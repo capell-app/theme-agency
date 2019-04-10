@@ -40,7 +40,7 @@ final class AgencyThemeServiceProvider extends ServiceProvider
             name: 'Agency',
             description: 'Awarded portfolios and design-education picks with a best-seat-in-the-house presentation. Includes the playful curated "Hand Picked" preset for lighter, taste-led indexes.',
             package: self::$packageName,
-            previewImage: '/vendor/capell/themes/agency.png',
+            previewImage: '/vendor/capell/themes/agency.webp',
             tags: ['Portfolio', 'Directory', 'Awards', 'Creators', 'Gallery'],
             bestFit: ['Portfolio directories', 'Creative award sites', 'Freelancer showcases', 'Studio indexes', 'Design education hubs'],
             includedSections: ['navigation', 'hero', 'featured-portfolios', 'filter-taxonomies', 'portfolio-grid', 'awarded-profiles', 'creator-directory', 'education-upsell', 'proof', 'content-listing', 'form', 'newsletter', 'cta', 'footer'],
@@ -49,7 +49,7 @@ final class AgencyThemeServiceProvider extends ServiceProvider
                     key: self::THEME_KEY,
                     name: 'Agency',
                     description: 'Agency visual preset for awards-style grids, large preview cards, filters, status labels, creator metadata, newest entries, awarded profiles, and education modules.',
-                    previewImage: '/vendor/capell/themes/agency.png',
+                    previewImage: '/vendor/capell/themes/agency.webp',
                     values: [
                         'primaryColor' => '#111111',
                         'accentColor' => '#1f6feb',
@@ -75,7 +75,7 @@ final class AgencyThemeServiceProvider extends ServiceProvider
                     key: 'gilded-archive',
                     name: 'Gilded Archive',
                     description: 'A charcoal-and-gold counterpart evoking a private awards archive, with denser bordered cards and a slower, more ceremonial motion feel.',
-                    previewImage: '/vendor/capell/themes/agency.png',
+                    previewImage: '/vendor/capell/themes/agency.webp',
                     values: [
                         'primaryColor' => '#f5f0e6',
                         'accentColor' => '#c9a24b',
@@ -101,7 +101,7 @@ final class AgencyThemeServiceProvider extends ServiceProvider
                     key: 'hand-picked',
                     name: 'Hand Picked',
                     description: 'A playful, curated counterpart with a violet accent on a soft lilac surface — for lighter, taste-led indexes.',
-                    previewImage: '/vendor/capell/themes/agency.png',
+                    previewImage: '/vendor/capell/themes/agency.webp',
                     values: [
                         'primaryColor' => '#111111',
                         'accentColor' => '#7b4ee6',

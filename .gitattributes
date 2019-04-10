@@ -1,3 +1,2 @@
 # Exclude development-only files from Composer distributions
 /tests export-ignore
-/docs/screenshots export-ignore

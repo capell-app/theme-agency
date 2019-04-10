@@ -33,9 +33,9 @@ Evidence: [`src/AgencyThemeServiceProvider.php`](src/AgencyThemeServiceProvider.
 
 Screenshot contract: `docs/screenshots.json`.
 
-![Agency Homepage](docs/screenshots/agency-homepage.png)
+![Agency Homepage](docs/screenshots/agency-homepage.webp)
 
-![Agency Landing page](docs/screenshots/agency-landing.png)
+![Agency Landing page](docs/screenshots/agency-landing.webp)
 
 Desktop, tablet, and mobile variants remain defined in the screenshot contract; this list groups them by workflow.
 
