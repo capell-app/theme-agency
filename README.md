@@ -49,14 +49,58 @@ Desktop, tablet, and mobile variants remain defined in the screenshot contract; 
 
 ## Technical Shape
 
-- Service providers: `Capell\ThemeAgency\AgencyThemeServiceProvider`.
-- Actions: `InstallAgencyThemeDemoAction`.
-- Command signatures: `capell:theme-agency-demo`.
-- Console command classes: `DemoCommand`.
-- Manifest contributions: `admin-page: Capell\ThemeAgency\Manifest\ThemeManagementPageContribution`.
-- Health checks: `Capell\ThemeAgency\Health\ThemeAgencyHealthCheck`.
-- Blade views: `packages/theme-agency/resources/views/page.blade.php`, `packages/theme-agency/resources/views/sections/awarded-profiles--spotlight.blade.php`, `packages/theme-agency/resources/views/sections/awarded-profiles.blade.php`, `packages/theme-agency/resources/views/sections/content-listing.blade.php`, `packages/theme-agency/resources/views/sections/creator-directory.blade.php`, `packages/theme-agency/resources/views/sections/cta.blade.php`, `packages/theme-agency/resources/views/sections/education-upsell--cta.blade.php`, `packages/theme-agency/resources/views/sections/education-upsell.blade.php`, `packages/theme-agency/resources/views/sections/featured-portfolios--parallax.blade.php`, `packages/theme-agency/resources/views/sections/featured-portfolios.blade.php`, `packages/theme-agency/resources/views/sections/filter-taxonomies--grid.blade.php`, `packages/theme-agency/resources/views/sections/filter-taxonomies.blade.php`, `and 9 more`.
-- Cache tags: `theme-agency`.
+### Service providers
+
+- `Capell\ThemeAgency\AgencyThemeServiceProvider`
+
+### Actions
+
+- `InstallAgencyThemeDemoAction`
+
+### Command signatures
+
+- `capell:theme-agency-demo`
+
+### Console command classes
+
+- `DemoCommand`
+
+### Manifest contributions
+
+- `admin-page: Capell\ThemeAgency\Manifest\ThemeManagementPageContribution`
+
+### Health checks
+
+- `Capell\ThemeAgency\Health\ThemeAgencyHealthCheck`
+
+### Blade views
+
+- `packages/theme-agency/resources/views/page.blade.php`
+- `packages/theme-agency/resources/views/sections/awarded-profiles--spotlight.blade.php`
+- `packages/theme-agency/resources/views/sections/awarded-profiles.blade.php`
+- `packages/theme-agency/resources/views/sections/content-listing.blade.php`
+- `packages/theme-agency/resources/views/sections/creator-directory.blade.php`
+- `packages/theme-agency/resources/views/sections/cta.blade.php`
+- `packages/theme-agency/resources/views/sections/education-upsell--cta.blade.php`
+- `packages/theme-agency/resources/views/sections/education-upsell.blade.php`
+- `packages/theme-agency/resources/views/sections/featured-portfolios--parallax.blade.php`
+- `packages/theme-agency/resources/views/sections/featured-portfolios.blade.php`
+- `packages/theme-agency/resources/views/sections/filter-taxonomies--grid.blade.php`
+- `packages/theme-agency/resources/views/sections/filter-taxonomies.blade.php`
+- `packages/theme-agency/resources/views/sections/footer.blade.php`
+- `packages/theme-agency/resources/views/sections/form.blade.php`
+- `packages/theme-agency/resources/views/sections/hero.blade.php`
+- `packages/theme-agency/resources/views/sections/navigation.blade.php`
+- `packages/theme-agency/resources/views/sections/newsletter.blade.php`
+- `packages/theme-agency/resources/views/sections/portfolio-grid--gallery-wall.blade.php`
+- `packages/theme-agency/resources/views/sections/portfolio-grid.blade.php`
+- `packages/theme-agency/resources/views/sections/proof.blade.php`
+- `packages/theme-agency/resources/views/widget/section.blade.php`
+
+### Cache tags
+
+- `theme-agency`
+
 
 ## Marketplace Classification
 
@@ -73,7 +117,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 - Required packages: `capell-app/core`, `capell-app/theme-foundation`, `capell-app/frontend`.
 - Admin navigation: declares `admin-page: ThemeManagementPageContribution`; each Filament page or resource controls its own navigation visibility.
 - Admin/editor extensions: none declared.
-- Permissions: none declared in `capell.json`.
+- Permissions: no package permission declarations or Shield gates detected; host access rules still apply.
 - Public routes: none declared.
 - Database changes: no package migrations declared.
 - Config: no package config files.
@@ -98,7 +142,7 @@ This theme has no schema impact. It relies on core Capell site, page, locale, an
 ## Quick Start
 
 1. Install the package: `composer require capell-app/theme-agency`.
-2. No package-specific setup command or migrations are declared.
+2. See it working: run `php artisan capell:theme-agency-demo`.
 3. Open `/theme-agency` and confirm the public output renders without admin state.
 
 ## Next Steps
