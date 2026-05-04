@@ -28,9 +28,6 @@
             "providers": [
                 "Capell\\ThemeStudio\\Agency\\AgencyThemeServiceProvider"
             ]
-        },
-        "branch-alias": {
-            "dev-main": "4.x-dev"
         }
     }
 }

@@ -1,27 +1,70 @@
-# Capell Agency Theme
+# Theme Agency
 
-**Composer package:** `capell-app/theme-agency`
-**Product group:** Capell Theme Studio
-**Tier:** Premium
+Status: **Available, no schema impact** · Kind: **theme** · Tier: **premium** · Bundle: **theme-studio** · Contexts: **frontend** · Product group: **Capell Theme Studio**
 
-Agency is the expressive theme for studios, creative teams, and case-study-led sites. It renders the shared Theme Studio content model with immersive media, bold typography, playful proof, and high-energy CTA treatment.
+## What This Plugin Adds
 
-## Install
+Theme Agency registers an expressive agency renderer for Capell Theme Studio.
 
-```bash
-composer require capell-app/theme-agency
-```
+- Agency theme service provider.
+- Theme renderer/views for agency-style Theme Studio output.
+- Dependency on Default Theme and Theme Studio Core.
 
-For the full commercial system, install `capell-app/theme-studio`.
+## Why It Matters
 
-## Includes
+**For developers:** Adds a renderer package that plugs into Theme Studio Core rather than changing Capell core rendering contracts.
 
-- Three presets: Signal, Gallery, Atelier.
-- Renderers for navigation, hero, features, proof, content listings, CTA, and footer.
-- Fallback-friendly section rendering through `capell-app/theme-studio-core`.
+**For teams:** Provides an agency-focused visual option for sites managed through Theme Studio.
 
-## Tests
+## Screens And Workflow
 
-```bash
-php -d memory_limit=-1 vendor/bin/pest packages/theme-studio/themes/agency/tests --no-coverage
-```
+Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) during package deployment.
+
+- Theme Studio preset selection showing Agency.
+- Frontend page rendered with Agency theme.
+- Theme preview URL output.
+
+## Technical Shape
+
+- AgencyThemeServiceProvider registers the renderer.
+- Requires capell-app/default-theme and capell-app/theme-studio-core.
+- No migrations, config, routes, resources, or models are present.
+
+## Data Model
+
+- This package does not own data.
+- It reads Theme Studio runtime data and core page content through Theme Studio Core.
+
+## Install Impact
+
+- Adds an Agency renderer to Theme Studio.
+- No database changes.
+- No admin navigation by itself.
+- No public routes by itself.
+
+## Commands
+
+- None proven in this package directory.
+
+## Admin And Access
+
+- None proven in this package directory.
+
+- None proven in this package directory.
+
+## Common Pitfalls
+
+- Install Theme Studio Core before using this renderer.
+- Verify frontend assets from Default Theme are available.
+
+## Quick Start
+
+1. Install the package with `composer require capell-app/theme-agency`.
+2. Register the package provider through Composer discovery and clear cached config if the host app uses config caching.
+3. Open the new admin surface or integration point and verify the result.
+
+## Next Steps
+
+- [docs/overview.md](docs/overview.md)
+- [../theme-studio-core/README.md](../theme-studio-core/README.md)
+- [../theme-studio-admin/README.md](../theme-studio-admin/README.md)
