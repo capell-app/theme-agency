@@ -1,4 +1,4 @@
-<section class="px-6 py-20">
+<section class="theme-cta px-6 py-20">
     <div
         class="mx-auto max-w-7xl rounded-[2rem] bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-accent)] p-10 text-white"
     >

@@ -1,4 +1,4 @@
-<section class="mx-auto max-w-7xl px-6 py-20">
+<section class="theme-features mx-auto max-w-7xl px-6 py-20">
     <h2 class="max-w-3xl text-5xl font-black tracking-tight">
         {{ $section->heading }}
     </h2>

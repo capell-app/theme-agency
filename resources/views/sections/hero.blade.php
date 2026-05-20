@@ -1,4 +1,4 @@
-<section class="overflow-hidden bg-zinc-950 text-white">
+<section class="theme-hero overflow-hidden bg-zinc-950 text-white">
     <div
         class="mx-auto grid max-w-7xl gap-10 px-6 py-24 lg:grid-cols-[0.95fr_1.05fr]"
     >

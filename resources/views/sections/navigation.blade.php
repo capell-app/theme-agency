@@ -1,4 +1,4 @@
-<nav class="bg-zinc-950 text-white">
+<nav class="theme-navigation bg-zinc-950 text-white">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
         <a href="/" class="text-2xl font-black tracking-tight">
             {{ $section->brandName }}

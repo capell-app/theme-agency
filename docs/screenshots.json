@@ -6,14 +6,16 @@
     "outputDirectory": "public/docs/screenshots/packages/theme-agency",
     "entries": [
         {
-            "id": "theme-studio-preset-selection-showing-agency",
-            "title": "Theme Studio preset selection showing Agency.",
+            "id": "theme-admin-list-showing-agency",
+            "title": "Themes admin list showing Agency.",
             "package": "theme-agency",
             "surface": "admin",
             "targetType": "admin-surface",
-            "target": null,
+            "target": "ThemeResource:index",
             "required": true,
-            "notes": "Resolved by the deployment screenshot runner after the package is installed and demo data is prepared."
+            "notes": "Capture after installing capell-app/theme-agency with Foundation Theme and creating an Agency theme record in the isolated demo harness.",
+            "useCase": "An administrator sees the Agency theme record in the host Themes admin surface.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-agency/theme-admin-list-showing-agency.png"
         },
         {
             "id": "frontend-page-rendered-with-agency-theme",
@@ -21,19 +23,23 @@
             "package": "theme-agency",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": null,
+            "target": "/theme-agency-demo",
             "required": true,
-            "notes": "Resolved by the deployment screenshot runner after the package is installed and demo data is prepared."
+            "notes": "Capture the isolated demo route that renders navigation, hero, features, proof, content listing, CTA, and footer through the Agency renderer.",
+            "useCase": "A visitor sees a seeded public page rendered through every Agency theme section.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-agency/frontend-page-rendered-with-agency-theme.png"
         },
         {
             "id": "theme-preview-url-output",
             "title": "Theme preview URL output.",
             "package": "theme-agency",
             "surface": "admin",
-            "targetType": "admin-surface",
-            "target": null,
+            "targetType": "admin-url",
+            "target": "capell.admin.theme-preview",
             "required": true,
-            "notes": "Resolved by the deployment screenshot runner after the package is installed and demo data is prepared."
+            "notes": "Capture a temporary signed preview URL generated from the host Themes table for the Agency theme.",
+            "useCase": "An administrator opens a preview URL to inspect a page with the Agency theme applied.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-agency/theme-preview-url-output.png"
         }
     ]
 }

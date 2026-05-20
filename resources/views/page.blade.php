@@ -1,22 +1,22 @@
 @once
     <style>
-        [data-theme-studio-theme='agency'] {
+        .site-theme-shell {
             background: #09090b;
             color: #f8fafc;
             font-family: var(--theme-body-font, Inter, system-ui, sans-serif);
         }
 
-        [data-theme-studio-theme='agency'] section {
+        .site-theme-shell section {
             padding: clamp(4rem, 8vw, 8rem) 1.5rem;
         }
 
-        [data-theme-studio-theme='agency'] section > div {
+        .site-theme-shell section > div {
             max-width: 76rem;
             margin-inline: auto;
         }
 
-        [data-theme-studio-theme='agency'] h1,
-        [data-theme-studio-theme='agency'] h2 {
+        .site-theme-shell h1,
+        .site-theme-shell h2 {
             max-width: 12ch;
             color: #fff;
             font-family: var(--theme-heading-font, inherit);
@@ -26,28 +26,27 @@
             letter-spacing: 0;
         }
 
-        [data-theme-studio-theme='agency'] p {
+        .site-theme-shell p {
             max-width: 42rem;
             color: rgb(255 255 255 / 72%);
             font-size: 1.125rem;
             line-height: 1.8;
         }
 
-        [data-theme-studio-theme='agency'] a {
+        .site-theme-shell a {
             color: inherit;
         }
 
-        [data-theme-studio-theme='agency'] img,
-        [data-theme-studio-theme='agency'] section div:empty {
+        .site-theme-shell img,
+        .site-theme-shell section div:empty {
             border-radius: 1.5rem;
         }
     </style>
 @endonce
 
 <div
-    data-theme-studio-theme="{{ $themeKey }}"
     style="{{ collect($brand->tokens())->map(fn ($value, $token) => $token . ':' . $value)->implode(';') }}"
-    class="min-h-screen bg-zinc-950 text-zinc-950 antialiased"
+    class="site-theme-shell min-h-screen bg-zinc-950 text-zinc-950 antialiased"
 >
     {!! $content !!}
 </div>

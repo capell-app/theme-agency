@@ -1,4 +1,4 @@
-<section class="mx-auto max-w-7xl px-6 py-20">
+<section class="theme-content-listing mx-auto max-w-7xl px-6 py-20">
     <h2 class="text-5xl font-black tracking-tight">{{ $section->heading }}</h2>
     @if ($section->summary)
         <p class="mt-4 max-w-2xl text-zinc-600">{{ $section->summary }}</p>

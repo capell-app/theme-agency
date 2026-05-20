@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Capell\ThemeStudio\Agency;
 
-use Capell\Core\Enums\PackageTypeEnum;
 use Capell\Core\Facades\CapellCore;
-use Capell\ThemeStudio\Core\Data\ThemeDefinitionData;
-use Capell\ThemeStudio\Core\Data\ThemePresetData;
-use Capell\ThemeStudio\Core\Rendering\BladeThemeRenderer;
-use Capell\ThemeStudio\Core\Rendering\ViewSectionRenderer;
-use Capell\ThemeStudio\Core\Theme\ThemeRegistry;
+use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
+use Capell\Core\ThemeStudio\Data\ThemePresetData;
+use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
+use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
+use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 class AgencyThemeServiceProvider extends ServiceProvider
 {
-    public const THEME_KEY = 'agency';
+    public const string THEME_KEY = 'agency';
 
     public static string $packageName = 'capell-app/theme-agency';
 
@@ -26,7 +26,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
             name: 'Agency',
             description: 'Expressive layouts with bold rhythm, immersive media, and confident calls to action.',
             package: 'capell-app/theme-agency',
-            previewImage: '/vendor/capell/theme-studio/agency-signal.jpg',
+            previewImage: '/vendor/capell/themes/agency-signal.jpg',
             tags: ['Expressive', 'Portfolio', 'Creative'],
             bestFit: ['Studios', 'Agencies', 'Brand-led teams'],
             includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'],
@@ -35,7 +35,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
                     key: 'signal',
                     name: 'Signal',
                     description: 'Sharp contrast, strong statements, and energetic section pacing.',
-                    previewImage: '/vendor/capell/theme-studio/agency-signal.jpg',
+                    previewImage: '/vendor/capell/themes/agency-signal.jpg',
                     values: [
                         'primaryColor' => '#ff5a7e',
                         'accentColor' => '#3b82f6',
@@ -50,7 +50,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
                     key: 'gallery',
                     name: 'Gallery',
                     description: 'Media-forward presentation with calmer motion and framed project surfaces.',
-                    previewImage: '/vendor/capell/theme-studio/agency-gallery.jpg',
+                    previewImage: '/vendor/capell/themes/agency-gallery.jpg',
                     values: [
                         'primaryColor' => '#7c3aed',
                         'accentColor' => '#fb7185',
@@ -65,7 +65,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
                     key: 'atelier',
                     name: 'Atelier',
                     description: 'Editorial studio feel with soft neutrals and refined proof.',
-                    previewImage: '/vendor/capell/theme-studio/agency-atelier.jpg',
+                    previewImage: '/vendor/capell/themes/agency-atelier.jpg',
                     values: [
                         'primaryColor' => '#be123c',
                         'accentColor' => '#f97316',
@@ -77,19 +77,12 @@ class AgencyThemeServiceProvider extends ServiceProvider
                     ],
                 ),
             ],
-            assets: ['css' => 'vendor/capell/theme-studio/agency.css'],
+            assets: ['css' => 'vendor/capell/themes/agency.css'],
         );
     }
 
-    public function register(): void
-    {
-        CapellCore::registerPackage(
-            name: self::$packageName,
-            type: PackageTypeEnum::Theme,
-            path: realpath(__DIR__ . '/..'),
-            version: CapellCore::getInstalledPrettyVersion(self::$packageName),
-        );
-    }
+    #[Override]
+    public function register(): void {}
 
     public function boot(ThemeRegistry $registry): void
     {
