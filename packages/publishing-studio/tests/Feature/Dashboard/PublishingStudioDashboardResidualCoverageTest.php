@@ -6,7 +6,6 @@ use Capell\Admin\Contracts\Dashboard\ContentHealthDataProvider;
 use Capell\Admin\Contracts\Dashboard\MyWorkQueueDataProvider;
 use Capell\Admin\Contracts\Dashboard\RecentlyPublishedDataProvider;
 use Capell\Admin\Contracts\Dashboard\SiteStatsDataProvider;
-use Capell\Core\Enums\TranslatableType;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\Translation;
@@ -41,12 +40,13 @@ it('covers publishing dashboard data providers and their action branches', funct
     $reviewPage = Page::factory()->create(['workspace_id' => $reviewWorkspace->id]);
     $scheduledPage = Page::factory()->create(['workspace_id' => $scheduledWorkspace->id]);
 
-    Translation::factory()->create([
-        'translatable_type' => TranslatableType::Page->value,
-        'translatable_id' => $publishedPage->id,
-        'title' => 'Home',
-        'meta' => ['description' => ''],
-    ]);
+    Translation::factory()
+        ->translatable($publishedPage)
+        ->language($site->language)
+        ->create([
+            'title' => 'Home',
+            'meta' => ['description' => ''],
+        ]);
 
     WorkspaceReviewAssignment::factory()->create([
         'workspace_id' => $reviewWorkspace->id,

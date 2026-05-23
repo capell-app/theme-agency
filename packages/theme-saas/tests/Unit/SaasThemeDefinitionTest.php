@@ -24,7 +24,8 @@ it('defines the saas premium renderer contract', function (): void {
         ->and($definition->key)->toBe(SaasThemeServiceProvider::THEME_KEY)
         ->and($definition->assets)->toBe(['css' => 'vendor/capell/themes/saas.css'])
         ->and($definition->includedSections)->toContain('hero', 'features', 'proof', 'cta')
-        ->and($definition->presets)->toHaveCount(3)
+        ->and($definition->presets)->toHaveCount(8)
+        ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->tags)->toContain('Conversion')
         ->and(ThemeSaasHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
 });

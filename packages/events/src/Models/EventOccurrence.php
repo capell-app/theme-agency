@@ -26,6 +26,7 @@ use Override;
  * @property int|null $capacity
  * @property CarbonImmutable|null $ends_at
  * @property string $occurrence_key
+ * @property array<string, mixed> $override_data
  * @property int $registration_count
  * @property CarbonImmutable $starts_at
  * @property EventOccurrenceStatusEnum $status

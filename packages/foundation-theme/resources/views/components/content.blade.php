@@ -200,8 +200,8 @@
     @endif
 
     @if ($contentType === ContentStructure::Blocks)
-        <x-capell::blocks
-            :blocks="$content"
+        <x-capell::widgets
+            :widgets="$content"
             :layout="$layout"
             :page="$page"
         />

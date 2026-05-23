@@ -10,6 +10,18 @@ Template-driven transactional email, delivery auditing, provider events, replies
 - Service providers: `packages/email-studio/src/Providers/AdminServiceProvider.php`, `packages/email-studio/src/Providers/EmailStudioServiceProvider.php`, `packages/email-studio/src/Providers/FrontendServiceProvider.php`
 - Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/frontend`
 
+## Why It Helps Your Capell Workflow
+
+- Gives Capell a transactional email center for reusable templates, provider delivery, suppressions, replies, and event audit.
+- Helps owners keep email behavior visible in admin instead of burying delivery state inside provider dashboards.
+- Gives developers provider adapters and send Actions so forms, automations, and workflow packages can send consistently.
+
+## Best Used With
+
+- [Newsletter](../newsletter/README.md)
+- [Public Actions](../public-actions/README.md)
+- [Form Builder](../form-builder/README.md)
+
 ## What It Adds
 
 - Template-driven transactional email, delivery auditing, provider events, replies, and suppressions for Capell CMS.
@@ -90,6 +102,7 @@ That is the part clients pay for. Sending an email is easy; proving what happene
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [email-studio-api.md](docs/email-studio-api.md)
 - [email-studio-database.md](docs/email-studio-database.md)
 - [overview.md](docs/overview.md)

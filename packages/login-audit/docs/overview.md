@@ -4,7 +4,7 @@ Status: **Available, schema-owning** · Kind: **package** · Tier: **premium** �
 
 This page is the implementation overview for the Login Audit package. It is based on the package README, providers, migrations, config, Filament resources, Actions, middleware, and tests.
 
-## What This Plugin Adds
+## What This Package Adds
 
 Login Audit records login, failed login, logout, and last-activity metadata for Capell users.
 
@@ -54,9 +54,9 @@ Helps site operators review access activity and spot account behaviour that need
 
 ![Login audit dashboard widget](../../../public/docs/screenshots/packages/login-audit/dashboard-widget.png)
 
-![User access summary on the edit user screen](../../../public/docs/screenshots/packages/login-audit/user-edit-access-summary.png)
+User access summary screenshot target: `public/docs/screenshots/packages/login-audit/user-edit-access-summary.png`. Keep this as text until the screenshot file is committed.
 
-![User authentication logs relation manager](../../../public/docs/screenshots/packages/login-audit/user-login-audits-relation-manager.png)
+User authentication logs relation manager screenshot target: `public/docs/screenshots/packages/login-audit/user-login-audits-relation-manager.png`. Keep this as text until the screenshot file is committed.
 
 ## Pitfalls
 

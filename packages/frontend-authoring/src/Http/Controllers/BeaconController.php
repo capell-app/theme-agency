@@ -9,6 +9,7 @@ use Capell\Core\Models\PageUrl;
 use Capell\Frontend\Contracts\AdminAccessCheckerInterface;
 use Capell\Frontend\Support\Loader\PageLoader;
 use Capell\Frontend\Support\Loader\SiteLoader;
+use Capell\FrontendAuthoring\Actions\BuildAuthoringBannerContextAction;
 use Capell\FrontendAuthoring\Actions\BuildEditableRegionManifestAction;
 use Capell\FrontendAuthoring\Http\Requests\BeaconRequest;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -78,6 +79,7 @@ class BeaconController extends BaseController
             if ($pageUrl instanceof PageUrl) {
                 $data['scripts'] = [
                     view('capell::authoring.bootstrap-script', [
+                        'banner' => BuildAuthoringBannerContextAction::run($pageUrl),
                         'regions' => BuildEditableRegionManifestAction::run($pageUrl),
                     ])->render(),
                 ];

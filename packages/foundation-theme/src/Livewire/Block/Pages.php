@@ -72,7 +72,9 @@ class Pages extends AbstractBlock
             paginationKey: $paginationKey,
             cacheKeyPrepend: sprintf('page-%d-block-%d-container-%s-%d', $page->id, $block->id, $this->containerKey, $this->occurrence),
             morphModel: $morphModel,
-            modifyQuery: fn (Builder $query) => $query->whereIn('id', $selection),
+            modifyQuery: function (Builder $query) use ($selection): void {
+                $query->whereIn('id', $selection);
+            },
         );
 
         if ($this->pages->isEmpty() && config('capell-layout-builder.block.skip_render_empty', true) === true) {

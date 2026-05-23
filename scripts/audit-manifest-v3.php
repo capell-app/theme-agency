@@ -97,10 +97,12 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
         'public-actions',
         'search',
         'seo-suite',
+        'shopify-commerce',
         'wordpress-importer',
     ],
     'themes' => [
         'theme-agency',
+        'theme-business-solutions',
         'theme-corporate',
         'theme-saas',
     ],

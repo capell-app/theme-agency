@@ -83,7 +83,11 @@ final class SearchShopifyProductsAction
             $changed = false;
 
             foreach ($nodes as $node) {
-                if (! is_array($node) || ! is_string($node['id'] ?? null)) {
+                if (! is_array($node)) {
+                    continue;
+                }
+
+                if (! is_string($node['id'] ?? null)) {
                     continue;
                 }
 
@@ -139,7 +143,7 @@ GRAPHQL;
     private function cacheTtlMinutes(): int
     {
         if (app()->bound(ShopifyCommerceSettings::class)) {
-            $settings = app(ShopifyCommerceSettings::class);
+            $settings = resolve(ShopifyCommerceSettings::class);
 
             return max(1, $settings->search_cache_ttl_minutes);
         }

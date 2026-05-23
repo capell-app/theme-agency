@@ -11,6 +11,18 @@ Diagnostics adds operational diagnostics for cache, configuration drift, migrati
 - Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/html-cache`
 - Third-party dependencies: `lorisleiva/laravel-actions`, `spatie/laravel-data`
 
+## Why It Helps Your Capell Workflow
+
+- Gives developers and operators one admin surface for checking cache, config drift, migrations, packages, queues, permissions, setup health, and Tailwind status.
+- Shortens support loops because package health checks can be found from Capell instead of by reading logs first.
+- Provides extension points for command-palette style diagnostic actions with explicit ability and risk metadata.
+
+## Best Used With
+
+- [Dashboard Reports](../dashboard-reports/README.md)
+- [Login Audit](../login-audit/README.md)
+- [Deployments](../deployments/README.md)
+
 ## What It Adds
 
 Diagnostics adds operational diagnostics for cache, configuration drift, migrations, packages, registries, queues, permissions, setup health, and Tailwind build status.
@@ -144,6 +156,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [command-palette.md](docs/command-palette.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 - [overview.md](docs/overview.md)

@@ -39,7 +39,9 @@ class Pages extends AbstractPagesBlock
             cacheKeyPrepend: 'pages-block-' . $this->block->id,
             morphModel: $morphModel,
             useCache: false,
-            modifyQuery: fn (Builder $query): Builder => $query->whereIn('id', $selection),
+            modifyQuery: function (Builder $query) use ($selection): void {
+                $query->whereIn('id', $selection);
+            },
         );
 
         if ($this->pages->isEmpty() && config('capell-layout-builder.block.skip_render_empty', true) === true) {

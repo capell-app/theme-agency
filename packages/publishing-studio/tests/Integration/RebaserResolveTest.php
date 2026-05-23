@@ -83,7 +83,9 @@ it('throws on an unknown choice value rather than silently no-opping', function 
     $workspace = Workspace::factory()->create();
     $uuid = (string) Str::uuid();
 
-    expect(fn (): mixed => (new Rebaser)->resolve($workspace, [
-        WorkspaceDraftableFixture::class => [$uuid => 'merge-somehow'],
-    ]))->toThrow(InvalidArgumentException::class);
+    expect(function () use ($workspace, $uuid): void {
+        (new Rebaser)->resolve($workspace, [
+            WorkspaceDraftableFixture::class => [$uuid => 'merge-somehow'],
+        ]);
+    })->toThrow(InvalidArgumentException::class);
 });

@@ -81,13 +81,13 @@
                             }
                         "
                     >
-                        @if (Str::startsWith($image->mime_type, 'video/'))
+                        @if ($image->media && Str::startsWith($image->media->getMimeType(), 'video/'))
                             <x-capell::media
                                 :class="'h-full w-full bg-gray-50 object-cover shadow transition-transform duration-300 group-hover:scale-105 group-focus-within:scale-105' . ($theme->withDarkMode ? ' dark:bg-gray-800' : '')"
                                 :height="$large ? 600 : 300"
                                 :$loop
-                                :media="$image"
-                                :preview="(int) $image->getMeta('image_id')"
+                                :media="$image->media"
+                                :preview="null"
                                 :alt="$assetRenderData->alt"
                                 :width="440"
                                 media_type="video"
@@ -95,14 +95,13 @@
                                 lightbox="true"
                             />
                         @else
-                            <x-capell::media
+                            <x-capell::image-source
                                 :class="'h-full w-full bg-gray-50 object-cover shadow transition-transform duration-300 group-hover:scale-105 group-focus-within:scale-105' . ($theme->withDarkMode ? ' dark:bg-gray-800' : '')"
                                 :height="$large ? 600 : 300"
                                 :$loop
-                                :media="$image"
+                                :image="$image"
                                 :alt="$assetRenderData->alt"
                                 :width="440"
-                                fit="crop-center"
                                 lightbox="true"
                             />
                         @endif

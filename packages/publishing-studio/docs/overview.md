@@ -4,7 +4,7 @@ Status: **Available, schema-owning** · Kind: **package** · Tier: **premium** �
 
 This page is the consolidated implementation overview for the PublishingStudio package. It is extracted from the package README, service providers, migrations, config files, routes, resources, models, actions, and the shared Capell ERD notes where available.
 
-## What This Plugin Adds
+## What This Package Adds
 
 PublishingStudio is Capell's premium editorial timeline package. It brings the publishing loop into one workflow: preview, compare, approve, schedule, publish, and rollback content changes while preserving a readable history of what happened and why.
 
@@ -97,7 +97,7 @@ The live preview, preview banner, recovery import, and activity history screensh
 - Tier: premium
 - Bundle: publishing-pro
 - Contexts: `admin`, `console`
-- Marketplace headline: Editorial timeline workflow for preview, compare, approval, scheduling, publishing, and rollback.
+- Package catalog headline: Editorial timeline workflow for preview, compare, approval, scheduling, publishing, and rollback.
 - Requires: `capell-app/core`, `capell-app/admin`
 - Optional dependencies: None listed.
 

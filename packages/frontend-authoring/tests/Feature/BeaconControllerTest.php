@@ -8,6 +8,7 @@ use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
 use Capell\Frontend\Contracts\AdminAccessCheckerInterface;
+use Capell\HtmlCache\Models\CachedModelUrl;
 use Capell\Tests\Fixtures\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Config;
@@ -64,7 +65,7 @@ it('returns csrf token and user info for authenticated user', function (): void 
 });
 
 it('returns beacon scripts for admin user with url', function (): void {
-    $user = User::factory()->create();
+    $user = User::factory()->create(['name' => 'Test User']);
     actingAs($user);
 
     fakeAdminAccessChecker();
@@ -87,7 +88,94 @@ it('returns beacon scripts for admin user with url', function (): void {
     expect($response->json('scripts.0'))
         ->toContain('CapellFrontendAuthoring')
         ->toContain('edit_url')
-        ->toContain('.capell-authoring-region:hover > .capell-authoring-button');
+        ->toContain('.capell-authoring-region:hover > .capell-authoring-button')
+        ->toContain('capell-authoring-toolbar')
+        ->toContain('Admin editing')
+        ->toContain('Not cached');
+});
+
+it('returns page and html cache context in admin authoring banner script', function (): void {
+    $user = User::factory()->create(['name' => 'Test User']);
+    actingAs($user);
+
+    fakeAdminAccessChecker();
+
+    $site = Site::factory()->create();
+    $language = Language::factory()->create();
+    SiteDomain::factory()->for($site)->for($language)->create();
+    $page = Page::factory()->site($site)->create(['name' => 'Company page']);
+    $page->forceFill([
+        'updated_by' => $user->getKey(),
+        'updated_at' => now()->subMinutes(12),
+    ])->saveQuietly();
+    $pageUrl = PageUrl::factory()->for($site)->for($language)->page($page)->create([
+        'url' => '/company',
+    ]);
+
+    CachedModelUrl::query()->create([
+        'url' => $pageUrl->full_url,
+        'url_hash' => CachedModelUrl::hashUrl($pageUrl->full_url),
+        'path' => $pageUrl->url,
+        'site_id' => $site->getKey(),
+        'site_domain_id' => $pageUrl->siteDomain?->getKey(),
+        'language_id' => $language->getKey(),
+        'cacheable_type' => $page->getMorphClass(),
+        'cacheable_id' => $page->getKey(),
+        'cached_at' => now()->subMinutes(5),
+        'last_seen_at' => now()->subMinutes(5),
+    ]);
+
+    $response = postJson(route('capell-frontend.beacon'), [
+        'url' => $pageUrl->full_url,
+    ]);
+
+    $response->assertOk();
+
+    expect($response->json('scripts.0'))
+        ->toContain('Company page')
+        ->toContain('/company')
+        ->toContain('HTML cached')
+        ->toContain('Test User')
+        ->toContain('--capell-authoring-bottom-offset');
+});
+
+it('escapes hostile page and editor names in admin authoring banner script', function (): void {
+    $user = User::factory()->create([
+        'name' => 'Editor <script>alert("editor")</script>',
+    ]);
+    actingAs($user);
+
+    fakeAdminAccessChecker();
+
+    $site = Site::factory()->create();
+    $language = Language::factory()->create();
+    SiteDomain::factory()->for($site)->for($language)->create();
+    $page = Page::factory()->site($site)->create([
+        'name' => '<img src=x onerror=alert("page")>',
+    ]);
+    $page->forceFill([
+        'updated_by' => $user->getKey(),
+        'updated_at' => now()->subMinutes(12),
+    ])->saveQuietly();
+    $pageUrl = PageUrl::factory()->for($site)->for($language)->page($page)->create([
+        'url' => '/hostile',
+    ]);
+
+    $response = postJson(route('capell-frontend.beacon'), [
+        'url' => $pageUrl->full_url,
+    ]);
+
+    $response->assertOk();
+
+    $script = $response->json('scripts.0');
+
+    expect($script)
+        ->not->toContain('<img src=x')
+        ->not->toContain('<script>alert')
+        ->toContain('textContent = String(text)')
+        ->toContain("appendToolbarText(content, 'capell-authoring-toolbar__page', bannerContext.page")
+        ->toContain('\u003Cimg src=x')
+        ->toContain('\u003Cscript\u003Ealert');
 });
 
 it('does not return authoring scripts for cross-origin admin beacons', function (): void {

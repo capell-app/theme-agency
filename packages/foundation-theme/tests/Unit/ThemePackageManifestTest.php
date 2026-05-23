@@ -27,6 +27,7 @@ it('declares premium themes as standalone packages extending foundation', functi
         ->and($manifest['product']['group'])->toBe('Capell Themes');
 })->with([
     'agency' => ['theme-agency', 'capell-app/theme-agency', 'agency'],
+    'business solutions' => ['theme-business-solutions', 'capell-app/theme-business-solutions', 'business-legal'],
     'corporate' => ['theme-corporate', 'capell-app/theme-corporate', 'corporate'],
     'saas' => ['theme-saas', 'capell-app/theme-saas', 'saas'],
 ]);

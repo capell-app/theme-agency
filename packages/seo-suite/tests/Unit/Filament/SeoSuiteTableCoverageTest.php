@@ -6,7 +6,6 @@ use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
-use Capell\Core\Models\SiteDomain;
 use Capell\Core\Models\Translation;
 use Capell\SeoSuite\Actions\ResolveAiDiscoveryProfileAction;
 use Capell\SeoSuite\Actions\UpdateAiDiscoveryPageInclusionAction;
@@ -108,17 +107,15 @@ it('builds markdown urls for included ai discovery pages with public urls', func
     }
 
     $language = Language::factory()->create();
-    $site = Site::factory()->language($language)->withTranslations($language)->create();
+    $site = Site::factory()
+        ->language($language)
+        ->withTranslations($language, siteDomainData: ['domain' => 'example.test', 'scheme' => 'https', 'path' => null, 'default' => true])
+        ->create();
     $page = Page::factory()
         ->site($site)
         ->withTranslations($language, ['title' => 'AI Discovery Public Page'])
         ->create();
 
-    SiteDomain::factory()
-        ->site($site)
-        ->language($language)
-        ->default()
-        ->create(['domain' => 'example.test', 'scheme' => 'https']);
     PageUrl::factory()
         ->site($site)
         ->language($language)

@@ -8,6 +8,18 @@ Trust-led corporate theme for Capell.
 - Namespace: `Capell\ThemeStudio\Corporate\`
 - Capell dependencies: `capell-app/core`, `capell-app/foundation-theme`
 
+## Why It Helps Your Capell Workflow
+
+- Provides restrained renderer views for B2B, public-sector, and professional-service Capell sites.
+- Helps owners launch a trust-led site with a theme direction that fits formal content and service pages.
+- Gives developers a corporate theme package to customize without weakening the shared Foundation Theme base.
+
+## Best Used With
+
+- [Foundation Theme](../foundation-theme/README.md)
+- [Theme Agency](../theme-agency/README.md)
+- [Theme SaaS](../theme-saas/README.md)
+
 ## What It Adds
 
 - Trust-led corporate theme for Capell.
@@ -86,6 +98,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 - [overview.md](docs/overview.md)
 

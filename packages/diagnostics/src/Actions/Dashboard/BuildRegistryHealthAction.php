@@ -171,6 +171,7 @@ final class BuildRegistryHealthAction
     private function sourcePackageOf(string $class): string
     {
         $map = resolve(CapellPackageRegistry::class)->namespaceMap();
+        $map['Capell\\Core\\'] = 'core';
         $map['App\\'] = 'host-app';
 
         foreach ($map as $prefix => $shortName) {

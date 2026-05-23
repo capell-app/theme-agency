@@ -29,19 +29,13 @@ final class ShopifyCallbackController
 
             abort_unless($user !== null, 403);
 
-            if (ValidateShopifyShopDomainAction::run($query->shop) !== true) {
-                throw new OAuthCallbackFailedException('invalid_shop');
-            }
+            throw_if(ValidateShopifyShopDomainAction::run($query->shop) !== true, OAuthCallbackFailedException::class, 'invalid_shop');
 
-            if (ValidateShopifyHmacAction::run($request->query(), config('capell-shopify-commerce.client_secret')) !== true) {
-                throw new OAuthCallbackFailedException('invalid_hmac');
-            }
+            throw_if(ValidateShopifyHmacAction::run($request->query(), config('capell-shopify-commerce.client_secret')) !== true, OAuthCallbackFailedException::class, 'invalid_hmac');
 
             $state = ValidateShopifyOAuthStateAction::run($query->state, $query->shop, $user);
 
-            if ($state === null) {
-                throw new OAuthCallbackFailedException('invalid_state');
-            }
+            throw_if($state === null, OAuthCallbackFailedException::class, 'invalid_state');
 
             $tokenData = ExchangeShopifyAuthorizationCodeAction::run($query->shop, $query->code);
 

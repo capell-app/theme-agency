@@ -47,15 +47,15 @@ final class StartShopifyProductBulkSyncAction
                     'last_sync_error' => null,
                 ])->save();
 
-                return (string) $bulkOperation['id'];
-            } catch (Throwable $exception) {
+                return $bulkOperation['id'];
+            } catch (Throwable $throwable) {
                 $connection->forceFill([
                     'sync_status' => 'failed',
-                    'status' => $exception instanceof ShopifyGraphqlException ? ShopifyConnectionStatus::Error : $connection->status,
-                    'last_sync_error' => $exception->getMessage(),
+                    'status' => $throwable instanceof ShopifyGraphqlException ? ShopifyConnectionStatus::Error : $connection->status,
+                    'last_sync_error' => $throwable->getMessage(),
                 ])->save();
 
-                throw $exception;
+                throw $throwable;
             }
         });
     }

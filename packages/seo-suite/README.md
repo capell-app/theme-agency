@@ -11,6 +11,18 @@ SEO Suite adds metadata panels, structured data, broken link tracking, Search Co
 - Capell dependencies: `capell-app/admin`, `capell-app/frontend`, `capell-app/insights`, `capell-app/site-discovery`
 - Third-party dependencies: `prism-php/prism`
 
+## Why It Helps Your Capell Workflow
+
+- Adds metadata panels, structured data, broken-link tracking, Search Console insights, AI content briefs, and publish checks.
+- Helps owners improve discoverability while giving editors concrete readiness signals before publishing.
+- Gives developers schema, sitemap, AI, and publish-gate extension points without mixing SEO behavior into core pages.
+
+## Best Used With
+
+- [Search](../search/README.md)
+- [Site Discovery](../site-discovery/README.md)
+- [Publishing Studio](../publishing-studio/README.md)
+
 ## What It Adds
 
 SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery output, crawler policy controls, and publish checks.
@@ -170,6 +182,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [ai-discovery.md](docs/ai-discovery.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 - [extending-seo-suite.md](docs/extending-seo-suite.md)

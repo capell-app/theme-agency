@@ -24,7 +24,7 @@ it('defines the corporate premium renderer contract', function (): void {
         ->and($definition->key)->toBe(CorporateThemeServiceProvider::THEME_KEY)
         ->and($definition->assets)->toBe(['css' => 'vendor/capell/themes/corporate.css'])
         ->and($definition->includedSections)->toContain('hero', 'features', 'proof', 'cta')
-        ->and($definition->presets)->toHaveCount(3)
+        ->and($definition->presets)->toHaveCount(6)
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->tags)->toContain('Trust')
         ->and(ThemeCorporateHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');

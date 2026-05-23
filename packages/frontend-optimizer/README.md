@@ -11,6 +11,18 @@ Profile-based CSS and JavaScript delivery for public Capell pages.
 - Capell dependencies: `capell-app/core`, `capell-app/frontend`
 - Third-party dependencies: `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`, `symfony/process`
 
+## Why It Helps Your Capell Workflow
+
+- Provides profile-based CSS and JavaScript delivery so Capell frontend performance can improve without rewriting themes.
+- Helps owners keep pages lean as optional packages add assets, widgets, and render profiles.
+- Gives developers manifest, critical CSS, and render-profile surfaces for package-aware asset loading.
+
+## Best Used With
+
+- [Foundation Theme](../foundation-theme/README.md)
+- [HTML Cache](../html-cache/README.md)
+- [Frontend Authoring](../frontend-authoring/README.md)
+
 ## What It Adds
 
 - Profile-based CSS and JavaScript delivery for public Capell pages.
@@ -59,6 +71,7 @@ Profile-based CSS and JavaScript delivery for public Capell pages.
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [overview.md](docs/overview.md)
 - [assets-and-render-profiles.md](docs/assets-and-render-profiles.md)
 - [screenshots.json](docs/screenshots.json)

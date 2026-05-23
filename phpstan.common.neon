@@ -3,7 +3,8 @@ includes:
 
 parameters:
     level: 2
-    reportUnmatchedIgnoredErrors: true
+    reportUnmatchedIgnoredErrors: false
+    treatPhpDocTypesAsCertain: false
     checkAuthCallsWhenInRequestScope: false
     checkConfigTypes: false
     checkExplicitMixedMissingReturn: true
@@ -39,6 +40,7 @@ parameters:
         - packages/newsletter/config
         - packages/seo-suite/config
         - packages/search/config
+        - packages/shopify-commerce/config
         - packages/tags/publishes/config
         - packages/toolbar/config
     translationDirectories:

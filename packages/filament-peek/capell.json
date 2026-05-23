@@ -1,0 +1,83 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/filament-peek",
+    "slug": "filament-peek",
+    "displayName": "Filament Peek",
+    "kind": "package",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Filament Peek adds private, unsaved page preview snapshots to Capell Admin.",
+    "product": {
+        "group": "Capell Foundation",
+        "tier": "free",
+        "bundle": "foundation"
+    },
+    "namespace": "Capell\\FilamentPeek",
+    "surfaces": ["admin", "frontend"],
+    "dependencies": {
+        "requires": ["capell-app/admin", "capell-app/frontend"],
+        "optional": [
+            "capell-app/layout-builder",
+            "capell-app/publishing-studio"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\FilamentPeek\\Providers\\FilamentPeekServiceProvider"
+        ],
+        "admin": [
+            "Capell\\FilamentPeek\\Providers\\FilamentPeekServiceProvider"
+        ],
+        "frontend": [
+            "Capell\\FilamentPeek\\Providers\\FilamentPeekServiceProvider"
+        ]
+    },
+    "contributes": [],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["page-preview"],
+    "performance": {
+        "frontendRenderBudgetMs": 0,
+        "adminQueryBudget": 40,
+        "cacheTags": ["filament-peek-preview"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["admin-user", "snapshot-token"],
+            "sensitiveOutput": true,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [],
+    "commercial": {
+        "proposedLicense": "free",
+        "requestedCertification": "first-party",
+        "supportPolicy": "capell-first-party",
+        "privateDocsRequested": false
+    },
+    "marketplace": {
+        "summary": "Filament Peek adds private page previews for unsaved Capell editor changes.",
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Filament Peek extension preview image",
+                "caption": "Filament Peek extension preview"
+            }
+        ],
+        "categories": ["admin", "editorial"]
+    }
+}

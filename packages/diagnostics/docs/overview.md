@@ -4,7 +4,7 @@ Status: **Available, audited schema** · Kind: **package** · Tier: **premium** 
 
 This page is the consolidated implementation overview for the Diagnostics package. It is extracted from the package README, service providers, migrations, config files, routes, resources, models, actions, and the shared Capell ERD notes where available.
 
-## What This Plugin Adds
+## What This Package Adds
 
 Diagnostics adds operational diagnostics for cache, configuration drift, migrations, packages, registries, queues, permissions, setup health, and Tailwind build status.
 

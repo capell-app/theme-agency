@@ -33,6 +33,19 @@ test('content component sanitizes cms html before rendering', function (): void 
         ->and($content)->not->toContain('{!! $page->translation->content !!}');
 });
 
+test('public image source component renders URL images without admin metadata', function (): void {
+    $themePath = dirname(__DIR__, 2);
+    $componentPath = dirname($themePath, 3) . '/capell-4/packages/frontend/resources/views/components/image-source.blade.php';
+    $component = file_get_contents($componentPath);
+
+    expect(is_file($componentPath))->toBeTrue()
+        ->and($component)->toContain('ResolveImageSourceDataAction::run')
+        ->and($component)->toContain('capell-image-source')
+        ->and($component)->not->toContain('recordId')
+        ->and($component)->not->toContain('fieldPath')
+        ->and($component)->not->toContain('wire:');
+});
+
 test('default theme treats navigation as optional', function (): void {
     $themePath = dirname(__DIR__, 2);
 

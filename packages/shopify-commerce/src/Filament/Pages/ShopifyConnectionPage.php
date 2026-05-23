@@ -112,7 +112,7 @@ final class ShopifyConnectionPage extends Page
 
         $this->selectedSiteId = $siteId;
 
-        return redirect()->route('capell-shopify-commerce.oauth.install', [
+        return to_route('capell-shopify-commerce.oauth.install', [
             'shop' => $this->shop,
             'site_id' => $this->selectedSiteId,
         ]);

@@ -164,7 +164,7 @@ class Event extends Model implements HasMedia, Pageable, Publishable, Translatab
         return $this->belongsTo(Layout::class);
     }
 
-    /** @return BelongsTo<Site, $this> */
+    /** @return BelongsTo<Site, Model> */
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class);
@@ -180,13 +180,13 @@ class Event extends Model implements HasMedia, Pageable, Publishable, Translatab
         return $this->hasMany(EventOccurrence::class);
     }
 
-    /** @return MorphOne<PageUrl, $this> */
+    /** @return MorphOne<PageUrl, Model> */
     public function pageUrl(): MorphOne
     {
         return $this->morphOne(PageUrl::class, 'pageable')->withDefault(['site_id' => $this->site_id]);
     }
 
-    /** @return MorphMany<PageUrl, $this> */
+    /** @return MorphMany<PageUrl, Model> */
     public function pageUrls(): MorphMany
     {
         $relation = $this->morphMany(PageUrl::class, 'pageable');

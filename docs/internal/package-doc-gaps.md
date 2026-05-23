@@ -26,7 +26,7 @@ No first-party package is currently missing a substantive public docs file. Ever
 
 ## Implementation Plan
 
-Use [Package Documentation Coverage Implementation Plan](../superpowers/plans/2026-05-06-package-doc-coverage.md) to add these docs. The plan keeps the first pass focused on package-owned docs and README links, then verifies that every package has at least one substantive docs file.
+Use [Package Documentation Rebuild Plan](../superpowers/plans/2026-05-23-package-documentation-rebuild.md) to add these docs. The plan keeps the first pass focused on package-owned docs and README links, then verifies that every package has at least one substantive docs file.
 
 ## Historical Notes To Re-check Later
 

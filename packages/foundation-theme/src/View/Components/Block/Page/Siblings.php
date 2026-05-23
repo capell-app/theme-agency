@@ -41,7 +41,9 @@ class Siblings extends AbstractPagesBlock
             withDate: $this->block->meta['with_date'] ?? false,
             cacheKeyPrepend: 'page-not-' . $page->id,
             useCache: false,
-            modifyQuery: fn (BuilderContract $query): BuilderContract => $query->whereKeyNot($page->id),
+            modifyQuery: function (BuilderContract $query) use ($page): void {
+                $query->whereKeyNot($page->id);
+            },
         );
 
         if ($this->pages->isEmpty()) {

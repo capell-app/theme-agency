@@ -22,20 +22,16 @@ final class ExchangeShopifyAuthorizationCodeAction
                 'code' => $code,
             ]);
 
-        if (! $response->successful()) {
-            throw new ShopifyOAuthException('Shopify token exchange failed.');
-        }
+        throw_unless($response->successful(), ShopifyOAuthException::class, 'Shopify token exchange failed.');
 
         $payload = $response->json();
         $accessToken = is_array($payload) ? ($payload['access_token'] ?? null) : null;
 
-        if (! is_string($accessToken) || $accessToken === '') {
-            throw new ShopifyOAuthException('Shopify token exchange did not return an access token.');
-        }
+        throw_if(! is_string($accessToken) || $accessToken === '', ShopifyOAuthException::class, 'Shopify token exchange did not return an access token.');
 
         $scopeValue = is_array($payload) ? ($payload['scope'] ?? '') : '';
         $scopes = is_string($scopeValue)
-            ? array_values(array_filter(array_map('trim', explode(',', $scopeValue)), static fn (string $scope): bool => $scope !== ''))
+            ? array_values(array_filter(array_map(trim(...), explode(',', $scopeValue)), static fn (string $scope): bool => $scope !== ''))
             : [];
 
         return new ShopifyTokenExchangeResponseData(

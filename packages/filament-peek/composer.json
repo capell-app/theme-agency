@@ -1,0 +1,67 @@
+{
+    "name": "capell-app/filament-peek",
+    "description": "Filament Peek page previews for Capell Admin.",
+    "type": "library",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "Capell\\FilamentPeek\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Capell\\FilamentPeek\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Capell\\FilamentPeek\\Providers\\FilamentPeekServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.3",
+        "capell-app/admin": "^4.0 || 4.x-dev",
+        "capell-app/frontend": "^4.0 || 4.x-dev",
+        "laravel/framework": "^11.44.2|^12.0|^13.0",
+        "lorisleiva/laravel-actions": "^2.8",
+        "pboivin/filament-peek": "^4.0",
+        "spatie/laravel-data": "^4.5",
+        "spatie/laravel-package-tools": "^1.14.1"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.15|^10.8|^11.0",
+        "pestphp/pest": "^3.8|^4.3",
+        "pestphp/pest-plugin-laravel": "^3.0|^4.0"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "test": "bin/pest --colors=always"
+    },
+    "homepage": "https://github.com/capell-app/filament-peek",
+    "keywords": [
+        "capell",
+        "cms",
+        "filament",
+        "preview"
+    ],
+    "authors": [
+        {
+            "name": "Capell Team",
+            "email": "team@capell.app",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/capell-app/capell-packages",
+        "docs": "https://docs.capell.app/packages/filament-peek"
+    }
+}

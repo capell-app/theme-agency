@@ -11,6 +11,18 @@ PublishingStudio is Capell's flagship editorial timeline workflow. It gives cont
 - Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/html-cache`, `capell-app/migration-assistant`, `capell-app/navigation`
 - Third-party dependencies: `jfcherng/php-diff`
 
+## Why It Helps Your Capell Workflow
+
+- Adds preview, compare, approval, scheduling, publishing, restore, rollback, and release workspace workflows for Capell content.
+- Helps owners manage editorial risk by making review state, publish readiness, and rollback paths visible in admin.
+- Gives developers draftable contracts, workspace registries, release contributors, and focused Actions for publishing behavior.
+
+## Best Used With
+
+- [SEO Suite](../seo-suite/README.md)
+- [Document Lifecycle](../document-lifecycle/README.md)
+- [Notes](../notes/README.md)
+
 ## What It Adds
 
 PublishingStudio is Capell's flagship editorial timeline workflow. It gives content teams a premium, Statamic-style publishing experience for Capell: preview, compare, approve, schedule, publish, and rollback every meaningful content change without editing live records directly.
@@ -167,6 +179,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 - [extending-publishing-studio.md](docs/extending-publishing-studio.md)
 - [overview.md](docs/overview.md)

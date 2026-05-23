@@ -8,50 +8,31 @@ use Capell\Core\Database\Factories\SiteFactory;
 use Capell\SeoSuite\Actions\GenerateAiContentBriefAction;
 use Capell\SeoSuite\Data\AiContentBriefData;
 use Capell\SeoSuite\Models\AIGenerationHistory;
-use Capell\SeoSuite\Support\AiResponse;
 use Capell\SeoSuite\Support\AiResponseParser;
-use Capell\SeoSuite\Support\PrismProvider;
 use Capell\SeoSuite\Support\PromptRepository;
+use Capell\SeoSuite\Tests\Fixtures\ContentBriefPrismProviderFake;
 
 /**
- * @param  (PrismProvider&object{params: array<string, mixed>})|null  $provider
+ * @return array{0: GenerateAiContentBriefAction, 1: ContentBriefPrismProviderFake}
  */
-function makeAiContentBriefActionForJson(string $json, ?PrismProvider &$provider): GenerateAiContentBriefAction
+function makeAiContentBriefActionForJson(string $json): array
 {
-    $provider = new class($json) extends PrismProvider
-    {
-        public array $params = [];
+    $provider = new ContentBriefPrismProviderFake($json);
 
-        public function __construct(private readonly string $json)
-        {
-            parent::__construct(['max_retries' => 1]);
-        }
-
-        public function chat(array $params): AiResponse
-        {
-            $this->params = $params;
-
-            return new AiResponse(
-                content: $this->json,
-                tokensUsed: 12,
-                model: 'test-model',
-                duration: 0.02,
-                metadata: ['prompt_tokens' => 5, 'completion_tokens' => 7],
-            );
-        }
-    };
-
-    return new GenerateAiContentBriefAction(
-        new PromptRepository([
-            'ai_content_brief' => [
-                'system' => 'Return JSON only.',
-                'user_template' => 'Page: {{page}} Report: {{report}} Site: {{site}} Language: {{language}}',
-                'model' => 'test-model',
-            ],
-        ]),
+    return [
+        new GenerateAiContentBriefAction(
+            new PromptRepository([
+                'ai_content_brief' => [
+                    'system' => 'Return JSON only.',
+                    'user_template' => 'Page: {{page}} Report: {{report}} Site: {{site}} Language: {{language}}',
+                    'model' => 'test-model',
+                ],
+            ]),
+            $provider,
+            new AiResponseParser,
+        ),
         $provider,
-        new AiResponseParser,
-    );
+    ];
 }
 
 it('parses an AI content brief JSON response into all fields without a live AI call', function (): void {
@@ -81,7 +62,7 @@ it('parses an AI content brief JSON response into all fields without a live AI c
         'metaDescriptionAlternatives' => ['Plan and launch a scalable CMS website with a Laravel specialist.'],
     ], JSON_THROW_ON_ERROR);
 
-    $action = makeAiContentBriefActionForJson($json, $provider);
+    [$action, $provider] = makeAiContentBriefActionForJson($json);
 
     $brief = $action->handle($page, $site, $language);
 

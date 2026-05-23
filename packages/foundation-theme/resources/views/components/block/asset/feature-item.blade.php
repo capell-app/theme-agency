@@ -45,23 +45,21 @@
     @elseif ($image)
         @if ($linkedPageUrl)
             <a href="{{ $linkedPageUrl }}">
-                <x-capell::media
-                    :media="$image"
+                <x-capell::image-source
+                    :image="$image"
                     :width="120"
                     :height="120"
                     :alt="$assetRenderData->title"
-                    fit="crop"
                     class="h-10 w-10 rounded-full object-cover object-center"
                     loading="lazy"
                 />
             </a>
         @else
-            <x-capell::media
-                :media="$image"
+            <x-capell::image-source
+                :image="$image"
                 :width="120"
                 :height="120"
                 :alt="$assetRenderData->title"
-                fit="crop"
                 class="h-10 w-10 rounded-full object-cover object-center"
                 loading="lazy"
             />

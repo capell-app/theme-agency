@@ -52,7 +52,9 @@ use Capell\Frontend\Support\State\FrontendState;
 use Capell\LayoutBuilder\Models\Block;
 use Capell\LayoutBuilder\Support\Livewire\OpaqueBlockReference;
 use Filament\Forms\Components\Checkbox;
-use Filament\Schemas\Components\Grid;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -164,18 +166,39 @@ it('builds banner image render data for empty and rounded blocks', function (): 
 
 it('declares foundation settings schema and settings migrations', function (): void {
     $components = FoundationThemeSettingsSchema::make(Schema::make());
-    $childComponents = foundationThemeCoverageGridComponents($components[0]);
+    $performanceComponents = foundationThemeCoverageChildComponents(foundationThemeCoverageChildComponents($components[0])[0]);
+    $designTokenComponents = foundationThemeCoverageChildComponents(foundationThemeCoverageChildComponents($components[1])[0]);
     $provider = new FoundationThemeSettingsMigrationProvider;
 
-    expect($components)->toHaveCount(1)
-        ->and($components[0])->toBeInstanceOf(Grid::class)
-        ->and($childComponents)->toHaveCount(2)
-        ->and($childComponents[0])->toBeInstanceOf(Checkbox::class)
-        ->and($childComponents[1])->toBeInstanceOf(Checkbox::class)
-        ->and($provider->getSettingMigrations())->toBe(['2026_05_10_190850_01_create_foundation_theme_settings'])
-        ->and($provider->migrations())->toBe(['2026_05_10_190850_01_create_foundation_theme_settings'])
+    expect($components)->toHaveCount(2)
+        ->and($components[0])->toBeInstanceOf(Section::class)
+        ->and($components[1])->toBeInstanceOf(Section::class)
+        ->and($performanceComponents)->toHaveCount(2)
+        ->and($performanceComponents[0])->toBeInstanceOf(Checkbox::class)
+        ->and($performanceComponents[1])->toBeInstanceOf(Checkbox::class)
+        ->and($designTokenComponents)->toHaveCount(14)
+        ->and($designTokenComponents[0])->toBeInstanceOf(ColorPicker::class)
+        ->and($designTokenComponents[11])->toBeInstanceOf(ColorPicker::class)
+        ->and($designTokenComponents[12])->toBeInstanceOf(Select::class)
+        ->and($designTokenComponents[13])->toBeInstanceOf(Select::class)
+        ->and($provider->getSettingMigrations())->toBe([
+            '2026_05_10_190850_01_create_foundation_theme_settings',
+            '2026_05_23_160819_add_foundation_theme_design_tokens',
+            '2026_05_23_161002_refresh_foundation_theme_design_token_defaults',
+            '2026_05_23_170001_add_foundation_theme_composition_tokens',
+            '2026_05_23_171201_quiet_foundation_theme_composition_palette',
+        ])
+        ->and($provider->migrations())->toBe([
+            '2026_05_10_190850_01_create_foundation_theme_settings',
+            '2026_05_23_160819_add_foundation_theme_design_tokens',
+            '2026_05_23_161002_refresh_foundation_theme_design_token_defaults',
+            '2026_05_23_170001_add_foundation_theme_composition_tokens',
+            '2026_05_23_171201_quiet_foundation_theme_composition_palette',
+        ])
         ->and(FoundationThemeSettings::group())->toBe('foundation_theme')
-        ->and(FoundationThemeSettings::schema())->toBe(FoundationThemeSettingsSchema::class);
+        ->and(FoundationThemeSettings::schema())->toBe(FoundationThemeSettingsSchema::class)
+        ->and(FoundationThemeSettings::sectionSpacingCssValueFor(null))->toBe(FoundationThemeSettings::SECTION_SPACING_OPTIONS['relaxed'])
+        ->and(FoundationThemeSettings::widgetGapCssValueFor(null))->toBe(FoundationThemeSettings::WIDGET_GAP_OPTIONS['balanced']);
 
     (new AdminServiceProvider(app()))->register();
 });
@@ -543,10 +566,10 @@ it('hydrates livewire page blocks from opaque references and skips empty selecti
 /**
  * @return array<int, object>
  */
-function foundationThemeCoverageGridComponents(Grid $grid): array
+function foundationThemeCoverageChildComponents(object $component): array
 {
-    $reflectionProperty = new ReflectionProperty($grid, 'childComponents');
-    $childComponents = $reflectionProperty->getValue($grid);
+    $reflectionProperty = new ReflectionProperty($component, 'childComponents');
+    $childComponents = $reflectionProperty->getValue($component);
 
     return $childComponents['default'] ?? [];
 }

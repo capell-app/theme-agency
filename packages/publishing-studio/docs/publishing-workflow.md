@@ -48,7 +48,7 @@ Release Workspaces are the campaign-shaped form of the same workflow: editors gr
 
 These screenshots were captured from a local Capell admin panel with overlay
 text that names the responsibility at each stage. They are intended for package
-docs and marketplace review, not as a substitute for the automated workflow
+docs and package catalog review, not as a substitute for the automated workflow
 tests.
 
 ### 1. Workflow Dashboard

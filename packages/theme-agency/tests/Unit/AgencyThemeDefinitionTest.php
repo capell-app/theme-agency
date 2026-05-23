@@ -24,7 +24,8 @@ it('defines the agency premium renderer contract', function (): void {
         ->and($definition->key)->toBe(AgencyThemeServiceProvider::THEME_KEY)
         ->and($definition->assets)->toBe(['css' => 'vendor/capell/themes/agency.css'])
         ->and($definition->includedSections)->toContain('hero', 'features', 'proof', 'cta')
-        ->and($definition->presets)->toHaveCount(3)
+        ->and($definition->presets)->toHaveCount(6)
+        ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->tags)->toContain('Expressive')
         ->and(ThemeAgencyHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
 });

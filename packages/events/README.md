@@ -11,6 +11,18 @@ Events adds event records, venues, occurrences, registrations, calendar pages, n
 - Capell dependencies: `capell-app/admin`, `capell-app/frontend`, `capell-app/navigation`, `capell-app/publishing-studio`
 - Third-party dependencies: `rlanvin/php-rrule`, `spatie/icalendar-generator`
 
+## Why It Helps Your Capell Workflow
+
+- Adds event listings, venues, occurrences, registrations, calendar feeds, and Event schema for sites that publish schedules.
+- Lets editors manage event content and feeds inside Capell instead of maintaining separate calendar tooling.
+- Gives developers documented extension points for registration, booking, feeds, schema, and publishing integration.
+
+## Best Used With
+
+- [Address](../address/README.md)
+- [Tags](../tags/README.md)
+- [SEO Suite](../seo-suite/README.md)
+
 ## What It Adds
 
 - Events adds event records, venues, occurrences, registrations, calendar pages, notifications, and iCalendar feed support to Capell.
@@ -82,6 +94,7 @@ Events adds event records, venues, occurrences, registrations, calendar pages, n
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [event-extension-points.md](docs/event-extension-points.md)
 - [overview.md](docs/overview.md)
 - [screenshots.json](docs/screenshots.json)

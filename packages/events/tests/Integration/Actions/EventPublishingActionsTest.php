@@ -22,12 +22,13 @@ it('cancels event occurrences with override metadata', function (): void {
     ]);
 
     $cancelled = CancelOccurrenceAction::run($occurrence, 'Speaker unavailable');
+    $cancelledOverrideData = $cancelled->override_data;
 
     expect($cancelled->status)->toBe(EventOccurrenceStatusEnum::Cancelled)
         ->and($cancelled->is_override)->toBeTrue()
-        ->and($cancelled->override_data['source'])->toBe('manual')
-        ->and($cancelled->override_data['cancellation_reason'])->toBe('Speaker unavailable')
-        ->and($cancelled->override_data['cancelled_at'])->not->toBeNull();
+        ->and($cancelledOverrideData['source'])->toBe('manual')
+        ->and($cancelledOverrideData['cancellation_reason'])->toBe('Speaker unavailable')
+        ->and($cancelledOverrideData['cancelled_at'])->not->toBeNull();
 });
 
 it('reschedules event occurrences with override metadata', function (): void {
@@ -38,12 +39,13 @@ it('reschedules event occurrences with override metadata', function (): void {
     $endsAt = $startsAt->addHours(3);
 
     $rescheduled = RescheduleOccurrenceAction::run($occurrence, $startsAt, $endsAt);
+    $rescheduledOverrideData = $rescheduled->override_data;
 
     expect($rescheduled->starts_at->equalTo($startsAt))->toBeTrue()
         ->and($rescheduled->ends_at->equalTo($endsAt))->toBeTrue()
         ->and($rescheduled->is_override)->toBeTrue()
-        ->and($rescheduled->override_data['source'])->toBe('calendar')
-        ->and($rescheduled->override_data['rescheduled_at'])->not->toBeNull();
+        ->and($rescheduledOverrideData['source'])->toBe('calendar')
+        ->and($rescheduledOverrideData['rescheduled_at'])->not->toBeNull();
 });
 
 it('ensures event publishing defaults for event pages and listing pages', function (): void {

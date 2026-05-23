@@ -11,6 +11,18 @@ Agent Bridge exposes Capell knowledge and site capabilities through Laravel Agen
 - Capell dependencies: `capell-app/admin`, `capell-app/core`
 - Third-party dependencies: `laravel/framework`, `laravel/mcp`, `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`
 
+## Why It Helps Your Capell Workflow
+
+- Lets trusted agent tools inspect Capell knowledge and run approved capabilities without opening broad admin access.
+- Keeps capability risk, confirmation, audit, and token behavior in one package so operators can reason about agent actions.
+- Gives developers a documented bridge for automation instead of adding ad hoc endpoints to admin resources.
+
+## Best Used With
+
+- [Diagnostics](../diagnostics/README.md)
+- [AI Orchestrator](../ai-orchestrator/README.md)
+- [Public Actions](../public-actions/README.md)
+
 ## What It Adds
 
 Agent Bridge exposes Capell knowledge and site capabilities through Laravel Agent Bridge servers with token authentication, confirmations, previews, and audit records.
@@ -144,6 +156,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [boost-integration.md](docs/boost-integration.md)
 - [capabilities.md](docs/capabilities.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)

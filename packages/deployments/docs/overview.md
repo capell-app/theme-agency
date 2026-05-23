@@ -7,7 +7,7 @@ The Deployments package stores Git provider connections and publishes Composer r
 - Manage active deployment connections.
 - Prepare Composer requirement commits.
 - Publish install changes through Git provider pull requests.
-- Provide the `PublishesComposerChanges` contract used by marketplace-style install flows.
+- Provide the `PublishesComposerChanges` contract used by package install flows.
 
 Deployment connection secrets are stored through the package model casts and should remain encrypted at rest.
 

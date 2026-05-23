@@ -11,6 +11,18 @@ Reusable public submit actions, outbound automation dispatch, and integration en
 - Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/frontend`
 - Third-party dependencies: `laravel/framework`, `lorisleiva/laravel-actions`
 
+## Why It Helps Your Capell Workflow
+
+- Lets public submissions run configured server-side actions and outbound automations without exposing unsafe admin endpoints.
+- Helps owners connect forms, access requests, and automation tools while keeping validation and dispatch in trusted code.
+- Gives developers handler and adapter surfaces for Zapier-style integrations, webhooks, and package-owned submit actions.
+
+## Best Used With
+
+- [Form Builder](../form-builder/README.md)
+- [Access Gate](../access-gate/README.md)
+- [Email Studio](../email-studio/README.md)
+
 ## What It Adds
 
 - Reusable public submit actions, outbound automation dispatch, and integration endpoints for Capell CMS.
@@ -67,6 +79,7 @@ Reusable public submit actions, outbound automation dispatch, and integration en
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [overview.md](docs/overview.md)
 - [screenshots.json](docs/screenshots.json)
 - [actions-and-integrations.md](docs/actions-and-integrations.md)

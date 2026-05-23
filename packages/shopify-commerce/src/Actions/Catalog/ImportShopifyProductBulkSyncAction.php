@@ -32,9 +32,7 @@ final class ImportShopifyProductBulkSyncAction
                 return 0;
             }
 
-            if (! is_string($connection->bulk_operation_url) || $connection->bulk_operation_url === '') {
-                throw new RuntimeException('Shopify bulk operation URL is missing.');
-            }
+            throw_if(! is_string($connection->bulk_operation_url) || $connection->bulk_operation_url === '', RuntimeException::class, 'Shopify bulk operation URL is missing.');
 
             try {
                 $connection->forceFill(['sync_status' => 'importing'])->save();
@@ -70,18 +68,18 @@ final class ImportShopifyProductBulkSyncAction
                 }
 
                 return count($products);
-            } catch (Throwable $exception) {
+            } catch (Throwable $throwable) {
                 $connection->refresh();
 
                 if ($connection->status !== ShopifyConnectionStatus::Revoked) {
                     $connection->forceFill([
                         'sync_status' => 'failed',
                         'status' => ShopifyConnectionStatus::Error,
-                        'last_sync_error' => $exception->getMessage(),
+                        'last_sync_error' => $throwable->getMessage(),
                     ])->save();
                 }
 
-                throw $exception;
+                throw $throwable;
             }
         });
     }
@@ -93,9 +91,7 @@ final class ImportShopifyProductBulkSyncAction
     {
         $response = Http::get($url);
 
-        if (! $response->successful()) {
-            throw new RuntimeException('Shopify bulk operation download failed.');
-        }
+        throw_unless($response->successful(), RuntimeException::class, 'Shopify bulk operation download failed.');
 
         $products = [];
         $lines = preg_split('/\r\n|\r|\n/', $response->body()) ?: [];
@@ -106,8 +102,11 @@ final class ImportShopifyProductBulkSyncAction
             }
 
             $node = json_decode($line, true);
+            if (! is_array($node)) {
+                continue;
+            }
 
-            if (! is_array($node) || ! is_string($node['id'] ?? null)) {
+            if (! is_string($node['id'] ?? null)) {
                 continue;
             }
 

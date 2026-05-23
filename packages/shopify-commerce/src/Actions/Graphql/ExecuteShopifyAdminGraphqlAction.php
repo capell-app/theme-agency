@@ -8,6 +8,7 @@ use Capell\ShopifyCommerce\Exceptions\ShopifyGraphqlException;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Capell\ShopifyCommerce\Settings\ShopifyCommerceSettings;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Sleep;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class ExecuteShopifyAdminGraphqlAction
@@ -32,21 +33,15 @@ final class ExecuteShopifyAdminGraphqlAction
                 'variables' => $variables,
             ]);
 
-        if (! $response->successful()) {
-            throw new ShopifyGraphqlException;
-        }
+        throw_unless($response->successful(), ShopifyGraphqlException::class);
 
         $payload = $response->json();
 
-        if (! is_array($payload)) {
-            throw new ShopifyGraphqlException;
-        }
+        throw_unless(is_array($payload), ShopifyGraphqlException::class);
 
         $errors = $payload['errors'] ?? null;
 
-        if (is_array($errors) && $errors !== []) {
-            throw new ShopifyGraphqlException($errors);
-        }
+        throw_if(is_array($errors) && $errors !== [], ShopifyGraphqlException::class, $errors);
 
         $this->paceForThrottleStatus($payload);
 
@@ -76,13 +71,13 @@ final class ExecuteShopifyAdminGraphqlAction
         $restoreRatePerSecond = max(1.0, (float) $restoreRate);
         $sleepMicroseconds = min(5_000_000, (int) ceil(($deficit / $restoreRatePerSecond) * 1_000_000));
 
-        usleep($sleepMicroseconds);
+        Sleep::usleep($sleepMicroseconds);
     }
 
     private function apiVersion(): string
     {
         if (app()->bound(ShopifyCommerceSettings::class)) {
-            $settings = app(ShopifyCommerceSettings::class);
+            $settings = resolve(ShopifyCommerceSettings::class);
 
             if ($settings->api_version !== '') {
                 return $settings->api_version;

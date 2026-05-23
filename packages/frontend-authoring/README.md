@@ -11,6 +11,18 @@ Frontend authoring bridge and in-page editing for Capell frontend.
 - Capell dependencies: `capell-app/admin`, `capell-app/frontend`, `capell-app/html-cache`
 - Third-party dependencies: `spatie/laravel-package-tools`
 
+## Why It Helps Your Capell Workflow
+
+- Lets authenticated admins edit page fields from the public site context without exposing authoring controls to anonymous visitors.
+- Protects static caching because the public page loads as ordinary HTML and the admin-only beacon adds editing affordances later.
+- Helps editors fix content in place while developers keep signed edit URLs, permissions, and field paths out of public Blade.
+
+## Best Used With
+
+- [HTML Cache](../html-cache/README.md)
+- [Layout Builder](../layout-builder/README.md)
+- [API](../api/README.md)
+
 ## What It Adds
 
 - Frontend authoring bridge and in-page editing for Capell frontend.
@@ -76,6 +88,7 @@ The documentation screenshots include the package working inside `capell-app`: t
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 - [editable-regions.md](docs/editable-regions.md)
 - [in-page-editing.md](docs/in-page-editing.md)

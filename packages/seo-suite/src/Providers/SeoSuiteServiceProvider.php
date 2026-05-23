@@ -18,7 +18,6 @@ use Capell\Admin\Support\AdminEventRegistry;
 use Capell\Admin\Support\CapellAdminManager;
 use Capell\Core\Actions\RegisterBlazeOptimizedViewsAction;
 use Capell\Core\Contracts\Pageable;
-use Capell\Core\Data\PackageData;
 use Capell\Core\Enums\PackageTypeEnum;
 use Capell\Core\Events\PageDeleted;
 use Capell\Core\Events\PageSaved;
@@ -534,9 +533,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
 
     private function isPackageInstalled(): bool
     {
-        $package = CapellCore::getPackage(static::$packageName);
-
-        return $package instanceof PackageData && $package->isInstalled();
+        return CapellCore::isPackageInstalled(static::$packageName);
     }
 
     private function registerExtenderResolvers(): self

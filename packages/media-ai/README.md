@@ -10,6 +10,18 @@ Optional AI-assisted media actions for Capell.
 - Capell dependencies: `capell-app/admin`, `capell-app/core`
 - Third-party dependencies: `filament/filament`, `laravel/framework`, `spatie/laravel-package-tools`
 
+## Why It Helps Your Capell Workflow
+
+- Adds optional AI-assisted media actions without forcing the media library to depend on an AI provider.
+- Helps editors speed up media tasks while developers keep AI execution behind package Actions and orchestration boundaries.
+- Fits sites that want AI support for media workflows but still need predictable fallbacks when AI is disabled.
+
+## Best Used With
+
+- [Media Library](../media-library/README.md)
+- [AI Orchestrator](../ai-orchestrator/README.md)
+- [Foundation Theme](../foundation-theme/README.md)
+
 ## What It Adds
 
 Optional AI-assisted media actions for Capell.
@@ -74,6 +86,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 - [overview.md](docs/overview.md)
 

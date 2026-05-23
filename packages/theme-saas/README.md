@@ -8,6 +8,18 @@ Conversion-led SaaS theme for Capell.
 - Namespace: `Capell\ThemeStudio\Saas\`
 - Capell dependencies: `capell-app/core`, `capell-app/foundation-theme`
 
+## Why It Helps Your Capell Workflow
+
+- Provides product-focused renderer views for software and subscription sites built on Capell.
+- Helps owners launch SaaS-style pages with presentation defaults suited to product messaging and conversion paths.
+- Gives developers a focused theme package that reuses Foundation Theme conventions instead of hard-coding product layouts into content.
+
+## Best Used With
+
+- [Foundation Theme](../foundation-theme/README.md)
+- [Theme Agency](../theme-agency/README.md)
+- [Theme Corporate](../theme-corporate/README.md)
+
 ## What It Adds
 
 - Conversion-led SaaS theme for Capell.
@@ -88,6 +100,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 - [overview.md](docs/overview.md)
 

@@ -20,6 +20,12 @@ parameters:
               - packages/events/src/Models/Event.php
 
         # Dynamic package contracts that are runtime-valid but not expressible through the shared core interfaces.
+        - identifier: missingType.generics
+          message: '#generic interface Capell\\Core\\Contracts\\Pageable#'
+        - identifier: method.childReturnType
+          path: packages/blog/src/Models/Article.php
+        - identifier: method.childReturnType
+          path: packages/events/src/Models/Event.php
         - identifier: property.notFound
           message: '#Access to an undefined property .*Model::.*#'
           reportUnmatched: false
@@ -34,6 +40,17 @@ parameters:
         - message: '#Call to an undefined method Capell\\Core\\Contracts\\Pageable::tags\(\)#'
           paths:
               - packages/blog/src/Support/Loader/TagLoader.php
+
+        # Eloquent relation generics are invariant, so PHPStan cannot treat package model
+        # relations declared on `$this` as satisfying core interfaces declared on Model.
+        - identifier: return.type
+          path: packages/blog/src/Models/Article.php
+        - identifier: return.type
+          path: packages/events/src/Models/Event.php
+        - identifier: return.type
+          path: packages/content-sections/src/Models/Section.php
+        - identifier: return.type
+          path: packages/layout-builder/src/Models/Block.php
 
         # Filament table arguments are available on concrete table Livewire components, not on the HasTable contract.
         - message: '#Call to an undefined method Filament\\Tables\\Contracts\\HasTable::getTableArguments\(\)#'

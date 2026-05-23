@@ -6,14 +6,18 @@ namespace Capell\ShopifyCommerce\Models;
 
 use Capell\Core\Models\Site;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Override;
 
 /**
  * @property CarbonImmutable|null $expires_at
  */
 final class ShopifyOAuthState extends Model
 {
+    use HasFactory;
+
     protected $table = 'shopify_oauth_states';
 
     protected $guarded = [];
@@ -29,6 +33,7 @@ final class ShopifyOAuthState extends Model
     /**
      * @return array<string, string>
      */
+    #[Override]
     protected function casts(): array
     {
         return [

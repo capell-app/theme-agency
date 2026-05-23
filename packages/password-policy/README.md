@@ -11,6 +11,18 @@ Password expiry, forced password changes, and password safety policy for Capell 
 - Capell dependencies: `capell-app/admin`, `capell-app/core`
 - Third-party dependencies: `laravel/framework`, `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`
 
+## Why It Helps Your Capell Workflow
+
+- Adds password expiry, forced password changes, and password safety policy for Capell admin and user accounts.
+- Helps operators enforce account hygiene without custom middleware in each host app.
+- Pairs with login audit so security policy and authentication history can be reviewed together.
+
+## Best Used With
+
+- [Login Audit](../login-audit/README.md)
+- [Diagnostics](../diagnostics/README.md)
+- [Document Lifecycle](../document-lifecycle/README.md)
+
 ## What It Adds
 
 - Password expiry, forced password changes, and password safety policy for Capell CMS.
@@ -78,6 +90,7 @@ This package makes its Composer dependencies visible because they are part of th
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [overview.md](docs/overview.md)
 - [screenshots.json](docs/screenshots.json)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)

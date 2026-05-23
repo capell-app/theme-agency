@@ -6,6 +6,7 @@ namespace Capell\ShopifyCommerce\Data;
 
 use Illuminate\Http\Request;
 use InvalidArgumentException;
+use Override;
 use Spatie\LaravelData\Data;
 
 final class ShopifyCallbackQueryData extends Data
@@ -19,6 +20,7 @@ final class ShopifyCallbackQueryData extends Data
         public ?string $timestamp,
     ) {}
 
+    #[Override]
     public static function from(mixed ...$payloads): static
     {
         $payload = $payloads[0] ?? [];
@@ -27,9 +29,7 @@ final class ShopifyCallbackQueryData extends Data
             $payload = $payload->query();
         }
 
-        if (! is_array($payload)) {
-            throw new InvalidArgumentException('Shopify callback query payload must be an array or request.');
-        }
+        throw_unless(is_array($payload), InvalidArgumentException::class, 'Shopify callback query payload must be an array or request.');
 
         $code = $payload['code'] ?? null;
         $hmac = $payload['hmac'] ?? null;

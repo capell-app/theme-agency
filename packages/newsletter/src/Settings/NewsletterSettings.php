@@ -14,7 +14,7 @@ class NewsletterSettings extends Settings implements SettingsContract, SettingsS
 {
     public string $default_resubscribe_policy = ResubscribePolicy::RequireDoubleOptIn->value;
 
-    /** @var array<string, string> */
+    /** @var array<int|string, string> */
     public array $site_resubscribe_policies = [];
 
     public static function group(): string

@@ -4,7 +4,7 @@ Status: **Available, schema-owning**
 
 This page is the consolidated implementation overview for the Agent Bridge package. It is extracted from the package README, service providers, migrations, config files, routes, resources, models, actions, and the shared Capell ERD notes where available.
 
-## What This Plugin Adds
+## What This Package Adds
 
 Agent Bridge exposes Capell knowledge and site capabilities through Laravel Agent Bridge servers with token authentication, confirmations, previews, and audit records.
 

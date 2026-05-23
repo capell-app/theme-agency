@@ -56,7 +56,7 @@ final class ShopifyInstallController
     private function defaultScopes(): array
     {
         if (app()->bound(ShopifyCommerceSettings::class)) {
-            $settings = app(ShopifyCommerceSettings::class);
+            $settings = resolve(ShopifyCommerceSettings::class);
 
             return $settings->default_scopes;
         }

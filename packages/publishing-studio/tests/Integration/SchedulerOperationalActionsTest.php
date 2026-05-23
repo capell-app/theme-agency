@@ -229,7 +229,7 @@ it('protects the public iCal route with tokens, revocation, and conditional resp
         ->get('/capell/publishing-studio/scheduler/ical/validfeedtoken')
         ->assertStatus(304);
 
-    $token->revoked_at = now();
+    $token->revoked_at = CarbonImmutable::now();
     $token->save();
 
     $this->get('/capell/publishing-studio/scheduler/ical/validfeedtoken')->assertNotFound();

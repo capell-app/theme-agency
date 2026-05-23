@@ -16,7 +16,7 @@ class ResolveEmailTemplateVariantAction
 
     public function handle(EmailTemplate $template, string $siteScopeKey = 'global', ?string $locale = null): ?EmailTemplateVariant
     {
-        return $template->variants()
+        $variant = $template->variants()
             ->where('status', EmailVariantStatus::Active)
             ->whereIn('site_scope_key', [$siteScopeKey, 'global'])
             ->orderByRaw('case when site_scope_key = ? then 0 else 1 end', [$siteScopeKey])
@@ -26,5 +26,7 @@ class ResolveEmailTemplateVariantAction
             ->when($locale === null, fn (Builder $query): Builder => $query->whereNull('locale'))
             ->latest('version')
             ->first();
+
+        return $variant instanceof EmailTemplateVariant ? $variant : null;
     }
 }

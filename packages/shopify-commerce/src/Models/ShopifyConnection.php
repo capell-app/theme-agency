@@ -7,9 +7,11 @@ namespace Capell\ShopifyCommerce\Models;
 use Capell\Core\Models\Site;
 use Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 
 /**
  * @property string|null $access_token
@@ -25,6 +27,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 final class ShopifyConnection extends Model
 {
+    use HasFactory;
+
     protected $table = 'shopify_connections';
 
     protected $guarded = [];
@@ -53,6 +57,7 @@ final class ShopifyConnection extends Model
     /**
      * @return array<string, string>
      */
+    #[Override]
     protected function casts(): array
     {
         return [
