@@ -25,6 +25,7 @@ it('returns a public-safe page manifest for an already public page', function ()
             'admin_prompt' => 'Rewrite with internal prompt',
             'references' => [
                 ['title' => 'External source', 'url' => 'https://source.example/reference'],
+                ['title' => 'Invalid source', 'url' => 'http-not-a-url'],
                 ['title' => 'Unsafe source', 'url' => 'javascript:alert(1)'],
             ],
         ],

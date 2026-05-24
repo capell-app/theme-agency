@@ -171,7 +171,7 @@ final class BuildAgentDeliveryPageAction
 
             $url = $reference['url'] ?? null;
 
-            if (! is_string($url) || ! str_starts_with($url, 'http')) {
+            if (! is_string($url) || ! $this->isPublicUrl($url)) {
                 continue;
             }
 
@@ -224,6 +224,11 @@ final class BuildAgentDeliveryPageAction
         $value = $page->getAttribute($attribute);
 
         return method_exists($value, 'toIso8601String') ? $value->toIso8601String() : null;
+    }
+
+    private function isPublicUrl(string $url): bool
+    {
+        return str_starts_with($url, 'https://') || str_starts_with($url, 'http://');
     }
 
     /**
