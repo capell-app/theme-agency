@@ -3,11 +3,13 @@
 declare(strict_types=1);
 
 use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
 use Capell\Core\ThemeStudio\Data\HeroSectionData;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePageData;
+use Capell\Core\ThemeStudio\Exceptions\SectionRendererNotFoundException;
 use Capell\Core\ThemeStudio\Exceptions\ThemeNotFoundException;
 use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
@@ -112,3 +114,123 @@ it('stores runtime metadata with theme definitions', function (): void {
     expect($definition->runtime->value)->toBe('inertia')
         ->and($definition->frontend)->toBe(['entry' => 'resources/js/app.ts']);
 });
+
+it('prefers child section renderers before inherited foundation renderers', function (): void {
+    $registry = new ThemeRegistry;
+    app()->instance(ThemeRegistry::class, $registry);
+
+    $foundationHero = new ThemeRegistryTestStringSectionRenderer('default', 'hero', 'foundation hero');
+    $childHero = new ThemeRegistryTestStringSectionRenderer('child', 'hero', 'child hero');
+
+    themeRegistryTestRegisterTheme($registry, 'default', null, [$foundationHero]);
+    themeRegistryTestRegisterTheme($registry, 'child', 'default', [$childHero]);
+
+    $html = $registry->renderer('child')->render(new ThemePageData(
+        title: 'Child',
+        brand: new BrandProfileData,
+        sections: [new HeroSectionData(heading: 'Heading')],
+    ));
+
+    expect($registry->sectionRenderer('child', 'hero'))->toBe($childHero)
+        ->and($html)->toContain('child hero')
+        ->and($html)->not->toContain('foundation hero');
+});
+
+it('uses the foundation parent renderer when a child omits a section', function (): void {
+    $registry = new ThemeRegistry;
+    app()->instance(ThemeRegistry::class, $registry);
+
+    $foundationHero = new ThemeRegistryTestStringSectionRenderer('default', 'hero', 'foundation hero');
+
+    themeRegistryTestRegisterTheme($registry, 'default', null, [$foundationHero]);
+    themeRegistryTestRegisterTheme($registry, 'child', 'default', []);
+
+    $html = $registry->renderer('child')->render(new ThemePageData(
+        title: 'Child',
+        brand: new BrandProfileData,
+        sections: [new HeroSectionData(heading: 'Heading')],
+    ));
+
+    expect($registry->sectionRenderer('child', 'hero'))->toBe($foundationHero)
+        ->and($html)->toContain('foundation hero');
+});
+
+it('returns null from the registry and fails loudly through rendering for missing sections', function (): void {
+    $registry = new ThemeRegistry;
+    app()->instance(ThemeRegistry::class, $registry);
+
+    themeRegistryTestRegisterTheme($registry, 'default', null, []);
+    themeRegistryTestRegisterTheme($registry, 'child', 'default', []);
+
+    expect($registry->sectionRenderer('child', 'hero'))->toBeNull()
+        ->and(fn (): string => $registry->renderer('child')->render(new ThemePageData(
+            title: 'Child',
+            brand: new BrandProfileData,
+            sections: [new HeroSectionData(heading: 'Heading')],
+        )))->toThrow(SectionRendererNotFoundException::class);
+});
+
+it('stops cyclic theme inheritance while resolving section renderers', function (): void {
+    $registry = new ThemeRegistry;
+    app()->instance(ThemeRegistry::class, $registry);
+
+    themeRegistryTestRegisterTheme($registry, 'alpha', 'beta', []);
+    themeRegistryTestRegisterTheme($registry, 'beta', 'alpha', []);
+
+    expect($registry->sectionRenderer('alpha', 'hero'))->toBeNull();
+});
+
+/**
+ * @param  array<int, SectionRenderer>  $sectionRenderers
+ */
+function themeRegistryTestRegisterTheme(
+    ThemeRegistry $registry,
+    string $themeKey,
+    ?string $extends,
+    array $sectionRenderers,
+): void {
+    $rendererMap = collect($sectionRenderers)
+        ->mapWithKeys(fn (SectionRenderer $renderer): array => [$renderer->sectionKey() => $renderer])
+        ->all();
+
+    $registry->register(
+        new ThemeDefinitionData(
+            key: $themeKey,
+            name: ucfirst($themeKey),
+            description: 'Test theme',
+            package: 'vendor/' . $themeKey,
+            previewImage: '',
+            tags: [],
+            bestFit: [],
+            includedSections: [],
+            presets: [],
+            extends: $extends,
+        ),
+        new BladeThemeRenderer($themeKey, 'missing-layout', $rendererMap),
+        $sectionRenderers,
+    );
+}
+
+final class ThemeRegistryTestStringSectionRenderer implements SectionRenderer
+{
+    public function __construct(
+        private readonly string $themeKey,
+        private readonly string $sectionKey,
+        private readonly string $html,
+    ) {}
+
+    public function themeKey(): string
+    {
+        return $this->themeKey;
+    }
+
+    public function sectionKey(): string
+    {
+        return $this->sectionKey;
+    }
+
+    public function render(ThemeSection $section): string
+    {
+        return '<section data-theme="' . $this->themeKey . '" data-section="' . $section->key() . '">' . $this->html . '</section>';
+    }
+}

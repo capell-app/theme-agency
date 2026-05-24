@@ -13,6 +13,7 @@ use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Knowledge\Console\Commands\DemoCommand;
+use Capell\ThemeStudio\Knowledge\Rendering\PackageAwareSectionRenderer;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -68,17 +69,23 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
             $this->commands([DemoCommand::class]);
         }
 
-        if (! CapellCore::hasPackage(self::$packageName)) {
+        if (! CapellCore::isPackageInstalled(self::$packageName)) {
             return;
         }
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-knowledge');
 
-        CapellCore::registerVendorAsset(new VendorAssetData(
-            package: self::$packageName,
-            path: 'resources/css/theme-knowledge.css',
-            type: 'css',
-        ));
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindImport('resources/css/theme-knowledge.css', self::$packageName),
+        );
+
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName),
+        );
+
+        $blogAvailable = CapellCore::isPackageInstalled('capell-app/blog');
+        $searchAvailable = CapellCore::isPackageInstalled('capell-app/search');
+        $newsletterAvailable = CapellCore::isPackageInstalled('capell-app/newsletter');
 
         $registry->register(
             definition: self::definition(),
@@ -88,13 +95,34 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
                 sectionRenderers: [],
             ),
             sectionRenderers: array_map(
-                fn (string $sectionKey): ViewSectionRenderer => new ViewSectionRenderer(
-                    themeKey: self::THEME_KEY,
-                    sectionKey: $sectionKey,
-                    view: 'capell-theme-knowledge::sections.' . $sectionKey,
-                ),
+                fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer => array_key_exists($sectionKey, $this->optionalSectionIntegrations($blogAvailable, $searchAvailable, $newsletterAvailable))
+                    ? new PackageAwareSectionRenderer(
+                        themeKey: self::THEME_KEY,
+                        sectionKey: $sectionKey,
+                        view: 'capell-theme-knowledge::sections.' . $sectionKey,
+                        integrations: $this->optionalSectionIntegrations($blogAvailable, $searchAvailable, $newsletterAvailable)[$sectionKey],
+                        failLoudly: true,
+                    )
+                    : new ViewSectionRenderer(
+                        themeKey: self::THEME_KEY,
+                        sectionKey: $sectionKey,
+                        view: 'capell-theme-knowledge::sections.' . $sectionKey,
+                        failLoudly: true,
+                    ),
                 self::definition()->includedSections,
             ),
         );
+    }
+
+    /**
+     * @return array<string, array<string, bool>>
+     */
+    private function optionalSectionIntegrations(bool $blogAvailable, bool $searchAvailable, bool $newsletterAvailable): array
+    {
+        return [
+            'resource-library' => ['blogAvailable' => $blogAvailable],
+            'search-listing' => ['searchAvailable' => $searchAvailable],
+            'newsletter' => ['newsletterAvailable' => $newsletterAvailable],
+        ];
     }
 }

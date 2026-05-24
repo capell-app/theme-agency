@@ -13,6 +13,7 @@ use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Portfolio\Console\Commands\DemoCommand;
+use Capell\ThemeStudio\Portfolio\Rendering\PackageAwareSectionRenderer;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -68,17 +69,23 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
             $this->commands([DemoCommand::class]);
         }
 
-        if (! CapellCore::hasPackage(self::$packageName)) {
+        if (! CapellCore::isPackageInstalled(self::$packageName)) {
             return;
         }
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-portfolio');
 
-        CapellCore::registerVendorAsset(new VendorAssetData(
-            package: self::$packageName,
-            path: 'resources/css/theme-portfolio.css',
-            type: 'css',
-        ));
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindImport('resources/css/theme-portfolio.css', self::$packageName),
+        );
+
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName),
+        );
+
+        $contentSectionsAvailable = CapellCore::isPackageInstalled('capell-app/content-sections');
+        $mediaLibraryAvailable = CapellCore::isPackageInstalled('capell-app/media-library');
+        $newsletterAvailable = CapellCore::isPackageInstalled('capell-app/newsletter');
 
         $registry->register(
             definition: self::definition(),
@@ -88,13 +95,34 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
                 sectionRenderers: [],
             ),
             sectionRenderers: array_map(
-                fn (string $sectionKey): ViewSectionRenderer => new ViewSectionRenderer(
-                    themeKey: self::THEME_KEY,
-                    sectionKey: $sectionKey,
-                    view: 'capell-theme-portfolio::sections.' . $sectionKey,
-                ),
+                fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer => array_key_exists($sectionKey, $this->optionalSectionIntegrations($contentSectionsAvailable, $mediaLibraryAvailable, $newsletterAvailable))
+                    ? new PackageAwareSectionRenderer(
+                        themeKey: self::THEME_KEY,
+                        sectionKey: $sectionKey,
+                        view: 'capell-theme-portfolio::sections.' . $sectionKey,
+                        integrations: $this->optionalSectionIntegrations($contentSectionsAvailable, $mediaLibraryAvailable, $newsletterAvailable)[$sectionKey],
+                        failLoudly: true,
+                    )
+                    : new ViewSectionRenderer(
+                        themeKey: self::THEME_KEY,
+                        sectionKey: $sectionKey,
+                        view: 'capell-theme-portfolio::sections.' . $sectionKey,
+                        failLoudly: true,
+                    ),
                 self::definition()->includedSections,
             ),
         );
+    }
+
+    /**
+     * @return array<string, array<string, bool>>
+     */
+    private function optionalSectionIntegrations(bool $contentSectionsAvailable, bool $mediaLibraryAvailable, bool $newsletterAvailable): array
+    {
+        return [
+            'case-studies' => ['contentSectionsAvailable' => $contentSectionsAvailable],
+            'work-grid' => ['mediaLibraryAvailable' => $mediaLibraryAvailable],
+            'newsletter' => ['newsletterAvailable' => $newsletterAvailable],
+        ];
     }
 }

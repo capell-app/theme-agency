@@ -13,6 +13,7 @@ use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\LocalServices\Console\Commands\DemoCommand;
+use Capell\ThemeStudio\LocalServices\Rendering\PackageAwareSectionRenderer;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -68,17 +69,22 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
             $this->commands([DemoCommand::class]);
         }
 
-        if (! CapellCore::hasPackage(self::$packageName)) {
+        if (! CapellCore::isPackageInstalled(self::$packageName)) {
             return;
         }
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-local-services');
 
-        CapellCore::registerVendorAsset(new VendorAssetData(
-            package: self::$packageName,
-            path: 'resources/css/theme-local-services.css',
-            type: 'css',
-        ));
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindImport('resources/css/theme-local-services.css', self::$packageName),
+        );
+
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName),
+        );
+
+        $blogAvailable = CapellCore::isPackageInstalled('capell-app/blog');
+        $formBuilderAvailable = CapellCore::isPackageInstalled('capell-app/form-builder');
 
         $registry->register(
             definition: self::definition(),
@@ -88,13 +94,33 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
                 sectionRenderers: [],
             ),
             sectionRenderers: array_map(
-                fn (string $sectionKey): ViewSectionRenderer => new ViewSectionRenderer(
-                    themeKey: self::THEME_KEY,
-                    sectionKey: $sectionKey,
-                    view: 'capell-theme-local-services::sections.' . $sectionKey,
-                ),
+                fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer => array_key_exists($sectionKey, $this->optionalSectionIntegrations($blogAvailable, $formBuilderAvailable))
+                    ? new PackageAwareSectionRenderer(
+                        themeKey: self::THEME_KEY,
+                        sectionKey: $sectionKey,
+                        view: 'capell-theme-local-services::sections.' . $sectionKey,
+                        integrations: $this->optionalSectionIntegrations($blogAvailable, $formBuilderAvailable)[$sectionKey],
+                        failLoudly: true,
+                    )
+                    : new ViewSectionRenderer(
+                        themeKey: self::THEME_KEY,
+                        sectionKey: $sectionKey,
+                        view: 'capell-theme-local-services::sections.' . $sectionKey,
+                        failLoudly: true,
+                    ),
                 self::definition()->includedSections,
             ),
         );
+    }
+
+    /**
+     * @return array<string, array<string, bool>>
+     */
+    private function optionalSectionIntegrations(bool $blogAvailable, bool $formBuilderAvailable): array
+    {
+        return [
+            'quote-form' => ['formBuilderAvailable' => $formBuilderAvailable],
+            'resources' => ['blogAvailable' => $blogAvailable],
+        ];
     }
 }

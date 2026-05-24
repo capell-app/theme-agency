@@ -13,6 +13,7 @@ use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Nonprofit\Console\Commands\DemoCommand;
+use Capell\ThemeStudio\Nonprofit\Rendering\PackageAwareSectionRenderer;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -68,17 +69,24 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
             $this->commands([DemoCommand::class]);
         }
 
-        if (! CapellCore::hasPackage(self::$packageName)) {
+        if (! CapellCore::isPackageInstalled(self::$packageName)) {
             return;
         }
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-nonprofit');
 
-        CapellCore::registerVendorAsset(new VendorAssetData(
-            package: self::$packageName,
-            path: 'resources/css/theme-nonprofit.css',
-            type: 'css',
-        ));
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindImport('resources/css/theme-nonprofit.css', self::$packageName),
+        );
+
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName),
+        );
+
+        $campaignStudioAvailable = CapellCore::isPackageInstalled('capell-app/campaign-studio');
+        $formBuilderAvailable = CapellCore::isPackageInstalled('capell-app/form-builder');
+        $eventsAvailable = CapellCore::isPackageInstalled('capell-app/events');
+        $blogAvailable = CapellCore::isPackageInstalled('capell-app/blog');
 
         $registry->register(
             definition: self::definition(),
@@ -88,13 +96,35 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
                 sectionRenderers: [],
             ),
             sectionRenderers: array_map(
-                fn (string $sectionKey): ViewSectionRenderer => new ViewSectionRenderer(
-                    themeKey: self::THEME_KEY,
-                    sectionKey: $sectionKey,
-                    view: 'capell-theme-nonprofit::sections.' . $sectionKey,
-                ),
+                fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer => array_key_exists($sectionKey, $this->optionalSectionIntegrations($campaignStudioAvailable, $formBuilderAvailable, $eventsAvailable, $blogAvailable))
+                    ? new PackageAwareSectionRenderer(
+                        themeKey: self::THEME_KEY,
+                        sectionKey: $sectionKey,
+                        view: 'capell-theme-nonprofit::sections.' . $sectionKey,
+                        integrations: $this->optionalSectionIntegrations($campaignStudioAvailable, $formBuilderAvailable, $eventsAvailable, $blogAvailable)[$sectionKey],
+                        failLoudly: true,
+                    )
+                    : new ViewSectionRenderer(
+                        themeKey: self::THEME_KEY,
+                        sectionKey: $sectionKey,
+                        view: 'capell-theme-nonprofit::sections.' . $sectionKey,
+                        failLoudly: true,
+                    ),
                 self::definition()->includedSections,
             ),
         );
+    }
+
+    /**
+     * @return array<string, array<string, bool>>
+     */
+    private function optionalSectionIntegrations(bool $campaignStudioAvailable, bool $formBuilderAvailable, bool $eventsAvailable, bool $blogAvailable): array
+    {
+        return [
+            'campaigns' => ['campaignStudioAvailable' => $campaignStudioAvailable],
+            'volunteer-donate' => ['formBuilderAvailable' => $formBuilderAvailable],
+            'events' => ['eventsAvailable' => $eventsAvailable],
+            'stories' => ['blogAvailable' => $blogAvailable],
+        ];
     }
 }

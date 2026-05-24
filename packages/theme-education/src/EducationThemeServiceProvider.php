@@ -13,6 +13,7 @@ use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Education\Console\Commands\DemoCommand;
+use Capell\ThemeStudio\Education\Rendering\PackageAwareSectionRenderer;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -68,17 +69,23 @@ final class EducationThemeServiceProvider extends ServiceProvider
             $this->commands([DemoCommand::class]);
         }
 
-        if (! CapellCore::hasPackage(self::$packageName)) {
+        if (! CapellCore::isPackageInstalled(self::$packageName)) {
             return;
         }
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-education');
 
-        CapellCore::registerVendorAsset(new VendorAssetData(
-            package: self::$packageName,
-            path: 'resources/css/theme-education.css',
-            type: 'css',
-        ));
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindImport('resources/css/theme-education.css', self::$packageName),
+        );
+
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName),
+        );
+
+        $eventsAvailable = CapellCore::isPackageInstalled('capell-app/events');
+        $formBuilderAvailable = CapellCore::isPackageInstalled('capell-app/form-builder');
+        $blogAvailable = CapellCore::isPackageInstalled('capell-app/blog');
 
         $registry->register(
             definition: self::definition(),
@@ -88,13 +95,34 @@ final class EducationThemeServiceProvider extends ServiceProvider
                 sectionRenderers: [],
             ),
             sectionRenderers: array_map(
-                fn (string $sectionKey): ViewSectionRenderer => new ViewSectionRenderer(
-                    themeKey: self::THEME_KEY,
-                    sectionKey: $sectionKey,
-                    view: 'capell-theme-education::sections.' . $sectionKey,
-                ),
+                fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer => array_key_exists($sectionKey, $this->optionalSectionIntegrations($eventsAvailable, $formBuilderAvailable, $blogAvailable))
+                    ? new PackageAwareSectionRenderer(
+                        themeKey: self::THEME_KEY,
+                        sectionKey: $sectionKey,
+                        view: 'capell-theme-education::sections.' . $sectionKey,
+                        integrations: $this->optionalSectionIntegrations($eventsAvailable, $formBuilderAvailable, $blogAvailable)[$sectionKey],
+                        failLoudly: true,
+                    )
+                    : new ViewSectionRenderer(
+                        themeKey: self::THEME_KEY,
+                        sectionKey: $sectionKey,
+                        view: 'capell-theme-education::sections.' . $sectionKey,
+                        failLoudly: true,
+                    ),
                 self::definition()->includedSections,
             ),
         );
+    }
+
+    /**
+     * @return array<string, array<string, bool>>
+     */
+    private function optionalSectionIntegrations(bool $eventsAvailable, bool $formBuilderAvailable, bool $blogAvailable): array
+    {
+        return [
+            'events' => ['eventsAvailable' => $eventsAvailable],
+            'enrolment-cta' => ['formBuilderAvailable' => $formBuilderAvailable],
+            'resources' => ['blogAvailable' => $blogAvailable],
+        ];
     }
 }

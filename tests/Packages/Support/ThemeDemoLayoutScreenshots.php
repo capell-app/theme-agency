@@ -7,7 +7,6 @@ use Capell\Core\Enums\FrontendRuntime;
 use Capell\Core\Enums\LayoutEnum;
 use Capell\Core\Enums\PageTypeEnum;
 use Capell\Core\Facades\CapellCore;
-use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\PageUrl;
@@ -83,7 +82,6 @@ function installThemeDemoScreenshotFixture(
 
     createThemeDemoScreenshotMaintenancePage($themeKey, $pages);
     createThemeDemoScreenshotSystemPage($themeKey, $pages);
-    allowThemeDemoScreenshotSystemPagesToResolveByUrl();
 
     $pages = Page::query()
         ->with(['layout', 'pageUrl.siteDomain', 'translations', 'type'])
@@ -131,7 +129,6 @@ function installFoundationThemeDemoScreenshotFixture(): Collection
 
     createThemeDemoScreenshotMaintenancePage($themeKey, $pages);
     createThemeDemoScreenshotSystemPage($themeKey, $pages);
-    allowThemeDemoScreenshotSystemPagesToResolveByUrl();
 
     $pages = Page::query()
         ->with(['layout', 'pageUrl.siteDomain', 'translations', 'type'])
@@ -194,24 +191,6 @@ function registerFoundationThemeDemoScreenshotRenderer(): void
     );
 }
 
-function allowThemeDemoScreenshotSystemPagesToResolveByUrl(): void
-{
-    Blueprint::query()
-        ->whereIn('key', [
-            PageTypeEnum::Maintenance->value,
-            PageTypeEnum::NotFound->value,
-        ])
-        ->get()
-        ->each(function (Blueprint $type): void {
-            $type->forceFill([
-                'meta' => array_replace(
-                    is_array($type->meta) ? $type->meta : [],
-                    ['accessible' => true],
-                ),
-            ])->save();
-        });
-}
-
 /**
  * @param  Collection<int, Page>  $pages
  * @param  array<string, array{type: string, layout: string}>  $expectedTypesAndLayoutsBySurface
@@ -242,7 +221,7 @@ function assertThemeDemoLayoutScreenshots(string $themeKey, Collection $pages, a
         expect($page->layout?->key)->toBe($expected['layout']);
         expect($page->pageUrl)->toBeInstanceOf(PageUrl::class);
 
-        $html = themeDemoScreenshotRouteBackedHtml($page, $surface);
+        $html = themeDemoScreenshotHtml($themeKey, $page, $surface);
 
         $htmlPath = themeDemoScreenshotHtmlPath($themeKey, $surface, $expected['type'], $expected['layout']);
         file_put_contents($htmlPath, $html);
@@ -299,12 +278,27 @@ function assertThemeDemoLayoutScreenshots(string $themeKey, Collection $pages, a
     }
 }
 
+function themeDemoScreenshotHtml(string $themeKey, Page $page, string $surface): string
+{
+    if (themeDemoScreenshotUsesRouteBackedHtml($page)) {
+        return themeDemoScreenshotRouteBackedHtml($page, $surface);
+    }
+
+    return themeDemoScreenshotRenderedHtml($themeKey, $page, $surface);
+}
+
+function themeDemoScreenshotUsesRouteBackedHtml(Page $page): bool
+{
+    return $page->type?->key === PageTypeEnum::Default->value
+        || $page->type?->key === PageTypeEnum::Home->value;
+}
+
 function themeDemoScreenshotRouteBackedHtml(Page $page, string $surface): string
 {
     expect($page->pageUrl)->toBeInstanceOf(PageUrl::class);
 
     $response = get($page->pageUrl->full_url);
-    $statusCode = themeDemoScreenshotExpectedRouteStatus($page);
+    $statusCode = 200;
 
     if ($response->getStatusCode() !== $statusCode) {
         throw new RuntimeException(themeDemoScreenshotRouteFailureMessage($surface, $page, $response, $statusCode));
@@ -314,11 +308,6 @@ function themeDemoScreenshotRouteBackedHtml(Page $page, string $surface): string
     assertThemeDemoRouteHtmlIsPublicSafe($response);
 
     return (string) $response->getContent();
-}
-
-function themeDemoScreenshotExpectedRouteStatus(Page $page): int
-{
-    return $page->type?->key === PageTypeEnum::NotFound->value ? 404 : 200;
 }
 
 function themeDemoScreenshotRouteFailureMessage(

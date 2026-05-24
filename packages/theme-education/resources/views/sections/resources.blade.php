@@ -2,4 +2,8 @@
     @isset($heading)
         <h2>{{ $heading }}</h2>
     @endisset
+
+    <p>
+        {{ $blogAvailable ?? false ? 'Connected learning resources' : 'Static resources' }}
+    </p>
 </section>

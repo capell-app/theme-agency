@@ -26,7 +26,7 @@
                         class="retail-resource-card rounded-xl border border-stone-200 bg-white p-6 transition hover:border-[#1f5f4a]"
                     >
                         <p
-                            class="text-xs font-black uppercase tracking-widest text-[#1f5f4a]"
+                            class="text-xs font-black tracking-widest text-[#1f5f4a] uppercase"
                         >
                             {{ $article['type'] ?? __('capell-theme-commerce::generic.article_label') }}
                         </p>
@@ -42,7 +42,7 @@
                         class="retail-resource-card rounded-xl border border-stone-200 bg-white p-6"
                     >
                         <p
-                            class="text-xs font-black uppercase tracking-widest text-[#1f5f4a]"
+                            class="text-xs font-black tracking-widest text-[#1f5f4a] uppercase"
                         >
                             {{ __('capell-theme-commerce::generic.resource') }}
                         </p>

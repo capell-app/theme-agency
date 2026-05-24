@@ -26,7 +26,7 @@
                         class="healthcare-resource-card rounded-xl border border-stone-200 bg-white p-6 transition hover:border-[#0f766e]"
                     >
                         <p
-                            class="text-xs font-black uppercase tracking-widest text-[#0f766e]"
+                            class="text-xs font-black tracking-widest text-[#0f766e] uppercase"
                         >
                             {{ $article['type'] ?? __('capell-theme-healthcare::generic.article_label') }}
                         </p>
@@ -42,7 +42,7 @@
                         class="healthcare-resource-card rounded-xl border border-stone-200 bg-white p-6"
                     >
                         <p
-                            class="text-xs font-black uppercase tracking-widest text-[#0f766e]"
+                            class="text-xs font-black tracking-widest text-[#0f766e] uppercase"
                         >
                             {{ __('capell-theme-healthcare::generic.resource') }}
                         </p>

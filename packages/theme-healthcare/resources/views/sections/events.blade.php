@@ -7,7 +7,7 @@
     <div class="grid gap-8 px-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
         <div>
             <p
-                class="mb-4 text-xs font-black uppercase tracking-widest text-[#2563eb]"
+                class="mb-4 text-xs font-black tracking-widest text-[#2563eb] uppercase"
             >
                 {{ $eventsAvailable ? __('capell-theme-healthcare::generic.events_live') : __('capell-theme-healthcare::generic.events_static') }}
             </p>
