@@ -6,12 +6,10 @@ namespace Capell\Newsletter\Filament\Resources\ProviderAudiences;
 
 use BackedEnum;
 use Capell\Admin\Support\SiteScope;
-use Capell\Core\Facades\CapellCore;
 use Capell\Newsletter\Filament\Resources\ProviderAudiences\Pages\CreateProviderAudience;
 use Capell\Newsletter\Filament\Resources\ProviderAudiences\Pages\EditProviderAudience;
 use Capell\Newsletter\Filament\Resources\ProviderAudiences\Pages\ListProviderAudiences;
 use Capell\Newsletter\Models\ProviderAudience;
-use Capell\Newsletter\Providers\NewsletterServiceProvider;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -84,7 +82,7 @@ class ProviderAudienceResource extends Resource
     #[Override]
     public static function shouldRegisterNavigation(): bool
     {
-        return CapellCore::isPackageInstalled(NewsletterServiceProvider::$packageName);
+        return false;
     }
 
     #[Override]

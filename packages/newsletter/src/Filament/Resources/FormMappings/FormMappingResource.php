@@ -6,14 +6,12 @@ namespace Capell\Newsletter\Filament\Resources\FormMappings;
 
 use BackedEnum;
 use Capell\Admin\Filament\Components\Forms\SiteSelect;
-use Capell\Core\Facades\CapellCore;
 use Capell\Newsletter\Enums\ConfirmationMode;
 use Capell\Newsletter\Filament\Concerns\ScopesNewsletterResourcesToAssignedSites;
 use Capell\Newsletter\Filament\Resources\FormMappings\Pages\CreateFormMapping;
 use Capell\Newsletter\Filament\Resources\FormMappings\Pages\EditFormMapping;
 use Capell\Newsletter\Filament\Resources\FormMappings\Pages\ListFormMappings;
 use Capell\Newsletter\Models\FormMapping;
-use Capell\Newsletter\Providers\NewsletterServiceProvider;
 use Capell\Tags\Models\Tag;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
@@ -126,7 +124,7 @@ class FormMappingResource extends Resource
     #[Override]
     public static function shouldRegisterNavigation(): bool
     {
-        return CapellCore::isPackageInstalled(NewsletterServiceProvider::$packageName);
+        return false;
     }
 
     #[Override]

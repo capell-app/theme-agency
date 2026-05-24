@@ -6,10 +6,8 @@ namespace Capell\Newsletter\Filament\Resources\SyncAttempts;
 
 use BackedEnum;
 use Capell\Admin\Support\SiteScope;
-use Capell\Core\Facades\CapellCore;
 use Capell\Newsletter\Filament\Resources\SyncAttempts\Pages\ListSyncAttempts;
 use Capell\Newsletter\Models\SyncAttempt;
-use Capell\Newsletter\Providers\NewsletterServiceProvider;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -71,7 +69,7 @@ class SyncAttemptResource extends Resource
     #[Override]
     public static function shouldRegisterNavigation(): bool
     {
-        return CapellCore::isPackageInstalled(NewsletterServiceProvider::$packageName);
+        return false;
     }
 
     #[Override]

@@ -61,7 +61,13 @@ class NewsletterTagResource extends Resource
     #[Override]
     public static function getNavigationGroup(): ?string
     {
-        return __('capell-admin::navigation.group_marketing');
+        return null;
+    }
+
+    #[Override]
+    public static function getNavigationParentItem(): string
+    {
+        return __('capell-admin::navigation.marketing_studio');
     }
 
     #[Override]

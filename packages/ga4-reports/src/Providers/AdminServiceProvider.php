@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Capell\GA4Reports\Providers;
 
 use Capell\Admin\Contracts\DashboardSettingsContributor;
+use Capell\Admin\Data\MarketingStudioActionData;
 use Capell\Admin\Enums\DashboardEnum;
+use Capell\Admin\Enums\MarketingStudioSectionEnum;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\GA4Reports\Actions\BuildGA4ReportsOverviewAction;
@@ -33,6 +35,7 @@ final class AdminServiceProvider extends ServiceProvider
             ->registerPages()
             ->registerOverviewStats()
             ->registerDashboardWidgets()
+            ->registerMarketingStudioActions()
             ->registerSchedule();
     }
 
@@ -68,9 +71,23 @@ final class AdminServiceProvider extends ServiceProvider
 
     private function registerDashboardWidgets(): self
     {
-        CapellAdmin::registerDashboardWidget(GA4ReportsTrafficTrendWidget::class, DashboardEnum::Main);
-        CapellAdmin::registerDashboardWidget(GA4ReportsTopPagesWidget::class, DashboardEnum::Main);
-        CapellAdmin::registerDashboardWidget(GA4ReportsSetupStatusWidget::class, DashboardEnum::Main);
+        CapellAdmin::registerDashboardWidget(GA4ReportsTrafficTrendWidget::class, DashboardEnum::Main, DashboardEnum::MarketingStudio);
+        CapellAdmin::registerDashboardWidget(GA4ReportsTopPagesWidget::class, DashboardEnum::Main, DashboardEnum::MarketingStudio);
+        CapellAdmin::registerDashboardWidget(GA4ReportsSetupStatusWidget::class, DashboardEnum::Main, DashboardEnum::MarketingStudio);
+
+        return $this;
+    }
+
+    private function registerMarketingStudioActions(): self
+    {
+        CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(
+            key: 'ga4-reports.performance',
+            label: fn (): string => GA4ReportsPage::getNavigationLabel(),
+            url: fn (): string => GA4ReportsPage::getUrl(),
+            section: MarketingStudioSectionEnum::Performance,
+            icon: 'heroicon-o-chart-bar-square',
+            sort: 10,
+        ));
 
         return $this;
     }

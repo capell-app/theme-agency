@@ -58,6 +58,11 @@ it('registers GA4 dashboard widgets and settings contributor', function (): void
         ->toContain(GA4ReportsTopPagesWidget::class)
         ->toContain(GA4ReportsSetupStatusWidget::class);
 
+    expect(CapellAdmin::getDashboardWidgets(DashboardEnum::MarketingStudio))
+        ->toContain(GA4ReportsTrafficTrendWidget::class)
+        ->toContain(GA4ReportsTopPagesWidget::class)
+        ->toContain(GA4ReportsSetupStatusWidget::class);
+
     expect(collect(CapellAdmin::getOverviewStats(false))->pluck('key')->all())
         ->toContain('ga4_reports_overview')
         ->toContain('ga4_reports_overview.sessions')

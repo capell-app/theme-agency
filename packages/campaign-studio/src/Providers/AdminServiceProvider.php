@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace Capell\CampaignStudio\Providers;
 
 use Capell\Admin\Data\AdminSurfaceContributionData;
+use Capell\Admin\Data\MarketingStudioActionData;
 use Capell\Admin\Enums\DashboardEnum;
-use Capell\Admin\Enums\NavigationGroupPositionEnum;
+use Capell\Admin\Enums\MarketingStudioSectionEnum;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\CampaignStudio\Actions\BuildCampaignOverviewStatsAction;
 use Capell\CampaignStudio\Enums\CampaignBlockConfiguratorEnum;
 use Capell\CampaignStudio\Enums\ResourceEnum;
+use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\CampaignConversionGoalResource;
+use Capell\CampaignStudio\Filament\Resources\CampaignCtaBlocks\CampaignCtaBlockResource;
+use Capell\CampaignStudio\Filament\Resources\CampaignGroups\CampaignGroupResource;
+use Capell\CampaignStudio\Filament\Resources\CampaignLandingPages\CampaignLandingPageResource;
 use Capell\CampaignStudio\Filament\Widgets\TopCampaignStudioWidget;
 use Capell\CampaignStudio\Filament\Widgets\TopLandingPagesWidget;
 use Capell\Core\Facades\CapellCore;
@@ -32,7 +37,6 @@ final class AdminServiceProvider extends ServiceProvider
             }
 
             $this
-                ->registerNavigationGroups()
                 ->registerResources()
                 ->registerConfigurators();
         });
@@ -46,23 +50,13 @@ final class AdminServiceProvider extends ServiceProvider
 
         $this
             ->registerOverviewStats()
-            ->registerDashboardWidgets();
+            ->registerDashboardWidgets()
+            ->registerMarketingStudioActions();
     }
 
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(CampaignStudioServiceProvider::$packageName);
-    }
-
-    private function registerNavigationGroups(): self
-    {
-        CapellAdmin::registerNavigationGroup(
-            label: 'capell-admin::navigation.group_marketing',
-            position: NavigationGroupPositionEnum::After,
-            relativeTo: 'capell-admin::navigation.group_websites',
-        );
-
-        return $this;
     }
 
     private function registerResources(): self
@@ -102,8 +96,50 @@ final class AdminServiceProvider extends ServiceProvider
 
     private function registerDashboardWidgets(): self
     {
-        CapellAdmin::registerDashboardWidget(TopCampaignStudioWidget::class, DashboardEnum::Main);
-        CapellAdmin::registerDashboardWidget(TopLandingPagesWidget::class, DashboardEnum::Main);
+        CapellAdmin::registerDashboardWidget(TopCampaignStudioWidget::class, DashboardEnum::Main, DashboardEnum::MarketingStudio);
+        CapellAdmin::registerDashboardWidget(TopLandingPagesWidget::class, DashboardEnum::Main, DashboardEnum::MarketingStudio);
+
+        return $this;
+    }
+
+    private function registerMarketingStudioActions(): self
+    {
+        CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(
+            key: 'campaign-studio.campaigns',
+            label: fn (): string => __('capell-campaign-studio::navigation.campaign_groups'),
+            url: fn (): string => CampaignGroupResource::getUrl(),
+            section: MarketingStudioSectionEnum::Campaigns,
+            icon: 'heroicon-o-megaphone',
+            sort: 10,
+            description: fn (): string => __('capell-campaign-studio::generic.campaign_groups'),
+        ));
+
+        CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(
+            key: 'campaign-studio.landing-pages',
+            label: fn (): string => __('capell-campaign-studio::navigation.landing_pages'),
+            url: fn (): string => CampaignLandingPageResource::getUrl(),
+            section: MarketingStudioSectionEnum::Campaigns,
+            icon: 'heroicon-o-rectangle-group',
+            sort: 20,
+        ));
+
+        CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(
+            key: 'campaign-studio.ctas',
+            label: fn (): string => __('capell-campaign-studio::navigation.cta_blocks'),
+            url: fn (): string => CampaignCtaBlockResource::getUrl(),
+            section: MarketingStudioSectionEnum::Advanced,
+            icon: 'heroicon-o-cursor-arrow-rays',
+            sort: 30,
+        ));
+
+        CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(
+            key: 'campaign-studio.conversion-goals',
+            label: fn (): string => __('capell-campaign-studio::navigation.conversion_goals'),
+            url: fn (): string => CampaignConversionGoalResource::getUrl(),
+            section: MarketingStudioSectionEnum::Advanced,
+            icon: 'heroicon-o-chart-bar',
+            sort: 40,
+        ));
 
         return $this;
     }

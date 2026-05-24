@@ -6,12 +6,10 @@ namespace Capell\Newsletter\Filament\Resources\ProviderInterestMappings;
 
 use BackedEnum;
 use Capell\Admin\Support\SiteScope;
-use Capell\Core\Facades\CapellCore;
 use Capell\Newsletter\Filament\Resources\ProviderInterestMappings\Pages\CreateProviderInterestMapping;
 use Capell\Newsletter\Filament\Resources\ProviderInterestMappings\Pages\EditProviderInterestMapping;
 use Capell\Newsletter\Filament\Resources\ProviderInterestMappings\Pages\ListProviderInterestMappings;
 use Capell\Newsletter\Models\ProviderInterestMapping;
-use Capell\Newsletter\Providers\NewsletterServiceProvider;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
@@ -91,7 +89,7 @@ class ProviderInterestMappingResource extends Resource
     #[Override]
     public static function shouldRegisterNavigation(): bool
     {
-        return CapellCore::isPackageInstalled(NewsletterServiceProvider::$packageName);
+        return false;
     }
 
     #[Override]

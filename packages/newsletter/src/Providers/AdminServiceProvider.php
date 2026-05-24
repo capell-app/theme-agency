@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Capell\Newsletter\Providers;
 
 use Capell\Admin\Data\AdminSurfaceContributionData;
-use Capell\Admin\Enums\NavigationGroupPositionEnum;
+use Capell\Admin\Data\MarketingStudioActionData;
+use Capell\Admin\Enums\DashboardEnum;
+use Capell\Admin\Enums\MarketingStudioSectionEnum;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Support\SiteScope;
 use Capell\Core\Facades\CapellCore;
@@ -13,6 +15,16 @@ use Capell\Newsletter\Console\Commands\RequeueDueProviderSyncAttemptsCommand;
 use Capell\Newsletter\Enums\ResourceEnum;
 use Capell\Newsletter\Enums\SubscriberStatus;
 use Capell\Newsletter\Enums\SyncStatus;
+use Capell\Newsletter\Filament\Resources\FormMappings\FormMappingResource;
+use Capell\Newsletter\Filament\Resources\ImportBatches\ImportBatchResource;
+use Capell\Newsletter\Filament\Resources\NewsletterTags\NewsletterTagResource;
+use Capell\Newsletter\Filament\Resources\ProviderAudiences\ProviderAudienceResource;
+use Capell\Newsletter\Filament\Resources\ProviderConnections\ProviderConnectionResource;
+use Capell\Newsletter\Filament\Resources\ProviderInterestMappings\ProviderInterestMappingResource;
+use Capell\Newsletter\Filament\Resources\Segments\SegmentResource;
+use Capell\Newsletter\Filament\Resources\Subscribers\SubscriberResource;
+use Capell\Newsletter\Filament\Resources\SyncAttempts\SyncAttemptResource;
+use Capell\Newsletter\Filament\Widgets\NewsletterOverviewStatsWidget;
 use Capell\Newsletter\Models\Subscriber;
 use Capell\Newsletter\Models\SyncAttempt;
 use Illuminate\Console\Scheduling\Schedule;
@@ -31,7 +43,6 @@ class AdminServiceProvider extends ServiceProvider
             }
 
             $this
-                ->registerNavigationGroups()
                 ->registerResources();
         });
     }
@@ -48,7 +59,10 @@ class AdminServiceProvider extends ServiceProvider
             $this->commands([RequeueDueProviderSyncAttemptsCommand::class]);
         }
 
-        $this->registerOverviewStats();
+        $this
+            ->registerOverviewStats()
+            ->registerDashboardWidgets()
+            ->registerMarketingStudioActions();
 
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
             $schedule->command('newsletter:sync-retry-due')->everyFiveMinutes();
@@ -107,17 +121,6 @@ class AdminServiceProvider extends ServiceProvider
         return $this;
     }
 
-    private function registerNavigationGroups(): self
-    {
-        CapellAdmin::registerNavigationGroup(
-            label: 'capell-admin::navigation.group_marketing',
-            position: NavigationGroupPositionEnum::After,
-            relativeTo: 'capell-admin::navigation.group_websites',
-        );
-
-        return $this;
-    }
-
     private function registerResources(): self
     {
         foreach (ResourceEnum::cases() as $resource) {
@@ -126,6 +129,99 @@ class AdminServiceProvider extends ServiceProvider
                 group: $resource->name,
             ));
         }
+
+        return $this;
+    }
+
+    private function registerDashboardWidgets(): self
+    {
+        CapellAdmin::registerDashboardWidget(NewsletterOverviewStatsWidget::class, DashboardEnum::MarketingStudio);
+
+        return $this;
+    }
+
+    private function registerMarketingStudioActions(): self
+    {
+        CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(
+            key: 'newsletter.subscribers',
+            label: fn (): string => __('capell-newsletter::navigation.subscribers'),
+            url: fn (): string => SubscriberResource::getUrl(),
+            section: MarketingStudioSectionEnum::Audience,
+            icon: 'heroicon-o-envelope',
+            sort: 10,
+        ));
+
+        CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(
+            key: 'newsletter.segments',
+            label: fn (): string => __('capell-newsletter::navigation.segments'),
+            url: fn (): string => SegmentResource::getUrl(),
+            section: MarketingStudioSectionEnum::Audience,
+            icon: 'heroicon-o-users',
+            sort: 20,
+        ));
+
+        CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(
+            key: 'newsletter.tags',
+            label: fn (): string => __('capell-newsletter::navigation.newsletter_tags'),
+            url: fn (): string => NewsletterTagResource::getUrl(),
+            section: MarketingStudioSectionEnum::Audience,
+            icon: 'heroicon-o-tag',
+            sort: 30,
+        ));
+
+        CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(
+            key: 'newsletter.imports',
+            label: fn (): string => __('capell-newsletter::navigation.import_batches'),
+            url: fn (): string => ImportBatchResource::getUrl(),
+            section: MarketingStudioSectionEnum::Audience,
+            icon: 'heroicon-o-arrow-up-tray',
+            sort: 40,
+        ));
+
+        CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(
+            key: 'newsletter.provider-connections',
+            label: fn (): string => __('capell-newsletter::navigation.provider_connections'),
+            url: fn (): string => ProviderConnectionResource::getUrl(),
+            section: MarketingStudioSectionEnum::Advanced,
+            icon: 'heroicon-o-globe-alt',
+            sort: 10,
+        ));
+
+        CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(
+            key: 'newsletter.provider-audiences',
+            label: fn (): string => __('capell-newsletter::navigation.provider_audiences'),
+            url: fn (): string => ProviderAudienceResource::getUrl(),
+            section: MarketingStudioSectionEnum::Advanced,
+            icon: 'heroicon-o-user-group',
+            sort: 15,
+        ));
+
+        CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(
+            key: 'newsletter.form-mappings',
+            label: fn (): string => __('capell-newsletter::navigation.form_mappings'),
+            url: fn (): string => FormMappingResource::getUrl(),
+            section: MarketingStudioSectionEnum::Advanced,
+            icon: 'heroicon-o-link',
+            sort: 20,
+        ));
+
+        CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(
+            key: 'newsletter.interest-mappings',
+            label: fn (): string => __('capell-newsletter::navigation.provider_interest_mappings'),
+            url: fn (): string => ProviderInterestMappingResource::getUrl(),
+            section: MarketingStudioSectionEnum::Advanced,
+            icon: 'heroicon-o-adjustments-horizontal',
+            sort: 30,
+        ));
+
+        CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(
+            key: 'newsletter.sync-attempts',
+            label: fn (): string => __('capell-newsletter::navigation.sync_attempts'),
+            url: fn (): string => SyncAttemptResource::getUrl(),
+            section: MarketingStudioSectionEnum::Advanced,
+            icon: 'heroicon-o-arrow-path',
+            sort: 40,
+        ));
 
         return $this;
     }

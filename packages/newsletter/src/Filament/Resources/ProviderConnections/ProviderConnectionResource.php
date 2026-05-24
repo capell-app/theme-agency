@@ -6,7 +6,6 @@ namespace Capell\Newsletter\Filament\Resources\ProviderConnections;
 
 use BackedEnum;
 use Capell\Admin\Filament\Components\Forms\SiteSelect;
-use Capell\Core\Facades\CapellCore;
 use Capell\Newsletter\Enums\AuthType;
 use Capell\Newsletter\Enums\ProviderType;
 use Capell\Newsletter\Filament\Concerns\ScopesNewsletterResourcesToAssignedSites;
@@ -14,7 +13,6 @@ use Capell\Newsletter\Filament\Resources\ProviderConnections\Pages\CreateProvide
 use Capell\Newsletter\Filament\Resources\ProviderConnections\Pages\EditProviderConnection;
 use Capell\Newsletter\Filament\Resources\ProviderConnections\Pages\ListProviderConnections;
 use Capell\Newsletter\Models\ProviderConnection;
-use Capell\Newsletter\Providers\NewsletterServiceProvider;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -91,7 +89,7 @@ class ProviderConnectionResource extends Resource
     #[Override]
     public static function shouldRegisterNavigation(): bool
     {
-        return CapellCore::isPackageInstalled(NewsletterServiceProvider::$packageName);
+        return false;
     }
 
     #[Override]

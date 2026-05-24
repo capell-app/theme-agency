@@ -97,18 +97,19 @@ it('declares newsletter tag and sync attempt table columns and navigation metada
             'error_message',
             'last_attempted_at',
         ])
-        ->and(NewsletterTagResource::getNavigationGroup())->toBe('capell-admin::navigation.group_marketing')
+        ->and(NewsletterTagResource::getNavigationGroup())->toBeNull()
+        ->and(NewsletterTagResource::getNavigationParentItem())->toBe((string) __('capell-admin::navigation.marketing_studio'))
         ->and(NewsletterTagResource::getNavigationLabel())->toBe('Newsletter Tags')
         ->and(NewsletterTagResource::shouldRegisterNavigation())->toBeTrue()
         ->and(FormMappingResource::getNavigationLabel())->toBe('Form Mappings')
-        ->and(FormMappingResource::shouldRegisterNavigation())->toBeTrue()
+        ->and(FormMappingResource::shouldRegisterNavigation())->toBeFalse()
         ->and(ProviderAudienceResource::getNavigationLabel())->toBe('Provider Audiences')
-        ->and(ProviderAudienceResource::shouldRegisterNavigation())->toBeTrue()
+        ->and(ProviderAudienceResource::shouldRegisterNavigation())->toBeFalse()
         ->and(ProviderInterestMappingResource::getNavigationLabel())->toBe('Provider Interest Mappings')
-        ->and(ProviderInterestMappingResource::shouldRegisterNavigation())->toBeTrue()
+        ->and(ProviderInterestMappingResource::shouldRegisterNavigation())->toBeFalse()
         ->and(SyncAttemptResource::getNavigationGroup())->toBe('capell-admin::navigation.group_marketing')
         ->and(SyncAttemptResource::getNavigationLabel())->toBe('Sync Attempts')
-        ->and(SyncAttemptResource::shouldRegisterNavigation())->toBeTrue();
+        ->and(SyncAttemptResource::shouldRegisterNavigation())->toBeFalse();
 });
 
 it('summarizes newsletter overview stats for current records', function (): void {

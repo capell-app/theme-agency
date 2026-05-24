@@ -56,18 +56,21 @@ it('builds campaign studio resource form schemas', function (): void {
 
 it('declares campaign studio resource models navigation labels and pages', function (): void {
     expect(CampaignGroupResource::getModel())->toBe(CampaignGroup::class)
-        ->and(CampaignGroupResource::getNavigationGroup())->toBe('capell-admin::navigation.group_marketing')
+        ->and(CampaignGroupResource::getNavigationGroup())->toBeNull()
+        ->and(CampaignGroupResource::getNavigationParentItem())->toBe((string) __('capell-admin::navigation.marketing_studio'))
         ->and(CampaignGroupResource::getNavigationLabel())->toBe('Campaign groups')
         ->and(CampaignGroupResource::getPluralModelLabel())->toBe('Campaign groups')
         ->and(CampaignGroupResource::getPages())->toHaveKeys(['index', 'create', 'edit'])
         ->and(CampaignCtaBlockResource::getModel())->toBe(CampaignCtaBlock::class)
         ->and(CampaignCtaBlockResource::getNavigationLabel())->toBe('CTA blocks')
+        ->and(CampaignCtaBlockResource::shouldRegisterNavigation())->toBeFalse()
         ->and(CampaignCtaBlockResource::getPages())->toHaveKeys(['index', 'create', 'edit'])
         ->and(CampaignLandingPageResource::getModel())->toBe(CampaignLandingPage::class)
         ->and(CampaignLandingPageResource::getNavigationLabel())->toBe('Landing pages')
         ->and(CampaignLandingPageResource::getPages())->toHaveKeys(['index', 'create', 'edit'])
         ->and(CampaignConversionGoalResource::getModel())->toBe(CampaignConversionGoal::class)
         ->and(CampaignConversionGoalResource::getNavigationLabel())->toBe('Conversion goals')
+        ->and(CampaignConversionGoalResource::shouldRegisterNavigation())->toBeFalse()
         ->and(CampaignConversionGoalResource::getPages())->toHaveKeys(['index', 'create', 'edit']);
 });
 
