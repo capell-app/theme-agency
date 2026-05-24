@@ -45,10 +45,13 @@ final class BuildAgentDeliveryPageAction
             summary: $this->summary($fields, $body),
             body: $body,
             metadata: $metadata,
-            references: $this->references($fields->meta),
+            references: array_values(array_merge(
+                $this->references($fields->meta),
+                $this->registry->references($page, $site, $language),
+            )),
             publishedAt: $this->dateAttribute($page, 'visible_from'),
             lastUpdatedAt: $this->dateAttribute($page, 'updated_at'),
-            relatedUrls: [],
+            relatedUrls: $this->registry->relatedUrls($page, $site, $language),
         );
     }
 

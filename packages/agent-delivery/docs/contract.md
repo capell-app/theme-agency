@@ -7,13 +7,14 @@
 
 Both routes resolve the site from the request host and only serve content that Core resolves as public.
 
-## Contributor Contract
+## Contributor Contracts
 
-Packages can tag implementations of `Capell\AgentDelivery\Contracts\AgentDeliveryContributor` with `AgentDeliveryContributor::TAG`.
+Packages can tag focused contributor contracts:
 
-Contributors may add:
+- `AgentDeliveryMetadataContributor::TAG` for public metadata/provenance.
+- `AgentDeliveryChunkContributor::TAG` for package-specific stable chunks.
+- `AgentDeliveryReferenceContributor::TAG` for public source/reference links.
+- `AgentDeliveryRelatedUrlContributor::TAG` for related public URLs.
+- `AgentDeliveryContributor::TAG` remains supported as a legacy aggregate contributor for metadata and chunks.
 
-- Public metadata.
-- Stable semantic chunks.
-
-Contributors must not include admin/editor state, model IDs, signed URLs, prompts, permissions, package internals, field paths, or hidden authoring markers.
+Contributors must not include admin/editor state, model IDs, signed URLs, prompts, permissions, package internals, field paths, unpublished content, or hidden authoring markers.

@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Capell\AgentDelivery\Providers;
 
+use Capell\AgentDelivery\Contracts\AgentDeliveryChunkContributor;
 use Capell\AgentDelivery\Contracts\AgentDeliveryContributor;
+use Capell\AgentDelivery\Contracts\AgentDeliveryMetadataContributor;
+use Capell\AgentDelivery\Contracts\AgentDeliveryReferenceContributor;
+use Capell\AgentDelivery\Contracts\AgentDeliveryRelatedUrlContributor;
 use Capell\AgentDelivery\Support\AgentDeliveryRegistry;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
@@ -65,6 +69,30 @@ final class AgentDeliveryServiceProvider extends AbstractPackageServiceProvider
         foreach ($this->app->tagged(AgentDeliveryContributor::TAG) as $contributor) {
             if ($contributor instanceof AgentDeliveryContributor) {
                 $registry->register($contributor);
+            }
+        }
+
+        foreach ($this->app->tagged(AgentDeliveryMetadataContributor::TAG) as $contributor) {
+            if ($contributor instanceof AgentDeliveryMetadataContributor) {
+                $registry->registerMetadataContributor($contributor);
+            }
+        }
+
+        foreach ($this->app->tagged(AgentDeliveryChunkContributor::TAG) as $contributor) {
+            if ($contributor instanceof AgentDeliveryChunkContributor) {
+                $registry->registerChunkContributor($contributor);
+            }
+        }
+
+        foreach ($this->app->tagged(AgentDeliveryReferenceContributor::TAG) as $contributor) {
+            if ($contributor instanceof AgentDeliveryReferenceContributor) {
+                $registry->registerReferenceContributor($contributor);
+            }
+        }
+
+        foreach ($this->app->tagged(AgentDeliveryRelatedUrlContributor::TAG) as $contributor) {
+            if ($contributor instanceof AgentDeliveryRelatedUrlContributor) {
+                $registry->registerRelatedUrlContributor($contributor);
             }
         }
     }
