@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Override;
 
+/**
+ * @property array<string, mixed>|null $filters
+ */
 class Segment extends Model
 {
     use HasFactory;

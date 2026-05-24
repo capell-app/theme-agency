@@ -47,7 +47,7 @@ final class CommandPalettePage extends Page
     }
 
     #[Override]
-    public static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): string
     {
         return __('capell-admin::navigation.group_system');
     }

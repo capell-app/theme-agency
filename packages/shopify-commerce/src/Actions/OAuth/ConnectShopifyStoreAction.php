@@ -27,7 +27,7 @@ final class ConnectShopifyStoreAction
                 'status' => ShopifyConnectionStatus::Active,
                 'access_token' => $tokenData->accessToken,
                 'scopes' => $tokenData->scopes,
-                'connected_by_user_id' => method_exists($user, 'getAuthIdentifier') ? $user->getAuthIdentifier() : null,
+                'connected_by_user_id' => $user->getAuthIdentifier(),
                 'sync_status' => 'queued',
                 'last_sync_queued_at' => now(),
                 'last_sync_error' => null,

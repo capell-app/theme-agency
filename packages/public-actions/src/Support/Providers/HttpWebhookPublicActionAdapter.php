@@ -108,7 +108,7 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
         $headers = is_array($destination->headers) ? $destination->headers : [];
 
         $normalizedHeaders = collect($headers)
-            ->filter(fn (mixed $value, mixed $key): bool => is_string($key) && is_scalar($value))
+            ->filter(fn (mixed $value, mixed $key): bool => is_scalar($value))
             ->mapWithKeys(fn (mixed $value, string $key): array => [$key => (string) $value])
             ->all();
 

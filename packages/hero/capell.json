@@ -13,25 +13,20 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\Hero",
-    "surfaces": [
-        "frontend",
-        "console"
-    ],
+    "surfaces": ["frontend", "console"],
     "dependencies": {
         "requires": [
             "capell-app/core",
             "capell-app/frontend",
             "capell-app/layout-builder"
         ],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": [
-            "Capell\\Hero\\Providers\\HeroServiceProvider"
-        ],
+        "runtime": ["Capell\\Hero\\Providers\\HeroServiceProvider"],
         "admin": [],
         "frontend": []
     },
@@ -53,15 +48,10 @@
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": [
-            "hero"
-        ],
+        "cacheTags": ["hero"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -91,10 +81,6 @@
                 "caption": "Hero extension preview"
             }
         ],
-        "categories": [
-            "console",
-            "foundation",
-            "frontend"
-        ]
+        "categories": ["console", "foundation", "frontend"]
     }
 }

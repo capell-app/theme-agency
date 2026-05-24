@@ -34,7 +34,7 @@ final class BuildTopLandingPagesQueryAction
             ->map(fn (CampaignLandingPage $landingPage): CampaignLandingPageSummaryData => new CampaignLandingPageSummaryData(
                 landingPageId: (int) $landingPage->getKey(),
                 landingPageName: $landingPage->headline ?? ('#' . $landingPage->page_id),
-                campaignName: $landingPage->campaignGroup?->name ?? '',
+                campaignName: $landingPage->campaignGroup->name ?? '',
                 conversions: $landingPage->conversions_count,
             ))
             ->values();

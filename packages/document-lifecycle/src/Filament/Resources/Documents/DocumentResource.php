@@ -90,7 +90,7 @@ final class DocumentResource extends Resource
     }
 
     #[Override]
-    public static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): string
     {
         return (string) __('capell-admin::navigation.group_websites');
     }

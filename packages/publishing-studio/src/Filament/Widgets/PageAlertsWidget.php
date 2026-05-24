@@ -223,7 +223,7 @@ class PageAlertsWidget extends ResourceAlertsWidget
 
         return new MessageData(
             message: __('capell-admin::message.page_status_draft', [
-                'workspace' => $workspace?->name ?? '—',
+                'workspace' => $workspace->name ?? '—',
             ]),
             type: AlertTypeEnum::Info,
             icon: 'heroicon-o-document-text',

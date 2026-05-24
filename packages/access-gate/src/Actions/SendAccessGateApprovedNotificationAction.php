@@ -68,7 +68,7 @@ final class SendAccessGateApprovedNotificationAction
     private function isAllowedClaimHost(Area $area, string $requestedHost): bool
     {
         return collect($area->claim_url_hosts ?? [])
-            ->filter(fn (mixed $host): bool => is_string($host) && $host !== '')
+            ->filter(fn (mixed $host): bool => $host !== '')
             ->contains($requestedHost);
     }
 }

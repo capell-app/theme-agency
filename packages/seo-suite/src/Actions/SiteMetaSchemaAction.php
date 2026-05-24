@@ -61,13 +61,13 @@ class SiteMetaSchemaAction
         $return = [];
 
         foreach ($areas_served as $area_served) {
-            if (isset($area_served['type']) && $area_served['type'] !== null && $area_served['type'] !== '') {
+            if (isset($area_served['type']) && $area_served['type'] !== '') {
                 $item = [
                     '@type' => $area_served['type'],
                     'name' => $area_served['name'],
                 ];
 
-                if (isset($area_served['url']) && $area_served['url'] !== null && $area_served['url'] !== '') {
+                if (isset($area_served['url']) && $area_served['url'] !== '') {
                     $item['@id'] = $area_served['url'];
                 }
 
@@ -193,6 +193,7 @@ class SiteMetaSchemaAction
             'saturday' => 'https://schema.org/Saturday',
             'sunday' => 'https://schema.org/Sunday',
             'public_holidays' => 'https://schema.org/PublicHolidays',
+            default => 'https://schema.org/' . ucfirst($day),
         };
     }
 

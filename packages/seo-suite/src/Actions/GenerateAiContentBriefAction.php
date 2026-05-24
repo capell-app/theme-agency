@@ -102,12 +102,12 @@ final class GenerateAiContentBriefAction
                 'name' => $page->name,
                 'title' => $translation?->title,
                 'content' => ExtractTextContentAction::run($translation?->content, 2500),
-                'meta' => $translation?->meta ?? [],
+                'meta' => $translation->meta ?? [],
             ],
             'site' => [
                 'id' => $site->getKey(),
                 'name' => $site->name ?? null,
-                'title' => $site->translation?->title ?? null,
+                'title' => $site->translation->title ?? null,
             ],
             'language' => [
                 'id' => $language->getKey(),

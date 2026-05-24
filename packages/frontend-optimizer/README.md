@@ -74,6 +74,7 @@ Profile-based CSS and JavaScript delivery for public Capell pages.
 - [docs index](docs/README.md)
 - [overview.md](docs/overview.md)
 - [assets-and-render-profiles.md](docs/assets-and-render-profiles.md)
+- [critical-css.md](docs/critical-css.md)
 - [screenshots.json](docs/screenshots.json)
 
 ## Testing

@@ -6,10 +6,11 @@ Start at the [package README](../README.md) when deciding whether to install thi
 
 ## Guides
 
-| Doc                                                         | Use it for                                                                         |
-| ----------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| [Assets And Render Profiles](assets-and-render-profiles.md) | Focused package workflow, setup, troubleshooting, or implementation details.       |
-| [Overview](overview.md)                                     | Package boundary, runtime surfaces, install notes, and first troubleshooting path. |
+| Doc                                                         | Use it for                                                                           |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| [Assets And Render Profiles](assets-and-render-profiles.md) | Focused package workflow, setup, troubleshooting, or implementation details.         |
+| [Critical CSS](critical-css.md)                             | URL-based above-the-fold CSS generation, settings, fallbacks, and page type opt-out. |
+| [Overview](overview.md)                                     | Package boundary, runtime surfaces, install notes, and first troubleshooting path.   |
 
 ## Read Next
 

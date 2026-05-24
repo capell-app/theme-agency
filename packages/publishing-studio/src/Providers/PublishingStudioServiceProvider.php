@@ -113,7 +113,7 @@ class PublishingStudioServiceProvider extends ServiceProvider
         });
     }
 
-    private function isPackageInstalled(): bool
+    protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(static::$packageName);
     }
@@ -223,7 +223,11 @@ class PublishingStudioServiceProvider extends ServiceProvider
         }
 
         // Page requires a finalizeOnPublish hook to retarget PageUrl + Translation rows.
-        WorkspaceRegistry::register(Page::class, finalizeOnPublish: static function (Page $draftRow): Page {
+        WorkspaceRegistry::register(Page::class, finalizeOnPublish: static function (Model $draftRow): Model {
+            if (! $draftRow instanceof Page) {
+                return $draftRow;
+            }
+
             if ($draftRow->uuid === null || $draftRow->uuid === '' || (int) $draftRow->workspace_id === 0) {
                 return $draftRow;
             }

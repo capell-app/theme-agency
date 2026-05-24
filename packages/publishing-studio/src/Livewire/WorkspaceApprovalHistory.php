@@ -27,7 +27,7 @@ class WorkspaceApprovalHistory extends Component
 
     public function render(): View
     {
-        return view('capell-admin::components.publishing-studio.approval-history', [
+        return view('capell-publishing-studio::components.publishing-studio.approval-history', [
             'approvals' => $this->loadApprovals(),
         ]);
     }

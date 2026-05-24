@@ -17,7 +17,7 @@ $json = [
 
 $searchPage = Page::getFirstPageByTypeForSite('results', $site, $language);
 
-if ($searchPage?->pageUrl?->full_url !== null && $searchPage?->pageUrl?->full_url !== '') {
+if ($searchPage->pageUrl->full_url !== null && $searchPage->pageUrl->full_url !== '') {
     $json['potentialAction'] = [
         '@type' => 'SearchAction',
         'target' => [

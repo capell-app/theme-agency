@@ -13,16 +13,10 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\FoundationTheme",
-    "surfaces": [
-        "admin",
-        "frontend"
-    ],
+    "surfaces": ["admin", "frontend"],
     "dependencies": {
-        "requires": [
-            "capell-app/frontend",
-            "capell-app/layout-builder"
-        ],
-        "optional": [],
+        "requires": ["capell-app/frontend", "capell-app/layout-builder"],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -52,15 +46,10 @@
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": [
-            "foundation-theme"
-        ],
+        "cacheTags": ["foundation-theme"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -90,17 +79,11 @@
                 "caption": "Foundation Theme extension preview"
             }
         ],
-        "categories": [
-            "admin",
-            "foundation",
-            "frontend"
-        ]
+        "categories": ["admin", "foundation", "frontend"]
     },
     "extends": null,
     "themeKey": "default",
     "contributionTraceability": {
-        "deferredContributions": [
-            "route"
-        ]
+        "deferredContributions": ["route"]
     }
 }

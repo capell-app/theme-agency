@@ -13,15 +13,14 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\FrontendOptimizer",
-    "surfaces": [
-        "frontend"
-    ],
+    "surfaces": ["admin", "frontend"],
     "dependencies": {
         "requires": [
+            "capell-app/admin",
             "capell-app/core",
             "capell-app/frontend"
         ],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -30,13 +29,15 @@
         "runtime": [
             "Capell\\FrontendOptimizer\\Providers\\FrontendOptimizerServiceProvider"
         ],
-        "admin": [],
+        "admin": [
+            "Capell\\FrontendOptimizer\\Providers\\FrontendOptimizerServiceProvider"
+        ],
         "frontend": []
     },
     "contributes": [],
     "database": {
         "migrations": true,
-        "settings": false,
+        "settings": true,
         "requiredTables": []
     },
     "commands": {
@@ -45,24 +46,18 @@
         "demo": null,
         "doctor": null
     },
-    "settings": [],
-    "permissions": [],
-    "capabilities": [
-        "frontend-optimizer",
-        "frontend-optimizer-frontend"
+    "settings": [
+        "Capell\\FrontendOptimizer\\Settings\\FrontendOptimizerSettings"
     ],
+    "permissions": [],
+    "capabilities": ["frontend-optimizer", "frontend-optimizer-frontend"],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": [
-            "frontend-optimizer"
-        ],
+        "cacheTags": ["frontend-optimizer"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -92,12 +87,7 @@
                 "caption": "Frontend Optimizer extension preview"
             }
         ],
-        "categories": [
-            "foundation",
-            "frontend"
-        ]
+        "categories": ["foundation", "frontend"]
     },
-    "scopes": [
-        "frontend"
-    ]
+    "scopes": ["frontend"]
 }

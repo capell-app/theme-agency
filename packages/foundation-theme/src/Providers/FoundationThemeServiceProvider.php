@@ -106,7 +106,7 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
         $this->registerVendorNpmDependencies();
     }
 
-    private function isPackageInstalled(): bool
+    protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(self::$packageName);
     }

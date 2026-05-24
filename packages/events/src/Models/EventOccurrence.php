@@ -25,6 +25,7 @@ use Override;
  * @property EventBookingModeEnum $booking_mode
  * @property int|null $capacity
  * @property CarbonImmutable|null $ends_at
+ * @property EventLocationModeEnum $location_mode
  * @property string $occurrence_key
  * @property array<string, mixed> $override_data
  * @property int $registration_count
@@ -93,7 +94,7 @@ class EventOccurrence extends Model
             return null;
         }
 
-        $pageUrlModel = $this->event?->getRelationValue('pageUrl');
+        $pageUrlModel = $this->event->getRelationValue('pageUrl');
 
         if (! $pageUrlModel instanceof PageUrl || ! $pageUrlModel->exists) {
             return null;

@@ -92,6 +92,6 @@ class PageSeoReportData extends Data
             }
         }
 
-        return array_values($values);
+        return $values;
     }
 }

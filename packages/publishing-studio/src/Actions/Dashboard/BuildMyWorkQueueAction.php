@@ -81,7 +81,7 @@ final class BuildMyWorkQueueAction
      */
     private function buildApprovalItems(Authenticatable $user): Collection
     {
-        $morphClass = method_exists($user, 'getMorphClass') ? $user->getMorphClass() : $user::class;
+        $morphClass = $user->getMorphClass();
 
         $workspaceIds = WorkspaceReviewAssignment::query()
             ->where('reviewer_type', $morphClass)

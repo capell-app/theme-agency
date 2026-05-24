@@ -34,9 +34,9 @@ final class CampaignConversionGoalResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    private static string $formConfigurator = CampaignConversionGoalForm::class;
+    protected static string $formConfigurator = CampaignConversionGoalForm::class;
 
-    private static string $tableConfigurator = CampaignConversionGoalsTable::class;
+    protected static string $tableConfigurator = CampaignConversionGoalsTable::class;
 
     #[Override]
     public static function form(Schema $configurator): Schema
@@ -64,7 +64,7 @@ final class CampaignConversionGoalResource extends Resource
     }
 
     #[Override]
-    public static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): string
     {
         return __('capell-admin::navigation.group_marketing');
     }

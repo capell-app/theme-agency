@@ -20,7 +20,7 @@ class RegisterEventSchemaHooks
         $this->registry->register(
             RenderHookLocation::HeadClose,
             function (): string {
-                $pageable = Frontend::page()?->pageable ?? null;
+                $pageable = Frontend::page()->pageable ?? null;
 
                 if (! $pageable instanceof Event) {
                     return '';

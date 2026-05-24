@@ -60,21 +60,25 @@ class Grant extends AccessGateModel
 
     protected static string $factory = GrantFactory::class;
 
+    /** @return BelongsTo<Area, $this> */
     public function area(): BelongsTo
     {
         return $this->belongsTo(Area::class, 'access_area_id');
     }
 
+    /** @return BelongsTo<Registration, $this> */
     public function registration(): BelongsTo
     {
         return $this->belongsTo(Registration::class, 'registration_id');
     }
 
+    /** @return HasMany<ClaimToken, $this> */
     public function claimTokens(): HasMany
     {
         return $this->hasMany(ClaimToken::class, 'grant_id');
     }
 
+    /** @return HasMany<BrowserToken, $this> */
     public function browserTokens(): HasMany
     {
         return $this->hasMany(BrowserToken::class, 'grant_id');

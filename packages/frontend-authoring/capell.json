@@ -13,10 +13,7 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\FrontendAuthoring",
-    "surfaces": [
-        "frontend",
-        "console"
-    ],
+    "surfaces": ["frontend", "console"],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -24,7 +21,7 @@
             "capell-app/frontend",
             "capell-app/html-cache"
         ],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -54,15 +51,10 @@
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": [
-            "frontend-authoring"
-        ],
+        "cacheTags": ["frontend-authoring"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -92,18 +84,10 @@
                 "caption": "Frontend Authoring extension preview"
             }
         ],
-        "categories": [
-            "console",
-            "foundation",
-            "frontend"
-        ]
+        "categories": ["console", "foundation", "frontend"]
     },
-    "scopes": [
-        "frontend"
-    ],
+    "scopes": ["frontend"],
     "contributionTraceability": {
-        "deferredContributions": [
-            "route"
-        ]
+        "deferredContributions": ["route"]
     }
 }

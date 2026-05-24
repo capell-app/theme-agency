@@ -132,14 +132,14 @@ final class RegisterLayoutBuilderPreviewBlocksAction
 
         return collect($assetState)
             ->filter(fn (mixed $asset): bool => is_array($asset))
-            ->map(function (array $asset) use ($page, $block, $containerKey, $occurrence, $existingAssets, $targetModels): ?BlockAsset {
+            ->map(function (array $asset) use ($page, $block, $containerKey, $occurrence, $existingAssets, $targetModels): BlockAsset {
                 $blockAsset = isset($asset['id']) && is_numeric($asset['id'])
                     ? $existingAssets->get((int) $asset['id'])
                     : null;
 
                 $blockAsset = $blockAsset instanceof BlockAsset
                     ? clone $blockAsset
-                    : $block->assets()->make();
+                    : $this->newBlockAsset($block);
 
                 $blockAsset->forceFill([
                     'block_id' => $block->getKey(),
@@ -165,6 +165,15 @@ final class RegisterLayoutBuilderPreviewBlocksAction
             ->filter()
             ->sortBy(fn (BlockAsset $blockAsset): int => (int) $blockAsset->order)
             ->values();
+    }
+
+    private function newBlockAsset(Block $block): BlockAsset
+    {
+        $blockAsset = $block->assets()->make();
+
+        throw_unless($blockAsset instanceof BlockAsset);
+
+        return $blockAsset;
     }
 
     /**

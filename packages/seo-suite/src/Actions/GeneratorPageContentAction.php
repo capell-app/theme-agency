@@ -12,7 +12,6 @@ use Capell\SeoSuite\Events\AiGenerationStarted;
 use Capell\SeoSuite\Support\Pipelines\GenerateContentPipeline;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
-use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
@@ -31,9 +30,6 @@ class GeneratorPageContentAction
         Event::dispatch(new AiGenerationStarted(static::class, [$context, $options]));
 
         try {
-            throw_unless($context instanceof AiActionContextInterface, InvalidArgumentException::class, 'Invalid context');
-            throw_unless(is_array($options), InvalidArgumentException::class, 'Options must be an array');
-
             $input = AiGenerationInputData::forContextAction('GeneratorPageContentAction', $context, $options);
             $result = $this->pipeline->execute($input);
 

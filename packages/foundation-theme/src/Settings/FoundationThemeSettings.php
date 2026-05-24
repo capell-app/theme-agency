@@ -10,15 +10,13 @@ use Spatie\LaravelSettings\Settings;
 
 class FoundationThemeSettings extends Settings implements SettingsContract
 {
-    /** @var array<string, string> */
-    public const SECTION_SPACING_OPTIONS = [
+    public const array SECTION_SPACING_OPTIONS = [
         'comfortable' => 'clamp(2.75rem, 5vw, 4.75rem)',
         'relaxed' => 'clamp(3.5rem, 6vw, 6rem)',
         'spacious' => 'clamp(4.5rem, 7vw, 7.25rem)',
     ];
 
-    /** @var array<string, string> */
-    public const WIDGET_GAP_OPTIONS = [
+    public const array WIDGET_GAP_OPTIONS = [
         'compact' => 'clamp(1rem, 2vw, 1.5rem)',
         'balanced' => 'clamp(1.25rem, 2.5vw, 2rem)',
         'airy' => 'clamp(1.75rem, 3vw, 2.75rem)',

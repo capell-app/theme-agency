@@ -34,7 +34,7 @@ it('proves the WorkspaceDraftableFixture honours the BelongsToWorkspace contract
     $factory = function (?Workspace $workspace): WorkspaceDraftableFixture {
         $row = new WorkspaceDraftableFixture;
         $row->forceFill([
-            'workspace_id' => $workspace?->id ?? 0,
+            'workspace_id' => $workspace->id ?? 0,
             'uuid' => (string) Str::uuid(),
             'name' => 'contract-row',
         ])->save();

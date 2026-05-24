@@ -9,7 +9,6 @@ use Capell\AgentBridge\Data\CapabilityInvocationData;
 use Capell\AgentBridge\Data\CapabilityResultData;
 use Capell\Core\Models\Page;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Validation\ValidationException;
 
 final class UpdateDraftPageCapabilityAction implements CapellAgentBridgeCapabilityAction
 {
@@ -77,10 +76,6 @@ final class UpdateDraftPageCapabilityAction implements CapellAgentBridgeCapabili
     private function pageClass(): string
     {
         $pageClass = Page::class;
-
-        if (! is_subclass_of($pageClass, Model::class)) {
-            throw ValidationException::withMessages(['page' => 'Capell Page model is not available.']);
-        }
 
         return $pageClass;
     }

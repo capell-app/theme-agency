@@ -13,15 +13,10 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Corporate",
-    "surfaces": [
-        "frontend"
-    ],
+    "surfaces": ["frontend"],
     "dependencies": {
-        "requires": [
-            "capell-app/core",
-            "capell-app/foundation-theme"
-        ],
-        "optional": [],
+        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -47,22 +42,14 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "theme-corporate",
-        "theme-corporate-frontend"
-    ],
+    "capabilities": ["theme-corporate", "theme-corporate-frontend"],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": [
-            "theme-corporate"
-        ],
+        "cacheTags": ["theme-corporate"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -92,10 +79,7 @@
                 "caption": "Theme Corporate extension preview"
             }
         ],
-        "categories": [
-            "frontend",
-            "themes"
-        ]
+        "categories": ["frontend", "themes"]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "corporate"

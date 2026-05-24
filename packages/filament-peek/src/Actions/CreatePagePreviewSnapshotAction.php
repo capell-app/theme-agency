@@ -9,6 +9,7 @@ use Capell\FilamentPeek\Data\PagePreviewSnapshotData;
 use Capell\FilamentPeek\Providers\FilamentPeekServiceProvider;
 use Capell\PublishingStudio\WorkspaceContext;
 use Filament\Facades\Filament;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -68,17 +69,17 @@ final class CreatePagePreviewSnapshotAction
         return PagePreviewSnapshotData::from($payload);
     }
 
-    private function currentUser(): ?Model
+    private function currentUser(): ?Authenticatable
     {
         $filamentUser = Filament::auth()->user();
 
-        if ($filamentUser instanceof Model) {
+        if ($filamentUser instanceof Authenticatable) {
             return $filamentUser;
         }
 
         $user = Auth::user();
 
-        return $user instanceof Model ? $user : null;
+        return $user instanceof Authenticatable ? $user : null;
     }
 
     private function currentWorkspaceId(): ?int

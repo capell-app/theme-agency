@@ -91,10 +91,7 @@ class EmailVariableRenderer
 
         $missingVariables = [];
 
-        foreach ($matches[1] ?? [] as $variableName) {
-            if (! is_string($variableName)) {
-                continue;
-            }
+        foreach ($matches[1] as $variableName) {
 
             if (! in_array($variableName, $declaredVariables, true) || ! array_key_exists($variableName, $variables)) {
                 $missingVariables[] = $variableName;

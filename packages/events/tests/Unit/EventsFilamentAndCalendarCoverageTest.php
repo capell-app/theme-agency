@@ -16,6 +16,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -37,7 +38,11 @@ it('builds the event resource form schema', function (): void {
         ->each->toBeInstanceOf(Section::class);
 
     $fields = collect($components)
-        ->flatMap(fn (Section $section): array => ReadsRawSchemaComponents::childComponents($section))
+        ->flatMap(function (Component $section): array {
+            throw_unless($section instanceof Section);
+
+            return ReadsRawSchemaComponents::childComponents($section);
+        })
         ->values();
 
     expect($fields)

@@ -29,7 +29,7 @@ class TranslationMetaSchema
                                 ->placeholder(
                                     fn (?Translation $record): string => __(
                                         'capell-admin::generic.meta_title_after_text',
-                                        ['site' => $record?->title ?? config('app.name')],
+                                        ['site' => $record->title ?? config('app.name')],
                                     ),
                                 ),
                             Textarea::make('description')

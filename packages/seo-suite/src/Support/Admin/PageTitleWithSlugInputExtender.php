@@ -140,7 +140,7 @@ class PageTitleWithSlugInputExtender implements PageTitleWithSlugInputExtenderCo
         $keywords = isset($data['keywords']) ? trim((string) $data['keywords']) : '';
         $content = isset($data['content']) ? trim((string) $data['content']) : '';
         $includeCurrent = (bool) ($data['includeCurrentTitle'] ?? false);
-        $currentTitle = $data['title'] ?? ($record?->title ?? '');
+        $currentTitle = $data['title'] ?? ($record->title ?? '');
 
         $context = new ContentActionContext(
             content: $content,

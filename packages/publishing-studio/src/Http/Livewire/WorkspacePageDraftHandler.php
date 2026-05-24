@@ -69,7 +69,7 @@ class WorkspacePageDraftHandler
     {
         $draft = Page::query()->withoutGlobalScopes()->findOrFail($draftId);
         $editPage->authorize('update', $draft);
-        $workspaceName = $draft->workspace?->name ?? '—';
+        $workspaceName = $draft->workspace->name ?? '—';
 
         DeletePageDraftAction::run($draft);
 

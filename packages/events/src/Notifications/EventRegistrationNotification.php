@@ -35,7 +35,7 @@ class EventRegistrationNotification extends Notification
         return (new MailMessage)
             ->subject($this->subject($event->name))
             ->line($event->name)
-            ->line($occurrence->starts_at?->setTimezone($occurrence->timezone)->format('j F Y H:i') ?? '')
+            ->line($occurrence->starts_at->setTimezone($occurrence->timezone)->format('j F Y H:i') ?? '')
             ->line(__('capell-events::notification.thank_you'));
     }
 

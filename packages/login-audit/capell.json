@@ -13,28 +13,18 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\LoginAudit",
-    "surfaces": [
-        "admin"
-    ],
+    "surfaces": ["admin"],
     "dependencies": {
-        "requires": [
-            "capell-app/admin"
-        ],
-        "optional": [],
+        "requires": ["capell-app/admin"],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
         "metadata": [],
         "install": [],
-        "auth": [
-            "Capell\\LoginAudit\\Providers\\LoginAuditServiceProvider"
-        ],
-        "runtime": [
-            "Capell\\LoginAudit\\Providers\\LoginAuditServiceProvider"
-        ],
-        "admin": [
-            "Capell\\LoginAudit\\Providers\\AdminServiceProvider"
-        ],
+        "auth": ["Capell\\LoginAudit\\Providers\\LoginAuditServiceProvider"],
+        "runtime": ["Capell\\LoginAudit\\Providers\\LoginAuditServiceProvider"],
+        "admin": ["Capell\\LoginAudit\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
     "contributes": [],
@@ -51,10 +41,7 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "login-audit",
-        "login-audit-admin"
-    ],
+    "capabilities": ["login-audit", "login-audit-admin"],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
@@ -91,10 +78,7 @@
                 "caption": "Login Audit extension preview"
             }
         ],
-        "categories": [
-            "admin",
-            "operations"
-        ]
+        "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
         "deferredContributions": [

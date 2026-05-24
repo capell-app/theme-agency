@@ -93,8 +93,8 @@ final class BuildAiDiscoveryPageEntriesAction
             $page->pageUrl->setRelation('siteDomain', $context->siteDomain);
         }
 
-        $url = $page->pageUrl?->full_url ?? '';
-        $title = trim(strip_tags($page->translation?->title ?? $page->translation?->label ?? $page->name ?? ''));
+        $url = $page->pageUrl->full_url ?? '';
+        $title = trim(strip_tags($page->translation->title ?? $page->translation->label ?? $page->name ?? ''));
 
         if ($url === '' || $title === '') {
             return null;

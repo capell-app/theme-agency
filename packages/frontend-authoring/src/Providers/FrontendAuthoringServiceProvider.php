@@ -39,7 +39,7 @@ class FrontendAuthoringServiceProvider extends ServiceProvider
         $this->app->singleton(EditableRegionSigner::class, fn (): EditableRegionSigner => new EditableRegionSigner);
     }
 
-    private function isPackageInstalled(): bool
+    protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(static::$packageName);
     }

@@ -80,7 +80,7 @@ class EditPageSeoAuditWidget extends Widget
         ]);
 
         $site = $this->record->site;
-        $language = $this->record->translation?->language ?? $site?->language;
+        $language = $this->record->translation->language ?? $site->language;
 
         if (! $site instanceof Site || ! $language instanceof Language) {
             return null;

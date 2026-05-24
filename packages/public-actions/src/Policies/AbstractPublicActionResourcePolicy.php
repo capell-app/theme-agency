@@ -90,10 +90,6 @@ abstract class AbstractPublicActionResourcePolicy
             return true;
         }
 
-        if (! method_exists($user, 'checkPermissionTo')) {
-            return false;
-        }
-
         try {
             return $user->checkPermissionTo(self::permission($ability, static::subject()));
         } catch (Throwable) {
@@ -103,9 +99,6 @@ abstract class AbstractPublicActionResourcePolicy
 
     private function isSuperAdmin(User $user): bool
     {
-        if (! method_exists($user, 'hasRole')) {
-            return false;
-        }
 
         try {
             return $user->hasRole(config('capell.roles.super_admin', 'super_admin'));

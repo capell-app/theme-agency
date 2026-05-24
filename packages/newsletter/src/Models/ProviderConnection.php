@@ -15,6 +15,8 @@ use Override;
 
 /**
  * @property ProviderType $provider
+ * @property array<string, mixed>|null $credentials
+ * @property array<string, mixed>|null $oauth_tokens
  */
 class ProviderConnection extends Model
 {

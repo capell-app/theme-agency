@@ -147,8 +147,8 @@ function registerPreviewTestRenderer(): void
 
         public function render(FrontendRenderContextData $context): SymfonyResponse
         {
-            $title = $context->page?->translation?->title ?? '';
-            $content = $context->page?->translation?->content ?? '';
+            $title = $context->page->translation->title ?? '';
+            $content = $context->page->translation->content ?? '';
             $name = $context->page?->getAttribute('name') ?? '';
             $image = $context->page instanceof Page && $context->page->relationLoaded('image')
                 ? $context->page->getRelation('image')?->uuid

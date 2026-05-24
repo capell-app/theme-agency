@@ -386,7 +386,7 @@ abstract class AbstractBlock extends Component
     {
         $site = $this->currentSite();
         $page = $this->currentPage();
-        $pageSiteId = $page?->site_id ?? null;
+        $pageSiteId = $page->site_id ?? null;
 
         if ($site instanceof Site && $this->siteId !== null && (int) $site->getKey() !== $this->siteId) {
             return false;

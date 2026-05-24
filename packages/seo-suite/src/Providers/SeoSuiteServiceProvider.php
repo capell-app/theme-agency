@@ -24,6 +24,7 @@ use Capell\Core\Events\PageSaved;
 use Capell\Core\Events\SiteCreated;
 use Capell\Core\Events\UrlVisitFailed;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\Models\Site;
 use Capell\Core\Support\ContentGraph\ContentGraphRegistry;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsGroupMetadata;
@@ -467,6 +468,11 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
         return $this;
     }
 
+    protected function isPackageInstalled(): bool
+    {
+        return CapellCore::isPackageInstalled(static::$packageName);
+    }
+
     private function bootInstalledPackage(): self
     {
         return $this
@@ -499,11 +505,19 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
 
     private function registerAiDiscoveryModelCacheInvalidation(): self
     {
-        AiDiscoverySiteProfile::saved(fn (AiDiscoverySiteProfile $profile): int => ClearAiDiscoveryCacheAction::run($profile->site, $profile->language));
-        AiDiscoverySiteProfile::deleted(fn (AiDiscoverySiteProfile $profile): int => ClearAiDiscoveryCacheAction::run($profile->site, $profile->language));
+        AiDiscoverySiteProfile::saved(fn (AiDiscoverySiteProfile $profile): int => $profile->site instanceof Site
+            ? ClearAiDiscoveryCacheAction::run($profile->site, $profile->language)
+            : 0);
+        AiDiscoverySiteProfile::deleted(fn (AiDiscoverySiteProfile $profile): int => $profile->site instanceof Site
+            ? ClearAiDiscoveryCacheAction::run($profile->site, $profile->language)
+            : 0);
 
-        AiDiscoveryPageProfile::saved(fn (AiDiscoveryPageProfile $profile): int => ClearAiDiscoveryCacheAction::run($profile->site, $profile->language, $profile->page));
-        AiDiscoveryPageProfile::deleted(fn (AiDiscoveryPageProfile $profile): int => ClearAiDiscoveryCacheAction::run($profile->site, $profile->language, $profile->page));
+        AiDiscoveryPageProfile::saved(fn (AiDiscoveryPageProfile $profile): int => $profile->site instanceof Site
+            ? ClearAiDiscoveryCacheAction::run($profile->site, $profile->language, $profile->page)
+            : 0);
+        AiDiscoveryPageProfile::deleted(fn (AiDiscoveryPageProfile $profile): int => $profile->site instanceof Site
+            ? ClearAiDiscoveryCacheAction::run($profile->site, $profile->language, $profile->page)
+            : 0);
 
         return $this;
     }
@@ -529,11 +543,6 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
         $metaSchema = data_get($event->context->site?->meta, 'meta_schema');
 
         return is_array($metaSchema) && in_array(MetaSchemaEnum::Image->getComponent(), $metaSchema, true);
-    }
-
-    private function isPackageInstalled(): bool
-    {
-        return CapellCore::isPackageInstalled(static::$packageName);
     }
 
     private function registerExtenderResolvers(): self

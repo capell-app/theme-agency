@@ -34,9 +34,9 @@ final class ResolvePageStructuredDataAction
             PageMetaSchemaAction::run($page, $site, $language),
             ...$this->breadcrumbSchemas($page, $site, $language),
             ...$this->configuredSchemas($page->meta ?? [], $site),
-            ...$this->configuredSchemas($page->translation?->meta ?? [], $site),
+            ...$this->configuredSchemas($page->translation->meta ?? [], $site),
         ])
-            ->filter(fn (mixed $schema): bool => is_array($schema) && $schema !== [])
+            ->filter(fn (array $schema): bool => $schema !== [])
             ->map(fn (array $schema): array => $this->withContext($this->normalizeUrls($schema, $site)))
             ->values()
             ->all();
@@ -95,7 +95,7 @@ final class ResolvePageStructuredDataAction
         }
 
         $siteUrl = $site->siteDomain?->full_url;
-        $siteName = $site->translation?->title ?? $site->name;
+        $siteName = $site->translation->title ?? $site->name;
 
         return [[
             '@context' => 'https://schema.org',
@@ -110,7 +110,7 @@ final class ResolvePageStructuredDataAction
                 [
                     '@type' => 'ListItem',
                     'position' => 2,
-                    'name' => $page->translation?->title ?? $page->name,
+                    'name' => $page->translation->title ?? $page->name,
                     'item' => $pageUrl,
                 ],
             ])),

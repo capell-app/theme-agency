@@ -170,6 +170,6 @@ class PageSeoPanel extends View
             }
         }
 
-        return $record->translation?->language ?? $site?->language;
+        return $record->translation->language ?? $site->language;
     }
 }

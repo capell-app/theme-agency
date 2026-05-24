@@ -80,6 +80,22 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
         });
     }
 
+    protected function isPackageInstalled(): bool
+    {
+        return CapellCore::getPackage(static::$packageName)->isInstalled();
+    }
+
+    protected function isLivewireV3(): bool
+    {
+        if (! class_exists(InstalledVersions::class) || ! InstalledVersions::isInstalled('livewire/livewire')) {
+            return true;
+        }
+
+        $version = InstalledVersions::getVersion('livewire/livewire');
+
+        return version_compare($version, '4.0.0', '<');
+    }
+
     private function bootInstalledPackage(): self
     {
         return $this
@@ -96,11 +112,6 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
             ->registerSeoSchemaTemplate()
             ->registerPublishingStudio()
             ->registerAboutCommand();
-    }
-
-    private function isPackageInstalled(): bool
-    {
-        return CapellCore::getPackage(static::$packageName)->isInstalled();
     }
 
     private function getVersion(): string
@@ -205,17 +216,6 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
         }
 
         return $this;
-    }
-
-    private function isLivewireV3(): bool
-    {
-        if (! class_exists(InstalledVersions::class) || ! InstalledVersions::isInstalled('livewire/livewire')) {
-            return true;
-        }
-
-        $version = InstalledVersions::getVersion('livewire/livewire');
-
-        return version_compare($version, '4.0.0', '<');
     }
 
     private function registerRoutes(): self

@@ -7,6 +7,7 @@ namespace Capell\PublicActions\Http\Controllers\Zapier;
 use Capell\PublicActions\Actions\BuildPublicActionIntegrationQueryAction;
 use Capell\PublicActions\Actions\BuildZapierSubmissionPayloadAction;
 use Capell\PublicActions\Enums\PublicActionIntegrationTokenAbility;
+use Capell\PublicActions\Models\PublicAction;
 use Capell\PublicActions\Models\PublicActionIntegrationToken;
 use Capell\PublicActions\Models\PublicActionSubmission;
 use Illuminate\Database\Eloquent\Builder;
@@ -32,7 +33,7 @@ final class ListZapierPublicActionSubmissionsController
             ->when($token->site_id !== null, fn (Builder $query): Builder => $query->where(
                 fn (Builder $builder): Builder => $builder->where('site_id', $token->site_id)->orWhereNull('site_id'),
             ))
-            ->whereHas('action', fn (Builder $query): Builder => $this->buildActionQuery->apply($query, $token))
+            ->whereIn('public_action_id', $this->buildActionQuery->handle($token)->select((new PublicAction)->getQualifiedKeyName()))
             ->when($afterId > 0, fn (Builder $query): Builder => $query->where('id', '>', $afterId))
             ->latest('submitted_at')
             ->limit(50)

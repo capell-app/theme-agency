@@ -13,16 +13,10 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\PasswordPolicy",
-    "surfaces": [
-        "admin",
-        "console"
-    ],
+    "surfaces": ["admin", "console"],
     "dependencies": {
-        "requires": [
-            "capell-app/admin",
-            "capell-app/core"
-        ],
-        "optional": [],
+        "requires": ["capell-app/admin", "capell-app/core"],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -48,9 +42,7 @@
         "demo": null,
         "doctor": null
     },
-    "settings": [
-        "Capell\\PasswordPolicy\\Settings\\PasswordPolicySettings"
-    ],
+    "settings": ["Capell\\PasswordPolicy\\Settings\\PasswordPolicySettings"],
     "permissions": [],
     "capabilities": [
         "password-policy",
@@ -93,15 +85,9 @@
                 "caption": "Password Policy extension preview"
             }
         ],
-        "categories": [
-            "admin",
-            "console",
-            "operations"
-        ]
+        "categories": ["admin", "console", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-page"
-        ]
+        "deferredContributions": ["admin-page"]
     }
 }

@@ -33,7 +33,7 @@ function invokeWorkspaceMiddleware(Request $request): Response
 
     return $middleware->handle($request, function (): Response {
         $response = new Response('ok');
-        $response->headers->set('X-Workspace-Context-Id', (string) (WorkspaceContext::current()?->id ?? ''));
+        $response->headers->set('X-Workspace-Context-Id', (string) (WorkspaceContext::current()->id ?? ''));
 
         return $response;
     });

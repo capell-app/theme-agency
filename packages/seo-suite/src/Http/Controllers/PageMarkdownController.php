@@ -34,8 +34,6 @@ class PageMarkdownController extends BaseController
     {
         $response = $this->render($request, $url, requireAcceptMarkdownEnabled: false, abortWhenUnavailable: true);
 
-        abort_unless($response instanceof Response, 404);
-
         return $response;
     }
 
@@ -49,7 +47,7 @@ class PageMarkdownController extends BaseController
         ?string $url,
         bool $requireAcceptMarkdownEnabled,
         bool $abortWhenUnavailable,
-    ): ?Response {
+    ): Response {
         [$site, $language, $siteDomain, $canonicalPath] = $this->resolveContext($request, $url);
 
         if (! $site instanceof Site || ! $language instanceof Language) {
@@ -118,11 +116,11 @@ class PageMarkdownController extends BaseController
         return ! $requireAcceptMarkdownEnabled || $siteProfile->accept_markdown_enabled;
     }
 
-    private function unavailable(bool $abortWhenUnavailable): ?Response
+    private function unavailable(bool $abortWhenUnavailable): Response
     {
         abort_if($abortWhenUnavailable, 404);
 
-        return null;
+        return response('', 404);
     }
 
     /**

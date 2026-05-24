@@ -63,7 +63,7 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
         VendorLoginAudit::observe(LoginAuditObserver::class);
     }
 
-    private function isPackageInstalled(): bool
+    protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(static::$packageName);
     }

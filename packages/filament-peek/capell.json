@@ -16,7 +16,7 @@
     "surfaces": ["admin", "frontend"],
     "dependencies": {
         "requires": ["capell-app/admin", "capell-app/frontend"],
-        "optional": [
+        "supports": [
             "capell-app/layout-builder",
             "capell-app/publishing-studio"
         ],

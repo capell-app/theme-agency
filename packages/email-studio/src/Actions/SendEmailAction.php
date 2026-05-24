@@ -6,7 +6,6 @@ namespace Capell\EmailStudio\Actions;
 
 use Capell\EmailStudio\Data\EmailAddressData;
 use Capell\EmailStudio\Data\EmailContextData;
-use Capell\EmailStudio\Data\EmailHeaderData;
 use Capell\EmailStudio\Data\SendEmailData;
 use Capell\EmailStudio\Enums\EmailMessageStatus;
 use Capell\EmailStudio\Enums\EmailRecipientStatus;
@@ -124,7 +123,7 @@ class SendEmailAction
         ])->flatMap(fn (mixed $addresses, string $type): array => collect($addresses)
             ->map(fn (mixed $address): array => [
                 'type' => $type,
-                'address' => $address instanceof EmailAddressData ? $address : EmailAddressData::from($address),
+                'address' => $address,
             ])
             ->all())
             ->values();
@@ -137,7 +136,7 @@ class SendEmailAction
     {
         return collect($data->headers)
             ->mapWithKeys(function (mixed $header): array {
-                $headerData = $header instanceof EmailHeaderData ? $header : EmailHeaderData::from($header);
+                $headerData = $header;
 
                 return [$headerData->name => $headerData->value];
             })

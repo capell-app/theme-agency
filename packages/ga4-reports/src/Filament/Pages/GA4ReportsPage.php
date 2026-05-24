@@ -44,7 +44,7 @@ final class GA4ReportsPage extends Page
     }
 
     #[Override]
-    public static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): string
     {
         return __('capell-admin::navigation.group_monitoring');
     }
@@ -56,7 +56,7 @@ final class GA4ReportsPage extends Page
     }
 
     #[Override]
-    public function getSubheading(): ?string
+    public function getSubheading(): string
     {
         return __('capell-ga4-reports::widgets.ga4_reports_hint');
     }

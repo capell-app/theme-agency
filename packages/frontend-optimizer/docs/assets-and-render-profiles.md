@@ -16,6 +16,8 @@ Use this package for public frontend CSS and JavaScript delivery. Do not use it 
 | `GenerateCriticalCssAction`              | Runs the configured `CriticalCssGenerator`.                           |
 | `@frontendOptimizerAssets($profileHash)` | Blade directive that renders stored assets for a profile.             |
 
+See [Critical CSS](critical-css.md) for the URL-based Playwright generation flow, settings, fallbacks, and page type opt-out.
+
 ## Register Layout Assets
 
 ```php
@@ -113,6 +115,8 @@ Render stored assets from Blade after the manifest has been persisted:
 | `capell-frontend-optimizer.playwright.viewports`   | Viewports used for critical CSS extraction.   |
 
 `CAPELL_FRONTEND_OPTIMIZER_NODE` overrides the Node binary in local or deployed environments.
+
+Critical CSS runtime settings are stored under the `frontend_optimizer` settings group. They include `enable_critical_css`, `automatic_generation`, `profile_scope`, `viewports`, `fold_multiplier`, `extra_fold_pixels`, `playwright_wait_strategy`, `playwright_timeout`, `max_inline_css_bytes`, and `debug_query_support`.
 
 ## Verification
 

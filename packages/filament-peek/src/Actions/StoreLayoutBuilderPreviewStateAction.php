@@ -9,6 +9,7 @@ use Capell\Core\Models\Layout;
 use Capell\FilamentPeek\Data\LayoutBuilderPreviewStateData;
 use Capell\FilamentPeek\Providers\FilamentPeekServiceProvider;
 use Filament\Facades\Filament;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -34,7 +35,7 @@ final class StoreLayoutBuilderPreviewStateAction
 
         $user = $this->currentUser();
 
-        if (! $user instanceof Model) {
+        if (! $user instanceof Authenticatable) {
             return;
         }
 
@@ -69,14 +70,14 @@ final class StoreLayoutBuilderPreviewStateAction
 
         $user ??= $this->currentUser();
 
-        if (! $user instanceof Model) {
+        if (! $user instanceof Authenticatable) {
             return;
         }
 
         Cache::store($this->cacheStore())->forget($this->cacheKey($page, $user));
     }
 
-    public function resolve(Pageable $page, Model $user): ?LayoutBuilderPreviewStateData
+    public function resolve(Pageable $page, Authenticatable $user): ?LayoutBuilderPreviewStateData
     {
         if (! $page instanceof Model) {
             return null;
@@ -91,20 +92,20 @@ final class StoreLayoutBuilderPreviewStateAction
         return LayoutBuilderPreviewStateData::from($payload);
     }
 
-    private function currentUser(): ?Model
+    private function currentUser(): ?Authenticatable
     {
         $filamentUser = Filament::auth()->user();
 
-        if ($filamentUser instanceof Model) {
+        if ($filamentUser instanceof Authenticatable) {
             return $filamentUser;
         }
 
         $user = Auth::user();
 
-        return $user instanceof Model ? $user : null;
+        return $user instanceof Authenticatable ? $user : null;
     }
 
-    private function cacheKey(Model $page, Model $user): string
+    private function cacheKey(Model $page, Authenticatable $user): string
     {
         return implode(':', [
             FilamentPeekServiceProvider::$name,

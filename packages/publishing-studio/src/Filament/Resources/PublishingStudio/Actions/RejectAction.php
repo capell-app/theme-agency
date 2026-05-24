@@ -42,7 +42,7 @@ class RejectAction extends Action
                     return;
                 }
 
-                $requiredLevels = $record->settings?->requiredApprovalLevels ?? 2;
+                $requiredLevels = $record->settings->requiredApprovalLevels ?? 2;
 
                 $record->reject($user, $requiredLevels, (string) $data['notes']);
 

@@ -61,21 +61,25 @@ class Registration extends AccessGateModel
 
     protected static string $factory = RegistrationFactory::class;
 
+    /** @return BelongsTo<Area, $this> */
     public function area(): BelongsTo
     {
         return $this->belongsTo(Area::class, 'access_area_id');
     }
 
+    /** @return HasMany<Grant, $this> */
     public function grants(): HasMany
     {
         return $this->hasMany(Grant::class, 'registration_id');
     }
 
+    /** @return HasMany<ClaimToken, $this> */
     public function claimTokens(): HasMany
     {
         return $this->hasMany(ClaimToken::class, 'registration_id');
     }
 
+    /** @return HasMany<Event, $this> */
     public function events(): HasMany
     {
         return $this->hasMany(Event::class, 'registration_id');

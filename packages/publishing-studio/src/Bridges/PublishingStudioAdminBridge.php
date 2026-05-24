@@ -45,11 +45,6 @@ final class PublishingStudioAdminBridge implements AdminBridge
 
     private function extensionPage(AdminBridgeRegistrar $registrar, string $packageName, string $page): void
     {
-        if (method_exists($registrar, 'extensionPage')) {
-            $registrar->extensionPage($packageName, $page);
-
-            return;
-        }
 
         resolve(ExtensionPageRegistry::class)->register($packageName, $page);
     }

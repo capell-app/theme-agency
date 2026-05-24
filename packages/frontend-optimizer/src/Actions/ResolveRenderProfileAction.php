@@ -7,12 +7,15 @@ namespace Capell\FrontendOptimizer\Actions;
 use Capell\FrontendOptimizer\Data\FrontendAssetDefinitionData;
 use Capell\FrontendOptimizer\Data\RenderProfileData;
 use Capell\FrontendOptimizer\Enums\OptimizationScope;
+use Capell\FrontendOptimizer\Support\CriticalCssSettings;
 use Capell\FrontendOptimizer\Support\FrontendAssetSet;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class ResolveRenderProfileAction
 {
     use AsAction;
+
+    public function __construct(private readonly CriticalCssSettings $criticalCssSettings) {}
 
     /**
      * @param  array<string, mixed>  $context
@@ -35,6 +38,7 @@ class ResolveRenderProfileAction
         $signature = [
             'assets' => array_map(static fn (FrontendAssetDefinitionData $asset): array => $asset->signature(), $assets),
             'context' => $this->normalize($context),
+            'critical_css' => $this->criticalCssSettings->signature(),
             'scope' => $scope->value,
         ];
 

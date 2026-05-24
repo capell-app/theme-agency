@@ -111,11 +111,11 @@ class AiCreatorPipeline
 
         $userMessage = strtr($prompt['user_template'], [
             '{{intent}}' => $data->intent,
-            '{{tone}}' => $data->tone ?? $context?->tone ?? 'professional',
-            '{{industry}}' => $data->industry ?? $context?->industry ?? 'general',
-            '{{target_audience}}' => $data->targetAudience ?? $context?->target_audience ?? 'general audience',
+            '{{tone}}' => $data->tone ?? $context->tone ?? 'professional',
+            '{{industry}}' => $data->industry ?? $context->industry ?? 'general',
+            '{{target_audience}}' => $data->targetAudience ?? $context->target_audience ?? 'general audience',
             '{{section_types}}' => $this->sectionRegistry->forAi(),
-            '{{brand_voice_notes}}' => $data->brandVoiceNotes ?? $context?->brand_voice_notes ?? 'none',
+            '{{brand_voice_notes}}' => $data->brandVoiceNotes ?? $context->brand_voice_notes ?? 'none',
         ]);
 
         $response = $this->provider->chat([

@@ -154,12 +154,6 @@ class KitProviderAdapter implements NewsletterProviderAdapter
     private function headers(ProviderConnection $connection): array
     {
         $credentials = is_array($connection->credentials) ? $connection->credentials : [];
-        $oauthTokens = is_array($connection->oauth_tokens) ? $connection->oauth_tokens : [];
-        $accessToken = $oauthTokens['access_token'] ?? null;
-
-        if (is_string($accessToken) && $accessToken !== '') {
-            return ['Authorization' => 'Bearer ' . $accessToken];
-        }
 
         return ['X-Kit-Api-Key' => $credentials['api_key'] ?? ''];
     }

@@ -29,6 +29,7 @@ use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\WorkspaceContext;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -67,9 +68,9 @@ final class RenderPagePreviewSnapshotAction
 
         $previewPage = $this->previewPage($page, $snapshot);
         $site = $previewPage->site;
-        $language = $previewPage->translation?->language ?? $site?->language;
+        $language = $previewPage->translation->language ?? $site->language;
         $layout = $previewPage->layout;
-        $theme = $layout?->theme ?? $site?->theme;
+        $theme = $layout->theme ?? $site->theme;
 
         abort_unless($site instanceof Site, 404);
         abort_unless($language instanceof Language, 404);
@@ -155,7 +156,7 @@ final class RenderPagePreviewSnapshotAction
 
     private function resolveLayout(Page $page, Page $previewPage, PagePreviewSnapshotData $snapshot): ?Layout
     {
-        $layoutId = $snapshot->layoutBuilderState?->layoutId ?? (int) $previewPage->layout_id;
+        $layoutId = $snapshot->layoutBuilderState->layoutId ?? (int) $previewPage->layout_id;
 
         $layout = ((int) $page->layout_id === $layoutId && $page->relationLoaded('layout'))
             ? clone $page->layout
@@ -178,9 +179,14 @@ final class RenderPagePreviewSnapshotAction
      */
     private function previewTranslations(Page $page, Page $previewPage, array $formState): EloquentCollection
     {
-        $translations = $page->relationLoaded('translations')
-            ? $page->translations->map(fn (Translation $translation): Translation => clone $translation)
-            : collect();
+        $translations = new EloquentCollection($page->relationLoaded('translations')
+            ? $page->translations->map(function (Model $translation): Translation {
+                throw_unless($translation instanceof Translation);
+
+                return clone $translation;
+            })
+                ->all()
+            : []);
 
         $stateTranslations = is_array($formState['translations'] ?? null) ? $formState['translations'] : [];
 
@@ -211,12 +217,12 @@ final class RenderPagePreviewSnapshotAction
                 }
             }
 
-            $translations = $translations->reject(
+            $translations = new EloquentCollection($translations->reject(
                 fn (Translation $candidate): bool => (int) $candidate->language_id === $languageId,
-            )->push($translation)->values();
+            )->push($translation)->values()->all());
         }
 
-        return new EloquentCollection($translations->all());
+        return $translations;
     }
 
     /**
@@ -244,9 +250,10 @@ final class RenderPagePreviewSnapshotAction
      */
     private function previewPageUrls(Page $page, ?Translation $translation): EloquentCollection
     {
-        $pageUrls = $page->relationLoaded('pageUrls')
+        $pageUrls = (new PageUrl)->newCollection($page->relationLoaded('pageUrls')
             ? $page->pageUrls->map(fn (PageUrl $pageUrl): PageUrl => clone $pageUrl)
-            : collect();
+                ->all()
+            : []);
 
         if ($translation instanceof Translation) {
             $pageUrls->each(function (PageUrl $pageUrl) use ($translation): void {
@@ -258,7 +265,7 @@ final class RenderPagePreviewSnapshotAction
             });
         }
 
-        return new EloquentCollection($pageUrls->all());
+        return $pageUrls;
     }
 
     private function registerThemeViews(?Theme $theme): void
@@ -327,7 +334,12 @@ final class RenderPagePreviewSnapshotAction
         $context->setFrontendData('publicPageRenderData', $renderContext->publicRenderData);
         $context->setFrontendData('assetManifest', $renderContext->publicRenderData->assetManifest);
         $context->setFrontendData('mediaHints', $renderContext->publicRenderData->mediaHints);
-        $context->setFrontendData('lcpMediaUrl', $renderContext->publicRenderData->mediaHints[0]->url ?? null);
+        $context->setFrontendData(
+            'lcpMediaUrl',
+            isset($renderContext->publicRenderData->mediaHints[0])
+                ? $renderContext->publicRenderData->mediaHints[0]->url
+                : null,
+        );
         $context->setFrontendData(
             'performanceReport',
             BuildPublicRenderPerformanceReportAction::run($renderContext->publicRenderData, $renderContext),
@@ -354,9 +366,10 @@ final class RenderPagePreviewSnapshotAction
      */
     private function previewMedia(Page $page, array $formState): EloquentCollection
     {
-        $media = $page->relationLoaded('media')
+        $media = $this->newMediaCollection($page->relationLoaded('media')
             ? $page->media->map(fn (Media $media): Media => clone $media)
-            : collect();
+                ->all()
+            : []);
 
         foreach ([
             'image' => MediaCollectionEnum::Image,
@@ -378,13 +391,23 @@ final class RenderPagePreviewSnapshotAction
             $previewMedia->setAttribute('model_type', $page->getMorphClass());
             $previewMedia->setAttribute('model_id', $page->getKey());
 
-            $media = $media
+            $media = $this->newMediaCollection($media
                 ->reject(fn (Media $candidate): bool => $candidate->collection_name === $collection->value)
                 ->push($previewMedia)
-                ->values();
+                ->values()
+                ->all());
         }
 
-        return new EloquentCollection($media->all());
+        return $media;
+    }
+
+    /**
+     * @param  list<Media>  $media
+     * @return EloquentCollection<int, Media>
+     */
+    private function newMediaCollection(array $media): EloquentCollection
+    {
+        return new EloquentCollection($media);
     }
 
     private function mediaFromFieldState(mixed $state, MediaCollectionEnum $collection): ?Media

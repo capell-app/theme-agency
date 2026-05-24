@@ -41,7 +41,7 @@ class InvalidatePublishedWorkspaceFrontendCacheAction
                 ->with('translations')
                 ->chunkById(100, function ($models) use ($invalidator): void {
                     foreach ($models as $model) {
-                        if ($model instanceof Model && $model instanceof Pageable) {
+                        if ($model instanceof Pageable) {
                             $invalidator->onSaved($model);
                         }
                     }

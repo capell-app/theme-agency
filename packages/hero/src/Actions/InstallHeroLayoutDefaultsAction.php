@@ -12,6 +12,7 @@ use Capell\Core\Models\Translation;
 use Capell\Core\Support\Creator\LayoutCreator;
 use Capell\LayoutBuilder\Actions\CreateHeroBlockAction;
 use Capell\LayoutBuilder\Support\Creator\BlockCreator;
+use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 /**
@@ -100,7 +101,9 @@ final class InstallHeroLayoutDefaultsAction
             ->with('translations')
             ->get()
             ->each(function (Page $page): void {
-                $page->translations->each(function (Translation $translation): void {
+                $page->translations->each(function (Model $translation): void {
+                    throw_unless($translation instanceof Translation);
+
                     $meta = is_array($translation->meta) ? $translation->meta : [];
                     $currentHero = $meta['hero'] ?? null;
                     $updates = [];

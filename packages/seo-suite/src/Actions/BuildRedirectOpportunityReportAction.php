@@ -83,7 +83,7 @@ final class BuildRedirectOpportunityReportAction
             ->first();
 
         $resolvedSiteId = $page?->site_id;
-        $resolvedLanguageId = $pageUrl?->language_id ?? $translation?->language_id;
+        $resolvedLanguageId = $pageUrl->language_id ?? $translation->language_id;
 
         return new RedirectOpportunityData(
             sourceUrl: $sourceUrl,

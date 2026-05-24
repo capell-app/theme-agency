@@ -13,15 +13,10 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\DashboardReports",
-    "surfaces": [
-        "admin"
-    ],
+    "surfaces": ["admin"],
     "dependencies": {
-        "requires": [
-            "capell-app/admin",
-            "capell-app/core"
-        ],
-        "optional": [],
+        "requires": ["capell-app/admin", "capell-app/core"],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -30,9 +25,7 @@
         "runtime": [
             "Capell\\DashboardReports\\Providers\\DashboardReportsServiceProvider"
         ],
-        "admin": [
-            "Capell\\DashboardReports\\Providers\\AdminServiceProvider"
-        ],
+        "admin": ["Capell\\DashboardReports\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
     "contributes": [],
@@ -49,10 +42,7 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "dashboard-reports",
-        "dashboard-reports-admin"
-    ],
+    "capabilities": ["dashboard-reports", "dashboard-reports-admin"],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
@@ -89,14 +79,9 @@
                 "caption": "Dashboard Reports extension preview"
             }
         ],
-        "categories": [
-            "admin",
-            "operations"
-        ]
+        "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "dashboard-widget"
-        ]
+        "deferredContributions": ["dashboard-widget"]
     }
 }

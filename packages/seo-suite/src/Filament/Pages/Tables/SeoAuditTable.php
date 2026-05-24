@@ -75,7 +75,7 @@ class SeoAuditTable implements TableConfigurator
                 ->sortable(false),
             TextColumn::make('search_preview_title')
                 ->label(__('capell-seo-suite::generic.seo_panel_search_preview'))
-                ->state(fn (Page $record): ?string => self::searchPreviewTitleFor($record))
+                ->state(fn (Page $record): string => self::searchPreviewTitleFor($record))
                 ->limit(60)
                 ->size('sm')
                 ->sortable(false),
@@ -258,7 +258,7 @@ class SeoAuditTable implements TableConfigurator
             ->first();
     }
 
-    private static function searchPreviewTitleFor(Page $record): ?string
+    private static function searchPreviewTitleFor(Page $record): string
     {
         $translation = $record->translation;
 

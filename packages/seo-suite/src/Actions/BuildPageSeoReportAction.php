@@ -137,9 +137,7 @@ final class BuildPageSeoReportAction
             return null;
         }
 
-        $value = method_exists($translation, 'getMeta')
-            ? $translation->getMeta($key)
-            : ($translation->meta[$key] ?? null);
+        $value = $translation->getMeta($key);
 
         return $this->stringValue($value);
     }

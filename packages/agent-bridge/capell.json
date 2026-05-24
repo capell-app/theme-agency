@@ -13,15 +13,10 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\AgentBridge",
-    "surfaces": [
-        "admin"
-    ],
+    "surfaces": ["admin"],
     "dependencies": {
-        "requires": [
-            "capell-app/admin",
-            "capell-app/core"
-        ],
-        "optional": [],
+        "requires": ["capell-app/admin", "capell-app/core"],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -47,10 +42,7 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "agent-bridge",
-        "agent-bridge-admin"
-    ],
+    "capabilities": ["agent-bridge", "agent-bridge-admin"],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
@@ -87,10 +79,7 @@
                 "caption": "Agent Bridge extension preview"
             }
         ],
-        "categories": [
-            "admin",
-            "operations"
-        ]
+        "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
         "deferredContributions": [

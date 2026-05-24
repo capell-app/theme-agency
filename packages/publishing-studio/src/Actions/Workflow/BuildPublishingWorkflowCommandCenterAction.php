@@ -267,9 +267,7 @@ final class BuildPublishingWorkflowCommandCenterAction
             return 0;
         }
 
-        $morphClass = method_exists($user, 'getMorphClass')
-            ? $user->getMorphClass()
-            : $user::class;
+        $morphClass = $user->getMorphClass();
 
         return WorkspaceReviewAssignment::query()
             ->whereIn('workspace_id', $this->visibleWorkspaceIdsQuery($user))
@@ -365,7 +363,7 @@ final class BuildPublishingWorkflowCommandCenterAction
     {
         $query = Page::query()->withoutGlobalScopes();
 
-        if ($user instanceof Authenticatable && ! SiteScope::isGlobalActor($user) && method_exists($user, 'getAssignedSiteIds')) {
+        if ($user instanceof Authenticatable && ! SiteScope::isGlobalActor($user)) {
             $siteIds = $user->getAssignedSiteIds();
 
             return $siteIds->isNotEmpty()
@@ -378,7 +376,7 @@ final class BuildPublishingWorkflowCommandCenterAction
 
     private function visibleWorkspaceIdsQuery(?Authenticatable $user): Builder
     {
-        if (! $user instanceof Authenticatable || SiteScope::isGlobalActor($user) || ! method_exists($user, 'getAssignedSiteIds')) {
+        if (! $user instanceof Authenticatable || SiteScope::isGlobalActor($user)) {
             return Workspace::query()
                 ->withoutGlobalScopes()
                 ->select('id');

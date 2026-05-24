@@ -13,10 +13,7 @@
         "bundle": "publishing-pro"
     },
     "namespace": "Capell\\PublishingStudio",
-    "surfaces": [
-        "admin",
-        "console"
-    ],
+    "surfaces": ["admin", "console"],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -25,7 +22,7 @@
             "capell-app/migration-assistant",
             "capell-app/navigation"
         ],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -36,9 +33,7 @@
         "runtime": [
             "Capell\\PublishingStudio\\Providers\\PublishingStudioServiceProvider"
         ],
-        "admin": [
-            "Capell\\PublishingStudio\\Providers\\AdminServiceProvider"
-        ],
+        "admin": ["Capell\\PublishingStudio\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
     "contributes": [
@@ -62,10 +57,7 @@
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": [
-            "workspaces",
-            "publishing_revisions"
-        ]
+        "requiredTables": ["workspaces", "publishing_revisions"]
     },
     "commands": {
         "install": null,
@@ -146,11 +138,7 @@
                 "caption": "Publishing Studio extension preview"
             }
         ],
-        "categories": [
-            "admin",
-            "console",
-            "publishing-pro"
-        ]
+        "categories": ["admin", "console", "publishing-pro"]
     },
     "contributionTraceability": {
         "deferredContributions": [

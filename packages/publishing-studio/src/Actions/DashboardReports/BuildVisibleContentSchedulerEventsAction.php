@@ -31,7 +31,7 @@ final class BuildVisibleContentSchedulerEventsAction
         $actor = auth()->user();
         $siteIds = null;
 
-        if ($actor instanceof Authenticatable && ! SiteScope::isGlobalActor($actor) && method_exists($actor, 'getAssignedSiteIds')) {
+        if ($actor instanceof Authenticatable && ! SiteScope::isGlobalActor($actor)) {
             $siteIds = $actor->getAssignedSiteIds()->all();
 
             if ($siteIds === []) {
@@ -49,7 +49,7 @@ final class BuildVisibleContentSchedulerEventsAction
             limit: $limit,
         );
 
-        if (! $actor instanceof Authenticatable || SiteScope::isGlobalActor($actor) || ! method_exists($actor, 'getAssignedSiteIds')) {
+        if (! $actor instanceof Authenticatable || SiteScope::isGlobalActor($actor)) {
             return $events;
         }
 

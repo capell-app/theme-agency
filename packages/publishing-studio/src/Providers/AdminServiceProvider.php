@@ -103,6 +103,11 @@ class AdminServiceProvider extends ServiceProvider
             ->registerPolicies();
     }
 
+    protected function isPackageInstalled(): bool
+    {
+        return CapellCore::isPackageInstalled(PublishingStudioServiceProvider::$packageName);
+    }
+
     private function registerSettingsSchemas(): self
     {
         /** @var SettingsSchemaRegistry $registry */
@@ -120,11 +125,6 @@ class AdminServiceProvider extends ServiceProvider
         $registry->register('publishing_studio', PublishingStudioSettingsSchema::class);
 
         return $this;
-    }
-
-    private function isPackageInstalled(): bool
-    {
-        return CapellCore::isPackageInstalled(PublishingStudioServiceProvider::$packageName);
     }
 
     private function registerDashboardSettingsContributors(): self
@@ -263,11 +263,7 @@ class AdminServiceProvider extends ServiceProvider
             && in_array('registerAdminBridge', $managerMethods, true)
             && in_array('bootAdminBridges', $managerMethods, true)
             && class_exists(PublishingStudioAdminBridge::class)
-            && class_exists(AdminBridgeRegistrar::class)
-            && method_exists(AdminBridgeRegistrar::class, 'schemaExtender')
-            && method_exists(AdminBridgeRegistrar::class, 'dashboardWidget')
-            && method_exists(AdminBridgeRegistrar::class, 'resource')
-            && method_exists(AdminBridgeRegistrar::class, 'extensionPage');
+            && class_exists(AdminBridgeRegistrar::class);
     }
 
     private function registerOverviewStats(): self

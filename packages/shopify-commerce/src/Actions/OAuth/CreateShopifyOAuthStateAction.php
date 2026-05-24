@@ -22,7 +22,7 @@ final class CreateShopifyOAuthStateAction
             'nonce' => $nonce,
             'shop_domain' => $shopDomain,
             'site_id' => $siteId,
-            'user_id' => method_exists($user, 'getAuthIdentifier') ? $user->getAuthIdentifier() : null,
+            'user_id' => $user->getAuthIdentifier(),
             'expires_at' => now()->addSeconds(max(60, $ttlSeconds)),
         ]);
 

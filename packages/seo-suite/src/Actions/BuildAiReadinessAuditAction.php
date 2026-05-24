@@ -97,7 +97,7 @@ final class BuildAiReadinessAuditAction
     {
         $meta = (array) $translation?->meta;
 
-        return trim(strip_tags((string) ($meta['title'] ?? $translation?->title ?? $page->name)));
+        return trim(strip_tags((string) ($meta['title'] ?? $translation->title ?? $page->name)));
     }
 
     private function canonicalUrl(Page $page, Language $language): string

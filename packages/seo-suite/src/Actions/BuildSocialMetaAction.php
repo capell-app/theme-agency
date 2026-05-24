@@ -44,9 +44,9 @@ class BuildSocialMetaAction
             imageMimeType: $imageMimeType,
             imageAlt: $imageAlt,
             ogType: $ogType,
-            url: $page->pageUrl?->full_url ?? '',
+            url: $page->pageUrl->full_url ?? '',
             locale: app()->getLocale(),
-            siteName: $site->translation?->title !== null && $site->translation?->title !== '' ? strip_tags($site->translation->title) : null,
+            siteName: $site->translation->title !== null && $site->translation->title !== '' ? strip_tags($site->translation->title) : null,
             twitterHandle: $site->getMeta('twitter'),
             articlePublishedTime: $ogType->isArticle() ? ($page->visible_from ?? $page->created_at)?->toIso8601String() : null,
             articleModifiedTime: $ogType->isArticle() ? $page->updated_at?->toIso8601String() : null,
@@ -91,13 +91,13 @@ class BuildSocialMetaAction
 
     private function resolveSocialImage(Pageable $page, Site $site): ?Media
     {
-        $socialImage = method_exists($page, 'socialImage') ? $page->socialImage : null;
+        $socialImage = $page->socialImage;
 
         if ($socialImage instanceof Media) {
             return $socialImage;
         }
 
-        $image = method_exists($page, 'image') ? $page->image : null;
+        $image = $page->image;
 
         if ($image instanceof Media) {
             return $image;

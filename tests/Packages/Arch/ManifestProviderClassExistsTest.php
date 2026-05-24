@@ -67,18 +67,12 @@ it('no two packages declare the same name in their capell.json manifest', functi
 
     $duplicates = array_filter($byName, fn (array $paths): bool => count($paths) > 1);
 
-    $expected = [];
-
     foreach (array_keys($duplicates) as $name) {
         sort($duplicates[$name]);
     }
 
-    foreach (array_keys($expected) as $name) {
-        sort($expected[$name]);
-    }
-
     expect($duplicates)->toBe(
-        $expected,
+        [],
         'New duplicate package name detected in capell.json — install order would be undefined:' .
         "\n" . json_encode($duplicates, JSON_PRETTY_PRINT),
     );

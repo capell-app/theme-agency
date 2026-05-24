@@ -183,7 +183,7 @@ class Workspace extends Model implements Userstampable
             'notes' => $notes,
         ]);
 
-        $requiredLevels = $this->settings?->requiredApprovalLevels ?? 2;
+        $requiredLevels = $this->settings->requiredApprovalLevels ?? 2;
 
         if ($level >= $requiredLevels) {
             $this->status = WorkspaceStatusEnum::Approved;

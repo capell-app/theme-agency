@@ -9,6 +9,8 @@ Use it when a site needs deterministic asset delivery per layout, widget set, si
 - `@frontendOptimizerAssets(...)` for rendering the resolved asset profile.
 - Layout and widget asset registries for package-owned frontend assets.
 - Critical CSS generation through `CriticalCssGenerator`, backed by Playwright by default.
+- Extension settings for viewports, fold depth, generation behavior, and inline-size limits.
+- A page type opt-out for pages that should not run above-the-fold CSS generation.
 - Render profile actions for resolving, preparing, persisting, and storing profile manifests.
 - `frontend_render_profiles` and `frontend_optimization_runs` tables.
 
@@ -16,12 +18,13 @@ Use it when a site needs deterministic asset delivery per layout, widget set, si
 
 - Requires `capell-app/core` and `capell-app/frontend`.
 - Adds one migration file that creates render profile and optimization run storage.
-- Adds no Filament pages, admin resources, public routes, or settings screen.
+- Registers extension settings and a page type configurator for critical CSS controls.
 - Frontend output is visible only where a theme or frontend view calls the Blade directive.
 
 ## Admin Surfaces
 
-None. This package has no `src/Filament` classes and registers no admin surface.
+- Extension settings are registered through `FrontendOptimizerSettings` and `FrontendOptimizerSettingsSchema`.
+- Page type critical CSS opt-out is registered through `FrontendOptimizerPageTypeConfigurator`.
 
 ## Frontend Surfaces
 
@@ -43,6 +46,12 @@ The package needs screenshot coverage for asset output, not for admin navigation
 - Empty screenshots are likely unless the demo theme calls the directive.
 - Playwright-backed critical CSS generation depends on the host runtime and browser availability.
 - Asset profile keys vary by render context; demo data should state the site, locale, layout, and theme used for capture.
+- Critical CSS generation should use a representative public URL for the profile; using an unusual page for a shared layout can produce a less useful above-the-fold subset.
+
+## Related Guides
+
+- [Critical CSS](critical-css.md)
+- [Assets And Render Profiles](assets-and-render-profiles.md)
 
 ## Verification
 

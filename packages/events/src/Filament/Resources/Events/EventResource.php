@@ -114,11 +114,11 @@ class EventResource extends PageResource
 
         $defaults = resolve(EnsureEventPublishingDefaultsAction::class);
 
-        if (! isset($data['blueprint_id']) || $data['blueprint_id'] === null || $data['blueprint_id'] === '') {
+        if (! isset($data['blueprint_id']) || $data['blueprint_id'] === '') {
             $data['blueprint_id'] = $defaults->eventPageType()->getKey();
         }
 
-        if (! isset($data['layout_id']) || $data['layout_id'] === null || $data['layout_id'] === '') {
+        if (! isset($data['layout_id']) || $data['layout_id'] === '') {
             $data['layout_id'] = $defaults->defaultEventLayout()->getKey();
         }
     }

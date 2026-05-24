@@ -15,7 +15,6 @@ use Capell\AccessGate\Models\BrowserToken;
 use Capell\AccessGate\Models\Grant;
 use Capell\Core\Actions\LoadSiteDomainFromUrlAction;
 use Capell\Core\Models\SiteDomain;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Encryption\Encrypter;
 use Illuminate\Cookie\CookieValuePrefix;
 use Illuminate\Database\Eloquent\Builder;
@@ -290,7 +289,7 @@ final class ResolveAccessGateAccessAction
         try {
             $encrypter = resolve(Encrypter::class);
             $decrypted = $encrypter->decrypt($value, false);
-        } catch (DecryptException|Throwable) {
+        } catch (Throwable) {
             return null;
         }
 

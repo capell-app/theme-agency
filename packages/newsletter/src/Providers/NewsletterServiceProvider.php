@@ -99,7 +99,7 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
         ], merge: true);
     }
 
-    private function isPackageInstalled(): bool
+    protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(self::$packageName);
     }

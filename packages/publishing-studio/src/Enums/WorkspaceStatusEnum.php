@@ -45,7 +45,7 @@ enum WorkspaceStatusEnum: string implements HasColor, HasIcon, HasLabel
         };
     }
 
-    public function getIcon(): string|Heroicon
+    public function getIcon(): Heroicon
     {
         return match ($this) {
             self::Open => Heroicon::OutlinedPencil,

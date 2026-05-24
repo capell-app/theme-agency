@@ -66,8 +66,10 @@ function invokeLoginAuditTableMethod(string $methodName, array $parameters = [])
     return $reflectionMethod->invokeArgs(null, $parameters);
 }
 
-function loginAuditTableForCoverage(Builder $query): Table
+function loginAuditTableForCoverage(mixed $query): Table
 {
+    throw_unless($query instanceof Builder);
+
     $livewire = Mockery::mock(HasTable::class);
     $livewire->shouldReceive('makeFilamentTranslatableContentDriver')->andReturn(null);
 

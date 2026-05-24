@@ -8,6 +8,7 @@ use Capell\FrontendOptimizer\Enums\OptimizationScope;
 use Capell\FrontendOptimizer\Enums\OptimizationStatus;
 use Capell\FrontendOptimizer\Jobs\GenerateCriticalCssJob;
 use Capell\FrontendOptimizer\Models\FrontendRenderProfile;
+use Capell\FrontendOptimizer\Support\CriticalCssSettings;
 use Capell\FrontendOptimizer\Support\FrontendAssetSet;
 use Illuminate\Contracts\Filesystem\Factory;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -16,7 +17,10 @@ class PrepareRenderProfileAction
 {
     use AsAction;
 
-    public function __construct(private readonly Factory $filesystems) {}
+    public function __construct(
+        private readonly Factory $filesystems,
+        private readonly CriticalCssSettings $criticalCssSettings,
+    ) {}
 
     /**
      * @param  array<string, mixed>  $context
@@ -48,7 +52,11 @@ class PrepareRenderProfileAction
 
     private function shouldDispatchGeneration(FrontendRenderProfile $profile): bool
     {
-        if (config('capell-frontend-optimizer.enabled', true) !== true) {
+        if (! $this->criticalCssSettings->automaticGenerationEnabled()) {
+            return false;
+        }
+
+        if ($this->criticalCssSettings->profileDisablesCriticalCss($profile->signature)) {
             return false;
         }
 

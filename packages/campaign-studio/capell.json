@@ -13,10 +13,7 @@
         "bundle": "growth"
     },
     "namespace": "Capell\\CampaignStudio",
-    "surfaces": [
-        "admin",
-        "frontend"
-    ],
+    "surfaces": ["admin", "frontend"],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -26,9 +23,7 @@
             "capell-app/insights",
             "capell-app/layout-builder"
         ],
-        "optional": [
-            "capell-app/seo-suite"
-        ],
+        "supports": ["capell-app/seo-suite"],
         "conflicts": []
     },
     "providers": {
@@ -37,9 +32,7 @@
         "runtime": [
             "Capell\\CampaignStudio\\Providers\\CampaignStudioServiceProvider"
         ],
-        "admin": [
-            "Capell\\CampaignStudio\\Providers\\AdminServiceProvider"
-        ],
+        "admin": ["Capell\\CampaignStudio\\Providers\\AdminServiceProvider"],
         "frontend": [
             "Capell\\CampaignStudio\\Providers\\FrontendServiceProvider"
         ]
@@ -66,15 +59,10 @@
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": [
-            "campaign-studio"
-        ],
+        "cacheTags": ["campaign-studio"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -104,11 +92,7 @@
                 "caption": "Campaign Studio extension preview"
             }
         ],
-        "categories": [
-            "admin",
-            "frontend",
-            "growth"
-        ]
+        "categories": ["admin", "frontend", "growth"]
     },
     "contributionTraceability": {
         "deferredContributions": [

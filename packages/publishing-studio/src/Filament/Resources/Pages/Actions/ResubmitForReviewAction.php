@@ -87,7 +87,7 @@ class ResubmitForReviewAction extends Action
         $workspace = $this->workspace($record);
 
         return $workspace instanceof Workspace
-            && auth()->user()?->can('submitForApproval', $workspace) === true;
+            && auth()->user()->can('submitForApproval', $workspace) === true;
     }
 
     private function workspace(Pageable $record): ?Workspace

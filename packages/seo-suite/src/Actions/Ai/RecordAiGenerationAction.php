@@ -21,7 +21,7 @@ class RecordAiGenerationAction
             return AIGenerationHistory::query()->create($result);
         }
 
-        $metadata = array_merge($result->response?->metadata ?? [], $result->metadata);
+        $metadata = array_merge($result->response->metadata ?? [], $result->metadata);
 
         if ($result->messages !== null) {
             $metadata['ai_messages'] = $result->messages;
@@ -42,8 +42,8 @@ class RecordAiGenerationAction
             'output' => $result->outputText,
             'prompt_tokens' => (int) ($result->response?->metadata['prompt_tokens'] ?? 0),
             'completion_tokens' => (int) ($result->response?->metadata['completion_tokens'] ?? 0),
-            'total_tokens' => $result->response?->tokensUsed ?? 0,
-            'duration' => $result->response?->duration ?? 0,
+            'total_tokens' => $result->response->tokensUsed ?? 0,
+            'duration' => $result->response->duration ?? 0,
             'pageable_id' => $result->pageableId,
             'pageable_type' => $result->pageableType,
             'language_id' => $result->languageId,

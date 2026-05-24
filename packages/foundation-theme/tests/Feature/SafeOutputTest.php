@@ -87,7 +87,7 @@ test('public action buttons mark their csrf output as non-cacheable', function (
     ]))->render();
 
     $contribution = collect(resolve(RecordExtensionRenderContributionAction::class)->recorded())
-        ->first(fn (mixed $record): bool => $record?->contributionClass === Actions::class);
+        ->first(fn (mixed $record): bool => $record->contributionClass === Actions::class);
 
     expect($contribution?->cacheable)->toBeFalse()
         ->and($contribution?->sensitiveOutput)->toBeTrue();

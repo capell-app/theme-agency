@@ -58,6 +58,6 @@ final class PeekPagePreviewAction extends Action
     {
         $state = $livewire->data ?? [];
 
-        return is_array($state) ? $state : [];
+        return $state;
     }
 }

@@ -252,7 +252,7 @@ final class BuildContentSchedulerEventsAction
             id: 'scheduler-event-' . $event->id,
             sourceType: 'workspace',
             sourceId: $event->source_id,
-            title: $workspace?->name ?? (string) __('capell-publishing-studio::scheduler.missing_workspace'),
+            title: $workspace->name ?? (string) __('capell-publishing-studio::scheduler.missing_workspace'),
             eventType: $event->event_type,
             scheduledFor: $event->scheduled_for,
             status: $event->state->getLabel(),
@@ -261,7 +261,7 @@ final class BuildContentSchedulerEventsAction
             state: $event->state,
             siteId: $event->site_id,
             ownerId: $event->owner_id,
-            ownerName: $event->owner?->name ?? null,
+            ownerName: $event->owner->name ?? null,
             timezone: $event->display_timezone,
             failure: $event->last_failure_message,
         );

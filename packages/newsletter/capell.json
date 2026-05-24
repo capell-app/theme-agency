@@ -13,10 +13,7 @@
         "bundle": "newsletter"
     },
     "namespace": "Capell\\Newsletter",
-    "surfaces": [
-        "admin",
-        "frontend"
-    ],
+    "surfaces": ["admin", "frontend"],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -25,18 +22,14 @@
             "capell-app/frontend",
             "capell-app/tags"
         ],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": [
-            "Capell\\Newsletter\\Providers\\NewsletterServiceProvider"
-        ],
-        "admin": [
-            "Capell\\Newsletter\\Providers\\AdminServiceProvider"
-        ],
+        "runtime": ["Capell\\Newsletter\\Providers\\NewsletterServiceProvider"],
+        "admin": ["Capell\\Newsletter\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
     "contributes": [],
@@ -53,23 +46,14 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "newsletter",
-        "newsletter-admin",
-        "newsletter-frontend"
-    ],
+    "capabilities": ["newsletter", "newsletter-admin", "newsletter-frontend"],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": [
-            "newsletter"
-        ],
+        "cacheTags": ["newsletter"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -120,11 +104,7 @@
                 "caption": "Newsletter extension preview"
             }
         ],
-        "categories": [
-            "admin",
-            "frontend",
-            "newsletter"
-        ]
+        "categories": ["admin", "frontend", "newsletter"]
     },
     "contributionTraceability": {
         "deferredContributions": [

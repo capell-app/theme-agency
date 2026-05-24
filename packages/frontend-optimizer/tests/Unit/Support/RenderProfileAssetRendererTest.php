@@ -36,13 +36,83 @@ it('renders only profile assets and inline critical css when available', functio
 
     $html = resolve(RenderProfileAssetRenderer::class)->render($profile->hash)->toHtml();
 
-    expect($html)->toContain('<style>.hero { display: grid; }</style>')
+    expect($html)->toContain('<style data-critical-css>.hero { display: grid; }</style>')
         ->and($html)->toContain('<link rel="stylesheet" href="/build/base.css">')
         ->and($html)->toContain('<link rel="preload" as="style" href="/build/carousel.css"')
         ->and($html)->toContain('<script type="module" defer src="/build/carousel.js"></script>')
         ->and($html)->not->toContain('capell')
         ->and($html)->not->toContain('editor')
         ->and($html)->not->toContain('signed');
+});
+
+it('renders normal stylesheet output when critical css is disabled globally', function (): void {
+    Storage::fake('local');
+    config()->set('capell-frontend-optimizer.enabled', false);
+
+    $profileData = ResolveRenderProfileAction::run(
+        scope: OptimizationScope::Layout,
+        context: ['layout' => 'landing'],
+        assetSets: [
+            FrontendAssetSet::make()->css(
+                handle: 'hero',
+                path: '/build/hero.css',
+                loadingStrategy: AssetLoadingStrategy::Critical,
+                slot: AssetSlot::AboveFold,
+                criticalEligible: true,
+            ),
+        ],
+    );
+
+    $profile = PersistRenderProfileAction::run($profileData);
+    $profile->forceFill([
+        'critical_css_path' => 'capell/frontend-optimizer/critical-css/test.css',
+        'status' => OptimizationStatus::Generated->value,
+    ])->save();
+
+    Storage::disk('local')->put('capell/frontend-optimizer/critical-css/test.css', '.hero { display: grid; }');
+
+    $html = resolve(RenderProfileAssetRenderer::class)->render($profile->hash)->toHtml();
+
+    expect($html)
+        ->toContain('<link rel="stylesheet" href="/build/hero.css">')
+        ->not->toContain('data-critical-css');
+});
+
+it('does not inline critical css for disabled page types', function (): void {
+    Storage::fake('local');
+
+    $profileData = ResolveRenderProfileAction::run(
+        scope: OptimizationScope::Layout,
+        context: [
+            'layout' => 'landing',
+            'page_type_meta' => [
+                'frontend_optimizer' => ['disable_critical_css' => true],
+            ],
+        ],
+        assetSets: [
+            FrontendAssetSet::make()->css(
+                handle: 'hero',
+                path: '/build/hero.css',
+                loadingStrategy: AssetLoadingStrategy::Critical,
+                slot: AssetSlot::AboveFold,
+                criticalEligible: true,
+            ),
+        ],
+    );
+
+    $profile = PersistRenderProfileAction::run($profileData);
+    $profile->forceFill([
+        'critical_css_path' => 'capell/frontend-optimizer/critical-css/test.css',
+        'status' => OptimizationStatus::Generated->value,
+    ])->save();
+
+    Storage::disk('local')->put('capell/frontend-optimizer/critical-css/test.css', '.hero { display: grid; }');
+
+    $html = resolve(RenderProfileAssetRenderer::class)->render($profile->hash)->toHtml();
+
+    expect($html)
+        ->toContain('<link rel="stylesheet" href="/build/hero.css">')
+        ->not->toContain('data-critical-css');
 });
 
 it('falls back to normal critical stylesheets until generated css is available', function (): void {

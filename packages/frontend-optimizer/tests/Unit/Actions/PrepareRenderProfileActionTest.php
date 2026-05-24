@@ -51,6 +51,25 @@ it('does not dispatch generation when the optimizer is disabled', function (): v
     Bus::assertNotDispatched(GenerateCriticalCssJob::class);
 });
 
+it('does not dispatch generation when the page type disables critical css', function (): void {
+    Storage::fake('local');
+    Bus::fake();
+
+    PrepareRenderProfileAction::run(
+        scope: OptimizationScope::Layout,
+        context: [
+            'layout' => 'landing',
+            'page_type_meta' => [
+                'frontend_optimizer' => ['disable_critical_css' => true],
+            ],
+        ],
+        assetSets: [FrontendAssetSet::make()->css('hero', '/build/hero.css', AssetLoadingStrategy::Critical)],
+        url: 'https://example.test/landing',
+    );
+
+    Bus::assertNotDispatched(GenerateCriticalCssJob::class);
+});
+
 it('dispatches generation again when the stored critical css file is missing', function (): void {
     Storage::fake('local');
     Bus::fake();

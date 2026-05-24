@@ -58,7 +58,7 @@ final class SchedulerIcalFeedController
             return false;
         }
 
-        if (! SiteScope::isGlobalActor($owner) && (! method_exists($owner, 'can') || ! $owner->can('viewAny', Workspace::class))) {
+        if (! SiteScope::isGlobalActor($owner) && ! $owner->can('viewAny', Workspace::class)) {
             return false;
         }
 

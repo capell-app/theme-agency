@@ -13,24 +13,16 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\AccessGate",
-    "surfaces": [
-        "admin"
-    ],
+    "surfaces": ["admin"],
     "dependencies": {
-        "requires": [
-            "capell-app/core"
-        ],
-        "optional": [
-            "capell-app/public-actions"
-        ],
+        "requires": ["capell-app/core"],
+        "supports": ["capell-app/public-actions"],
         "conflicts": []
     },
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": [
-            "Capell\\AccessGate\\Providers\\AccessGateServiceProvider"
-        ],
+        "runtime": ["Capell\\AccessGate\\Providers\\AccessGateServiceProvider"],
         "admin": [],
         "frontend": []
     },
@@ -96,10 +88,7 @@
                 "caption": "Access Gate extension preview"
             }
         ],
-        "categories": [
-            "admin",
-            "operations"
-        ]
+        "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
         "deferredContributions": [

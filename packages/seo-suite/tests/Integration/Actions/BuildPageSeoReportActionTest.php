@@ -117,7 +117,7 @@ it('detects noindex inside comma separated scalar robots directives', function (
 it('uses robots directives from the requested translation only', function (): void {
     $english = LanguageFactory::new()->create(['name' => 'English', 'code' => 'en']);
     $french = LanguageFactory::new()->create(['name' => 'French', 'code' => 'fr']);
-    $site = SiteFactory::new()->recycle($english)->language($english)->withTranslations(collect([$english, $french]))->create();
+    $site = SiteFactory::new()->recycle($english)->language($english)->withTranslations([$english, $french])->create();
     $page = PageFactory::new()
         ->site($site)
         ->withTranslations($english, [

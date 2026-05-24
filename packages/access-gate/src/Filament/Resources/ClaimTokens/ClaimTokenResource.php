@@ -83,13 +83,13 @@ final class ClaimTokenResource extends Resource
     }
 
     #[Override]
-    public static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): string
     {
         return (string) __('capell-admin::navigation.group_websites');
     }
 
     #[Override]
-    public static function getNavigationParentItem(): ?string
+    public static function getNavigationParentItem(): string
     {
         return __('capell-access-gate::filament.navigation_group');
     }

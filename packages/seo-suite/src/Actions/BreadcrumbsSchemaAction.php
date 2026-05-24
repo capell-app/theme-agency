@@ -32,7 +32,7 @@ class BreadcrumbsSchemaAction
                 $item = [
                     '@context' => 'https://schema.org',
                     '@type' => 'BreadcrumbList',
-                    '@id' => $canonicalPage->pageUrl?->full_url !== null && $canonicalPage->pageUrl?->full_url !== ''
+                    '@id' => $canonicalPage->pageUrl->full_url !== null && $canonicalPage->pageUrl->full_url !== ''
                         ? SchemaEntityTypeEnum::BreadcrumbList->toId($canonicalPage->pageUrl->full_url)
                         : null,
                     'itemListElement' => [],
@@ -59,7 +59,7 @@ class BreadcrumbsSchemaAction
             $item = [
                 '@context' => 'https://schema.org',
                 '@type' => 'BreadcrumbList',
-                '@id' => $page->pageUrl?->full_url !== null && $page->pageUrl?->full_url !== ''
+                '@id' => $page->pageUrl->full_url !== null && $page->pageUrl->full_url !== ''
                     ? SchemaEntityTypeEnum::BreadcrumbList->toId($page->pageUrl->full_url)
                     : null,
                 'itemListElement' => [],

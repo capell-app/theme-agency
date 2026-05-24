@@ -13,16 +13,10 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\Deployments",
-    "surfaces": [
-        "admin",
-        "console"
-    ],
+    "surfaces": ["admin", "console"],
     "dependencies": {
-        "requires": [
-            "capell-app/admin",
-            "capell-app/core"
-        ],
-        "optional": [],
+        "requires": ["capell-app/admin", "capell-app/core"],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -31,9 +25,7 @@
             "Capell\\Deployments\\Providers\\DeploymentsServiceProvider"
         ],
         "runtime": [],
-        "admin": [
-            "Capell\\Deployments\\Providers\\DeploymentsServiceProvider"
-        ],
+        "admin": ["Capell\\Deployments\\Providers\\DeploymentsServiceProvider"],
         "frontend": []
     },
     "contributes": [],
@@ -50,11 +42,7 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "deployments",
-        "deployments-admin",
-        "deployments-console"
-    ],
+    "capabilities": ["deployments", "deployments-admin", "deployments-console"],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
@@ -91,16 +79,9 @@
                 "caption": "Deployments extension preview"
             }
         ],
-        "categories": [
-            "admin",
-            "console",
-            "operations"
-        ]
+        "categories": ["admin", "console", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-page",
-            "route"
-        ]
+        "deferredContributions": ["admin-page", "route"]
     }
 }

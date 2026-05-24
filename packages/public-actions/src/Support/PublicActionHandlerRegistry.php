@@ -9,11 +9,11 @@ use InvalidArgumentException;
 
 final class PublicActionHandlerRegistry
 {
-    /** @var array<string, PublicActionHandler|class-string<PublicActionHandler>> */
+    /** @var array<string, PublicActionHandler|class-string> */
     private array $handlers = [];
 
     /**
-     * @param  PublicActionHandler|class-string<PublicActionHandler>  $handler
+     * @param  PublicActionHandler|class-string  $handler
      */
     public function register(string $key, PublicActionHandler|string $handler): void
     {

@@ -19,7 +19,7 @@ final class BuildZapierSubmissionPayloadAction
             actionKey: (string) $submission->action?->key,
             submittedAt: $submission->submitted_at?->toIso8601String() ?? $submission->created_at?->toIso8601String() ?? now()->toIso8601String(),
             payload: $submission->payload ?? [],
-            siteName: is_string($submission->site?->name ?? null) ? $submission->site->name : null,
+            siteName: is_string($submission->site->name ?? null) ? $submission->site->name : null,
             sourceType: $submission->source_type,
         );
     }

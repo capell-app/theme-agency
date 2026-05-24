@@ -34,10 +34,6 @@ final class ResolveCampaignFromUrlAction
 
         $path = $this->path($url);
 
-        if ($path === null) {
-            return null;
-        }
-
         $landingPage = CampaignLandingPage::query()
             ->whereHas('page.pageUrls', function (Builder $builder) use ($path): void {
                 $builder->where('url', $path);

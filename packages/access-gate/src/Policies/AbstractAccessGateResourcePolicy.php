@@ -123,10 +123,6 @@ abstract class AbstractAccessGateResourcePolicy
             return true;
         }
 
-        if (! method_exists($user, 'checkPermissionTo')) {
-            return false;
-        }
-
         try {
             return $user->checkPermissionTo($this->permission($ability, static::subject()));
         } catch (Throwable) {
@@ -136,9 +132,6 @@ abstract class AbstractAccessGateResourcePolicy
 
     private function isSuperAdmin(User $user): bool
     {
-        if (! method_exists($user, 'hasRole')) {
-            return false;
-        }
 
         try {
             return $user->hasRole(config('capell.roles.super_admin', 'super_admin'));

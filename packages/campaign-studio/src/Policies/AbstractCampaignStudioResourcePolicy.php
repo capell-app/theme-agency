@@ -90,11 +90,8 @@ abstract class AbstractCampaignStudioResourcePolicy
             return true;
         }
 
-        if (method_exists($user, 'getAssignedSiteIds')) {
-            return $user->getAssignedSiteIds()->contains($siteId);
-        }
+        return $user->getAssignedSiteIds()->contains($siteId);
 
-        return true;
     }
 
     protected function recordSiteId(Model $record): ?int
@@ -122,10 +119,6 @@ abstract class AbstractCampaignStudioResourcePolicy
     {
         if (SiteScope::isGlobalActor($user)) {
             return true;
-        }
-
-        if (! method_exists($user, 'checkPermissionTo')) {
-            return false;
         }
 
         try {

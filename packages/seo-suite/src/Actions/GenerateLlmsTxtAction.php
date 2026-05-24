@@ -84,7 +84,7 @@ final class GenerateLlmsTxtAction
     {
         return trim(strip_tags((string) $context->site->getMeta(
             'business_name',
-            $context->site->translation?->title ?? config('app.name'),
+            $context->site->translation->title ?? config('app.name'),
         )));
     }
 

@@ -13,17 +13,14 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\DocumentLifecycle",
-    "surfaces": [
-        "admin",
-        "console"
-    ],
+    "surfaces": ["admin", "console"],
     "dependencies": {
         "requires": [
             "capell-app/admin",
             "capell-app/core",
             "capell-app/publishing-studio"
         ],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -114,16 +111,9 @@
                 "caption": "Document Lifecycle extension preview"
             }
         ],
-        "categories": [
-            "admin",
-            "console",
-            "operations"
-        ]
+        "categories": ["admin", "console", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "model",
-            "migration"
-        ]
+        "deferredContributions": ["model", "migration"]
     }
 }

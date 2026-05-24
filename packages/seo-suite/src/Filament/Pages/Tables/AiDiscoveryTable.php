@@ -35,6 +35,7 @@ use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use LogicException;
 use Throwable;
@@ -191,7 +192,7 @@ class AiDiscoveryTable implements TableConfigurator
             Action::make('include_ai_index')
                 ->label(__('capell-seo-suite::generic.ai_discovery_include'))
                 ->icon('heroicon-o-check-circle')
-                ->visible(fn (Page $record): bool => ! (self::profileFor($record)?->include_in_ai_index ?? false))
+                ->visible(fn (Page $record): bool => ! (self::profileFor($record)->include_in_ai_index ?? false))
                 ->action(function (Page $record, Action $action): void {
                     self::updateInclusion($record, true);
                     $action->success();
@@ -201,7 +202,7 @@ class AiDiscoveryTable implements TableConfigurator
                 ->label(__('capell-seo-suite::generic.ai_discovery_exclude'))
                 ->icon('heroicon-o-x-circle')
                 ->color('gray')
-                ->visible(fn (Page $record): bool => self::profileFor($record)?->include_in_ai_index ?? false)
+                ->visible(fn (Page $record): bool => self::profileFor($record)->include_in_ai_index ?? false)
                 ->requiresConfirmation()
                 ->action(function (Page $record, Action $action): void {
                     self::updateInclusion($record, false);
@@ -228,7 +229,11 @@ class AiDiscoveryTable implements TableConfigurator
                 ->label(__('capell-seo-suite::generic.ai_discovery_include'))
                 ->icon('heroicon-o-check-circle')
                 ->action(function (EloquentCollection $records): void {
-                    $records->each(fn (Page $record): AiDiscoveryPageProfile => self::updateInclusion($record, true));
+                    $records->each(function (Model $record): void {
+                        if ($record instanceof Page) {
+                            self::updateInclusion($record, true);
+                        }
+                    });
                     self::notifyUpdated();
                 })
                 ->deselectRecordsAfterCompletion(),
@@ -238,7 +243,11 @@ class AiDiscoveryTable implements TableConfigurator
                 ->color('gray')
                 ->requiresConfirmation()
                 ->action(function (EloquentCollection $records): void {
-                    $records->each(fn (Page $record): AiDiscoveryPageProfile => self::updateInclusion($record, false));
+                    $records->each(function (Model $record): void {
+                        if ($record instanceof Page) {
+                            self::updateInclusion($record, false);
+                        }
+                    });
                     self::notifyUpdated();
                 })
                 ->deselectRecordsAfterCompletion(),
@@ -313,9 +322,9 @@ class AiDiscoveryTable implements TableConfigurator
         $profile = self::profileFor($record);
 
         return [
-            'include_in_ai_index' => $profile?->include_in_ai_index ?? true,
-            'section' => $profile?->section ?? 'Pages',
-            'priority' => $profile?->priority ?? 500,
+            'include_in_ai_index' => $profile->include_in_ai_index ?? true,
+            'section' => $profile->section ?? 'Pages',
+            'priority' => $profile->priority ?? 500,
             'summary' => $profile?->summary,
             'markdown_override' => $profile?->markdown_override,
             'exclude_reason' => $profile?->exclude_reason,
@@ -418,7 +427,7 @@ class AiDiscoveryTable implements TableConfigurator
 
         $record->loadMissing('pageUrl.siteDomain');
 
-        $url = trim($record->pageUrl?->full_url ?? '');
+        $url = trim($record->pageUrl->full_url ?? '');
 
         if ($url === '') {
             return null;

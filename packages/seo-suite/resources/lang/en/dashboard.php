@@ -11,6 +11,7 @@ return [
     'search_movement' => 'Search movement',
     'seo_opportunities' => 'SEO opportunities',
     'ai_discovery_coverage' => 'AI Discovery coverage',
+    'ai_metrics' => 'AI metrics',
     'clicks' => 'Clicks',
     'impressions' => 'Impressions',
     'ctr' => 'CTR',

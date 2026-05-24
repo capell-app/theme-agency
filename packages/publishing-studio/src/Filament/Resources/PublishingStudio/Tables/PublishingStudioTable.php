@@ -138,14 +138,14 @@ class PublishingStudioTable implements TableConfigurator
             TextColumn::make('status')
                 ->label(__('capell-admin::table.status'))
                 ->badge()
-                ->color(fn (Workspace $record): string => $record->status?->getColor() ?? 'gray')
+                ->color(fn (Workspace $record): string => $record->status->getColor() ?? 'gray')
                 ->sortable(),
             TextColumn::make('kind')
                 ->label(__('capell-admin::workspace.kind_label'))
                 ->badge()
-                ->color(fn (Workspace $record): string => $record->kind?->getColor() ?? 'gray')
+                ->color(fn (Workspace $record): string => $record->kind->getColor() ?? 'gray')
                 ->icon(function (Workspace $record): string {
-                    $icon = $record->kind?->getIcon();
+                    $icon = $record->kind->getIcon();
 
                     if ($icon instanceof Heroicon) {
                         return 'heroicon-' . $icon->value;
