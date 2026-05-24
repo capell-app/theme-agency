@@ -16,7 +16,7 @@ use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Layout;
 use Capell\LayoutBuilder\Enums\LayoutTypeEnum;
 use Capell\LayoutBuilder\Filament\Configurators\Types\BlockTypeConfigurator;
-use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\Widget as Block;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class InstallCampaignLayoutsAction
@@ -72,7 +72,7 @@ final class InstallCampaignLayoutsAction
                     'group' => 'CampaignStudio',
                     'containers' => $this->containersForPreset($preset, $blocks),
                     'status' => true,
-                    'blocks' => collect($blocks)
+                    'widgets' => collect($blocks)
                         ->map(fn (Block $block): string => $block->key)
                         ->values()
                         ->all(),
@@ -157,7 +157,7 @@ final class InstallCampaignLayoutsAction
             }
 
             $containers[$containerKey] = [
-                'blocks' => [],
+                'widgets' => [],
                 'meta' => [
                     'container' => $containerDefinition['width'] ?? null,
                 ],
@@ -183,8 +183,8 @@ final class InstallCampaignLayoutsAction
                 continue;
             }
 
-            $containers[$containerKey]['blocks'][] = [
-                'block_key' => $blocks[$blockType]->key,
+            $containers[$containerKey]['widgets'][] = [
+                'widget_key' => $blocks[$blockType]->key,
                 'occurrence' => 1,
             ];
         }
@@ -197,7 +197,7 @@ final class InstallCampaignLayoutsAction
         return Blueprint::query()->firstOrCreate(
             [
                 'key' => 'campaign',
-                'type' => LayoutTypeEnum::Block,
+                'type' => LayoutTypeEnum::Widget,
             ],
             [
                 'name' => __('capell-campaign-studio::generic.campaign'),

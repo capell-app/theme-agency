@@ -1,5 +1,7 @@
 # Creating A Capell Theme
 
+For tiering, database ownership, Layout Builder asset boundaries, and cross-theme change rules, start with the [Capell Theme Scale](theme-scale.md). This page is the implementation companion for creating one theme package.
+
 Capell themes are ordinary Composer packages. They register a frontend renderer,
 declare package metadata in `capell.json`, and optionally extend another theme.
 There is no separate Theme Studio metapackage to install, even though the runtime

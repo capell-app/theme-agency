@@ -61,6 +61,8 @@ it('declares event resource metadata and route defaults', function (): void {
     expect(EventResource::getModel())->toBe(Event::class)
         ->and(EventResource::getNavigationGroup())->toBe('capell-admin::navigation.group_content')
         ->and(EventResource::getNavigationLabel())->toBe('Events')
+        ->and(EventResource::getPluralModelLabel())->toBe('Events')
+        ->and(EventResource::getBreadcrumb())->toBe('Events')
         ->and(EventResource::getNavigationParentItem())->toBeNull()
         ->and(EventResource::getResourceName())->toBe('event')
         ->and(EventResource::getBasePath($site, $language))->toBe('/events/')

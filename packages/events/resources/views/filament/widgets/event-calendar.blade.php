@@ -1,4 +1,4 @@
-<x-filament-widgets::widget>
+<x-filament-widgets::widget class="capell-events-calendar-widget">
     <x-filament::section>
         <x-slot name="heading">
             {{ __('capell-events::generic.upcoming_occurrences') }}
@@ -6,13 +6,17 @@
 
         <div class="space-y-4">
             @forelse ($this->occurrencesByDate as $date => $occurrences)
+                @php
+                    $dateLabel = CarbonImmutable::parse($date)->isoFormat('dddd D MMMM YYYY');
+                @endphp
+
                 <div
                     class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-gray-900"
                 >
                     <div
                         class="mb-3 text-sm font-semibold text-gray-950 dark:text-white"
                     >
-                        {{ CarbonImmutable::parse($date)->isoFormat('dddd D MMMM YYYY') }}
+                        {{ $dateLabel }}
                     </div>
 
                     <div class="space-y-2">

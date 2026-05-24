@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Contracts\ThemePageAdapter;
 use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
@@ -13,10 +15,12 @@ use Capell\Core\ThemeStudio\Data\HeroSectionData;
 use Capell\Core\ThemeStudio\Data\NavigationData;
 use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Data\ThemePageData;
+use Capell\Core\ThemeStudio\Theme\ThemePageAdapterRegistry;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Saas\Health\ThemeSaasHealthCheck;
 use Capell\ThemeStudio\Saas\Rendering\BlogSectionRenderer;
 use Capell\ThemeStudio\Saas\SaasThemeServiceProvider;
+use Capell\ThemeStudio\Saas\ThemeStudio\Adapters\SaasThemePageAdapter;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
@@ -91,6 +95,28 @@ it('declares renderers for every included saas section', function (): void {
     ]);
 });
 
+it('registers premium landing page tailwind assets from the saas theme only when installed', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(SaasThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new SaasThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $packageImports = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindImport)
+        ->filter(fn (mixed $asset): bool => $asset->packageName === SaasThemeServiceProvider::$packageName)
+        ->pluck('value')
+        ->all();
+
+    $packageSources = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindSource)
+        ->filter(fn (mixed $asset): bool => $asset->packageName === SaasThemeServiceProvider::$packageName)
+        ->pluck('value')
+        ->all();
+
+    expect($packageImports)->not->toContain('resources/css/saas-theme.css')
+        ->and($packageSources)->toContain('resources/views/**/*.blade.php');
+});
+
 it('registers saas only when the theme package is installed', function (): void {
     CapellCore::clearPackages();
 
@@ -107,7 +133,9 @@ it('registers saas only when the theme package is installed', function (): void 
     $provider->boot($registry);
 
     expect($registry->has('saas'))->toBeTrue()
-        ->and($registry->definition('saas')->package)->toBe(SaasThemeServiceProvider::$packageName);
+        ->and($registry->definition('saas')->package)->toBe(SaasThemeServiceProvider::$packageName)
+        ->and($this->app->make(ThemePageAdapterRegistry::class)->has('saas'))->toBeTrue()
+        ->and($this->app->make(ThemePageAdapter::class))->not->toBeInstanceOf(SaasThemePageAdapter::class);
 });
 
 it('renders public theme markup without package identifiers', function (): void {

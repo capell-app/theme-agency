@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\ThemeStudio\Saas;
 
+use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
@@ -11,9 +12,11 @@ use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
+use Capell\Core\ThemeStudio\Theme\ThemePageAdapterRegistry;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Saas\Console\Commands\DemoCommand;
 use Capell\ThemeStudio\Saas\Rendering\BlogSectionRenderer;
+use Capell\ThemeStudio\Saas\ThemeStudio\Adapters\SaasThemePageAdapter;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -70,16 +73,22 @@ class SaasThemeServiceProvider extends ServiceProvider
 
     public function boot(ThemeRegistry $registry): void
     {
-        if (! CapellCore::isPackageInstalled(self::$packageName)) {
-            return;
-        }
-
         if ($this->app->runningInConsole()) {
             $this->commands([DemoCommand::class]);
         }
 
+        if (! CapellCore::isPackageInstalled(self::$packageName)) {
+            return;
+        }
+
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-saas');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-saas');
+        $this->publishes([
+            __DIR__ . '/../resources/css/saas-theme.css' => public_path('vendor/capell/themes/saas.css'),
+        ], 'capell-theme-saas-assets');
+        $this->registerVendorCssAssets();
+        $this->app->make(ThemePageAdapterRegistry::class)
+            ->register(self::THEME_KEY, SaasThemePageAdapter::class);
 
         $sectionRenderers = $this->sectionRenderers();
 
@@ -91,6 +100,13 @@ class SaasThemeServiceProvider extends ServiceProvider
                 sectionRenderers: $sectionRenderers,
             ),
             sectionRenderers: array_values($sectionRenderers),
+        );
+    }
+
+    private function registerVendorCssAssets(): void
+    {
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName),
         );
     }
 

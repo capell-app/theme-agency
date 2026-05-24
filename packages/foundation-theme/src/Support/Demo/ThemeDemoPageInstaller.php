@@ -11,6 +11,7 @@ use Capell\Core\Enums\LayoutEnum;
 use Capell\Core\Enums\PageTypeEnum;
 use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Language;
+use Capell\Core\Models\Layout;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\Theme;
@@ -175,6 +176,8 @@ final class ThemeDemoPageInstaller
         $creator = resolve(PageCreator::class);
 
         foreach ($definitions as $index => $definition) {
+            $this->updateExistingPageLayout($site, $definition);
+
             /** @var Page $page */
             $page = $creator->createPage([
                 'name' => $definition->name,
@@ -198,6 +201,20 @@ final class ThemeDemoPageInstaller
 
             SetupPageUrlsAction::run($page);
         }
+    }
+
+    private function updateExistingPageLayout(Site $site, ThemeDemoPageDefinition $definition): void
+    {
+        $layout = Layout::query()->firstWhere('key', $definition->layout->value);
+
+        if (! $layout instanceof Layout) {
+            return;
+        }
+
+        Page::query()
+            ->where('site_id', $site->getKey())
+            ->where('name', $definition->name)
+            ->update(['layout_id' => $layout->getKey()]);
     }
 
     /**
@@ -333,12 +350,13 @@ final class ThemeDemoPageInstaller
                 name: $brandName . ' Contact',
                 title: $brandName . ' Contact',
                 slug: 'theme-' . $themeKey . '-contact',
-                content: $this->content('Contact preview', 'A contact page sample with practical office, appointment, or enquiry copy.', $media['contact'][0]),
+                content: $this->contactContent(),
                 renderData: [
-                    'summary' => 'Contact page render data with contact-focused CTA and image media.',
-                    'hero' => ['heading' => 'Start a conversation', 'summary' => 'Preview enquiry copy with remote contact media.', 'mediaUrl' => $media['contact'][0]],
-                    'actions' => [['label' => 'Send enquiry', 'url' => 'mailto:hello@example.test', 'style' => 'primary']],
+                    'summary' => 'Contact page render data with routing cards, expectation details, and a static enquiry form.',
+                    'hero' => ['heading' => 'Start the right conversation', 'summary' => 'Route project scoping, support, migrations, and partnerships to the right team.', 'mediaUrl' => $media['contact'][0]],
+                    'actions' => [['label' => 'Send enquiry', 'url' => '#contact-form', 'style' => 'primary']],
                 ],
+                layout: LayoutEnum::System,
             ),
             new ThemeDemoPageDefinition(
                 surface: 'empty',
@@ -391,6 +409,326 @@ final class ThemeDemoPageInstaller
             e($imageUrl),
             e($imageUrl),
         );
+    }
+
+    private function contactContent(): string
+    {
+        return <<<'HTML'
+<style>
+    .theme-demo-contact-page {
+        background:
+            linear-gradient(135deg, rgba(15, 118, 110, 0.08), transparent 34rem),
+            #faf8ff;
+        color: #131b2e;
+        margin: 0;
+        padding: clamp(48px, 8vw, 96px) clamp(20px, 6vw, 72px);
+    }
+
+    .theme-demo-contact-shell {
+        display: grid;
+        gap: clamp(32px, 5vw, 72px);
+        margin: 0 auto;
+        max-width: 1240px;
+    }
+
+    .theme-demo-contact-gateway {
+        display: grid;
+        gap: clamp(32px, 5vw, 64px);
+    }
+
+    .theme-demo-contact-intro {
+        display: grid;
+        gap: 28px;
+    }
+
+    .theme-demo-contact-eyebrow,
+    .theme-demo-contact-routing article > p:first-child,
+    .theme-demo-contact-form label {
+        color: #0f766e;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0;
+        margin: 0;
+        text-transform: uppercase;
+    }
+
+    .theme-demo-contact-page h2,
+    .theme-demo-contact-page h3 {
+        letter-spacing: 0;
+    }
+
+    .theme-demo-contact-page h2 {
+        color: #131b2e;
+        font-size: clamp(2rem, 5vw, 3.75rem);
+        font-weight: 850;
+        line-height: 1;
+        margin: 0;
+        max-width: 12ch;
+    }
+
+    .theme-demo-contact-lede {
+        color: #475569;
+        font-size: 1.08rem;
+        line-height: 1.7;
+        margin: 0;
+        max-width: 44rem;
+    }
+
+    .theme-demo-contact-routing {
+        display: grid;
+        gap: 0;
+        border-top: 1px solid rgba(148, 163, 184, 0.42);
+    }
+
+    .theme-demo-contact-routing article {
+        border-bottom: 1px solid rgba(148, 163, 184, 0.42);
+        display: grid;
+        gap: 12px;
+        padding: 22px 0;
+    }
+
+    .theme-demo-contact-routing h3 {
+        color: #131b2e;
+        font-size: 1.15rem;
+        line-height: 1.2;
+        margin: 0;
+    }
+
+    .theme-demo-contact-routing article > p:last-child {
+        color: #475569;
+        line-height: 1.65;
+        margin: 0;
+    }
+
+    .theme-demo-contact-details {
+        border-bottom: 1px solid rgba(148, 163, 184, 0.42);
+        border-top: 1px solid rgba(148, 163, 184, 0.42);
+        display: grid;
+        gap: 18px;
+        padding: 24px 0;
+    }
+
+    .theme-demo-contact-details h3 {
+        color: #131b2e;
+        font-size: clamp(1.45rem, 3vw, 2rem);
+        font-weight: 850;
+        line-height: 1.1;
+        margin: 0;
+    }
+
+    .theme-demo-contact-details p,
+    .theme-demo-contact-expectations p {
+        color: #475569;
+        line-height: 1.65;
+        margin: 0;
+    }
+
+    .theme-demo-contact-form {
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(226, 232, 240, 0.95);
+        border-radius: 8px;
+        box-shadow: 0 28px 90px rgba(15, 23, 42, 0.12);
+        display: grid;
+        gap: 16px;
+        padding: clamp(22px, 4vw, 34px);
+    }
+
+    .theme-demo-contact-form-header {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    .theme-demo-contact-form-header h3 {
+        color: #131b2e;
+        font-size: 1.65rem;
+        font-weight: 850;
+        line-height: 1.12;
+        margin: 0;
+    }
+
+    .theme-demo-contact-form-header p {
+        color: #64748b;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .theme-demo-contact-field {
+        display: grid;
+        gap: 8px;
+    }
+
+    .theme-demo-contact-form input,
+    .theme-demo-contact-form select,
+    .theme-demo-contact-form textarea {
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        color: #0f172a;
+        font: inherit;
+        min-height: 46px;
+        padding: 10px 12px;
+        width: 100%;
+    }
+
+    .theme-demo-contact-form textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .theme-demo-contact-form button {
+        align-items: center;
+        background: #0f766e;
+        border: 0;
+        border-radius: 8px;
+        color: #ffffff;
+        display: inline-flex;
+        font: inherit;
+        font-weight: 800;
+        justify-content: center;
+        min-height: 48px;
+        padding: 12px 18px;
+    }
+
+    .theme-demo-contact-expectations {
+        border-top: 1px solid rgba(148, 163, 184, 0.42);
+        display: grid;
+        gap: 0;
+        margin-top: 8px;
+    }
+
+    .theme-demo-contact-expectations p {
+        border-bottom: 1px solid rgba(148, 163, 184, 0.42);
+        padding: 16px 0;
+    }
+
+    .theme-demo-contact-expectations strong {
+        color: #131b2e;
+    }
+
+    @media (min-width: 760px) {
+        .theme-demo-contact-routing article,
+        .theme-demo-contact-details {
+            grid-template-columns: minmax(10rem, 0.48fr) minmax(0, 1fr);
+        }
+
+        .theme-demo-contact-expectations {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .theme-demo-contact-expectations p {
+            border-bottom: 0;
+            border-left: 1px solid rgba(148, 163, 184, 0.42);
+            padding: 0 20px;
+        }
+
+        .theme-demo-contact-expectations p:first-child {
+            border-left: 0;
+            padding-left: 0;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .theme-demo-contact-gateway {
+            grid-template-columns: minmax(0, 1fr) minmax(22rem, 0.72fr);
+            align-items: start;
+        }
+
+        .theme-demo-contact-form {
+            position: sticky;
+            top: 32px;
+        }
+    }
+</style>
+<section id="contact" class="theme-demo-contact-page">
+    <div class="theme-demo-contact-shell">
+        <div class="theme-demo-contact-gateway">
+            <div class="theme-demo-contact-intro">
+                <p class="theme-demo-contact-eyebrow">Contact</p>
+                <h2>Start the right conversation</h2>
+                <p class="theme-demo-contact-lede">Tell us what you are planning, fixing, moving, or partnering on. One contact page routes project scoping, technical support, migrations, and partnerships to the right Capell team.</p>
+
+                <div class="theme-demo-contact-details">
+                    <h3>Capell Studio, London</h3>
+                    <p>Remote-first delivery with UK timezone handover. Send an enquiry and the contact form routes it into the right follow-up path.</p>
+                </div>
+
+                <div class="theme-demo-contact-routing">
+                    <article>
+                        <p>Project scoping</p>
+                        <div>
+                            <h3>New implementations</h3>
+                            <p>Plan content models, package boundaries, layouts, and launch checks before the build starts.</p>
+                        </div>
+                    </article>
+                    <article>
+                        <p>Support</p>
+                        <div>
+                            <h3>Existing site help</h3>
+                            <p>Route production issues, editor workflow questions, and package troubleshooting to the right owner.</p>
+                        </div>
+                    </article>
+                    <article>
+                        <p>Migration planning</p>
+                        <div>
+                            <h3>Move from legacy CMSs</h3>
+                            <p>Map pages, redirects, media, structured fields, and verification work into a clear migration path.</p>
+                        </div>
+                    </article>
+                    <article>
+                        <p>Partnerships</p>
+                        <div>
+                            <h3>Agency and technology work</h3>
+                            <p>Discuss delivery partnerships, packaged integrations, and repeatable theme or content operations.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <form id="contact-form" class="theme-demo-contact-form theme-demo-contact-form-panel" method="post" action="#">
+                <div class="theme-demo-contact-form-header">
+                    <p class="theme-demo-contact-eyebrow">Contact form</p>
+                    <h3>Send an enquiry</h3>
+                    <p>Share the context once. We will route it to the right delivery, support, migration, or partnership lead.</p>
+                </div>
+
+                <div class="theme-demo-contact-field">
+                    <label for="theme-demo-contact-name">Name</label>
+                    <input id="theme-demo-contact-name" name="name" type="text" autocomplete="name">
+                </div>
+                <div class="theme-demo-contact-field">
+                    <label for="theme-demo-contact-email">Work email</label>
+                    <input id="theme-demo-contact-email" name="email" type="email" autocomplete="email">
+                </div>
+                <div class="theme-demo-contact-field">
+                    <label for="theme-demo-contact-company">Company</label>
+                    <input id="theme-demo-contact-company" name="company" type="text" autocomplete="organization">
+                </div>
+                <div class="theme-demo-contact-field">
+                    <label for="theme-demo-contact-topic">Topic</label>
+                    <select id="theme-demo-contact-topic" name="topic">
+                        <option>Project scoping</option>
+                        <option>Support</option>
+                        <option>Migration planning</option>
+                        <option>Partnerships</option>
+                    </select>
+                </div>
+                <div class="theme-demo-contact-field">
+                    <label for="theme-demo-contact-message">Message</label>
+                    <textarea id="theme-demo-contact-message" name="message" rows="5"></textarea>
+                </div>
+                <button type="button">Send enquiry</button>
+            </form>
+        </div>
+
+        <div class="theme-demo-contact-expectations">
+            <p><strong>Response:</strong> Within 4 business hours</p>
+            <p><strong>Location:</strong> London, UK and remote-first</p>
+            <p><strong>Handover:</strong> Directly routed to the right team</p>
+        </div>
+    </div>
+</section>
+HTML;
     }
 
     /**

@@ -299,6 +299,28 @@ function toggleCarousel(swiperNode, swiperInstance, enabled) {
     swiperInstance.autoplay.stop()
 }
 
+function keepCarouselAutoplayRunning(swiperNode, swiperInstance, options) {
+    if (
+        !options.autoplayEnabled ||
+        swiperInstance.destroyed ||
+        swiperNode.classList.contains('swiper-disabled') ||
+        !swiperInstance.autoplay
+    ) {
+        return
+    }
+
+    window.setTimeout(() => {
+        if (
+            swiperInstance.destroyed ||
+            swiperNode.classList.contains('swiper-disabled')
+        ) {
+            return
+        }
+
+        swiperInstance.autoplay.start()
+    }, 0)
+}
+
 function createVisibilityObserver(swiperNode, swiperInstance) {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
@@ -418,6 +440,10 @@ export function buildSwiperSettings(swiperNode, options, controls, signal) {
             swiperNode.classList.add('swiper-ready')
             updateActiveSlides(swiperNode, this)
             bindPaginationBullets(this, controls, options, signal)
+            keepCarouselAutoplayRunning(swiperNode, this, options)
+        },
+        autoplayStop() {
+            keepCarouselAutoplayRunning(swiperNode, this, options)
         },
         paginationRender() {
             bindPaginationBullets(this, controls, options, signal)
@@ -431,6 +457,10 @@ export function buildSwiperSettings(swiperNode, options, controls, signal) {
         slideChange() {
             updateActiveSlides(swiperNode, this)
             bindPaginationBullets(this, controls, options, signal)
+            keepCarouselAutoplayRunning(swiperNode, this, options)
+        },
+        slideChangeTransitionEnd() {
+            keepCarouselAutoplayRunning(swiperNode, this, options)
         },
     }
 

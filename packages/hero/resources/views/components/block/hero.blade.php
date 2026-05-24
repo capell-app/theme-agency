@@ -40,6 +40,7 @@ $theme = Frontend::theme();
     use Illuminate\Contracts\Pagination\LengthAwarePaginator;
     use Capell\Frontend\Actions\GetPageVariablesAction;
     use Capell\Frontend\Actions\RenderHtmlContentAction;
+    use Capell\Hero\Actions\ResolveHeroBackgroundDataAction;
     use Capell\Hero\Data\HeroAssetSlideData;
 
     if ($containerIndex === 0 && $theme->getMeta('header_position') === 'fixed') {
@@ -122,9 +123,11 @@ $theme = Frontend::theme();
                     /** @var \Capell\LayoutBuilder\Models\BlockAsset $blockAsset */
                     $isFirstSlide = $loop->first;
                     $slide = HeroAssetSlideData::fromBlockAsset($blockAsset, $block, $color);
+                    $heroBackground = ResolveHeroBackgroundDataAction::run($theme, $block, $blockAsset);
                 @endphp
                 {{-- format-ignore-end --}}
                     <x-capell-hero::hero.slide
+                        :hero-background="$heroBackground"
                         :background-image="$slide->backgroundImage"
                         :background-color="$slide->asset->getMeta('background_color', $backgroundColor)"
                         :background-size="$slide->asset->getMeta('background_size', $block->getMeta('background_size', 'cover'))"
@@ -248,6 +251,7 @@ $theme = Frontend::theme();
                 @endforeach
             @elseif ($page->translation->getMeta('hero'))
                 <x-capell-hero::hero.slide
+                    :hero-background="ResolveHeroBackgroundDataAction::run($theme, $block)"
                     :background-image="$block->image"
                     :background-color="$block->getMeta('background_color', $theme->getMeta('background_color'))"
                     :background-size="$block->getMeta('background_size', 'cover')"

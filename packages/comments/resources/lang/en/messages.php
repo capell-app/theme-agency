@@ -1,0 +1,28 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'author_blocked' => 'This author cannot post comments.',
+    'author_updated' => 'Comment author updated.',
+    'authentication_required' => 'Sign in before posting a comment.',
+    'body_required' => 'Enter a comment.',
+    'commentable_unavailable' => 'Comments are not available here.',
+    'comments_disabled' => 'Comments are disabled.',
+    'email_required' => 'Enter a valid email address.',
+    'email_must_be_verified' => 'The author email must be verified before this comment can be approved.',
+    'email_verified' => 'Your email address has been verified. Your comment is now waiting for moderation.',
+    'invalid_token' => 'This verification link is invalid or has expired.',
+    'max_depth_reached' => 'This thread cannot accept more nested replies.',
+    'name_required' => 'Enter your name.',
+    'parent_must_be_approved' => 'A reply can only be approved after its parent comment is approved.',
+    'parent_unavailable' => 'This comment can no longer be replied to.',
+    'status_updated' => 'Comment status updated.',
+    'submitted' => 'Thanks. Your comment has been received. If email verification is required, check your inbox before it can be reviewed.',
+    'too_many_comments' => 'Too many comments were submitted. Try again shortly.',
+    'validation_failed' => 'Check the comment form for errors.',
+    'verify_email_action' => 'Verify email',
+    'verify_email_confirmation' => 'Confirm that you want to verify this email address for your comment.',
+    'verify_email_line' => 'Please verify your email address before your comment can be reviewed.',
+    'verify_email_subject' => 'Verify your email for your comment',
+];

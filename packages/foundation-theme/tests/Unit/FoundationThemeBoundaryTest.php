@@ -133,3 +133,9 @@ it('owns the product showcase styling for modern homepage blocks', function (): 
         ->and($cta)->toContain('Homepage content is block, media, and layout driven.')
         ->and($gallery)->toContain('ap-gallery-caption');
 });
+
+it('does not own premium demo kit homepage section styling', function (): void {
+    $themeCss = file_get_contents(dirname(__DIR__, 2) . '/resources/css/theme/theme.css');
+
+    expect($themeCss)->not->toContain('capell-block-homepage-section');
+});

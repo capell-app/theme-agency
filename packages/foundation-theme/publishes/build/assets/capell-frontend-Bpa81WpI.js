@@ -10104,6 +10104,17 @@ function Kr(e, t, n) {
         t.autoplay.stop()
     }
 }
+function CapellKeepAutoplay(e, t, n) {
+    !n.autoplayEnabled ||
+        t.destroyed ||
+        e.classList.contains(`swiper-disabled`) ||
+        !t.autoplay ||
+        window.setTimeout(() => {
+            !t.destroyed &&
+                !e.classList.contains(`swiper-disabled`) &&
+                t.autoplay.start()
+        }, 0)
+}
 function qr(e, t) {
     let n = new IntersectionObserver((n) => {
         n.forEach((n) => {
@@ -10183,7 +10194,11 @@ function Yr(e, t, n, r) {
             init() {
                 ;(e.classList.add(`swiper-ready`),
                     Wr(e, this),
-                    Gr(this, n, t, r))
+                    Gr(this, n, t, r),
+                    CapellKeepAutoplay(e, this, t))
+            },
+            autoplayStop() {
+                CapellKeepAutoplay(e, this, t)
             },
             paginationRender() {
                 Gr(this, n, t, r)
@@ -10195,7 +10210,12 @@ function Yr(e, t, n, r) {
                 this.update()
             },
             slideChange() {
-                ;(Wr(e, this), Gr(this, n, t, r))
+                ;(Wr(e, this),
+                    Gr(this, n, t, r),
+                    CapellKeepAutoplay(e, this, t))
+            },
+            slideChangeTransitionEnd() {
+                CapellKeepAutoplay(e, this, t)
             },
         }),
         a

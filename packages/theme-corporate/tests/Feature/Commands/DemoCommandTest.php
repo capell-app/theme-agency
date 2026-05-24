@@ -83,5 +83,9 @@ it('installs corporate theme demo pages idempotently with https media urls', fun
     $payload = json_encode(Page::query()->with('translations')->get()->toArray(), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
 
     expect($payload)->toContain('https://images.unsplash.com/')
-        ->and($payload)->toContain('theme_demo');
+        ->and($payload)->toContain('theme_demo')
+        ->and($payload)->toContain('Start the right conversation')
+        ->and($payload)->toContain('theme-demo-contact-form')
+        ->and($payload)->toContain('Project scoping')
+        ->and($payload)->toContain('Migration planning');
 });

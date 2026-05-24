@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+use Capell\Comments\Providers\CommentsServiceProvider;
+
+it('declares comments as optional for supported companion packages', function (): void {
+    $manifest = json_decode(file_get_contents(__DIR__ . '/../../capell.json'), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($manifest['name'])->toBe('capell-app/comments')
+        ->and($manifest['dependencies']['requires'])->not->toContain('capell-app/blog')
+        ->and($manifest['dependencies']['requires'])->not->toContain('capell-app/layout-builder')
+        ->and($manifest['dependencies']['supports'])->toContain('capell-app/blog')
+        ->and($manifest['providers']['runtime'])->toContain(CommentsServiceProvider::class);
+});

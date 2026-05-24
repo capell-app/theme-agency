@@ -72,12 +72,12 @@ class HealthcareThemeServiceProvider extends ServiceProvider
 
     public function boot(ThemeRegistry $registry): void
     {
-        if (! CapellCore::isPackageInstalled(self::$packageName)) {
-            return;
-        }
-
         if ($this->app->runningInConsole()) {
             $this->commands([DemoCommand::class]);
+        }
+
+        if (! CapellCore::isPackageInstalled(self::$packageName)) {
+            return;
         }
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-healthcare');

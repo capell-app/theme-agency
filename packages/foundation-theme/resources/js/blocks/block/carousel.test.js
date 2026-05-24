@@ -256,4 +256,44 @@ describe('carousel runtime', () => {
             rows: 2,
         })
     })
+
+    it('restarts autoplay when an enabled autoplay carousel stops unexpectedly', () => {
+        vi.useFakeTimers()
+
+        document.body.innerHTML = createCarouselMarkup(
+            [
+                'data-carousel-id="autoplay-carousel"',
+                'data-carousel-autoplay="1"',
+                'data-carousel-pagination="1"',
+            ].join(' '),
+        )
+
+        const swiperNode = document.querySelector('.swiper')
+        const options = parseCarouselOptions(swiperNode)
+        const controls = resolveCarouselControls(swiperNode, options)
+        const abortController = new AbortController()
+
+        const settings = buildSwiperSettings(
+            swiperNode,
+            options,
+            controls,
+            abortController.signal,
+        )
+        const swiperInstance = {
+            activeIndex: 0,
+            autoplay: {
+                start: vi.fn(),
+            },
+            destroyed: false,
+            realIndex: 0,
+        }
+
+        settings.on.autoplayStop.call(swiperInstance)
+        vi.runOnlyPendingTimers()
+
+        expect(swiperInstance.autoplay.start).toHaveBeenCalledOnce()
+
+        abortController.abort()
+        vi.useRealTimers()
+    })
 })

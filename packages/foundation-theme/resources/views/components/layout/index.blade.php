@@ -14,10 +14,25 @@
     $layout ??= Frontend::layout();
     $site ??= Frontend::site();
     $isSystemPageLayout ??= data_get($layout->admin ?? [], 'system_page_layout') === true;
+    $isThemeDemoContactPage = data_get($page?->meta ?? [], 'theme_demo.surface') === 'contact'
+        && view()->exists('capell-foundation-theme::components.demo.contact-page');
     $layoutNeighborLinks ??= null;
 @endphp
 
-@if ($isSystemPageLayout)
+@if ($isSystemPageLayout && $isThemeDemoContactPage)
+    <div
+        {{ $attributes->merge(['style' => 'min-height: 100vh; background: #faf8ff; color: #131b2e;']) }}
+    >
+        <main id="main">
+            @include('capell-foundation-theme::components.demo.contact-page', [
+                'page' => $page,
+                'site' => $site,
+            ])
+
+            {{ $pageSlot ?? $slot }}
+        </main>
+    </div>
+@elseif ($isSystemPageLayout)
     <div
         {{ $attributes->merge(['style' => 'min-height: 100vh; display: flex; flex-direction: column; background: #f8fafc; color: #0f172a;']) }}
     >

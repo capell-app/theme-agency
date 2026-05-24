@@ -92,7 +92,7 @@ final class AdminServiceProvider extends ServiceProvider
 
             CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::configurator(
                 class: $configuratorClass,
-                group: self::LAYOUT_BUILDER_CONFIGURATOR_TYPE_ENUM::Block->value,
+                group: self::LAYOUT_BUILDER_CONFIGURATOR_TYPE_ENUM::Widget->value,
                 name: $configuratorClass::getKey(),
             ));
         }

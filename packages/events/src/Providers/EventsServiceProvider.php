@@ -191,7 +191,7 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerBlazeComponents(): self
     {
-        RegisterBlazeOptimizedViewsAction::run(__DIR__ . '/../../resources/views');
+        RegisterBlazeOptimizedViewsAction::run(__DIR__ . '/../../resources/views/livewire');
 
         return $this;
     }

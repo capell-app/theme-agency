@@ -86,6 +86,12 @@ class EventResource extends PageResource
     }
 
     #[Override]
+    public static function getPluralModelLabel(): string
+    {
+        return __('capell-events::generic.events');
+    }
+
+    #[Override]
     public static function getNavigationParentItem(): ?string
     {
         return null;

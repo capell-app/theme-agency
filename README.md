@@ -92,6 +92,8 @@ Each package README follows the same shape:
 
 ### Themes
 
+Use the [Capell Theme Scale](docs/theme-scale.md) when creating a theme, changing renderer contracts, or deciding whether configuration belongs in theme settings, page blueprints, widget blueprints, Layout Builder assets, or Blade.
+
 | Package                                                 | Composer package              | Tier    | Purpose                                      |
 | ------------------------------------------------------- | ----------------------------- | ------- | -------------------------------------------- |
 | [foundation-theme](packages/foundation-theme/README.md) | `capell-app/foundation-theme` | Free    | Default frontend runtime and renderer.       |
