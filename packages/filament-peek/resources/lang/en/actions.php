@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 return [
     'preview' => [
-        'label' => 'Preview',
-        'tooltip' => 'Preview unsaved page changes',
-        'modal_title' => 'Page preview',
+        'label' => 'Preview unsaved changes',
+        'tooltip' => 'Preview the current unsaved page snapshot',
+        'modal_title' => 'Unsaved preview',
     ],
 ];

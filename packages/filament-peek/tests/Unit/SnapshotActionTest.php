@@ -47,7 +47,39 @@ it('caches the latest layout builder preview state per user and page', function 
 
     expect($state)->not->toBeNull()
         ->and($state->layoutId)->toBe($layout->id)
-        ->and($state->containers['main']['blocks'][0]['block_key'])->toBe('hero');
+        ->and($state->containers['main']['blocks'][0]['block_key'])->toBe('hero')
+        ->and($state->signature)->toBeString();
 
     Cache::store('array')->flush();
+});
+
+it('clears stale layout builder preview state after saved layout changes reset the editor', function (): void {
+    $user = $this->createUserWithRole('super_admin');
+    $this->actingAs($user);
+
+    $layout = Layout::factory()->create();
+    $page = Page::factory()->create(['layout_id' => $layout->id]);
+
+    StoreLayoutBuilderPreviewStateAction::run(
+        page: $page,
+        layout: $layout,
+        containers: [
+            'main' => ['blocks' => [['block_key' => 'hero', 'occurrence' => 1]]],
+        ],
+        assets: [
+            'main' => [
+                [
+                    ['asset_type' => 'page', 'asset_id' => 1],
+                ],
+            ],
+        ],
+    );
+
+    $action = resolve(StoreLayoutBuilderPreviewStateAction::class);
+
+    expect($action->resolve($page, $user))->not->toBeNull();
+
+    $action->clear($page, $user);
+
+    expect($action->resolve($page, $user))->toBeNull();
 });

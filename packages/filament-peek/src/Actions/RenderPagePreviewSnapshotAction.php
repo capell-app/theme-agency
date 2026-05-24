@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Capell\FilamentPeek\Actions;
 
+use Capell\Core\Enums\MediaCollectionEnum;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Layout;
+use Capell\Core\Models\Media;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
@@ -22,6 +24,7 @@ use Capell\Frontend\Support\Render\FrontendResponseRendererRegistry;
 use Capell\Frontend\Support\State\FrontendState;
 use Capell\Frontend\Support\View\ThemeChainResolver;
 use Capell\Frontend\Support\View\ThemeViewRegistrar;
+use Capell\LayoutBuilder\Support\CapellLayoutManager;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\WorkspaceContext;
 use Illuminate\Contracts\Support\Responsable;
@@ -46,11 +49,14 @@ final class RenderPagePreviewSnapshotAction
         $page = Page::query()
             ->with([
                 'layout.theme',
+                'media',
+                'image',
                 'pageUrl.siteDomain',
                 'pageUrls.siteDomain',
                 'site.language',
                 'site.siteDomains',
                 'site.theme',
+                'socialImage',
                 'translation.language',
                 'translations.language',
                 'type',
@@ -70,9 +76,17 @@ final class RenderPagePreviewSnapshotAction
         abort_unless($layout instanceof Layout, 404);
 
         $this->registerThemeViews($theme);
+        $previewBlocksRegistered = $this->registerLayoutBuilderPreviewBlocks($previewPage, $language, $snapshot);
 
         $context = $this->seedFrontendContext($site, $language, $previewPage, $layout, $theme);
-        $response = $this->render($context, $previewPage, $site, $language, $layout, $theme);
+
+        try {
+            $response = $this->render($context, $previewPage, $site, $language, $layout, $theme);
+        } finally {
+            if ($previewBlocksRegistered && class_exists(CapellLayoutManager::class)) {
+                CapellLayoutManager::clearContainerBlocks();
+            }
+        }
 
         return $response instanceof Response ? $response : $response->toResponse(request());
     }
@@ -88,6 +102,7 @@ final class RenderPagePreviewSnapshotAction
         $translations = $this->previewTranslations($page, $previewPage, $snapshot->formState);
         $translation = $this->currentTranslation($page, $translations);
         $pageUrls = $this->previewPageUrls($page, $translation);
+        $media = $this->previewMedia($page, $snapshot->formState);
 
         $previewPage->setRelation('site', $site);
         $previewPage->setRelation('layout', $layout);
@@ -95,6 +110,9 @@ final class RenderPagePreviewSnapshotAction
         $previewPage->setRelation('translation', $translation);
         $previewPage->setRelation('pageUrls', $pageUrls);
         $previewPage->setRelation('pageUrl', $pageUrls->first());
+        $previewPage->setRelation('media', $media);
+        $previewPage->setRelation('image', $media->firstWhere('collection_name', MediaCollectionEnum::Image->value));
+        $previewPage->setRelation('socialImage', $media->firstWhere('collection_name', MediaCollectionEnum::SocialImage->value));
 
         if ($page->relationLoaded('type')) {
             $previewPage->setRelation('type', $page->type);
@@ -316,6 +334,96 @@ final class RenderPagePreviewSnapshotAction
         );
 
         return $renderer->render($renderContext);
+    }
+
+    private function registerLayoutBuilderPreviewBlocks(
+        Page $page,
+        Language $language,
+        PagePreviewSnapshotData $snapshot,
+    ): bool {
+        if ($snapshot->layoutBuilderState === null || ! class_exists(RegisterLayoutBuilderPreviewBlocksAction::class)) {
+            return false;
+        }
+
+        return RegisterLayoutBuilderPreviewBlocksAction::run($page, $language, $snapshot->layoutBuilderState);
+    }
+
+    /**
+     * @param  array<string, mixed>  $formState
+     * @return EloquentCollection<int, Media>
+     */
+    private function previewMedia(Page $page, array $formState): EloquentCollection
+    {
+        $media = $page->relationLoaded('media')
+            ? $page->media->map(fn (Media $media): Media => clone $media)
+            : collect();
+
+        foreach ([
+            'image' => MediaCollectionEnum::Image,
+            'social_image' => MediaCollectionEnum::SocialImage,
+            'socialImage' => MediaCollectionEnum::SocialImage,
+        ] as $field => $collection) {
+            if (! array_key_exists($field, $formState)) {
+                continue;
+            }
+
+            $previewMedia = $this->mediaFromFieldState($formState[$field], $collection);
+
+            if (! $previewMedia instanceof Media) {
+                continue;
+            }
+
+            $previewMedia = clone $previewMedia;
+            $previewMedia->setAttribute('collection_name', $collection->value);
+            $previewMedia->setAttribute('model_type', $page->getMorphClass());
+            $previewMedia->setAttribute('model_id', $page->getKey());
+
+            $media = $media
+                ->reject(fn (Media $candidate): bool => $candidate->collection_name === $collection->value)
+                ->push($previewMedia)
+                ->values();
+        }
+
+        return new EloquentCollection($media->all());
+    }
+
+    private function mediaFromFieldState(mixed $state, MediaCollectionEnum $collection): ?Media
+    {
+        $uuid = $this->firstUuid($state);
+
+        if ($uuid === null) {
+            return null;
+        }
+
+        return Media::query()
+            ->where('uuid', $uuid)
+            ->where('collection_name', $collection->value)
+            ->first();
+    }
+
+    private function firstUuid(mixed $state): ?string
+    {
+        if (is_string($state) && preg_match('/^[0-9a-fA-F-]{36}$/', $state) === 1) {
+            return $state;
+        }
+
+        if (! is_array($state)) {
+            return null;
+        }
+
+        foreach ($state as $key => $value) {
+            if (is_string($key) && preg_match('/^[0-9a-fA-F-]{36}$/', $key) === 1) {
+                return $key;
+            }
+
+            $uuid = $this->firstUuid($value);
+
+            if ($uuid !== null) {
+                return $uuid;
+            }
+        }
+
+        return null;
     }
 
     /**

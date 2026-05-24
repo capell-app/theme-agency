@@ -21,16 +21,12 @@ final class StoreLayoutBuilderPreviewStateAction
     /**
      * @param  array<string, mixed>|null  $containers
      * @param  array<string, mixed>  $assets
-     * @param  array<string, mixed>|null  $originalAssets
-     * @param  array<string, mixed>  $selectedRecords
      */
     public function handle(
         Pageable $page,
         Layout $layout,
         ?array $containers,
         array $assets = [],
-        ?array $originalAssets = null,
-        array $selectedRecords = [],
     ): void {
         if (! $page instanceof Model) {
             return;
@@ -42,19 +38,42 @@ final class StoreLayoutBuilderPreviewStateAction
             return;
         }
 
+        $signature = $this->signature((int) $layout->getKey(), $containers ?? [], $assets);
+        $cache = Cache::store($this->cacheStore());
+        $cacheKey = $this->cacheKey($page, $user);
+        $existingPayload = $cache->get($cacheKey);
+
+        if (is_array($existingPayload) && ($existingPayload['signature'] ?? null) === $signature) {
+            return;
+        }
+
         $state = new LayoutBuilderPreviewStateData(
             layoutId: (int) $layout->getKey(),
             containers: $containers ?? [],
             assets: $assets,
-            originalAssets: $originalAssets,
-            selectedRecords: $selectedRecords,
+            signature: $signature,
         );
 
-        Cache::store($this->cacheStore())->put(
-            $this->cacheKey($page, $user),
+        $cache->put(
+            $cacheKey,
             $state->toArray(),
             now()->addMinutes($this->ttlMinutes()),
         );
+    }
+
+    public function clear(Pageable $page, ?Model $user = null): void
+    {
+        if (! $page instanceof Model) {
+            return;
+        }
+
+        $user ??= $this->currentUser();
+
+        if (! $user instanceof Model) {
+            return;
+        }
+
+        Cache::store($this->cacheStore())->forget($this->cacheKey($page, $user));
     }
 
     public function resolve(Pageable $page, Model $user): ?LayoutBuilderPreviewStateData
@@ -106,5 +125,18 @@ final class StoreLayoutBuilderPreviewStateAction
         $store = config('capell-filament-peek.preview.cache_store');
 
         return is_string($store) && $store !== '' ? $store : null;
+    }
+
+    /**
+     * @param  array<string, mixed>  $containers
+     * @param  array<string, mixed>  $assets
+     */
+    private function signature(int $layoutId, array $containers, array $assets): string
+    {
+        return hash('sha256', json_encode([
+            'layout_id' => $layoutId,
+            'containers' => $containers,
+            'assets' => $assets,
+        ], JSON_THROW_ON_ERROR));
     }
 }

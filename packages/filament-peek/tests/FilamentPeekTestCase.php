@@ -11,9 +11,11 @@ use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Providers\AdminServiceProvider;
 use Capell\Admin\Providers\Filament\AdminPanelProvider;
+use Capell\ContentBlocks\Providers\ContentBlocksServiceProvider;
 use Capell\Core\Facades\CapellCore;
 use Capell\FilamentPeek\Providers\FilamentPeekServiceProvider as CapellFilamentPeekServiceProvider;
 use Capell\Frontend\Providers\FrontendServiceProvider;
+use Capell\LayoutBuilder\LayoutBuilderServiceProvider;
 use Capell\Tests\Packages\PackagesTestCase;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use CmsMulti\FilamentClearCache\FilamentClearCacheServiceProvider;
@@ -91,8 +93,10 @@ abstract class FilamentPeekTestCase extends PackagesTestCase
             WidgetsServiceProvider::class,
             NotificationsServiceProvider::class,
             AdminServiceProvider::class,
+            ContentBlocksServiceProvider::class,
             AdminPanelProvider::class,
             FrontendServiceProvider::class,
+            LayoutBuilderServiceProvider::class,
             LivewireServiceProvider::class,
             CapellFilamentPeekServiceProvider::class,
         ];
@@ -107,7 +111,9 @@ abstract class FilamentPeekTestCase extends PackagesTestCase
         $app['config']->set('capell-filament-peek.preview.cache_store', 'array');
 
         CapellCore::forcePackageInstalled(AdminServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(ContentBlocksServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(FrontendServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(LayoutBuilderServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(CapellFilamentPeekServiceProvider::$packageName);
     }
 }

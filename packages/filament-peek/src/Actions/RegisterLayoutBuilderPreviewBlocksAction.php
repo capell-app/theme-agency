@@ -1,0 +1,250 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Capell\FilamentPeek\Actions;
+
+use Capell\Core\Enums\MediaCollectionEnum;
+use Capell\Core\Models\Language;
+use Capell\Core\Models\Page;
+use Capell\FilamentPeek\Data\LayoutBuilderPreviewStateData;
+use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\BlockAsset;
+use Capell\LayoutBuilder\Support\CapellLayoutManager;
+use Capell\LayoutBuilder\Support\LayoutBlockData;
+use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Collection;
+use Lorisleiva\Actions\Concerns\AsAction;
+
+final class RegisterLayoutBuilderPreviewBlocksAction
+{
+    use AsAction;
+
+    public function handle(Page $page, Language $language, LayoutBuilderPreviewStateData $state): bool
+    {
+        if (! class_exists(Block::class) || ! class_exists(BlockAsset::class) || ! class_exists(CapellLayoutManager::class)) {
+            return false;
+        }
+
+        $containers = $state->containers;
+        $blockKeys = $this->blockKeys($containers);
+
+        if ($blockKeys === []) {
+            return false;
+        }
+
+        /** @var Collection<string, Block> $blocks */
+        $blocks = Block::query()
+            ->whereIn('key', $blockKeys)
+            ->with([
+                'blueprint',
+                'type',
+                'media' => fn (BuilderContract $query): BuilderContract => $query->ordered(),
+                'translation' => fn (BuilderContract $query): BuilderContract => $query->where('language_id', $language->getKey()),
+            ])
+            ->get()
+            ->keyBy('key');
+
+        if ($blocks->isEmpty()) {
+            return false;
+        }
+
+        CapellLayoutManager::clearContainerBlocks();
+
+        foreach ($containers as $containerKey => $container) {
+            if (! is_array($container)) {
+                continue;
+            }
+
+            foreach (LayoutBlockData::normalizeMany($container['blocks'] ?? []) as $blockIndex => $blockData) {
+                $blockKey = LayoutBlockData::key($blockData);
+
+                if ($blockKey === null) {
+                    continue;
+                }
+
+                $block = $blocks->get($blockKey);
+
+                if (! $block instanceof Block) {
+                    continue;
+                }
+
+                $previewBlock = clone $block;
+                $previewBlock->translation?->setRelation('language', $language);
+                $previewBlock->setRelation('image', $previewBlock->media->firstWhere('type', MediaCollectionEnum::Image->value));
+                $previewBlock->setRelation(
+                    'backgroundImage',
+                    $previewBlock->media->firstWhere('type', MediaCollectionEnum::BackgroundImage->value),
+                );
+                $previewBlock->setRelation(
+                    'assets',
+                    $this->previewBlockAssets(
+                        page: $page,
+                        block: $previewBlock,
+                        containerKey: (string) $containerKey,
+                        occurrence: LayoutBlockData::occurrence($blockData),
+                        assetState: $state->assets[(string) $containerKey][$blockIndex] ?? [],
+                    ),
+                );
+
+                CapellLayoutManager::storeContainerBlock(
+                    (string) $containerKey,
+                    $blockKey,
+                    $previewBlock,
+                    LayoutBlockData::occurrence($blockData),
+                );
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param  array<string, mixed>  $containers
+     * @return array<int, string>
+     */
+    private function blockKeys(array $containers): array
+    {
+        return collect($containers)
+            ->filter(fn (mixed $container): bool => is_array($container))
+            ->flatMap(fn (array $container): array => LayoutBlockData::normalizeMany($container['blocks'] ?? []))
+            ->map(static fn (array $blockData): ?string => LayoutBlockData::key($blockData))
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @param  array<int, mixed>  $assetState
+     * @return Collection<int, BlockAsset>
+     */
+    private function previewBlockAssets(Page $page, Block $block, string $containerKey, int $occurrence, array $assetState): Collection
+    {
+        if ($assetState === []) {
+            return collect();
+        }
+
+        $existingAssets = $this->existingBlockAssets($assetState);
+        $targetModels = $this->targetModels($assetState);
+
+        return collect($assetState)
+            ->filter(fn (mixed $asset): bool => is_array($asset))
+            ->map(function (array $asset) use ($page, $block, $containerKey, $occurrence, $existingAssets, $targetModels): ?BlockAsset {
+                $blockAsset = isset($asset['id']) && is_numeric($asset['id'])
+                    ? $existingAssets->get((int) $asset['id'])
+                    : null;
+
+                $blockAsset = $blockAsset instanceof BlockAsset
+                    ? clone $blockAsset
+                    : $block->assets()->make();
+
+                $blockAsset->forceFill([
+                    'block_id' => $block->getKey(),
+                    'container' => $asset['container'] ?? $containerKey,
+                    'workspace_id' => $asset['workspace_id'] ?? null,
+                    'pageable_type' => $asset['pageable_type'] ?? $page->getMorphClass(),
+                    'pageable_id' => $asset['pageable_id'] ?? $page->getKey(),
+                    'asset_type' => $asset['asset_type'] ?? null,
+                    'asset_id' => $asset['asset_id'] ?? null,
+                    'meta' => $asset['meta'] ?? null,
+                    'occurrence' => $asset['occurrence'] ?? $occurrence,
+                    'order' => $asset['order'] ?? 0,
+                ]);
+
+                $targetModel = $this->targetModel($targetModels, $blockAsset->asset_type, $blockAsset->asset_id);
+
+                if ($targetModel instanceof Model) {
+                    $blockAsset->setRelation('asset', $targetModel);
+                }
+
+                return $blockAsset;
+            })
+            ->filter()
+            ->sortBy(fn (BlockAsset $blockAsset): int => (int) $blockAsset->order)
+            ->values();
+    }
+
+    /**
+     * @param  array<int, mixed>  $assetState
+     * @return Collection<int, BlockAsset>
+     */
+    private function existingBlockAssets(array $assetState): Collection
+    {
+        $ids = collect($assetState)
+            ->filter(fn (mixed $asset): bool => is_array($asset) && isset($asset['id']) && is_numeric($asset['id']))
+            ->map(static fn (array $asset): int => (int) $asset['id'])
+            ->unique()
+            ->values()
+            ->all();
+
+        if ($ids === []) {
+            return collect();
+        }
+
+        return BlockAsset::query()
+            ->with(['asset', 'media'])
+            ->whereIn('id', $ids)
+            ->get()
+            ->keyBy('id');
+    }
+
+    /**
+     * @param  array<int, mixed>  $assetState
+     * @return array<string, Collection<int|string, Model>>
+     */
+    private function targetModels(array $assetState): array
+    {
+        $idsByType = [];
+
+        foreach ($assetState as $asset) {
+            if (! is_array($asset) || ! isset($asset['asset_type'], $asset['asset_id'])) {
+                continue;
+            }
+
+            $type = (string) $asset['asset_type'];
+            $idsByType[$type] ??= [];
+            $idsByType[$type][] = $asset['asset_id'];
+        }
+
+        $models = [];
+
+        foreach ($idsByType as $type => $ids) {
+            $class = Relation::getMorphedModel($type) ?? $type;
+
+            if (! is_string($class) || ! class_exists($class) || ! is_subclass_of($class, Model::class)) {
+                continue;
+            }
+
+            /** @var class-string<Model> $class */
+            $models[$type] = $class::query()
+                ->whereKey(array_values(array_unique($ids)))
+                ->get()
+                ->keyBy(fn (Model $model): int|string => $model->getKey());
+        }
+
+        return $models;
+    }
+
+    /**
+     * @param  array<string, Collection<int|string, Model>>  $targetModels
+     */
+    private function targetModel(array $targetModels, mixed $type, mixed $id): ?Model
+    {
+        if (! is_string($type) || $id === null) {
+            return null;
+        }
+
+        $models = $targetModels[$type] ?? null;
+
+        if (! $models instanceof Collection) {
+            return null;
+        }
+
+        $model = $models->get($id);
+
+        return $model instanceof Model ? $model : null;
+    }
+}

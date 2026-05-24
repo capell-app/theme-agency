@@ -24,6 +24,7 @@ final class FilamentPeekServiceProvider extends AbstractPackageServiceProvider
             ->name(self::$name)
             ->hasConfigFile()
             ->hasTranslations()
+            ->hasViews()
             ->hasRoute('web');
     }
 
