@@ -93,6 +93,7 @@ use Capell\SeoSuite\Support\Admin\PageContentEditorConfigurator;
 use Capell\SeoSuite\Support\Admin\PageSeoAuditPageEditExtender;
 use Capell\SeoSuite\Support\Admin\PageSeoAuditPageResourceWidgetExtender;
 use Capell\SeoSuite\Support\Admin\PageTitleWithSlugInputExtender;
+use Capell\SeoSuite\Support\AiDiscovery\AiDiscoveryDiscoveryOutputSource;
 use Capell\SeoSuite\Support\AiFeatureRegistry;
 use Capell\SeoSuite\Support\AiRateLimiter;
 use Capell\SeoSuite\Support\AiResponseParser;
@@ -115,6 +116,8 @@ use Capell\SeoSuite\Support\SearchConsole\GoogleSearchConsoleClient;
 use Capell\SeoSuite\Support\SearchConsole\NullSearchConsoleClient;
 use Capell\SeoSuite\Support\SectionRegistry;
 use Capell\SeoSuite\Targets\FlatJsonTarget;
+use Capell\SiteDiscovery\Contracts\DiscoveryOutputSource;
+use Capell\SiteDiscovery\Support\DiscoveryOutputRegistry;
 use Closure;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -489,6 +492,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             ->registerAiServices()
             ->registerAiEventListeners()
             ->registerAiDiscoveryEventListeners()
+            ->registerAiDiscoveryOutputSource()
             ->registerAiDiscoveryModelCacheInvalidation()
             ->registerBrokenLinkEventListeners()
             ->registerSettingsSchema()
@@ -501,6 +505,24 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             ->registerFrontendViews()
             ->registerRenderHooks()
             ->registerLlmsTxtRoute();
+    }
+
+    private function registerAiDiscoveryOutputSource(): self
+    {
+        if (! interface_exists(DiscoveryOutputSource::class)) {
+            return $this;
+        }
+
+        $this->app->singleton(AiDiscoveryDiscoveryOutputSource::class);
+        $this->app->tag([AiDiscoveryDiscoveryOutputSource::class], DiscoveryOutputSource::TAG);
+
+        if (class_exists(DiscoveryOutputRegistry::class) && $this->app->bound(DiscoveryOutputRegistry::class)) {
+            /** @var DiscoveryOutputRegistry $registry */
+            $registry = $this->app->make(DiscoveryOutputRegistry::class);
+            $registry->register($this->app->make(AiDiscoveryDiscoveryOutputSource::class));
+        }
+
+        return $this;
     }
 
     private function registerAiDiscoveryModelCacheInvalidation(): self
