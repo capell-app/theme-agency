@@ -207,7 +207,7 @@ class PageTitleWithSlugInputExtender implements PageTitleWithSlugInputExtenderCo
                 Radio::make('titles')
                     ->label(__('Select a Suggested Title'))
                     ->options(
-                        collect($arguments['titles'] ?? [])
+                        collect(is_array($arguments['titles'] ?? null) ? $arguments['titles'] : [])
                             ->mapWithKeys(fn (string $title): array => [$title => $title])
                             ->all(),
                     )

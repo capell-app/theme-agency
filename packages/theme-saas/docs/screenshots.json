@@ -18,6 +18,18 @@
             "screenshotPath": "public/docs/screenshots/packages/theme-saas/theme-admin-list-showing-saas.png"
         },
         {
+            "id": "theme-preview-url-output",
+            "title": "Theme preview URL output.",
+            "package": "theme-saas",
+            "surface": "admin",
+            "targetType": "admin-url",
+            "target": "capell.admin.theme-preview",
+            "required": true,
+            "notes": "Capture a signed preview URL generated with CreateThemePreviewUrlAction for the seeded SaaS theme, site, and page.",
+            "useCase": "An administrator opens a signed preview URL to inspect a page with the SaaS theme applied before publishing the theme choice.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-saas/theme-preview-url-output.png"
+        },
+        {
             "id": "frontend-page-rendered-with-saas-theme",
             "title": "Frontend page rendered with SaaS theme.",
             "package": "theme-saas",
@@ -30,16 +42,112 @@
             "screenshotPath": "public/docs/screenshots/packages/theme-saas/frontend-page-rendered-with-saas-theme.png"
         },
         {
-            "id": "theme-preview-url-output",
-            "title": "Theme preview URL output.",
+            "id": "saas-homepage-layout",
+            "title": "SaaS homepage.",
             "package": "theme-saas",
-            "surface": "admin",
-            "targetType": "admin-url",
-            "target": "capell.admin.theme-preview",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/saas-homepage-layout",
             "required": true,
-            "notes": "Capture a signed preview URL generated with CreateThemePreviewUrlAction for the seeded SaaS theme, site, and page.",
-            "useCase": "An administrator opens a signed preview URL to inspect a page with the SaaS theme applied before publishing the theme choice.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-saas/theme-preview-url-output.png"
+            "notes": "Capture Theme SaaS saas homepage with product hero, feature proof, dashboard panels, cta. No additional package note required.",
+            "useCase": "A buyer reviews how Theme SaaS handles the saas homepage page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-homepage-layout.png"
+        },
+        {
+            "id": "saas-feature-layout",
+            "title": "Feature page.",
+            "package": "theme-saas",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/saas-feature-layout",
+            "required": true,
+            "notes": "Capture Theme SaaS feature page with feature narrative, comparison blocks, proof, cta. No additional package note required.",
+            "useCase": "A buyer reviews how Theme SaaS handles the feature page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-feature-layout.png"
+        },
+        {
+            "id": "saas-pricing-layout",
+            "title": "Pricing page.",
+            "package": "theme-saas",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/saas-pricing-layout",
+            "required": true,
+            "notes": "Capture Theme SaaS pricing page with plan cards, comparison table, faq, cta. Requires capell-app/content-sections; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme SaaS handles the pricing page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-pricing-layout.png"
+        },
+        {
+            "id": "saas-docs-layout",
+            "title": "Documentation page.",
+            "package": "theme-saas",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/saas-docs-layout",
+            "required": true,
+            "notes": "Capture Theme SaaS documentation page with docs nav, article content, related links. Requires capell-app/document-lifecycle; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme SaaS handles the documentation page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-docs-layout.png"
+        },
+        {
+            "id": "saas-blog-layout",
+            "title": "Product blog article.",
+            "package": "theme-saas",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/saas-blog-layout",
+            "required": true,
+            "notes": "Capture Theme SaaS product blog article with article hero, author, related articles. Requires capell-app/blog; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme SaaS handles the product blog article page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-blog-layout.png"
+        },
+        {
+            "id": "saas-demo-request-layout",
+            "title": "Demo request page.",
+            "package": "theme-saas",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/saas-demo-request-layout",
+            "required": true,
+            "notes": "Capture Theme SaaS demo request page with qualification form, routing, success state. Requires capell-app/form-builder; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme SaaS handles the demo request page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-demo-request-layout.png"
+        },
+        {
+            "id": "saas-webinar-layout",
+            "title": "Webinar landing page.",
+            "package": "theme-saas",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/saas-webinar-layout",
+            "required": true,
+            "notes": "Capture Theme SaaS webinar landing page with agenda, speakers, registration cta. Requires capell-app/events; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme SaaS handles the webinar landing page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-webinar-layout.png"
+        },
+        {
+            "id": "saas-search-layout",
+            "title": "Knowledge search page.",
+            "package": "theme-saas",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/saas-search-layout",
+            "required": true,
+            "notes": "Capture Theme SaaS knowledge search page with search field, docs/blog results, snippets. Requires capell-app/search; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme SaaS handles the knowledge search page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-search-layout.png"
+        },
+        {
+            "id": "saas-campaign-layout",
+            "title": "Launch campaign page.",
+            "package": "theme-saas",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/saas-campaign-layout",
+            "required": true,
+            "notes": "Capture Theme SaaS launch campaign page with variant hero, segments, campaign analytics. Requires capell-app/campaign-studio; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme SaaS handles the launch campaign page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-campaign-layout.png"
         }
     ]
 }

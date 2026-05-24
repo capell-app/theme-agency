@@ -17,8 +17,10 @@ use Carbon\CarbonImmutable;
 use Illuminate\Container\Container;
 use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+/** @extends TestCase<MockObject> */
 final class PublishingStudioValueDataTest extends TestCase
 {
     /**

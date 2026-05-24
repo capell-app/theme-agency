@@ -98,6 +98,7 @@ class Workspace extends Model implements Userstampable
         'kind' => 'manual',
     ];
 
+    /** @return array<int, string> */
     #[Override]
     public function uniqueIds(): array
     {

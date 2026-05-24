@@ -42,7 +42,9 @@ class KitProviderAdapter implements NewsletterProviderAdapter
             return [];
         }
 
-        return collect($response->json('forms', []))
+        $audiences = $response->json('forms', []);
+
+        return collect(is_array($audiences) ? $audiences : [])
             ->filter(static fn (mixed $audience): bool => is_array($audience))
             ->map(static fn (array $audience): ProviderAudienceData => new ProviderAudienceData(
                 remoteId: (string) ($audience['id'] ?? ''),

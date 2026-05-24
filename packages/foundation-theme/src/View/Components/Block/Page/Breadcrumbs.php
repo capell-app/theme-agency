@@ -13,6 +13,7 @@ use Capell\Frontend\Facades\Frontend;
 use Capell\Frontend\Support\Loader\PageLoader;
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
 use Override;
 use Stringable;
 
@@ -57,7 +58,7 @@ class Breadcrumbs extends AbstractBlock
      */
     private function translationVariables(?Page $page, ?Site $site): array
     {
-        return collect(GetPageVariablesAction::run($page, $site))
+        return (new Collection(GetPageVariablesAction::run($page, $site)))
             ->filter(fn (mixed $value): bool => is_scalar($value) || $value instanceof Stringable)
             ->map(fn (mixed $value): string => (string) $value)
             ->all();

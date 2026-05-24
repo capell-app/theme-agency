@@ -50,13 +50,13 @@ it('adds hero meta to blog and article pages when blog package is installed', fu
     foreach ($blogPage->translations as $blogTranslation) {
         $meta = $blogTranslation->meta;
 
-        expect($meta)->not()->toHaveKey('hero');
+        capell_expect($meta)->not()->toHaveKey('hero');
     }
 
     foreach ($articlePage->translations as $articleTranslation) {
         $meta = $articleTranslation->meta;
 
-        expect($meta)->not()->toHaveKey('hero');
+        capell_expect($meta)->not()->toHaveKey('hero');
     }
 
     artisan('capell:hero-demo --sites=DemoSite')
@@ -67,12 +67,12 @@ it('adds hero meta to blog and article pages when blog package is installed', fu
     $expectedBlogHero = '<h1>' . __('capell-blog::generic.latest_articles') . '</h1><p>' . __('capell-blog::generic.blog_intro') . '</p>';
 
     foreach ($blogPage->fresh()->translations as $blogTranslation) {
-        expect($blogTranslation->meta)->hero->toBe($expectedBlogHero);
+        capell_expect($blogTranslation->meta)->hero->toBe($expectedBlogHero);
     }
 
     $freshArticlePage = $articlePage->fresh();
 
     foreach ($freshArticlePage->translations as $articleTranslation) {
-        expect($articleTranslation->meta)->hero->toBe('<h1>' . $articleTranslation->title . '</h1>');
+        capell_expect($articleTranslation->meta)->hero->toBe('<h1>' . $articleTranslation->title . '</h1>');
     }
 });

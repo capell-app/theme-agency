@@ -13,7 +13,7 @@ it('declares the document admin resource as a manifest contribution', function (
         flags: JSON_THROW_ON_ERROR,
     );
 
-    $contribution = collect($manifest['contributes'] ?? [])
+    $contribution = capell_test_collect($manifest['contributes'] ?? [])
         ->firstWhere('type', 'admin-resource');
 
     expect($contribution)

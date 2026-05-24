@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $hash
  * @property string $scope
  * @property string|null $label
- * @property array $signature
+ * @property array<array-key, mixed> $signature
  * @property array<array-key, mixed>|null $manifest
  * @property string|null $critical_css_path
  * @property string $status

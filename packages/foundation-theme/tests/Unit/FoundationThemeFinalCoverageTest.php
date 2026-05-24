@@ -487,7 +487,7 @@ function foundationThemeFinalFrontendState(Language $language, Site $site, Theme
 final class FoundationThemeFinalPageAssetsHarness extends PageAssets
 {
     /**
-     * @return Builder<Model>
+     * @return Builder<Page>
      */
     public function exposeTableQuery(): Builder
     {

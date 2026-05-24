@@ -1,0 +1,142 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-commerce",
+    "slug": "theme-commerce",
+    "displayName": "Theme Commerce",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Theme Commerce registers the commerce theme key and image-led retail renderer views for catalog and conversion pages.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\Commerce",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "supports": ["capell-app/blog", "capell-app/shopify-commerce"],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\Commerce\\CommerceThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\Commerce\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "commerce"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-commerce-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-commerce", "theme-commerce-frontend"],
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-commerce"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-commerce.package-health",
+            "label": "Theme Commerce package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\Commerce\\Health\\ThemeCommerceHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Commerce theme screenshots across catalog, product, article, campaign, and conversion page layouts.",
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Theme Commerce extension preview image",
+                "caption": "Theme Commerce extension preview"
+            },
+            {
+                "path": "docs/assets/marketplace/commerce-homepage-layout.svg",
+                "alt": "Theme Commerce commerce homepage screenshot showing retail hero, collection tiles, product rail, proof.",
+                "caption": "Theme Commerce: Commerce homepage. Retail hero, collection tiles, product rail, proof."
+            },
+            {
+                "path": "docs/assets/marketplace/commerce-collection-layout.svg",
+                "alt": "Theme Commerce collection listing screenshot showing filters, product grid, merchandising banner. Requires capell-app/shopify-commerce.",
+                "caption": "Theme Commerce: Collection listing. Filters, product grid, merchandising banner. Requires capell-app/shopify-commerce."
+            },
+            {
+                "path": "docs/assets/marketplace/commerce-product-layout.svg",
+                "alt": "Theme Commerce product detail page screenshot showing gallery, price, variants, recommendations, cta. Requires capell-app/shopify-commerce.",
+                "caption": "Theme Commerce: Product detail page. Gallery, price, variants, recommendations, CTA. Requires capell-app/shopify-commerce."
+            },
+            {
+                "path": "docs/assets/marketplace/commerce-lookbook-layout.svg",
+                "alt": "Theme Commerce lookbook page screenshot showing image-led editorial sections and shoppable cards. Requires capell-app/media-library.",
+                "caption": "Theme Commerce: Lookbook page. Image-led editorial sections and shoppable cards. Requires capell-app/media-library."
+            },
+            {
+                "path": "docs/assets/marketplace/commerce-buying-guide-layout.svg",
+                "alt": "Theme Commerce buying guide article screenshot showing editorial content, related products, author details. Requires capell-app/blog.",
+                "caption": "Theme Commerce: Buying guide article. Editorial content, related products, author details. Requires capell-app/blog."
+            },
+            {
+                "path": "docs/assets/marketplace/commerce-newsletter-layout.svg",
+                "alt": "Theme Commerce newsletter capture page screenshot showing signup block, incentives, consent messaging. Requires capell-app/newsletter.",
+                "caption": "Theme Commerce: Newsletter capture page. Signup block, incentives, consent messaging. Requires capell-app/newsletter."
+            },
+            {
+                "path": "docs/assets/marketplace/commerce-store-event-layout.svg",
+                "alt": "Theme Commerce retail event page screenshot showing event details, location, registration cta. Requires capell-app/events.",
+                "caption": "Theme Commerce: Retail event page. Event details, location, registration CTA. Requires capell-app/events."
+            },
+            {
+                "path": "docs/assets/marketplace/commerce-search-layout.svg",
+                "alt": "Theme Commerce product search page screenshot showing search field, filters, result grid, empty state. Requires capell-app/search.",
+                "caption": "Theme Commerce: Product search page. Search field, filters, result grid, empty state. Requires capell-app/search."
+            },
+            {
+                "path": "docs/assets/marketplace/commerce-campaign-layout.svg",
+                "alt": "Theme Commerce promotion campaign page screenshot showing offer hero, countdown, segmented ctas. Requires capell-app/campaign-studio.",
+                "caption": "Theme Commerce: Promotion campaign page. Offer hero, countdown, segmented CTAs. Requires capell-app/campaign-studio."
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "capell-app/foundation-theme",
+    "themeKey": "commerce"
+}

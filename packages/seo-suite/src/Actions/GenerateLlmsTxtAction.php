@@ -19,7 +19,7 @@ use Lorisleiva\Actions\Concerns\AsAction;
 /**
  * Generate llms.txt content for a site.
  *
- * @method static string run(AiDiscoveryRenderContextData|Site $context, ?Language $language = null, ?Collection $discoverablePages = null)
+ * @method static string run(AiDiscoveryRenderContextData|Site $context, ?Language $language = null, ?Collection<int, DiscoverablePageData> $discoverablePages = null)
  */
 final class GenerateLlmsTxtAction
 {

@@ -1,0 +1,121 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-healthcare",
+    "slug": "theme-healthcare",
+    "displayName": "Theme Healthcare",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Theme Healthcare registers the healthcare theme key and clinical renderer views for appointments, services, clinicians, resources, and locations.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\Healthcare",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/events",
+            "capell-app/form-builder"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\Healthcare\\HealthcareThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\Healthcare\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "healthcare"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-healthcare-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-healthcare", "theme-healthcare-frontend"],
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-healthcare"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-healthcare.package-health",
+            "label": "Theme Healthcare package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\Healthcare\\Health\\ThemeHealthcareHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Theme Healthcare registers the healthcare theme key and clinical renderer views for appointments, services, clinicians, resources, and locations.",
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Theme Healthcare extension preview image",
+                "caption": "Theme Healthcare extension preview"
+            },
+            {
+                "path": "docs/assets/marketplace/healthcare-homepage-layout.svg",
+                "alt": "Theme Healthcare homepage screenshot showing appointment hero, service finder, clinician proof, CTA.",
+                "caption": "Theme Healthcare: Homepage. Appointment hero, service finder, clinician proof, CTA."
+            },
+            {
+                "path": "docs/assets/marketplace/healthcare-services-layout.svg",
+                "alt": "Theme Healthcare service listing screenshot showing service filters, cards, booking prompt.",
+                "caption": "Theme Healthcare: Service listing. Filters, cards, booking prompt."
+            },
+            {
+                "path": "docs/assets/marketplace/healthcare-clinician-layout.svg",
+                "alt": "Theme Healthcare clinician detail screenshot showing biography, availability, related services.",
+                "caption": "Theme Healthcare: Clinician detail. Biography, availability, related services."
+            },
+            {
+                "path": "docs/assets/marketplace/healthcare-contact-layout.svg",
+                "alt": "Theme Healthcare contact screenshot showing locations, enquiry panel, urgent care guidance.",
+                "caption": "Theme Healthcare: Contact page. Locations, enquiry panel, urgent care guidance."
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "capell-app/foundation-theme",
+    "themeKey": "healthcare"
+}

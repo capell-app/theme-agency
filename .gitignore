@@ -72,5 +72,3 @@ temp/
 *.tmp
 *.phar
 .superpowers/
-.dual-graph/
-.dual-graph-context/

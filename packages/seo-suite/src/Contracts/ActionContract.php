@@ -6,7 +6,7 @@ namespace Capell\SeoSuite\Contracts;
 
 interface ActionContract
 {
-    public function handle(...$args): mixed;
+    public function handle(mixed ...$args): mixed;
 
     /**
      * @param  array<array-key, mixed>  $input

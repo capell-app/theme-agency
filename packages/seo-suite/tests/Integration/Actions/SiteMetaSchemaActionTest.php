@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Capell\Core\Database\Factories\LanguageFactory;
 use Capell\Core\Database\Factories\SiteFactory;
 use Capell\SeoSuite\Actions\SiteMetaSchemaAction;
-use Illuminate\Support\Arr;
 
 it('generates correct schema for site with meta data', function (): void {
     $language = LanguageFactory::new()->create([
@@ -57,7 +56,7 @@ it('generates correct schema for site with meta data', function (): void {
         ->toHaveKey('sameAs')
         ->toHaveKey('openingHoursSpecification');
 
-    expect(Arr::first($configurator['areaServed']))
+    expect($configurator['areaServed'][0])
         ->toHaveKey('@type', 'Country')
         ->toHaveKey('name', 'USA')
         ->toHaveKey('@id', 'https://example.com/usa');

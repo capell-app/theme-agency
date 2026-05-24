@@ -63,8 +63,8 @@ final class InternalLinkCandidateRepository
     }
 
     /**
-     * @param  Builder<Model>  $query
-     * @return Builder<Model>
+     * @param  Builder<Model>|Relation<Model, Model, mixed>  $query
+     * @return Builder<Model>|Relation<Model, Model, mixed>
      */
     private function pageUrlQuery(Builder|Relation $query, Site $site, Language $language): Builder|Relation
     {

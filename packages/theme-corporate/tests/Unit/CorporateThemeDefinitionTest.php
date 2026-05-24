@@ -17,7 +17,7 @@ use Capell\ThemeStudio\Corporate\CorporateThemeServiceProvider;
 use Capell\ThemeStudio\Corporate\Health\ThemeCorporateHealthCheck;
 use Illuminate\Support\Facades\View;
 
-it('defines the corporate premium renderer contract', function (): void {
+it('defines the corporate free renderer contract', function (): void {
     $definition = CorporateThemeServiceProvider::definition();
 
     expect($definition->package)->toBe('capell-app/theme-corporate')

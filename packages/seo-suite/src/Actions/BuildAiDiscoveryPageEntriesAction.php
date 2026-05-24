@@ -18,7 +18,7 @@ use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static Collection<int, AiDiscoveryPageEntryData> run(AiDiscoveryRenderContextData $context, AiDiscoverySiteProfile $siteProfile, ?Collection $discoverablePages = null)
+ * @method static Collection<int, AiDiscoveryPageEntryData> run(AiDiscoveryRenderContextData $context, AiDiscoverySiteProfile $siteProfile, ?Collection<int, DiscoverablePageData> $discoverablePages = null)
  */
 final class BuildAiDiscoveryPageEntriesAction
 {

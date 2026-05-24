@@ -81,6 +81,8 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 ## Install And Setup
 
 - Install with `composer require capell-app/theme-corporate` in the host Capell application.
+- Seed the Corporate preview pages with `php artisan capell:theme-corporate-demo --url=https://demo.test --sites=Demo --languages=en --force`.
+- The Extensions installer demo checkbox and full Capell demo install use the same manifest demo command path.
 - In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
 
 ## Admin And Access

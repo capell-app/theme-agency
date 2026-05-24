@@ -8,9 +8,9 @@
     "version": "4.x-dev",
     "description": "Theme Agency registers the agency theme key and expressive renderer views for studio, portfolio, and brand-led sites.",
     "product": {
-        "group": "Capell Themes",
-        "tier": "premium",
-        "bundle": "themes"
+        "group": "Capell Foundation",
+        "tier": "free",
+        "bundle": "foundation"
     },
     "namespace": "Capell\\ThemeStudio\\Agency",
     "surfaces": ["frontend"],
@@ -26,7 +26,17 @@
         "admin": [],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\Agency\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "agency"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
     "database": {
         "migrations": false,
         "settings": false,
@@ -35,7 +45,8 @@
     "commands": {
         "install": null,
         "setup": null,
-        "demo": null,
+        "demo": "capell:theme-agency-demo",
+        "demoParams": ["url", "languages", "sites"],
         "doctor": null
     },
     "settings": [],
@@ -69,12 +80,57 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Theme Agency registers the agency theme key and expressive renderer views for studio, portfolio, and brand-led sites.",
+        "summary": "Agency theme screenshots across studio, portfolio, campaign, publishing, and lead-generation page layouts.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Theme Agency extension preview image",
                 "caption": "Theme Agency extension preview"
+            },
+            {
+                "path": "docs/assets/marketplace/agency-homepage-layout.svg",
+                "alt": "Theme Agency agency homepage screenshot showing editorial hero, proof band, case study cards, cta.",
+                "caption": "Theme Agency: Agency homepage. Editorial hero, proof band, case study cards, CTA."
+            },
+            {
+                "path": "docs/assets/marketplace/agency-services-layout.svg",
+                "alt": "Theme Agency services page screenshot showing service matrix, process steps, team proof, cta.",
+                "caption": "Theme Agency: Services page. Service matrix, process steps, team proof, CTA."
+            },
+            {
+                "path": "docs/assets/marketplace/agency-portfolio-layout.svg",
+                "alt": "Theme Agency portfolio index screenshot showing project cards, category filters, featured case study. Requires capell-app/content-sections.",
+                "caption": "Theme Agency: Portfolio index. Project cards, category filters, featured case study. Requires capell-app/content-sections."
+            },
+            {
+                "path": "docs/assets/marketplace/agency-case-study-layout.svg",
+                "alt": "Theme Agency case study detail screenshot showing problem, approach, outcome metrics, gallery. Requires capell-app/media-library.",
+                "caption": "Theme Agency: Case study detail. Problem, approach, outcome metrics, gallery. Requires capell-app/media-library."
+            },
+            {
+                "path": "docs/assets/marketplace/agency-insights-layout.svg",
+                "alt": "Theme Agency insights article screenshot showing article hero, author details, related reads. Requires capell-app/blog.",
+                "caption": "Theme Agency: Insights article. Article hero, author details, related reads. Requires capell-app/blog."
+            },
+            {
+                "path": "docs/assets/marketplace/agency-event-landing-layout.svg",
+                "alt": "Theme Agency event landing page screenshot showing agenda, speaker cards, registration cta. Requires capell-app/events.",
+                "caption": "Theme Agency: Event landing page. Agenda, speaker cards, registration CTA. Requires capell-app/events."
+            },
+            {
+                "path": "docs/assets/marketplace/agency-lead-form-layout.svg",
+                "alt": "Theme Agency lead generation page screenshot showing offer copy, qualification fields, confirmation state. Requires capell-app/form-builder.",
+                "caption": "Theme Agency: Lead generation page. Offer copy, qualification fields, confirmation state. Requires capell-app/form-builder."
+            },
+            {
+                "path": "docs/assets/marketplace/agency-campaign-layout.svg",
+                "alt": "Theme Agency campaign page screenshot showing variant hero, campaign sections, analytics hooks. Requires capell-app/campaign-studio.",
+                "caption": "Theme Agency: Campaign page. Variant hero, campaign sections, analytics hooks. Requires capell-app/campaign-studio."
+            },
+            {
+                "path": "docs/assets/marketplace/agency-search-layout.svg",
+                "alt": "Theme Agency search results page screenshot showing search field, grouped results, highlighted terms. Requires capell-app/search.",
+                "caption": "Theme Agency: Search results page. Search field, grouped results, highlighted terms. Requires capell-app/search."
             }
         ],
         "categories": ["frontend", "themes"]

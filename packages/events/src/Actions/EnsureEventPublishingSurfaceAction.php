@@ -12,14 +12,14 @@ use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static Page run(Site $site, ?Collection $languages = null)
+ * @method static Page run(Site $site, ?Collection<int, Language> $languages = null)
  */
 class EnsureEventPublishingSurfaceAction
 {
     use AsAction;
 
     /**
-     * @param  Collection<array-key, mixed>  $languages
+     * @param  Collection<int, Language>|null  $languages
      */
     public function handle(Site $site, ?Collection $languages = null): Page
     {

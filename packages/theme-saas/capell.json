@@ -16,7 +16,7 @@
     "surfaces": ["frontend"],
     "dependencies": {
         "requires": ["capell-app/core", "capell-app/foundation-theme"],
-        "supports": [],
+        "supports": ["capell-app/blog"],
         "conflicts": []
     },
     "providers": {
@@ -26,7 +26,17 @@
         "admin": [],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\Saas\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "saas"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
     "database": {
         "migrations": false,
         "settings": false,
@@ -35,7 +45,8 @@
     "commands": {
         "install": null,
         "setup": null,
-        "demo": null,
+        "demo": "capell:theme-saas-demo",
+        "demoParams": ["url", "languages", "sites"],
         "doctor": null
     },
     "settings": [],
@@ -69,12 +80,57 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Theme SaaS registers the saas theme key and product-focused renderer views for software and subscription sites.",
+        "summary": "SaaS theme screenshots across product, pricing, docs, campaign, search, and conversion page layouts.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Theme Saas extension preview image",
                 "caption": "Theme Saas extension preview"
+            },
+            {
+                "path": "docs/assets/marketplace/saas-homepage-layout.svg",
+                "alt": "Theme SaaS saas homepage screenshot showing product hero, feature proof, dashboard panels, cta.",
+                "caption": "Theme SaaS: SaaS homepage. Product hero, feature proof, dashboard panels, CTA."
+            },
+            {
+                "path": "docs/assets/marketplace/saas-feature-layout.svg",
+                "alt": "Theme SaaS feature page screenshot showing feature narrative, comparison blocks, proof, cta.",
+                "caption": "Theme SaaS: Feature page. Feature narrative, comparison blocks, proof, CTA."
+            },
+            {
+                "path": "docs/assets/marketplace/saas-pricing-layout.svg",
+                "alt": "Theme SaaS pricing page screenshot showing plan cards, comparison table, faq, cta. Requires capell-app/content-sections.",
+                "caption": "Theme SaaS: Pricing page. Plan cards, comparison table, FAQ, CTA. Requires capell-app/content-sections."
+            },
+            {
+                "path": "docs/assets/marketplace/saas-docs-layout.svg",
+                "alt": "Theme SaaS documentation page screenshot showing docs nav, article content, related links. Requires capell-app/document-lifecycle.",
+                "caption": "Theme SaaS: Documentation page. Docs nav, article content, related links. Requires capell-app/document-lifecycle."
+            },
+            {
+                "path": "docs/assets/marketplace/saas-blog-layout.svg",
+                "alt": "Theme SaaS product blog article screenshot showing article hero, author, related articles. Requires capell-app/blog.",
+                "caption": "Theme SaaS: Product blog article. Article hero, author, related articles. Requires capell-app/blog."
+            },
+            {
+                "path": "docs/assets/marketplace/saas-demo-request-layout.svg",
+                "alt": "Theme SaaS demo request page screenshot showing qualification form, routing, success state. Requires capell-app/form-builder.",
+                "caption": "Theme SaaS: Demo request page. Qualification form, routing, success state. Requires capell-app/form-builder."
+            },
+            {
+                "path": "docs/assets/marketplace/saas-webinar-layout.svg",
+                "alt": "Theme SaaS webinar landing page screenshot showing agenda, speakers, registration cta. Requires capell-app/events.",
+                "caption": "Theme SaaS: Webinar landing page. Agenda, speakers, registration CTA. Requires capell-app/events."
+            },
+            {
+                "path": "docs/assets/marketplace/saas-search-layout.svg",
+                "alt": "Theme SaaS knowledge search page screenshot showing search field, docs/blog results, snippets. Requires capell-app/search.",
+                "caption": "Theme SaaS: Knowledge search page. Search field, docs/blog results, snippets. Requires capell-app/search."
+            },
+            {
+                "path": "docs/assets/marketplace/saas-campaign-layout.svg",
+                "alt": "Theme SaaS launch campaign page screenshot showing variant hero, segments, campaign analytics. Requires capell-app/campaign-studio.",
+                "caption": "Theme SaaS: Launch campaign page. Variant hero, segments, campaign analytics. Requires capell-app/campaign-studio."
             }
         ],
         "categories": ["frontend", "themes"]

@@ -18,18 +18,6 @@
             "screenshotPath": "public/docs/screenshots/packages/foundation-theme/foundation-theme-settings-screen.png"
         },
         {
-            "id": "frontend-page-using-the-foundation-theme",
-            "title": "Frontend page using the default theme.",
-            "package": "foundation-theme",
-            "surface": "frontend",
-            "targetType": "frontend-url",
-            "target": null,
-            "required": true,
-            "notes": "Capture after installing capell-app/foundation-theme in the isolated demo harness and seeding the data required for this use case.",
-            "useCase": "A visitor sees a seeded page rendered by Foundation Theme with its header, footer, tokens, and components.",
-            "screenshotPath": "public/docs/screenshots/packages/foundation-theme/frontend-page-using-the-foundation-theme.png"
-        },
-        {
             "id": "generated-tailwind-asset-output-review",
             "title": "Generated Tailwind asset output review.",
             "package": "foundation-theme",
@@ -42,6 +30,18 @@
             "screenshotPath": "public/docs/screenshots/packages/foundation-theme/generated-tailwind-asset-output-review.png"
         },
         {
+            "id": "frontend-page-using-the-foundation-theme",
+            "title": "Frontend page using the default theme.",
+            "package": "foundation-theme",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": null,
+            "required": true,
+            "notes": "Capture after installing capell-app/foundation-theme in the isolated demo harness and seeding the data required for this use case.",
+            "useCase": "A visitor sees a seeded page rendered by Foundation Theme with its header, footer, tokens, and components.",
+            "screenshotPath": "public/docs/screenshots/packages/foundation-theme/frontend-page-using-the-foundation-theme.png"
+        },
+        {
             "id": "foundation-theme-header-area",
             "title": "Foundation header Layout Builder area.",
             "package": "foundation-theme",
@@ -52,6 +52,102 @@
             "notes": "Capture a public page with a seeded header-area block to prove Foundation Theme renders the registered Layout Builder header area.",
             "useCase": "A maintainer verifies the registered Layout Builder header area renders through Foundation Theme.",
             "screenshotPath": "public/docs/screenshots/packages/foundation-theme/foundation-theme-header-area.png"
+        },
+        {
+            "id": "foundation-homepage-layout",
+            "title": "Homepage layout.",
+            "package": "foundation-theme",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/foundation-homepage-layout",
+            "required": true,
+            "notes": "Capture Foundation Theme homepage layout with hero, feature grid, content blocks, cta, footer. No additional package note required.",
+            "useCase": "A buyer reviews how Foundation Theme handles the homepage layout page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/foundation-theme/foundation-homepage-layout.png"
+        },
+        {
+            "id": "foundation-standard-page-layout",
+            "title": "Standard content page.",
+            "package": "foundation-theme",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/foundation-standard-page-layout",
+            "required": true,
+            "notes": "Capture Foundation Theme standard content page with header, breadcrumbs, rich content, related links. No additional package note required.",
+            "useCase": "A buyer reviews how Foundation Theme handles the standard content page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/foundation-theme/foundation-standard-page-layout.png"
+        },
+        {
+            "id": "foundation-blog-article-layout",
+            "title": "Blog article layout.",
+            "package": "foundation-theme",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/foundation-blog-article-layout",
+            "required": true,
+            "notes": "Capture Foundation Theme blog article layout with article hero, author row, body, related posts. Requires capell-app/blog; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Foundation Theme handles the blog article layout page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/foundation-theme/foundation-blog-article-layout.png"
+        },
+        {
+            "id": "foundation-listing-layout",
+            "title": "Listing page layout.",
+            "package": "foundation-theme",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/foundation-listing-layout",
+            "required": true,
+            "notes": "Capture Foundation Theme listing page layout with card grid, filters, pagination, empty state. Requires capell-app/tags; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Foundation Theme handles the listing page layout page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/foundation-theme/foundation-listing-layout.png"
+        },
+        {
+            "id": "foundation-contact-form-layout",
+            "title": "Contact form layout.",
+            "package": "foundation-theme",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/foundation-contact-form-layout",
+            "required": true,
+            "notes": "Capture Foundation Theme contact form layout with intro copy, validated form, consent, confirmation. Requires capell-app/form-builder; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Foundation Theme handles the contact form layout page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/foundation-theme/foundation-contact-form-layout.png"
+        },
+        {
+            "id": "foundation-search-results-layout",
+            "title": "Search results layout.",
+            "package": "foundation-theme",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/foundation-search-results-layout",
+            "required": true,
+            "notes": "Capture Foundation Theme search results layout with search box, result excerpts, highlighting, no-results state. Requires capell-app/search; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Foundation Theme handles the search results layout page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/foundation-theme/foundation-search-results-layout.png"
+        },
+        {
+            "id": "foundation-events-layout",
+            "title": "Events listing layout.",
+            "package": "foundation-theme",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/foundation-events-layout",
+            "required": true,
+            "notes": "Capture Foundation Theme events listing layout with featured event, date cards, location metadata. Requires capell-app/events; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Foundation Theme handles the events listing layout page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/foundation-theme/foundation-events-layout.png"
+        },
+        {
+            "id": "foundation-membership-gate-layout",
+            "title": "Access-gated page layout.",
+            "package": "foundation-theme",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/foundation-membership-gate-layout",
+            "required": true,
+            "notes": "Capture Foundation Theme access-gated page layout with teaser content, sign-in prompt, gated sections. Requires capell-app/access-gate; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Foundation Theme handles the access-gated page layout page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/foundation-theme/foundation-membership-gate-layout.png"
         }
     ]
 }

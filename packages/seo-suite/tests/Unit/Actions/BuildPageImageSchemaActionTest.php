@@ -49,7 +49,7 @@ it('builds image schema from loaded pageable media and tracks emitted media', fu
     $ignored = mediaForSchema(4, 'Ignored image');
     $article = new Article;
     $article->setRelation('image', $primary);
-    $article->setRelation('media', collect([$primary, $secondary, $extra, $ignored]));
+    $article->setRelation('media', capell_test_collect([$primary, $secondary, $extra, $ignored]));
 
     $schema = BuildPageImageSchemaAction::run($article);
 
@@ -60,7 +60,7 @@ it('builds image schema from loaded pageable media and tracks emitted media', fu
             'caption' => 'Primary caption',
             'description' => 'Primary description',
         ])
-        ->and(collect($schema)->pluck('name')->all())->toBe([
+        ->and(capell_test_collect($schema)->pluck('name')->all())->toBe([
             'Primary image',
             'Secondary image',
             'Extra image',

@@ -23,7 +23,7 @@ it('extracts weak page seo snapshot dependencies', function (): void {
         'computed_at' => now(),
     ]);
 
-    $edges = collect(BuildContentGraphForModelAction::run($snapshot)->edges);
+    $edges = capell_test_collect(BuildContentGraphForModelAction::run($snapshot)->edges);
 
     expect($edges)->toHaveCount(1)
         ->and($edges->first()?->kind)->toBe(ContentGraphEdgeKind::DescribesPage)
@@ -40,7 +40,7 @@ it('extracts weak broken link page dependencies', function (): void {
         'last_checked_at' => now(),
     ]);
 
-    $edges = collect(BuildContentGraphForModelAction::run($brokenLink)->edges);
+    $edges = capell_test_collect(BuildContentGraphForModelAction::run($brokenLink)->edges);
 
     expect($edges)->toHaveCount(1)
         ->and($edges->first()?->kind)->toBe(ContentGraphEdgeKind::FoundOnPage)

@@ -13,7 +13,7 @@ it('builds default CMS content health issues from core pages', function (): void
     Page::factory()->expired()->create();
 
     $data = BuildDefaultContentHealthAction::run();
-    $issues = collect($data->issues->toArray())->keyBy('id');
+    $issues = capell_test_collect($data->issues->toArray())->keyBy('id');
 
     expect($issues->get('scheduled_pages')['count'])->toBe(1)
         ->and($issues->get('expired_pages')['count'])->toBe(1)

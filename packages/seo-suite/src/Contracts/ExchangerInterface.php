@@ -6,5 +6,5 @@ namespace Capell\SeoSuite\Contracts;
 
 interface ExchangerInterface
 {
-    public function execute();
+    public function execute(): mixed;
 }

@@ -36,11 +36,6 @@ final readonly class CopyOnWriteAction
      * Clone a live row into the workspace, carrying dirty attributes across.
      * Returns the persisted workspace-scoped clone so callers can compare
      * primary keys or continue work with the new record.
-     *
-     * @template TModel of Model
-     *
-     * @param  TModel  $liveRecord
-     * @return TModel
      */
     public function cloneForEdit(Model $liveRecord, Workspace $workspace): Model
     {
@@ -92,11 +87,6 @@ final readonly class CopyOnWriteAction
      * the model uses {@see SoftDeletes}; a hard-delete of a live row from
      * inside a workspace context is never allowed — it would mutate live
      * data out-of-band.
-     *
-     * @template TModel of Model
-     *
-     * @param  TModel  $liveRecord
-     * @return TModel
      */
     public function cloneForDelete(Model $liveRecord, Workspace $workspace): Model
     {

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Capell\SeoSuite\Actions;
 
 use Capell\Core\Enums\UrlTypeEnum;
+use Capell\Core\Models\Page;
 use Capell\Core\Models\PageUrl;
 use Capell\SeoSuite\Data\RedirectOpportunityData;
 use Capell\SeoSuite\Models\BrokenLink;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
@@ -26,10 +26,13 @@ final class BuildRedirectOpportunityReportAction
      */
     public function handle(?int $siteId = null, ?int $languageId = null, ?int $pageId = null): array
     {
+        $pageQuery = $this->applyPageScope(Page::query(), $siteId, $languageId)
+            ->select('id');
+
         return BrokenLink::query()
             ->where('http_status', '>=', 400)
             ->when($pageId !== null, fn (Builder $query): Builder => $query->where('page_id', $pageId))
-            ->whereHas('page', fn (Builder $query): Builder => $this->applyPageScope($query, $siteId, $languageId))
+            ->whereIn('page_id', $pageQuery)
             ->with([
                 'page.site',
                 'page.pageUrls.siteDomain',
@@ -48,7 +51,7 @@ final class BuildRedirectOpportunityReportAction
     }
 
     /**
-     * @param  Builder<Model>  $query
+     * @param  Builder<PageUrl>  $query
      */
     private function applyNonRedirectUrlScope(Builder $query): void
     {
@@ -57,8 +60,8 @@ final class BuildRedirectOpportunityReportAction
     }
 
     /**
-     * @param  Builder<Model>  $query
-     * @return Builder<Model>
+     * @param  Builder<Page>  $query
+     * @return Builder<Page>
      */
     private function applyPageScope(Builder $query, ?int $siteId, ?int $languageId): Builder
     {
@@ -68,8 +71,8 @@ final class BuildRedirectOpportunityReportAction
     }
 
     /**
-     * @param  Builder<Model>  $query
-     * @return Builder<Model>
+     * @param  Builder<Page>  $query
+     * @return Builder<Page>
      */
     private function applyPageLanguageScope(Builder $query, int $languageId): Builder
     {

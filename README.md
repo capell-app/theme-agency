@@ -92,11 +92,14 @@ Each package README follows the same shape:
 
 ### Themes
 
-| Package                                               | Composer package             | Purpose                               |
-| ----------------------------------------------------- | ---------------------------- | ------------------------------------- |
-| [theme-agency](packages/theme-agency/README.md)       | `capell-app/theme-agency`    | Expressive agency theme for Capell.   |
-| [theme-corporate](packages/theme-corporate/README.md) | `capell-app/theme-corporate` | Trust-led corporate theme for Capell. |
-| [theme-saas](packages/theme-saas/README.md)           | `capell-app/theme-saas`      | Conversion-led SaaS theme for Capell. |
+| Package                                                 | Composer package              | Tier    | Purpose                                      |
+| ------------------------------------------------------- | ----------------------------- | ------- | -------------------------------------------- |
+| [foundation-theme](packages/foundation-theme/README.md) | `capell-app/foundation-theme` | Free    | Default frontend runtime and renderer.       |
+| [theme-agency](packages/theme-agency/README.md)         | `capell-app/theme-agency`     | Free    | Expressive agency theme for Capell.          |
+| [theme-corporate](packages/theme-corporate/README.md)   | `capell-app/theme-corporate`  | Free    | Trust-led corporate theme for Capell.        |
+| [theme-commerce](packages/theme-commerce/README.md)     | `capell-app/theme-commerce`   | Premium | Image-led commerce theme for Capell.         |
+| [theme-healthcare](packages/theme-healthcare/README.md) | `capell-app/theme-healthcare` | Premium | Appointment-led healthcare theme for Capell. |
+| [theme-saas](packages/theme-saas/README.md)             | `capell-app/theme-saas`       | Premium | Velocity SaaS theme for Capell.              |
 
 ## Install Pattern
 

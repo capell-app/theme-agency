@@ -422,19 +422,19 @@ class PublishingStudioServiceProvider extends ServiceProvider
     private function registerBuilderMacros(): self
     {
         Builder::macro('live', function (): Builder {
-            /** @var Builder $this */
+            /** @var Builder<Model> $this */
             return $this->where($this->getModel()->qualifyColumn('workspace_id'), 0);
         });
 
         Builder::macro('inWorkspace', function (Workspace|int $workspace): Builder {
-            /** @var Builder $this */
+            /** @var Builder<Model> $this */
             $workspaceId = $workspace instanceof Workspace ? $workspace->id : $workspace;
 
             return $this->where($this->getModel()->qualifyColumn('workspace_id'), $workspaceId);
         });
 
         Builder::macro('forContext', function (Workspace|int|null $workspace): Builder {
-            /** @var Builder $this */
+            /** @var Builder<Model> $this */
             $workspaceColumn = $this->getModel()->qualifyColumn('workspace_id');
 
             if ($workspace === null) {
@@ -458,7 +458,7 @@ class PublishingStudioServiceProvider extends ServiceProvider
         });
 
         Builder::macro('withoutWorkspaceScope', function (): Builder {
-            /** @var Builder $this */
+            /** @var Builder<Model> $this */
             return $this->withoutGlobalScope(WorkspaceContextScope::class);
         });
 

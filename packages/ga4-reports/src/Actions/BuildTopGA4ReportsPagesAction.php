@@ -10,6 +10,9 @@ use Capell\GA4Reports\Models\GA4ReportsPageMetric;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static list<GA4ReportsTopPageData> run(?GA4ReportsWindowData $window = null, int $limit = 10)
+ */
 final class BuildTopGA4ReportsPagesAction
 {
     use AsAction;

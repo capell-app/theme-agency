@@ -68,6 +68,7 @@ class Subscriber extends Model
         return $this->belongsTo(Site::class);
     }
 
+    /** @return BelongsTo<Model, $this> */
     public function sourceForm(): BelongsTo
     {
         return $this->belongsTo($this->formModelClass(), 'source_form_id');
@@ -153,8 +154,9 @@ class Subscriber extends Model
         ];
     }
 
+    /** @return class-string<Model> */
     private function formModelClass(): string
     {
-        return implode('\\', ['Capell', 'FormBuilder', 'Models', 'Form']);
+        return 'Capell\\FormBuilder\\Models\\Form';
     }
 }

@@ -37,6 +37,32 @@
             @continue
         @endif
 
+        @if (($action['kind'] ?? null) === 'video_popup')
+            <x-capell::button
+                url="#"
+                :color="$action['color'] ?? $buttonColor"
+                :icon="$action['icon'] ?? 'heroicon-o-play-circle'"
+                :outline="$buttonOutline === false"
+                :size="$buttonSize"
+                :weight="$buttonWeight"
+                :wire-navigation="false"
+                :class="'lightbox action-item max-w-full whitespace-normal' . ' ' . ($actionItemClass ?? '')"
+                :data-lightbox="$action['video_url']"
+                data-type="video"
+                :data-title="$action['label'] ?? ''"
+                :data-group="$action['group'] ?? 'action-videos'"
+            >
+                @if ($action['hide_label'] ?? false)
+                    <span class="sr-only">
+                        {{ $action['label'] }}
+                    </span>
+                @else
+                    {{ $action['label'] }}
+                @endif
+            </x-capell::button>
+            @continue
+        @endif
+
         <x-capell::button
             :url="$action['url']"
             :target="$action['target'] ?? ''"

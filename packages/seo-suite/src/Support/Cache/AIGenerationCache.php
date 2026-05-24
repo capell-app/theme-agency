@@ -4,13 +4,20 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Support\Cache;
 
+use Closure;
 use Illuminate\Support\Facades\Cache;
 
 class AIGenerationCache
 {
     public function __construct(private readonly string $driver, private readonly int $ttl) {}
 
-    public function remember(string $key, callable $callback): mixed
+    /**
+     * @template TCacheValue
+     *
+     * @param  Closure(): TCacheValue  $callback
+     * @return TCacheValue
+     */
+    public function remember(string $key, Closure $callback): mixed
     {
         return Cache::driver($this->driver)->remember($key, $this->ttl, $callback);
     }

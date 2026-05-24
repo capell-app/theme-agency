@@ -102,7 +102,6 @@ const CAPELL_MANIFEST_V3_MIGRATION_GROUPS = [
     ],
     'themes' => [
         'theme-agency',
-        'theme-business-solutions',
         'theme-corporate',
         'theme-saas',
     ],

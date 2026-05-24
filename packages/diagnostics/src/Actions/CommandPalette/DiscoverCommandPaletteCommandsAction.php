@@ -8,6 +8,9 @@ use Capell\Diagnostics\Contracts\CommandPaletteProvider;
 use Capell\Diagnostics\Data\CommandPaletteCommandData;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static array<string, CommandPaletteCommandData> run()
+ */
 final class DiscoverCommandPaletteCommandsAction
 {
     use AsAction;

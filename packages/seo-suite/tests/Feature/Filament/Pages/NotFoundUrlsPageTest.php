@@ -96,8 +96,11 @@ function insightsEventForNotFoundUrlsPageTest(array $attributes): InsightsEvent
  */
 function notFoundUrlsPageTestQuery(): Builder
 {
-    return InsightsEvent::query()
+    /** @var Builder<Model> $query */
+    $query = InsightsEvent::query()
         ->where('type', InsightsEventType::PageView);
+
+    return $query;
 }
 
 beforeEach(function (): void {

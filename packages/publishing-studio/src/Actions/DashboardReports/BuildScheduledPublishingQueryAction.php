@@ -6,7 +6,6 @@ namespace Capell\PublishingStudio\Actions\DashboardReports;
 
 use Capell\Core\Models\Page;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class BuildScheduledPublishingQueryAction
@@ -14,7 +13,7 @@ final class BuildScheduledPublishingQueryAction
     use AsAction;
 
     /**
-     * @return Builder<Model>
+     * @return Builder<Page>
      */
     public function handle(): Builder
     {

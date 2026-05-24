@@ -23,8 +23,7 @@ class Pages extends AbstractBlock
     protected static string $defaultView = 'capell-foundation-theme::components.block.asset.pages';
 
     /**
-     * @var Collection<array-key, mixed>
-     * @var \Illuminate\Pagination\LengthAwarePaginator<array-key, mixed>
+     * @var Collection<int, mixed>|LengthAwarePaginator<int, mixed>
      */
     protected Collection|LengthAwarePaginator $pages;
 

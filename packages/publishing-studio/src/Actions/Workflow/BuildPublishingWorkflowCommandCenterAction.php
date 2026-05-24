@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\PublishingStudio\Actions\Workflow;
 
+use Aimeos\Nestedset\QueryBuilder;
 use Capell\Admin\Support\SiteScope;
 use Capell\Core\Models\Page;
 use Capell\PublishingStudio\Actions\DashboardReports\BuildStaleDraftsQueryAction;
@@ -379,7 +380,7 @@ final class BuildPublishingWorkflowCommandCenterAction
     }
 
     /**
-     * @return Builder<Model>
+     * @return Builder<Model>|Builder<Workspace>|QueryBuilder<Page>
      */
     private function visibleWorkspaceIdsQuery(?Authenticatable $user): Builder
     {

@@ -10,8 +10,10 @@ use Capell\PublishingStudio\Enums\SchedulerEventTypeEnum;
 use Capell\PublishingStudio\Enums\WorkspaceTransitionEnum;
 use Capell\PublishingStudio\Filament\Resources\PreviewLinks\PreviewLinkResource;
 use Capell\PublishingStudio\Filament\Resources\PublishingStudio\WorkspaceResource;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+/** @extends TestCase<MockObject> */
 final class PublishingStudioEnumCoverageTest extends TestCase
 {
     public function test_resource_enum_points_at_the_filament_resources_it_exposes(): void

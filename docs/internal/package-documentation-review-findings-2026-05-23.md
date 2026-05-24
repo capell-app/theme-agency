@@ -15,14 +15,14 @@ This file records the review and verification pass for the package documentation
 
 ## Developer Review
 
-| Check                      | Result | Notes                                                                                                                                                       |
-| -------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Package coverage           | Pass   | 47 composer package directories; 47 package READMEs; 47 package `docs/README.md` index files.                                                               |
-| README workflow section    | Pass   | Every package README has `## Why It Helps Your Capell Workflow`.                                                                                            |
-| README docs index link     | Pass   | Every package README links to `docs/README.md`.                                                                                                             |
-| Local Markdown links       | Pass   | Checked 340 Markdown files; all 1,110 local targets resolve.                                                                                                |
-| Stale headings             | Pass   | No remaining legacy extension headings in package docs.                                                                                                     |
-| Generated screenshot links | Fixed  | Broken image links in Theme Business Solutions, SEO Suite, Campaign Studio, and Login Audit overview docs were converted to text targets until files exist. |
+| Check                      | Result | Notes                                                                                                                             |
+| -------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| Package coverage           | Pass   | 47 composer package directories; 47 package READMEs; 47 package `docs/README.md` index files.                                     |
+| README workflow section    | Pass   | Every package README has `## Why It Helps Your Capell Workflow`.                                                                  |
+| README docs index link     | Pass   | Every package README links to `docs/README.md`.                                                                                   |
+| Local Markdown links       | Pass   | Checked 340 Markdown files; all 1,110 local targets resolve.                                                                      |
+| Stale headings             | Pass   | No remaining legacy extension headings in package docs.                                                                           |
+| Generated screenshot links | Fixed  | Broken image links in SEO Suite, Campaign Studio, and Login Audit overview docs were converted to text targets until files exist. |
 
 ## Content Writer Review
 
@@ -44,11 +44,11 @@ This file records the review and verification pass for the package documentation
 
 ## Security And Cache Review
 
-| Check                         | Result | Notes                                                                                                                                                                                                   |
-| ----------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Public-output safety language | Pass   | Value and safety sections preserve the rule that authoring state, tokens, admin URLs, editor selectors, model ids, and internal metadata must not leak to public output.                                |
-| Frontend/cache packages       | Pass   | Frontend Authoring, HTML Cache, API, Block Library, Layout Builder, Foundation Theme, Shopify Commerce, and Theme Business Solutions all include explicit safety boundaries or safe ownership language. |
-| Unsafe extension advice       | Pass   | No new docs advise replacing core classes, bypassing registries, or storing designed layout markup in database content fields.                                                                          |
+| Check                         | Result | Notes                                                                                                                                                                         |
+| ----------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Public-output safety language | Pass   | Value and safety sections preserve the rule that authoring state, tokens, admin URLs, editor selectors, model ids, and internal metadata must not leak to public output.      |
+| Frontend/cache packages       | Pass   | Frontend Authoring, HTML Cache, API, Block Library, Layout Builder, Foundation Theme, and Shopify Commerce all include explicit safety boundaries or safe ownership language. |
+| Unsafe extension advice       | Pass   | No new docs advise replacing core classes, bypassing registries, or storing designed layout markup in database content fields.                                                |
 
 ## Verification Commands
 
@@ -58,7 +58,6 @@ This file records the review and verification pass for the package documentation
 | `rg -n "$DOC_STALE_PATTERN" packages/*/README.md packages/*/docs docs/README.md docs/package-documentation-standard.md docs/internal/package-documentation-review-2026-05-23.md docs/internal/package-documentation-review-findings-2026-05-23.md docs/internal/package-doc-gaps.md` | Pass: no matches.                                                                                                                                                                                                              |
 | `xargs npx prettier --check < /tmp/capell-docs-owned-md-files.txt`                                                                                                                                                                                                                   | Pass: all matched files use Prettier code style.                                                                                                                                                                               |
 | `vendor/bin/pest packages/shopify-commerce/tests --configuration=phpunit.xml`                                                                                                                                                                                                        | Pass: 36 tests, 92 assertions.                                                                                                                                                                                                 |
-| `vendor/bin/pest packages/theme-business-solutions/tests --configuration=phpunit.xml`                                                                                                                                                                                                | Pass: 7 tests, 167 assertions.                                                                                                                                                                                                 |
 | `vendor/bin/pest packages/frontend-authoring/tests --configuration=phpunit.xml`                                                                                                                                                                                                      | Pass: 34 tests, 228 assertions.                                                                                                                                                                                                |
 | `vendor/bin/pest packages/html-cache/tests --configuration=phpunit.xml`                                                                                                                                                                                                              | Fail: 4 failed, 101 passed. Failures are runtime/test-fixture issues around anonymous users missing `hasRole()`, settings casts, and maintenance cache state; no Markdown files are involved.                                  |
 | `vendor/bin/pest packages/publishing-studio/tests --configuration=phpunit.xml`                                                                                                                                                                                                       | Fail: 55 failed, 1 skipped, 507 passed. Failures are runtime/test-fixture issues around page translation URL listeners, settings casts, dashboard widgets, Filament actions, and bridge tests; no Markdown files are involved. |

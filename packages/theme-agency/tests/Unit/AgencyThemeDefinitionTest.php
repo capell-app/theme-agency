@@ -17,7 +17,7 @@ use Capell\ThemeStudio\Agency\AgencyThemeServiceProvider;
 use Capell\ThemeStudio\Agency\Health\ThemeAgencyHealthCheck;
 use Illuminate\Support\Facades\View;
 
-it('defines the agency premium renderer contract', function (): void {
+it('defines the agency free renderer contract', function (): void {
     $definition = AgencyThemeServiceProvider::definition();
 
     expect($definition->package)->toBe('capell-app/theme-agency')

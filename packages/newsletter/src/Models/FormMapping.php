@@ -51,6 +51,7 @@ class FormMapping extends Model
         return $this->belongsTo(Site::class);
     }
 
+    /** @return BelongsTo<Model, $this> */
     public function form(): BelongsTo
     {
         return $this->belongsTo($this->formModelClass());
@@ -80,8 +81,9 @@ class FormMapping extends Model
         ];
     }
 
+    /** @return class-string<Model> */
     private function formModelClass(): string
     {
-        return implode('\\', ['Capell', 'FormBuilder', 'Models', 'Form']);
+        return 'Capell\\FormBuilder\\Models\\Form';
     }
 }

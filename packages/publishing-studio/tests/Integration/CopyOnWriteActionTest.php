@@ -79,7 +79,7 @@ it('cloneForEdit leaves the live row on disk untouched', function (): void {
         ->withoutGlobalScopes()
         ->find($originalId);
 
-    expect($stored)->not->toBeNull()
+    capell_expect($stored)->not->toBeNull()
         ->and($stored->name)->toBe('live-name')
         ->and($stored->workspace_id)->toBe(0)
         ->and($stored->uuid)->toBe($originalUuid);
@@ -93,11 +93,11 @@ it('cloneForEdit persists a workspace-scoped clone with dirty attributes applied
 
     $clone = (new CopyOnWriteAction)->cloneForEdit($liveRow, $workspace);
 
-    expect($clone->exists)->toBeTrue()
-        ->and($clone->id)->not->toBe($liveRow->id)
-        ->and($clone->workspace_id)->toBe($workspace->id)
-        ->and($clone->name)->toBe('edited-name')
-        ->and($clone->shadowed_by_workspace_id)->toBe(0);
+    capell_expect($clone->exists)->toBeTrue();
+    capell_expect($clone->id)->not->toBe($liveRow->id);
+    capell_expect($clone->workspace_id)->toBe($workspace->id);
+    capell_expect($clone->name)->toBe('edited-name');
+    capell_expect($clone->shadowed_by_workspace_id)->toBe(0);
 });
 
 it('cloneForEdit preserves the uuid of the source live row on the clone', function (): void {
@@ -108,7 +108,7 @@ it('cloneForEdit preserves the uuid of the source live row on the clone', functi
 
     $clone = (new CopyOnWriteAction)->cloneForEdit($liveRow, $workspace);
 
-    expect($clone->uuid)->toBe($liveRow->uuid);
+    capell_expect((string) $clone->uuid)->toBe((string) $liveRow->uuid);
 });
 
 it('cloneForEdit stamps the shadow flag on the live row', function (): void {
@@ -122,7 +122,7 @@ it('cloneForEdit stamps the shadow flag on the live row', function (): void {
         ->withoutGlobalScopes()
         ->find($liveRow->id);
 
-    expect($liveAfter->shadowed_by_workspace_id)->toBe($workspace->id)
+    capell_expect($liveAfter->shadowed_by_workspace_id)->toBe($workspace->id)
         ->and($liveRow->shadowed_by_workspace_id)->toBe($workspace->id);
 });
 
@@ -139,10 +139,10 @@ it('cloneForEdit refuses a live row already shadowed by another workspace', func
         ->findOrFail($liveRow->id);
     $freshLiveRow->name = 'other edit';
 
-    expect(fn (): Model => (new CopyOnWriteAction)->cloneForEdit($freshLiveRow, $otherWorkspace))
+    capell_expect(fn (): Model => (new CopyOnWriteAction)->cloneForEdit($freshLiveRow, $otherWorkspace))
         ->toThrow(LogicException::class, 'already shadowed by workspace');
 
-    expect(ShadowableDraftableFixture::query()
+    capell_expect(ShadowableDraftableFixture::query()
         ->withoutGlobalScopes()
         ->where('workspace_id', $otherWorkspace->id)
         ->where('uuid', $liveRow->uuid)
@@ -155,16 +155,16 @@ it('cloneForDelete persists the clone and soft-deletes it to mark a tombstone', 
 
     $clone = (new CopyOnWriteAction)->cloneForDelete($liveRow, $workspace);
 
-    expect($clone->exists)->toBeTrue()
-        ->and($clone->workspace_id)->toBe($workspace->id)
-        ->and($clone->trashed())->toBeTrue()
-        ->and($clone->uuid)->toBe($liveRow->uuid);
+    capell_expect($clone->exists)->toBeTrue();
+    capell_expect($clone->workspace_id)->toBe($workspace->id);
+    capell_expect(method_exists($clone, 'trashed') ? $clone->trashed() : false)->toBeTrue();
+    capell_expect($clone->uuid)->toBe($liveRow->uuid);
 
     $storedLive = ShadowableDraftableFixture::query()
         ->withoutGlobalScopes()
         ->find($liveRow->id);
 
-    expect($storedLive->trashed())->toBeFalse()
+    capell_expect($storedLive->trashed())->toBeFalse()
         ->and($storedLive->shadowed_by_workspace_id)->toBe($workspace->id);
 });
 
@@ -180,10 +180,10 @@ it('cloneForDelete refuses a live row already shadowed by another workspace', fu
         ->withoutGlobalScopes()
         ->findOrFail($liveRow->id);
 
-    expect(fn (): Model => (new CopyOnWriteAction)->cloneForDelete($freshLiveRow, $otherWorkspace))
+    capell_expect(fn (): Model => (new CopyOnWriteAction)->cloneForDelete($freshLiveRow, $otherWorkspace))
         ->toThrow(LogicException::class, 'already shadowed by workspace');
 
-    expect(ShadowableDraftableFixture::query()
+    capell_expect(ShadowableDraftableFixture::query()
         ->withoutGlobalScopes()
         ->where('workspace_id', $otherWorkspace->id)
         ->where('uuid', $liveRow->uuid)
@@ -194,7 +194,7 @@ it('cloneForDelete throws a LogicException for models that do not use SoftDelete
     $workspace = Workspace::factory()->create();
     $liveRow = makeLiveHardDeletableRow();
 
-    expect(fn (): Model => (new CopyOnWriteAction)->cloneForDelete($liveRow, $workspace))
+    capell_expect(fn (): Model => (new CopyOnWriteAction)->cloneForDelete($liveRow, $workspace))
         ->toThrow(LogicException::class, 'does not use SoftDeletes');
 });
 
@@ -213,7 +213,7 @@ it('clearShadow only clears the flag when the workspace id matches', function ()
         ->withoutGlobalScopes()
         ->find($liveRow->id);
 
-    expect($stillShadowed->shadowed_by_workspace_id)->toBe($ownerWorkspace->id);
+    capell_expect($stillShadowed->shadowed_by_workspace_id)->toBe($ownerWorkspace->id);
 
     // The matching workspace resets it.
     (new CopyOnWriteAction)->clearShadow($liveRow, $ownerWorkspace);
@@ -222,7 +222,7 @@ it('clearShadow only clears the flag when the workspace id matches', function ()
         ->withoutGlobalScopes()
         ->find($liveRow->id);
 
-    expect($cleared->shadowed_by_workspace_id)->toBe(0);
+    capell_expect($cleared->shadowed_by_workspace_id)->toBe(0);
 });
 
 it('guardLive rejects records that are not live rows on cloneForEdit', function (): void {
@@ -237,7 +237,7 @@ it('guardLive rejects records that are not live rows on cloneForEdit', function 
             'name' => 'draft-only',
         ]);
 
-    expect(fn (): Model => (new CopyOnWriteAction)->cloneForEdit($alreadyScopedRow, $workspace))
+    capell_expect(fn (): Model => (new CopyOnWriteAction)->cloneForEdit($alreadyScopedRow, $workspace))
         ->toThrow(LogicException::class, 'expected a live row');
 });
 
@@ -253,6 +253,6 @@ it('guardLive rejects records that are not live rows on cloneForDelete', functio
             'name' => 'draft-only',
         ]);
 
-    expect(fn (): Model => (new CopyOnWriteAction)->cloneForDelete($alreadyScopedRow, $workspace))
+    capell_expect(fn (): Model => (new CopyOnWriteAction)->cloneForDelete($alreadyScopedRow, $workspace))
         ->toThrow(LogicException::class, 'expected a live row');
 });

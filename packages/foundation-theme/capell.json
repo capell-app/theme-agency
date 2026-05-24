@@ -71,12 +71,52 @@
         "privateDocsRequested": false
     },
     "marketplace": {
-        "summary": "Foundation Theme provides the default Capell theme assets, Tailwind pipeline, Blade directives, and media handling.",
+        "summary": "Default Capell page foundations, layout areas, content blocks, media, forms, and package-aware frontend states.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Foundation Theme extension preview image",
                 "caption": "Foundation Theme extension preview"
+            },
+            {
+                "path": "docs/assets/marketplace/foundation-homepage-layout.svg",
+                "alt": "Foundation Theme homepage layout screenshot showing hero, feature grid, content blocks, cta, footer.",
+                "caption": "Foundation Theme: Homepage layout. Hero, feature grid, content blocks, CTA, footer."
+            },
+            {
+                "path": "docs/assets/marketplace/foundation-standard-page-layout.svg",
+                "alt": "Foundation Theme standard content page screenshot showing header, breadcrumbs, rich content, related links.",
+                "caption": "Foundation Theme: Standard content page. Header, breadcrumbs, rich content, related links."
+            },
+            {
+                "path": "docs/assets/marketplace/foundation-blog-article-layout.svg",
+                "alt": "Foundation Theme blog article layout screenshot showing article hero, author row, body, related posts. Requires capell-app/blog.",
+                "caption": "Foundation Theme: Blog article layout. Article hero, author row, body, related posts. Requires capell-app/blog."
+            },
+            {
+                "path": "docs/assets/marketplace/foundation-listing-layout.svg",
+                "alt": "Foundation Theme listing page layout screenshot showing card grid, filters, pagination, empty state. Requires capell-app/tags.",
+                "caption": "Foundation Theme: Listing page layout. Card grid, filters, pagination, empty state. Requires capell-app/tags."
+            },
+            {
+                "path": "docs/assets/marketplace/foundation-contact-form-layout.svg",
+                "alt": "Foundation Theme contact form layout screenshot showing intro copy, validated form, consent, confirmation. Requires capell-app/form-builder.",
+                "caption": "Foundation Theme: Contact form layout. Intro copy, validated form, consent, confirmation. Requires capell-app/form-builder."
+            },
+            {
+                "path": "docs/assets/marketplace/foundation-search-results-layout.svg",
+                "alt": "Foundation Theme search results layout screenshot showing search box, result excerpts, highlighting, no-results state. Requires capell-app/search.",
+                "caption": "Foundation Theme: Search results layout. Search box, result excerpts, highlighting, no-results state. Requires capell-app/search."
+            },
+            {
+                "path": "docs/assets/marketplace/foundation-events-layout.svg",
+                "alt": "Foundation Theme events listing layout screenshot showing featured event, date cards, location metadata. Requires capell-app/events.",
+                "caption": "Foundation Theme: Events listing layout. Featured event, date cards, location metadata. Requires capell-app/events."
+            },
+            {
+                "path": "docs/assets/marketplace/foundation-membership-gate-layout.svg",
+                "alt": "Foundation Theme access gated page layout screenshot showing teaser content, sign-in prompt, gated sections. Requires capell-app/access-gate.",
+                "caption": "Foundation Theme: Access-gated page layout. Teaser content, sign-in prompt, gated sections. Requires capell-app/access-gate."
             }
         ],
         "categories": ["admin", "foundation", "frontend"]

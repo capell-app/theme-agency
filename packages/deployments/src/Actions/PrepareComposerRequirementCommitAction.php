@@ -25,8 +25,15 @@ final class PrepareComposerRequirementCommitAction
 
         if ($requirement->repositoryUrl !== null) {
             $composer['repositories'] ??= [];
-            $alreadyPresent = collect($composer['repositories'])
-                ->contains(fn (array $repo): bool => ($repo['url'] ?? null) === $requirement->repositoryUrl);
+            $repositories = is_array($composer['repositories']) ? $composer['repositories'] : [];
+            $alreadyPresent = false;
+
+            foreach ($repositories as $repository) {
+                if (is_array($repository) && ($repository['url'] ?? null) === $requirement->repositoryUrl) {
+                    $alreadyPresent = true;
+                    break;
+                }
+            }
 
             if (! $alreadyPresent) {
                 $composer['repositories'][] = ['type' => 'vcs', 'url' => $requirement->repositoryUrl];

@@ -91,7 +91,6 @@ parameters:
         - packages/shopify-commerce/resources/views
         - packages/site-discovery/resources/views
         - packages/theme-agency/resources/views
-        - packages/theme-business-solutions/resources/views
         - packages/theme-corporate/resources/views
         - packages/theme-saas/resources/views
         - packages/theme-studio-admin/resources/views

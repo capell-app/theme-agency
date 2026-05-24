@@ -11,6 +11,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\ThemeStudio\Agency\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -162,6 +163,10 @@ class AgencyThemeServiceProvider extends ServiceProvider
     {
         if (! CapellCore::isPackageInstalled(self::$packageName)) {
             return;
+        }
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([DemoCommand::class]);
         }
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-agency');

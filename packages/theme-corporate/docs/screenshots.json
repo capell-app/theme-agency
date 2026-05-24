@@ -18,6 +18,18 @@
             "screenshotPath": "public/docs/screenshots/packages/theme-corporate/theme-admin-list-showing-corporate.png"
         },
         {
+            "id": "theme-preview-url-output",
+            "title": "Theme preview URL output.",
+            "package": "theme-corporate",
+            "surface": "admin",
+            "targetType": "admin-url",
+            "target": "capell.admin.theme-preview",
+            "required": true,
+            "notes": "Capture a temporary signed preview URL generated from the host Themes table for the Corporate theme.",
+            "useCase": "An administrator opens a preview URL to inspect a page with the Corporate theme applied.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/theme-preview-url-output.png"
+        },
+        {
             "id": "frontend-page-rendered-with-corporate-theme",
             "title": "Frontend page rendered with Corporate theme.",
             "package": "theme-corporate",
@@ -30,16 +42,112 @@
             "screenshotPath": "public/docs/screenshots/packages/theme-corporate/frontend-page-rendered-with-corporate-theme.png"
         },
         {
-            "id": "theme-preview-url-output",
-            "title": "Theme preview URL output.",
+            "id": "corporate-homepage-layout",
+            "title": "Corporate homepage.",
             "package": "theme-corporate",
-            "surface": "admin",
-            "targetType": "admin-url",
-            "target": "capell.admin.theme-preview",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/corporate-homepage-layout",
             "required": true,
-            "notes": "Capture a temporary signed preview URL generated from the host Themes table for the Corporate theme.",
-            "useCase": "An administrator opens a preview URL to inspect a page with the Corporate theme applied.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/theme-preview-url-output.png"
+            "notes": "Capture Theme Corporate corporate homepage with trust-led hero, capability bands, proof, cta. No additional package note required.",
+            "useCase": "A buyer reviews how Theme Corporate handles the corporate homepage page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-homepage-layout.png"
+        },
+        {
+            "id": "corporate-services-layout",
+            "title": "Services page.",
+            "package": "theme-corporate",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/corporate-services-layout",
+            "required": true,
+            "notes": "Capture Theme Corporate services page with service cards, process, outcomes, contact cta. No additional package note required.",
+            "useCase": "A buyer reviews how Theme Corporate handles the services page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-services-layout.png"
+        },
+        {
+            "id": "corporate-governance-layout",
+            "title": "Governance page.",
+            "package": "theme-corporate",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/corporate-governance-layout",
+            "required": true,
+            "notes": "Capture Theme Corporate governance page with policy sections, document cards, leadership proof. Requires capell-app/document-lifecycle; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Corporate handles the governance page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-governance-layout.png"
+        },
+        {
+            "id": "corporate-resources-layout",
+            "title": "Resources listing.",
+            "package": "theme-corporate",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/corporate-resources-layout",
+            "required": true,
+            "notes": "Capture Theme Corporate resources listing with resource cards, filters, topic navigation. Requires capell-app/tags; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Corporate handles the resources listing page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-resources-layout.png"
+        },
+        {
+            "id": "corporate-article-layout",
+            "title": "Thought leadership article.",
+            "package": "theme-corporate",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/corporate-article-layout",
+            "required": true,
+            "notes": "Capture Theme Corporate thought leadership article with article body, author, related resources. Requires capell-app/blog; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Corporate handles the thought leadership article page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-article-layout.png"
+        },
+        {
+            "id": "corporate-contact-layout",
+            "title": "Contact form page.",
+            "package": "theme-corporate",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/corporate-contact-layout",
+            "required": true,
+            "notes": "Capture Theme Corporate contact form page with office details, form fields, routing notes. Requires capell-app/form-builder; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Corporate handles the contact form page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-contact-layout.png"
+        },
+        {
+            "id": "corporate-locations-layout",
+            "title": "Locations page.",
+            "package": "theme-corporate",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/corporate-locations-layout",
+            "required": true,
+            "notes": "Capture Theme Corporate locations page with office cards, address metadata, map-ready panels. Requires capell-app/address; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Corporate handles the locations page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-locations-layout.png"
+        },
+        {
+            "id": "corporate-search-layout",
+            "title": "Search results page.",
+            "package": "theme-corporate",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/corporate-search-layout",
+            "required": true,
+            "notes": "Capture Theme Corporate search results page with search field, grouped results, snippets. Requires capell-app/search; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Corporate handles the search results page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-search-layout.png"
+        },
+        {
+            "id": "corporate-investor-event-layout",
+            "title": "Event detail page.",
+            "package": "theme-corporate",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/corporate-investor-event-layout",
+            "required": true,
+            "notes": "Capture Theme Corporate event detail page with agenda, registration, related documents. Requires capell-app/events; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Corporate handles the event detail page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-investor-event-layout.png"
         }
     ]
 }

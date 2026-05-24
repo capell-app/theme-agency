@@ -190,7 +190,7 @@ class SearchMetaDataSectionExtender implements SearchMetaDataSectionExtenderCont
                 Radio::make('descriptions')
                     ->label(__('Select a Suggested Meta Description'))
                     ->options(
-                        collect($arguments['descriptions'] ?? [])
+                        collect(is_array($arguments['descriptions'] ?? null) ? $arguments['descriptions'] : [])
                             ->mapWithKeys(fn (string $description): array => [$description => $description])
                             ->all(),
                     )

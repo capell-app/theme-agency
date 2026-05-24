@@ -27,7 +27,7 @@ use Override;
  * @property CarbonImmutable|null $ends_at
  * @property EventLocationModeEnum $location_mode
  * @property string $occurrence_key
- * @property array $override_data
+ * @property array<array-key, mixed> $override_data
  * @property int $registration_count
  * @property CarbonImmutable $starts_at
  * @property EventOccurrenceStatusEnum $status

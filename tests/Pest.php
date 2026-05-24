@@ -40,6 +40,8 @@ use Capell\Tests\Packages\PackagesTestCase;
 use Capell\Tests\Packages\UninstalledPackagesTestCase;
 use Capell\WelcomeTour\Tests\WelcomeTourTestCase;
 use Capell\WordPressImporter\Tests\WordPressImporterTestCase;
+use Illuminate\Support\Collection;
+use Pest\Expectation;
 
 /**
  * @param  class-string  $testCase
@@ -47,6 +49,28 @@ use Capell\WordPressImporter\Tests\WordPressImporterTestCase;
 function extendCapellPackageTests(string $testCase, string $group, string $package): void
 {
     pest()->extend($testCase)->group($group)->in(sprintf('../packages/%s/tests', $package), sprintf('../Packages/%s/tests', $package));
+}
+
+/**
+ * @return Collection<array-key, mixed>
+ */
+function capell_test_collect(mixed $items = []): Collection
+{
+    if ($items instanceof Collection) {
+        return $items;
+    }
+
+    if (is_array($items) || $items instanceof Traversable) {
+        return new Collection($items);
+    }
+
+    return new Collection;
+}
+
+/** @return Expectation<mixed> */
+function capell_expect(mixed $value): Expectation
+{
+    return expect($value);
 }
 
 extendCapellPackageTests(AddressTestCase::class, 'address', 'address');
@@ -88,7 +112,9 @@ extendCapellPackageTests(SeoSuiteTestCase::class, 'seo-suite', 'seo-suite');
 extendCapellPackageTests(ShopifyCommerceTestCase::class, 'shopify-commerce', 'shopify-commerce');
 extendCapellPackageTests(TagsTestCase::class, 'tags', 'tags');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-agency', 'theme-agency');
+extendCapellPackageTests(PackagesTestCase::class, 'theme-commerce', 'theme-commerce');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-corporate', 'theme-corporate');
+extendCapellPackageTests(PackagesTestCase::class, 'theme-healthcare', 'theme-healthcare');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-saas', 'theme-saas');
 pest()->extend(UninstalledPackagesTestCase::class)->in('UninstalledPackages');
 extendCapellPackageTests(WelcomeTourTestCase::class, 'welcome-tour', 'welcome-tour');

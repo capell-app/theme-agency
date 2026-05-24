@@ -18,9 +18,11 @@ use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\RebaseReport;
 use Carbon\CarbonImmutable;
 use Illuminate\Container\Container;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
+/** @extends TestCase<MockObject> */
 final class PublishingStudioReportDataTest extends TestCase
 {
     protected function setUp(): void

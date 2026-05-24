@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
@@ -14,7 +15,10 @@ use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Data\ThemePageData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Saas\Health\ThemeSaasHealthCheck;
+use Capell\ThemeStudio\Saas\Rendering\BlogSectionRenderer;
 use Capell\ThemeStudio\Saas\SaasThemeServiceProvider;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 
 it('defines the saas premium renderer contract', function (): void {
@@ -22,9 +26,24 @@ it('defines the saas premium renderer contract', function (): void {
 
     expect($definition->package)->toBe('capell-app/theme-saas')
         ->and($definition->key)->toBe(SaasThemeServiceProvider::THEME_KEY)
+        ->and($definition->name)->toContain('Velocity')
+        ->and($definition->description)->toContain('Velocity')
         ->and($definition->assets)->toBe(['css' => 'vendor/capell/themes/saas.css'])
-        ->and($definition->includedSections)->toContain('hero', 'features', 'proof', 'cta')
-        ->and($definition->presets)->toHaveCount(8)
+        ->and($definition->includedSections)->toBe([
+            'navigation',
+            'hero',
+            'features',
+            'proof',
+            'content-listing',
+            'comparison',
+            'calculator',
+            'cta',
+            'footer',
+            'blog',
+        ])
+        ->and($definition->includedSections)->toContain('content-listing', 'comparison', 'calculator', 'blog')
+        ->and($definition->presets)->toHaveCount(1)
+        ->and($definition->presets[0]->key)->toBe('velocity')
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->tags)->toContain('Conversion')
         ->and(ThemeSaasHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
@@ -64,8 +83,11 @@ it('declares renderers for every included saas section', function (): void {
         'features',
         'proof',
         'content-listing',
+        'comparison',
+        'calculator',
         'cta',
         'footer',
+        'blog',
     ]);
 });
 
@@ -119,6 +141,56 @@ it('renders public theme markup without package identifiers', function (): void 
                 heading: 'Resources',
                 items: [['title' => 'Onboarding teardown', 'summary' => 'A practical checklist.', 'url' => '/resources/onboarding']],
             ),
+            new class implements ThemeSection
+            {
+                public function key(): string
+                {
+                    return 'comparison';
+                }
+
+                public function fallbackKey(): ?string
+                {
+                    return null;
+                }
+
+                public function toViewData(): array
+                {
+                    return [
+                        'section' => (object) [
+                            'heading' => 'Compare paths',
+                            'summary' => 'Choose the route that fits your growth motion.',
+                            'items' => [
+                                ['title' => 'Self serve', 'summary' => 'Fast activation for smaller teams.'],
+                            ],
+                        ],
+                    ];
+                }
+            },
+            new class implements ThemeSection
+            {
+                public function key(): string
+                {
+                    return 'calculator';
+                }
+
+                public function fallbackKey(): ?string
+                {
+                    return null;
+                }
+
+                public function toViewData(): array
+                {
+                    return [
+                        'section' => (object) [
+                            'heading' => 'Model the lift',
+                            'summary' => 'Estimate the compounding effect of activation improvements.',
+                            'items' => [
+                                ['title' => 'Trial conversion', 'summary' => 'Turn more trials into qualified accounts.', 'metric' => '+18%'],
+                            ],
+                        ],
+                    ];
+                }
+            },
             new CtaSectionData(
                 heading: 'Launch the next test',
                 actions: [['label' => 'Start trial', 'url' => '/signup']],
@@ -147,4 +219,185 @@ it('renders public theme markup without package identifiers', function (): void 
         ->not->toContain('signed')
         ->not->toContain('filament')
         ->not->toContain('editor');
+});
+
+it('renders Velocity blog views when Blog is installed', function (): void {
+    View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
+    app('translator')->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
+
+    $indexHtml = view('capell-theme-saas::blog.index', [
+        'blogAvailable' => true,
+        'heading' => 'Growth calendar',
+        'summary' => 'What product teams should test next.',
+        'articles' => [
+            ['title' => 'Activation forecast', 'summary' => 'A practical planning model.', 'url' => '/blog/activation-forecast'],
+        ],
+    ])->render();
+
+    $articleHtml = view('capell-theme-saas::blog.article', [
+        'blogAvailable' => true,
+        'title' => 'Activation forecast',
+        'summary' => 'A practical planning model.',
+        'body' => 'Plan the next growth sprint.',
+    ])->render();
+
+    expect($indexHtml)
+        ->toContain('velocity-insights-index')
+        ->toContain('/blog/activation-forecast')
+        ->toContain('Activation forecast')
+        ->and($articleHtml)
+        ->toContain('velocity-article')
+        ->toContain('Plan the next growth sprint.')
+        ->not->toContain('capell-app/theme-saas')
+        ->not->toContain('capell-theme-saas')
+        ->not->toContain('filament')
+        ->not->toContain('editor');
+});
+
+it('escapes untrusted article body content', function (): void {
+    View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
+    app('translator')->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-saas::blog.article', [
+        'blogAvailable' => true,
+        'title' => 'Activation forecast',
+        'body' => '<script>alert("unsafe")</script><p>Visible copy</p>',
+    ])->render();
+
+    expect($html)
+        ->not->toContain('<script>')
+        ->not->toContain('<p>Visible copy</p>')
+        ->toContain('&lt;script&gt;alert(&quot;unsafe&quot;)&lt;/script&gt;&lt;p&gt;Visible copy&lt;/p&gt;');
+});
+
+it('renders marketing-safe blog fallbacks when Blog is not installed', function (): void {
+    View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
+    app('translator')->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-saas::blog.index', [
+        'blogAvailable' => false,
+        'heading' => 'Growth resources',
+        'articles' => [
+            ['title' => 'Activation forecast', 'summary' => 'A practical planning model.', 'url' => '/blog/activation-forecast'],
+        ],
+    ])->render();
+
+    expect($html)
+        ->toContain('velocity-insights-index')
+        ->toContain('Growth resources')
+        ->toContain('Activation forecast')
+        ->not->toContain('href="/blog/activation-forecast"')
+        ->not->toContain('capell-app/theme-saas')
+        ->not->toContain('capell-theme-saas')
+        ->not->toContain('filament')
+        ->not->toContain('editor');
+});
+
+it('passes Blog package availability through the registered section renderer', function (bool $blogInstalled, string $expectedMarkup, string $missingMarkup): void {
+    View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
+    app('translator')->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(SaasThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/blog', $blogInstalled);
+
+    $registry = new ThemeRegistry;
+    $provider = new SaasThemeServiceProvider($this->app);
+    $provider->register();
+    $provider->boot($registry);
+
+    $renderer = $registry->sectionRenderer('saas', 'blog');
+
+    expect($renderer)->not->toBeNull();
+
+    $html = $renderer->render(new class implements ThemeSection
+    {
+        public function key(): string
+        {
+            return 'blog';
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        public function toViewData(): array
+        {
+            return [
+                'section' => (object) [
+                    'heading' => 'Growth calendar',
+                    'items' => [
+                        ['title' => 'Activation forecast', 'summary' => 'A practical planning model.', 'url' => '/blog/activation-forecast'],
+                    ],
+                ],
+            ];
+        }
+    });
+
+    expect($html)
+        ->toContain('velocity-insights')
+        ->toContain($expectedMarkup)
+        ->not->toContain($missingMarkup);
+})->with([
+    'blog installed' => [true, 'href="/blog/activation-forecast"', '<article class="velocity-insight-card'],
+    'blog not installed' => [false, '<article class="velocity-insight-card', 'href="/blog/activation-forecast"'],
+]);
+
+it('renders public blog views without database queries', function (): void {
+    View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
+    app('translator')->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
+
+    $queries = [];
+
+    DB::listen(function (QueryExecuted $query) use (&$queries): void {
+        $queries[] = $query->sql;
+    });
+
+    $sectionHtml = (new BlogSectionRenderer(SaasThemeServiceProvider::THEME_KEY, true, failLoudly: true))->render(
+        new class implements ThemeSection
+        {
+            public function key(): string
+            {
+                return 'blog';
+            }
+
+            public function fallbackKey(): ?string
+            {
+                return null;
+            }
+
+            public function toViewData(): array
+            {
+                return [
+                    'section' => (object) [
+                        'heading' => 'Growth calendar',
+                        'summary' => 'What product teams should test next.',
+                        'items' => [
+                            ['title' => 'Activation forecast', 'summary' => 'A practical planning model.', 'url' => '/blog/activation-forecast'],
+                        ],
+                    ],
+                ];
+            }
+        },
+    );
+
+    $indexHtml = view('capell-theme-saas::blog.index', [
+        'blogAvailable' => true,
+        'heading' => 'Growth calendar',
+        'articles' => [
+            ['title' => 'Activation forecast', 'summary' => 'A practical planning model.', 'url' => '/blog/activation-forecast'],
+        ],
+    ])->render();
+
+    $articleHtml = view('capell-theme-saas::blog.article', [
+        'blogAvailable' => true,
+        'title' => 'Activation forecast',
+        'summary' => 'A practical planning model.',
+        'body' => 'Plan the next growth sprint.',
+    ])->render();
+
+    expect($sectionHtml)->toContain('velocity-insights')
+        ->and($indexHtml)->toContain('velocity-insights-index')
+        ->and($articleHtml)->toContain('velocity-article')
+        ->and($queries)->toBe([]);
 });

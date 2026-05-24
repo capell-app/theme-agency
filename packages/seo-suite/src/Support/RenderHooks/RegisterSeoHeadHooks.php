@@ -12,6 +12,7 @@ use Capell\SeoSuite\Actions\BuildSocialMetaAction;
 
 class RegisterSeoHeadHooks
 {
+    /** @param RenderHookRegistry<RenderHookContext> $registry */
     public function __construct(private readonly RenderHookRegistry $registry) {}
 
     public function register(): void
