@@ -16,6 +16,7 @@ use Capell\PublicActions\Enums\PublicActionStatus;
 use Capell\PublicActions\Enums\PublicActionSubmissionStatus;
 use Capell\PublicActions\Jobs\DispatchPublicActionDestinationJob;
 use Capell\PublicActions\Models\PublicAction;
+use Capell\PublicActions\Models\PublicActionDestination;
 use Capell\PublicActions\Models\PublicActionSubmission;
 use Capell\PublicActions\Support\PublicActionHandlerRegistry;
 use Illuminate\Database\Eloquent\Builder;
@@ -352,6 +353,8 @@ final class SubmitPublicActionAction
             ->get();
 
         foreach ($destinations as $destination) {
+            throw_unless($destination instanceof PublicActionDestination);
+
             if ((bool) data_get($destination->settings, 'sync', false)) {
                 DispatchPublicActionDestinationAction::run($destination, $submission);
 

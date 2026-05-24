@@ -9,6 +9,7 @@ it('keeps every package manifest in an approved product group', function (): voi
         'admin' => 'Capell Admin',
         'automation' => 'Capell Automation',
         'collaboration' => 'Capell Collaboration',
+        'commerce' => 'Capell Commerce',
         'commercial' => 'Capell Commercial',
         'communications' => 'Capell Communications',
         'content-product' => 'Capell Content',
@@ -79,6 +80,9 @@ it('groups packages into the current product bundles', function (): void {
         'collaboration' => [
             'notes/capell.json',
         ],
+        'commerce' => [
+            'shopify-commerce/capell.json',
+        ],
         'commercial' => [
             'ai-orchestrator/capell.json',
         ],
@@ -97,14 +101,18 @@ it('groups packages into the current product bundles', function (): void {
             'blog/capell.json',
             'content-sections/capell.json',
             'demo-kit/capell.json',
+            'filament-peek/capell.json',
             'foundation-theme/capell.json',
             'frontend-authoring/capell.json',
             'frontend-optimizer/capell.json',
             'hero/capell.json',
             'html-cache/capell.json',
+            'layout-builder/capell.json',
             'media-library/capell.json',
             'navigation/capell.json',
             'tags/capell.json',
+            'theme-agency/capell.json',
+            'theme-corporate/capell.json',
             'welcome-tour/capell.json',
         ],
         'growth' => [
@@ -124,12 +132,14 @@ it('groups packages into the current product bundles', function (): void {
             'dashboard-reports/capell.json',
             'deployments/capell.json',
             'diagnostics/capell.json',
+            'document-lifecycle/capell.json',
             'login-audit/capell.json',
             'migration-assistant/capell.json',
             'password-policy/capell.json',
             'wordpress-importer/capell.json',
         ],
         'publishing-pro' => [
+            'agent-delivery/capell.json',
             'api/capell.json',
             'publishing-studio/capell.json',
         ],
@@ -139,11 +149,19 @@ it('groups packages into the current product bundles', function (): void {
             'site-discovery/capell.json',
         ],
         'themes' => [
-            'theme-agency/capell.json',
-            'theme-corporate/capell.json',
+            'theme-commerce/capell.json',
+            'theme-healthcare/capell.json',
             'theme-saas/capell.json',
         ],
     ]);
+});
+
+it('removes business solutions package references', function (): void {
+    expect(is_dir(packageRepositoryPath('packages/theme-business-solutions')))->toBeFalse()
+        ->and(file_get_contents(packageRepositoryPath('composer.json')))->not->toContain('ThemeStudio\\\\BusinessSolutions')
+        ->and(file_get_contents(packageRepositoryPath('composer.local.json')))->not->toContain('theme-business-solutions')
+        ->and(file_get_contents(packageRepositoryPath('README.md')))->not->toContain('theme-business-solutions')
+        ->and(file_get_contents(packageRepositoryPath('docs/README.md')))->not->toContain('Theme Business Solutions');
 });
 
 /**
@@ -169,4 +187,9 @@ function packageManifestPayloads(): array
     ksort($payloads);
 
     return $payloads;
+}
+
+function packageRepositoryPath(string $path): string
+{
+    return __DIR__ . '/../../..' . DIRECTORY_SEPARATOR . $path;
 }

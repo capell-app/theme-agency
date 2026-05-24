@@ -1,49 +1,81 @@
-<section class="theme-hero relative overflow-hidden">
+<section class="velocity-hero relative overflow-hidden">
     <div
-        class="from-[var(--theme-primary)]/15 to-[var(--theme-accent)]/15 absolute inset-x-0 top-0 h-80 bg-gradient-to-br"
+        class="pointer-events-none absolute inset-x-0 top-0 h-40 border-b border-cyan-100 bg-cyan-50/45"
     ></div>
+
     <div
-        class="relative mx-auto grid max-w-7xl items-center gap-10 px-6 py-20 lg:grid-cols-[1fr_1fr]"
+        class="relative grid items-center gap-12 px-6 lg:grid-cols-[1.02fr_0.98fr]"
     >
         <div>
             @if ($section->eyebrow)
                 <p
-                    class="bg-[var(--theme-primary)]/10 mb-4 inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider text-[var(--theme-primary)]"
+                    class="mb-5 inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-black uppercase tracking-widest text-cyan-700"
                 >
                     {{ $section->eyebrow }}
                 </p>
             @endif
 
-            <h1 class="text-5xl font-bold tracking-tight md:text-6xl">
-                {{ $section->heading }}
-            </h1>
+            <h1>{{ $section->heading }}</h1>
+
             @if ($section->summary)
-                <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+                <p class="mt-7 max-w-2xl text-xl">
                     {{ $section->summary }}
                 </p>
             @endif
 
-            <div class="mt-8 flex flex-wrap gap-3">
+            <div class="mt-9 flex flex-wrap gap-3">
                 @foreach ($section->actions as $action)
                     <a
                         href="{{ $action['url'] }}"
-                        class="{{ ($action['style'] ?? 'primary') === 'secondary' ? 'border border-slate-300 text-slate-800' : 'bg-[var(--theme-primary)] text-white shadow-lg' }} rounded-lg px-5 py-3 text-sm font-semibold"
+                        class="velocity-cta {{ ($action['style'] ?? 'primary') === 'secondary' ? 'velocity-cta-secondary' : 'velocity-cta-primary' }}"
                     >
                         {{ $action['label'] }}
                     </a>
                 @endforeach
             </div>
         </div>
-        @if ($section->mediaUrl)
-            <div
-                class="rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl"
-            >
+
+        <div class="velocity-frame bg-white p-3">
+            @if ($section->mediaUrl)
                 <img
                     src="{{ $section->mediaUrl }}"
                     alt="{{ $section->mediaAlt ?? '' }}"
                     class="aspect-[4/3] w-full rounded-xl object-cover"
                 />
-            </div>
-        @endif
+            @else
+                <div
+                    class="aspect-[4/3] rounded-xl bg-slate-950 p-5 text-white"
+                >
+                    <div
+                        class="grid h-full grid-rows-[auto_1fr_auto] gap-5 rounded-lg border border-white/10 bg-white/[0.03] p-5"
+                    >
+                        <div class="flex items-center justify-between">
+                            <span
+                                class="h-2.5 w-24 rounded-full bg-cyan-300"
+                            ></span>
+                            <span
+                                class="h-2.5 w-14 rounded-full bg-blue-400"
+                            ></span>
+                        </div>
+                        <div class="grid content-end gap-3">
+                            <span
+                                class="h-24 rounded-lg border border-white/10 bg-white/10"
+                            ></span>
+                            <span
+                                class="h-3 w-2/3 rounded-full bg-white/40"
+                            ></span>
+                            <span
+                                class="h-3 w-1/2 rounded-full bg-white/25"
+                            ></span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-3">
+                            <span class="h-16 rounded-lg bg-cyan-400/25"></span>
+                            <span class="h-16 rounded-lg bg-blue-400/25"></span>
+                            <span class="h-16 rounded-lg bg-white/10"></span>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        </div>
     </div>
 </section>

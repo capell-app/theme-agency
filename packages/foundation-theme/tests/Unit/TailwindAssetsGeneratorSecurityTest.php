@@ -8,6 +8,9 @@ use Illuminate\Filesystem\Filesystem;
 
 require_once dirname(__DIR__, 2) . '/src/Support/Tailwind/TailwindAssetsGenerator.php';
 
+/**
+ * @param  array<array-key, mixed>  $parameters
+ */
 function invokeFoundationThemeTailwindGeneratorMethod(
     TailwindAssetsGenerator $generator,
     string $methodName,

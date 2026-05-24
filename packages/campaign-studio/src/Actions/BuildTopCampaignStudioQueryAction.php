@@ -9,6 +9,7 @@ use Capell\CampaignStudio\Models\CampaignGroup;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
@@ -62,6 +63,10 @@ final class BuildTopCampaignStudioQueryAction
             ->count();
     }
 
+    /**
+     * @param  Builder<Model>  $builder
+     * @return Builder<Model>
+     */
     private function applyConversionWindow(Builder $builder, ?CarbonImmutable $startsAt, ?CarbonImmutable $endsAt): Builder
     {
         return $builder

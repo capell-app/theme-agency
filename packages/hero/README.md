@@ -11,6 +11,18 @@ Hero renders and seeds the default home-page hero block used by Capell frontend 
 - Capell dependencies: `capell-app/core`, `capell-app/frontend`, `capell-app/layout-builder`
 - Third-party dependencies: `lorisleiva/laravel-actions`, `spatie/laravel-package-tools`
 
+## Why It Helps Your Capell Workflow
+
+- Provides a default Capell home hero block, rendering, and setup path so new sites start with a useful first-screen component.
+- Helps designers and editors begin from a package-owned hero instead of hard-coding a one-off homepage header.
+- Keeps the default hero small and replaceable while Layout Builder and themes own broader composition.
+
+## Best Used With
+
+- [Layout Builder](../layout-builder/README.md)
+- [Foundation Theme](../foundation-theme/README.md)
+- [Content Sections](../content-sections/README.md)
+
 ## What It Adds
 
 - Hero renders and seeds the default home-page hero block used by Capell frontend themes.
@@ -59,6 +71,7 @@ Hero renders and seeds the default home-page hero block used by Capell frontend 
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [overview.md](docs/overview.md)
 - [screenshots.json](docs/screenshots.json)
 

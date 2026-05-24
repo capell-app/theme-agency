@@ -10,6 +10,9 @@ use Lorisleiva\Actions\Action;
 
 final class BuildQueueHealthQueryAction extends Action
 {
+    /**
+     * @return Builder<FailedJob>
+     */
     public function handle(): Builder
     {
         return FailedJob::query()->latest('failed_at');

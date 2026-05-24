@@ -46,6 +46,9 @@ final class GA4ReportsOverviewStatsWidget extends BaseWidget implements CapellWi
             ]);
     }
 
+    /**
+     * @return Collection<array-key, mixed>
+     */
     private function getRecords(): Collection
     {
         $overview = BuildGA4ReportsOverviewAction::run($this->getGA4ReportsWindow());

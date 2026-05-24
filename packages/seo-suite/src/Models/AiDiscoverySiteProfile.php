@@ -7,22 +7,30 @@ namespace Capell\SeoSuite\Models;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Site;
 use Capell\SeoSuite\Enums\AiDiscoveryStatusEnum;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
 
+/**
+ * @property-read Site|null $site
+ * @property-read Language|null $language
+ */
 class AiDiscoverySiteProfile extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     protected $guarded = [];
 
+    /** @return BelongsTo<Site, $this> */
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class);
     }
 
+    /** @return BelongsTo<Language, $this> */
     public function language(): BelongsTo
     {
         return $this->belongsTo(Language::class);

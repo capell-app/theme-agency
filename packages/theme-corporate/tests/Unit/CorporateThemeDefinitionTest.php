@@ -17,14 +17,14 @@ use Capell\ThemeStudio\Corporate\CorporateThemeServiceProvider;
 use Capell\ThemeStudio\Corporate\Health\ThemeCorporateHealthCheck;
 use Illuminate\Support\Facades\View;
 
-it('defines the corporate premium renderer contract', function (): void {
+it('defines the corporate free renderer contract', function (): void {
     $definition = CorporateThemeServiceProvider::definition();
 
     expect($definition->package)->toBe('capell-app/theme-corporate')
         ->and($definition->key)->toBe(CorporateThemeServiceProvider::THEME_KEY)
         ->and($definition->assets)->toBe(['css' => 'vendor/capell/themes/corporate.css'])
         ->and($definition->includedSections)->toContain('hero', 'features', 'proof', 'cta')
-        ->and($definition->presets)->toHaveCount(3)
+        ->and($definition->presets)->toHaveCount(6)
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->tags)->toContain('Trust')
         ->and(ThemeCorporateHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');

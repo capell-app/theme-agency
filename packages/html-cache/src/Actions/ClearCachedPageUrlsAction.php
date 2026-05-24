@@ -11,7 +11,7 @@ use Lorisleiva\Actions\Concerns\AsJob;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 /**
- * @method static int run(Collection $urls, ?EloquentCollection $sites = null)
+ * @method static int run(Collection<int, string> $urls, ?EloquentCollection<int, \Capell\Core\Models\Site> $sites = null)
  */
 final class ClearCachedPageUrlsAction
 {
@@ -19,6 +19,9 @@ final class ClearCachedPageUrlsAction
     use AsJob;
     use AsObject;
 
+    /**
+     * @param  Collection<int, string>  $urls
+     */
     public function handle(Collection $urls): int
     {
         $cleared = 0;

@@ -96,7 +96,7 @@ class PublishingStudioUserSchemaExtender extends AbstractUserSchemaExtender
 
         $actionClass = ShouldLoadUserResourceBridgeAction::class;
 
-        if (class_exists($actionClass) && method_exists($actionClass, 'run')) {
+        if (class_exists($actionClass)) {
             if ($actionClass::run('enable_content_ownership_user_bridge', true) !== true) {
                 return false;
             }
@@ -132,6 +132,11 @@ class PublishingStudioUserSchemaExtender extends AbstractUserSchemaExtender
             ->count();
     }
 
+    /**
+     * @template TModel of Model
+     *
+     * @param  Builder<TModel>  $query
+     */
     private function morphCount(Builder $query, Model $user, string $morphName): int
     {
         return $query

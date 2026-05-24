@@ -61,4 +61,10 @@ it('writes a playwright payload with only critical-eligible stylesheet paths', f
     );
 
     expect($payload['eligible_stylesheet_paths'])->toBe(['/build/hero.css']);
+    expect($payload['render_options'])->toMatchArray([
+        'extra_fold_pixels' => 0,
+        'fold_multiplier' => 1.0,
+        'wait_strategy' => 'networkidle',
+    ]);
+    expect($payload['max_inline_css_bytes'])->toBe(20000);
 });

@@ -49,6 +49,7 @@ use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -87,7 +88,7 @@ it('builds section asset render data from preloaded relations and plain objects'
 
             public function all(): Collection
             {
-                return collect();
+                return capell_test_collect();
             }
         };
     });
@@ -106,6 +107,9 @@ it('builds section asset render data from preloaded relations and plain objects'
 
     $asset = new class($translation)
     {
+        /**
+         * @var array<array-key, mixed>
+         */
         public array $meta = ['featured' => true];
 
         public function __construct(private readonly object $translation) {}
@@ -132,6 +136,7 @@ it('builds section asset render data from preloaded relations and plain objects'
                         return (object) ['full_url' => 'https://example.test/page'];
                     }
                 },
+                default => null,
             };
         }
 
@@ -155,7 +160,7 @@ it('builds section asset render data from preloaded relations and plain objects'
 });
 
 it('exposes default section definitions and enum metadata', function (): void {
-    $definitions = collect((new DefaultSectionDefinitionProvider)->definitions());
+    $definitions = capell_test_collect((new DefaultSectionDefinitionProvider)->definitions());
 
     expect($definitions)->toHaveCount(17)
         ->and($definitions->pluck('key')->all())->toContain('content', 'hero', 'pricing', 'timeline')
@@ -197,7 +202,7 @@ it('exposes default section extenders and testimonial configurator metadata', fu
 
 it('builds the content blueprint configurator admin tab', function (): void {
     $components = (new ContentBlueprintConfigurator)->make(Schema::make()->operation('create'));
-    $tabs = collect($components)->first(fn (mixed $component): bool => $component instanceof Tabs);
+    $tabs = capell_test_collect($components)->first(fn (mixed $component): bool => $component instanceof Tabs);
 
     expect($components)->not->toBeEmpty()
         ->and($tabs)->toBeInstanceOf(Tabs::class);
@@ -206,7 +211,7 @@ it('builds the content blueprint configurator admin tab', function (): void {
 it('builds popular section meta schemas for all configured section keys', function (object $configurator, array $expectedNames): void {
     $reflection = new ReflectionMethod($configurator, 'metaFields');
 
-    $fields = collect($reflection->invoke($configurator, Schema::make()->operation('edit')));
+    $fields = capell_test_collect($reflection->invoke($configurator, Schema::make()->operation('edit')));
     $fieldNames = $fields->map(
         fn (mixed $field): ?string => method_exists($field, 'getName') ? $field->getName() : null,
     )->filter()->values()->all();
@@ -238,7 +243,7 @@ it('builds popular section meta schemas for all configured section keys', functi
 it('builds testimonial media metadata schema', function (): void {
     $reflection = new ReflectionMethod(TestimonialSectionConfigurator::class, 'getMetaSchema');
 
-    $components = collect($reflection->invoke(new TestimonialSectionConfigurator));
+    $components = capell_test_collect($reflection->invoke(new TestimonialSectionConfigurator));
 
     expect($components)->not->toBeEmpty()
         ->and($components->map(
@@ -249,6 +254,9 @@ it('builds testimonial media metadata schema', function (): void {
 it('exposes modal table select query, form, and selection helpers', function (): void {
     $component = new class extends ModalTableSelect
     {
+        /**
+         * @return Builder<Model>
+         */
         public function exposeTableQuery(): Builder
         {
             return $this->getTableQuery();
@@ -285,6 +293,9 @@ it('rejects invalid modal table configuration classes', function (): void {
 it('declares section asset table metadata and filtered queries', function (): void {
     $assetComponent = new class extends SectionAssets
     {
+        /**
+         * @return Builder<Section>
+         */
         public function exposeTableQuery(): Builder
         {
             return $this->getTableQuery();
@@ -366,6 +377,7 @@ it('declares section resource metadata', function (): void {
         ->and(SectionResource::getWidgets())->toContain(SectionAlertsWidget::class)
         ->and(SectionResource::getGlobalSearchResultDetails(new class extends Model
         {
+            /** @use HasFactory<Factory<static>> */
             use HasFactory;
         }))->toBe([]);
 });

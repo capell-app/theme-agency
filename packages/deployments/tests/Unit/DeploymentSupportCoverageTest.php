@@ -11,6 +11,7 @@ use Capell\Deployments\Data\PullRequestData;
 use Capell\Deployments\Data\RepoFile;
 use Capell\Deployments\Enums\GitProviderType;
 use Capell\Deployments\Enums\InstallPolicy;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,6 +40,7 @@ it('encrypts and decrypts nullable deployment strings', function (): void {
     $cast = new EncryptedString;
     $model = new class extends Model
     {
+        /** @use HasFactory<Factory<static>> */
         use HasFactory;
     };
 

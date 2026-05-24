@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\DocumentLifecycle\Models;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,13 +21,14 @@ use Override;
  * @property string|null $published_actor_type
  * @property int|null $published_actor_id
  * @property CarbonImmutable $published_at
- * @property array<string, mixed>|null $metadata
+ * @property array<array-key, mixed>|null $metadata
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
  * @property-read Document $document
  */
 class DocumentPublication extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     protected $table = 'document_lifecycle_publications';
@@ -50,6 +52,9 @@ class DocumentPublication extends Model
         return $this->belongsTo(Document::class);
     }
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function publishedActor(): MorphTo
     {
         return $this->morphTo(__FUNCTION__, 'published_actor_type', 'published_actor_id');

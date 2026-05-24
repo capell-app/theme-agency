@@ -45,6 +45,9 @@ final class GA4ReportsSetupStatusWidget extends BaseWidget implements CapellWidg
             ]);
     }
 
+    /**
+     * @return Collection<array-key, mixed>
+     */
     private function getRecords(): Collection
     {
         $config = ResolveGA4ReportsConfigAction::run();

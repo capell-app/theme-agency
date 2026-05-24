@@ -16,6 +16,10 @@ class CampaignCtaBlock extends Component
 {
     public ?CampaignCtaBlockModel $ctaBlock = null;
 
+    /**
+     * @param  array<array-key, mixed>  $blockData
+     * @param  array<array-key, mixed>  $container
+     */
     public function __construct(
         public array $container,
         public string $containerKey,
@@ -65,6 +69,9 @@ class CampaignCtaBlock extends Component
         });
     }
 
+    /**
+     * @param  array<array-key, mixed>  $data
+     */
     public function render(array $data = []): View|string|Closure
     {
         return view('capell-campaign-studio::components.block.campaign-cta-block', [

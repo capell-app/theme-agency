@@ -1,5 +1,7 @@
 # Capell Packages
 
+![Capell Packages GitHub banner](docs/assets/github/capell-packages-banner.png)
+
 First-party optional packages for Capell CMS. This repository is the package workspace beside the host application in `../capell-4`; install only the packages a project needs.
 
 Package pages are published at `docs.capell.app/packages/<package>/`. Each package page should be useful on its own for developers searching for a specific Capell capability, and should link to deeper docs when the package owns setup, data, workflow, API, or extension details.
@@ -90,11 +92,16 @@ Each package README follows the same shape:
 
 ### Themes
 
-| Package                                               | Composer package             | Purpose                               |
-| ----------------------------------------------------- | ---------------------------- | ------------------------------------- |
-| [theme-agency](packages/theme-agency/README.md)       | `capell-app/theme-agency`    | Expressive agency theme for Capell.   |
-| [theme-corporate](packages/theme-corporate/README.md) | `capell-app/theme-corporate` | Trust-led corporate theme for Capell. |
-| [theme-saas](packages/theme-saas/README.md)           | `capell-app/theme-saas`      | Conversion-led SaaS theme for Capell. |
+Use the [Capell Theme Scale](docs/theme-scale.md) when creating a theme, changing renderer contracts, or deciding whether configuration belongs in theme settings, page blueprints, widget blueprints, Layout Builder assets, or Blade.
+
+| Package                                                 | Composer package              | Tier    | Purpose                                      |
+| ------------------------------------------------------- | ----------------------------- | ------- | -------------------------------------------- |
+| [foundation-theme](packages/foundation-theme/README.md) | `capell-app/foundation-theme` | Free    | Default frontend runtime and renderer.       |
+| [theme-agency](packages/theme-agency/README.md)         | `capell-app/theme-agency`     | Free    | Expressive agency theme for Capell.          |
+| [theme-corporate](packages/theme-corporate/README.md)   | `capell-app/theme-corporate`  | Free    | Trust-led corporate theme for Capell.        |
+| [theme-commerce](packages/theme-commerce/README.md)     | `capell-app/theme-commerce`   | Premium | Image-led commerce theme for Capell.         |
+| [theme-healthcare](packages/theme-healthcare/README.md) | `capell-app/theme-healthcare` | Premium | Appointment-led healthcare theme for Capell. |
+| [theme-saas](packages/theme-saas/README.md)             | `capell-app/theme-saas`       | Premium | Velocity SaaS theme for Capell.              |
 
 ## Install Pattern
 

@@ -4,7 +4,7 @@ Status: **Available, schema-owning** · Kind: **package** · Tier: **premium** �
 
 This page is the consolidated implementation overview for the CampaignStudio package. It is extracted from the package README, service providers, migrations, config files, routes, resources, models, actions, and the shared Capell ERD notes where available.
 
-## What This Plugin Adds
+## What This Package Adds
 
 CampaignStudio adds campaign groups, landing pages, CTA blocks, conversion goals, UTM attribution, and conversion reporting to Capell.
 
@@ -61,7 +61,7 @@ Lets marketing and editorial teams connect landing pages to goals and see which 
 
 ![Campaign CTA block form](../../../public/docs/screenshots/packages/campaign-studio/cta-block-form.png)
 
-![Campaign dashboard blocks](../../../public/docs/screenshots/packages/campaign-studio/campaign-dashboard-blocks.png)
+Campaign dashboard blocks screenshot target: `public/docs/screenshots/packages/campaign-studio/campaign-dashboard-blocks.png`. Keep this as text until the screenshot file is committed.
 
 ## Pitfalls
 

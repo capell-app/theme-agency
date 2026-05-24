@@ -10,13 +10,16 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 
 /**
- * Filament Schema for Modern Process Steps Block
+ * Filament Schema for Modern Process Steps Widget
  *
  * Provides admin panel controls for customizing process steps display
  * with title, layout, and customization options.
  */
 class ModernProcessStepsConfigurator
 {
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function getFormSchema(): array
     {
         return [
@@ -58,6 +61,9 @@ class ModernProcessStepsConfigurator
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function getDefaults(): array
     {
         return [

@@ -14,7 +14,7 @@ class InvalidReviewDecisionException extends RuntimeException
         return new self(sprintf(
             'Review assignment #%d has already been decided (%s).',
             $assignment->id,
-            $assignment->decision?->value ?? 'unknown',
+            $assignment->decision->value ?? 'unknown',
         ));
     }
 }

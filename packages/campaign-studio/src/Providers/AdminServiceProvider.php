@@ -49,7 +49,7 @@ final class AdminServiceProvider extends ServiceProvider
             ->registerDashboardWidgets();
     }
 
-    private function isPackageInstalled(): bool
+    protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(CampaignStudioServiceProvider::$packageName);
     }
@@ -92,7 +92,7 @@ final class AdminServiceProvider extends ServiceProvider
 
             CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::configurator(
                 class: $configuratorClass,
-                group: self::LAYOUT_BUILDER_CONFIGURATOR_TYPE_ENUM::Block->value,
+                group: self::LAYOUT_BUILDER_CONFIGURATOR_TYPE_ENUM::Widget->value,
                 name: $configuratorClass::getKey(),
             ));
         }

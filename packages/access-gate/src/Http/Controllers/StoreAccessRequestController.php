@@ -105,7 +105,7 @@ final class StoreAccessRequestController
         }
 
         $allowedHosts = collect($area->claim_url_hosts ?? [])
-            ->filter(fn (mixed $allowedHost): bool => is_string($allowedHost) && $allowedHost !== '')
+            ->filter(fn (mixed $allowedHost): bool => $allowedHost !== '')
             ->all();
 
         return in_array($host, $allowedHosts, true) ? $requestedUrl : null;

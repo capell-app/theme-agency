@@ -22,7 +22,7 @@
             "capell-app/frontend",
             "capell-app/tags"
         ],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -97,7 +97,13 @@
     },
     "marketplace": {
         "summary": "Newsletter adds subscriber capture and audience workflows for Capell sites.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Newsletter extension preview image",
+                "caption": "Newsletter extension preview"
+            }
+        ],
         "categories": ["admin", "frontend", "newsletter"]
     },
     "contributionTraceability": {

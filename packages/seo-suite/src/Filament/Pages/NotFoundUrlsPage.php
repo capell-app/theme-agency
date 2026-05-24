@@ -53,9 +53,12 @@ class NotFoundUrlsPage extends Page implements HasActions, HasTable
         return InsightsEvent::class;
     }
 
+    /**
+     * @return Builder<Model>
+     */
     public static function getEloquentQuery(): Builder
     {
-        /** @var Builder<InsightsEvent> $query */
+        /** @var Builder<Model> $query */
         $query = SiteScope::applyForCurrentActor(InsightsEvent::query());
 
         return $query->where('type', InsightsEventType::PageView);

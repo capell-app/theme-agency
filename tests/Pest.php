@@ -9,6 +9,7 @@ use Capell\AIOrchestrator\Tests\AIOrchestratorTestCase;
 use Capell\Api\Tests\ApiTestCase;
 use Capell\Blog\Tests\BlogTestCase;
 use Capell\CampaignStudio\Tests\CampaignStudioTestCase;
+use Capell\Comments\Tests\CommentsTestCase;
 use Capell\ContentBlocks\Tests\BlockLibraryTestCase;
 use Capell\ContentSections\Tests\ContentSectionsTestCase;
 use Capell\DemoKit\Tests\DemoKitTestCase;
@@ -17,6 +18,7 @@ use Capell\Diagnostics\Tests\DiagnosticsTestCase;
 use Capell\DocumentLifecycle\Tests\DocumentLifecycleTestCase;
 use Capell\EmailStudio\Tests\EmailStudioTestCase;
 use Capell\Events\Tests\EventsTestCase;
+use Capell\FilamentPeek\Tests\FilamentPeekTestCase;
 use Capell\FormBuilder\Tests\FormBuilderTestCase;
 use Capell\FrontendAuthoring\Tests\FrontendAuthoringTestCase;
 use Capell\FrontendOptimizer\Tests\FrontendOptimizerTestCase;
@@ -33,11 +35,14 @@ use Capell\PublicActions\Tests\PublicActionsTestCase;
 use Capell\PublishingStudio\Tests\PublishingStudioTestCase;
 use Capell\Search\Tests\SearchTestCase;
 use Capell\SeoSuite\Tests\SeoSuiteTestCase;
+use Capell\ShopifyCommerce\Tests\TestCase as ShopifyCommerceTestCase;
 use Capell\Tags\Tests\TagsTestCase;
 use Capell\Tests\Packages\PackagesTestCase;
 use Capell\Tests\Packages\UninstalledPackagesTestCase;
 use Capell\WelcomeTour\Tests\WelcomeTourTestCase;
 use Capell\WordPressImporter\Tests\WordPressImporterTestCase;
+use Illuminate\Support\Collection;
+use Pest\Expectation;
 
 /**
  * @param  class-string  $testCase
@@ -45,6 +50,28 @@ use Capell\WordPressImporter\Tests\WordPressImporterTestCase;
 function extendCapellPackageTests(string $testCase, string $group, string $package): void
 {
     pest()->extend($testCase)->group($group)->in(sprintf('../packages/%s/tests', $package), sprintf('../Packages/%s/tests', $package));
+}
+
+/**
+ * @return Collection<array-key, mixed>
+ */
+function capell_test_collect(mixed $items = []): Collection
+{
+    if ($items instanceof Collection) {
+        return $items;
+    }
+
+    if (is_array($items) || $items instanceof Traversable) {
+        return new Collection($items);
+    }
+
+    return new Collection;
+}
+
+/** @return Expectation<mixed> */
+function capell_expect(mixed $value): Expectation
+{
+    return expect($value);
 }
 
 extendCapellPackageTests(AddressTestCase::class, 'address', 'address');
@@ -55,6 +82,7 @@ extendCapellPackageTests(ApiTestCase::class, 'api', 'api');
 extendCapellPackageTests(BlogTestCase::class, 'blog', 'blog');
 extendCapellPackageTests(BlockLibraryTestCase::class, 'block-library', 'block-library');
 extendCapellPackageTests(CampaignStudioTestCase::class, 'campaign-studio', 'campaign-studio');
+extendCapellPackageTests(CommentsTestCase::class, 'comments', 'comments');
 extendCapellPackageTests(ContentSectionsTestCase::class, 'content-sections', 'content-sections');
 extendCapellPackageTests(DemoKitTestCase::class, 'demo-kit', 'demo-kit');
 extendCapellPackageTests(DeploymentsTestCase::class, 'deployments', 'deployments');
@@ -62,6 +90,7 @@ extendCapellPackageTests(DiagnosticsTestCase::class, 'diagnostics', 'diagnostics
 extendCapellPackageTests(DocumentLifecycleTestCase::class, 'document-lifecycle', 'document-lifecycle');
 extendCapellPackageTests(EmailStudioTestCase::class, 'email-studio', 'email-studio');
 extendCapellPackageTests(EventsTestCase::class, 'events', 'events');
+extendCapellPackageTests(FilamentPeekTestCase::class, 'filament-peek', 'filament-peek');
 extendCapellPackageTests(FormBuilderTestCase::class, 'form-builder', 'form-builder');
 extendCapellPackageTests(FrontendAuthoringTestCase::class, 'frontend-authoring', 'frontend-authoring');
 extendCapellPackageTests(FrontendOptimizerTestCase::class, 'frontend-optimizer', 'frontend-optimizer');
@@ -82,9 +111,12 @@ extendCapellPackageTests(PublishingStudioTestCase::class, 'publishing-studio', '
 extendCapellPackageTests(PublicActionsTestCase::class, 'public-actions', 'public-actions');
 extendCapellPackageTests(SearchTestCase::class, 'search', 'search');
 extendCapellPackageTests(SeoSuiteTestCase::class, 'seo-suite', 'seo-suite');
+extendCapellPackageTests(ShopifyCommerceTestCase::class, 'shopify-commerce', 'shopify-commerce');
 extendCapellPackageTests(TagsTestCase::class, 'tags', 'tags');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-agency', 'theme-agency');
+extendCapellPackageTests(PackagesTestCase::class, 'theme-commerce', 'theme-commerce');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-corporate', 'theme-corporate');
+extendCapellPackageTests(PackagesTestCase::class, 'theme-healthcare', 'theme-healthcare');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-saas', 'theme-saas');
 pest()->extend(UninstalledPackagesTestCase::class)->in('UninstalledPackages');
 extendCapellPackageTests(WelcomeTourTestCase::class, 'welcome-tour', 'welcome-tour');

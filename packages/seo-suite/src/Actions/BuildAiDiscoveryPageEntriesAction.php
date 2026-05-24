@@ -18,7 +18,7 @@ use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static Collection<int, AiDiscoveryPageEntryData> run(AiDiscoveryRenderContextData $context, AiDiscoverySiteProfile $siteProfile, ?Collection $discoverablePages = null)
+ * @method static Collection<int, AiDiscoveryPageEntryData> run(AiDiscoveryRenderContextData $context, AiDiscoverySiteProfile $siteProfile, ?Collection<int, DiscoverablePageData> $discoverablePages = null)
  */
 final class BuildAiDiscoveryPageEntriesAction
 {
@@ -93,8 +93,8 @@ final class BuildAiDiscoveryPageEntriesAction
             $page->pageUrl->setRelation('siteDomain', $context->siteDomain);
         }
 
-        $url = $page->pageUrl?->full_url ?? '';
-        $title = trim(strip_tags($page->translation?->title ?? $page->translation?->label ?? $page->name ?? ''));
+        $url = $page->pageUrl->full_url ?? '';
+        $title = trim(strip_tags($page->translation->title ?? $page->translation->label ?? $page->name ?? ''));
 
         if ($url === '' || $title === '') {
             return null;

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Capell\ThemeStudio\Agency;
 
+use Capell\Core\Enums\FrontendRuntime;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\ThemeStudio\Agency\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -76,8 +78,81 @@ class AgencyThemeServiceProvider extends ServiceProvider
                         'motionIntensity' => 'subtle',
                     ],
                 ),
+                new ThemePresetData(
+                    key: 'zenith',
+                    name: 'Zenith',
+                    description: 'Wellness editorial direction from the Stitch Zenith Yoga concept, with quiet space and organic imagery.',
+                    previewImage: '/vendor/capell/themes/agency-zenith.jpg',
+                    values: [
+                        'primaryColor' => '#516447',
+                        'accentColor' => '#bb957f',
+                        'neutralColor' => '#2c2e2b',
+                        'surfaceColor' => '#fafaf5',
+                        'foregroundColor' => '#1a1c19',
+                        'headingFont' => 'playfair',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'spacious',
+                        'cardStyle' => 'subtle',
+                        'navigationStyle' => 'minimal',
+                        'layoutPresentation' => 'editorial',
+                        'motionIntensity' => 'subtle',
+                        'mediaTreatment' => 'natural',
+                        'radius' => 'xl',
+                        'headingScale' => 'expressive',
+                        'cardDensity' => 'spacious',
+                    ],
+                ),
+                new ThemePresetData(
+                    key: 'northstar',
+                    name: 'Northstar',
+                    description: 'Polished consultancy and brand-lab direction from the Stitch Northstar homepage.',
+                    previewImage: '/vendor/capell/themes/agency-northstar.jpg',
+                    values: [
+                        'primaryColor' => '#155e75',
+                        'accentColor' => '#f97316',
+                        'neutralColor' => '#111827',
+                        'surfaceColor' => '#f8fafc',
+                        'foregroundColor' => '#111827',
+                        'headingFont' => 'sora',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'spacious',
+                        'cardStyle' => 'layered',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'immersive',
+                        'motionIntensity' => 'expressive',
+                        'mediaTreatment' => 'framed',
+                        'radius' => 'lg',
+                        'headingScale' => 'expressive',
+                        'cardDensity' => 'comfortable',
+                    ],
+                ),
+                new ThemePresetData(
+                    key: 'motion-studio',
+                    name: 'Motion Studio',
+                    description: 'High-contrast portfolio rhythm for the more visual Stitch agency concepts.',
+                    previewImage: '/vendor/capell/themes/agency-motion-studio.jpg',
+                    values: [
+                        'primaryColor' => '#e11d48',
+                        'accentColor' => '#22d3ee',
+                        'neutralColor' => '#09090b',
+                        'surfaceColor' => '#fafafa',
+                        'foregroundColor' => '#18181b',
+                        'headingFont' => 'sora',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'spacious',
+                        'cardStyle' => 'layered',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'immersive',
+                        'motionIntensity' => 'expressive',
+                        'mediaTreatment' => 'framed',
+                        'radius' => 'xl',
+                        'headingScale' => 'expressive',
+                        'cardDensity' => 'spacious',
+                    ],
+                ),
             ],
             assets: ['css' => 'vendor/capell/themes/agency.css'],
+            runtime: FrontendRuntime::Blade,
         );
     }
 
@@ -86,6 +161,10 @@ class AgencyThemeServiceProvider extends ServiceProvider
 
     public function boot(ThemeRegistry $registry): void
     {
+        if ($this->app->runningInConsole()) {
+            $this->commands([DemoCommand::class]);
+        }
+
         if (! CapellCore::isPackageInstalled(self::$packageName)) {
             return;
         }

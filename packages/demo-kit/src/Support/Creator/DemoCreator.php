@@ -46,9 +46,15 @@ class DemoCreator extends ApDemoBlockCreator
             : Page::class;
     }
 
+    /**
+     * @param  Collection<int, Language>|null  $languages
+     */
     public function setupSite(Site $site, ?Collection $languages = null): void
     {
-        $languages ??= $site->languages;
+        $languages ??= Language::query()
+            ->whereKey($site->languages->modelKeys())
+            ->get();
+
         $title = ctype_digit($site->name[0]) ? $site->name : Str::title($site->name);
 
         $meta = $site->meta;
@@ -106,6 +112,9 @@ class DemoCreator extends ApDemoBlockCreator
         }
     }
 
+    /**
+     * @param  array<array-key, mixed>  $languages
+     */
     public function createDefaultLanguages(?array $languages = null): void
     {
         foreach (resolve(DemoContentPool::class)->languages() as $item) {
@@ -142,7 +151,8 @@ class DemoCreator extends ApDemoBlockCreator
     }
 
     /**
-     * @param  null|Collection<int, Language>  $languages  =  null
+     * @param  array<array-key, mixed>  $data
+     * @param  Collection<int, Language>|null  $languages
      */
     public function createPage(
         array $data,
@@ -211,13 +221,20 @@ class DemoCreator extends ApDemoBlockCreator
 
         $page = $pageCreator->createPage($pageData, $site, $languages);
 
-        if ($createMedia) {
+        if ($createMedia && $page instanceof Model) {
             $this->createMedia($page, $name);
+        }
+
+        if ($page instanceof Page) {
+            $this->syncDemoPageContentAssets($page, $name);
         }
 
         return $page;
     }
 
+    /**
+     * @param  Collection<int, Language>  $languages
+     */
     public function refreshDemoPage(Page $page, Collection $languages, bool $refreshUrls = true): Page
     {
         $name = $this->canonicalDemoPageName($page->name);
@@ -265,6 +282,8 @@ class DemoCreator extends ApDemoBlockCreator
         if ($refreshUrls) {
             SetupPageUrlsAction::run($page);
         }
+
+        $this->syncDemoPageContentAssets($page, $name);
 
         return $page->refresh();
     }

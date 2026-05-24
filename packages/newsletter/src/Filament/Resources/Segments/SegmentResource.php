@@ -100,6 +100,9 @@ class SegmentResource extends Resource
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private static function segmentTypeOptions(): array
     {
         return collect(SegmentType::cases())

@@ -10,6 +10,18 @@ Controlled document registration, publication history, and acceptance tracking f
 - Service providers: `packages/document-lifecycle/src/Providers/DocumentLifecycleServiceProvider.php`
 - Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/publishing-studio`
 
+## Why It Helps Your Capell Workflow
+
+- Adds controlled document registry, publication metadata, hashes, and acceptance evidence for compliance-heavy Capell sites.
+- Helps owners prove which document version was published or accepted without inventing a custom audit layer.
+- Fits publishing workflows where documents need clearer state and evidence than ordinary page content.
+
+## Best Used With
+
+- [Publishing Studio](../publishing-studio/README.md)
+- [Diagnostics](../diagnostics/README.md)
+- [Password Policy](../password-policy/README.md)
+
 ## What It Adds
 
 - A Controlled documents admin resource.
@@ -44,6 +56,7 @@ Run migrations through the host application package install flow.
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [overview.md](docs/overview.md)
 
 ## Testing

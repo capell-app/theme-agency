@@ -32,10 +32,6 @@ class PageContentEditorConfigurator
             return;
         }
 
-        if (! method_exists($component, 'hintAction')) {
-            return;
-        }
-
         $component->hintAction($this->generateContentAction());
     }
 
@@ -100,12 +96,15 @@ class PageContentEditorConfigurator
             ->action($this->handleGenerateContentAction(...));
     }
 
+    /**
+     * @param  array<array-key, mixed>  $data
+     */
     private function handleGenerateContentAction(Set $set, mixed $component, Action $action, array $data, ?Translation $record): void
     {
         $keywords = isset($data['keywords']) ? trim((string) $data['keywords']) : '';
         $content = isset($data['content']) ? trim((string) $data['content']) : '';
         $includeCurrent = (bool) ($data['includeCurrentContent'] ?? false);
-        $currentTitle = $data['title'] ?? ($record?->title ?? '');
+        $currentTitle = $data['title'] ?? ($record->title ?? '');
         $targetLength = isset($data['target_length']) && $data['target_length'] !== ''
             ? max(100, min(2000, (int) $data['target_length']))
             : null;

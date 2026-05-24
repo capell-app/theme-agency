@@ -289,7 +289,7 @@ class ScheduledPublishingTable implements TableConfigurator
     {
         $actor = auth()->user();
 
-        if (! $actor instanceof Authenticatable || SiteScope::isGlobalActor($actor) || ! method_exists($actor, 'getAssignedSiteIds')) {
+        if (! $actor instanceof Authenticatable || SiteScope::isGlobalActor($actor)) {
             return true;
         }
 

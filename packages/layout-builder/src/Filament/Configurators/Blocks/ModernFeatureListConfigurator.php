@@ -10,13 +10,16 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 
 /**
- * Filament Schema for Modern Feature List Block
+ * Filament Schema for Modern Feature List Widget
  *
  * Provides admin panel controls for customizing feature list layout
  * and display options.
  */
 class ModernFeatureListConfigurator
 {
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function getFormSchema(): array
     {
         return [
@@ -74,6 +77,9 @@ class ModernFeatureListConfigurator
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function getDefaults(): array
     {
         return [

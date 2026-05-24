@@ -25,7 +25,9 @@ use Override;
  * @property EventBookingModeEnum $booking_mode
  * @property int|null $capacity
  * @property CarbonImmutable|null $ends_at
+ * @property EventLocationModeEnum $location_mode
  * @property string $occurrence_key
+ * @property array<array-key, mixed> $override_data
  * @property int $registration_count
  * @property CarbonImmutable $starts_at
  * @property EventOccurrenceStatusEnum $status
@@ -45,16 +47,25 @@ class EventOccurrence extends Model
 
     protected static string $factory = EventOccurrenceFactory::class;
 
+    /**
+     * @return BelongsTo<EventModel, $this>
+     */
     public function event(): BelongsTo
     {
         return $this->belongsTo(EventModel::class);
     }
 
+    /**
+     * @return BelongsTo<EventVenue, $this>
+     */
     public function venue(): BelongsTo
     {
         return $this->belongsTo(EventVenue::class, 'event_venue_id');
     }
 
+    /**
+     * @return HasMany<EventRegistration, $this>
+     */
     public function registrations(): HasMany
     {
         return $this->hasMany(EventRegistration::class);
@@ -92,7 +103,7 @@ class EventOccurrence extends Model
             return null;
         }
 
-        $pageUrlModel = $this->event?->getRelationValue('pageUrl');
+        $pageUrlModel = $this->event->getRelationValue('pageUrl');
 
         if (! $pageUrlModel instanceof PageUrl || ! $pageUrlModel->exists) {
             return null;
@@ -119,11 +130,19 @@ class EventOccurrence extends Model
             && ! $event->isExpired();
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopeOrdered(Builder $query): Builder
     {
         return $query->oldest('starts_at')->orderBy('id');
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopeInRange(Builder $query, CarbonImmutable $startsAt, CarbonImmutable $endsAt): Builder
     {
         return $query
@@ -134,6 +153,10 @@ class EventOccurrence extends Model
             });
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopeUpcoming(Builder $query, ?CarbonImmutable $from = null): Builder
     {
         $from ??= CarbonImmutable::now();
@@ -141,6 +164,10 @@ class EventOccurrence extends Model
         return $query->where('starts_at', '>=', $from);
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopePublic(Builder $query): Builder
     {
         return $query

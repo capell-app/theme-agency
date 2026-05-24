@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\PublishingStudio\Tests\Integration\Fixtures;
 
 use Capell\PublishingStudio\BelongsToWorkspace;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
 class HardDeletableDraftableFixture extends Model
 {
     use BelongsToWorkspace;
+
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     public $timestamps = true;

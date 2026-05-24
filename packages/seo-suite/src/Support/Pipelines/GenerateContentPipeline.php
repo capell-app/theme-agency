@@ -52,6 +52,10 @@ class GenerateContentPipeline
         return $resultData;
     }
 
+    /**
+     * @param  array<array-key, mixed>  $payload
+     * @return array<array-key, mixed>
+     */
     private function validateInput(array $payload, callable $next): array
     {
         $context = $payload['context'] ?? null;
@@ -60,6 +64,10 @@ class GenerateContentPipeline
         return $next($payload);
     }
 
+    /**
+     * @param  array<array-key, mixed>  $payload
+     * @return array<array-key, mixed>
+     */
     private function checkRateLimit(array $payload, callable $next): array
     {
         $identifier = (string) ($payload['options']['user_id'] ?? 'global');
@@ -68,6 +76,10 @@ class GenerateContentPipeline
         return $next($payload);
     }
 
+    /**
+     * @param  array<array-key, mixed>  $payload
+     * @return array<array-key, mixed>
+     */
     private function executeAiCall(array $payload, callable $next): array
     {
         /** @var AiActionContextInterface $context */
@@ -103,6 +115,10 @@ class GenerateContentPipeline
         return $next($payload);
     }
 
+    /**
+     * @param  array<array-key, mixed>  $payload
+     * @return array<array-key, mixed>
+     */
     private function parseResponse(array $payload, callable $next): array
     {
         /** @var AiResponse $response */
@@ -115,6 +131,10 @@ class GenerateContentPipeline
         return $next($payload);
     }
 
+    /**
+     * @param  array<array-key, mixed>  $payload
+     * @return array<array-key, mixed>
+     */
     private function recordGeneration(array $payload, callable $next): array
     {
         /** @var AiGenerationInputData $input */

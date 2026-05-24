@@ -39,6 +39,9 @@ final class AgentBridgeTokensRelationManager extends RelationManager
             ->where('user_id', $user->getKey());
     }
 
+    /**
+     * @return Builder<CapellAgentBridgeToken>
+     */
     #[Override]
     public function getRelationship(): Builder
     {

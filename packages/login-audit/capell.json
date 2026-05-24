@@ -16,7 +16,7 @@
     "surfaces": ["admin"],
     "dependencies": {
         "requires": ["capell-app/admin"],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -71,7 +71,13 @@
     },
     "marketplace": {
         "summary": "Login Audit records login, failed login, logout, and admin/user activity metadata for Capell users.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Login Audit extension preview image",
+                "caption": "Login Audit extension preview"
+            }
+        ],
         "categories": ["admin", "operations"]
     },
     "contributionTraceability": {

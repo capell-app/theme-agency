@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\PublishingStudio\Models;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,6 +33,7 @@ use Override;
  */
 class PreviewLink extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     protected $fillable = [
@@ -51,11 +53,17 @@ class PreviewLink extends Model
         return Str::lower(Str::random(48));
     }
 
+    /**
+     * @return BelongsTo<Workspace, $this>
+     */
     public function workspace(): BelongsTo
     {
         return $this->belongsTo(Workspace::class);
     }
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function issuedBy(): MorphTo
     {
         return $this->morphTo();

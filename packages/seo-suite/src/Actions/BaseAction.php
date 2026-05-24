@@ -23,11 +23,17 @@ abstract class BaseAction implements ActionContract
 {
     use AsObject;
 
+    /**
+     * @var array<array-key, mixed>
+     */
     protected array $metadata = [];
 
     protected float $startTime = 0.0;
 
-    public static function __callStatic(string $method, array $arguments)
+    /**
+     * @param  array<int, mixed>  $arguments
+     */
+    public static function __callStatic(string $method, array $arguments): mixed
     {
         if ($method === 'run') {
             $instance = App::make(static::class);
@@ -38,10 +44,14 @@ abstract class BaseAction implements ActionContract
         throw new BadMethodCallException(sprintf('Method %s does not exist on ', $method) . static::class);
     }
 
-    /** Implement in child actions */
+    /**
+     * Implement in child actions.
+     *
+     * @param  array<array-key, mixed>  $options
+     */
     abstract protected function perform(AiActionContextInterface $context, array $options = []): mixed;
 
-    public function handle(...$args): mixed
+    public function handle(mixed ...$args): mixed
     {
         /** @var AiActionContextInterface|null $context */
         $context = $args[0] ?? null;
@@ -62,6 +72,9 @@ abstract class BaseAction implements ActionContract
         }
     }
 
+    /**
+     * @param  array<array-key, mixed>  $input
+     */
     public function validate(array $input): bool
     {
         // TODO: Replace with a dedicated validator/service; keep fast guards here for now.
@@ -79,12 +92,15 @@ abstract class BaseAction implements ActionContract
         return true;
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public function getMetadata(): array
     {
         return $this->metadata;
     }
 
-    protected function before(...$args): void
+    protected function before(mixed ...$args): void
     {
         $this->startTime = microtime(true);
         event(new AiGenerationStarted(static::class, $args));

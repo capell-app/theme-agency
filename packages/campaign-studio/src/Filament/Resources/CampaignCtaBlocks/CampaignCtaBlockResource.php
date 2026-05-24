@@ -34,9 +34,9 @@ final class CampaignCtaBlockResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    private static string $formConfigurator = CampaignCtaBlockForm::class;
+    protected static string $formConfigurator = CampaignCtaBlockForm::class;
 
-    private static string $tableConfigurator = CampaignCtaBlocksTable::class;
+    protected static string $tableConfigurator = CampaignCtaBlocksTable::class;
 
     #[Override]
     public static function form(Schema $configurator): Schema
@@ -64,7 +64,7 @@ final class CampaignCtaBlockResource extends Resource
     }
 
     #[Override]
-    public static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): string
     {
         return __('capell-admin::navigation.group_marketing');
     }

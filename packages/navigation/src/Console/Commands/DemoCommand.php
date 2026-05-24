@@ -10,7 +10,7 @@ use Capell\Core\Models\Site;
 use Capell\Navigation\Support\Creator\NavigationDemoCreator;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Throwable;
 
 class DemoCommand extends Command
@@ -60,7 +60,10 @@ class DemoCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function resolveSites(): Collection
+    /**
+     * @return EloquentCollection<int, Site>
+     */
+    private function resolveSites(): EloquentCollection
     {
         $siteOptions = $this->option('sites');
 
@@ -70,7 +73,6 @@ class DemoCommand extends Command
             $siteOptions = null;
         }
 
-        /** @var Collection<int, Site> $sites */
         $sites = Site::query()
             ->with(['language', 'languages', 'translations'])
             ->when(
@@ -82,6 +84,9 @@ class DemoCommand extends Command
         return $sites;
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private function resolveLanguageCodes(): ?array
     {
         $languageOption = $this->option('languages');
@@ -97,8 +102,11 @@ class DemoCommand extends Command
         return null;
     }
 
-    /** @return Collection<int, Language> */
-    private function resolveSiteLanguages(Site $site, ?array $languageCodes): Collection
+    /**
+     * @param  array<array-key, mixed>|null  $languageCodes
+     * @return EloquentCollection<int, Language>
+     */
+    private function resolveSiteLanguages(Site $site, ?array $languageCodes): EloquentCollection
     {
         if ($languageCodes === null) {
             return $site->languages;

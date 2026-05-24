@@ -15,6 +15,8 @@ Free baseline packages:
 | Media Library      | `capell-app/media-library`      |
 | Frontend Authoring | `capell-app/frontend-authoring` |
 | Foundation Theme   | `capell-app/foundation-theme`   |
+| Theme Agency       | `capell-app/theme-agency`       |
+| Theme Corporate    | `capell-app/theme-corporate`    |
 
 Tags and Media Library are Foundation packages because taxonomy and media management are normal CMS expectations. Redirect management is built into Capell Core/Admin rather than shipped as an add-on package.
 
@@ -29,7 +31,7 @@ Tags and Media Library are Foundation packages because taxonomy and media manage
 | Capell Growth         | `growth`         | Insights, CampaignStudio                                                                   |
 | Capell Communications | `communications` | Email Studio                                                                               |
 | Capell Search & SEO   | `search-seo`     | SEO Suite, Search; AI Discovery, llms.txt, page Markdown, crawler policy, readiness audits |
-| Capell Themes         | `themes`         | Agency Theme, Corporate Theme, SaaS Theme                                                  |
+| Capell Themes         | `themes`         | Commerce Theme, Healthcare Theme, SaaS Theme                                               |
 
 ## Manifest Fields
 

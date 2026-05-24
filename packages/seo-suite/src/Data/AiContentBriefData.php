@@ -8,6 +8,15 @@ use Spatie\LaravelData\Data;
 
 class AiContentBriefData extends Data
 {
+    /**
+     * @param  array<array-key, mixed>  $faqIdeas
+     * @param  array<array-key, mixed>  $internalLinks
+     * @param  array<array-key, mixed>  $metaDescriptionAlternatives
+     * @param  array<array-key, mixed>  $metaTitleAlternatives
+     * @param  array<array-key, mixed>  $missingTopics
+     * @param  array<array-key, mixed>  $schemaOpportunities
+     * @param  array<array-key, mixed>  $suggestedHeadings
+     */
     public function __construct(
         public string $contentAngle,
         public array $missingTopics,

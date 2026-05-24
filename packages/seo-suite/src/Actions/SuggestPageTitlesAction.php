@@ -12,7 +12,6 @@ use Capell\SeoSuite\Events\AiGenerationStarted;
 use Capell\SeoSuite\Support\Pipelines\SuggestTitlesPipeline;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
-use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
@@ -24,6 +23,7 @@ class SuggestPageTitlesAction
 
     /**
      * @return array<int, string>
+     * @param array<array-key, mixed> $options
      */
     public function handle(AiActionContextInterface $context, array $options = []): array
     {
@@ -31,8 +31,6 @@ class SuggestPageTitlesAction
         Event::dispatch(new AiGenerationStarted(static::class, [$context, $options]));
 
         try {
-            throw_unless($context instanceof AiActionContextInterface, InvalidArgumentException::class, 'Invalid context');
-
             $input = AiGenerationInputData::forContextAction('SuggestPageTitlesAction', $context, $options);
             $result = $this->pipeline->execute($input);
 

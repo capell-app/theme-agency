@@ -42,7 +42,9 @@ class KitProviderAdapter implements NewsletterProviderAdapter
             return [];
         }
 
-        return collect($response->json('forms', []))
+        $audiences = $response->json('forms', []);
+
+        return collect(is_array($audiences) ? $audiences : [])
             ->filter(static fn (mixed $audience): bool => is_array($audience))
             ->map(static fn (array $audience): ProviderAudienceData => new ProviderAudienceData(
                 remoteId: (string) ($audience['id'] ?? ''),
@@ -154,12 +156,6 @@ class KitProviderAdapter implements NewsletterProviderAdapter
     private function headers(ProviderConnection $connection): array
     {
         $credentials = is_array($connection->credentials) ? $connection->credentials : [];
-        $oauthTokens = is_array($connection->oauth_tokens) ? $connection->oauth_tokens : [];
-        $accessToken = $oauthTokens['access_token'] ?? null;
-
-        if (is_string($accessToken) && $accessToken !== '') {
-            return ['Authorization' => 'Bearer ' . $accessToken];
-        }
 
         return ['X-Kit-Api-Key' => $credentials['api_key'] ?? ''];
     }

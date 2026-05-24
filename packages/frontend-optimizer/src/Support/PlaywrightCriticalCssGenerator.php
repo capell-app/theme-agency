@@ -16,7 +16,10 @@ use Symfony\Component\Process\Process;
 
 class PlaywrightCriticalCssGenerator implements CriticalCssGenerator
 {
-    public function __construct(private readonly Factory $filesystems) {}
+    public function __construct(
+        private readonly Factory $filesystems,
+        private readonly CriticalCssSettings $criticalCssSettings,
+    ) {}
 
     public function generate(FrontendRenderProfile $profile, string $url): string
     {
@@ -28,9 +31,15 @@ class PlaywrightCriticalCssGenerator implements CriticalCssGenerator
         $localDisk->put($payloadPath, json_encode([
             'eligible_stylesheet_paths' => $this->eligibleStylesheetPaths($profile),
             'manifest' => $profile->manifest,
+            'max_inline_css_bytes' => $this->criticalCssSettings->maxInlineCssBytes(),
             'profile_hash' => $profile->hash,
+            'render_options' => [
+                'extra_fold_pixels' => $this->criticalCssSettings->extraFoldPixels(),
+                'fold_multiplier' => $this->criticalCssSettings->foldMultiplier(),
+                'wait_strategy' => $this->criticalCssSettings->playwrightWaitStrategy(),
+            ],
             'url' => $url,
-            'viewports' => config('capell-frontend-optimizer.playwright.viewports', []),
+            'viewports' => $this->criticalCssSettings->viewports(),
         ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));
 
         $process = new Process([
@@ -39,7 +48,7 @@ class PlaywrightCriticalCssGenerator implements CriticalCssGenerator
             $localDisk->path($payloadPath),
             $localDisk->path($criticalCssPath),
         ]);
-        $process->setTimeout((float) config('capell-frontend-optimizer.playwright.timeout', 120));
+        $process->setTimeout((float) $this->criticalCssSettings->playwrightTimeout());
         $process->run();
 
         if (! $process->isSuccessful()) {

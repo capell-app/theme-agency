@@ -13,6 +13,9 @@ final class BuildBrokenLinksQueryAction
 {
     use AsAction;
 
+    /**
+     * @return Builder<BrokenLink>
+     */
     public function handle(): Builder
     {
         return BrokenLink::query()

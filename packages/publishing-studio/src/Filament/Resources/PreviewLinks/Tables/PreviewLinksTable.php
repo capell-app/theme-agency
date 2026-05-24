@@ -59,6 +59,9 @@ class PreviewLinksTable implements TableConfigurator
             ]);
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     protected static function getTableColumns(): array
     {
         return [

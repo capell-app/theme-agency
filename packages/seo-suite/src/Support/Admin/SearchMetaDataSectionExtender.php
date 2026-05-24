@@ -118,6 +118,9 @@ class SearchMetaDataSectionExtender implements SearchMetaDataSectionExtenderCont
             ->action($this->handleMetaDescriptionSuggestionsAction(...));
     }
 
+    /**
+     * @param  array<array-key, mixed>  $data
+     */
     private function handleMetaDescriptionSuggestionsAction(HasActions $livewire, Section $component, Action $action, array $data, ?Translation $record): void
     {
         $keywords = isset($data['keywords']) ? trim((string) $data['keywords']) : '';
@@ -187,7 +190,7 @@ class SearchMetaDataSectionExtender implements SearchMetaDataSectionExtenderCont
                 Radio::make('descriptions')
                     ->label(__('Select a Suggested Meta Description'))
                     ->options(
-                        collect($arguments['descriptions'] ?? [])
+                        collect(is_array($arguments['descriptions'] ?? null) ? $arguments['descriptions'] : [])
                             ->mapWithKeys(fn (string $description): array => [$description => $description])
                             ->all(),
                     )

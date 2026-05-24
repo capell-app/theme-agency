@@ -12,6 +12,7 @@ use Capell\MediaAI\Support\NullImageDoctor;
 use Capell\MediaAI\Tests\Fixtures\RecordingImageDoctor;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -41,6 +42,7 @@ function createMediaAIGlobalUser(): Authenticatable
 {
     $user = new class extends Authenticatable implements FilamentUser
     {
+        /** @use HasFactory<Factory<static>> */
         use HasFactory;
 
         protected $table = 'users';

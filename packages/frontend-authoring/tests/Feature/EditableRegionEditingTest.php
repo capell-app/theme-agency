@@ -55,6 +55,9 @@ function bindEditableRegionAdminAccess(bool $isAdmin): void
     });
 }
 
+/**
+ * @param  array<array-key, mixed>  $attributes
+ */
 function createEditableRegionTranslation(array $attributes = []): Translation
 {
     $page = Page::factory()->create();

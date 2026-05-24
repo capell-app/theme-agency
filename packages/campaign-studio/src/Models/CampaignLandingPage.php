@@ -47,21 +47,33 @@ class CampaignLandingPage extends Model
         return is_string($tableName) ? $tableName : 'campaign_landing_pages';
     }
 
+    /**
+     * @return BelongsTo<CampaignGroup, $this>
+     */
     public function campaignGroup(): BelongsTo
     {
         return $this->belongsTo(CampaignGroup::class);
     }
 
+    /**
+     * @return BelongsTo<Page, $this>
+     */
     public function page(): BelongsTo
     {
         return $this->belongsTo(Page::class);
     }
 
+    /**
+     * @return BelongsTo<CampaignConversionGoal, $this>
+     */
     public function primaryGoal(): BelongsTo
     {
         return $this->belongsTo(CampaignConversionGoal::class, 'primary_goal_id');
     }
 
+    /**
+     * @return HasMany<CampaignConversion, $this>
+     */
     public function conversions(): HasMany
     {
         return $this->hasMany(CampaignConversion::class);

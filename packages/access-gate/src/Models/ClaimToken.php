@@ -44,21 +44,25 @@ class ClaimToken extends AccessGateModel
 
     protected static string $factory = ClaimTokenFactory::class;
 
+    /** @return BelongsTo<Area, $this> */
     public function area(): BelongsTo
     {
         return $this->belongsTo(Area::class, 'access_area_id');
     }
 
+    /** @return BelongsTo<Registration, $this> */
     public function registration(): BelongsTo
     {
         return $this->belongsTo(Registration::class, 'registration_id');
     }
 
+    /** @return BelongsTo<Grant, $this> */
     public function grant(): BelongsTo
     {
         return $this->belongsTo(Grant::class, 'grant_id');
     }
 
+    /** @return HasMany<Event, $this> */
     public function events(): HasMany
     {
         return $this->hasMany(Event::class, 'claim_token_id');

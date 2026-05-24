@@ -32,7 +32,7 @@ it('installs compact natural home hero defaults', function (): void {
     $homeLayout = Layout::query()->where('key', LayoutEnum::Home->value)->firstOrFail();
     $heroBlock = Block::query()->where('key', 'hero')->firstOrFail();
 
-    expect(array_keys($homeLayout->containers))->toBe(['hero', 'main'])
+    capell_expect(array_keys($homeLayout->containers))->toBe(['hero', 'main'])
         ->and($homeLayout->containers['hero']['blocks'])->toBe([
             ['block_key' => 'hero'],
         ])
@@ -48,7 +48,7 @@ it('installs compact natural home hero defaults', function (): void {
         ->with('translation')
         ->firstOrFail();
 
-    expect($homePage->translation->getMeta('hero_title'))->toBe('Start with a clean foundation.')
+    capell_expect($homePage->translation->getMeta('hero_title'))->toBe('Start with a clean foundation.')
         ->and($homePage->translation->getMeta('hero'))->toBe('<p>Shape this page around your content, navigation, and publishing workflow.</p>')
         ->and($homePage->translation->content)->toBe('<p>Add the most important details for this page here. Keep it concise, useful, and easy to scan.</p>');
 });
@@ -68,7 +68,7 @@ it('does not duplicate hero defaults on repeated setup', function (): void {
 
     $homeLayout = Layout::query()->where('key', LayoutEnum::Home->value)->firstOrFail();
 
-    expect(array_keys($homeLayout->containers))->toBe(['hero', 'main'])
+    capell_expect(array_keys($homeLayout->containers))->toBe(['hero', 'main'])
         ->and($homeLayout->blocks)->toBe(['hero', 'page-content'])
         ->and(Block::query()->where('key', 'hero')->count())->toBe(1);
 });

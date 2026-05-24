@@ -4,13 +4,25 @@ declare(strict_types=1);
 
 namespace Capell\FrontendOptimizer\Providers;
 
+use Capell\Admin\Data\AdminSurfaceContributionData;
+use Capell\Admin\Enums\ConfiguratorTypeEnum;
+use Capell\Admin\Facades\CapellAdmin;
+use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\Core\Support\Settings\SettingsSchemaRegistry;
+use Capell\Frontend\Events\FrontendContextResolved;
 use Capell\FrontendOptimizer\Actions\RenderProfileAssetsAction;
 use Capell\FrontendOptimizer\Contracts\CriticalCssGenerator;
+use Capell\FrontendOptimizer\Filament\Configurators\Types\FrontendOptimizerPageTypeConfigurator;
+use Capell\FrontendOptimizer\Filament\Settings\FrontendOptimizerSettingsSchema;
+use Capell\FrontendOptimizer\Listeners\CaptureCriticalCssPageTypeOptOut;
+use Capell\FrontendOptimizer\Settings\FrontendOptimizerSettings;
+use Capell\FrontendOptimizer\Support\CriticalCssSettings;
 use Capell\FrontendOptimizer\Support\LayoutAssetRegistry;
 use Capell\FrontendOptimizer\Support\PlaywrightCriticalCssGenerator;
 use Capell\FrontendOptimizer\Support\WidgetAssetRegistry;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Event;
 use Spatie\LaravelPackageTools\Package;
 
 final class FrontendOptimizerServiceProvider extends AbstractPackageServiceProvider
@@ -24,6 +36,7 @@ final class FrontendOptimizerServiceProvider extends AbstractPackageServiceProvi
         $package
             ->name(self::$name)
             ->hasConfigFile('capell-frontend-optimizer')
+            ->hasTranslations()
             ->hasMigration('2026_05_10_190851_01_create_frontend_optimizer_tables');
     }
 
@@ -33,9 +46,47 @@ final class FrontendOptimizerServiceProvider extends AbstractPackageServiceProvi
 
         $this->app->singleton(LayoutAssetRegistry::class);
         $this->app->singleton(WidgetAssetRegistry::class);
+        $this->app->singleton(CriticalCssSettings::class);
         $this->app->singleton(CriticalCssGenerator::class, PlaywrightCriticalCssGenerator::class);
 
         Blade::directive('frontendOptimizerAssets', fn (string $expression): string => sprintf('<?php echo ' . RenderProfileAssetsAction::class . '::run(%s); ?>', $expression));
 
+        Event::listen(FrontendContextResolved::class, CaptureCriticalCssPageTypeOptOut::class);
+
+    }
+
+    public function packageRegistered(): void
+    {
+        $this->app->booted(function (): void {
+            if (! $this->isPackageInstalled()) {
+                return;
+            }
+
+            $this->registerSettings();
+            $this->registerAdminSurface();
+        });
+    }
+
+    protected function isPackageInstalled(): bool
+    {
+        return CapellCore::isPackageInstalled(self::$packageName);
+    }
+
+    private function registerSettings(): void
+    {
+        /** @var SettingsSchemaRegistry $registry */
+        $registry = $this->app->make(SettingsSchemaRegistry::class);
+
+        $registry->registerSettingsClass(FrontendOptimizerSettings::group(), FrontendOptimizerSettings::class);
+        $registry->register(FrontendOptimizerSettings::group(), FrontendOptimizerSettingsSchema::class);
+    }
+
+    private function registerAdminSurface(): void
+    {
+        CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::configurator(
+            class: FrontendOptimizerPageTypeConfigurator::class,
+            group: ConfiguratorTypeEnum::Blueprint->value,
+            name: FrontendOptimizerPageTypeConfigurator::getKey(),
+        ));
     }
 }

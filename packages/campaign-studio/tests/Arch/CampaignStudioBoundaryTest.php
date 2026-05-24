@@ -19,7 +19,7 @@ it('declares insights as a required package dependency', function (): void {
     );
 
     expect($capellManifest['dependencies']['requires'])->toContain('capell-app/insights')
-        ->and($capellManifest['dependencies']['optional'])->not->toContain('capell-app/insights')
+        ->and($capellManifest['dependencies']['supports'])->not->toContain('capell-app/insights')
         ->and($composerManifest['require'])->toHaveKey('capell-app/insights');
 });
 

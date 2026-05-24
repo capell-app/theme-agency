@@ -29,15 +29,13 @@ class ApplyAiDraftAction
         Event::dispatch(new AiGenerationStarted(static::class, [$context, $options]));
 
         try {
-            throw_unless($context instanceof AiActionContextInterface, InvalidArgumentException::class, 'Invalid context');
-
             $target = $options['target'] ?? null;
-            $draft = method_exists($context, 'getContent') ? $context->getContent() : null;
+            $draft = $context->getContent();
 
             throw_unless(is_object($target), InvalidArgumentException::class, 'Target must be an object');
             throw_unless(property_exists($target, 'content'), InvalidArgumentException::class, 'Target must have a content property');
 
-            $target->content = is_string($draft) ? $draft : null;
+            $target->content = $draft;
 
             $saved = true;
             if (method_exists($target, 'save')) {

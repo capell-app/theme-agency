@@ -9,13 +9,16 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 
 /**
- * Filament Schema for Modern Alternating Content Block
+ * Filament Schema for Modern Alternating Content Widget
  *
  * Provides admin panel controls for customizing two-column alternating
  * content layout with images and text.
  */
 class ModernAlternatingContentConfigurator
 {
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function getFormSchema(): array
     {
         return [
@@ -39,6 +42,9 @@ class ModernAlternatingContentConfigurator
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function getDefaults(): array
     {
         return [

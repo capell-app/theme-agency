@@ -29,7 +29,10 @@ final class AiMetricsWidgetAbstract extends Widget implements CapellWidgetContra
     /** @var int|string|array<string, int|null> */
     protected int|string|array $columnSpan = ['md' => 1];
 
-    private static ?string $heading = 'AI metrics';
+    public function getHeading(): string
+    {
+        return __('capell-seo-suite::dashboard.ai_metrics');
+    }
 
     /**
      * @return array<string, mixed>

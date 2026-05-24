@@ -35,8 +35,7 @@ class CreateRedirectFromBrokenLinkAction extends Action
     {
         return class_exists(self::BUILD_REDIRECT_CREATE_URL_ACTION)
             && class_exists(self::VALIDATE_REDIRECT_ACTION)
-            && class_exists(self::REDIRECT_RESOURCE)
-            && method_exists(self::REDIRECT_RESOURCE, 'getUrl');
+            && class_exists(self::REDIRECT_RESOURCE);
     }
 
     private function redirectCreateUrl(BrokenLink $brokenLink): string
@@ -44,7 +43,7 @@ class CreateRedirectFromBrokenLinkAction extends Action
         $brokenLink->loadMissing(['page.pageUrls', 'page.translations']);
 
         $page = $brokenLink->page;
-        $languageId = $page?->pageUrls->first()?->language_id
+        $languageId = $page->pageUrls->first()->language_id
             ?? $page?->translations->first()?->language_id;
 
         return BuildRedirectCreateUrlAction::run(

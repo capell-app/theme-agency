@@ -110,7 +110,7 @@ class EntityRollbackAction
                 'shadowed_by_workspace_id' => 0,
             ]);
 
-            if ($usesSoftDeletes && ($usesSoftDeletes ? $targetRow->getAttribute('deleted_at') : null) !== null) {
+            if ($usesSoftDeletes && $targetRow->getAttribute('deleted_at') !== null) {
                 $targetRow->setAttribute('deleted_at', null);
             }
 

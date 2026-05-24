@@ -10,6 +10,18 @@ Newsletter manages audiences, subscriptions, consent state, imports, notificatio
 - Service providers: `packages/newsletter/src/Providers/AdminServiceProvider.php`, `packages/newsletter/src/Providers/NewsletterServiceProvider.php`
 - Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/form-builder`, `capell-app/frontend`, `capell-app/tags`
 
+## Why It Helps Your Capell Workflow
+
+- Adds subscriber capture, consent state, imports, notifications, and public subscription routes for Capell sites.
+- Helps owners build audience workflows without putting newsletter-specific logic into Form Builder or Campaign Studio.
+- Gives developers provider sync and subscription Actions that can connect to email, public actions, and growth workflows.
+
+## Best Used With
+
+- [Email Studio](../email-studio/README.md)
+- [Public Actions](../public-actions/README.md)
+- [Campaign Studio](../campaign-studio/README.md)
+
 ## What It Adds
 
 - Newsletter manages audiences, subscriptions, consent state, imports, notifications, and public subscription routes.
@@ -84,6 +96,7 @@ Newsletter manages audiences, subscriptions, consent state, imports, notificatio
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [overview.md](docs/overview.md)
 - [screenshots.json](docs/screenshots.json)
 - [subscription-workflow.md](docs/subscription-workflow.md)

@@ -28,6 +28,9 @@ class LoginAuditsTable implements TableConfigurator
             ->filters(self::getTableFilters());
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     protected static function getTableColumns(): array
     {
         return [
@@ -71,6 +74,9 @@ class LoginAuditsTable implements TableConfigurator
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     protected static function getTableFilters(): array
     {
         return [

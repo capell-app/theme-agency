@@ -4,7 +4,7 @@ Status: **Available, schema-owning** · Kind: **package** · Tier: **premium** �
 
 This page is the consolidated implementation overview for the SEO Suite package. It is extracted from the package README, service providers, migrations, config files, routes, resources, models, actions, and the shared Capell ERD notes where available.
 
-## What This Plugin Adds
+## What This Package Adds
 
 SEO Suite adds metadata panels, AI Discovery outputs, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, and publish checks.
 
@@ -89,7 +89,7 @@ SEO Suite contributes content graph edges from page SEO snapshots and broken-lin
 
 ![Translation coverage settings](../../../public/docs/screenshots/packages/seo-suite/translation-coverage-page.png)
 
-![AI Discovery page](../../../public/docs/screenshots/packages/seo-suite/ai-discovery-page.png)
+AI Discovery screenshot target: `public/docs/screenshots/packages/seo-suite/ai-discovery-page.png`. Keep this as text until the screenshot file is committed.
 
 ![Page SEO panel](../../../public/docs/screenshots/packages/seo-suite/page-seo-panel.png)
 

@@ -7,6 +7,9 @@ use Capell\SeoSuite\Models\AiCreatorSession;
 use Capell\SeoSuite\Support\ContentTargetResolver;
 use Illuminate\Auth\Access\AuthorizationException;
 
+/**
+ * @param  array<array-key, mixed>  $state
+ */
 function createReviewAiCreatorSession(array $state = []): AiCreatorSession
 {
     return AiCreatorSession::query()->create([

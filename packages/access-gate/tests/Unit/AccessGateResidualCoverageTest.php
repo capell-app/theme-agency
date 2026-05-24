@@ -16,6 +16,7 @@ use Capell\AccessGate\Notifications\AccessRevokedNotification;
 use Capell\AccessGate\Policies\RegistrationPolicy;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User;
 
@@ -91,6 +92,7 @@ function accessGateResidualPolicyActor(array $permissions = [], array $roles = [
 {
     return new class($permissions, $roles) extends User
     {
+        /** @use HasFactory<Factory<static>> */
         use HasFactory;
 
         /**

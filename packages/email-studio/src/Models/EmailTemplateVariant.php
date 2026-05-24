@@ -50,16 +50,25 @@ class EmailTemplateVariant extends Model
         return is_string($tableName) ? $tableName : 'email_template_variants';
     }
 
+    /**
+     * @return BelongsTo<EmailTemplate, $this>
+     */
     public function template(): BelongsTo
     {
         return $this->belongsTo(EmailTemplate::class, 'email_template_id');
     }
 
+    /**
+     * @return BelongsTo<EmailProfile, $this>
+     */
     public function profile(): BelongsTo
     {
         return $this->belongsTo(EmailProfile::class, 'email_profile_id');
     }
 
+    /**
+     * @return HasMany<EmailMessage, $this>
+     */
     public function messages(): HasMany
     {
         return $this->hasMany(EmailMessage::class);

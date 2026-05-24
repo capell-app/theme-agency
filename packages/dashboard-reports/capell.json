@@ -16,7 +16,7 @@
     "surfaces": ["admin"],
     "dependencies": {
         "requires": ["capell-app/admin", "capell-app/core"],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -72,7 +72,13 @@
     },
     "marketplace": {
         "summary": "Dashboard Reports provides generic CMS reporting widgets for Capell dashboards.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Dashboard Reports extension preview image",
+                "caption": "Dashboard Reports extension preview"
+            }
+        ],
         "categories": ["admin", "operations"]
     },
     "contributionTraceability": {

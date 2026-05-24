@@ -54,13 +54,13 @@ function aiWorkflowContext(): AiActionContextInterface
 }
 
 /**
- * @return PrismProvider&object{calls: array<int, array<string, mixed>>}
+ * @return PrismProvider&object{calls: array<int, array<array-key, mixed>>}
  */
 function bindAiWorkflowProvider(AiResponse $response): PrismProvider
 {
     $provider = new class($response) extends PrismProvider
     {
-        /** @var array<int, array<string, mixed>> */
+        /** @var array<int, array<array-key, mixed>> */
         public array $calls = [];
 
         public function __construct(private readonly AiResponse $response)
@@ -68,6 +68,9 @@ function bindAiWorkflowProvider(AiResponse $response): PrismProvider
             parent::__construct(['max_retries' => 1]);
         }
 
+        /**
+         * @param  array<array-key, mixed>  $params
+         */
         public function chat(array $params): AiResponse
         {
             $this->calls[] = $params;
@@ -112,13 +115,13 @@ function bindAiWorkflowRateLimiter(?Throwable $throwable = null): AiRateLimiter
 }
 
 /**
- * @return NamespacedRecordAiGenerationAction&object{records: array<int, AiGenerationResultData|array<string, mixed>>}
+ * @return NamespacedRecordAiGenerationAction&object{records: array<int, AiGenerationResultData|array<array-key, mixed>>}
  */
 function bindAiWorkflowRecorder(): NamespacedRecordAiGenerationAction
 {
     $recorder = new class extends NamespacedRecordAiGenerationAction
     {
-        /** @var array<int, AiGenerationResultData|array<string, mixed>> */
+        /** @var array<int, AiGenerationResultData|array<array-key, mixed>> */
         public array $records = [];
 
         public function handle(AiGenerationResultData|array $result): AIGenerationHistory

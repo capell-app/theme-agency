@@ -16,9 +16,12 @@ final class RegisterLocalPackageManifestsServiceProvider extends ServiceProvider
     public function register(): void
     {
         $loader = new ManifestLoader(new ManifestValidator);
-        $manifestPaths = glob(__DIR__ . '/../../packages/*/capell.json');
+        $manifestPaths = [
+            ...$this->manifestPaths(__DIR__ . '/../../packages/*/capell.json'),
+            ...$this->manifestPaths(__DIR__ . '/../../../capell-4/packages/{core,installer,marketplace}/capell.json'),
+        ];
 
-        foreach ($manifestPaths === false ? [] : $manifestPaths as $manifestPath) {
+        foreach ($manifestPaths as $manifestPath) {
             $manifest = $loader->load($manifestPath);
 
             CapellCore::registerManifestPackage(
@@ -26,5 +29,15 @@ final class RegisterLocalPackageManifestsServiceProvider extends ServiceProvider
                 CapellCore::getInstalledPrettyVersion($manifest->name),
             );
         }
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function manifestPaths(string $pattern): array
+    {
+        $paths = glob($pattern, GLOB_BRACE);
+
+        return $paths === false ? [] : $paths;
     }
 }

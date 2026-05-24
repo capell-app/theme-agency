@@ -11,7 +11,7 @@ use Capell\Core\Models\Translation;
 use Capell\DemoKit\Actions\Diagnostics\AssertDefaultDemoInstallHealthAction;
 use Capell\LayoutBuilder\Actions\InstallPackageAction as LayoutBuilderInstallPackageAction;
 use Capell\LayoutBuilder\Enums\LayoutTypeEnum;
-use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\Widget as Block;
 use Capell\LayoutBuilder\Support\CapellLayoutBuilderManager;
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Support\Str;
@@ -78,6 +78,7 @@ function showcaseBlockKeys(): array
         'capell-home-hero-command-center',
         'capell-home-proof-strip',
         'capell-home-demo-showcase',
+        'capell-home-demo-widgets-carousel',
         'capell-extension-marketplace-showcase',
         'capell-home-technical-pipeline',
         'capell-home-route-split',
@@ -109,7 +110,7 @@ function createDemoHealthLayout(Site $site, array $blockKeys): Layout
 function createDemoHealthBlock(string $key, string $title): Block
 {
     $type = Blueprint::factory()->create([
-        'type' => LayoutTypeEnum::Block->value,
+        'type' => LayoutTypeEnum::Widget->value,
     ]);
 
     $block = Block::factory()
@@ -136,6 +137,7 @@ function showcaseBlockTitle(string $key): string
         'capell-home-hero-command-center' => 'Capell CMS',
         'capell-home-proof-strip' => 'Proof points for a healthier release',
         'capell-home-demo-showcase' => 'A complete CMS foundation',
+        'capell-home-demo-widgets-carousel' => 'Interactive demo widgets',
         'capell-extension-marketplace-showcase' => 'Extension marketplace showcase',
         'capell-home-technical-pipeline' => 'Everything visible is backed by editable records',
         'capell-home-route-split' => 'From model to public page',

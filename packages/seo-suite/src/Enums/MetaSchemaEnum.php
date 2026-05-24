@@ -8,6 +8,7 @@ use Capell\Core\Enums\Attribute\Component;
 use Capell\Core\Enums\Attribute\EnumAttributeHelper;
 use Capell\Core\Enums\Attribute\EnumAttributeInterface;
 
+/** @implements EnumAttributeInterface<Component> */
 enum MetaSchemaEnum: string implements EnumAttributeInterface
 {
     use EnumAttributeHelper;
@@ -30,11 +31,14 @@ enum MetaSchemaEnum: string implements EnumAttributeInterface
     #[Component('capell::schema.graph')]
     case Graph = 'graph';
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function getComponents(): array
     {
         $attributes = self::getAllCaseAttributes(Component::class);
 
-        return array_map(fn (?Component $attribute): ?string => $attribute?->class ?? null, $attributes);
+        return array_map(fn (?Component $attribute): ?string => $attribute->class ?? null, $attributes);
     }
 
     public function getComponent(): ?string

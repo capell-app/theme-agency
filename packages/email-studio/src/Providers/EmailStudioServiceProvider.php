@@ -77,7 +77,7 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
         });
     }
 
-    private function isPackageInstalled(): bool
+    protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(self::$packageName);
     }

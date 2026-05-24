@@ -13,10 +13,14 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\FrontendOptimizer",
-    "surfaces": ["frontend"],
+    "surfaces": ["admin", "frontend"],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/frontend"],
-        "optional": [],
+        "requires": [
+            "capell-app/admin",
+            "capell-app/core",
+            "capell-app/frontend"
+        ],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -25,13 +29,15 @@
         "runtime": [
             "Capell\\FrontendOptimizer\\Providers\\FrontendOptimizerServiceProvider"
         ],
-        "admin": [],
+        "admin": [
+            "Capell\\FrontendOptimizer\\Providers\\FrontendOptimizerServiceProvider"
+        ],
         "frontend": []
     },
     "contributes": [],
     "database": {
         "migrations": true,
-        "settings": false,
+        "settings": true,
         "requiredTables": []
     },
     "commands": {
@@ -40,7 +46,9 @@
         "demo": null,
         "doctor": null
     },
-    "settings": [],
+    "settings": [
+        "Capell\\FrontendOptimizer\\Settings\\FrontendOptimizerSettings"
+    ],
     "permissions": [],
     "capabilities": ["frontend-optimizer", "frontend-optimizer-frontend"],
     "performance": {
@@ -72,7 +80,13 @@
     },
     "marketplace": {
         "summary": "Frontend Optimizer provides profile-based CSS and JavaScript delivery for public Capell pages.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Frontend Optimizer extension preview image",
+                "caption": "Frontend Optimizer extension preview"
+            }
+        ],
         "categories": ["foundation", "frontend"]
     },
     "scopes": ["frontend"]

@@ -26,6 +26,9 @@ class PrismProvider implements ServiceContract
 
     protected int $retryDelay;
 
+    /**
+     * @param  array<array-key, mixed>  $config
+     */
     public function __construct(protected array $config = [])
     {
         $this->maxRetries = (int) ($this->config['max_retries'] ?? 3);
@@ -37,6 +40,9 @@ class PrismProvider implements ServiceContract
         return $this->chat($input);
     }
 
+    /**
+     * @param  array<array-key, mixed>  $params
+     */
     public function chat(array $params): AiResponse
     {
         throw_if($this->isCircuitOpen(), OpenAICircuitBreakerOpenException::class);

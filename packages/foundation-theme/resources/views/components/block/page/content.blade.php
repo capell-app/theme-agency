@@ -70,8 +70,8 @@
                     </{{ $headingTag }}>
                 @endif
 
-                <x-capell::blocks
-                    :blocks="$pageContentRenderData->content"
+                <x-capell::widgets
+                    :widgets="$pageContentRenderData->content"
                     :$layout
                     :$containerKey
                     :$page

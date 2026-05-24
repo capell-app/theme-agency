@@ -45,6 +45,9 @@ class AiCreatorAction extends Action
             });
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private function buildWizardForm(): array
     {
         return [
@@ -102,6 +105,9 @@ class AiCreatorAction extends Action
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private function buildBrandStep(): array
     {
         $siteId = $this->resolveSiteId();
@@ -116,23 +122,23 @@ class AiCreatorAction extends Action
                     'playful' => __('capell-seo-suite::generic.ai_creator_tone_playful'),
                     'authoritative' => __('capell-seo-suite::generic.ai_creator_tone_authoritative'),
                 ])
-                ->default($existingContext?->tone ?? 'professional')
+                ->default($existingContext->tone ?? 'professional')
                 ->required(),
 
             TextInput::make('industry')
                 ->label(__('capell-seo-suite::generic.ai_creator_industry'))
-                ->default($existingContext?->industry ?? '')
+                ->default($existingContext->industry ?? '')
                 ->placeholder(__('capell-seo-suite::generic.ai_creator_industry_placeholder')),
 
             Textarea::make('target_audience')
                 ->label(__('capell-seo-suite::generic.ai_creator_target_audience'))
-                ->default($existingContext?->target_audience ?? '')
+                ->default($existingContext->target_audience ?? '')
                 ->placeholder(__('capell-seo-suite::generic.ai_creator_target_audience_placeholder'))
                 ->rows(2),
 
             Textarea::make('brand_voice_notes')
                 ->label(__('capell-seo-suite::generic.ai_creator_brand_voice_notes'))
-                ->default($existingContext?->brand_voice_notes ?? '')
+                ->default($existingContext->brand_voice_notes ?? '')
                 ->placeholder(__('capell-seo-suite::generic.ai_creator_brand_voice_notes_placeholder'))
                 ->rows(2),
         ];
@@ -191,6 +197,9 @@ class AiCreatorAction extends Action
         }
     }
 
+    /**
+     * @param  array<array-key, mixed>  $data
+     */
     private function runCreator(array $data): void
     {
         $sessionId = $data['ai_session_id'] ?? null;

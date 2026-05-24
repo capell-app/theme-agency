@@ -20,7 +20,7 @@
             "capell-app/core",
             "capell-app/publishing-studio"
         ],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -87,7 +87,15 @@
             "queueInvalidation": false
         }
     },
-    "healthChecks": [],
+    "healthChecks": [
+        {
+            "key": "document-lifecycle.package-health",
+            "label": "Document Lifecycle package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\DocumentLifecycle\\Health\\DocumentLifecycleHealthCheck",
+            "severity": "critical",
+            "surface": "admin"
+        }
+    ],
     "commercial": {
         "proposedLicense": "paid",
         "requestedCertification": "first-party",
@@ -96,7 +104,13 @@
     },
     "marketplace": {
         "summary": "Controlled document registry, publication metadata, hashes, and acceptance evidence for Capell CMS.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Document Lifecycle extension preview image",
+                "caption": "Document Lifecycle extension preview"
+            }
+        ],
         "categories": ["admin", "console", "operations"]
     },
     "contributionTraceability": {

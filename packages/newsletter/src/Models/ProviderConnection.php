@@ -7,6 +7,7 @@ namespace Capell\Newsletter\Models;
 use Capell\Core\Models\Site;
 use Capell\Newsletter\Enums\AuthType;
 use Capell\Newsletter\Enums\ProviderType;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,9 +16,12 @@ use Override;
 
 /**
  * @property ProviderType $provider
+ * @property array<array-key, mixed>|null $credentials
+ * @property array<array-key, mixed>|null $oauth_tokens
  */
 class ProviderConnection extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     /** @var list<string> */
@@ -34,11 +38,17 @@ class ProviderConnection extends Model
 
     protected $table = 'newsletter_provider_connections';
 
+    /**
+     * @return BelongsTo<Site, $this>
+     */
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class);
     }
 
+    /**
+     * @return HasMany<ProviderAudience, $this>
+     */
     public function audiences(): HasMany
     {
         return $this->hasMany(ProviderAudience::class);

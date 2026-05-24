@@ -13,7 +13,7 @@ it('declares the publishing workflow as manifest contributions', function (): vo
         flags: JSON_THROW_ON_ERROR,
     );
 
-    $contributions = collect($manifest['contributes'] ?? []);
+    $contributions = capell_test_collect($manifest['contributes'] ?? []);
 
     expect($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-page'
             && ($contribution['class'] ?? null) === PublishingWorkflowPageContribution::class

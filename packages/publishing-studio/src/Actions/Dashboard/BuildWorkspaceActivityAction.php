@@ -40,9 +40,7 @@ final class BuildWorkspaceActivityAction
 
     private function countPendingApprovals(Authenticatable $user): int
     {
-        $morphClass = method_exists($user, 'getMorphClass')
-            ? $user->getMorphClass()
-            : $user::class;
+        $morphClass = $user->getMorphClass();
 
         return WorkspaceReviewAssignment::query()
             ->where('reviewer_type', $morphClass)

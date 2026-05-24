@@ -29,7 +29,7 @@ it('inserts tagged contributor actions after preview and before validate', funct
     $tableReflection = new ReflectionClass(PublishingStudioTable::class);
     $recordActionsMethod = $tableReflection->getMethod('getRecordActions');
 
-    $actionNames = collect($recordActionsMethod->invoke(null))
+    $actionNames = capell_test_collect($recordActionsMethod->invoke(null))
         ->filter(fn (object $action): bool => method_exists($action, 'getName'))
         ->map(fn (object $action): string => $action->getName())
         ->values();

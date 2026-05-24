@@ -23,6 +23,7 @@ beforeEach(function (): void {
 });
 
 /**
+ * @param  array<array-key, mixed>  $arguments
  * @return array<int, mixed>
  */
 function seoSuiteAdminActionSchema(Action $action, array $arguments = []): array

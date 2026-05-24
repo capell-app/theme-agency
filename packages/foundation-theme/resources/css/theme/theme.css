@@ -27,6 +27,11 @@
         text-rendering: optimizeLegibility;
     }
 
+    body.capell-app-body {
+        background: var(--foundation-page-bg);
+        color: color-mix(in srgb, var(--color-brand) 82%, #111827);
+    }
+
     @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
@@ -152,13 +157,13 @@
     .capell-product-header {
         --capell-header-surface: color-mix(
             in srgb,
-            var(--bg-color-header) 92%,
-            white
+            var(--foundation-header-bg) 92%,
+            var(--bg-color-header)
         );
         --capell-header-border: color-mix(
             in srgb,
-            var(--border-header) 72%,
-            rgb(15 23 42 / 16%)
+            var(--foundation-border) 72%,
+            var(--border-header)
         );
         backdrop-filter: blur(18px);
         background: color-mix(
@@ -168,7 +173,7 @@
         );
         border-bottom: 1px solid
             color-mix(in srgb, var(--capell-header-border) 90%, transparent);
-        box-shadow: 0 18px 42px rgb(15 23 42 / 7%);
+        box-shadow: 0 18px 42px rgb(15 23 42 / 5%);
     }
 
     .capell-product-header.header-over-hero {
@@ -245,9 +250,25 @@
     }
 
     .capell-product-header__logo-text::before {
-        background: linear-gradient(135deg, #2563eb 0%, #22c55e 100%), #2563eb;
-        border-radius: 0.5rem;
-        box-shadow: 0 10px 22px rgb(37 99 235 / 24%);
+        background:
+            linear-gradient(
+                135deg,
+                var(--foundation-primary-action) 0%,
+                color-mix(
+                        in srgb,
+                        var(--foundation-primary-action) 70%,
+                        #22c55e
+                    )
+                    100%
+            ),
+            var(--foundation-primary-action);
+        border-radius: var(--foundation-radius);
+        box-shadow: 0 10px 22px
+            color-mix(
+                in srgb,
+                var(--foundation-primary-action) 24%,
+                transparent
+            );
         content: '';
         display: inline-block;
         height: 2rem;
@@ -256,7 +277,7 @@
 
     .capell-product-nav-item {
         align-items: center;
-        border-radius: 0.5rem;
+        border-radius: var(--foundation-radius);
         color: color-mix(in srgb, var(--color-header) 78%, transparent);
         display: inline-flex;
         font-size: 0.875rem;
@@ -277,18 +298,27 @@
     .capell-product-nav-item:hover,
     .capell-product-nav-item:focus-visible,
     .capell-product-nav-item.active {
-        background: rgb(37 99 235 / 8%);
-        color: #1d4ed8;
+        background: color-mix(
+            in srgb,
+            var(--foundation-primary-action) 10%,
+            transparent
+        );
+        color: var(--foundation-primary-action);
         outline: none;
     }
 
     .capell-product-nav-item:focus-visible {
-        box-shadow: 0 0 0 3px rgb(37 99 235 / 18%);
+        box-shadow: 0 0 0 3px
+            color-mix(
+                in srgb,
+                var(--foundation-primary-action) 18%,
+                transparent
+            );
     }
 
     .capell-product-dropdown-item {
         align-items: center;
-        border-radius: 0.5rem;
+        border-radius: var(--foundation-radius);
         color: rgb(51 65 85);
         display: flex;
         font-size: 0.875rem;
@@ -306,16 +336,24 @@
     .capell-product-dropdown-item:hover,
     .capell-product-dropdown-item:focus-visible,
     .capell-product-dropdown-item.active {
-        background: rgb(37 99 235 / 8%);
-        color: #1d4ed8;
+        background: color-mix(
+            in srgb,
+            var(--foundation-primary-action) 10%,
+            transparent
+        );
+        color: var(--foundation-primary-action);
         outline: none;
     }
 
     .capell-product-menu-toggle {
         align-items: center;
-        background: rgb(248 250 252 / 92%);
-        border: 1px solid rgb(226 232 240);
-        border-radius: 0.5rem;
+        background: color-mix(
+            in srgb,
+            var(--foundation-surface-bg) 92%,
+            transparent
+        );
+        border: 1px solid var(--foundation-border);
+        border-radius: var(--foundation-radius);
         box-shadow: 0 10px 24px rgb(15 23 42 / 10%);
         color: rgb(15 23 42);
         display: flex;
@@ -330,15 +368,19 @@
 
     .capell-product-menu-toggle:hover,
     .capell-product-menu-toggle:focus-visible {
-        background: white;
-        border-color: rgb(37 99 235 / 36%);
-        color: #1d4ed8;
+        background: var(--foundation-surface-bg);
+        border-color: color-mix(
+            in srgb,
+            var(--foundation-primary-action) 36%,
+            var(--foundation-border)
+        );
+        color: var(--foundation-primary-action);
         outline: none;
     }
 
     .capell-product-menu-toggle.is-open {
-        background: #2563eb;
-        border-color: #2563eb;
+        background: var(--foundation-primary-action);
+        border-color: var(--foundation-primary-action);
         color: white;
     }
 
@@ -468,12 +510,12 @@
     .capell-showcase {
         --capell-showcase-ink: #0f172a;
         --capell-showcase-muted: #475569;
-        --capell-showcase-line: #dbe4f0;
-        --capell-showcase-blue: #2563eb;
+        --capell-showcase-line: var(--foundation-border);
+        --capell-showcase-blue: var(--foundation-primary-action);
         --capell-showcase-emerald: #059669;
         --capell-showcase-amber: #d97706;
-        --capell-showcase-surface: #ffffff;
-        --capell-showcase-soft: #f8fafc;
+        --capell-showcase-surface: var(--foundation-surface-bg);
+        --capell-showcase-soft: var(--foundation-muted-bg);
         background: var(--capell-showcase-surface);
         color: var(--capell-showcase-ink);
     }
@@ -518,6 +560,11 @@
         gap: 1rem;
         margin-bottom: clamp(2rem, 4vw, 3.25rem);
         max-width: 44rem;
+    }
+
+    .capell-image-source {
+        border-color: var(--foundation-image-border);
+        border-radius: var(--foundation-image-radius);
     }
 
     .ap-hero {
@@ -765,11 +812,11 @@
     .ap-showcase-feature-list,
     .ap-showcase-gallery,
     .ap-showcase-cta {
-        padding-block: clamp(3rem, 6vw, 5.5rem);
+        padding-block: var(--foundation-section-spacing);
     }
 
     .ap-showcase-gallery {
-        padding-block: clamp(3.25rem, 6vw, 5.25rem);
+        padding-block: var(--foundation-section-spacing);
     }
 
     .ap-showcase-gallery .capell-showcase__section-head {
@@ -778,7 +825,13 @@
 
     .ap-showcase-card-grid,
     .ap-showcase-gallery {
-        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%), #ffffff;
+        background:
+            linear-gradient(
+                180deg,
+                var(--foundation-surface-bg) 0%,
+                var(--foundation-muted-bg) 100%
+            ),
+            var(--foundation-surface-bg);
     }
 
     .ap-card-grid {
@@ -792,10 +845,10 @@
 
     .ap-card,
     .ap-feature-item {
-        background: white;
+        background: var(--foundation-card-bg);
         border: 1px solid var(--capell-showcase-line);
-        border-radius: 0.75rem;
-        box-shadow: 0 18px 40px rgb(15 23 42 / 6%);
+        border-radius: var(--foundation-radius);
+        box-shadow: 0 18px 40px rgb(15 23 42 / 4%);
         display: flex;
         flex-direction: column;
         min-height: 100%;
@@ -808,17 +861,25 @@
 
     .ap-card:hover,
     .ap-feature-item:hover {
-        border-color: rgb(37 99 235 / 34%);
-        box-shadow: 0 26px 60px rgb(15 23 42 / 10%);
+        border-color: color-mix(
+            in srgb,
+            var(--foundation-primary-action) 34%,
+            var(--foundation-border-strong)
+        );
+        box-shadow: 0 26px 60px rgb(15 23 42 / 8%);
         transform: translateY(-2px);
     }
 
     .ap-card__icon,
     .ap-feature-item__icon {
         align-items: center;
-        background: rgb(37 99 235 / 9%);
-        border-radius: 0.6rem;
-        color: #1d4ed8;
+        background: color-mix(
+            in srgb,
+            var(--foundation-primary-action) 9%,
+            transparent
+        );
+        border-radius: var(--foundation-radius);
+        color: var(--foundation-primary-action);
         display: inline-flex;
         font-size: 1.35rem;
         height: 2.8rem;
@@ -853,7 +914,7 @@
     .block-ap-pricing-table section,
     .block-ap-team-members section,
     .block-ap-faq-section section {
-        padding-block: clamp(3rem, 6vw, 5.5rem);
+        padding-block: var(--foundation-section-spacing);
     }
 
     .block-ap-stats-section h2,
@@ -950,10 +1011,10 @@
     }
 
     .ap-gallery-item {
-        background: white;
+        background: var(--foundation-card-bg);
         border: 1px solid var(--capell-showcase-line);
-        border-radius: 0.75rem;
-        box-shadow: 0 18px 40px rgb(15 23 42 / 7%);
+        border-radius: var(--foundation-radius);
+        box-shadow: 0 18px 40px rgb(15 23 42 / 5%);
         overflow: hidden;
     }
 

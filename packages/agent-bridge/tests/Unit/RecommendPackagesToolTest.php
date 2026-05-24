@@ -22,7 +22,8 @@ it('recommends matching packages from the knowledge repository', function (): vo
         ->and($structuredContent['query'])->toBe('seo redirects')
         ->and($structuredContent['recommendations'])->not->toBeEmpty();
 
-    $recommendedNames = collect($structuredContent['recommendations'])->pluck('name');
+    $recommendations = $structuredContent['recommendations'];
+    $recommendedNames = is_array($recommendations) ? array_column($recommendations, 'name') : [];
 
     expect($recommendedNames)
         ->toContain('capell-app/seo-suite');

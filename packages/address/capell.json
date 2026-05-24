@@ -16,7 +16,7 @@
     "surfaces": ["admin"],
     "dependencies": {
         "requires": ["capell-app/admin"],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -71,7 +71,13 @@
     },
     "marketplace": {
         "summary": "Address adds reusable countries, address records, address selectors, country selectors, and flag rendering to the Capell admin surface.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Address extension preview image",
+                "caption": "Address extension preview"
+            }
+        ],
         "categories": ["admin", "content-product"]
     },
     "contributionTraceability": {

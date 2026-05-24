@@ -11,6 +11,18 @@ Capell default theme - ships the standard Tailwind asset pipeline, Blade directi
 - Capell dependencies: `capell-app/frontend`, `capell-app/layout-builder`
 - Third-party dependencies: `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`
 
+## Why It Helps Your Capell Workflow
+
+- Provides the default frontend theme base, asset pipeline, Blade directives, URL generation, and media rendering conventions for Capell sites.
+- Helps owners launch a coherent frontend faster while keeping theme-specific presentation out of database content.
+- Gives developers the baseline renderer patterns used by premium theme packages and package frontend components.
+
+## Best Used With
+
+- [Layout Builder](../layout-builder/README.md)
+- [Theme Agency](../theme-agency/README.md)
+- [Theme Corporate](../theme-corporate/README.md)
+
 ## What It Adds
 
 - Capell default theme - ships the standard Tailwind asset pipeline, Blade directives, URL generator, and SVG media component.
@@ -158,6 +170,7 @@ Use this pattern for future theme chrome areas such as `footer`, `announcement`,
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 - [overview.md](docs/overview.md)
 

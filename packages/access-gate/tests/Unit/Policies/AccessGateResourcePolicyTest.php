@@ -16,15 +16,21 @@ use Capell\AccessGate\Policies\BrowserTokenPolicy;
 use Capell\AccessGate\Policies\ClaimTokenPolicy;
 use Capell\AccessGate\Policies\GrantPolicy;
 use Capell\AccessGate\Policies\RegistrationPolicy;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Collection as SupportCollection;
 
+/**
+ * @param  array<array-key, mixed>  $permissions
+ * @param  array<array-key, mixed>  $roles
+ */
 function accessGatePolicyActor(array $permissions = [], array $roles = []): User
 {
     return new class($permissions, $roles) extends User
     {
+        /** @use HasFactory<Factory<static>> */
         use HasFactory;
 
         /**
@@ -83,6 +89,7 @@ it('scopes access area resource queries to the current actor sites', function ()
 
     $user = new class extends User
     {
+        /** @use HasFactory<Factory<static>> */
         use HasFactory;
 
         /** @var SupportCollection<int, int> */

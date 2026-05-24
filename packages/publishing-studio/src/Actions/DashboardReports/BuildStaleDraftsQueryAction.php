@@ -13,6 +13,9 @@ final class BuildStaleDraftsQueryAction
 {
     use AsAction;
 
+    /**
+     * @return Builder<Workspace>
+     */
     public function handle(int $thresholdDays = 14): Builder
     {
         $cutoff = now()->subDays($thresholdDays);

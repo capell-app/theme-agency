@@ -21,7 +21,7 @@
             "capell-app/navigation",
             "capell-app/publishing-studio"
         ],
-        "optional": [
+        "supports": [
             "capell-app/address",
             "capell-app/form-builder",
             "capell-app/seo-suite",
@@ -106,7 +106,13 @@
     },
     "marketplace": {
         "summary": "Events adds listings, recurring events, venues, RSVPs, calendar feeds, and Event schema.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Events extension preview image",
+                "caption": "Events extension preview"
+            }
+        ],
         "categories": ["admin", "console", "content-product", "frontend"]
     },
     "contributionTraceability": {

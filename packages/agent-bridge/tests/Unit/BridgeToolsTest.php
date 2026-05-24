@@ -75,7 +75,10 @@ it('lists knowledge packages as structured content', function (): void {
 
     $response = (new ListKnowledgePackagesTool)->handle(new KnowledgeRepository);
 
-    expect(collect($response->getStructuredContent()['packages'])->pluck('name'))
+    $packages = $response->getStructuredContent()['packages'];
+    $packageNames = is_array($packages) ? array_column($packages, 'name') : [];
+
+    expect($packageNames)
         ->toContain('capell-app/agent-bridge');
 });
 
@@ -129,7 +132,10 @@ it('lists site capabilities allowed by the authenticated client scopes', functio
         new AuthenticatedAgentBridgeClientData(tokenId: 1, name: 'Scoped client', scopes: ['capell.fake.allowed']),
     );
 
-    expect(collect($response->getStructuredContent()['capabilities'])->pluck('key')->all())
+    $capabilities = $response->getStructuredContent()['capabilities'];
+    $capabilityKeys = is_array($capabilities) ? array_column($capabilities, 'key') : [];
+
+    expect($capabilityKeys)
         ->toBe(['capell.fake.allowed']);
 });
 

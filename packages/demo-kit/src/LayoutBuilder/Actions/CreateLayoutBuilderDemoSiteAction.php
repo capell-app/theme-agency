@@ -83,6 +83,7 @@ class CreateLayoutBuilderDemoSiteAction
         $orderedContainers = [];
         $remainingContainers = array_diff_key($containers, array_flip([
             'ap-blocks',
+            'hero',
             'main',
             'faq-main',
             'faq-col',
@@ -99,15 +100,19 @@ class CreateLayoutBuilderDemoSiteAction
 
         $layout->update([
             'containers' => $containers,
-            'blocks' => $this->layoutBlockKeys($containers),
+            'widgets' => $this->layoutBlockKeys($containers),
         ]);
     }
 
+    /**
+     * @param  array<array-key, mixed>  $containers
+     */
     private function populateAPBlocksContainer(array &$containers): void
     {
         $heroBlock = $this->demoCreator->createHomepageHeroCommandCenterBlock();
         $proofBlock = $this->demoCreator->createHomepageProofStripBlock();
         $showcaseBlock = $this->demoCreator->createHomepageDemoShowcaseBlock();
+        $widgetsCarouselBlock = $this->demoCreator->createHomepageDemoWidgetsCarouselBlock();
         $marketplaceBlock = $this->demoCreator->createHomepageMarketplaceBlock();
         $pipelineBlock = $this->demoCreator->createHomepageTechnicalPipelineBlock();
         $routeSplitBlock = $this->demoCreator->createHomepageRouteSplitBlock();
@@ -117,20 +122,21 @@ class CreateLayoutBuilderDemoSiteAction
             'meta' => [
                 'colspan' => 12,
             ],
-            'blocks' => [
-                ['block_key' => $heroBlock->key],
-                ['block_key' => $proofBlock->key],
-                ['block_key' => $showcaseBlock->key],
-                ['block_key' => $marketplaceBlock->key],
-                ['block_key' => $pipelineBlock->key],
-                ['block_key' => $routeSplitBlock->key],
-                ['block_key' => $finalCtaBlock->key],
+            'widgets' => [
+                ['widget_key' => $heroBlock->key],
+                ['widget_key' => $proofBlock->key],
+                ['widget_key' => $showcaseBlock->key],
+                ['widget_key' => $widgetsCarouselBlock->key],
+                ['widget_key' => $marketplaceBlock->key],
+                ['widget_key' => $pipelineBlock->key],
+                ['widget_key' => $routeSplitBlock->key],
+                ['widget_key' => $finalCtaBlock->key],
             ],
         ];
     }
 
     /**
-     * @param  array<string, mixed>  $containers
+     * @param  array<array-key, mixed>  $containers
      * @return list<string>
      */
     private function layoutBlockKeys(array $containers): array
@@ -141,17 +147,21 @@ class CreateLayoutBuilderDemoSiteAction
                     return [];
                 }
 
-                $blocks = $container['blocks'] ?? [];
+                $blocks = $container['widgets'] ?? [];
 
                 return is_array($blocks) ? $blocks : [];
             })
-            ->map(fn (mixed $block): ?string => is_array($block) ? ($block['block_key'] ?? null) : null)
+            ->map(fn (mixed $block): ?string => is_array($block) ? ($block['widget_key'] ?? null) : null)
             ->filter(fn (?string $blockKey): bool => is_string($blockKey) && $blockKey !== '')
             ->unique()
             ->values()
             ->all();
     }
 
+    /**
+     * @param  EloquentCollection<int, Language>  $languages
+     * @param  array<array-key, mixed>  $contentNode
+     */
     private function createSiteContents(
         ContentCreator $contentCreator,
         array $contentNode,
@@ -194,6 +204,9 @@ class CreateLayoutBuilderDemoSiteAction
         }
     }
 
+    /**
+     * @param  EloquentCollection<int, Language>  $languages
+     */
     private function setupSiteNavigations(Site $site, EloquentCollection $languages, Page $homePage): void
     {
         $navigationDemoCreatorClass = NavigationDemoCreator::class;

@@ -9,12 +9,12 @@ use Capell\PublishingStudio\WorkspaceContext;
 use Capell\Tests\Fixtures\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Session\ArraySessionHandler;
 use Illuminate\Session\Store;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Response;
 
 beforeEach(function (): void {
     WorkspaceContext::clear();
@@ -33,7 +33,7 @@ function invokeWorkspaceMiddleware(Request $request): Response
 
     return $middleware->handle($request, function (): Response {
         $response = new Response('ok');
-        $response->headers->set('X-Workspace-Context-Id', (string) (WorkspaceContext::current()?->id ?? ''));
+        $response->headers->set('X-Workspace-Context-Id', (string) (WorkspaceContext::current()->id ?? ''));
 
         return $response;
     });

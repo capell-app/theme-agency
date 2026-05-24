@@ -23,7 +23,7 @@
             "capell-app/insights",
             "capell-app/layout-builder"
         ],
-        "optional": ["capell-app/seo-suite"],
+        "supports": ["capell-app/seo-suite"],
         "conflicts": []
     },
     "providers": {
@@ -85,7 +85,13 @@
     },
     "marketplace": {
         "summary": "CampaignStudio adds campaign groups, landing pages, CTA blocks, conversion goals, UTM attribution, and conversion reporting to Capell.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Campaign Studio extension preview image",
+                "caption": "Campaign Studio extension preview"
+            }
+        ],
         "categories": ["admin", "frontend", "growth"]
     },
     "contributionTraceability": {

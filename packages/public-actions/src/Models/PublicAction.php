@@ -24,8 +24,8 @@ use Override;
  * @property string|null $failure_redirect_url
  * @property string|null $success_message
  * @property string|null $failure_message
- * @property array<string, mixed>|null $payload_schema
- * @property array<string, mixed>|null $settings
+ * @property array<array-key, mixed>|null $payload_schema
+ * @property array<array-key, mixed>|null $settings
  */
 class PublicAction extends Model
 {
@@ -58,16 +58,25 @@ class PublicAction extends Model
         return is_string($tableName) ? $tableName : 'public_actions';
     }
 
+    /**
+     * @return BelongsTo<Site, $this>
+     */
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class);
     }
 
+    /**
+     * @return HasMany<PublicActionDestination, $this>
+     */
     public function destinations(): HasMany
     {
         return $this->hasMany(PublicActionDestination::class);
     }
 
+    /**
+     * @return HasMany<PublicActionSubmission, $this>
+     */
     public function submissions(): HasMany
     {
         return $this->hasMany(PublicActionSubmission::class);

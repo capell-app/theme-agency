@@ -64,6 +64,9 @@ final class GA4ReportsTopPagesTableWidget extends BaseWidget
             ]);
     }
 
+    /**
+     * @return Collection<array-key, mixed>
+     */
     private function getRecords(): Collection
     {
         return collect(BuildTopGA4ReportsPagesAction::run($this->getGA4ReportsWindow(), 100))

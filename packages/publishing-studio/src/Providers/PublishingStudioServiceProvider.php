@@ -113,7 +113,7 @@ class PublishingStudioServiceProvider extends ServiceProvider
         });
     }
 
-    private function isPackageInstalled(): bool
+    protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(static::$packageName);
     }
@@ -223,7 +223,11 @@ class PublishingStudioServiceProvider extends ServiceProvider
         }
 
         // Page requires a finalizeOnPublish hook to retarget PageUrl + Translation rows.
-        WorkspaceRegistry::register(Page::class, finalizeOnPublish: static function (Page $draftRow): Page {
+        WorkspaceRegistry::register(Page::class, finalizeOnPublish: static function (Model $draftRow): Model {
+            if (! $draftRow instanceof Page) {
+                return $draftRow;
+            }
+
             if ($draftRow->uuid === null || $draftRow->uuid === '' || (int) $draftRow->workspace_id === 0) {
                 return $draftRow;
             }
@@ -418,19 +422,19 @@ class PublishingStudioServiceProvider extends ServiceProvider
     private function registerBuilderMacros(): self
     {
         Builder::macro('live', function (): Builder {
-            /** @var Builder $this */
+            /** @var Builder<Model> $this */
             return $this->where($this->getModel()->qualifyColumn('workspace_id'), 0);
         });
 
         Builder::macro('inWorkspace', function (Workspace|int $workspace): Builder {
-            /** @var Builder $this */
+            /** @var Builder<Model> $this */
             $workspaceId = $workspace instanceof Workspace ? $workspace->id : $workspace;
 
             return $this->where($this->getModel()->qualifyColumn('workspace_id'), $workspaceId);
         });
 
         Builder::macro('forContext', function (Workspace|int|null $workspace): Builder {
-            /** @var Builder $this */
+            /** @var Builder<Model> $this */
             $workspaceColumn = $this->getModel()->qualifyColumn('workspace_id');
 
             if ($workspace === null) {
@@ -454,7 +458,7 @@ class PublishingStudioServiceProvider extends ServiceProvider
         });
 
         Builder::macro('withoutWorkspaceScope', function (): Builder {
-            /** @var Builder $this */
+            /** @var Builder<Model> $this */
             return $this->withoutGlobalScope(WorkspaceContextScope::class);
         });
 

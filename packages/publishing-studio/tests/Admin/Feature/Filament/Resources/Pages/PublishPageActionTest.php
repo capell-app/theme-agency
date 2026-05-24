@@ -14,6 +14,7 @@ use Capell\PublishingStudio\WorkspaceContext;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Livewire;
+use RuntimeException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -37,10 +38,14 @@ function draftInWorkspace(WorkspaceStatusEnum $status): Page
     $live = Page::factory()->withTranslations()->create();
     $workspace = Workspace::factory()->create(['status' => $status->value]);
 
-    return (new CopyOnWriteAction)->cloneForEdit(
+    $draft = (new CopyOnWriteAction)->cloneForEdit(
         $live->fresh()->fill(['name' => 'draft name']),
         $workspace,
     );
+
+    throw_unless($draft instanceof Page, RuntimeException::class, 'Expected a page draft.');
+
+    return $draft;
 }
 
 it('is hidden on a live page', function (): void {

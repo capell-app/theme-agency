@@ -16,6 +16,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -37,7 +38,11 @@ it('builds the event resource form schema', function (): void {
         ->each->toBeInstanceOf(Section::class);
 
     $fields = collect($components)
-        ->flatMap(fn (Section $section): array => ReadsRawSchemaComponents::childComponents($section))
+        ->flatMap(function (Component $section): array {
+            throw_unless($section instanceof Section);
+
+            return ReadsRawSchemaComponents::childComponents($section);
+        })
         ->values();
 
     expect($fields)
@@ -56,6 +61,8 @@ it('declares event resource metadata and route defaults', function (): void {
     expect(EventResource::getModel())->toBe(Event::class)
         ->and(EventResource::getNavigationGroup())->toBe('capell-admin::navigation.group_content')
         ->and(EventResource::getNavigationLabel())->toBe('Events')
+        ->and(EventResource::getPluralModelLabel())->toBe('Events')
+        ->and(EventResource::getBreadcrumb())->toBe('Events')
         ->and(EventResource::getNavigationParentItem())->toBeNull()
         ->and(EventResource::getResourceName())->toBe('event')
         ->and(EventResource::getBasePath($site, $language))->toBe('/events/')

@@ -33,9 +33,12 @@ use Illuminate\Support\Str;
 
 abstract class StandardDemoBlockCreator extends BaseDemoCreator
 {
+    /**
+     * @param  Collection<int, Model>  $languages
+     */
     public function createContentBlock(Collection $languages): Block
     {
-        $siteId = Site::query()->default()?->value('id');
+        $siteId = Site::query()->default()->value('id');
 
         $type = resolve(TypeCreator::class)->contentBuilderBlockType();
 
@@ -88,13 +91,16 @@ abstract class StandardDemoBlockCreator extends BaseDemoCreator
         return $block;
     }
 
+    /**
+     * @param  Collection<int, Model>  $languages
+     */
     public function createSplitContentBlock(Collection $languages): Block
     {
-        $siteId = Site::query()->default()?->value('id');
+        $siteId = Site::query()->default()->value('id');
 
         $block = $this->blockModel::query()->firstOrCreate(['key' => 'example-split-content'], [
             'name' => 'Example Split Content',
-            'blueprint_id' => $this->typeModel::query()->firstWhere(['key' => BlockTypeEnum::SectionBuilder, 'type' => LayoutTypeEnum::Block])->id,
+            'blueprint_id' => $this->typeModel::query()->firstWhere(['key' => BlockTypeEnum::SectionBuilder, 'type' => LayoutTypeEnum::Widget])->id,
             'meta' => [
                 'align' => 'center',
                 'size' => 'md',
@@ -141,6 +147,9 @@ abstract class StandardDemoBlockCreator extends BaseDemoCreator
         return $block;
     }
 
+    /**
+     * @param  Collection<int, Model>  $languages
+     */
     public function createBannerImageBlock(Collection $languages): Block
     {
         $block = resolve(BlockCreator::class)->bannerImageBlock();
@@ -219,9 +228,12 @@ abstract class StandardDemoBlockCreator extends BaseDemoCreator
         return $block;
     }
 
+    /**
+     * @param  Collection<int, Model>  $languages
+     */
     public function createFaqBlock(Collection $languages): Block
     {
-        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Block)
+        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Widget)
             ->firstWhere('key', 'assets');
 
         if ($blockType === null) {
@@ -361,6 +373,9 @@ abstract class StandardDemoBlockCreator extends BaseDemoCreator
         return $block;
     }
 
+    /**
+     * @param  Collection<int, Model>  $languages
+     */
     public function createStaticNavigationBlock(Collection $languages, Site $site): Block
     {
         $model = Navigation::class;
@@ -395,14 +410,16 @@ abstract class StandardDemoBlockCreator extends BaseDemoCreator
             $navigationType = resolve(BlueprintCreator::class)->createNavigationType();
         }
 
-        $navigation = CapellCore::isPackageInstalled(self::NavigationPackage) && class_exists($model)
+        $language = $languages->first();
+
+        $navigation = $language instanceof Language && CapellCore::isPackageInstalled(self::NavigationPackage) && class_exists($model)
             ? $model::query()->updateOrCreate([
                 'key' => $key,
                 'site_id' => $site->id,
                 'blueprint_id' => $navigationType->id,
             ], [
                 'name' => $name,
-                'items' => $this->navigationPageItems($pages, $languages->first()),
+                'items' => $this->navigationPageItems($pages, $language),
             ])
             : null;
 
@@ -537,13 +554,16 @@ abstract class StandardDemoBlockCreator extends BaseDemoCreator
         }
     }
 
+    /**
+     * @param  Collection<int, Model>  $languages
+     */
     public function createClientLogosBlock(Collection $languages): Block
     {
         $block = Block::query()->firstOrCreate([
             'key' => 'client-logos',
         ], [
             'name' => 'Client Logos',
-            'blueprint_id' => $this->typeModel::query()->firstWhere(['key' => BlockTypeEnum::Assets, 'type' => LayoutTypeEnum::Block])->id,
+            'blueprint_id' => $this->typeModel::query()->firstWhere(['key' => BlockTypeEnum::Assets, 'type' => LayoutTypeEnum::Widget])->id,
             'meta' => [
                 'align' => 'center',
                 'margin' => ['lg'],
@@ -560,7 +580,11 @@ abstract class StandardDemoBlockCreator extends BaseDemoCreator
             return $block;
         }
 
-        $languages->each(function (Language $language) use ($block): void {
+        $languages->each(function (Model $language) use ($block): void {
+            if (! $language instanceof Language) {
+                return;
+            }
+
             $block->translations()->firstOrCreate([
                 'language_id' => $language->id,
             ], [
@@ -582,7 +606,7 @@ abstract class StandardDemoBlockCreator extends BaseDemoCreator
             'key' => 'business-features',
         ], [
             'name' => 'Business Features',
-            'blueprint_id' => $this->typeModel::query()->firstWhere(['key' => BlockTypeEnum::Sections, 'type' => LayoutTypeEnum::Block])->id,
+            'blueprint_id' => $this->typeModel::query()->firstWhere(['key' => BlockTypeEnum::Sections, 'type' => LayoutTypeEnum::Widget])->id,
             'meta' => [
                 'align' => 'center',
                 'margin' => ['lg'],
@@ -643,6 +667,9 @@ abstract class StandardDemoBlockCreator extends BaseDemoCreator
         return $block;
     }
 
+    /**
+     * @param  Collection<int, Model>  $languages
+     */
     public function createTestimonialsBlock(Collection $languages): Block
     {
         $blockCreator = resolve(BlockCreator::class);
@@ -650,7 +677,11 @@ abstract class StandardDemoBlockCreator extends BaseDemoCreator
 
         $this->createMedia($block, collection: MediaCollectionEnum::BackgroundImage);
 
-        $languages->each(function (Language $language) use ($block): void {
+        $languages->each(function (Model $language) use ($block): void {
+            if (! $language instanceof Language) {
+                return;
+            }
+
             $block->translations()->firstOrCreate(['language_id' => $language->id], [
                 'title' => 'What Our Clients Say',
             ]);
@@ -676,7 +707,7 @@ abstract class StandardDemoBlockCreator extends BaseDemoCreator
     {
         $block = $this->blockModel::query()->firstOrCreate(['key' => 'statistics'], [
             'name' => 'Statistic Blocks',
-            'blueprint_id' => $this->typeModel::query()->firstWhere(['key' => BlockTypeEnum::Assets, 'type' => LayoutTypeEnum::Block])->id,
+            'blueprint_id' => $this->typeModel::query()->firstWhere(['key' => BlockTypeEnum::Assets, 'type' => LayoutTypeEnum::Widget])->id,
             'meta' => [
                 'component_item' => FrontendComponentKeyEnum::SectionBlock->value,
                 'view_file' => 'capell-foundation-theme::components.block.asset.blocks',
@@ -750,12 +781,15 @@ abstract class StandardDemoBlockCreator extends BaseDemoCreator
         return $block;
     }
 
+    /**
+     * @param  Collection<int, Model>  $languages
+     */
     public function createTeamPortfolioBlock(Collection $languages): Block
     {
         $type = $this->typeModel::query()
             ->where([
                 'key' => BlockTypeEnum::Sections,
-                'type' => LayoutTypeEnum::Block,
+                'type' => LayoutTypeEnum::Widget,
             ])
             ->first();
 
@@ -783,7 +817,11 @@ abstract class StandardDemoBlockCreator extends BaseDemoCreator
             ],
         ]);
 
-        $languages->each(function (Language $language) use ($block): void {
+        $languages->each(function (Model $language) use ($block): void {
+            if (! $language instanceof Language) {
+                return;
+            }
+
             $block->translations()->firstOrCreate(['language_id' => $language->id], [
                 'title' => 'Meet Our Team',
                 'content' => '<p>Meet the people represented in the sample team directory.</p>',

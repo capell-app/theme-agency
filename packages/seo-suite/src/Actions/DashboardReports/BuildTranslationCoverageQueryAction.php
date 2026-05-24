@@ -13,6 +13,9 @@ final class BuildTranslationCoverageQueryAction
 {
     use AsAction;
 
+    /**
+     * @return Builder<Page>
+     */
     public function handle(): Builder
     {
         $query = Page::query()

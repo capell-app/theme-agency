@@ -7,12 +7,14 @@ namespace Capell\Events\Support\RenderHooks;
 use Capell\Events\Actions\BuildEventSchemaAction;
 use Capell\Events\Models\Event;
 use Capell\Events\Models\EventOccurrence;
+use Capell\Frontend\Data\RenderHookContext;
 use Capell\Frontend\Enums\RenderHookLocation;
 use Capell\Frontend\Facades\Frontend;
 use Capell\Frontend\Support\Render\RenderHookRegistry;
 
 class RegisterEventSchemaHooks
 {
+    /** @param RenderHookRegistry<RenderHookContext> $registry */
     public function __construct(private readonly RenderHookRegistry $registry) {}
 
     public function register(): void
@@ -20,7 +22,7 @@ class RegisterEventSchemaHooks
         $this->registry->register(
             RenderHookLocation::HeadClose,
             function (): string {
-                $pageable = Frontend::page()?->pageable ?? null;
+                $pageable = Frontend::page()->pageable ?? null;
 
                 if (! $pageable instanceof Event) {
                     return '';

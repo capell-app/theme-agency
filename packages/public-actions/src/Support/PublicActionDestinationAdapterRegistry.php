@@ -9,11 +9,11 @@ use InvalidArgumentException;
 
 final class PublicActionDestinationAdapterRegistry
 {
-    /** @var array<string, PublicActionDestinationAdapter|class-string<PublicActionDestinationAdapter>> */
+    /** @var array<string, PublicActionDestinationAdapter|class-string> */
     private array $adapters = [];
 
     /**
-     * @param  PublicActionDestinationAdapter|class-string<PublicActionDestinationAdapter>  $adapter
+     * @param  PublicActionDestinationAdapter|class-string  $adapter
      */
     public function register(string $key, PublicActionDestinationAdapter|string $adapter): void
     {

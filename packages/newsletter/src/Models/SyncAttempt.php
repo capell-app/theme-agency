@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Newsletter\Models;
 
 use Capell\Newsletter\Enums\SyncStatus;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,6 +19,7 @@ use Override;
  */
 class SyncAttempt extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     /** @var list<string> */
@@ -36,16 +38,25 @@ class SyncAttempt extends Model
 
     protected $table = 'newsletter_sync_attempts';
 
+    /**
+     * @return BelongsTo<Subscriber, $this>
+     */
     public function subscriber(): BelongsTo
     {
         return $this->belongsTo(Subscriber::class);
     }
 
+    /**
+     * @return BelongsTo<ProviderConnection, $this>
+     */
     public function providerConnection(): BelongsTo
     {
         return $this->belongsTo(ProviderConnection::class);
     }
 
+    /**
+     * @return BelongsTo<ProviderAudience, $this>
+     */
     public function providerAudience(): BelongsTo
     {
         return $this->belongsTo(ProviderAudience::class);

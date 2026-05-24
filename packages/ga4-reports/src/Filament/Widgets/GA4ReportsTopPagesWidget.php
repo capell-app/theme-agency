@@ -59,6 +59,9 @@ final class GA4ReportsTopPagesWidget extends BaseWidget implements CapellWidgetC
             ]);
     }
 
+    /**
+     * @return Collection<array-key, mixed>
+     */
     private function getRecords(): Collection
     {
         return collect(BuildTopGA4ReportsPagesAction::run($this->getGA4ReportsWindow(), 10))

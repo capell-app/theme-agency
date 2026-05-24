@@ -16,7 +16,7 @@
     "surfaces": ["admin", "console"],
     "dependencies": {
         "requires": ["capell-app/admin", "capell-app/core"],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -78,7 +78,13 @@
     },
     "marketplace": {
         "summary": "Password Policy provides opt-in password rules and enforcement for Capell CMS.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Password Policy extension preview image",
+                "caption": "Password Policy extension preview"
+            }
+        ],
         "categories": ["admin", "console", "operations"]
     },
     "contributionTraceability": {

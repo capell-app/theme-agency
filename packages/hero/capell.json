@@ -20,7 +20,7 @@
             "capell-app/frontend",
             "capell-app/layout-builder"
         ],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -74,7 +74,13 @@
     },
     "marketplace": {
         "summary": "Hero provides the default Capell home hero block, rendering, and layout setup.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Hero extension preview image",
+                "caption": "Hero extension preview"
+            }
+        ],
         "categories": ["console", "foundation", "frontend"]
     }
 }

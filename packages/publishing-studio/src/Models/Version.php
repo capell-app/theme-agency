@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Capell\PublishingStudio\Models;
 
 use Carbon\CarbonImmutable;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Collection;
 use Override;
 
 /**
@@ -37,6 +38,7 @@ use Override;
  */
 class Version extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     protected $fillable = [
@@ -63,11 +65,17 @@ class Version extends Model
         return self::query()->withoutGlobalScopes()->where('is_live', true)->first();
     }
 
+    /**
+     * @return BelongsTo<Workspace, $this>
+     */
     public function sourceWorkspace(): BelongsTo
     {
         return $this->belongsTo(Workspace::class, 'source_workspace_id');
     }
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function publishedBy(): MorphTo
     {
         return $this->morphTo('published_by');

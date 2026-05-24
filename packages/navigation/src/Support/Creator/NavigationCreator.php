@@ -49,7 +49,7 @@ class NavigationCreator
             return $label;
         }
 
-        $title = $translation?->title;
+        $title = $translation->title;
 
         if ($title) {
             return $title;
@@ -58,6 +58,10 @@ class NavigationCreator
         return $page->name;
     }
 
+    /**
+     * @param  Collection<array-key, mixed>  $pages
+     * @param  array<array-key, mixed>  $items
+     */
     public function footerNavigation(
         Site $site,
         ?Blueprint $type = null,
@@ -106,6 +110,10 @@ class NavigationCreator
         return $navigation;
     }
 
+    /**
+     * @param  Collection<array-key, mixed>  $pages
+     * @param  array<array-key, mixed>  $items
+     */
     public function subFooterNavigation(
         Site $site,
         ?Blueprint $type = null,
@@ -117,6 +125,9 @@ class NavigationCreator
         return $this->footerNavigation(site: $site, type: $type, language: $language, pages: $pages, items: $items, key: $key);
     }
 
+    /**
+     * @param  array<array-key, mixed>  $additionalItems
+     */
     public function mainNavigation(
         Site $site,
         ?Blueprint $type = null,
@@ -143,7 +154,7 @@ class NavigationCreator
         if ($home instanceof Page && $homePageExists === null) {
             $items->prepend(
                 [
-                    'label' => self::getPageNavigationLabel($home, $language) ?? __('capell::generic.home'),
+                    'label' => self::getPageNavigationLabel($home, $language),
                     'type' => NavigationItemType::Page->value,
                     'data' => [
                         'site_id' => $home->site_id,
@@ -193,6 +204,10 @@ class NavigationCreator
         return $navigation;
     }
 
+    /**
+     * @param  Collection<array-key, mixed>  $items
+     * @return Collection<array-key, mixed>
+     */
     private function backfillMissingPageLabels(Collection $items, Language $language): Collection
     {
         return $items->map(function (array $item) use ($language): array {

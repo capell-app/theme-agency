@@ -18,11 +18,11 @@ it('dashboard-dashboard_reports page types registered via CapellCore', function 
 
     $result = BuildRegistryHealthAction::run();
 
-    $pageTypesSection = collect($result->sections->toArray())
-        ->first(fn (array $section): bool => $section['name'] === 'Page types');
+    $pageTypesSection = $result->sections->toCollection()
+        ->first(fn (RegistrySectionData $section): bool => $section->name === 'Page types');
 
     expect($pageTypesSection)->not->toBeNull()
-        ->and(collect($pageTypesSection['entries'])->pluck('class')->all())
+        ->and($pageTypesSection->entries->pluck('class')->all())
         ->toContain(Page::class);
 });
 
@@ -34,14 +34,14 @@ it('classifies Capell core types as source package "core"', function (): void {
 
     $result = BuildRegistryHealthAction::run();
 
-    $pageTypesSection = collect($result->sections->toArray())
-        ->first(fn (array $section): bool => $section['name'] === 'Page types');
+    $pageTypesSection = $result->sections->toCollection()
+        ->first(fn (RegistrySectionData $section): bool => $section->name === 'Page types');
 
-    $coreEntry = collect($pageTypesSection['entries'])
-        ->first(fn (array $entry): bool => $entry['class'] === Page::class);
+    $coreEntry = $pageTypesSection->entries
+        ->first(fn ($entry): bool => $entry->class === Page::class);
 
     expect($coreEntry)->not->toBeNull()
-        ->and($coreEntry['sourcePackage'])->toBe('core');
+        ->and($coreEntry->sourcePackage)->toBe('core');
 });
 
 it('classifies App-namespaced types as auto-discovered', function (): void {
@@ -61,13 +61,13 @@ it('classifies App-namespaced types as auto-discovered', function (): void {
     // the output: Page::class starts with Capell\Core so autoDiscovered must be false.
     $result = BuildRegistryHealthAction::run();
 
-    $pageTypesSection = collect($result->sections->toArray())
-        ->first(fn (array $section): bool => $section['name'] === 'Page types');
+    $pageTypesSection = $result->sections->toCollection()
+        ->first(fn (RegistrySectionData $section): bool => $section->name === 'Page types');
 
-    $entry = collect($pageTypesSection['entries'])
-        ->first(fn (array $entry): bool => $entry['class'] === Page::class);
+    $entry = $pageTypesSection->entries
+        ->first(fn ($entry): bool => $entry->class === Page::class);
 
-    expect($entry['autoDiscovered'])->toBeFalse();
+    expect($entry->autoDiscovered)->toBeFalse();
 });
 
 it('includes counts matching registered entries', function (): void {

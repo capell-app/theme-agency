@@ -70,6 +70,10 @@ final class BuildPublishingTrendAction
             ->count();
     }
 
+    /**
+     * @param  Builder<Page>  $query
+     * @return Builder<Page>
+     */
     private function publishedMarkerWithin(Builder $query, CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd): Builder
     {
         return $query

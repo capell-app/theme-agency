@@ -21,8 +21,8 @@ return new class extends Migration
         $pivotRole = $columnNames['role_pivot_key'] ?? 'role_id';
         $pivotPermission = $columnNames['permission_pivot_key'] ?? 'permission_id';
 
-        throw_if($tableNames === null || $tableNames === [] || ! is_array($tableNames), Exception::class, 'Error: config/permission.php not loaded. Clear cached config and try again.');
-        throw_if($teams && (! isset($columnNames['team_foreign_key']) || $columnNames['team_foreign_key'] === null || $columnNames['team_foreign_key'] === ''), Exception::class, 'Error: team_foreign_key on config/permission.php not loaded. Clear cached config and try again.');
+        throw_if(! is_array($tableNames) || $tableNames === [], Exception::class, 'Error: config/permission.php not loaded. Clear cached config and try again.');
+        throw_if($teams && (! isset($columnNames['team_foreign_key']) || $columnNames['team_foreign_key'] === ''), Exception::class, 'Error: team_foreign_key on config/permission.php not loaded. Clear cached config and try again.');
 
         Schema::create($tableNames['permissions'], static function (Blueprint $table): void {
             // $table->engine('InnoDB');

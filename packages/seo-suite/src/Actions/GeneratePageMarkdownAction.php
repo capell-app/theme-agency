@@ -102,6 +102,9 @@ final class GeneratePageMarkdownAction
         return trim(strip_tags($page->name));
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private function extractableContent(?Translation $translation): string|array|null
     {
         $content = $translation?->content;

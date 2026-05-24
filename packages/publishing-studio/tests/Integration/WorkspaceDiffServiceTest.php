@@ -46,9 +46,11 @@ it('returns a tree tagging changed and unchanged attributes', function (): void 
 
     $tree = (new WorkspaceDiffService)->diffTree($workspace);
 
-    expect($tree)->toHaveCount(1);
+    expect($tree->all())->toHaveCount(1);
 
     $entry = $tree->first();
+    throw_unless(is_array($entry));
+
     expect($entry['kind'])->toBe('modified')
         ->and($entry['attributes']['name'])->toMatchArray([
             'status' => 'changed',

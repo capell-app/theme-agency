@@ -14,6 +14,9 @@ const SEO_PUBLISH_REPORT_PROVIDER = SeoPublishReportProvider::class;
 it('uses a bound SEO publish report provider and maps critical issues to errors', function (): void {
     app()->instance(SEO_PUBLISH_REPORT_PROVIDER, new class
     {
+        /**
+         * @return array<array-key, mixed>
+         */
         public function forWorkspace(Workspace $workspace): array
         {
             return [
@@ -38,6 +41,9 @@ it('maps warning and notice SEO issues to warnings', function (): void {
 
     app()->instance(SEO_PUBLISH_REPORT_PROVIDER, new class
     {
+        /**
+         * @return array<array-key, mixed>
+         */
         public function forWorkspace(Workspace $workspace): array
         {
             return [
@@ -66,6 +72,9 @@ it('uses configured publish gates to block and ignore SEO issues by check key', 
 
     app()->instance(SEO_PUBLISH_REPORT_PROVIDER, new class
     {
+        /**
+         * @return array<array-key, mixed>
+         */
         public function forWorkspace(Workspace $workspace): array
         {
             return [
@@ -89,6 +98,9 @@ it('uses configured publish gates to block and ignore SEO issues by check key', 
 it('returns an info result when the SEO provider has no issues', function (): void {
     app()->instance(SEO_PUBLISH_REPORT_PROVIDER, new class
     {
+        /**
+         * @return array<array-key, mixed>
+         */
         public function forWorkspace(Workspace $workspace): array
         {
             return [];
@@ -106,6 +118,9 @@ it('can ignore a configured SEO publish check', function (): void {
 
     app()->instance(SEO_PUBLISH_REPORT_PROVIDER, new class
     {
+        /**
+         * @return array<array-key, mixed>
+         */
         public function forWorkspace(Workspace $workspace): array
         {
             return [
@@ -130,6 +145,9 @@ it('can downgrade critical SEO issues to warnings by check key', function (): vo
 
     app()->instance(SEO_PUBLISH_REPORT_PROVIDER, new class
     {
+        /**
+         * @return array<array-key, mixed>
+         */
         public function forWorkspace(Workspace $workspace): array
         {
             return [

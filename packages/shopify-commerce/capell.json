@@ -1,0 +1,113 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/shopify-commerce",
+    "slug": "shopify-commerce",
+    "displayName": "Shopify Commerce",
+    "kind": "package",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Shopify Commerce adds site-scoped Shopify Admin API OAuth and catalog sync for Capell.",
+    "product": {
+        "group": "Capell Commerce",
+        "tier": "premium",
+        "bundle": "commerce"
+    },
+    "namespace": "Capell\\ShopifyCommerce",
+    "surfaces": ["admin", "console"],
+    "dependencies": {
+        "requires": ["capell-app/admin", "capell-app/core"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [
+            "Capell\\ShopifyCommerce\\Providers\\ShopifyCommerceServiceProvider"
+        ],
+        "runtime": [
+            "Capell\\ShopifyCommerce\\Providers\\ShopifyCommerceServiceProvider"
+        ],
+        "admin": ["Capell\\ShopifyCommerce\\Providers\\AdminServiceProvider"],
+        "frontend": []
+    },
+    "contributes": [],
+    "database": {
+        "migrations": true,
+        "settings": true,
+        "requiredTables": [
+            "shopify_connections",
+            "shopify_oauth_states",
+            "shopify_products",
+            "shopify_product_variants"
+        ],
+        "protectedTables": [
+            "shopify_connections",
+            "shopify_oauth_states",
+            "shopify_products",
+            "shopify_product_variants"
+        ]
+    },
+    "commands": {
+        "install": "capell-shopify-commerce:install",
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "settings": ["Capell\\ShopifyCommerce\\Settings\\ShopifyCommerceSettings"],
+    "permissions": ["shopify-commerce.manage"],
+    "capabilities": [
+        "shopify-commerce",
+        "shopify-commerce-admin",
+        "shopify-commerce-catalog-sync"
+    ],
+    "performance": {
+        "frontendRenderBudgetMs": 0,
+        "adminQueryBudget": 40,
+        "cacheTags": ["shopify-commerce"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site"],
+            "sensitiveOutput": true,
+            "invalidationSources": [
+                {
+                    "model": "Capell\\ShopifyCommerce\\Models\\ShopifyProduct",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\ShopifyCommerce\\Models\\ShopifyProductVariant",
+                    "events": ["created", "updated", "deleted"]
+                }
+            ],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "shopify-commerce.package-health",
+            "label": "Shopify Commerce package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ShopifyCommerce\\Health\\ShopifyCommerceHealthCheck",
+            "severity": "critical",
+            "surface": "admin"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Site-scoped Shopify Admin API OAuth and catalog sync for Capell.",
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Shopify Commerce extension preview image",
+                "caption": "Shopify Commerce extension preview"
+            }
+        ],
+        "categories": ["admin", "commerce", "integrations"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": ["admin-page", "model", "route"]
+    }
+}

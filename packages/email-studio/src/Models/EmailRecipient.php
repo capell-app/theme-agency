@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
 /**
+ * @property string $type
+ * @property string $email
+ * @property string|null $name
  * @property EmailRecipientStatus $status
  * @property string|null $provider_message_id
  * @property CarbonImmutable|null $sent_at
@@ -58,21 +61,33 @@ class EmailRecipient extends Model
         return is_string($tableName) ? $tableName : 'email_recipients';
     }
 
+    /**
+     * @return BelongsTo<EmailMessage, $this>
+     */
     public function message(): BelongsTo
     {
         return $this->belongsTo(EmailMessage::class, 'email_message_id');
     }
 
+    /**
+     * @return HasMany<EmailEvent, $this>
+     */
     public function events(): HasMany
     {
         return $this->hasMany(EmailEvent::class);
     }
 
+    /**
+     * @return HasMany<EmailReply, $this>
+     */
     public function replies(): HasMany
     {
         return $this->hasMany(EmailReply::class);
     }
 
+    /**
+     * @return HasMany<EmailTrackingToken, $this>
+     */
     public function trackingTokens(): HasMany
     {
         return $this->hasMany(EmailTrackingToken::class);

@@ -13,6 +13,9 @@ final class BuildLoginAuditsQueryAction
 {
     use AsAction;
 
+    /**
+     * @return Builder<LoginAudit>
+     */
     public function handle(
         ?Site $site = null,
         int $hours = 24,

@@ -16,6 +16,12 @@ final class AccessGateDatabase
         return is_string($connection) && $connection !== '' ? $connection : null;
     }
 
+    /**
+     * @template TReturn
+     *
+     * @param  Closure(): TReturn  $callback
+     * @return TReturn
+     */
     public static function transaction(Closure $callback): mixed
     {
         $connection = self::connectionName();

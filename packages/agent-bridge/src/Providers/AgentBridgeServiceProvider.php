@@ -72,6 +72,15 @@ final class AgentBridgeServiceProvider extends ServiceProvider
         $this->registerTaggedCapabilityProviders();
     }
 
+    protected function isPackageInstalled(): bool
+    {
+        if (! class_exists(CapellCore::class)) {
+            return true;
+        }
+
+        return CapellCore::isPackageInstalled(self::$packageName);
+    }
+
     private function registerBoostIntegration(): void
     {
         if (! class_exists(Boost::class)) {
@@ -87,15 +96,6 @@ final class AgentBridgeServiceProvider extends ServiceProvider
                 PreviewBoostCapabilityTool::class,
             ])),
         ]);
-    }
-
-    private function isPackageInstalled(): bool
-    {
-        if (! class_exists(CapellCore::class)) {
-            return true;
-        }
-
-        return CapellCore::isPackageInstalled(self::$packageName);
     }
 
     private function registerAdminIntegration(): void
@@ -216,9 +216,8 @@ final class AgentBridgeServiceProvider extends ServiceProvider
             && method_exists($admin, 'registerAdminBridge')
             && method_exists($admin, 'bootAdminBridges')
             && class_exists(AgentBridgeAdminBridge::class)
-            && class_exists(AdminBridgeRegistrar::class)
-            && method_exists(AdminBridgeRegistrar::class, 'extensionPage')
-            && method_exists(AdminBridgeRegistrar::class, 'schemaExtender');
+            && class_exists(AdminBridgeRegistrar::class);
+
     }
 
     private function registerBuiltInCapabilities(): void

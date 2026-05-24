@@ -9,6 +9,8 @@ use Capell\Core\ThemeStudio\Assets\ThemeTokenStore;
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
+use Capell\Core\ThemeStudio\Exceptions\ThemePresetNotFoundException;
+use Capell\Core\ThemeStudio\Preview\ThemePreviewContext;
 use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 
@@ -141,3 +143,85 @@ it('layers parent defaults before child defaults and applies database overrides 
         ->and($runtime->brand->cardStyle)->toBe('bordered')
         ->and($runtime->brand->headingFont)->toBe('sora');
 });
+
+it('falls back to the theme default preset when saved theme studio settings are stale', function (): void {
+    $registry = new ThemeRegistry;
+    app()->instance(ThemeRegistry::class, $registry);
+    $renderer = new BladeThemeRenderer('saas', 'missing-view', []);
+
+    $registry->register(
+        definition: new ThemeDefinitionData(
+            key: 'saas',
+            name: 'SaaS',
+            description: 'SaaS theme',
+            package: 'vendor/saas-theme',
+            previewImage: '',
+            tags: [],
+            bestFit: [],
+            includedSections: [],
+            presets: [
+                new ThemePresetData(
+                    key: 'velocity',
+                    name: 'Velocity',
+                    description: '',
+                    previewImage: '',
+                    values: [
+                        'primaryColor' => '#2563eb',
+                    ],
+                ),
+            ],
+        ),
+        themeRenderer: $renderer,
+        sectionRenderers: [],
+    );
+
+    app()->instance(ThemeTokenStore::class, new ThemeTokenStore(sys_get_temp_dir() . '/capell-theme-runtime-stale-preset-test'));
+
+    $runtime = ResolveThemeRuntimeAction::run(
+        activeTheme: 'saas',
+        activePreset: 'boardroom',
+        brand: new BrandProfileData,
+    );
+
+    expect($runtime->presetKey)->toBe('velocity')
+        ->and($runtime->preset->key)->toBe('velocity')
+        ->and($runtime->brand->primaryColor)->toBe('#2563eb');
+});
+
+it('keeps invalid preview preset links explicit', function (): void {
+    $registry = new ThemeRegistry;
+    app()->instance(ThemeRegistry::class, $registry);
+    $renderer = new BladeThemeRenderer('saas', 'missing-view', []);
+
+    $registry->register(
+        definition: new ThemeDefinitionData(
+            key: 'saas',
+            name: 'SaaS',
+            description: 'SaaS theme',
+            package: 'vendor/saas-theme',
+            previewImage: '',
+            tags: [],
+            bestFit: [],
+            includedSections: [],
+            presets: [
+                new ThemePresetData(
+                    key: 'velocity',
+                    name: 'Velocity',
+                    description: '',
+                    previewImage: '',
+                ),
+            ],
+        ),
+        themeRenderer: $renderer,
+        sectionRenderers: [],
+    );
+
+    app()->instance(ThemeTokenStore::class, new ThemeTokenStore(sys_get_temp_dir() . '/capell-theme-runtime-preview-preset-test'));
+
+    ResolveThemeRuntimeAction::run(
+        activeTheme: 'saas',
+        activePreset: 'velocity',
+        brand: new BrandProfileData,
+        previewContext: new ThemePreviewContext(themeKey: 'saas', presetKey: 'missing', previewing: true),
+    );
+})->throws(ThemePresetNotFoundException::class);

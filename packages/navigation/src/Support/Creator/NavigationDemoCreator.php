@@ -44,7 +44,13 @@ class NavigationDemoCreator
     {
         Site::query()->with(['related', 'related.translation'])->get()
             ->each(function (Site $site): void {
-                $this->updateSubFooterNavigation($site, $site->related);
+                $relatedSites = $site->getRelationValue('related');
+
+                if (! $relatedSites instanceof SupportCollection) {
+                    return;
+                }
+
+                $this->updateSubFooterNavigation($site, $relatedSites);
             });
     }
 
@@ -95,6 +101,8 @@ class NavigationDemoCreator
             ->get()
             ->toTree();
 
+        $pages = $pages instanceof SupportCollection ? $pages : new SupportCollection($pages);
+
         /** @var class-string<Blueprint> $typeModel */
         $typeModel = Blueprint::class;
         $navigationType = $typeModel::query()->navigationType()->default()->first();
@@ -138,6 +146,10 @@ class NavigationDemoCreator
             ));
     }
 
+    /**
+     * @param  SupportCollection<array-key, mixed>  $pages
+     * @return array<array-key, mixed>
+     */
     private function buildNavigationPageItems(SupportCollection $pages, Language $language): array
     {
         $this->loadPageTranslations($pages, $language);
@@ -162,6 +174,9 @@ class NavigationDemoCreator
         return $items;
     }
 
+    /**
+     * @param  SupportCollection<array-key, mixed>  $pages
+     */
     private function loadPageTranslations(SupportCollection $pages, Language $language): void
     {
         if ($pages instanceof Collection) {

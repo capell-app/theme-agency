@@ -20,7 +20,7 @@ final class GitLabProvider implements GitProviderContract
         $encodedProject = urlencode($conn->repoCoordinate());
         $encodedPath = rawurlencode($path);
 
-        $response = $this->client($conn)
+        $response = $this->client($conn, retry: true)
             ->get(sprintf(
                 '/projects/%s/repository/files/%s',
                 $encodedProject,
@@ -117,7 +117,7 @@ final class GitLabProvider implements GitProviderContract
     {
         $encodedProject = urlencode($conn->repoCoordinate());
 
-        $response = $this->client($conn)
+        $response = $this->client($conn, retry: true)
             ->get(sprintf('/projects/%s/merge_requests/%s', $encodedProject, $pullRequestId))
             ->throw()
             ->json();
@@ -140,7 +140,7 @@ final class GitLabProvider implements GitProviderContract
     {
         $encodedProject = urlencode($conn->repoCoordinate());
 
-        $statuses = $this->client($conn)
+        $statuses = $this->client($conn, retry: true)
             ->get(sprintf('/projects/%s/repository/commits/%s/statuses', $encodedProject, $commitSha))
             ->throw()
             ->json();
@@ -160,12 +160,20 @@ final class GitLabProvider implements GitProviderContract
         return 'success';
     }
 
-    private function client(DeploymentConnection $conn): PendingRequest
+    private function client(DeploymentConnection $conn, bool $retry = false): PendingRequest
     {
-        return $this->http
+        $request = $this->http
             ->baseUrl('https://gitlab.com/api/v4')
             ->withHeader('PRIVATE-TOKEN', $conn->access_token_encrypted)
-            ->withHeader('Content-Type', 'application/json');
+            ->withHeader('Content-Type', 'application/json')
+            ->timeout(10)
+            ->connectTimeout(5);
+
+        if ($retry) {
+            $request->retry(2, 200, throw: false);
+        }
+
+        return $request;
     }
 
     /** @param array<string, mixed> $response */

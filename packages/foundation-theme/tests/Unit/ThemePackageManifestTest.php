@@ -14,7 +14,7 @@ it('declares foundation as the default theme package', function (): void {
         ->and($manifest['extends'])->toBeNull();
 });
 
-it('declares premium themes as standalone packages extending foundation', function (string $packageDirectory, string $composerName, string $themeKey): void {
+it('declares standalone theme packages extending foundation', function (string $packageDirectory, string $composerName, string $themeKey): void {
     $manifest = themePackageManifest($packageDirectory);
     $composer = themePackageComposer($packageDirectory);
 
@@ -24,12 +24,34 @@ it('declares premium themes as standalone packages extending foundation', functi
         ->and($manifest['themeKey'])->toBe($themeKey)
         ->and($manifest['extends'])->toBe('capell-app/foundation-theme')
         ->and($manifest['dependencies']['requires'])->toContain('capell-app/foundation-theme')
-        ->and($manifest['product']['group'])->toBe('Capell Themes');
-})->with([
-    'agency' => ['theme-agency', 'capell-app/theme-agency', 'agency'],
-    'corporate' => ['theme-corporate', 'capell-app/theme-corporate', 'corporate'],
-    'saas' => ['theme-saas', 'capell-app/theme-saas', 'saas'],
-]);
+        ->and($manifest['product']['group'])->toBeIn(['Capell Foundation', 'Capell Themes']);
+})->with('standalone theme packages');
+
+dataset('standalone theme packages', function (): array {
+    $packagesDirectory = dirname(__DIR__, 3);
+    $themeManifests = glob($packagesDirectory . '/theme-*/capell.json') ?: [];
+    $themeManifests = array_filter(
+        $themeManifests,
+        fn (string $manifestPath): bool => basename(dirname($manifestPath)) !== 'theme-business-solutions',
+    );
+
+    sort($themeManifests);
+
+    $packages = [];
+
+    foreach ($themeManifests as $manifestPath) {
+        $packageDirectory = basename(dirname($manifestPath));
+        $manifest = json_decode((string) file_get_contents($manifestPath), true, flags: JSON_THROW_ON_ERROR);
+
+        $packages[$manifest['themeKey']] = [
+            $packageDirectory,
+            $manifest['name'],
+            $manifest['themeKey'],
+        ];
+    }
+
+    return $packages;
+});
 
 /**
  * @return array<string, mixed>

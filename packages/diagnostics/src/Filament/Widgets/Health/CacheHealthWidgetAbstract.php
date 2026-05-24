@@ -100,6 +100,9 @@ final class CacheHealthWidgetAbstract extends Widget implements CapellWidgetCont
         $this->dispatch('$refresh');
     }
 
+    /**
+     * @return Builder<Site>
+     */
     private function siteQuery(): Builder
     {
         return SiteScope::applyForCurrentActor(Site::query(), 'id');

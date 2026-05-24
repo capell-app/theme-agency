@@ -11,6 +11,18 @@ Access gating foundations for Capell CMS.
 - Capell dependencies: `capell-app/core`
 - Third-party dependencies: `laravel/framework`, `lorisleiva/laravel-actions`
 
+## Why It Helps Your Capell Workflow
+
+- Protect gated pages, downloads, or member-only areas without building a one-off approval system for each site.
+- Keeps request, grant, claim-token, and approval state in package tables so operators can audit access decisions.
+- Works well with public submission flows because access requests can stay separate from page rendering and cacheable public HTML.
+
+## Best Used With
+
+- [Public Actions](../public-actions/README.md)
+- [HTML Cache](../html-cache/README.md)
+- [Diagnostics](../diagnostics/README.md)
+
 ## What It Adds
 
 - Access gating foundations for Capell CMS.
@@ -72,6 +84,7 @@ Access gating foundations for Capell CMS.
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [access-requests.md](docs/access-requests.md)
 - [overview.md](docs/overview.md)
 - [screenshots.json](docs/screenshots.json)

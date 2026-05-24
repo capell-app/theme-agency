@@ -104,6 +104,9 @@ class ProviderConnectionResource extends Resource
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private static function providerOptions(): array
     {
         return collect(ProviderType::cases())
@@ -112,6 +115,9 @@ class ProviderConnectionResource extends Resource
             ->all();
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private static function authTypeOptions(): array
     {
         return collect(AuthType::cases())

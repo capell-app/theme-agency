@@ -8,8 +8,10 @@ use Capell\PublishingStudio\Checks\PublishCheckResult;
 use Capell\PublishingStudio\Checks\PublishCheckSeverity;
 use Capell\PublishingStudio\Exceptions\EntityNotInVersionException;
 use Capell\PublishingStudio\Exceptions\PublishBlockedByChecksException;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+/** @extends TestCase<MockObject> */
 final class PublishingStudioExceptionCoverageTest extends TestCase
 {
     public function test_entity_not_in_version_exception_identifies_the_missing_manifest_member(): void

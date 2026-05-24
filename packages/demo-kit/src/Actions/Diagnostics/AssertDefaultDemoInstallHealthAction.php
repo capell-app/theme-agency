@@ -12,7 +12,7 @@ use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\Translation;
 use Capell\DemoKit\Data\DemoProfileData;
-use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\Widget;
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Support\Facades\Schema;
 use Lorisleiva\Actions\Concerns\AsObject;
@@ -25,7 +25,7 @@ final class AssertDefaultDemoInstallHealthAction
 {
     use AsObject;
 
-    private const string LAYOUT_BUILDER_ELEMENT_MODEL = Block::class;
+    private const string LAYOUT_BUILDER_ELEMENT_MODEL = Widget::class;
 
     private DemoProfileData $profile;
 
@@ -333,13 +333,18 @@ final class AssertDefaultDemoInstallHealthAction
                 continue;
             }
 
-            $block = collect($container['blocks'] ?? [])->first();
+            $blocks = $container['widgets'] ?? $container['blocks'] ?? [];
+            if (! is_array($blocks)) {
+                continue;
+            }
+
+            $block = $blocks[array_key_first($blocks)] ?? null;
 
             if (! is_array($block)) {
                 continue;
             }
 
-            $key = (string) ($block['block_key'] ?? $block['key'] ?? '');
+            $key = (string) ($block['widget_key'] ?? $block['block_key'] ?? $block['key'] ?? '');
 
             return $key !== '' ? $key : null;
         }
@@ -362,12 +367,12 @@ final class AssertDefaultDemoInstallHealthAction
                     return [];
                 }
 
-                $blocks = $container['blocks'] ?? [];
+                $blocks = $container['widgets'] ?? $container['blocks'] ?? [];
 
                 return is_array($blocks) ? $blocks : [];
             })
             ->map(fn (mixed $block): ?string => is_array($block)
-                ? (string) ($block['block_key'] ?? $block['key'] ?? '')
+                ? (string) ($block['widget_key'] ?? $block['block_key'] ?? $block['key'] ?? '')
                 : (is_string($block) ? $block : null))
             ->filter(fn (?string $key): bool => $key !== null && $key !== '')
             ->values()

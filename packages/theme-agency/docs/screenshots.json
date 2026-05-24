@@ -18,6 +18,18 @@
             "screenshotPath": "public/docs/screenshots/packages/theme-agency/theme-admin-list-showing-agency.png"
         },
         {
+            "id": "theme-preview-url-output",
+            "title": "Theme preview URL output.",
+            "package": "theme-agency",
+            "surface": "admin",
+            "targetType": "admin-url",
+            "target": "capell.admin.theme-preview",
+            "required": true,
+            "notes": "Capture a temporary signed preview URL generated from the host Themes table for the Agency theme.",
+            "useCase": "An administrator opens a preview URL to inspect a page with the Agency theme applied.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-agency/theme-preview-url-output.png"
+        },
+        {
             "id": "frontend-page-rendered-with-agency-theme",
             "title": "Frontend page rendered with Agency theme.",
             "package": "theme-agency",
@@ -30,16 +42,112 @@
             "screenshotPath": "public/docs/screenshots/packages/theme-agency/frontend-page-rendered-with-agency-theme.png"
         },
         {
-            "id": "theme-preview-url-output",
-            "title": "Theme preview URL output.",
+            "id": "agency-homepage-layout",
+            "title": "Agency homepage.",
             "package": "theme-agency",
-            "surface": "admin",
-            "targetType": "admin-url",
-            "target": "capell.admin.theme-preview",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/agency-homepage-layout",
             "required": true,
-            "notes": "Capture a temporary signed preview URL generated from the host Themes table for the Agency theme.",
-            "useCase": "An administrator opens a preview URL to inspect a page with the Agency theme applied.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-agency/theme-preview-url-output.png"
+            "notes": "Capture Theme Agency agency homepage with editorial hero, proof band, case study cards, cta. No additional package note required.",
+            "useCase": "A buyer reviews how Theme Agency handles the agency homepage page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-agency/agency-homepage-layout.png"
+        },
+        {
+            "id": "agency-services-layout",
+            "title": "Services page.",
+            "package": "theme-agency",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/agency-services-layout",
+            "required": true,
+            "notes": "Capture Theme Agency services page with service matrix, process steps, team proof, cta. No additional package note required.",
+            "useCase": "A buyer reviews how Theme Agency handles the services page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-agency/agency-services-layout.png"
+        },
+        {
+            "id": "agency-portfolio-layout",
+            "title": "Portfolio index.",
+            "package": "theme-agency",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/agency-portfolio-layout",
+            "required": true,
+            "notes": "Capture Theme Agency portfolio index with project cards, category filters, featured case study. Requires capell-app/content-sections; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Agency handles the portfolio index page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-agency/agency-portfolio-layout.png"
+        },
+        {
+            "id": "agency-case-study-layout",
+            "title": "Case study detail.",
+            "package": "theme-agency",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/agency-case-study-layout",
+            "required": true,
+            "notes": "Capture Theme Agency case study detail with problem, approach, outcome metrics, gallery. Requires capell-app/media-library; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Agency handles the case study detail page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-agency/agency-case-study-layout.png"
+        },
+        {
+            "id": "agency-insights-layout",
+            "title": "Insights article.",
+            "package": "theme-agency",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/agency-insights-layout",
+            "required": true,
+            "notes": "Capture Theme Agency insights article with article hero, author details, related reads. Requires capell-app/blog; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Agency handles the insights article page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-agency/agency-insights-layout.png"
+        },
+        {
+            "id": "agency-event-landing-layout",
+            "title": "Event landing page.",
+            "package": "theme-agency",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/agency-event-landing-layout",
+            "required": true,
+            "notes": "Capture Theme Agency event landing page with agenda, speaker cards, registration cta. Requires capell-app/events; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Agency handles the event landing page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-agency/agency-event-landing-layout.png"
+        },
+        {
+            "id": "agency-lead-form-layout",
+            "title": "Lead generation page.",
+            "package": "theme-agency",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/agency-lead-form-layout",
+            "required": true,
+            "notes": "Capture Theme Agency lead generation page with offer copy, qualification fields, confirmation state. Requires capell-app/form-builder; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Agency handles the lead generation page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-agency/agency-lead-form-layout.png"
+        },
+        {
+            "id": "agency-campaign-layout",
+            "title": "Campaign page.",
+            "package": "theme-agency",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/agency-campaign-layout",
+            "required": true,
+            "notes": "Capture Theme Agency campaign page with variant hero, campaign sections, analytics hooks. Requires capell-app/campaign-studio; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Agency handles the campaign page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-agency/agency-campaign-layout.png"
+        },
+        {
+            "id": "agency-search-layout",
+            "title": "Search results page.",
+            "package": "theme-agency",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/agency-search-layout",
+            "required": true,
+            "notes": "Capture Theme Agency search results page with search field, grouped results, highlighted terms. Requires capell-app/search; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Agency handles the search results page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-agency/agency-search-layout.png"
         }
     ]
 }

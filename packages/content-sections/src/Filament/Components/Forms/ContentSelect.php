@@ -148,7 +148,7 @@ class ContentSelect extends Select
                 /** @var Section $record */
                 $record = $component->getSelectedRecord();
 
-                return $record?->attributesToArray() ?? [];
+                return $record->attributesToArray() ?? [];
             })
             ->getSelectedRecordUsing(static fn (?int $state): ?Section => Section::query()
                 ->with(['blueprint'])
@@ -178,6 +178,9 @@ class ContentSelect extends Select
         return new HtmlString($label . Str::limit($record->name, 40));
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private function getContentOptions(?int $site_id = null, ?string $search = null): array
     {
         $relations = [

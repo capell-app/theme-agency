@@ -55,7 +55,7 @@ final class BuildRobotsTxtAction
 
         return $site->siteDomains
             ->filter(fn (SiteDomain $siteDomain): bool => $siteDomain->status)
-            ->map(fn (SiteDomain $siteDomain): ?string => $siteDomain->full_url !== null
+            ->map(fn (SiteDomain $siteDomain): string => $siteDomain->full_url !== null
                 ? rtrim($siteDomain->full_url, '/') . $xmlPath
                 : null)
             ->filter()

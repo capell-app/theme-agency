@@ -6,5 +6,8 @@ namespace Capell\SeoSuite\Events;
 
 class AiGenerationCompleted
 {
+    /**
+     * @param  array<array-key, mixed>  $metadata
+     */
     public function __construct(public string $actionClass, public mixed $result, public array $metadata = []) {}
 }

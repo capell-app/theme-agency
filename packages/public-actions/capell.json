@@ -20,7 +20,7 @@
             "capell-app/core",
             "capell-app/frontend"
         ],
-        "optional": ["capell-app/access-gate", "capell-app/form-builder"],
+        "supports": ["capell-app/access-gate", "capell-app/form-builder"],
         "conflicts": []
     },
     "providers": {
@@ -102,7 +102,13 @@
     },
     "marketplace": {
         "summary": "Public Actions lets Capell sites run configured server-side actions and outbound automation from safe public submissions.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Public Actions extension preview image",
+                "caption": "Public Actions extension preview"
+            }
+        ],
         "categories": ["admin", "automation", "console", "frontend"]
     },
     "contributionTraceability": {

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Support;
 
-use Capell\Core\Contracts\ParserContract;
-
-class AiResponseParser implements ParserContract
+class AiResponseParser
 {
+    /**
+     * @var array<array-key, mixed>
+     */
     protected readonly array $listPatterns;
 
     public function __construct()
@@ -19,6 +20,9 @@ class AiResponseParser implements ParserContract
         ];
     }
 
+    /**
+     * @return list<array<string, mixed>>
+     */
     public function parse(string $content): array
     {
         $content = trim($content);
@@ -37,6 +41,10 @@ class AiResponseParser implements ParserContract
         return [['value' => $content, 'source' => 'fallback']];
     }
 
+    /**
+     * @param  array<int|string, mixed>  $data
+     * @return list<array<string, mixed>>
+     */
     public function normalize(array $data): array
     {
         return array_map(function (mixed $item): array {
@@ -75,11 +83,14 @@ class AiResponseParser implements ParserContract
         return (str_starts_with($t, '{') && str_ends_with($t, '}')) || (str_starts_with($t, '[') && str_ends_with($t, ']'));
     }
 
+    /**
+     * @return list<array<string, mixed>>
+     */
     protected function parseList(string $content): array
     {
         foreach ($this->listPatterns as $pattern) {
             preg_match_all($pattern, $content, $matches);
-            if (isset($matches[1]) && $matches[1] !== []) {
+            if ($matches[1] !== []) {
                 return array_map(static fn (string $item): array => [
                     'value' => trim($item),
                     'source' => 'list',

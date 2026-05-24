@@ -43,7 +43,7 @@ it('includes healthy and unhealthy pages in the site wide seo audit query', func
 it('exposes snapshot backed seo audit filters', function (): void {
     $reflectionClass = new ReflectionClass(SeoAuditTable::class);
     $reflectionMethod = $reflectionClass->getMethod('getTableFilters');
-    $filters = collect($reflectionMethod->invoke(null));
+    $filters = capell_test_collect($reflectionMethod->invoke(null));
 
     expect($filters->map(fn (mixed $filter): string => $filter->getName())->all())->toContain(
         'severity',

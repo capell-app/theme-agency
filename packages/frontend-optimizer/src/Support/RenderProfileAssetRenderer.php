@@ -12,7 +12,10 @@ use Illuminate\Support\HtmlString;
 
 class RenderProfileAssetRenderer
 {
-    public function __construct(private readonly Factory $filesystems) {}
+    public function __construct(
+        private readonly Factory $filesystems,
+        private readonly CriticalCssSettings $criticalCssSettings,
+    ) {}
 
     public function render(string $profileHash): HtmlString
     {
@@ -25,9 +28,9 @@ class RenderProfileAssetRenderer
         $html = [];
         $hasInlineCriticalCss = false;
 
-        if (is_string($profile->critical_css_path) && $this->filesystems->disk('local')->exists($profile->critical_css_path)) {
+        if ($this->shouldInlineCriticalCss($profile)) {
             $hasInlineCriticalCss = true;
-            $html[] = '<style>' . $this->escapeStyleContents($this->filesystems->disk('local')->get($profile->critical_css_path)) . '</style>';
+            $html[] = '<style data-critical-css>' . $this->escapeStyleContents($this->filesystems->disk('local')->get((string) $profile->critical_css_path)) . '</style>';
         }
 
         foreach ($this->assetsFromProfile($profile) as $asset) {
@@ -35,6 +38,27 @@ class RenderProfileAssetRenderer
         }
 
         return new HtmlString(implode(PHP_EOL, array_filter($html, static fn (string $tag): bool => $tag !== '')));
+    }
+
+    private function shouldInlineCriticalCss(FrontendRenderProfile $profile): bool
+    {
+        if (! $this->criticalCssSettings->enabled()) {
+            return false;
+        }
+
+        if ($this->criticalCssSettings->profileDisablesCriticalCss($profile->signature)) {
+            return false;
+        }
+
+        if (! is_string($profile->critical_css_path) || $profile->critical_css_path === '') {
+            return false;
+        }
+
+        if (! $this->filesystems->disk('local')->exists($profile->critical_css_path)) {
+            return false;
+        }
+
+        return strlen($this->filesystems->disk('local')->get($profile->critical_css_path)) <= $this->criticalCssSettings->maxInlineCssBytes();
     }
 
     /**

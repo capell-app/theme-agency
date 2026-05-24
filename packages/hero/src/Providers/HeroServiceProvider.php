@@ -9,7 +9,12 @@ use Capell\Core\Enums\PackageTypeEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Hero\Console\Commands\SetupCommand;
+use Capell\Hero\Filament\Extenders\HeroBackgroundBlockAssetSchemaExtender;
+use Capell\Hero\Filament\Extenders\HeroBackgroundBlockSchemaExtender;
+use Capell\Hero\Filament\Extenders\HeroBackgroundThemeSchemaExtender;
 use Capell\Hero\View\Components\Block\Hero;
+use Capell\LayoutBuilder\Contracts\Extenders\BlockAssetSchemaExtender;
+use Capell\LayoutBuilder\Contracts\Extenders\BlockSchemaExtender;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Support\Facades\Blade;
 use Spatie\LaravelPackageTools\Package;
@@ -26,6 +31,7 @@ final class HeroServiceProvider extends AbstractPackageServiceProvider
     {
         $package
             ->name(self::$name)
+            ->hasTranslations()
             ->hasCommands([
                 SetupCommand::class,
             ]);
@@ -36,12 +42,13 @@ final class HeroServiceProvider extends AbstractPackageServiceProvider
         $this->registerTailwindSources();
         $this->registerViews();
         $this->registerBladeComponents();
+        $this->registerSchemaExtenders();
 
         if (! $this->isPackageInstalled()) {
         }
     }
 
-    private function isPackageInstalled(): bool
+    protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(self::$packageName);
     }
@@ -69,5 +76,12 @@ final class HeroServiceProvider extends AbstractPackageServiceProvider
         CapellCore::registerVendorAsset(
             VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName),
         );
+    }
+
+    private function registerSchemaExtenders(): void
+    {
+        $this->app->tag(HeroBackgroundThemeSchemaExtender::class, HeroBackgroundThemeSchemaExtender::TAG);
+        $this->app->tag(HeroBackgroundBlockSchemaExtender::class, BlockSchemaExtender::TAG);
+        $this->app->tag(HeroBackgroundBlockAssetSchemaExtender::class, BlockAssetSchemaExtender::TAG);
     }
 }

@@ -8,6 +8,18 @@ Expressive agency theme for Capell.
 - Namespace: `Capell\ThemeStudio\Agency\`
 - Capell dependencies: `capell-app/core`, `capell-app/foundation-theme`
 
+## Why It Helps Your Capell Workflow
+
+- Provides expressive renderer views for studio, portfolio, and brand-led sites that need stronger visual storytelling.
+- Helps owners launch an agency-style Capell site faster by building on Foundation Theme and Layout Builder conventions.
+- Gives developers a focused theme package to extend without changing the baseline Foundation Theme.
+
+## Best Used With
+
+- [Foundation Theme](../foundation-theme/README.md)
+- [Theme Corporate](../theme-corporate/README.md)
+- [Theme SaaS](../theme-saas/README.md)
+
 ## What It Adds
 
 - Expressive agency theme for Capell.
@@ -69,6 +81,8 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 ## Install And Setup
 
 - Install with `composer require capell-app/theme-agency` in the host Capell application.
+- Seed the Agency preview pages with `php artisan capell:theme-agency-demo --url=https://demo.test --sites=Demo --languages=en --force`.
+- The Extensions installer demo checkbox and full Capell demo install use the same manifest demo command path.
 - In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
 
 ## Admin And Access
@@ -86,6 +100,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 - [overview.md](docs/overview.md)
 

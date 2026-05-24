@@ -34,9 +34,9 @@ final class CampaignLandingPageResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'headline';
 
-    private static string $formConfigurator = CampaignLandingPageForm::class;
+    protected static string $formConfigurator = CampaignLandingPageForm::class;
 
-    private static string $tableConfigurator = CampaignLandingPagesTable::class;
+    protected static string $tableConfigurator = CampaignLandingPagesTable::class;
 
     #[Override]
     public static function form(Schema $configurator): Schema
@@ -65,7 +65,7 @@ final class CampaignLandingPageResource extends Resource
     }
 
     #[Override]
-    public static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): string
     {
         return __('capell-admin::navigation.group_marketing');
     }

@@ -15,6 +15,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class StaleDraftsTable implements TableConfigurator
 {
@@ -66,6 +67,10 @@ class StaleDraftsTable implements TableConfigurator
             ->defaultSort('updated_at', 'asc');
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected static function applyDaysStaleSort(Builder $query, string $direction): Builder
     {
         return $query->orderBy(

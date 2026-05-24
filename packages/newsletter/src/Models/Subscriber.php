@@ -60,31 +60,47 @@ class Subscriber extends Model
         return hash('sha256', mb_strtolower(trim($email)));
     }
 
+    /**
+     * @return BelongsTo<Site, $this>
+     */
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class);
     }
 
+    /** @return BelongsTo<Model, $this> */
     public function sourceForm(): BelongsTo
     {
         return $this->belongsTo($this->formModelClass(), 'source_form_id');
     }
 
+    /**
+     * @return HasMany<ConsentEvent, $this>
+     */
     public function consentEvents(): HasMany
     {
         return $this->hasMany(ConsentEvent::class);
     }
 
+    /**
+     * @return HasMany<PublicToken, $this>
+     */
     public function publicTokens(): HasMany
     {
         return $this->hasMany(PublicToken::class);
     }
 
+    /**
+     * @return HasMany<ProviderSubscriber, $this>
+     */
     public function providerSubscribers(): HasMany
     {
         return $this->hasMany(ProviderSubscriber::class);
     }
 
+    /**
+     * @return BelongsToMany<Segment, $this>
+     */
     public function segments(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -105,6 +121,10 @@ class Subscriber extends Model
         });
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopeForEmail(Builder $query, int $siteId, string $email): Builder
     {
         return $query
@@ -134,8 +154,9 @@ class Subscriber extends Model
         ];
     }
 
+    /** @return class-string<Model> */
     private function formModelClass(): string
     {
-        return implode('\\', ['Capell', 'FormBuilder', 'Models', 'Form']);
+        return 'Capell\\FormBuilder\\Models\\Form';
     }
 }

@@ -16,7 +16,7 @@ use Lorisleiva\Actions\Concerns\AsAction;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
- * @method static array run(Site $site, Language $language)
+ * @method static array<array-key, mixed> run(Site $site, Language $language)
  */
 class SiteMetaSchemaAction
 {
@@ -28,6 +28,9 @@ class SiteMetaSchemaAction
 
     protected Language $language;
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public function handle(Site $site, Language $language): array
     {
         if ($site->siteDomain === null) {
@@ -56,18 +59,22 @@ class SiteMetaSchemaAction
         );
     }
 
+    /**
+     * @param  array<int, array{name?: string, type?: string, url?: string}>  $areas_served
+     * @return array<array-key, mixed>
+     */
     protected function areasServed(array $areas_served): array
     {
         $return = [];
 
         foreach ($areas_served as $area_served) {
-            if (isset($area_served['type']) && $area_served['type'] !== null && $area_served['type'] !== '') {
+            if (isset($area_served['type']) && $area_served['type'] !== '') {
                 $item = [
                     '@type' => $area_served['type'],
                     'name' => $area_served['name'],
                 ];
 
-                if (isset($area_served['url']) && $area_served['url'] !== null && $area_served['url'] !== '') {
+                if (isset($area_served['url']) && $area_served['url'] !== '') {
                     $item['@id'] = $area_served['url'];
                 }
 
@@ -80,6 +87,10 @@ class SiteMetaSchemaAction
         return $return;
     }
 
+    /**
+     * @param  array<int, int|string>  $languages
+     * @return array<array-key, mixed>
+     */
     protected function availableLanguage(array $languages): array
     {
         $return = [];
@@ -100,6 +111,14 @@ class SiteMetaSchemaAction
         return $return;
     }
 
+    /**
+     * @param  array<int, array{name?: string, type?: string, url?: string}>|null  $areas_served
+     * @param  array<int, int|string>|null  $languages
+     * @param  array<int, array<string, mixed>>|null  $open_hours
+     * @param  array<array-key, mixed>|null  $options
+     * @param  array<int, array{url?: string}>|null  $social_links
+     * @return array<array-key, mixed>
+     */
     protected function contactPoint(
         ?array $areas_served = null,
         ?string $email = null,
@@ -159,6 +178,10 @@ class SiteMetaSchemaAction
         return $return;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $contacts
+     * @return array<array-key, mixed>
+     */
     protected function contactPoints(array $contacts, ?Page $contactPage = null): array
     {
         $return = [];
@@ -193,9 +216,14 @@ class SiteMetaSchemaAction
             'saturday' => 'https://schema.org/Saturday',
             'sunday' => 'https://schema.org/Sunday',
             'public_holidays' => 'https://schema.org/PublicHolidays',
+            default => 'https://schema.org/' . ucfirst($day),
         };
     }
 
+    /**
+     * @param  array<int, string>  $days
+     * @return array<array-key, mixed>
+     */
     protected function getSchemaSpecification(
         array $days,
         ?string $dateFrom,
@@ -231,6 +259,9 @@ class SiteMetaSchemaAction
         return $return;
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     protected function mediaItem(Media $media): array
     {
         $return = [
@@ -256,6 +287,13 @@ class SiteMetaSchemaAction
 
     /**
      * @param  Collection<int, Media>|null  $media
+     * @param  array<array-key, mixed>|null  $areasServed
+     * @param  array<array-key, mixed>|null  $contacts
+     * @param  array<array-key, mixed>|null  $currenciesAccepted
+     * @param  array<array-key, mixed>|null  $openHours
+     * @param  array<array-key, mixed>|null  $paymentAccepted
+     * @param  array<array-key, mixed>|null  $socialLinks
+     * @return array<array-key, mixed>
      */
     protected function process(
         string $type,
@@ -349,6 +387,10 @@ class SiteMetaSchemaAction
         return $item;
     }
 
+    /**
+     * @param  array<int, array{url?: string}>  $social_links
+     * @return array<array-key, mixed>
+     */
     protected function sameAs(array $social_links): array
     {
         $return = [];
@@ -360,6 +402,10 @@ class SiteMetaSchemaAction
         return $return;
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $open_hours
+     * @return array<array-key, mixed>
+     */
     private function openingHoursSpecification(array $open_hours): array
     {
         $return = [];

@@ -7,8 +7,10 @@ use Capell\Diagnostics\Filament\Widgets\Health\CacheHealthWidgetAbstract as Cach
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\Gate;
 
@@ -24,10 +26,14 @@ beforeEach(function (): void {
     Role::findOrCreate(config('capell.roles.developer', 'developer'));
 });
 
+/**
+ * @param  Collection<array-key, mixed>  $assignedSiteIds
+ */
 function createScopedUserForCacheHealthWidgetTest(SupportCollection $assignedSiteIds): Authenticatable
 {
     $user = new class extends Authenticatable implements FilamentUser
     {
+        /** @use HasFactory<Factory<static>> */
         use HasFactory;
 
         /** @var SupportCollection<int, int> */

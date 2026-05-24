@@ -125,6 +125,11 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
         ], merge: true);
     }
 
+    protected function isPackageInstalled(): bool
+    {
+        return CapellCore::isPackageInstalled(static::$packageName);
+    }
+
     private function registerFrontendRuleConditions(): self
     {
         if (! class_exists(FrontendRuleConditionRegistry::class)) {
@@ -259,11 +264,6 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
         if (method_exists($kernel, 'setMiddlewarePriority')) {
             $kernel->setMiddlewarePriority($orderedPriority);
         }
-    }
-
-    private function isPackageInstalled(): bool
-    {
-        return CapellCore::isPackageInstalled(static::$packageName);
     }
 
     private function hasCapellCore(): bool

@@ -38,7 +38,9 @@ class Latest extends AbstractPagesBlock
             cacheKeyPrepend: 'latest-block-' . $this->block->id,
             morphModel: $modelClass,
             useCache: false,
-            modifyQuery: fn (Builder $query) => $query->whereKeyNot(Frontend::page()->id),
+            modifyQuery: function (Builder $query): void {
+                $query->whereKeyNot(Frontend::page()->id);
+            },
         );
 
         if ($this->pages->isEmpty() && config('capell-layout-builder.block.skip_render_empty', true) === true) {

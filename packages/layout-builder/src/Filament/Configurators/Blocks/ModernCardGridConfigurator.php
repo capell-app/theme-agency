@@ -12,13 +12,16 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 
 /**
- * Filament Schema for Modern Card Grid Block
+ * Filament Schema for Modern Card Grid Widget
  *
  * Enables admins to create responsive card grids with customizable cards,
  * columns, variants, and layout options.
  */
 class ModernCardGridConfigurator
 {
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function getFormSchema(): array
     {
         return [
@@ -143,6 +146,9 @@ class ModernCardGridConfigurator
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function getDefaults(): array
     {
         return [

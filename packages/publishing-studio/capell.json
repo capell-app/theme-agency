@@ -22,7 +22,7 @@
             "capell-app/migration-assistant",
             "capell-app/navigation"
         ],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -131,7 +131,13 @@
     },
     "marketplace": {
         "summary": "PublishingStudio provides preview, compare, approve, schedule, publish, restore, and rollback workflows for Capell content.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Publishing Studio extension preview image",
+                "caption": "Publishing Studio extension preview"
+            }
+        ],
         "categories": ["admin", "console", "publishing-pro"]
     },
     "contributionTraceability": {

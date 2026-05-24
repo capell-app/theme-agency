@@ -16,6 +16,10 @@ use Filament\Schemas\Components\Section;
 
 class TranslationMetaSchema
 {
+    /**
+     * @param  array<array-key, mixed>  $components
+     * @return array<array-key, mixed>
+     */
     public static function make(array $components = []): array
     {
         return [
@@ -29,7 +33,7 @@ class TranslationMetaSchema
                                 ->placeholder(
                                     fn (?Translation $record): string => __(
                                         'capell-admin::generic.meta_title_after_text',
-                                        ['site' => $record?->title ?? config('app.name')],
+                                        ['site' => $record->title ?? config('app.name')],
                                     ),
                                 ),
                             Textarea::make('description')

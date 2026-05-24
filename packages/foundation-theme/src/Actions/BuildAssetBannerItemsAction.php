@@ -52,7 +52,7 @@ final class BuildAssetBannerItemsAction
 
         return new AssetBannerItemData(
             image: $this->image($block, $blockAsset, $asset),
-            alt: (string) ($translation?->label ?? $translation?->title ?? ''),
+            alt: (string) ($translation->label ?? $translation->title ?? ''),
             title: $hasTranslations ? $translation?->title : null,
             content: $hasTranslations ? $translation?->content : null,
             url: $this->pageUrl($linkedPage),
@@ -88,7 +88,7 @@ final class BuildAssetBannerItemsAction
 
         $pageUrl = $linkedPage->getRelation('pageUrl');
 
-        return is_string($pageUrl?->full_url ?? null) ? $pageUrl->full_url : null;
+        return is_string($pageUrl->full_url ?? null) ? $pageUrl->full_url : null;
     }
 
     private function linkText(mixed $linkedPage): ?string
@@ -99,7 +99,7 @@ final class BuildAssetBannerItemsAction
 
         $translation = $linkedPage->getRelation('translation');
 
-        return is_string($translation?->link_text ?? null) ? $translation->link_text : null;
+        return is_string($translation->link_text ?? null) ? $translation->link_text : null;
     }
 
     private function firstLoadedMedia(Model $model, string $collectionName): ?Media

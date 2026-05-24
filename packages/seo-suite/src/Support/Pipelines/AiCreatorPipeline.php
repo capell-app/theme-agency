@@ -54,6 +54,10 @@ class AiCreatorPipeline
         return $resultData;
     }
 
+    /**
+     * @param  array<array-key, mixed>  $payload
+     * @return array<array-key, mixed>
+     */
     private function loadOrCreateSession(array $payload, callable $next): array
     {
         /** @var AiCreatorData $data */
@@ -81,6 +85,10 @@ class AiCreatorPipeline
         return $next($payload);
     }
 
+    /**
+     * @param  array<array-key, mixed>  $payload
+     * @return array<array-key, mixed>
+     */
     private function loadContext(array $payload, callable $next): array
     {
         /** @var AiCreatorData $data */
@@ -91,6 +99,10 @@ class AiCreatorPipeline
         return $next($payload);
     }
 
+    /**
+     * @param  array<array-key, mixed>  $payload
+     * @return array<array-key, mixed>
+     */
     private function checkRateLimit(array $payload, callable $next): array
     {
         $this->rateLimiter->checkLimit((string) $payload['data']->userId, 'ai_creator');
@@ -98,6 +110,10 @@ class AiCreatorPipeline
         return $next($payload);
     }
 
+    /**
+     * @param  array<array-key, mixed>  $payload
+     * @return array<array-key, mixed>
+     */
     private function executeAiCall(array $payload, callable $next): array
     {
         /** @var AiCreatorData $data */
@@ -111,11 +127,11 @@ class AiCreatorPipeline
 
         $userMessage = strtr($prompt['user_template'], [
             '{{intent}}' => $data->intent,
-            '{{tone}}' => $data->tone ?? $context?->tone ?? 'professional',
-            '{{industry}}' => $data->industry ?? $context?->industry ?? 'general',
-            '{{target_audience}}' => $data->targetAudience ?? $context?->target_audience ?? 'general audience',
+            '{{tone}}' => $data->tone ?? $context->tone ?? 'professional',
+            '{{industry}}' => $data->industry ?? $context->industry ?? 'general',
+            '{{target_audience}}' => $data->targetAudience ?? $context->target_audience ?? 'general audience',
             '{{section_types}}' => $this->sectionRegistry->forAi(),
-            '{{brand_voice_notes}}' => $data->brandVoiceNotes ?? $context?->brand_voice_notes ?? 'none',
+            '{{brand_voice_notes}}' => $data->brandVoiceNotes ?? $context->brand_voice_notes ?? 'none',
         ]);
 
         $response = $this->provider->chat([
@@ -139,6 +155,10 @@ class AiCreatorPipeline
         return $next($payload);
     }
 
+    /**
+     * @param  array<array-key, mixed>  $payload
+     * @return array<array-key, mixed>
+     */
     private function parseSections(array $payload, callable $next): array
     {
         /** @var AiResponse $response */
@@ -202,6 +222,10 @@ class AiCreatorPipeline
         return $next($payload);
     }
 
+    /**
+     * @param  array<array-key, mixed>  $payload
+     * @return array<array-key, mixed>
+     */
     private function persistResult(array $payload, callable $next): array
     {
         /** @var AiGenerationInputData $input */

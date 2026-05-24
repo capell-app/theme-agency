@@ -20,7 +20,7 @@
             "capell-app/core",
             "capell-app/frontend"
         ],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -74,7 +74,13 @@
     },
     "marketplace": {
         "summary": "Insights records first-party visits, events, consent decisions, page views, clicks, and journey data for Capell sites.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Insights extension preview image",
+                "caption": "Insights extension preview"
+            }
+        ],
         "categories": ["admin", "frontend", "growth"]
     },
     "contributionTraceability": {

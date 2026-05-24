@@ -11,12 +11,15 @@ use Capell\SeoSuite\Enums\SchemaEntityTypeEnum;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static array run(Page $page, Site $site, Language $language)
+ * @method static array<array-key, mixed> run(Page $page, Site $site, Language $language)
  */
 class PageMetaSchemaAction
 {
     use AsAction;
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public function handle(Page $page, Site $site, Language $language): array
     {
         $page->loadMissing('translations.language');
@@ -53,7 +56,7 @@ class PageMetaSchemaAction
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<array-key, mixed>
      */
     private function articleFields(Page $page, Site $site): array
     {

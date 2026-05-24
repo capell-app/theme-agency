@@ -19,6 +19,7 @@ use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
@@ -61,6 +62,9 @@ final class LoginAuditsWidget extends BaseWidget implements CapellWidgetContract
             ]);
     }
 
+    /**
+     * @return Builder<Model>
+     */
     protected function getTableQuery(): Builder
     {
         return BuildLoginAuditsQueryAction::run();
@@ -121,6 +125,10 @@ final class LoginAuditsWidget extends BaseWidget implements CapellWidgetContract
         ];
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return CursorPaginator<array-key, mixed>
+     */
     protected function paginateTableQuery(Builder $query): CursorPaginator
     {
         return $query->cursorPaginate(

@@ -13,6 +13,9 @@ use Spatie\Activitylog\Models\Activity;
 
 final class BuildActivityTrailQueryAction extends Action
 {
+    /**
+     * @return Builder<Activity>
+     */
     public function handle(): Builder
     {
         return Activity::query()

@@ -1,0 +1,153 @@
+{
+    "package": "theme-commerce",
+    "composerName": "capell-app/theme-commerce",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "public/docs/screenshots/packages/theme-commerce",
+    "entries": [
+        {
+            "id": "theme-admin-list-showing-commerce",
+            "title": "Theme admin list showing commerce.",
+            "package": "theme-commerce",
+            "surface": "admin",
+            "targetType": "filament-resource",
+            "target": "ThemeResource:index",
+            "required": true,
+            "notes": "Capture with only the core Capell stack, Foundation Theme, Layout Builder, and capell-app/theme-commerce installed in the isolated demo harness.",
+            "useCase": "An administrator confirms the commerce theme is available through the core Themes resource without installing another theme package.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-commerce/theme-admin-list-showing-commerce.png"
+        },
+        {
+            "id": "theme-preview-url-output",
+            "title": "Theme preview URL output.",
+            "package": "theme-commerce",
+            "surface": "admin",
+            "targetType": "admin-url",
+            "target": "capell.admin.theme-preview",
+            "required": true,
+            "notes": "Capture a signed preview URL generated with CreateThemePreviewUrlAction for the seeded commerce theme, site, and page.",
+            "useCase": "An administrator opens a signed preview URL to inspect a page with the commerce theme applied before publishing the theme choice.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-commerce/theme-preview-url-output.png"
+        },
+        {
+            "id": "frontend-page-rendered-with-commerce-theme",
+            "title": "Frontend page rendered with commerce theme.",
+            "package": "theme-commerce",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-commerce-demo",
+            "required": true,
+            "notes": "Capture the seeded Stone & Loom page after installing capell-app/theme-commerce and building the Foundation Theme/frontend assets.",
+            "useCase": "A visitor sees a seeded product page rendered through the commerce navigation, hero, product finder, collections, product grid, catalog, proof, blog teaser, CTA, and footer sections.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-commerce/frontend-page-rendered-with-commerce-theme.png"
+        },
+        {
+            "id": "commerce-homepage-layout",
+            "title": "Commerce homepage.",
+            "package": "theme-commerce",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/commerce-homepage-layout",
+            "required": true,
+            "notes": "Capture Theme Commerce commerce homepage with retail hero, collection tiles, product rail, proof. No additional package note required.",
+            "useCase": "A buyer reviews how Theme Commerce handles the commerce homepage page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-homepage-layout.png"
+        },
+        {
+            "id": "commerce-collection-layout",
+            "title": "Collection listing.",
+            "package": "theme-commerce",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/commerce-collection-layout",
+            "required": true,
+            "notes": "Capture Theme Commerce collection listing with filters, product grid, merchandising banner. Requires capell-app/shopify-commerce; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Commerce handles the collection listing page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-collection-layout.png"
+        },
+        {
+            "id": "commerce-product-layout",
+            "title": "Product detail page.",
+            "package": "theme-commerce",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/commerce-product-layout",
+            "required": true,
+            "notes": "Capture Theme Commerce product detail page with gallery, price, variants, recommendations, cta. Requires capell-app/shopify-commerce; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Commerce handles the product detail page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-product-layout.png"
+        },
+        {
+            "id": "commerce-lookbook-layout",
+            "title": "Lookbook page.",
+            "package": "theme-commerce",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/commerce-lookbook-layout",
+            "required": true,
+            "notes": "Capture Theme Commerce lookbook page with image-led editorial sections and shoppable cards. Requires capell-app/media-library; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Commerce handles the lookbook page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-lookbook-layout.png"
+        },
+        {
+            "id": "commerce-buying-guide-layout",
+            "title": "Buying guide article.",
+            "package": "theme-commerce",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/commerce-buying-guide-layout",
+            "required": true,
+            "notes": "Capture Theme Commerce buying guide article with editorial content, related products, author details. Requires capell-app/blog; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Commerce handles the buying guide article page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-buying-guide-layout.png"
+        },
+        {
+            "id": "commerce-newsletter-layout",
+            "title": "Newsletter capture page.",
+            "package": "theme-commerce",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/commerce-newsletter-layout",
+            "required": true,
+            "notes": "Capture Theme Commerce newsletter capture page with signup block, incentives, consent messaging. Requires capell-app/newsletter; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Commerce handles the newsletter capture page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-newsletter-layout.png"
+        },
+        {
+            "id": "commerce-store-event-layout",
+            "title": "Retail event page.",
+            "package": "theme-commerce",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/commerce-store-event-layout",
+            "required": true,
+            "notes": "Capture Theme Commerce retail event page with event details, location, registration cta. Requires capell-app/events; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Commerce handles the retail event page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-store-event-layout.png"
+        },
+        {
+            "id": "commerce-search-layout",
+            "title": "Product search page.",
+            "package": "theme-commerce",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/commerce-search-layout",
+            "required": true,
+            "notes": "Capture Theme Commerce product search page with search field, filters, result grid, empty state. Requires capell-app/search; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Commerce handles the product search page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-search-layout.png"
+        },
+        {
+            "id": "commerce-campaign-layout",
+            "title": "Promotion campaign page.",
+            "package": "theme-commerce",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/commerce-campaign-layout",
+            "required": true,
+            "notes": "Capture Theme Commerce promotion campaign page with offer hero, countdown, segmented ctas. Requires capell-app/campaign-studio; show this package note on the captured image.",
+            "useCase": "A buyer reviews how Theme Commerce handles the promotion campaign page page layout before installing the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-campaign-layout.png"
+        }
+    ]
+}

@@ -135,12 +135,15 @@ class PageTitleWithSlugInputExtender implements PageTitleWithSlugInputExtenderCo
             ->action($this->handleTitleSuggestionsAction(...));
     }
 
+    /**
+     * @param  array<array-key, mixed>  $data
+     */
     private function handleTitleSuggestionsAction(HasActions $livewire, FusedGroup $component, Action $action, array $data, ?Translation $record): void
     {
         $keywords = isset($data['keywords']) ? trim((string) $data['keywords']) : '';
         $content = isset($data['content']) ? trim((string) $data['content']) : '';
         $includeCurrent = (bool) ($data['includeCurrentTitle'] ?? false);
-        $currentTitle = $data['title'] ?? ($record?->title ?? '');
+        $currentTitle = $data['title'] ?? ($record->title ?? '');
 
         $context = new ContentActionContext(
             content: $content,
@@ -204,7 +207,7 @@ class PageTitleWithSlugInputExtender implements PageTitleWithSlugInputExtenderCo
                 Radio::make('titles')
                     ->label(__('Select a Suggested Title'))
                     ->options(
-                        collect($arguments['titles'] ?? [])
+                        collect(is_array($arguments['titles'] ?? null) ? $arguments['titles'] : [])
                             ->mapWithKeys(fn (string $title): array => [$title => $title])
                             ->all(),
                     )

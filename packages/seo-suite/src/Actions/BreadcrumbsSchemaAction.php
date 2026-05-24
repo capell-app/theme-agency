@@ -12,12 +12,15 @@ use Capell\SeoSuite\Enums\SchemaEntityTypeEnum;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static array run(Page $page, Site $site, Language $language)
+ * @method static array<array-key, mixed> run(Page $page, Site $site, Language $language)
  */
 class BreadcrumbsSchemaAction
 {
     use AsAction;
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public function handle(Page $page, Site $site, Language $language): array
     {
         $page->loadMissing('translations.language');
@@ -32,7 +35,7 @@ class BreadcrumbsSchemaAction
                 $item = [
                     '@context' => 'https://schema.org',
                     '@type' => 'BreadcrumbList',
-                    '@id' => $canonicalPage->pageUrl?->full_url !== null && $canonicalPage->pageUrl?->full_url !== ''
+                    '@id' => $canonicalPage->pageUrl->full_url !== null && $canonicalPage->pageUrl->full_url !== ''
                         ? SchemaEntityTypeEnum::BreadcrumbList->toId($canonicalPage->pageUrl->full_url)
                         : null,
                     'itemListElement' => [],
@@ -59,7 +62,7 @@ class BreadcrumbsSchemaAction
             $item = [
                 '@context' => 'https://schema.org',
                 '@type' => 'BreadcrumbList',
-                '@id' => $page->pageUrl?->full_url !== null && $page->pageUrl?->full_url !== ''
+                '@id' => $page->pageUrl->full_url !== null && $page->pageUrl->full_url !== ''
                     ? SchemaEntityTypeEnum::BreadcrumbList->toId($page->pageUrl->full_url)
                     : null,
                 'itemListElement' => [],

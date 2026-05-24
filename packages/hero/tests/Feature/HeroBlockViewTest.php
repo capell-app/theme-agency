@@ -114,3 +114,126 @@ it('skips empty hero blocks before exposing public markup', function (): void {
 
     expect($component->render())->toBe('');
 });
+
+it('renders the inherited theme hero background without public admin metadata', function (): void {
+    $language = Language::factory()->english()->create();
+    $theme = Theme::factory()->create([
+        'meta' => [
+            'hero_background' => [
+                'mode' => 'custom',
+                'background_color' => '#eaf2ff',
+                'accent_color' => '#245f8f',
+                'accent_color_alt' => '#8db9dc',
+                'overlay_style' => 'grid',
+                'overlay_opacity' => '0.24',
+            ],
+        ],
+    ]);
+    $site = Site::factory()
+        ->language($language)
+        ->theme($theme)
+        ->withTranslations($language, ['title' => 'Capell'])
+        ->create();
+
+    $page = Page::factory()
+        ->site($site)
+        ->withTranslations($language, [
+            'title' => 'Hero Background',
+            'content' => '<p>Body content.</p>',
+            'meta' => [
+                'hero' => '<p>Hero copy.</p>',
+                'slug' => 'hero-background',
+            ],
+        ])
+        ->create();
+
+    $page->load('translation');
+    $site->load('translation');
+
+    $block = Block::factory()->create([
+        'key' => 'hero',
+        'meta' => [
+            'component' => BlockComponentEnum::Hero->value,
+            'color' => 'light',
+        ],
+    ]);
+    $block->setRelation('assets', new EloquentCollection);
+
+    resolve(FrontendState::class)
+        ->withLanguage($language)
+        ->withSite($site)
+        ->withTheme($theme)
+        ->withPage($page);
+
+    $view = $this->view('capell-hero::components.block.hero', [
+        'containerKey' => 'main',
+        'containerIndex' => 0,
+        'block' => $block,
+        'blockIndex' => 0,
+        'loop' => (object) ['first' => true, 'last' => true],
+    ]);
+
+    $view
+        ->assertSee('capell-hero-background--grid', false)
+        ->assertSee('--capell-hero-background-color: #eaf2ff', false)
+        ->assertDontSee('theme_id', false)
+        ->assertDontSee('site_id', false)
+        ->assertDontSee('block_id', false);
+});
+
+it('allows a hero block to turn the inherited background off', function (): void {
+    $language = Language::factory()->english()->create();
+    $theme = Theme::factory()->create([
+        'meta' => [
+            'hero_background' => [
+                'mode' => 'custom',
+                'background_color' => '#eaf2ff',
+            ],
+        ],
+    ]);
+    $site = Site::factory()
+        ->language($language)
+        ->theme($theme)
+        ->withTranslations($language, ['title' => 'Capell'])
+        ->create();
+
+    $page = Page::factory()
+        ->site($site)
+        ->withTranslations($language, [
+            'title' => 'Disabled Hero Background',
+            'content' => '<p>Body content.</p>',
+            'meta' => [
+                'hero' => '<p>Hero copy.</p>',
+                'slug' => 'disabled-hero-background',
+            ],
+        ])
+        ->create();
+
+    $page->load('translation');
+    $site->load('translation');
+
+    $block = Block::factory()->create([
+        'key' => 'hero',
+        'meta' => [
+            'component' => BlockComponentEnum::Hero->value,
+            'hero_background' => ['mode' => 'off'],
+        ],
+    ]);
+    $block->setRelation('assets', new EloquentCollection);
+
+    resolve(FrontendState::class)
+        ->withLanguage($language)
+        ->withSite($site)
+        ->withTheme($theme)
+        ->withPage($page);
+
+    $view = $this->view('capell-hero::components.block.hero', [
+        'containerKey' => 'main',
+        'containerIndex' => 0,
+        'block' => $block,
+        'blockIndex' => 0,
+        'loop' => (object) ['first' => true, 'last' => true],
+    ]);
+
+    $view->assertDontSee('capell-hero-background', false);
+});

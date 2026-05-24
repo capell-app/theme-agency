@@ -10,13 +10,16 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 
 /**
- * Filament Schema for Modern Pricing Table Block
+ * Filament Schema for Modern Pricing Table Widget
  *
  * Provides admin panel controls for customizing pricing table
  * content and display options.
  */
 class ModernPricingTableConfigurator
 {
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function getFormSchema(): array
     {
         return [
@@ -56,6 +59,9 @@ class ModernPricingTableConfigurator
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function getDefaults(): array
     {
         return [

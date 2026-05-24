@@ -15,6 +15,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Support\Collection;
 use Override;
 
 final class ListPublicActionIntegrationTokens extends ListRecords
@@ -59,7 +60,7 @@ final class ListPublicActionIntegrationTokens extends ListRecords
                         name: (string) $data['name'],
                         provider: PublicActionIntegrationProvider::from((string) $data['provider']),
                         siteId: filled($data['site_id'] ?? null) ? (int) $data['site_id'] : null,
-                        abilities: collect($data['abilities'] ?? [])
+                        abilities: (new Collection($data['abilities'] ?? []))
                             ->filter(fn (mixed $ability): bool => is_string($ability))
                             ->map(fn (string $ability): PublicActionIntegrationTokenAbility => PublicActionIntegrationTokenAbility::from($ability))
                             ->values()

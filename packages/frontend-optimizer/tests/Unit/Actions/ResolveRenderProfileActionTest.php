@@ -52,3 +52,24 @@ it('changes the render profile hash when widget assets change', function (): voi
 
     expect($first->hash)->not()->toBe($second->hash);
 });
+
+it('changes the render profile hash when critical css fold settings change', function (): void {
+    config()->set('capell-frontend-optimizer.enabled', true);
+
+    $first = ResolveRenderProfileAction::run(
+        scope: OptimizationScope::Layout,
+        context: ['layout' => 'landing'],
+        assetSets: [FrontendAssetSet::make()->css('hero', 'hero.css')],
+    );
+
+    config()->set('capell-frontend-optimizer.enabled', false);
+
+    $second = ResolveRenderProfileAction::run(
+        scope: OptimizationScope::Layout,
+        context: ['layout' => 'landing'],
+        assetSets: [FrontendAssetSet::make()->css('hero', 'hero.css')],
+    );
+
+    expect($first->hash)->not()->toBe($second->hash)
+        ->and($first->signature['critical_css'])->toHaveKey('viewports');
+});

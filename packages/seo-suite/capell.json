@@ -21,7 +21,7 @@
             "capell-app/insights",
             "capell-app/site-discovery"
         ],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -101,7 +101,13 @@
     },
     "marketplace": {
         "summary": "SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, and publish checks.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "SEO Suite extension preview image",
+                "caption": "SEO Suite extension preview"
+            }
+        ],
         "categories": ["admin", "console", "frontend", "search-seo"]
     },
     "contributionTraceability": {

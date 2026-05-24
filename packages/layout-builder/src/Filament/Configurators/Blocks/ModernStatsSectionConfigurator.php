@@ -10,13 +10,16 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 
 /**
- * Filament Schema for Modern Stats Section Block
+ * Filament Schema for Modern Stats Section Widget
  *
  * Provides admin panel controls for customizing statistics display
  * with title, subtitle, layout, and icon options.
  */
 class ModernStatsSectionConfigurator
 {
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function getFormSchema(): array
     {
         return [
@@ -58,6 +61,9 @@ class ModernStatsSectionConfigurator
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function getDefaults(): array
     {
         return [

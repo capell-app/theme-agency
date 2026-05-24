@@ -15,6 +15,9 @@ use Illuminate\Support\Collection;
 
 class Navigation extends AbstractBlock
 {
+    /**
+     * @var Collection<array-key, mixed>
+     */
     public ?Collection $items = null;
 
     public ?Models\Navigation $menu = null;

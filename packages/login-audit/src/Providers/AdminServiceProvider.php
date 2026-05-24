@@ -51,6 +51,11 @@ class AdminServiceProvider extends ServiceProvider
         $this->registerSchedule();
     }
 
+    protected function isPackageInstalled(): bool
+    {
+        return CapellCore::isPackageInstalled(LoginAuditServiceProvider::$packageName);
+    }
+
     private function registerAdminIntegration(): void
     {
         if ($this->supportsAdminBridges()) {
@@ -98,16 +103,6 @@ class AdminServiceProvider extends ServiceProvider
             && method_exists($admin, 'registerAdminBridge')
             && method_exists($admin, 'bootAdminBridges')
             && class_exists(LoginAuditAdminBridge::class)
-            && class_exists(AdminBridgeRegistrar::class)
-            && method_exists(AdminBridgeRegistrar::class, 'schemaExtender')
-            && method_exists(AdminBridgeRegistrar::class, 'panelExtender')
-            && method_exists(AdminBridgeRegistrar::class, 'resource')
-            && method_exists(AdminBridgeRegistrar::class, 'dashboardWidget')
-            && method_exists(AdminBridgeRegistrar::class, 'dashboardSettingsContributor');
-    }
-
-    private function isPackageInstalled(): bool
-    {
-        return CapellCore::isPackageInstalled(LoginAuditServiceProvider::$packageName);
+            && class_exists(AdminBridgeRegistrar::class);
     }
 }

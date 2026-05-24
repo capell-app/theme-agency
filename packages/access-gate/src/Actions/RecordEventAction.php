@@ -35,7 +35,7 @@ final class RecordEventAction
         ?Model $subject = null,
     ): Event {
         return Event::query()->create([
-            'access_area_id' => $area?->getKey() ?? $registration?->access_area_id ?? $grant?->access_area_id ?? $claimToken?->access_area_id ?? $browserToken?->access_area_id,
+            'access_area_id' => $area->getKey() ?? $registration->access_area_id ?? $grant->access_area_id ?? $claimToken->access_area_id ?? $browserToken->access_area_id,
             'registration_id' => $registration?->getKey(),
             'grant_id' => $grant?->getKey(),
             'claim_token_id' => $claimToken?->getKey(),

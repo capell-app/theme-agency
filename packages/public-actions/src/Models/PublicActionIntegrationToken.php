@@ -52,6 +52,9 @@ class PublicActionIntegrationToken extends Model
         return is_string($tableName) ? $tableName : 'public_action_integration_tokens';
     }
 
+    /**
+     * @return BelongsTo<Site, $this>
+     */
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class);

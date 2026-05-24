@@ -15,12 +15,15 @@ use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Wizard;
 
+/**
+ * @param  array<array-key, mixed>  $state
+ */
 function seoSuiteFakeGet(array $state): Get
 {
     return new class($state) extends Get
     {
         /**
-         * @param  array<string, mixed>  $state
+         * @param  array<array-key, mixed>  $state
          */
         public function __construct(private readonly array $state) {}
 
@@ -32,6 +35,7 @@ function seoSuiteFakeGet(array $state): Get
 }
 
 /**
+ * @param  array<array-key, mixed>  $state
  * @return array<int, mixed>
  */
 function seoSuiteRawActionSchema(Action $action, array $state = []): array

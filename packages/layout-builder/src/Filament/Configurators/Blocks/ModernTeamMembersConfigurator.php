@@ -10,13 +10,16 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 
 /**
- * Filament Schema for Modern Team Members Block
+ * Filament Schema for Modern Team Members Widget
  *
  * Provides admin panel controls for customizing team member grid
  * layout and display options.
  */
 class ModernTeamMembersConfigurator
 {
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function getFormSchema(): array
     {
         return [
@@ -54,6 +57,9 @@ class ModernTeamMembersConfigurator
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function getDefaults(): array
     {
         return [

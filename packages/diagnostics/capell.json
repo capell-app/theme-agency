@@ -20,7 +20,7 @@
             "capell-app/core",
             "capell-app/html-cache"
         ],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -103,7 +103,13 @@
     },
     "marketplace": {
         "summary": "Diagnostics adds operational diagnostics for cache, configuration drift, migrations, packages, registries, queues, permissions, setup health, and Tailwind build status.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Diagnostics extension preview image",
+                "caption": "Diagnostics extension preview"
+            }
+        ],
         "categories": ["admin", "console", "operations"]
     },
     "contributionTraceability": {

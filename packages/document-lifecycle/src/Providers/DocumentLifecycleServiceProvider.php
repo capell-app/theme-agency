@@ -56,6 +56,11 @@ class DocumentLifecycleServiceProvider extends AbstractPackageServiceProvider
         });
     }
 
+    protected function isPackageInstalled(): bool
+    {
+        return CapellCore::isPackageInstalled(static::$packageName);
+    }
+
     private function registerAdminResources(): self
     {
         if (! class_exists(CapellAdmin::class) || ! class_exists(AdminSurfaceContributionData::class)) {
@@ -110,10 +115,5 @@ class DocumentLifecycleServiceProvider extends AbstractPackageServiceProvider
         });
 
         return $this;
-    }
-
-    private function isPackageInstalled(): bool
-    {
-        return CapellCore::isPackageInstalled(static::$packageName);
     }
 }

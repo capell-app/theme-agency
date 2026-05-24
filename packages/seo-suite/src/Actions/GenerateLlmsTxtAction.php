@@ -19,7 +19,7 @@ use Lorisleiva\Actions\Concerns\AsAction;
 /**
  * Generate llms.txt content for a site.
  *
- * @method static string run(AiDiscoveryRenderContextData|Site $context, ?Language $language = null, ?Collection $discoverablePages = null)
+ * @method static string run(AiDiscoveryRenderContextData|Site $context, ?Language $language = null, ?Collection<int, DiscoverablePageData> $discoverablePages = null)
  */
 final class GenerateLlmsTxtAction
 {
@@ -48,6 +48,9 @@ final class GenerateLlmsTxtAction
         return $this->contentFromEntries($renderContext, $siteProfile, $entries);
     }
 
+    /**
+     * @param  Collection<array-key, mixed>  $entries
+     */
     public function contentFromEntries(AiDiscoveryRenderContextData $renderContext, AiDiscoverySiteProfile $siteProfile, Collection $entries): string
     {
         $lines = ['# ' . $this->siteTitle($renderContext)];
@@ -84,7 +87,7 @@ final class GenerateLlmsTxtAction
     {
         return trim(strip_tags((string) $context->site->getMeta(
             'business_name',
-            $context->site->translation?->title ?? config('app.name'),
+            $context->site->translation->title ?? config('app.name'),
         )));
     }
 

@@ -79,7 +79,9 @@ it('acknowledges duplicate provider webhook retries without re-recording consent
     if (! Schema::hasTable('newsletter_processed_webhook_events')) {
         Schema::create('newsletter_processed_webhook_events', function (Blueprint $table): void {
             $table->id();
-            $table->foreignId('provider_connection_id')->constrained('newsletter_provider_connections')->cascadeOnDelete();
+            $table->foreignId('provider_connection_id')
+                ->constrained('newsletter_provider_connections', 'id', 'newsletter_processed_webhooks_connection_fk')
+                ->cascadeOnDelete();
             $table->string('remote_event_id');
             $table->string('event_type');
             $table->timestamp('processed_at')->useCurrent();

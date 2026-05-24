@@ -6,7 +6,6 @@ use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
-use Capell\Core\Models\SiteDomain;
 use Capell\Core\Models\Translation;
 use Capell\SeoSuite\Actions\BuildSocialMetaAction;
 use Capell\SeoSuite\Enums\OpenGraphTypeEnum;
@@ -19,7 +18,7 @@ it('builds social metadata from explicit social fields and article schema data',
         ->withTranslations($language, [
             'title' => '<strong>Capell Site</strong>',
             'meta' => ['title_after_text' => 'Ignored suffix'],
-        ])
+        ], siteDomainData: ['domain' => 'example.test', 'scheme' => 'https', 'path' => null, 'default' => true])
         ->create(['meta' => ['twitter' => '@capell']]);
     $page = Page::factory()
         ->site($site)
@@ -37,11 +36,6 @@ it('builds social metadata from explicit social fields and article schema data',
             'updated_at' => CarbonImmutable::parse('2026-01-03 03:04:05'),
         ]);
 
-    SiteDomain::factory()
-        ->site($site)
-        ->language($language)
-        ->default()
-        ->create(['domain' => 'example.test', 'scheme' => 'https']);
     $pageUrl = PageUrl::factory()
         ->site($site)
         ->language($language)

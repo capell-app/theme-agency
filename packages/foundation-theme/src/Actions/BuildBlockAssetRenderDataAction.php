@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Capell\FoundationTheme\Actions;
 
+use Capell\Core\Actions\ResolveImageSourceDataAction;
+use Capell\Core\Contracts\Media\MediaContract;
 use Capell\Core\Contracts\Pageable;
+use Capell\Core\Data\ImageSourceData;
 use Capell\Core\Enums\ContentStructure;
 use Capell\Core\Enums\MediaCollectionEnum;
-use Capell\Core\Models\Media;
 use Capell\FoundationTheme\Data\BlockAssetRenderData;
 use Capell\LayoutBuilder\Models\BlockAsset;
 use Illuminate\Database\Eloquent\Model;
@@ -55,11 +57,18 @@ final class BuildBlockAssetRenderDataAction
         );
     }
 
-    private function image(BlockAsset $blockAsset, mixed $asset): ?Media
+    private function image(BlockAsset $blockAsset, mixed $asset): ?ImageSourceData
     {
-        return $this->firstLoadedMedia($blockAsset)
+        $media = $this->firstLoadedMedia($blockAsset)
             ?? ($asset instanceof Model ? $this->firstLoadedMedia($asset) : null)
             ?? ($asset instanceof Model ? $this->loadedImage($asset) : null);
+
+        $source = $this->metaValue($blockAsset, 'image_source')
+            ?? ($asset instanceof Model ? $this->metaValue($asset, 'image_source') : null)
+            ?? $this->metaValue($blockAsset, 'image')
+            ?? ($asset instanceof Model ? $this->metaValue($asset, 'image') : null);
+
+        return ResolveImageSourceDataAction::run($source, $media);
     }
 
     private function linkedPage(BlockAsset $blockAsset, mixed $asset): mixed
@@ -89,14 +98,14 @@ final class BuildBlockAssetRenderDataAction
         return is_string($fullUrl) && $fullUrl !== '' ? $fullUrl : null;
     }
 
-    private function loadedImage(Model $model): ?Media
+    private function loadedImage(Model $model): ?MediaContract
     {
         $image = $this->loadedRelation($model, 'image');
 
-        return $image instanceof Media ? $image : null;
+        return $image instanceof MediaContract ? $image : null;
     }
 
-    private function firstLoadedMedia(Model $model): ?Media
+    private function firstLoadedMedia(Model $model): ?MediaContract
     {
         $media = $this->loadedRelation($model, 'media');
 
@@ -105,20 +114,20 @@ final class BuildBlockAssetRenderDataAction
         }
 
         $match = $media->first(
-            static fn (mixed $media): bool => $media instanceof Media
-                && in_array($media->collection_name, [
+            static fn (mixed $media): bool => $media instanceof MediaContract
+                && in_array((string) data_get($media, 'collection_name'), [
                     MediaCollectionEnum::Image->value,
                     MediaCollectionEnum::BackgroundImage->value,
                 ], true),
         );
 
-        if ($match instanceof Media) {
+        if ($match instanceof MediaContract) {
             return $match;
         }
 
-        $fallback = $media->first(static fn (mixed $media): bool => $media instanceof Media);
+        $fallback = $media->first(static fn (mixed $media): bool => $media instanceof MediaContract);
 
-        return $fallback instanceof Media ? $fallback : null;
+        return $fallback instanceof MediaContract ? $fallback : null;
     }
 
     private function loadedRelation(Model $model, string $relation): mixed
@@ -153,6 +162,15 @@ final class BuildBlockAssetRenderDataAction
         $value = $asset->getMeta($key, []);
 
         return is_array($value) ? $value : [];
+    }
+
+    private function metaValue(mixed $asset, string $key): mixed
+    {
+        if (! is_object($asset) || ! method_exists($asset, 'getMeta')) {
+            return null;
+        }
+
+        return $asset->getMeta($key);
     }
 
     private function stringValue(mixed $object, string $key): ?string

@@ -11,6 +11,18 @@ Login Audit records Capell user access history. It wraps Rappasoft's authenticat
 - Capell dependencies: `capell-app/admin`
 - Third-party dependencies: `rappasoft/laravel-authentication-log`, `tapp/filament-authentication-log`
 
+## Why It Helps Your Capell Workflow
+
+- Records login, failed login, logout, and admin/user metadata so operators can investigate account activity from Capell.
+- Helps owners spot authentication patterns without adding a bespoke security report to each project.
+- Pairs with password policy and diagnostics to make account safety visible as an operational workflow.
+
+## Best Used With
+
+- [Password Policy](../password-policy/README.md)
+- [Diagnostics](../diagnostics/README.md)
+- [Dashboard Reports](../dashboard-reports/README.md)
+
 ## What It Adds
 
 Login Audit records login, failed login, logout, and last-activity metadata for Capell users.
@@ -158,6 +170,7 @@ The Laravel 13 demo harness has screenshots for the Login Audit resource, table 
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 - [overview.md](docs/overview.md)
 - [settings-and-ip-resolution.md](docs/settings-and-ip-resolution.md)

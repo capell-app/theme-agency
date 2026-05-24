@@ -22,11 +22,17 @@ class EventNotificationLog extends Model
 
     protected static string $factory = EventNotificationLogFactory::class;
 
+    /**
+     * @return BelongsTo<EventOccurrence, $this>
+     */
     public function occurrence(): BelongsTo
     {
         return $this->belongsTo(EventOccurrence::class, 'event_occurrence_id');
     }
 
+    /**
+     * @return BelongsTo<EventRegistration, $this>
+     */
     public function registration(): BelongsTo
     {
         return $this->belongsTo(EventRegistration::class, 'event_registration_id');

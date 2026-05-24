@@ -16,7 +16,6 @@ use Capell\GA4Reports\Models\GA4ReportsSyncRun;
 use Capell\GA4Reports\Settings\GA4ReportsSettings;
 use Capell\GA4Reports\Settings\GA4ReportsSettingsMigrationProvider;
 use Capell\GA4Reports\Support\Insights\GA4ReportsDataClient;
-use Capell\GA4Reports\Support\Insights\NullGA4ReportsDataClient;
 use Spatie\LaravelPackageTools\Package;
 
 final class GA4ReportsServiceProvider extends AbstractPackageServiceProvider
@@ -77,7 +76,7 @@ final class GA4ReportsServiceProvider extends AbstractPackageServiceProvider
         ], 'capell-ga4-reports-settings');
     }
 
-    private function isPackageInstalled(): bool
+    protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(self::$packageName);
     }
@@ -120,10 +119,6 @@ final class GA4ReportsServiceProvider extends AbstractPackageServiceProvider
                 'property_id' => $resolvedConfig->propertyId,
                 'credentials_path' => $resolvedConfig->credentialsPath,
             ];
-
-            if (! is_array($config)) {
-                return new NullGA4ReportsDataClient;
-            }
 
             return new GA4ReportsDataClient($config);
         });

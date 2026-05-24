@@ -36,6 +36,9 @@ function createAiDiscoveryMigrationLanguage(): Language
     ]);
 }
 
+/**
+ * @param  array<array-key, mixed>  $migrations
+ */
 function runAiDiscoverySettingsMigrations(array $migrations, string $basePath): void
 {
     $settingsMigrator = resolve(SettingsMigrator::class);

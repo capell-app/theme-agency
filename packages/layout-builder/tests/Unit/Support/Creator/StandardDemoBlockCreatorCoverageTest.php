@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Data\PageTypeData;
 use Capell\Core\Enums\MediaCollectionEnum;
+use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Layout;
@@ -10,13 +12,13 @@ use Capell\Core\Models\Media;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
 use Capell\Core\Support\Creator\BlueprintCreator;
-use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Support\Creator\BlockCreator;
 use Capell\LayoutBuilder\Support\Creator\StandardDemoBlockCreator;
 use Capell\LayoutBuilder\Support\Creator\TypeCreator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Spatie\MediaLibrary\HasMedia;
 
 final class LayoutBuilderStandardDemoContentPage extends Page
 {
@@ -51,36 +53,51 @@ final class LayoutBuilderStandardDemoBlockCreatorHarness extends StandardDemoBlo
     public function __construct()
     {
         $this->contentModel = LayoutBuilderStandardDemoContentPage::class;
-        $this->blockModel = Block::class;
+        $this->blockModel = Widget::class;
         $this->typeModel = Blueprint::class;
         $this->pageModel = Page::class;
     }
 
+    /**
+     * @param  Collection<array-key, mixed>  $siteTree
+     * @return array<array-key, mixed>
+     */
     public function exposeNavigationPageItems(Collection $siteTree, Language $language): array
     {
         return $this->navigationPageItems($siteTree, $language);
     }
 
+    /**
+     * @return Collection<array-key, mixed>
+     */
     public function exposeCreateFeatures(Site $site): Collection
     {
         return $this->createFeatures($site);
     }
 
+    /**
+     * @param  Collection<array-key, mixed>  $languages
+     * @return Collection<array-key, mixed>
+     */
     public function exposeCreateTestimonials(Collection $languages): Collection
     {
         return $this->createTestimonials($languages);
     }
 
+    /**
+     * @param  Collection<array-key, mixed>  $languages
+     * @return Collection<array-key, mixed>
+     */
     public function exposeCreateTeamMembers(Collection $languages): Collection
     {
         return $this->createTeamMembers($languages);
     }
 
     #[Override]
-    protected function createMedia(HasMedia $model, ?string $name = null, string $type = 'image', BackedEnum|string $collection = 'image'): void {}
+    protected function createMedia(Model $model, ?string $name = null, string $type = 'image', BackedEnum|string $collection = 'image'): void {}
 
     #[Override]
-    protected function createBlockMedia(Block $model, ?string $name = null, string $type = 'image', BackedEnum|string $collection = 'image'): Media
+    protected function createBlockMedia(Widget $model, ?string $name = null, string $type = 'image', BackedEnum|string $collection = 'image'): Media
     {
         $content = LayoutBuilderStandardDemoContentPage::query()->create([
             'name' => $name ?? 'Demo Media',
@@ -99,8 +116,19 @@ final class LayoutBuilderStandardDemoBlockCreatorHarness extends StandardDemoBlo
     }
 }
 
+/**
+ * @return array<array-key, mixed>
+ */
 function prepareStandardDemoCreatorHarness(Language $language): array
 {
+    if (! CapellCore::hasPageType('section')) {
+        CapellCore::registerPageType(new PageTypeData(
+            name: 'section',
+            model: LayoutBuilderStandardDemoContentPage::class,
+            label: 'Section',
+        ));
+    }
+
     $site = Site::factory()
         ->default()
         ->language($language)

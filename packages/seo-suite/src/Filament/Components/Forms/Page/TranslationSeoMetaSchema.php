@@ -12,6 +12,9 @@ use Filament\Support\Icons\Heroicon;
 
 class TranslationSeoMetaSchema
 {
+    /**
+     * @return array<array-key, mixed>
+     */
     public static function make(): array
     {
         return [

@@ -10,6 +10,15 @@ use Spatie\LaravelData\Data;
 
 class PageSeoReportData extends Data
 {
+    /**
+     * @param  array<array-key, mixed>  $internalLinkSuggestions
+     * @param  array<array-key, mixed>  $issues
+     * @param  array<array-key, mixed>  $passedChecks
+     * @param  array<array-key, mixed>  $redirectOpportunities
+     * @param  array<array-key, mixed>  $robotsDirectives
+     * @param  array<array-key, mixed>  $schemaDashboardReports
+     * @param  array<array-key, mixed>  $searchConsoleInsights
+     */
     public function __construct(
         public int $score,
         public SeoPreviewData $searchPreview,
@@ -92,6 +101,6 @@ class PageSeoReportData extends Data
             }
         }
 
-        return array_values($values);
+        return $values;
     }
 }

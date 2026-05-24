@@ -15,7 +15,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
 {
     public function createModernFeatureListBlock(): Block
     {
-        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Block)
+        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Widget)
             ->firstWhere('key', BlockTypeEnum::Assets);
 
         if ($blockType === null) {
@@ -31,7 +31,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
             ],
         ]);
 
-        foreach (Site::getDefault()?->languages ?? [] as $language) {
+        foreach (Site::getDefault()->languages ?? [] as $language) {
             $block->translations()->updateOrCreate(
                 ['language_id' => $language->id],
                 [
@@ -57,7 +57,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
                 'meta' => ['icon' => $feature['icon']],
             ]);
 
-            foreach (Site::getDefault()?->languages ?? [] as $language) {
+            foreach (Site::getDefault()->languages ?? [] as $language) {
                 $this->translationsFor($section)->updateOrCreate(
                     ['language_id' => $language->id],
                     ['title' => $feature['title'], 'content' => sprintf('<p>%s</p>', $feature['description'])],
@@ -75,7 +75,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
 
     public function createModernTeamMembersBlock(): Block
     {
-        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Block)
+        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Widget)
             ->firstWhere('key', BlockTypeEnum::Assets);
 
         if ($blockType === null) {
@@ -92,7 +92,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
             ],
         ]);
 
-        foreach (Site::getDefault()?->languages ?? [] as $language) {
+        foreach (Site::getDefault()->languages ?? [] as $language) {
             $block->translations()->updateOrCreate(
                 ['language_id' => $language->id],
                 ['title' => 'Our Team'],
@@ -140,7 +140,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
                 ],
             ]);
 
-            foreach (Site::getDefault()?->languages ?? [] as $language) {
+            foreach (Site::getDefault()->languages ?? [] as $language) {
                 $this->translationsFor($section)->updateOrCreate(
                     ['language_id' => $language->id],
                     ['title' => $member['name'], 'content' => sprintf('<p>%s</p>', $member['bio'])],
@@ -158,7 +158,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
 
     public function createModernPricingTableBlock(): Block
     {
-        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Block)
+        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Widget)
             ->firstWhere('key', BlockTypeEnum::Assets);
 
         if ($blockType === null) {
@@ -176,7 +176,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
             ],
         ]);
 
-        foreach (Site::getDefault()?->languages ?? [] as $language) {
+        foreach (Site::getDefault()->languages ?? [] as $language) {
             $block->translations()->updateOrCreate(
                 ['language_id' => $language->id],
                 ['title' => 'Simple, Transparent Pricing'],
@@ -232,7 +232,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
                 ],
             ]);
 
-            foreach (Site::getDefault()?->languages ?? [] as $language) {
+            foreach (Site::getDefault()->languages ?? [] as $language) {
                 $this->translationsFor($section)->updateOrCreate(
                     ['language_id' => $language->id],
                     ['title' => $plan['name'], 'content' => sprintf('<p>%s</p>', $plan['description'])],
@@ -250,7 +250,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
 
     public function createModernTestimonialsBlock(): Block
     {
-        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Block)
+        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Widget)
             ->firstWhere('key', BlockTypeEnum::Assets);
 
         if ($blockType === null) {
@@ -267,7 +267,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
             ],
         ]);
 
-        foreach (Site::getDefault()?->languages ?? [] as $language) {
+        foreach (Site::getDefault()->languages ?? [] as $language) {
             $block->translations()->updateOrCreate(
                 ['language_id' => $language->id],
                 [
@@ -293,7 +293,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
                 ],
             ]);
 
-            foreach (Site::getDefault()?->languages ?? [] as $language) {
+            foreach (Site::getDefault()->languages ?? [] as $language) {
                 $this->translationsFor($section)->updateOrCreate(
                     ['language_id' => $language->id],
                     ['title' => $testimonial['author'], 'content' => sprintf('<p>%s</p>', $testimonial['quote'])],
@@ -311,7 +311,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
 
     public function createModernFaqBlock(): Block
     {
-        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Block)
+        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Widget)
             ->firstWhere('key', BlockTypeEnum::Assets);
 
         if ($blockType === null) {
@@ -327,7 +327,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
             ],
         ]);
 
-        foreach (Site::getDefault()?->languages ?? [] as $language) {
+        foreach (Site::getDefault()->languages ?? [] as $language) {
             $block->translations()->updateOrCreate(
                 ['language_id' => $language->id],
                 [
@@ -351,7 +351,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
                 'meta' => ['category' => $faq['category']],
             ]);
 
-            foreach (Site::getDefault()?->languages ?? [] as $language) {
+            foreach (Site::getDefault()->languages ?? [] as $language) {
                 $this->translationsFor($section)->updateOrCreate(
                     ['language_id' => $language->id],
                     ['title' => $faq['question'], 'content' => sprintf('<p>%s</p>', $faq['answer'])],
@@ -369,7 +369,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
 
     public function createModernStatsSectionBlock(): Block
     {
-        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Block)
+        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Widget)
             ->firstWhere('key', BlockTypeEnum::Assets);
 
         if ($blockType === null) {
@@ -385,7 +385,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
             ],
         ]);
 
-        foreach (Site::getDefault()?->languages ?? [] as $language) {
+        foreach (Site::getDefault()->languages ?? [] as $language) {
             $block->translations()->updateOrCreate(
                 ['language_id' => $language->id],
                 [
@@ -409,7 +409,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
                 'meta' => ['icon' => $stat['icon']],
             ]);
 
-            foreach (Site::getDefault()?->languages ?? [] as $language) {
+            foreach (Site::getDefault()->languages ?? [] as $language) {
                 $this->translationsFor($section)->updateOrCreate(
                     ['language_id' => $language->id],
                     ['title' => $stat['label'], 'content' => sprintf('<p>%s</p>', $stat['value'])],
@@ -427,7 +427,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
 
     public function createModernAlternatingContentBlock(): Block
     {
-        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Block)
+        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Widget)
             ->firstWhere('key', BlockTypeEnum::Assets);
 
         if ($blockType === null) {
@@ -443,7 +443,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
             ],
         ]);
 
-        foreach (Site::getDefault()?->languages ?? [] as $language) {
+        foreach (Site::getDefault()->languages ?? [] as $language) {
             $block->translations()->updateOrCreate(
                 ['language_id' => $language->id],
                 [
@@ -466,7 +466,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
                 'meta' => ['icon' => $step['icon'], 'position' => $step['position']],
             ]);
 
-            foreach (Site::getDefault()?->languages ?? [] as $language) {
+            foreach (Site::getDefault()->languages ?? [] as $language) {
                 $this->translationsFor($section)->updateOrCreate(
                     ['language_id' => $language->id],
                     ['title' => $step['title'], 'content' => sprintf('<p>%s</p>', $step['description'])],
@@ -484,7 +484,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
 
     public function createModernProcessStepsBlock(): Block
     {
-        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Block)
+        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Widget)
             ->firstWhere('key', BlockTypeEnum::Assets);
 
         if ($blockType === null) {
@@ -500,7 +500,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
             ],
         ]);
 
-        foreach (Site::getDefault()?->languages ?? [] as $language) {
+        foreach (Site::getDefault()->languages ?? [] as $language) {
             $block->translations()->updateOrCreate(
                 ['language_id' => $language->id],
                 [
@@ -524,7 +524,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
                 'meta' => ['icon' => $step['icon']],
             ]);
 
-            foreach (Site::getDefault()?->languages ?? [] as $language) {
+            foreach (Site::getDefault()->languages ?? [] as $language) {
                 $this->translationsFor($section)->updateOrCreate(
                     ['language_id' => $language->id],
                     ['title' => $step['title'], 'content' => sprintf('<p>%s</p>', $step['description'])],
@@ -542,7 +542,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
 
     public function createModernImageGalleryBlock(): Block
     {
-        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Block)
+        $blockType = $this->typeModel::query()->where('type', LayoutTypeEnum::Widget)
             ->firstWhere('key', BlockTypeEnum::Assets);
 
         if ($blockType === null) {
@@ -559,7 +559,7 @@ abstract class ModernDemoBlockCreator extends StandardDemoBlockCreator
             ],
         ]);
 
-        foreach (Site::getDefault()?->languages ?? [] as $language) {
+        foreach (Site::getDefault()->languages ?? [] as $language) {
             $block->translations()->updateOrCreate(
                 ['language_id' => $language->id],
                 [

@@ -7,9 +7,12 @@ use Capell\SeoSuite\Support\Publishing\SeoPublishReportProviderAdapter;
 use Capell\SiteDiscovery\Actions\DiscoverPublicPagesAction;
 use Capell\SiteDiscovery\Actions\DiscoverPublicUrlsAction;
 use Capell\SiteDiscovery\Contracts\DiscoverableUrlSource;
+use Capell\SiteDiscovery\Contracts\DiscoveryOutputSource;
 use Capell\SiteDiscovery\Data\DiscoverablePageData;
 use Capell\SiteDiscovery\Data\DiscoverableUrlData;
+use Capell\SiteDiscovery\Data\DiscoveryOutputData;
 use Capell\SiteDiscovery\Providers\SiteDiscoveryServiceProvider;
+use Capell\SiteDiscovery\Support\DiscoveryOutputRegistry;
 use Symfony\Component\Finder\Finder;
 
 arch('seo-suite does not import packages that depend on it')
@@ -101,10 +104,13 @@ it('uses only site discovery public discovery APIs', function (): void {
     $allowedReferences = [
         DiscoverPublicPagesAction::class,
         DiscoverPublicUrlsAction::class,
+        DiscoveryOutputSource::class,
         DiscoverableUrlSource::class,
+        DiscoveryOutputData::class,
         DiscoverablePageData::class,
         DiscoverableUrlData::class,
         SiteDiscoveryServiceProvider::class,
+        DiscoveryOutputRegistry::class,
     ];
     $violations = [];
 

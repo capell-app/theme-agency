@@ -8,6 +8,7 @@ use Capell\PublishingStudio\Enums\SchedulerEventStateEnum;
 use Capell\PublishingStudio\Enums\SchedulerEventTypeEnum;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -43,12 +44,14 @@ use Throwable;
  * @property string|null $last_failure_class
  * @property string|null $last_failure_message
  * @property string|null $skipped_reason
- * @property array<string, mixed>|null $metadata
+ * @property array<array-key, mixed>|null $metadata
  * @property-read Workspace|null $workspace
  */
 class SchedulerEvent extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
+
     use SoftDeletes;
 
     protected $table = 'publishing_scheduler_events';
@@ -87,6 +90,9 @@ class SchedulerEvent extends Model
         'failure_count' => 0,
     ];
 
+    /**
+     * @return BelongsTo<Workspace, $this>
+     */
     public function workspace(): BelongsTo
     {
         return $this->belongsTo(Workspace::class);
@@ -98,16 +104,25 @@ class SchedulerEvent extends Model
         return $this->hasMany(SchedulerDelivery::class, 'scheduler_event_id');
     }
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function source(): MorphTo
     {
         return $this->morphTo(__FUNCTION__, 'source_type', 'source_id');
     }
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function owner(): MorphTo
     {
         return $this->morphTo(__FUNCTION__, 'owner_type', 'owner_id');
     }
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function actor(): MorphTo
     {
         return $this->morphTo(__FUNCTION__, 'actor_type', 'actor_id');
@@ -151,6 +166,10 @@ class SchedulerEvent extends Model
         });
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopeDue(Builder $query): Builder
     {
         return $query

@@ -1,5 +1,7 @@
 # Creating A Capell Theme
 
+For tiering, database ownership, Layout Builder asset boundaries, and cross-theme change rules, start with the [Capell Theme Scale](theme-scale.md). This page is the implementation companion for creating one theme package.
+
 Capell themes are ordinary Composer packages. They register a frontend renderer,
 declare package metadata in `capell.json`, and optionally extend another theme.
 There is no separate Theme Studio metapackage to install, even though the runtime
@@ -24,16 +26,20 @@ fallback exists, register every section view the theme promises to support.
 
 Use these packages as the working examples:
 
-| Package                       | Theme key   | Role                                                                                                                          |
-| ----------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `capell-app/foundation-theme` | `default`   | Shared runtime, default Blade components, Tailwind asset generation, settings, media URL handling, and generic beacon client. |
-| `capell-app/theme-agency`     | `agency`    | Expressive premium renderer for studio, portfolio, and brand-led sites.                                                       |
-| `capell-app/theme-corporate`  | `corporate` | Restrained premium renderer for B2B, public sector, and professional-service sites.                                           |
-| `capell-app/theme-saas`       | `saas`      | Conversion-led premium renderer for software and subscription sites.                                                          |
+| Package                       | Theme key    | Role                                                                                                                               |
+| ----------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `capell-app/foundation-theme` | `default`    | Free shared runtime, default Blade components, Tailwind asset generation, settings, media URL handling, and generic beacon client. |
+| `capell-app/theme-agency`     | `agency`     | Free expressive renderer for studio, portfolio, and brand-led sites.                                                               |
+| `capell-app/theme-corporate`  | `corporate`  | Free restrained renderer for B2B, public sector, and professional-service sites.                                                   |
+| `capell-app/theme-commerce`   | `commerce`   | Premium image-led renderer for catalog, retail, and conversion pages.                                                              |
+| `capell-app/theme-healthcare` | `healthcare` | Premium clinical renderer for appointment-led care, service discovery, clinicians, resources, and locations.                       |
+| `capell-app/theme-saas`       | `saas`       | Premium Velocity renderer for software and subscription sites.                                                                     |
 
-The premium themes are intentionally thin. They have no migrations, routes,
-models, admin navigation, or settings of their own. They register renderer
-contracts and consume the Foundation Theme runtime.
+Theme packages are intentionally thin. They have no migrations, routes, models,
+admin navigation, or settings of their own. They register renderer contracts,
+consume the Foundation Theme runtime, and expose demo commands through the same
+manifest path used by the Extensions installer demo option and the full Capell
+demo install.
 
 ## 1. Choose The Theme Shape
 

@@ -1,0 +1,90 @@
+.layout-container > .capell-block-homepage-section {
+    background:
+        radial-gradient(
+            circle at 0 0,
+            rgb(226 223 255 / 82%),
+            transparent 34rem
+        ),
+        var(--foundation-page-bg);
+    border-top: 1px solid rgb(199 196 216 / 70%);
+    color: #131b2e;
+    padding-block: clamp(4rem, 7vw, 7rem);
+    position: relative;
+}
+
+.layout-container > .capell-block-homepage-section:first-child {
+    border-top: 0;
+    padding-top: clamp(4rem, 8vw, 7.5rem);
+}
+
+.layout-container > .capell-block-homepage-section:nth-of-type(even) {
+    background: #ffffff;
+}
+
+.layout-container > .capell-block-homepage-section:nth-of-type(3n + 4) {
+    background:
+        linear-gradient(135deg, rgb(79 70 229 / 9%), rgb(254 94 30 / 8%)),
+        #faf8ff;
+}
+
+.layout-container
+    > .capell-block-homepage-section:first-child
+    + .capell-block-homepage-section {
+    background: #ffffff;
+    border-top: 0;
+    padding-block: clamp(1rem, 2vw, 1.5rem);
+}
+
+.layout-container
+    > .capell-block-homepage-section:first-child
+    + .capell-block-homepage-section
+    > div {
+    border-block: 1px solid rgb(199 196 216 / 85%);
+    padding-block: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.capell-block-homepage-section > div {
+    position: relative;
+    z-index: 1;
+}
+
+.capell-block-homepage-section > div > :is(.grid, section.grid) {
+    gap: clamp(1.25rem, 2.5vw, 2.25rem);
+}
+
+.capell-block-homepage-section article[class*='border'],
+.capell-block-homepage-section div[class*='border'][class*='bg-white'] {
+    border-color: rgb(199 196 216 / 80%);
+    box-shadow: 0 18px 44px rgb(19 27 46 / 6%);
+}
+
+.capell-block-homepage-section article[class*='border']:hover,
+.capell-block-homepage-section div[class*='border'][class*='bg-white']:hover {
+    border-color: rgb(79 70 229 / 42%);
+    box-shadow: 0 22px 60px rgb(79 70 229 / 10%);
+}
+
+.capell-block-homepage-section [class*='border-t'] {
+    border-color: rgb(199 196 216 / 80%);
+}
+
+.capell-block-homepage-section [class*='text-[#315f8f]'] {
+    color: #3525cd;
+}
+
+.capell-block-homepage-section [class*='bg-[#315f8f]'] {
+    background-color: #3525cd;
+    border-color: #3525cd;
+}
+
+.capell-block-homepage-section [class*='hover:bg-[#24496f]']:hover {
+    background-color: #261aa0;
+}
+
+.velocity-proof :is(h2, blockquote) {
+    color: #ffffff !important;
+}
+
+.velocity-proof :is(p, figcaption) {
+    color: rgb(203 213 225) !important;
+}

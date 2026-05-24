@@ -21,6 +21,9 @@ class PreviewLinksRelationManager extends RelationManager
 
     protected static bool $shouldSkipAuthorization = true;
 
+    /**
+     * @return Builder<PreviewLink>
+     */
     public static function scopedQueryForUser(Model $user): Builder
     {
         $morphKey = static::userMorphKey($user);
@@ -37,6 +40,9 @@ class PreviewLinksRelationManager extends RelationManager
         return __('capell-publishing-studio::workspace.user_bridge.preview_links');
     }
 
+    /**
+     * @return Relation<PreviewLink, Model, mixed>|Builder<PreviewLink>
+     */
     #[Override]
     public function getRelationship(): Relation|Builder
     {

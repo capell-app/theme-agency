@@ -1,0 +1,115 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/comments",
+    "slug": "comments",
+    "displayName": "Comments",
+    "kind": "package",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Comments adds moderated, configurable, cache-safe threaded discussion surfaces to Capell content.",
+    "product": {
+        "group": "Capell Engagement",
+        "tier": "premium",
+        "bundle": "comments"
+    },
+    "namespace": "Capell\\Comments",
+    "surfaces": ["admin", "frontend"],
+    "dependencies": {
+        "requires": [
+            "capell-app/admin",
+            "capell-app/core",
+            "capell-app/frontend"
+        ],
+        "supports": ["capell-app/blog", "capell-app/email-studio"],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": ["Capell\\Comments\\Providers\\CommentsServiceProvider"],
+        "admin": ["Capell\\Comments\\Providers\\AdminServiceProvider"],
+        "frontend": ["Capell\\Comments\\Providers\\FrontendServiceProvider"]
+    },
+    "contributes": [
+        {
+            "type": "frontend-component",
+            "class": "Capell\\Comments\\Livewire\\CommentThreadComponent",
+            "surface": "frontend"
+        },
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\Comments\\Filament\\Widgets\\CommentStatsWidget",
+            "surface": "admin"
+        }
+    ],
+    "database": {
+        "migrations": true,
+        "settings": true,
+        "requiredTables": [
+            "comment_authors",
+            "comments",
+            "comment_tokens",
+            "comment_moderation_events"
+        ]
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "settings": ["comments"],
+    "permissions": [],
+    "capabilities": ["comments", "comments-admin", "comments-frontend"],
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 40,
+        "cacheTags": ["comments"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [
+                {
+                    "model": "Capell\\Comments\\Models\\Comment",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                }
+            ],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Comments adds moderated, configurable, cache-safe threaded discussion surfaces to Capell content.",
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Comments extension preview image",
+                "caption": "Comments extension preview"
+            }
+        ],
+        "categories": ["admin", "engagement", "frontend"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": [
+            "admin-resource",
+            "dashboard-widget",
+            "frontend-component",
+            "model",
+            "route",
+            "settings"
+        ]
+    }
+}

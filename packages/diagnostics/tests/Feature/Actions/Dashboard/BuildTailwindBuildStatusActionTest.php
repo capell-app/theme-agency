@@ -6,8 +6,10 @@ use Capell\Core\Models\Site;
 use Capell\Diagnostics\Actions\Dashboard\BuildTailwindBuildStatusAction;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Sleep;
@@ -16,6 +18,9 @@ use Illuminate\Support\Sleep;
 // Helpers
 // ---------------------------------------------------------------------------
 
+/**
+ * @return array<array-key, mixed>
+ */
 function makeSitesWithTailwindPaths(int $count): array
 {
     $createdSites = [];
@@ -58,10 +63,14 @@ function cleanupPath(string $path): void
     }
 }
 
+/**
+ * @param  Collection<array-key, mixed>  $assignedSiteIds
+ */
 function createScopedUserForBuildTailwindBuildStatusActionTest(SupportCollection $assignedSiteIds): Authenticatable
 {
     $user = new class extends Authenticatable implements FilamentUser
     {
+        /** @use HasFactory<Factory<static>> */
         use HasFactory;
 
         /** @var SupportCollection<int, int> */

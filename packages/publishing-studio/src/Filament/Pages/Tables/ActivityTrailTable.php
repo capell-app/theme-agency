@@ -41,9 +41,6 @@ class ActivityTrailTable implements TableConfigurator
             ->paginated();
     }
 
-    /**
-     * @return class-string
-     */
     private static function providerClass(): string
     {
         if (interface_exists(ActivityTrailQueryProvider::class)) {

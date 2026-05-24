@@ -18,7 +18,7 @@ use LogicException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static Collection<int, AiDiscoveryPageProfile> run(Site $site, Language $language, ?Collection $discoverablePages = null)
+ * @method static Collection<int, AiDiscoveryPageProfile> run(Site $site, Language $language, ?Collection<int, DiscoverablePageData> $discoverablePages = null)
  */
 final class SyncAiDiscoveryPageProfilesAction
 {

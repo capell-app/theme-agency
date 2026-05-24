@@ -16,7 +16,7 @@
     "surfaces": ["admin"],
     "dependencies": {
         "requires": ["capell-app/core"],
-        "optional": ["capell-app/public-actions"],
+        "supports": ["capell-app/public-actions"],
         "conflicts": []
     },
     "providers": {
@@ -81,7 +81,13 @@
     },
     "marketplace": {
         "summary": "Access gating foundations for Capell CMS.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Access Gate extension preview image",
+                "caption": "Access Gate extension preview"
+            }
+        ],
         "categories": ["admin", "operations"]
     },
     "contributionTraceability": {

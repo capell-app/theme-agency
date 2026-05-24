@@ -1,6 +1,6 @@
-# Theme SaaS
+# Velocity Theme
 
-Conversion-led SaaS theme for Capell.
+Product-led SaaS theme for Capell, shipped under the existing `saas` theme key.
 
 ## At A Glance
 
@@ -8,10 +8,23 @@ Conversion-led SaaS theme for Capell.
 - Namespace: `Capell\ThemeStudio\Saas\`
 - Capell dependencies: `capell-app/core`, `capell-app/foundation-theme`
 
+## Why It Helps Your Capell Workflow
+
+- Provides Velocity renderer views for software and subscription sites built on Capell.
+- Helps owners launch product-led pages with feature discovery, proof, comparison, calculator, and insight surfaces.
+- Gives developers a focused theme package that reuses Foundation Theme conventions instead of hard-coding product layouts into content.
+
+## Best Used With
+
+- [Foundation Theme](../foundation-theme/README.md)
+- [Theme Agency](../theme-agency/README.md)
+- [Theme Corporate](../theme-corporate/README.md)
+
 ## What It Adds
 
-- Conversion-led SaaS theme for Capell.
-- Public views for navigation, hero, features, proof, content listing, CTA, and footer sections.
+- Velocity SaaS theme for Capell.
+- Public views for navigation, hero, features, proof, content listing, comparison, calculator, CTA, footer, and blog sections.
+- Blog index and article views that render custom insight markup when Blog is installed and marketing-safe fallback cards when it is not.
 
 ## Why It Matters
 
@@ -36,16 +49,16 @@ This package makes its Composer dependencies visible because they are part of th
 
 Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) during package deployment.
 
-- Theme admin list showing SaaS.
-- Frontend page rendered with SaaS theme.
+- Theme admin list showing Velocity.
+- Frontend page rendered with Velocity theme.
 - Theme preview URL output.
 
 ## Technical Shape
 
-- SaasThemeServiceProvider registers the renderer.
+- SaasThemeServiceProvider registers the Velocity renderer.
 - `capell.json` declares `themeKey: "saas"` and `extends: "capell-app/foundation-theme"`.
 - Uses Foundation Theme runtime data and standard section keys, while rendering its own page and section Blade views.
-- Ships Blade resources for the page wrapper and standard theme sections.
+- Ships Blade resources for the page wrapper, standard theme sections, comparison, calculator, blog section, and blog page views.
 - No migrations, config, routes, models, admin navigation, or package-owned settings are present.
 - Public theme output must stay free of package identifiers, signed admin URLs, Filament/editor markers, and other authoring metadata.
 
@@ -63,7 +76,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Install Impact
 
-- Adds a SaaS renderer to theme system.
+- Adds the Velocity renderer to theme system.
 - No database changes.
 - No admin navigation by itself.
 - No public routes by itself.
@@ -71,6 +84,8 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 ## Install And Setup
 
 - Install with `composer require capell-app/theme-saas` in the host Capell application.
+- Seed the Velocity preview pages with `php artisan capell:theme-saas-demo --url=https://demo.test --sites=Demo --languages=en --force`.
+- The Extensions installer demo checkbox and full Capell demo install use the same manifest demo command path.
 - In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
 - For screenshots, use a disposable Capell app with the core stack, Layout Builder, Foundation Theme, and only this theme package installed.
 
@@ -83,11 +98,12 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Install Layout Builder before Foundation Theme in the disposable harness.
 - Install Foundation Theme before using this renderer.
 - Build both frontend and Filament assets before browser capture.
-- Keep Theme Studio settings aligned with a SaaS preset such as `launch`, `platform`, or `labs`; stale settings from another theme can make screenshots misleading.
+- Keep Theme Studio settings aligned with the `velocity` preset; stale settings from another theme can make screenshots misleading.
 - Do not install a Studio metapackage; this package installs independently.
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 - [overview.md](docs/overview.md)
 

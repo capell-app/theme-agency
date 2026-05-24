@@ -6,7 +6,6 @@ use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
-use Capell\Core\Models\SiteDomain;
 use Capell\Core\Models\Translation;
 use Capell\SeoSuite\Actions\ResolveAiDiscoveryProfileAction;
 use Capell\SeoSuite\Actions\UpdateAiDiscoveryPageInclusionAction;
@@ -15,10 +14,6 @@ use Capell\SeoSuite\Filament\Pages\Tables\SeoAuditTable;
 use Capell\SeoSuite\Filament\Pages\Tables\TranslationCoverageTable;
 use Capell\SeoSuite\Models\AiDiscoveryPageProfile;
 use Capell\SeoSuite\Models\PageSeoSnapshot;
-use Filament\Actions\Action;
-use Filament\Actions\BulkAction;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 it('exposes translation coverage table columns for page, language completeness, missing languages, and author', function (): void {
@@ -66,18 +61,10 @@ it('exposes ai discovery table columns, filters, row actions, and bulk actions',
     $actionsMethod = new ReflectionMethod(AiDiscoveryTable::class, 'getTableActions');
     $bulkActionsMethod = new ReflectionMethod(AiDiscoveryTable::class, 'getBulkActions');
 
-    $columnNames = collect($columnsMethod->invoke(null))
-        ->map(fn (mixed $column): string => $column->getName())
-        ->all();
-    $filterNames = collect($filtersMethod->invoke(null))
-        ->map(fn (SelectFilter|TernaryFilter $filter): string => $filter->getName())
-        ->all();
-    $actionNames = collect($actionsMethod->invoke(null))
-        ->map(fn (Action $action): string => $action->getName())
-        ->all();
-    $bulkActionNames = collect($bulkActionsMethod->invoke(null))
-        ->map(fn (BulkAction $action): string => $action->getName())
-        ->all();
+    $columnNames = reflectedComponentNames($columnsMethod);
+    $filterNames = reflectedComponentNames($filtersMethod);
+    $actionNames = reflectedComponentNames($actionsMethod);
+    $bulkActionNames = reflectedComponentNames($bulkActionsMethod);
 
     expect($columnNames)->toBe([
         'name',
@@ -108,17 +95,15 @@ it('builds markdown urls for included ai discovery pages with public urls', func
     }
 
     $language = Language::factory()->create();
-    $site = Site::factory()->language($language)->withTranslations($language)->create();
+    $site = Site::factory()
+        ->language($language)
+        ->withTranslations($language, siteDomainData: ['domain' => 'example.test', 'scheme' => 'https', 'path' => null, 'default' => true])
+        ->create();
     $page = Page::factory()
         ->site($site)
         ->withTranslations($language, ['title' => 'AI Discovery Public Page'])
         ->create();
 
-    SiteDomain::factory()
-        ->site($site)
-        ->language($language)
-        ->default()
-        ->create(['domain' => 'example.test', 'scheme' => 'https']);
     PageUrl::factory()
         ->site($site)
         ->language($language)
@@ -142,12 +127,8 @@ it('exposes seo audit table columns and status filters', function (): void {
     $columnsMethod = new ReflectionMethod(SeoAuditTable::class, 'getTableColumns');
     $filtersMethod = new ReflectionMethod(SeoAuditTable::class, 'getTableFilters');
 
-    $columnNames = collect($columnsMethod->invoke(null))
-        ->map(fn (mixed $column): string => $column->getName())
-        ->all();
-    $filterNames = collect($filtersMethod->invoke(null))
-        ->map(fn (SelectFilter $filter): string => $filter->getName())
-        ->all();
+    $columnNames = reflectedComponentNames($columnsMethod);
+    $filterNames = reflectedComponentNames($filtersMethod);
 
     expect($columnNames)->toBe([
         'name',
@@ -171,6 +152,30 @@ it('exposes seo audit table columns and status filters', function (): void {
             'snapshot_state',
         ]);
 });
+
+/**
+ * @return array<int, string>
+ */
+function reflectedComponentNames(ReflectionMethod $method): array
+{
+    $components = $method->invoke(null);
+
+    if (! is_iterable($components)) {
+        return [];
+    }
+
+    $names = [];
+
+    foreach ($components as $component) {
+        if (! is_object($component) || ! method_exists($component, 'getName')) {
+            continue;
+        }
+
+        $names[] = $component->getName();
+    }
+
+    return $names;
+}
 
 it('uses translation metadata before labels for seo audit search preview titles', function (): void {
     $translation = new Translation;

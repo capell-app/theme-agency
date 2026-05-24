@@ -13,6 +13,9 @@ class BeaconRequest extends FormRequest
         return true;
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public function rules(): array
     {
         return [

@@ -23,7 +23,7 @@ use Override;
  * @property CarbonInterface|null $expires_at
  * @property CarbonInterface|null $last_used_at
  * @property CarbonInterface|null $revoked_at
- * @property array<string, mixed>|null $metadata
+ * @property array<array-key, mixed>|null $metadata
  * @property-read Grant|null $grant
  */
 class BrowserToken extends AccessGateModel
@@ -49,16 +49,25 @@ class BrowserToken extends AccessGateModel
 
     protected static string $factory = BrowserTokenFactory::class;
 
+    /**
+     * @return BelongsTo<Area, $this>
+     */
     public function area(): BelongsTo
     {
         return $this->belongsTo(Area::class, 'access_area_id');
     }
 
+    /**
+     * @return BelongsTo<Grant, $this>
+     */
     public function grant(): BelongsTo
     {
         return $this->belongsTo(Grant::class, 'grant_id');
     }
 
+    /**
+     * @return HasMany<Event, $this>
+     */
     public function events(): HasMany
     {
         return $this->hasMany(Event::class, 'browser_token_id');

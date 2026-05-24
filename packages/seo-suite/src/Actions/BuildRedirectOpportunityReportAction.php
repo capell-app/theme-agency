@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\SeoSuite\Actions;
 
 use Capell\Core\Enums\UrlTypeEnum;
+use Capell\Core\Models\Page;
 use Capell\Core\Models\PageUrl;
 use Capell\SeoSuite\Data\RedirectOpportunityData;
 use Capell\SeoSuite\Models\BrokenLink;
@@ -25,10 +26,13 @@ final class BuildRedirectOpportunityReportAction
      */
     public function handle(?int $siteId = null, ?int $languageId = null, ?int $pageId = null): array
     {
+        $pageQuery = $this->applyPageScope(Page::query(), $siteId, $languageId)
+            ->select('id');
+
         return BrokenLink::query()
             ->where('http_status', '>=', 400)
             ->when($pageId !== null, fn (Builder $query): Builder => $query->where('page_id', $pageId))
-            ->whereHas('page', fn (Builder $query): Builder => $this->applyPageScope($query, $siteId, $languageId))
+            ->whereIn('page_id', $pageQuery)
             ->with([
                 'page.site',
                 'page.pageUrls.siteDomain',
@@ -46,12 +50,19 @@ final class BuildRedirectOpportunityReportAction
             ->all();
     }
 
+    /**
+     * @param  Builder<PageUrl>  $query
+     */
     private function applyNonRedirectUrlScope(Builder $query): void
     {
         $query->whereNull('type')
             ->orWhere('type', '!=', UrlTypeEnum::Redirect->value);
     }
 
+    /**
+     * @param  Builder<Page>  $query
+     * @return Builder<Page>
+     */
     private function applyPageScope(Builder $query, ?int $siteId, ?int $languageId): Builder
     {
         return $query
@@ -59,6 +70,10 @@ final class BuildRedirectOpportunityReportAction
             ->when($languageId !== null, fn (Builder $query): Builder => $this->applyPageLanguageScope($query, $languageId));
     }
 
+    /**
+     * @param  Builder<Page>  $query
+     * @return Builder<Page>
+     */
     private function applyPageLanguageScope(Builder $query, int $languageId): Builder
     {
         return $query->where(
@@ -83,7 +98,7 @@ final class BuildRedirectOpportunityReportAction
             ->first();
 
         $resolvedSiteId = $page?->site_id;
-        $resolvedLanguageId = $pageUrl?->language_id ?? $translation?->language_id;
+        $resolvedLanguageId = $pageUrl->language_id ?? $translation->language_id;
 
         return new RedirectOpportunityData(
             sourceUrl: $sourceUrl,

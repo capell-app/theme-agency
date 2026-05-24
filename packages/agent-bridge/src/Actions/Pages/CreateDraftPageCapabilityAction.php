@@ -90,12 +90,6 @@ final class CreateDraftPageCapabilityAction implements CapellAgentBridgeCapabili
             return;
         }
 
-        if (! method_exists($user, 'getAssignedSiteIds')) {
-            throw ValidationException::withMessages([
-                'site_id' => __('capell-agent-bridge::admin.capability_site_forbidden'),
-            ]);
-        }
-
         $assignedSiteIds = $user->getAssignedSiteIds();
         if (! is_iterable($assignedSiteIds)) {
             throw ValidationException::withMessages([
@@ -116,22 +110,17 @@ final class CreateDraftPageCapabilityAction implements CapellAgentBridgeCapabili
 
     private function isGlobalAdmin(Authenticatable $user): bool
     {
-        if (method_exists($user, 'isGlobalAdmin') && $user->isGlobalAdmin() === true) {
+        if ($user->isGlobalAdmin() === true) {
             return true;
         }
 
-        return method_exists($user, 'hasRole')
-            && $user->hasRole(config('capell.roles.super_admin', 'super_admin')) === true;
+        return $user->hasRole(config('capell.roles.super_admin', 'super_admin')) === true;
     }
 
     /** @return class-string<Model> */
     private function pageClass(): string
     {
         $pageClass = Page::class;
-
-        if (! is_subclass_of($pageClass, Model::class)) {
-            throw ValidationException::withMessages(['page' => 'Capell Page model is not available.']);
-        }
 
         return $pageClass;
     }

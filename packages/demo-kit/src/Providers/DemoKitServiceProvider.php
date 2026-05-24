@@ -8,6 +8,7 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Support\CapellAdminManager;
 use Capell\Admin\Support\Extensions\ExtensionPageRegistry;
 use Capell\Core\Data\RenderableDefinitionData;
+use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Renderables\RenderableRegistry;
@@ -56,8 +57,16 @@ final class DemoKitServiceProvider extends AbstractPackageServiceProvider
 
     public function packageBooted(): void
     {
+        $this->registerTailwindSources();
         $this->registerRenderables();
         $this->registerAdminPanelExtensions();
+    }
+
+    private function registerTailwindSources(): void
+    {
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName),
+        );
     }
 
     private function registerRenderables(): void
@@ -111,9 +120,6 @@ final class DemoKitServiceProvider extends AbstractPackageServiceProvider
         }
 
         $registerExtensionPage = static function (CapellAdminManager $capellAdminManager): void {
-            if (! method_exists($capellAdminManager, 'registerExtensionPage')) {
-                return;
-            }
 
             $capellAdminManager->registerExtensionPage(self::$packageName, DemoKitPage::class);
         };

@@ -75,19 +75,17 @@ class PasswordPolicyServiceProvider extends AbstractPackageServiceProvider
     private function registerSettings(SettingsSchemaRegistry $registry): SettingsSchemaRegistry
     {
         $registry->registerSettingsClass('password_policy', PasswordPolicySettings::class);
-        if (method_exists($registry, 'registerMetadata')) {
-            $metadataClass = SettingsGroupMetadata::class;
+        $metadataClass = SettingsGroupMetadata::class;
 
-            if (class_exists($metadataClass)) {
-                $registry->registerMetadata(new $metadataClass(
-                    group: 'password_policy',
-                    label: 'capell-password-policy::settings.title',
-                    icon: Heroicon::OutlinedKey,
-                    navigationGroup: 'capell-admin::navigation.group_system',
-                    navigationSort: 93,
-                    packageName: static::$packageName,
-                ));
-            }
+        if (class_exists($metadataClass)) {
+            $registry->registerMetadata(new $metadataClass(
+                group: 'password_policy',
+                label: 'capell-password-policy::settings.title',
+                icon: Heroicon::OutlinedKey,
+                navigationGroup: 'capell-admin::navigation.group_system',
+                navigationSort: 93,
+                packageName: static::$packageName,
+            ));
         }
 
         $registry->register('password_policy', PasswordPolicySettingsSchema::class);
@@ -166,12 +164,7 @@ class PasswordPolicyServiceProvider extends AbstractPackageServiceProvider
             && method_exists($admin, 'registerAdminBridge')
             && method_exists($admin, 'bootAdminBridges')
             && class_exists(PasswordPolicyAdminBridge::class)
-            && class_exists(AdminBridgeRegistrar::class)
-            && method_exists(AdminBridgeRegistrar::class, 'extensionPage')
-            && method_exists(AdminBridgeRegistrar::class, 'page')
-            && method_exists(AdminBridgeRegistrar::class, 'panelExtender')
-            && method_exists(AdminBridgeRegistrar::class, 'userFormExtender')
-            && method_exists(AdminBridgeRegistrar::class, 'userTableExtender');
+            && class_exists(AdminBridgeRegistrar::class);
     }
 
     private function registerConfigSettings(): self

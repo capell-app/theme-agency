@@ -42,6 +42,8 @@ Site-specific crawler rows override global rows with the same provider, user age
 
 Current seeded providers include OpenAI, Anthropic, Perplexity, Google Extended, and Common Crawl. Review crawler documentation regularly because names and behaviours can change.
 
+For the site-owner decision model, see [Crawler Governance](crawler-governance.md).
+
 ## Cache And Invalidation
 
 Generated AI Discovery documents are cached per site, domain context, language, output kind, and page where relevant. Snapshot rows store the content hash, byte size, cache key, generated time, expiry, and freshness status.

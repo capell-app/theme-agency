@@ -1,0 +1,105 @@
+{
+    "package": "theme-healthcare",
+    "composerName": "capell-app/theme-healthcare",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "public/docs/screenshots/packages/theme-healthcare",
+    "entries": [
+        {
+            "id": "theme-admin-list-showing-healthcare",
+            "title": "Theme admin list showing healthcare.",
+            "package": "theme-healthcare",
+            "surface": "admin",
+            "targetType": "filament-resource",
+            "target": "ThemeResource:index",
+            "required": true,
+            "notes": "Capture with only the core Capell stack, Foundation Theme, Layout Builder, and capell-app/theme-healthcare installed in the isolated demo harness.",
+            "useCase": "An administrator confirms the healthcare theme is available through the core Themes resource without installing another theme package.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-healthcare/theme-admin-list-showing-healthcare.png"
+        },
+        {
+            "id": "frontend-page-rendered-with-healthcare-theme",
+            "title": "Frontend page rendered with healthcare theme.",
+            "package": "theme-healthcare",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-healthcare-demo",
+            "required": true,
+            "notes": "Capture a seeded clinic page after installing capell-app/theme-healthcare and building the Foundation Theme/frontend assets.",
+            "useCase": "A visitor sees a seeded appointment-led page rendered through the healthcare utility bar, navigation, hero, service finder, services, clinicians, booking, events, proof, comparison, resources, contact, CTA, and footer sections.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-healthcare/frontend-page-rendered-with-healthcare-theme.png"
+        },
+        {
+            "id": "healthcare-homepage-desktop",
+            "title": "Healthcare homepage desktop.",
+            "package": "theme-healthcare",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-healthcare-demo",
+            "required": true,
+            "notes": "Capture the desktop healthcare homepage with appointment hero, service finder, clinician proof, booking CTA, and footer.",
+            "useCase": "A clinic owner reviews the first viewport and conversion flow on desktop before activating the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-healthcare/healthcare-homepage-desktop.png"
+        },
+        {
+            "id": "healthcare-homepage-mobile",
+            "title": "Healthcare homepage mobile.",
+            "package": "theme-healthcare",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-healthcare-demo",
+            "required": true,
+            "notes": "Capture the mobile healthcare homepage with compact navigation, appointment CTA, service cards, and footer.",
+            "useCase": "A clinic owner verifies the mobile patient journey and tap targets before activating the theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-healthcare/healthcare-homepage-mobile.png"
+        },
+        {
+            "id": "healthcare-services-listing",
+            "title": "Healthcare services listing.",
+            "package": "theme-healthcare",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-healthcare-directory",
+            "required": true,
+            "notes": "Capture a seeded services listing with finder controls, service cards, and booking prompts.",
+            "useCase": "A patient browses care options and moves toward the right enquiry path.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-healthcare/healthcare-services-listing.png"
+        },
+        {
+            "id": "healthcare-clinician-detail",
+            "title": "Healthcare clinician detail.",
+            "package": "theme-healthcare",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-healthcare-detail",
+            "required": true,
+            "notes": "Capture a seeded clinician or care article detail page with image-led hero, body copy, proof, and related services.",
+            "useCase": "A patient reviews clinician expertise and available next steps.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-healthcare/healthcare-clinician-detail.png"
+        },
+        {
+            "id": "healthcare-contact-page",
+            "title": "Healthcare contact page.",
+            "package": "theme-healthcare",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-healthcare-contact",
+            "required": true,
+            "notes": "Capture the healthcare contact surface with locations, enquiry panel, and clear appointment actions.",
+            "useCase": "A patient finds the right contact route after browsing services.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-healthcare/healthcare-contact-page.png"
+        },
+        {
+            "id": "theme-preview-url-output",
+            "title": "Theme preview URL output.",
+            "package": "theme-healthcare",
+            "surface": "admin",
+            "targetType": "admin-url",
+            "target": "capell.admin.theme-preview",
+            "required": true,
+            "notes": "Capture a signed preview URL generated with CreateThemePreviewUrlAction for the seeded healthcare theme, site, and page.",
+            "useCase": "An administrator opens a signed preview URL to inspect a page with the healthcare theme applied before publishing the theme choice.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-healthcare/theme-preview-url-output.png"
+        }
+    ]
+}

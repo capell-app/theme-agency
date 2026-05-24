@@ -23,7 +23,7 @@ use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
 /**
- * @method static Collection<int, AiReadinessIssueData> run(Page $page, Site $site, Language $language)
+ * @method static \Illuminate\Support\Collection<int, AiReadinessIssueData> run(Page $page, Site $site, Language $language)
  */
 final class BuildAiReadinessAuditAction
 {
@@ -97,7 +97,7 @@ final class BuildAiReadinessAuditAction
     {
         $meta = (array) $translation?->meta;
 
-        return trim(strip_tags((string) ($meta['title'] ?? $translation?->title ?? $page->name)));
+        return trim(strip_tags((string) ($meta['title'] ?? $translation->title ?? $page->name)));
     }
 
     private function canonicalUrl(Page $page, Language $language): string
@@ -116,6 +116,9 @@ final class BuildAiReadinessAuditAction
             || filled($translationMeta['schema_templates'] ?? null);
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private function extractableContent(?Translation $translation): string|array|null
     {
         $content = $translation?->content;

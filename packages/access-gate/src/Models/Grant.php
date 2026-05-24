@@ -28,8 +28,8 @@ use Override;
  * @property string|null $discount_label
  * @property string|null $discount_code
  * @property CarbonInterface|null $discount_expires_at
- * @property array<string, mixed>|null $discount_metadata
- * @property array<string, mixed>|null $metadata
+ * @property array<array-key, mixed>|null $discount_metadata
+ * @property array<array-key, mixed>|null $metadata
  * @property-read Area|null $area
  */
 class Grant extends AccessGateModel
@@ -60,26 +60,33 @@ class Grant extends AccessGateModel
 
     protected static string $factory = GrantFactory::class;
 
+    /** @return BelongsTo<Area, $this> */
     public function area(): BelongsTo
     {
         return $this->belongsTo(Area::class, 'access_area_id');
     }
 
+    /** @return BelongsTo<Registration, $this> */
     public function registration(): BelongsTo
     {
         return $this->belongsTo(Registration::class, 'registration_id');
     }
 
+    /** @return HasMany<ClaimToken, $this> */
     public function claimTokens(): HasMany
     {
         return $this->hasMany(ClaimToken::class, 'grant_id');
     }
 
+    /** @return HasMany<BrowserToken, $this> */
     public function browserTokens(): HasMany
     {
         return $this->hasMany(BrowserToken::class, 'grant_id');
     }
 
+    /**
+     * @return HasMany<Event, $this>
+     */
     public function events(): HasMany
     {
         return $this->hasMany(Event::class, 'grant_id');

@@ -1,0 +1,56 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'navigation' => [
+        'label' => 'Shopify Commerce',
+        'group' => 'Integrations',
+    ],
+    'connection' => [
+        'title' => 'Shopify Commerce',
+        'shop_label' => 'Shop domain',
+        'shop_placeholder' => 'example.myshopify.com',
+        'connect' => 'Connect',
+        'connected_store' => 'Connected store',
+        'granted_scopes' => 'Granted scopes',
+        'last_sync' => 'Last sync',
+        'never_synced' => 'Never synced',
+        'sync_now' => 'Sync now',
+        'disconnect' => 'Disconnect',
+        'disconnect_confirm' => 'Disconnect this Shopify store and remove its Admin API token?',
+        'disconnected' => 'Shopify store disconnected.',
+        'sync_started' => 'Shopify catalog sync queued.',
+        'sync_running' => 'Shopify catalog sync is queued or running.',
+        'search_label' => 'Search cached catalog',
+        'search_placeholder' => 'Search by product title or handle',
+        'search' => 'Search',
+        'search_failed' => 'Shopify search failed. Check the connection and try again.',
+        'no_results' => 'No matching products found.',
+        'result_count' => '{0} No products shown|{1} 1 product shown|[2,*] :count products shown',
+        'empty_catalog' => 'No products are cached yet. Run a sync to load the Shopify catalog.',
+        'product' => 'Product',
+        'variants' => 'Variants',
+        'status' => 'Status',
+        'sync_error' => 'The last Shopify catalog sync failed. Check the app credentials and try syncing again.',
+        'not_configured' => 'Shopify app credentials are not configured.',
+        'oauth_connected' => 'Shopify store connected.',
+        'oauth_failed' => 'Shopify connection failed. Check the store domain and app credentials, then try again.',
+        'oauth_invalid_state' => 'Shopify connection expired. Start the connection again.',
+        'invalid_shop' => 'Enter a valid myshopify.com domain.',
+        'invalid_site' => 'Choose a site you can manage.',
+        'site_label' => 'Site',
+    ],
+    'status' => [
+        'connecting' => 'Connecting',
+        'active' => 'Active',
+        'revoked' => 'Revoked',
+        'error' => 'Error',
+    ],
+    'settings' => [
+        'title' => 'Shopify Commerce settings',
+        'api_version' => 'Admin API version',
+        'default_scopes' => 'Default OAuth scopes',
+        'search_cache_ttl_minutes' => 'Search cache TTL',
+    ],
+];

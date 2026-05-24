@@ -20,7 +20,7 @@
             "capell-app/core",
             "capell-app/frontend"
         ],
-        "optional": [
+        "supports": [
             "capell-app/campaign-studio",
             "capell-app/form-builder",
             "capell-app/insights"
@@ -107,7 +107,13 @@
     },
     "marketplace": {
         "summary": "Email Studio gives Capell a transactional email centre for reusable templates, delivery profiles, send audit trails, suppressions, replies, and provider events.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Email Studio extension preview image",
+                "caption": "Email Studio extension preview"
+            }
+        ],
         "categories": ["admin", "communications", "console", "frontend"]
     },
     "contributionTraceability": {

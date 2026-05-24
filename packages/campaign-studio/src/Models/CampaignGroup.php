@@ -55,31 +55,50 @@ class CampaignGroup extends Model
         return is_string($tableName) ? $tableName : 'campaign_groups';
     }
 
+    /**
+     * @return BelongsTo<Site, $this>
+     */
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class);
     }
 
+    /**
+     * @return HasMany<CampaignLandingPage, $this>
+     */
     public function landingPages(): HasMany
     {
         return $this->hasMany(CampaignLandingPage::class);
     }
 
+    /**
+     * @return HasMany<CampaignCtaBlock, $this>
+     */
     public function ctaBlocks(): HasMany
     {
         return $this->hasMany(CampaignCtaBlock::class);
     }
 
+    /**
+     * @return HasMany<CampaignConversionGoal, $this>
+     */
     public function conversionGoals(): HasMany
     {
         return $this->hasMany(CampaignConversionGoal::class);
     }
 
+    /**
+     * @return HasMany<CampaignConversion, $this>
+     */
     public function conversions(): HasMany
     {
         return $this->hasMany(CampaignConversion::class);
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopeActive(Builder $query): Builder
     {
         return $query

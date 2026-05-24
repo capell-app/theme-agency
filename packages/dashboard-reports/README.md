@@ -11,6 +11,18 @@ Generic CMS reporting widgets for Capell dashboards.
 - Capell dependencies: `capell-app/admin`, `capell-app/core`
 - Third-party dependencies: `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`
 
+## Why It Helps Your Capell Workflow
+
+- Turns common CMS health and content signals into dashboard widgets that operators can scan quickly.
+- Helps owners understand content health and publishing trends without opening several admin resources.
+- Gives developers small reporting Actions that can be tested independently from Filament widget rendering.
+
+## Best Used With
+
+- [Diagnostics](../diagnostics/README.md)
+- [Publishing Studio](../publishing-studio/README.md)
+- [Login Audit](../login-audit/README.md)
+
 ## What It Adds
 
 Generic CMS reporting widgets for Capell dashboards.
@@ -78,6 +90,7 @@ This package makes its Composer dependencies visible because they are part of th
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [overview.md](docs/overview.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 

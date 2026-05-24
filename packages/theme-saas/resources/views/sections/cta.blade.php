@@ -1,23 +1,29 @@
-<section class="theme-cta mx-auto max-w-7xl px-6 py-16">
-    <div class="rounded-2xl bg-slate-950 p-10 text-center text-white">
-        <h2 class="text-3xl font-bold tracking-tight">
-            {{ $section->heading }}
-        </h2>
-        @if ($section->summary)
-            <p class="mx-auto mt-3 max-w-2xl text-white/70">
-                {{ $section->summary }}
-            </p>
-        @endif
+<section class="velocity-final-cta bg-white">
+    <div class="px-6">
+        <div
+            class="rounded-3xl border border-blue-100 bg-blue-600 p-8 text-white md:p-12"
+        >
+            <div class="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
+                <div>
+                    <h2 class="text-white">{{ $section->heading }}</h2>
+                    @if ($section->summary)
+                        <p class="mt-4 max-w-2xl text-blue-50">
+                            {{ $section->summary }}
+                        </p>
+                    @endif
+                </div>
 
-        <div class="mt-8 flex justify-center gap-3">
-            @foreach ($section->actions as $action)
-                <a
-                    href="{{ $action['url'] }}"
-                    class="rounded-lg bg-[var(--theme-accent)] px-5 py-3 text-sm font-semibold text-white"
-                >
-                    {{ $action['label'] }}
-                </a>
-            @endforeach
+                <div class="flex flex-wrap gap-3 md:justify-end">
+                    @foreach ($section->actions as $action)
+                        <a
+                            href="{{ $action['url'] }}"
+                            class="velocity-cta {{ ($action['style'] ?? 'primary') === 'secondary' ? 'border border-white/40 text-white' : 'bg-white text-blue-700' }}"
+                        >
+                            {{ $action['label'] }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
         </div>
     </div>
 </section>

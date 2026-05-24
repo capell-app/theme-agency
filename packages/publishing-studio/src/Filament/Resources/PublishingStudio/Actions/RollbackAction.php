@@ -14,7 +14,6 @@ use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Foundation\Auth\User as AuthenticatedUser;
 use Illuminate\Support\Facades\Auth;
-use LogicException;
 use Override;
 use Throwable;
 
@@ -66,7 +65,7 @@ class RollbackAction extends Action
 
                 try {
                     (new Rollback)->rollbackTo($target, $user, (string) ($data['reason'] ?? ''));
-                } catch (LogicException|Throwable $exception) {
+                } catch (Throwable $exception) {
                     Notification::make()
                         ->title(__('capell-admin::workspace.notifications.rollback_failed'))
                         ->body($exception->getMessage())

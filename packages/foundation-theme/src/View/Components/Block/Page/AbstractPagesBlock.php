@@ -14,6 +14,9 @@ abstract class AbstractPagesBlock extends AbstractBlock
 {
     public ?string $componentItem = null;
 
+    /**
+     * @var Collection<array-key, mixed>
+     */
     public ?Collection $pages = null;
 
     protected static string $defaultView = 'capell-foundation-theme::components.block.asset.pages';

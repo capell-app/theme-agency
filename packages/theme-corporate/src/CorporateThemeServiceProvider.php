@@ -11,6 +11,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\ThemeStudio\Corporate\Console\Commands\DemoCommand;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -74,6 +75,78 @@ class CorporateThemeServiceProvider extends ServiceProvider
                         'layoutPresentation' => 'editorial',
                     ],
                 ),
+                new ThemePresetData(
+                    key: 'integrity',
+                    name: 'Integrity',
+                    description: 'Institutional security and board-grade structure from the Stitch Institutional Integrity system.',
+                    previewImage: '/vendor/capell/themes/corporate-integrity.jpg',
+                    values: [
+                        'primaryColor' => '#0f172a',
+                        'accentColor' => '#0284c7',
+                        'neutralColor' => '#334155',
+                        'surfaceColor' => '#f7f9fb',
+                        'foregroundColor' => '#191c1e',
+                        'headingFont' => 'inter',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'balanced',
+                        'cardStyle' => 'bordered',
+                        'navigationStyle' => 'standard',
+                        'layoutPresentation' => 'structured',
+                        'motionIntensity' => 'subtle',
+                        'mediaTreatment' => 'natural',
+                        'radius' => 'sm',
+                        'headingScale' => 'compact',
+                        'cardDensity' => 'compact',
+                    ],
+                ),
+                new ThemePresetData(
+                    key: 'enterprise-trust',
+                    name: 'Enterprise Trust',
+                    description: 'Formal trust-led enterprise direction based on the Stitch Enterprise Trust homepage.',
+                    previewImage: '/vendor/capell/themes/corporate-enterprise-trust.jpg',
+                    values: [
+                        'primaryColor' => '#172554',
+                        'accentColor' => '#d97706',
+                        'neutralColor' => '#1e293b',
+                        'surfaceColor' => '#f8fafc',
+                        'foregroundColor' => '#0f172a',
+                        'headingFont' => 'manrope',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'balanced',
+                        'cardStyle' => 'bordered',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'structured',
+                        'motionIntensity' => 'subtle',
+                        'mediaTreatment' => 'natural',
+                        'radius' => 'md',
+                        'headingScale' => 'balanced',
+                        'cardDensity' => 'comfortable',
+                    ],
+                ),
+                new ThemePresetData(
+                    key: 'public-ledger',
+                    name: 'Public Ledger',
+                    description: 'Civic-grade information architecture for content-heavy public and regulated sites.',
+                    previewImage: '/vendor/capell/themes/corporate-public-ledger.jpg',
+                    values: [
+                        'primaryColor' => '#0f766e',
+                        'accentColor' => '#ca8a04',
+                        'neutralColor' => '#263238',
+                        'surfaceColor' => '#fbfaf7',
+                        'foregroundColor' => '#18201f',
+                        'headingFont' => 'inter',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'balanced',
+                        'cardStyle' => 'bordered',
+                        'navigationStyle' => 'standard',
+                        'layoutPresentation' => 'structured',
+                        'motionIntensity' => 'subtle',
+                        'mediaTreatment' => 'natural',
+                        'radius' => 'none',
+                        'headingScale' => 'compact',
+                        'cardDensity' => 'comfortable',
+                    ],
+                ),
             ],
             assets: ['css' => 'vendor/capell/themes/corporate.css'],
             runtime: FrontendRuntime::Blade,
@@ -85,6 +158,10 @@ class CorporateThemeServiceProvider extends ServiceProvider
 
     public function boot(ThemeRegistry $registry): void
     {
+        if ($this->app->runningInConsole()) {
+            $this->commands([DemoCommand::class]);
+        }
+
         if (! CapellCore::isPackageInstalled(self::$packageName)) {
             return;
         }

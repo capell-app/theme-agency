@@ -106,10 +106,10 @@ class BrokenLinkCheck implements PublishCheck
         }
 
         preg_match_all('/\bhref\s*=\s*"(\/[^"]*)"/i', $html, $matches);
-        $fromDouble = $matches[1] ?? [];
+        $fromDouble = $matches[1];
 
         preg_match_all("/\\bhref\\s*=\\s*'(\\/[^']*)'/i", $html, $matches);
-        $fromSingle = $matches[1] ?? [];
+        $fromSingle = $matches[1];
 
         return array_values(array_unique(array_merge($fromDouble, $fromSingle)));
     }

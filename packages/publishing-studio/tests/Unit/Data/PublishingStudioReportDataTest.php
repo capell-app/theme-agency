@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\PublishingStudio\Tests\Unit\Data;
 
 use Capell\Admin\Data\PagePublishStateData;
+use Capell\Core\Models\Page;
 use Capell\PublishingStudio\Activity\WorkspaceActivityEntry;
 use Capell\PublishingStudio\Approvals\RequiredReviewer;
 use Capell\PublishingStudio\Checks\PublishCheckResult;
@@ -17,9 +18,11 @@ use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\RebaseReport;
 use Carbon\CarbonImmutable;
 use Illuminate\Container\Container;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
+/** @extends TestCase<MockObject> */
 final class PublishingStudioReportDataTest extends TestCase
 {
     protected function setUp(): void
@@ -91,7 +94,7 @@ final class PublishingStudioReportDataTest extends TestCase
             ],
             rowCounts: [
                 Workspace::class => 2,
-                'App\\Models\\Page' => 3,
+                Page::class => 3,
             ],
             failure: new RuntimeException('Publish blocked.'),
             checkResults: [

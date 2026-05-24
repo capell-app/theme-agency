@@ -11,6 +11,18 @@ Repository deployment connections and Composer publishing for Capell CMS.
 - Capell dependencies: `capell-app/admin`, `capell-app/core`
 - Third-party dependencies: `laravel/framework`, `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`
 
+## Why It Helps Your Capell Workflow
+
+- Helps operators connect repository providers and publish Composer requirement changes from Capell-managed workflows.
+- Keeps deployment connection state and provider-specific behavior inside one package instead of scattering Git provider code.
+- Gives developers Actions for validating OAuth state, preparing requirement commits, and publishing requirement changes.
+
+## Best Used With
+
+- [Diagnostics](../diagnostics/README.md)
+- [Agent Bridge](../agent-bridge/README.md)
+- [Migration Assistant](../migration-assistant/README.md)
+
 ## What It Adds
 
 - Repository deployment connections and Composer publishing for Capell CMS.
@@ -89,6 +101,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 - [overview.md](docs/overview.md)
 

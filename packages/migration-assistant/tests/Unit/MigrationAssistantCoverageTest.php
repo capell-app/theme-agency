@@ -209,14 +209,18 @@ it('exposes null import target and collision defaults', function (): void {
     expect($target->type)->toBe('live')
         ->and($target->label)->toBeNull()
         ->and($resolver->resolve($session)->type)->toBe('live')
-        ->and((new NullPageCollisionDetector)->detect(['/demo'], null))
+        ->and((new NullPageCollisionDetector)->detect([[
+            'site_id' => null,
+            'language_id' => null,
+            'url' => '/demo',
+        ]], null))
         ->toBe([PageReviewRow::COLLISION_NONE, [], PageReviewRow::ACTION_CREATE]);
 });
 
 it('declares import session table columns and summary formatting', function (): void {
     $reflection = new ReflectionMethod(ImportSessionsTable::class, 'getTableColumns');
 
-    $columns = collect($reflection->invoke(null));
+    $columns = capell_test_collect($reflection->invoke(null));
     $summaryColumn = $columns->first(
         fn (mixed $column): bool => $column instanceof TextColumn && $column->getName() === 'result_summary',
     );

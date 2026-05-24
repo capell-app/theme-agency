@@ -11,6 +11,7 @@ use Capell\AgentBridge\Models\CapellAgentBridgeToken;
 use Capell\AgentBridge\Support\CapellAgentBridgeCapabilityRegistry;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -92,7 +93,7 @@ final class InvokeAgentBridgeCapabilityPreviewAction
             'expires_at' => now()->addMinutes(config('capell-agent-bridge.confirmation_ttl_minutes', 10)),
         ]);
 
-        if ($user !== null) {
+        if ($user instanceof Model) {
             $confirmation->user()->associate($user);
         }
 

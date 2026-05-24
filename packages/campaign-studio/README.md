@@ -11,6 +11,18 @@ CampaignStudio adds campaign groups, landing pages, CTA blocks, conversion goals
 - Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/form-builder`, `capell-app/frontend`, `capell-app/insights`
 - Third-party dependencies: `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`
 
+## Why It Helps Your Capell Workflow
+
+- Connects campaign landing pages, CTA blocks, UTM attribution, conversion goals, and reporting into one growth workflow.
+- Helps owners see which campaigns and pages are producing conversions without stitching together custom admin widgets.
+- Gives developers package-owned Actions and models for attribution, funnels, overview stats, and campaign URLs.
+
+## Best Used With
+
+- [Insights](../insights/README.md)
+- [GA4 Reports](../ga4-reports/README.md)
+- [Form Builder](../form-builder/README.md)
+
 ## What It Adds
 
 CampaignStudio adds campaign groups, landing pages, CTA blocks, conversion goals, UTM attribution, and conversion reporting to Capell.
@@ -161,6 +173,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [campaign-studio-api.md](docs/campaign-studio-api.md)
 - [campaign-studio-database.md](docs/campaign-studio-database.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)

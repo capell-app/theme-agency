@@ -11,6 +11,18 @@ GA4 Reports 4 dashboard reporting for Capell.
 - Capell dependencies: `capell-app/admin`, `capell-app/core`
 - Third-party dependencies: `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`
 
+## Why It Helps Your Capell Workflow
+
+- Brings GA4 reporting snapshots into Capell admin so owners can see traffic signals beside CMS work.
+- Keeps credential, property, sync-window, and null-client behavior isolated from campaign or content packages.
+- Gives developers a data client boundary that can be faked in tests and replaced when host apps need custom GA4 access.
+
+## Best Used With
+
+- [Insights](../insights/README.md)
+- [Campaign Studio](../campaign-studio/README.md)
+- [Dashboard Reports](../dashboard-reports/README.md)
+
 ## What It Adds
 
 GA4 Reports 4 dashboard reporting for Capell.
@@ -92,6 +104,7 @@ This package makes its Composer dependencies visible because they are part of th
 
 ## Docs
 
+- [docs index](docs/README.md)
 - [overview.md](docs/overview.md)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 - [data-client.md](docs/data-client.md)

@@ -104,6 +104,10 @@ final class Actions extends Component
             return $this->resolvePublicAction($action);
         }
 
+        if (ActionLinkEnum::tryFrom($rawType) === ActionLinkEnum::VideoPopup) {
+            return $this->resolveVideoPopupAction($action);
+        }
+
         $url = is_string($action['url'] ?? null) ? $action['url'] : '';
         $pageUrl = null;
 
@@ -127,6 +131,27 @@ final class Actions extends Component
             'label' => $action['label'] ?? $pageUrl?->translation->link_text ?? '',
             'url' => $url,
             'wire_navigation' => true,
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $action
+     * @return array<string, mixed>|null
+     */
+    private function resolveVideoPopupAction(array $action): ?array
+    {
+        $videoUrl = is_string($action['video_url'] ?? null) ? $action['video_url'] : '';
+
+        if ($videoUrl === '') {
+            return null;
+        }
+
+        return [
+            ...$action,
+            'kind' => 'video_popup',
+            'label' => $action['label'] ?? '',
+            'video_url' => $videoUrl,
+            'wire_navigation' => false,
         ];
     }
 

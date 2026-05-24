@@ -23,7 +23,7 @@ class BuildCalendarFeedAction
         $startsAt ??= CarbonImmutable::now()->subWeek();
         $endsAt ??= CarbonImmutable::now()->addYear();
 
-        $calendar = Calendar::create((string) ($site->translation?->title ?? $site->name ?? __('capell-events::generic.events')))
+        $calendar = Calendar::create((string) ($site->translation->title ?? $site->name ?? __('capell-events::generic.events')))
             ->productIdentifier('-//Capell//Events//EN')
             ->refreshInterval(60);
 
@@ -37,7 +37,7 @@ class BuildCalendarFeedAction
 
     private function calendarEvent(EventOccurrence $occurrence): CalendarEvent
     {
-        $event = CalendarEvent::create($occurrence->event->translation?->title ?? $occurrence->event->name)
+        $event = CalendarEvent::create($occurrence->event->translation->title ?? $occurrence->event->name)
             ->uniqueIdentifier(sprintf('event-%s-occurrence-%s@capell', $occurrence->event_id, $occurrence->occurrence_key))
             ->startsAt($occurrence->starts_at->toDateTimeImmutable(), ! $occurrence->all_day);
 

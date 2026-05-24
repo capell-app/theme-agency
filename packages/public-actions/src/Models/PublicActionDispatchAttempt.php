@@ -48,11 +48,17 @@ class PublicActionDispatchAttempt extends Model
         return is_string($tableName) ? $tableName : 'public_action_dispatch_attempts';
     }
 
+    /**
+     * @return BelongsTo<PublicActionSubmission, $this>
+     */
     public function submission(): BelongsTo
     {
         return $this->belongsTo(PublicActionSubmission::class, 'public_action_submission_id');
     }
 
+    /**
+     * @return BelongsTo<PublicActionDestination, $this>
+     */
     public function destination(): BelongsTo
     {
         return $this->belongsTo(PublicActionDestination::class, 'public_action_destination_id');

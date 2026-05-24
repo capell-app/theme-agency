@@ -12,6 +12,9 @@ final class BuildScheduledPublishingQueryAction
 {
     use AsAction;
 
+    /**
+     * @return Builder<Page>
+     */
     public function handle(): Builder
     {
         return Page::query()

@@ -50,7 +50,7 @@ class RequestChangesAction extends Action
                     return;
                 }
 
-                $requiredLevels = $record->settings?->requiredApprovalLevels ?? 2;
+                $requiredLevels = $record->settings->requiredApprovalLevels ?? 2;
 
                 $record->requestChanges($user, $requiredLevels, (string) $data['notes']);
 

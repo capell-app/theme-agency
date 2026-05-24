@@ -4,12 +4,19 @@ declare(strict_types=1);
 
 namespace Capell\ThemeStudio\Saas;
 
+use Capell\Core\Data\VendorAssetData;
+use Capell\Core\Enums\FrontendRuntime;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
+use Capell\Core\ThemeStudio\Theme\ThemePageAdapterRegistry;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\ThemeStudio\Saas\Console\Commands\DemoCommand;
+use Capell\ThemeStudio\Saas\Rendering\BlogSectionRenderer;
+use Capell\ThemeStudio\Saas\ThemeStudio\Adapters\SaasThemePageAdapter;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -23,59 +30,41 @@ class SaasThemeServiceProvider extends ServiceProvider
     {
         return new ThemeDefinitionData(
             key: self::THEME_KEY,
-            name: 'SaaS',
-            description: 'Conversion-led layouts with product framing, compact proof, and clear feature hierarchy.',
+            name: 'Velocity',
+            description: 'Velocity product-led SaaS layouts with feature discovery, comparison, calculator, and blog-ready growth content.',
             package: 'capell-app/theme-saas',
-            previewImage: '/vendor/capell/themes/saas-launch.jpg',
+            previewImage: '/vendor/capell/themes/saas-velocity.jpg',
             tags: ['Product', 'Conversion', 'Growth'],
             bestFit: ['Software products', 'Startups', 'Subscription services'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'comparison', 'calculator', 'cta', 'footer', 'blog'],
             presets: [
                 new ThemePresetData(
-                    key: 'launch',
-                    name: 'Launch',
-                    description: 'High-conversion product framing with crisp cards and proof near the fold.',
-                    previewImage: '/vendor/capell/themes/saas-launch.jpg',
-                    values: [
-                        'primaryColor' => '#6366f1',
-                        'accentColor' => '#10b981',
-                        'headingFont' => 'inter',
-                        'cardStyle' => 'elevated',
-                        'navigationStyle' => 'prominent',
-                        'layoutPresentation' => 'structured',
-                    ],
-                ),
-                new ThemePresetData(
-                    key: 'platform',
-                    name: 'Platform',
-                    description: 'Enterprise SaaS positioning with denser proof and measured motion.',
-                    previewImage: '/vendor/capell/themes/saas-platform.jpg',
+                    key: 'velocity',
+                    name: 'Velocity',
+                    description: 'Product-led conversion direction from the Stitch Velocity landing, article, blog, and feature screens.',
+                    previewImage: '/vendor/capell/themes/saas-velocity.jpg',
                     values: [
                         'primaryColor' => '#2563eb',
-                        'accentColor' => '#14b8a6',
-                        'headingFont' => 'manrope',
-                        'cardStyle' => 'bordered',
-                        'navigationStyle' => 'standard',
-                        'motionIntensity' => 'subtle',
-                    ],
-                ),
-                new ThemePresetData(
-                    key: 'labs',
-                    name: 'Labs',
-                    description: 'More expressive product storytelling for AI, developer, and beta products.',
-                    previewImage: '/vendor/capell/themes/saas-labs.jpg',
-                    values: [
-                        'primaryColor' => '#7c3aed',
-                        'accentColor' => '#22d3ee',
+                        'accentColor' => '#06b6d4',
+                        'neutralColor' => '#0f172a',
+                        'surfaceColor' => '#f8fafc',
+                        'foregroundColor' => '#0f172a',
                         'headingFont' => 'sora',
-                        'cardStyle' => 'layered',
-                        'layoutPresentation' => 'immersive',
-                        'motionIntensity' => 'expressive',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'balanced',
+                        'cardStyle' => 'bordered',
+                        'navigationStyle' => 'prominent',
+                        'layoutPresentation' => 'structured',
+                        'motionIntensity' => 'subtle',
                         'mediaTreatment' => 'framed',
+                        'radius' => 'md',
+                        'headingScale' => 'balanced',
+                        'cardDensity' => 'compact',
                     ],
                 ),
             ],
             assets: ['css' => 'vendor/capell/themes/saas.css'],
+            runtime: FrontendRuntime::Blade,
         );
     }
 
@@ -84,12 +73,22 @@ class SaasThemeServiceProvider extends ServiceProvider
 
     public function boot(ThemeRegistry $registry): void
     {
+        if ($this->app->runningInConsole()) {
+            $this->commands([DemoCommand::class]);
+        }
+
         if (! CapellCore::isPackageInstalled(self::$packageName)) {
             return;
         }
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-saas');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-saas');
+        $this->publishes([
+            __DIR__ . '/../resources/css/saas-theme.css' => public_path('vendor/capell/themes/saas.css'),
+        ], 'capell-theme-saas-assets');
+        $this->registerVendorCssAssets();
+        $this->app->make(ThemePageAdapterRegistry::class)
+            ->register(self::THEME_KEY, SaasThemePageAdapter::class);
 
         $sectionRenderers = $this->sectionRenderers();
 
@@ -104,19 +103,31 @@ class SaasThemeServiceProvider extends ServiceProvider
         );
     }
 
+    private function registerVendorCssAssets(): void
+    {
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName),
+        );
+    }
+
     /**
-     * @return array<string, ViewSectionRenderer>
+     * @return array<string, SectionRenderer>
      */
     private function sectionRenderers(): array
     {
+        $blogAvailable = CapellCore::isPackageInstalled('capell-app/blog');
+
         return [
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-saas::sections.navigation', failLoudly: true),
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-saas::sections.hero', failLoudly: true),
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-saas::sections.features', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-saas::sections.proof', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-saas::sections.content-listing', failLoudly: true),
+            'comparison' => new ViewSectionRenderer(self::THEME_KEY, 'comparison', 'capell-theme-saas::sections.comparison', failLoudly: true),
+            'calculator' => new ViewSectionRenderer(self::THEME_KEY, 'calculator', 'capell-theme-saas::sections.calculator', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-saas::sections.cta', failLoudly: true),
             'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-saas::sections.footer', failLoudly: true),
+            'blog' => new BlogSectionRenderer(self::THEME_KEY, $blogAvailable, failLoudly: true),
         ];
     }
 }

@@ -11,6 +11,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
+/**
+ * @property EmailProviderType $provider
+ * @property string $from_email
+ * @property string|null $from_name
+ * @property string|null $reply_to_email
+ * @property string|null $reply_to_name
+ * @property array<string, mixed>|null $provider_settings
+ */
 class EmailProfile extends Model
 {
     /** @use HasFactory<EmailProfileFactory> */
@@ -43,16 +51,25 @@ class EmailProfile extends Model
         return is_string($tableName) ? $tableName : 'email_profiles';
     }
 
+    /**
+     * @return HasMany<EmailTemplateVariant, $this>
+     */
     public function variants(): HasMany
     {
         return $this->hasMany(EmailTemplateVariant::class);
     }
 
+    /**
+     * @return HasMany<EmailMessage, $this>
+     */
     public function messages(): HasMany
     {
         return $this->hasMany(EmailMessage::class);
     }
 
+    /**
+     * @return HasMany<EmailEvent, $this>
+     */
     public function events(): HasMany
     {
         return $this->hasMany(EmailEvent::class);

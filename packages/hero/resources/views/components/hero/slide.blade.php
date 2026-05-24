@@ -14,6 +14,7 @@
     'containerClass' => '',
     'first' => false,
     'height' => '',
+    'heroBackground' => null,
     'slideBgImgClass' => '',
     'title' => null,
 ])
@@ -44,6 +45,8 @@
             ])
         }}
     >
+        <x-capell-hero::hero.background :background="$heroBackground" />
+
         @if ($backgroundImage)
             <x-capell::media
                 format="webp"

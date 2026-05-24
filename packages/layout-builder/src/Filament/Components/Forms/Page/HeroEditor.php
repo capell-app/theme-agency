@@ -11,7 +11,7 @@ use Capell\Admin\Filament\Components\Forms\Editor\RichEditor;
 use Capell\Admin\Filament\Components\Forms\Editor\TinyEditor;
 use Capell\Core\Contracts\Pageable;
 use Capell\Core\Models\Translation;
-use Capell\LayoutBuilder\Models\BlockAsset;
+use Capell\LayoutBuilder\Models\WidgetAsset;
 use Filament\Schemas\Components\Group;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -30,10 +30,8 @@ class HeroEditor extends Group
                 $page = null;
                 if ($record instanceof Pageable) {
                     $page = $record;
-                } elseif ($record instanceof Translation) {
+                } else {
                     $page = $record->translatable;
-                } elseif (method_exists($record, 'pageable')) {
-                    $page = $record->pageable;
                 }
 
                 if (! $page instanceof Pageable) {
@@ -65,8 +63,8 @@ class HeroEditor extends Group
         return $cache->rememberForever(
             sprintf('page-%d-has-hero-block-assets', $page->id),
             function () use ($page): bool {
-                /** @var class-string<BlockAsset> $model */
-                $model = BlockAsset::class;
+                /** @var class-string<WidgetAsset> $model */
+                $model = WidgetAsset::class;
 
                 return $model::query()
                     ->where('pageable_type', $page->getMorphClass())

@@ -41,7 +41,7 @@ describe('frontend authoring capell.json manifest', function (): void {
 
     it('declares browser tests for public safety and admin editing', function () use ($screenshotManifest): void {
         $manifest = $screenshotManifest();
-        $browserTestIds = collect($manifest['browserTests'] ?? [])->pluck('id')->all();
+        $browserTestIds = capell_test_collect($manifest['browserTests'] ?? [])->pluck('id')->all();
 
         expect($browserTestIds)->toContain('anonymous-users-receive-no-authoring-surface')
             ->and($browserTestIds)->toContain('admin-can-open-single-field-editor');

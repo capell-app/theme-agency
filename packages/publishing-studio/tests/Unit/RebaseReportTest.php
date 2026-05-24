@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Models\Page;
+use Capell\Navigation\Models\Navigation;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\RebaseReport;
 
@@ -27,16 +29,16 @@ it('dashboard-dashboard_reports no conflicts when the map is empty', function ()
 it('addConflict accumulates uuids without duplicates', function (): void {
     $report = new RebaseReport(makeWorkspaceForReport(1), 2, []);
 
-    $report->addConflict('App\\Models\\Page', 'uuid-one');
-    $report->addConflict('App\\Models\\Page', 'uuid-two');
-    $report->addConflict('App\\Models\\Page', 'uuid-one');
-    $report->addConflict('App\\Models\\Navigation', 'nav-uuid');
+    $report->addConflict(Page::class, 'uuid-one');
+    $report->addConflict(Page::class, 'uuid-two');
+    $report->addConflict(Page::class, 'uuid-one');
+    $report->addConflict(Navigation::class, 'nav-uuid');
 
     expect($report->hasConflicts())->toBeTrue()
         ->and($report->conflictCount())->toBe(3)
         ->and($report->conflicts())->toBe([
-            'App\\Models\\Page' => ['uuid-one', 'uuid-two'],
-            'App\\Models\\Navigation' => ['nav-uuid'],
+            Page::class => ['uuid-one', 'uuid-two'],
+            Navigation::class => ['nav-uuid'],
         ]);
 });
 

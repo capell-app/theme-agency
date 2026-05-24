@@ -8,15 +8,15 @@
     "version": "4.x-dev",
     "description": "Theme Corporate registers the corporate theme key and restrained renderer views for B2B, public sector, and professional-service sites.",
     "product": {
-        "group": "Capell Themes",
-        "tier": "premium",
-        "bundle": "themes"
+        "group": "Capell Foundation",
+        "tier": "free",
+        "bundle": "foundation"
     },
     "namespace": "Capell\\ThemeStudio\\Corporate",
     "surfaces": ["frontend"],
     "dependencies": {
         "requires": ["capell-app/core", "capell-app/foundation-theme"],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -28,7 +28,17 @@
         "admin": [],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\Corporate\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "corporate"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
     "database": {
         "migrations": false,
         "settings": false,
@@ -37,7 +47,8 @@
     "commands": {
         "install": null,
         "setup": null,
-        "demo": null,
+        "demo": "capell:theme-corporate-demo",
+        "demoParams": ["url", "languages", "sites"],
         "doctor": null
     },
     "settings": [],
@@ -71,8 +82,59 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Theme Corporate registers the corporate theme key and restrained renderer views for B2B, public sector, and professional-service sites.",
-        "screenshots": [],
+        "summary": "Corporate theme screenshots across homepage, services, governance, resources, forms, and search layouts.",
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Theme Corporate extension preview image",
+                "caption": "Theme Corporate extension preview"
+            },
+            {
+                "path": "docs/assets/marketplace/corporate-homepage-layout.svg",
+                "alt": "Theme Corporate corporate homepage screenshot showing trust-led hero, capability bands, proof, cta.",
+                "caption": "Theme Corporate: Corporate homepage. Trust-led hero, capability bands, proof, CTA."
+            },
+            {
+                "path": "docs/assets/marketplace/corporate-services-layout.svg",
+                "alt": "Theme Corporate services page screenshot showing service cards, process, outcomes, contact cta.",
+                "caption": "Theme Corporate: Services page. Service cards, process, outcomes, contact CTA."
+            },
+            {
+                "path": "docs/assets/marketplace/corporate-governance-layout.svg",
+                "alt": "Theme Corporate governance page screenshot showing policy sections, document cards, leadership proof. Requires capell-app/document-lifecycle.",
+                "caption": "Theme Corporate: Governance page. Policy sections, document cards, leadership proof. Requires capell-app/document-lifecycle."
+            },
+            {
+                "path": "docs/assets/marketplace/corporate-resources-layout.svg",
+                "alt": "Theme Corporate resources listing screenshot showing resource cards, filters, topic navigation. Requires capell-app/tags.",
+                "caption": "Theme Corporate: Resources listing. Resource cards, filters, topic navigation. Requires capell-app/tags."
+            },
+            {
+                "path": "docs/assets/marketplace/corporate-article-layout.svg",
+                "alt": "Theme Corporate thought leadership article screenshot showing article body, author, related resources. Requires capell-app/blog.",
+                "caption": "Theme Corporate: Thought leadership article. Article body, author, related resources. Requires capell-app/blog."
+            },
+            {
+                "path": "docs/assets/marketplace/corporate-contact-layout.svg",
+                "alt": "Theme Corporate contact form page screenshot showing office details, form fields, routing notes. Requires capell-app/form-builder.",
+                "caption": "Theme Corporate: Contact form page. Office details, form fields, routing notes. Requires capell-app/form-builder."
+            },
+            {
+                "path": "docs/assets/marketplace/corporate-locations-layout.svg",
+                "alt": "Theme Corporate locations page screenshot showing office cards, address metadata, map-ready panels. Requires capell-app/address.",
+                "caption": "Theme Corporate: Locations page. Office cards, address metadata, map-ready panels. Requires capell-app/address."
+            },
+            {
+                "path": "docs/assets/marketplace/corporate-search-layout.svg",
+                "alt": "Theme Corporate search results page screenshot showing search field, grouped results, snippets. Requires capell-app/search.",
+                "caption": "Theme Corporate: Search results page. Search field, grouped results, snippets. Requires capell-app/search."
+            },
+            {
+                "path": "docs/assets/marketplace/corporate-investor-event-layout.svg",
+                "alt": "Theme Corporate event detail page screenshot showing agenda, registration, related documents. Requires capell-app/events.",
+                "caption": "Theme Corporate: Event detail page. Agenda, registration, related documents. Requires capell-app/events."
+            }
+        ],
         "categories": ["frontend", "themes"]
     },
     "extends": "capell-app/foundation-theme",

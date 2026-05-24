@@ -7,6 +7,7 @@ namespace Capell\Newsletter\Models;
 use Capell\Core\Models\Site;
 use Capell\Newsletter\Enums\ImportBatchStatus;
 use Capell\Newsletter\Enums\ImportBatchType;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,6 +16,7 @@ use Override;
 
 class ImportBatch extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     /** @var list<string> */
@@ -35,11 +37,17 @@ class ImportBatch extends Model
 
     protected $table = 'newsletter_import_batches';
 
+    /**
+     * @return BelongsTo<Site, $this>
+     */
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class);
     }
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function actor(): MorphTo
     {
         return $this->morphTo();

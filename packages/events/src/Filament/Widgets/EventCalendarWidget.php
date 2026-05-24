@@ -17,7 +17,7 @@ class EventCalendarWidget extends Widget
     protected int|string|array $columnSpan = 'full';
 
     /**
-     * @return Collection<string, Collection<int, EventOccurrence>>
+     * @return Collection<int|string, \Illuminate\Database\Eloquent\Collection<int, EventOccurrence>>
      */
     #[Computed]
     public function occurrencesByDate(): Collection

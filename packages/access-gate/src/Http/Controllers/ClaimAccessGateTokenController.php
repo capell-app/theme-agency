@@ -53,7 +53,7 @@ final class ClaimAccessGateTokenController
 
         $requestedHost = parse_url($requestedUrl, PHP_URL_HOST);
         $allowedHosts = collect($area->claim_url_hosts ?? [])
-            ->filter(fn (mixed $host): bool => is_string($host) && $host !== '')
+            ->filter(fn (mixed $host): bool => $host !== '')
             ->push($request->getHost())
             ->unique()
             ->values();

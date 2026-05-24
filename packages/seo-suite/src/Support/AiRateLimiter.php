@@ -11,6 +11,9 @@ use Throwable;
 
 class AiRateLimiter
 {
+    /**
+     * @param  array<array-key, mixed>  $config
+     */
     public function __construct(
         protected RateLimitCache $cache,
         protected array $config,

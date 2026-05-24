@@ -1,27 +1,36 @@
-<section class="theme-content-listing mx-auto max-w-7xl px-6 py-16">
-    <div class="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-        <div>
-            <h2 class="text-3xl font-bold tracking-tight">
-                {{ $section->heading }}
-            </h2>
+<section class="velocity-directory bg-white">
+    <div class="px-6">
+        <div class="grid gap-4 md:grid-cols-[0.75fr_1fr] md:items-end">
+            <h2>{{ $section->heading }}</h2>
             @if ($section->summary)
-                <p class="mt-3 max-w-2xl text-slate-600">
+                <p class="max-w-2xl text-lg md:justify-self-end">
                     {{ $section->summary }}
                 </p>
             @endif
         </div>
-    </div>
-    <div class="mt-10 grid gap-4 md:grid-cols-3">
-        @foreach ($section->items as $item)
-            <a
-                href="{{ $item['url'] ?? '#' }}"
-                class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm hover:border-[var(--theme-primary)]"
-            >
-                <h3 class="font-semibold">{{ $item['title'] }}</h3>
-                <p class="mt-2 text-sm text-slate-600">
-                    {{ $item['summary'] ?? '' }}
-                </p>
-            </a>
-        @endforeach
+
+        <div class="mt-10 grid gap-4 md:grid-cols-3">
+            @foreach ($section->items as $item)
+                <a
+                    href="{{ $item['url'] ?? '#' }}"
+                    class="group rounded-2xl border border-slate-200 bg-slate-50/70 p-6 transition hover:border-blue-300 hover:bg-white"
+                >
+                    @if ($item['type'] ?? null)
+                        <p
+                            class="mb-4 text-xs font-black uppercase tracking-widest text-cyan-700"
+                        >
+                            {{ $item['type'] }}
+                        </p>
+                    @endif
+
+                    <h3 class="text-xl font-black group-hover:text-blue-700">
+                        {{ $item['title'] }}
+                    </h3>
+                    <p class="mt-3 text-sm">
+                        {{ $item['summary'] ?? '' }}
+                    </p>
+                </a>
+            @endforeach
+        </div>
     </div>
 </section>

@@ -52,7 +52,9 @@ use Capell\Frontend\Support\State\FrontendState;
 use Capell\LayoutBuilder\Models\Block;
 use Capell\LayoutBuilder\Support\Livewire\OpaqueBlockReference;
 use Filament\Forms\Components\Checkbox;
-use Filament\Schemas\Components\Grid;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -77,7 +79,7 @@ it('generates tailwind assets from configured app sources and packages', functio
     $generated = (new TailwindAssetsGenerator(new Filesystem))->generate($targetPath);
     $css = (string) file_get_contents($targetPath);
 
-    expect($generated)->toBe([$targetPath])
+    capell_expect($generated)->toBe([$targetPath])
         ->and($css)->toContain('@import "tailwindcss";')
         ->and($css)->toContain('@import "@tailwindcss/forms";')
         ->and($css)->toContain('@plugin "@tailwindcss/typography";')
@@ -101,7 +103,7 @@ it('registers foundation theme provider runtime services and package boot hooks'
     $provider->packageRegistered();
     $provider->packageBooted();
 
-    expect(resolve('capell.tailwind.generator'))->toBeInstanceOf(TailwindAssetsGenerator::class)
+    capell_expect(resolve('capell.tailwind.generator'))->toBeInstanceOf(TailwindAssetsGenerator::class)
         ->and(config('media-library.url_generator'))->toBe(CapellUrlGenerator::class);
 });
 
@@ -115,7 +117,7 @@ it('collects default tailwind assets without writing files', function (): void {
 
     $registry = (new TailwindAssetsGenerator(new Filesystem))->collect();
 
-    expect($registry)->toBeInstanceOf(TailwindAssetsRegistry::class)
+    capell_expect($registry)->toBeInstanceOf(TailwindAssetsRegistry::class)
         ->and($registry->imports())->toContain('swiper/css')
         ->and($registry->plugins())->toContain('@tailwindcss/forms')
         ->and($registry->sources())->not->toBeEmpty()
@@ -156,7 +158,7 @@ it('builds banner image render data for empty and rounded blocks', function (): 
         reverseOrder: true,
     );
 
-    expect($data->backgroundImage)->toBeNull()
+    capell_expect($data->backgroundImage)->toBeNull()
         ->and($data->actions)->toBe([['label' => 'Start']])
         ->and($data->hasContent)->toBeTrue()
         ->and($data->imageRoundedClass)->toBe(' rounded-r-lg');
@@ -164,18 +166,39 @@ it('builds banner image render data for empty and rounded blocks', function (): 
 
 it('declares foundation settings schema and settings migrations', function (): void {
     $components = FoundationThemeSettingsSchema::make(Schema::make());
-    $childComponents = foundationThemeCoverageGridComponents($components[0]);
+    $performanceComponents = foundationThemeCoverageChildComponents(foundationThemeCoverageChildComponents($components[0])[0]);
+    $designTokenComponents = foundationThemeCoverageChildComponents(foundationThemeCoverageChildComponents($components[1])[0]);
     $provider = new FoundationThemeSettingsMigrationProvider;
 
-    expect($components)->toHaveCount(1)
-        ->and($components[0])->toBeInstanceOf(Grid::class)
-        ->and($childComponents)->toHaveCount(2)
-        ->and($childComponents[0])->toBeInstanceOf(Checkbox::class)
-        ->and($childComponents[1])->toBeInstanceOf(Checkbox::class)
-        ->and($provider->getSettingMigrations())->toBe(['2026_05_10_190850_01_create_foundation_theme_settings'])
-        ->and($provider->migrations())->toBe(['2026_05_10_190850_01_create_foundation_theme_settings'])
+    capell_expect($components)->toHaveCount(2)
+        ->and($components[0])->toBeInstanceOf(Section::class)
+        ->and($components[1])->toBeInstanceOf(Section::class)
+        ->and($performanceComponents)->toHaveCount(2)
+        ->and($performanceComponents[0])->toBeInstanceOf(Checkbox::class)
+        ->and($performanceComponents[1])->toBeInstanceOf(Checkbox::class)
+        ->and($designTokenComponents)->toHaveCount(14)
+        ->and($designTokenComponents[0])->toBeInstanceOf(ColorPicker::class)
+        ->and($designTokenComponents[11])->toBeInstanceOf(ColorPicker::class)
+        ->and($designTokenComponents[12])->toBeInstanceOf(Select::class)
+        ->and($designTokenComponents[13])->toBeInstanceOf(Select::class)
+        ->and($provider->getSettingMigrations())->toBe([
+            '2026_05_10_190850_01_create_foundation_theme_settings',
+            '2026_05_23_160819_add_foundation_theme_design_tokens',
+            '2026_05_23_161002_refresh_foundation_theme_design_token_defaults',
+            '2026_05_23_170001_add_foundation_theme_composition_tokens',
+            '2026_05_23_171201_quiet_foundation_theme_composition_palette',
+        ])
+        ->and($provider->migrations())->toBe([
+            '2026_05_10_190850_01_create_foundation_theme_settings',
+            '2026_05_23_160819_add_foundation_theme_design_tokens',
+            '2026_05_23_161002_refresh_foundation_theme_design_token_defaults',
+            '2026_05_23_170001_add_foundation_theme_composition_tokens',
+            '2026_05_23_171201_quiet_foundation_theme_composition_palette',
+        ])
         ->and(FoundationThemeSettings::group())->toBe('foundation_theme')
-        ->and(FoundationThemeSettings::schema())->toBe(FoundationThemeSettingsSchema::class);
+        ->and(FoundationThemeSettings::schema())->toBe(FoundationThemeSettingsSchema::class)
+        ->and(FoundationThemeSettings::sectionSpacingCssValueFor(null))->toBe(FoundationThemeSettings::SECTION_SPACING_OPTIONS['relaxed'])
+        ->and(FoundationThemeSettings::widgetGapCssValueFor(null))->toBe(FoundationThemeSettings::WIDGET_GAP_OPTIONS['balanced']);
 
     (new AdminServiceProvider(app()))->register();
 });
@@ -193,7 +216,7 @@ it('compiles foundation blade directives across build tools and buffer expressio
 {{ $renderCard('Hello') }}
 BLADE);
 
-    expect($assetHtml)
+    capell_expect($assetHtml)
         ->toContain('<link rel="stylesheet" href="http://localhost/vendor/capell/frontend.css">')
         ->toContain('<script src="http://localhost/vendor/capell/frontend.js"></script>')
         ->and($buffer)->toContain('<span>Hello a,b</span>');
@@ -213,7 +236,7 @@ it('fills foundation theme defaults without overwriting existing theme meta', fu
         ],
     ]);
 
-    expect($data['meta'])
+    capell_expect($data['meta'])
         ->toHaveKey('assets', ['resources/css/capell/frontend.css'])
         ->toHaveKey('assets_path', 'build')
         ->toHaveKey('footer_spacing', 'relaxed')
@@ -230,7 +253,7 @@ it('covers small foundation layout helper actions', function (): void {
 
     MarkPrimaryHeadingRenderedAction::run();
 
-    expect(BlockIsSlotAction::run($slotBlock))->toBeTrue()
+    capell_expect(BlockIsSlotAction::run($slotBlock))->toBeTrue()
         ->and(BlockIsSlotAction::run($plainBlock))->toBeFalse();
 });
 
@@ -248,7 +271,7 @@ it('skips empty asset blocks without touching frontend context', function (strin
         block: $block,
     );
 
-    expect($component->render())->toBe('');
+    capell_expect($component->render())->toBe('');
 })->with([
     'asset' => [Asset::class],
     'carousel' => [Carousel::class],
@@ -259,7 +282,7 @@ it('reports latest footer pages when explicit pages are provided', function (): 
     $emptyComponent = new LatestPages(headingClass: 'font-semibold', pages: collect());
     $filledComponent = new LatestPages(headingClass: 'font-semibold', pages: collect([new Page]));
 
-    expect($emptyComponent->hasPages())->toBeFalse()
+    capell_expect($emptyComponent->hasPages())->toBeFalse()
         ->and($filledComponent->hasPages())->toBeTrue()
         ->and($filledComponent->render()->name())->toBe('capell::components.footer.latest-pages');
 });
@@ -270,7 +293,7 @@ it('does not build neighbor links when page meta disables them', function (): vo
 
     $neighbors = BuildLayoutNeighborLinksDataAction::run($page, new Site, new Language);
 
-    expect($neighbors->previousPage)->toBeNull()
+    capell_expect($neighbors->previousPage)->toBeNull()
         ->and($neighbors->nextPage)->toBeNull()
         ->and($neighbors->shouldRender())->toBeFalse();
 });
@@ -280,15 +303,15 @@ it('resolves loaded layout container background images defensively', function ()
     $media = new Media;
     $media->collection_name = 'main-background';
 
-    expect(ResolveLoadedLayoutContainerBackgroundImageAction::run($layout, 'main'))->toBeNull();
+    capell_expect(ResolveLoadedLayoutContainerBackgroundImageAction::run($layout, 'main'))->toBeNull();
 
     $layout->setRelation('media', 'not-a-collection');
 
-    expect(ResolveLoadedLayoutContainerBackgroundImageAction::run($layout, 'main'))->toBeNull();
+    capell_expect(ResolveLoadedLayoutContainerBackgroundImageAction::run($layout, 'main'))->toBeNull();
 
     $layout->setRelation('media', collect([$media]));
 
-    expect(ResolveLoadedLayoutContainerBackgroundImageAction::run($layout, 'main'))->toBe($media)
+    capell_expect(ResolveLoadedLayoutContainerBackgroundImageAction::run($layout, 'main'))->toBe($media)
         ->and(ResolveLoadedLayoutContainerBackgroundImageAction::run($layout, 'sidebar'))->toBeNull();
 });
 
@@ -329,7 +352,7 @@ it('rewrites media urls to the active frontend root or configured site base', fu
         ->setMedia($media)
         ->setPathGenerator($pathGenerator);
 
-    expect($generator->getUrl())->toContain('https://cdn.example.test')
+    capell_expect($generator->getUrl())->toContain('https://cdn.example.test')
         ->and($generator->getResponsiveImagesDirectoryUrl())->toBe('https://cdn.example.test/storage/media/responsive/');
 
     $domain = new SiteDomain([
@@ -338,7 +361,7 @@ it('rewrites media urls to the active frontend root or configured site base', fu
     ]);
     resolve(FrontendState::class)->withDomain($domain);
 
-    expect($generator->getUrl())->toContain('https://active.example.test');
+    capell_expect($generator->getUrl())->toContain('https://active.example.test');
 });
 
 it('skips empty navigation and page listing blocks without public markup', function (string $componentClass): void {
@@ -370,7 +393,7 @@ it('skips empty navigation and page listing blocks without public markup', funct
         block: $block,
     );
 
-    expect($component->render())->toBe('');
+    capell_expect($component->render())->toBe('');
 })->with([
     'navigation' => [Navigation::class],
     'children' => [Children::class],
@@ -412,7 +435,7 @@ it('renders page content and layout components from frontend context', function 
         theme: ['container' => 'wide'],
     );
 
-    expect($content->previousPage)->toBeNull()
+    capell_expect($content->previousPage)->toBeNull()
         ->and($content->nextPage)->toBeNull()
         ->and($content->render()->name())->toBe('capell-foundation-theme::components.block.page.content')
         ->and($index->render()->name())->toBe('capell::components.layout.index')
@@ -436,6 +459,11 @@ it('resolves action component links and public action payloads', function (): vo
     $component = new ActionsComponent(actions: [
         ['type' => 'link', 'url' => 'https://example.test', 'label' => 'External'],
         [
+            'type' => 'video_popup',
+            'video_url' => 'https://capell.app/storage/videos/capell-laravel-foundation.mp4',
+            'label' => 'Watch video',
+        ],
+        [
             'type' => 'public_action',
             'public_action_key' => 'request-access',
             'label' => 'Request access',
@@ -446,9 +474,22 @@ it('resolves action component links and public action payloads', function (): vo
         'ignored',
     ]);
 
-    expect($component->resolvedActions)->not->toBeEmpty()
+    capell_expect($component->resolvedActions)->not->toBeEmpty()
         ->and($component->resolvedActions[0]['kind'])->toBe('link')
+        ->and($component->resolvedActions[1]['kind'])->toBe('video_popup')
+        ->and($component->resolvedActions[1]['video_url'])->toBe('https://capell.app/storage/videos/capell-laravel-foundation.mp4')
         ->and($component->render()->name())->toBe('capell-foundation-theme::components.actions.index');
+});
+
+it('renders video popup actions as lightbox triggers', function (): void {
+    $view = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/actions/index.blade.php');
+
+    capell_expect($view)
+        ->toContain('($action[\'kind\'] ?? null) === \'video_popup\'')
+        ->toContain("'lightbox action-item max-w-full whitespace-normal'")
+        ->toContain(':data-lightbox="$action[\'video_url\']"')
+        ->toContain('data-type="video"')
+        ->toContain(':data-title="$action[\'label\'] ?? \'\'"');
 });
 
 it('builds footer context and table asset record keys', function (): void {
@@ -465,7 +506,7 @@ it('builds footer context and table asset record keys', function (): void {
     $footer = new FooterIndex;
     $table = new PageAssets;
 
-    expect($footer->render()->name())->toBe('capell::components.footer.index')
+    capell_expect($footer->render()->name())->toBe('capell::components.footer.index')
         ->and($footer->hasFooterMenu)->toBeFalse()
         ->and($table->getTableRecordKey(['id' => 123]))->toBe('123')
         ->and(PageAssets::getResource())->toBeString();
@@ -479,7 +520,7 @@ it('builds page asset table queries with scoped exclusions', function (): void {
     $method = new ReflectionMethod(PageAssets::class, 'getTableQuery');
     $query = $method->invoke($table);
 
-    expect($query->toSql())->toContain('not')
+    capell_expect($query->toSql())->toContain('not')
         ->and($query->getEagerLoads())->toHaveKeys([
             'translations.language',
             'ancestors.type',
@@ -535,7 +576,7 @@ it('hydrates livewire page blocks from opaque references and skips empty selecti
         'block_index' => 0,
     ]));
 
-    expect($component->render())->toBe('<div style="display: none"></div>')
+    capell_expect($component->render())->toBe('<div style="display: none"></div>')
         ->and(LivewirePages::getViewName())->toBe('capell-foundation-theme::components.block.asset.pages')
         ->and(LivewirePages::getBlockByKey($block->key)?->is($block))->toBeTrue();
 });
@@ -543,10 +584,10 @@ it('hydrates livewire page blocks from opaque references and skips empty selecti
 /**
  * @return array<int, object>
  */
-function foundationThemeCoverageGridComponents(Grid $grid): array
+function foundationThemeCoverageChildComponents(object $component): array
 {
-    $reflectionProperty = new ReflectionProperty($grid, 'childComponents');
-    $childComponents = $reflectionProperty->getValue($grid);
+    $reflectionProperty = new ReflectionProperty($component, 'childComponents');
+    $childComponents = $reflectionProperty->getValue($component);
 
     return $childComponents['default'] ?? [];
 }

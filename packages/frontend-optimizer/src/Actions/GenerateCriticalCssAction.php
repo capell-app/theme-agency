@@ -24,6 +24,8 @@ class GenerateCriticalCssAction
             'status' => OptimizationStatus::Running->value,
         ]);
 
+        throw_unless($run instanceof FrontendOptimizationRun);
+
         try {
             $criticalCssPath = $this->generator->generate($profile, $url);
 

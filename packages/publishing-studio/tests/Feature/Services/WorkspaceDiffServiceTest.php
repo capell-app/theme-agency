@@ -50,8 +50,10 @@ it('dashboard-dashboard_reports modified rows with only changed attributes', fun
 
     $entries = (new WorkspaceDiffService)->diff($workspace);
 
-    expect($entries)->toHaveCount(1);
+    expect($entries->all())->toHaveCount(1);
     $entry = $entries->first();
+    throw_unless(is_array($entry));
+
     expect($entry['kind'])->toBe('modified')
         ->and($entry['changes'])->toHaveKey('name')
         ->and($entry['changes']['name'])->toMatchArray([
@@ -73,8 +75,11 @@ it('dashboard-dashboard_reports added rows with no live counterpart', function (
 
     $entries = (new WorkspaceDiffService)->diff($workspace);
 
-    expect($entries)->toHaveCount(1);
-    expect($entries->first()['kind'])->toBe('added');
+    expect($entries->all())->toHaveCount(1);
+    $entry = $entries->first();
+    throw_unless(is_array($entry));
+
+    expect($entry['kind'])->toBe('added');
 });
 
 it('omits rows whose only differences are ignored columns', function (): void {
@@ -99,7 +104,7 @@ it('omits rows whose only differences are ignored columns', function (): void {
 
     $entries = (new WorkspaceDiffService)->diff($workspace);
 
-    expect($entries)->toHaveCount(0);
+    expect($entries->all())->toHaveCount(0);
 });
 
 it('renders an HTML side-by-side diff for long text', function (): void {
