@@ -1,0 +1,50 @@
+{
+    "name": "capell-app/theme-education",
+    "description": "Course and school theme for education providers, training teams, and learning programmes.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3",
+        "capell-app/core": "^4.0 || 4.x-dev",
+        "capell-app/foundation-theme": "^4.0 || 4.x-dev"
+    },
+    "require-dev": {
+        "pestphp/pest": "^3.0|^4.0",
+        "phpunit/phpunit": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Capell\\ThemeStudio\\Education\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Capell\\ThemeStudio\\Education\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Capell\\ThemeStudio\\Education\\EducationThemeServiceProvider"
+            ]
+        }
+    },
+    "homepage": "https://github.com/capell-app/theme-education",
+    "keywords": [
+        "capell",
+        "cms",
+        "laravel",
+        "theme"
+    ],
+    "authors": [
+        {
+            "name": "Capell Team",
+            "email": "team@capell.app",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/capell-app/capell-packages",
+        "docs": "https://docs.capell.app/packages/theme-education"
+    }
+}

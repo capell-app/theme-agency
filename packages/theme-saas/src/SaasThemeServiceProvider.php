@@ -65,6 +65,7 @@ class SaasThemeServiceProvider extends ServiceProvider
             ],
             assets: ['css' => 'vendor/capell/themes/saas.css'],
             runtime: FrontendRuntime::Blade,
+            extends: 'default',
         );
     }
 

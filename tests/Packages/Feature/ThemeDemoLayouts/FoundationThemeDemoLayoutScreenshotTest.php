@@ -2,7 +2,11 @@
 
 declare(strict_types=1);
 
+use Capell\Tests\Support\Concerns\TestingFrontend;
+
 require_once __DIR__ . '/../../Support/ThemeDemoLayoutScreenshots.php';
+
+uses(TestingFrontend::class);
 
 it('captures foundation default frontend demo page screenshots for the expected page types and layouts', function (): void {
     $pages = installFoundationThemeDemoScreenshotFixture();

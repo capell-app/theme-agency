@@ -25,6 +25,7 @@ use Capell\Core\ThemeStudio\Data\NavigationData;
 use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
 use Capell\Core\ThemeStudio\Data\ThemePageData;
+use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemePageAdapterRegistry;
@@ -82,7 +83,7 @@ function installThemeDemoScreenshotFixture(
 
     createThemeDemoScreenshotMaintenancePage($themeKey, $pages);
     createThemeDemoScreenshotSystemPage($themeKey, $pages);
-    makeThemeDemoScreenshotSystemPageTypesRouteAccessible();
+    allowThemeDemoScreenshotSystemPagesToResolveByUrl();
 
     $pages = Page::query()
         ->with(['layout', 'pageUrl.siteDomain', 'translations', 'type'])
@@ -130,7 +131,7 @@ function installFoundationThemeDemoScreenshotFixture(): Collection
 
     createThemeDemoScreenshotMaintenancePage($themeKey, $pages);
     createThemeDemoScreenshotSystemPage($themeKey, $pages);
-    makeThemeDemoScreenshotSystemPageTypesRouteAccessible();
+    allowThemeDemoScreenshotSystemPagesToResolveByUrl();
 
     $pages = Page::query()
         ->with(['layout', 'pageUrl.siteDomain', 'translations', 'type'])
@@ -174,7 +175,14 @@ function registerFoundationThemeDemoScreenshotRenderer(): void
             tags: ['Foundation'],
             bestFit: ['Default frontend'],
             includedSections: array_keys($sectionRenderers),
-            presets: [],
+            presets: [
+                new ThemePresetData(
+                    key: 'boardroom',
+                    name: 'Foundation',
+                    description: 'Neutral foundation preset used by route-backed demo screenshots.',
+                    previewImage: '/vendor/capell/themes/foundation.jpg',
+                ),
+            ],
             runtime: FrontendRuntime::Blade,
         ),
         themeRenderer: new BladeThemeRenderer(
@@ -186,7 +194,7 @@ function registerFoundationThemeDemoScreenshotRenderer(): void
     );
 }
 
-function makeThemeDemoScreenshotSystemPageTypesRouteAccessible(): void
+function allowThemeDemoScreenshotSystemPagesToResolveByUrl(): void
 {
     Blueprint::query()
         ->whereIn('key', [
@@ -296,21 +304,44 @@ function themeDemoScreenshotRouteBackedHtml(Page $page, string $surface): string
     expect($page->pageUrl)->toBeInstanceOf(PageUrl::class);
 
     $response = get($page->pageUrl->full_url);
-    $statusCode = $page->type?->key === PageTypeEnum::NotFound->value ? 404 : 200;
+    $statusCode = themeDemoScreenshotExpectedRouteStatus($page);
 
     if ($response->getStatusCode() !== $statusCode) {
-        throw new RuntimeException(sprintf(
-            'Expected %s route [%s] to return %d, received %d.',
-            $surface,
-            $page->pageUrl->full_url,
-            $statusCode,
-            $response->getStatusCode(),
-        ));
+        throw new RuntimeException(themeDemoScreenshotRouteFailureMessage($surface, $page, $response, $statusCode));
     }
+
     $response->assertStatus($statusCode);
     assertThemeDemoRouteHtmlIsPublicSafe($response);
 
     return (string) $response->getContent();
+}
+
+function themeDemoScreenshotExpectedRouteStatus(Page $page): int
+{
+    return $page->type?->key === PageTypeEnum::NotFound->value ? 404 : 200;
+}
+
+function themeDemoScreenshotRouteFailureMessage(
+    string $surface,
+    Page $page,
+    TestResponse $response,
+    int $expectedStatusCode,
+): string {
+    $exception = $response->exception;
+    $exceptionSummary = $exception instanceof Throwable
+        ? $exception::class . ': ' . $exception->getMessage()
+        : 'none';
+
+    return sprintf(
+        'Expected %s route [%s] to return %d, received %d. Type [%s] meta: %s. Exception: %s',
+        $surface,
+        $page->pageUrl?->full_url ?? 'missing',
+        $expectedStatusCode,
+        $response->getStatusCode(),
+        (string) $page->type?->key,
+        json_encode($page->type?->meta, JSON_THROW_ON_ERROR),
+        $exceptionSummary,
+    );
 }
 
 function assertThemeDemoRouteHtmlIsPublicSafe(TestResponse $response): void

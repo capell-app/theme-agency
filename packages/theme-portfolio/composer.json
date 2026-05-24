@@ -1,0 +1,50 @@
+{
+    "name": "capell-app/theme-portfolio",
+    "description": "Creator and consultant portfolio theme for work, case studies, services, media kits, and newsletters.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3",
+        "capell-app/core": "^4.0 || 4.x-dev",
+        "capell-app/foundation-theme": "^4.0 || 4.x-dev"
+    },
+    "require-dev": {
+        "pestphp/pest": "^3.0|^4.0",
+        "phpunit/phpunit": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Capell\\ThemeStudio\\Portfolio\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Capell\\ThemeStudio\\Portfolio\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Capell\\ThemeStudio\\Portfolio\\PortfolioThemeServiceProvider"
+            ]
+        }
+    },
+    "homepage": "https://github.com/capell-app/theme-portfolio",
+    "keywords": [
+        "capell",
+        "cms",
+        "laravel",
+        "theme"
+    ],
+    "authors": [
+        {
+            "name": "Capell Team",
+            "email": "team@capell.app",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/capell-app/capell-packages",
+        "docs": "https://docs.capell.app/packages/theme-portfolio"
+    }
+}

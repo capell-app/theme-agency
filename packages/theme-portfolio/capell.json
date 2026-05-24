@@ -1,0 +1,103 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-portfolio",
+    "slug": "theme-portfolio",
+    "displayName": "Theme Portfolio",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Creator and consultant portfolio theme for work, case studies, services, media kits, and newsletters.",
+    "product": {
+        "group": "Capell Foundation",
+        "tier": "free",
+        "bundle": "foundation"
+    },
+    "namespace": "Capell\\ThemeStudio\\Portfolio",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "supports": [
+            "capell-app/layout-builder",
+            "capell-app/frontend-authoring",
+            "capell-app/publishing-studio",
+            "capell-app/seo-suite",
+            "capell-app/blog"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\Portfolio\\PortfolioThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\Portfolio\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "portfolio"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-portfolio-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-portfolio", "theme-portfolio-frontend"],
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-portfolio"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-portfolio.package-health",
+            "label": "Theme Portfolio package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\Portfolio\\Health\\ThemePortfolioHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "marketplace": {
+        "summary": "Creator and consultant portfolio theme for work, case studies, services, media kits, and newsletters.",
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Theme Portfolio extension preview image",
+                "caption": "Theme Portfolio extension preview"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "capell-app/foundation-theme",
+    "themeKey": "portfolio",
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    }
+}

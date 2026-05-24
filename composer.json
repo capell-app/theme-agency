@@ -265,7 +265,12 @@
             "Capell\\WordPressImporter\\": "packages/wordpress-importer/src",
             "Capell\\WelcomeTour\\": "packages/welcome-tour/src",
             "Capell\\PublishingStudio\\": "packages/publishing-studio/src",
-            "Capell\\PublishingStudio\\Database\\Factories\\": "packages/publishing-studio/database/factories"
+            "Capell\\PublishingStudio\\Database\\Factories\\": "packages/publishing-studio/database/factories",
+            "Capell\\ThemeStudio\\LocalServices\\": "packages/theme-local-services/src",
+            "Capell\\ThemeStudio\\Knowledge\\": "packages/theme-knowledge/src",
+            "Capell\\ThemeStudio\\Education\\": "packages/theme-education/src",
+            "Capell\\ThemeStudio\\Nonprofit\\": "packages/theme-nonprofit/src",
+            "Capell\\ThemeStudio\\Portfolio\\": "packages/theme-portfolio/src"
         }
     },
     "autoload-dev": {
@@ -323,7 +328,12 @@
             "Capell\\HtmlCache\\Tests\\": "packages/html-cache/tests",
             "Capell\\WordPressImporter\\Tests\\": "packages/wordpress-importer/tests",
             "Capell\\WelcomeTour\\Tests\\": "packages/welcome-tour/tests",
-            "Capell\\PublishingStudio\\Tests\\": "packages/publishing-studio/tests"
+            "Capell\\PublishingStudio\\Tests\\": "packages/publishing-studio/tests",
+            "Capell\\ThemeStudio\\LocalServices\\Tests\\": "packages/theme-local-services/tests",
+            "Capell\\ThemeStudio\\Knowledge\\Tests\\": "packages/theme-knowledge/tests",
+            "Capell\\ThemeStudio\\Education\\Tests\\": "packages/theme-education/tests",
+            "Capell\\ThemeStudio\\Nonprofit\\Tests\\": "packages/theme-nonprofit/tests",
+            "Capell\\ThemeStudio\\Portfolio\\Tests\\": "packages/theme-portfolio/tests"
         }
     },
     "config": {

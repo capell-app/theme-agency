@@ -130,3 +130,62 @@ vendor/bin/pest packages/foundation-theme/tests packages/layout-builder/tests --
 ```
 
 Use `composer preflight` before committing broader theme/runtime changes.
+
+## Theme Inheritance
+
+Core Theme Studio supports parent theme fallback through `ThemeDefinitionData::$extends`. First-party child themes should set `extends: 'default'` in their runtime definition and `extends: "capell-app/foundation-theme"` in `capell.json`.
+
+When a child theme does not register a renderer for a section, `ThemeRegistry` resolves the renderer through the parent theme chain. Child renderers still win. Missing sections still fail loudly when neither the child nor any parent can render the section.
+
+Use inheritance to avoid copying standard Foundation views into thin child themes. Only override sections where the theme has distinct domain presentation.
+
+## First-Party Theme Catalogue
+
+The modern first-party catalogue now includes these Foundation child themes:
+
+- `local-services`: quote-led service businesses, local proof, service areas, quote forms, resources, and contact paths.
+- `knowledge`: editorial/resource sites, topic hubs, featured content, resource libraries, search-led listings, newsletter, and authors.
+- `education`: schools and course providers, course catalogues, instructors, events, enrolment CTAs, resources, and FAQs.
+- `nonprofit`: charities and civic sites, impact, campaigns, volunteer/donate CTAs, events, stories, and contact paths.
+- `portfolio`: creators and consultants, work grids, case studies, services, testimonials, speaking/media kit, and newsletter paths.
+
+Each package stays thin: no migrations, models, routes, or admin resources. Optional integrations are surfaced through safe render data and must never leak package metadata, authoring state, signed editor URLs, or admin selectors to public output.
+
+## Theme Marketplace Cards
+
+Theme admin cards should read like a product marketplace, not a database table. Cards can use installed theme records, registered theme definitions, and manifest/admin metadata to show preview images, best-fit use cases, tags, section count, package identity, demo readiness, install state, and compatibility warnings.
+
+Keep card copy and labels translated through `capell-admin::*`.
+
+## Theme Inheritance
+
+Core Theme Studio supports parent theme fallback through `ThemeDefinitionData::$extends`. First-party child themes should set `extends: 'default'` in their runtime definition and `extends: "capell-app/foundation-theme"` in `capell.json`.
+
+When a child theme does not register a renderer for a section, `ThemeRegistry` resolves the renderer through the parent theme chain. Child renderers still win. Missing sections still fail loudly when neither the child nor any parent can render the section.
+
+Use inheritance to avoid copying standard Foundation views into thin child themes. Only override sections where the theme has distinct domain presentation.
+
+## First-Party Theme Catalogue
+
+The modern first-party catalogue now includes these Foundation child themes:
+
+- `local-services`: quote-led service businesses, local proof, service areas, quote forms, resources, and contact paths.
+- `knowledge`: editorial/resource sites, topic hubs, featured content, resource libraries, search-led listings, newsletter, and authors.
+- `education`: schools and course providers, course catalogues, instructors, events, enrolment CTAs, resources, and FAQs.
+- `nonprofit`: charities and civic sites, impact, campaigns, volunteer/donate CTAs, events, stories, and contact paths.
+- `portfolio`: creators and consultants, work grids, case studies, services, testimonials, speaking/media kit, and newsletter paths.
+
+Each package stays thin: no migrations, models, routes, or admin resources. Optional integrations are surfaced through safe render data and must never leak package metadata, authoring state, signed editor URLs, or admin selectors to public output.
+
+## Theme Marketplace Cards
+
+Theme admin cards should read like a product marketplace, not a database table. Cards can use installed theme records, registered theme definitions, and manifest/admin metadata to show:
+
+- Preview image or generated fallback.
+- Best-fit use cases and tags.
+- Included section count.
+- Package/composer identity in details.
+- Demo readiness and package/install state.
+- Compatibility warnings when present.
+
+Keep card copy and labels translated through `capell-admin::*`.

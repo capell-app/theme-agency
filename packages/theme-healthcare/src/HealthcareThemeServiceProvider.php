@@ -65,6 +65,7 @@ class HealthcareThemeServiceProvider extends ServiceProvider
             ],
             assets: ['css' => 'vendor/capell/themes/healthcare.css'],
             runtime: FrontendRuntime::Blade,
+            extends: 'default',
         );
     }
 

@@ -502,3 +502,100 @@ These changes would make theme work faster and safer:
   over time, keeping aliases for backwards compatibility.
 - Document and enforce the supported `BrandProfileData` token vocabulary so
   custom themes do not invent incompatible preset fields.
+
+## Theme Inheritance Runtime
+
+Set runtime inheritance in the service provider definition:
+
+```php
+return new ThemeDefinitionData(
+    key: 'client',
+    name: 'Client',
+    description: 'Client-specific Foundation child theme.',
+    package: 'vendor/theme-client',
+    previewImage: '/vendor/client/theme.jpg',
+    tags: ['Client'],
+    bestFit: ['Client sites'],
+    includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'],
+    presets: [$preset],
+    extends: 'default',
+);
+```
+
+The manifest still uses the package-level parent:
+
+```json
+{
+    "kind": "theme",
+    "themeKey": "client",
+    "extends": "capell-app/foundation-theme"
+}
+```
+
+A child theme may omit standard section renderers and inherit them from Foundation. It should register only the views it actually customises. Add tests for inherited sections and for the loud failure path when no child or parent renderer exists.
+
+## Marketplace Metadata Expectations
+
+For first-party and marketplace-ready themes, include enough metadata for product-grade admin cards: `tags`, `bestFit`, `includedSections`, `previewImage`, screenshot metadata, optional integration names, and demo command/action readiness when demos exist.
+
+Admin UI strings must stay in `capell-admin::*`; package public Blade must remain free of package names, authoring controls, signed URLs, model IDs, field paths, permissions, and database queries.
+
+## Current First-Party Child Themes
+
+- `capell-app/theme-local-services`, key `local-services`.
+- `capell-app/theme-knowledge`, key `knowledge`.
+- `capell-app/theme-education`, key `education`.
+- `capell-app/theme-nonprofit`, key `nonprofit`.
+- `capell-app/theme-portfolio`, key `portfolio`.
+
+## Theme Inheritance Runtime
+
+Set runtime inheritance in the service provider definition:
+
+```php
+return new ThemeDefinitionData(
+    key: 'client',
+    name: 'Client',
+    description: 'Client-specific Foundation child theme.',
+    package: 'vendor/theme-client',
+    previewImage: '/vendor/client/theme.jpg',
+    tags: ['Client'],
+    bestFit: ['Client sites'],
+    includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'],
+    presets: [$preset],
+    extends: 'default',
+);
+```
+
+The manifest still uses the package-level parent:
+
+```json
+{
+    "kind": "theme",
+    "themeKey": "client",
+    "extends": "capell-app/foundation-theme"
+}
+```
+
+A child theme may omit standard section renderers and inherit them from Foundation. It should register only the views it actually customises. Add tests for inherited sections and for the loud failure path when no child or parent renderer exists.
+
+## Marketplace Metadata Expectations
+
+For first-party and marketplace-ready themes, include enough metadata for product-grade admin cards:
+
+- `tags` for quick visual/content style cues.
+- `bestFit` for use cases.
+- `includedSections` for section count and capability summary.
+- `previewImage` and screenshot metadata.
+- Optional integration names in admin or manifest metadata when the package renders richer states for installed companions.
+- Demo command/action readiness when demos exist.
+
+Admin UI strings must stay in `capell-admin::*`; package public Blade must remain free of package names, authoring controls, signed URLs, model IDs, field paths, permissions, and database queries.
+
+## Current First-Party Child Themes
+
+- `capell-app/theme-local-services`, key `local-services`.
+- `capell-app/theme-knowledge`, key `knowledge`.
+- `capell-app/theme-education`, key `education`.
+- `capell-app/theme-nonprofit`, key `nonprofit`.
+- `capell-app/theme-portfolio`, key `portfolio`.

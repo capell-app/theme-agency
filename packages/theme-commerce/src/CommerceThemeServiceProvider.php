@@ -64,6 +64,7 @@ class CommerceThemeServiceProvider extends ServiceProvider
             ],
             assets: ['css' => 'vendor/capell/themes/commerce.css'],
             runtime: FrontendRuntime::Blade,
+            extends: 'default',
         );
     }
 

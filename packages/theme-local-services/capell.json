@@ -1,0 +1,103 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-local-services",
+    "slug": "theme-local-services",
+    "displayName": "Theme Local Services",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Quote-led service business theme for local operators, trades, clinics, and consultancies.",
+    "product": {
+        "group": "Capell Foundation",
+        "tier": "free",
+        "bundle": "foundation"
+    },
+    "namespace": "Capell\\ThemeStudio\\LocalServices",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "supports": [
+            "capell-app/layout-builder",
+            "capell-app/frontend-authoring",
+            "capell-app/publishing-studio",
+            "capell-app/seo-suite",
+            "capell-app/blog"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\LocalServices\\LocalServicesThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\LocalServices\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "local-services"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-local-services-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-local-services", "theme-local-services-frontend"],
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-local-services"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-local-services.package-health",
+            "label": "Theme Local Services package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\LocalServices\\Health\\ThemeLocalServicesHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "marketplace": {
+        "summary": "Quote-led service business theme for local operators, trades, clinics, and consultancies.",
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Theme Local Services extension preview image",
+                "caption": "Theme Local Services extension preview"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "capell-app/foundation-theme",
+    "themeKey": "local-services",
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    }
+}

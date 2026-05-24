@@ -151,6 +151,7 @@ class CorporateThemeServiceProvider extends ServiceProvider
             ],
             assets: ['css' => 'vendor/capell/themes/corporate.css'],
             runtime: FrontendRuntime::Blade,
+            extends: 'default',
         );
     }
 

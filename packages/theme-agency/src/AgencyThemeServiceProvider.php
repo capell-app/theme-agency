@@ -154,6 +154,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
             ],
             assets: ['css' => 'vendor/capell/themes/agency.css'],
             runtime: FrontendRuntime::Blade,
+            extends: 'default',
         );
     }
 

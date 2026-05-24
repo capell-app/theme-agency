@@ -1,0 +1,103 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-knowledge",
+    "slug": "theme-knowledge",
+    "displayName": "Theme Knowledge",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Editorial and resource-library theme for knowledge bases, publishers, and content-led teams.",
+    "product": {
+        "group": "Capell Foundation",
+        "tier": "free",
+        "bundle": "foundation"
+    },
+    "namespace": "Capell\\ThemeStudio\\Knowledge",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "supports": [
+            "capell-app/layout-builder",
+            "capell-app/frontend-authoring",
+            "capell-app/publishing-studio",
+            "capell-app/seo-suite",
+            "capell-app/blog"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\Knowledge\\KnowledgeThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\Knowledge\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "knowledge"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": "capell:theme-knowledge-demo",
+        "demoParams": ["url", "languages", "sites"],
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-knowledge", "theme-knowledge-frontend"],
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-knowledge"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-knowledge.package-health",
+            "label": "Theme Knowledge package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "class": "Capell\\ThemeStudio\\Knowledge\\Health\\ThemeKnowledgeHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "marketplace": {
+        "summary": "Editorial and resource-library theme for knowledge bases, publishers, and content-led teams.",
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Theme Knowledge extension preview image",
+                "caption": "Theme Knowledge extension preview"
+            }
+        ],
+        "categories": ["frontend", "themes"]
+    },
+    "extends": "capell-app/foundation-theme",
+    "themeKey": "knowledge",
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    }
+}
