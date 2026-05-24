@@ -29,7 +29,7 @@ class PageSeoPanel extends View
             ->registerActions([
                 AiContentBriefAction::make(),
             ])
-            ->viewData(fn (Get $get): array => $this->reportViewData($get('language_id')));
+            ->viewData(fn (Get $get): array => $this->reportViewData($this->resolveLanguageIdFromState($get)));
     }
 
     #[Override]
@@ -78,6 +78,17 @@ class PageSeoPanel extends View
             'site' => $site,
             'language' => $language,
         ];
+    }
+
+    public function resolveLanguageIdFromState(?Get $get = null): null|int|string
+    {
+        foreach ($this->languageStateCandidates($get) as $languageId) {
+            if ($languageId !== null && $languageId !== '') {
+                return $languageId;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -170,6 +181,68 @@ class PageSeoPanel extends View
             }
         }
 
-        return $record->translation->language ?? $site->language;
+        $translation = $record->translation;
+
+        if ($translation?->language instanceof Language) {
+            return $translation->language;
+        }
+
+        return $site?->language;
+    }
+
+    /**
+     * @return array<int, mixed>
+     */
+    private function languageStateCandidates(?Get $get): array
+    {
+        $candidates = [];
+
+        if ($get instanceof Get) {
+            $candidates[] = $get('language_id');
+            $candidates[] = $get('../language_id');
+            $candidates[] = $get('../../language_id');
+        }
+
+        $rawState = $this->containerRawState();
+
+        $candidates[] = $rawState['language_id'] ?? null;
+        $candidates[] = $this->firstTranslationLanguageId($rawState['translations'] ?? null);
+
+        return $candidates;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function containerRawState(): array
+    {
+        try {
+            $state = $this->getContainer()->getRawState();
+        } catch (Throwable) {
+            return [];
+        }
+
+        return is_array($state) ? $state : [];
+    }
+
+    private function firstTranslationLanguageId(mixed $translations): null|int|string
+    {
+        if (! is_array($translations)) {
+            return null;
+        }
+
+        foreach ($translations as $translation) {
+            if (! is_array($translation)) {
+                continue;
+            }
+
+            $languageId = $translation['language_id'] ?? null;
+
+            if ($languageId !== null && $languageId !== '') {
+                return $languageId;
+            }
+        }
+
+        return null;
     }
 }

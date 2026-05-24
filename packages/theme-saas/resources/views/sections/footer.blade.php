@@ -1,4 +1,4 @@
-<footer class="velocity-footer border-t border-slate-200 bg-slate-50">
+<footer class="saas-footer border-t border-slate-200 bg-slate-50">
     <h2 class="sr-only">{{ __('capell-theme-saas::generic.footer') }}</h2>
     <div class="grid gap-10 px-6 py-14 md:grid-cols-[1fr_2fr]">
         <div>

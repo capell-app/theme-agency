@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\ThemeStudio\Corporate;
 
+use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
@@ -168,6 +169,7 @@ class CorporateThemeServiceProvider extends ServiceProvider
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-corporate');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-corporate');
+        $this->registerVendorCssAssets();
 
         $sectionRenderers = $this->sectionRenderers();
 
@@ -179,6 +181,17 @@ class CorporateThemeServiceProvider extends ServiceProvider
                 sectionRenderers: $sectionRenderers,
             ),
             sectionRenderers: array_values($sectionRenderers),
+        );
+    }
+
+    private function registerVendorCssAssets(): void
+    {
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindImport('resources/css/theme-corporate.css', self::$packageName),
+        );
+
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName),
         );
     }
 

@@ -10,6 +10,7 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Filament\Pages\SettingsPage;
 use Capell\Admin\Filament\Resources\Users\Pages\CreateUser;
 use Capell\Admin\Filament\Resources\Users\Pages\EditUser;
+use Capell\Admin\Filament\Widgets\Extensions\InstalledExtensionsWidget;
 use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
 use Capell\Admin\Support\CapellAdminManager;
 use Capell\Admin\Support\Extensions\ExtensionPageRegistry;
@@ -99,6 +100,7 @@ it('registers the current password policy admin bridge surface', function (): vo
 
     expect(resolve(ExtensionPageRegistry::class)->get(PasswordPolicyServiceProvider::$packageName))
         ->toBe(PasswordPolicySettingsPage::class)
+        ->and(CapellAdmin::getAdminSurfaceRegistry()->pages())->toContain(PasswordPolicySettingsPage::class)
         ->and(CapellAdmin::getAdminSurfaceRegistry()->pages())->toContain(ForcedPasswordChangePage::class)
         ->and(CapellAdmin::getAdminSurfaceRegistry()->panelExtenders())->toContain(PasswordPolicyPanelExtender::class)
         ->and(collect(app()->tagged(UserFormExtender::TAG))->contains(
@@ -107,6 +109,18 @@ it('registers the current password policy admin bridge surface', function (): vo
         ->and(collect(app()->tagged(UserTableExtender::TAG))->contains(
             fn (object $extender): bool => $extender instanceof PasswordPolicyUserTableExtender,
         ))->toBeTrue();
+});
+
+it('opens password policy settings from the extensions page action modal', function (): void {
+    Permission::create(['name' => 'View:ExtensionsPage', 'guard_name' => 'web']);
+    auth()->user()->givePermissionTo('View:ExtensionsPage');
+
+    Livewire::test(InstalledExtensionsWidget::class)
+        ->assertSuccessful()
+        ->assertSee(__('capell-password-policy::settings.title'))
+        ->mountTableAction('manageExtension', PasswordPolicyServiceProvider::$packageName)
+        ->assertMountedActionModalSee(__('capell-password-policy::settings.title'))
+        ->assertMountedActionModalSee(PasswordPolicySettingsPage::getUrl());
 });
 
 it('keeps the legacy admin fallback when the bridge host is unavailable', function (): void {

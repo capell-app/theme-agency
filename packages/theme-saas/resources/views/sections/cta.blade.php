@@ -1,4 +1,4 @@
-<section class="velocity-final-cta bg-white">
+<section class="saas-final-cta bg-white">
     <div class="px-6">
         <div
             class="rounded-3xl border border-blue-100 bg-blue-600 p-8 text-white md:p-12"
@@ -17,7 +17,7 @@
                     @foreach ($section->actions as $action)
                         <a
                             href="{{ $action['url'] }}"
-                            class="velocity-cta {{ ($action['style'] ?? 'primary') === 'secondary' ? 'border border-white/40 text-white' : 'bg-white text-blue-700' }}"
+                            class="saas-cta {{ ($action['style'] ?? 'primary') === 'secondary' ? 'border border-white/40 text-white' : 'bg-white text-blue-700' }}"
                         >
                             {{ $action['label'] }}
                         </a>

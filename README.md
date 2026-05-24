@@ -101,7 +101,7 @@ Use the [Capell Theme Scale](docs/theme-scale.md) when creating a theme, changin
 | [theme-corporate](packages/theme-corporate/README.md)   | `capell-app/theme-corporate`  | Free    | Trust-led corporate theme for Capell.        |
 | [theme-commerce](packages/theme-commerce/README.md)     | `capell-app/theme-commerce`   | Premium | Image-led commerce theme for Capell.         |
 | [theme-healthcare](packages/theme-healthcare/README.md) | `capell-app/theme-healthcare` | Premium | Appointment-led healthcare theme for Capell. |
-| [theme-saas](packages/theme-saas/README.md)             | `capell-app/theme-saas`       | Premium | Velocity SaaS theme for Capell.              |
+| [theme-saas](packages/theme-saas/README.md)             | `capell-app/theme-saas`       | Premium | Product-led SaaS theme for Capell.           |
 
 ## Install Pattern
 

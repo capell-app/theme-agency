@@ -1,1 +1,23 @@
 @import './utilities/swiper-carousel.css';
+
+@layer components {
+    @keyframes faqFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-4px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .faq-item.is-visible {
+        animation: faqFadeIn 0.25s ease-out;
+    }
+
+    .billing-toggle-button.is-annual .billing-toggle-dot {
+        left: 30px;
+    }
+}

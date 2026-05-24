@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
@@ -93,6 +94,28 @@ it('registers commerce only when the theme package is installed', function (): v
 
     expect($registry->has('commerce'))->toBeTrue()
         ->and($registry->definition('commerce')->package)->toBe(CommerceThemeServiceProvider::$packageName);
+});
+
+it('registers commerce tailwind imports and blade sources when installed', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(CommerceThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new CommerceThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $packageImports = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindImport)
+        ->filter(fn (mixed $asset): bool => $asset->packageName === CommerceThemeServiceProvider::$packageName)
+        ->pluck('value')
+        ->all();
+
+    $packageSources = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindSource)
+        ->filter(fn (mixed $asset): bool => $asset->packageName === CommerceThemeServiceProvider::$packageName)
+        ->pluck('value')
+        ->all();
+
+    expect($packageImports)->toContain('resources/css/theme-commerce.css')
+        ->and($packageSources)->toContain('resources/views/**/*.blade.php');
 });
 
 it('renders public theme markup without forbidden package or authoring tokens', function (): void {
@@ -188,12 +211,7 @@ it('renders public theme markup without forbidden package or authoring tokens', 
 });
 
 it('keeps commerce typography defaults low specificity so section color utilities can win', function (): void {
-    View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
-
-    $css = view('capell-theme-commerce::page', [
-        'brand' => new BrandProfileData,
-        'content' => '<section><h2 class="text-white">Catalog panel</h2><p class="text-stone-100">Readable copy</p></section>',
-    ])->render();
+    $css = file_get_contents(__DIR__ . '/../../resources/css/theme-commerce.css');
 
     expect($css)
         ->toContain(':where(.retail-shell h1, .retail-shell h2, .retail-shell h3)')

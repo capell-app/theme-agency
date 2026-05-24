@@ -1,4 +1,4 @@
-<section class="velocity-hero relative overflow-hidden">
+<section class="saas-hero relative overflow-hidden">
     <div
         class="pointer-events-none absolute inset-x-0 top-0 h-40 border-b border-cyan-100 bg-cyan-50/45"
     ></div>
@@ -9,7 +9,7 @@
         <div>
             @if ($section->eyebrow)
                 <p
-                    class="mb-5 inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-black uppercase tracking-widest text-cyan-700"
+                    class="mb-5 inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-black tracking-widest text-cyan-700 uppercase"
                 >
                     {{ $section->eyebrow }}
                 </p>
@@ -27,7 +27,7 @@
                 @foreach ($section->actions as $action)
                     <a
                         href="{{ $action['url'] }}"
-                        class="velocity-cta {{ ($action['style'] ?? 'primary') === 'secondary' ? 'velocity-cta-secondary' : 'velocity-cta-primary' }}"
+                        class="saas-cta {{ ($action['style'] ?? 'primary') === 'secondary' ? 'saas-cta-secondary' : 'saas-cta-primary' }}"
                     >
                         {{ $action['label'] }}
                     </a>
@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <div class="velocity-frame bg-white p-3">
+        <div class="saas-frame bg-white p-3">
             @if ($section->mediaUrl)
                 <img
                     src="{{ $section->mediaUrl }}"

@@ -144,7 +144,7 @@ final class SaasThemePageAdapter implements ThemePageAdapter
                 ],
             ),
             new ProofSectionData(
-                heading: 'Built for high-velocity publishing teams',
+                heading: 'Built for fast-moving publishing teams',
                 summary: 'Compact proof modules keep the first screen commercially sharp without storing presentation markup in page content.',
                 items: [
                     ['metric' => '2.5k+', 'name' => 'Teams onboarded'],
@@ -158,7 +158,7 @@ final class SaasThemePageAdapter implements ThemePageAdapter
                 features: [
                     ['title' => 'Live content model', 'description' => 'Typed pages, layouts, and blocks keep campaign surfaces consistent.'],
                     ['title' => 'Growth dashboard feel', 'description' => 'Structured cards and metrics make the public page feel product-led.'],
-                    ['title' => 'Theme-owned rendering', 'description' => 'Velocity carries the premium landing rhythm without moving it into Foundation.'],
+                    ['title' => 'Theme-owned rendering', 'description' => 'SaaS carries the premium landing rhythm without moving it into Foundation.'],
                 ],
             ),
             new ContentListingSectionData(
@@ -172,7 +172,7 @@ final class SaasThemePageAdapter implements ThemePageAdapter
             ),
             new CtaSectionData(
                 heading: 'Launch the next landing page with the premium theme',
-                summary: 'Foundation stays boring; Velocity carries the opinionated conversion layout.',
+                summary: 'Foundation stays boring; SaaS carries the opinionated conversion layout.',
                 actions: [
                     ['label' => 'Contact team', 'url' => '/contact', 'style' => 'primary'],
                     ['label' => 'Browse services', 'url' => '/services', 'style' => 'secondary'],
@@ -225,6 +225,13 @@ final class SaasThemePageAdapter implements ThemePageAdapter
             return null;
         }
 
+        if (array_is_list($navigation)) {
+            return new NavigationData(
+                brandName: $this->defaultNavigation()->brandName,
+                items: $navigation,
+            );
+        }
+
         return NavigationData::from($navigation);
     }
 
@@ -234,6 +241,13 @@ final class SaasThemePageAdapter implements ThemePageAdapter
     private function footerFrom(array $renderData, NavigationData $navigation): FooterData
     {
         $footer = data_get($renderData, 'footer');
+
+        if (is_array($footer) && array_is_list($footer)) {
+            return new FooterData(
+                brandName: $navigation->brandName,
+                columns: $footer,
+            );
+        }
 
         if (is_array($footer)) {
             return FooterData::from($footer);

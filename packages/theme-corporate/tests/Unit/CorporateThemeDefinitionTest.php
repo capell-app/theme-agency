@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
@@ -86,6 +87,28 @@ it('registers corporate only when the theme package is installed', function (): 
 
     expect($registry->has('corporate'))->toBeTrue()
         ->and($registry->definition('corporate')->package)->toBe(CorporateThemeServiceProvider::$packageName);
+});
+
+it('registers corporate tailwind imports and blade sources when installed', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(CorporateThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new CorporateThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $packageImports = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindImport)
+        ->filter(fn (mixed $asset): bool => $asset->packageName === CorporateThemeServiceProvider::$packageName)
+        ->pluck('value')
+        ->all();
+
+    $packageSources = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindSource)
+        ->filter(fn (mixed $asset): bool => $asset->packageName === CorporateThemeServiceProvider::$packageName)
+        ->pluck('value')
+        ->all();
+
+    expect($packageImports)->toContain('resources/css/theme-corporate.css')
+        ->and($packageSources)->toContain('resources/views/**/*.blade.php');
 });
 
 it('renders public theme markup without package identifiers', function (): void {

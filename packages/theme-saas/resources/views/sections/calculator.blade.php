@@ -2,7 +2,7 @@
     $items = $section->items ?? $section->features ?? [];
 @endphp
 
-<section class="velocity-calculator bg-white">
+<section class="saas-calculator bg-white">
     <div class="grid gap-8 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div>
             <h2>{{ $section->heading }}</h2>
@@ -11,7 +11,7 @@
             @endif
         </div>
 
-        <div class="velocity-frame bg-slate-950 p-6 text-white">
+        <div class="saas-frame bg-slate-950 p-6 text-white">
             <div class="grid gap-4">
                 @foreach ($items as $item)
                     <div

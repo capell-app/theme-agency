@@ -33,7 +33,7 @@ Use these packages as the working examples:
 | `capell-app/theme-corporate`  | `corporate`  | Free restrained renderer for B2B, public sector, and professional-service sites.                                                   |
 | `capell-app/theme-commerce`   | `commerce`   | Premium image-led renderer for catalog, retail, and conversion pages.                                                              |
 | `capell-app/theme-healthcare` | `healthcare` | Premium clinical renderer for appointment-led care, service discovery, clinicians, resources, and locations.                       |
-| `capell-app/theme-saas`       | `saas`       | Premium Velocity renderer for software and subscription sites.                                                                     |
+| `capell-app/theme-saas`       | `saas`       | Premium product-led renderer for software and subscription sites.                                                                  |
 
 Theme packages are intentionally thin. They have no migrations, routes, models,
 admin navigation, or settings of their own. They register renderer contracts,

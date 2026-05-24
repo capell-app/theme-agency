@@ -10,8 +10,10 @@ it('exposes labels and descriptions for every robots directive option', function
     foreach (RobotsDirectiveEnum::cases() as $directive) {
         expect($directive->getLabel())->toBeString()
             ->and($directive->getLabel())->not->toBe('')
+            ->and($directive->getLabel())->not->toStartWith('capell')
             ->and($directive->getDescription())->toBeString()
-            ->and($directive->getDescription())->not->toBe('');
+            ->and($directive->getDescription())->not->toBe('')
+            ->and($directive->getDescription())->not->toStartWith('capell');
     }
 });
 

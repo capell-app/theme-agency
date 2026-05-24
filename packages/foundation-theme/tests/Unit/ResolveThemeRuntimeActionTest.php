@@ -161,8 +161,8 @@ it('falls back to the theme default preset when saved theme studio settings are 
             includedSections: [],
             presets: [
                 new ThemePresetData(
-                    key: 'velocity',
-                    name: 'Velocity',
+                    key: 'saas',
+                    name: 'SaaS',
                     description: '',
                     previewImage: '',
                     values: [
@@ -183,8 +183,8 @@ it('falls back to the theme default preset when saved theme studio settings are 
         brand: new BrandProfileData,
     );
 
-    expect($runtime->presetKey)->toBe('velocity')
-        ->and($runtime->preset->key)->toBe('velocity')
+    expect($runtime->presetKey)->toBe('saas')
+        ->and($runtime->preset->key)->toBe('saas')
         ->and($runtime->brand->primaryColor)->toBe('#2563eb');
 });
 
@@ -205,8 +205,8 @@ it('keeps invalid preview preset links explicit', function (): void {
             includedSections: [],
             presets: [
                 new ThemePresetData(
-                    key: 'velocity',
-                    name: 'Velocity',
+                    key: 'saas',
+                    name: 'SaaS',
                     description: '',
                     previewImage: '',
                 ),
@@ -220,7 +220,7 @@ it('keeps invalid preview preset links explicit', function (): void {
 
     ResolveThemeRuntimeAction::run(
         activeTheme: 'saas',
-        activePreset: 'velocity',
+        activePreset: 'saas',
         brand: new BrandProfileData,
         previewContext: new ThemePreviewContext(themeKey: 'saas', presetKey: 'missing', previewing: true),
     );

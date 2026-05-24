@@ -12,7 +12,32 @@ use Capell\SeoSuite\Enums\SeoCheckKeyEnum;
 use Capell\SeoSuite\Enums\SeoIssueSeverityEnum;
 use Capell\SeoSuite\Filament\Components\Forms\Page\PageSeoPanel;
 use Capell\SeoSuite\Filament\Extenders\Page\PageSeoPanelSchemaExtender;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+
+/**
+ * @param  array<string, mixed>  $state
+ */
+function seoSuitePagePanelFakeGet(array $state): Get
+{
+    return new class($state) extends Get
+    {
+        /**
+         * @param  array<string, mixed>  $state
+         */
+        public function __construct(private readonly array $state) {}
+
+        public function __invoke(string|Component $path = '', bool $isAbsolute = false): mixed
+        {
+            if ($path instanceof Component) {
+                return null;
+            }
+
+            return $this->state[$path] ?? data_get($this->state, $path);
+        }
+    };
+}
 
 it('registers the page SEO panel schema extender', function (): void {
     $extenders = collect(app()->tagged(PageSchemaExtender::TAG));
@@ -31,6 +56,20 @@ it('adds the page SEO panel after search meta', function (): void {
 
     expect($components)->toHaveCount(1)
         ->and($components[0])->toBeInstanceOf(PageSeoPanel::class);
+});
+
+it('resolves the panel language id from nested translation state paths', function (): void {
+    $panel = PageSeoPanel::make();
+
+    expect($panel->resolveLanguageIdFromState(seoSuitePagePanelFakeGet([
+        'language_id' => null,
+        '../language_id' => 12,
+    ])))->toBe(12)
+        ->and($panel->resolveLanguageIdFromState(seoSuitePagePanelFakeGet([
+            'language_id' => '',
+            '../language_id' => null,
+            '../../language_id' => '34',
+        ])))->toBe('34');
 });
 
 it('groups SEO report issues and passed checks by key and severity', function (): void {

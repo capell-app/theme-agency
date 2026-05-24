@@ -16,7 +16,7 @@
     ];
 
     $gridClass = $gridClasses[(int) $columns] ?? $gridClasses[2];
-    $responsiveGrid = '!flex snap-x gap-4 !overflow-x-auto pb-3 [scrollbar-width:none] md:!grid md:!overflow-visible md:pb-0 [&::-webkit-scrollbar]:hidden';
+    $responsiveGrid = '!flex snap-x [scrollbar-width:none] gap-4 !overflow-x-auto pb-3 md:!grid md:!overflow-visible md:pb-0 [&::-webkit-scrollbar]:hidden';
     $assets = $block->assets;
 @endphp
 
@@ -74,7 +74,7 @@
                                     @if ($blockAsset->asset->translation?->content)
                                         <blockquote class="mb-6">
                                             <p
-                                                class="text-lg italic leading-relaxed text-gray-700"
+                                                class="text-lg leading-relaxed text-gray-700 italic"
                                             >
                                                 {{ strip_tags($blockAsset->asset->translation->content) }}
                                             </p>
@@ -130,14 +130,14 @@
 
                 @if ($assets->count() > 1)
                     <button
-                        class="carousel-prev absolute left-0 top-1/2 -translate-x-12 -translate-y-1/2 text-2xl text-gray-600 hover:text-gray-900"
-                        onclick="slideCarousel(this, -1)"
+                        class="carousel-prev absolute top-1/2 left-0 -translate-x-12 -translate-y-1/2 text-2xl text-gray-600 hover:text-gray-900"
+                        data-carousel-direction="-1"
                     >
                         ←
                     </button>
                     <button
-                        class="carousel-next absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 text-2xl text-gray-600 hover:text-gray-900"
-                        onclick="slideCarousel(this, 1)"
+                        class="carousel-next absolute top-1/2 right-0 translate-x-12 -translate-y-1/2 text-2xl text-gray-600 hover:text-gray-900"
+                        data-carousel-direction="1"
                     >
                         →
                     </button>
@@ -145,11 +145,8 @@
                     <div class="mt-6 flex justify-center gap-2">
                         @for ($dotIndex = 0; $dotIndex < $assets->count(); $dotIndex++)
                             <button
-                                class="carousel-dot h-2.5 w-2.5 rounded-full transition-all"
-                                style="
-                                    background-color: {{ $dotIndex === 0 ? '#4f46e5' : '#d1d5db' }};
-                                "
-                                onclick="goToSlide(this, {{ $dotIndex }})"
+                                class="{{ $dotIndex === 0 ? 'is-active bg-stone-900' : 'bg-stone-300' }} carousel-dot h-2.5 w-2.5 rounded-full transition-all"
+                                data-carousel-slide="{{ $dotIndex }}"
                             ></button>
                         @endfor
                     </div>
@@ -175,7 +172,7 @@
                         @if ($blockAsset->asset->translation?->content)
                             <blockquote class="mb-6">
                                 <p
-                                    class="text-lg italic leading-relaxed text-gray-700"
+                                    class="text-lg leading-relaxed text-gray-700 italic"
                                 >
                                     {{ strip_tags($blockAsset->asset->translation->content) }}
                                 </p>
@@ -223,39 +220,3 @@
         @endif
     </section>
 </x-capell-foundation-theme::block.wrapper>
-
-<script>
-    function slideCarousel(button, direction) {
-        const carousel = button.closest('.layout-builder-testimonials-carousel')
-        const container = carousel.querySelector('.carousel-container')
-        const slides = carousel.querySelectorAll('.carousel-slide')
-        const currentOffset =
-            parseInt(
-                container.style.transform?.replace('translateX(', '') ?? '0',
-            ) || 0
-        const currentIndex = Math.round(-currentOffset / 100)
-
-        let newIndex = currentIndex + direction
-        if (newIndex < 0) newIndex = slides.length - 1
-        if (newIndex >= slides.length) newIndex = 0
-
-        container.style.transform = `translateX(${-newIndex * 100}%)`
-        updateDots(carousel, newIndex)
-    }
-
-    function goToSlide(dotButton, index) {
-        const carousel = dotButton.closest(
-            '.layout-builder-testimonials-carousel',
-        )
-        const container = carousel.querySelector('.carousel-container')
-        container.style.transform = `translateX(${-index * 100}%)`
-        updateDots(carousel, index)
-    }
-
-    function updateDots(carousel, activeIndex) {
-        carousel.querySelectorAll('.carousel-dot').forEach((dot, index) => {
-            dot.style.backgroundColor =
-                index === activeIndex ? '#1c1917' : '#d6d3d1'
-        })
-    }
-</script>

@@ -41,7 +41,7 @@
                 {{-- format-ignore-start --}}
                         <button
                             class="billing-toggle-button relative h-8 w-14 rounded-full bg-stone-800 transition-colors"
-                            onclick="toggleBillingCycle(this)"
+                            data-billing-toggle
                         >
                             <div
                                 class="billing-toggle-dot absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition-all"
@@ -176,42 +176,3 @@
         </div>
     </section>
 </x-capell-foundation-theme::block.wrapper>
-
-<script>
-    function toggleBillingCycle(button) {
-        const grid = document.querySelector('.pricing-grid')
-        const currentBilling = grid.getAttribute('data-billing')
-        const newBilling = currentBilling === 'monthly' ? 'annual' : 'monthly'
-
-        grid.setAttribute('data-billing', newBilling)
-
-        const plans = document.querySelectorAll('.pricing-plan')
-        plans.forEach((plan) => {
-            const priceBlock = plan.querySelector('.plan-price')
-            const periodBlock = plan.querySelector('.billing-period')
-
-            if (newBilling === 'annual') {
-                const annualPrice = plan.getAttribute('data-price-annual')
-                priceBlock.textContent = priceBlock.textContent.replace(
-                    plan.getAttribute('data-price-monthly'),
-                    annualPrice,
-                )
-                if (annualPrice !== 'Custom' && periodBlock) {
-                    periodBlock.textContent = '/year'
-                }
-            } else {
-                const monthlyPrice = plan.getAttribute('data-price-monthly')
-                priceBlock.textContent = priceBlock.textContent.replace(
-                    plan.getAttribute('data-price-annual'),
-                    monthlyPrice,
-                )
-                if (monthlyPrice !== 'Custom' && periodBlock) {
-                    periodBlock.textContent = '/month'
-                }
-            }
-        })
-
-        const dot = button.querySelector('.billing-toggle-dot')
-        dot.style.left = newBilling === 'annual' ? '30px' : '4px'
-    }
-</script>

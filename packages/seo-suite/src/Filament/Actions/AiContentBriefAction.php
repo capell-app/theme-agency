@@ -56,7 +56,11 @@ class AiContentBriefAction extends Action
      */
     private function generateBrief(HasActions $livewire, PageSeoPanel $component, Action $action, array $data): void
     {
-        $context = $component->resolveAiContentBriefContext($data['language_id'] ?? null);
+        $languageId = $data['language_id'] ?? null;
+        $languageId = $languageId !== null && $languageId !== ''
+            ? $languageId
+            : $component->resolveLanguageIdFromState();
+        $context = $component->resolveAiContentBriefContext($languageId);
 
         if ($context === null) {
             Notification::make('ai-content-brief-missing-context')

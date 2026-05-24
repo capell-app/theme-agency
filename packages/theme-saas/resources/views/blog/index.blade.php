@@ -11,14 +11,14 @@
     $latestArticles ??= array_slice($articles, 0, 4);
 @endphp
 
-<main class="velocity-insights-index bg-white px-6 py-20 text-slate-950">
+<main class="saas-insights-index bg-white px-6 py-20 text-slate-950">
     <div class="mx-auto max-w-6xl">
         <header
             class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end"
         >
             <div class="max-w-3xl">
                 <p
-                    class="text-xs font-black uppercase tracking-widest text-cyan-700"
+                    class="text-xs font-black tracking-widest text-cyan-700 uppercase"
                 >
                     {{ $blogAvailable ? __('capell-theme-saas::generic.insights_label') : __('capell-theme-saas::generic.resources_label') }}
                 </p>
@@ -36,7 +36,7 @@
 
             <div class="rounded-lg border border-slate-200 bg-slate-50 p-5">
                 <p
-                    class="text-xs font-black uppercase tracking-widest text-cyan-700"
+                    class="text-xs font-black tracking-widest text-cyan-700 uppercase"
                 >
                     {{ __('capell-theme-saas::generic.results_summary') }}
                 </p>
@@ -51,11 +51,11 @@
                         class="mt-5 grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]"
                         role="search"
                     >
-                        <label class="sr-only" for="velocity-blog-search">
+                        <label class="sr-only" for="saas-blog-search">
                             {{ __('capell-theme-saas::generic.search_articles') }}
                         </label>
                         <input
-                            id="velocity-blog-search"
+                            id="saas-blog-search"
                             class="min-h-11 rounded-md border border-slate-200 bg-white px-3 text-sm font-bold text-slate-950"
                             name="q"
                             type="search"
@@ -83,7 +83,7 @@
                             class="rounded-lg border border-slate-200 bg-slate-50 p-6 transition hover:border-blue-300 hover:bg-white"
                         >
                             <p
-                                class="text-xs font-black uppercase tracking-widest text-cyan-700"
+                                class="text-xs font-black tracking-widest text-cyan-700 uppercase"
                             >
                                 {{ $article['type'] ?? __('capell-theme-saas::generic.insight') }}
                             </p>
@@ -101,7 +101,7 @@
                             class="rounded-lg border border-slate-200 bg-slate-50 p-6"
                         >
                             <p
-                                class="text-xs font-black uppercase tracking-widest text-cyan-700"
+                                class="text-xs font-black tracking-widest text-cyan-700 uppercase"
                             >
                                 {{ __('capell-theme-saas::generic.resource') }}
                             </p>
@@ -165,12 +165,12 @@
                                 href="{{ $blogAvailable ? ($article['url'] ?? '/blog') : '/blog' }}"
                             >
                                 <span
-                                    class="text-xs font-black uppercase tracking-widest text-cyan-700"
+                                    class="text-xs font-black tracking-widest text-cyan-700 uppercase"
                                 >
                                     {{ $article['type'] ?? __('capell-theme-saas::generic.insight') }}
                                 </span>
                                 <strong
-                                    class="mt-1 block text-sm font-black leading-snug text-slate-950"
+                                    class="mt-1 block text-sm leading-snug font-black text-slate-950"
                                 >
                                     {{ $article['title'] }}
                                 </strong>

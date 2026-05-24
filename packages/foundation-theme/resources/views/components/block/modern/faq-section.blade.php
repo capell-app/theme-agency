@@ -17,19 +17,6 @@
     $hasCategories = count($categories) > 0;
 @endphp
 
-<style>
-    @keyframes faqFadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-4px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-</style>
-
 <x-capell-foundation-theme::block.wrapper
     class="capell-modern-faq-section block-ap-faq-section"
     :$container
@@ -64,7 +51,7 @@
                 <button
                     class="faq-category-tab rounded-full bg-stone-800 px-4 py-2 text-sm font-semibold text-white transition-all"
                     data-category="all"
-                    onclick="filterFaqCategory(this, 'all')"
+                    data-faq-category-tab
                 >
                     All
                 </button>
@@ -73,7 +60,7 @@
                     <button
                         class="faq-category-tab rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-semibold text-gray-600 transition-all hover:border-stone-400 hover:text-stone-800"
                         data-category="{{ $category }}"
-                        onclick="filterFaqCategory(this, '{{ $category }}')"
+                        data-faq-category-tab
                     >
                         {{ $category }}
                     </button>
@@ -88,7 +75,7 @@
                     data-category="{{ $blockAsset->asset->getMeta('category', 'uncategorized') }}"
                 >
                     <summary
-                        class="flex cursor-pointer select-none items-center justify-between p-5 text-base font-semibold text-gray-900"
+                        class="flex cursor-pointer items-center justify-between p-5 text-base font-semibold text-gray-900 select-none"
                     >
                         <span>
                             {{ $blockAsset->asset->translation?->title }}
@@ -102,7 +89,7 @@
 
                     @if ($blockAsset->asset->translation?->content)
                         <div
-                            class="border-t border-stone-100 px-5 pb-5 pt-4 leading-relaxed text-stone-600"
+                            class="border-t border-stone-100 px-5 pt-4 pb-5 leading-relaxed text-stone-600"
                         >
                             {{ strip_tags($blockAsset->asset->translation->content) }}
                         </div>
@@ -116,22 +103,3 @@
         </div>
     </section>
 </x-capell-foundation-theme::block.wrapper>
-
-<script>
-    function filterFaqCategory(button, category) {
-        document.querySelectorAll('.faq-category-tab').forEach((tab) => {
-            const isActive = tab.getAttribute('data-category') === category
-            tab.className = isActive
-                ? 'faq-category-tab rounded-full bg-stone-800 px-4 py-2 text-sm font-semibold text-white transition-all'
-                : 'faq-category-tab rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-semibold text-gray-600 transition-all hover:border-stone-400 hover:text-stone-800'
-        })
-
-        document.querySelectorAll('.faq-item').forEach((item) => {
-            const matches =
-                category === 'all' ||
-                item.getAttribute('data-category') === category
-            item.style.display = matches ? 'block' : 'none'
-            if (matches) item.style.animation = 'faqFadeIn 0.25s ease-out'
-        })
-    }
-</script>

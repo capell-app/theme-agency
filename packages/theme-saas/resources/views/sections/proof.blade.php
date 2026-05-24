@@ -1,6 +1,4 @@
-<section
-    class="velocity-proof border-y border-slate-200 bg-slate-950 text-white"
->
+<section class="saas-proof border-y border-slate-200 bg-slate-950 text-white">
     <div class="px-6">
         <div class="mx-auto max-w-3xl text-center">
             <h2 class="mx-auto text-white">{{ $section->heading }}</h2>

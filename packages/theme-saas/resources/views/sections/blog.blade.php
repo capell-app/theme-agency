@@ -3,7 +3,7 @@
     $articles = $section->items ?? [];
 @endphp
 
-<section class="velocity-insights bg-slate-50">
+<section class="saas-insights bg-slate-50">
     <div class="px-6">
         <div
             class="flex flex-col justify-between gap-5 md:flex-row md:items-end"
@@ -23,10 +23,10 @@
                 @if ($blogAvailable)
                     <a
                         href="{{ $article['url'] ?? '#' }}"
-                        class="velocity-insight-card rounded-2xl border border-slate-200 bg-white p-6 transition hover:border-blue-300"
+                        class="saas-insight-card rounded-2xl border border-slate-200 bg-white p-6 transition hover:border-blue-300"
                     >
                         <p
-                            class="text-xs font-black uppercase tracking-widest text-cyan-700"
+                            class="text-xs font-black tracking-widest text-cyan-700 uppercase"
                         >
                             {{ $article['type'] ?? __('capell-theme-saas::generic.insight') }}
                         </p>
@@ -39,10 +39,10 @@
                     </a>
                 @else
                     <article
-                        class="velocity-insight-card rounded-2xl border border-slate-200 bg-white p-6"
+                        class="saas-insight-card rounded-2xl border border-slate-200 bg-white p-6"
                     >
                         <p
-                            class="text-xs font-black uppercase tracking-widest text-cyan-700"
+                            class="text-xs font-black tracking-widest text-cyan-700 uppercase"
                         >
                             {{ __('capell-theme-saas::generic.resource') }}
                         </p>

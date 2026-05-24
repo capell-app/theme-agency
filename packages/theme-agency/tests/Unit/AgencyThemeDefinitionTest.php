@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
@@ -86,6 +87,28 @@ it('registers agency only when the theme package is installed', function (): voi
 
     expect($registry->has('agency'))->toBeTrue()
         ->and($registry->definition('agency')->package)->toBe(AgencyThemeServiceProvider::$packageName);
+});
+
+it('registers agency tailwind imports and blade sources when installed', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(AgencyThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new AgencyThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $packageImports = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindImport)
+        ->filter(fn (mixed $asset): bool => $asset->packageName === AgencyThemeServiceProvider::$packageName)
+        ->pluck('value')
+        ->all();
+
+    $packageSources = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindSource)
+        ->filter(fn (mixed $asset): bool => $asset->packageName === AgencyThemeServiceProvider::$packageName)
+        ->pluck('value')
+        ->all();
+
+    expect($packageImports)->toContain('resources/css/theme-agency.css')
+        ->and($packageSources)->toContain('resources/views/**/*.blade.php');
 });
 
 it('renders public theme markup without package identifiers', function (): void {

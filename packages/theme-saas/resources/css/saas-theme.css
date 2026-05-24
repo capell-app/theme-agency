@@ -81,10 +81,10 @@
     background-color: #261aa0;
 }
 
-.velocity-proof :is(h2, blockquote) {
+.saas-proof :is(h2, blockquote) {
     color: #ffffff !important;
 }
 
-.velocity-proof :is(p, figcaption) {
+.saas-proof :is(p, figcaption) {
     color: rgb(203 213 225) !important;
 }

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\Admin\Testing\Filament\ReadsRawSchemaComponents;
+use Capell\CampaignStudio\Filament\Extenders\Page\CampaignPageSchemaExtender;
 use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\CampaignConversionGoalResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\Schemas\CampaignConversionGoalForm;
 use Capell\CampaignStudio\Filament\Resources\CampaignCtaBlocks\CampaignCtaBlockResource;
@@ -72,6 +73,18 @@ it('declares campaign studio resource models navigation labels and pages', funct
         ->and(CampaignConversionGoalResource::getNavigationLabel())->toBe('Conversion goals')
         ->and(CampaignConversionGoalResource::shouldRegisterNavigation())->toBeFalse()
         ->and(CampaignConversionGoalResource::getPages())->toHaveKeys(['index', 'create', 'edit']);
+});
+
+it('uses container query columns for page campaign sidebar fields', function (): void {
+    $components = (new CampaignPageSchemaExtender)->extendSidebarComponents(Schema::make());
+
+    expect($components)
+        ->toHaveCount(1)
+        ->and($components[0])->toBeInstanceOf(Fieldset::class)
+        ->and($components[0]->isGridContainer())->toBeTrue()
+        ->and($components[0]->getColumns('default'))->toBe(1)
+        ->and($components[0]->getColumns('lg'))->toBeNull()
+        ->and($components[0]->getColumns('@xl'))->toBe(2);
 });
 
 /**

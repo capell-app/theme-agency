@@ -6,7 +6,7 @@ namespace Capell\FoundationTheme\Actions;
 
 use Capell\Core\Enums\MediaCollectionEnum;
 use Capell\Core\Models\Media;
-use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\Widget;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsObject;
 
@@ -14,7 +14,7 @@ final class ResolveLoadedBlockBackgroundImageAction
 {
     use AsObject;
 
-    public function handle(Block $block): ?Media
+    public function handle(Widget $block): ?Media
     {
         if (! $block->relationLoaded('media')) {
             return null;

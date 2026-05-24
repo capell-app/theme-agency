@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\ThemeStudio\Healthcare;
 
+use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
@@ -82,6 +83,7 @@ class HealthcareThemeServiceProvider extends ServiceProvider
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-healthcare');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-healthcare');
+        $this->registerVendorCssAssets();
 
         $sectionRenderers = $this->sectionRenderers();
 
@@ -93,6 +95,17 @@ class HealthcareThemeServiceProvider extends ServiceProvider
                 sectionRenderers: $sectionRenderers,
             ),
             sectionRenderers: array_values($sectionRenderers),
+        );
+    }
+
+    private function registerVendorCssAssets(): void
+    {
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindImport('resources/css/theme-healthcare.css', self::$packageName),
+        );
+
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName),
         );
     }
 

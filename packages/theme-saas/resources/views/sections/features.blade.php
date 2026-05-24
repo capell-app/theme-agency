@@ -1,4 +1,4 @@
-<section class="velocity-features bg-white">
+<section class="saas-features bg-white">
     <div class="px-6">
         <div
             class="flex flex-col justify-between gap-5 md:flex-row md:items-end"

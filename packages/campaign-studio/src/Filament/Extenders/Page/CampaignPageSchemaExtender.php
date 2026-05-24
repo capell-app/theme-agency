@@ -42,7 +42,8 @@ final class CampaignPageSchemaExtender implements PageSchemaExtender
         return [
             Fieldset::make(__('capell-campaign-studio::generic.campaign'))
                 ->statePath('meta.campaign')
-                ->columns(['default' => 1, 'lg' => 2])
+                ->gridContainer()
+                ->columns(['default' => 1, 'lg' => null, '@xl' => 2])
                 ->schema([
                     Select::make('campaign_group_id')
                         ->label(__('capell-campaign-studio::form.campaign_group'))

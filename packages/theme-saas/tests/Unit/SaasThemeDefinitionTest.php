@@ -30,8 +30,8 @@ it('defines the saas premium renderer contract', function (): void {
 
     expect($definition->package)->toBe('capell-app/theme-saas')
         ->and($definition->key)->toBe(SaasThemeServiceProvider::THEME_KEY)
-        ->and($definition->name)->toContain('Velocity')
-        ->and($definition->description)->toContain('Velocity')
+        ->and($definition->name)->toContain('SaaS')
+        ->and($definition->description)->toContain('SaaS')
         ->and($definition->assets)->toBe(['css' => 'vendor/capell/themes/saas.css'])
         ->and($definition->includedSections)->toBe([
             'navigation',
@@ -47,7 +47,7 @@ it('defines the saas premium renderer contract', function (): void {
         ])
         ->and($definition->includedSections)->toContain('content-listing', 'comparison', 'calculator', 'blog')
         ->and($definition->presets)->toHaveCount(1)
-        ->and($definition->presets[0]->key)->toBe('velocity')
+        ->and($definition->presets[0]->key)->toBe('saas')
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->tags)->toContain('Conversion')
         ->and(ThemeSaasHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
@@ -113,7 +113,8 @@ it('registers premium landing page tailwind assets from the saas theme only when
         ->pluck('value')
         ->all();
 
-    expect($packageImports)->not->toContain('resources/css/saas-theme.css')
+    expect($packageImports)->toContain('resources/css/theme-saas.css')
+        ->and($packageImports)->not->toContain('resources/css/saas-theme.css')
         ->and($packageSources)->toContain('resources/views/**/*.blade.php');
 });
 
@@ -249,7 +250,7 @@ it('renders public theme markup without package identifiers', function (): void 
         ->not->toContain('editor');
 });
 
-it('renders Velocity blog views when Blog is installed', function (): void {
+it('renders SaaS blog views when Blog is installed', function (): void {
     View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
     app('translator')->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
 
@@ -270,11 +271,11 @@ it('renders Velocity blog views when Blog is installed', function (): void {
     ])->render();
 
     expect($indexHtml)
-        ->toContain('velocity-insights-index')
+        ->toContain('saas-insights-index')
         ->toContain('/blog/activation-forecast')
         ->toContain('Activation forecast')
         ->and($articleHtml)
-        ->toContain('velocity-article')
+        ->toContain('saas-article')
         ->toContain('Plan the next growth sprint.')
         ->not->toContain('capell-app/theme-saas')
         ->not->toContain('capell-theme-saas')
@@ -311,7 +312,7 @@ it('renders marketing-safe blog fallbacks when Blog is not installed', function 
     ])->render();
 
     expect($html)
-        ->toContain('velocity-insights-index')
+        ->toContain('saas-insights-index')
         ->toContain('Growth resources')
         ->toContain('Activation forecast')
         ->not->toContain('href="/blog/activation-forecast"')
@@ -363,12 +364,12 @@ it('passes Blog package availability through the registered section renderer', f
     });
 
     expect($html)
-        ->toContain('velocity-insights')
+        ->toContain('saas-insights')
         ->toContain($expectedMarkup)
         ->not->toContain($missingMarkup);
 })->with([
-    'blog installed' => [true, 'href="/blog/activation-forecast"', '<article class="velocity-insight-card'],
-    'blog not installed' => [false, '<article class="velocity-insight-card', 'href="/blog/activation-forecast"'],
+    'blog installed' => [true, 'href="/blog/activation-forecast"', '<article'],
+    'blog not installed' => [false, 'saas-insight-card', 'href="/blog/activation-forecast"'],
 ]);
 
 it('renders public blog views without database queries', function (): void {
@@ -424,8 +425,8 @@ it('renders public blog views without database queries', function (): void {
         'body' => 'Plan the next growth sprint.',
     ])->render();
 
-    expect($sectionHtml)->toContain('velocity-insights')
-        ->and($indexHtml)->toContain('velocity-insights-index')
-        ->and($articleHtml)->toContain('velocity-article')
+    expect($sectionHtml)->toContain('saas-insights')
+        ->and($indexHtml)->toContain('saas-insights-index')
+        ->and($articleHtml)->toContain('saas-article')
         ->and($queries)->toBe([]);
 });

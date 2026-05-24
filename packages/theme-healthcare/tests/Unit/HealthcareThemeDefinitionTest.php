@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
@@ -103,6 +104,28 @@ it('registers healthcare only when the theme package is installed', function ():
         ->and($registry->definition('healthcare')->package)->toBe(HealthcareThemeServiceProvider::$packageName);
 });
 
+it('registers healthcare tailwind imports and blade sources when installed', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(HealthcareThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new HealthcareThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $packageImports = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindImport)
+        ->filter(fn (mixed $asset): bool => $asset->packageName === HealthcareThemeServiceProvider::$packageName)
+        ->pluck('value')
+        ->all();
+
+    $packageSources = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindSource)
+        ->filter(fn (mixed $asset): bool => $asset->packageName === HealthcareThemeServiceProvider::$packageName)
+        ->pluck('value')
+        ->all();
+
+    expect($packageImports)->toContain('resources/css/theme-healthcare.css')
+        ->and($packageSources)->toContain('resources/views/**/*.blade.php');
+});
+
 it('renders public healthcare markup without forbidden package or authoring tokens', function (): void {
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(HealthcareThemeServiceProvider::$packageName);
@@ -194,12 +217,7 @@ it('renders public healthcare markup without forbidden package or authoring toke
 });
 
 it('keeps healthcare typography defaults low specificity so utility colors can win', function (): void {
-    View::addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/views');
-
-    $css = view('capell-theme-healthcare::page', [
-        'brand' => new BrandProfileData,
-        'content' => '<section><h2 class="text-white">Care panel</h2><p class="text-slate-100">Readable copy</p></section>',
-    ])->render();
+    $css = file_get_contents(__DIR__ . '/../../resources/css/theme-healthcare.css');
 
     expect($css)
         ->toContain(':where(.healthcare-shell h1, .healthcare-shell h2, .healthcare-shell h3)')

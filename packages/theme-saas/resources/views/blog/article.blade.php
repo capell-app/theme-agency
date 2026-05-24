@@ -9,11 +9,11 @@
     $suggestions ??= [];
 @endphp
 
-<main class="velocity-article bg-white px-6 py-20 text-slate-950">
+<main class="saas-article bg-white px-6 py-20 text-slate-950">
     <article class="mx-auto max-w-3xl">
         <header>
             <p
-                class="text-xs font-black uppercase tracking-widest text-cyan-700"
+                class="text-xs font-black tracking-widest text-cyan-700 uppercase"
             >
                 {{ $blogAvailable ? __('capell-theme-saas::generic.article_label') : __('capell-theme-saas::generic.resource') }}
             </p>
@@ -43,7 +43,7 @@
                     href="{{ $previousArticle['url'] ?? '#' }}"
                 >
                     <span
-                        class="block text-xs uppercase tracking-widest text-cyan-700"
+                        class="block text-xs tracking-widest text-cyan-700 uppercase"
                     >
                         {{ __('capell-theme-saas::generic.previous_article') }}
                     </span>
@@ -64,7 +64,7 @@
                     href="{{ $nextArticle['url'] ?? '#' }}"
                 >
                     <span
-                        class="block text-xs uppercase tracking-widest text-cyan-700"
+                        class="block text-xs tracking-widest text-cyan-700 uppercase"
                     >
                         {{ __('capell-theme-saas::generic.next_article') }}
                     </span>
@@ -76,7 +76,7 @@
         @if ($suggestions !== [])
             <section class="mt-12 border-t border-slate-200 pt-8">
                 <p
-                    class="text-xs font-black uppercase tracking-widest text-cyan-700"
+                    class="text-xs font-black tracking-widest text-cyan-700 uppercase"
                 >
                     {{ __('capell-theme-saas::generic.suggested_reading') }}
                 </p>
@@ -87,7 +87,7 @@
                             href="{{ $suggestion['url'] ?? '#' }}"
                         >
                             <strong
-                                class="block text-base font-black leading-snug text-slate-950"
+                                class="block text-base leading-snug font-black text-slate-950"
                             >
                                 {{ $suggestion['title'] ?? '' }}
                             </strong>

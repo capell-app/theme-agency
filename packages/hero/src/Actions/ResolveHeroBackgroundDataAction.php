@@ -6,18 +6,18 @@ namespace Capell\Hero\Actions;
 
 use Capell\Core\Models\Theme;
 use Capell\Hero\Data\HeroBackgroundData;
-use Capell\LayoutBuilder\Models\Block;
-use Capell\LayoutBuilder\Models\BlockAsset;
+use Capell\LayoutBuilder\Models\Widget;
+use Capell\LayoutBuilder\Models\WidgetAsset;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 /**
- * @method static HeroBackgroundData run(?Theme $theme = null, ?Block $block = null, ?BlockAsset $asset = null)
+ * @method static HeroBackgroundData run(?Theme $theme = null, ?Widget $block = null, ?WidgetAsset $asset = null)
  */
 final class ResolveHeroBackgroundDataAction
 {
     use AsObject;
 
-    public function handle(?Theme $theme = null, ?Block $block = null, ?BlockAsset $asset = null): HeroBackgroundData
+    public function handle(?Theme $theme = null, ?Widget $block = null, ?WidgetAsset $asset = null): HeroBackgroundData
     {
         $background = HeroBackgroundData::defaults();
 
@@ -43,7 +43,7 @@ final class ResolveHeroBackgroundDataAction
     /**
      * @return list<array<string, mixed>>
      */
-    private function layers(?Theme $theme, ?Block $block, ?BlockAsset $asset): array
+    private function layers(?Theme $theme, ?Widget $block, ?WidgetAsset $asset): array
     {
         return array_values(array_filter([
             $this->settings($theme?->getMeta('hero_background', [])),

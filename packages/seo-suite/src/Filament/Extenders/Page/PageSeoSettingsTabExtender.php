@@ -120,12 +120,14 @@ class PageSeoSettingsTabExtender implements PageSchemaExtender
                     'capell-seo-suite::form.canonical_url.helper',
                 ),
                 CheckboxList::make('robots')
-                    ->options(RobotsDirectiveEnum::class)
-                    ->descriptions(
-                        collect(RobotsDirectiveEnum::cases())
-                            ->mapWithKeys(fn (RobotsDirectiveEnum $directive): array => [$directive->value => $directive->getDescription()])
-                            ->all(),
-                    ),
+                    ->options($this->robotsOptions())
+                    ->descriptions($this->robotsDescriptions())
+                    ->default([])
+                    ->mutateStateForValidationUsing(fn (mixed $state): array => $this->normalizeRobotsState($state))
+                    ->dehydrateStateUsing(fn (mixed $state): array => $this->normalizeRobotsState($state))
+                    ->afterStateHydrated(function (CheckboxList $component, mixed $state): void {
+                        $component->state($this->normalizeRobotsState($state));
+                    }),
                 Textarea::make('meta_tags')
                     ->columnSpan(2)
                     ->rows(4)
@@ -162,5 +164,58 @@ class PageSeoSettingsTabExtender implements PageSchemaExtender
                             ->columnSpanFull(),
                     ]),
             ]);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function robotsOptions(): array
+    {
+        return collect(RobotsDirectiveEnum::cases())
+            ->mapWithKeys(fn (RobotsDirectiveEnum $directive): array => [$directive->value => $directive->getLabel()])
+            ->all();
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function robotsDescriptions(): array
+    {
+        return collect(RobotsDirectiveEnum::cases())
+            ->mapWithKeys(fn (RobotsDirectiveEnum $directive): array => [$directive->value => $directive->getDescription()])
+            ->all();
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function normalizeRobotsState(mixed $state): array
+    {
+        if (is_string($state)) {
+            $state = array_map(trim(...), explode(',', $state));
+        }
+
+        if (! is_array($state)) {
+            return [];
+        }
+
+        $validDirectives = array_flip(array_keys($this->robotsOptions()));
+        $directives = [];
+
+        foreach ($state as $key => $value) {
+            $directive = is_string($key) ? $key : $value;
+
+            if (is_string($key) && $value !== true) {
+                continue;
+            }
+
+            if (! is_string($directive) || ! isset($validDirectives[$directive])) {
+                continue;
+            }
+
+            $directives[] = $directive;
+        }
+
+        return array_values(array_unique($directives));
     }
 }

@@ -30,19 +30,19 @@ class SaasThemeServiceProvider extends ServiceProvider
     {
         return new ThemeDefinitionData(
             key: self::THEME_KEY,
-            name: 'Velocity',
-            description: 'Velocity product-led SaaS layouts with feature discovery, comparison, calculator, and blog-ready growth content.',
+            name: 'SaaS',
+            description: 'Product-led SaaS layouts with feature discovery, comparison, calculator, and blog-ready growth content.',
             package: 'capell-app/theme-saas',
-            previewImage: '/vendor/capell/themes/saas-velocity.jpg',
+            previewImage: '/vendor/capell/themes/saas.jpg',
             tags: ['Product', 'Conversion', 'Growth'],
             bestFit: ['Software products', 'Startups', 'Subscription services'],
             includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'comparison', 'calculator', 'cta', 'footer', 'blog'],
             presets: [
                 new ThemePresetData(
-                    key: 'velocity',
-                    name: 'Velocity',
-                    description: 'Product-led conversion direction from the Stitch Velocity landing, article, blog, and feature screens.',
-                    previewImage: '/vendor/capell/themes/saas-velocity.jpg',
+                    key: 'saas',
+                    name: 'SaaS',
+                    description: 'Product-led conversion direction for landing, article, blog, and feature screens.',
+                    previewImage: '/vendor/capell/themes/saas.jpg',
                     values: [
                         'primaryColor' => '#2563eb',
                         'accentColor' => '#06b6d4',
@@ -83,9 +83,6 @@ class SaasThemeServiceProvider extends ServiceProvider
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-saas');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-saas');
-        $this->publishes([
-            __DIR__ . '/../resources/css/saas-theme.css' => public_path('vendor/capell/themes/saas.css'),
-        ], 'capell-theme-saas-assets');
         $this->registerVendorCssAssets();
         $this->app->make(ThemePageAdapterRegistry::class)
             ->register(self::THEME_KEY, SaasThemePageAdapter::class);
@@ -105,6 +102,10 @@ class SaasThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindImport('resources/css/theme-saas.css', self::$packageName),
+        );
+
         CapellCore::registerVendorAsset(
             VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName),
         );

@@ -36,6 +36,28 @@ it('bundles layout builder javascript into the foundation frontend runtime', fun
         ->and($provider)->not->toContain('LAYOUT_BUILDER_ASSETS_CONDITION');
 });
 
+it('moves modern block interactions out of blade and into the frontend runtime', function (): void {
+    $entrypoint = file_get_contents(dirname(__DIR__, 2) . '/resources/js/capell-frontend.js');
+    $faq = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/block/modern/faq-section.blade.php');
+    $pricing = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/block/modern/pricing-table.blade.php');
+    $testimonials = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/block/modern/testimonials.blade.php');
+    $blocksCss = file_get_contents(dirname(__DIR__, 2) . '/resources/css/blocks/foundation-blocks.css');
+
+    expect($entrypoint)
+        ->toContain('data-faq-category-tab')
+        ->toContain('data-billing-toggle')
+        ->toContain('data-carousel-direction')
+        ->toContain('data-carousel-slide')
+        ->and($blocksCss)->toContain('@keyframes faqFadeIn')
+        ->and($faq)->not->toContain('<style')
+        ->and($faq)->not->toContain('<script')
+        ->and($faq)->not->toContain('onclick=')
+        ->and($pricing)->not->toContain('<script')
+        ->and($pricing)->not->toContain('onclick=')
+        ->and($testimonials)->not->toContain('<script')
+        ->and($testimonials)->not->toContain('onclick=');
+});
+
 it('publishes the foundation frontend runtime build during setup', function (): void {
     $provider = file_get_contents(dirname(__DIR__, 2) . '/src/Providers/FoundationThemeServiceProvider.php');
     $command = file_get_contents(dirname(__DIR__, 2) . '/src/Console/Commands/SetupCommand.php');

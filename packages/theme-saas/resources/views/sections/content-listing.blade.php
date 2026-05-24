@@ -1,4 +1,4 @@
-<section class="velocity-directory bg-white">
+<section class="saas-directory bg-white">
     <div class="px-6">
         <div class="grid gap-4 md:grid-cols-[0.75fr_1fr] md:items-end">
             <h2>{{ $section->heading }}</h2>
@@ -17,7 +17,7 @@
                 >
                     @if ($item['type'] ?? null)
                         <p
-                            class="mb-4 text-xs font-black uppercase tracking-widest text-cyan-700"
+                            class="mb-4 text-xs font-black tracking-widest text-cyan-700 uppercase"
                         >
                             {{ $item['type'] }}
                         </p>

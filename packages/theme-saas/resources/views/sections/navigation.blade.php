@@ -1,5 +1,5 @@
 <nav
-    class="velocity-navigation bg-white/92 sticky top-0 z-20 border-b border-slate-200/80 backdrop-blur"
+    class="saas-navigation sticky top-0 z-20 border-b border-slate-200/80 bg-white/92 backdrop-blur"
     aria-label="{{ __('capell-theme-saas::generic.main_navigation') }}"
 >
     <div class="flex items-center justify-between px-6 py-4">
@@ -13,7 +13,7 @@
             @foreach ($section->items as $item)
                 <a
                     href="{{ $item['url'] }}"
-                    class="transition hover:text-[var(--velocity-primary)]"
+                    class="transition hover:text-[var(--saas-primary)]"
                 >
                     {{ $item['label'] }}
                 </a>
@@ -24,7 +24,7 @@
             @if ($section->ctaLabel && $section->ctaUrl)
                 <a
                     href="{{ $section->ctaUrl }}"
-                    class="velocity-cta velocity-cta-primary"
+                    class="saas-cta saas-cta-primary"
                 >
                     {{ $section->ctaLabel }}
                 </a>
@@ -42,7 +42,7 @@
                     @foreach ($section->items as $item)
                         <a
                             href="{{ $item['url'] }}"
-                            class="hover:text-[var(--velocity-primary)]"
+                            class="hover:text-[var(--saas-primary)]"
                         >
                             {{ $item['label'] }}
                         </a>

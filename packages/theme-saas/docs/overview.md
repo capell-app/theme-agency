@@ -1,15 +1,15 @@
-# Velocity Theme
+# SaaS Theme
 
 Status: **Available, no schema impact** · Kind: **theme** · Tier: **premium** · Bundle: **themes** · Contexts: **frontend** · Product group: **Capell Themes**
 
-This page documents the renderer-only Velocity theme package from the code that ships in this repository. The package keeps the existing Composer package and `saas` theme key while replacing the old visual layer with the Velocity product-led direction.
+This page documents the renderer-only SaaS theme package from the code that ships in this repository. The package keeps the existing Composer package and `saas` theme key while replacing the old visual layer with the SaaS product-led direction.
 
 ## What This Package Adds
 
-Velocity is a standalone Capell theme package. It registers the `saas` theme key, extends Foundation Theme, and adds product-focused renderer views for software and subscription sites.
+SaaS is a standalone Capell theme package. It registers the `saas` theme key, extends Foundation Theme, and adds product-focused renderer views for software and subscription sites.
 
-- Velocity theme service provider.
-- Theme renderer/views for Velocity page output.
+- SaaS theme service provider.
+- Theme renderer/views for SaaS page output.
 - Section Blade views for navigation, hero, features, proof, content listing, comparison, calculator, CTA, footer, and blog.
 - Blog index and article Blade views for Blog-aware rendering.
 - Dependency on Foundation Theme.
@@ -18,7 +18,7 @@ Velocity is a standalone Capell theme package. It registers the `saas` theme key
 
 Adds a renderer package that uses Foundation Theme runtime contracts while leaving content models unchanged.
 
-- SaasThemeServiceProvider registers the Velocity renderer.
+- SaasThemeServiceProvider registers the SaaS renderer.
 - `capell.json` declares `themeKey: "saas"` and `extends: "capell-app/foundation-theme"`.
 - Uses Foundation Theme runtime data and standard section keys, while rendering its own page and section Blade views.
 - Ships Blade resources for the page wrapper, standard theme sections, comparison, calculator, blog section, and blog page views.
@@ -27,9 +27,9 @@ Adds a renderer package that uses Foundation Theme runtime contracts while leavi
 
 ## Operational Notes
 
-Provides a Velocity visual option for product sites managed through the normal Theme admin page and install flow.
+Provides a SaaS visual option for product sites managed through the normal Theme admin page and install flow.
 
-- Adds the Velocity renderer to the theme system.
+- Adds the SaaS renderer to the theme system.
 - No database changes.
 - No admin navigation by itself.
 - No public routes by itself.
@@ -41,8 +41,8 @@ Provides a Velocity visual option for product sites managed through the normal T
 
 ## Screenshot Plan
 
-- Theme admin list showing Velocity.
-- Frontend page rendered with Velocity at `/theme-saas-demo`.
+- Theme admin list showing SaaS.
+- Frontend page rendered with SaaS at `/theme-saas-demo`.
 - Theme preview URL output from `capell.admin.theme-preview`.
 
 ## Pitfalls
@@ -50,7 +50,7 @@ Provides a Velocity visual option for product sites managed through the normal T
 - Install Layout Builder before Foundation Theme in a disposable harness; Foundation Theme setup expects the layout stack to be available.
 - Install Foundation Theme before using this renderer.
 - Build both frontend and Filament assets. Missing Foundation Theme manifests make screenshots fail even when the Composer install succeeds.
-- Keep Theme Studio settings aligned with `activeTheme: "saas"` and the `velocity` preset. Stale settings from another theme can render the wrong token set.
+- Keep Theme Studio settings aligned with `activeTheme: "saas"` and the `saas` preset. Stale settings from another theme can render the wrong token set.
 - Do not install a Studio metapackage; this package installs independently.
 
 ## Verification
@@ -100,6 +100,6 @@ This package has no committed ERD excerpt. Use implementation notes and extensio
 
 Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `public/docs/screenshots/packages/theme-saas`.
 
-- Theme admin list showing Velocity.
-- Frontend page rendered with Velocity.
+- Theme admin list showing SaaS.
+- Frontend page rendered with SaaS.
 - Theme preview URL output.

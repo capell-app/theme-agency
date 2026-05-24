@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\ThemeStudio\Commerce;
 
+use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\FrontendRuntime;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
@@ -81,6 +82,7 @@ class CommerceThemeServiceProvider extends ServiceProvider
 
         $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-commerce');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-commerce');
+        $this->registerVendorCssAssets();
 
         $sectionRenderers = $this->sectionRenderers();
 
@@ -92,6 +94,17 @@ class CommerceThemeServiceProvider extends ServiceProvider
                 sectionRenderers: $sectionRenderers,
             ),
             sectionRenderers: array_values($sectionRenderers),
+        );
+    }
+
+    private function registerVendorCssAssets(): void
+    {
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindImport('resources/css/theme-commerce.css', self::$packageName),
+        );
+
+        CapellCore::registerVendorAsset(
+            VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName),
         );
     }
 

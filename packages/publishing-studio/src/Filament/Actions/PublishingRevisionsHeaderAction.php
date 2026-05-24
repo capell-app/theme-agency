@@ -22,6 +22,7 @@ final class PublishingRevisionsHeaderAction extends Action
                 'count' => ListPublishingRevisionsAction::run($record)->count(),
             ]))
             ->icon('heroicon-o-clock')
+            ->visible(fn (Model $record): bool => ListPublishingRevisionsAction::run($record)->isNotEmpty())
             ->modalHeading(__('capell-publishing-studio::workspace.revisions.modal_heading'))
             ->modalSubmitAction(false)
             ->modalCancelActionLabel(__('capell-publishing-studio::workspace.revisions.close'))

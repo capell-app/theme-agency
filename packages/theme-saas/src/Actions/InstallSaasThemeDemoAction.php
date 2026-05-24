@@ -15,6 +15,6 @@ final class InstallSaasThemeDemoAction implements InstallsThemeDemo
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'saas', 'Velocity');
+        return ThemeDemoPageInstaller::run($data, 'saas', 'SaaS');
     }
 }

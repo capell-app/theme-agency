@@ -2,7 +2,7 @@
     $items = $section->items ?? $section->features ?? [];
 @endphp
 
-<section class="velocity-comparison bg-slate-50">
+<section class="saas-comparison bg-slate-50">
     <div class="px-6">
         <div class="mx-auto max-w-3xl text-center">
             <h2 class="mx-auto">{{ $section->heading }}</h2>

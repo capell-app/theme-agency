@@ -200,6 +200,37 @@ it('renders the generic revision timeline action content for draftable models', 
         ->and($html)->toContain('release notes');
 });
 
+it('hides the generic revision timeline action when a draftable model has no revisions', function (): void {
+    $record = WorkspaceDraftableFixture::query()->withoutGlobalScopes()->create([
+        'workspace_id' => 0,
+        'uuid' => (string) Str::uuid(),
+        'name' => 'current value',
+    ]);
+
+    expect(PublishingRevisionsHeaderAction::make()->record($record)->isHidden())->toBeTrue();
+});
+
+it('shows the generic revision timeline action when a draftable model has revisions', function (): void {
+    $entityUuid = (string) Str::uuid();
+    $record = WorkspaceDraftableFixture::query()->withoutGlobalScopes()->create([
+        'workspace_id' => 0,
+        'uuid' => $entityUuid,
+        'name' => 'current value',
+    ]);
+
+    PublishingRevision::query()->create([
+        'uuid' => (string) Str::uuid(),
+        'revisionable_type' => WorkspaceDraftableFixture::class,
+        'revisionable_id' => $record->id,
+        'revisionable_uuid' => $entityUuid,
+        'version' => 1,
+        'event_type' => PublishingRevisionEventEnum::Published,
+        'after_payload' => ['name' => 'current value'],
+    ]);
+
+    expect(PublishingRevisionsHeaderAction::make()->record($record)->isHidden())->toBeFalse();
+});
+
 it('captures restored revisions when rolling back a published version', function (): void {
     $keeperUuid = (string) Str::uuid();
     $extraUuid = (string) Str::uuid();
