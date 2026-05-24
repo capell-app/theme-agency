@@ -321,8 +321,8 @@ it('passes optional Events availability through the registered events renderer',
         ->toContain($expectedMarkup)
         ->not->toContain($missingMarkup);
 })->with([
-    'events installed' => [true, 'href="/events/heart-health"', '<article class="grid gap-4'],
-    'events not installed' => [false, '<article class="grid gap-4', 'href="/events/heart-health"'],
+    'events installed' => [true, 'href="/events/heart-health"', 'grid gap-4 rounded-lg border border-[#d9e8ee] bg-[#f6fbfd] p-5 md:grid-cols-[8rem_1fr]"'],
+    'events not installed' => [false, 'grid gap-4 rounded-lg border border-[#d9e8ee] bg-[#f6fbfd] p-5 md:grid-cols-[8rem_1fr]"', 'href="/events/heart-health"'],
 ]);
 
 it('passes optional Blog availability through the registered blog teaser renderer', function (bool $blogInstalled, string $expectedMarkup, string $missingMarkup): void {
@@ -351,8 +351,8 @@ it('passes optional Blog availability through the registered blog teaser rendere
         ->toContain($expectedMarkup)
         ->not->toContain($missingMarkup);
 })->with([
-    'blog installed' => [true, 'href="/resources/first-consultation"', '<article class="healthcare-resource-card'],
-    'blog not installed' => [false, '<article class="healthcare-resource-card', 'href="/resources/first-consultation"'],
+    'blog installed' => [true, 'href="/resources/first-consultation"', 'healthcare-resource-card rounded-xl border border-stone-200 bg-white p-6"'],
+    'blog not installed' => [false, 'healthcare-resource-card rounded-xl border border-stone-200 bg-white p-6"', 'href="/resources/first-consultation"'],
 ]);
 
 it('renders optional healthcare section views without database queries', function (): void {

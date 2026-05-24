@@ -318,8 +318,8 @@ it('passes optional Blog availability through the registered blog teaser rendere
         ->toContain($expectedMarkup)
         ->not->toContain($missingMarkup);
 })->with([
-    'blog installed' => [true, 'href="/blog/canvas-weight"', '<article class="retail-resource-card'],
-    'blog not installed' => [false, '<article class="retail-resource-card', 'href="/blog/canvas-weight"'],
+    'blog installed' => [true, 'href="/blog/canvas-weight"', 'retail-resource-card rounded-xl border border-stone-200 bg-white p-6"'],
+    'blog not installed' => [false, 'retail-resource-card rounded-xl border border-stone-200 bg-white p-6"', 'href="/blog/canvas-weight"'],
 ]);
 
 it('renders optional commerce section views without database queries', function (): void {
