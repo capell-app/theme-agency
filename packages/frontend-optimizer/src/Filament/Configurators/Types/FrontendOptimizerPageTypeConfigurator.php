@@ -7,7 +7,7 @@ namespace Capell\FrontendOptimizer\Filament\Configurators\Types;
 use Capell\Admin\Filament\Components\Forms\CacheFrequencySelect;
 use Capell\Admin\Filament\Components\Forms\CacheTimeSelect;
 use Capell\Admin\Filament\Components\Forms\ComponentSelect;
-use Capell\Admin\Filament\Configurators\Types\PageTypeConfigurator;
+use Capell\Admin\Filament\Configurators\Blueprints\PageBlueprintConfigurator;
 use Capell\Core\Enums\ComponentTypeEnum;
 use Capell\Core\Models\Blueprint;
 use Filament\Forms\Components\Checkbox;
@@ -15,7 +15,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs\Tab;
 
-final class FrontendOptimizerPageTypeConfigurator extends PageTypeConfigurator
+final class FrontendOptimizerPageTypeConfigurator extends PageBlueprintConfigurator
 {
     protected function frontendTab(): Tab
     {

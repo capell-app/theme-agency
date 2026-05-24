@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\Events\Actions;
 
+use Capell\Admin\Filament\Configurators\Blueprints\PageBlueprintConfigurator;
 use Capell\Admin\Filament\Configurators\Pages\ResultsPageConfigurator;
-use Capell\Admin\Filament\Configurators\Types\PageTypeConfigurator;
 use Capell\Core\Actions\GetOrCreateResultsLayoutAction;
 use Capell\Core\Enums\BlueprintSubjectEnum;
 use Capell\Core\Enums\UrlParamTypeEnum;
@@ -40,7 +40,7 @@ class EnsureEventPublishingDefaultsAction
             'name' => __('capell-events::generic.event'),
             'group' => 'Event',
             'admin' => [
-                'type_configurator' => PageTypeConfigurator::getKey(),
+                'type_configurator' => PageBlueprintConfigurator::getKey(),
                 'icon' => 'heroicon-' . Heroicon::OutlinedCalendarDays->value,
                 'required_fields' => ['title'],
                 'resource' => 'event',
@@ -64,7 +64,7 @@ class EnsureEventPublishingDefaultsAction
             'name' => __('capell-events::generic.events'),
             'group' => 'Event',
             'admin' => [
-                'type_configurator' => PageTypeConfigurator::getKey(),
+                'type_configurator' => PageBlueprintConfigurator::getKey(),
                 'configurator' => ResultsPageConfigurator::getKey(),
                 'icon' => 'heroicon-' . Heroicon::OutlinedCalendarDays->value,
                 'required_fields' => ['title'],

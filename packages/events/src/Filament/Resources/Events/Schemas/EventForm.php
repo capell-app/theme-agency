@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Capell\Events\Filament\Resources\Events\Schemas;
 
 use Capell\Admin\Data\Configurators\ConfiguratorContextData;
+use Capell\Admin\Filament\Components\Forms\BlueprintSelect;
 use Capell\Admin\Filament\Components\Forms\Page\LayoutSelect;
 use Capell\Admin\Filament\Components\Forms\SiteSelect;
-use Capell\Admin\Filament\Components\Forms\TypeSelect;
 use Capell\Admin\Filament\Contracts\FormConfigurator;
 use Capell\Events\Enums\EventBookingModeEnum;
 use Capell\Events\Enums\EventLocationModeEnum;
@@ -30,7 +30,7 @@ class EventForm implements FormConfigurator
                 Section::make(__('capell-events::form.event_details'))
                     ->schema([
                         SiteSelect::make('site_id'),
-                        TypeSelect::make('blueprint_id')->required(),
+                        BlueprintSelect::make('blueprint_id')->required(),
                         LayoutSelect::make('layout_id')->required(),
                         TextInput::make('name')
                             ->label(__('capell-events::table.name'))
