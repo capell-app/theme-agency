@@ -45,11 +45,17 @@ class CampaignCtaBlock extends Model
         return is_string($tableName) ? $tableName : 'campaign_cta_blocks';
     }
 
+    /**
+     * @return BelongsTo<CampaignGroup, $this>
+     */
     public function campaignGroup(): BelongsTo
     {
         return $this->belongsTo(CampaignGroup::class);
     }
 
+    /**
+     * @return BelongsTo<Site, $this>
+     */
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class);

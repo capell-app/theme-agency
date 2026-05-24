@@ -132,6 +132,9 @@ class AiDiscoveryTable implements TableConfigurator
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     protected static function getTableFilters(): array
     {
         return [
@@ -159,6 +162,9 @@ class AiDiscoveryTable implements TableConfigurator
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     protected static function getTableActions(): array
     {
         return [
@@ -222,6 +228,9 @@ class AiDiscoveryTable implements TableConfigurator
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     protected static function getBulkActions(): array
     {
         return [
@@ -488,6 +497,10 @@ class AiDiscoveryTable implements TableConfigurator
         return $site?->language instanceof Language ? $site->language : null;
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     private static function whereIncluded(Builder $query, bool $included): Builder
     {
         return $query->where(function (Builder $nestedQuery) use ($included): void {
@@ -509,6 +522,10 @@ class AiDiscoveryTable implements TableConfigurator
         });
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     private static function whereSummaryMissing(Builder $query): Builder
     {
         return $query->where(function (Builder $nestedQuery): void {
@@ -522,6 +539,10 @@ class AiDiscoveryTable implements TableConfigurator
         });
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     private static function whereSummaryReady(Builder $query): Builder
     {
         return self::whereAiProfile($query, function (QueryBuilder $profileQuery): void {
@@ -531,6 +552,10 @@ class AiDiscoveryTable implements TableConfigurator
         });
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     private static function whereAiProfile(Builder $query, Closure $constraint): Builder
     {
         return $query->whereExists(function (QueryBuilder $profileQuery) use ($constraint): void {

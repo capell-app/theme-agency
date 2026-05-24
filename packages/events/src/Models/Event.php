@@ -76,7 +76,10 @@ class Event extends Model implements HasMedia, Pageable, Publishable, Translatab
     use HasJsonRelationships;
     use HasMetaData;
     use HasMorphModelRelations;
+
+    /** @use HasPageOrdering<self> */
     use HasPageOrdering;
+
     use HasPublishDates;
     use HasTranslations;
     use HasType;
@@ -116,6 +119,9 @@ class Event extends Model implements HasMedia, Pageable, Publishable, Translatab
         'waitlist_enabled',
     ];
 
+    /**
+     * @var array<array-key, mixed>
+     */
     protected array $clone_exempt_attributes = [
         'hidden',
     ];
@@ -159,6 +165,9 @@ class Event extends Model implements HasMedia, Pageable, Publishable, Translatab
         return $url . 'events';
     }
 
+    /**
+     * @return BelongsTo<Layout, $this>
+     */
     public function layout(): BelongsTo
     {
         return $this->belongsTo(Layout::class);
@@ -170,11 +179,17 @@ class Event extends Model implements HasMedia, Pageable, Publishable, Translatab
         return $this->belongsTo(Site::class);
     }
 
+    /**
+     * @return BelongsTo<EventVenue, $this>
+     */
     public function venue(): BelongsTo
     {
         return $this->belongsTo(EventVenue::class, 'event_venue_id');
     }
 
+    /**
+     * @return HasMany<EventOccurrence, $this>
+     */
     public function occurrences(): HasMany
     {
         return $this->hasMany(EventOccurrence::class);
@@ -214,6 +229,9 @@ class Event extends Model implements HasMedia, Pageable, Publishable, Translatab
         return $this->morphTo(type: 'meta->canonical_pageable_type', id: 'meta->canonical_pageable_id');
     }
 
+    /**
+     * @return HasMany<self, $this>
+     */
     public function draftRevisions(): HasMany
     {
         return $this->hasMany(self::class, 'id', 'id')->whereRaw('0=1');
@@ -226,7 +244,7 @@ class Event extends Model implements HasMedia, Pageable, Publishable, Translatab
         return $date !== null ? CarbonImmutable::make($date) : null;
     }
 
-    /** @return array<string, mixed>|null */
+    /** @return array<array-key, mixed>|null */
     protected function getUrlParamsAttribute(): ?array
     {
         return $this->type->meta['url_params'] ?? null;

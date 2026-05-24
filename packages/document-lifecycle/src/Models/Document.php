@@ -6,6 +6,7 @@ namespace Capell\DocumentLifecycle\Models;
 
 use Capell\DocumentLifecycle\Enums\DocumentStatusEnum;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,12 +20,13 @@ use Override;
  * @property DocumentStatusEnum $status
  * @property string|null $documentable_type
  * @property int|null $documentable_id
- * @property array<string, mixed>|null $metadata
+ * @property array<array-key, mixed>|null $metadata
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
  */
 class Document extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     protected $table = 'document_lifecycle_documents';
@@ -38,6 +40,9 @@ class Document extends Model
         'metadata',
     ];
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function documentable(): MorphTo
     {
         return $this->morphTo();

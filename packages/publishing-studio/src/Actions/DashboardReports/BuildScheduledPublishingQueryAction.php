@@ -6,12 +6,16 @@ namespace Capell\PublishingStudio\Actions\DashboardReports;
 
 use Capell\Core\Models\Page;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class BuildScheduledPublishingQueryAction
 {
     use AsAction;
 
+    /**
+     * @return Builder<Model>
+     */
     public function handle(): Builder
     {
         return Page::query()

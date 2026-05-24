@@ -20,6 +20,9 @@ class WorkspaceReviewAssignmentsRelationManager extends RelationManager
 
     protected static bool $shouldSkipAuthorization = true;
 
+    /**
+     * @return Builder<WorkspaceReviewAssignment>
+     */
     public static function scopedQueryForUser(Model $user): Builder
     {
         $morphKey = static::userMorphKey($user);
@@ -36,6 +39,9 @@ class WorkspaceReviewAssignmentsRelationManager extends RelationManager
         return __('capell-publishing-studio::workspace.user_bridge.review_assignments');
     }
 
+    /**
+     * @return Relation<WorkspaceReviewAssignment, Model, mixed>|Builder<WorkspaceReviewAssignment>
+     */
     #[Override]
     public function getRelationship(): Relation|Builder
     {

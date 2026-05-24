@@ -6,23 +6,38 @@ namespace Capell\SeoSuite\Support;
 
 class AiFeatureRegistry
 {
+    /**
+     * @var array<array-key, mixed>
+     */
     protected array $features = [];
 
+    /**
+     * @param  array<array-key, mixed>  $config
+     */
     public function __construct(private array $config = [])
     {
         $this->registerDefaultFeatures();
     }
 
+    /**
+     * @param  array<array-key, mixed>  $feature
+     */
     public function register(string $name, array $feature): void
     {
         $this->features[$name] = array_merge(['name' => $name], $feature, $this->config[$name] ?? []);
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public function get(string $name): ?array
     {
         return $this->features[$name] ?? null;
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public function all(bool $enabledOnly = false): array
     {
         if (! $enabledOnly) {
@@ -42,6 +57,9 @@ class AiFeatureRegistry
         return $this->features[$name]['handler'] ?? null;
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public function getConfig(string $name): array
     {
         return $this->features[$name] ?? [];

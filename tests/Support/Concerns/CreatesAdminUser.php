@@ -28,21 +28,33 @@ trait CreatesAdminUser
         return parent::actingAs($user, $guard ?? 'web');
     }
 
+    /**
+     * @param  array<array-key, mixed>  $attributes
+     */
     public function actingAsRole(string $role, array $attributes = []): static
     {
         return $this->actingAs($this->createUserWithRole($role, $attributes));
     }
 
+    /**
+     * @param  array<array-key, mixed>  $attributes
+     */
     public function actingAsUser(array $attributes = []): static
     {
         return $this->actingAs($this->createUser($attributes));
     }
 
+    /**
+     * @param  array<array-key, mixed>  $attributes
+     */
     public function actingAsAdmin(array $attributes = []): static
     {
         return $this->actingAsRole('super_admin', $attributes);
     }
 
+    /**
+     * @param  array<array-key, mixed>  $attributes
+     */
     public function createUser(array $attributes = []): User
     {
         Model::setConnectionResolver($this->app->make('db'));
@@ -50,6 +62,10 @@ trait CreatesAdminUser
         return User::factory()->create($attributes);
     }
 
+    /**
+     * @param  array<array-key, mixed>|Collection<array-key, mixed>  $roles
+     * @param  array<array-key, mixed>  $attributes
+     */
     public function createUserWithRole(
         array|string|int|Role|Collection $roles,
         array $attributes = [],
@@ -57,6 +73,10 @@ trait CreatesAdminUser
         return $this->createUser($attributes)->assignRole($roles);
     }
 
+    /**
+     * @param  array<array-key, mixed>|Collection<array-key, mixed>  $permissions
+     * @param  array<array-key, mixed>  $attributes
+     */
     public function createUserWithPermission(
         string|int|array|Permission|Collection $permissions,
         array $attributes = [],

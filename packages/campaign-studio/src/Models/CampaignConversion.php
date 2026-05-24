@@ -51,31 +51,49 @@ class CampaignConversion extends Model
         return is_string($tableName) ? $tableName : 'campaign_conversions';
     }
 
+    /**
+     * @return BelongsTo<CampaignGroup, $this>
+     */
     public function campaignGroup(): BelongsTo
     {
         return $this->belongsTo(CampaignGroup::class);
     }
 
+    /**
+     * @return BelongsTo<CampaignLandingPage, $this>
+     */
     public function landingPage(): BelongsTo
     {
         return $this->belongsTo(CampaignLandingPage::class, 'campaign_landing_page_id');
     }
 
+    /**
+     * @return BelongsTo<CampaignConversionGoal, $this>
+     */
     public function goal(): BelongsTo
     {
         return $this->belongsTo(CampaignConversionGoal::class, 'campaign_conversion_goal_id');
     }
 
+    /**
+     * @return BelongsTo<InsightsVisit, $this>
+     */
     public function visit(): BelongsTo
     {
         return $this->belongsTo(InsightsVisit::class, 'insights_visit_id');
     }
 
+    /**
+     * @return BelongsTo<InsightsEvent, $this>
+     */
     public function event(): BelongsTo
     {
         return $this->belongsTo(InsightsEvent::class, 'insights_event_id');
     }
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function source(): MorphTo
     {
         return $this->morphTo();

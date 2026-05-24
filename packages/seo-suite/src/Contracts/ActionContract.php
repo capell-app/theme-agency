@@ -8,5 +8,8 @@ interface ActionContract
 {
     public function handle(...$args): mixed;
 
+    /**
+     * @param  array<array-key, mixed>  $input
+     */
     public function validate(array $input): bool;
 }

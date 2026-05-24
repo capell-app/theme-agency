@@ -48,6 +48,9 @@ final class GenerateLlmsTxtAction
         return $this->contentFromEntries($renderContext, $siteProfile, $entries);
     }
 
+    /**
+     * @param  Collection<array-key, mixed>  $entries
+     */
     public function contentFromEntries(AiDiscoveryRenderContextData $renderContext, AiDiscoverySiteProfile $siteProfile, Collection $entries): string
     {
         $lines = ['# ' . $this->siteTitle($renderContext)];

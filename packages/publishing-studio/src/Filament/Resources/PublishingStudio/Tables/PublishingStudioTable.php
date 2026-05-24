@@ -121,6 +121,9 @@ class PublishingStudioTable implements TableConfigurator
         return $actions;
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     protected static function getTableColumns(): array
     {
         return [

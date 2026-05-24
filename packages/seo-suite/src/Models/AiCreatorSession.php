@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\SeoSuite\Models;
 
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class AiCreatorSession extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     protected $fillable = [
@@ -39,6 +41,9 @@ class AiCreatorSession extends Model
         'ai_messages' => 'array',
     ];
 
+    /**
+     * @return BelongsTo<AIGenerationHistory, $this>
+     */
     public function history(): BelongsTo
     {
         return $this->belongsTo(AIGenerationHistory::class, 'ai_history_id');

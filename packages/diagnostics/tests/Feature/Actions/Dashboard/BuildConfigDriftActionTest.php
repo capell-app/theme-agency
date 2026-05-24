@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\File;
 // Helper: subclass that overrides configPairs() to point at temp files.
 // ---------------------------------------------------------------------------
 
+/**
+ * @param  array<array-key, mixed>  $pairs
+ */
 function makeDriftAction(array $pairs): BuildConfigDriftAction
 {
     return new class($pairs) extends BuildConfigDriftAction
@@ -26,6 +29,9 @@ function makeDriftAction(array $pairs): BuildConfigDriftAction
     };
 }
 
+/**
+ * @param  array<array-key, mixed>  $config
+ */
 function writeTempConfig(array $config): string
 {
     $path = tempnam(sys_get_temp_dir(), 'capell_cfg_');

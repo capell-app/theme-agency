@@ -139,6 +139,9 @@ class FormMappingResource extends Resource
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private static function confirmationModeOptions(): array
     {
         return collect(ConfirmationMode::cases())
@@ -146,6 +149,9 @@ class FormMappingResource extends Resource
             ->all();
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private static function newsletterTagOptions(): array
     {
         return Tag::query()

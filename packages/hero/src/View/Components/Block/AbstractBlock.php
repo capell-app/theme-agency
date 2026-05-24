@@ -16,6 +16,10 @@ abstract class AbstractBlock extends Component
 
     protected bool $skipRender = false;
 
+    /**
+     * @param  array<array-key, mixed>  $blockData
+     * @param  array<array-key, mixed>  $container
+     */
     public function __construct(
         public array $container,
         public string $containerKey,
@@ -27,6 +31,9 @@ abstract class AbstractBlock extends Component
         $this->mountBlock();
     }
 
+    /**
+     * @param  array<array-key, mixed>  $data
+     */
     public function render(array $data = []): View|string|Closure
     {
         if ($this->skipRender && config('capell-layout-builder.block.skip_render_empty', true) === true) {

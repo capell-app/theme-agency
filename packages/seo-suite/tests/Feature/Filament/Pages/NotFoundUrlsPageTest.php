@@ -14,8 +14,11 @@ use Filament\Actions\Testing\TestAction;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Collection as SupportCollection;
 
 use function Pest\Laravel\get;
@@ -26,10 +29,14 @@ use Spatie\Permission\Models\Permission;
 uses(CreatesAdminUser::class)
     ->group('not-found-urls');
 
+/**
+ * @param  Collection<array-key, mixed>  $assignedSiteIds
+ */
 function createScopedUserForNotFoundUrlsPageTest(SupportCollection $assignedSiteIds): Authenticatable
 {
     $user = new class extends Authenticatable implements FilamentUser
     {
+        /** @use HasFactory<Factory<static>> */
         use HasFactory;
 
         /** @var SupportCollection<int, int> */
@@ -65,7 +72,7 @@ function createScopedUserForNotFoundUrlsPageTest(SupportCollection $assignedSite
 }
 
 /**
- * @param  array<string, mixed>  $attributes
+ * @param  array<array-key, mixed>  $attributes
  */
 function insightsEventForNotFoundUrlsPageTest(array $attributes): InsightsEvent
 {
@@ -84,6 +91,9 @@ function insightsEventForNotFoundUrlsPageTest(array $attributes): InsightsEvent
     ]);
 }
 
+/**
+ * @return Builder<Model>
+ */
 function notFoundUrlsPageTestQuery(): Builder
 {
     return InsightsEvent::query()

@@ -6,6 +6,7 @@ namespace Capell\PublishingStudio\Models;
 
 use Capell\PublishingStudio\Enums\PublishingRevisionEventEnum;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,8 +26,8 @@ use Override;
  * @property int|null $version_id
  * @property int $version
  * @property PublishingRevisionEventEnum $event_type
- * @property array<string, mixed>|null $before_payload
- * @property array<string, mixed>|null $after_payload
+ * @property array<array-key, mixed>|null $before_payload
+ * @property array<array-key, mixed>|null $after_payload
  * @property string|null $actor_type
  * @property int|null $actor_id
  * @property string|null $notes
@@ -37,6 +38,7 @@ use Override;
  */
 class PublishingRevision extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     protected $fillable = [
@@ -55,21 +57,33 @@ class PublishingRevision extends Model
         'notes',
     ];
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function revisionable(): MorphTo
     {
         return $this->morphTo();
     }
 
+    /**
+     * @return BelongsTo<Workspace, $this>
+     */
     public function workspace(): BelongsTo
     {
         return $this->belongsTo(Workspace::class);
     }
 
+    /**
+     * @return BelongsTo<Version, $this>
+     */
     public function publishedVersion(): BelongsTo
     {
         return $this->belongsTo(Version::class, 'version_id');
     }
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function actor(): MorphTo
     {
         return $this->morphTo();

@@ -6,6 +6,7 @@ namespace Capell\Newsletter\Models;
 
 use Capell\Newsletter\Enums\PublicTokenType;
 use Carbon\CarbonInterface;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,6 +18,7 @@ use Override;
  */
 class PublicToken extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     /** @var list<string> */
@@ -30,6 +32,9 @@ class PublicToken extends Model
 
     protected $table = 'newsletter_public_tokens';
 
+    /**
+     * @return BelongsTo<Subscriber, $this>
+     */
     public function subscriber(): BelongsTo
     {
         return $this->belongsTo(Subscriber::class);

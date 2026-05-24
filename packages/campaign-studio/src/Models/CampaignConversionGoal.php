@@ -52,16 +52,25 @@ class CampaignConversionGoal extends Model
         return is_string($tableName) ? $tableName : 'campaign_conversion_goals';
     }
 
+    /**
+     * @return BelongsTo<CampaignGroup, $this>
+     */
     public function campaignGroup(): BelongsTo
     {
         return $this->belongsTo(CampaignGroup::class);
     }
 
+    /**
+     * @return BelongsTo<Site, $this>
+     */
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class);
     }
 
+    /**
+     * @return HasMany<CampaignConversion, $this>
+     */
     public function conversions(): HasMany
     {
         return $this->hasMany(CampaignConversion::class, 'campaign_conversion_goal_id');

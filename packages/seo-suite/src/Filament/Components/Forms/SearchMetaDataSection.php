@@ -21,6 +21,9 @@ class SearchMetaDataSection extends Section
             ->headerActions($this->resolveHeaderActions());
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private function resolveHeaderActions(): array
     {
         return resolve(SearchMetaDataSectionExtenderResolverInterface::class)->resolveHeaderActions($this);

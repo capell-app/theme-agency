@@ -6,6 +6,7 @@ namespace Capell\AgentBridge\Models;
 
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,8 +22,8 @@ use Override;
  * @property string $capability_key
  * @property string $scope
  * @property string $payload_hash
- * @property array<string, mixed> $payload
- * @property array<string, mixed> $preview
+ * @property array<array-key, mixed> $payload
+ * @property array<array-key, mixed> $preview
  * @property CarbonImmutable $expires_at
  * @property CarbonImmutable|null $used_at
  * @property Authenticatable $user
@@ -30,6 +31,7 @@ use Override;
  */
 final class CapellAgentBridgeConfirmation extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     protected $fillable = [

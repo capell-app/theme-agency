@@ -38,6 +38,7 @@ use Capell\Navigation\Models\Navigation as NavigationModel;
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Mix;
@@ -213,6 +214,7 @@ it('covers page asset table query branches and selected record submission', func
     $excludedPage = Page::factory()->withTranslations($language)->create();
     $uuidModel = new class extends Model
     {
+        /** @use HasFactory<Factory<static>> */
         use HasFactory;
 
         public function getKey(): mixed
@@ -484,6 +486,9 @@ function foundationThemeFinalFrontendState(Language $language, Site $site, Theme
 
 final class FoundationThemeFinalPageAssetsHarness extends PageAssets
 {
+    /**
+     * @return Builder<Model>
+     */
     public function exposeTableQuery(): Builder
     {
         return $this->getTableQuery();

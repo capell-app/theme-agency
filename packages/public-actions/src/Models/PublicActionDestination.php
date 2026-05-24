@@ -19,8 +19,8 @@ use Override;
  * @property string $name
  * @property string|null $endpoint_url
  * @property string|null $secret
- * @property array<string, mixed>|null $headers
- * @property array<string, mixed>|null $settings
+ * @property array<array-key, mixed>|null $headers
+ * @property array<array-key, mixed>|null $settings
  */
 class PublicActionDestination extends Model
 {
@@ -49,11 +49,17 @@ class PublicActionDestination extends Model
         return is_string($tableName) ? $tableName : 'public_action_destinations';
     }
 
+    /**
+     * @return BelongsTo<PublicAction, $this>
+     */
     public function action(): BelongsTo
     {
         return $this->belongsTo(PublicAction::class, 'public_action_id');
     }
 
+    /**
+     * @return HasMany<PublicActionDispatchAttempt, $this>
+     */
     public function dispatchAttempts(): HasMany
     {
         return $this->hasMany(PublicActionDispatchAttempt::class);

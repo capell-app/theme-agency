@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static array run(Page $page, Site $site, Language $language)
+ * @method static array<array-key, mixed> run(Page $page, Site $site, Language $language)
  */
 final class ResolvePageStructuredDataAction
 {

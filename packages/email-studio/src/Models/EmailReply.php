@@ -42,11 +42,17 @@ class EmailReply extends Model
         return is_string($tableName) ? $tableName : 'email_replies';
     }
 
+    /**
+     * @return BelongsTo<EmailMessage, $this>
+     */
     public function message(): BelongsTo
     {
         return $this->belongsTo(EmailMessage::class, 'email_message_id');
     }
 
+    /**
+     * @return BelongsTo<EmailRecipient, $this>
+     */
     public function recipient(): BelongsTo
     {
         return $this->belongsTo(EmailRecipient::class, 'email_recipient_id');

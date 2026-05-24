@@ -24,7 +24,8 @@ class RecordAiGenerationAction
     /**
      * Accepts a plain array payload and records a history entry. Falls back to context/options if not array.
      *
-     * @param  array<string, mixed>|AiGenerationResultData|AiActionContextInterface  $input
+     * @param  array<array-key, mixed>|AiGenerationResultData|AiActionContextInterface  $input
+     * @param  array<array-key, mixed>  $options
      */
     public function handle($input, array $options = []): AIGenerationHistory
     {

@@ -6,6 +6,9 @@ namespace Capell\SeoSuite\Support;
 
 final class AiResponse
 {
+    /**
+     * @param  array<array-key, mixed>  $metadata
+     */
     public function __construct(
         public string $content,
         public int $tokensUsed,

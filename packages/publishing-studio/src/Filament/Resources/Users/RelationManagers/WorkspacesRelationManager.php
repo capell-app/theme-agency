@@ -20,6 +20,9 @@ class WorkspacesRelationManager extends RelationManager
 
     protected static bool $shouldSkipAuthorization = true;
 
+    /**
+     * @return Builder<Workspace>
+     */
     public static function scopedQueryForUser(Model $user): Builder
     {
         return Workspace::query()
@@ -37,6 +40,9 @@ class WorkspacesRelationManager extends RelationManager
         return __('capell-publishing-studio::workspace.user_bridge.workspaces');
     }
 
+    /**
+     * @return Relation<Workspace, Model, mixed>|Builder<Workspace>
+     */
     #[Override]
     public function getRelationship(): Relation|Builder
     {

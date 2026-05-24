@@ -20,6 +20,9 @@ class WorkspaceFieldCommentsRelationManager extends RelationManager
 
     protected static bool $shouldSkipAuthorization = true;
 
+    /**
+     * @return Builder<WorkspaceFieldComment>
+     */
     public static function scopedQueryForUser(Model $user): Builder
     {
         $morphKey = static::userMorphKey($user);
@@ -36,6 +39,9 @@ class WorkspaceFieldCommentsRelationManager extends RelationManager
         return __('capell-publishing-studio::workspace.user_bridge.field_comments');
     }
 
+    /**
+     * @return Relation<WorkspaceFieldComment, Model, mixed>|Builder<WorkspaceFieldComment>
+     */
     #[Override]
     public function getRelationship(): Relation|Builder
     {

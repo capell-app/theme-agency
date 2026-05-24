@@ -109,6 +109,10 @@ class PasswordPolicyUserTableExtender implements UserTableExtender
         return null;
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     private function expiredPasswordQuery(Builder $query): Builder
     {
         $settings = resolve(PasswordPolicySettingsResolver::class)->settings();

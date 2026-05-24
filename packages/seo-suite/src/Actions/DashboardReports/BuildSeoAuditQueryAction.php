@@ -13,6 +13,9 @@ final class BuildSeoAuditQueryAction
 {
     use AsAction;
 
+    /**
+     * @return Builder<Page>
+     */
     public function handle(): Builder
     {
         $query = Page::query()

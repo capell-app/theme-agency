@@ -10,12 +10,15 @@ use DOMNode;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static string run(string|array|null $content)
+ * @method static string run(string|array<array-key, mixed>|null $content)
  */
 final class RenderContentMarkdownAction
 {
     use AsAction;
 
+    /**
+     * @param  array<array-key, mixed>|string|null  $content
+     */
     public function handle(string|array|null $content): string
     {
         if ($content === null) {
@@ -30,7 +33,7 @@ final class RenderContentMarkdownAction
     }
 
     /**
-     * @param  array<mixed>  $content
+     * @param  array<array-key, mixed>  $content
      */
     private function renderArray(array $content): string
     {

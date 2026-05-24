@@ -115,11 +115,19 @@ trait BelongsToWorkspace
         return (int) $this->getAttribute('workspace_id') > 0;
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopeLive(Builder $query): Builder
     {
         return $query->where($this->qualifyColumn('workspace_id'), 0);
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopeInWorkspace(Builder $query, Workspace|int $workspace): Builder
     {
         $workspaceId = $workspace instanceof Workspace ? $workspace->id : $workspace;
@@ -127,6 +135,10 @@ trait BelongsToWorkspace
         return $query->where($this->qualifyColumn('workspace_id'), $workspaceId);
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopeForContext(Builder $query, Workspace|int|null $workspace): Builder
     {
         $workspaceColumn = $this->qualifyColumn('workspace_id');
@@ -157,6 +169,9 @@ trait BelongsToWorkspace
      * Escape hatch: return a query that ignores the workspace context scope
      * entirely. Use for publisher/rebaser code that must see live + every
      * workspace at once.
+     *
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
      */
     protected function scopeWithoutWorkspaceScope(Builder $query): Builder
     {

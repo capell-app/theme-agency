@@ -47,6 +47,9 @@ it('runs base ai actions through validation, events, logging, and metadata', fun
 
     $action = new class extends BaseAction
     {
+        /**
+         * @param  array<array-key, mixed>  $options
+         */
         protected function perform(AiActionContextInterface $context, array $options = []): mixed
         {
             $this->setMetadata('keywords', $context->getKeywords());
@@ -76,6 +79,9 @@ it('rejects malformed base ai action input before running hooks', function (): v
     {
         public bool $performed = false;
 
+        /**
+         * @param  array<array-key, mixed>  $options
+         */
         protected function perform(AiActionContextInterface $context, array $options = []): mixed
         {
             $this->performed = true;
@@ -97,6 +103,9 @@ it('dispatches failure events and logs when base ai actions throw', function ():
 
     $action = new class extends BaseAction
     {
+        /**
+         * @param  array<array-key, mixed>  $options
+         */
         protected function perform(AiActionContextInterface $context, array $options = []): mixed
         {
             throw new RuntimeException('Provider unavailable');
@@ -114,6 +123,9 @@ it('dispatches failure events and logs when base ai actions throw', function ():
 it('supports static run dispatch through the container', function (): void {
     $action = new class extends BaseAction
     {
+        /**
+         * @param  array<array-key, mixed>  $options
+         */
         protected function perform(AiActionContextInterface $context, array $options = []): mixed
         {
             return $options['prefix'] . ':' . $context->getLanguageId();

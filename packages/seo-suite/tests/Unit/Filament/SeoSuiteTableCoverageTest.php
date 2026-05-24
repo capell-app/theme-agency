@@ -14,10 +14,6 @@ use Capell\SeoSuite\Filament\Pages\Tables\SeoAuditTable;
 use Capell\SeoSuite\Filament\Pages\Tables\TranslationCoverageTable;
 use Capell\SeoSuite\Models\AiDiscoveryPageProfile;
 use Capell\SeoSuite\Models\PageSeoSnapshot;
-use Filament\Actions\Action;
-use Filament\Actions\BulkAction;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 it('exposes translation coverage table columns for page, language completeness, missing languages, and author', function (): void {
@@ -65,18 +61,10 @@ it('exposes ai discovery table columns, filters, row actions, and bulk actions',
     $actionsMethod = new ReflectionMethod(AiDiscoveryTable::class, 'getTableActions');
     $bulkActionsMethod = new ReflectionMethod(AiDiscoveryTable::class, 'getBulkActions');
 
-    $columnNames = collect($columnsMethod->invoke(null))
-        ->map(fn (mixed $column): string => $column->getName())
-        ->all();
-    $filterNames = collect($filtersMethod->invoke(null))
-        ->map(fn (SelectFilter|TernaryFilter $filter): string => $filter->getName())
-        ->all();
-    $actionNames = collect($actionsMethod->invoke(null))
-        ->map(fn (Action $action): string => $action->getName())
-        ->all();
-    $bulkActionNames = collect($bulkActionsMethod->invoke(null))
-        ->map(fn (BulkAction $action): string => $action->getName())
-        ->all();
+    $columnNames = reflectedComponentNames($columnsMethod);
+    $filterNames = reflectedComponentNames($filtersMethod);
+    $actionNames = reflectedComponentNames($actionsMethod);
+    $bulkActionNames = reflectedComponentNames($bulkActionsMethod);
 
     expect($columnNames)->toBe([
         'name',
@@ -139,12 +127,8 @@ it('exposes seo audit table columns and status filters', function (): void {
     $columnsMethod = new ReflectionMethod(SeoAuditTable::class, 'getTableColumns');
     $filtersMethod = new ReflectionMethod(SeoAuditTable::class, 'getTableFilters');
 
-    $columnNames = collect($columnsMethod->invoke(null))
-        ->map(fn (mixed $column): string => $column->getName())
-        ->all();
-    $filterNames = collect($filtersMethod->invoke(null))
-        ->map(fn (SelectFilter $filter): string => $filter->getName())
-        ->all();
+    $columnNames = reflectedComponentNames($columnsMethod);
+    $filterNames = reflectedComponentNames($filtersMethod);
 
     expect($columnNames)->toBe([
         'name',
@@ -168,6 +152,30 @@ it('exposes seo audit table columns and status filters', function (): void {
             'snapshot_state',
         ]);
 });
+
+/**
+ * @return array<int, string>
+ */
+function reflectedComponentNames(ReflectionMethod $method): array
+{
+    $components = $method->invoke(null);
+
+    if (! is_iterable($components)) {
+        return [];
+    }
+
+    $names = [];
+
+    foreach ($components as $component) {
+        if (! is_object($component) || ! method_exists($component, 'getName')) {
+            continue;
+        }
+
+        $names[] = $component->getName();
+    }
+
+    return $names;
+}
 
 it('uses translation metadata before labels for seo audit search preview titles', function (): void {
     $translation = new Translation;

@@ -15,6 +15,9 @@ class Hero extends AbstractBlock
 {
     protected static string $defaultView = 'capell-hero::components.block.hero';
 
+    /**
+     * @param  array<array-key, mixed>  $morphRelations
+     */
     public static function loadBlockAssets(array &$morphRelations, ?Language $language = null): void
     {
         $morphRelations[Page::class]['related'] = fn (BuilderContract $query): BuilderContract => $query->with(Page::getMorphRelations($language))

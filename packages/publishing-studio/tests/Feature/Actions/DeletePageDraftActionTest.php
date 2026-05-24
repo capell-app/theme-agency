@@ -8,6 +8,9 @@ use Capell\PublishingStudio\Actions\DeletePageDraftAction;
 use Capell\PublishingStudio\Enums\WorkspaceKindEnum;
 use Capell\PublishingStudio\Models\Workspace;
 
+/**
+ * @return array<array-key, mixed>
+ */
 function makeLiveAndDraft(WorkspaceKindEnum $kind = WorkspaceKindEnum::Manual): array
 {
     $live = Page::factory()->create();

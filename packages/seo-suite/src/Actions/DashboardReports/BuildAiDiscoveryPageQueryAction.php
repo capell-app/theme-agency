@@ -10,12 +10,15 @@ use Illuminate\Database\Eloquent\Builder;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static Builder run()
+ * @method static Builder<Page> run()
  */
 final class BuildAiDiscoveryPageQueryAction
 {
     use AsAction;
 
+    /**
+     * @return Builder<Page>
+     */
     public function handle(): Builder
     {
         $query = Page::query()

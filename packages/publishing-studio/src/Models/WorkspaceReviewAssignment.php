@@ -48,11 +48,17 @@ class WorkspaceReviewAssignment extends Model
 
     protected static string $factory = WorkspaceReviewAssignmentFactory::class;
 
+    /**
+     * @return BelongsTo<Workspace, $this>
+     */
     public function workspace(): BelongsTo
     {
         return $this->belongsTo(Workspace::class);
     }
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function reviewer(): MorphTo
     {
         return $this->morphTo();

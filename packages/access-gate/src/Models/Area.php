@@ -34,11 +34,11 @@ use Override;
  * @property array<int, string>|null $public_allowlist
  * @property array<int, string>|null $claim_url_hosts
  * @property string|null $gate_view
- * @property array<string, mixed>|null $metadata
+ * @property array<array-key, mixed>|null $metadata
  * @property string|null $discount_label
  * @property string|null $discount_code
  * @property CarbonInterface|null $discount_expires_at
- * @property array<string, mixed>|null $discount_metadata
+ * @property array<array-key, mixed>|null $discount_metadata
  */
 class Area extends AccessGateModel
 {
@@ -73,31 +73,49 @@ class Area extends AccessGateModel
 
     protected static string $factory = AreaFactory::class;
 
+    /**
+     * @return BelongsTo<Site, $this>
+     */
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class);
     }
 
+    /**
+     * @return HasMany<Registration, $this>
+     */
     public function registrations(): HasMany
     {
         return $this->hasMany(Registration::class, 'access_area_id');
     }
 
+    /**
+     * @return HasMany<Grant, $this>
+     */
     public function grants(): HasMany
     {
         return $this->hasMany(Grant::class, 'access_area_id');
     }
 
+    /**
+     * @return HasMany<ClaimToken, $this>
+     */
     public function claimTokens(): HasMany
     {
         return $this->hasMany(ClaimToken::class, 'access_area_id');
     }
 
+    /**
+     * @return HasMany<BrowserToken, $this>
+     */
     public function browserTokens(): HasMany
     {
         return $this->hasMany(BrowserToken::class, 'access_area_id');
     }
 
+    /**
+     * @return HasMany<Event, $this>
+     */
     public function events(): HasMany
     {
         return $this->hasMany(Event::class, 'access_area_id');

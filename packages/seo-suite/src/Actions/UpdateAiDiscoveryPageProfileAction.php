@@ -13,7 +13,7 @@ use LogicException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static AiDiscoveryPageProfile run(Page $page, Site $site, Language $language, array $data)
+ * @method static AiDiscoveryPageProfile run(Page $page, Site $site, Language $language, array{include_in_ai_index?: mixed, section?: mixed, priority?: mixed, summary?: mixed, markdown_override?: mixed, exclude_reason?: mixed} $data)
  */
 final class UpdateAiDiscoveryPageProfileAction
 {

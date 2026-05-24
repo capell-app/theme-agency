@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Capell\Newsletter\Models;
 
 use Capell\Tags\Models\Tag;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProviderInterestMapping extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     /** @var list<string> */
@@ -24,11 +26,17 @@ class ProviderInterestMapping extends Model
 
     protected $table = 'newsletter_provider_interest_mappings';
 
+    /**
+     * @return BelongsTo<ProviderAudience, $this>
+     */
     public function providerAudience(): BelongsTo
     {
         return $this->belongsTo(ProviderAudience::class);
     }
 
+    /**
+     * @return BelongsTo<Tag, $this>
+     */
     public function tag(): BelongsTo
     {
         return $this->belongsTo(Tag::class);

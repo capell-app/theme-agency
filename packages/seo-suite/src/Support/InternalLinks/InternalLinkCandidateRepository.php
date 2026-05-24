@@ -13,6 +13,7 @@ use Capell\Core\Models\Site;
 use Capell\Core\Models\Translation;
 use Capell\SeoSuite\Enums\RobotsDirectiveEnum;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Throwable;
 
@@ -61,6 +62,10 @@ final class InternalLinkCandidateRepository
             ->all();
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     private function pageUrlQuery(Builder|Relation $query, Site $site, Language $language): Builder|Relation
     {
         return $query

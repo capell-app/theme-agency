@@ -44,6 +44,9 @@ final class Index extends Component
 
     public mixed $footerSpacing;
 
+    /**
+     * @var Collection<array-key, mixed>
+     */
     public Collection $latestFooterPages;
 
     public mixed $site;

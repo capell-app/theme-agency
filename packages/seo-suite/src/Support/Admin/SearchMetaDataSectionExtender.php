@@ -118,6 +118,9 @@ class SearchMetaDataSectionExtender implements SearchMetaDataSectionExtenderCont
             ->action($this->handleMetaDescriptionSuggestionsAction(...));
     }
 
+    /**
+     * @param  array<array-key, mixed>  $data
+     */
     private function handleMetaDescriptionSuggestionsAction(HasActions $livewire, Section $component, Action $action, array $data, ?Translation $record): void
     {
         $keywords = isset($data['keywords']) ? trim((string) $data['keywords']) : '';

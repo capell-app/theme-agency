@@ -9,6 +9,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +21,7 @@ it('builds login audit table columns filters and helper fallbacks', function ():
     $namedRecord = new LoginAudit;
     $namedRecord->setRelation('authenticatable', new class extends Model
     {
+        /** @use HasFactory<Factory<static>> */
         use HasFactory;
 
         protected $attributes = [
@@ -45,6 +47,7 @@ it('builds login audit table columns filters and helper fallbacks', function ():
 it('builds login audit user relation manager table metadata', function (): void {
     $owner = new class extends Model
     {
+        /** @use HasFactory<Factory<static>> */
         use HasFactory;
     };
     $manager = new LoginAuditsRelationManager;

@@ -26,6 +26,7 @@ final class BuildContentSchedulerEventsAction
     use AsAction;
 
     /**
+     * @param  array<array-key, mixed>  $siteIds
      * @return Collection<int, SchedulerEventData>
      */
     public function handle(
@@ -68,6 +69,7 @@ final class BuildContentSchedulerEventsAction
     }
 
     /**
+     * @param  array<array-key, mixed>  $siteIds
      * @return Collection<int, SchedulerEventData>
      */
     private function pageEvents(
@@ -100,6 +102,7 @@ final class BuildContentSchedulerEventsAction
     }
 
     /**
+     * @param  array<array-key, mixed>  $siteIds
      * @return Collection<int, SchedulerEventData>
      */
     private function pageColumnEvents(
@@ -140,6 +143,7 @@ final class BuildContentSchedulerEventsAction
     }
 
     /**
+     * @param  array<array-key, mixed>  $siteIds
      * @return Collection<int, SchedulerEventData>
      */
     private function workspaceEvents(
@@ -171,6 +175,7 @@ final class BuildContentSchedulerEventsAction
     }
 
     /**
+     * @param  array<array-key, mixed>  $siteIds
      * @return Collection<int, SchedulerEventData>
      */
     private function legacyWorkspaceEvents(

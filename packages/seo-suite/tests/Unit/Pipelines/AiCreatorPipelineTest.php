@@ -43,6 +43,9 @@ function makeAiCreatorPipelineForJson(string $json): AiCreatorPipeline
                 parent::__construct(['max_retries' => 1]);
             }
 
+            /**
+             * @param  array<array-key, mixed>  $params
+             */
             public function chat(array $params): AiResponse
             {
                 return new AiResponse(

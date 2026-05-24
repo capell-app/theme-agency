@@ -6,6 +6,7 @@ namespace Capell\PublishingStudio\Models;
 
 use Capell\PublishingStudio\Enums\SchedulerIcalFeedScopeEnum;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -25,6 +26,7 @@ use Override;
  */
 class SchedulerIcalToken extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     protected $table = 'publishing_scheduler_ical_tokens';
@@ -40,6 +42,9 @@ class SchedulerIcalToken extends Model
         'last_used_at',
     ];
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function owner(): MorphTo
     {
         return $this->morphTo();

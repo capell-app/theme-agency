@@ -47,15 +47,19 @@ it('protects the configured knowledge server route with bearer token middleware'
         return;
     }
 
-    $knowledgeRoute = collect(Route::getRoutes())
-        ->first(function (mixed $route): bool {
-            if (! $route instanceof IlluminateRoute) {
-                return false;
-            }
+    $knowledgeRoute = null;
 
-            return str_contains($route->uri(), 'agent-bridge/capell/knowledge')
-                && in_array('POST', $route->methods(), true);
-        });
+    foreach (Route::getRoutes()->getRoutes() as $route) {
+        if (! $route instanceof IlluminateRoute) {
+            continue;
+        }
+
+        if (str_contains($route->uri(), 'agent-bridge/capell/knowledge') && in_array('POST', $route->methods(), true)) {
+            $knowledgeRoute = $route;
+
+            break;
+        }
+    }
 
     expect($knowledgeRoute)->toBeInstanceOf(IlluminateRoute::class);
     assert($knowledgeRoute instanceof IlluminateRoute);

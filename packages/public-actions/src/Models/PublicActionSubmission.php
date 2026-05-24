@@ -20,8 +20,8 @@ use Override;
  * @property int|null $site_id
  * @property string|null $source_type
  * @property string|null $source_id
- * @property array<string, mixed>|null $payload
- * @property array<string, mixed>|null $metadata
+ * @property array<array-key, mixed>|null $payload
+ * @property array<array-key, mixed>|null $metadata
  * @property CarbonInterface|null $submitted_at
  * @property CarbonInterface|null $created_at
  */
@@ -52,16 +52,25 @@ class PublicActionSubmission extends Model
         return is_string($tableName) ? $tableName : 'public_action_submissions';
     }
 
+    /**
+     * @return BelongsTo<PublicAction, $this>
+     */
     public function action(): BelongsTo
     {
         return $this->belongsTo(PublicAction::class, 'public_action_id');
     }
 
+    /**
+     * @return BelongsTo<Site, $this>
+     */
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class);
     }
 
+    /**
+     * @return HasMany<PublicActionDispatchAttempt, $this>
+     */
     public function dispatchAttempts(): HasMany
     {
         return $this->hasMany(PublicActionDispatchAttempt::class);

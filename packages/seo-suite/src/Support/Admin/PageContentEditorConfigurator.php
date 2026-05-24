@@ -96,6 +96,9 @@ class PageContentEditorConfigurator
             ->action($this->handleGenerateContentAction(...));
     }
 
+    /**
+     * @param  array<array-key, mixed>  $data
+     */
     private function handleGenerateContentAction(Set $set, mixed $component, Action $action, array $data, ?Translation $record): void
     {
         $keywords = isset($data['keywords']) ? trim((string) $data['keywords']) : '';

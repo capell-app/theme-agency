@@ -12,6 +12,7 @@ use Capell\CampaignStudio\Enums\CampaignBlockConfiguratorEnum;
 use Capell\CampaignStudio\Enums\CampaignStatus;
 use Capell\CampaignStudio\Enums\ConversionGoalType;
 use Capell\CampaignStudio\Health\CampaignStudioHealthCheck;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -117,16 +118,17 @@ it('defines campaign studio package metadata and enum labels', function (): void
 });
 
 /**
- * @param  array<string, mixed>  $attributes
+ * @param  array<array-key, mixed>  $attributes
  */
 function campaignStudioCoverageModel(array $attributes): Model
 {
     return new class($attributes) extends Model
     {
+        /** @use HasFactory<Factory<static>> */
         use HasFactory;
 
         /**
-         * @param  array<string, mixed>  $attributes
+         * @param  array<array-key, mixed>  $attributes
          */
         public function __construct(array $attributes = [])
         {

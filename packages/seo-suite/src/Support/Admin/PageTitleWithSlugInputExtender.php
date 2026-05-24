@@ -135,6 +135,9 @@ class PageTitleWithSlugInputExtender implements PageTitleWithSlugInputExtenderCo
             ->action($this->handleTitleSuggestionsAction(...));
     }
 
+    /**
+     * @param  array<array-key, mixed>  $data
+     */
     private function handleTitleSuggestionsAction(HasActions $livewire, FusedGroup $component, Action $action, array $data, ?Translation $record): void
     {
         $keywords = isset($data['keywords']) ? trim((string) $data['keywords']) : '';

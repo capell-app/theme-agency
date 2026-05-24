@@ -24,10 +24,14 @@ use Capell\PublishingStudio\Models\WorkspaceReviewAssignment;
 use Capell\PublishingStudio\Support\WorkspaceSchema;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
+/**
+ * @method static list<PublishingWorkflowPanelData> run(?Authenticatable $user = null)
+ */
 final class BuildPublishingWorkflowCommandCenterAction
 {
     use AsAction;
@@ -374,6 +378,9 @@ final class BuildPublishingWorkflowCommandCenterAction
         return $query;
     }
 
+    /**
+     * @return Builder<Model>
+     */
     private function visibleWorkspaceIdsQuery(?Authenticatable $user): Builder
     {
         if (! $user instanceof Authenticatable || SiteScope::isGlobalActor($user)) {

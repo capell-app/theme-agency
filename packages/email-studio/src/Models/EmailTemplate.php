@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
+/**
+ * @property list<string>|null $variables
+ */
 class EmailTemplate extends Model
 {
     /** @use HasFactory<EmailTemplateFactory> */
@@ -37,11 +40,17 @@ class EmailTemplate extends Model
         return is_string($tableName) ? $tableName : 'email_templates';
     }
 
+    /**
+     * @return HasMany<EmailTemplateVariant, $this>
+     */
     public function variants(): HasMany
     {
         return $this->hasMany(EmailTemplateVariant::class);
     }
 
+    /**
+     * @return HasMany<EmailMessage, $this>
+     */
     public function messages(): HasMany
     {
         return $this->hasMany(EmailMessage::class);

@@ -6,6 +6,9 @@ namespace Capell\SeoSuite\Support;
 
 class AiResponseParser
 {
+    /**
+     * @var array<array-key, mixed>
+     */
     protected readonly array $listPatterns;
 
     public function __construct()

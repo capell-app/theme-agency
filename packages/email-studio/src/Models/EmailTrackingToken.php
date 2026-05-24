@@ -37,6 +37,9 @@ class EmailTrackingToken extends Model
         return is_string($tableName) ? $tableName : 'email_tracking_tokens';
     }
 
+    /**
+     * @return BelongsTo<EmailRecipient, $this>
+     */
     public function recipient(): BelongsTo
     {
         return $this->belongsTo(EmailRecipient::class, 'email_recipient_id');

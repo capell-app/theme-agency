@@ -27,6 +27,9 @@ class PageAssets extends AbstractAssets implements HasPageResource
         return AdminSurfaceLookup::resource(ResourceEnum::Page);
     }
 
+    /**
+     * @return Builder<Page>
+     */
     public function getFilteredTableQuery(): Builder
     {
         $query = parent::getFilteredTableQuery();
@@ -48,6 +51,9 @@ class PageAssets extends AbstractAssets implements HasPageResource
         return $query;
     }
 
+    /**
+     * @return Builder<Page>
+     */
     #[Override]
     protected function getTableQuery(): Builder
     {

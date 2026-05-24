@@ -28,6 +28,9 @@ trait BuildsOrderedMigrationWorkspace
         $this->orderedMigrationWorkspacePath = null;
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private function discoverPackageMigrations(PackageData $package): array
     {
         $path = $package->path;

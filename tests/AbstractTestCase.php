@@ -268,6 +268,9 @@ abstract class AbstractTestCase extends TestCase
         ];
     }
 
+    /**
+     * @param  array<array-key, mixed>  $packages
+     */
     protected function registerPackageConfigs(Application $app, ?array $packages = null): void
     {
         if ($packages === null || $packages === []) {
@@ -315,6 +318,9 @@ abstract class AbstractTestCase extends TestCase
         }
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     protected function getDefaultPackages(): array
     {
         return [
@@ -353,6 +359,9 @@ abstract class AbstractTestCase extends TestCase
         }
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     protected function getPublishConfigs(string $package): array
     {
         $path = realpath(__DIR__ . '/../packages/' . $package . '/publishes/config');
@@ -364,6 +373,9 @@ abstract class AbstractTestCase extends TestCase
         return glob($path . '/*.php');
     }
 
+    /**
+     * @param  array<array-key, mixed>  $migrations
+     */
     protected function registerAndMigrateSettings(array $migrations, string $basePath): void
     {
         $settingsMigrator = resolve(SettingsMigrator::class);
@@ -384,6 +396,9 @@ abstract class AbstractTestCase extends TestCase
         }
     }
 
+    /**
+     * @param  array<array-key, mixed>  $package
+     */
     private function getPackageFile(array $package): string
     {
         $path = '/vendor/' . basename((string) $package['user']) . '/' . basename((string) $package['name']) . '/config';
@@ -392,6 +407,9 @@ abstract class AbstractTestCase extends TestCase
         return sprintf('%s/%s', $path, $file);
     }
 
+    /**
+     * @param  array<array-key, mixed>  $config
+     */
     private function registerPackageConfig(string $package, array $config): void
     {
         foreach ($config as $key => $value) {

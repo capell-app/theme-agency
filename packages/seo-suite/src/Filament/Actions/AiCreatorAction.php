@@ -45,6 +45,9 @@ class AiCreatorAction extends Action
             });
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private function buildWizardForm(): array
     {
         return [
@@ -102,6 +105,9 @@ class AiCreatorAction extends Action
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     private function buildBrandStep(): array
     {
         $siteId = $this->resolveSiteId();
@@ -191,6 +197,9 @@ class AiCreatorAction extends Action
         }
     }
 
+    /**
+     * @param  array<array-key, mixed>  $data
+     */
     private function runCreator(array $data): void
     {
         $sessionId = $data['ai_session_id'] ?? null;

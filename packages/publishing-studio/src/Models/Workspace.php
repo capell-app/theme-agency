@@ -17,7 +17,6 @@ use Capell\PublishingStudio\Events\WorkspaceStateChanged;
 use Capell\PublishingStudio\WorkspaceContext;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as AuthenticatedUser;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Override;
 use Spatie\Activitylog\LogOptions;
@@ -104,11 +104,17 @@ class Workspace extends Model implements Userstampable
         return ['uuid'];
     }
 
+    /**
+     * @return BelongsTo<Version, $this>
+     */
     public function baseVersion(): BelongsTo
     {
         return $this->belongsTo(Version::class, 'base_version_id');
     }
 
+    /**
+     * @return HasOne<Version, $this>
+     */
     public function publishedVersion(): HasOne
     {
         return $this->hasOne(Version::class, 'source_workspace_id');
@@ -315,26 +321,46 @@ class Workspace extends Model implements Userstampable
         });
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopeOpen(Builder $query): Builder
     {
         return $query->where('status', WorkspaceStatusEnum::Open->value);
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopeInReview(Builder $query): Builder
     {
         return $query->where('status', WorkspaceStatusEnum::InReview->value);
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopeApproved(Builder $query): Builder
     {
         return $query->where('status', WorkspaceStatusEnum::Approved->value);
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopePublished(Builder $query): Builder
     {
         return $query->where('status', WorkspaceStatusEnum::Published->value);
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopeActive(Builder $query): Builder
     {
         return $query->whereIn('status', [

@@ -20,6 +20,9 @@ class FoundationThemeSettingsMigrationProvider implements SettingsMigrationProvi
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public function migrations(): array
     {
         return $this->getSettingMigrations();

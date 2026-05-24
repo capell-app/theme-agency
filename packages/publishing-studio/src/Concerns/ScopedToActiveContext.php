@@ -9,6 +9,7 @@ use Capell\Core\Models\Site;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\WorkspaceContext;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Provides uniform active-context filtering for dashboard widget queries.
@@ -79,6 +80,9 @@ trait ScopedToActiveContext
      *
      * This ensures the trait degrades gracefully on models that do not
      * participate in multi-site or workspace workflows.
+     *
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
      */
     protected function scopeToActive(Builder $query): Builder
     {
@@ -97,6 +101,9 @@ trait ScopedToActiveContext
         return $query;
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     */
     private function modelHasColumn(Builder $query, string $column): bool
     {
         $model = $query->getModel();

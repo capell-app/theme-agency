@@ -50,6 +50,9 @@ final class AgentBridgeAuditEntriesRelationManager extends RelationManager
             });
     }
 
+    /**
+     * @return Builder<CapellAgentBridgeAuditEntry>
+     */
     #[Override]
     public function getRelationship(): Builder
     {

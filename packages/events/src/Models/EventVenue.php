@@ -34,7 +34,9 @@ class EventVenue extends Model implements Statusable, Userstampable
     /** @use HasFactory<EventVenueFactory> */
     use HasFactory;
 
+    /** @use HasStatus<self> */
     use HasStatus;
+
     use HasUserstamps;
     use SoftDeletes;
 
@@ -44,21 +46,34 @@ class EventVenue extends Model implements Statusable, Userstampable
 
     protected static string $factory = EventVenueFactory::class;
 
+    /**
+     * @return BelongsTo<Site, $this>
+     */
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class);
     }
 
+    /**
+     * @return HasMany<Event, $this>
+     */
     public function events(): HasMany
     {
         return $this->hasMany(Event::class, 'event_venue_id');
     }
 
+    /**
+     * @return HasMany<EventOccurrence, $this>
+     */
     public function occurrences(): HasMany
     {
         return $this->hasMany(EventOccurrence::class, 'event_venue_id');
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopeAvailableToSite(Builder $query, Site $site): Builder
     {
         return $query->where(function (Builder $query) use ($site): void {
@@ -67,6 +82,10 @@ class EventVenue extends Model implements Statusable, Userstampable
         });
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected function scopeOrdered(Builder $query): Builder
     {
         return $query->orderBy('name');

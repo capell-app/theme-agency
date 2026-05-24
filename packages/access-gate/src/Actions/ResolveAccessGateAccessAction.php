@@ -194,7 +194,7 @@ final class ResolveAccessGateAccessAction
     }
 
     /**
-     * @return callable(Builder): void
+     * @return callable(Builder<Grant>): void
      */
     private function activeGrantScope(): callable
     {

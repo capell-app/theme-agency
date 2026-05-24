@@ -10,12 +10,15 @@ use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static Collection<int, array{id: string, page: string, score: int, critical_count: int, warning_count: int, notices: int}> run(int $limit = 5)
+ * @method static \Illuminate\Support\Collection<int, array{id: string, page: string, score: int, critical_count: int, warning_count: int, notices: int}> run(int $limit = 5)
  */
 final class BuildSeoOpportunityRowsAction
 {
     use AsAction;
 
+    /**
+     * @return Collection<array-key, mixed>
+     */
     public function handle(int $limit = 5): Collection
     {
         return SiteScope::applyForCurrentActor(PageSeoSnapshot::query(), denyWhenMissingActor: true)

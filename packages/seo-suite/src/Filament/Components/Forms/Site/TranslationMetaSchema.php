@@ -16,6 +16,10 @@ use Filament\Schemas\Components\Section;
 
 class TranslationMetaSchema
 {
+    /**
+     * @param  array<array-key, mixed>  $components
+     * @return array<array-key, mixed>
+     */
     public static function make(array $components = []): array
     {
         return [

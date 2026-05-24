@@ -64,27 +64,42 @@ class DiagnosticsPage extends Page implements HasActions
         return __('capell-diagnostics::package.diagnostics');
     }
 
+    /**
+     * @return Collection<array-key, mixed>
+     */
     public function makers(): Collection
     {
         return resolve(MakerRegistryInterface::class)->all()
             ->map(fn (Maker $maker): MakerDefinitionData => $maker->definition());
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public function safety(): array
     {
         return resolve(MakerSafety::class)->current()->toArray();
     }
 
+    /**
+     * @return Collection<array-key, mixed>
+     */
     public function configurators(): Collection
     {
         return resolve(RegistryInspectorInterface::class)->configurators();
     }
 
+    /**
+     * @return Collection<array-key, mixed>
+     */
     public function components(): Collection
     {
         return resolve(RegistryInspectorInterface::class)->components();
     }
 
+    /**
+     * @return Collection<array-key, mixed>
+     */
     public function blocks(): Collection
     {
         return resolve(RegistryInspectorInterface::class)->blocks();

@@ -27,6 +27,9 @@ class AIOrchestratorSettings extends Settings implements SettingsContract
 
     public string $image_default_size;
 
+    /**
+     * @var array<array-key, mixed>
+     */
     public array $prompts;
 
     public static function group(): string

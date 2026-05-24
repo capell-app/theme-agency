@@ -21,6 +21,9 @@ class VersionsRelationManager extends RelationManager
 
     protected static bool $shouldSkipAuthorization = true;
 
+    /**
+     * @return Builder<Version>
+     */
     public static function scopedQueryForUser(Model $user): Builder
     {
         $morphKey = static::userMorphKey($user);
@@ -37,6 +40,9 @@ class VersionsRelationManager extends RelationManager
         return __('capell-publishing-studio::workspace.user_bridge.versions');
     }
 
+    /**
+     * @return Relation<Version, Model, mixed>|Builder<Version>
+     */
     #[Override]
     public function getRelationship(): Relation|Builder
     {

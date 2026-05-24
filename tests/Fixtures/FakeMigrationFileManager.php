@@ -8,8 +8,14 @@ use Capell\Core\Support\Migration\MigrationFilesystemInterface;
 
 class FakeMigrationFileManager implements MigrationFilesystemInterface
 {
+    /**
+     * @var array<array-key, mixed>
+     */
     public array $calls = [];
 
+    /**
+     * @param  array<array-key, mixed>  $overrides
+     */
     public function __construct(private array $overrides = []) {}
 
     public function fileExists(string $path): bool

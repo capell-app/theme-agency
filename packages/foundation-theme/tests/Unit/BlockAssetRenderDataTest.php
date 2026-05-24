@@ -12,6 +12,7 @@ use Capell\FoundationTheme\Actions\BuildHeroRailItemsRenderDataAction;
 use Capell\FoundationTheme\Actions\BuildPageContentRenderDataAction;
 use Capell\LayoutBuilder\Models\Block;
 use Capell\LayoutBuilder\Models\BlockAsset;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -30,6 +31,7 @@ it('builds block asset render data from loaded relations only', function (): voi
     $linkedPage = new Page;
     $asset = new class extends Model
     {
+        /** @use HasFactory<Factory<static>> */
         use HasFactory;
 
         protected $guarded = [];
@@ -129,6 +131,7 @@ function heroRailBlockAsset(string $role, string $caption): BlockAsset
 {
     $asset = new class extends Model
     {
+        /** @use HasFactory<Factory<static>> */
         use HasFactory;
 
         protected $guarded = [];

@@ -23,6 +23,7 @@ class SuggestPageTitlesAction
 
     /**
      * @return array<int, string>
+     * @param array<array-key, mixed> $options
      */
     public function handle(AiActionContextInterface $context, array $options = []): array
     {

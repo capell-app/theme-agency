@@ -9,6 +9,7 @@ use Capell\Core\Models\PageUrl;
 use Capell\SeoSuite\Data\RedirectOpportunityData;
 use Capell\SeoSuite\Models\BrokenLink;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
@@ -46,12 +47,19 @@ final class BuildRedirectOpportunityReportAction
             ->all();
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     */
     private function applyNonRedirectUrlScope(Builder $query): void
     {
         $query->whereNull('type')
             ->orWhere('type', '!=', UrlTypeEnum::Redirect->value);
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     private function applyPageScope(Builder $query, ?int $siteId, ?int $languageId): Builder
     {
         return $query
@@ -59,6 +67,10 @@ final class BuildRedirectOpportunityReportAction
             ->when($languageId !== null, fn (Builder $query): Builder => $this->applyPageLanguageScope($query, $languageId));
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     private function applyPageLanguageScope(Builder $query, int $languageId): Builder
     {
         return $query->where(

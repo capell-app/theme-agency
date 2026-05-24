@@ -59,6 +59,9 @@ function makeLoginAuditBridgeUser(): LoginAuditBridgeTestUser
     return $user;
 }
 
+/**
+ * @return array<array-key, mixed>
+ */
 function rawChildComponents(object $component): array
 {
     $reflectionProperty = new ReflectionProperty($component, 'childComponents');

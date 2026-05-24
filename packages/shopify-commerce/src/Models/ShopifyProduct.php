@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\ShopifyCommerce\Models;
 
 use Capell\ShopifyCommerce\Data\ShopifyProductOptionData;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +15,7 @@ use Spatie\LaravelData\DataCollection;
 
 final class ShopifyProduct extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     protected $table = 'shopify_products';

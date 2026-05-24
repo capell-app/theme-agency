@@ -10,6 +10,9 @@ use Spatie\Permission\Models\Role;
 
 final class BuildPermissionAuditQueryAction extends Action
 {
+    /**
+     * @return Builder<Role>
+     */
     public function handle(): Builder
     {
         return Role::query()

@@ -132,6 +132,11 @@ class PublishingStudioUserSchemaExtender extends AbstractUserSchemaExtender
             ->count();
     }
 
+    /**
+     * @template TModel of Model
+     *
+     * @param  Builder<TModel>  $query
+     */
     private function morphCount(Builder $query, Model $user, string $morphName): int
     {
         return $query

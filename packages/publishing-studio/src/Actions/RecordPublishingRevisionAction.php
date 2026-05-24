@@ -19,13 +19,17 @@ final class RecordPublishingRevisionAction
     use AsAction;
 
     /**
-     * @return array<string, mixed>
+     * @return array<array-key, mixed>
      */
     public static function payloadFor(Model $record): array
     {
         return $record->getAttributes();
     }
 
+    /**
+     * @param  array<array-key, mixed>  $afterPayload
+     * @param  array<array-key, mixed>  $beforePayload
+     */
     public function handle(
         string $revisionableType,
         int $revisionableId,

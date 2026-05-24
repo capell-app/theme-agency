@@ -23,10 +23,16 @@ abstract class BaseAction implements ActionContract
 {
     use AsObject;
 
+    /**
+     * @var array<array-key, mixed>
+     */
     protected array $metadata = [];
 
     protected float $startTime = 0.0;
 
+    /**
+     * @param  array<int, mixed>  $arguments
+     */
     public static function __callStatic(string $method, array $arguments)
     {
         if ($method === 'run') {
@@ -38,7 +44,11 @@ abstract class BaseAction implements ActionContract
         throw new BadMethodCallException(sprintf('Method %s does not exist on ', $method) . static::class);
     }
 
-    /** Implement in child actions */
+    /**
+     * Implement in child actions.
+     *
+     * @param  array<array-key, mixed>  $options
+     */
     abstract protected function perform(AiActionContextInterface $context, array $options = []): mixed;
 
     public function handle(...$args): mixed
@@ -62,6 +72,9 @@ abstract class BaseAction implements ActionContract
         }
     }
 
+    /**
+     * @param  array<array-key, mixed>  $input
+     */
     public function validate(array $input): bool
     {
         // TODO: Replace with a dedicated validator/service; keep fast guards here for now.
@@ -79,6 +92,9 @@ abstract class BaseAction implements ActionContract
         return true;
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public function getMetadata(): array
     {
         return $this->metadata;

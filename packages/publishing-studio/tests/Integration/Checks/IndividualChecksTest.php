@@ -53,6 +53,9 @@ function ensurePageUrlsTable(): void
     }
 }
 
+/**
+ * @param  array<array-key, mixed>  $overrides
+ */
 function insertBasePage(Workspace $workspace, array $overrides = []): string
 {
     $uuid = (string) Str::uuid();

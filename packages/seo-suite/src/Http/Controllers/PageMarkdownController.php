@@ -39,7 +39,13 @@ class PageMarkdownController extends BaseController
 
     public function forAcceptHeader(Request $request): ?Response
     {
-        return $this->render($request, null, requireAcceptMarkdownEnabled: true, abortWhenUnavailable: false);
+        $response = $this->render($request, null, requireAcceptMarkdownEnabled: true, abortWhenUnavailable: false);
+
+        if ($response->getStatusCode() === 404 && $response->getContent() === '') {
+            return null;
+        }
+
+        return $response;
     }
 
     private function render(

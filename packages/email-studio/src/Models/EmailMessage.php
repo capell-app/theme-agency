@@ -55,31 +55,49 @@ class EmailMessage extends Model
         return is_string($tableName) ? $tableName : 'email_messages';
     }
 
+    /**
+     * @return BelongsTo<EmailProfile, $this>
+     */
     public function profile(): BelongsTo
     {
         return $this->belongsTo(EmailProfile::class, 'email_profile_id');
     }
 
+    /**
+     * @return BelongsTo<EmailTemplate, $this>
+     */
     public function template(): BelongsTo
     {
         return $this->belongsTo(EmailTemplate::class, 'email_template_id');
     }
 
+    /**
+     * @return BelongsTo<EmailTemplateVariant, $this>
+     */
     public function templateVariant(): BelongsTo
     {
         return $this->belongsTo(EmailTemplateVariant::class, 'email_template_variant_id');
     }
 
+    /**
+     * @return HasMany<EmailRecipient, $this>
+     */
     public function recipients(): HasMany
     {
         return $this->hasMany(EmailRecipient::class);
     }
 
+    /**
+     * @return HasMany<EmailEvent, $this>
+     */
     public function events(): HasMany
     {
         return $this->hasMany(EmailEvent::class);
     }
 
+    /**
+     * @return HasMany<EmailReply, $this>
+     */
     public function replies(): HasMany
     {
         return $this->hasMany(EmailReply::class);

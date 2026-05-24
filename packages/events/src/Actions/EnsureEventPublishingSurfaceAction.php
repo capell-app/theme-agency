@@ -18,6 +18,9 @@ class EnsureEventPublishingSurfaceAction
 {
     use AsAction;
 
+    /**
+     * @param  Collection<array-key, mixed>  $languages
+     */
     public function handle(Site $site, ?Collection $languages = null): Page
     {
         $defaults = resolve(EnsureEventPublishingDefaultsAction::class);

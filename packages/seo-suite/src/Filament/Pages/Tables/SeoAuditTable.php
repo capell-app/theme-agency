@@ -20,6 +20,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class SeoAuditTable implements TableConfigurator
@@ -38,6 +39,9 @@ class SeoAuditTable implements TableConfigurator
             ->defaultSort('created_at', 'desc');
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     protected static function getTableColumns(): array
     {
         return [
@@ -90,6 +94,9 @@ class SeoAuditTable implements TableConfigurator
         ];
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
     protected static function getTableFilters(): array
     {
         return [
@@ -168,6 +175,10 @@ class SeoAuditTable implements TableConfigurator
         ];
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected static function whereSeveritySnapshot(Builder $query, string $severity): Builder
     {
         return self::whereSnapshot($query, function (QueryBuilder $snapshotQuery) use ($severity): void {
@@ -184,6 +195,10 @@ class SeoAuditTable implements TableConfigurator
         });
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected static function whereIssueKeySnapshot(Builder $query, string $issueKey): Builder
     {
         return self::whereSnapshot($query, function (QueryBuilder $snapshotQuery) use ($issueKey): void {
@@ -191,6 +206,10 @@ class SeoAuditTable implements TableConfigurator
         });
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected static function whereSnapshot(Builder $query, ?Closure $constraint = null): Builder
     {
         return $query->whereExists(function (QueryBuilder $snapshotQuery) use ($constraint): void {
@@ -213,6 +232,10 @@ class SeoAuditTable implements TableConfigurator
         });
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     protected static function whereMissingSnapshot(Builder $query): Builder
     {
         return $query->whereNotExists(function (QueryBuilder $snapshotQuery): void {
@@ -286,6 +309,10 @@ class SeoAuditTable implements TableConfigurator
         ];
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
+     */
     private static function whereSnapshotStatus(Builder $query, string $column, mixed $value): Builder
     {
         if (! is_string($value) || $value === '') {

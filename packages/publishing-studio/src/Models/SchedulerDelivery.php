@@ -6,6 +6,7 @@ namespace Capell\PublishingStudio\Models;
 
 use Capell\PublishingStudio\Enums\SchedulerDeliveryStateEnum;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,6 +27,7 @@ use Override;
  */
 class SchedulerDelivery extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     protected $table = 'publishing_scheduler_deliveries';
@@ -46,11 +48,17 @@ class SchedulerDelivery extends Model
         'state' => 'pending',
     ];
 
+    /**
+     * @return BelongsTo<SchedulerEvent, $this>
+     */
     public function event(): BelongsTo
     {
         return $this->belongsTo(SchedulerEvent::class, 'scheduler_event_id');
     }
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function recipient(): MorphTo
     {
         return $this->morphTo();

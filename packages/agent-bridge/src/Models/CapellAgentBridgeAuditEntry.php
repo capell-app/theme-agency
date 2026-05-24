@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\AgentBridge\Models;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,12 +18,13 @@ use Override;
  * @property string $event
  * @property string|null $capability_key
  * @property string|null $scope
- * @property array<string, mixed>|null $payload
- * @property array<string, mixed>|null $result
+ * @property array<array-key, mixed>|null $payload
+ * @property array<array-key, mixed>|null $result
  * @property Authenticatable $user
  */
 final class CapellAgentBridgeAuditEntry extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     protected $fillable = [

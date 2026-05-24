@@ -54,7 +54,7 @@ abstract class AbstractBlock extends Component
 
     protected ?int $siteId = null;
 
-    /** @var array<string, mixed> */
+    /** @var array<array-key, mixed> */
     protected array $referenceBlockData = [];
 
     protected bool $resolvedLayoutLoaded = false;
@@ -105,7 +105,7 @@ abstract class AbstractBlock extends Component
     }
 
     /**
-     * @param  array<string, mixed>  $blockData
+     * @param  array<array-key, mixed>  $blockData
      */
     public function mount(string $blockReference, array $blockData = []): void
     {
@@ -125,6 +125,9 @@ abstract class AbstractBlock extends Component
         return $block;
     }
 
+    /**
+     * @param  array<array-key, mixed>  $data
+     */
     public function render(array $data = []): View|Closure|string
     {
         if ($this->skipRender) {
@@ -350,7 +353,7 @@ abstract class AbstractBlock extends Component
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<array-key, mixed>
      */
     private function containerData(): array
     {
@@ -361,7 +364,7 @@ abstract class AbstractBlock extends Component
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<array-key, mixed>
      */
     private function blockData(): array
     {
@@ -463,7 +466,7 @@ abstract class AbstractBlock extends Component
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<array-key, mixed>
      */
     private function frontendParams(): array
     {

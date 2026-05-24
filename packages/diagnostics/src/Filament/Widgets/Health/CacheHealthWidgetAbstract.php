@@ -13,7 +13,6 @@ use Capell\Diagnostics\Actions\Dashboard\BuildCacheHealthAction;
 use Capell\Diagnostics\Data\Dashboard\CacheHealthData;
 use Filament\Widgets\Widget;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Livewire\Attributes\Computed;
 
 final class CacheHealthWidgetAbstract extends Widget implements CapellWidgetContract
@@ -76,11 +75,7 @@ final class CacheHealthWidgetAbstract extends Widget implements CapellWidgetCont
         return $this->siteQuery()
             ->orderBy('name')
             ->get(['id', 'name'])
-            ->map(function (Model $site): array {
-                throw_unless($site instanceof Site);
-
-                return ['id' => $site->id, 'name' => $site->name];
-            })
+            ->map(fn (Site $site): array => ['id' => $site->id, 'name' => $site->name])
             ->all();
     }
 
@@ -105,6 +100,9 @@ final class CacheHealthWidgetAbstract extends Widget implements CapellWidgetCont
         $this->dispatch('$refresh');
     }
 
+    /**
+     * @return Builder<Site>
+     */
     private function siteQuery(): Builder
     {
         return SiteScope::applyForCurrentActor(Site::query(), 'id');

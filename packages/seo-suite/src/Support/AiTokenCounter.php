@@ -19,6 +19,10 @@ class AiTokenCounter
         return (int) ($baseTokens * $multiplier);
     }
 
+    /**
+     * @param  array<array-key, mixed>  $usage
+     * @return array<array-key, mixed>
+     */
     public function count(array $usage): array
     {
         return [
@@ -31,6 +35,8 @@ class AiTokenCounter
     /**
      * Lenient counter to support tests passing a string by mistake.
      * Prefer count() with array usage in application code.
+     *
+     * @return array<array-key, mixed>
      */
     public function countFromString(string $usage): array
     {

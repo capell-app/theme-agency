@@ -12,12 +12,15 @@ use Capell\SeoSuite\Enums\SchemaEntityTypeEnum;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static array run(Page $page, Site $site, Language $language)
+ * @method static array<array-key, mixed> run(Page $page, Site $site, Language $language)
  */
 class BreadcrumbsSchemaAction
 {
     use AsAction;
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public function handle(Page $page, Site $site, Language $language): array
     {
         $page->loadMissing('translations.language');

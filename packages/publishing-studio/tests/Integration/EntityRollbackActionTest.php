@@ -26,6 +26,9 @@ afterEach(function (): void {
     Schema::dropIfExists('workspace_draftable_fixtures');
 });
 
+/**
+ * @param  array<array-key, mixed>  $manifest
+ */
 function makeVersion(array $manifest): Version
 {
     return Version::query()->create([
