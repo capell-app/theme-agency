@@ -9,6 +9,7 @@ Start at the [package README](../README.md) when deciding whether to install thi
 | Doc                                                             | Use it for                                                                         |
 | --------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | [Ai Discovery](ai-discovery.md)                                 | Focused package workflow, setup, troubleshooting, or implementation details.       |
+| [Crawler Governance](crawler-governance.md)                     | Search, AI inclusion, model-training, and provider-specific crawler policy.        |
 | [Credits And Acknowledgements](credits-and-acknowledgements.md) | Upstream services, dependencies, and acknowledgements.                             |
 | [Extending Seo Suite](extending-seo-suite.md)                   | Package extension points, registration paths, and focused tests.                   |
 | [Overview](overview.md)                                         | Package boundary, runtime surfaces, install notes, and first troubleshooting path. |
