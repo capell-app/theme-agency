@@ -189,12 +189,8 @@ final class BuildAgentDeliveryPageAction
      */
     private function plainText(string|array|null $content): ?string
     {
-        if ($content === null) {
+        if ($content === null || is_array($content)) {
             return null;
-        }
-
-        if (is_array($content)) {
-            $content = json_encode($content, JSON_THROW_ON_ERROR);
         }
 
         $content = preg_replace('/<(script|style)\b[^>]*>.*?<\/\1>/is', '', $content) ?? $content;
@@ -223,7 +219,7 @@ final class BuildAgentDeliveryPageAction
 
         $value = $page->getAttribute($attribute);
 
-        return method_exists($value, 'toIso8601String') ? $value->toIso8601String() : null;
+        return is_object($value) && method_exists($value, 'toIso8601String') ? $value->toIso8601String() : null;
     }
 
     private function isPublicUrl(string $url): bool

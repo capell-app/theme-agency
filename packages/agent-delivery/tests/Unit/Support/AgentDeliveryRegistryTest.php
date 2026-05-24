@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\AgentDelivery\Actions\BuildAgentDeliveryPageAction;
 use Capell\AgentDelivery\Contracts\AgentDeliveryChunkContributor;
 use Capell\AgentDelivery\Contracts\AgentDeliveryContributor;
 use Capell\AgentDelivery\Contracts\AgentDeliveryMetadataContributor;
@@ -9,17 +10,22 @@ use Capell\AgentDelivery\Contracts\AgentDeliveryReferenceContributor;
 use Capell\AgentDelivery\Contracts\AgentDeliveryRelatedUrlContributor;
 use Capell\AgentDelivery\Data\AgentDeliveryChunkData;
 use Capell\AgentDelivery\Support\AgentDeliveryRegistry;
+use Capell\AgentDelivery\Tests\AgentDeliveryTestCase;
 use Capell\Core\Contracts\Pageable;
+use Capell\Core\Data\PublicPageFieldsData;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
 use Illuminate\Database\Eloquent\Model;
 
+uses(AgentDeliveryTestCase::class);
+
 it('merges contributor metadata and returns chunks in stable order', function (): void {
     $registry = new AgentDeliveryRegistry;
-    $page = new Page(['id' => 5]);
-    $site = new Site(['id' => 7]);
-    $language = new Language(['id' => 9, 'code' => 'en', 'locale' => 'en']);
+    $page = (new Page)->forceFill(['id' => 5]);
+    $page->setRelation('pageUrl', null);
+    $site = (new Site)->forceFill(['id' => 7]);
+    $language = (new Language)->forceFill(['id' => 9, 'code' => 'en', 'locale' => 'en']);
 
     $registry->register(new class implements AgentDeliveryContributor
     {
@@ -53,9 +59,9 @@ it('merges contributor metadata and returns chunks in stable order', function ()
 
 it('collects focused package-aware delivery contributors', function (): void {
     $registry = new AgentDeliveryRegistry;
-    $page = new Page(['id' => 5]);
-    $site = new Site(['id' => 7]);
-    $language = new Language(['id' => 9, 'code' => 'en', 'locale' => 'en']);
+    $page = (new Page)->forceFill(['id' => 5]);
+    $site = (new Site)->forceFill(['id' => 7]);
+    $language = (new Language)->forceFill(['id' => 9, 'code' => 'en', 'locale' => 'en']);
 
     $registry
         ->registerMetadataContributor(new class implements AgentDeliveryMetadataContributor
@@ -121,4 +127,32 @@ it('collects focused package-aware delivery contributors', function (): void {
         ])
         ->and($registry->relatedUrls($page, $site, $language))
         ->toBe(['https://example.com/related']);
+});
+
+it('does not expose raw array content in public page body or headings', function (): void {
+    $registry = new AgentDeliveryRegistry;
+    $page = (new Page)->forceFill(['id' => 5]);
+    $page->setRelation('pageUrl', null);
+    $site = (new Site)->forceFill(['id' => 7]);
+    $language = (new Language)->forceFill(['id' => 9, 'code' => 'en', 'locale' => 'en']);
+
+    $delivery = (new BuildAgentDeliveryPageAction($registry))->handle(
+        page: $page,
+        site: $site,
+        language: $language,
+        fields: new PublicPageFieldsData(
+            url: '/structured',
+            title: 'Structured Page',
+            content: [
+                'internal_model_id' => 123,
+                'field_path' => 'blocks.0.secret_prompt',
+                'public_copy' => 'Visible copy must be contributed as rendered text.',
+            ],
+            meta: [],
+        ),
+    );
+
+    expect($delivery->body)->toBeNull()
+        ->and($delivery->summary)->toBeNull()
+        ->and($delivery->headings)->toBe(['Structured Page']);
 });
