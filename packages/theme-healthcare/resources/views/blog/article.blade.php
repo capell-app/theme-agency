@@ -9,7 +9,7 @@
     <article class="mx-auto max-w-3xl">
         <header>
             <p
-                class="text-xs font-black uppercase tracking-widest text-[#0f766e]"
+                class="text-xs font-black tracking-widest text-[#0f766e] uppercase"
             >
                 {{ $blogAvailable ? __('capell-theme-healthcare::generic.article_label') : __('capell-theme-healthcare::generic.resource') }}
             </p>

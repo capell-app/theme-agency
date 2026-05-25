@@ -59,7 +59,7 @@
 
             @if (! empty($link['title']))
                 <span
-                    class="inline-block text-balance text-left text-sm font-medium leading-none"
+                    class="inline-block text-left text-sm leading-none font-medium text-balance"
                 >
                     {{ $link['title'] ?? str($link['type'])->title() }}
                 </span>

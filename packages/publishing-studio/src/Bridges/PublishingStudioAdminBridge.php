@@ -37,13 +37,13 @@ final class PublishingStudioAdminBridge implements AdminBridge
         $registrar->resource(WorkspaceResource::class, group: 'Workspace');
         $registrar->resource(PreviewLinkResource::class, group: 'PreviewLink');
 
-        $this->extensionPage($registrar, $context->packageName, PublishingWorkflowPage::class);
-        $this->extensionPage($registrar, $context->packageName, ActivityTrailPage::class);
-        $this->extensionPage($registrar, $context->packageName, ScheduledPublishingPage::class);
-        $this->extensionPage($registrar, $context->packageName, StaleDraftsPage::class);
+        $this->extensionPage($context->packageName, PublishingWorkflowPage::class);
+        $this->extensionPage($context->packageName, ActivityTrailPage::class);
+        $this->extensionPage($context->packageName, ScheduledPublishingPage::class);
+        $this->extensionPage($context->packageName, StaleDraftsPage::class);
     }
 
-    private function extensionPage(AdminBridgeRegistrar $registrar, string $packageName, string $page): void
+    private function extensionPage(string $packageName, string $page): void
     {
 
         resolve(ExtensionPageRegistry::class)->register($packageName, $page);

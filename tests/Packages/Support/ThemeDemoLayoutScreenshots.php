@@ -46,6 +46,7 @@ use Symfony\Component\Process\Process;
 /**
  * @param  class-string<ServiceProvider>  $providerClass
  * @param  class-string  $installerClass
+ * @return Collection<int, Page>
  */
 function installThemeDemoScreenshotFixture(
     string $themeKey,
@@ -60,18 +61,18 @@ function installThemeDemoScreenshotFixture(
     expect($provider)->toBeInstanceOf(ServiceProvider::class);
 
     $provider->register();
-    $provider->boot(resolve(ThemeRegistry::class));
+    app()->call([$provider, 'boot'], ['themeRegistry' => resolve(ThemeRegistry::class)]);
 
     registerThemeDemoScreenshotPageAdapter($themeKey);
 
     $exitCode = $installerClass::run(new ThemeDemoInstallData(
-        baseUrl: 'https://demo.test',
         siteNames: ['Snapshot'],
         languageCodes: ['en'],
+        baseUrl: 'https://demo.test',
         force: true,
     ));
 
-    expect($exitCode)->toBe(Command::SUCCESS);
+    expect((int) $exitCode)->toBe(Command::SUCCESS);
 
     $pages = Page::query()
         ->with(['layout', 'pageUrl.siteDomain', 'translations', 'type'])
@@ -95,6 +96,9 @@ function installThemeDemoScreenshotFixture(
     return $pages->fresh(['layout', 'pageUrl.siteDomain', 'translations', 'type']);
 }
 
+/**
+ * @return Collection<int, Page>
+ */
 function installFoundationThemeDemoScreenshotFixture(): Collection
 {
     $themeKey = 'default';
@@ -112,9 +116,9 @@ function installFoundationThemeDemoScreenshotFixture(): Collection
     registerThemeDemoScreenshotPageAdapter($themeKey);
 
     $exitCode = ThemeDemoPageInstaller::run(new ThemeDemoInstallData(
-        baseUrl: 'https://demo.test',
         siteNames: ['Snapshot'],
         languageCodes: ['en'],
+        baseUrl: 'https://demo.test',
         force: true,
     ), $themeKey, 'Foundation');
 
@@ -256,7 +260,7 @@ function assertThemeDemoLayoutScreenshots(string $themeKey, Collection $pages, a
 
     $result = runThemeDemoScreenshotCapture($themeKey, $manifest);
     $expectedScreenshotNames = collect($manifest['entries'])
-        ->map(fn (array $entry): string => basename((string) $entry['screenshotPath']))
+        ->map(fn (array $entry): string => basename($entry['screenshotPath']))
         ->sort()
         ->values()
         ->all();
@@ -269,7 +273,10 @@ function assertThemeDemoLayoutScreenshots(string $themeKey, Collection $pages, a
     expect($result['entries'])->toHaveCount(count($manifest['entries']));
     expect(count($result['entries']))->toBeGreaterThanOrEqual(themeDemoMinimumScreenshotCount());
     expect($actualScreenshotNames)->toBe($expectedScreenshotNames);
-    expect(collect($result['entries'])->sum('imageCount'))->toBeGreaterThan(0);
+    expect(array_sum(array_map(
+        fn (array $entry): int => (int) ($entry['imageCount'] ?? 0),
+        $result['entries'],
+    )))->toBeGreaterThan(0);
 
     foreach ($result['entries'] as $entry) {
         expect($entry['screenshotPath'])->toBeFile()
@@ -300,7 +307,7 @@ function themeDemoScreenshotRouteBackedHtml(Page $page, string $surface): string
     $response = get($page->pageUrl->full_url);
     $statusCode = 200;
 
-    if ($response->getStatusCode() !== $statusCode) {
+    if ($response->baseResponse->getStatusCode() !== $statusCode) {
         throw new RuntimeException(themeDemoScreenshotRouteFailureMessage($surface, $page, $response, $statusCode));
     }
 
@@ -316,17 +323,14 @@ function themeDemoScreenshotRouteFailureMessage(
     TestResponse $response,
     int $expectedStatusCode,
 ): string {
-    $exception = $response->exception;
-    $exceptionSummary = $exception instanceof Throwable
-        ? $exception::class . ': ' . $exception->getMessage()
-        : 'none';
+    $exceptionSummary = 'none';
 
     return sprintf(
         'Expected %s route [%s] to return %d, received %d. Type [%s] meta: %s. Exception: %s',
         $surface,
-        $page->pageUrl?->full_url ?? 'missing',
+        $page->pageUrl->full_url ?? 'missing',
         $expectedStatusCode,
-        $response->getStatusCode(),
+        $response->baseResponse->getStatusCode(),
         (string) $page->type?->key,
         json_encode($page->type?->meta, JSON_THROW_ON_ERROR),
         $exceptionSummary,
@@ -884,7 +888,7 @@ function themeDemoScreenshotEnrichedRenderData(string $themeKey, string $surface
     $themeName = ucfirst(str_replace('-', ' ', $themeKey));
     $expectedText = themeDemoScreenshotExpectedText($surface);
     $mediaUrls = themeDemoScreenshotMediaUrls($renderData);
-    $primaryMedia = $mediaUrls[0] ?? data_get($renderData, 'hero.mediaUrl') ?? data_get($renderData, 'mediaUrl');
+    $primaryMedia = $mediaUrls[0] ?? data_get($renderData, 'hero.mediaUrl', data_get($renderData, 'mediaUrl'));
     $actions = [
         ['label' => 'View preview', 'url' => '#preview', 'style' => 'primary'],
         ['label' => 'Talk to team', 'url' => '#contact', 'style' => 'secondary'],

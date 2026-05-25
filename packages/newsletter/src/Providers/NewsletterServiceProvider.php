@@ -32,6 +32,7 @@ use Capell\Newsletter\Support\SegmentAudienceProvider;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Event;
+use Override;
 use Spatie\LaravelPackageTools\Package;
 
 class NewsletterServiceProvider extends AbstractPackageServiceProvider
@@ -99,6 +100,7 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
         ], merge: true);
     }
 
+    #[Override]
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(self::$packageName);

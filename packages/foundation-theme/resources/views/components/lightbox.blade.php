@@ -7,7 +7,7 @@
     class="capell-lightbox"
 >
     <div
-        class="fixed left-0 top-0 z-[9999] flex h-screen w-screen items-center justify-center bg-[#000000c9] md:p-5 lg:p-10"
+        class="fixed top-0 left-0 z-[9999] flex h-screen w-screen items-center justify-center bg-[#000000c9] md:p-5 lg:p-10"
         x-show="currentUrl"
         x-cloak
         x-ref="lightboxDialog"
@@ -18,10 +18,10 @@
         @click="if($event.target == $el){ close() }"
     >
         <div
-            class="relative mx-auto min-h-[10vh] min-w-[50%] max-w-[95%] rounded bg-white p-1 md:max-w-[85%] md:p-3"
+            class="relative mx-auto min-h-[10vh] max-w-[95%] min-w-[50%] rounded bg-white p-1 md:max-w-[85%] md:p-3"
         >
             <button
-                class="hover:text-primary focus:text-primary fixed right-6 top-6 z-[8888] flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-black text-white md:absolute md:-right-6 md:-top-6"
+                class="hover:text-primary focus:text-primary fixed top-6 right-6 z-[8888] flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-black text-white md:absolute md:-top-6 md:-right-6"
                 aria-label="{{ __('capell-frontend::generic.close') }}"
                 type="button"
                 @click="close()"

@@ -42,7 +42,7 @@
                     class="rounded-md border border-gray-200 p-3 dark:border-gray-700"
                 >
                     <div
-                        class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400"
+                        class="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400"
                     >
                         {{ __('capell-seo-suite::generic.seo_panel_search_preview') }}
                     </div>
@@ -65,7 +65,7 @@
                     class="rounded-md border border-gray-200 p-3 dark:border-gray-700"
                 >
                     <div
-                        class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400"
+                        class="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400"
                     >
                         {{ __('capell-seo-suite::generic.seo_panel_social_preview') }}
                     </div>
@@ -97,7 +97,7 @@
                         class="rounded-md border border-gray-200 p-3 dark:border-gray-700"
                     >
                         <div
-                            class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400"
+                            class="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400"
                         >
                             {{ $severityLabel }} ({{ count($issues) }})
                         </div>
@@ -256,7 +256,7 @@
             >
                 <div>
                     <div
-                        class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400"
+                        class="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400"
                     >
                         {{ __('capell-seo-suite::generic.seo_panel_canonical') }}
                     </div>
@@ -266,7 +266,7 @@
                 </div>
                 <div>
                     <div
-                        class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400"
+                        class="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400"
                     >
                         {{ __('capell-seo-suite::generic.seo_panel_robots') }}
                     </div>

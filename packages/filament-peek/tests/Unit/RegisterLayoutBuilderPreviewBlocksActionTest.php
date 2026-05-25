@@ -9,8 +9,8 @@ use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
 use Capell\FilamentPeek\Actions\RegisterLayoutBuilderPreviewBlocksAction;
 use Capell\FilamentPeek\Data\LayoutBuilderPreviewStateData;
-use Capell\LayoutBuilder\Models\Block;
-use Capell\LayoutBuilder\Models\BlockAsset;
+use Capell\LayoutBuilder\Models\Widget;
+use Capell\LayoutBuilder\Models\WidgetAsset;
 use Capell\LayoutBuilder\Support\CapellLayoutManager;
 
 afterEach(function (): void {
@@ -23,8 +23,8 @@ it('registers preview layout blocks with unsaved widget asset state for public r
     $layout = Layout::factory()->site($site)->create();
     $page = Page::factory()->site($site)->layout($layout)->withTranslations($language)->create();
     $linkedPage = Page::factory()->site($site)->layout($layout)->withTranslations($language)->create();
-    $block = Block::factory()->create(['key' => 'asset-rail']);
-    $savedAsset = BlockAsset::factory()
+    $block = Widget::factory()->create(['key' => 'asset-rail']);
+    $savedAsset = WidgetAsset::factory()
         ->block($block)
         ->page($page, 'main', 1)
         ->asset($linkedPage)
@@ -67,8 +67,8 @@ it('registers preview layout blocks with unsaved widget asset state for public r
     $previewAsset = $previewBlock?->assets->first();
 
     expect($registered)->toBeTrue()
-        ->and($previewBlock)->toBeInstanceOf(Block::class)
-        ->and($previewAsset)->toBeInstanceOf(BlockAsset::class)
+        ->and($previewBlock)->toBeInstanceOf(Widget::class)
+        ->and($previewAsset)->toBeInstanceOf(WidgetAsset::class)
         ->and($previewAsset->meta)->toBe(['caption' => 'Unsaved caption'])
         ->and($previewAsset->asset)->toBeInstanceOf(Page::class)
         ->and($previewAsset->asset->is($linkedPage))->toBeTrue()

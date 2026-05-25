@@ -22,6 +22,7 @@ use Capell\EmailStudio\Support\EmailTemplateRegistry;
 use Capell\EmailStudio\Support\Providers\FakeEmailProviderAdapter;
 use Capell\EmailStudio\Support\Providers\PostmarkEmailProviderAdapter;
 use Capell\EmailStudio\Support\Providers\SmtpEmailProviderAdapter;
+use Override;
 use Spatie\LaravelPackageTools\Package;
 
 class EmailStudioServiceProvider extends AbstractPackageServiceProvider
@@ -77,6 +78,7 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
         });
     }
 
+    #[Override]
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(self::$packageName);

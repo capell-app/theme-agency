@@ -19,6 +19,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Override;
 
+/**
+ * @property string $public_id
+ * @property int $site_id
+ * @property int|null $parent_id
+ * @property int|null $root_id
+ * @property int $depth
+ * @property CommentStatus $status
+ * @property string $body
+ * @property CarbonImmutable|null $submitted_at
+ * @property CarbonImmutable|null $email_verified_at
+ */
 class Comment extends Model
 {
     /** @use HasFactory<CommentFactory> */
@@ -60,15 +71,6 @@ class Comment extends Model
     public function isPubliclyVisible(): bool
     {
         return $this->status === CommentStatus::Approved;
-    }
-
-    /**
-     * @param  Builder<Comment>  $query
-     * @return Builder<Comment>
-     */
-    public function scopePubliclyVisible(Builder $query): Builder
-    {
-        return $query->where('status', CommentStatus::Approved);
     }
 
     /**
@@ -147,6 +149,15 @@ class Comment extends Model
                 $comment->submitted_at = now()->toImmutable();
             }
         });
+    }
+
+    /**
+     * @param  Builder<Comment>  $query
+     * @return Builder<Comment>
+     */
+    protected function scopePubliclyVisible(Builder $query): Builder
+    {
+        return $query->where('status', CommentStatus::Approved);
     }
 
     /**

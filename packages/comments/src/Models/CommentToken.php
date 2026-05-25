@@ -6,12 +6,22 @@ namespace Capell\Comments\Models;
 
 use Capell\Comments\Enums\CommentTokenType;
 use Capell\Core\Models\Site;
+use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
 
+/**
+ * @property CarbonImmutable|null $expires_at
+ * @property CarbonImmutable|null $consumed_at
+ */
 class CommentToken extends Model
 {
+    /** @use HasFactory<Factory<self>> */
+    use HasFactory;
+
     protected $table = 'comment_tokens';
 
     /** @var list<string> */

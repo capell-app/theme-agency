@@ -7,8 +7,8 @@ namespace Capell\Hero\Data;
 use Capell\Core\Enums\MediaCollectionEnum;
 use Capell\Core\Models\Media;
 use Capell\Core\Models\Page;
-use Capell\LayoutBuilder\Models\Block;
-use Capell\LayoutBuilder\Models\BlockAsset;
+use Capell\LayoutBuilder\Models\Widget;
+use Capell\LayoutBuilder\Models\WidgetAsset;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -26,7 +26,7 @@ final readonly class HeroAssetSlideData
         public ?Collection $images,
     ) {}
 
-    public static function fromBlockAsset(BlockAsset $blockAsset, Block $block, string $fallbackColor): self
+    public static function fromBlockAsset(WidgetAsset $blockAsset, Widget $block, string $fallbackColor): self
     {
         $asset = $blockAsset->asset;
         $color = method_exists($asset, 'getMeta') ? $asset->getMeta('color', $fallbackColor) : $fallbackColor;
@@ -44,7 +44,7 @@ final readonly class HeroAssetSlideData
         );
     }
 
-    private static function resolveBackgroundImage(BlockAsset $blockAsset): ?Media
+    private static function resolveBackgroundImage(WidgetAsset $blockAsset): ?Media
     {
         if ($blockAsset->asset instanceof Media) {
             return $blockAsset->asset;
@@ -61,7 +61,7 @@ final readonly class HeroAssetSlideData
     /**
      * @return Collection<int, Media>|null
      */
-    private static function resolveImages(BlockAsset $blockAsset): ?Collection
+    private static function resolveImages(WidgetAsset $blockAsset): ?Collection
     {
         if ($blockAsset->asset instanceof Media) {
             return null;

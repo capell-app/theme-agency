@@ -16,7 +16,7 @@ use Capell\FoundationTheme\Support\View\FoundationThemeViewName;
 use Capell\Frontend\Actions\Performance\RecordExtensionRenderContributionAction;
 use Capell\Frontend\Facades\Frontend;
 use Capell\LayoutBuilder\Enums\CapellLayoutCacheKeyEnum;
-use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Support\LayoutBlockData;
 use Capell\LayoutBuilder\Support\Livewire\OpaqueBlockReference;
 use Capell\LayoutBuilder\Support\Loader\LayoutLoader;
@@ -30,7 +30,7 @@ use Livewire\Component;
 use Throwable;
 
 /**
- * @property-read Block $block
+ * @property-read Widget $block
  */
 abstract class AbstractBlock extends Component
 {
@@ -88,13 +88,13 @@ abstract class AbstractBlock extends Component
         return static::$defaultView;
     }
 
-    public static function getBlockByKey(string $blockKey): ?Block
+    public static function getBlockByKey(string $blockKey): ?Widget
     {
         $cacheKey = CapellLayoutCacheKeyEnum::BlockByKey->value . $blockKey;
 
         return self::getCached(
             $cacheKey,
-            fn () => Block::query()->firstWhere('key', $blockKey),
+            fn () => Widget::query()->firstWhere('key', $blockKey),
         );
     }
 
@@ -116,11 +116,11 @@ abstract class AbstractBlock extends Component
     }
 
     #[Computed]
-    public function block(): Block
+    public function block(): Widget
     {
         $block = $this->resolveScopedBlock();
 
-        throw_if(! $block instanceof Block, Exception::class, 'Block not found');
+        throw_if(! $block instanceof Widget, Exception::class, 'Block not found');
 
         return $block;
     }
@@ -232,7 +232,7 @@ abstract class AbstractBlock extends Component
         $this->clearResolvedContext();
     }
 
-    private function resolveScopedBlock(): ?Block
+    private function resolveScopedBlock(): ?Widget
     {
         $layout = $this->currentLayout();
         $language = $this->currentLanguage();
@@ -247,7 +247,7 @@ abstract class AbstractBlock extends Component
 
         return resolve(LayoutLoader::class)->getLayoutBlock(
             layout: $layout,
-            blockKey: $this->blockKey,
+            widgetKey: $this->blockKey,
             language: $language,
             page: $this->currentPage(),
             containerKey: $this->containerKey,

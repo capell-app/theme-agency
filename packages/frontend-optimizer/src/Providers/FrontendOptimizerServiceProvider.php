@@ -23,6 +23,7 @@ use Capell\FrontendOptimizer\Support\PlaywrightCriticalCssGenerator;
 use Capell\FrontendOptimizer\Support\WidgetAssetRegistry;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
+use Override;
 use Spatie\LaravelPackageTools\Package;
 
 final class FrontendOptimizerServiceProvider extends AbstractPackageServiceProvider
@@ -67,6 +68,7 @@ final class FrontendOptimizerServiceProvider extends AbstractPackageServiceProvi
         });
     }
 
+    #[Override]
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(self::$packageName);

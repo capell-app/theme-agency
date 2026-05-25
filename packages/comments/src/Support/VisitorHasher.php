@@ -16,6 +16,6 @@ class VisitorHasher
             ?: config('app.key')
             ?: 'capell-comments';
 
-        return hash_hmac('sha256', $value, (string) $secret . '|' . (string) $siteId);
+        return hash_hmac('sha256', $value, $secret . '|' . $siteId);
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Hero\View\Components\Block;
 
-use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\Widget;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -25,7 +25,7 @@ abstract class AbstractBlock extends Component
         public string $containerKey,
         public int $blockIndex,
         public stdClass $loop,
-        public Block $block,
+        public Widget $block,
         public array $blockData = [],
     ) {
         $this->mountBlock();

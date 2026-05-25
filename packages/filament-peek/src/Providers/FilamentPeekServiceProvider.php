@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Capell\FilamentPeek\Providers;
 
 use Capell\Admin\Contracts\Extenders\AdminPanelExtender;
-use Capell\Admin\Contracts\Extenders\ResourceHeaderActionExtender;
+use Capell\Admin\Contracts\Extenders\PagePreviewActionExtender;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\FilamentPeek\Filament\Extenders\FilamentPeekPanelExtender;
-use Capell\FilamentPeek\Filament\Extenders\PagePeekPreviewHeaderActionExtender;
+use Capell\FilamentPeek\Filament\Extenders\PagePeekPreviewActionExtender;
 use Spatie\LaravelPackageTools\Package;
 
 final class FilamentPeekServiceProvider extends AbstractPackageServiceProvider
@@ -30,6 +30,10 @@ final class FilamentPeekServiceProvider extends AbstractPackageServiceProvider
 
     public function registeringPackage(): void
     {
+        if (! $this->isDiscoveringPackages() && config('capell-filament-peek.enabled', true)) {
+            $this->app->tag([FilamentPeekPanelExtender::class], AdminPanelExtender::TAG);
+        }
+
         $this->app->booted(function (): void {
             if ($this->isDiscoveringPackages()) {
                 return;
@@ -39,7 +43,7 @@ final class FilamentPeekServiceProvider extends AbstractPackageServiceProvider
                 return;
             }
 
-            $this->registerAdminExtenders();
+            $this->app->tag([PagePeekPreviewActionExtender::class], PagePreviewActionExtender::TAG);
         });
     }
 
@@ -50,11 +54,5 @@ final class FilamentPeekServiceProvider extends AbstractPackageServiceProvider
         }
 
         return CapellCore::isPackageInstalled(self::$packageName);
-    }
-
-    private function registerAdminExtenders(): void
-    {
-        $this->app->tag([FilamentPeekPanelExtender::class], AdminPanelExtender::TAG);
-        $this->app->tag([PagePeekPreviewHeaderActionExtender::class], ResourceHeaderActionExtender::TAG);
     }
 }

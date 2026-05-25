@@ -29,6 +29,7 @@ use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
 use Filament\Widgets\WidgetsServiceProvider;
 use Guava\IconPicker\IconPickerServiceProvider;
+use Illuminate\Contracts\Config\Repository;
 use LaraZeus\SpatieTranslatable\SpatieTranslatableServiceProvider;
 use Livewire\LivewireServiceProvider;
 use Override;
@@ -107,8 +108,8 @@ abstract class FilamentPeekTestCase extends PackagesTestCase
     {
         parent::getEnvironmentSetUp($app);
 
-        $app['config']->set('cache.default', 'array');
-        $app['config']->set('capell-filament-peek.preview.cache_store', 'array');
+        $app->make(Repository::class)->set('cache.default', 'array');
+        $app->make(Repository::class)->set('capell-filament-peek.preview.cache_store', 'array');
 
         CapellCore::forcePackageInstalled(AdminServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(ContentBlocksServiceProvider::$packageName);

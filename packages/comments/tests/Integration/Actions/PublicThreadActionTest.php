@@ -101,7 +101,10 @@ it('limits root comments before loading replies', function (): void {
     expect($comments)->toHaveCount(1)
         ->and($comments[0]->publicId)->toBe($first->public_id)
         ->and($comments[0]->children)->toHaveCount(1)
-        ->and(collect($comments)->pluck('publicId')->all())->not->toContain($second->public_id);
+        ->and(array_map(
+            fn (object $comment): mixed => $comment->publicId,
+            $comments,
+        ))->not->toContain($second->public_id);
 });
 
 it('scopes public comments to the commentable language when present', function (): void {

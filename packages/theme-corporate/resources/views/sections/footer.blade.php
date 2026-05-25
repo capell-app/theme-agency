@@ -8,7 +8,7 @@
                 class="inline-flex items-center gap-2.5 text-sm font-semibold tracking-wide"
             >
                 <span
-                    class="inline-flex h-8 w-8 items-center justify-center rounded-[0.35rem] bg-white text-[0.7rem] font-bold uppercase text-slate-950"
+                    class="inline-flex h-8 w-8 items-center justify-center rounded-[0.35rem] bg-white text-[0.7rem] font-bold text-slate-950 uppercase"
                 >
                     {{ collect(explode(' ', trim($section->brandName)))->filter()->map(fn (string $word): string => mb_substr($word, 0, 1))->take(2)->implode('') ?: 'C' }}
                 </span>

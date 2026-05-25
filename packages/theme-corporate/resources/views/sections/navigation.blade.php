@@ -1,5 +1,5 @@
 <nav
-    class="theme-navigation dark:bg-slate-950/88 sticky top-0 z-40 border-b border-slate-200/80 bg-[#f7f8f6]/90 backdrop-blur dark:border-white/10"
+    class="theme-navigation sticky top-0 z-40 border-b border-slate-200/80 bg-[#f7f8f6]/90 backdrop-blur dark:border-white/10 dark:bg-slate-950/88"
     aria-label="{{ __('capell-theme-corporate::generic.main_navigation') }}"
 >
     <div
@@ -10,7 +10,7 @@
             class="group inline-flex items-center gap-2.5 text-sm font-semibold tracking-wide text-slate-950 dark:text-white"
         >
             <span
-                class="inline-flex h-8 w-8 items-center justify-center rounded-[0.35rem] bg-slate-950 text-[0.7rem] font-bold uppercase text-white transition group-hover:bg-[var(--theme-primary)] dark:bg-white dark:text-slate-950"
+                class="inline-flex h-8 w-8 items-center justify-center rounded-[0.35rem] bg-slate-950 text-[0.7rem] font-bold text-white uppercase transition group-hover:bg-[var(--theme-primary)] dark:bg-white dark:text-slate-950"
             >
                 {{ collect(explode(' ', trim($section->brandName)))->filter()->map(fn (string $word): string => mb_substr($word, 0, 1))->take(2)->implode('') ?: 'C' }}
             </span>

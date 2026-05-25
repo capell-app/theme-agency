@@ -17,7 +17,7 @@
     ];
 
     $gridClass = $gridClasses[(int) $columns] ?? $gridClasses[3];
-    $responsiveGrid = '!flex snap-x gap-4 !overflow-x-auto pb-3 [scrollbar-width:none] md:!grid md:!overflow-visible md:pb-0 [&::-webkit-scrollbar]:hidden';
+    $responsiveGrid = '!flex snap-x [scrollbar-width:none] gap-4 !overflow-x-auto pb-3 md:!grid md:!overflow-visible md:pb-0 [&::-webkit-scrollbar]:hidden';
 
     $socialIcons = [
         'twitter' => '𝕏',
@@ -102,7 +102,7 @@
 
                     @if ($role)
                         <p
-                            class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700"
+                            class="mb-3 text-sm font-semibold tracking-wide text-emerald-700 uppercase"
                         >
                             {{ $role }}
                         </p>

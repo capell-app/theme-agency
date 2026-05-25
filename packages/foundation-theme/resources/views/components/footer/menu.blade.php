@@ -1,8 +1,8 @@
 @props([
     'items' => null,
     'headingClass' => '',
-    'menuItemClass' => 'focus:text-primary hover:text-primary break-all text-sm font-medium leading-tight text-[var(--color-footer-link)] xl:text-base',
-    'menuSubItemClass' => 'focus:text-primary hover:text-primary py-1 text-xs font-medium leading-tight text-[var(--color-footer-muted)] xl:text-sm',
+    'menuItemClass' => 'focus:text-primary hover:text-primary text-sm leading-tight font-medium break-all text-[var(--color-footer-link)] xl:text-base',
+    'menuSubItemClass' => 'focus:text-primary hover:text-primary py-1 text-xs leading-tight font-medium text-[var(--color-footer-muted)] xl:text-sm',
 ])
 @php
     use Illuminate\Support\Collection;

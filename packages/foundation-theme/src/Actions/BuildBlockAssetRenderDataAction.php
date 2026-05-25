@@ -11,7 +11,7 @@ use Capell\Core\Data\ImageSourceData;
 use Capell\Core\Enums\ContentStructure;
 use Capell\Core\Enums\MediaCollectionEnum;
 use Capell\FoundationTheme\Data\BlockAssetRenderData;
-use Capell\LayoutBuilder\Models\BlockAsset;
+use Capell\LayoutBuilder\Models\WidgetAsset;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsObject;
@@ -20,7 +20,7 @@ final class BuildBlockAssetRenderDataAction
 {
     use AsObject;
 
-    public function handle(BlockAsset $blockAsset): BlockAssetRenderData
+    public function handle(WidgetAsset $blockAsset): BlockAssetRenderData
     {
         $asset = $this->loadedRelation($blockAsset, 'asset');
         $translation = $asset instanceof Model ? $this->loadedRelation($asset, 'translation') : null;
@@ -57,7 +57,7 @@ final class BuildBlockAssetRenderDataAction
         );
     }
 
-    private function image(BlockAsset $blockAsset, mixed $asset): ?ImageSourceData
+    private function image(WidgetAsset $blockAsset, mixed $asset): ?ImageSourceData
     {
         $media = $this->firstLoadedMedia($blockAsset)
             ?? ($asset instanceof Model ? $this->firstLoadedMedia($asset) : null)
@@ -71,7 +71,7 @@ final class BuildBlockAssetRenderDataAction
         return ResolveImageSourceDataAction::run($source, $media);
     }
 
-    private function linkedPage(BlockAsset $blockAsset, mixed $asset): mixed
+    private function linkedPage(WidgetAsset $blockAsset, mixed $asset): mixed
     {
         if ($asset instanceof Pageable) {
             return $asset;
@@ -84,7 +84,7 @@ final class BuildBlockAssetRenderDataAction
         return $this->loadedRelation($blockAsset, 'linkedPage');
     }
 
-    private function linkedPageUrl(BlockAsset $blockAsset, mixed $asset): ?string
+    private function linkedPageUrl(WidgetAsset $blockAsset, mixed $asset): ?string
     {
         $linkedPage = $this->linkedPage($blockAsset, $asset);
 

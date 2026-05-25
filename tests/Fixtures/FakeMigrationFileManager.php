@@ -48,4 +48,23 @@ class FakeMigrationFileManager implements MigrationFilesystemInterface
     {
         $this->calls[] = ['copy', $from, $to];
     }
+
+    /**
+     * @return list<string>
+     */
+    public function glob(string $pattern): array
+    {
+        $this->calls[] = ['glob', $pattern];
+
+        $result = $this->overrides['glob'][$pattern] ?? [];
+
+        return is_array($result) ? array_values(array_filter($result, is_string(...))) : [];
+    }
+
+    public function delete(string $path): bool
+    {
+        $this->calls[] = ['delete', $path];
+
+        return $this->overrides['delete'][$path] ?? true;
+    }
 }

@@ -7,14 +7,14 @@ use Capell\Core\Models\Media;
 use Capell\Core\Models\Page;
 use Capell\Hero\Data\HeroAssetSlideData;
 use Capell\Hero\Health\HeroHealthCheck;
-use Capell\LayoutBuilder\Models\Block;
-use Capell\LayoutBuilder\Models\BlockAsset;
+use Capell\LayoutBuilder\Models\Widget;
+use Capell\LayoutBuilder\Models\WidgetAsset;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 it('builds hero asset slide data from a linked page asset', function (): void {
     $page = Page::factory()->create(['meta' => ['color' => 'brand']]);
-    $block = new Block;
-    $blockAsset = new BlockAsset;
+    $block = new Widget;
+    $blockAsset = new WidgetAsset;
     $backgroundImage = new Media;
     $backgroundImage->collection_name = MediaCollectionEnum::BackgroundImage->value;
 
@@ -36,8 +36,8 @@ it('builds hero asset slide data from a linked page asset', function (): void {
 });
 
 it('uses media assets directly as the hero background image', function (): void {
-    $block = new Block;
-    $blockAsset = new BlockAsset;
+    $block = new Widget;
+    $blockAsset = new WidgetAsset;
     $media = new Media;
     $media->collection_name = MediaCollectionEnum::Image->value;
 

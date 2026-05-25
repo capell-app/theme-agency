@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use Capell\Core\Models\Theme;
 use Capell\Hero\Actions\ResolveHeroBackgroundDataAction;
-use Capell\LayoutBuilder\Models\Block;
-use Capell\LayoutBuilder\Models\BlockAsset;
+use Capell\LayoutBuilder\Models\Widget;
+use Capell\LayoutBuilder\Models\WidgetAsset;
 
 it('resolves hero background from theme block and asset layers', function (): void {
     $theme = Theme::factory()->create([
@@ -20,7 +20,7 @@ it('resolves hero background from theme block and asset layers', function (): vo
             ],
         ],
     ]);
-    $block = Block::factory()->create([
+    $block = Widget::factory()->create([
         'meta' => [
             'hero_background' => [
                 'mode' => 'custom',
@@ -29,7 +29,7 @@ it('resolves hero background from theme block and asset layers', function (): vo
             ],
         ],
     ]);
-    $asset = BlockAsset::factory()->create([
+    $asset = WidgetAsset::factory()->create([
         'meta' => [
             'hero_background' => [
                 'mode' => 'custom',
@@ -57,14 +57,14 @@ it('allows widget and asset layers to turn the hero background off', function ()
             ],
         ],
     ]);
-    $block = Block::factory()->create([
+    $block = Widget::factory()->create([
         'meta' => [
             'hero_background' => [
                 'mode' => 'inherit',
             ],
         ],
     ]);
-    $asset = BlockAsset::factory()->create([
+    $asset = WidgetAsset::factory()->create([
         'meta' => [
             'hero_background' => [
                 'mode' => 'off',

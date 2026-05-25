@@ -8,7 +8,7 @@
 @php
     $classes = [
         'group flex items-center justify-between gap-3',
-        '@md/item:text-base text-sm' => $size === 'sm',
+        'text-sm @md/item:text-base' => $size === 'sm',
         'text-md lg:text-base' => $size === 'md',
         'text-lg lg:text-xl' => $size === 'lg',
         'text-secondary hover:text-primary focus:text-primary font-medium' => ! $active,
@@ -36,7 +36,7 @@
             </span>
             @if ($count)
                 <span
-                    class="list-item-badge group-hover:text-primary group-focus:text-primary dark:group-hover:text-primary dark:group-focus:text-primary flex items-center whitespace-nowrap rounded-full bg-gray-100 px-2 py-0.5 font-light tracking-tight text-gray-500 dark:bg-gray-800 dark:text-gray-500"
+                    class="list-item-badge group-hover:text-primary group-focus:text-primary dark:group-hover:text-primary dark:group-focus:text-primary flex items-center rounded-full bg-gray-100 px-2 py-0.5 font-light tracking-tight whitespace-nowrap text-gray-500 dark:bg-gray-800 dark:text-gray-500"
                 >
                     {{ $count }}
                 </span>
@@ -49,7 +49,7 @@
             </span>
             @if ($count)
                 <span
-                    class="list-item-badge group-hover:text-primary group-focus:text-primary dark:group-hover:text-primary dark:group-focus:text-primary flex items-center whitespace-nowrap rounded-full bg-gray-100 px-2 py-0.5 font-light tracking-tight text-gray-500 dark:bg-gray-800 dark:text-gray-500"
+                    class="list-item-badge group-hover:text-primary group-focus:text-primary dark:group-hover:text-primary dark:group-focus:text-primary flex items-center rounded-full bg-gray-100 px-2 py-0.5 font-light tracking-tight whitespace-nowrap text-gray-500 dark:bg-gray-800 dark:text-gray-500"
                 >
                     {{ $count }}
                 </span>

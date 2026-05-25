@@ -110,9 +110,14 @@ final class CriticalCssSettings
     /** @param array<string, mixed> $context */
     public function pageTypeDisablesCriticalCss(array $context): bool
     {
-        return Arr::get($context, 'meta.frontend_optimizer.disable_critical_css') === true
-            || Arr::get($context, 'page_type.meta.frontend_optimizer.disable_critical_css') === true
-            || Arr::get($context, 'page_type_meta.frontend_optimizer.disable_critical_css') === true;
+        if (Arr::get($context, 'meta.frontend_optimizer.disable_critical_css') === true) {
+            return true;
+        }
+        if (Arr::get($context, 'page_type.meta.frontend_optimizer.disable_critical_css') === true) {
+            return true;
+        }
+
+        return Arr::get($context, 'page_type_meta.frontend_optimizer.disable_critical_css') === true;
     }
 
     public function profileDisablesCriticalCss(mixed $signature): bool
@@ -129,7 +134,7 @@ final class CriticalCssSettings
     private function settings(): ?FrontendOptimizerSettings
     {
         try {
-            return app(FrontendOptimizerSettings::class);
+            return resolve(FrontendOptimizerSettings::class);
         } catch (Throwable) {
             return null;
         }

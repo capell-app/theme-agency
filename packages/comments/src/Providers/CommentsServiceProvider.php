@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
+use Override;
 use Spatie\LaravelPackageTools\Package;
 
 class CommentsServiceProvider extends AbstractPackageServiceProvider
@@ -84,6 +85,7 @@ class CommentsServiceProvider extends AbstractPackageServiceProvider
         ], merge: true);
     }
 
+    #[Override]
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(static::$packageName);

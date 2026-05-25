@@ -14,7 +14,7 @@
         --slide-size-sm: 50%;
         --slide-size-lg: calc(100% / {{ min(3, $related->count()) }});
     "
-    {{ $attributes->class(['@container/related hero-related mt-4 grid gap-x-8 gap-y-4 lg:mt-6 lg:flex']) }}
+    {{ $attributes->class(['hero-related @container/related mt-4 grid gap-x-8 gap-y-4 lg:mt-6 lg:flex']) }}
 >
     @foreach ($related as $feature)
         {{-- format-ignore-start --}}
@@ -34,7 +34,7 @@
             class="@container/item hero-related-item @md:basis-[var(--slide-size-sm)] @lg:shrink @lg:basis-[var(--slide-size-lg)] group min-w-0 shrink-0 grow-0 basis-[var(--slide-size)]"
         >
             <div
-                class="@2xs/item:flex-nowrap flex flex-wrap items-center gap-x-4 gap-y-3"
+                class="flex flex-wrap items-center gap-x-4 gap-y-3 @2xs/item:flex-nowrap"
             >
                 @if ($feature->image)
                     {{-- format-ignore-start --}}
@@ -50,7 +50,7 @@
                         class="prose prose-sm dark:prose-invert grid h-full grow [&>:first-child]:mt-0 [&>:last-child]:mb-0"
                     >
                         @if ($feature->translation->title)
-                            <p class="text-md @2xs/item:text-lg mb-1 leading-6">
+                            <p class="text-md mb-1 leading-6 @2xs/item:text-lg">
                                 @if ($url)
                                     <a
                                         href="{{ $url }}"
@@ -70,7 +70,7 @@
                         @endif
 
                         <div
-                            class="line-clamp-4 break-words font-medium leading-6 opacity-80"
+                            class="line-clamp-4 leading-6 font-medium break-words opacity-80"
                         >
                             {{ $feature->translation->summary }}
                         </div>

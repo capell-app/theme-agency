@@ -126,6 +126,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
+use Override;
 use Spatie\LaravelPackageTools\Package;
 
 class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
@@ -471,6 +472,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
         return $this;
     }
 
+    #[Override]
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(static::$packageName);

@@ -49,7 +49,7 @@ $runtimeManifest = Frontend::getFrontendData('runtimeManifest');
         title="{{ strip_tags($title ?? '') }}"
         {{
             $attributes->class([
-                'capell-button inline-flex items-center justify-center rounded-md px-4 py-2 text-center font-semibold leading-tight !no-underline transition duration-300 focus:ring-2 lg:px-8 lg:py-3',
+                'capell-button inline-flex items-center justify-center rounded-md px-4 py-2 text-center leading-tight font-semibold !no-underline transition duration-300 focus:ring-2 lg:px-8 lg:py-3',
                 'font-semibold' => ! $weight,
                 'font-light' => $weight === 'light',
                 'font-bold' => $weight === 'bold',
@@ -63,8 +63,8 @@ $runtimeManifest = Frontend::getFrontendData('runtimeManifest');
                 ? 'border-secondary text-secondary hover:bg-secondary focus:bg-secondary border-2 bg-transparent hover:text-white focus:text-white focus:outline-none'
                 : 'hover:text-secondary focus:text-secondary focus:ring-secondary border-secondary bg-secondary border-2 text-white hover:bg-white focus:bg-white focus:outline-none' => $color === 'secondary',
                 $outline
-                ? 'border-2 border-white bg-transparent text-white hover:bg-transparent focus:bg-transparent focus:outline-none focus:ring-transparent'
-                : 'border-2 border-white bg-transparent text-white hover:bg-transparent focus:bg-transparent focus:outline-none focus:ring-transparent' => ! $color,
+                ? 'border-2 border-white bg-transparent text-white hover:bg-transparent focus:bg-transparent focus:ring-transparent focus:outline-none'
+                : 'border-2 border-white bg-transparent text-white hover:bg-transparent focus:bg-transparent focus:ring-transparent focus:outline-none' => ! $color,
                 'text-white' => ! $color && $color === 'light',
                 'text-primary' => ! $color && $color !== 'light',
                 $class,
@@ -87,7 +87,7 @@ $runtimeManifest = Frontend::getFrontendData('runtimeManifest');
         title="{{ strip_tags($title ?? '') }}"
         {{
             $attributes->class([
-                'capell-button inline-flex items-center justify-center rounded-md px-8 py-3 text-center font-semibold leading-tight transition duration-300',
+                'capell-button inline-flex items-center justify-center rounded-md px-8 py-3 text-center leading-tight font-semibold transition duration-300',
                 'font-semibold' => ! $weight,
                 'font-light' => $weight === 'light',
                 'font-bold' => $weight === 'bold',

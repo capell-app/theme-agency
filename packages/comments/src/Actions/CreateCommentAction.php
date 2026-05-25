@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Comments\Actions;
 
+use Capell\Comments\Data\CommentableTypeData;
 use Capell\Comments\Data\CreateCommentData;
 use Capell\Comments\Enums\CommentIdentityMode;
 use Capell\Comments\Enums\CommentPublicationPolicy;
@@ -36,7 +37,7 @@ class CreateCommentAction
         return DB::transaction(function () use ($data): Comment {
             $commentableType = $this->commentableRegistry->forModel($data->commentable);
 
-            if ($commentableType === null || ! $commentableType->isVisible($data->commentable)) {
+            if (! $commentableType instanceof CommentableTypeData || ! $commentableType->isVisible($data->commentable)) {
                 throw ValidationException::withMessages([
                     'commentable' => __('capell-comments::messages.commentable_unavailable'),
                 ]);
@@ -86,7 +87,7 @@ class CreateCommentAction
                 'commentable_type' => $data->commentable->getMorphClass(),
                 'commentable_id' => $data->commentable->getKey(),
                 'parent_id' => $parent?->getKey(),
-                'root_id' => $parent?->root_id ?? $parent?->getKey(),
+                'root_id' => $parent instanceof Comment ? ($parent->root_id ?? $parent->getKey()) : null,
                 'depth' => $depth,
                 'status' => $this->initialStatus($author, $siteId, $commentableType->key, $emailVerifiedForSubmission),
                 'body' => $body,

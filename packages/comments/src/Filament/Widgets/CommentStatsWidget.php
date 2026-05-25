@@ -13,6 +13,7 @@ use Capell\Comments\Models\Comment;
 use Capell\Core\Contracts\Extensions\RegistersExtensionWidget;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Override;
 
 class CommentStatsWidget extends StatsOverviewWidget implements CapellWidgetContract, RegistersExtensionWidget
 {
@@ -33,6 +34,7 @@ class CommentStatsWidget extends StatsOverviewWidget implements CapellWidgetCont
         return '^4.0';
     }
 
+    #[Override]
     protected function getStats(): array
     {
         return [

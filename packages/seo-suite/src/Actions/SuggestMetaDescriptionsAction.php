@@ -22,8 +22,8 @@ class SuggestMetaDescriptionsAction
     public function __construct(private readonly SuggestMetaDescriptionsPipeline $pipeline) {}
 
     /**
+     * @param  array<array-key, mixed>  $options
      * @return array<int, string>
-     * @param array<array-key, mixed> $options
      */
     public function handle(AiActionContextInterface $context, array $options = []): array
     {

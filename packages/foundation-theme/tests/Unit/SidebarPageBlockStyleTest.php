@@ -18,8 +18,8 @@ use Capell\FoundationTheme\View\Components\Block\Page\Content as ContentBlock;
 use Capell\Frontend\Data\FrontendContext;
 use Capell\Frontend\Facades\Frontend;
 use Capell\Frontend\Support\CapellFrontendContext;
-use Capell\LayoutBuilder\Models\Block;
-use Capell\LayoutBuilder\Models\BlockAsset;
+use Capell\LayoutBuilder\Models\Widget;
+use Capell\LayoutBuilder\Models\WidgetAsset;
 use Capell\LayoutBuilder\Support\Livewire\OpaqueBlockReference;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Blaze\Blaze;
 
 test('sidebar page blocks expose stable styling and current page hooks', function (): void {
-    $component = new class(container: [], containerKey: 'sidebar', blockIndex: 0, loop: (object) ['index' => 0], block: new Block(['key' => 'pages', 'name' => 'Pages', 'meta' => ['view_file' => 'capell::components.no-results']])) extends AbstractPagesBlock
+    $component = new class(container: [], containerKey: 'sidebar', blockIndex: 0, loop: (object) ['index' => 0], block: new Widget(['key' => 'pages', 'name' => 'Pages', 'meta' => ['view_file' => 'capell::components.no-results']])) extends AbstractPagesBlock
     {
         protected function mountBlock(): void
         {
@@ -50,7 +50,7 @@ test('banner image render data uses only preloaded block media', function (): vo
     $media = MediaFactory::new()->make([
         'collection_name' => MediaCollectionEnum::BackgroundImage->value,
     ]);
-    $block = new Block(['key' => 'banner', 'meta' => []]);
+    $block = new Widget(['key' => 'banner', 'meta' => []]);
     $block->setRelation('media', new Collection([$media]));
 
     $renderData = BuildBannerImageRenderDataAction::run($block, null, null, false, false);
@@ -59,7 +59,7 @@ test('banner image render data uses only preloaded block media', function (): vo
 });
 
 test('banner image render data does not lazy-load block media', function (): void {
-    $block = Block::factory()->create(['key' => 'banner', 'meta' => []]);
+    $block = Widget::factory()->create(['key' => 'banner', 'meta' => []]);
 
     DB::enableQueryLog();
 
@@ -72,7 +72,7 @@ test('banner image render data does not lazy-load block media', function (): voi
 });
 
 test('block wrapper background image resolution does not lazy-load media', function (): void {
-    $block = Block::factory()->create(['key' => 'section', 'meta' => []]);
+    $block = Widget::factory()->create(['key' => 'section', 'meta' => []]);
 
     DB::enableQueryLog();
 
@@ -88,12 +88,12 @@ test('asset banner render data uses only loaded relations', function (): void {
     $media = MediaFactory::new()->make([
         'collection_name' => MediaCollectionEnum::Image->value,
     ]);
-    $blockAsset = BlockAsset::factory()->make([
-        'asset_type' => Block::class,
+    $blockAsset = WidgetAsset::factory()->make([
+        'asset_type' => Widget::class,
     ]);
     $blockAsset->setRelation('media', new Collection([$media]));
 
-    $block = new Block(['key' => 'asset-banners', 'meta' => []]);
+    $block = new Widget(['key' => 'asset-banners', 'meta' => []]);
     $block->setRelation('assets', new Collection([$blockAsset]));
 
     $items = BuildAssetBannerItemsAction::run($block);
@@ -107,15 +107,15 @@ test('asset banner render data uses linked page loaded on the asset model', func
     $linkedPage->setRelation('pageUrl', (object) ['full_url' => '/linked-page']);
     $linkedPage->setRelation('translation', (object) ['link_text' => 'Read more']);
 
-    $asset = new Block(['key' => 'linked-asset']);
+    $asset = new Widget(['key' => 'linked-asset']);
     $asset->setRelation('linkedPage', $linkedPage);
 
-    $blockAsset = BlockAsset::factory()->make([
-        'asset_type' => Block::class,
+    $blockAsset = WidgetAsset::factory()->make([
+        'asset_type' => Widget::class,
     ]);
     $blockAsset->setRelation('asset', $asset);
 
-    $block = new Block(['key' => 'asset-banners', 'meta' => []]);
+    $block = new Widget(['key' => 'asset-banners', 'meta' => []]);
     $block->setRelation('assets', new Collection([$blockAsset]));
 
     $items = BuildAssetBannerItemsAction::run($block);
@@ -126,7 +126,7 @@ test('asset banner render data uses linked page loaded on the asset model', func
 });
 
 test('asset banner render data does not lazy-load relations', function (): void {
-    $block = Block::factory()->create(['key' => 'asset-banners', 'meta' => []]);
+    $block = Widget::factory()->create(['key' => 'asset-banners', 'meta' => []]);
 
     DB::enableQueryLog();
 
@@ -187,7 +187,7 @@ test('opaque block references do not expose raw public context', function (): vo
 test('public livewire blocks resolve the scoped layout block clone', function (): void {
     $language = Language::factory()->create();
     $site = Site::factory()->create(['language_id' => $language->getKey()]);
-    $block = Block::factory()->create(['key' => 'featured-pages']);
+    $block = Widget::factory()->create(['key' => 'featured-pages']);
     $firstOccurrenceAsset = Page::factory()->site($site)->withTranslations($language)->create(['name' => 'First occurrence']);
     $secondOccurrenceAsset = Page::factory()->site($site)->withTranslations($language)->create(['name' => 'Second occurrence']);
     $layout = Layout::factory()->site($site)->create([
@@ -202,13 +202,13 @@ test('public livewire blocks resolve the scoped layout block clone', function ()
     ]);
     $page = Page::factory()->site($site)->layout($layout)->withTranslations($language)->create();
 
-    BlockAsset::factory()
+    WidgetAsset::factory()
         ->block($block)
         ->asset($firstOccurrenceAsset)
         ->page($page, 'main', 1)
         ->create();
 
-    BlockAsset::factory()
+    WidgetAsset::factory()
         ->block($block)
         ->asset($secondOccurrenceAsset)
         ->page($page, 'main', 2)
@@ -299,7 +299,7 @@ test('public livewire blocks resolve the scoped layout block clone', function ()
 test('public livewire blocks reject references without scoped page and site ids', function (): void {
     $language = Language::factory()->create();
     $site = Site::factory()->create(['language_id' => $language->getKey()]);
-    $block = Block::factory()->create(['key' => 'legacy-featured-pages']);
+    $block = Widget::factory()->create(['key' => 'legacy-featured-pages']);
     $layout = Layout::factory()->site($site)->create([
         'containers' => [
             'main' => [
@@ -326,13 +326,13 @@ test('public livewire blocks reject references without scoped page and site ids'
         'occurrence' => 1,
         'block_index' => 0,
     ])))
-        ->toThrow(Exception::class, 'Block reference is invalid');
+        ->toThrow(Exception::class, 'Widget reference is invalid');
 });
 
 test('public livewire blocks can hydrate blocks from global layouts', function (): void {
     $language = Language::factory()->create();
     $site = Site::factory()->create(['language_id' => $language->getKey()]);
-    $block = Block::factory()->create(['key' => 'global-featured-pages']);
+    $block = Widget::factory()->create(['key' => 'global-featured-pages']);
     $layout = Layout::factory()->create([
         'site_id' => null,
         'containers' => [
@@ -392,7 +392,7 @@ test('public livewire blocks reject global layout references replayed under anot
     $language = Language::factory()->create();
     $referenceSite = Site::factory()->create(['language_id' => $language->getKey()]);
     $currentSite = Site::factory()->create(['language_id' => $language->getKey()]);
-    $block = Block::factory()->create(['key' => 'global-cross-site-pages']);
+    $block = Widget::factory()->create(['key' => 'global-cross-site-pages']);
     $layout = Layout::factory()->create([
         'site_id' => null,
         'containers' => [
@@ -436,13 +436,13 @@ test('public livewire blocks reject global layout references replayed under anot
         'site_id' => $referenceSite->getKey(),
         'block_index' => 0,
     ])))
-        ->toThrow(Exception::class, 'Block not found');
+        ->toThrow(Exception::class, 'Widget not found');
 });
 
 test('public livewire page content blocks render from encrypted context without ambient frontend state', function (): void {
     $language = Language::factory()->create();
     $site = Site::factory()->create(['language_id' => $language->getKey()]);
-    $block = Block::factory()->create([
+    $block = Widget::factory()->create([
         'key' => 'page-content',
         'meta' => ['view_file' => 'capell-foundation-theme::components.block.page.content'],
     ]);
@@ -523,7 +523,7 @@ test('breadcrumbs render data does not lazy-load optional page and site relation
     $language = Language::factory()->create();
     $site = Site::factory()->create(['language_id' => $language->getKey()]);
     $page = Page::factory()->site($site)->create();
-    $block = new Block(['key' => 'breadcrumbs', 'name' => 'Breadcrumbs', 'meta' => ['view_file' => 'capell-foundation-theme::components.block.page.breadcrumbs']]);
+    $block = new Widget(['key' => 'breadcrumbs', 'name' => 'Breadcrumbs', 'meta' => ['view_file' => 'capell-foundation-theme::components.block.page.breadcrumbs']]);
 
     app()->instance(CapellFrontendContext::class, new CapellFrontendContext(new FrontendContext(
         site: $site,
@@ -566,7 +566,7 @@ test('content page block ignores contextless hydration when resolving next previ
     )));
     Frontend::clearResolvedInstance(CapellFrontendContext::class);
 
-    $block = new Block(['key' => 'content', 'name' => 'Content', 'meta' => ['view_file' => 'capell::components.no-results']]);
+    $block = new Widget(['key' => 'content', 'name' => 'Content', 'meta' => ['view_file' => 'capell::components.no-results']]);
 
     $component = new ContentBlock(
         container: [],
@@ -584,7 +584,7 @@ test('public livewire blocks reject references from another frontend site', func
     $language = Language::factory()->create();
     $currentSite = Site::factory()->create(['language_id' => $language->getKey()]);
     $otherSite = Site::factory()->create(['language_id' => $language->getKey()]);
-    $block = Block::factory()->create(['key' => 'featured-pages']);
+    $block = Widget::factory()->create(['key' => 'featured-pages']);
     $layout = Layout::factory()->site($otherSite)->create([
         'containers' => [
             'main' => [
@@ -625,5 +625,5 @@ test('public livewire blocks reject references from another frontend site', func
         'site_id' => $currentSite->getKey(),
         'block_index' => 0,
     ])))
-        ->toThrow(Exception::class, 'Block not found');
+        ->toThrow(Exception::class, 'Widget not found');
 });

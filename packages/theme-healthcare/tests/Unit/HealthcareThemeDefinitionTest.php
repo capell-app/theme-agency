@@ -20,6 +20,7 @@ use Capell\ThemeStudio\Healthcare\HealthcareThemeServiceProvider;
 use Capell\ThemeStudio\Healthcare\Rendering\BlogTeaserSectionRenderer;
 use Capell\ThemeStudio\Healthcare\Rendering\BookingSectionRenderer;
 use Capell\ThemeStudio\Healthcare\Rendering\EventPanelSectionRenderer;
+use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
@@ -268,7 +269,7 @@ it('renders standard feature and content listing sections through healthcare reg
 
 it('passes optional Form Builder availability through the registered booking renderer', function (bool $formBuilderInstalled, string $expectedMarkup, string $missingMarkup): void {
     View::addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/views');
-    app('translator')->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
+    resolve(Translator::class)->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(HealthcareThemeServiceProvider::$packageName);
     CapellCore::forcePackageInstalled('capell-app/form-builder', $formBuilderInstalled);
@@ -299,7 +300,7 @@ it('passes optional Form Builder availability through the registered booking ren
 
 it('passes optional Events availability through the registered events renderer', function (bool $eventsInstalled, string $expectedMarkup, string $missingMarkup): void {
     View::addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/views');
-    app('translator')->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
+    resolve(Translator::class)->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(HealthcareThemeServiceProvider::$packageName);
     CapellCore::forcePackageInstalled('capell-app/events', $eventsInstalled);
@@ -327,7 +328,7 @@ it('passes optional Events availability through the registered events renderer',
 
 it('passes optional Blog availability through the registered blog teaser renderer', function (bool $blogInstalled, string $expectedMarkup, string $missingMarkup): void {
     View::addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/views');
-    app('translator')->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
+    resolve(Translator::class)->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(HealthcareThemeServiceProvider::$packageName);
     CapellCore::forcePackageInstalled('capell-app/blog', $blogInstalled);
@@ -357,7 +358,7 @@ it('passes optional Blog availability through the registered blog teaser rendere
 
 it('renders optional healthcare section views without database queries', function (): void {
     View::addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/views');
-    app('translator')->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
+    resolve(Translator::class)->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
 
     $queries = [];
 
@@ -399,14 +400,14 @@ it('renders optional healthcare section views without database queries', functio
  */
 function healthcareThemeSection(string $key, array $viewData): ThemeSection
 {
-    return new class($key, $viewData) implements ThemeSection
+    return new readonly class($key, $viewData) implements ThemeSection
     {
         /**
          * @param  array<string, mixed>  $viewData
          */
         public function __construct(
-            private readonly string $sectionKey,
-            private readonly array $viewData,
+            private string $sectionKey,
+            private array $viewData,
         ) {}
 
         public function key(): string

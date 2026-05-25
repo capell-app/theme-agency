@@ -10,7 +10,7 @@
         <div class="mt-8 grid gap-4 md:grid-cols-3">
             @foreach ($section->items as $item)
                 <figure class="rounded-2xl bg-zinc-950 p-6 text-white">
-                    <blockquote class="text-lg font-semibold leading-7">
+                    <blockquote class="text-lg leading-7 font-semibold">
                         {{ $item['quote'] ?? $item['metric'] ?? '' }}
                     </blockquote>
                     <figcaption class="mt-5 text-sm text-[var(--theme-accent)]">

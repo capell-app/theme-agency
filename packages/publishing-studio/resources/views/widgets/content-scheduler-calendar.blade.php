@@ -36,7 +36,7 @@
                                 <a
                                     href="{{ $event->recordUrl }}"
                                     aria-label="{{ $eventLabel }}"
-                                    class="focus:ring-primary-500 flex items-start justify-between gap-3 rounded-md border border-gray-100 px-3 py-2 text-sm transition hover:bg-gray-50 focus:outline-none focus:ring-2 dark:border-white/10 dark:hover:bg-white/5"
+                                    class="focus:ring-primary-500 flex items-start justify-between gap-3 rounded-md border border-gray-100 px-3 py-2 text-sm transition hover:bg-gray-50 focus:ring-2 focus:outline-none dark:border-white/10 dark:hover:bg-white/5"
                                 >
                                     <span>
                                         <span

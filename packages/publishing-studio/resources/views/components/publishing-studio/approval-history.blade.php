@@ -36,7 +36,7 @@
 
                 <li class="relative">
                     <span
-                        class="{{ $color }} absolute -left-[1.375rem] top-1.5 h-2.5 w-2.5 rounded-full"
+                        class="{{ $color }} absolute top-1.5 -left-[1.375rem] h-2.5 w-2.5 rounded-full"
                     ></span>
 
                     <div class="flex items-baseline gap-2">
@@ -54,7 +54,7 @@
 
                     @if (! empty($approval->notes))
                         <p
-                            class="mt-1 whitespace-pre-line rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                            class="mt-1 rounded-md bg-gray-50 px-3 py-2 text-sm whitespace-pre-line text-gray-700 dark:bg-gray-800 dark:text-gray-200"
                         >
                             {{ $approval->notes }}
                         </p>

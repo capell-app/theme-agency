@@ -24,10 +24,11 @@ class CommentModerationEventAction
         ?string $note = null,
     ): CommentModerationEvent {
         $eventAuthor = $author ?? $comment?->author;
+        $siteId = $comment instanceof Comment ? $comment->site_id : $eventAuthor?->site_id;
 
         /** @var CommentModerationEvent $event */
         $event = CommentModerationEvent::query()->create([
-            'site_id' => $comment?->site_id ?? $eventAuthor?->site_id,
+            'site_id' => $siteId,
             'comment_id' => $comment?->getKey(),
             'comment_author_id' => $eventAuthor?->getKey(),
             'moderator_id' => $moderatorId,

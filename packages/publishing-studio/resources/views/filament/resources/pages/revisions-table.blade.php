@@ -4,7 +4,7 @@
 
 <table class="w-full text-sm">
     <thead
-        class="bg-gray-50 text-xs uppercase tracking-wide text-gray-500 dark:bg-gray-800"
+        class="bg-gray-50 text-xs tracking-wide text-gray-500 uppercase dark:bg-gray-800"
     >
         <tr>
             <th class="px-4 py-2 text-left">

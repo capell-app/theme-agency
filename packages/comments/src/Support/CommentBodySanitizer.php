@@ -21,6 +21,6 @@ class CommentBodySanitizer
     {
         preg_match_all('/https?:\/\//i', $body, $matches);
 
-        return count($matches[0] ?? []);
+        return count($matches[0]);
     }
 }

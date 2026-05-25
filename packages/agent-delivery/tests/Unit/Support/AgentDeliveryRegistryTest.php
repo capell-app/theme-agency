@@ -24,6 +24,7 @@ it('merges contributor metadata and returns chunks in stable order', function ()
     $registry = new AgentDeliveryRegistry;
     $page = (new Page)->forceFill(['id' => 5]);
     $page->setRelation('pageUrl', null);
+
     $site = (new Site)->forceFill(['id' => 7]);
     $language = (new Language)->forceFill(['id' => 9, 'code' => 'en', 'locale' => 'en']);
 
@@ -133,6 +134,7 @@ it('does not expose raw array content in public page body or headings', function
     $registry = new AgentDeliveryRegistry;
     $page = (new Page)->forceFill(['id' => 5]);
     $page->setRelation('pageUrl', null);
+
     $site = (new Site)->forceFill(['id' => 7]);
     $language = (new Language)->forceFill(['id' => 9, 'code' => 'en', 'locale' => 'en']);
 

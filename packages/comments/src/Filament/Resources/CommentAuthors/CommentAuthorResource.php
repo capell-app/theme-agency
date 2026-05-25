@@ -111,7 +111,7 @@ class CommentAuthorResource extends Resource
             })
             ->action(function (CommentAuthor $record) use ($name): void {
                 /** @var UpdateCommentAuthorModerationAction $action */
-                $action = app(UpdateCommentAuthorModerationAction::class);
+                $action = resolve(UpdateCommentAuthorModerationAction::class);
                 $action->{$name}($record);
                 self::notify();
             });

@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace Capell\Comments\Models;
 
 use Capell\Core\Models\Site;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
 
 class CommentModerationEvent extends Model
 {
+    /** @use HasFactory<Factory<self>> */
+    use HasFactory;
+
     protected $table = 'comment_moderation_events';
 
     /** @var list<string> */

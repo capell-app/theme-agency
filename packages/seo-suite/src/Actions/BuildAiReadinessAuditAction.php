@@ -23,7 +23,7 @@ use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
 /**
- * @method static \Illuminate\Support\Collection<int, AiReadinessIssueData> run(Page $page, Site $site, Language $language)
+ * @method static Collection<int, AiReadinessIssueData> run(Page $page, Site $site, Language $language)
  */
 final class BuildAiReadinessAuditAction
 {

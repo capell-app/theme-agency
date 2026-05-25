@@ -5,7 +5,7 @@
         <div>
             @if ($section->eyebrow)
                 <p
-                    class="mb-6 text-sm font-bold uppercase tracking-[0.25em] text-[var(--theme-accent)]"
+                    class="mb-6 text-sm font-bold tracking-[0.25em] text-[var(--theme-accent)] uppercase"
                 >
                     {{ $section->eyebrow }}
                 </p>

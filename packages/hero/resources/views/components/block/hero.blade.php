@@ -120,7 +120,7 @@ $theme = Frontend::theme();
                 @foreach ($block->assets as $blockAsset)
                     {{-- format-ignore-start --}}
                 @php
-                    /** @var \Capell\LayoutBuilder\Models\BlockAsset $blockAsset */
+                    /** @var \Capell\LayoutBuilder\Models\WidgetAsset $blockAsset */
                     $isFirstSlide = $loop->first;
                     $slide = HeroAssetSlideData::fromBlockAsset($blockAsset, $block, $color);
                     $heroBackground = ResolveHeroBackgroundDataAction::run($theme, $block, $blockAsset);
@@ -144,13 +144,13 @@ $theme = Frontend::theme();
                     >
                         <div
                             @class([
-                                '@container grid min-w-0 max-w-full select-text gap-4 gap-x-10 gap-y-8 py-14 lg:gap-x-16 lg:py-24',
+                                '@container grid max-w-full min-w-0 gap-4 gap-x-10 gap-y-8 py-14 select-text lg:gap-x-16 lg:py-24',
                                 'lg:grid-cols-12' => $slide->images?->isNotEmpty(),
                             ])
                         >
                             <div
                                 @class([
-                                    'flex min-w-0 max-w-full flex-col justify-center',
+                                    'flex max-w-full min-w-0 flex-col justify-center',
                                     $contentAlignmentClass => ! $slide->images?->isNotEmpty(),
                                     'items-start text-left' => $slide->images?->isNotEmpty(),
                                     'lg:col-span-5 xl:col-span-7' => $slide->images?->isNotEmpty(),
@@ -213,7 +213,7 @@ $theme = Frontend::theme();
                             @if ($slide->images?->isNotEmpty())
                                 <div
                                     @class([
-                                        'relative z-30 flex w-full min-w-0 max-w-full items-center overflow-hidden lg:col-span-6 xl:col-span-5',
+                                        'relative z-30 flex w-full max-w-full min-w-0 items-center overflow-hidden lg:col-span-6 xl:col-span-5',
                                         'lg:order-1' => $mediaPosition === 'left',
                                     ])
                                 >
@@ -225,7 +225,7 @@ $theme = Frontend::theme();
                                                 :alt="$slide->asset->translation->title"
                                                 :width="420"
                                                 :fetchpriority="$isFirstSlide ? 'high' : null"
-                                                class="hero-slide-img h-full max-h-[40vh] w-full min-w-0 max-w-full object-cover object-center lg:max-h-[400px]"
+                                                class="hero-slide-img h-full max-h-[40vh] w-full max-w-full min-w-0 object-cover object-center lg:max-h-[400px]"
                                                 loading="{{ $isFirstSlide ? 'eager' : 'lazy' }}"
                                                 sizes="(min-width: 1024px) 38vw, 88vw"
                                             />
@@ -233,13 +233,13 @@ $theme = Frontend::theme();
                                         @endif
 
                                         <div
-                                            class="z-12 absolute -bottom-4 left-4 w-2/3 rounded-lg bg-gray-200 shadow-lg lg:-left-8 dark:bg-gray-800"
+                                            class="absolute -bottom-4 left-4 z-12 w-2/3 rounded-lg bg-gray-200 shadow-lg lg:-left-8 dark:bg-gray-800"
                                         >
                                             <x-capell::media
                                                 format="webp"
                                                 :media="$media"
                                                 :alt="$slide->asset->translation->title"
-                                                class="hero-slide-img h-full max-h-[40vh] w-full min-w-0 max-w-full object-cover object-center lg:max-h-[400px]"
+                                                class="hero-slide-img h-full max-h-[40vh] w-full max-w-full min-w-0 object-cover object-center lg:max-h-[400px]"
                                                 loading="lazy"
                                             />
                                         </div>
@@ -263,7 +263,7 @@ $theme = Frontend::theme();
                     :color="$color"
                     container-class="container"
                 >
-                    <div class="@lg:py-12 flex select-text items-center py-12">
+                    <div class="@lg:py-12 flex items-center py-12 select-text">
                         <x-capell-hero::hero.content
                             :title="$pageHeroTitle ?: ($block->translation ? __($block->translation->title, $pageVariables) : null)"
                             :color="$color"

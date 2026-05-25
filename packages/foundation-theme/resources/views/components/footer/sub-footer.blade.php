@@ -63,7 +63,7 @@
 
         @if ($slot->isNotEmpty())
             <div
-                class="sm:grid-col-2 grow text-center text-xs font-medium leading-tight text-[var(--color-footer-muted)] md:col-span-1 lg:order-2"
+                class="sm:grid-col-2 grow text-center text-xs leading-tight font-medium text-[var(--color-footer-muted)] md:col-span-1 lg:order-2"
             >
                 {{ $slot }}
             </div>

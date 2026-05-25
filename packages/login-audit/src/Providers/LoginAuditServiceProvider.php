@@ -14,6 +14,7 @@ use Capell\LoginAudit\Observers\LoginAuditObserver;
 use Capell\LoginAudit\Settings\LoginAuditSettings;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
+use Override;
 use Rappasoft\LaravelAuthenticationLog\Models\AuthenticationLog as VendorLoginAudit;
 use Spatie\LaravelPackageTools\Package;
 
@@ -63,6 +64,7 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
         VendorLoginAudit::observe(LoginAuditObserver::class);
     }
 
+    #[Override]
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(static::$packageName);

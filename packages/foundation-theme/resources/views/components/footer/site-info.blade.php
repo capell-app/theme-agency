@@ -31,7 +31,7 @@
                 />
             @endif
         @else
-            <span class="footer-logo-text text-2xl font-semibold leading-tight">
+            <span class="footer-logo-text text-2xl leading-tight font-semibold">
                 {{ $site->translation->title }}
             </span>
         @endif
@@ -47,7 +47,7 @@
 
     @if ($businessName || $email || $phone || $contactPage?->pageUrl)
         <address
-            class="footer-contact text-sm not-italic leading-6 text-[var(--color-footer-muted)]"
+            class="footer-contact text-sm leading-6 text-[var(--color-footer-muted)] not-italic"
         >
             @if ($businessName)
                 <div>{{ $businessName }}</div>

@@ -15,6 +15,7 @@ use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Override;
 use Spatie\LaravelPackageTools\Package;
 
 final class AgentDeliveryServiceProvider extends AbstractPackageServiceProvider
@@ -56,6 +57,7 @@ final class AgentDeliveryServiceProvider extends AbstractPackageServiceProvider
         $this->registerTaggedContributors();
     }
 
+    #[Override]
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(self::$packageName);

@@ -50,6 +50,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Livewire\Livewire;
+use Override;
 use Spatie\LaravelPackageTools\Package;
 
 final class FoundationThemeServiceProvider extends AbstractPackageServiceProvider
@@ -106,6 +107,7 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
         $this->registerVendorNpmDependencies();
     }
 
+    #[Override]
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(self::$packageName);

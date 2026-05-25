@@ -16,7 +16,7 @@ use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Layout;
 use Capell\LayoutBuilder\Enums\LayoutTypeEnum;
 use Capell\LayoutBuilder\Filament\Configurators\Types\BlockTypeConfigurator;
-use Capell\LayoutBuilder\Models\Widget as Block;
+use Capell\LayoutBuilder\Models\Widget;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class InstallCampaignLayoutsAction
@@ -73,7 +73,7 @@ final class InstallCampaignLayoutsAction
                     'containers' => $this->containersForPreset($preset, $blocks),
                     'status' => true,
                     'widgets' => collect($blocks)
-                        ->map(fn (Block $block): string => $block->key)
+                        ->map(fn (Widget $block): string => $block->key)
                         ->values()
                         ->all(),
                 ],
@@ -98,7 +98,7 @@ final class InstallCampaignLayoutsAction
     }
 
     /**
-     * @return array<string, Block>
+     * @return array<string, Widget>
      */
     private function blocksForPreset(CampaignLayoutPreset $preset): array
     {
@@ -118,7 +118,7 @@ final class InstallCampaignLayoutsAction
             $definition = self::WIDGET_DEFINITIONS[$blockType];
             $blockKey = $preset->key() . '-' . $blockType;
 
-            $blocks[$blockType] = Block::query()->updateOrCreate(
+            $blocks[$blockType] = Widget::query()->updateOrCreate(
                 ['key' => $blockKey],
                 [
                     'name' => $preset->name() . ' - ' . $definition['name'],
@@ -139,8 +139,8 @@ final class InstallCampaignLayoutsAction
     }
 
     /**
-     * @param  array<string, Block>  $blocks
-     * @return array<string, array{blocks: array<int, array{block_key: string, occurrence: int}>, meta: array<string, mixed>}>
+     * @param  array<string, Widget>  $blocks
+     * @return array<string, array{widgets: array<int, array{widget_key: string, occurrence: int}>, meta: array<string, mixed>}>
      */
     private function containersForPreset(CampaignLayoutPreset $preset, array $blocks): array
     {

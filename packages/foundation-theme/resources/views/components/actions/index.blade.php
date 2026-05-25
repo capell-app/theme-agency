@@ -1,7 +1,7 @@
 <div
     {{
         $attributes->class([
-            'actions flex min-w-0 max-w-full flex-wrap gap-2 lg:gap-x-4',
+            'actions flex max-w-full min-w-0 flex-wrap gap-2 lg:gap-x-4',
             'justify-center' => $align === 'center',
             'justify-start' => $align === 'start' || $align === 'left',
             'justify-end' => $align === 'end' || $align === 'right',

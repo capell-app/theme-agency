@@ -17,7 +17,7 @@
                     <div
                         class="rounded-xl border border-stone-200 bg-white p-4"
                     >
-                        <p class="text-xs font-black uppercase text-[#1f5f4a]">
+                        <p class="text-xs font-black text-[#1f5f4a] uppercase">
                             {{ $filter['group'] ?? __('capell-theme-commerce::generic.finder_filter') }}
                         </p>
                         <div class="mt-3 flex flex-wrap gap-2">

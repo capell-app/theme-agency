@@ -61,7 +61,7 @@ function capell_test_collect(mixed $items = []): Collection
         return $items;
     }
 
-    if (is_array($items) || $items instanceof Traversable) {
+    if (is_iterable($items)) {
         return new Collection($items);
     }
 

@@ -58,7 +58,7 @@ class RenderProfileAssetRenderer
             return false;
         }
 
-        return strlen($this->filesystems->disk('local')->get($profile->critical_css_path)) <= $this->criticalCssSettings->maxInlineCssBytes();
+        return strlen((string) $this->filesystems->disk('local')->get($profile->critical_css_path)) <= $this->criticalCssSettings->maxInlineCssBytes();
     }
 
     /**

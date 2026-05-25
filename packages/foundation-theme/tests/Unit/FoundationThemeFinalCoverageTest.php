@@ -30,8 +30,8 @@ use Capell\Frontend\Contracts\FrontendContextReader;
 use Capell\Frontend\Facades\Frontend;
 use Capell\Frontend\Support\CapellFrontendContext;
 use Capell\Frontend\Support\State\FrontendState;
-use Capell\LayoutBuilder\Models\Block;
-use Capell\LayoutBuilder\Models\BlockAsset;
+use Capell\LayoutBuilder\Models\Widget;
+use Capell\LayoutBuilder\Models\WidgetAsset;
 use Capell\LayoutBuilder\Support\Livewire\OpaqueBlockReference;
 use Capell\Navigation\Enums\NavigationItemType;
 use Capell\Navigation\Models\Navigation as NavigationModel;
@@ -113,7 +113,7 @@ it('mounts successful child and sibling page blocks with hydrated frontend conte
         ->withTranslations($language, ['title' => 'Sibling child'], slug: 'sibling-child')
         ->create();
 
-    $block = Block::factory()->create([
+    $block = Widget::factory()->create([
         'key' => 'page-list',
         'meta' => [
             'with_children_count' => true,
@@ -168,7 +168,7 @@ it('mounts the livewire pages block around selected page assets', function (): v
         ->site($site)
         ->language($language)
         ->create(['url' => '/selected-livewire-page']);
-    $block = Block::factory()->create([
+    $block = Widget::factory()->create([
         'key' => 'selected-pages',
         'meta' => [
             'limit' => 3,
@@ -178,7 +178,7 @@ it('mounts the livewire pages block around selected page assets', function (): v
         ],
     ]);
 
-    BlockAsset::factory()
+    WidgetAsset::factory()
         ->block($block)
         ->asset($selectedPage)
         ->create(['order' => 1]);
@@ -353,16 +353,16 @@ it('renders navigation and breadcrumbs with frontend context data', function ():
             ],
         ])
         ->create(['key' => 'docs']);
-    $navigationBlock = Block::factory()->create([
+    $navigationBlock = Widget::factory()->create([
         'key' => 'navigation-block',
         'meta' => ['navigation_id' => $navigation->getKey()],
     ]);
-    $breadcrumbsBlock = Block::factory()->create(['key' => 'breadcrumbs-block']);
+    $breadcrumbsBlock = Widget::factory()->create(['key' => 'breadcrumbs-block']);
 
     foundationThemeFinalFrontendState($language, $site, $theme, $layout, $page->load('type', 'layout', 'translation'));
 
     $navigationComponent = new Navigation([], 'main', 0, new stdClass, $navigationBlock);
-    $navigationByKeyBlock = Block::factory()->create([
+    $navigationByKeyBlock = Widget::factory()->create([
         'key' => 'navigation-key-block',
         'meta' => ['navigation' => 'docs'],
     ]);
@@ -372,7 +372,7 @@ it('renders navigation and breadcrumbs with frontend context data', function ():
         ->language($language)
         ->items([])
         ->create(['key' => 'empty-docs']);
-    $emptyNavigationBlock = Block::factory()->create([
+    $emptyNavigationBlock = Widget::factory()->create([
         'key' => 'navigation-empty-block',
         'meta' => ['navigation_id' => $emptyNavigation->getKey()],
     ]);
@@ -417,7 +417,7 @@ it('covers content neighbor links and small frontend context helper branches', f
         ->state(['order' => 3])
         ->withTranslations($language, ['title' => 'Next'], slug: 'content-next')
         ->create();
-    $block = Block::factory()->create(['key' => 'content-neighbors']);
+    $block = Widget::factory()->create(['key' => 'content-neighbors']);
     $slotType = new class
     {
         public function getMeta(string $key): ?string
@@ -425,13 +425,13 @@ it('covers content neighbor links and small frontend context helper branches', f
             return $key === 'type' ? 'slot' : null;
         }
     };
-    $slotBlock = new Block;
+    $slotBlock = new Widget;
     $slotBlock->setRelation('type', $slotType);
 
     $media = new Media;
     $media->collection_name = 'background_image';
 
-    $backgroundBlock = new Block;
+    $backgroundBlock = new Widget;
     $backgroundBlock->setRelation('media', new Collection([$media]));
 
     foundationThemeFinalFrontendState($language, $site, $theme, $layout, $page->load('type', 'layout'));

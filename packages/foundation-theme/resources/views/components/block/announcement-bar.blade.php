@@ -18,7 +18,7 @@
     :index="$loop->index"
     :$block
 >
-    <div class="border-current/15 rounded-md border px-4 py-3">
+    <div class="rounded-md border border-current/15 px-4 py-3">
         <x-capell::content
             class="block-content"
             :compact="true"

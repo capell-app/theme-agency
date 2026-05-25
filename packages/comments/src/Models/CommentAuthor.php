@@ -11,9 +11,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Override;
 
+/**
+ * @property int $site_id
+ * @property string $name
+ * @property string $email
+ * @property string|null $email_hash
+ * @property Carbon|null $email_verified_at
+ * @property Carbon|null $trusted_at
+ * @property Carbon|null $blocked_at
+ */
 class CommentAuthor extends Model
 {
     /** @use HasFactory<CommentAuthorFactory> */

@@ -17,6 +17,7 @@ use Capell\LayoutBuilder\Contracts\Extenders\BlockAssetSchemaExtender;
 use Capell\LayoutBuilder\Contracts\Extenders\BlockSchemaExtender;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Support\Facades\Blade;
+use Override;
 use Spatie\LaravelPackageTools\Package;
 
 final class HeroServiceProvider extends AbstractPackageServiceProvider
@@ -48,6 +49,7 @@ final class HeroServiceProvider extends AbstractPackageServiceProvider
         }
     }
 
+    #[Override]
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(self::$packageName);

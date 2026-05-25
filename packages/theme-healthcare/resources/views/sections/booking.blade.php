@@ -24,7 +24,7 @@
 
         <div class="healthcare-frame bg-[#14323a] p-6 text-white">
             <p
-                class="text-xs font-black uppercase tracking-widest text-[#f59e0b]"
+                class="text-xs font-black tracking-widest text-[#f59e0b] uppercase"
             >
                 {{ $formBuilderAvailable ? __('capell-theme-healthcare::generic.booking_live') : __('capell-theme-healthcare::generic.booking_static') }}
             </p>

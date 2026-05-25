@@ -102,7 +102,7 @@
                                 @if ($check->fixUrl && $check->fixLabel)
                                     <a
                                         href="{{ $check->fixUrl }}"
-                                        class="bg-primary-600 hover:bg-primary-700 inline-flex items-center gap-2 whitespace-nowrap rounded px-2.5 py-1.5 text-xs font-medium text-white"
+                                        class="bg-primary-600 hover:bg-primary-700 inline-flex items-center gap-2 rounded px-2.5 py-1.5 text-xs font-medium whitespace-nowrap text-white"
                                     >
                                         {{ $check->fixLabel }}
                                     </a>

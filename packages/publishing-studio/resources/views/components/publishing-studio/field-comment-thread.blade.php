@@ -24,7 +24,7 @@
                 >
                     <div class="flex items-start justify-between gap-2">
                         <p
-                            class="whitespace-pre-line text-sm text-gray-700 dark:text-gray-200"
+                            class="text-sm whitespace-pre-line text-gray-700 dark:text-gray-200"
                         >
                             {{ $comment->body }}
                         </p>
@@ -72,12 +72,12 @@
             wire:model="newComment"
             rows="2"
             placeholder="{{ __('capell-admin::workspace.field_comments.placeholder') }}"
-            class="focus:border-primary-500 focus:ring-primary-500 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500"
+            class="focus:border-primary-500 focus:ring-primary-500 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:ring-1 focus:outline-none dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500"
         ></textarea>
 
         <button
             type="submit"
-            class="bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 rounded-md px-3 py-1.5 text-xs font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-1"
+            class="bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 rounded-md px-3 py-1.5 text-xs font-medium text-white focus:ring-2 focus:ring-offset-1 focus:outline-none"
         >
             {{ __('capell-admin::workspace.field_comments.post') }}
         </button>

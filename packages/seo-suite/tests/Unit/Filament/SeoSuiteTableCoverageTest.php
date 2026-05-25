@@ -167,10 +167,12 @@ function reflectedComponentNames(ReflectionMethod $method): array
     $names = [];
 
     foreach ($components as $component) {
-        if (! is_object($component) || ! method_exists($component, 'getName')) {
+        if (! is_object($component)) {
             continue;
         }
-
+        if (! method_exists($component, 'getName')) {
+            continue;
+        }
         $names[] = $component->getName();
     }
 

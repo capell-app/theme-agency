@@ -69,7 +69,7 @@
 
 <button
     type="button"
-    class="capell-foundation-theme-footer scroll-top hover:bg-primary focus:bg-primary text-primary z-999 sticky bottom-0 left-full hidden h-10 w-10 -translate-x-6 items-center justify-center rounded-t-sm bg-gray-200 transition hover:text-white focus:text-white"
+    class="capell-foundation-theme-footer scroll-top hover:bg-primary focus:bg-primary text-primary sticky bottom-0 left-full z-999 hidden h-10 w-10 -translate-x-6 items-center justify-center rounded-t-sm bg-gray-200 transition hover:text-white focus:text-white"
     aria-label="{{ __('capell-foundation-theme::generic.scroll_to_top') }}"
     title="{{ __('capell-foundation-theme::generic.scroll_to_top') }}"
     onclick="
@@ -106,7 +106,7 @@
             @class([
                 'px-0 py-0',
                 'flex justify-center' => ! $hasFooterPrimaryContent,
-                '@2xl:grid-cols-2 @4xl:grid-cols-3 grid gap-x-8 gap-y-8 xl:flex xl:flex-row xl:gap-x-10' => $hasFooterPrimaryContent,
+                'grid gap-x-8 gap-y-8 xl:flex xl:flex-row xl:gap-x-10 @2xl:grid-cols-2 @4xl:grid-cols-3' => $hasFooterPrimaryContent,
             ])
         >
             <x-capell::footer.site-info
@@ -121,7 +121,7 @@
 
             @if ($hasFooterPrimaryContent)
                 <div
-                    class="@4xl:col-span-2 order-1 grid grow gap-8 lg:order-2 xl:flex"
+                    class="order-1 grid grow gap-8 lg:order-2 xl:flex @4xl:col-span-2"
                 >
                     @if ($hasFooterMenu)
                         <x-capell::footer.menu

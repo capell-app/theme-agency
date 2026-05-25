@@ -53,7 +53,7 @@ final class AdminServiceProvider extends ServiceProvider
             ->registerDashboardWidgets();
     }
 
-    protected function isPackageInstalled(): bool
+    private function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(DiagnosticsServiceProvider::$packageName);
     }

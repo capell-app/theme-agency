@@ -11,7 +11,7 @@ use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
 use Capell\LayoutBuilder\Actions\AddHeroBlockToLayoutAction;
 use Capell\LayoutBuilder\Actions\CreateHeroBlockAction;
-use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Support\Creator\DemoCreator;
 use Illuminate\Console\Command;
 use Mockery\MockInterface;
@@ -22,7 +22,7 @@ it('adds hero meta to blog and article pages when blog package is installed', fu
     AddHeroBlockToLayoutAction::shouldRun()->once();
     Blueprint::factory()->type('section')->create(['key' => 'hero']);
 
-    $heroBlock = Block::factory()->make();
+    $heroBlock = Widget::factory()->make();
     CreateHeroBlockAction::shouldRun()->twice()->andReturn($heroBlock);
 
     $demoCreator = mock(DemoCreator::class, function (DemoCreator&MockInterface $mock): void {

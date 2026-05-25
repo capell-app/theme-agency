@@ -12,7 +12,7 @@
                 class="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm transition hover:-translate-y-1"
             >
                 <p
-                    class="text-sm font-bold uppercase tracking-widest text-[var(--theme-primary)]"
+                    class="text-sm font-bold tracking-widest text-[var(--theme-primary)] uppercase"
                 >
                     {{ $feature['icon'] ?? 'Studio' }}
                 </p>

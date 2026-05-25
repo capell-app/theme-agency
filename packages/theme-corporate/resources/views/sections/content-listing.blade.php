@@ -13,12 +13,12 @@
         >
             <div>
                 <p
-                    class="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-primary)] dark:text-[var(--theme-accent)]"
+                    class="mb-3 text-xs font-semibold tracking-[0.16em] text-[var(--theme-primary)] uppercase dark:text-[var(--theme-accent)]"
                 >
                     {{ ucfirst($variant) }}
                 </p>
                 <h2
-                    class="max-w-xl text-2xl font-semibold leading-tight text-slate-950 sm:text-3xl lg:text-4xl dark:text-white"
+                    class="max-w-xl text-2xl leading-tight font-semibold text-slate-950 sm:text-3xl lg:text-4xl dark:text-white"
                 >
                     {{ $section->heading }}
                 </h2>
@@ -114,7 +114,7 @@
                         class="grid gap-2 p-4 transition hover:bg-slate-50 sm:grid-cols-[0.25fr_1fr] sm:p-5 dark:hover:bg-white/[0.04]"
                     >
                         <span
-                            class="text-xs font-medium uppercase tracking-[0.16em] text-slate-400"
+                            class="text-xs font-medium tracking-[0.16em] text-slate-400 uppercase"
                         >
                             Question {{ $loop->iteration }}
                         </span>
@@ -235,7 +235,7 @@
                                 @endif
                             </span>
                             <span
-                                class="{{ $loop->first ? 'text-xl sm:text-2xl' : 'text-base' }} block font-semibold leading-tight text-slate-950 dark:text-white"
+                                class="{{ $loop->first ? 'text-xl sm:text-2xl' : 'text-base' }} block leading-tight font-semibold text-slate-950 dark:text-white"
                             >
                                 {{ $item['title'] }}
                             </span>

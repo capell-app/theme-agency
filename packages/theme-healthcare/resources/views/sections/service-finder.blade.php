@@ -17,7 +17,7 @@
                     <div
                         class="rounded-xl border border-stone-200 bg-white p-4"
                     >
-                        <p class="text-xs font-black uppercase text-[#0f766e]">
+                        <p class="text-xs font-black text-[#0f766e] uppercase">
                             {{ $filter['group'] ?? __('capell-theme-healthcare::generic.finder_filter') }}
                         </p>
                         <div class="mt-3 flex flex-wrap gap-2">

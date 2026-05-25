@@ -18,8 +18,8 @@ return [
     'root_page_size' => 20,
     'reply_page_size' => 5,
     'token_expiry_hours' => 72,
-    'email_hash_secret' => env('CAPELL_COMMENTS_EMAIL_HASH_SECRET'),
-    'visitor_hash_secret' => env('CAPELL_COMMENTS_VISITOR_HASH_SECRET'),
+    'email_hash_secret' => $_ENV['CAPELL_COMMENTS_EMAIL_HASH_SECRET'] ?? null,
+    'visitor_hash_secret' => $_ENV['CAPELL_COMMENTS_VISITOR_HASH_SECRET'] ?? null,
     'throttle' => [
         'max_attempts' => 6,
         'decay_seconds' => 60,

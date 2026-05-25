@@ -184,7 +184,7 @@
                         />
                         @if ($assetRenderData->title)
                             <div
-                                class="pointer-events-none absolute inset-x-0 bottom-0 flex translate-y-full transform items-center justify-center break-words bg-gray-600/75 px-2 py-4 text-sm font-medium leading-none leading-tight text-white opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus:translate-y-0 group-focus:opacity-100"
+                                class="pointer-events-none absolute inset-x-0 bottom-0 flex translate-y-full transform items-center justify-center bg-gray-600/75 px-2 py-4 text-sm leading-none leading-tight font-medium break-words text-white opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus:translate-y-0 group-focus:opacity-100"
                             >
                                 {{ $assetRenderData->title }}
                             </div>
@@ -219,7 +219,7 @@
 
                     @if ($carouselPagination)
                         <div
-                            class="swiper-pagination pointer-events-auto absolute bottom-2 left-1/2 flex -translate-x-1/2 select-none justify-center pt-4"
+                            class="swiper-pagination pointer-events-auto absolute bottom-2 left-1/2 flex -translate-x-1/2 justify-center pt-4 select-none"
                             wire:ignore
                         ></div>
                     @endif

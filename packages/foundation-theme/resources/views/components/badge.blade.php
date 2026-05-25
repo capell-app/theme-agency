@@ -7,7 +7,7 @@
 
 @php
     $classes = [
-        'group inline-flex items-center justify-between gap-2 rounded-full pl-3 pr-2',
+        'group inline-flex items-center justify-between gap-2 rounded-full pr-2 pl-3',
         'py-1 text-xs' => $size === 'sm',
         'py-1.5 text-sm' => $size === 'md',
         'py-2 text-base' => $size === 'lg',

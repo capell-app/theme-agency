@@ -44,6 +44,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Override;
 use Spatie\LaravelPackageTools\Package;
 
 class AccessGateServiceProvider extends AbstractPackageServiceProvider
@@ -125,6 +126,7 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
         ], merge: true);
     }
 
+    #[Override]
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(static::$packageName);

@@ -43,7 +43,7 @@ final class DemoCommand extends Command
         }
 
         return array_values(array_filter(
-            array_map(static fn (string $item): string => trim($item), explode(',', $value)),
+            array_map(trim(...), explode(',', $value)),
             static fn (string $item): bool => $item !== '',
         ));
     }

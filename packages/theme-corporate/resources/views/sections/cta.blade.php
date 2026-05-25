@@ -6,7 +6,7 @@
             class="grid gap-5 border-y border-slate-200 py-7 sm:py-9 lg:grid-cols-[0.9fr_1.1fr] lg:items-center dark:border-white/10"
         >
             <h2
-                class="max-w-xl text-2xl font-semibold leading-tight text-slate-950 sm:text-3xl lg:text-4xl dark:text-white"
+                class="max-w-xl text-2xl leading-tight font-semibold text-slate-950 sm:text-3xl lg:text-4xl dark:text-white"
             >
                 {{ $section->heading }}
             </h2>

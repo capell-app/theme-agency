@@ -84,7 +84,7 @@ final class CreatePagePreviewSnapshotAction
 
     private function currentWorkspaceId(): ?int
     {
-        if (! class_exists('Capell\\PublishingStudio\\WorkspaceContext')) {
+        if (! class_exists(WorkspaceContext::class)) {
             return null;
         }
 

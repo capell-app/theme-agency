@@ -13,6 +13,7 @@ use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\Theme;
 use Capell\Core\Models\Translation;
+use Capell\FilamentPeek\Data\LayoutBuilderPreviewStateData;
 use Capell\FilamentPeek\Data\PagePreviewSnapshotData;
 use Capell\Frontend\Actions\BuildPublicPageRenderDataAction;
 use Capell\Frontend\Actions\BuildPublicRenderPerformanceReportAction;
@@ -166,7 +167,7 @@ final class RenderPagePreviewSnapshotAction
             return null;
         }
 
-        if ($snapshot->layoutBuilderState !== null) {
+        if ($snapshot->layoutBuilderState instanceof LayoutBuilderPreviewStateData) {
             $layout->setAttribute('containers', $snapshot->layoutBuilderState->containers);
         }
 
@@ -324,12 +325,11 @@ final class RenderPagePreviewSnapshotAction
 
         $renderer = resolve(FrontendResponseRendererRegistry::class)->forRuntime($runtimeResolution->runtime);
 
-        if ($renderer === null) {
-            throw new RuntimeException('No Capell frontend renderer is available for Filament Peek preview.');
-        }
+        throw_if($renderer === null, RuntimeException::class, 'No Capell frontend renderer is available for Filament Peek preview.');
 
         $renderContext->runtimeManifest = $runtimeResolution->runtimeManifest;
         $renderContext->publicRenderData = BuildPublicPageRenderDataAction::run($renderContext);
+
         $context->setFrontendData('runtimeManifest', $runtimeResolution->runtimeManifest);
         $context->setFrontendData('publicPageRenderData', $renderContext->publicRenderData);
         $context->setFrontendData('assetManifest', $renderContext->publicRenderData->assetManifest);
@@ -353,7 +353,7 @@ final class RenderPagePreviewSnapshotAction
         Language $language,
         PagePreviewSnapshotData $snapshot,
     ): bool {
-        if ($snapshot->layoutBuilderState === null || ! class_exists(RegisterLayoutBuilderPreviewBlocksAction::class)) {
+        if (! $snapshot->layoutBuilderState instanceof LayoutBuilderPreviewStateData || ! class_exists(RegisterLayoutBuilderPreviewBlocksAction::class)) {
             return false;
         }
 
@@ -457,13 +457,13 @@ final class RenderPagePreviewSnapshotAction
      */
     private function withWorkspaceContext(PagePreviewSnapshotData $snapshot, callable $callback): mixed
     {
-        if (! class_exists('Capell\\PublishingStudio\\WorkspaceContext')) {
+        if (! class_exists(WorkspaceContext::class)) {
             return $callback();
         }
 
         $workspace = null;
 
-        if ($snapshot->workspaceId !== null && class_exists('Capell\\PublishingStudio\\Models\\Workspace')) {
+        if ($snapshot->workspaceId !== null && class_exists(Workspace::class)) {
             $workspace = Workspace::query()->find($snapshot->workspaceId);
         }
 

@@ -7,7 +7,7 @@
             {{ $section->brandName }}
         </a>
         <div
-            class="hidden items-center gap-6 text-sm font-semibold uppercase tracking-wide text-white/70 md:flex"
+            class="hidden items-center gap-6 text-sm font-semibold tracking-wide text-white/70 uppercase md:flex"
         >
             @foreach ($section->items as $item)
                 <a
@@ -25,7 +25,7 @@
                 {{ __('capell-theme-agency::generic.menu') }}
             </summary>
             <div
-                class="absolute right-0 z-30 mt-3 grid min-w-48 gap-3 rounded-lg bg-zinc-900 p-4 text-sm font-semibold uppercase tracking-wide text-white/80 shadow-xl"
+                class="absolute right-0 z-30 mt-3 grid min-w-48 gap-3 rounded-lg bg-zinc-900 p-4 text-sm font-semibold tracking-wide text-white/80 uppercase shadow-xl"
             >
                 @foreach ($section->items as $item)
                     <a

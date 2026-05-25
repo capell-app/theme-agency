@@ -80,9 +80,7 @@ function themeFrontendBootTheme(string $themeKey): void
     $provider = new $theme['provider'](app());
     $provider->register();
 
-    $provider instanceof FoundationThemeServiceProvider
-        ? $provider->boot()
-        : $provider->boot(resolve(ThemeRegistry::class));
+    app()->call([$provider, 'boot'], ['themeRegistry' => resolve(ThemeRegistry::class)]);
 
     themeFrontendRegisterStringRendererForTheme($themeKey);
 }
@@ -162,7 +160,8 @@ function themeFrontendRegisterFixtureAdapter(string $themeKey): void
                 $page = Frontend::page();
                 $renderData = is_array($page?->meta) ? data_get($page->meta, 'theme_frontend.render_data', []) : [];
                 $renderData = is_array($renderData) ? $renderData : [];
-                $title = (string) data_get($renderData, 'title', $page?->name ?? 'Theme Route Smoke');
+
+                $title = (string) data_get($renderData, 'title', $page->name ?? 'Theme Route Smoke');
 
                 return new ThemePageData(
                     title: $title,

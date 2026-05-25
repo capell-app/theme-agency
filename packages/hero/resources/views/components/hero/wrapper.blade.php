@@ -4,7 +4,7 @@
     'carouselAlign' => 'center',
     'carouselArrows' => false,
     // kept old name for backward compatibility but prefer carouselButtonClass
-    'carouselArrowClass' => 'hover:text-primary focus:text-primary absolute bottom-0 top-0 flex w-10 cursor-pointer items-center justify-center text-center hover:bg-white/50 disabled:opacity-50',
+    'carouselArrowClass' => 'hover:text-primary focus:text-primary absolute top-0 bottom-0 flex w-10 cursor-pointer items-center justify-center text-center hover:bg-white/50 disabled:opacity-50',
     'carouselButtonClass' => null,
     'carouselAutoPlay' => false,
     'carouselAutoDelay' => 8000,
@@ -86,7 +86,7 @@
 
             @if ($carouselPagination)
                 <div
-                    class="swiper-pagination absolute bottom-8 left-0 right-0 z-10 flex select-none justify-center"
+                    class="swiper-pagination absolute right-0 bottom-8 left-0 z-10 flex justify-center select-none"
                     wire:ignore
                 ></div>
             @endif

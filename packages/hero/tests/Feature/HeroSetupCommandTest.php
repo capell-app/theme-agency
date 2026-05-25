@@ -6,7 +6,7 @@ use Capell\Core\Enums\LayoutEnum;
 use Capell\Core\Models\Layout;
 use Capell\Core\Models\Page;
 use Capell\Core\Support\Creator\LayoutCreator;
-use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\Widget;
 
 it('installs compact natural home hero defaults', function (): void {
     resolve(LayoutCreator::class)->setup();
@@ -25,12 +25,12 @@ it('installs compact natural home hero defaults', function (): void {
         ])
         ->create(['name' => 'Home']);
 
-    Block::query()->where('key', 'hero')->delete();
+    Widget::query()->where('key', 'hero')->delete();
 
     test()->artisan('capell:hero-setup')->assertSuccessful();
 
     $homeLayout = Layout::query()->where('key', LayoutEnum::Home->value)->firstOrFail();
-    $heroBlock = Block::query()->where('key', 'hero')->firstOrFail();
+    $heroBlock = Widget::query()->where('key', 'hero')->firstOrFail();
 
     capell_expect(array_keys($homeLayout->containers))->toBe(['hero', 'main'])
         ->and($homeLayout->containers['hero']['blocks'])->toBe([
@@ -61,7 +61,7 @@ it('does not duplicate hero defaults on repeated setup', function (): void {
         ->firstOrFail()
         ->update(['containers' => [], 'blocks' => []]);
 
-    Block::query()->where('key', 'hero')->delete();
+    Widget::query()->where('key', 'hero')->delete();
 
     test()->artisan('capell:hero-setup')->assertSuccessful();
     test()->artisan('capell:hero-setup')->assertSuccessful();
@@ -70,5 +70,5 @@ it('does not duplicate hero defaults on repeated setup', function (): void {
 
     capell_expect(array_keys($homeLayout->containers))->toBe(['hero', 'main'])
         ->and($homeLayout->blocks)->toBe(['hero', 'page-content'])
-        ->and(Block::query()->where('key', 'hero')->count())->toBe(1);
+        ->and(Widget::query()->where('key', 'hero')->count())->toBe(1);
 });

@@ -5,12 +5,12 @@
         <div class="grid gap-6 lg:grid-cols-[0.72fr_1.28fr] lg:gap-8">
             <div>
                 <p
-                    class="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-primary)] dark:text-[var(--theme-accent)]"
+                    class="mb-3 text-xs font-semibold tracking-[0.16em] text-[var(--theme-primary)] uppercase dark:text-[var(--theme-accent)]"
                 >
                     Features
                 </p>
                 <h2
-                    class="max-w-lg text-2xl font-semibold leading-tight text-slate-950 sm:text-3xl lg:text-4xl dark:text-white"
+                    class="max-w-lg text-2xl leading-tight font-semibold text-slate-950 sm:text-3xl lg:text-4xl dark:text-white"
                 >
                     {{ $section->heading }}
                 </h2>

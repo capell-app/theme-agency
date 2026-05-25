@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Comments\Actions;
 
+use Capell\Blog\Models\Article;
 use Capell\Comments\Data\CommentableTypeData;
 use Capell\Comments\Support\CommentableRegistry;
 use Capell\Core\Facades\CapellCore;
@@ -28,7 +29,7 @@ class RegisterDefaultCommentablesAction
             visibilityResolver: static fn (Model $model): bool => method_exists($model, 'isPublished') ? (bool) $model->isPublished() : true,
         ));
 
-        $articleClass = 'Capell\\Blog\\Models\\Article';
+        $articleClass = Article::class;
         if (! class_exists($articleClass) || ! CapellCore::isPackageInstalled('capell-app/blog')) {
             return;
         }

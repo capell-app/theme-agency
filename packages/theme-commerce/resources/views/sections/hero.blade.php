@@ -9,7 +9,7 @@
         <div>
             @if ($section->eyebrow ?? null)
                 <p
-                    class="mb-5 inline-flex rounded-full border border-[#e86f5c]/25 bg-white px-3 py-1 text-xs font-black uppercase tracking-widest text-[#1f5f4a]"
+                    class="mb-5 inline-flex rounded-full border border-[#e86f5c]/25 bg-white px-3 py-1 text-xs font-black tracking-widest text-[#1f5f4a] uppercase"
                 >
                     {{ $section->eyebrow }}
                 </p>

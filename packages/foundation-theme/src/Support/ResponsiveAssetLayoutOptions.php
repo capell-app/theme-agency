@@ -6,7 +6,7 @@ namespace Capell\FoundationTheme\Support;
 
 use Capell\Core\Models\Blueprint;
 use Capell\LayoutBuilder\Enums\ResponsiveLayoutPattern;
-use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\Widget;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\HtmlString;
@@ -40,7 +40,7 @@ class ResponsiveAssetLayoutOptions
         public readonly string $carouselAlign,
     ) {}
 
-    public static function fromBlock(Block $block, int $total): self
+    public static function fromBlock(Widget $block, int $total): self
     {
         $legacyColumns = (int) self::meta($block, 'columns');
         $fallbackColumns = $legacyColumns > 0 ? $legacyColumns : max(1, min($total, 4));
@@ -170,7 +170,7 @@ HTML);
     /**
      * @param  array<int, string>  $keys
      */
-    private static function hasAnyMeta(Block $block, array $keys): bool
+    private static function hasAnyMeta(Widget $block, array $keys): bool
     {
         foreach ($keys as $key) {
             if (self::meta($block, $key) !== null) {
@@ -181,7 +181,7 @@ HTML);
         return false;
     }
 
-    private static function intMeta(Block $block, string $key, int $default, int $min, int $max): int
+    private static function intMeta(Widget $block, string $key, int $default, int $min, int $max): int
     {
         $value = self::meta($block, $key, $default);
         $value = is_numeric($value) ? (int) $value : $default;
@@ -189,7 +189,7 @@ HTML);
         return min($max, max($min, $value));
     }
 
-    private static function floatMeta(Block $block, string $key, float $default, float $min, float $max): float
+    private static function floatMeta(Widget $block, string $key, float $default, float $min, float $max): float
     {
         $value = self::meta($block, $key, $default);
         $value = is_numeric($value) ? (float) $value : $default;
@@ -197,7 +197,7 @@ HTML);
         return min($max, max($min, $value));
     }
 
-    private static function meta(Block $block, string $key, mixed $default = null): mixed
+    private static function meta(Widget $block, string $key, mixed $default = null): mixed
     {
         $meta = $block->meta ?? [];
 

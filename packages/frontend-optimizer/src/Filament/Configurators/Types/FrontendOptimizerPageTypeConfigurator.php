@@ -14,9 +14,11 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs\Tab;
+use Override;
 
 final class FrontendOptimizerPageTypeConfigurator extends PageBlueprintConfigurator
 {
+    #[Override]
     protected function frontendTab(): Tab
     {
         return Tab::make(__('capell-admin::generic.frontend'))

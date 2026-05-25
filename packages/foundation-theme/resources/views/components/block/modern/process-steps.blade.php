@@ -8,7 +8,7 @@
 ])
 
 @php
-    $responsiveGrid = '!flex snap-x gap-4 !overflow-x-auto pb-3 [scrollbar-width:none] md:!grid md:!overflow-visible md:pb-0 [&::-webkit-scrollbar]:hidden';
+    $responsiveGrid = '!flex snap-x [scrollbar-width:none] gap-4 !overflow-x-auto pb-3 md:!grid md:!overflow-visible md:pb-0 [&::-webkit-scrollbar]:hidden';
 @endphp
 
 <x-capell-foundation-theme::block.wrapper
@@ -41,7 +41,7 @@
         @if ($layout === 'horizontal')
             <div class="relative mx-auto max-w-5xl">
                 <div
-                    class="absolute left-0 right-0 top-12 hidden h-px bg-stone-200 md:block"
+                    class="absolute top-12 right-0 left-0 hidden h-px bg-stone-200 md:block"
                 ></div>
 
                 <div class="{{ $responsiveGrid }} md:grid-cols-4 md:gap-6">
@@ -66,7 +66,7 @@
                                     @endif
                                 </div>
                                 <div
-                                    class="absolute -right-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full bg-stone-800 text-xs font-bold text-white"
+                                    class="absolute -top-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-stone-800 text-xs font-bold text-white"
                                 >
                                     {{ $loop->index + 1 }}
                                 </div>
@@ -110,7 +110,7 @@
                                 <span class="text-2xl">{{ $icon }}</span>
                             @endif
                             <div
-                                class="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white"
+                                class="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white"
                             >
                                 {{ $loop->index + 1 }}
                             </div>

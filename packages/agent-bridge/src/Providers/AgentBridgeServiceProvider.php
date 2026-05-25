@@ -72,7 +72,7 @@ final class AgentBridgeServiceProvider extends ServiceProvider
         $this->registerTaggedCapabilityProviders();
     }
 
-    protected function isPackageInstalled(): bool
+    private function isPackageInstalled(): bool
     {
         if (! class_exists(CapellCore::class)) {
             return true;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Newsletter\Models;
 
 use Capell\Core\Models\Site;
+use Capell\FormBuilder\Models\Form;
 use Capell\Newsletter\Enums\ConfirmationMode;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -84,6 +85,6 @@ class FormMapping extends Model
     /** @return class-string<Model> */
     private function formModelClass(): string
     {
-        return 'Capell\\FormBuilder\\Models\\Form';
+        return Form::class;
     }
 }

@@ -32,16 +32,14 @@ class PageMarkdownController extends BaseController
 {
     public function __invoke(Request $request, ?string $url = null): Response
     {
-        $response = $this->render($request, $url, requireAcceptMarkdownEnabled: false, abortWhenUnavailable: true);
-
-        return $response;
+        return $this->render($request, $url, requireAcceptMarkdownEnabled: false, abortWhenUnavailable: true);
     }
 
     public function forAcceptHeader(Request $request): ?Response
     {
         $response = $this->render($request, null, requireAcceptMarkdownEnabled: true, abortWhenUnavailable: false);
 
-        if ($response->getStatusCode() === 404 && $response->getContent() === '') {
+        if ($response->getStatusCode() === \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND && $response->getContent() === '') {
             return null;
         }
 

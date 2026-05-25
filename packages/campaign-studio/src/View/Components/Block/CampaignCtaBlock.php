@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Capell\CampaignStudio\View\Components\Block;
 
 use Capell\CampaignStudio\Models\CampaignCtaBlock as CampaignCtaBlockModel;
-use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\Widget;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
@@ -25,7 +25,7 @@ class CampaignCtaBlock extends Component
         public string $containerKey,
         public int $blockIndex,
         public stdClass $loop,
-        public Block $block,
+        public Widget $block,
         public array $blockData = [],
         public ?int $containerIndex = null,
         public ?int $containerWidth = null,
@@ -39,12 +39,12 @@ class CampaignCtaBlock extends Component
     }
 
     /**
-     * @param  Collection<int, Block>  $blocks
+     * @param  Collection<int, Widget>  $blocks
      */
     public static function hydrateBlocks(Collection $blocks): void
     {
         $ctaBlockIds = $blocks
-            ->map(fn (Block $block): mixed => $block->getMeta('cta_block_id'))
+            ->map(fn (Widget $block): mixed => $block->getMeta('cta_block_id'))
             ->filter(fn (mixed $id): bool => is_numeric($id))
             ->map(fn (mixed $id): int => (int) $id)
             ->unique()
@@ -59,7 +59,7 @@ class CampaignCtaBlock extends Component
             ->get()
             ->keyBy(fn (CampaignCtaBlockModel $ctaBlock): int => (int) $ctaBlock->getKey());
 
-        $blocks->each(function (Block $block) use ($ctaBlocks): void {
+        $blocks->each(function (Widget $block) use ($ctaBlocks): void {
             $ctaBlockId = $block->getMeta('cta_block_id');
 
             $block->setRelation(

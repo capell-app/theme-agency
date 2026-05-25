@@ -39,7 +39,7 @@
                         </div>
                     </div>
                     <span
-                        class="shrink-0 text-sm font-medium tabular-nums text-gray-700 dark:text-gray-300"
+                        class="shrink-0 text-sm font-medium text-gray-700 tabular-nums dark:text-gray-300"
                     >
                         {{ $data->cachedCount }} / {{ $total }} &mdash;
                         {{ $pct }}%
@@ -109,7 +109,7 @@
                 <button
                     wire:click="warmCache"
                     wire:loading.attr="disabled"
-                    class="bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white shadow-sm transition focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 dark:focus:ring-offset-gray-900"
+                    class="bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white shadow-sm transition focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:opacity-60 dark:focus:ring-offset-gray-900"
                 >
                     <span wire:loading.remove wire:target="warmCache">
                         Warm cache

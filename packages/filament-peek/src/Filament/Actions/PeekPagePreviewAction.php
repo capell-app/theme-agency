@@ -27,20 +27,18 @@ final class PeekPagePreviewAction extends Action
             ->color('gray')
             ->authorize(fn (Page $record): bool => Gate::allows('update', $record))
             ->visible(fn (): bool => CapellCore::isPackageInstalled(FilamentPeekServiceProvider::$packageName))
-            ->action(function (): void {
-                Peek::ensurePluginIsLoaded();
-            })
-            ->dispatch('open-preview-modal', function (Page $record, EditPage $livewire): array {
+            ->action(function (Page $record, EditPage $livewire): void {
                 $snapshot = CreatePagePreviewSnapshotAction::run(
                     page: $record,
                     formState: $this->formState($livewire),
                 );
 
-                return [
-                    'modalTitle' => __('capell-filament-peek::actions.preview.modal_title'),
-                    'iframeUrl' => $snapshot['url'],
-                    'iframeContent' => null,
-                ];
+                $livewire->dispatch(
+                    'open-preview-modal',
+                    modalTitle: __('capell-filament-peek::actions.preview.modal_title'),
+                    iframeUrl: $snapshot['url'],
+                    iframeContent: null,
+                );
             });
 
         Peek::registerPreviewModal();
@@ -56,8 +54,6 @@ final class PeekPagePreviewAction extends Action
      */
     private function formState(EditPage $livewire): array
     {
-        $state = $livewire->data ?? [];
-
-        return $state;
+        return $livewire->data ?? [];
     }
 }

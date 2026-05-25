@@ -6,8 +6,8 @@ namespace Capell\FoundationTheme\Actions;
 
 use Capell\Core\Contracts\Pageable;
 use Capell\FoundationTheme\Data\BlockAssetRenderData;
-use Capell\LayoutBuilder\Models\Block;
-use Capell\LayoutBuilder\Models\BlockAsset;
+use Capell\LayoutBuilder\Models\Widget;
+use Capell\LayoutBuilder\Models\WidgetAsset;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsObject;
@@ -19,7 +19,7 @@ final class BuildHeroRailItemsRenderDataAction
     /**
      * @return Collection<int, BlockAssetRenderData>
      */
-    public function handle(Block $block, ?Pageable $page, string $source, int $limit = 4): Collection
+    public function handle(Widget $block, ?Pageable $page, string $source, int $limit = 4): Collection
     {
         $blockAssets = $this->loadedAssets($block);
         $pageAssets = in_array($source, ['page', 'mixed'], true)
@@ -33,8 +33,8 @@ final class BuildHeroRailItemsRenderDataAction
         };
 
         return $assets
-            ->filter(static fn (mixed $asset): bool => $asset instanceof BlockAsset)
-            ->map(static fn (BlockAsset $asset): BlockAssetRenderData => BuildBlockAssetRenderDataAction::run($asset))
+            ->filter(static fn (mixed $asset): bool => $asset instanceof WidgetAsset)
+            ->map(static fn (WidgetAsset $asset): BlockAssetRenderData => BuildBlockAssetRenderDataAction::run($asset))
             ->take(max(0, $limit))
             ->values();
     }
@@ -64,7 +64,7 @@ final class BuildHeroRailItemsRenderDataAction
 
         return $this->loadedAssets($page)
             ->filter(function (mixed $attachment): bool {
-                if (! $attachment instanceof BlockAsset) {
+                if (! $attachment instanceof WidgetAsset) {
                     return false;
                 }
 

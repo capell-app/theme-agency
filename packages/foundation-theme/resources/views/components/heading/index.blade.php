@@ -5,7 +5,7 @@
 <{{ $tag }}
     {{
         $attributes->class([
-            'heading font-heading text-balance font-semibold',
+            'heading font-heading font-semibold text-balance',
             'text-xl 2xl:text-2xl' => ! $size,
             'prose-h1' => $size === 'h1',
             'prose-h2' => $size === 'h2',

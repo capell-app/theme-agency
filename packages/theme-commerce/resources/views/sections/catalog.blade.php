@@ -24,7 +24,7 @@
 
         <div class="retail-frame bg-[#17211c] p-6 text-white">
             <p
-                class="text-xs font-black uppercase tracking-widest text-[#e86f5c]"
+                class="text-xs font-black tracking-widest text-[#e86f5c] uppercase"
             >
                 {{ $shopifyAvailable ? __('capell-theme-commerce::generic.shopify_ready') : __('capell-theme-commerce::generic.catalog_ready') }}
             </p>

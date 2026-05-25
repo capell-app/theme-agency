@@ -33,7 +33,7 @@ class BuildPublicThreadAction
                 fn (Builder $query): Builder => $query->where('language_id', (int) $commentable->getAttribute('language_id')),
             )
             ->whereNull('parent_id')
-            ->orderBy('submitted_at')
+            ->oldest('submitted_at')
             ->limit(max(1, $rootLimit))
             ->get();
 
@@ -59,7 +59,7 @@ class BuildPublicThreadAction
                     ->whereIn('id', $rootIds)
                     ->orWhereIn('root_id', $rootIds);
             })
-            ->orderBy('submitted_at')
+            ->oldest('submitted_at')
             ->get();
 
         $byParent = $comments->groupBy(fn (Comment $comment): int => (int) ($comment->parent_id ?? 0));

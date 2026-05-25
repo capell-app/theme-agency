@@ -81,8 +81,8 @@ it('caches public theme route output without authoring surface', function (): vo
     $firstResponse->assertOk();
     $secondResponse->assertOk();
 
-    expect($firstResponse->headers->get('X-Frontend-Cache'))->toBe('MISS')
-        ->and($secondResponse->headers->get('X-Frontend-Cache'))->toBe('HIT')
+    expect($firstResponse->baseResponse->headers->get('X-Frontend-Cache'))->toBe('MISS')
+        ->and($secondResponse->baseResponse->headers->get('X-Frontend-Cache'))->toBe('HIT')
         ->and($secondResponse->getContent())->toContain('Theme route smoke CTA');
 
     assertThemeFrontendPublicHtmlIsSafe($secondResponse);

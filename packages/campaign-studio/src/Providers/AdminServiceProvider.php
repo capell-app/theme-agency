@@ -54,7 +54,7 @@ final class AdminServiceProvider extends ServiceProvider
             ->registerMarketingStudioActions();
     }
 
-    protected function isPackageInstalled(): bool
+    private function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(CampaignStudioServiceProvider::$packageName);
     }

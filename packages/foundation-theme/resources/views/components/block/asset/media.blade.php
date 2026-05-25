@@ -48,7 +48,7 @@
         @if ($block->assets->isNotEmpty())
             <div
                 @class([
-                    'grid grid-cols-2 2xl:container md:grid-cols-3',
+                    'grid grid-cols-2 md:grid-cols-3 2xl:container',
                     'gap-2' => $spacing === 'sm',
                     'gap-4' => $spacing === 'md',
                     'gap-6' => $spacing === 'lg',

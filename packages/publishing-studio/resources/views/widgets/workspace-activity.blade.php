@@ -36,7 +36,7 @@
             @else
                 <div>
                     <div
-                        class="mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-400"
+                        class="mb-1.5 text-xs font-semibold tracking-wide text-gray-400 uppercase"
                     >
                         Recent merges
                     </div>

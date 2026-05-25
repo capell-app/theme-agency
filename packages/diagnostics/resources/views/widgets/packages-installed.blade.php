@@ -16,37 +16,37 @@
                             class="border-b border-gray-200 dark:border-gray-700"
                         >
                             <th
-                                class="pb-2 pr-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                                class="pr-4 pb-2 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400"
                             >
                                 {{ __('capell-diagnostics::package.packages_installed_package') }}
                             </th>
                             <th
-                                class="pb-2 pr-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                                class="pr-4 pb-2 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400"
                             >
                                 {{ __('capell-diagnostics::package.packages_installed_version') }}
                             </th>
                             <th
-                                class="pb-2 pr-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                                class="pr-4 pb-2 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400"
                             >
                                 {{ __('capell-diagnostics::package.packages_installed_bundle') }}
                             </th>
                             <th
-                                class="pb-2 pr-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                                class="pr-4 pb-2 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400"
                             >
                                 {{ __('capell-diagnostics::package.packages_installed_config_published') }}
                             </th>
                             <th
-                                class="pb-2 pr-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                                class="pr-4 pb-2 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400"
                             >
                                 {{ __('capell-diagnostics::package.packages_installed_health') }}
                             </th>
                             <th
-                                class="pb-2 pr-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                                class="pr-4 pb-2 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400"
                             >
                                 {{ __('capell-diagnostics::package.packages_installed_commands') }}
                             </th>
                             <th
-                                class="pb-2 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400"
+                                class="pb-2 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400"
                             >
                                 {{ __('capell-diagnostics::package.packages_installed_docs') }}
                             </th>

@@ -63,8 +63,6 @@ final class InspectPagePublishingReadinessCapabilityAction implements CapellAgen
     /** @return class-string<Model> */
     private function pageClass(): string
     {
-        $pageClass = Page::class;
-
-        return $pageClass;
+        return Page::class;
     }
 }

@@ -57,6 +57,7 @@ use Illuminate\Database\Eloquent\Model;
 class PageUrl extends Model {}
 
 /**
+ * @property int $language_id
  * @property-read Collection<int, \Capell\Core\Models\Language> $languages
  * @property-read Collection<int, Model> $navigations
  * @property-read Language|null $language
@@ -97,6 +98,9 @@ class Translation extends Model {}
  * @property-read PageUrl|null $pageUrl
  * @property-read Translation|null $translation
  * @property-read Collection<int, Model> $translations
+ *
+ * @method \Illuminate\Database\Eloquent\Relations\MorphMany<Model, self> widgetAssets()
+ * @method \Illuminate\Database\Eloquent\Relations\MorphToMany<Model, self> widgets()
  */
 class Page extends Model
 {
@@ -218,6 +222,7 @@ interface Pageable
 
     public function site(): mixed;
 }
+
 
 namespace Capell\Core\Models\Contracts;
 

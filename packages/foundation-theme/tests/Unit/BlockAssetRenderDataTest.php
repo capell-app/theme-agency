@@ -10,8 +10,8 @@ use Capell\Core\Models\Translation;
 use Capell\FoundationTheme\Actions\BuildBlockAssetRenderDataAction;
 use Capell\FoundationTheme\Actions\BuildHeroRailItemsRenderDataAction;
 use Capell\FoundationTheme\Actions\BuildPageContentRenderDataAction;
-use Capell\LayoutBuilder\Models\Block;
-use Capell\LayoutBuilder\Models\BlockAsset;
+use Capell\LayoutBuilder\Models\Widget;
+use Capell\LayoutBuilder\Models\WidgetAsset;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -54,7 +54,7 @@ it('builds block asset render data from loaded relations only', function (): voi
     $asset->setRelation('translation', $translation);
     $asset->setRelation('linkedPage', $linkedPage);
 
-    $blockAsset = new BlockAsset(['asset_type' => Page::class]);
+    $blockAsset = new WidgetAsset(['asset_type' => Page::class]);
     $blockAsset->setRelation('asset', $asset);
 
     DB::enableQueryLog();
@@ -100,8 +100,8 @@ it('builds page content render data from loaded relations only', function (): vo
 });
 
 it('builds hero rail items from loaded explicit hero assets only', function (): void {
-    $block = new Block;
-    $blockAsset = heroRailBlockAsset('block-card', 'Block card');
+    $block = new Widget;
+    $blockAsset = heroRailBlockAsset('block-card', 'Widget card');
     $page = new Page;
     $pageHeroAsset = heroRailBlockAsset('hero-card', 'Hero card');
     $pageGenericAsset = heroRailBlockAsset('card', 'Generic card');
@@ -119,15 +119,15 @@ it('builds hero rail items from loaded explicit hero assets only', function (): 
         ->and($pageItems[0]->caption)->toBe('Hero card')
         ->and($mixedItems)->toHaveCount(2)
         ->and($mixedItems[0]->caption)->toBe('Hero card')
-        ->and($mixedItems[1]->caption)->toBe('Block card')
+        ->and($mixedItems[1]->caption)->toBe('Widget card')
         ->and($blockItems)->toHaveCount(1)
-        ->and($blockItems[0]->caption)->toBe('Block card')
+        ->and($blockItems[0]->caption)->toBe('Widget card')
         ->and(DB::getQueryLog())->toBe([]);
 
     DB::disableQueryLog();
 });
 
-function heroRailBlockAsset(string $role, string $caption): BlockAsset
+function heroRailBlockAsset(string $role, string $caption): WidgetAsset
 {
     $asset = new class extends Model
     {
@@ -148,7 +148,7 @@ function heroRailBlockAsset(string $role, string $caption): BlockAsset
         ],
     ]);
 
-    $blockAsset = new BlockAsset(['asset_type' => Page::class]);
+    $blockAsset = new WidgetAsset(['asset_type' => Page::class]);
     $blockAsset->setRelation('asset', $asset);
 
     return $blockAsset;

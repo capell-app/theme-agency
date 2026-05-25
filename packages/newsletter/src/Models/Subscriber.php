@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Newsletter\Models;
 
 use Capell\Core\Models\Site;
+use Capell\FormBuilder\Models\Form;
 use Capell\Newsletter\Database\Factories\SubscriberFactory;
 use Capell\Newsletter\Enums\SubscriberStatus;
 use Carbon\CarbonInterface;
@@ -157,6 +158,6 @@ class Subscriber extends Model
     /** @return class-string<Model> */
     private function formModelClass(): string
     {
-        return 'Capell\\FormBuilder\\Models\\Form';
+        return Form::class;
     }
 }

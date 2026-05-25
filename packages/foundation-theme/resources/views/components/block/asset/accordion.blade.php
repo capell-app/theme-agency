@@ -4,7 +4,7 @@
     use Capell\Core\Models\Page;
     use Capell\FoundationTheme\Actions\BuildBlockAssetRenderDataAction;
     use Capell\Frontend\Facades\Frontend;
-    use Capell\LayoutBuilder\Models\BlockAsset;
+    use Capell\LayoutBuilder\Models\WidgetAsset;
 
     $site = Frontend::site();
     $theme = Frontend::theme();
@@ -59,7 +59,7 @@
                 @foreach ($block->assets as $blockAsset)
                     {{-- format-ignore-start --}}
                 @php
-                    /** @var BlockAsset $blockAsset */
+                    /** @var WidgetAsset $blockAsset */
 
                     $assetRenderData = BuildBlockAssetRenderDataAction::run($blockAsset);
                     $image = $assetRenderData->image;
@@ -98,7 +98,7 @@
                             "
                             class="relative max-h-0 overflow-hidden transition-all duration-700"
                         >
-                            <div class="ml-4 px-1 pr-4 pt-1">
+                            <div class="ml-4 px-1 pt-1 pr-4">
                                 <div class="flex gap-6">
                                     @if ($assetRenderData->content)
                                         <x-capell::content

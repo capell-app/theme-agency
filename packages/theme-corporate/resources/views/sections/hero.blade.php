@@ -11,11 +11,11 @@
     class="theme-hero border-b border-slate-200/80 bg-[#f7f8f6] dark:border-white/10 dark:bg-slate-950"
 >
     <div
-        class="lg:py-18 mx-auto grid max-w-7xl items-end gap-5 px-4 py-6 sm:px-6 sm:py-10 md:py-14 lg:grid-cols-[0.88fr_1.12fr] lg:gap-10"
+        class="mx-auto grid max-w-7xl items-end gap-5 px-4 py-6 sm:px-6 sm:py-10 md:py-14 lg:grid-cols-[0.88fr_1.12fr] lg:gap-10 lg:py-18"
     >
         <div class="space-y-4 sm:space-y-5">
             <div
-                class="flex flex-wrap items-center gap-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400"
+                class="flex flex-wrap items-center gap-2 text-[0.68rem] font-semibold tracking-[0.16em] text-slate-500 uppercase dark:text-slate-400"
             >
                 <span
                     class="text-[var(--theme-primary)] dark:text-[var(--theme-accent)]"
@@ -30,7 +30,7 @@
             </div>
 
             <h1
-                class="max-w-4xl text-4xl font-semibold leading-none text-slate-950 sm:text-5xl lg:text-7xl dark:text-white"
+                class="max-w-4xl text-4xl leading-none font-semibold text-slate-950 sm:text-5xl lg:text-7xl dark:text-white"
             >
                 {{ $section->heading }}
             </h1>
@@ -59,7 +59,7 @@
             >
                 <div>
                     <dt
-                        class="font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500"
+                        class="font-semibold tracking-[0.12em] text-slate-400 uppercase dark:text-slate-500"
                     >
                         Pages
                     </dt>
@@ -71,7 +71,7 @@
                 </div>
                 <div>
                     <dt
-                        class="font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500"
+                        class="font-semibold tracking-[0.12em] text-slate-400 uppercase dark:text-slate-500"
                     >
                         Media
                     </dt>
@@ -83,7 +83,7 @@
                 </div>
                 <div>
                     <dt
-                        class="font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500"
+                        class="font-semibold tracking-[0.12em] text-slate-400 uppercase dark:text-slate-500"
                     >
                         Layout
                     </dt>
@@ -104,7 +104,7 @@
                     class="aspect-[16/10] max-h-[18rem] w-full rounded-[0.35rem] object-cover sm:aspect-[5/4] sm:max-h-none"
                 />
                 <figcaption
-                    class="mt-2 flex items-center justify-between gap-3 text-[0.68rem] uppercase tracking-[0.14em] text-slate-500 sm:mt-3 sm:gap-4 sm:text-xs sm:tracking-[0.16em] dark:text-slate-400"
+                    class="mt-2 flex items-center justify-between gap-3 text-[0.68rem] tracking-[0.14em] text-slate-500 uppercase sm:mt-3 sm:gap-4 sm:text-xs sm:tracking-[0.16em] dark:text-slate-400"
                 >
                     <span>{{ $section->mediaAlt ?? $section->heading }}</span>
                     <span

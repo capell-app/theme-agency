@@ -49,7 +49,7 @@ use Capell\FoundationTheme\View\Components\Footer\LatestPages;
 use Capell\FoundationTheme\View\Components\Layout\Index;
 use Capell\FoundationTheme\View\Components\Layout\Main;
 use Capell\Frontend\Support\State\FrontendState;
-use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Support\Livewire\OpaqueBlockReference;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\ColorPicker;
@@ -147,7 +147,7 @@ it('runs foundation tailwind command report generate and package-change listener
 });
 
 it('builds banner image render data for empty and rounded blocks', function (): void {
-    $block = new Block;
+    $block = new Widget;
     $block->meta = ['actions' => [['label' => 'Start']]];
 
     $data = BuildBannerImageRenderDataAction::run(
@@ -245,10 +245,10 @@ it('fills foundation theme defaults without overwriting existing theme meta', fu
 });
 
 it('covers small foundation layout helper actions', function (): void {
-    $slotBlock = new Block;
+    $slotBlock = new Widget;
     $slotBlock->meta = ['type' => 'slot', 'name' => 'Sidebar'];
 
-    $plainBlock = new Block;
+    $plainBlock = new Widget;
     $plainBlock->meta = [];
 
     MarkPrimaryHeadingRenderedAction::run();
@@ -260,7 +260,7 @@ it('covers small foundation layout helper actions', function (): void {
 it('skips empty asset blocks without touching frontend context', function (string $componentClass): void {
     config(['capell-layout-builder.block.skip_render_empty' => true]);
 
-    $block = new Block;
+    $block = new Widget;
     $block->setRelation('assets', collect());
 
     $component = new $componentClass(
@@ -379,7 +379,7 @@ it('skips empty navigation and page listing blocks without public markup', funct
         ->withLayout($layout)
         ->withPage($page);
 
-    $block = Block::factory()->create([
+    $block = Widget::factory()->create([
         'key' => 'coverage-block',
         'meta' => [],
     ]);
@@ -415,7 +415,7 @@ it('renders page content and layout components from frontend context', function 
         ->withLayout($layout)
         ->withPage($page);
 
-    $block = Block::factory()->create([
+    $block = Widget::factory()->create([
         'key' => 'content-block',
         'meta' => [],
     ]);
@@ -537,7 +537,7 @@ it('builds page asset table queries with scoped exclusions', function (): void {
 it('hydrates livewire page blocks from opaque references and skips empty selections', function (): void {
     [$language, $site, $theme, $layout, $page] = foundationThemeCoverageFrontendContext();
 
-    $block = Block::factory()->create([
+    $block = Widget::factory()->create([
         'key' => 'livewire-pages',
         'meta' => [
             'pagination' => true,

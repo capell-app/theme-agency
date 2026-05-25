@@ -7,7 +7,10 @@ namespace Capell\AgentDelivery\Http\Controllers;
 use Capell\AgentDelivery\Actions\ResolveAgentDeliveryPageAction;
 use Capell\AgentDelivery\Data\ResolvedAgentDeliveryPageData;
 use Capell\AgentDelivery\Providers\AgentDeliveryServiceProvider;
+use Capell\Core\Contracts\Pageable;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\Models\Language;
+use Capell\Core\Models\Site;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -56,15 +59,15 @@ final class PageManifestController
     {
         $tags = ['agent-delivery'];
 
-        if ($resolved->site !== null) {
+        if ($resolved->site instanceof Site) {
             $tags[] = 'site:' . $resolved->site->getKey();
         }
 
-        if ($resolved->language !== null) {
+        if ($resolved->language instanceof Language) {
             $tags[] = 'language:' . $resolved->language->getKey();
         }
 
-        if ($resolved->page !== null) {
+        if ($resolved->page instanceof Pageable) {
             $tags[] = 'page:' . $resolved->page->getKey();
         }
 

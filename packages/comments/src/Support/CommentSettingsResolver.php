@@ -49,7 +49,7 @@ class CommentSettingsResolver
     {
         try {
             /** @var CommentSettings $settings */
-            $settings = app(CommentSettings::class);
+            $settings = resolve(CommentSettings::class);
         } catch (Throwable) {
             return $fallback;
         }

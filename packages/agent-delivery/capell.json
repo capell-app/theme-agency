@@ -22,7 +22,9 @@
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": ["Capell\\AgentDelivery\\Providers\\AgentDeliveryServiceProvider"],
+        "runtime": [
+            "Capell\\AgentDelivery\\Providers\\AgentDeliveryServiceProvider"
+        ],
         "admin": [],
         "frontend": []
     },
@@ -40,7 +42,11 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["agent-delivery", "public-page-manifest", "public-page-chunks"],
+    "capabilities": [
+        "agent-delivery",
+        "public-page-manifest",
+        "public-page-chunks"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
@@ -52,7 +58,13 @@
             "invalidationSources": [
                 {
                     "model": "Capell\\Core\\Models\\Page",
-                    "events": ["created", "updated", "deleted", "restored", "forceDeleted"]
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
                 }
             ],
             "queueInvalidation": true
@@ -71,6 +83,10 @@
         "categories": ["frontend", "publishing-pro", "ai"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["route", "public-api-endpoint", "agent-delivery-contract"]
+        "deferredContributions": [
+            "route",
+            "public-api-endpoint",
+            "agent-delivery-contract"
+        ]
     }
 }

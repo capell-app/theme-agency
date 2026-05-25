@@ -150,7 +150,7 @@
 
                                     @if ($content)
                                         <blockquote
-                                            class="lg:text-md max-w-2xl italic text-white"
+                                            class="lg:text-md max-w-2xl text-white italic"
                                             itemprop="reviewBody"
                                         >
                                             {!! $content !!}

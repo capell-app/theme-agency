@@ -60,5 +60,5 @@ it('serves hydrated thread markup with no-store cache headers', function (): voi
     $response = $this->get(route('capell-comments.thread', ['thread' => 'opaque-thread-key']))
         ->assertSuccessful();
 
-    expect((string) $response->headers->get('Cache-Control'))->toContain('no-store');
+    expect((string) $response->baseResponse->headers->get('Cache-Control'))->toContain('no-store');
 });

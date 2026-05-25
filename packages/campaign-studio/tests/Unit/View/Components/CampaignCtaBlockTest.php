@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 use Capell\CampaignStudio\Models\CampaignCtaBlock;
 use Capell\CampaignStudio\View\Components\Block\CampaignCtaBlock as CampaignCtaBlockComponent;
-use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\Widget;
 
 it('hydrates CTA blocks for campaign blocks in one batch', function (): void {
     $firstCtaBlock = CampaignCtaBlock::factory()->create(['headline' => 'First CTA']);
     $secondCtaBlock = CampaignCtaBlock::factory()->create(['headline' => 'Second CTA']);
-    $firstBlock = Block::factory()->create(['meta' => ['cta_block_id' => $firstCtaBlock->getKey()]]);
-    $secondBlock = Block::factory()->create(['meta' => ['cta_block_id' => $secondCtaBlock->getKey()]]);
+    $firstBlock = Widget::factory()->create(['meta' => ['cta_block_id' => $firstCtaBlock->getKey()]]);
+    $secondBlock = Widget::factory()->create(['meta' => ['cta_block_id' => $secondCtaBlock->getKey()]]);
 
     CampaignCtaBlockComponent::hydrateBlocks(collect([$firstBlock, $secondBlock]));
 

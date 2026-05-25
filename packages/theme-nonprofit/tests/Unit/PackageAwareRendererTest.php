@@ -22,9 +22,9 @@ it('passes optional package availability into public section renderers', functio
 
     expect($renderer)->not->toBeNull();
 
-    $html = $renderer->render(new class('campaigns') implements ThemeSection
+    $html = $renderer->render(new readonly class('campaigns') implements ThemeSection
     {
-        public function __construct(private readonly string $sectionKey) {}
+        public function __construct(private string $sectionKey) {}
 
         public function key(): string
         {

@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\View\Compilers\BladeCompiler;
+use Override;
 use Spatie\LaravelPackageTools\Package;
 
 class PublicActionsServiceProvider extends AbstractPackageServiceProvider
@@ -84,6 +85,7 @@ class PublicActionsServiceProvider extends AbstractPackageServiceProvider
         });
     }
 
+    #[Override]
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(self::$packageName);

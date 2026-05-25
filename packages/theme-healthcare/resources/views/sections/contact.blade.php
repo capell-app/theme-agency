@@ -17,7 +17,7 @@
                     class="rounded-lg border border-[#d9e8ee] bg-white p-6"
                 >
                     <p
-                        class="text-xs font-black uppercase tracking-widest text-[#2563eb]"
+                        class="text-xs font-black tracking-widest text-[#2563eb] uppercase"
                     >
                         {{ $location['label'] ?? __('capell-theme-healthcare::generic.location') }}
                     </p>

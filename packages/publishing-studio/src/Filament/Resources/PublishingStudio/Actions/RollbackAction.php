@@ -65,10 +65,10 @@ class RollbackAction extends Action
 
                 try {
                     (new Rollback)->rollbackTo($target, $user, (string) ($data['reason'] ?? ''));
-                } catch (Throwable $exception) {
+                } catch (Throwable $throwable) {
                     Notification::make()
                         ->title(__('capell-admin::workspace.notifications.rollback_failed'))
-                        ->body($exception->getMessage())
+                        ->body($throwable->getMessage())
                         ->danger()
                         ->send();
 

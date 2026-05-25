@@ -9,7 +9,7 @@ use Capell\Core\Models\Theme;
 use Capell\Frontend\Support\State\FrontendState;
 use Capell\Hero\View\Components\Block\Hero;
 use Capell\LayoutBuilder\Enums\BlockComponentEnum;
-use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\Widget;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 it('renders page translation hero content while ignoring nested page variables', function (): void {
@@ -38,7 +38,7 @@ it('renders page translation hero content while ignoring nested page variables',
 
     $site->load('translation');
 
-    $block = Block::factory()->create([
+    $block = Widget::factory()->create([
         'key' => 'hero',
         'meta' => [
             'component' => BlockComponentEnum::Hero->value,
@@ -89,7 +89,7 @@ it('skips empty hero blocks before exposing public markup', function (): void {
 
     $site->load('translation');
 
-    $block = Block::factory()->create([
+    $block = Widget::factory()->create([
         'key' => 'hero',
         'meta' => [
             'component' => BlockComponentEnum::Hero->value,
@@ -148,9 +148,10 @@ it('renders the inherited theme hero background without public admin metadata', 
         ->create();
 
     $page->load('translation');
+
     $site->load('translation');
 
-    $block = Block::factory()->create([
+    $block = Widget::factory()->create([
         'key' => 'hero',
         'meta' => [
             'component' => BlockComponentEnum::Hero->value,
@@ -210,9 +211,10 @@ it('allows a hero block to turn the inherited background off', function (): void
         ->create();
 
     $page->load('translation');
+
     $site->load('translation');
 
-    $block = Block::factory()->create([
+    $block = Widget::factory()->create([
         'key' => 'hero',
         'meta' => [
             'component' => BlockComponentEnum::Hero->value,

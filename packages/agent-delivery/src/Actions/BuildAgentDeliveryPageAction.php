@@ -31,7 +31,7 @@ final class BuildAgentDeliveryPageAction
     {
         $body = $this->plainText($fields->content);
         $metadata = array_merge(
-            $this->publicMetadata($page, $fields),
+            $this->publicMetadata($fields),
             $this->registry->metadata($page, $site, $language),
         );
 
@@ -67,10 +67,9 @@ final class BuildAgentDeliveryPageAction
     }
 
     /**
-     * @param  Pageable<Model>  $page
      * @return array<string, mixed>
      */
-    private function publicMetadata(Pageable $page, PublicPageFieldsData $fields): array
+    private function publicMetadata(PublicPageFieldsData $fields): array
     {
         return array_filter([
             'description' => $this->metaString($fields->meta, 'description'),
@@ -94,10 +93,12 @@ final class BuildAgentDeliveryPageAction
         $alternates = [];
 
         foreach ($pageUrls as $pageUrl) {
-            if (! $pageUrl->status || $pageUrl->language === null) {
+            if (! $pageUrl->status) {
                 continue;
             }
-
+            if ($pageUrl->language === null) {
+                continue;
+            }
             $locale = $pageUrl->language->locale ?? $pageUrl->language->code;
             $alternates[$locale] = $pageUrl->full_url;
         }
@@ -170,8 +171,10 @@ final class BuildAgentDeliveryPageAction
             }
 
             $url = $reference['url'] ?? null;
-
-            if (! is_string($url) || ! $this->isPublicUrl($url)) {
+            if (! is_string($url)) {
+                continue;
+            }
+            if (! $this->isPublicUrl($url)) {
                 continue;
             }
 
@@ -195,6 +198,7 @@ final class BuildAgentDeliveryPageAction
 
         $content = preg_replace('/<(script|style)\b[^>]*>.*?<\/\1>/is', '', $content) ?? $content;
         $content = preg_replace('/<[^>]+>/', ' ', $content) ?? $content;
+
         $text = html_entity_decode($content, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $text = preg_replace('/\s+/u', ' ', $text);
 

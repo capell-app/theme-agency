@@ -29,7 +29,7 @@ it('resolves site and commentable settings overrides', function (): void {
 
     app()->instance(CommentSettings::class, $settings);
 
-    $resolver = app(CommentSettingsResolver::class);
+    $resolver = resolve(CommentSettingsResolver::class);
 
     expect($resolver->publicationPolicy(10, 'article'))->toBe(CommentPublicationPolicy::AutoPublish)
         ->and($resolver->maxDepth(10, 'article'))->toBe(1)

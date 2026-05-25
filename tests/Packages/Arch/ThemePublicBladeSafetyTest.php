@@ -24,6 +24,7 @@ it('keeps public theme blade views free of queries and authoring surface', funct
             }
         }
     }
+
     $forbiddenPatterns = [
         '::query(',
         'DB::',

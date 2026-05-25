@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 use Capell\FoundationTheme\Support\ResponsiveAssetLayoutOptions;
 use Capell\LayoutBuilder\Enums\ResponsiveLayoutPattern;
-use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\Widget;
 
 it('resolves configurable grid and carousel layout options from block meta', function (): void {
-    $block = new Block([
+    $block = new Widget([
         'meta' => [
             'responsive_layout_pattern' => ResponsiveLayoutPattern::DesktopGridMobileCarousel->value,
             'responsive_grid_sm_columns' => 2,

@@ -21,6 +21,7 @@ use Capell\ThemeStudio\Saas\Health\ThemeSaasHealthCheck;
 use Capell\ThemeStudio\Saas\Rendering\BlogSectionRenderer;
 use Capell\ThemeStudio\Saas\SaasThemeServiceProvider;
 use Capell\ThemeStudio\Saas\ThemeStudio\Adapters\SaasThemePageAdapter;
+use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
@@ -116,6 +117,16 @@ it('registers premium landing page tailwind assets from the saas theme only when
     expect($packageImports)->toContain('resources/css/theme-saas.css')
         ->and($packageImports)->not->toContain('resources/css/saas-theme.css')
         ->and($packageSources)->toContain('resources/views/**/*.blade.php');
+});
+
+it('keeps the source stylesheet aligned with the public saas renderer selectors', function (): void {
+    $css = file_get_contents(__DIR__ . '/../../resources/css/theme-saas.css');
+
+    expect($css)
+        ->toContain('.saas-shell')
+        ->toContain('.saas-final-cta')
+        ->toContain('.saas-cta')
+        ->not->toContain('.layout-container > .capell-block-homepage-section');
 });
 
 it('registers saas only when the theme package is installed', function (): void {
@@ -252,7 +263,7 @@ it('renders public theme markup without package identifiers', function (): void 
 
 it('renders SaaS blog views when Blog is installed', function (): void {
     View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
-    app('translator')->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
+    resolve(Translator::class)->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
 
     $indexHtml = view('capell-theme-saas::blog.index', [
         'blogAvailable' => true,
@@ -285,7 +296,7 @@ it('renders SaaS blog views when Blog is installed', function (): void {
 
 it('escapes untrusted article body content', function (): void {
     View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
-    app('translator')->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
+    resolve(Translator::class)->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
 
     $html = view('capell-theme-saas::blog.article', [
         'blogAvailable' => true,
@@ -301,7 +312,7 @@ it('escapes untrusted article body content', function (): void {
 
 it('renders marketing-safe blog fallbacks when Blog is not installed', function (): void {
     View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
-    app('translator')->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
+    resolve(Translator::class)->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
 
     $html = view('capell-theme-saas::blog.index', [
         'blogAvailable' => false,
@@ -324,7 +335,7 @@ it('renders marketing-safe blog fallbacks when Blog is not installed', function 
 
 it('passes Blog package availability through the registered section renderer', function (bool $blogInstalled, string $expectedMarkup, string $missingMarkup): void {
     View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
-    app('translator')->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
+    resolve(Translator::class)->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(SaasThemeServiceProvider::$packageName);
     CapellCore::forcePackageInstalled('capell-app/blog', $blogInstalled);
@@ -374,7 +385,7 @@ it('passes Blog package availability through the registered section renderer', f
 
 it('renders public blog views without database queries', function (): void {
     View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
-    app('translator')->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
+    resolve(Translator::class)->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
 
     $queries = [];
 

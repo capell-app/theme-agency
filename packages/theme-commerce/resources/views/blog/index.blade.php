@@ -9,7 +9,7 @@
     <div class="mx-auto max-w-6xl">
         <header class="max-w-3xl">
             <p
-                class="text-xs font-black uppercase tracking-widest text-[#1f5f4a]"
+                class="text-xs font-black tracking-widest text-[#1f5f4a] uppercase"
             >
                 {{ $blogAvailable ? __('capell-theme-commerce::generic.insights_label') : __('capell-theme-commerce::generic.resources_label') }}
             </p>
@@ -31,7 +31,7 @@
                         class="rounded-xl border border-stone-200 bg-white p-6 transition hover:border-[#1f5f4a] hover:shadow-lg"
                     >
                         <p
-                            class="text-xs font-black uppercase tracking-widest text-[#e86f5c]"
+                            class="text-xs font-black tracking-widest text-[#e86f5c] uppercase"
                         >
                             {{ $article['type'] ?? __('capell-theme-commerce::generic.insight') }}
                         </p>
@@ -47,7 +47,7 @@
                         class="rounded-xl border border-stone-200 bg-white p-6"
                     >
                         <p
-                            class="text-xs font-black uppercase tracking-widest text-[#e86f5c]"
+                            class="text-xs font-black tracking-widest text-[#e86f5c] uppercase"
                         >
                             {{ __('capell-theme-commerce::generic.resource') }}
                         </p>

@@ -9,7 +9,7 @@
     <div class="mx-auto max-w-6xl">
         <header class="max-w-3xl">
             <p
-                class="text-xs font-black uppercase tracking-widest text-[#0f766e]"
+                class="text-xs font-black tracking-widest text-[#0f766e] uppercase"
             >
                 {{ $blogAvailable ? __('capell-theme-healthcare::generic.insights_label') : __('capell-theme-healthcare::generic.resources_label') }}
             </p>
@@ -31,7 +31,7 @@
                         class="rounded-xl border border-stone-200 bg-white p-6 transition hover:border-[#0f766e] hover:shadow-lg"
                     >
                         <p
-                            class="text-xs font-black uppercase tracking-widest text-[#f59e0b]"
+                            class="text-xs font-black tracking-widest text-[#f59e0b] uppercase"
                         >
                             {{ $article['type'] ?? __('capell-theme-healthcare::generic.insight') }}
                         </p>
@@ -47,7 +47,7 @@
                         class="rounded-xl border border-stone-200 bg-white p-6"
                     >
                         <p
-                            class="text-xs font-black uppercase tracking-widest text-[#f59e0b]"
+                            class="text-xs font-black tracking-widest text-[#f59e0b] uppercase"
                         >
                             {{ __('capell-theme-healthcare::generic.resource') }}
                         </p>

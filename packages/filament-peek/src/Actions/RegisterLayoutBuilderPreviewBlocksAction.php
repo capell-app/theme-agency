@@ -8,8 +8,8 @@ use Capell\Core\Enums\MediaCollectionEnum;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\FilamentPeek\Data\LayoutBuilderPreviewStateData;
-use Capell\LayoutBuilder\Models\Block;
-use Capell\LayoutBuilder\Models\BlockAsset;
+use Capell\LayoutBuilder\Models\Widget;
+use Capell\LayoutBuilder\Models\WidgetAsset;
 use Capell\LayoutBuilder\Support\CapellLayoutManager;
 use Capell\LayoutBuilder\Support\LayoutBlockData;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
@@ -24,7 +24,7 @@ final class RegisterLayoutBuilderPreviewBlocksAction
 
     public function handle(Page $page, Language $language, LayoutBuilderPreviewStateData $state): bool
     {
-        if (! class_exists(Block::class) || ! class_exists(BlockAsset::class) || ! class_exists(CapellLayoutManager::class)) {
+        if (! class_exists(Widget::class) || ! class_exists(WidgetAsset::class) || ! class_exists(CapellLayoutManager::class)) {
             return false;
         }
 
@@ -35,8 +35,8 @@ final class RegisterLayoutBuilderPreviewBlocksAction
             return false;
         }
 
-        /** @var Collection<string, Block> $blocks */
-        $blocks = Block::query()
+        /** @var Collection<string, Widget> $blocks */
+        $blocks = Widget::query()
             ->whereIn('key', $blockKeys)
             ->with([
                 'blueprint',
@@ -67,7 +67,7 @@ final class RegisterLayoutBuilderPreviewBlocksAction
 
                 $block = $blocks->get($blockKey);
 
-                if (! $block instanceof Block) {
+                if (! $block instanceof Widget) {
                     continue;
                 }
 
@@ -119,9 +119,9 @@ final class RegisterLayoutBuilderPreviewBlocksAction
 
     /**
      * @param  array<int, mixed>  $assetState
-     * @return Collection<int, BlockAsset>
+     * @return Collection<int, WidgetAsset>
      */
-    private function previewBlockAssets(Page $page, Block $block, string $containerKey, int $occurrence, array $assetState): Collection
+    private function previewBlockAssets(Page $page, Widget $block, string $containerKey, int $occurrence, array $assetState): Collection
     {
         if ($assetState === []) {
             return collect();
@@ -132,12 +132,12 @@ final class RegisterLayoutBuilderPreviewBlocksAction
 
         return collect($assetState)
             ->filter(fn (mixed $asset): bool => is_array($asset))
-            ->map(function (array $asset) use ($page, $block, $containerKey, $occurrence, $existingAssets, $targetModels): BlockAsset {
+            ->map(function (array $asset) use ($page, $block, $containerKey, $occurrence, $existingAssets, $targetModels): WidgetAsset {
                 $blockAsset = isset($asset['id']) && is_numeric($asset['id'])
                     ? $existingAssets->get((int) $asset['id'])
                     : null;
 
-                $blockAsset = $blockAsset instanceof BlockAsset
+                $blockAsset = $blockAsset instanceof WidgetAsset
                     ? clone $blockAsset
                     : $this->newBlockAsset($block);
 
@@ -163,22 +163,22 @@ final class RegisterLayoutBuilderPreviewBlocksAction
                 return $blockAsset;
             })
             ->filter()
-            ->sortBy(fn (BlockAsset $blockAsset): int => (int) $blockAsset->order)
+            ->sortBy(fn (WidgetAsset $blockAsset): int => (int) $blockAsset->order)
             ->values();
     }
 
-    private function newBlockAsset(Block $block): BlockAsset
+    private function newBlockAsset(Widget $block): WidgetAsset
     {
         $blockAsset = $block->assets()->make();
 
-        throw_unless($blockAsset instanceof BlockAsset);
+        throw_unless($blockAsset instanceof WidgetAsset);
 
         return $blockAsset;
     }
 
     /**
      * @param  array<int, mixed>  $assetState
-     * @return Collection<int, BlockAsset>
+     * @return Collection<int, WidgetAsset>
      */
     private function existingBlockAssets(array $assetState): Collection
     {
@@ -193,7 +193,7 @@ final class RegisterLayoutBuilderPreviewBlocksAction
             return collect();
         }
 
-        return BlockAsset::query()
+        return WidgetAsset::query()
             ->with(['asset', 'media'])
             ->whereIn('id', $ids)
             ->get()
@@ -209,10 +209,12 @@ final class RegisterLayoutBuilderPreviewBlocksAction
         $idsByType = [];
 
         foreach ($assetState as $asset) {
-            if (! is_array($asset) || ! isset($asset['asset_type'], $asset['asset_id'])) {
+            if (! is_array($asset)) {
                 continue;
             }
-
+            if (! isset($asset['asset_type'], $asset['asset_id'])) {
+                continue;
+            }
             $type = (string) $asset['asset_type'];
             $idsByType[$type] ??= [];
             $idsByType[$type][] = $asset['asset_id'];
@@ -222,8 +224,13 @@ final class RegisterLayoutBuilderPreviewBlocksAction
 
         foreach ($idsByType as $type => $ids) {
             $class = Relation::getMorphedModel($type) ?? $type;
-
-            if (! is_string($class) || ! class_exists($class) || ! is_subclass_of($class, Model::class)) {
+            if (! is_string($class)) {
+                continue;
+            }
+            if (! class_exists($class)) {
+                continue;
+            }
+            if (! is_subclass_of($class, Model::class)) {
                 continue;
             }
 

@@ -27,7 +27,7 @@ final class SaasThemePageAdapter implements ThemePageAdapter
         $page = Frontend::page();
         $translation = $page instanceof Model && $page->relationLoaded('translation') ? $page->translation : null;
         $brand = resolve(ThemeRuntimeSettings::class)->brandProfile();
-        $title = $this->titleFrom($translation, $page?->name ?? 'Untitled page');
+        $title = $this->titleFrom($translation, $page->name ?? 'Untitled page');
         $renderData = $this->renderData($page, $translation);
         $navigation = $this->navigationFrom($renderData) ?? $this->defaultNavigation();
 
@@ -61,6 +61,10 @@ final class SaasThemePageAdapter implements ThemePageAdapter
     }
 
     /**
+     * @return array<int, ThemeSection>
+     */
+    /**
+     * @param  array<string, mixed>  $renderData
      * @return array<int, ThemeSection>
      */
     private function sectionsFrom(array $renderData, string $title, ?Translation $translation): array
@@ -261,7 +265,7 @@ final class SaasThemePageAdapter implements ThemePageAdapter
         $site = Frontend::site();
 
         return NavigationData::from([
-            'brandName' => $site?->title ?? $site?->name ?? 'Capell',
+            'brandName' => $site->title ?? $site->name ?? 'Capell',
             'items' => [
                 ['label' => 'Product', 'url' => '#content'],
                 ['label' => 'Growth', 'url' => '#gallery'],

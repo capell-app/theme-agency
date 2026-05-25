@@ -53,7 +53,7 @@
         :$block
     >
         <ul
-            class="tab-items mb-4 mt-10 flex flex-col flex-wrap items-center gap-4 border-b border-gray-100 px-2 text-center text-sm font-medium text-gray-500 md:flex-row"
+            class="tab-items mt-10 mb-4 flex flex-col flex-wrap items-center gap-4 border-b border-gray-100 px-2 text-center text-sm font-medium text-gray-500 md:flex-row"
         >
             @foreach ($items as $item)
                 <li class="tab-item -mb-px">

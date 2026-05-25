@@ -23,8 +23,8 @@ use Capell\FoundationTheme\View\Components\Block\Page\Content;
 use Capell\FoundationTheme\View\Components\Block\Page\Latest;
 use Capell\FoundationTheme\View\Components\Block\Page\Siblings;
 use Capell\LayoutBuilder\Livewire\Filament\LayoutBuilder;
-use Capell\LayoutBuilder\Models\Block;
-use Capell\LayoutBuilder\Models\BlockAsset;
+use Capell\LayoutBuilder\Models\Widget;
+use Capell\LayoutBuilder\Models\WidgetAsset;
 use Capell\Tests\Fixtures\Models\User;
 use Capell\Tests\Fixtures\Policies\RolePolicy;
 use Capell\Tests\Support\Concerns\BuildsOrderedMigrationWorkspace;
@@ -172,8 +172,8 @@ abstract class AbstractTestCase extends TestCase
             'country' => Country::class,
             'section' => Section::class,
             'user' => User::class,
-            'block' => Block::class,
-            'block_asset' => BlockAsset::class,
+            'block' => Widget::class,
+            'block_asset' => WidgetAsset::class,
         ]);
 
         Model::shouldBeStrict();

@@ -265,7 +265,7 @@
                                 <tr>
                                     <td
                                         colspan="{{ $mode === 'side-by-side' ? 3 : 2 }}"
-                                        class="pb-2 pt-0"
+                                        class="pt-0 pb-2"
                                     >
                                         @livewire('capell-publishing-studio::field-comment-thread',
                                             [

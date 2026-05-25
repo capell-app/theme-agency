@@ -16,8 +16,6 @@ final class ThemeDemoInstallData extends Data
 
     public readonly string $baseUrl;
 
-    public readonly bool $force;
-
     /**
      * @param  array<int, string>  $siteNames
      * @param  array<int, string>  $languageCodes
@@ -26,26 +24,25 @@ final class ThemeDemoInstallData extends Data
         array $siteNames,
         array $languageCodes,
         string $baseUrl,
-        bool $force = false,
+        public readonly bool $force = false,
     ) {
-        $this->siteNames = self::normalizeStrings($siteNames);
+        $this->siteNames = $this->normalizeStrings($siteNames);
         $this->languageCodes = array_map(
-            static fn (string $languageCode): string => strtolower($languageCode),
-            self::normalizeStrings($languageCodes),
+            strtolower(...),
+            $this->normalizeStrings($languageCodes),
         );
         $this->baseUrl = rtrim(trim($baseUrl), '/');
-        $this->force = $force;
     }
 
     /**
      * @param  array<int, string>  $values
      * @return array<int, string>
      */
-    private static function normalizeStrings(array $values): array
+    private function normalizeStrings(array $values): array
     {
         return array_values(array_filter(
             array_map(
-                static fn (string $value): string => trim($value),
+                trim(...),
                 $values,
             ),
             static fn (string $value): bool => $value !== '',

@@ -7,7 +7,7 @@ namespace Capell\FoundationTheme\Actions;
 use Capell\Core\Enums\MediaCollectionEnum;
 use Capell\Core\Models\Media;
 use Capell\FoundationTheme\Data\BannerImageRenderData;
-use Capell\LayoutBuilder\Models\Block;
+use Capell\LayoutBuilder\Models\Widget;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsObject;
 
@@ -15,7 +15,7 @@ final class BuildBannerImageRenderDataAction
 {
     use AsObject;
 
-    public function handle(Block $block, mixed $content, mixed $title, bool $rounded, mixed $reverseOrder): BannerImageRenderData
+    public function handle(Widget $block, mixed $content, mixed $title, bool $rounded, mixed $reverseOrder): BannerImageRenderData
     {
         $backgroundImage = $this->firstLoadedBlockMedia($block, MediaCollectionEnum::BackgroundImage->value)
             ?? $this->firstLoadedBlockMedia($block, MediaCollectionEnum::Image->value)
@@ -33,7 +33,7 @@ final class BuildBannerImageRenderDataAction
         );
     }
 
-    private function firstLoadedBlockMedia(Block $block, string $collectionName): ?Media
+    private function firstLoadedBlockMedia(Widget $block, string $collectionName): ?Media
     {
         if (! $block->relationLoaded('media')) {
             return null;
@@ -52,7 +52,7 @@ final class BuildBannerImageRenderDataAction
         return $match instanceof Media ? $match : null;
     }
 
-    private function firstAssetMedia(Block $block): mixed
+    private function firstAssetMedia(Widget $block): mixed
     {
         if (! $block->relationLoaded('assets')) {
             return null;

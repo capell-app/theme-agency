@@ -1,7 +1,7 @@
 @props([
     'id' => null,
     'itemClass',
-    'dropdownItemClass' => 'text-secondary hover:bg-primary/10 focus-visible:bg-primary/10 focus-visible:ring-primary/40 dark:text-secondary dark:hover:bg-primary/20 dark:focus-visible:bg-primary/20 flex w-full items-center px-4 py-2 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 lg:px-3 lg:py-1.5',
+    'dropdownItemClass' => 'text-secondary hover:bg-primary/10 focus-visible:bg-primary/10 focus-visible:ring-primary/40 dark:text-secondary dark:hover:bg-primary/20 dark:focus-visible:bg-primary/20 flex w-full items-center px-4 py-2 text-left text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 lg:px-3 lg:py-1.5',
     'dropdownName' => 'header-menu',
     'menu',
     'item',

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Comments\Actions;
 
 use Capell\Comments\Data\CommentEmailTemplateData;
+use Capell\EmailStudio\Support\EmailTemplateRegistry;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class RegisterCommentEmailTemplatesAction
@@ -13,13 +14,13 @@ class RegisterCommentEmailTemplatesAction
 
     public function handle(): void
     {
-        $registryClass = 'Capell\\EmailStudio\\Support\\EmailTemplateRegistry';
+        $registryClass = EmailTemplateRegistry::class;
 
         if (! class_exists($registryClass) || ! app()->bound($registryClass)) {
             return;
         }
 
-        $registry = app($registryClass);
+        $registry = resolve($registryClass);
 
         foreach ($this->templates() as $template) {
             $registry->register(

@@ -5,12 +5,12 @@
         <div class="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-8">
             <div>
                 <p
-                    class="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--theme-accent)]"
+                    class="mb-3 text-xs font-semibold tracking-[0.16em] text-[var(--theme-accent)] uppercase"
                 >
                     Proof
                 </p>
                 <h2
-                    class="max-w-xl text-2xl font-semibold leading-tight sm:text-3xl lg:text-4xl"
+                    class="max-w-xl text-2xl leading-tight font-semibold sm:text-3xl lg:text-4xl"
                 >
                     {{ $section->heading }}
                 </h2>

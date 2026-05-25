@@ -26,7 +26,7 @@
                     <div class="p-5">
                         @if ($item['type'] ?? null)
                             <p
-                                class="mb-4 text-xs font-black uppercase tracking-widest text-[#0f766e]"
+                                class="mb-4 text-xs font-black tracking-widest text-[#0f766e] uppercase"
                             >
                                 {{ $item['type'] }}
                             </p>

@@ -25,7 +25,7 @@
     <section class="campaign-hero px-6 py-16">
         <div class="mx-auto max-w-5xl">
             @if ($eyebrow)
-                <p class="mb-3 text-sm font-semibold uppercase tracking-wide">
+                <p class="mb-3 text-sm font-semibold tracking-wide uppercase">
                     {{ $eyebrow }}
                 </p>
             @endif

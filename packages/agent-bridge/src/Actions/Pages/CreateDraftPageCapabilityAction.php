@@ -120,8 +120,6 @@ final class CreateDraftPageCapabilityAction implements CapellAgentBridgeCapabili
     /** @return class-string<Model> */
     private function pageClass(): string
     {
-        $pageClass = Page::class;
-
-        return $pageClass;
+        return Page::class;
     }
 }

@@ -19,6 +19,7 @@ use Capell\ThemeStudio\Commerce\CommerceThemeServiceProvider;
 use Capell\ThemeStudio\Commerce\Health\ThemeCommerceHealthCheck;
 use Capell\ThemeStudio\Commerce\Rendering\BlogTeaserSectionRenderer;
 use Capell\ThemeStudio\Commerce\Rendering\CatalogSectionRenderer;
+use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
@@ -262,7 +263,7 @@ it('renders standard feature and content listing sections through commerce regis
 
 it('passes optional Shopify availability through the registered catalog renderer', function (bool $shopifyInstalled, string $expectedMarkup, string $missingMarkup): void {
     View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
-    app('translator')->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(CommerceThemeServiceProvider::$packageName);
     CapellCore::forcePackageInstalled('capell-app/shopify-commerce', $shopifyInstalled);
@@ -294,7 +295,7 @@ it('passes optional Shopify availability through the registered catalog renderer
 
 it('passes optional Blog availability through the registered blog teaser renderer', function (bool $blogInstalled, string $expectedMarkup, string $missingMarkup): void {
     View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
-    app('translator')->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(CommerceThemeServiceProvider::$packageName);
     CapellCore::forcePackageInstalled('capell-app/blog', $blogInstalled);
@@ -324,7 +325,7 @@ it('passes optional Blog availability through the registered blog teaser rendere
 
 it('renders optional commerce section views without database queries', function (): void {
     View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
-    app('translator')->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
 
     $queries = [];
 
@@ -358,14 +359,14 @@ it('renders optional commerce section views without database queries', function 
  */
 function commerceThemeSection(string $key, array $viewData): ThemeSection
 {
-    return new class($key, $viewData) implements ThemeSection
+    return new readonly class($key, $viewData) implements ThemeSection
     {
         /**
          * @param  array<string, mixed>  $viewData
          */
         public function __construct(
-            private readonly string $sectionKey,
-            private readonly array $viewData,
+            private string $sectionKey,
+            private array $viewData,
         ) {}
 
         public function key(): string

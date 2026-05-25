@@ -9,8 +9,8 @@ use Capell\Core\Enums\MediaCollectionEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Media;
 use Capell\FoundationTheme\Data\AssetBannerItemData;
-use Capell\LayoutBuilder\Models\Block;
-use Capell\LayoutBuilder\Models\BlockAsset;
+use Capell\LayoutBuilder\Models\Widget;
+use Capell\LayoutBuilder\Models\WidgetAsset;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsObject;
@@ -23,7 +23,7 @@ final class BuildAssetBannerItemsAction
     /**
      * @return Collection<int, AssetBannerItemData>
      */
-    public function handle(Block $block): Collection
+    public function handle(Widget $block): Collection
     {
         $blockAssets = $block->relationLoaded('assets') ? $block->getRelation('assets') : collect();
 
@@ -32,12 +32,12 @@ final class BuildAssetBannerItemsAction
         }
 
         return $blockAssets
-            ->filter(fn (mixed $blockAsset): bool => $blockAsset instanceof BlockAsset)
-            ->map(fn (BlockAsset $blockAsset): AssetBannerItemData => $this->item($block, $blockAsset))
+            ->filter(fn (mixed $blockAsset): bool => $blockAsset instanceof WidgetAsset)
+            ->map(fn (WidgetAsset $blockAsset): AssetBannerItemData => $this->item($block, $blockAsset))
             ->values();
     }
 
-    private function item(Block $block, BlockAsset $blockAsset): AssetBannerItemData
+    private function item(Widget $block, WidgetAsset $blockAsset): AssetBannerItemData
     {
         $asset = $blockAsset->relationLoaded('asset') ? $blockAsset->getRelation('asset') : null;
         $linkedPage = $this->linkedPage($blockAsset, $asset);
@@ -60,14 +60,14 @@ final class BuildAssetBannerItemsAction
         );
     }
 
-    private function image(Block $block, BlockAsset $blockAsset, mixed $asset): mixed
+    private function image(Widget $block, WidgetAsset $blockAsset, mixed $asset): mixed
     {
         return $this->firstLoadedMedia($blockAsset, MediaCollectionEnum::Image->value)
             ?? ($asset instanceof Model && $asset->relationLoaded('image') ? $asset->getRelation('image') : null)
             ?? $this->firstLoadedMedia($block, MediaCollectionEnum::BackgroundImage->value);
     }
 
-    private function linkedPage(BlockAsset $blockAsset, mixed $asset): mixed
+    private function linkedPage(WidgetAsset $blockAsset, mixed $asset): mixed
     {
         if ($asset instanceof Pageable) {
             return $asset;
@@ -121,7 +121,7 @@ final class BuildAssetBannerItemsAction
         return $match instanceof Media ? $match : null;
     }
 
-    private function assetDefinition(BlockAsset $blockAsset): mixed
+    private function assetDefinition(WidgetAsset $blockAsset): mixed
     {
         if (! is_string($blockAsset->asset_type) || $blockAsset->asset_type === '') {
             return null;

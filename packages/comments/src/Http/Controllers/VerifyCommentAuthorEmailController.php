@@ -26,8 +26,7 @@ class VerifyCommentAuthorEmailController
             return response(__('capell-comments::messages.invalid_token'), 404);
         }
 
-        return redirect()
-            ->route('capell-comments.verify', ['token' => $token])
+        return to_route('capell-comments.verify', ['token' => $token])
             ->with('capell_comments_verified', true);
     }
 }

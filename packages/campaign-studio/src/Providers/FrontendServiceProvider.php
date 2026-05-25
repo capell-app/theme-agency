@@ -19,7 +19,7 @@ final class FrontendServiceProvider extends ServiceProvider
         Blade::anonymousComponentNamespace('Capell\\CampaignStudio\\View\\Components');
     }
 
-    protected function isPackageInstalled(): bool
+    private function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(CampaignStudioServiceProvider::$packageName);
     }

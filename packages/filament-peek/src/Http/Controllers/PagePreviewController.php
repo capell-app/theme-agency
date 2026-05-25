@@ -37,8 +37,8 @@ final class PagePreviewController extends Controller
 
         try {
             $response = RenderPagePreviewSnapshotAction::run($snapshot);
-        } catch (Throwable $exception) {
-            report($exception);
+        } catch (Throwable $throwable) {
+            report($throwable);
 
             return $this->errorResponse(
                 500,
