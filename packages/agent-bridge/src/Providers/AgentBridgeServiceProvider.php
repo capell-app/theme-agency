@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\AgentBridge\Providers;
 
 use Capell\Admin\Contracts\Extenders\UserSchemaExtender;
+use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
 use Capell\AgentBridge\Actions\Cache\ClearCapellCacheCapabilityAction;
@@ -179,6 +180,12 @@ final class AgentBridgeServiceProvider extends ServiceProvider
     {
         $registry->registerSettingsClass(AgentBridgeSettings::group(), AgentBridgeSettings::class);
         $registry->register(AgentBridgeSettings::group(), AgentBridgeSettingsSchema::class);
+        CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
+            packageName: self::$packageName,
+            label: 'capell-agent-bridge::admin.settings_title',
+            settingsGroup: AgentBridgeSettings::group(),
+            icon: Heroicon::OutlinedSparkles,
+        ));
 
         if (class_exists(SettingsGroupMetadata::class)) {
             $registry->registerMetadata(new SettingsGroupMetadata(

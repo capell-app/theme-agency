@@ -68,7 +68,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Not-found URLs page.
 - Translation coverage page.
 - AI Discovery page.
-- SEO Suite settings page.
+- SEO Suite settings modal on the Extensions page.
 - Search Console insights panel.
 - Public AI Discovery outputs: `/llms.txt`, `/robots.txt`, and `/index.md`.
 
@@ -99,7 +99,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Admin Surface
 
-- Pages: `AiDiscoveryPage`, `AiDiscoveryTable`, `BrokenLinksPage`, `BrokenLinksTable`, `ListPageSeoAuditWidget`, `NotFoundUrlsPage`, `SeoAuditPage`, `SeoAuditTable`, `SeoSuiteSettingsPage`, `TranslationCoveragePage`, `TranslationCoverageTable`.
+- Pages: `AiDiscoveryPage`, `AiDiscoveryTable`, `BrokenLinksPage`, `BrokenLinksTable`, `ListPageSeoAuditWidget`, `NotFoundUrlsPage`, `SeoAuditPage`, `SeoAuditTable`, `TranslationCoveragePage`, `TranslationCoverageTable`.
 - Widgets: `AiMetricsWidgetAbstract`, `AiUsageWidget`, `EditPageSeoAuditWidget`, `ListPageSeoAuditWidget`.
 - Settings: `AIOrchestratorSettings`, `SeoSuiteSettings`.
 

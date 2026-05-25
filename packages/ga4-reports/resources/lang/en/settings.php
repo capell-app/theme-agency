@@ -11,4 +11,5 @@ return [
     'property_id_helper' => 'Use the numeric GA4 property ID without the properties/ prefix.',
     'route_slug' => 'Admin page slug',
     'sync_days' => 'Sync window',
+    'title' => 'GA4 Reports settings',
 ];

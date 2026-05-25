@@ -13,7 +13,7 @@ use Capell\Admin\Filament\Resources\Users\Pages\EditUser;
 use Capell\Admin\Filament\Widgets\Extensions\InstalledExtensionsWidget;
 use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
 use Capell\Admin\Support\CapellAdminManager;
-use Capell\Admin\Support\Extensions\ExtensionPageRegistry;
+use Capell\Admin\Support\Extensions\ExtensionManagementSurfaceRegistry;
 use Capell\Core\Database\Factories\UserFactory;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\PasswordPolicy\Actions\MarkUserForPasswordChangeAction;
@@ -53,7 +53,7 @@ function invokePasswordPolicyProviderMethod(object $provider, string $method): v
 function resetPasswordPolicyAdminBridgeState(): void
 {
     app()->forgetInstance(CapellAdminManager::class);
-    app()->forgetInstance(ExtensionPageRegistry::class);
+    app()->forgetInstance(ExtensionManagementSurfaceRegistry::class);
     CapellAdmin::clearResolvedInstance(CapellAdminManager::class);
     CapellAdmin::clearAdminSurfaceContributions();
 }
@@ -83,11 +83,11 @@ it('declares its installable database migrations', function (): void {
     ]);
 });
 
-it('registers password policy settings as an extension page', function (): void {
-    $extensionPage = collect(resolve(ExtensionPageRegistry::class)->entries())
-        ->first(fn (array $extensionPage): bool => $extensionPage['page'] === PasswordPolicySettingsPage::class);
+it('registers password policy settings as an extension management surface', function (): void {
+    $settingsSurfaces = resolve(ExtensionManagementSurfaceRegistry::class)
+        ->surfacesForPackage(PasswordPolicyServiceProvider::$packageName);
 
-    expect($extensionPage['page'] ?? null)->toBe(PasswordPolicySettingsPage::class);
+    expect($settingsSurfaces[0]->settingsGroup ?? null)->toBe('password_policy');
 });
 
 it('registers the current password policy admin bridge surface', function (): void {
@@ -98,9 +98,11 @@ it('registers the current password policy admin bridge surface', function (): vo
         AdminBridgeContextData::forPackage(PasswordPolicyServiceProvider::$packageName),
     );
 
-    expect(resolve(ExtensionPageRegistry::class)->get(PasswordPolicyServiceProvider::$packageName))
-        ->toBe(PasswordPolicySettingsPage::class)
-        ->and(CapellAdmin::getAdminSurfaceRegistry()->pages())->toContain(PasswordPolicySettingsPage::class)
+    $settingsSurfaces = resolve(ExtensionManagementSurfaceRegistry::class)
+        ->surfacesForPackage(PasswordPolicyServiceProvider::$packageName);
+
+    expect($settingsSurfaces[0]->settingsGroup ?? null)
+        ->toBe('password_policy')
         ->and(CapellAdmin::getAdminSurfaceRegistry()->pages())->toContain(ForcedPasswordChangePage::class)
         ->and(CapellAdmin::getAdminSurfaceRegistry()->panelExtenders())->toContain(PasswordPolicyPanelExtender::class)
         ->and(collect(app()->tagged(UserFormExtender::TAG))->contains(
@@ -120,7 +122,7 @@ it('opens password policy settings from the extensions page action modal', funct
         ->assertSee(__('capell-password-policy::settings.title'))
         ->mountTableAction('manageExtension', PasswordPolicyServiceProvider::$packageName)
         ->assertMountedActionModalSee(__('capell-password-policy::settings.title'))
-        ->assertMountedActionModalSee(PasswordPolicySettingsPage::getUrl());
+        ->assertMountedActionModalSee(__('capell-password-policy::settings.password_expiry_enabled'));
 });
 
 it('keeps the legacy admin fallback when the bridge host is unavailable', function (): void {
@@ -138,7 +140,7 @@ it('keeps the legacy admin fallback when the bridge host is unavailable', functi
             ->map(fn (object $extender): string => $extender::class);
 
         expect($host->extensionPages[PasswordPolicyServiceProvider::$packageName] ?? [])
-            ->toContain(PasswordPolicySettingsPage::class)
+            ->toBe([])
             ->and(collect($host->surfaceContributions)->pluck('class'))->toContain(ForcedPasswordChangePage::class)
             ->and($adminPanelExtenders)->toContain(PasswordPolicyPanelExtender::class)
             ->and($userFormExtenders)->toContain(PasswordPolicyUserFormExtender::class)

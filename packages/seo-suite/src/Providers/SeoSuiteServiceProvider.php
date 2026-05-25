@@ -11,6 +11,7 @@ use Capell\Admin\Contracts\Extenders\PageResourceWidgetExtender;
 use Capell\Admin\Contracts\Extenders\PageSchemaExtender;
 use Capell\Admin\Contracts\Extenders\SiteHeaderActionExtender;
 use Capell\Admin\Contracts\Extenders\SiteSchemaExtender;
+use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
 use Capell\Admin\Enums\DashboardEnum;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Filament\Resources\Pages\Pages\EditPage;
@@ -54,7 +55,6 @@ use Capell\SeoSuite\Filament\Pages\AiDiscoveryPage;
 use Capell\SeoSuite\Filament\Pages\BrokenLinksPage;
 use Capell\SeoSuite\Filament\Pages\NotFoundUrlsPage;
 use Capell\SeoSuite\Filament\Pages\SeoAuditPage;
-use Capell\SeoSuite\Filament\Pages\SeoSuiteSettingsPage;
 use Capell\SeoSuite\Filament\Pages\TranslationCoveragePage;
 use Capell\SeoSuite\Filament\Settings\AIOrchestratorSettingsSchema;
 use Capell\SeoSuite\Filament\Settings\Contributors\SeoSuiteDashboardSettingsContributor;
@@ -355,7 +355,12 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
         $adminManager->registerExtensionPage(static::$packageName, BrokenLinksPage::class);
         $adminManager->registerExtensionPage(static::$packageName, SeoAuditPage::class);
         $adminManager->registerExtensionPage(static::$packageName, AiDiscoveryPage::class);
-        $adminManager->registerExtensionPage(static::$packageName, SeoSuiteSettingsPage::class);
+        $adminManager->registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
+            packageName: static::$packageName,
+            label: 'capell-seo-suite::generic.seo_settings',
+            settingsGroup: 'seo_suite',
+            icon: Heroicon::OutlinedMagnifyingGlass,
+        ));
         $adminManager->registerExtensionPage(static::$packageName, TranslationCoveragePage::class);
 
         return $this;

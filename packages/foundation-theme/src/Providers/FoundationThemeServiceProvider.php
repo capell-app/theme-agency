@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\FoundationTheme\Providers;
 
+use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
+use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Actions\RegisterBlazeOptimizedViewsAction;
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\PackageTypeEnum;
@@ -179,6 +181,12 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
         $registry = resolve(SettingsSchemaRegistry::class);
         $registry->registerSettingsClass('foundation_theme', FoundationThemeSettings::class);
         $registry->register('foundation_theme', FoundationThemeSettingsSchema::class);
+        CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
+            packageName: self::$packageName,
+            label: 'capell-foundation-theme::generic.foundation_theme',
+            settingsGroup: 'foundation_theme',
+            icon: 'heroicon-o-swatch',
+        ));
     }
 
     private function registerThemeChromeComponents(): void

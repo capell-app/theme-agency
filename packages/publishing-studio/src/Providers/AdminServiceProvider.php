@@ -11,6 +11,7 @@ use Capell\Admin\Contracts\Dashboard\SiteStatsDataProvider;
 use Capell\Admin\Contracts\DashboardSettingsContributor;
 use Capell\Admin\Contracts\Extenders\UserSchemaExtender;
 use Capell\Admin\Data\AdminSurfaceContributionData;
+use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
 use Capell\Admin\Enums\DashboardEnum;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Filament\Widgets\Dashboard\MyWorkQueueWidget;
@@ -123,6 +124,12 @@ class AdminServiceProvider extends ServiceProvider
             packageName: PublishingStudioServiceProvider::$packageName,
         ));
         $registry->register('publishing_studio', PublishingStudioSettingsSchema::class);
+        CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
+            packageName: PublishingStudioServiceProvider::$packageName,
+            label: 'capell-publishing-studio::workspace.settings.group',
+            settingsGroup: 'publishing_studio',
+            icon: Heroicon::OutlinedDocumentCheck,
+        ));
 
         return $this;
     }

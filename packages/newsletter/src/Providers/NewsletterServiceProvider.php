@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\Newsletter\Providers;
 
+use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
+use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
@@ -126,6 +128,12 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
         $registry = resolve(SettingsSchemaRegistry::class);
         $registry->registerSettingsClass('newsletter', NewsletterSettings::class);
         $registry->register('newsletter', NewsletterSettingsSchema::class);
+        CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
+            packageName: self::$packageName,
+            label: 'capell-newsletter::settings.fieldset',
+            settingsGroup: 'newsletter',
+            icon: 'heroicon-o-envelope',
+        ));
 
         return $this;
     }

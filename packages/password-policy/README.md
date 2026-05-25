@@ -68,8 +68,8 @@ This package makes its Composer dependencies visible because they are part of th
 
 ## Admin Surface
 
-- Pages: `ForcedPasswordChangePage`, `PasswordPolicySettingsPage`.
-- Settings: `PasswordPolicySettings`.
+- Pages: `ForcedPasswordChangePage`.
+- Settings: Extensions page modal surface for `PasswordPolicySettings`.
 
 ## Data And Persistence
 

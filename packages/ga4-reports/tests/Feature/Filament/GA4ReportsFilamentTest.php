@@ -5,8 +5,12 @@ declare(strict_types=1);
 use Capell\Admin\Contracts\DashboardSettingsContributor;
 use Capell\Admin\Enums\DashboardEnum;
 use Capell\Admin\Facades\CapellAdmin;
+use Capell\Admin\Support\Extensions\ExtensionManagementSurfaceRegistry;
+use Capell\Admin\Support\Extensions\ExtensionPageRegistry;
+use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\GA4Reports\Filament\Pages\GA4ReportsPage;
 use Capell\GA4Reports\Filament\Settings\Contributors\GA4ReportsDashboardSettingsContributor;
+use Capell\GA4Reports\Filament\Settings\GA4ReportsSettingsSchema;
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsSetupStatusWidget;
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesTableWidget;
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesWidget;
@@ -67,6 +71,18 @@ it('registers GA4 dashboard widgets and settings contributor', function (): void
         ->toContain('ga4_reports_overview')
         ->toContain('ga4_reports_overview.sessions')
         ->toContain('ga4_reports_overview.engagement_rate');
+});
+
+it('registers GA4 extension pages and settings schema metadata', function (): void {
+    $settingsRegistry = resolve(SettingsSchemaRegistry::class);
+    $settingsSurfaces = resolve(ExtensionManagementSurfaceRegistry::class)->surfacesForPackage('capell-app/ga4-reports');
+
+    expect(resolve(ExtensionPageRegistry::class)->pagesForPackage('capell-app/ga4-reports'))
+        ->toContain(GA4ReportsPage::class)
+        ->and($settingsRegistry->getSettingsClass('ga4_reports'))->toBe(GA4ReportsSettings::class)
+        ->and($settingsRegistry->getSchemas('ga4_reports'))->toContain(GA4ReportsSettingsSchema::class)
+        ->and($settingsRegistry->getMetadata('ga4_reports')?->packageName)->toBe('capell-app/ga4-reports')
+        ->and($settingsSurfaces[0]->settingsGroup ?? null)->toBe('ga4_reports');
 });
 
 it('uses translated page labels and configured slug', function (): void {

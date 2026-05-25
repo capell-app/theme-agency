@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\ShopifyCommerce\Providers;
 
+use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
+use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsGroupMetadata;
@@ -86,6 +88,12 @@ final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvide
             packageName: self::$packageName,
         ));
         $registry->register(ShopifyCommerceSettings::group(), ShopifyCommerceSettingsSchema::class);
+        CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
+            packageName: self::$packageName,
+            label: 'capell-shopify-commerce::capell-shopify-commerce.settings.title',
+            settingsGroup: ShopifyCommerceSettings::group(),
+            icon: Heroicon::OutlinedShoppingBag,
+        ));
 
         return $this;
     }

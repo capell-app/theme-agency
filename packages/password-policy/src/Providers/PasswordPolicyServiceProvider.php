@@ -8,10 +8,10 @@ use Capell\Admin\Contracts\Extenders\AdminPanelExtender;
 use Capell\Admin\Contracts\Extenders\UserFormExtender;
 use Capell\Admin\Contracts\Extenders\UserTableExtender;
 use Capell\Admin\Data\AdminSurfaceContributionData;
+use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
 use Capell\Admin\Support\CapellAdminManager;
-use Capell\Admin\Support\Extensions\ExtensionPageRegistry;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsGroupMetadata;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
@@ -20,7 +20,6 @@ use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyPanelExtender;
 use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyUserFormExtender;
 use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyUserTableExtender;
 use Capell\PasswordPolicy\Filament\Pages\ForcedPasswordChangePage;
-use Capell\PasswordPolicy\Filament\Pages\PasswordPolicySettingsPage;
 use Capell\PasswordPolicy\Filament\Settings\PasswordPolicySettingsSchema;
 use Capell\PasswordPolicy\Settings\PasswordPolicySettings;
 use Filament\Support\Icons\Heroicon;
@@ -121,32 +120,25 @@ class PasswordPolicyServiceProvider extends AbstractPackageServiceProvider
 
     private function registerPasswordPolicySettingsExtensionPage(): self
     {
-        if (class_exists(ExtensionPageRegistry::class)) {
-            $registerExtensionPage = static function (ExtensionPageRegistry $extensionPageRegistry): void {
-                $extensionPageRegistry->register(self::$packageName, PasswordPolicySettingsPage::class);
-            };
-
-            if ($this->app->bound(ExtensionPageRegistry::class)) {
-                $registerExtensionPage($this->app->make(ExtensionPageRegistry::class));
-            }
-
-            $this->app->afterResolving(ExtensionPageRegistry::class, $registerExtensionPage);
-        }
-
         if (class_exists(CapellAdminManager::class)) {
-            $registerAdminSurfacePage = static function (object $capellAdminManager): void {
-                if (! method_exists($capellAdminManager, 'registerExtensionPage')) {
+            $registerAdminSurface = static function (object $capellAdminManager): void {
+                if (! method_exists($capellAdminManager, 'registerExtensionManagementSurface')) {
                     return;
                 }
 
-                $capellAdminManager->registerExtensionPage(self::$packageName, PasswordPolicySettingsPage::class);
+                $capellAdminManager->registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
+                    packageName: self::$packageName,
+                    label: 'capell-password-policy::settings.title',
+                    settingsGroup: 'password_policy',
+                    icon: Heroicon::OutlinedKey,
+                ));
             };
 
             if ($this->app->bound(CapellAdminManager::class)) {
-                $registerAdminSurfacePage($this->app->make(CapellAdminManager::class));
+                $registerAdminSurface($this->app->make(CapellAdminManager::class));
             }
 
-            $this->app->afterResolving(CapellAdminManager::class, $registerAdminSurfacePage);
+            $this->app->afterResolving(CapellAdminManager::class, $registerAdminSurface);
         }
 
         return $this;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\GA4Reports\Providers;
 
 use Capell\Admin\Contracts\DashboardSettingsContributor;
+use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
 use Capell\Admin\Data\MarketingStudioActionData;
 use Capell\Admin\Enums\DashboardEnum;
 use Capell\Admin\Enums\MarketingStudioSectionEnum;
@@ -65,6 +66,12 @@ final class AdminServiceProvider extends ServiceProvider
     private function registerPages(): self
     {
         CapellAdmin::registerExtensionPage(GA4ReportsServiceProvider::$packageName, GA4ReportsPage::class);
+        CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
+            packageName: GA4ReportsServiceProvider::$packageName,
+            label: 'capell-ga4-reports::settings.title',
+            settingsGroup: 'ga4_reports',
+            icon: 'heroicon-o-chart-bar-square',
+        ));
 
         return $this;
     }

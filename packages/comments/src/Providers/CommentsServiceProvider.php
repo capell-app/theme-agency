@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\Comments\Providers;
 
+use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
+use Capell\Admin\Facades\CapellAdmin;
 use Capell\Comments\Actions\RegisterDefaultCommentablesAction;
 use Capell\Comments\Filament\Settings\CommentSettingsSchema;
 use Capell\Comments\Models\Comment;
@@ -116,6 +118,12 @@ class CommentsServiceProvider extends AbstractPackageServiceProvider
         $registry = $this->app->make(SettingsSchemaRegistry::class);
         $registry->registerSettingsClass('comments', CommentSettings::class);
         $registry->register('comments', CommentSettingsSchema::class);
+        CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
+            packageName: self::$packageName,
+            label: 'capell-comments::package.name',
+            settingsGroup: 'comments',
+            icon: 'heroicon-o-chat-bubble-left-right',
+        ));
 
         return $this;
     }

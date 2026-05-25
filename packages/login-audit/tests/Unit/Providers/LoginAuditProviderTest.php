@@ -10,6 +10,7 @@ use Capell\Admin\Enums\DashboardEnum;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
 use Capell\Admin\Support\CapellAdminManager;
+use Capell\Admin\Support\Extensions\ExtensionManagementSurfaceRegistry;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\LoginAudit\Bridges\LoginAuditAdminBridge;
@@ -68,6 +69,11 @@ it('registers login-audit settings in the settings registry', function (): void 
         ->toBe(LoginAuditSettings::class)
         ->and($registry->getSchema('login_audit', 'LoginAuditSettingsSchema'))
         ->toBe(LoginAuditSettingsSchema::class);
+
+    $surfaces = resolve(ExtensionManagementSurfaceRegistry::class)
+        ->surfacesForPackage(LoginAuditServiceProvider::$packageName);
+
+    expect($surfaces[0]->settingsGroup ?? null)->toBe('login_audit');
 });
 
 it('does not register admin surfaces when login-audit is not installed', function (): void {

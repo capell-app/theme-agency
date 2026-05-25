@@ -6,6 +6,7 @@ namespace Capell\GA4Reports\Providers;
 
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\Core\Support\Settings\SettingsGroupMetadata;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\GA4Reports\Actions\ResolveGA4ReportsConfigAction;
 use Capell\GA4Reports\Contracts\GA4ReportsDataClientInterface;
@@ -16,6 +17,7 @@ use Capell\GA4Reports\Models\GA4ReportsSyncRun;
 use Capell\GA4Reports\Settings\GA4ReportsSettings;
 use Capell\GA4Reports\Settings\GA4ReportsSettingsMigrationProvider;
 use Capell\GA4Reports\Support\Insights\GA4ReportsDataClient;
+use Filament\Support\Icons\Heroicon;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -100,6 +102,14 @@ final class GA4ReportsServiceProvider extends AbstractPackageServiceProvider
         $registry = $this->app->make(SettingsSchemaRegistry::class);
 
         $registry->registerSettingsClass('ga4_reports', GA4ReportsSettings::class);
+        $registry->registerMetadata(new SettingsGroupMetadata(
+            group: 'ga4_reports',
+            label: 'capell-ga4-reports::settings.title',
+            icon: Heroicon::OutlinedChartBarSquare,
+            navigationGroup: 'capell-admin::navigation.group_monitoring',
+            navigationSort: 90,
+            packageName: self::$packageName,
+        ));
         $registry->register('ga4_reports', GA4ReportsSettingsSchema::class);
 
         return $this;

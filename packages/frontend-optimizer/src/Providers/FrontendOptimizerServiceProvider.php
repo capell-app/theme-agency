@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\FrontendOptimizer\Providers;
 
 use Capell\Admin\Data\AdminSurfaceContributionData;
+use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
 use Capell\Admin\Enums\ConfiguratorTypeEnum;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
@@ -81,6 +82,12 @@ final class FrontendOptimizerServiceProvider extends AbstractPackageServiceProvi
 
         $registry->registerSettingsClass(FrontendOptimizerSettings::group(), FrontendOptimizerSettings::class);
         $registry->register(FrontendOptimizerSettings::group(), FrontendOptimizerSettingsSchema::class);
+        CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
+            packageName: self::$packageName,
+            label: 'capell-frontend-optimizer::settings.critical_css',
+            settingsGroup: FrontendOptimizerSettings::group(),
+            icon: 'heroicon-o-bolt',
+        ));
     }
 
     private function registerAdminSurface(): void

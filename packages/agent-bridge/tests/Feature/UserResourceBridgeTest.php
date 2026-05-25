@@ -10,6 +10,7 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Settings\AdminSettings;
 use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
 use Capell\Admin\Support\CapellAdminManager;
+use Capell\Admin\Support\Extensions\ExtensionManagementSurfaceRegistry;
 use Capell\Admin\Support\Extensions\ExtensionPageRegistry;
 use Capell\AgentBridge\Bridges\AgentBridgeAdminBridge;
 use Capell\AgentBridge\Extenders\AgentBridgeUserSchemaExtender;
@@ -101,11 +102,18 @@ it('hydrates agent bridge settings and registers the settings schema', function 
 
     expect(resolve(AgentBridgeSettings::class)->enable_user_resource_bridge)->toBeTrue();
 
+    app()->singleton(ExtensionManagementSurfaceRegistry::class, fn (): ExtensionManagementSurfaceRegistry => new ExtensionManagementSurfaceRegistry);
+
     /** @var SettingsSchemaRegistry $registry */
     $registry = resolve(SettingsSchemaRegistry::class);
 
     expect($registry->getSettingsClass('agent_bridge'))->toBe(AgentBridgeSettings::class)
         ->and($registry->getSchemas('agent_bridge'))->toContain(AgentBridgeSettingsSchema::class);
+
+    $surfaces = resolve(ExtensionManagementSurfaceRegistry::class)
+        ->surfacesForPackage(AgentBridgeServiceProvider::$packageName);
+
+    expect($surfaces[0]->settingsGroup ?? null)->toBe('agent_bridge');
 });
 
 it('exposes a translated settings toggle', function (): void {

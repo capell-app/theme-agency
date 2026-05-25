@@ -10,9 +10,14 @@ use Capell\Admin\Support\Dashboard\DefaultSiteStatsDataProvider;
 use Capell\Admin\Support\Dashboard\NullContentHealthDataProvider;
 use Capell\Admin\Support\Dashboard\NullMyWorkQueueDataProvider;
 use Capell\Admin\Support\Dashboard\NullRecentlyPublishedDataProvider;
+use Capell\Admin\Support\Extensions\ExtensionManagementSurfaceRegistry;
 use Capell\Core\Models\Page;
+use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\MigrationAssistant\Contracts\MigrationAssistantContextResolver;
 use Capell\PublishingStudio\Actions\DashboardReports\BuildContentSchedulerEventsAction;
+use Capell\PublishingStudio\Filament\Settings\PublishingStudioSettingsSchema;
+use Capell\PublishingStudio\Providers\PublishingStudioServiceProvider;
+use Capell\PublishingStudio\Settings\PublishingStudioSettings;
 use Capell\PublishingStudio\Support\Dashboard\WorkspaceContentHealthDataProvider;
 use Capell\PublishingStudio\Support\Dashboard\WorkspaceMyWorkQueueDataProvider;
 use Capell\PublishingStudio\Support\Dashboard\WorkspaceRecentlyPublishedDataProvider;
@@ -46,4 +51,16 @@ it('falls back to core dashboard providers when the workspace schema is missing'
         ->and(resolve(RecentlyPublishedDataProvider::class))->toBeInstanceOf(NullRecentlyPublishedDataProvider::class)
         ->and(resolve(SiteStatsDataProvider::class))->toBeInstanceOf(DefaultSiteStatsDataProvider::class)
         ->and(BuildContentSchedulerEventsAction::run(sourceType: 'workspace'))->toHaveCount(0);
+});
+
+it('registers publishing studio settings and extension settings surface', function (): void {
+    $settingsRegistry = resolve(SettingsSchemaRegistry::class);
+
+    expect($settingsRegistry->getSettingsClass('publishing_studio'))->toBe(PublishingStudioSettings::class)
+        ->and($settingsRegistry->getSchemas('publishing_studio'))->toContain(PublishingStudioSettingsSchema::class);
+
+    $surfaces = resolve(ExtensionManagementSurfaceRegistry::class)
+        ->surfacesForPackage(PublishingStudioServiceProvider::$packageName);
+
+    expect($surfaces[0]->settingsGroup ?? null)->toBe('publishing_studio');
 });

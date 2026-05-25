@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\LoginAudit\Providers;
 
+use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
+use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
@@ -88,6 +90,12 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
 
         $registry->registerSettingsClass('login_audit', LoginAuditSettings::class);
         $registry->register('login_audit', LoginAuditSettingsSchema::class);
+        CapellAdmin::registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
+            packageName: self::$packageName,
+            label: 'capell-login-audit::settings.security_access',
+            settingsGroup: 'login_audit',
+            icon: 'heroicon-o-shield-check',
+        ));
 
         return $this;
     }
