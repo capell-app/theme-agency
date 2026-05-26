@@ -6,6 +6,7 @@ namespace Capell\AccessGate\Models;
 
 use Capell\AccessGate\Database\Factories\ClaimTokenFactory;
 use Capell\AccessGate\Enums\ClaimTokenStatus;
+use Capell\AccessGate\Models\Event as AccessGateEvent;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -62,10 +63,10 @@ class ClaimToken extends AccessGateModel
         return $this->belongsTo(Grant::class, 'grant_id');
     }
 
-    /** @return HasMany<Event, $this> */
+    /** @return HasMany<AccessGateEvent, $this> */
     public function events(): HasMany
     {
-        return $this->hasMany(Event::class, 'claim_token_id');
+        return $this->hasMany(AccessGateEvent::class, 'claim_token_id');
     }
 
     /**

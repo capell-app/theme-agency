@@ -113,6 +113,7 @@ final class CriticalCssSettings
         if (Arr::get($context, 'meta.frontend_optimizer.disable_critical_css') === true) {
             return true;
         }
+
         if (Arr::get($context, 'page_type.meta.frontend_optimizer.disable_critical_css') === true) {
             return true;
         }

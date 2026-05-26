@@ -6,6 +6,8 @@ First-party optional packages for Capell CMS. This repository is the package wor
 
 Package pages are published at `docs.capell.app/packages/<package>/`. Each package page should be useful on its own for developers searching for a specific Capell capability, and should link to deeper docs when the package owns setup, data, workflow, API, or extension details.
 
+This repository is the source of truth for first-party package code. Individual package repositories under `capell-app/<package>` are generated splits for Composer installs and focused collaborator PRs. Maintainers merge forwarded package changes in this monorepo, not in the split repositories.
+
 Each package README follows the same shape:
 
 - At a glance: Composer name, namespace, runtime surfaces, service providers, and package dependencies.
@@ -127,6 +129,16 @@ Use package-level checks while editing:
 vendor/bin/pest packages/<package>/tests --configuration=phpunit.xml
 ```
 
+Use Pest groups when the failing area is known:
+
+```bash
+PEST_GROUP=blog composer run test:group
+PEST_GROUP=feature composer run test:group
+PEST_GROUP=blog composer run test:debug:group
+```
+
+Useful groups include package names such as `blog`, suite names such as `unit`, `feature`, `integration`, and `arch`, plus `package` for all package tests and `workspace` for shared root tests. `test:debug:group` runs without parallelism and stops on the first defect so large failure sets are easier to inspect.
+
 Use broader checks before integration:
 
 ```bash
@@ -135,6 +147,14 @@ composer preflight
 ```
 
 Do not run `php artisan` in this repository. Testbench provides the Laravel context for package tests.
+
+## Contributing Through Split Repositories
+
+Invited collaborators may open PRs against individual package repositories such as `capell-app/address` or `capell-app/blog`. Those repositories contain a generated workflow that copies the split PR contents into `packages/<package>` here and opens or updates a matching PR against `capell-app/capell-packages:4.x`.
+
+Review the forwarded monorepo PR for tests, code review, and merge. Close the split PR after the monorepo PR is merged. The split repository will be updated again by the tag-based monorepo split workflow.
+
+The forwarding workflow requires an Actions secret named `SPLIT_PR_FORWARD_TOKEN` or `ACCESS_TOKEN` with permission to read the split repo, push branches to this repository, create PRs, and comment on PRs.
 
 ## Documentation
 

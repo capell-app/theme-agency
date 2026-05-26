@@ -61,7 +61,7 @@ class CommentSettingsResolver
     }
 
     /**
-     * @param  array<string, mixed>  $overrides
+     * @param  array<string, string|int|bool|null|array<string, string|int|bool|null>>|list<array<string, string|int|bool|null>>  $overrides
      */
     private function overrideValue(array $overrides, ?string $overrideKey, string $settingKey, mixed $fallback): mixed
     {
@@ -81,7 +81,7 @@ class CommentSettingsResolver
     }
 
     /**
-     * @param  array<string, mixed>  $overrides
+     * @param  array<string, string|int|bool|null|array<string, string|int|bool|null>>|list<array<string, string|int|bool|null>>  $overrides
      * @return array<string, mixed>|null
      */
     private function listOverride(array $overrides, string $overrideKey): ?array

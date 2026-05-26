@@ -49,7 +49,34 @@ use Pest\Expectation;
  */
 function extendCapellPackageTests(string $testCase, string $group, string $package): void
 {
-    pest()->extend($testCase)->group($group)->in(sprintf('../packages/%s/tests', $package), sprintf('../Packages/%s/tests', $package));
+    pest()
+        ->extend($testCase)
+        ->group($group, 'package')
+        ->in(sprintf('../packages/%s/tests', $package), sprintf('../Packages/%s/tests', $package));
+}
+
+function groupCapellPackageTests(string ...$groups): void
+{
+    pest()->group(...$groups)->in('../packages/*/tests');
+}
+
+function groupCapellPackageDirectoriesByName(): void
+{
+    $packageTestPaths = glob(__DIR__ . '/../packages/*/tests') ?: [];
+
+    foreach ($packageTestPaths as $packageTestPath) {
+        $packageName = basename(dirname($packageTestPath));
+
+        pest()->group($packageName, 'package')->in($packageTestPath);
+    }
+}
+
+function groupCapellPackageSuiteTests(string $suite): void
+{
+    $group = strtolower($suite);
+
+    pest()->group($group, 'package')->in(sprintf('../packages/*/tests/%s', $suite));
+    pest()->group($group, 'workspace')->in(sprintf('Packages/%s', $suite));
 }
 
 /**
@@ -73,6 +100,15 @@ function capell_expect(mixed $value): Expectation
 {
     return expect($value);
 }
+
+groupCapellPackageTests('package');
+groupCapellPackageDirectoriesByName();
+groupCapellPackageSuiteTests('Arch');
+groupCapellPackageSuiteTests('Feature');
+groupCapellPackageSuiteTests('Integration');
+groupCapellPackageSuiteTests('Unit');
+pest()->group('feature', 'workspace')->in('Feature');
+pest()->group('uninstalled-packages', 'workspace', 'integration')->in('UninstalledPackages');
 
 extendCapellPackageTests(AddressTestCase::class, 'address', 'address');
 extendCapellPackageTests(AccessGateTestCase::class, 'access-gate', 'access-gate');

@@ -58,7 +58,7 @@
         "demo": null,
         "doctor": null
     },
-    "settings": ["comments"],
+    "settings": ["Capell\\Comments\\Settings\\CommentSettings"],
     "permissions": [],
     "capabilities": ["comments", "comments-admin", "comments-frontend"],
     "performance": {

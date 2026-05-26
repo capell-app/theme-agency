@@ -7,6 +7,7 @@ namespace Capell\AccessGate\Models;
 use Capell\AccessGate\Database\Factories\GrantFactory;
 use Capell\AccessGate\Enums\GrantStatus;
 use Capell\AccessGate\Enums\GrantSubjectType;
+use Capell\AccessGate\Models\Event as AccessGateEvent;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -85,11 +86,11 @@ class Grant extends AccessGateModel
     }
 
     /**
-     * @return HasMany<Event, $this>
+     * @return HasMany<AccessGateEvent, $this>
      */
     public function events(): HasMany
     {
-        return $this->hasMany(Event::class, 'grant_id');
+        return $this->hasMany(AccessGateEvent::class, 'grant_id');
     }
 
     /**

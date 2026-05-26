@@ -14,6 +14,8 @@ use Capell\CampaignStudio\Filament\Resources\CampaignCtaBlocks\Pages\ListCampaig
 use Capell\CampaignStudio\Filament\Resources\CampaignCtaBlocks\Schemas\CampaignCtaBlockForm;
 use Capell\CampaignStudio\Filament\Resources\CampaignCtaBlocks\Tables\CampaignCtaBlocksTable;
 use Capell\CampaignStudio\Models\CampaignCtaBlock;
+use Capell\CampaignStudio\Providers\CampaignStudioServiceProvider;
+use Capell\Core\Facades\CapellCore;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -32,9 +34,21 @@ final class CampaignCtaBlockResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static string $formConfigurator = CampaignCtaBlockForm::class;
+    private static string $formConfigurator = CampaignCtaBlockForm::class;
 
-    protected static string $tableConfigurator = CampaignCtaBlocksTable::class;
+    private static string $tableConfigurator = CampaignCtaBlocksTable::class;
+
+    /** @return class-string<CampaignCtaBlockForm> */
+    public static function getFormConfigurator(): string
+    {
+        return self::$formConfigurator;
+    }
+
+    /** @return class-string<CampaignCtaBlocksTable> */
+    public static function getTableConfigurator(): string
+    {
+        return self::$tableConfigurator;
+    }
 
     #[Override]
     public static function form(Schema $configurator): Schema
@@ -82,7 +96,7 @@ final class CampaignCtaBlockResource extends Resource
     #[Override]
     public static function shouldRegisterNavigation(): bool
     {
-        return false;
+        return CapellCore::getPackage(CampaignStudioServiceProvider::$packageName)->isInstalled();
     }
 
     #[Override]

@@ -6,6 +6,7 @@ namespace Capell\AccessGate\Models;
 
 use Capell\AccessGate\Database\Factories\BrowserTokenFactory;
 use Capell\AccessGate\Enums\BrowserTokenStatus;
+use Capell\AccessGate\Models\Event as AccessGateEvent;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -66,11 +67,11 @@ class BrowserToken extends AccessGateModel
     }
 
     /**
-     * @return HasMany<Event, $this>
+     * @return HasMany<AccessGateEvent, $this>
      */
     public function events(): HasMany
     {
-        return $this->hasMany(Event::class, 'browser_token_id');
+        return $this->hasMany(AccessGateEvent::class, 'browser_token_id');
     }
 
     /**

@@ -21,6 +21,7 @@ final class BuildStaleDraftsQueryAction
         $cutoff = now()->subDays($thresholdDays);
 
         return Workspace::query()
+            ->with('editor')
             ->whereIn('status', [
                 WorkspaceStatusEnum::Open->value,
                 WorkspaceStatusEnum::InReview->value,

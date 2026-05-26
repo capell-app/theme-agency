@@ -96,9 +96,11 @@ final class BuildAgentDeliveryPageAction
             if (! $pageUrl->status) {
                 continue;
             }
+
             if ($pageUrl->language === null) {
                 continue;
             }
+
             $locale = $pageUrl->language->locale ?? $pageUrl->language->code;
             $alternates[$locale] = $pageUrl->full_url;
         }
@@ -174,6 +176,7 @@ final class BuildAgentDeliveryPageAction
             if (! is_string($url)) {
                 continue;
             }
+
             if (! $this->isPublicUrl($url)) {
                 continue;
             }

@@ -10,6 +10,7 @@ use Capell\AccessGate\Enums\ApprovalStrategy;
 use Capell\AccessGate\Enums\IdentityMode;
 use Capell\AccessGate\Enums\RegistrationPolicy;
 use Capell\AccessGate\Enums\TokenPolicy;
+use Capell\AccessGate\Models\Event as AccessGateEvent;
 use Capell\Core\Models\Site;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -114,11 +115,11 @@ class Area extends AccessGateModel
     }
 
     /**
-     * @return HasMany<Event, $this>
+     * @return HasMany<AccessGateEvent, $this>
      */
     public function events(): HasMany
     {
-        return $this->hasMany(Event::class, 'access_area_id');
+        return $this->hasMany(AccessGateEvent::class, 'access_area_id');
     }
 
     /**

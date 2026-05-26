@@ -17,7 +17,6 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Filament\Widgets\Dashboard\MyWorkQueueWidget;
 use Capell\Admin\Filament\Widgets\Dashboard\RecentlyPublishedWidget;
 use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
-use Capell\Admin\Support\CapellAdminManager;
 use Capell\Admin\Support\Dashboard\DefaultSiteStatsDataProvider;
 use Capell\Admin\Support\Dashboard\NullContentHealthDataProvider;
 use Capell\Admin\Support\Dashboard\NullMyWorkQueueDataProvider;
@@ -264,11 +263,9 @@ class AdminServiceProvider extends ServiceProvider
             return false;
         }
 
-        $managerMethods = get_class_methods(CapellAdminManager::class);
-
         return is_object($admin)
-            && in_array('registerAdminBridge', $managerMethods, true)
-            && in_array('bootAdminBridges', $managerMethods, true)
+            && method_exists($admin, 'registerAdminBridge')
+            && method_exists($admin, 'bootAdminBridges')
             && class_exists(PublishingStudioAdminBridge::class)
             && class_exists(AdminBridgeRegistrar::class);
     }

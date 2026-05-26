@@ -6,6 +6,7 @@ namespace Capell\EmailStudio\Actions;
 
 use Capell\EmailStudio\Data\EmailAddressData;
 use Capell\EmailStudio\Data\EmailContextData;
+use Capell\EmailStudio\Data\EmailHeaderData;
 use Capell\EmailStudio\Data\SendEmailData;
 use Capell\EmailStudio\Enums\EmailMessageStatus;
 use Capell\EmailStudio\Enums\EmailRecipientStatus;
@@ -117,11 +118,11 @@ class SendEmailAction
     private function recipientRows(SendEmailData $data): Collection
     {
         return collect([
-            'to' => $data->to,
-            'cc' => $data->cc,
-            'bcc' => $data->bcc,
+            'to' => $data->to->items(),
+            'cc' => $data->cc->items(),
+            'bcc' => $data->bcc->items(),
         ])->flatMap(fn (mixed $addresses, string $type): array => collect($addresses)
-            ->map(fn (mixed $address): array => [
+            ->map(fn (EmailAddressData $address): array => [
                 'type' => $type,
                 'address' => $address,
             ])
@@ -134,12 +135,8 @@ class SendEmailAction
      */
     private function headersToArray(SendEmailData $data): array
     {
-        return collect($data->headers)
-            ->mapWithKeys(function (mixed $header): array {
-                $headerData = $header;
-
-                return [$headerData->name => $headerData->value];
-            })
+        return collect($data->headers->items())
+            ->mapWithKeys(fn (EmailHeaderData $header): array => [$header->name => $header->value])
             ->all();
     }
 }

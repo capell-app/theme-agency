@@ -208,9 +208,11 @@ class PageSeoSettingsTabExtender implements PageSchemaExtender
             if (is_string($key) && $value !== true) {
                 continue;
             }
+
             if (! is_string($directive)) {
                 continue;
             }
+
             if (! isset($validDirectives[$directive])) {
                 continue;
             }

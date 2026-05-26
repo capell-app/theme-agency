@@ -34,8 +34,10 @@ class CommentSettings extends Settings implements SettingsContract, SettingsSche
 
     public int $token_expiry_hours = 72;
 
+    /** @phpstan-var array<string, string|int|bool|null|array<string, string|int|bool|null>>|list<array<string, string|int|bool|null>> */
     public array $site_overrides = [];
 
+    /** @phpstan-var array<string, string|int|bool|null|array<string, string|int|bool|null>>|list<array<string, string|int|bool|null>> */
     public array $commentable_type_overrides = [];
 
     public static function group(): string

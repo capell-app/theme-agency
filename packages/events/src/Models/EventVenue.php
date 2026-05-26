@@ -10,6 +10,7 @@ use Capell\Core\Models\Contracts\Statusable;
 use Capell\Core\Models\Contracts\Userstampable;
 use Capell\Core\Models\Site;
 use Capell\Events\Database\Factories\EventVenueFactory;
+use Capell\Events\Models\Event as EventModel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -55,11 +56,11 @@ class EventVenue extends Model implements Statusable, Userstampable
     }
 
     /**
-     * @return HasMany<Event, $this>
+     * @return HasMany<EventModel, $this>
      */
     public function events(): HasMany
     {
-        return $this->hasMany(Event::class, 'event_venue_id');
+        return $this->hasMany(EventModel::class, 'event_venue_id');
     }
 
     /**

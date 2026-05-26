@@ -22,7 +22,7 @@ it('dashboard-dashboard_reports page types registered via CapellCore', function 
         ->first(fn (RegistrySectionData $section): bool => $section->name === 'Page types');
 
     expect($pageTypesSection)->not->toBeNull()
-        ->and($pageTypesSection->entries->pluck('class')->all())
+        ->and($pageTypesSection->entries->toCollection()->pluck('class')->all())
         ->toContain(Page::class);
 });
 

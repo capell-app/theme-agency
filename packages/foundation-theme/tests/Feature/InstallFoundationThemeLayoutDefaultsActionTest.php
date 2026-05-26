@@ -24,7 +24,7 @@ it('registers layout builder morph models during a same-process fresh install', 
         expect($result['created'])->toBeGreaterThanOrEqual(2)
             ->and(Relation::getMorphedModel('block'))->toBe(Widget::class)
             ->and(Relation::getMorphedModel('block_asset'))->toBe(WidgetAsset::class)
-            ->and(Layout::query()->where('key', LayoutEnum::Home->value)->firstOrFail()->blocks)->toBe(['page-content']);
+            ->and(Layout::query()->where('key', LayoutEnum::Home->value)->firstOrFail()->widgets)->toBe(['page-content']);
     } finally {
         Relation::morphMap($originalMorphMap, merge: false);
     }

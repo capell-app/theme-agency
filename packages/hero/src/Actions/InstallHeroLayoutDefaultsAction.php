@@ -56,13 +56,13 @@ final class InstallHeroLayoutDefaultsAction
                         'colspan' => 12,
                         'container' => ContainerWidthEnum::Full,
                     ],
-                    'blocks' => [
-                        ['block_key' => $heroBlock->key],
+                    'widgets' => [
+                        ['widget_key' => $heroBlock->key],
                     ],
                 ],
                 ...$this->mainContainer($homeLayout->containers),
             ],
-            'blocks' => [$heroBlock->key, 'page-content'],
+            'widgets' => [$heroBlock->key, 'page-content'],
         ]);
 
         return [
@@ -87,8 +87,8 @@ final class InstallHeroLayoutDefaultsAction
         return [
             'main' => [
                 ...$main,
-                'blocks' => [
-                    ['block_key' => 'page-content'],
+                'widgets' => [
+                    ['widget_key' => 'page-content'],
                 ],
             ],
         ];

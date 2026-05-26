@@ -52,7 +52,7 @@ final class InstallFoundationThemeLayoutDefaultsAction
 
             $layout->update([
                 'containers' => $containers,
-                'blocks' => $this->blockKeys($containers),
+                'widgets' => $this->widgetKeys($containers),
             ]);
 
             ApplyLayoutSidebarBlockContributionsAction::run($layout);
@@ -76,18 +76,18 @@ final class InstallFoundationThemeLayoutDefaultsAction
         return [
             LayoutEnum::Home->value => [
                 'main' => $this->mainContainer([
-                    ['block_key' => 'page-content'],
+                    ['widget_key' => 'page-content'],
                 ], 12),
             ],
             LayoutEnum::Default->value => [
                 'main' => $this->mainContainer([
-                    ['block_key' => 'breadcrumbs'],
-                    ['block_key' => 'page-content'],
-                    ['block_key' => 'children'],
+                    ['widget_key' => 'breadcrumbs'],
+                    ['widget_key' => 'page-content'],
+                    ['widget_key' => 'children'],
                 ]),
                 'sidebar' => $this->sidebarContainer([
-                    ['block_key' => 'siblings'],
-                    ['block_key' => 'latest-pages'],
+                    ['widget_key' => 'siblings'],
+                    ['widget_key' => 'latest-pages'],
                 ]),
             ],
         ];
@@ -108,7 +108,7 @@ final class InstallFoundationThemeLayoutDefaultsAction
                 'padding' => ['md'],
                 'html_class' => 'sidebar-sticky space-y-8',
             ],
-            'blocks' => $blocks,
+            'widgets' => $blocks,
         ];
     }
 
@@ -122,7 +122,7 @@ final class InstallFoundationThemeLayoutDefaultsAction
             'meta' => [
                 'colspan' => $colspan,
             ],
-            'blocks' => $blocks,
+            'widgets' => $blocks,
         ];
     }
 
@@ -130,12 +130,12 @@ final class InstallFoundationThemeLayoutDefaultsAction
      * @param  array<string, array<string, mixed>>  $containers
      * @return array<int, string>
      */
-    private function blockKeys(array $containers): array
+    private function widgetKeys(array $containers): array
     {
         return collect($containers)
-            ->flatMap(fn (array $container): array => $container['blocks'] ?? [])
-            ->unique('block_key')
-            ->pluck('block_key')
+            ->flatMap(fn (array $container): array => $container['widgets'] ?? [])
+            ->unique('widget_key')
+            ->pluck('widget_key')
             ->values()
             ->all();
     }

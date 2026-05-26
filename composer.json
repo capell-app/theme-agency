@@ -48,6 +48,9 @@
             "@test"
         ],
         "test:unit": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --configuration=phpunit.xml",
+        "test:group": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --group=${PEST_GROUP:-unit} --configuration=phpunit.xml",
+        "test:debug": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --debug --stop-on-defect --configuration=phpunit.xml",
+        "test:debug:group": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --debug --stop-on-defect --group=${PEST_GROUP:-unit} --configuration=phpunit.xml",
         "test:fast": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --shard=${PEST_SHARD:-1/1} --stop-on-error --stop-on-failure --configuration=phpunit.xml",
         "test:fast:ci": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --shard=${PEST_SHARD:-1/1} --configuration=phpunit.xml",
         "test:all": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --stop-on-error --stop-on-failure --configuration=phpunit.xml",
@@ -97,10 +100,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/fdemb/laravel-authentication-log"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/howdu/filament-adjacency-list"
         }
     ],
     "require": {
@@ -147,7 +146,7 @@
         "prism-php/prism": "^0.100",
         "rappasoft/laravel-authentication-log": "dev-main as 6.0.1",
         "rlanvin/php-rrule": "^2.6",
-        "saade/filament-adjacency-list": "dev-feat/laravel-13-support",
+        "saade/filament-adjacency-list": "^4.0.2",
         "spatie/icalendar-generator": "^3.2",
         "spatie/laravel-activitylog": "^4.0",
         "spatie/laravel-data": "^4.5",

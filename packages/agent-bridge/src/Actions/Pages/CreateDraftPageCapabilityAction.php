@@ -110,11 +110,12 @@ final class CreateDraftPageCapabilityAction implements CapellAgentBridgeCapabili
 
     private function isGlobalAdmin(Authenticatable $user): bool
     {
-        if ($user->isGlobalAdmin() === true) {
+        if (is_callable([$user, 'isGlobalAdmin']) && $user->isGlobalAdmin() === true) {
             return true;
         }
 
-        return $user->hasRole(config('capell.roles.super_admin', 'super_admin')) === true;
+        return is_callable([$user, 'hasRole'])
+            && $user->hasRole(config('capell.roles.super_admin', 'super_admin')) === true;
     }
 
     /** @return class-string<Model> */

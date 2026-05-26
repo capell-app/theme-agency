@@ -73,6 +73,9 @@ final class BuildPageImageSchemaAction
 
     private function loadedRelation(Pageable $page, string $relation): mixed
     {
+        if (! $page->relationLoaded($relation)) {
+            return null;
+        }
 
         return $page->getRelation($relation);
     }

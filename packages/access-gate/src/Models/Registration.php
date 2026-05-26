@@ -6,6 +6,7 @@ namespace Capell\AccessGate\Models;
 
 use Capell\AccessGate\Database\Factories\RegistrationFactory;
 use Capell\AccessGate\Enums\RegistrationStatus;
+use Capell\AccessGate\Models\Event as AccessGateEvent;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -79,10 +80,10 @@ class Registration extends AccessGateModel
         return $this->hasMany(ClaimToken::class, 'registration_id');
     }
 
-    /** @return HasMany<Event, $this> */
+    /** @return HasMany<AccessGateEvent, $this> */
     public function events(): HasMany
     {
-        return $this->hasMany(Event::class, 'registration_id');
+        return $this->hasMany(AccessGateEvent::class, 'registration_id');
     }
 
     /**

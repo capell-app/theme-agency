@@ -61,7 +61,7 @@ it('builds block asset render data from loaded relations only', function (): voi
 
     $renderData = BuildBlockAssetRenderDataAction::run($blockAsset);
 
-    expect($renderData->image)->toBe($media)
+    expect($renderData->image?->media?->is($media))->toBeTrue()
         ->and($renderData->linkedPage)->toBe($linkedPage)
         ->and($renderData->title)->toBe('North Star')
         ->and($renderData->alt)->toBe('North Star')

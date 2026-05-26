@@ -15,7 +15,7 @@ it('installs compact natural home hero defaults', function (): void {
         ->where('key', LayoutEnum::Home->value)
         ->firstOrFail();
 
-    $homeLayout->update(['containers' => [], 'blocks' => []]);
+    $homeLayout->update(['containers' => [], 'widgets' => []]);
 
     Page::factory()
         ->layout($homeLayout)
@@ -33,10 +33,10 @@ it('installs compact natural home hero defaults', function (): void {
     $heroBlock = Widget::query()->where('key', 'hero')->firstOrFail();
 
     capell_expect(array_keys($homeLayout->containers))->toBe(['hero', 'main'])
-        ->and($homeLayout->containers['hero']['blocks'])->toBe([
-            ['block_key' => 'hero'],
+        ->and($homeLayout->containers['hero']['widgets'])->toBe([
+            ['widget_key' => 'hero'],
         ])
-        ->and($homeLayout->blocks)->toBe(['hero', 'page-content'])
+        ->and($homeLayout->widgets)->toBe(['hero', 'page-content'])
         ->and($heroBlock->getMeta('height'))->toBe('small')
         ->and($heroBlock->getMeta('color'))->toBe('light')
         ->and($heroBlock->getMeta('content_align'))->toBe('center')
@@ -59,7 +59,7 @@ it('does not duplicate hero defaults on repeated setup', function (): void {
     Layout::query()
         ->where('key', LayoutEnum::Home->value)
         ->firstOrFail()
-        ->update(['containers' => [], 'blocks' => []]);
+        ->update(['containers' => [], 'widgets' => []]);
 
     Widget::query()->where('key', 'hero')->delete();
 
@@ -69,6 +69,6 @@ it('does not duplicate hero defaults on repeated setup', function (): void {
     $homeLayout = Layout::query()->where('key', LayoutEnum::Home->value)->firstOrFail();
 
     capell_expect(array_keys($homeLayout->containers))->toBe(['hero', 'main'])
-        ->and($homeLayout->blocks)->toBe(['hero', 'page-content'])
+        ->and($homeLayout->widgets)->toBe(['hero', 'page-content'])
         ->and(Widget::query()->where('key', 'hero')->count())->toBe(1);
 });

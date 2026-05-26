@@ -35,7 +35,7 @@ final class RecordEventAction
         ?Model $subject = null,
     ): Event {
         return Event::query()->create([
-            'access_area_id' => $area->getKey() ?? $registration->access_area_id ?? $grant->access_area_id ?? $claimToken->access_area_id ?? $browserToken->access_area_id,
+            'access_area_id' => $this->accessAreaId($area, $registration, $grant, $claimToken, $browserToken),
             'registration_id' => $registration?->getKey(),
             'grant_id' => $grant?->getKey(),
             'claim_token_id' => $claimToken?->getKey(),
@@ -48,5 +48,31 @@ final class RecordEventAction
             'metadata' => $metadata,
             'occurred_at' => now(),
         ]);
+    }
+
+    private function accessAreaId(
+        ?Area $area,
+        ?Registration $registration,
+        ?Grant $grant,
+        ?ClaimToken $claimToken,
+        ?BrowserToken $browserToken,
+    ): int|string|null {
+        if ($area instanceof Area) {
+            return $area->getKey();
+        }
+
+        if ($registration instanceof Registration) {
+            return $registration->access_area_id;
+        }
+
+        if ($grant instanceof Grant) {
+            return $grant->access_area_id;
+        }
+
+        if ($claimToken instanceof ClaimToken) {
+            return $claimToken->access_area_id;
+        }
+
+        return $browserToken?->access_area_id;
     }
 }

@@ -120,7 +120,7 @@ abstract class AbstractBlock extends Component
     {
         $block = $this->resolveScopedBlock();
 
-        throw_if(! $block instanceof Widget, Exception::class, 'Block not found');
+        throw_if(! $block instanceof Widget, Exception::class, 'Widget not found');
 
         return $block;
     }
@@ -214,7 +214,7 @@ abstract class AbstractBlock extends Component
         $blockData = $reference['block_data'] ?? [];
         $blockIndex = $reference['block_index'] ?? null;
 
-        throw_if(! is_string($containerKey) || $containerKey === '' || ! is_string($blockKey) || $blockKey === '', Exception::class, 'Block reference is invalid');
+        throw_if(! is_string($containerKey) || $containerKey === '' || ! is_string($blockKey) || $blockKey === '', Exception::class, 'Widget reference is invalid');
 
         $this->containerKey = $containerKey;
         $this->blockKey = $blockKey;
@@ -227,7 +227,7 @@ abstract class AbstractBlock extends Component
         $this->referenceBlockData = is_array($blockData) ? $blockData : [];
         $this->blockIndex = is_numeric($blockIndex) ? max(0, (int) $blockIndex) : 0;
 
-        throw_if($this->pageId === null || $this->siteId === null, Exception::class, 'Block reference is invalid');
+        throw_if($this->pageId === null || $this->siteId === null, Exception::class, 'Widget reference is invalid');
 
         $this->clearResolvedContext();
     }

@@ -65,8 +65,11 @@ function packageSettingsClasses(): array
 
         foreach ($autoloadMap as $namespace => $basePath) {
             $realBasePath = realpath($basePath);
+            if ($realBasePath === false) {
+                continue;
+            }
 
-            if ($realBasePath === false || ! str_starts_with($path, $realBasePath . DIRECTORY_SEPARATOR)) {
+            if (! str_starts_with($path, $realBasePath . DIRECTORY_SEPARATOR)) {
                 continue;
             }
 
@@ -101,7 +104,15 @@ function packagePsr4AutoloadMap(): array
     $map = [];
 
     foreach ($psr4 as $namespace => $path) {
-        if (! is_string($namespace) || ! is_string($path) || ! str_starts_with($path, 'packages/')) {
+        if (! is_string($namespace)) {
+            continue;
+        }
+
+        if (! is_string($path)) {
+            continue;
+        }
+
+        if (! str_starts_with($path, 'packages/')) {
             continue;
         }
 

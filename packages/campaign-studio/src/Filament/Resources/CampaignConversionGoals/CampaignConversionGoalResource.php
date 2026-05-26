@@ -14,6 +14,8 @@ use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\Pages\ListC
 use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\Schemas\CampaignConversionGoalForm;
 use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\Tables\CampaignConversionGoalsTable;
 use Capell\CampaignStudio\Models\CampaignConversionGoal;
+use Capell\CampaignStudio\Providers\CampaignStudioServiceProvider;
+use Capell\Core\Facades\CapellCore;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -32,9 +34,21 @@ final class CampaignConversionGoalResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static string $formConfigurator = CampaignConversionGoalForm::class;
+    private static string $formConfigurator = CampaignConversionGoalForm::class;
 
-    protected static string $tableConfigurator = CampaignConversionGoalsTable::class;
+    private static string $tableConfigurator = CampaignConversionGoalsTable::class;
+
+    /** @return class-string<CampaignConversionGoalForm> */
+    public static function getFormConfigurator(): string
+    {
+        return self::$formConfigurator;
+    }
+
+    /** @return class-string<CampaignConversionGoalsTable> */
+    public static function getTableConfigurator(): string
+    {
+        return self::$tableConfigurator;
+    }
 
     #[Override]
     public static function form(Schema $configurator): Schema
@@ -82,7 +96,7 @@ final class CampaignConversionGoalResource extends Resource
     #[Override]
     public static function shouldRegisterNavigation(): bool
     {
-        return false;
+        return CapellCore::getPackage(CampaignStudioServiceProvider::$packageName)->isInstalled();
     }
 
     #[Override]

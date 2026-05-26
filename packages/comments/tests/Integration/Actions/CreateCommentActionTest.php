@@ -41,7 +41,9 @@ it('creates anonymous comments as pending email verification by default', functi
 });
 
 it('auto publishes only verified trusted authors when configured', function (): void {
-    config()->set('capell-comments.publication_policy', CommentPublicationPolicy::AutoPublish->value);
+    bindCommentSettings([
+        'publication_policy' => CommentPublicationPolicy::AutoPublish->value,
+    ]);
 
     $page = $this->createCommentsPage();
     $user = User::factory()->create(['email' => 'trusted@example.com', 'email_verified_at' => now(), 'name' => 'Trusted User']);
@@ -64,7 +66,9 @@ it('auto publishes only verified trusted authors when configured', function (): 
 
 it('does not let anonymous commenters inherit trusted author verification', function (): void {
     Notification::fake();
-    config()->set('capell-comments.publication_policy', CommentPublicationPolicy::AutoPublish->value);
+    bindCommentSettings([
+        'publication_policy' => CommentPublicationPolicy::AutoPublish->value,
+    ]);
 
     $page = $this->createCommentsPage();
     $author = CommentAuthor::factory()->trusted()->create([
@@ -172,22 +176,14 @@ it('does not consume expired or wrong-purpose verification tokens', function ():
 });
 
 it('applies commentable-specific identity mode overrides during submission', function (): void {
-    /** @var CommentSettings $settings */
-    $settings = (new ReflectionClass(CommentSettings::class))->newInstanceWithoutConstructor();
-    $settings->enabled = true;
-    $settings->identity_mode = 'both';
-    $settings->publication_policy = CommentPublicationPolicy::RequireApproval->value;
-    $settings->verification_flow = 'verify_then_moderate';
-    $settings->require_email_verification = true;
-    $settings->max_depth = 4;
-    $settings->site_overrides = [];
-    $settings->commentable_type_overrides = [
-        [
-            'commentable_type' => 'page',
-            'identity_mode' => 'authenticated',
+    bindCommentSettings([
+        'commentable_type_overrides' => [
+            [
+                'commentable_type' => 'page',
+                'identity_mode' => 'authenticated',
+            ],
         ],
-    ];
-    app()->instance(CommentSettings::class, $settings);
+    ]);
 
     $page = $this->createCommentsPage();
 
@@ -198,6 +194,29 @@ it('applies commentable-specific identity mode overrides during submission', fun
         authorEmail: 'ben@example.com',
     ));
 })->throws(ValidationException::class);
+
+/**
+ * @param  array<string, mixed>  $overrides
+ */
+function bindCommentSettings(array $overrides = []): void
+{
+    /** @var CommentSettings $settings */
+    $settings = (new ReflectionClass(CommentSettings::class))->newInstanceWithoutConstructor();
+    $settings->enabled = true;
+    $settings->identity_mode = 'both';
+    $settings->publication_policy = CommentPublicationPolicy::RequireApproval->value;
+    $settings->verification_flow = 'verify_then_moderate';
+    $settings->require_email_verification = true;
+    $settings->max_depth = 4;
+    $settings->site_overrides = [];
+    $settings->commentable_type_overrides = [];
+
+    foreach ($overrides as $property => $value) {
+        $settings->{$property} = $value;
+    }
+
+    app()->instance(CommentSettings::class, $settings);
+}
 
 it('keeps authenticated comments pending email verification when the user email is unverified', function (): void {
     Notification::fake();
@@ -221,7 +240,9 @@ it('keeps authenticated comments pending email verification when the user email 
 });
 
 it('does not approve comments before required email verification', function (): void {
-    config()->set('capell-comments.verification_flow', 'moderate_then_verify');
+    bindCommentSettings([
+        'verification_flow' => 'moderate_then_verify',
+    ]);
 
     $page = $this->createCommentsPage();
     $comment = CreateCommentAction::run(new CreateCommentData(

@@ -212,9 +212,11 @@ final class RegisterLayoutBuilderPreviewBlocksAction
             if (! is_array($asset)) {
                 continue;
             }
+
             if (! isset($asset['asset_type'], $asset['asset_id'])) {
                 continue;
             }
+
             $type = (string) $asset['asset_type'];
             $idsByType[$type] ??= [];
             $idsByType[$type][] = $asset['asset_id'];
@@ -227,9 +229,11 @@ final class RegisterLayoutBuilderPreviewBlocksAction
             if (! is_string($class)) {
                 continue;
             }
+
             if (! class_exists($class)) {
                 continue;
             }
+
             if (! is_subclass_of($class, Model::class)) {
                 continue;
             }

@@ -34,9 +34,21 @@ final class CampaignLandingPageResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'headline';
 
-    protected static string $formConfigurator = CampaignLandingPageForm::class;
+    private static string $formConfigurator = CampaignLandingPageForm::class;
 
-    protected static string $tableConfigurator = CampaignLandingPagesTable::class;
+    private static string $tableConfigurator = CampaignLandingPagesTable::class;
+
+    /** @return class-string<CampaignLandingPageForm> */
+    public static function getFormConfigurator(): string
+    {
+        return self::$formConfigurator;
+    }
+
+    /** @return class-string<CampaignLandingPagesTable> */
+    public static function getTableConfigurator(): string
+    {
+        return self::$tableConfigurator;
+    }
 
     #[Override]
     public static function form(Schema $configurator): Schema

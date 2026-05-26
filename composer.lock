@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f03040115acf17c6e657a802594a172",
+    "content-hash": "1f83f674d7dbd8b75406173d04dc0149",
     "packages": [
         {
             "name": "aimeos/laravel-nestedset",
@@ -746,7 +746,7 @@
                 "lorisleiva/laravel-actions": "^2.8",
                 "pboivin/filament-peek": "^3.0|^4.0",
                 "php": "^8.3",
-                "saade/filament-adjacency-list": "dev-feat/laravel-13-support",
+                "saade/filament-adjacency-list": "^4.0.2",
                 "spatie/laravel-package-tools": "^1.15",
                 "stechstudio/filament-impersonate": "^5.3",
                 "tanmuhittin/laravel-google-translate": "^2.4"
@@ -2246,7 +2246,7 @@
             ],
             "authors": [
                 {
-                    "name": "François Zaninotto"
+                    "name": "Fran\u00e7ois Zaninotto"
                 }
             ],
             "description": "Faker is a PHP library that generates fake data for you.",
@@ -3703,7 +3703,7 @@
                     "homepage": "https://github.com/Nyholm"
                 },
                 {
-                    "name": "Márk Sági-Kazár",
+                    "name": "M\u00e1rk S\u00e1gi-Kaz\u00e1r",
                     "email": "mark.sagikazar@gmail.com",
                     "homepage": "https://github.com/sagikazarmark"
                 },
@@ -3899,7 +3899,7 @@
                     "homepage": "https://github.com/Nyholm"
                 },
                 {
-                    "name": "Márk Sági-Kazár",
+                    "name": "M\u00e1rk S\u00e1gi-Kaz\u00e1r",
                     "email": "mark.sagikazar@gmail.com",
                     "homepage": "https://github.com/sagikazarmark"
                 },
@@ -3909,7 +3909,7 @@
                     "homepage": "https://github.com/Tobion"
                 },
                 {
-                    "name": "Márk Sági-Kazár",
+                    "name": "M\u00e1rk S\u00e1gi-Kaz\u00e1r",
                     "email": "mark.sagikazar@gmail.com",
                     "homepage": "https://sagikazarmark.hu"
                 }
@@ -6232,7 +6232,7 @@
                     "email": "pabs@pablotron.org"
                 },
                 {
-                    "name": "Jonatan Männchen",
+                    "name": "Jonatan M\u00e4nnchen",
                     "email": "jonatan@maennchen.ch"
                 },
                 {
@@ -6240,7 +6240,7 @@
                     "email": "donatj@gmail.com"
                 },
                 {
-                    "name": "András Kolesár",
+                    "name": "Andr\u00e1s Koles\u00e1r",
                     "email": "kolesar@kolesar.hu"
                 }
             ],
@@ -6663,7 +6663,7 @@
                     "homepage": "https://nette.org/contributors"
                 }
             ],
-            "description": "🐘 Nette PHP Generator: generates neat PHP code for you. Supports new PHP 8.5 features.",
+            "description": "\ud83d\udc18 Nette PHP Generator: generates neat PHP code for you. Supports new PHP 8.5 features.",
             "homepage": "https://nette.org",
             "keywords": [
                 "code",
@@ -6732,7 +6732,7 @@
                     "homepage": "https://nette.org/contributors"
                 }
             ],
-            "description": "📐 Nette Schema: validating data structures against a given Schema.",
+            "description": "\ud83d\udcd0 Nette Schema: validating data structures against a given Schema.",
             "homepage": "https://nette.org",
             "keywords": [
                 "config",
@@ -6811,7 +6811,7 @@
                     "homepage": "https://nette.org/contributors"
                 }
             ],
-            "description": "🛠  Nette Utils: lightweight utilities for string & array manipulation, image handling, safe JSON encoding/decoding, validation, slug or strong password generating etc.",
+            "description": "\ud83d\udee0  Nette Utils: lightweight utilities for string & array manipulation, image handling, safe JSON encoding/decoding, validation, slug or strong password generating etc.",
             "homepage": "https://nette.org",
             "keywords": [
                 "array",
@@ -7643,7 +7643,7 @@
             ],
             "authors": [
                 {
-                    "name": "Márk Sági-Kazár",
+                    "name": "M\u00e1rk S\u00e1gi-Kaz\u00e1r",
                     "email": "mark.sagikazar@gmail.com"
                 }
             ],
@@ -9149,16 +9149,16 @@
         },
         {
             "name": "saade/filament-adjacency-list",
-            "version": "dev-feat/laravel-13-support",
+            "version": "v4.0.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/howdu/filament-adjacency-list.git",
-                "reference": "b08115304c45c46c3d0bef4e67963ffbcf2be84b"
+                "url": "https://github.com/saade/filament-adjacency-list.git",
+                "reference": "b1df48323f0b591ef0f1ed3b2fd81c94749621ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/howdu/filament-adjacency-list/zipball/b08115304c45c46c3d0bef4e67963ffbcf2be84b",
-                "reference": "b08115304c45c46c3d0bef4e67963ffbcf2be84b",
+                "url": "https://api.github.com/repos/saade/filament-adjacency-list/zipball/b1df48323f0b591ef0f1ed3b2fd81c94749621ff",
+                "reference": "b1df48323f0b591ef0f1ed3b2fd81c94749621ff",
                 "shasum": ""
             },
             "require": {
@@ -9199,25 +9199,7 @@
                     "Saade\\FilamentAdjacencyList\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "post-autoload-dump": [
-                    "@php ./vendor/bin/testbench package:discover --ansi"
-                ],
-                "analyse": [
-                    "vendor/bin/phpstan analyse"
-                ],
-                "test": [
-                    "vendor/bin/pest"
-                ],
-                "format": [
-                    "vendor/bin/pint"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -9241,11 +9223,11 @@
             },
             "funding": [
                 {
-                    "type": "github",
-                    "url": "https://github.com/saade"
+                    "url": "https://github.com/saade",
+                    "type": "github"
                 }
             ],
-            "time": "2026-04-27T21:27:06+00:00"
+            "time": "2026-05-05T04:22:16+00:00"
         },
         {
             "name": "scrivo/highlight.php",
@@ -11279,7 +11261,7 @@
                     "email": "fabien@symfony.com"
                 },
                 {
-                    "name": "Jean-François Simon",
+                    "name": "Jean-Fran\u00e7ois Simon",
                     "email": "jeanfrancois.simon@sensiolabs.com"
                 },
                 {
@@ -13006,7 +12988,7 @@
             ],
             "authors": [
                 {
-                    "name": "Grégoire Pineau",
+                    "name": "Gr\u00e9goire Pineau",
                     "email": "lyrixx@lyrixx.info"
                 },
                 {
@@ -13591,7 +13573,7 @@
             ],
             "authors": [
                 {
-                    "name": "Grégoire Pineau",
+                    "name": "Gr\u00e9goire Pineau",
                     "email": "lyrixx@lyrixx.info"
                 },
                 {
@@ -15261,7 +15243,7 @@
             ],
             "authors": [
                 {
-                    "name": "Théo FIDRY",
+                    "name": "Th\u00e9o FIDRY",
                     "email": "theo.fidry@gmail.com"
                 }
             ],
@@ -16063,7 +16045,7 @@
             ],
             "authors": [
                 {
-                    "name": "Pádraic Brady",
+                    "name": "P\u00e1draic Brady",
                     "email": "padraic.brady@gmail.com",
                     "homepage": "https://github.com/padraic",
                     "role": "Author"
@@ -19291,7 +19273,7 @@
             ],
             "authors": [
                 {
-                    "name": "René Sinnbeck",
+                    "name": "Ren\u00e9 Sinnbeck",
                     "email": "rene.sinnbeck@gmail.com",
                     "homepage": "https://sinnbeck.dev",
                     "role": "Developer"
@@ -20279,7 +20261,7 @@
         "ext-intl": "*",
         "ext-simplexml": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "8.3.0"
     },

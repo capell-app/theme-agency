@@ -45,16 +45,10 @@ The demo app `composer.json` is configured with local symlink path repositories:
     },
     {
         "type": "vcs",
-        "url": "https://github.com/howdu/filament-adjacency-list"
-    },
-    {
-        "type": "vcs",
         "url": "https://github.com/fdemb/laravel-authentication-log"
     }
 ]
 ```
-
-The `howdu/filament-adjacency-list` repository is required by the local `capell-app/admin` dependency on `saade/filament-adjacency-list:dev-feat/laravel-13-support`.
 
 The `fdemb/laravel-authentication-log` repository is required while testing `capell-app/login-audit` on Laravel 13. Use the fork as a root app alias until [rappasoft/laravel-authentication-log#140](https://github.com/rappasoft/laravel-authentication-log/pull/140) is released upstream:
 

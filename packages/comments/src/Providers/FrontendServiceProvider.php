@@ -21,13 +21,15 @@ class FrontendServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
+        $this
+            ->registerLivewireComponents()
+            ->registerBladeComponents();
+
         if (! $this->isPackageInstalled()) {
             return;
         }
 
         $this
-            ->registerLivewireComponents()
-            ->registerBladeComponents()
             ->registerRenderables()
             ->registerAutoInjection();
     }

@@ -41,7 +41,13 @@ it('creates the unsaved preview snapshot when the header action is clicked', fun
         ->callAction('peekPagePreview')
         ->assertDispatched('open-preview-modal');
 
-    $event = collect($component->effects['dispatches'] ?? [])
+    $dispatches = $component->effects['dispatches'] ?? [];
+
+    if (! is_array($dispatches)) {
+        $dispatches = [];
+    }
+
+    $event = collect($dispatches)
         ->firstWhere('name', 'open-preview-modal');
 
     expect($event)->not->toBeNull();

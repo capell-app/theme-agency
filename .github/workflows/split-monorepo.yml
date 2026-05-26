@@ -20,6 +20,8 @@ jobs:
             repository_name: address
           - package_directory: packages/agent-bridge
             repository_name: agent-bridge
+          - package_directory: packages/agent-delivery
+            repository_name: agent-delivery
           - package_directory: packages/ai-orchestrator
             repository_name: ai-orchestrator
           - package_directory: packages/api
@@ -30,6 +32,8 @@ jobs:
             repository_name: blog
           - package_directory: packages/campaign-studio
             repository_name: campaign-studio
+          - package_directory: packages/comments
+            repository_name: comments
           - package_directory: packages/content-sections
             repository_name: content-sections
           - package_directory: packages/dashboard-reports
@@ -46,6 +50,8 @@ jobs:
             repository_name: email-studio
           - package_directory: packages/events
             repository_name: events
+          - package_directory: packages/filament-peek
+            repository_name: filament-peek
           - package_directory: packages/form-builder
             repository_name: form-builder
           - package_directory: packages/foundation-theme
@@ -88,14 +94,30 @@ jobs:
             repository_name: search
           - package_directory: packages/seo-suite
             repository_name: seo-suite
+          - package_directory: packages/shopify-commerce
+            repository_name: shopify-commerce
           - package_directory: packages/site-discovery
             repository_name: site-discovery
           - package_directory: packages/tags
             repository_name: tags
           - package_directory: packages/theme-agency
             repository_name: theme-agency
+          - package_directory: packages/theme-commerce
+            repository_name: theme-commerce
           - package_directory: packages/theme-corporate
             repository_name: theme-corporate
+          - package_directory: packages/theme-education
+            repository_name: theme-education
+          - package_directory: packages/theme-healthcare
+            repository_name: theme-healthcare
+          - package_directory: packages/theme-knowledge
+            repository_name: theme-knowledge
+          - package_directory: packages/theme-local-services
+            repository_name: theme-local-services
+          - package_directory: packages/theme-nonprofit
+            repository_name: theme-nonprofit
+          - package_directory: packages/theme-portfolio
+            repository_name: theme-portfolio
           - package_directory: packages/theme-saas
             repository_name: theme-saas
           - package_directory: packages/translation-manager

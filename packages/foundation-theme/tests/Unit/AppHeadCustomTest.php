@@ -29,6 +29,7 @@ it('maps foundation design settings into public CSS hooks', function (): void {
     $settings = file_get_contents(dirname(__DIR__, 2) . '/src/Settings/FoundationThemeSettings.php');
     $schema = file_get_contents(dirname(__DIR__, 2) . '/src/Filament/Settings/FoundationThemeSettingsSchema.php');
     $styles = file_get_contents(dirname(__DIR__, 2) . '/resources/css/theme/theme.css');
+    $tokens = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/app/head/tokens.blade.php');
 
     expect($settings)->toContain('public string $page_background_color')
         ->and($settings)->toContain('public string $border_color')
@@ -44,9 +45,9 @@ it('maps foundation design settings into public CSS hooks', function (): void {
         ->and($schema)->toContain("Select::make('image_radius')")
         ->and($schema)->toContain("Select::make('section_spacing')")
         ->and($schema)->toContain("Select::make('widget_gap')")
+        ->and($tokens)->toContain('--foundation-band-alt-bg')
+        ->and($tokens)->toContain('--foundation-widget-gap')
         ->and($styles)->toContain('background: var(--foundation-page-bg)')
-        ->and($styles)->toContain('var(--foundation-band-alt-bg)')
-        ->and($styles)->toContain('var(--foundation-widget-gap)')
         ->and($styles)->toContain('var(--foundation-section-spacing)')
         ->and($styles)->toContain('var(--foundation-card-bg)')
         ->and($styles)->toContain('var(--foundation-primary-action)')

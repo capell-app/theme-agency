@@ -34,9 +34,21 @@ final class CampaignGroupResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static string $formConfigurator = CampaignGroupForm::class;
+    private static string $formConfigurator = CampaignGroupForm::class;
 
-    protected static string $tableConfigurator = CampaignGroupsTable::class;
+    private static string $tableConfigurator = CampaignGroupsTable::class;
+
+    /** @return class-string<CampaignGroupForm> */
+    public static function getFormConfigurator(): string
+    {
+        return self::$formConfigurator;
+    }
+
+    /** @return class-string<CampaignGroupsTable> */
+    public static function getTableConfigurator(): string
+    {
+        return self::$tableConfigurator;
+    }
 
     #[Override]
     public static function form(Schema $configurator): Schema

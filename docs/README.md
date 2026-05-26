@@ -8,6 +8,7 @@ For the commercial/free grouping, see [Package product groups](product-groups.md
 For package-level upstream credits, services, and acknowledgements, see [Credits and acknowledgements](credits-and-acknowledgements.md).
 For theme package authoring, see [Creating a Capell theme](creating-a-theme.md).
 For optional package integration rules, see [Optional Package Boundaries](optional-package-boundaries.md).
+For split repository contribution flow, see [Split PR Forwarding](split-pr-forwarding.md).
 
 Use package `overview.md` pages for search-facing package summaries and task-level orientation. Use focused package docs for API, data, workflow, provider, and extension contracts.
 

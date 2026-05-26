@@ -96,14 +96,14 @@ class SchemaGraphAction
         ];
 
         // Add SearchAction if site has a search/results page
-        $searchPage = Page::getFirstPageByTypeForSite('results', $site, $language);
+        $searchPageUrl = Page::getFirstPageByTypeForSite('results', $site, $language)?->pageUrl?->full_url;
 
-        if ($searchPage->pageUrl->full_url !== null && $searchPage->pageUrl->full_url !== '') {
+        if ($searchPageUrl !== null && $searchPageUrl !== '') {
             $configurator['potentialAction'] = [
                 '@type' => 'SearchAction',
                 'target' => [
                     '@type' => 'EntryPoint',
-                    'urlTemplate' => $searchPage->pageUrl->full_url . '?q={search_term_string}',
+                    'urlTemplate' => $searchPageUrl . '?q={search_term_string}',
                 ],
                 'query-input' => 'required name=search_term_string',
             ];
