@@ -1,5 +1,8 @@
 name: Notify demo site
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
@@ -18,7 +21,7 @@ jobs:
     steps:
       - name: Prepare demo dispatch payload
         id: payload
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           script: |
             const payload = {
@@ -36,7 +39,7 @@ jobs:
             core.info(`Prepared capell-packages-release payload: ${JSON.stringify(payload)}`);
 
       - name: Send repository_dispatch to demo
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           github-token: ${{ env.DEMO_DISPATCH_TOKEN }}
           script: |

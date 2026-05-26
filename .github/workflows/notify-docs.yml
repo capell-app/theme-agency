@@ -1,5 +1,8 @@
 name: Notify docs site
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
@@ -41,7 +44,7 @@ jobs:
     steps:
       - name: Prepare docs dispatch payload
         id: payload
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           script: |
             const payload = {
@@ -68,7 +71,7 @@ jobs:
 
       - name: Send repository_dispatch to capell-docs
         if: github.event_name != 'pull_request'
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           github-token: ${{ env.DOCS_DISPATCH_TOKEN }}
           script: |
