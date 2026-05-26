@@ -11,7 +11,7 @@ on:
         type: string
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   update:
@@ -19,13 +19,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           ref: 4.x
 
       - name: Prepare changelog inputs
         id: changelog
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           script: |
             const release = context.payload.release || {};
@@ -64,14 +64,14 @@ jobs:
             core.info(`Prepared changelog inputs for ${tagName}.`);
 
       - name: Update Changelog
-        uses: stefanzweifel/changelog-updater-action@v1
+        uses: stefanzweifel/changelog-updater-action@a938690fad7edf25368f37e43a1ed1b34303eb36 # v1
         with:
           latest-version: ${{ steps.changelog.outputs.latest_version }}
           release-notes: ${{ steps.changelog.outputs.release_notes }}
           release-date: ${{ steps.changelog.outputs.release_date }}
 
       - name: Commit updated CHANGELOG
-        uses: stefanzweifel/git-auto-commit-action@v7
+        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7
         with:
           branch: 4.x
           commit_message: Update CHANGELOG
