@@ -53,6 +53,9 @@
         "demo": null,
         "doctor": null
     },
+    "actions": {
+        "install": "Capell\\ShopifyCommerce\\Actions\\InstallShopifyCommercePackageAction"
+    },
     "settings": ["Capell\\ShopifyCommerce\\Settings\\ShopifyCommerceSettings"],
     "permissions": ["shopify-commerce.manage"],
     "capabilities": [

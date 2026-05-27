@@ -45,6 +45,9 @@
         "demo": null,
         "doctor": "capell:access-gate-doctor"
     },
+    "actions": {
+        "install": "Capell\\AccessGate\\Actions\\InstallAccessGatePackageAction"
+    },
     "settings": [],
     "permissions": [],
     "capabilities": [

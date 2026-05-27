@@ -4,6 +4,7 @@
     use Capell\Core\Enums\RenderableTypeEnum;
     use Capell\Core\Facades\CapellCore;
     use Capell\Frontend\Facades\Frontend;
+    use Capell\Frontend\Support\View\PublicModelMeta;
 
     $language = Frontend::language();
     $page = Frontend::page();
@@ -34,6 +35,7 @@
         ->map(fn (object $blockAsset): ?object => $blockAsset->asset)
         ->filter()
         ->values();
+    $isArticleListBlock = in_array($block->key, ['latest-articles', 'popular-articles'], true);
 
     if ($componentItem === 'capell::list.item') {
         $componentItem = AssetComponentEnum::Card->value;
@@ -46,7 +48,7 @@
     @if ($pages->isNotEmpty() || ! config('capell-layout-builder.block.skip_render_empty', true))
         <x-capell-foundation-theme::block.wrapper
             class="block-pages widget-pages"
-            container-class="space-y-4"
+            :container-class="$isArticleListBlock && $containerKey === 'sidebar' ? 'space-y-3' : 'space-y-4'"
             :$container
             :$containerKey
             :$containerWidth
@@ -83,7 +85,11 @@
                 <div
                     @class([
                         'grid',
-                        ...$containerKey === 'sidebar' && (! $columns && $columns !== 0)
+                        ...($isArticleListBlock && $columns <= 1
+                        ? [
+                            'divide-y divide-slate-200/45 dark:divide-slate-700/70',
+                        ]
+                        : ($containerKey === 'sidebar' && (! $columns && $columns !== 0)
                         ? [
                             'divide-y divide-gray-100 [&>*:not(:first-child)]:pt-4 [&>*:not(:last-child)]:pb-4',
                         ]
@@ -96,33 +102,42 @@
                             'gap-8 @lg:gap-x-10 @lg:gap-y-10' => $spacing === 'lg' && $columns,
                             '@3xl:grid-cols-2' => $columns > 1 && count($pages) >= 2,
                             '@8xl:grid-cols-3' => $columns > 2 && count($pages) >= 3,
-                        ],
+                        ])),
                     ])
                 >
                     @foreach ($pages as $item)
-                        @if ($block->key === 'latest-articles')
+                        @if ($isArticleListBlock)
                             @php
                                 $itemImage = $withImage && method_exists($item, 'relationLoaded') && $item->relationLoaded('image') ? $item->image : null;
+                                $itemImage ??= $withImage ? PublicModelMeta::get($item, 'image_source') : null;
                                 $itemDate = $withDate ? $item->getPublishDate() : null;
                             @endphp
 
                             <article
-                                class="latest-articles-page-item group/latest @lg:grid-cols-[4.75rem_minmax(0,1fr)] @lg:gap-4 grid min-w-0 gap-3 py-3 first:pt-0 last:pb-0 @3xl:py-4"
+                                @class([
+                                    'latest-articles-page-item group/latest grid min-w-0 first:pt-0 last:pb-0',
+                                    'gap-3 py-4 @3xl:py-5' => $containerKey !== 'sidebar',
+                                    'gap-2.5 py-5' => $containerKey === 'sidebar',
+                                ])
                             >
                                 @if ($itemImage)
                                     <a
                                         href="{{ $item->pageUrl->full_url }}"
                                         title="{{ htmlspecialchars(strip_tags($item->translation->title)) }}"
-                                        class="@lg:aspect-square block aspect-[5/3] min-w-0 overflow-hidden rounded-md bg-slate-100 after:!hidden after:!content-none dark:bg-slate-800"
+                                        @class([
+                                            'block min-w-0 overflow-hidden after:!hidden after:!content-none',
+                                            'aspect-[16/8] rounded-md bg-slate-100 dark:bg-slate-800' => $containerKey !== 'sidebar',
+                                            'aspect-[16/7] rounded-[4px]' => $containerKey === 'sidebar',
+                                        ])
                                         @wireNavigate
                                     >
-                                        <x-capell::media
-                                            :media="$itemImage"
+                                        <x-capell::image-source
+                                            :image="$itemImage"
                                             loading="lazy"
                                             :alt="$item->translation->title"
                                             :width="320"
                                             :height="240"
-                                            sizes="(min-width: 1024px) 7rem, 92vw"
+                                            sizes="{{ $containerKey === 'sidebar' ? '(min-width: 1024px) 16rem, 92vw' : '(min-width: 1024px) 18rem, 92vw' }}"
                                             class="h-full w-full object-cover object-center transition duration-500 group-hover/latest:scale-[1.04]"
                                         />
                                     </a>
@@ -132,7 +147,11 @@
                                     <a
                                         href="{{ $item->pageUrl->full_url }}"
                                         title="{{ htmlspecialchars(strip_tags($item->translation->title)) }}"
-                                        class="hover:text-primary focus:text-primary line-clamp-3 text-[0.95rem] leading-snug font-semibold text-slate-950 no-underline transition after:!hidden after:!content-none dark:text-white"
+                                        @class([
+                                            'hover:text-primary focus:text-primary line-clamp-3 leading-snug font-semibold text-slate-950 no-underline transition after:!hidden after:!content-none dark:text-white',
+                                            'text-[0.95rem]' => $containerKey !== 'sidebar',
+                                            'text-[0.92rem]' => $containerKey === 'sidebar',
+                                        ])
                                         @wireNavigate
                                     >
                                         {{ $item->translation->title }}
@@ -140,7 +159,11 @@
 
                                     @if ($withSummary && $item->translation->summary)
                                         <p
-                                            class="line-clamp-2 text-sm leading-6 text-slate-600 dark:text-slate-300"
+                                            @class([
+                                                'line-clamp-2 text-slate-600 dark:text-slate-300',
+                                                'text-sm leading-6' => $containerKey !== 'sidebar',
+                                                'text-[0.86rem] leading-5' => $containerKey === 'sidebar',
+                                            ])
                                         >
                                             {{ $item->translation->summary }}
                                         </p>

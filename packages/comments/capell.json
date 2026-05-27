@@ -58,6 +58,9 @@
         "demo": null,
         "doctor": null
     },
+    "actions": {
+        "install": "Capell\\Comments\\Actions\\InstallCommentsPackageAction"
+    },
     "settings": ["Capell\\Comments\\Settings\\CommentSettings"],
     "permissions": [],
     "capabilities": ["comments", "comments-admin", "comments-frontend"],

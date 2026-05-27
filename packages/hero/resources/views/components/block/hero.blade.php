@@ -63,6 +63,7 @@ $theme = Frontend::theme();
 
     $contentAlign = $block->getMeta('content_align', 'center');
     $contentWidth = $block->getMeta('content_width', 'balanced');
+    $mediaSize = $block->getMeta('media_size', 'default');
     $mediaPosition = $block->getMeta('media_position', 'right');
 
     $contentAlignmentClass = match ($contentAlign) {
@@ -153,7 +154,8 @@ $theme = Frontend::theme();
                                     'flex max-w-full min-w-0 flex-col justify-center',
                                     $contentAlignmentClass => ! $slide->images?->isNotEmpty(),
                                     'items-start text-left' => $slide->images?->isNotEmpty(),
-                                    'lg:col-span-5 xl:col-span-7' => $slide->images?->isNotEmpty(),
+                                    'lg:col-span-5 xl:col-span-7' => $slide->images?->isNotEmpty() && $mediaSize !== 'compact',
+                                    'lg:col-span-7 xl:col-span-8' => $slide->images?->isNotEmpty() && $mediaSize === 'compact',
                                     'lg:order-2' => $slide->images?->isNotEmpty() && $mediaPosition === 'left',
                                     'py-[4vh]' => ! $slide->asset->image && ! $slide->backgroundImage,
                                 ])
@@ -182,6 +184,17 @@ $theme = Frontend::theme();
 
                                         @if ($isFirstSlide && $heroContent)
                                             {{ $heroContent }}
+                                        @endif
+
+                                        @if ($isFirstSlide && $paginationResults instanceof LengthAwarePaginator && $paginationResults->hasPages())
+                                            @php
+                                                Frontend::setFrontendData('has_pagination_summary', true);
+                                            @endphp
+
+                                            <x-capell::pagination.hero-summary
+                                                :results="$paginationResults"
+                                                class="mt-5"
+                                            />
                                         @endif
                                     </x-capell-hero::hero.content>
                                 @endif
@@ -213,7 +226,9 @@ $theme = Frontend::theme();
                             @if ($slide->images?->isNotEmpty())
                                 <div
                                     @class([
-                                        'relative z-30 flex w-full max-w-full min-w-0 items-center overflow-hidden lg:col-span-6 xl:col-span-5',
+                                        'relative z-30 flex w-full max-w-full min-w-0 items-center overflow-hidden',
+                                        'lg:col-span-6 xl:col-span-5' => $mediaSize !== 'compact',
+                                        'lg:col-span-5 xl:col-span-4' => $mediaSize === 'compact',
                                         'lg:order-1' => $mediaPosition === 'left',
                                     ])
                                 >
@@ -225,7 +240,11 @@ $theme = Frontend::theme();
                                                 :alt="$slide->asset->translation->title"
                                                 :width="420"
                                                 :fetchpriority="$isFirstSlide ? 'high' : null"
-                                                class="hero-slide-img h-full max-h-[40vh] w-full max-w-full min-w-0 object-cover object-center lg:max-h-[400px]"
+                                                @class([
+                                                    'hero-slide-img h-full max-h-[40vh] w-full max-w-full min-w-0 object-cover object-center',
+                                                    'lg:max-h-[400px]' => $mediaSize !== 'compact',
+                                                    'lg:max-h-[320px]' => $mediaSize === 'compact',
+                                                ])
                                                 loading="{{ $isFirstSlide ? 'eager' : 'lazy' }}"
                                                 sizes="(min-width: 1024px) 38vw, 88vw"
                                             />
@@ -239,7 +258,11 @@ $theme = Frontend::theme();
                                                 format="webp"
                                                 :media="$media"
                                                 :alt="$slide->asset->translation->title"
-                                                class="hero-slide-img h-full max-h-[40vh] w-full max-w-full min-w-0 object-cover object-center lg:max-h-[400px]"
+                                                @class([
+                                                    'hero-slide-img h-full max-h-[40vh] w-full max-w-full min-w-0 object-cover object-center',
+                                                    'lg:max-h-[400px]' => $mediaSize !== 'compact',
+                                                    'lg:max-h-[320px]' => $mediaSize === 'compact',
+                                                ])
                                                 loading="lazy"
                                             />
                                         </div>

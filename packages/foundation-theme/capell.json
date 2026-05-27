@@ -40,6 +40,9 @@
         "demo": null,
         "doctor": null
     },
+    "actions": {
+        "setup": "Capell\\FoundationTheme\\Actions\\SetupFoundationThemePackageAction"
+    },
     "settings": [],
     "permissions": [],
     "capabilities": [],

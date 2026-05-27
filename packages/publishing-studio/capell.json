@@ -65,6 +65,9 @@
         "demo": null,
         "doctor": null
     },
+    "actions": {
+        "install": "Capell\\PublishingStudio\\Actions\\InstallPublishingStudioPackageAction"
+    },
     "settings": [],
     "permissions": [
         "submit_workspace_for_approval",

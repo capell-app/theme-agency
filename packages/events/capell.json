@@ -48,6 +48,9 @@
         "demo": null,
         "doctor": null
     },
+    "actions": {
+        "install": "Capell\\Events\\Actions\\InstallEventsPackageAction"
+    },
     "settings": [],
     "permissions": [],
     "capabilities": [

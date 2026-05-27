@@ -43,6 +43,9 @@
         "demo": null,
         "doctor": null
     },
+    "actions": {
+        "install": "Capell\\SeoSuite\\Actions\\InstallSeoSuitePackageAction"
+    },
     "settings": [],
     "permissions": [],
     "capabilities": [
