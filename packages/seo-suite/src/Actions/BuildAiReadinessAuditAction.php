@@ -18,7 +18,6 @@ use Capell\SeoSuite\Models\AiDiscoverySiteProfile;
 use Capell\SeoSuite\Settings\SeoSuiteSettings;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Support\Collection;
-use LogicException;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
@@ -44,11 +43,8 @@ final class BuildAiReadinessAuditAction
             'canonicalPage.pageUrls.siteDomain',
         ]);
 
-        $siteProfile = ResolveAiDiscoveryProfileAction::run($site, $language);
-        $pageProfile = ResolveAiDiscoveryProfileAction::run($site, $language, $page);
-
-        throw_unless($siteProfile instanceof AiDiscoverySiteProfile, LogicException::class, 'Resolving an AI Discovery site profile returned an unexpected page profile.');
-        throw_unless($pageProfile instanceof AiDiscoveryPageProfile, LogicException::class, 'Resolving an AI Discovery page profile returned an unexpected site profile.');
+        $siteProfile = $this->siteProfile($site, $language);
+        $pageProfile = $this->pageProfile($page, $site, $language);
 
         $issues = collect();
         $translation = $page->translation;
@@ -152,12 +148,100 @@ final class BuildAiReadinessAuditAction
             ->exists();
     }
 
+    private function siteProfile(Site $site, Language $language): AiDiscoverySiteProfile
+    {
+        $cacheKey = sprintf('%s:%s', $site->getKey(), $language->getKey());
+        $cachedProfiles = request()->attributes->get('capell.seo_suite.ai_readiness_site_profiles', []);
+        $cachedProfile = is_array($cachedProfiles) ? ($cachedProfiles[$cacheKey] ?? null) : null;
+
+        if ($cachedProfile instanceof AiDiscoverySiteProfile) {
+            return $cachedProfile;
+        }
+
+        $profile = AiDiscoverySiteProfile::query()
+            ->where('site_id', $site->getKey())
+            ->where('language_id', $language->getKey())
+            ->first();
+
+        if ($profile instanceof AiDiscoverySiteProfile) {
+            $cachedProfiles = is_array($cachedProfiles) ? $cachedProfiles : [];
+            $cachedProfiles[$cacheKey] = $profile;
+            request()->attributes->set('capell.seo_suite.ai_readiness_site_profiles', $cachedProfiles);
+
+            return $profile;
+        }
+
+        $profile = new AiDiscoverySiteProfile([
+            'site_id' => $site->getKey(),
+            'language_id' => $language->getKey(),
+            'markdown_pages_enabled' => true,
+            'default_include_pages' => true,
+        ]);
+
+        $cachedProfiles = is_array($cachedProfiles) ? $cachedProfiles : [];
+        $cachedProfiles[$cacheKey] = $profile;
+        request()->attributes->set('capell.seo_suite.ai_readiness_site_profiles', $cachedProfiles);
+
+        return $profile;
+    }
+
+    private function pageProfile(Page $page, Site $site, Language $language): AiDiscoveryPageProfile
+    {
+        $cacheKey = sprintf('%s:%s:%s', $page->getKey(), $site->getKey(), $language->getKey());
+        $cachedProfiles = request()->attributes->get('capell.seo_suite.ai_readiness_page_profiles', []);
+        $cachedProfile = is_array($cachedProfiles) ? ($cachedProfiles[$cacheKey] ?? null) : null;
+
+        if ($cachedProfile instanceof AiDiscoveryPageProfile) {
+            return $cachedProfile;
+        }
+
+        $profile = AiDiscoveryPageProfile::query()
+            ->where('page_id', $page->getKey())
+            ->where('site_id', $site->getKey())
+            ->where('language_id', $language->getKey())
+            ->first();
+
+        if ($profile instanceof AiDiscoveryPageProfile) {
+            $cachedProfiles = is_array($cachedProfiles) ? $cachedProfiles : [];
+            $cachedProfiles[$cacheKey] = $profile;
+            request()->attributes->set('capell.seo_suite.ai_readiness_page_profiles', $cachedProfiles);
+
+            return $profile;
+        }
+
+        $profile = new AiDiscoveryPageProfile([
+            'page_id' => $page->getKey(),
+            'site_id' => $site->getKey(),
+            'language_id' => $language->getKey(),
+            'include_in_ai_index' => true,
+            'section' => 'Pages',
+            'priority' => 500,
+        ]);
+
+        $cachedProfiles = is_array($cachedProfiles) ? $cachedProfiles : [];
+        $cachedProfiles[$cacheKey] = $profile;
+        request()->attributes->set('capell.seo_suite.ai_readiness_page_profiles', $cachedProfiles);
+
+        return $profile;
+    }
+
     private function auditEnabled(): bool
     {
-        try {
-            return resolve(SeoSuiteSettings::class)->ai_discovery_audit_enabled;
-        } catch (Throwable) {
-            return true;
+        $cacheKey = 'capell.seo_suite.ai_readiness_audit_enabled';
+        $cached = request()->attributes->get($cacheKey);
+
+        if (is_bool($cached)) {
+            return $cached;
         }
+
+        try {
+            $enabled = resolve(SeoSuiteSettings::class)->ai_discovery_audit_enabled;
+        } catch (Throwable) {
+            $enabled = true;
+        }
+
+        request()->attributes->set($cacheKey, $enabled);
+
+        return $enabled;
     }
 }

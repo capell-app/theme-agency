@@ -13,13 +13,19 @@ use Throwable;
 
 final class WorkspaceSchema
 {
+    /** @var array<string, bool> */
+    private static array $tableExists = [];
+
+    /** @var array<string, bool> */
+    private static array $columnExists = [];
+
     public static function isReady(): bool
     {
         try {
             return self::hasWorkspaceTable()
-                && Schema::hasTable((new Version)->getTable())
-                && Schema::hasTable((new WorkspaceReviewAssignment)->getTable())
-                && Schema::hasColumn((new Page)->getTable(), 'workspace_id');
+                && self::hasTable((new Version)->getTable())
+                && self::hasTable((new WorkspaceReviewAssignment)->getTable())
+                && self::hasColumn((new Page)->getTable(), 'workspace_id');
         } catch (Throwable) {
             return false;
         }
@@ -27,10 +33,26 @@ final class WorkspaceSchema
 
     public static function hasWorkspaceTable(): bool
     {
+        return self::hasTable((new Workspace)->getTable());
+    }
+
+    public static function hasTable(string $table): bool
+    {
         try {
-            return Schema::hasTable((new Workspace)->getTable());
+            return self::$tableExists[$table] ??= Schema::hasTable($table);
         } catch (Throwable) {
-            return false;
+            return self::$tableExists[$table] = false;
+        }
+    }
+
+    public static function hasColumn(string $table, string $column): bool
+    {
+        $cacheKey = $table . ':' . $column;
+
+        try {
+            return self::$columnExists[$cacheKey] ??= Schema::hasColumn($table, $column);
+        } catch (Throwable) {
+            return self::$columnExists[$cacheKey] = false;
         }
     }
 }

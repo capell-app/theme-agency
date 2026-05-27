@@ -14,8 +14,6 @@ use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\Pages\ListC
 use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\Schemas\CampaignConversionGoalForm;
 use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\Tables\CampaignConversionGoalsTable;
 use Capell\CampaignStudio\Models\CampaignConversionGoal;
-use Capell\CampaignStudio\Providers\CampaignStudioServiceProvider;
-use Capell\Core\Facades\CapellCore;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -96,7 +94,7 @@ final class CampaignConversionGoalResource extends Resource
     #[Override]
     public static function shouldRegisterNavigation(): bool
     {
-        return CapellCore::getPackage(CampaignStudioServiceProvider::$packageName)->isInstalled();
+        return false;
     }
 
     #[Override]

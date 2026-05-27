@@ -8,11 +8,11 @@ use Capell\PublishingStudio\Enums\WorkspaceStatusEnum;
 use Capell\PublishingStudio\Filament\Resources\PublishingStudio\WorkspaceResource;
 use Capell\PublishingStudio\Http\Middleware\ResolveWorkspaceContext;
 use Capell\PublishingStudio\Models\Workspace;
+use Capell\PublishingStudio\Support\WorkspaceSchema;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -115,6 +115,6 @@ class WorkspaceSwitcher extends Component
 
     private function hasPublishingStudioTable(): bool
     {
-        return Schema::hasTable('workspaces');
+        return WorkspaceSchema::hasWorkspaceTable();
     }
 }

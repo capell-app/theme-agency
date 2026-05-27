@@ -79,10 +79,11 @@ final class WorkspaceContextScope implements Scope
     {
         $connection = $model->getConnection();
         $table = $model->getTable();
+        $schemaTable = $this->schemaTableFor($model, $table);
         $cacheKey = implode(':', [
             $connection->getName(),
             $connection->getDatabaseName(),
-            $table,
+            $schemaTable,
         ]);
 
         if (array_key_exists($cacheKey, self::$workspaceColumnCache)) {
@@ -97,10 +98,27 @@ final class WorkspaceContextScope implements Scope
 
         $schema = $connection->getSchemaBuilder();
 
-        return self::$workspaceColumnCache[$cacheKey] = $schema->hasColumns($table, [
+        return self::$workspaceColumnCache[$cacheKey] = $schema->hasColumns($schemaTable, [
             'workspace_id',
             'shadowed_by_workspace_id',
         ]);
+    }
+
+    private function schemaTableFor(Model $model, string $table): string
+    {
+        if (str_starts_with($table, 'laravel_reserved_')) {
+            $modelClass = $model::class;
+
+            return (new $modelClass)->getTable();
+        }
+
+        if (str_contains(strtolower($table), ' as ')) {
+            $parts = preg_split('/\s+as\s+/i', $table);
+
+            return trim((string) ($parts[0] ?? $table));
+        }
+
+        return $table;
     }
 
     private function primeWorkspaceColumnCache(Model $model): void

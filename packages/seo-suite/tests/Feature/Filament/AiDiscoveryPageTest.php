@@ -22,6 +22,7 @@ use Capell\SeoSuite\Models\AiDiscoveryPageProfile;
 use Capell\SeoSuite\Models\AiDiscoverySiteProfile;
 use Capell\SeoSuite\Settings\SeoSuiteSettings;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
+use Livewire\Livewire;
 
 uses(CreatesAdminUser::class);
 
@@ -40,6 +41,17 @@ it('builds the ai discovery page query through the current site scope', function
     $page = Page::factory()->site($site)->withTranslations($language, ['title' => 'AI Discovery Page'])->create();
 
     expect(BuildAiDiscoveryPageQueryAction::run()->whereKey($page)->exists())->toBeTrue();
+});
+
+it('renders ai discovery management without creating missing profiles', function (): void {
+    $language = Language::factory()->create();
+    $site = Site::factory()->language($language)->withTranslations($language)->create();
+    Page::factory()->site($site)->withTranslations($language, ['title' => 'AI Discovery Page'])->create();
+
+    Livewire::test(AiDiscoveryPage::class)->assertOk();
+
+    expect(AiDiscoverySiteProfile::query()->count())->toBe(0)
+        ->and(AiDiscoveryPageProfile::query()->count())->toBe(0);
 });
 
 it('fills ai discovery summaries from existing seo metadata', function (): void {

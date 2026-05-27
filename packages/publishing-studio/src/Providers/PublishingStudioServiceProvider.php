@@ -53,6 +53,7 @@ use Capell\PublishingStudio\Support\PublishingStudioManager;
 use Capell\PublishingStudio\Support\PublishingStudioMigrationAssistantContextResolver;
 use Capell\PublishingStudio\Support\PublishingStudioPageImportTargetResolver;
 use Capell\PublishingStudio\Support\PublishingStudioPageUrlCollisionDetector;
+use Capell\PublishingStudio\Support\WorkspaceSchema;
 use Capell\PublishingStudio\WorkspaceContext;
 use Capell\PublishingStudio\WorkspaceContextScope;
 use Capell\PublishingStudio\WorkspaceRegistry;
@@ -63,7 +64,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Override;
 use Spatie\Activitylog\Models\Activity;
@@ -165,7 +165,7 @@ class PublishingStudioServiceProvider extends ServiceProvider
             return resolve(RuntimeSchemaState::class)->hasTable($table);
         }
 
-        return Schema::hasTable($table);
+        return WorkspaceSchema::hasTable($table);
     }
 
     private function registerExtenders(): self

@@ -40,6 +40,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Checkout Capell monorepo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          repository: capell-app/capell
+          ref: 4.x
+          token: ${{ secrets.ACCESS_TOKEN }}
+          path: capell-4
+
       - name: Cache Dependencies PHP
         id: php-cache
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
@@ -66,8 +75,31 @@ jobs:
       - name: Check Composer lock file
         run: composer run check:composer-lock
 
+      - name: Use Capell monorepo packages
+        run: |
+          php <<'PHP'
+          <?php
+
+          declare(strict_types=1);
+
+          $composerFile = 'composer.json';
+          $composer = json_decode((string) file_get_contents($composerFile), true, flags: JSON_THROW_ON_ERROR);
+
+          array_unshift($composer['repositories'], [
+              'type' => 'path',
+              'url' => 'capell-4/packages/*',
+              'options' => [
+                  'symlink' => false,
+              ],
+          ]);
+
+          file_put_contents(
+              $composerFile,
+              json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . PHP_EOL,
+          );
+          PHP
+
       - name: Install PHP dependencies
-        if: steps.php-cache.outputs.cache-hit != 'true'
         run: |
           composer remove --no-interaction --no-progress --ansi --dev --no-update laravel/pao
           composer require --no-interaction --no-progress --ansi --no-update \
@@ -98,7 +130,12 @@ jobs:
             pboivin/filament-peek:^3.0 \
             symfony/html-sanitizer:^7.0 \
             openspout/openspout:^4.22
-          composer update --no-interaction --no-progress --ansi --optimize-autoloader --with-all-dependencies -W
+          composer update --no-interaction --no-progress --ansi --optimize-autoloader --with-all-dependencies -W \
+            capell-app/admin \
+            capell-app/core \
+            capell-app/frontend \
+            capell-app/installer \
+            capell-app/marketplace
 
       - name: Configure environment
         run: |

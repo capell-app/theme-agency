@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\PasswordPolicy\Filament\Extenders;
 
 use Capell\Admin\Contracts\Extenders\UserTableExtender;
+use Capell\Core\Support\Database\RuntimeSchemaState;
 use Capell\PasswordPolicy\Actions\MarkUserForPasswordChangeAction;
 use Capell\PasswordPolicy\Support\PasswordPolicySettingsResolver;
 use Filament\Actions\Action;
@@ -17,7 +18,6 @@ use Filament\Tables\Filters\TernaryFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Schema;
 
 class PasswordPolicyUserTableExtender implements UserTableExtender
 {
@@ -90,9 +90,11 @@ class PasswordPolicyUserTableExtender implements UserTableExtender
 
     private function hasPasswordPolicyColumns(): bool
     {
-        return Schema::hasTable('users')
-            && Schema::hasColumn('users', 'must_change_password')
-            && Schema::hasColumn('users', 'password_changed_at');
+        $schema = resolve(RuntimeSchemaState::class);
+
+        return $schema->hasTable('users')
+            && $schema->hasColumn('users', 'must_change_password')
+            && $schema->hasColumn('users', 'password_changed_at');
     }
 
     private function canRequirePasswordChange(): bool

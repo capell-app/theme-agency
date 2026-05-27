@@ -18,7 +18,6 @@ use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Schema;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class BuildContentSchedulerEventsAction
@@ -156,7 +155,7 @@ final class BuildContentSchedulerEventsAction
         ?string $ownerType,
         int $limit,
     ): Collection {
-        if (! Schema::hasTable('publishing_scheduler_events')) {
+        if (! WorkspaceSchema::hasTable('publishing_scheduler_events')) {
             return collect();
         }
 

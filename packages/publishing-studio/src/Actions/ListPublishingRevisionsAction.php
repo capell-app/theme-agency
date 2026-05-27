@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Capell\PublishingStudio\Actions;
 
 use Capell\PublishingStudio\Models\PublishingRevision;
+use Capell\PublishingStudio\Support\WorkspaceSchema;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Schema;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class ListPublishingRevisionsAction
@@ -31,7 +31,7 @@ final class ListPublishingRevisionsAction
             $revisionableUuid ??= $this->uuidFor($revisionable);
         }
 
-        if (! Schema::hasTable((new PublishingRevision)->getTable())) {
+        if (! WorkspaceSchema::hasTable((new PublishingRevision)->getTable())) {
             return collect();
         }
 

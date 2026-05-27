@@ -15,7 +15,6 @@ use Capell\SeoSuite\Actions\BuildAiReadinessAuditAction;
 use Capell\SeoSuite\Actions\DashboardReports\BuildAiDiscoveryPageQueryAction;
 use Capell\SeoSuite\Actions\FillAiDiscoveryPageSummaryAction;
 use Capell\SeoSuite\Actions\PageIsDiscoverableForAiDiscoveryAction;
-use Capell\SeoSuite\Actions\ResolveAiDiscoveryProfileAction;
 use Capell\SeoSuite\Actions\UpdateAiDiscoveryPageInclusionAction;
 use Capell\SeoSuite\Actions\UpdateAiDiscoveryPageProfileAction;
 use Capell\SeoSuite\Models\AiDiscoveryPageProfile;
@@ -46,6 +45,11 @@ class AiDiscoveryTable implements TableConfigurator
      * @var array<string, AiDiscoveryPageProfile|null>
      */
     private static array $profiles = [];
+
+    /**
+     * @var array<string, AiDiscoverySiteProfile|null>
+     */
+    private static array $siteProfiles = [];
 
     /**
      * @var array<string, int>
@@ -198,7 +202,7 @@ class AiDiscoveryTable implements TableConfigurator
             Action::make('include_ai_index')
                 ->label(__('capell-seo-suite::generic.ai_discovery_include'))
                 ->icon('heroicon-o-check-circle')
-                ->visible(fn (Page $record): bool => ! (self::profileFor($record)->include_in_ai_index ?? false))
+                ->visible(fn (Page $record): bool => ! self::includeInAiIndexFor($record))
                 ->action(function (Page $record, Action $action): void {
                     self::updateInclusion($record, true);
                     $action->success();
@@ -208,7 +212,7 @@ class AiDiscoveryTable implements TableConfigurator
                 ->label(__('capell-seo-suite::generic.ai_discovery_exclude'))
                 ->icon('heroicon-o-x-circle')
                 ->color('gray')
-                ->visible(fn (Page $record): bool => self::profileFor($record)->include_in_ai_index ?? false)
+                ->visible(fn (Page $record): bool => self::includeInAiIndexFor($record))
                 ->requiresConfirmation()
                 ->action(function (Page $record, Action $action): void {
                     self::updateInclusion($record, false);
@@ -331,8 +335,8 @@ class AiDiscoveryTable implements TableConfigurator
         $profile = self::profileFor($record);
 
         return [
-            'include_in_ai_index' => $profile->include_in_ai_index ?? true,
-            'section' => $profile->section ?? 'Pages',
+            'include_in_ai_index' => self::includeInAiIndexFor($record),
+            'section' => $profile->section ?? self::siteProfileFor($record)?->default_section ?? 'Pages',
             'priority' => $profile->priority ?? 500,
             'summary' => $profile?->summary,
             'markdown_override' => $profile?->markdown_override,
@@ -370,15 +374,24 @@ class AiDiscoveryTable implements TableConfigurator
             return self::$profiles[$cacheKey] = null;
         }
 
-        $siteProfile = ResolveAiDiscoveryProfileAction::run($site, $language);
-
-        if (! $siteProfile instanceof AiDiscoverySiteProfile) {
-            return self::$profiles[$cacheKey] = null;
-        }
-
-        $profile = ResolveAiDiscoveryProfileAction::run($site, $language, $record);
+        $profile = AiDiscoveryPageProfile::query()
+            ->where('page_id', $record->getKey())
+            ->where('site_id', $site->getKey())
+            ->where('language_id', $language->getKey())
+            ->first();
 
         return self::$profiles[$cacheKey] = $profile instanceof AiDiscoveryPageProfile ? $profile : null;
+    }
+
+    private static function includeInAiIndexFor(Page $record): bool
+    {
+        $profile = self::profileFor($record);
+
+        if ($profile instanceof AiDiscoveryPageProfile) {
+            return $profile->include_in_ai_index;
+        }
+
+        return self::siteProfileFor($record)?->default_include_pages ?? true;
     }
 
     private static function readinessIssueCountFor(Page $record): int
@@ -426,7 +439,7 @@ class AiDiscoveryTable implements TableConfigurator
             return null;
         }
 
-        if (self::profileFor($record)?->include_in_ai_index !== true) {
+        if (! self::includeInAiIndexFor($record)) {
             return null;
         }
 
@@ -461,9 +474,18 @@ class AiDiscoveryTable implements TableConfigurator
             return null;
         }
 
-        $profile = ResolveAiDiscoveryProfileAction::run($site, $language);
+        $cacheKey = sprintf('%s:%s', $site->getKey(), $language->getKey());
 
-        return $profile instanceof AiDiscoverySiteProfile ? $profile : null;
+        if (array_key_exists($cacheKey, self::$siteProfiles)) {
+            return self::$siteProfiles[$cacheKey];
+        }
+
+        $profile = AiDiscoverySiteProfile::query()
+            ->where('site_id', $site->getKey())
+            ->where('language_id', $language->getKey())
+            ->first();
+
+        return self::$siteProfiles[$cacheKey] = $profile instanceof AiDiscoverySiteProfile ? $profile : null;
     }
 
     private static function isDiscoverableForMarkdown(Page $record): bool
