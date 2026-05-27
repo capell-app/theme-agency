@@ -9,6 +9,8 @@ use Capell\SeoSuite\Actions\DashboardReports\BuildSeoAuditQueryAction;
 use Capell\SeoSuite\Filament\Pages\Tables\SeoAuditTable;
 use Capell\SeoSuite\Models\PageSeoSnapshot;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
 
 uses(CreatesAdminUser::class);
 
@@ -129,6 +131,83 @@ it('uses the site language for snapshot backed audit columns', function (): void
     expect($snapshot)->toBeInstanceOf(PageSeoSnapshot::class)
         ->and($snapshot->language_id)->toBe($english->getKey())
         ->and($snapshot->critical_count)->toBe(0);
+});
+
+it('uses eager loaded snapshots for seo audit table state', function (): void {
+    (new ReflectionProperty(SeoAuditTable::class, 'snapshots'))->setValue(null, []);
+
+    $language = LanguageFactory::new()->create(['name' => 'English', 'code' => 'en']);
+    $site = SiteFactory::new()
+        ->recycle($language)
+        ->language($language)
+        ->withTranslations($language)
+        ->create();
+    $page = PageFactory::new()
+        ->site($site)
+        ->withTranslations($language)
+        ->create();
+
+    PageSeoSnapshot::query()->create([
+        'page_id' => $page->getKey(),
+        'site_id' => $site->getKey(),
+        'language_id' => $language->getKey(),
+        'score' => 88,
+        'critical_count' => 0,
+        'warning_count' => 1,
+        'notice_count' => 0,
+        'passed_count' => 2,
+        'schema_status' => 'warning',
+        'robots_status' => 'passed',
+        'canonical_status' => 'passed',
+        'search_console_status' => 'unknown',
+        'computed_at' => now(),
+    ]);
+
+    $auditedPage = BuildSeoAuditQueryAction::run()
+        ->whereKey($page->getKey())
+        ->firstOrFail();
+    $reflectionMethod = new ReflectionMethod(SeoAuditTable::class, 'snapshotFor');
+    $queries = [];
+
+    DB::listen(static function (QueryExecuted $query) use (&$queries): void {
+        $queries[] = $query->sql;
+    });
+
+    $snapshot = $reflectionMethod->invoke(null, $auditedPage);
+
+    expect($snapshot)->toBeInstanceOf(PageSeoSnapshot::class)
+        ->and($snapshot->score)->toBe(88)
+        ->and(collect($queries)->filter(fn (string $query): bool => str_contains($query, 'page_seo_snapshots')))->toBeEmpty();
+});
+
+it('does not query per row when eager loaded seo snapshots are empty', function (): void {
+    (new ReflectionProperty(SeoAuditTable::class, 'snapshots'))->setValue(null, []);
+
+    $language = LanguageFactory::new()->create(['name' => 'English', 'code' => 'en']);
+    $site = SiteFactory::new()
+        ->recycle($language)
+        ->language($language)
+        ->withTranslations($language)
+        ->create();
+    $page = PageFactory::new()
+        ->site($site)
+        ->withTranslations($language)
+        ->create();
+
+    $auditedPage = BuildSeoAuditQueryAction::run()
+        ->whereKey($page->getKey())
+        ->firstOrFail();
+    $reflectionMethod = new ReflectionMethod(SeoAuditTable::class, 'snapshotFor');
+    $queries = [];
+
+    DB::listen(static function (QueryExecuted $query) use (&$queries): void {
+        $queries[] = $query->sql;
+    });
+
+    $snapshot = $reflectionMethod->invoke(null, $auditedPage);
+
+    expect($snapshot)->toBeNull()
+        ->and(collect($queries)->filter(fn (string $query): bool => str_contains($query, 'page_seo_snapshots')))->toBeEmpty();
 });
 
 it('constrains severity filters to the displayed snapshot language', function (): void {

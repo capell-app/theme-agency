@@ -8,6 +8,7 @@ use Capell\Core\Models\Site;
 use Capell\SeoSuite\Filament\Widgets\EditPageSeoAuditWidget;
 use Capell\SeoSuite\Support\Admin\PageSeoAuditPageEditExtender;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
+use Filament\Widgets\WidgetConfiguration;
 use Illuminate\Support\Collection as SupportCollection;
 use Livewire\Livewire;
 
@@ -19,8 +20,11 @@ beforeEach(function (): void {
 
 it('contributes the edit page seo audit widget from seo suite', function (): void {
     $extender = resolve(PageSeoAuditPageEditExtender::class);
+    $widgets = $extender->getHeaderWidgets();
 
-    expect($extender->getHeaderWidgets())->toBe([EditPageSeoAuditWidget::class])
+    expect($widgets[0])->toBeInstanceOf(WidgetConfiguration::class)
+        ->and($widgets[0]->widget)->toBe(EditPageSeoAuditWidget::class)
+        ->and($widgets[0]->getProperties())->toBe(['record' => null])
         ->and($extender->getFormActions())->toBe([]);
 });
 

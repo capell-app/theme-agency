@@ -7,7 +7,7 @@ namespace Capell\SeoSuite\Filament\Extenders\Page;
 use Capell\Admin\Contracts\Extenders\PageSchemaExtender;
 use Capell\Admin\Enums\PageTranslationSchemaHookEnum;
 use Capell\Admin\Filament\Components\Forms\CacheTimeSelect;
-use Capell\Admin\Filament\Components\Forms\PageRelationSelect;
+use Capell\Admin\Filament\Components\Forms\PageSelect;
 use Capell\Admin\Filament\Support\HelperText;
 use Capell\Core\Models\Page;
 use Capell\SeoSuite\Enums\RobotsDirectiveEnum;
@@ -83,12 +83,10 @@ class PageSeoSettingsTabExtender implements PageSchemaExtender
             ->icon(Heroicon::OutlinedArrowTrendingUp)
             ->columns(3)
             ->schema([
-                PageRelationSelect::make('canonical_page_id')
-                    ->setupRelation('canonicalPage', $schema)
-                    ->qualifiedForeignKeyName('pages.id')
+                PageSelect::make('canonical_page_id')
+                    ->pageGroup('page')
                     ->label(__('capell-seo-suite::form.canonical_page'))
                     ->helperText(__('capell-seo-suite::generic.canonical_page_info'))
-                    ->saveRelationshipsUsing(fn (): false => false)
                     ->withHintEditAction()
                     ->dehydrated()
                     ->reactive(),

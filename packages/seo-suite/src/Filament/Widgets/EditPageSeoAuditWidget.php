@@ -27,9 +27,23 @@ class EditPageSeoAuditWidget extends Widget
 
     public ?Pageable $record = null;
 
+    public ?int $recordKey = null;
+
     protected int|string|array $columnSpan = 'full';
 
     protected string $view = 'capell-seo-suite::filament.widgets.seo-audit-edit';
+
+    private ?Pageable $resolvedRecord = null;
+
+    public function mount(): void
+    {
+        $this->recordKey ??= $this->initialRecordKey();
+    }
+
+    public function hydrate(): void
+    {
+        $this->recordKey ??= $this->initialRecordKey();
+    }
 
     /**
      * @return Collection<string, SeoCheckData>
@@ -70,23 +84,25 @@ class EditPageSeoAuditWidget extends Widget
 
     private function buildReport(): ?PageSeoReportData
     {
-        if (! $this->record instanceof Page) {
+        $record = $this->pageRecord();
+
+        if (! $record instanceof Page) {
             return null;
         }
 
-        $this->record->loadMissing([
+        $record->loadMissing([
             'site.language',
             'translation.language',
         ]);
 
-        $site = $this->record->site;
-        $language = $this->record->translation->language ?? $site->language;
+        $site = $record->site;
+        $language = $record->translation->language ?? $site->language;
 
         if (! $site instanceof Site || ! $language instanceof Language) {
             return null;
         }
 
-        return BuildPageSeoReportAction::run($this->record, $site, $language);
+        return BuildPageSeoReportAction::run($record, $site, $language);
     }
 
     private function iconForCheck(SeoCheckKeyEnum $checkKey): string
@@ -101,6 +117,47 @@ class EditPageSeoAuditWidget extends Widget
             SeoCheckKeyEnum::ImageAltText, SeoCheckKeyEnum::SocialImage => 'heroicon-o-photo',
             default => 'heroicon-o-magnifying-glass',
         };
+    }
+
+    private function pageRecord(): ?Pageable
+    {
+        if ($this->resolvedRecord instanceof Pageable) {
+            return $this->resolvedRecord;
+        }
+
+        if ($this->record instanceof Pageable) {
+            $this->recordKey ??= (int) $this->record->getKey();
+            $this->resolvedRecord = $this->record;
+
+            return $this->resolvedRecord;
+        }
+
+        if ($this->recordKey === null) {
+            return null;
+        }
+
+        $this->resolvedRecord = Page::query()->find($this->recordKey);
+
+        return $this->resolvedRecord;
+    }
+
+    private function initialRecordKey(): ?int
+    {
+        if ($this->record instanceof Pageable) {
+            return (int) $this->record->getKey();
+        }
+
+        $routeRecord = request()->route('record');
+
+        if ($routeRecord instanceof Pageable) {
+            return (int) $routeRecord->getKey();
+        }
+
+        if (is_numeric($routeRecord)) {
+            return (int) $routeRecord;
+        }
+
+        return null;
     }
 
     private function tooltipForCheck(SeoCheckKeyEnum $checkKey): ?string

@@ -8,6 +8,7 @@ use Capell\Admin\Contracts\Extenders\PageEditExtender;
 use Capell\SeoSuite\Filament\Widgets\EditPageSeoAuditWidget;
 use Filament\Actions\Action;
 use Filament\Widgets\Widget;
+use Filament\Widgets\WidgetConfiguration;
 
 class PageSeoAuditPageEditExtender implements PageEditExtender
 {
@@ -20,12 +21,12 @@ class PageSeoAuditPageEditExtender implements PageEditExtender
     }
 
     /**
-     * @return array<int, class-string<Widget>>
+     * @return array<int, class-string<Widget>|WidgetConfiguration>
      */
     public function getHeaderWidgets(): array
     {
         return [
-            EditPageSeoAuditWidget::class,
+            new WidgetConfiguration(EditPageSeoAuditWidget::class, ['record' => null]),
         ];
     }
 }

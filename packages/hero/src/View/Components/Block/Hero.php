@@ -47,9 +47,13 @@ class Hero extends AbstractBlock
         $page = Frontend::page();
 
         $hasHero = isset($page->translation->meta['hero']) && filled($page->translation->meta['hero']);
+        $hasHeroTitle = isset($page->translation->meta['hero_title']) && filled($page->translation->meta['hero_title']);
+        $hasPaginationSummary = Frontend::getFrontendData('pagination_results') !== null;
 
         if (
             $hasHero === false &&
+            $hasHeroTitle === false &&
+            $hasPaginationSummary === false &&
             blank($this->block->translation?->content) &&
             $this->block->assets->isEmpty()
         ) {

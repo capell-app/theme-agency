@@ -28,14 +28,18 @@ class PageAlertsWidget extends ResourceAlertsWidget
 {
     public ?Pageable $record = null;
 
+    public ?int $recordKey = null;
+
+    private ?Pageable $resolvedRecord = null;
+
     public function mount(): void
     {
-        $this->loadRecord();
+        $this->recordKey ??= $this->initialRecordKey();
     }
 
     public function hydrate(): void
     {
-        $this->loadRecord();
+        $this->recordKey ??= $this->initialRecordKey();
     }
 
     public function clearCacheAction(): Action
@@ -47,7 +51,7 @@ class PageAlertsWidget extends ResourceAlertsWidget
             ->link()
             ->size(Size::Small)
             ->action(function (): void {
-                ClearCachedUrlsForModelAction::dispatch($this->record);
+                ClearCachedUrlsForModelAction::dispatch($this->pageRecord());
 
                 Notification::make()
                     ->title(__('capell-admin::notification.page_cache_cleared'))
@@ -61,18 +65,18 @@ class PageAlertsWidget extends ResourceAlertsWidget
         return Action::make('viewSite')
             ->label(__('capell-admin::button.edit_site'))
             ->link()
-            ->url(SiteResource::getUrl('edit', ['record' => $this->record->site->id]));
+            ->url(SiteResource::getUrl('edit', ['record' => $this->pageRecord()->site->id]));
     }
 
     public function viewCanonicalsAction(): Action
     {
         return Action::make('viewCanonicals')
             ->label(__('capell-admin::button.view_pages'))
-            ->visible(fn (): bool => (bool) $this->record->canonical_pages_count)
+            ->visible(fn (): bool => (bool) $this->pageRecord()->canonical_pages_count)
             ->url(
                 self::getResource()::getUrl(
                     'index',
-                    ['filters[filter][canonical_page_id]' => $this->record->getKey()],
+                    ['filters[filter][canonical_page_id]' => $this->pageRecord()->getKey()],
                 ),
             );
     }
@@ -91,6 +95,7 @@ class PageAlertsWidget extends ResourceAlertsWidget
      */
     protected function buildAlerts(): Collection
     {
+        $record = $this->pageRecord();
         $alerts = collect();
 
         $pageStatus = $this->draftStatusAlert();
@@ -99,7 +104,7 @@ class PageAlertsWidget extends ResourceAlertsWidget
             $alerts->put('pageStatus', $pageStatus);
         }
 
-        if ($this->record->trashed()) {
+        if ($record->trashed()) {
             $alerts->put('deleted', new MessageData(
                 message: __('capell-admin::message.resource_deleted'),
                 type: AlertTypeEnum::Warning,
@@ -107,7 +112,7 @@ class PageAlertsWidget extends ResourceAlertsWidget
             ));
         }
 
-        if ($this->record->site->trashed()) {
+        if ($record->site->trashed()) {
             $alerts->put('deleted_site', new MessageData(
                 message: __('capell-admin::message.page_site_deleted'),
                 type: AlertTypeEnum::Warning,
@@ -116,9 +121,9 @@ class PageAlertsWidget extends ResourceAlertsWidget
             ));
         }
 
-        $this->record->loadCount('pageUrls');
+        $record->loadCount('pageUrls');
 
-        if ($this->record->page_urls_count === 0) {
+        if ($record->page_urls_count === 0) {
             $alerts->put('missingUrl', new MessageData(
                 message: __('capell-admin::message.page_no_urls'),
                 type: AlertTypeEnum::Warning,
@@ -126,12 +131,12 @@ class PageAlertsWidget extends ResourceAlertsWidget
             ));
         }
 
-        $this->record->loadCount('canonicalPages');
+        $record->loadCount('canonicalPages');
 
-        if (($this->record->canonical_pages_count ?? 0) > 0) {
+        if (($record->canonical_pages_count ?? 0) > 0) {
             $alerts->put('referenced', new MessageData(
                 message: __('capell-admin::message.canonical_page_count', [
-                    'count' => $this->record->canonical_pages_count,
+                    'count' => $record->canonical_pages_count,
                 ]),
                 type: AlertTypeEnum::Info,
                 icon: 'heroicon-o-information-circle',
@@ -139,11 +144,11 @@ class PageAlertsWidget extends ResourceAlertsWidget
             ));
         }
 
-        switch ($this->record->publish_status) {
+        switch ($record->publish_status) {
             case PublishStatusEnum::pending:
                 $alerts->put('pending', new MessageData(
                     message: __('capell-admin::message.resource_pending', [
-                        'date' => $this->record->visible_from?->diffForHumans(),
+                        'date' => $record->visible_from?->diffForHumans(),
                         'name' => __('capell-admin::generic.page'),
                     ]),
                     type: AlertTypeEnum::Warning,
@@ -153,7 +158,7 @@ class PageAlertsWidget extends ResourceAlertsWidget
             case PublishStatusEnum::expired:
                 $alerts->put('expired', new MessageData(
                     message: __('capell-admin::message.resource_expired', [
-                        'date' => $this->record->visible_until?->diffForHumans(),
+                        'date' => $record->visible_until?->diffForHumans(),
                         'name' => strtolower(__('capell-admin::generic.page')),
                     ]),
                     type: AlertTypeEnum::Warning,
@@ -162,7 +167,7 @@ class PageAlertsWidget extends ResourceAlertsWidget
                 break;
         }
 
-        $cachedPage = static::getCachedPage($this->record);
+        $cachedPage = static::getCachedPage($record);
         if ($cachedPage instanceof CachedModelUrl) {
             $alerts->put('cached', new MessageData(
                 message: __(
@@ -178,20 +183,35 @@ class PageAlertsWidget extends ResourceAlertsWidget
         return $alerts;
     }
 
-    protected function loadRecord(): void
+    protected function pageRecord(): Pageable
     {
-        throw_unless($this->record instanceof Pageable, RuntimeException::class, 'Record must be an instance of ' . Page::class);
+        if ($this->resolvedRecord instanceof Pageable) {
+            return $this->resolvedRecord;
+        }
 
-        $this->record->load([
+        if ($this->record instanceof Pageable) {
+            $this->recordKey ??= (int) $this->record->getKey();
+            $this->resolvedRecord = $this->record;
+        } elseif ($this->recordKey !== null) {
+            $this->resolvedRecord = Page::query()
+                ->withTrashed()
+                ->find($this->recordKey);
+        }
+
+        throw_unless($this->resolvedRecord instanceof Pageable, RuntimeException::class, 'Record must be an instance of ' . Page::class);
+
+        $this->resolvedRecord->load([
             'site' => fn (BuilderContract $query): BuilderContract => $query->withTrashed(),
             'type',
             'pageUrls',
         ]);
+
+        return $this->resolvedRecord;
     }
 
     private function draftStatusAlert(): ?MessageData
     {
-        $record = $this->record;
+        $record = $this->pageRecord();
 
         $workspaceId = $record->getAttribute('workspace_id');
 
@@ -236,6 +256,25 @@ class PageAlertsWidget extends ResourceAlertsWidget
      */
     private function getResource(): string
     {
-        return GetResourceFromBlueprintAction::run(ResourceEnum::Page, $this->record->type) ?? PageResource::class;
+        return GetResourceFromBlueprintAction::run(ResourceEnum::Page, $this->pageRecord()->type) ?? PageResource::class;
+    }
+
+    private function initialRecordKey(): ?int
+    {
+        if ($this->record instanceof Pageable) {
+            return (int) $this->record->getKey();
+        }
+
+        $routeRecord = request()->route('record');
+
+        if ($routeRecord instanceof Pageable) {
+            return (int) $routeRecord->getKey();
+        }
+
+        if (is_numeric($routeRecord)) {
+            return (int) $routeRecord;
+        }
+
+        return null;
     }
 }

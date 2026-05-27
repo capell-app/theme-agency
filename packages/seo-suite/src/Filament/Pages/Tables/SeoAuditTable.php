@@ -274,6 +274,17 @@ class SeoAuditTable implements TableConfigurator
             return self::$snapshots[$cacheKey] = null;
         }
 
+        if ($record->relationLoaded('seoSnapshots')) {
+            $snapshots = $record->getRelation('seoSnapshots');
+            $snapshot = $snapshots
+                ->first(
+                    fn (PageSeoSnapshot $snapshot): bool => (int) $snapshot->site_id === (int) $site->getKey()
+                        && (int) $snapshot->language_id === (int) $language->getKey(),
+                );
+
+            return self::$snapshots[$cacheKey] = $snapshot instanceof PageSeoSnapshot ? $snapshot : null;
+        }
+
         return self::$snapshots[$cacheKey] = PageSeoSnapshot::query()
             ->where('page_id', $record->getKey())
             ->where('site_id', $site->getKey())

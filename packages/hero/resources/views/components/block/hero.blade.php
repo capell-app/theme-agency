@@ -78,10 +78,10 @@ $theme = Frontend::theme();
 
     $pageHeroTitle = $page->translation->getMeta('hero_title');
     $pageHeroTitle = is_string($pageHeroTitle) && $pageHeroTitle !== '' ? __($pageHeroTitle, $pageVariables) : null;
-    $paginationResults = $results ?? null;
+    $paginationResults = $results ?? Frontend::getFrontendData('pagination_results');
 @endphp
 {{-- format-ignore-end --}}
-@if ($block->assets->isNotEmpty() || $page->translation->getMeta('hero') || ! config('capell-layout-builder.block.skip_render_empty', true))
+@if ($block->assets->isNotEmpty() || $pageHeroTitle || $page->translation->getMeta('hero') || $paginationResults instanceof LengthAwarePaginator || ! config('capell-layout-builder.block.skip_render_empty', true))
     <section
         @class([
             'capell-block',
@@ -249,7 +249,7 @@ $theme = Frontend::theme();
                         </div>
                     </x-capell-hero::hero.slide>
                 @endforeach
-            @elseif ($page->translation->getMeta('hero'))
+            @elseif ($pageHeroTitle || $page->translation->getMeta('hero') || $paginationResults instanceof LengthAwarePaginator)
                 <x-capell-hero::hero.slide
                     :hero-background="ResolveHeroBackgroundDataAction::run($theme, $block)"
                     :background-image="$block->image"
@@ -274,7 +274,9 @@ $theme = Frontend::theme();
                                 'mx-auto' => $contentAlign === 'center',
                             ])
                         >
-                            {!! RenderHtmlContentAction::run((string) __($page->translation->getMeta('hero'), $pageVariables), ['page' => $page, 'site' => $site]) !!}
+                            @if ($page->translation->getMeta('hero'))
+                                {!! RenderHtmlContentAction::run((string) __($page->translation->getMeta('hero'), $pageVariables), ['page' => $page, 'site' => $site]) !!}
+                            @endif
 
                             @if ($paginationResults instanceof LengthAwarePaginator && $paginationResults->hasPages())
                                 @php

@@ -9,26 +9,33 @@
     }
 
     $isPaginated = $results->perPage() < $results->total();
+    $from = ($results->currentPage() - 1) * $results->perPage() + 1;
+    $to = ($results->currentPage() - 1) * $results->perPage() + count($results->items());
 @endphp
 
 <div
     {{
         $attributes
+            ->merge([
+                'aria-label' => __('capell-frontend::messages.pagination_info', [
+                    'from' => $from,
+                    'to' => $to,
+                    'total' => $results->total(),
+                ]),
+            ])
             ->class('capell-pagination-hero-summary pagination-info tracking-loose text-sm leading-none font-normal text-gray-500 dark:text-gray-400')
     }}
 >
     @if ($isPaginated)
-        {{ __('capell-frontend::messages.page') }}
+        {{ __('capell-frontend::messages.showing') }}
         <span
-            class="pagination-page font-semibold tracking-normal dark:text-white"
+            class="pagination-range font-semibold tracking-normal dark:text-white"
         >
-            {{ $results->currentPage() }}
+            {{ $from }} to {{ $to }}
         </span>
         {{ __('capell-frontend::messages.of') }}
-        <span class="font-semibold tracking-normal dark:text-white">
-            {{ $results->lastPage() }}
-        </span>
-        &mdash;
+    @else
+        {{ __('capell-frontend::messages.showing') }}
     @endif
 
     <span

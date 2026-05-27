@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\PublishingStudio\Livewire;
 
 use Capell\Core\Contracts\Pageable;
+use Capell\Core\Models\Page;
 use Capell\PublishingStudio\Enums\WorkspaceApprovalActionEnum;
 use Capell\PublishingStudio\Enums\WorkspaceStatusEnum;
 use Capell\PublishingStudio\Models\Workspace;
@@ -18,15 +19,29 @@ class PageApprovalStatus extends Widget
 {
     public ?Pageable $record = null;
 
+    public ?int $recordKey = null;
+
     protected string $view = 'capell-admin::livewire.page-approval-status';
 
     /** @var int|string|array<string, int|null> */
     protected int|string|array $columnSpan = 'full';
 
+    private ?Pageable $resolvedRecord = null;
+
+    public function mount(): void
+    {
+        $this->recordKey ??= $this->initialRecordKey();
+    }
+
+    public function hydrate(): void
+    {
+        $this->recordKey ??= $this->initialRecordKey();
+    }
+
     #[Override]
     public function render(): View
     {
-        $workspace = $this->record?->workspace;
+        $workspace = $this->pageRecord()?->workspace;
         $approvals = $this->approvalsFor($workspace);
         $latestAction = $approvals->first()?->action;
 
@@ -85,5 +100,48 @@ class PageApprovalStatus extends Widget
             ->latest('id')
             ->limit(5)
             ->get();
+    }
+
+    private function pageRecord(): ?Pageable
+    {
+        if ($this->resolvedRecord instanceof Pageable) {
+            return $this->resolvedRecord;
+        }
+
+        if ($this->record instanceof Pageable) {
+            $this->recordKey ??= (int) $this->record->getKey();
+            $this->resolvedRecord = $this->record;
+
+            return $this->resolvedRecord;
+        }
+
+        if ($this->recordKey === null) {
+            return null;
+        }
+
+        $this->resolvedRecord = Page::query()
+            ->with('workspace')
+            ->find($this->recordKey);
+
+        return $this->resolvedRecord;
+    }
+
+    private function initialRecordKey(): ?int
+    {
+        if ($this->record instanceof Pageable) {
+            return (int) $this->record->getKey();
+        }
+
+        $routeRecord = request()->route('record');
+
+        if ($routeRecord instanceof Pageable) {
+            return (int) $routeRecord->getKey();
+        }
+
+        if (is_numeric($routeRecord)) {
+            return (int) $routeRecord;
+        }
+
+        return null;
     }
 }

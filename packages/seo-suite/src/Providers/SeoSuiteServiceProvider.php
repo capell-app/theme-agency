@@ -25,6 +25,7 @@ use Capell\Core\Events\PageSaved;
 use Capell\Core\Events\SiteCreated;
 use Capell\Core\Events\UrlVisitFailed;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
 use Capell\Core\Support\ContentGraph\ContentGraphRegistry;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
@@ -84,6 +85,7 @@ use Capell\SeoSuite\Models\AiDiscoverySiteProfile;
 use Capell\SeoSuite\Models\AiDiscoverySnapshot;
 use Capell\SeoSuite\Models\AIGenerationHistory;
 use Capell\SeoSuite\Models\BrokenLink;
+use Capell\SeoSuite\Models\PageSeoSnapshot;
 use Capell\SeoSuite\Policies\AiCreatorPolicy;
 use Capell\SeoSuite\Settings\AIOrchestratorSettings;
 use Capell\SeoSuite\Settings\SeoSuiteSettings;
@@ -123,6 +125,7 @@ use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
@@ -488,6 +491,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
         return $this
             ->registerExtenderResolvers()
             ->registerModels()
+            ->registerModelRelations()
             ->registerBlazeComponents()
             ->bindSchemaTemplateRegistry()
             ->bindSearchConsoleClient()
@@ -649,7 +653,18 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             AiDiscoveryCrawlerRule::class,
             AiDiscoverySnapshot::class,
             BrokenLink::class,
+            PageSeoSnapshot::class,
         ]);
+
+        return $this;
+    }
+
+    private function registerModelRelations(): self
+    {
+        Page::resolveRelationUsing(
+            'seoSnapshots',
+            fn (Page $page): HasMany => $page->hasMany(PageSeoSnapshot::class, 'page_id'),
+        );
 
         return $this;
     }

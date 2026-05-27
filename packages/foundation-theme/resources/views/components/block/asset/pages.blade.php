@@ -100,23 +100,81 @@
                     ])
                 >
                     @foreach ($pages as $item)
-                        <x-dynamic-component
-                            :component="$componentItem"
-                            :class="$block->key . '-page-item'"
-                            :$container
-                            :$containerKey
-                            :count="$withChildCount ? $item->children_count : null"
-                            :icon="(bool) $block->getMeta('icon')"
-                            :image="$withImage ? $item->image : null"
-                            :$loop
-                            :parent="$withParent && method_exists($item, 'loadParent') ? $item->loadParent($language) : null"
-                            :publish-date="$withDate ? $item->getPublishDate() : null"
-                            :$size
-                            :summary="$item->translation->summary"
-                            :title="$item->translation->title"
-                            :url="$item->pageUrl->full_url"
-                            :$withSummary
-                        />
+                        @if ($block->key === 'latest-articles')
+                            @php
+                                $itemImage = $withImage && method_exists($item, 'relationLoaded') && $item->relationLoaded('image') ? $item->image : null;
+                                $itemDate = $withDate ? $item->getPublishDate() : null;
+                            @endphp
+
+                            <article
+                                class="latest-articles-page-item group/latest @lg:grid-cols-[4.75rem_minmax(0,1fr)] @lg:gap-4 grid min-w-0 gap-3 py-3 first:pt-0 last:pb-0 @3xl:py-4"
+                            >
+                                @if ($itemImage)
+                                    <a
+                                        href="{{ $item->pageUrl->full_url }}"
+                                        title="{{ htmlspecialchars(strip_tags($item->translation->title)) }}"
+                                        class="@lg:aspect-square block aspect-[5/3] min-w-0 overflow-hidden rounded-md bg-slate-100 after:!hidden after:!content-none dark:bg-slate-800"
+                                        @wireNavigate
+                                    >
+                                        <x-capell::media
+                                            :media="$itemImage"
+                                            loading="lazy"
+                                            :alt="$item->translation->title"
+                                            :width="320"
+                                            :height="240"
+                                            sizes="(min-width: 1024px) 7rem, 92vw"
+                                            class="h-full w-full object-cover object-center transition duration-500 group-hover/latest:scale-[1.04]"
+                                        />
+                                    </a>
+                                @endif
+
+                                <div class="flex min-w-0 flex-col gap-2">
+                                    <a
+                                        href="{{ $item->pageUrl->full_url }}"
+                                        title="{{ htmlspecialchars(strip_tags($item->translation->title)) }}"
+                                        class="hover:text-primary focus:text-primary line-clamp-3 text-[0.95rem] leading-snug font-semibold text-slate-950 no-underline transition after:!hidden after:!content-none dark:text-white"
+                                        @wireNavigate
+                                    >
+                                        {{ $item->translation->title }}
+                                    </a>
+
+                                    @if ($withSummary && $item->translation->summary)
+                                        <p
+                                            class="line-clamp-2 text-sm leading-6 text-slate-600 dark:text-slate-300"
+                                        >
+                                            {{ $item->translation->summary }}
+                                        </p>
+                                    @endif
+
+                                    @if ($itemDate)
+                                        <time
+                                            class="pt-1 text-xs font-medium tracking-[0.08em] text-slate-500 uppercase dark:text-slate-400"
+                                            datetime="{{ $itemDate->toW3cString() }}"
+                                        >
+                                            {{ $itemDate->format(config('capell-frontend.date_format')) }}
+                                        </time>
+                                    @endif
+                                </div>
+                            </article>
+                        @else
+                            <x-dynamic-component
+                                :component="$componentItem"
+                                :class="$block->key . '-page-item'"
+                                :$container
+                                :$containerKey
+                                :count="$withChildCount ? $item->children_count : null"
+                                :icon="(bool) $block->getMeta('icon')"
+                                :image="$withImage ? $item->image : null"
+                                :$loop
+                                :parent="$withParent && method_exists($item, 'loadParent') ? $item->loadParent($language) : null"
+                                :publish-date="$withDate ? $item->getPublishDate() : null"
+                                :$size
+                                :summary="$item->translation->summary"
+                                :title="$item->translation->title"
+                                :url="$item->pageUrl->full_url"
+                                :$withSummary
+                            />
+                        @endif
                     @endforeach
                 </div>
 

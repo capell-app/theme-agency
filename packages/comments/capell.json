@@ -53,7 +53,7 @@
         ]
     },
     "commands": {
-        "install": null,
+        "install": "capell-comments:install",
         "setup": null,
         "demo": null,
         "doctor": null

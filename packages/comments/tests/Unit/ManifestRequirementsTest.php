@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Comments\Console\Commands\InstallCommentsCommand;
 use Capell\Comments\Providers\CommentsServiceProvider;
 
 it('declares comments as optional for supported companion packages', function (): void {
@@ -11,5 +12,7 @@ it('declares comments as optional for supported companion packages', function ()
         ->and($manifest['dependencies']['requires'])->not->toContain('capell-app/blog')
         ->and($manifest['dependencies']['requires'])->not->toContain('capell-app/layout-builder')
         ->and($manifest['dependencies']['supports'])->toContain('capell-app/blog')
-        ->and($manifest['providers']['runtime'])->toContain(CommentsServiceProvider::class);
+        ->and($manifest['providers']['runtime'])->toContain(CommentsServiceProvider::class)
+        ->and($manifest['commands']['install'])->toBe('capell-comments:install')
+        ->and(class_exists(InstallCommentsCommand::class))->toBeTrue();
 });

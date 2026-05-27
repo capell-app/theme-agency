@@ -23,6 +23,7 @@ final class BuildSeoAuditQueryAction
                 'blueprint',
                 'pageUrl.siteDomain',
                 'site.language',
+                'seoSnapshots',
                 'translation.language',
                 'translations.language',
             ]);

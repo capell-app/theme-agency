@@ -24,9 +24,9 @@ final class BuildMyWorkQueueAction
     {
         $userId = $user->getAuthIdentifier();
 
-        $draftItems = $this->buildDraftItems($userId);
-        $approvalItems = $this->buildApprovalItems($user);
-        $scheduledItems = $this->buildScheduledItems($userId, $scheduledDays);
+        $draftItems = $this->buildDraftItems($userId, $limit);
+        $approvalItems = $this->buildApprovalItems($user, $limit);
+        $scheduledItems = $this->buildScheduledItems($userId, $scheduledDays, $limit);
 
         /** @var Collection<int, MyWorkItemData> $merged */
         $merged = $draftItems
@@ -45,7 +45,7 @@ final class BuildMyWorkQueueAction
      *
      * @return Collection<int, MyWorkItemData>
      */
-    private function buildDraftItems(int|string $userId): Collection
+    private function buildDraftItems(int|string $userId, int $limit): Collection
     {
         $workspaceIds = Workspace::query()
             ->whereIn('status', [
@@ -63,6 +63,7 @@ final class BuildMyWorkQueueAction
             ->withoutGlobalScopes()
             ->whereIn('workspace_id', $workspaceIds)
             ->latest('updated_at')
+            ->limit($limit)
             ->get()
             ->map(fn (Page $page): MyWorkItemData => new MyWorkItemData(
                 pageId: $page->id,
@@ -79,7 +80,7 @@ final class BuildMyWorkQueueAction
      *
      * @return Collection<int, MyWorkItemData>
      */
-    private function buildApprovalItems(Authenticatable $user): Collection
+    private function buildApprovalItems(Authenticatable $user, int $limit): Collection
     {
         $morphClass = $user->getMorphClass();
 
@@ -98,6 +99,7 @@ final class BuildMyWorkQueueAction
             ->withoutGlobalScopes()
             ->whereIn('workspace_id', $workspaceIds)
             ->latest('updated_at')
+            ->limit($limit)
             ->get()
             ->map(fn (Page $page): MyWorkItemData => new MyWorkItemData(
                 pageId: $page->id,
@@ -114,7 +116,7 @@ final class BuildMyWorkQueueAction
      *
      * @return Collection<int, MyWorkItemData>
      */
-    private function buildScheduledItems(int|string $userId, int $scheduledDays): Collection
+    private function buildScheduledItems(int|string $userId, int $scheduledDays, int $limit): Collection
     {
         $cutoff = now()->addDays($scheduledDays);
 
@@ -130,30 +132,36 @@ final class BuildMyWorkQueueAction
             return collect();
         }
 
-        $result = collect();
+        $workspaceIndex = $publishingStudio->keyBy('id');
+        $pages = Page::query()
+            ->withoutGlobalScopes()
+            ->whereIn('workspace_id', $publishingStudio->pluck('id'))
+            ->latest('updated_at')
+            ->limit($limit)
+            ->get();
 
-        foreach ($publishingStudio as $workspace) {
-            $publishAt = $workspace->publish_at;
-            $publishAtString = $publishAt?->toIso8601String();
+        return $pages
+            ->map(function (Page $page) use ($workspaceIndex): ?MyWorkItemData {
+                /** @var Workspace|null $workspace */
+                $workspace = $workspaceIndex->get($page->workspace_id);
 
-            $pages = Page::query()
-                ->withoutGlobalScopes()
-                ->where('workspace_id', $workspace->id)
-                ->latest('updated_at')
-                ->get();
+                if ($workspace === null) {
+                    return null;
+                }
 
-            foreach ($pages as $page) {
-                $result->push(new MyWorkItemData(
+                $publishAt = $workspace->publish_at;
+                $publishAtString = $publishAt?->toIso8601String();
+
+                return new MyWorkItemData(
                     pageId: $page->id,
                     title: $page->name,
                     kind: 'scheduled',
                     editUrl: PageResource::getUrl('edit', ['record' => $page]),
                     scheduledAt: $publishAtString,
                     updatedAt: $page->updated_at?->toIso8601String(),
-                ));
-            }
-        }
-
-        return $result;
+                );
+            })
+            ->filter()
+            ->values();
     }
 }

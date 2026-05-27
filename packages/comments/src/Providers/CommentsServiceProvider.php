@@ -7,6 +7,7 @@ namespace Capell\Comments\Providers;
 use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Comments\Actions\RegisterDefaultCommentablesAction;
+use Capell\Comments\Console\Commands\InstallCommentsCommand;
 use Capell\Comments\Filament\Settings\CommentSettingsSchema;
 use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
@@ -53,6 +54,12 @@ class CommentsServiceProvider extends AbstractPackageServiceProvider
         $this->app->singleton(CommentableRegistry::class);
         $this->app->register(AdminServiceProvider::class);
         $this->app->register(FrontendServiceProvider::class);
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                InstallCommentsCommand::class,
+            ]);
+        }
     }
 
     public function packageRegistered(): void

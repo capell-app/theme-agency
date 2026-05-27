@@ -23,6 +23,12 @@ final class AdminServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                InstallShopifyCommerceCommand::class,
+            ]);
+        }
+
         if (! CapellCore::isPackageInstalled(ShopifyCommerceServiceProvider::$packageName) || config('capell-shopify-commerce.enabled', true) !== true) {
             return;
         }
@@ -33,7 +39,6 @@ final class AdminServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                InstallShopifyCommerceCommand::class,
                 SyncShopifyProductsCommand::class,
             ]);
         }
