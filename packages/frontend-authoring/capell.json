@@ -47,7 +47,12 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [],
+    "capabilities": [
+        "authoring-surface",
+        "preview-only",
+        "beacon",
+        "cache-blocking"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,

@@ -46,7 +46,7 @@ final class CapellAgentBridgeConfirmation extends Model
         'used_at',
     ];
 
-    protected $table = 'capell_agent-bridge_confirmations';
+    protected $table = 'capell_agent_bridge_confirmations';
 
     public function isUsable(): bool
     {

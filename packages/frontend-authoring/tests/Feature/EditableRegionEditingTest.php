@@ -237,6 +237,89 @@ it('updates allowed editable region fields and rejects unknown fields', function
         ->toThrow(HttpException::class);
 });
 
+it('saves text rich html and meta edits while clearing every affected cached page', function (string $field, string $value, Closure $assertSaved): void {
+    Storage::fake('page_cache');
+
+    $translation = createEditableRegionTranslation();
+    $page = $translation->translatable;
+    assert($page instanceof Page);
+
+    $pageUrl = PageUrl::query()
+        ->where('pageable_type', $page->getMorphClass())
+        ->where('pageable_id', $page->getKey())
+        ->firstOrFail();
+    $siteDomain = SiteDomain::query()
+        ->where('site_id', $pageUrl->site_id)
+        ->where('language_id', $pageUrl->language_id)
+        ->firstOrFail();
+    $pathResolver = resolve(HtmlCachePathResolver::class);
+
+    $touchedUrls = [
+        $pageUrl->full_url,
+        'https://example.test/also-uses-this-copy',
+    ];
+
+    foreach ($touchedUrls as $url) {
+        $path = '/' . ltrim((string) parse_url($url, PHP_URL_PATH), '/');
+        $cachePath = $pathResolver->pathForUrl($path === '' ? '/' : $path, $siteDomain);
+
+        Storage::disk('page_cache')->put($cachePath, 'stale cached html');
+
+        CachedModelUrl::query()->create([
+            'url' => $url,
+            'url_hash' => CachedModelUrl::hashUrl($url),
+            'path' => $path === '' ? '/' : $path,
+            'site_id' => $siteDomain->site_id,
+            'site_domain_id' => $siteDomain->getKey(),
+            'language_id' => $siteDomain->language_id,
+            'cacheable_type' => $translation->getMorphClass(),
+            'cacheable_id' => $translation->getKey(),
+        ]);
+    }
+
+    $result = UpdateEditableRegionAction::run(editableRegionPayload($translation, $field), $value);
+
+    $translation->refresh();
+    $assertSaved($translation);
+
+    expect($result)->toMatchArray([
+        'cleared' => 2,
+        'urls' => $touchedUrls,
+        'status' => 'published',
+        'redirect_url' => null,
+    ]);
+
+    foreach ($touchedUrls as $url) {
+        $path = '/' . ltrim((string) parse_url($url, PHP_URL_PATH), '/');
+        $cachePath = $pathResolver->pathForUrl($path === '' ? '/' : $path, $siteDomain);
+
+        expect(Storage::disk('page_cache')->exists($cachePath))->toBeFalse()
+            ->and(CachedModelUrl::query()->where('url', $url)->exists())->toBeFalse();
+    }
+})->with([
+    'plain text title' => [
+        'title',
+        'User tested title',
+        function (Translation $translation): void {
+            expect($translation->title)->toBe('User tested title');
+        },
+    ],
+    'rich html content' => [
+        'content',
+        '<h2>User tested heading</h2><p><strong>Rich</strong> body copy.</p>',
+        function (Translation $translation): void {
+            expect($translation->content)->toBe('<h2>User tested heading</h2><p><strong>Rich</strong> body copy.</p>');
+        },
+    ],
+    'meta description' => [
+        'meta.seo.description',
+        'User tested SEO description',
+        function (Translation $translation): void {
+            expect($translation->meta)->toHaveKey('seo.description', 'User tested SEO description');
+        },
+    ],
+]);
+
 it('saves inline edits into an approval workspace and returns a preview redirect when approval is required', function (): void {
     Config::set('capell-frontend-authoring.workflow.require_approval', true);
     ensureEditableRegionWorkflowTables();
@@ -393,6 +476,10 @@ it('protects the edit region route with authentication admin access and signed u
     allowEditableRegionEdits();
 
     get($signedUrl)->assertOk()
+        ->assertSee('<html lang="en" class="fi">', false)
+        ->assertSee('capell-authoring-editor-shell')
+        ->assertSee("[x-cloak='']", false)
+        ->assertSee('capell-authoring:editor-loaded')
         ->assertSee('wire:snapshot', false)
         ->assertSee('Page title');
 

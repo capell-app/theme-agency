@@ -88,9 +88,7 @@ function capell_artisan(string $command, array $parameters = []): PendingCommand
 {
     $pendingCommand = test()->artisan($command, $parameters);
 
-    if (! $pendingCommand instanceof PendingCommand) {
-        throw new RuntimeException('Capell package command tests expect console output mocking to remain enabled.');
-    }
+    throw_unless($pendingCommand instanceof PendingCommand, RuntimeException::class, 'Capell package command tests expect console output mocking to remain enabled.');
 
     return $pendingCommand;
 }

@@ -17,6 +17,7 @@ it('creates the columns needed for actions, dispatch, and integration tokens', f
         ->and(Schema::hasColumn('public_actions', 'handler_key'))->toBeTrue()
         ->and(Schema::hasColumn('public_action_destinations', 'endpoint_url'))->toBeTrue()
         ->and(Schema::hasColumn('public_action_submissions', 'payload'))->toBeTrue()
+        ->and(Schema::hasColumn('public_action_submissions', 'idempotency_key'))->toBeTrue()
         ->and(Schema::hasColumn('public_action_dispatch_attempts', 'request_hash'))->toBeTrue()
         ->and(Schema::hasColumn('public_action_integration_tokens', 'token_hash'))->toBeTrue()
         ->and(Schema::hasColumn('public_action_integration_tokens', 'abilities'))->toBeTrue();

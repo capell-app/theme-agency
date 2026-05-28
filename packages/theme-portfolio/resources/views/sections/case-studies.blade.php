@@ -84,7 +84,7 @@
                             Editorial design system
                         </h3>
                         <p class="mt-3 text-sm text-slate-200">
-                            Content-first experiences designed to keep visitors
+                            Content-first experiences built to keep visitors
                             reading and converting.
                         </p>
                     </article>

@@ -35,7 +35,7 @@
             </p>
             <h3 class="mt-2 text-lg font-black">Mentor Access</h3>
             <p class="mt-2 text-sm text-stone-600">
-                Fast feedback windows designed for premium learners and teams.
+                Fast feedback windows built for premium learners and teams.
             </p>
         </article>
     </div>

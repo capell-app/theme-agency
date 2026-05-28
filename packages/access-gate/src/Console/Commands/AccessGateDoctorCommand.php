@@ -30,6 +30,7 @@ final class AccessGateDoctorCommand extends Command
             $this->checkMiddleware($router),
             $this->checkCookies(),
             $this->checkClaimHosts(),
+            $this->checkSiteScopedAreas(),
         ]);
 
         $report = new DoctorReportData(
@@ -218,6 +219,72 @@ final class AccessGateDoctorCommand extends Command
             label: 'Access Gate claim hosts',
             passed: true,
             message: __('capell-access-gate::doctor.claim_hosts.ok'),
+        );
+    }
+
+    private function checkSiteScopedAreas(): DoctorCheckResultData
+    {
+        if (! Schema::hasTable((new Area)->getTable()) || ! Schema::hasColumn((new Area)->getTable(), 'site_id')) {
+            return new DoctorCheckResultData(
+                label: 'Access Gate site-scoped areas',
+                passed: true,
+                message: __('capell-access-gate::doctor.site_scoped_areas.not_enabled'),
+            );
+        }
+
+        if (! Schema::hasTable('sites')) {
+            return new DoctorCheckResultData(
+                label: 'Access Gate site-scoped areas',
+                passed: true,
+                message: __('capell-access-gate::doctor.site_scoped_areas.sites_missing'),
+            );
+        }
+
+        $siteIds = DB::table('sites')->pluck('id')->map(fn (mixed $siteId): int => (int) $siteId)->all();
+
+        if ($siteIds === []) {
+            return new DoctorCheckResultData(
+                label: 'Access Gate site-scoped areas',
+                passed: true,
+                message: __('capell-access-gate::doctor.site_scoped_areas.no_sites'),
+            );
+        }
+
+        $missingAreaKeys = Area::query()
+            ->select('key')
+            ->whereNotNull('site_id')
+            ->distinct()
+            ->pluck('key')
+            ->filter(function (string $key) use ($siteIds): bool {
+                if (Area::query()->where('key', $key)->whereNull('site_id')->exists()) {
+                    return false;
+                }
+
+                $configuredSiteIds = Area::query()
+                    ->where('key', $key)
+                    ->whereNotNull('site_id')
+                    ->pluck('site_id')
+                    ->map(fn (mixed $siteId): int => (int) $siteId)
+                    ->all();
+
+                return array_diff($siteIds, $configuredSiteIds) !== [];
+            });
+
+        if ($missingAreaKeys->isNotEmpty()) {
+            return new DoctorCheckResultData(
+                label: 'Access Gate site-scoped areas',
+                passed: false,
+                message: __('capell-access-gate::doctor.site_scoped_areas.missing_site_config', [
+                    'areas' => $missingAreaKeys->implode(', '),
+                ]),
+                remediation: __('capell-access-gate::doctor.site_scoped_areas.missing_site_config_remediation'),
+            );
+        }
+
+        return new DoctorCheckResultData(
+            label: 'Access Gate site-scoped areas',
+            passed: true,
+            message: __('capell-access-gate::doctor.site_scoped_areas.ok'),
         );
     }
 

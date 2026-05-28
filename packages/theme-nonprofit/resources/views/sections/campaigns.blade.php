@@ -23,7 +23,7 @@
             </p>
             <h3 class="mt-2 text-lg font-black">Donor Path</h3>
             <p class="mt-2 text-sm text-stone-600">
-                Designed to improve donor confidence and return.
+                Built for donor confidence and return.
             </p>
         </article>
         <article class="rounded-xl border border-slate-200 bg-white p-5">

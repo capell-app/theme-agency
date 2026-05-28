@@ -153,6 +153,57 @@ final class GoogleSearchConsoleClient implements SearchConsoleClientInterface
         );
     }
 
+    public function queryMetricRows(int $siteId, int $limit = 100): array
+    {
+        if (! $this->isConfigured()) {
+            return [];
+        }
+
+        $propertyUrl = $this->sitePropertyUrl($siteId);
+
+        if ($propertyUrl === null) {
+            return [];
+        }
+
+        $currentWindowEnd = Date::now()->toImmutable()->subDay();
+        $currentWindowStart = $currentWindowEnd->subDays(27);
+        $previousWindowEnd = $currentWindowStart->subDay();
+        $previousWindowStart = $previousWindowEnd->subDays(27);
+
+        try {
+            $currentRows = $this->searchInsightsRowsByQueryAndUrl($this->querySearchInsights($propertyUrl, [
+                'startDate' => $currentWindowStart->toDateString(),
+                'endDate' => $currentWindowEnd->toDateString(),
+                'dimensions' => ['query', 'page'],
+                'rowLimit' => $limit,
+            ]));
+            $previousRows = $this->searchInsightsRowsByQueryAndUrl($this->querySearchInsights($propertyUrl, [
+                'startDate' => $previousWindowStart->toDateString(),
+                'endDate' => $previousWindowEnd->toDateString(),
+                'dimensions' => ['query', 'page'],
+                'rowLimit' => $limit,
+            ]));
+        } catch (Throwable) {
+            return [];
+        }
+
+        $rowKeys = array_values(array_unique([
+            ...array_keys($currentRows),
+            ...array_keys($previousRows),
+        ]));
+
+        return array_map(
+            fn (string $rowKey): array => $this->queryComparisonRow(
+                rowKey: $rowKey,
+                currentRow: $currentRows[$rowKey] ?? [],
+                previousRow: $previousRows[$rowKey] ?? [],
+                windowStart: $currentWindowStart->toDateString(),
+                windowEnd: $currentWindowEnd->toDateString(),
+            ),
+            $rowKeys,
+        );
+    }
+
     /**
      * @param  array<string, mixed>  $payload
      * @return list<array<string, mixed>>
@@ -162,7 +213,7 @@ final class GoogleSearchConsoleClient implements SearchConsoleClientInterface
         $response = Http::withToken($this->accessToken())
             ->acceptJson()
             ->post(
-                'https://searchconsole.googleapis.com/webmasters/v3/sites/' . rawurlencode($propertyUrl) . '/searchInsights/query',
+                'https://searchconsole.googleapis.com/webmasters/v3/sites/' . rawurlencode($propertyUrl) . '/searchAnalytics/query',
                 $payload,
             );
 
@@ -198,6 +249,52 @@ final class GoogleSearchConsoleClient implements SearchConsoleClientInterface
     }
 
     /**
+     * @param  list<array<string, mixed>>  $rows
+     * @return array<string, array<string, mixed>>
+     */
+    private function searchInsightsRowsByQueryAndUrl(array $rows): array
+    {
+        $rowsByQueryAndUrl = [];
+
+        foreach ($rows as $row) {
+            $query = $this->searchInsightsRowQuery($row);
+            $url = $this->searchInsightsRowUrl($row);
+
+            if ($query === null || $url === null) {
+                continue;
+            }
+
+            $rowsByQueryAndUrl[$this->queryRowKey($query, $url)] = $row;
+        }
+
+        return $rowsByQueryAndUrl;
+    }
+
+    /**
+     * @param  array<string, mixed>  $row
+     */
+    private function searchInsightsRowQuery(array $row): ?string
+    {
+        $keys = $row['keys'] ?? [];
+
+        if (is_array($keys)) {
+            $query = $keys[0] ?? null;
+
+            if (is_string($query) && trim($query) !== '') {
+                return trim(mb_strtolower($query));
+            }
+        }
+
+        $query = $row['query'] ?? null;
+
+        if (is_string($query) && trim($query) !== '') {
+            return trim(mb_strtolower($query));
+        }
+
+        return null;
+    }
+
+    /**
      * @param  array<string, mixed>  $row
      */
     private function searchInsightsRowUrl(array $row): ?string
@@ -205,7 +302,7 @@ final class GoogleSearchConsoleClient implements SearchConsoleClientInterface
         $keys = $row['keys'] ?? [];
 
         if (is_array($keys)) {
-            $keyUrl = $keys[0] ?? null;
+            $keyUrl = count($keys) > 1 ? ($keys[1] ?? null) : ($keys[0] ?? null);
 
             if (is_string($keyUrl) && trim($keyUrl) !== '') {
                 return $keyUrl;
@@ -219,6 +316,41 @@ final class GoogleSearchConsoleClient implements SearchConsoleClientInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param  array<string, mixed>  $currentRow
+     * @param  array<string, mixed>  $previousRow
+     * @return array{query: string, url: string, clicks: int, impressions: int, ctr: float, average_position: float, previous_clicks: int, previous_impressions: int, previous_ctr: float, previous_average_position: float, window_start: string, window_end: string}
+     */
+    private function queryComparisonRow(
+        string $rowKey,
+        array $currentRow,
+        array $previousRow,
+        string $windowStart,
+        string $windowEnd,
+    ): array {
+        [$query, $url] = explode("\n", $rowKey, 2);
+
+        return [
+            'query' => $query,
+            'url' => $url,
+            'clicks' => $this->integerMetric($currentRow, 'clicks'),
+            'impressions' => $this->integerMetric($currentRow, 'impressions'),
+            'ctr' => $this->floatMetric($currentRow, 'ctr'),
+            'average_position' => $this->floatMetric($currentRow, 'position'),
+            'previous_clicks' => $this->integerMetric($previousRow, 'clicks'),
+            'previous_impressions' => $this->integerMetric($previousRow, 'impressions'),
+            'previous_ctr' => $this->floatMetric($previousRow, 'ctr'),
+            'previous_average_position' => $this->floatMetric($previousRow, 'position'),
+            'window_start' => $windowStart,
+            'window_end' => $windowEnd,
+        ];
+    }
+
+    private function queryRowKey(string $query, string $url): string
+    {
+        return trim(mb_strtolower($query)) . "\n" . trim($url);
     }
 
     /**

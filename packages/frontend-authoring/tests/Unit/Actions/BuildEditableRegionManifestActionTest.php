@@ -63,14 +63,17 @@ it('builds signed editable regions for a translated page url', function (): void
             'id' => array_key_first($manifest),
             'type' => 'text',
             'selector' => '[data-edit-title]',
+            'surface' => 'field',
         ])
         ->and($regions[1])->toMatchArray([
             'type' => 'textarea',
             'selector' => '[data-edit-title]',
+            'surface' => 'field',
         ])
         ->and($regions[2])->toMatchArray([
             'type' => 'html',
             'selector' => '[data-edit-content]',
+            'surface' => 'field',
         ]);
 });
 
@@ -135,6 +138,7 @@ it('includes package supplied editable region extenders', function (): void {
             'label' => 'Summary',
             'type' => 'textarea',
             'selector' => '[data-edit-summary]',
+            'surface' => 'field',
         ]);
 });
 

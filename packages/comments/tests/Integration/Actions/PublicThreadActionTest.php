@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Capell\Comments\Actions\BuildPublicThreadAction;
+use Capell\Comments\Actions\ResolvePublicCommentableThreadAction;
+use Capell\Comments\Data\PublicCommentableThreadData;
 use Capell\Comments\Data\PublicCommentData;
 use Capell\Comments\Enums\CommentPublicationPolicy;
 use Capell\Comments\Enums\CommentStatus;
@@ -151,6 +153,21 @@ it('does not expose approved comments when comments are disabled for public read
     expect(BuildPublicThreadAction::run($page))->toBe([]);
 });
 
+it('does not resolve public threads when the commentable is not publicly visible', function (): void {
+    $page = $this->createCommentsPage();
+    $page->forceFill(['visible_from' => now()->addDay()])->save();
+
+    Comment::factory()->create([
+        'site_id' => $page->site_id,
+        'commentable_type' => $page->getMorphClass(),
+        'commentable_id' => $page->getKey(),
+        'body' => 'Approved but hidden page',
+    ]);
+
+    expect(BuildPublicThreadAction::run($page))->toBe([])
+        ->and(ResolvePublicCommentableThreadAction::run($page))->toBeNull();
+});
+
 it('does not expose approved comments when public publication is disabled for the commentable type', function (): void {
     $page = $this->createCommentsPage();
 
@@ -164,6 +181,25 @@ it('does not expose approved comments when public publication is disabled for th
     bindPublicThreadCommentSettings(['publication_policy' => CommentPublicationPolicy::Disabled->value]);
 
     expect(BuildPublicThreadAction::run($page))->toBe([]);
+});
+
+it('resolves public commentable thread metadata and approved comments', function (): void {
+    $page = $this->createCommentsPage();
+    Comment::factory()->create([
+        'site_id' => $page->site_id,
+        'commentable_type' => $page->getMorphClass(),
+        'commentable_id' => $page->getKey(),
+        'body' => 'Visible thread comment',
+    ]);
+
+    $thread = ResolvePublicCommentableThreadAction::run($page);
+
+    expect($thread)
+        ->toBeInstanceOf(PublicCommentableThreadData::class)
+        ->commentableType->toBe('page')
+        ->siteId->toBe((int) $page->site_id)
+        ->and($thread->comments)->toHaveCount(1)
+        ->and($thread->comments[0]->body)->toBe('Visible thread comment');
 });
 
 it('escapes public comment output and hides pending comments when rendered', function (): void {

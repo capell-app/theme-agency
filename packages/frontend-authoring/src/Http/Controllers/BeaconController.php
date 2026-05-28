@@ -49,15 +49,14 @@ class BeaconController extends BaseController
             ], 404);
         }
 
-        /** @var User $user */
         $user = $request->user();
 
-        $data['user'] = [
-            'id' => $user->getKey(),
-            'name' => (string) data_get($user, 'name'),
-        ];
-
         if ($this->isAdminUser($user) && config('capell-frontend-authoring.enabled') === true) {
+            /** @var User $user */
+            $data['user'] = [
+                'id' => $user->getKey(),
+                'name' => (string) data_get($user, 'name'),
+            ];
             $data['user']['admin'] = true;
             $pageUrl = $this->resolveEditablePageUrl($siteDomain, $url);
 

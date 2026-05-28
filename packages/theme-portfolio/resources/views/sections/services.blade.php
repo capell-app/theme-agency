@@ -8,8 +8,8 @@
                 {{ $heading }}
             </h2>
             <p class="max-w-2xl text-lg text-stone-600">
-                A modular services layer designed for portfolio storytelling
-                that converts attention into action.
+                A modular services layer built for portfolio storytelling that
+                converts attention into action.
             </p>
         </div>
     @endisset

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Comments\Actions;
 
+use Capell\Comments\Data\CommentableTypeData;
 use Capell\Comments\Data\PublicCommentData;
 use Capell\Comments\Enums\CommentPublicationPolicy;
 use Capell\Comments\Enums\CommentStatus;
@@ -86,7 +87,7 @@ class BuildPublicThreadAction
     {
         $commentableType = $this->commentableRegistry->forModel($commentable);
 
-        if ($commentableType === null || ! $commentableType->isVisible($commentable)) {
+        if (! $commentableType instanceof CommentableTypeData || ! $commentableType->isVisible($commentable)) {
             return false;
         }
 

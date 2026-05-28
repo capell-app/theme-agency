@@ -27,4 +27,9 @@ final class NullSearchConsoleClient implements SearchConsoleClientInterface
     {
         return [];
     }
+
+    public function queryMetricRows(int $siteId, int $limit = 100): array
+    {
+        return [];
+    }
 }

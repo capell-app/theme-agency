@@ -73,6 +73,7 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
             return;
         }
 
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-knowledge');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-knowledge');
 
         CapellCore::registerVendorAsset(

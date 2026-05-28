@@ -206,9 +206,7 @@ abstract class AbstractTestCase extends TestCase
     {
         $pendingCommand = parent::artisan($command, $parameters);
 
-        if (! $pendingCommand instanceof PendingCommand) {
-            throw new RuntimeException('Capell package tests expect console output mocking to remain enabled.');
-        }
+        throw_unless($pendingCommand instanceof PendingCommand, RuntimeException::class, 'Capell package tests expect console output mocking to remain enabled.');
 
         return $pendingCommand;
     }

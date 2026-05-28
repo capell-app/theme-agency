@@ -3,9 +3,11 @@
 declare(strict_types=1);
 
 use Capell\Core\Database\Factories\UserFactory;
+use Capell\PasswordPolicy\Actions\BuildPasswordSecurityPostureReportAction;
 use Capell\PasswordPolicy\Actions\EvaluatePasswordPolicyAction;
 use Capell\PasswordPolicy\Actions\UpdatePasswordAction;
 use Capell\PasswordPolicy\Data\PasswordChangeData;
+use Capell\PasswordPolicy\Health\PasswordPolicyHealthCheck;
 use Capell\PasswordPolicy\Settings\PasswordPolicySettings;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -107,4 +109,25 @@ it('blocks recently used passwords when password history is enabled', function (
             currentPassword: 'new-password',
         ),
     ))->toThrow(ValidationException::class);
+});
+
+it('reports password security posture and panel-aware forced change urls', function (): void {
+    $settings = PasswordPolicySettings::instance();
+    $settings->force_change_enabled = true;
+    $settings->password_expiry_enabled = true;
+    $settings->password_history_enabled = true;
+    $settings->compromised_password_checks_enabled = true;
+    $settings->save();
+
+    $report = BuildPasswordSecurityPostureReportAction::run(['admin']);
+
+    expect($report->forceChangeEnabled)->toBeTrue()
+        ->and($report->passwordExpiryEnabled)->toBeTrue()
+        ->and($report->passwordHistoryEnabled)->toBeTrue()
+        ->and($report->compromisedPasswordChecksEnabled)->toBeTrue()
+        ->and($report->userColumnsInstalled)->toBeTrue()
+        ->and($report->historyTableInstalled)->toBeTrue()
+        ->and($report->forcedChangeUrls['admin'] ?? null)->toContain('/admin/password-policy/change-password')
+        ->and((new PasswordPolicyHealthCheck)->securityPosture(['admin'])->forcedChangeUrls)
+        ->toHaveKey('admin');
 });

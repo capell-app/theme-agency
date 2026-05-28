@@ -24,7 +24,11 @@ use Capell\PublicActions\Support\Providers\HttpWebhookPublicActionAdapter;
 use Capell\PublicActions\Support\PublicActionDestinationAdapterRegistry;
 use Capell\PublicActions\Support\PublicActionHandlerRegistry;
 use Capell\PublicActions\Support\PublicActionProviderPresetRegistry;
+use Capell\PublicActions\Support\PublicActionSpamProtectionAdapterRegistry;
+use Capell\PublicActions\Support\SpamProtection\HoneypotPublicActionSpamProtectionAdapter;
+use Capell\PublicActions\Support\SpamProtection\TurnstilePublicActionSpamProtectionAdapter;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
@@ -54,6 +58,7 @@ class PublicActionsServiceProvider extends AbstractPackageServiceProvider
                 '2026_05_10_190865_03_create_public_action_submissions_table',
                 '2026_05_10_190865_04_create_public_action_dispatch_attempts_table',
                 '2026_05_10_190865_05_create_public_action_integration_tokens_table',
+                '2026_05_28_000002_add_idempotency_keys_to_public_action_submissions_table',
             ]);
     }
 
@@ -64,6 +69,13 @@ class PublicActionsServiceProvider extends AbstractPackageServiceProvider
         $this->app->singleton(PublicActionDestinationAdapterRegistry::class, static function (): PublicActionDestinationAdapterRegistry {
             $registry = new PublicActionDestinationAdapterRegistry;
             $registry->register('http_webhook', HttpWebhookPublicActionAdapter::class);
+
+            return $registry;
+        });
+        $this->app->singleton(PublicActionSpamProtectionAdapterRegistry::class, static function (Container $app): PublicActionSpamProtectionAdapterRegistry {
+            $registry = new PublicActionSpamProtectionAdapterRegistry($app);
+            $registry->register('honeypot', HoneypotPublicActionSpamProtectionAdapter::class);
+            $registry->register('turnstile', TurnstilePublicActionSpamProtectionAdapter::class);
 
             return $registry;
         });

@@ -111,9 +111,7 @@ it('groups llms txt entries by section and orders by priority', function (): voi
     $secondPagePosition = strpos($content, 'Second Page');
     $firstPagePosition = strpos($content, 'First Page');
 
-    if ($secondPagePosition === false || $firstPagePosition === false) {
-        throw new RuntimeException('Expected both page titles to be present in llms.txt content.');
-    }
+    throw_if($secondPagePosition === false || $firstPagePosition === false, RuntimeException::class, 'Expected both page titles to be present in llms.txt content.');
 
     expect($secondPagePosition)->toBeLessThan($firstPagePosition);
 });
@@ -425,9 +423,7 @@ it('serves current frontend pages as markdown for text markdown accept requests'
 
     $response = resolve(FrontendPageController::class)();
 
-    if (! $response instanceof Response) {
-        throw new RuntimeException('Expected frontend page controller to return a Symfony response.');
-    }
+    throw_unless($response instanceof Response, RuntimeException::class, 'Expected frontend page controller to return a Symfony response.');
 
     expect($response->getStatusCode())->toBe(200)
         ->and($response->headers->get('Content-Type'))->toBe('text/markdown; charset=utf-8')
@@ -646,9 +642,7 @@ it('syncs site language ai discovery settings from site translation meta', funct
 
     $profile = ResolveAiDiscoveryProfileAction::run($site, $language);
 
-    if (! $profile instanceof AiDiscoverySiteProfile) {
-        throw new RuntimeException('Expected site-level AI discovery profile.');
-    }
+    throw_unless($profile instanceof AiDiscoverySiteProfile, RuntimeException::class, 'Expected site-level AI discovery profile.');
 
     expect($profile->llms_txt_enabled)->toBeFalse()
         ->and($profile->llms_full_txt_enabled)->toBeTrue()

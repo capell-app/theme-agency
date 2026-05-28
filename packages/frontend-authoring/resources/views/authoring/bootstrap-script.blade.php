@@ -1,8 +1,8 @@
 window.CapellFrontendAuthoring = window.CapellFrontendAuthoring || (function ()
 { let editMode = false; let modalRestoreTarget = null; let modalKeydownHandler =
-null; let modalIsDirty = false; let activeMenu = null; let activeMenuTrigger =
-null; let bottomOffsetFrame = null; let originalBodyPaddingBottom = null; const
-labels = { adminEditing:
+null; let modalLoadTimer = null; let modalIsDirty = false; let activeMenu =
+null; let activeMenuTrigger = null; let bottomOffsetFrame = null; let
+originalBodyPaddingBottom = null; const labels = { adminEditing:
 @json(__('capell-frontend-authoring::authoring.admin_editing'))
 , cached:
 @json(__('capell-frontend-authoring::authoring.cached'))
@@ -12,6 +12,10 @@ labels = { adminEditing:
 @json(__('capell-frontend-authoring::authoring.discard_changes'))
 , edit:
 @json(__('capell-frontend-authoring::authoring.edit'))
+, editorLoading:
+@json(__('capell-frontend-authoring::authoring.editor_loading'))
+, editorLoadError:
+@json(__('capell-frontend-authoring::authoring.editor_load_error'))
 , editableArea:
 @json(__('capell-frontend-authoring::authoring.editable_area'))
 , editableAreas:
@@ -62,24 +66,34 @@ window.confirm(labels.discardChanges)) { return false; }
 document.querySelectorAll('.capell-authoring-modal').forEach((modal) =>
 modal.remove()); if (modalKeydownHandler) {
 document.removeEventListener('keydown', modalKeydownHandler);
-modalKeydownHandler = null; } modalIsDirty = false; const restoreTarget =
-modalRestoreTarget; modalRestoreTarget = null; if (restoreTarget instanceof
-HTMLElement && restoreTarget.isConnected) { restoreTarget.focus({ preventScroll:
-true }); return true; } const fallbackTarget =
-document.querySelector('.capell-authoring-toolbar__toggle'); if (fallbackTarget
-instanceof HTMLElement) { fallbackTarget.focus({ preventScroll: true }); }
-return true; } function openModal(region) { closeMenu(); closeModal();
-modalRestoreTarget = document.activeElement instanceof HTMLElement ?
-document.activeElement : null; const overlay = document.createElement('div');
-overlay.className = 'capell-authoring-modal'; const regionLabel =
-escapeHtml(region.label); const editUrl = escapeHtml(region.edit_url);
-overlay.innerHTML = `
+modalKeydownHandler = null; } if (modalLoadTimer) {
+window.clearTimeout(modalLoadTimer); modalLoadTimer = null; } modalIsDirty =
+false; const restoreTarget = modalRestoreTarget; modalRestoreTarget = null; if
+(restoreTarget instanceof HTMLElement && restoreTarget.isConnected) {
+restoreTarget.focus({ preventScroll: true }); return true; } const
+fallbackTarget = document.querySelector('.capell-authoring-toolbar__toggle'); if
+(fallbackTarget instanceof HTMLElement) { fallbackTarget.focus({ preventScroll:
+true }); } return true; } function markModalLoaded() { const modal =
+document.querySelector('.capell-authoring-modal'); if (! modal) { return; }
+const panel = modal.querySelector('.capell-authoring-modal__panel'); const
+loading = modal.querySelector('.capell-authoring-modal__loading'); const frame =
+modal.querySelector('.capell-authoring-modal__frame');
+panel?.removeAttribute('aria-busy'); if (panel) { delete panel.dataset.loading;
+} loading?.remove(); if (frame) { frame.hidden = false; } if (modalLoadTimer) {
+window.clearTimeout(modalLoadTimer); modalLoadTimer = null; } } function
+openModal(region) { closeMenu(); closeModal(); modalRestoreTarget =
+document.activeElement instanceof HTMLElement ? document.activeElement : null;
+const overlay = document.createElement('div'); overlay.className =
+'capell-authoring-modal'; const regionLabel = escapeHtml(region.label); const
+editUrl = escapeHtml(region.edit_url); overlay.innerHTML = `
 <div class="capell-authoring-modal__backdrop"></div>
 <div
     class="capell-authoring-modal__panel"
     role="dialog"
     aria-modal="true"
     aria-label="${regionLabel}"
+    aria-busy="true"
+    data-loading="true"
 >
     <div class="capell-authoring-modal__header">
         <div class="capell-authoring-modal__eyebrow">
@@ -94,24 +108,38 @@ overlay.innerHTML = `
     >
         ${escapeHtml(labels.closeEditor)}
     </button>
+    <div
+        class="capell-authoring-modal__loading"
+        role="status"
+        aria-live="polite"
+    >
+        <span class="capell-authoring-modal__spinner" aria-hidden="true"></span>
+        <span>${escapeHtml(labels.editorLoading)}</span>
+    </div>
     <iframe
         class="capell-authoring-modal__frame"
         src="${editUrl}"
         title="${regionLabel}"
+        hidden
     ></iframe>
 </div>
 `; document.body.appendChild(overlay); const panel =
 overlay.querySelector('.capell-authoring-modal__panel'); const closeButton =
 overlay.querySelector('.capell-authoring-modal__close'); const frame =
-overlay.querySelector('.capell-authoring-modal__frame'); modalKeydownHandler =
-(event) => { if (event.key === 'Escape') { event.preventDefault(); closeModal();
-return; } if (event.key !== 'Tab' || ! panel) { return; } const focusable =
-focusableElements(panel); if (focusable.length === 0) { return; } const first =
-focusable[0]; const last = focusable[focusable.length - 1]; if (event.shiftKey
-&& document.activeElement === first) { event.preventDefault(); last.focus();
-return; } if (! event.shiftKey && document.activeElement === last) {
-event.preventDefault(); first.focus(); } }; document.addEventListener('keydown',
-modalKeydownHandler); closeButton.addEventListener('click', () => closeModal());
+overlay.querySelector('.capell-authoring-modal__frame'); const loading =
+overlay.querySelector('.capell-authoring-modal__loading'); modalLoadTimer =
+window.setTimeout(() => { if (panel?.dataset.loading !== 'true' || ! loading) {
+return; } loading.innerHTML = `
+<strong>${escapeHtml(labels.editorLoadError)}</strong>
+`; }, 12000); modalKeydownHandler = (event) => { if (event.key === 'Escape') {
+event.preventDefault(); closeModal(); return; } if (event.key !== 'Tab' || !
+panel) { return; } const focusable = focusableElements(panel); if
+(focusable.length === 0) { return; } const first = focusable[0]; const last =
+focusable[focusable.length - 1]; if (event.shiftKey && document.activeElement
+=== first) { event.preventDefault(); last.focus(); return; } if (!
+event.shiftKey && document.activeElement === last) { event.preventDefault();
+first.focus(); } }; document.addEventListener('keydown', modalKeydownHandler);
+closeButton.addEventListener('click', () => closeModal());
 overlay.querySelector('.capell-authoring-modal__backdrop').addEventListener('click',
 () => closeModal()); frame.addEventListener('load', () => { try { const
 frameDocument = frame.contentDocument; if (! frameDocument) { return; }
@@ -201,7 +229,14 @@ font: 800 16px/1.2 ui-sans-serif, system-ui, sans-serif; }
 border: 0; border-radius: 999px; color: #fff; cursor: pointer; display: flex;
 font: 800 12px/1 ui-sans-serif, system-ui, sans-serif; height: 34px;
 justify-content: center; padding: 0 12px; position: absolute; right: 14px; top:
-14px; z-index: 2; } .capell-authoring-modal__frame { border: 0; height: 100%;
+14px; z-index: 2; } .capell-authoring-modal__loading { align-items: center;
+color: #334155; display: flex; font: 800 14px/1.4 ui-sans-serif, system-ui,
+sans-serif; gap: 12px; justify-content: center; min-height: 320px; padding:
+24px; text-align: center; } .capell-authoring-modal__spinner { animation:
+capellAuthoringSpin .8s linear infinite; border: 3px solid #dbeafe;
+border-top-color: #2563eb; border-radius: 999px; display: inline-block; height:
+28px; width: 28px; } @keyframes capellAuthoringSpin { to { transform:
+rotate(360deg); } } .capell-authoring-modal__frame { border: 0; height: 100%;
 width: 100%; } @media (max-width: 640px) { .capell-authoring-toolbar {
 align-items: stretch; grid-template-columns: 1fr; }
 .capell-authoring-toolbar__actions { justify-content: stretch; }
@@ -323,8 +358,8 @@ regions !== 'object') { return; } const editableRegions =
 Object.values(regions); ensureStyles(); ensureToolbar(editableRegions.length);
 const groups = new Map(); editableRegions.forEach((region) => { const target =
 document.querySelector(region.selector); if (! target) { return; } const key =
-region.selector; const group = groups.get(key) || { target, regions: [] };
-group.regions.push(region); groups.set(key, group); });
+region.target || region.selector; const group = groups.get(key) || { target,
+regions: [] }; group.regions.push(region); groups.set(key, group); });
 Array.from(groups.entries()).forEach(([selector, group], index) => {
 group.target.dataset.capellAuthoringSelector = selector;
 group.target.classList.add('capell-authoring-region'); const control =
@@ -338,10 +373,11 @@ closeMenu(); } }); window.addEventListener('keydown', (event) => { if (event.key
 activeMenuTrigger; closeMenu(); trigger?.focus({ preventScroll: true }); } });
 window.addEventListener('message', (event) => { if (event.origin !==
 window.location.origin) { return; } if (event.data?.type ===
-'capell-authoring:dirty') { modalIsDirty = true; return; } if (event.data?.type
-=== 'capell-authoring:saved') { modalIsDirty = false; const detail =
-event.data?.detail || {}; const firstDetail = Array.isArray(detail) ? detail[0]
-: detail; const redirectUrl = firstDetail?.redirectUrl; const status =
+'capell-authoring:editor-loaded') { markModalLoaded(); return; } if
+(event.data?.type === 'capell-authoring:dirty') { modalIsDirty = true; return; }
+if (event.data?.type === 'capell-authoring:saved') { modalIsDirty = false; const
+detail = event.data?.detail || {}; const firstDetail = Array.isArray(detail) ?
+detail[0] : detail; const redirectUrl = firstDetail?.redirectUrl; const status =
 firstDetail?.status; const message = status === 'pending_approval' ?
 labels.savedDraftStatus : labels.savedPublishedStatus; closeModal({ force: true
 }); showToast(message); window.setTimeout(() => { if (redirectUrl) {

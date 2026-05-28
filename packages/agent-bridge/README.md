@@ -112,13 +112,14 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Data And Persistence
 
-- capell_agent-bridge_tokens stores Agent Bridge client tokens.
-- capell_agent-bridge_confirmations stores pending or completed confirmations.
-- capell_agent-bridge_audit_entries stores capability invocation records.
+- `capell_agent_bridge_tokens` stores Agent Bridge client tokens.
+- `capell_agent_bridge_confirmations` stores pending or completed confirmations.
+- `capell_agent_bridge_audit_entries` stores capability invocation records.
+- `capell_agent_bridge_saved_prompts` stores prompt builder templates.
 - Confirmation TTL defaults to 10 minutes.
 
 - Models: `CapellAgentBridgeAuditEntry`, `CapellAgentBridgeConfirmation`, `CapellAgentBridgeToken`.
-- Migrations: `2026_05_10_190840_01_create_capell_agent-bridge_tokens_table.php`, `2026_05_10_190840_02_create_capell_agent-bridge_confirmations_table.php`, `2026_05_10_190840_03_create_capell_agent-bridge_audit_entries_table.php`.
+- Migrations create legacy hyphenated table names on fresh installs, then `2026_05_28_000001_rename_agent_bridge_tables_to_canonical_names.php` renames them to canonical underscore names for runtime use.
 - Config: `packages/agent-bridge/config/capell-agent-bridge.php`.
 - Data objects live in `src/Data/`; use them for payloads, form state, and view models.
 

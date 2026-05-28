@@ -34,7 +34,7 @@ final class CapellAgentBridgeSavedPrompt extends Model
         'prompt',
     ];
 
-    protected $table = 'capell_agent-bridge_saved_prompts';
+    protected $table = 'capell_agent_bridge_saved_prompts';
 
     /** @return MorphTo<Model, $this> */
     public function user(): MorphTo

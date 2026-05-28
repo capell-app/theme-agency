@@ -6,17 +6,26 @@ Use this package for public frontend CSS and JavaScript delivery. Do not use it 
 
 ## Main Surfaces
 
-| Surface                                  | Purpose                                                               |
-| ---------------------------------------- | --------------------------------------------------------------------- |
-| `LayoutAssetRegistry`                    | Assets that belong to a layout key.                                   |
-| `WidgetAssetRegistry`                    | Assets that belong to a widget type, optionally gated by widget data. |
-| `FrontendAssetSet`                       | Fluent builder for CSS and JavaScript asset definitions.              |
-| `ResolveRenderProfileAction`             | Merges asset sets and creates the profile hash/signature.             |
-| `StoreRenderProfileManifestAction`       | Persists the generated manifest.                                      |
-| `GenerateCriticalCssAction`              | Runs the configured `CriticalCssGenerator`.                           |
-| `@frontendOptimizerAssets($profileHash)` | Blade directive that renders stored assets for a profile.             |
+| Surface                                  | Purpose                                                                |
+| ---------------------------------------- | ---------------------------------------------------------------------- |
+| `LayoutAssetRegistry`                    | Assets that belong to a layout key.                                    |
+| `WidgetAssetRegistry`                    | Assets that belong to a widget type, optionally gated by widget data.  |
+| `FrontendAssetSet`                       | Fluent builder for CSS and JavaScript asset definitions.               |
+| `CapellFrontendAssetManifestRenderer`    | Converts Capell public asset manifests into optimizer render profiles. |
+| `ResolveRenderProfileAction`             | Merges asset sets and creates the profile hash/signature.              |
+| `StoreRenderProfileManifestAction`       | Persists the generated manifest.                                       |
+| `GenerateCriticalCssAction`              | Runs the configured `CriticalCssGenerator`.                            |
+| `@frontendOptimizerAssets($profileHash)` | Blade directive that renders stored assets for a profile.              |
 
 See [Critical CSS](critical-css.md) for the URL-based Playwright generation flow, settings, fallbacks, and page type opt-out.
+
+## Capell Frontend Manifest Integration
+
+When the package is installed, `FrontendOptimizerServiceProvider` binds Capell's `FrontendAssetManifestRenderer` contract to `CapellFrontendAssetManifestRenderer`. Public frontend head rendering continues to receive the standard `FrontendAssetManifestData`, but the optimizer converts eager CSS and JavaScript requirements into a layout-scoped `FrontendAssetSet`.
+
+The Foundation theme stylesheet (`foundation-theme:css`) is marked as critical-CSS eligible and rendered with a deferred loading strategy once generated critical CSS exists. Until that file exists, the renderer falls back to a blocking stylesheet link for the eligible stylesheet so public pages do not flash unstyled content. Other manifest CSS remains blocking, and JavaScript remains deferred/module output.
+
+Render profile hashes are scoped to the layout/theme asset graph. Equivalent pages using the same layout, theme, and asset set reuse the same generated profile and critical CSS. If profile preparation or rendering cannot run safely, the package falls back to Capell frontend's default renderer.
 
 ## Register Layout Assets
 

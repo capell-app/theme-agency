@@ -31,7 +31,7 @@ final class FrontendOptimizerSettings extends Settings implements SettingsContra
 
     public int $playwright_timeout = 120;
 
-    public int $max_inline_css_bytes = 20000;
+    public int $max_inline_css_bytes = 60000;
 
     public bool $debug_query_support = true;
 

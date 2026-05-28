@@ -11,6 +11,7 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
+use Capell\Frontend\Contracts\FrontendAssetManifestRenderer;
 use Capell\Frontend\Events\FrontendContextResolved;
 use Capell\FrontendOptimizer\Actions\RenderProfileAssetsAction;
 use Capell\FrontendOptimizer\Contracts\CriticalCssGenerator;
@@ -18,6 +19,7 @@ use Capell\FrontendOptimizer\Filament\Configurators\Types\FrontendOptimizerPageT
 use Capell\FrontendOptimizer\Filament\Settings\FrontendOptimizerSettingsSchema;
 use Capell\FrontendOptimizer\Listeners\CaptureCriticalCssPageTypeOptOut;
 use Capell\FrontendOptimizer\Settings\FrontendOptimizerSettings;
+use Capell\FrontendOptimizer\Support\CapellFrontendAssetManifestRenderer;
 use Capell\FrontendOptimizer\Support\CriticalCssSettings;
 use Capell\FrontendOptimizer\Support\LayoutAssetRegistry;
 use Capell\FrontendOptimizer\Support\PlaywrightCriticalCssGenerator;
@@ -64,6 +66,7 @@ final class FrontendOptimizerServiceProvider extends AbstractPackageServiceProvi
                 return;
             }
 
+            $this->app->singleton(FrontendAssetManifestRenderer::class, CapellFrontendAssetManifestRenderer::class);
             $this->registerSettings();
             $this->registerAdminSurface();
         });

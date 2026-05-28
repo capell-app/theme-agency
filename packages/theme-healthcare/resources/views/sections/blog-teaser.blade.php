@@ -53,7 +53,7 @@
                             </a>
                         @else
                             <article
-                                class="healthcare-resource-card min-w-[250px] snap-start rounded-xl border border-stone-200 bg-white p-6 transition hover:shadow-sm md:min-w-0"
+                                class="healthcare-resource-card rounded-xl border border-stone-200 bg-white p-6"
                             >
                                 <p
                                     class="text-xs font-black tracking-widest text-[#0f766e] uppercase"

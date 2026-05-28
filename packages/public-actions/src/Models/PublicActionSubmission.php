@@ -20,6 +20,7 @@ use Override;
  * @property int|null $site_id
  * @property string|null $source_type
  * @property string|null $source_id
+ * @property string|null $idempotency_key
  * @property array<array-key, mixed>|null $payload
  * @property array<array-key, mixed>|null $metadata
  * @property CarbonInterface|null $submitted_at
@@ -36,6 +37,7 @@ class PublicActionSubmission extends Model
         'site_id',
         'source_type',
         'source_id',
+        'idempotency_key',
         'payload',
         'metadata',
         'status',

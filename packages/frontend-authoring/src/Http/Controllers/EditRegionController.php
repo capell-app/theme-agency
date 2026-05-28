@@ -7,6 +7,7 @@ namespace Capell\FrontendAuthoring\Http\Controllers;
 use Capell\Frontend\Contracts\AdminAccessCheckerInterface;
 use Capell\FrontendAuthoring\Actions\ValidateEditableRegionPayloadAction;
 use Capell\FrontendAuthoring\Support\EditableRegionSigner;
+use Capell\FrontendAuthoring\Support\EditorSurfaceRegistry;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -18,14 +19,14 @@ class EditRegionController extends BaseController
     {
         $user = $this->authorizeAdmin($request);
 
-        ValidateEditableRegionPayloadAction::run(
+        $region = ValidateEditableRegionPayloadAction::run(
             resolve(EditableRegionSigner::class)->decode($payload),
             $user,
         );
 
-        return view('capell::editor.region', [
-            'payload' => $payload,
-        ]);
+        return resolve(EditorSurfaceRegistry::class)
+            ->surface($region->surface)
+            ->render($region, $user);
     }
 
     private function authorizeAdmin(Request $request): AuthenticatableContract

@@ -7,7 +7,10 @@ use Capell\AccessGate\Models\Area;
 use Capell\AccessGate\Tests\Support\FakePageCacheMiddleware;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Manifest\CapellManifestData;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 afterEach(function (): void {
     $publishedMigrations = glob(base_path('database/migrations/*access_gate*.php'));
@@ -29,6 +32,34 @@ it('passes doctor checks when middleware priority forces the gate before fronten
 
     capell_artisan('capell:access-gate-doctor')
         ->assertSuccessful();
+});
+
+it('reports site-scoped access areas without coverage for every site', function (): void {
+    defineAccessGateSiteTablesForDoctorTest();
+
+    DB::table('sites')->insert([
+        [
+            'id' => 1,
+            'name' => 'Site 1',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ],
+        [
+            'id' => 2,
+            'name' => 'Site 2',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ],
+    ]);
+
+    Area::factory()->create([
+        'key' => 'preview',
+        'site_id' => 1,
+    ]);
+
+    capell_artisan('capell:access-gate-doctor')
+        ->assertFailed()
+        ->expectsOutputToContain('Site-scoped access areas are missing explicit config');
 });
 
 it('sets up the configured default access area', function (): void {
@@ -65,3 +96,15 @@ it('installs publishables, runs migrations, and creates the paused default acces
     expect($area->name)->toBe('Capell Preview')
         ->and($area->status)->toBe(AccessAreaStatus::Paused);
 });
+
+function defineAccessGateSiteTablesForDoctorTest(): void
+{
+    if (! Schema::hasTable('sites')) {
+        Schema::create('sites', function (Blueprint $table): void {
+            $table->id();
+            $table->string('name');
+            $table->softDeletes();
+            $table->timestamps();
+        });
+    }
+}

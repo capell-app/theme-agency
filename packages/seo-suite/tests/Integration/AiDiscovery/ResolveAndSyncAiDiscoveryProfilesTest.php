@@ -37,9 +37,7 @@ it('resolves site profile defaults for a site and language', function (): void {
 
     $profile = ResolveAiDiscoveryProfileAction::run($site, $language);
 
-    if (! $profile instanceof AiDiscoverySiteProfile) {
-        throw new RuntimeException('Expected site-level AI discovery profile.');
-    }
+    throw_unless($profile instanceof AiDiscoverySiteProfile, RuntimeException::class, 'Expected site-level AI discovery profile.');
 
     expect($profile->site_id)->toBe($site->getKey())
         ->and($profile->language_id)->toBe($language->getKey())
@@ -70,9 +68,7 @@ it('resolves a page profile using site profile defaults', function (): void {
 
     $profile = ResolveAiDiscoveryProfileAction::run($site, $language, $page);
 
-    if (! $profile instanceof AiDiscoveryPageProfile) {
-        throw new RuntimeException('Expected page-level AI discovery profile.');
-    }
+    throw_unless($profile instanceof AiDiscoveryPageProfile, RuntimeException::class, 'Expected page-level AI discovery profile.');
 
     expect($profile->page_id)->toBe($page->getKey())
         ->and($profile->site_id)->toBe($site->getKey())

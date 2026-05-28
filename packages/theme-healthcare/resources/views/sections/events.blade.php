@@ -68,7 +68,7 @@
                             </a>
                         @else
                             <article
-                                class="grid gap-4 rounded-lg border border-[#d9e8ee] bg-[#f6fbfd] p-5 transition hover:shadow-sm md:grid-cols-[8rem_1fr] xl:min-w-[22rem] xl:flex-shrink-0 xl:snap-start xl:rounded-xl xl:px-6"
+                                class="grid gap-4 rounded-lg border border-[#d9e8ee] bg-[#f6fbfd] p-5 md:grid-cols-[8rem_1fr]"
                             >
                                 <p class="text-sm font-black text-[#0f766e]">
                                     {{ $item['date'] ?? __('capell-theme-healthcare::generic.next_available') }}

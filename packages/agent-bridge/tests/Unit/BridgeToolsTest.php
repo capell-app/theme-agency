@@ -252,6 +252,46 @@ it('hashes capability payloads deterministically regardless of key order', funct
     ]));
 });
 
+it('hashes nested capability payload objects deterministically while preserving list order', function (): void {
+    expect(InvokeAgentBridgeCapabilityPreviewAction::payloadHash([
+        'filters' => [
+            'second' => true,
+            'first' => [
+                'beta' => 'two',
+                'alpha' => 'one',
+            ],
+        ],
+        'steps' => [
+            ['name' => 'first'],
+            ['name' => 'second'],
+        ],
+    ]))->toBe(InvokeAgentBridgeCapabilityPreviewAction::payloadHash([
+        'steps' => [
+            ['name' => 'first'],
+            ['name' => 'second'],
+        ],
+        'filters' => [
+            'first' => [
+                'alpha' => 'one',
+                'beta' => 'two',
+            ],
+            'second' => true,
+        ],
+    ]))->not->toBe(InvokeAgentBridgeCapabilityPreviewAction::payloadHash([
+        'filters' => [
+            'first' => [
+                'alpha' => 'one',
+                'beta' => 'two',
+            ],
+            'second' => true,
+        ],
+        'steps' => [
+            ['name' => 'second'],
+            ['name' => 'first'],
+        ],
+    ]));
+});
+
 it('exposes the agent bridge overview resource as markdown text', function (): void {
     expect((string) (new CapellAgentBridgeOverviewResource)->handle()->content())
         ->toContain('Capell Agent Bridge')

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 it('prepares a render profile and dispatches critical css generation when missing', function (): void {
     Storage::fake('local');
     Bus::fake();
+    config()->set('queue.default', 'database');
 
     $profile = PrepareRenderProfileAction::run(
         scope: OptimizationScope::Layout,
@@ -34,6 +35,26 @@ it('prepares a render profile and dispatches critical css generation when missin
         fn (GenerateCriticalCssJob $job): bool => $job->renderProfileId === $profile->id
             && $job->url === 'https://example.test/landing',
     );
+});
+
+it('does not dispatch generation from public rendering when the queue is synchronous', function (): void {
+    Storage::fake('local');
+    Bus::fake();
+    config()->set('queue.default', 'sync');
+
+    $profile = PrepareRenderProfileAction::run(
+        scope: OptimizationScope::Layout,
+        context: ['layout' => 'landing'],
+        assetSets: [
+            FrontendAssetSet::make()
+                ->css('hero', '/build/hero.css', AssetLoadingStrategy::Critical, criticalEligible: true),
+        ],
+        url: 'https://example.test/landing',
+        label: 'Landing',
+    );
+
+    Storage::disk('local')->assertExists($profile->manifest['path']);
+    Bus::assertNotDispatched(GenerateCriticalCssJob::class);
 });
 
 it('does not dispatch generation when the optimizer is disabled', function (): void {
@@ -73,6 +94,7 @@ it('does not dispatch generation when the page type disables critical css', func
 it('dispatches generation again when the stored critical css file is missing', function (): void {
     Storage::fake('local');
     Bus::fake();
+    config()->set('queue.default', 'database');
 
     $profileData = ResolveRenderProfileAction::run(
         scope: OptimizationScope::Layout,

@@ -378,6 +378,7 @@ final class ThemeDemoPageInstaller
                     'summary' => 'Contact page render data with routing cards, expectation details, and a static enquiry form.',
                     'hero' => ['heading' => 'Start the right conversation', 'summary' => 'Route project scoping, support, migrations, and partnerships to the right team.', 'mediaUrl' => $media['contact'][0]],
                     'actions' => [['label' => 'Send enquiry', 'url' => '#contact-form', 'style' => 'primary']],
+                    'form' => $this->contactFormData(),
                 ],
                 layout: LayoutEnum::System,
             ),
@@ -458,6 +459,36 @@ HTML;
     }
 
     /**
+     * @return array{
+     *     id: string,
+     *     heading: string,
+     *     summary: string,
+     *     topics: array<int, string>,
+     *     fields: array<int, array{name: string, label: string, type: string}>
+     * }
+     */
+    private function contactFormData(): array
+    {
+        return [
+            'id' => 'theme-demo-contact-form',
+            'heading' => 'Send an enquiry',
+            'summary' => 'Share the context once so the right delivery, support, migration, or partnership lead can follow up.',
+            'topics' => [
+                'Project scoping',
+                'Support',
+                'Migration planning',
+                'Partnerships',
+            ],
+            'fields' => [
+                ['name' => 'name', 'label' => 'Name', 'type' => 'text'],
+                ['name' => 'email', 'label' => 'Work email', 'type' => 'email'],
+                ['name' => 'company', 'label' => 'Company', 'type' => 'text'],
+                ['name' => 'message', 'label' => 'Message', 'type' => 'textarea'],
+            ],
+        ];
+    }
+
+    /**
      * @param  array<int, string>  $imageUrls
      * @param  array<int, array{title: string, summary: string, type?: string}>  $copy
      * @return array<int, array<string, string>>
@@ -526,7 +557,7 @@ HTML;
             'featuresSummary' => sprintf('Homepage preview content for the %s theme.', $themeName),
             'features' => [],
             'spotlightHeading' => sprintf('%s buying moments', $themeName),
-            'spotlightSummary' => 'Tabbed spotlight panels let visitors compare the theme\'s strongest content moments without leaving the page.',
+            'spotlightSummary' => "Tabbed spotlight panels let visitors compare the theme's strongest content moments without leaving the page.",
             'spotlight' => $this->defaultSpotlightItems($themeName),
             'galleryHeading' => sprintf('%s layout gallery', $themeName),
             'gallerySummary' => 'A carousel-ready media section for campaigns, featured work, resources, and proof surfaces.',
@@ -695,7 +726,7 @@ HTML;
         return [
             [
                 'title' => sprintf('%s first impression', $themeName),
-                'summary' => 'Show the theme\'s strongest hero, media, and proof treatment as one focused buyer-facing story.',
+                'summary' => "Show the theme's strongest hero, media, and proof treatment as one focused buyer-facing story.",
                 'type' => 'Moment',
             ],
             [

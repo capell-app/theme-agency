@@ -38,7 +38,7 @@ final class CapellAgentBridgeAuditEntry extends Model
         'user_agent',
     ];
 
-    protected $table = 'capell_agent-bridge_audit_entries';
+    protected $table = 'capell_agent_bridge_audit_entries';
 
     /** @return BelongsTo<CapellAgentBridgeToken, $this> */
     public function agentBridgeToken(): BelongsTo

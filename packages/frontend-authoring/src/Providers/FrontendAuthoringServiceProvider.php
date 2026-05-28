@@ -10,6 +10,8 @@ use Capell\FrontendAuthoring\Http\Middleware\PassThroughActivityMiddleware;
 use Capell\FrontendAuthoring\Livewire\EditRegionField;
 use Capell\FrontendAuthoring\Support\EditableRegionRegistry;
 use Capell\FrontendAuthoring\Support\EditableRegionSigner;
+use Capell\FrontendAuthoring\Support\EditorSurfaceRegistry;
+use Capell\FrontendAuthoring\Support\EditorSurfaces\FieldEditorSurface;
 use Capell\FrontendAuthoring\Support\FrontendAuthoringRuntimeManifestContributor;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -39,6 +41,12 @@ class FrontendAuthoringServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../../config/capell-frontend-authoring.php', 'capell-frontend-authoring');
         $this->app->singleton(EditableRegionRegistry::class, fn (): EditableRegionRegistry => new EditableRegionRegistry);
         $this->app->singleton(EditableRegionSigner::class, fn (): EditableRegionSigner => new EditableRegionSigner);
+        $this->app->singleton(EditorSurfaceRegistry::class, function (): EditorSurfaceRegistry {
+            $registry = new EditorSurfaceRegistry;
+            $registry->register(new FieldEditorSurface);
+
+            return $registry;
+        });
         $this->app->tag([FrontendAuthoringRuntimeManifestContributor::class], FrontendRuntimeManifestContributor::TAG);
     }
 

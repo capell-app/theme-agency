@@ -50,13 +50,10 @@ function postSameOriginBeacon(string $url, array $headers = []): TestResponse
     $port = parse_url($url, PHP_URL_PORT);
     $origin = $scheme . '://' . $host . (is_int($port) ? ':' . $port : '');
 
-    return test()
-        ->withServerVariables([
-            'HTTP_HOST' => $host . (is_int($port) ? ':' . $port : ''),
-            'SERVER_PORT' => (string) (is_int($port) ? $port : ($scheme === 'https' ? 443 : 80)),
-            'HTTPS' => $scheme === 'https' ? 'on' : 'off',
-        ])
-        ->postJson($origin . '/beacon', ['url' => $url], $headers);
+    return postJson($origin . '/beacon', ['url' => $url], [
+        'Host' => $host . (is_int($port) ? ':' . $port : ''),
+        'X-Forwarded-Proto' => $scheme,
+    ] + $headers);
 }
 
 it('returns 404 if no site domain', function (): void {
@@ -68,7 +65,7 @@ it('returns 404 if no site domain', function (): void {
     $response->assertStatus(404);
 });
 
-it('returns csrf token and user info for authenticated user', function (): void {
+it('returns only csrf token for authenticated non-admin users', function (): void {
     $user = User::factory()->create(['name' => 'Test User']);
     actingAs($user);
 
@@ -81,9 +78,8 @@ it('returns csrf token and user info for authenticated user', function (): void 
     $response->assertOk();
     $response->assertJsonStructure([
         'csrf_token',
-        'user' => ['id', 'name'],
     ]);
-    $response->assertJson(['user' => ['id' => $user->getKey(), 'name' => 'Test User']]);
+    $response->assertJsonMissingPath('user');
 });
 
 it('returns beacon scripts for admin user with url', function (): void {
@@ -278,13 +274,10 @@ it('does not return authoring scripts when the posted url origin differs from th
     $page = Page::factory()->site($site)->create();
     PageUrl::factory()->for($site)->for($language)->page($page)->create();
 
-    $response = test()
-        ->withServerVariables([
-            'HTTP_HOST' => 'admin.example.test',
-            'SERVER_PORT' => '443',
-            'HTTPS' => 'on',
-        ])
-        ->postJson(route('capell-frontend.beacon'), ['url' => $page->pageUrl->full_url]);
+    $response = postJson(route('capell-frontend.beacon'), ['url' => $page->pageUrl->full_url], [
+        'Host' => 'admin.example.test',
+        'X-Forwarded-Proto' => 'https',
+    ]);
 
     $response->assertOk();
     $response->assertJsonStructure(['csrf_token']);
@@ -313,6 +306,7 @@ it('does not return authoring scripts or metadata for non-admin authenticated us
 
     $response->assertOk();
     $response->assertJsonMissingPath('scripts');
+    $response->assertJsonMissingPath('user');
     $response->assertJsonMissingPath('editable_regions');
     $response->assertJsonMissingPath('editor_html');
 

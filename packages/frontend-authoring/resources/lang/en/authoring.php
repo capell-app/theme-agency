@@ -10,6 +10,8 @@ return [
     'close_editor' => 'Close editor',
     'discard_changes' => 'Discard unsaved changes?',
     'edit' => 'Edit',
+    'editor_load_error' => 'The editor is taking longer than expected to load. Close it and try again.',
+    'editor_loading' => 'Loading editor...',
     'editable_area' => '1 editable area',
     'editable_areas' => ':count editable areas',
     'edit_mode' => 'Edit mode',

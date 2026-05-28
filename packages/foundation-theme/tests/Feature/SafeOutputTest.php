@@ -73,6 +73,33 @@ test('public layout output does not include debug block comments', function (): 
         ->not->toContain("config('app.debug')");
 });
 
+test('language flag images reserve dimensions for stable public layout', function (): void {
+    $themePath = dirname(__DIR__, 2);
+    $files = [
+        'resources/views/components/languages.blade.php',
+        'resources/views/components/header/menu/languages-dropdown.blade.php',
+    ];
+    $violations = [];
+
+    foreach ($files as $file) {
+        $contents = file_get_contents($themePath . '/' . $file);
+
+        preg_match_all('/<img\b.*?vendor\/blade-country-flags.*?\/>/s', (string) $contents, $matches);
+
+        foreach ($matches[0] as $imageTag) {
+            if (! str_contains($imageTag, 'width="16"') || ! str_contains($imageTag, 'height="16"')) {
+                $violations[] = $file . ' contains an unsized language flag image';
+            }
+        }
+    }
+
+    expect($violations)->toBe(
+        [],
+        'Language flag images without explicit dimensions found:' . PHP_EOL .
+        json_encode($violations, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
+    );
+});
+
 test('public action buttons mark their csrf output as non-cacheable', function (): void {
     Route::post('/public-actions/{action}', static fn (): string => 'ok')
         ->name('capell-public-actions.submit');

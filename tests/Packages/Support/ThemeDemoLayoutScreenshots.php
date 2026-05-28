@@ -54,6 +54,12 @@ function installThemeDemoScreenshotFixture(
     string $providerClass,
     string $installerClass,
 ): Collection {
+    CapellCore::forcePackageInstalled(FoundationThemeServiceProvider::$packageName);
+
+    $foundationProvider = new FoundationThemeServiceProvider(app());
+    $foundationProvider->register();
+    $foundationProvider->boot();
+
     CapellCore::forcePackageInstalled($packageName);
 
     $provider = new $providerClass(app());

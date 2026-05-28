@@ -74,6 +74,7 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
         }
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-local-services');
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-local-services');
 
         CapellCore::registerVendorAsset(
             VendorAssetData::tailwindImport('resources/css/theme-local-services.css', self::$packageName),

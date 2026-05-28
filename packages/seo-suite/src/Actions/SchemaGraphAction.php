@@ -30,7 +30,7 @@ class SchemaGraphAction
         $nodes[] = $this->stripContext($organizationSchema);
 
         // WebSite schema
-        $websiteSchema = $this->buildWebSiteSchema($site, $language);
+        $websiteSchema = $this->buildWebSiteSchema($site);
         $nodes[] = $websiteSchema;
 
         // WebPage / Article schema
@@ -83,7 +83,7 @@ class SchemaGraphAction
     /**
      * @return array<string, mixed>
      */
-    private function buildWebSiteSchema(Site $site, Language $language): array
+    private function buildWebSiteSchema(Site $site): array
     {
         $siteUrl = $site->siteDomain?->full_url;
 

@@ -61,6 +61,7 @@ try {
                 const { extraFoldPixels, foldMultiplier, stylesheetPaths } =
                     options
                 const collectedRules = []
+                const themeDeclarations = new Map()
                 const viewportHeight =
                     (window.innerHeight ||
                         document.documentElement.clientHeight) *
@@ -80,6 +81,13 @@ try {
                 const eligiblePaths = stylesheetPaths.map(normalizePath)
 
                 const stylesheetIsEligible = (stylesheet) => {
+                    if (
+                        stylesheet.ownerNode instanceof HTMLStyleElement &&
+                        stylesheet.ownerNode.matches('style[data-critical-css]')
+                    ) {
+                        return false
+                    }
+
                     if (eligiblePaths.length === 0) {
                         return true
                     }
@@ -105,8 +113,8 @@ try {
                         rectangle.height > 0 &&
                         rectangle.top < viewportHeight &&
                         rectangle.bottom > 0 &&
-                        rectangle.left < viewportWidth &&
-                        rectangle.right > 0
+                        rectangle.left < viewportWidth * 2 &&
+                        rectangle.right > viewportWidth * -1
                     )
                 }
 
@@ -122,6 +130,19 @@ try {
                         }
 
                         try {
+                            const elements = Array.from(
+                                document.querySelectorAll(normalizedSelector),
+                            )
+
+                            if (
+                                elements.length > 0 &&
+                                /(contents|hidden|invisible|translate|fixed|absolute)/.test(
+                                    normalizedSelector,
+                                )
+                            ) {
+                                return true
+                            }
+
                             if (
                                 [':root', 'html', 'body'].includes(
                                     normalizedSelector,
@@ -130,9 +151,7 @@ try {
                                 return true
                             }
 
-                            for (const element of Array.from(
-                                document.querySelectorAll(normalizedSelector),
-                            )) {
+                            for (const element of elements) {
                                 if (elementIsAboveFold(element)) {
                                     return true
                                 }
@@ -145,71 +164,116 @@ try {
                     return false
                 }
 
-                const collectRule = (rule) => {
-                    if (rule instanceof CSSStyleRule) {
-                        if (selectorIsAboveFold(rule.selectorText)) {
-                            collectedRules.push(rule.cssText)
+                const collectThemeDeclarations = (rule) => {
+                    for (const property of Array.from(rule.style ?? [])) {
+                        if (!property.startsWith('--')) {
+                            continue
                         }
 
-                        return
+                        themeDeclarations.set(
+                            property,
+                            rule.style.getPropertyValue(property),
+                        )
+                    }
+                }
+
+                const collectNestedRules = (rules, context = {}) => {
+                    const nestedRules = []
+
+                    for (const nestedRule of Array.from(rules ?? [])) {
+                        nestedRules.push(...collectRule(nestedRule, context))
+                    }
+
+                    return nestedRules
+                }
+
+                const collectRule = (rule, context = {}) => {
+                    if (rule instanceof CSSStyleRule) {
+                        if (context.layerName === 'theme') {
+                            collectThemeDeclarations(rule)
+
+                            return []
+                        }
+
+                        if (selectorIsAboveFold(rule.selectorText)) {
+                            return [rule.cssText]
+                        }
+
+                        return []
                     }
 
                     if (
                         rule instanceof CSSFontFaceRule ||
                         rule instanceof CSSKeyframesRule
                     ) {
-                        collectedRules.push(rule.cssText)
+                        return [rule.cssText]
+                    }
 
-                        return
+                    if (
+                        typeof CSSLayerBlockRule !== 'undefined' &&
+                        rule instanceof CSSLayerBlockRule
+                    ) {
+                        const layerName = rule.name
+
+                        const nestedRules = collectNestedRules(rule.cssRules, {
+                            ...context,
+                            layerName,
+                        })
+
+                        if (nestedRules.length === 0) {
+                            return []
+                        }
+
+                        if (layerName === 'theme') {
+                            return []
+                        }
+
+                        return nestedRules.map((nestedRule) =>
+                            layerName === ''
+                                ? `@layer { ${nestedRule} }`
+                                : `@layer ${layerName} { ${nestedRule} }`,
+                        )
                     }
 
                     if (rule instanceof CSSMediaRule) {
                         if (!window.matchMedia(rule.conditionText).matches) {
-                            return
+                            return []
                         }
 
-                        const nestedRules = []
-
-                        for (const nestedRule of Array.from(
-                            rule.cssRules ?? [],
-                        )) {
-                            if (
-                                nestedRule instanceof CSSStyleRule &&
-                                selectorIsAboveFold(nestedRule.selectorText)
-                            ) {
-                                nestedRules.push(nestedRule.cssText)
-                            }
-                        }
+                        const nestedRules = collectNestedRules(
+                            rule.cssRules,
+                            context,
+                        )
 
                         if (nestedRules.length > 0) {
-                            collectedRules.push(
+                            return [
                                 `@media ${rule.conditionText} { ${nestedRules.join(' ')} }`,
-                            )
+                            ]
                         }
 
-                        return
+                        return []
                     }
 
                     if (rule instanceof CSSSupportsRule) {
-                        const nestedRules = []
-
-                        for (const nestedRule of Array.from(
-                            rule.cssRules ?? [],
-                        )) {
-                            if (
-                                nestedRule instanceof CSSStyleRule &&
-                                selectorIsAboveFold(nestedRule.selectorText)
-                            ) {
-                                nestedRules.push(nestedRule.cssText)
-                            }
-                        }
+                        const nestedRules = collectNestedRules(
+                            rule.cssRules,
+                            context,
+                        )
 
                         if (nestedRules.length > 0) {
-                            collectedRules.push(
+                            return [
                                 `@supports ${rule.conditionText} { ${nestedRules.join(' ')} }`,
-                            )
+                            ]
                         }
+
+                        return []
                     }
+
+                    if (rule.cssRules) {
+                        return collectNestedRules(rule.cssRules, context)
+                    }
+
+                    return []
                 }
 
                 for (const stylesheet of Array.from(document.styleSheets)) {
@@ -221,14 +285,49 @@ try {
                         for (const rule of Array.from(
                             stylesheet.cssRules ?? [],
                         )) {
-                            collectRule(rule)
+                            collectedRules.push(...collectRule(rule))
                         }
                     } catch {
                         // Cross-origin stylesheets cannot be inspected by the browser.
                     }
                 }
 
-                return collectedRules
+                const usedThemeVariables = new Set()
+                const findUsedThemeVariables = (text) => {
+                    for (const match of text.matchAll(/var\((--[^),\s]+)/g)) {
+                        usedThemeVariables.add(match[1])
+                    }
+                }
+
+                for (const rule of collectedRules) {
+                    findUsedThemeVariables(rule)
+                }
+
+                let previousSize = -1
+
+                while (previousSize !== usedThemeVariables.size) {
+                    previousSize = usedThemeVariables.size
+
+                    for (const variable of Array.from(usedThemeVariables)) {
+                        const value = themeDeclarations.get(variable)
+
+                        if (typeof value === 'string') {
+                            findUsedThemeVariables(value)
+                        }
+                    }
+                }
+
+                const themeRule = Array.from(usedThemeVariables)
+                    .filter((variable) => themeDeclarations.has(variable))
+                    .map(
+                        (variable) =>
+                            `${variable}: ${themeDeclarations.get(variable)};`,
+                    )
+                    .join(' ')
+
+                return themeRule === ''
+                    ? collectedRules
+                    : [`:root { ${themeRule} }`, ...collectedRules]
             },
             {
                 extraFoldPixels,
@@ -250,13 +349,24 @@ try {
 await fs.mkdir(new URL('.', `file://${outputPath}`).pathname, {
     recursive: true,
 })
-let output = Array.from(criticalRules).join('\n') + '\n'
+const outputRules = []
+let outputBytes = 0
 
-if (
-    maxInlineCssBytes !== null &&
-    Buffer.byteLength(output, 'utf8') > maxInlineCssBytes
-) {
-    output = output.slice(0, maxInlineCssBytes)
+for (const rule of Array.from(criticalRules)) {
+    const ruleBytes = Buffer.byteLength(`${rule}\n`, 'utf8')
+
+    if (
+        maxInlineCssBytes !== null &&
+        outputRules.length > 0 &&
+        outputBytes + ruleBytes > maxInlineCssBytes
+    ) {
+        continue
+    }
+
+    outputRules.push(rule)
+    outputBytes += ruleBytes
 }
+
+const output = outputRules.join('\n') + '\n'
 
 await fs.writeFile(outputPath, output)

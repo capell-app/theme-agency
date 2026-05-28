@@ -9,11 +9,11 @@ use Capell\Hero\Data\HeroBackgroundData;
 use Capell\Hero\Data\HeroMediaData;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\Field;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Utilities\Get;
-use LogicException;
 
 final class HeroBackgroundSchema
 {
@@ -193,33 +193,36 @@ final class HeroBackgroundSchema
             ]);
     }
 
-    private static function videoUpload(string $collection, string $label): SpatieMediaLibraryFileUpload
+    private static function videoUpload(string $collection, string $label): Field
     {
-        return self::mediaUpload($collection)
-            ->label($label)
-            ->acceptedFileTypes(['video/mp4', 'video/webm'])
-            ->collection($collection);
-    }
+        $component = self::mediaUpload($collection)
+            ->label($label);
 
-    private static function imageUpload(string $collection, string $label): SpatieMediaLibraryFileUpload
-    {
-        return self::mediaUpload($collection)
-            ->label($label)
-            ->image()
-            ->collection($collection);
-    }
-
-    private static function mediaUpload(string $collection): SpatieMediaLibraryFileUpload
-    {
-        $component = MediaLibraryFileUpload::make($collection);
-
-        if (! $component instanceof SpatieMediaLibraryFileUpload) {
-            throw new LogicException(sprintf(
-                'Hero media uploads require %s components.',
-                SpatieMediaLibraryFileUpload::class,
-            ));
+        if ($component instanceof SpatieMediaLibraryFileUpload) {
+            $component
+                ->acceptedFileTypes(['video/mp4', 'video/webm'])
+                ->collection($collection);
         }
 
         return $component;
+    }
+
+    private static function imageUpload(string $collection, string $label): Field
+    {
+        $component = self::mediaUpload($collection)
+            ->label($label);
+
+        if ($component instanceof SpatieMediaLibraryFileUpload) {
+            $component
+                ->image()
+                ->collection($collection);
+        }
+
+        return $component;
+    }
+
+    private static function mediaUpload(string $collection): Field
+    {
+        return MediaLibraryFileUpload::make($collection);
     }
 }

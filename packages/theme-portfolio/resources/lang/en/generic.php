@@ -8,7 +8,7 @@ return [
     'case_studies_static' => 'Static case studies are ready.',
     'newsletter_connected' => 'Connected newsletter signup is available.',
     'newsletter_static' => 'Static newsletter CTA is available.',
-    'work_grid_connected' => 'Connected media library is available.',
-    'work_grid_static' => 'Static work gallery is available.',
+    'work_grid_connected' => 'Connected media library.',
+    'work_grid_static' => 'Static work grid.',
     'email_label' => 'Email address',
 ];

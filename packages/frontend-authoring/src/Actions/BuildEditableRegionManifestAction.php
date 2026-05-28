@@ -16,7 +16,7 @@ class BuildEditableRegionManifestAction
     use AsObject;
 
     /**
-     * @return array<string, array<string, string>>
+     * @return array<string, array<string, mixed>>
      */
     public function handle(PageUrl $pageUrl, ?AuthenticatableContract $user = null): array
     {
@@ -35,6 +35,10 @@ class BuildEditableRegionManifestAction
                 type: $payload->type,
                 selector: $payload->selector,
                 editUrl: $signer->signedEditUrl($payload),
+                surface: $payload->surface,
+                target: $payload->target,
+                description: $payload->description,
+                context: $payload->context,
             );
 
             $manifest[$region->id] = $region->toArray();

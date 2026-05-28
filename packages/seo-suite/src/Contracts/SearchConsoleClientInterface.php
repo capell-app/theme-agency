@@ -22,4 +22,9 @@ interface SearchConsoleClientInterface
      * @return array<int, array<string, mixed>>
      */
     public function urlMetricRows(int $siteId, int $limit = 100): array;
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function queryMetricRows(int $siteId, int $limit = 100): array;
 }

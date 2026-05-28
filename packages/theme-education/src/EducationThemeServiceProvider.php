@@ -73,6 +73,7 @@ final class EducationThemeServiceProvider extends ServiceProvider
             return;
         }
 
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-education');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-education');
 
         CapellCore::registerVendorAsset(

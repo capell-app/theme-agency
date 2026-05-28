@@ -112,12 +112,7 @@
     >
         ✕
     </button>
-    <img
-        src=""
-        alt=""
-        class="max-h-[85vh] w-full max-w-4xl rounded-xl border border-white/20 object-contain"
-        data-gallery-image
-    />
+    <div data-gallery-image-frame></div>
 </div>
 
 <script>
@@ -164,10 +159,22 @@
         trigger.addEventListener('click', () => {
             const imageUrl = trigger.getAttribute('data-gallery-open')
             const lightbox = document.querySelector('[data-gallery-lightbox]')
-            const lightboxImage = document.querySelector('[data-gallery-image]')
+            const imageFrame = document.querySelector(
+                '[data-gallery-image-frame]',
+            )
 
-            if (!lightbox || !lightboxImage) {
+            if (!lightbox || !imageFrame || !imageUrl) {
                 return
+            }
+
+            let lightboxImage = imageFrame.querySelector('img')
+
+            if (!lightboxImage) {
+                lightboxImage = document.createElement('img')
+                lightboxImage.alt = ''
+                lightboxImage.className =
+                    'max-h-[85vh] w-full max-w-4xl rounded-xl border border-white/20 object-contain'
+                imageFrame.appendChild(lightboxImage)
             }
 
             lightboxImage.src = imageUrl

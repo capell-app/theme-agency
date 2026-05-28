@@ -30,7 +30,7 @@
             >
                 @foreach ($articles as $article)
                     <a
-                        href="{{ $article['url'] ?? '#' }}"
+                        href="{{ $blogAvailable ? ($article['url'] ?? '#') : '#' }}"
                         class="saas-insight-card min-w-[260px] snap-start rounded-2xl border border-slate-200 bg-white p-6 transition hover:border-blue-300"
                     >
                         <p

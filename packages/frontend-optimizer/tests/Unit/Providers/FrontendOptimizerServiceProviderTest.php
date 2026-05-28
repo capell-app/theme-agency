@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 use Capell\Admin\Support\Extensions\ExtensionManagementSurfaceRegistry;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
+use Capell\Frontend\Contracts\FrontendAssetManifestRenderer;
 use Capell\FrontendOptimizer\Contracts\CriticalCssGenerator;
 use Capell\FrontendOptimizer\Filament\Settings\FrontendOptimizerSettingsSchema;
 use Capell\FrontendOptimizer\Providers\FrontendOptimizerServiceProvider;
 use Capell\FrontendOptimizer\Settings\FrontendOptimizerSettings;
+use Capell\FrontendOptimizer\Support\CapellFrontendAssetManifestRenderer;
 use Capell\FrontendOptimizer\Support\LayoutAssetRegistry;
 use Capell\FrontendOptimizer\Support\PlaywrightCriticalCssGenerator;
 use Capell\FrontendOptimizer\Support\WidgetAssetRegistry;
@@ -16,6 +18,10 @@ it('binds optimizer registries and the required playwright generator', function 
     expect(resolve(LayoutAssetRegistry::class))->toBeInstanceOf(LayoutAssetRegistry::class)
         ->and(resolve(WidgetAssetRegistry::class))->toBeInstanceOf(WidgetAssetRegistry::class)
         ->and(resolve(CriticalCssGenerator::class))->toBeInstanceOf(PlaywrightCriticalCssGenerator::class);
+});
+
+it('binds the Capell frontend asset manifest renderer when installed', function (): void {
+    expect(resolve(FrontendAssetManifestRenderer::class))->toBeInstanceOf(CapellFrontendAssetManifestRenderer::class);
 });
 
 it('exposes frontend optimizer settings defaults', function (): void {

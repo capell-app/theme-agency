@@ -14,6 +14,15 @@ return [
     'form_builder' => [
         'mappings' => [],
     ],
+    'spam_protection' => [
+        'enabled' => ['honeypot'],
+        'honeypot' => [
+            'fields' => ['_hp'],
+        ],
+        'turnstile' => [
+            'secret' => null,
+        ],
+    ],
     'tables' => [
         'actions' => 'public_actions',
         'destinations' => 'public_action_destinations',

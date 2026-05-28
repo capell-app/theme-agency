@@ -77,7 +77,7 @@ it('builds gallery carousel and proof sections from theme demo render data', fun
     expect($themePage->sections)->toHaveCount(3)
         ->and($themePage->sections[0])->toBeInstanceOf(FeatureSectionData::class)
         ->and($themePage->sections[1])->toBeInstanceOf(ContentListingSectionData::class)
-        ->and($themePage->sections[1]->variant)->toBe('gallery')
+        ->and((string) ($themePage->sections[1]->toViewData()['variant'] ?? ''))->toBe('gallery')
         ->and($themePage->sections[2])->toBeInstanceOf(ProofSectionData::class);
 });
 
@@ -108,8 +108,8 @@ it('builds spotlight tab sections from theme demo render data', function (): voi
 
     expect($themePage->sections)->toHaveCount(1)
         ->and($themePage->sections[0])->toBeInstanceOf(ContentListingSectionData::class)
-        ->and($themePage->sections[0]->variant)->toBe('spotlight')
-        ->and($themePage->sections[0]->heading)->toBe('Theme spotlight');
+        ->and((string) ($themePage->sections[0]->toViewData()['variant'] ?? ''))->toBe('spotlight')
+        ->and((string) ($themePage->sections[0]->toViewData()['heading'] ?? ''))->toBe('Theme spotlight');
 });
 
 it('renders gallery content listings with swiper controls', function (): void {

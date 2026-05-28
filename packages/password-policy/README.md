@@ -70,6 +70,7 @@ This package makes its Composer dependencies visible because they are part of th
 
 - Pages: `ForcedPasswordChangePage`.
 - Settings: Extensions page modal surface for `PasswordPolicySettings`.
+- Health: `BuildPasswordSecurityPostureReportAction` exposes enabled controls, installed persistence columns, and panel-aware forced-change URLs for Diagnostics.
 
 ## Data And Persistence
 

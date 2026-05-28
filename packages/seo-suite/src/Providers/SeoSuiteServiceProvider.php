@@ -39,6 +39,7 @@ use Capell\SeoSuite\Console\Commands\ClearAiCacheCommand;
 use Capell\SeoSuite\Console\Commands\InstallCommand;
 use Capell\SeoSuite\Console\Commands\MonitorAiUsageCommand;
 use Capell\SeoSuite\Console\Commands\SetupCommand;
+use Capell\SeoSuite\Console\Commands\SyncSearchConsoleCommand;
 use Capell\SeoSuite\Console\Commands\TestOpenAiConnectionCommand;
 use Capell\SeoSuite\Contracts\Schemas\SearchMetaDataSectionExtenderResolverInterface;
 use Capell\SeoSuite\Contracts\SearchConsoleClientInterface;
@@ -152,6 +153,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
                 InstallCommand::class,
                 MonitorAiUsageCommand::class,
                 SetupCommand::class,
+                SyncSearchConsoleCommand::class,
                 TestOpenAiConnectionCommand::class,
             ]);
     }

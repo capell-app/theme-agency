@@ -1,6 +1,7 @@
 @php
     $sections = $block->getMeta('sections', []);
     $family = (string) $block->getMeta('family', 'reference');
+    $isInitialStructuredReference = $block->key === 'kitchen-sink-structured-text';
 @endphp
 
 <x-capell-foundation-theme::block.wrapper
@@ -42,20 +43,26 @@
                     @endif
                 </header>
 
-                <aside aria-label="{{ $heading }} reference notes">
-                    <dl class="grid gap-3 md:grid-cols-2">
-                        @foreach (['Purpose', 'Layout', 'Content', 'Variant rules', 'Behavior', 'Accessibility'] as $label)
-                            <div>
-                                <dt class="font-semibold">{{ $label }}</dt>
-                                <dd>
-                                    {{ $notes[$label] ?? 'Use the default Foundation theme contract for this pattern.' }}
-                                </dd>
-                            </div>
-                        @endforeach
-                    </dl>
-                </aside>
+                @if ($isInitialStructuredReference)
+                    <p>
+                        {{ $notes['Purpose'] ?? 'Use the default Foundation theme contract for this pattern.' }}
+                    </p>
+                @else
+                    <aside aria-label="{{ $heading }} reference notes">
+                        <dl class="grid gap-3 md:grid-cols-2">
+                            @foreach (['Purpose', 'Layout', 'Content', 'Variant rules', 'Behavior', 'Accessibility'] as $label)
+                                <div>
+                                    <dt class="font-semibold">{{ $label }}</dt>
+                                    <dd>
+                                        {{ $notes[$label] ?? 'Use the default Foundation theme contract for this pattern.' }}
+                                    </dd>
+                                </div>
+                            @endforeach
+                        </dl>
+                    </aside>
+                @endif
 
-                @switch($key)
+                @switch($isInitialStructuredReference ? '__initial_structured_reference' : $key)
                     @case('faq-accordion')
                         <div>
                             <button

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\Comments\Livewire;
 
-use Capell\Comments\Actions\BuildPublicThreadAction;
 use Capell\Comments\Actions\CreateCommentAction;
+use Capell\Comments\Actions\ResolvePublicCommentableThreadAction;
 use Capell\Comments\Data\CreateCommentData;
 use Capell\Comments\Data\PublicCommentData;
 use Capell\Core\Contracts\Extensions\RegistersExtensionFrontendComponent;
@@ -110,10 +110,11 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
             return;
         }
 
-        $this->comments = BuildPublicThreadAction::run(
+        $thread = ResolvePublicCommentableThreadAction::run(
             commentable: $commentable,
             rootLimit: (int) config('capell-comments.root_page_size', 20),
         );
+        $this->comments = $thread->comments ?? [];
     }
 
     private function resolveCommentable(): ?Model

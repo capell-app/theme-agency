@@ -12,7 +12,16 @@
                         {{ $heading }}
                     </h2>
                     <p class="mt-4 max-w-2xl text-lg text-stone-600">
-                        {{ __('capell-theme-portfolio::generic.work_grid_copy') ?? 'Selected portfolio projects with premium composition and clear visual hierarchy.' }}
+                        @php
+                            $connectedCopy = __('capell-theme-portfolio::generic.work_grid_connected');
+                            $staticCopy = __('capell-theme-portfolio::generic.work_grid_static');
+                        @endphp
+
+                        {{
+                            $mediaLibraryAvailable
+                            ? ($connectedCopy !== 'capell-theme-portfolio::generic.work_grid_connected' ? $connectedCopy : 'Connected media library')
+                            : ($staticCopy !== 'capell-theme-portfolio::generic.work_grid_static' ? $staticCopy : 'Static work grid')
+                        }}
                     </p>
                 </div>
                 <div class="grid grid-cols-3 gap-2 text-sm">
