@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Capell\Comments\Actions;
 
 use Capell\Comments\Data\PublicCommentData;
+use Capell\Comments\Enums\CommentPublicationPolicy;
 use Capell\Comments\Enums\CommentStatus;
 use Capell\Comments\Models\Comment;
+use Capell\Comments\Support\CommentableRegistry;
+use Capell\Comments\Support\CommentSettingsResolver;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
@@ -17,11 +20,20 @@ class BuildPublicThreadAction
 {
     use AsAction;
 
+    public function __construct(
+        private readonly CommentableRegistry $commentableRegistry,
+        private readonly CommentSettingsResolver $settings,
+    ) {}
+
     /**
      * @return list<PublicCommentData>
      */
     public function handle(Model $commentable, int $rootLimit = 20): array
     {
+        if (! $this->canRead($commentable)) {
+            return [];
+        }
+
         /** @var EloquentCollection<int, Comment> $roots */
         $roots = Comment::query()
             ->with(['author'])
@@ -68,6 +80,21 @@ class BuildPublicThreadAction
             ->map(fn (Comment $comment): PublicCommentData => $this->toData($comment, $byParent))
             ->values()
             ->all();
+    }
+
+    private function canRead(Model $commentable): bool
+    {
+        $commentableType = $this->commentableRegistry->forModel($commentable);
+
+        if ($commentableType === null || ! $commentableType->isVisible($commentable)) {
+            return false;
+        }
+
+        $siteId = $commentableType->siteId($commentable);
+
+        return $siteId !== null
+            && $this->settings->enabled($siteId, $commentableType->key)
+            && $this->settings->publicationPolicy($siteId, $commentableType->key) !== CommentPublicationPolicy::Disabled;
     }
 
     /**

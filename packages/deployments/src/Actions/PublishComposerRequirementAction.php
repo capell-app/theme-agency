@@ -39,7 +39,7 @@ final class PublishComposerRequirementAction
 
         $branchName = 'capell/add-extension-' . $slug . '-' . Str::random(6);
 
-        $provider->createBranch($connection, $branchName, $composerJson->sha ?? '');
+        $provider->createBranch($connection, $branchName, $provider->getBranchCommitSha($connection, $connection->default_branch));
         $provider->commitFiles($connection, $branchName, 'Add extension ' . $requirement->composerName, [$patched]);
 
         $pr = $provider->openPullRequest(

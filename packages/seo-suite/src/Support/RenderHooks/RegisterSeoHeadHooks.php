@@ -9,6 +9,8 @@ use Capell\Frontend\Enums\RenderHookLocation;
 use Capell\Frontend\Enums\RenderHookScenario;
 use Capell\Frontend\Support\Render\RenderHookRegistry;
 use Capell\SeoSuite\Actions\BuildSocialMetaAction;
+use Capell\SeoSuite\Actions\SchemaGraphAction;
+use Capell\SeoSuite\Enums\MetaSchemaEnum;
 
 class RegisterSeoHeadHooks
 {
@@ -31,14 +33,30 @@ class RegisterSeoHeadHooks
 
                 $meta = BuildSocialMetaAction::run($page, $site, $language);
 
-                return view('capell::head.social-meta', [
+                $html = view('capell::head.social-meta', [
                     'meta' => $meta,
                     'page' => $page,
                     'site' => $site,
                     'language' => $language,
                 ])->render();
+
+                if ($this->shouldRenderSchemaGraph($site->meta ?? [])) {
+                    $html .= SchemaGraphAction::run($page, $site, $language)->toJsonLdScript();
+                }
+
+                return $html;
             },
             scenario: RenderHookScenario::SeoMeta->value,
         );
+    }
+
+    /**
+     * @param  array<string, mixed>  $siteMeta
+     */
+    private function shouldRenderSchemaGraph(array $siteMeta): bool
+    {
+        $metaSchema = $siteMeta['meta_schema'] ?? [];
+
+        return is_array($metaSchema) && in_array(MetaSchemaEnum::Graph->getComponent(), $metaSchema, true);
     }
 }

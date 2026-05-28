@@ -19,6 +19,7 @@ return [
     ],
     'default_provider' => 'smtp',
     'queue' => Env::get('CAPELL_EMAIL_STUDIO_QUEUE', 'default'),
+    'sending_lock_ttl_seconds' => Env::get('CAPELL_EMAIL_STUDIO_SENDING_LOCK_TTL_SECONDS', 900),
     'track_opens' => true,
     'track_clicks' => true,
     'body_retention_days' => 90,

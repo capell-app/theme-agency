@@ -37,6 +37,7 @@ enum MetaSchemaEnum: string implements EnumAttributeInterface
     public static function getComponents(): array
     {
         $attributes = self::getAllCaseAttributes(Component::class);
+        unset($attributes[self::Graph->value]);
 
         return array_map(fn (?Component $attribute): ?string => $attribute->class ?? null, $attributes);
     }

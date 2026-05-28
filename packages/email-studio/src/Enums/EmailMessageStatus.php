@@ -10,6 +10,7 @@ enum EmailMessageStatus: string implements HasLabel
 {
     case Requested = 'requested';
     case Queued = 'queued';
+    case Sending = 'sending';
     case Sent = 'sent';
     case Failed = 'failed';
     case PartiallyFailed = 'partially_failed';

@@ -95,20 +95,6 @@ class SchemaGraphAction
             'publisher' => $siteUrl !== null && $siteUrl !== '' ? ['@id' => SchemaEntityTypeEnum::Organization->toId($siteUrl)] : null,
         ];
 
-        // Add SearchAction if site has a search/results page
-        $searchPageUrl = Page::getFirstPageByTypeForSite('results', $site, $language)?->pageUrl?->full_url;
-
-        if ($searchPageUrl !== null && $searchPageUrl !== '') {
-            $configurator['potentialAction'] = [
-                '@type' => 'SearchAction',
-                'target' => [
-                    '@type' => 'EntryPoint',
-                    'urlTemplate' => $searchPageUrl . '?q={search_term_string}',
-                ],
-                'query-input' => 'required name=search_term_string',
-            ];
-        }
-
         return array_filter($configurator, static fn (mixed $value): bool => $value !== null);
     }
 

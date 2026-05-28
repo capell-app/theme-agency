@@ -29,6 +29,9 @@ Capell default theme - ships the standard Tailwind asset pipeline, Blade directi
 - Livewire components: `AbstractAssets`, `AbstractBlock`, `PageAssets`, `Pages`.
 - Package setup or maintenance commands.
 - A `header` Layout Builder area so editors can place normal layout blocks inside the Foundation header chrome.
+- Seven `kitchen-sink-*` reference blocks for the Demo Kit kitchen sink page: rich text, structured text, data display, forms, interactions, embeds, and utility states.
+
+The kitchen sink blocks are CMS authoring/reference fixtures for inspecting semantic HTML, page-scoped assets, and accessibility contracts. They should not be used as production landing page templates.
 
 ## Why It Matters
 

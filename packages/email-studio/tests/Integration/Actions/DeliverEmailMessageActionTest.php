@@ -191,6 +191,84 @@ it('delivers queued recipients and rechecks suppressions before provider handoff
         ->and($exceptionRecipient->failure_reason)->toBe('Transport exploded.');
 });
 
+it('does not send a message that another worker recently claimed', function (): void {
+    Queue::fake();
+    createEmailStudioSendFixtures();
+
+    $message = SendEmailAction::run(new SendEmailData(
+        templateKey: 'forms.confirmation',
+        to: new DataCollection(EmailAddressData::class, [new EmailAddressData('claimed@example.com')]),
+        cc: new DataCollection(EmailAddressData::class, []),
+        bcc: new DataCollection(EmailAddressData::class, []),
+        siteId: 12,
+        siteScopeKey: 'site:12',
+        emailProfileId: null,
+        variables: ['name' => 'Ben'],
+        headers: new DataCollection(EmailHeaderData::class, []),
+        triggeredByType: null,
+        triggeredById: null,
+        queue: true,
+    ));
+
+    $message->forceFill(['status' => EmailMessageStatus::Sending])->save();
+
+    resolve(EmailProviderRegistry::class)->register(EmailProviderType::Fake, new class implements EmailProviderAdapter
+    {
+        public function send(EmailMessage $message): ProviderSendResultData
+        {
+            throw new RuntimeException('Provider should not be called for claimed messages.');
+        }
+
+        public function normalizeWebhookPayload(array $payload, array $headers = []): ProviderWebhookEventData
+        {
+            return new ProviderWebhookEventData(provider: 'fake', eventType: 'ignored', payload: $payload);
+        }
+
+        public function normalizeInboundReply(array $payload, array $headers = []): InboundEmailReplyData
+        {
+            return new InboundEmailReplyData(provider: 'fake', providerMessageId: null, fromEmail: 'sender@example.com', payload: $payload);
+        }
+    });
+
+    $deliveredMessage = DeliverEmailMessageAction::run($message);
+
+    expect($deliveredMessage->status)->toBe(EmailMessageStatus::Sending)
+        ->and(EmailRecipient::query()->where('email_message_id', $message->getKey())->sole()->status)
+        ->toBe(EmailRecipientStatus::Queued);
+});
+
+it('reclaims stale sending messages after a worker crash', function (): void {
+    Queue::fake();
+    createEmailStudioSendFixtures();
+    config(['capell-email-studio.sending_lock_ttl_seconds' => 300]);
+
+    $message = SendEmailAction::run(new SendEmailData(
+        templateKey: 'forms.confirmation',
+        to: new DataCollection(EmailAddressData::class, [new EmailAddressData('stale@example.com')]),
+        cc: new DataCollection(EmailAddressData::class, []),
+        bcc: new DataCollection(EmailAddressData::class, []),
+        siteId: 12,
+        siteScopeKey: 'site:12',
+        emailProfileId: null,
+        variables: ['name' => 'Ben'],
+        headers: new DataCollection(EmailHeaderData::class, []),
+        triggeredByType: null,
+        triggeredById: null,
+        queue: true,
+    ));
+
+    $message->forceFill([
+        'status' => EmailMessageStatus::Sending,
+        'updated_at' => now()->subMinutes(10),
+    ])->save();
+
+    $deliveredMessage = DeliverEmailMessageAction::run($message);
+
+    expect($deliveredMessage->status)->toBe(EmailMessageStatus::Sent)
+        ->and(EmailRecipient::query()->where('email_message_id', $message->getKey())->sole()->status)
+        ->toBe(EmailRecipientStatus::Sent);
+});
+
 function createEmailStudioSendFixtures(): void
 {
     EmailProfile::factory()->create([

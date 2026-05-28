@@ -33,6 +33,17 @@ final class GitHubProvider implements GitProviderContract
         );
     }
 
+    public function getBranchCommitSha(DeploymentConnection $conn, string $branch): string
+    {
+        $branchData = $this->client($conn)
+            ->retry(2, 200, throw: false)
+            ->get(sprintf('/repos/%s/%s/branches/%s', $conn->repo_owner, $conn->repo_name, $branch))
+            ->throw()
+            ->json();
+
+        return (string) $branchData['commit']['sha'];
+    }
+
     /**
      * @param  array<int, RepoFile>  $files
      */

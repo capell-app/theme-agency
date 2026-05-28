@@ -39,6 +39,19 @@ final class GitLabProvider implements GitProviderContract
         );
     }
 
+    public function getBranchCommitSha(DeploymentConnection $conn, string $branch): string
+    {
+        $encodedProject = urlencode($conn->repoCoordinate());
+        $encodedBranch = rawurlencode($branch);
+
+        $response = $this->client($conn, retry: true)
+            ->get(sprintf('/projects/%s/repository/branches/%s', $encodedProject, $encodedBranch))
+            ->throw()
+            ->json();
+
+        return (string) $response['commit']['id'];
+    }
+
     /**
      * @param  array<int, RepoFile>  $files
      */

@@ -30,6 +30,11 @@ final class FakeComposerPublisher implements GitProviderContract
         );
     }
 
+    public function getBranchCommitSha(DeploymentConnection $conn, string $branch): string
+    {
+        return 'branch-commit-sha';
+    }
+
     public function commitFiles(DeploymentConnection $conn, string $branch, string $commitMessage, array $files): string
     {
         $this->commits[] = [
