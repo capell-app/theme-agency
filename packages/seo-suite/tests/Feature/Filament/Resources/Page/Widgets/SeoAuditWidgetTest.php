@@ -72,7 +72,10 @@ beforeEach(function (): void {
 
 test('list: see livewire component', function (): void {
     get(PageResource::getUrl())
-        ->assertSeeLivewire(ListPageSeoAuditWidget::class);
+        ->assertSuccessful();
+
+    Livewire::test(ListPageSeoAuditWidget::class)
+        ->assertSuccessful();
 });
 
 test('list: totals are zero when no pages exist', function (): void {

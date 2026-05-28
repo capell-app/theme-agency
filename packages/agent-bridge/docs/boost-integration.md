@@ -75,12 +75,11 @@ For authenticated site operations:
 5. Confirm through the site Agent Bridge confirmation tool.
 6. Review audit entries if needed.
 
-## Verifying In `capell-ruby`
+## Verifying In A Host App
 
 From the host app:
 
 ```bash
-cd /Users/ben/Sites/capell-ruby
 composer require 'capell-app/agent-bridge:*' --with-all-dependencies
 php artisan package:discover --ansi
 find vendor/capell-app/agent-bridge/resources/boost -maxdepth 4 -type f -print | sort

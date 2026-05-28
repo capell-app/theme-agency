@@ -6,6 +6,7 @@ namespace Capell\SeoSuite\Listeners\AiDiscovery;
 
 use Capell\Core\Events\PageSaved;
 use Capell\Core\Models\Page;
+use Capell\Core\Models\Site;
 use Capell\SeoSuite\Actions\ClearAiDiscoveryCacheAction;
 
 class ClearAiDiscoveryCacheOnPageSaved
@@ -14,10 +15,18 @@ class ClearAiDiscoveryCacheOnPageSaved
     {
         $page = $event->page;
 
-        if (! $page instanceof Page || $page->site === null) {
+        if (! $page instanceof Page) {
             return;
         }
 
-        ClearAiDiscoveryCacheAction::run($page->site, page: $page);
+        $site = $page->relationLoaded('site')
+            ? $page->getRelation('site')
+            : Site::query()->find($page->site_id);
+
+        if (! $site instanceof Site) {
+            return;
+        }
+
+        ClearAiDiscoveryCacheAction::run($site, page: $page);
     }
 }

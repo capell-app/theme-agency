@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\FoundationTheme\View\Components\Actions;
 use Capell\Frontend\Actions\Performance\RecordExtensionRenderContributionAction;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\Finder\Finder;
 
@@ -34,16 +35,17 @@ test('content component sanitizes cms html before rendering', function (): void 
 });
 
 test('public image source component renders URL images without admin metadata', function (): void {
-    $themePath = dirname(__DIR__, 2);
-    $componentPath = dirname($themePath, 3) . '/capell-4/packages/frontend/resources/views/components/image-source.blade.php';
-    $component = file_get_contents($componentPath);
+    $html = Blade::render(
+        '<x-capell::image-source image="/public-image.jpg" alt="Public image" />',
+    );
 
-    expect(is_file($componentPath))->toBeTrue()
-        ->and($component)->toContain('ResolveImageSourceDataAction::run')
-        ->and($component)->toContain('capell-image-source')
-        ->and($component)->not->toContain('recordId')
-        ->and($component)->not->toContain('fieldPath')
-        ->and($component)->not->toContain('wire:');
+    expect($html)
+        ->toContain('src="/public-image.jpg"')
+        ->toContain('alt="Public image"')
+        ->toContain('capell-image-source')
+        ->not->toContain('recordId')
+        ->not->toContain('fieldPath')
+        ->not->toContain('wire:');
 });
 
 test('default theme treats navigation as optional', function (): void {

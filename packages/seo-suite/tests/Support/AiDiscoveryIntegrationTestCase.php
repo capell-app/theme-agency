@@ -11,6 +11,7 @@ use Capell\Frontend\Support\CapellFrontendContext;
 use Capell\Frontend\Support\State\FrontendState;
 use Capell\SeoSuite\Providers\SeoSuiteServiceProvider;
 use Capell\Tests\AbstractTestCase;
+use Composer\InstalledVersions;
 use Illuminate\Contracts\Foundation\Application;
 use Livewire\LivewireServiceProvider;
 use Override;
@@ -47,7 +48,7 @@ class AiDiscoveryIntegrationTestCase extends AbstractTestCase
 
         CapellCore::registerPackage(
             FrontendServiceProvider::$packageName,
-            path: realpath(__DIR__ . '/../../../../../capell-4/packages/frontend'),
+            path: InstalledVersions::getInstallPath('capell-app/frontend'),
         );
         CapellCore::forcePackageInstalled(FrontendServiceProvider::$packageName);
         CapellCore::registerPackage(

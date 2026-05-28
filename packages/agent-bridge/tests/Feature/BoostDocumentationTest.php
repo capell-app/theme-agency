@@ -13,5 +13,6 @@ it('documents Laravel Boost and Capell Agent Bridge setup paths', function (): v
         ->toContain('boost.agent-bridge.tools.include')
         ->toContain('capell-list-capabilities')
         ->toContain('capell-preview-capability')
-        ->toContain('/Users/ben/Sites/capell-ruby');
+        ->toContain('## Verifying In A Host App')
+        ->not->toContain('/Users/ben/');
 });

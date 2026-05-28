@@ -12,6 +12,7 @@ use Capell\PublishingStudio\Support\WorkspaceSchema;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Facades\Route;
 use Override;
 
 class PublishingWorkflowPage extends Page
@@ -31,7 +32,9 @@ class PublishingWorkflowPage extends Page
     #[Override]
     public static function canAccess(): bool
     {
-        return WorkspaceSchema::isReady() && parent::canAccess();
+        return Route::has(static::getRouteName())
+            && WorkspaceSchema::isReady()
+            && parent::canAccess();
     }
 
     #[Override]

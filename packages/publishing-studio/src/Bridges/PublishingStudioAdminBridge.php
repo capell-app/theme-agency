@@ -8,10 +8,10 @@ use Capell\Admin\Contracts\Bridges\AdminBridge;
 use Capell\Admin\Contracts\Extenders\UserSchemaExtender;
 use Capell\Admin\Data\Bridges\AdminBridgeContextData;
 use Capell\Admin\Enums\DashboardEnum;
+use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Filament\Widgets\Dashboard\MyWorkQueueWidget;
 use Capell\Admin\Filament\Widgets\Dashboard\RecentlyPublishedWidget;
 use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
-use Capell\Admin\Support\Extensions\ExtensionPageRegistry;
 use Capell\PublishingStudio\Extenders\PublishingStudioUserSchemaExtender;
 use Capell\PublishingStudio\Filament\Pages\ActivityTrailPage;
 use Capell\PublishingStudio\Filament\Pages\PublishingWorkflowPage;
@@ -45,7 +45,6 @@ final class PublishingStudioAdminBridge implements AdminBridge
 
     private function extensionPage(string $packageName, string $page): void
     {
-
-        resolve(ExtensionPageRegistry::class)->register($packageName, $page);
+        CapellAdmin::registerExtensionPage($packageName, $page);
     }
 }

@@ -120,18 +120,25 @@ class PasswordPolicyServiceProvider extends AbstractPackageServiceProvider
 
     private function registerPasswordPolicySettingsExtensionPage(): self
     {
+        $surface = ExtensionManagementSurfaceData::settings(
+            packageName: self::$packageName,
+            label: 'capell-password-policy::settings.title',
+            settingsGroup: 'password_policy',
+            icon: Heroicon::OutlinedKey,
+        );
+
+        try {
+            CapellAdmin::registerExtensionManagementSurface($surface);
+        } catch (Throwable) {
+        }
+
         if (class_exists(CapellAdminManager::class)) {
-            $registerAdminSurface = static function (object $capellAdminManager): void {
+            $registerAdminSurface = static function (object $capellAdminManager) use ($surface): void {
                 if (! method_exists($capellAdminManager, 'registerExtensionManagementSurface')) {
                     return;
                 }
 
-                $capellAdminManager->registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
-                    packageName: self::$packageName,
-                    label: 'capell-password-policy::settings.title',
-                    settingsGroup: 'password_policy',
-                    icon: Heroicon::OutlinedKey,
-                ));
+                $capellAdminManager->registerExtensionManagementSurface($surface);
             };
 
             if ($this->app->bound(CapellAdminManager::class)) {

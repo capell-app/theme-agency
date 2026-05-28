@@ -5,10 +5,9 @@ import { chromium } from 'playwright'
 const [, , manifestPath, resultPath] = process.argv
 
 if (!manifestPath || !resultPath) {
-    console.error(
+    throw new Error(
         'Usage: node scripts/capture-theme-demo-layout-screenshots.mjs <manifest.json> <result.json>',
     )
-    process.exit(1)
 }
 
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
@@ -45,7 +44,7 @@ async function captureEntry(entry) {
 
     await page.setContent(html, { waitUntil: 'load' })
     await page.waitForFunction(() => document.styleSheets.length > 0, null, {
-        timeout: 1000,
+        timeout: 10000,
     })
     await page.evaluate(async () => {
         await Promise.all(

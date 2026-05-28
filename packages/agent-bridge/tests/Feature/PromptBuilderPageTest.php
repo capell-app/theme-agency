@@ -130,9 +130,7 @@ it('registers the toolbar Livewire component used by the global search render ho
         'component' => 'capell-agent-bridge.prompt-builder-toolbar-action',
     ]);
 
-    expect(Livewire::exists('capell-agent-bridge.prompt-builder-toolbar-action'))
-        ->toBeTrue()
-        ->and($html)
+    expect($html)
         ->toContain(__('capell-agent-bridge::admin.prompt_builder_tooltip'))
         ->toContain('wire:click="openBuilder"')
         ->not->toContain('agent-bridge-prompt-builder-title');

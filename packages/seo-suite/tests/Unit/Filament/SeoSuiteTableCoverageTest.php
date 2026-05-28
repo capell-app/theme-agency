@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\PageUrl;
@@ -89,7 +90,7 @@ it('exposes ai discovery table columns, filters, row actions, and bulk actions',
 });
 
 it('builds markdown urls for included ai discovery pages with public urls', function (): void {
-    foreach (['profiles', 'readinessIssueCounts', 'markdownDiscoverability'] as $propertyName) {
+    foreach (['profiles', 'siteProfiles', 'readinessIssueCounts', 'markdownDiscoverability'] as $propertyName) {
         $property = new ReflectionProperty(AiDiscoveryTable::class, $propertyName);
         $property->setValue(null, []);
     }
@@ -101,6 +102,7 @@ it('builds markdown urls for included ai discovery pages with public urls', func
         ->create();
     $page = Page::factory()
         ->site($site)
+        ->type(Blueprint::factory()->page()->create(['status' => true]))
         ->withTranslations($language, ['title' => 'AI Discovery Public Page'])
         ->create();
 

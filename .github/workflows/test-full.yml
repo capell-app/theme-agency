@@ -25,12 +25,14 @@ jobs:
           - php: 8.3
             laravel: 11.*
             testbench: 9.*
+            livewire: ^3.7
             stability: prefer-stable
             db: sqlite
             mysql_port: 3308
           - php: 8.4
             laravel: 12.*
             testbench: 10.*
+            livewire: ^4.0
             stability: prefer-stable
             db: mysql
             mysql_port: 3307
@@ -66,7 +68,19 @@ jobs:
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
         with:
           path: vendor
-          key: dependencies-php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-testbench-${{ matrix.testbench }}-${{ matrix.db }}-${{ hashFiles('composer.json', 'composer.lock', '.github/workflows/test-full.yml') }}
+          key: dependencies-php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-testbench-${{ matrix.testbench }}-livewire-${{ matrix.livewire }}-${{ matrix.db }}-${{ hashFiles('composer.json', 'composer.lock', '.github/workflows/test-full.yml') }}
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
 
       - name: Setup PHP
         uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2
@@ -118,6 +132,8 @@ jobs:
             "laravel/framework:${{ matrix.laravel }}"
           composer require --no-interaction --no-progress --ansi --dev --no-update \
             "orchestra/testbench:${{ matrix.testbench }}"
+          composer require --no-interaction --no-progress --ansi --no-update \
+            "livewire/livewire:${{ matrix.livewire }}"
 
           # PHP 8.3 / Laravel 11 uses the Pest 3 stack; Pest 4 workers crash under this matrix.
           if [ "${{ matrix.php }}" = "8.3" ]; then
@@ -138,19 +154,13 @@ jobs:
               driftingly/rector-laravel:^1.0 \
               larastan/larastan:^2.0
             composer require --no-interaction --no-progress --ansi --no-update \
-              livewire/livewire:^3.7 \
               filament/filament:^4.7 \
               filament/support:^4.7 \
               pboivin/filament-peek:^3.0 \
               symfony/html-sanitizer:^7.0 \
               openspout/openspout:^4.22
           fi
-          composer update --no-interaction --no-progress --ansi --optimize-autoloader --with-all-dependencies -W \
-            capell-app/admin \
-            capell-app/core \
-            capell-app/frontend \
-            capell-app/installer \
-            capell-app/marketplace
+          composer update --no-interaction --no-progress --ansi --optimize-autoloader --with-all-dependencies -W
 
       - name: Configure environment
         run: |

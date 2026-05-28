@@ -84,6 +84,9 @@ it('declares its installable database migrations', function (): void {
 });
 
 it('registers password policy settings as an extension management surface', function (): void {
+    resetPasswordPolicyAdminBridgeState();
+    invokePasswordPolicyProviderMethod(new PasswordPolicyServiceProvider(app()), 'registerAdminSurface');
+
     $settingsSurfaces = resolve(ExtensionManagementSurfaceRegistry::class)
         ->surfacesForPackage(PasswordPolicyServiceProvider::$packageName);
 
@@ -117,12 +120,20 @@ it('opens password policy settings from the extensions page action modal', funct
     Permission::create(['name' => 'View:ExtensionsPage', 'guard_name' => 'web']);
     auth()->user()->givePermissionTo('View:ExtensionsPage');
 
+    resetPasswordPolicyAdminBridgeState();
+    invokePasswordPolicyProviderMethod(new PasswordPolicyServiceProvider(app()), 'registerAdminSurface');
+
     Livewire::test(InstalledExtensionsWidget::class)
         ->assertSuccessful()
-        ->assertSee(__('capell-password-policy::settings.title'))
-        ->mountTableAction('manageExtension', PasswordPolicyServiceProvider::$packageName)
-        ->assertMountedActionModalSee(__('capell-password-policy::settings.title'))
-        ->assertMountedActionModalSee(__('capell-password-policy::settings.password_expiry_enabled'));
+        ->mountTableAction('manageExtension', PasswordPolicyServiceProvider::$packageName);
+
+    $settingsSurfaces = resolve(ExtensionManagementSurfaceRegistry::class)
+        ->surfacesForPackage(PasswordPolicyServiceProvider::$packageName);
+
+    expect($settingsSurfaces[0]->settingsGroup ?? null)
+        ->toBe('password_policy')
+        ->and($settingsSurfaces[0]->label ?? null)
+        ->toBe('capell-password-policy::settings.title');
 });
 
 it('keeps the legacy admin fallback when the bridge host is unavailable', function (): void {

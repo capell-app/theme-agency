@@ -8,7 +8,7 @@ Install the package in a host Capell app with Composer:
 composer require capell-app/frontend-optimizer
 ```
 
-For local package development, point Composer at `../packages/capell/capell-packages-4/packages/frontend-optimizer` as a path repository, then require the same package name.
+For local package development, use the host app's Composer repository configuration to resolve the package, then require the same package name.
 
 ## Generation Flow
 
