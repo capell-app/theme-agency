@@ -27,8 +27,12 @@ class UpdateEditableRegionAction
     /**
      * @return array{cleared: int, urls: list<string>, status: string, redirect_url: string|null}
      */
-    public function handle(EditableRegionPayloadData $payload, string $value): array
+    public function handle(EditableRegionPayloadData $payload, string $value, ?AuthenticatableContract $user = null): array
     {
+        if ($user instanceof AuthenticatableContract) {
+            $payload = ValidateEditableRegionPayloadAction::run($payload, $user);
+        }
+
         /** @var class-string<Model> $modelClass */
         $modelClass = $payload->model;
         abort_unless(is_subclass_of($modelClass, Model::class), 403);

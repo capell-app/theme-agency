@@ -70,6 +70,22 @@ it('declares renderers for every included agency section', function (): void {
     ]);
 });
 
+it('renders proof headings readably inside the white proof panel', function (): void {
+    View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
+
+    $html = view('capell-theme-agency::sections.proof', [
+        'section' => new ProofSectionData(
+            heading: 'Proof that the theme can carry real pages',
+            summary: 'Proof copy should remain visible.',
+            items: [['quote' => 'Faster launches', 'name' => 'Studio team']],
+        ),
+    ])->render();
+
+    expect($html)
+        ->toContain('Proof that the theme can carry real pages')
+        ->toContain('text-zinc-950');
+});
+
 it('registers agency only when the theme package is installed', function (): void {
     CapellCore::clearPackages();
 

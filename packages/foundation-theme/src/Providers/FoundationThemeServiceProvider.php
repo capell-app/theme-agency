@@ -8,6 +8,7 @@ use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Actions\RegisterBlazeOptimizedViewsAction;
 use Capell\Core\Data\VendorAssetData;
+use Capell\Core\Enums\FrontendRuntime;
 use Capell\Core\Enums\PackageTypeEnum;
 use Capell\Core\Events\PackageInstalled;
 use Capell\Core\Events\PackageUninstalled;
@@ -17,6 +18,11 @@ use Capell\Core\Support\Assets\VendorAssetConditionRegistry;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\Core\Support\Themes\ThemeChromeRegistry;
+use Capell\Core\ThemeStudio\Data\ThemeDefinitionData;
+use Capell\Core\ThemeStudio\Data\ThemePresetData;
+use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
+use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
+use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Console\Commands\GenerateTailwindAssetsCommand;
 use Capell\FoundationTheme\Console\Commands\SetupCommand;
 use Capell\FoundationTheme\Enums\FoundationThemeAssetEnum;
@@ -57,11 +63,54 @@ use Spatie\LaravelPackageTools\Package;
 
 final class FoundationThemeServiceProvider extends AbstractPackageServiceProvider
 {
+    public const string THEME_KEY = 'default';
+
     public static string $name = 'capell-foundation-theme';
 
     public static string $packageName = 'capell-app/foundation-theme';
 
     public static PackageTypeEnum $type = PackageTypeEnum::Theme;
+
+    public static function definition(): ThemeDefinitionData
+    {
+        return new ThemeDefinitionData(
+            key: self::THEME_KEY,
+            name: 'Foundation',
+            description: 'Clean starter theme for structured Capell sites, content previews, and shared child-theme defaults.',
+            package: self::$packageName,
+            previewImage: '/vendor/capell-foundation-theme/preview.jpg',
+            tags: ['Foundation', 'Structured', 'Default'],
+            bestFit: ['Starter sites', 'Documentation', 'General publishing'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'],
+            presets: [
+                new ThemePresetData(
+                    key: 'default',
+                    name: 'Foundation',
+                    description: 'Balanced neutral defaults with clear hierarchy and quiet content surfaces.',
+                    previewImage: '/vendor/capell-foundation-theme/preview.jpg',
+                    values: [
+                        'primaryColor' => '#315f8f',
+                        'accentColor' => '#7c5f3f',
+                        'neutralColor' => '#1f2937',
+                        'surfaceColor' => '#faf9f7',
+                        'foregroundColor' => '#111827',
+                        'headingFont' => 'inter',
+                        'bodyFont' => 'inter',
+                        'spacing' => 'balanced',
+                        'cardStyle' => 'subtle',
+                        'layoutPresentation' => 'structured',
+                        'motionIntensity' => 'subtle',
+                        'mediaTreatment' => 'natural',
+                        'radius' => 'md',
+                        'headingScale' => 'balanced',
+                        'cardDensity' => 'comfortable',
+                    ],
+                ),
+            ],
+            assets: ['css' => 'vendor/capell-foundation-theme/foundation-theme.css'],
+            runtime: FrontendRuntime::Blade,
+        );
+    }
 
     public function configurePackage(Package $package): void
     {
@@ -97,6 +146,7 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
         $this->registerSettingsSchemas();
         $this->registerLayoutAreas();
         $this->registerThemeChromeComponents();
+        $this->registerThemeStudioDefinition();
     }
 
     public function packageRegistered(): void
@@ -203,6 +253,45 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
         }
     }
 
+    private function registerThemeStudioDefinition(): void
+    {
+        $register = function (ThemeRegistry $registry): void {
+            $sectionRenderers = $this->themeStudioSectionRenderers();
+
+            $registry->register(
+                definition: self::definition(),
+                themeRenderer: new BladeThemeRenderer(
+                    themeKey: self::THEME_KEY,
+                    layoutView: 'capell-foundation-theme::theme.page',
+                    sectionRenderers: $sectionRenderers,
+                ),
+                sectionRenderers: array_values($sectionRenderers),
+            );
+        };
+
+        $this->app->afterResolving(ThemeRegistry::class, $register);
+
+        if ($this->app->resolved(ThemeRegistry::class)) {
+            $register($this->app->make(ThemeRegistry::class));
+        }
+    }
+
+    /**
+     * @return array<string, ViewSectionRenderer>
+     */
+    private function themeStudioSectionRenderers(): array
+    {
+        return [
+            'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-foundation-theme::theme.sections.navigation', failLoudly: true),
+            'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-foundation-theme::theme.sections.hero', failLoudly: true),
+            'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-foundation-theme::theme.sections.features', failLoudly: true),
+            'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-foundation-theme::theme.sections.proof', failLoudly: true),
+            'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-foundation-theme::theme.sections.content-listing', failLoudly: true),
+            'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-foundation-theme::theme.sections.cta', failLoudly: true),
+            'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-foundation-theme::theme.sections.footer', failLoudly: true),
+        ];
+    }
+
     private function registerLayoutAreas(): void
     {
         $register = function (LayoutAreaRegistry $registry): void {
@@ -300,8 +389,7 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
     {
         resolve(VendorAssetConditionRegistry::class)->register(
             'foundation-theme-runtime',
-            fn (FrontendAssetContextData $context): bool => $context->runtime->usesBeacon
-                || $context->runtime->usesIslands
+            fn (FrontendAssetContextData $context): bool => $context->runtime->usesIslands
                 || $context->runtime->usesLivewire
                 || ($context->runtime->modules['layout-builder'] ?? false),
         );

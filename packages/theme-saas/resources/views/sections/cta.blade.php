@@ -5,7 +5,11 @@
         >
             <div class="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
                 <div>
-                    <h2 class="text-white">{{ $section->heading }}</h2>
+                    <h2
+                        class="text-3xl font-black text-white sm:text-4xl md:text-5xl"
+                    >
+                        {{ $section->heading }}
+                    </h2>
                     @if ($section->summary)
                         <p class="mt-4 max-w-2xl text-blue-50">
                             {{ $section->summary }}

@@ -11,10 +11,10 @@ See [In-page editing](in-page-editing.md) for the full admin flow, screenshot, s
 1. The frontend page renders normally and can be served from HTML cache.
 2. The frontend beacon client posts the current URL to `capell-frontend.beacon`.
 3. The beacon resolves the `PageUrl` and checks admin access.
-4. Only for admins, the beacon returns the authoring script and editable region metadata.
+4. Only for admins with frontend authoring permission for the resolved page, the beacon returns the authoring script and editable region metadata.
 5. The browser decorates matching DOM selectors with edit controls.
 6. Editing opens a signed route in a modal.
-7. Saving updates the field, clears every cached URL recorded for that model, and refreshes the page.
+7. The editor revalidates the signed region against the current page manifest, saves the field, clears every cached URL recorded for that model, and refreshes the page.
 
 ## Cache Rule
 
@@ -29,3 +29,5 @@ If another frontend package wants editable content, it registers regions here. I
 - Page content: `Translation.content`
 
 Additional packages can register regions via the `capell-frontend-authoring:editable-regions` tag.
+
+Registered regions must be tied to the current page URL, site, language, and a stable region key so signed editor links can be rejected when a region becomes stale or unauthorized.

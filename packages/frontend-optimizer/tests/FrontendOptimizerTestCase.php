@@ -38,7 +38,7 @@ abstract class FrontendOptimizerTestCase extends AbstractTestCase
         CapellCore::forcePackageInstalled(CapellAdminServiceProvider::$packageName);
         CapellCore::registerPackage(
             FrontendOptimizerServiceProvider::$packageName,
-            path: realpath(__DIR__ . '/../'),
+            path: realpath(__DIR__ . '/../') ?: null,
         );
         CapellCore::forcePackageInstalled(FrontendOptimizerServiceProvider::$packageName);
     }

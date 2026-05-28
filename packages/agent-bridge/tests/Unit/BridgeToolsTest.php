@@ -71,7 +71,7 @@ it('previews a boost capability through the registry', function (): void {
 });
 
 it('lists knowledge packages as structured content', function (): void {
-    app()->setBasePath(getcwd());
+    app()->setBasePath(getcwd() ?: dirname(__DIR__, 4));
 
     $response = (new ListKnowledgePackagesTool)->handle(new KnowledgeRepository);
 
@@ -83,7 +83,7 @@ it('lists knowledge packages as structured content', function (): void {
 });
 
 it('reads allowed knowledge documents by repository path', function (): void {
-    app()->setBasePath(getcwd());
+    app()->setBasePath(getcwd() ?: dirname(__DIR__, 4));
     config()->set('capell-agent-bridge.public_docs_paths', [
         base_path('packages/agent-bridge/docs'),
     ]);

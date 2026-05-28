@@ -39,6 +39,10 @@ $this->app->tag([
                 type: 'text',
                 selector: '.campaign-hero__headline',
                 currentUrl: $pageUrl->full_url,
+                pageUrlId: (int) $pageUrl->getKey(),
+                siteId: (int) $pageUrl->site_id,
+                languageId: (int) $pageUrl->language_id,
+                regionKey: 'campaign.hero.headline',
             ),
         ];
     },
@@ -47,6 +51,8 @@ $this->app->tag([
 
 Only use selectors that already exist for presentation. Do not add hidden editor-only attributes to public markup just to make authoring easier.
 
+The `regionKey` must be stable for the current page and field. Signed editor routes are revalidated against the current `PageUrl` manifest before rendering or saving, so stale links stop working if the package removes a region, changes its selector, or moves it to another page/site/language context.
+
 ## Beacon And Signed Editor Route
 
 | Route                            | Method                             | Purpose                                                                                 |
@@ -54,7 +60,7 @@ Only use selectors that already exist for presentation. Do not add hidden editor
 | `capell-frontend.beacon`         | `POST /beacon`                     | Resolves the current URL and returns authoring bootstrap only for authenticated admins. |
 | `capell-frontend.authoring.edit` | `GET /authoring/regions/{payload}` | Opens one signed editor iframe for one editable field.                                  |
 
-`EditableRegionSigner` signs the payload with `app.key` and creates a temporary signed route for 15 minutes. The payload includes model class, record key, field path, field type, selector, and current URL.
+`EditableRegionSigner` signs the payload with `app.key` and creates a temporary signed route for 15 minutes. The payload includes model class, record key, field path, field type, selector, current URL, page URL ID, site ID, language ID, and stable region key.
 
 ## Cache Invalidation
 

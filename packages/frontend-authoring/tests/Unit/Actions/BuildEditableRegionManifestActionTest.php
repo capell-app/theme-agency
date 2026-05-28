@@ -110,6 +110,10 @@ it('includes package supplied editable region extenders', function (): void {
             type: 'textarea',
             selector: '[data-edit-summary]',
             currentUrl: $resolvedPageUrl->full_url,
+            pageUrlId: (int) $resolvedPageUrl->getKey(),
+            siteId: (int) $resolvedPageUrl->site_id,
+            languageId: (int) $resolvedPageUrl->language_id,
+            regionKey: 'test.summary',
         ),
     ]);
     app()->tag('frontend-authoring-test.extra-region', 'capell-frontend-authoring:editable-regions');

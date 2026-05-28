@@ -11,6 +11,7 @@ use Capell\SeoSuite\Enums\AiDiscoveryStatusEnum;
 use Capell\SeoSuite\Models\AiDiscoveryPageProfile;
 use Capell\SeoSuite\Models\AiDiscoverySiteProfile;
 use Composer\Autoload\ClassLoader;
+use RuntimeException;
 
 $composerAutoloader = require getcwd() . '/vendor/autoload.php';
 
@@ -36,8 +37,11 @@ it('resolves site profile defaults for a site and language', function (): void {
 
     $profile = ResolveAiDiscoveryProfileAction::run($site, $language);
 
-    expect($profile)->toBeInstanceOf(AiDiscoverySiteProfile::class)
-        ->and($profile->site_id)->toBe($site->getKey())
+    if (! $profile instanceof AiDiscoverySiteProfile) {
+        throw new RuntimeException('Expected site-level AI discovery profile.');
+    }
+
+    expect($profile->site_id)->toBe($site->getKey())
         ->and($profile->language_id)->toBe($language->getKey())
         ->and($profile->llms_txt_enabled)->toBeTrue()
         ->and($profile->llms_full_txt_enabled)->toBeFalse()
@@ -66,8 +70,11 @@ it('resolves a page profile using site profile defaults', function (): void {
 
     $profile = ResolveAiDiscoveryProfileAction::run($site, $language, $page);
 
-    expect($profile)->toBeInstanceOf(AiDiscoveryPageProfile::class)
-        ->and($profile->page_id)->toBe($page->getKey())
+    if (! $profile instanceof AiDiscoveryPageProfile) {
+        throw new RuntimeException('Expected page-level AI discovery profile.');
+    }
+
+    expect($profile->page_id)->toBe($page->getKey())
         ->and($profile->site_id)->toBe($site->getKey())
         ->and($profile->language_id)->toBe($language->getKey())
         ->and($profile->include_in_ai_index)->toBeTrue()

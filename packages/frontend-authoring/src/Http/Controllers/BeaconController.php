@@ -6,8 +6,8 @@ namespace Capell\FrontendAuthoring\Http\Controllers;
 
 use Capell\Core\Actions\LoadSiteDomainFromUrlAction;
 use Capell\Core\Models\PageUrl;
+use Capell\Core\Models\SiteDomain;
 use Capell\Frontend\Contracts\AdminAccessCheckerInterface;
-use Capell\Frontend\Support\Loader\PageLoader;
 use Capell\Frontend\Support\Loader\SiteLoader;
 use Capell\FrontendAuthoring\Actions\BuildAuthoringBannerContextAction;
 use Capell\FrontendAuthoring\Actions\BuildEditableRegionManifestAction;
@@ -37,6 +37,10 @@ class BeaconController extends BaseController
             return response()->json($data);
         }
 
+        if (! $this->isPostedUrlSameOrigin($request)) {
+            return response()->json($data);
+        }
+
         [$siteDomain, $url] = LoadSiteDomainFromUrlAction::run($request->url, sites: SiteLoader::getSites());
 
         if (! $siteDomain) {
@@ -44,26 +48,6 @@ class BeaconController extends BaseController
                 'message' => 'Not Found',
             ], 404);
         }
-
-        $pageUrl = null;
-
-        PageUrl::withoutEvents(function () use ($siteDomain, $url, &$pageUrl): void {
-            $pageUrl = PageLoader::getPageUrl(
-                site: $siteDomain->site,
-                language: $siteDomain->language,
-                url: $url,
-                withEvents: false,
-            );
-
-            if (! $pageUrl instanceof PageUrl) {
-                $pageUrl = PageLoader::getWildCardUrl(
-                    site: $siteDomain->site,
-                    language: $siteDomain->language,
-                    url: $url,
-                    withEvents: false,
-                );
-            }
-        });
 
         /** @var User $user */
         $user = $request->user();
@@ -75,18 +59,32 @@ class BeaconController extends BaseController
 
         if ($this->isAdminUser($user) && config('capell-frontend-authoring.enabled') === true) {
             $data['user']['admin'] = true;
+            $pageUrl = $this->resolveEditablePageUrl($siteDomain, $url);
 
             if ($pageUrl instanceof PageUrl) {
                 $data['scripts'] = [
                     view('capell::authoring.bootstrap-script', [
                         'banner' => BuildAuthoringBannerContextAction::run($pageUrl),
-                        'regions' => BuildEditableRegionManifestAction::run($pageUrl),
+                        'regions' => BuildEditableRegionManifestAction::run($pageUrl, $user),
                     ])->render(),
                 ];
             }
         }
 
         return response()->json($data);
+    }
+
+    private function resolveEditablePageUrl(SiteDomain $siteDomain, string $url): ?PageUrl
+    {
+        return PageUrl::withoutEvents(
+            fn (): ?PageUrl => PageUrl::query()
+                ->with(['pageable.translation', 'translation', 'siteDomain'])
+                ->where('site_id', $siteDomain->site_id)
+                ->where('language_id', $siteDomain->language_id)
+                ->where('url', $url)
+                ->enabled()
+                ->first(),
+        );
     }
 
     /**
@@ -114,7 +112,40 @@ class BeaconController extends BaseController
             return false;
         }
 
-        return strcasecmp($originHost, $request->getHost()) === 0;
+        $originScheme = parse_url($origin, PHP_URL_SCHEME);
+        $originPort = parse_url($origin, PHP_URL_PORT);
+
+        return is_string($originScheme)
+            && $this->originsMatch($originScheme, $originHost, is_int($originPort) ? $originPort : null, $request);
+    }
+
+    private function isPostedUrlSameOrigin(BeaconRequest $request): bool
+    {
+        $scheme = parse_url($request->url, PHP_URL_SCHEME);
+        $host = parse_url($request->url, PHP_URL_HOST);
+        $port = parse_url($request->url, PHP_URL_PORT);
+
+        if (! is_string($scheme) || ! is_string($host) || ! in_array($scheme, ['http', 'https'], true)) {
+            return false;
+        }
+
+        return $this->originsMatch($scheme, $host, is_int($port) ? $port : null, $request);
+    }
+
+    private function originsMatch(string $scheme, string $host, ?int $port, BeaconRequest $request): bool
+    {
+        return $scheme === $request->getScheme()
+            && strcasecmp($host, $request->getHost()) === 0
+            && $this->normalisePort($scheme, $port) === $this->normalisePort($request->getScheme(), $request->getPort());
+    }
+
+    private function normalisePort(string $scheme, ?int $port): int
+    {
+        if ($port !== null) {
+            return $port;
+        }
+
+        return $scheme === 'https' ? 443 : 80;
     }
 
     private function isAdminUser(AuthenticatableContract $user): bool

@@ -10,6 +10,7 @@ use Capell\Admin\Support\AdminSurfaceLookup;
 use Capell\Blog\Providers\BlogServiceProvider;
 use Capell\Core\Facades\CapellCore;
 use Capell\SeoSuite\Providers\SeoSuiteServiceProvider;
+use ReflectionClass;
 
 /**
  * These tests boot the same set of packages PackagesTestCase already boots
@@ -74,5 +75,6 @@ it('every ConfiguratorTypeEnum value resolves to a configurator map', function (
 });
 
 it('ConfiguratorTypeEnumInterface contract is satisfied by ConfiguratorTypeEnum', function (): void {
-    expect(is_a(ConfiguratorTypeEnum::class, ConfiguratorTypeEnumInterface::class, true))->toBeTrue();
+    expect((new ReflectionClass(ConfiguratorTypeEnum::class))->implementsInterface(ConfiguratorTypeEnumInterface::class))
+        ->toBeTrue();
 });

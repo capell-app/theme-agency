@@ -11,6 +11,7 @@ use Capell\PublishingStudio\Enums\WorkspaceStatusEnum;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Models\WorkspaceApproval;
 use Filament\Widgets\Widget;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Override;
@@ -45,7 +46,7 @@ class PageApprovalStatus extends Widget
         $approvals = $this->approvalsFor($workspace);
         $latestAction = $approvals->first()?->action;
 
-        return view($this->view, [
+        return resolve(Factory::class)->make($this->view, [
             'workspace' => $workspace,
             'visible' => $this->isVisibleFor($workspace, $latestAction),
             'title' => $this->titleFor($workspace?->status, $latestAction),

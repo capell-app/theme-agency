@@ -33,7 +33,7 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/local-services.jpg',
             tags: ['Services', 'Local SEO', 'Lead generation'],
             bestFit: ['Service businesses', 'Local operators', 'Quote-led teams'],
-            includedSections: ['navigation', 'hero', 'services', 'service-areas', 'proof', 'quote-form', 'case-studies', 'resources', 'contact', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'services', 'service-areas', 'proof', 'content-listing', 'quote-form', 'case-studies', 'resources', 'contact', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'local-services',
@@ -93,24 +93,53 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
                 layoutView: 'capell-theme-local-services::page',
                 sectionRenderers: [],
             ),
-            sectionRenderers: array_map(
-                fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer => array_key_exists($sectionKey, $this->optionalSectionIntegrations($blogAvailable, $formBuilderAvailable))
-                    ? new PackageAwareSectionRenderer(
-                        themeKey: self::THEME_KEY,
-                        sectionKey: $sectionKey,
-                        view: 'capell-theme-local-services::sections.' . $sectionKey,
-                        integrations: $this->optionalSectionIntegrations($blogAvailable, $formBuilderAvailable)[$sectionKey],
-                        failLoudly: true,
-                    )
-                    : new ViewSectionRenderer(
-                        themeKey: self::THEME_KEY,
-                        sectionKey: $sectionKey,
-                        view: 'capell-theme-local-services::sections.' . $sectionKey,
-                        failLoudly: true,
-                    ),
-                self::definition()->includedSections,
-            ),
+            sectionRenderers: collect(self::definition()->includedSections)
+                ->map(fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer|null => $this->sectionRenderer(
+                    $sectionKey,
+                    $this->optionalSectionIntegrations($blogAvailable, $formBuilderAvailable),
+                ))
+                ->filter()
+                ->values()
+                ->all(),
         );
+    }
+
+    /**
+     * @param  array<string, array<string, bool>>  $optionalIntegrations
+     */
+    private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ViewSectionRenderer|PackageAwareSectionRenderer|null
+    {
+        if ($this->isFoundationSection($sectionKey)) {
+            return null;
+        }
+
+        $view = 'capell-theme-local-services::sections.' . $sectionKey;
+
+        if (! view()->exists($view)) {
+            return null;
+        }
+
+        if (array_key_exists($sectionKey, $optionalIntegrations)) {
+            return new PackageAwareSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: $sectionKey,
+                view: $view,
+                integrations: $optionalIntegrations[$sectionKey],
+                failLoudly: true,
+            );
+        }
+
+        return new ViewSectionRenderer(
+            themeKey: self::THEME_KEY,
+            sectionKey: $sectionKey,
+            view: $view,
+            failLoudly: true,
+        );
+    }
+
+    private function isFoundationSection(string $sectionKey): bool
+    {
+        return in_array($sectionKey, ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'], true);
     }
 
     /**

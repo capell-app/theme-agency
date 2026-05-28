@@ -33,6 +33,10 @@ final class EditableRegionRegistry
                 type: 'text',
                 selector: config('capell-frontend-authoring.selectors.page_title', '#main h1:first-of-type'),
                 currentUrl: $currentUrl,
+                pageUrlId: (int) $pageUrl->getKey(),
+                siteId: (int) $pageUrl->site_id,
+                languageId: (int) $pageUrl->language_id,
+                regionKey: 'page.title',
             ),
             new EditableRegionPayloadData(
                 model: $translation::class,
@@ -42,6 +46,10 @@ final class EditableRegionRegistry
                 type: 'textarea',
                 selector: config('capell-frontend-authoring.selectors.page_title', '#main h1:first-of-type'),
                 currentUrl: $currentUrl,
+                pageUrlId: (int) $pageUrl->getKey(),
+                siteId: (int) $pageUrl->site_id,
+                languageId: (int) $pageUrl->language_id,
+                regionKey: 'page.meta.description',
             ),
             new EditableRegionPayloadData(
                 model: $translation::class,
@@ -51,12 +59,19 @@ final class EditableRegionRegistry
                 type: 'html',
                 selector: config('capell-frontend-authoring.selectors.page_content', '#main .content-component:first-of-type'),
                 currentUrl: $currentUrl,
+                pageUrlId: (int) $pageUrl->getKey(),
+                siteId: (int) $pageUrl->site_id,
+                languageId: (int) $pageUrl->language_id,
+                regionKey: 'page.content',
             ),
         ];
 
         foreach (app()->tagged('capell-frontend-authoring:editable-regions') as $extender) {
             if (is_callable($extender)) {
-                $regions = array_values([...$regions, ...(array) $extender($pageUrl)]);
+                $regions = array_values([...$regions, ...array_filter(
+                    (array) $extender($pageUrl),
+                    fn (mixed $payload): bool => $payload instanceof EditableRegionPayloadData,
+                )]);
             }
         }
 

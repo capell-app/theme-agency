@@ -33,6 +33,7 @@ final class EditableRegionSigner
         $payload = json_decode($json, true);
 
         abort_if(! is_array($payload) || ! isset($payload['data'], $payload['signature']) || ! is_array($payload['data']), 403);
+        abort_unless($this->hasRequiredData($payload['data']), 403);
 
         $signature = (string) $payload['signature'];
 
@@ -48,6 +49,26 @@ final class EditableRegionSigner
             now()->addMinutes(15),
             ['payload' => $this->encode($payload)],
         );
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    private function hasRequiredData(array $data): bool
+    {
+        return collect([
+            'model',
+            'recordKey',
+            'field',
+            'label',
+            'type',
+            'selector',
+            'currentUrl',
+            'pageUrlId',
+            'siteId',
+            'languageId',
+            'regionKey',
+        ])->every(fn (string $key): bool => array_key_exists($key, $data));
     }
 
     /**

@@ -85,6 +85,41 @@ it('does not load the foundation runtime for generic alpine chrome', function ()
     expect(collect($requirements)->pluck('handle')->all())->not->toContain('foundation-theme:runtime');
 });
 
+it('does not load the foundation runtime for the frontend authoring beacon alone', function (): void {
+    $runtime = new FrontendRuntimeManifestData(
+        renderingStrategy: RenderingStrategyEnum::BladeOnly,
+        usesLivewire: false,
+        usesAlpine: true,
+        usesBeacon: true,
+        usesWireNavigate: false,
+        usesIslands: false,
+        modules: ['frontend-chrome' => true, 'frontend-authoring' => true],
+    );
+
+    $requirements = resolve(FoundationThemeAssetContributor::class)->requirements(new FrontendAssetContextData(
+        page: null,
+        site: null,
+        language: null,
+        layout: null,
+        theme: null,
+        runtime: $runtime,
+    ));
+
+    $context = new FrontendAssetContextData(
+        page: null,
+        site: null,
+        language: null,
+        layout: null,
+        theme: null,
+        runtime: $runtime,
+    );
+    $registerVendorAssetConditions = new ReflectionMethod(FoundationThemeServiceProvider::class, 'registerVendorAssetConditions');
+    $registerVendorAssetConditions->invoke(new FoundationThemeServiceProvider(app()));
+
+    expect(collect($requirements)->pluck('handle')->all())->not->toContain('foundation-theme:runtime')
+        ->and(resolve(VendorAssetConditionRegistry::class)->passes('foundation-theme-runtime', $context))->toBeFalse();
+});
+
 it('loads the foundation runtime for blade-only layout builder interactions', function (): void {
     $context = new FrontendAssetContextData(
         page: null,

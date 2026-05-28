@@ -83,41 +83,48 @@ final class SaasThemePageAdapter implements ThemePageAdapter
             ]);
         }
 
-        $proof = data_get($renderData, 'proof');
+        $features = $this->featuresFrom($renderData);
 
-        if (is_array($proof) && data_get($proof, 'items') !== null) {
-            $sections[] = ProofSectionData::from([
-                'heading' => data_get($proof, 'heading', 'Proof points'),
-                'summary' => data_get($proof, 'summary'),
-                'items' => data_get($proof, 'items', []),
-            ]);
+        if ($features instanceof FeatureSectionData) {
+            $sections[] = $features;
         }
 
-        $features = data_get($renderData, 'features');
+        $spotlight = $this->contentListingFrom(
+            renderData: $renderData,
+            key: 'spotlight',
+            defaultHeading: 'Theme spotlight',
+            variant: 'spotlight',
+        );
 
-        if (is_array($features) && $features !== []) {
-            $sections[] = FeatureSectionData::from([
-                'heading' => data_get($renderData, 'features_heading', 'Featured modules'),
-                'summary' => data_get($renderData, 'features_summary', data_get($renderData, 'summary')),
-                'features' => collect($features)
-                    ->filter(fn (mixed $feature): bool => is_array($feature))
-                    ->map(fn (array $feature): array => [
-                        'title' => (string) data_get($feature, 'title', data_get($feature, 'name', 'Feature')),
-                        'description' => (string) data_get($feature, 'description', data_get($feature, 'summary', '')),
-                    ])
-                    ->values()
-                    ->all(),
-            ]);
+        if ($spotlight instanceof ContentListingSectionData) {
+            $sections[] = $spotlight;
         }
 
-        $items = data_get($renderData, 'items');
+        $gallery = $this->contentListingFrom(
+            renderData: $renderData,
+            key: 'gallery',
+            defaultHeading: 'Gallery',
+            variant: 'gallery',
+        );
 
-        if (is_array($items) && $items !== []) {
-            $sections[] = ContentListingSectionData::from([
-                'heading' => data_get($renderData, 'heading', 'Browse entries'),
-                'summary' => data_get($renderData, 'summary'),
-                'items' => $items,
-            ]);
+        if ($gallery instanceof ContentListingSectionData) {
+            $sections[] = $gallery;
+        }
+
+        $items = $this->contentListingFrom(
+            renderData: $renderData,
+            key: 'items',
+            defaultHeading: 'Browse entries',
+        );
+
+        if ($items instanceof ContentListingSectionData) {
+            $sections[] = $items;
+        }
+
+        $proof = $this->proofFrom($renderData);
+
+        if ($proof instanceof ProofSectionData) {
+            $sections[] = $proof;
         }
 
         $cta = data_get($renderData, 'cta');
@@ -127,6 +134,87 @@ final class SaasThemePageAdapter implements ThemePageAdapter
         }
 
         return $sections !== [] ? $sections : [$this->fallbackHero($title, $translation)];
+    }
+
+    /**
+     * @param  array<string, mixed>  $renderData
+     */
+    private function featuresFrom(array $renderData): ?FeatureSectionData
+    {
+        $features = data_get($renderData, 'features');
+
+        if (! is_array($features) || $features === []) {
+            return null;
+        }
+
+        return FeatureSectionData::from([
+            'heading' => data_get($renderData, 'features_heading', 'Featured modules'),
+            'summary' => data_get($renderData, 'features_summary', data_get($renderData, 'summary')),
+            'features' => collect($features)
+                ->filter(fn (mixed $feature): bool => is_array($feature))
+                ->map(fn (array $feature): array => [
+                    'title' => (string) data_get($feature, 'title', data_get($feature, 'name', 'Feature')),
+                    'description' => (string) data_get($feature, 'description', data_get($feature, 'summary', '')),
+                    'image' => data_get($feature, 'image', data_get($feature, 'imageUrl')),
+                    'type' => data_get($feature, 'type'),
+                ])
+                ->values()
+                ->all(),
+        ]);
+    }
+
+    /**
+     * @param  array<string, mixed>  $renderData
+     */
+    private function contentListingFrom(array $renderData, string $key, string $defaultHeading, ?string $variant = null): ?ContentListingSectionData
+    {
+        $source = data_get($renderData, $key);
+
+        if (! is_array($source)) {
+            return null;
+        }
+
+        $sourceIsList = array_is_list($source);
+        $items = $sourceIsList ? $source : data_get($source, 'items', []);
+
+        if (! is_array($items) || $items === []) {
+            return null;
+        }
+
+        return ContentListingSectionData::from([
+            'heading' => $sourceIsList
+                ? data_get($renderData, $key . '_heading', data_get($renderData, 'heading', $defaultHeading))
+                : data_get($source, 'heading', $defaultHeading),
+            'summary' => $sourceIsList
+                ? data_get($renderData, $key . '_summary', data_get($renderData, 'summary'))
+                : data_get($source, 'summary'),
+            'items' => $items,
+            'variant' => $sourceIsList ? data_get($renderData, $key . '_variant', $variant) : data_get($source, 'variant', $variant),
+        ]);
+    }
+
+    /**
+     * @param  array<string, mixed>  $renderData
+     */
+    private function proofFrom(array $renderData): ?ProofSectionData
+    {
+        $proof = data_get($renderData, 'proof');
+
+        if (! is_array($proof)) {
+            return null;
+        }
+
+        $items = array_is_list($proof) ? $proof : data_get($proof, 'items', []);
+
+        if (! is_array($items) || $items === []) {
+            return null;
+        }
+
+        return ProofSectionData::from([
+            'heading' => array_is_list($proof) ? 'Proof points' : data_get($proof, 'heading', 'Proof points'),
+            'summary' => array_is_list($proof) ? null : data_get($proof, 'summary'),
+            'items' => $items,
+        ]);
     }
 
     /**

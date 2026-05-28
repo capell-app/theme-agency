@@ -9,7 +9,7 @@ $language = Frontend::language();
 $theme = Frontend::theme();
 
 $routeName = config('capell-page.frontend.route_name', 'capell-frontend.beacon');
-$beaconRoute = is_string($routeName) && Route::has($routeName) ? route($routeName) : null;
+$beaconRoute = is_string($routeName) && Route::has($routeName) ? route($routeName, [], false) : null;
 
 $beacon = [
     'url' => $beaconRoute,
@@ -30,40 +30,63 @@ $beacon = [
             const token = document
                 .querySelector('meta[name="csrf-token"]')
                 ?.getAttribute('content')
+            const beaconUrl = new URL(beacon.url, window.location.origin)
 
-            fetch(beacon.url, {
-                method: 'POST',
-                credentials: 'same-origin',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    ...(token ? { 'X-CSRF-TOKEN': token } : {}),
-                },
-                body: JSON.stringify({
-                    ...beacon.payload,
-                    url: window.location.href,
-                }),
-            })
-                .then((response) => (response.ok ? response.json() : null))
-                .then((payload) => {
-                    if (!payload || !Array.isArray(payload.scripts)) {
-                        return
-                    }
-
-                    payload.scripts.forEach((scriptContent) => {
-                        if (
-                            typeof scriptContent !== 'string' ||
-                            scriptContent.trim() === ''
-                        ) {
+            const fetchBeaconData = function () {
+                fetch(beaconUrl, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        ...(token ? { 'X-CSRF-TOKEN': token } : {}),
+                    },
+                    body: JSON.stringify({
+                        ...beacon.payload,
+                        url: window.location.href,
+                    }),
+                })
+                    .then((response) => (response.ok ? response.json() : null))
+                    .then((payload) => {
+                        if (!payload || !Array.isArray(payload.scripts)) {
                             return
                         }
 
-                        const script = document.createElement('script')
-                        script.text = scriptContent
-                        document.body.appendChild(script)
+                        payload.scripts.forEach((scriptContent) => {
+                            if (
+                                typeof scriptContent !== 'string' ||
+                                scriptContent.trim() === ''
+                            ) {
+                                return
+                            }
+
+                            const script = document.createElement('script')
+                            script.text = scriptContent
+                            document.body.appendChild(script)
+                        })
                     })
-                })
-                .catch(() => {})
+                    .catch(() => {})
+            }
+
+            const queueBeaconFetch = function () {
+                if ('requestIdleCallback' in window) {
+                    window.requestIdleCallback(fetchBeaconData, {
+                        timeout: 2000,
+                    })
+
+                    return
+                }
+
+                window.setTimeout(fetchBeaconData, 1)
+            }
+
+            if (document.readyState === 'complete') {
+                queueBeaconFetch()
+
+                return
+            }
+
+            window.addEventListener('load', queueBeaconFetch, { once: true })
         })(window.beaconData)
     </script>
 </div>

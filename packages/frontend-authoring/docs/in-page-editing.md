@@ -11,10 +11,10 @@ Frontend Authoring lets an admin edit page fields from the rendered frontend wit
 1. The public page is rendered by the active frontend theme and can be served from HTML cache.
 2. The frontend beacon client posts the current URL to `capell-frontend.beacon`.
 3. The beacon resolves the URL to `PageUrl`, checks the authenticated user, and stops unless the user is an admin.
-4. For admins only, the beacon returns a small authoring bootstrap script with a selector-based editable region manifest.
+4. For admins with frontend authoring permission for the resolved page, the beacon returns a small authoring bootstrap script with a selector-based editable region manifest.
 5. The browser decorates the page title, page description target, and content target with edit controls.
 6. Selecting a control opens a signed modal iframe.
-7. The iframe renders one Filament field, saves through `UpdateEditableRegionAction`, clears all recorded HTML caches for the edited model, and refreshes the current page.
+7. The iframe revalidates the signed payload against the current page manifest, renders one Filament field, saves through `UpdateEditableRegionAction`, clears all recorded HTML caches for the edited model, and refreshes the current page.
 
 ## Non-admin Safety
 
@@ -31,6 +31,8 @@ Do not add authoring markers to Blade, theme components, public JavaScript, or c
 | Page content     | `Translation.content`          | HTML textarea | `#main .content-component:first-of-type` |
 
 Package-owned regions should be registered through the `capell-frontend-authoring:editable-regions` tag. Use stable selectors that already exist for presentation; do not add hidden authoring-only markers to cached markup.
+
+Every region payload must include the current `PageUrl` ID, site ID, language ID, and a stable `regionKey`. The editor rejects signed links when the region is no longer present in the current manifest or the user no longer has permission to edit that region.
 
 ## HTML Cache Invalidation
 

@@ -15,7 +15,11 @@
                 </p>
             @endif
 
-            <h1>{{ $section->heading }}</h1>
+            <h1
+                class="max-w-2xl text-4xl leading-none font-black tracking-tight text-[#14323a] lg:text-5xl"
+            >
+                {{ $section->heading }}
+            </h1>
 
             @if ($section->summary ?? null)
                 <p class="mt-7 max-w-2xl text-xl">

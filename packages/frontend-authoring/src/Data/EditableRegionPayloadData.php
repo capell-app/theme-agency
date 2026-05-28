@@ -14,6 +14,10 @@ final class EditableRegionPayloadData
         public string $type,
         public string $selector,
         public string $currentUrl,
+        public int $pageUrlId,
+        public int $siteId,
+        public int $languageId,
+        public string $regionKey,
     ) {}
 
     /**
@@ -29,6 +33,10 @@ final class EditableRegionPayloadData
             type: (string) $payload['type'],
             selector: (string) $payload['selector'],
             currentUrl: (string) $payload['currentUrl'],
+            pageUrlId: (int) $payload['pageUrlId'],
+            siteId: (int) $payload['siteId'],
+            languageId: (int) $payload['languageId'],
+            regionKey: (string) $payload['regionKey'],
         );
     }
 
@@ -45,6 +53,10 @@ final class EditableRegionPayloadData
             'type' => $this->type,
             'selector' => $this->selector,
             'currentUrl' => $this->currentUrl,
+            'pageUrlId' => $this->pageUrlId,
+            'siteId' => $this->siteId,
+            'languageId' => $this->languageId,
+            'regionKey' => $this->regionKey,
         ];
     }
 }

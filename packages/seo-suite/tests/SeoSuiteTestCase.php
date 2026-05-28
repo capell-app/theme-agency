@@ -68,11 +68,11 @@ class SeoSuiteTestCase extends AbstractTestCase
         CapellCore::forcePackageInstalled(AdminServiceProvider::$packageName);
         CapellCore::registerPackage(
             FrontendServiceProvider::$packageName,
-            path: realpath(__DIR__ . '/../../frontend'),
+            path: realpath(__DIR__ . '/../../frontend') ?: null,
         );
         CapellCore::registerPackage(
             InsightsServiceProvider::$packageName,
-            path: realpath(__DIR__ . '/../../insights'),
+            path: realpath(__DIR__ . '/../../insights') ?: null,
         );
         CapellCore::forcePackageInstalled(InsightsServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(FrontendServiceProvider::$packageName);
@@ -89,7 +89,7 @@ class SeoSuiteTestCase extends AbstractTestCase
         // discover and include navigation's migrations in the ordered workspace.
         CapellCore::registerPackage(
             NavigationServiceProvider::$packageName,
-            path: realpath(__DIR__ . '/../../navigation'),
+            path: realpath(__DIR__ . '/../../navigation') ?: null,
         );
         CapellCore::forcePackageInstalled(NavigationServiceProvider::$packageName);
     }

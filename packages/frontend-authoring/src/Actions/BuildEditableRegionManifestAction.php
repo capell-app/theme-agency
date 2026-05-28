@@ -8,6 +8,7 @@ use Capell\Core\Models\PageUrl;
 use Capell\FrontendAuthoring\Data\EditableRegionData;
 use Capell\FrontendAuthoring\Support\EditableRegionRegistry;
 use Capell\FrontendAuthoring\Support\EditableRegionSigner;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 class BuildEditableRegionManifestAction
@@ -17,13 +18,17 @@ class BuildEditableRegionManifestAction
     /**
      * @return array<string, array<string, string>>
      */
-    public function handle(PageUrl $pageUrl): array
+    public function handle(PageUrl $pageUrl, ?AuthenticatableContract $user = null): array
     {
         $registry = resolve(EditableRegionRegistry::class);
         $signer = resolve(EditableRegionSigner::class);
         $manifest = [];
 
         foreach ($registry->regionsFor($pageUrl) as $payload) {
+            if ($user instanceof AuthenticatableContract && ! AuthorizeEditableRegionAction::run($user, $payload, $pageUrl)) {
+                continue;
+            }
+
             $region = new EditableRegionData(
                 id: $signer->idFor($payload),
                 label: $payload->label,

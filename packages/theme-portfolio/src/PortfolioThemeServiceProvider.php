@@ -33,7 +33,7 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/portfolio.jpg',
             tags: ['Portfolio', 'Case studies', 'Personal brand'],
             bestFit: ['Creators', 'Consultants', 'Independent studios'],
-            includedSections: ['navigation', 'hero', 'work-grid', 'case-studies', 'services', 'testimonials', 'speaking-media-kit', 'newsletter', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'work-grid', 'case-studies', 'services', 'testimonials', 'speaking-media-kit', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'portfolio',
@@ -94,24 +94,53 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
                 layoutView: 'capell-theme-portfolio::page',
                 sectionRenderers: [],
             ),
-            sectionRenderers: array_map(
-                fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer => array_key_exists($sectionKey, $this->optionalSectionIntegrations($contentSectionsAvailable, $mediaLibraryAvailable, $newsletterAvailable))
-                    ? new PackageAwareSectionRenderer(
-                        themeKey: self::THEME_KEY,
-                        sectionKey: $sectionKey,
-                        view: 'capell-theme-portfolio::sections.' . $sectionKey,
-                        integrations: $this->optionalSectionIntegrations($contentSectionsAvailable, $mediaLibraryAvailable, $newsletterAvailable)[$sectionKey],
-                        failLoudly: true,
-                    )
-                    : new ViewSectionRenderer(
-                        themeKey: self::THEME_KEY,
-                        sectionKey: $sectionKey,
-                        view: 'capell-theme-portfolio::sections.' . $sectionKey,
-                        failLoudly: true,
-                    ),
-                self::definition()->includedSections,
-            ),
+            sectionRenderers: collect(self::definition()->includedSections)
+                ->map(fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer|null => $this->sectionRenderer(
+                    $sectionKey,
+                    $this->optionalSectionIntegrations($contentSectionsAvailable, $mediaLibraryAvailable, $newsletterAvailable),
+                ))
+                ->filter()
+                ->values()
+                ->all(),
         );
+    }
+
+    /**
+     * @param  array<string, array<string, bool>>  $optionalIntegrations
+     */
+    private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ViewSectionRenderer|PackageAwareSectionRenderer|null
+    {
+        if ($this->isFoundationSection($sectionKey)) {
+            return null;
+        }
+
+        $view = 'capell-theme-portfolio::sections.' . $sectionKey;
+
+        if (! view()->exists($view)) {
+            return null;
+        }
+
+        if (array_key_exists($sectionKey, $optionalIntegrations)) {
+            return new PackageAwareSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: $sectionKey,
+                view: $view,
+                integrations: $optionalIntegrations[$sectionKey],
+                failLoudly: true,
+            );
+        }
+
+        return new ViewSectionRenderer(
+            themeKey: self::THEME_KEY,
+            sectionKey: $sectionKey,
+            view: $view,
+            failLoudly: true,
+        );
+    }
+
+    private function isFoundationSection(string $sectionKey): bool
+    {
+        return in_array($sectionKey, ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'], true);
     }
 
     /**

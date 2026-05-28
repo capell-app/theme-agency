@@ -8,6 +8,7 @@ use Capell\FoundationTheme\Support\View\FoundationThemeViewName;
 use Capell\Frontend\Facades\Frontend;
 use Capell\LayoutBuilder\Models\Widget;
 use Closure;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use stdClass;
@@ -63,7 +64,7 @@ abstract class AbstractBlock extends Component
 
         $data['component_item'] = $this->getComponentItem();
 
-        return view(FoundationThemeViewName::canonical($this->getViewFile()), $data);
+        return resolve(Factory::class)->make(FoundationThemeViewName::canonical($this->getViewFile()), $data);
     }
 
     protected function getComponentItem(): ?string
