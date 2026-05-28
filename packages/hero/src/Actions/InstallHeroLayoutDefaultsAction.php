@@ -62,7 +62,6 @@ final class InstallHeroLayoutDefaultsAction
                 ],
                 ...$this->mainContainer($homeLayout->containers),
             ],
-            'widgets' => [$heroBlock->key, 'page-content'],
         ]);
 
         return [

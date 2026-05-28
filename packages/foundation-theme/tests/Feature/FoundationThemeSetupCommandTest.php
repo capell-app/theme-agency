@@ -8,7 +8,7 @@ use Capell\Core\Support\Creator\LayoutCreator;
 
 it('installs Foundation theme layout defaults without owning the home hero', function (): void {
     $homeLayout = resolve(LayoutCreator::class)->createHomeLayout();
-    $homeLayout->update(['containers' => [], 'widgets' => []]);
+    $homeLayout->update(['containers' => []]);
     $homeLayout->refresh();
 
     expect($homeLayout->containers)->not->toHaveKey('hero')
@@ -40,7 +40,6 @@ it('keeps home page content defaults stable on repeated setup', function (): voi
                     ],
                 ],
             ],
-            'widgets' => ['hero'],
         ]);
 
     test()->artisan('capell:foundation-theme-setup')->assertSuccessful();

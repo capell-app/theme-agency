@@ -52,7 +52,6 @@ final class InstallFoundationThemeLayoutDefaultsAction
 
             $layout->update([
                 'containers' => $containers,
-                'widgets' => $this->widgetKeys($containers),
             ]);
 
             ApplyLayoutSidebarBlockContributionsAction::run($layout);
@@ -124,19 +123,5 @@ final class InstallFoundationThemeLayoutDefaultsAction
             ],
             'widgets' => $blocks,
         ];
-    }
-
-    /**
-     * @param  array<string, array<string, mixed>>  $containers
-     * @return array<int, string>
-     */
-    private function widgetKeys(array $containers): array
-    {
-        return collect($containers)
-            ->flatMap(fn (array $container): array => $container['widgets'] ?? [])
-            ->unique('widget_key')
-            ->pluck('widget_key')
-            ->values()
-            ->all();
     }
 }

@@ -8,6 +8,7 @@ use Capell\AgentBridge\Data\AgentBridgePromptData;
 use Capell\AgentBridge\Models\CapellAgentBridgeSavedPrompt;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class SaveAgentBridgePromptAction
@@ -15,7 +16,7 @@ final class SaveAgentBridgePromptAction
     use AsAction;
 
     public function handle(
-        Authenticatable $user,
+        Authenticatable&Model $user,
         string $name,
         ?string $description,
         AgentBridgePromptData $data,

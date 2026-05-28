@@ -15,7 +15,7 @@ it('installs compact natural home hero defaults', function (): void {
         ->where('key', LayoutEnum::Home->value)
         ->firstOrFail();
 
-    $homeLayout->update(['containers' => [], 'widgets' => []]);
+    $homeLayout->update(['containers' => []]);
 
     Page::factory()
         ->layout($homeLayout)
@@ -59,7 +59,7 @@ it('does not duplicate hero defaults on repeated setup', function (): void {
     Layout::query()
         ->where('key', LayoutEnum::Home->value)
         ->firstOrFail()
-        ->update(['containers' => [], 'widgets' => []]);
+        ->update(['containers' => []]);
 
     Widget::query()->where('key', 'hero')->delete();
 
