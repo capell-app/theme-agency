@@ -333,10 +333,11 @@ class AiDiscoveryTable implements TableConfigurator
     private static function profileFormState(Page $record): array
     {
         $profile = self::profileFor($record);
+        $siteProfile = self::siteProfileFor($record);
 
         return [
             'include_in_ai_index' => self::includeInAiIndexFor($record),
-            'section' => $profile->section ?? self::siteProfileFor($record)?->default_section ?? 'Pages',
+            'section' => $profile->section ?? ($siteProfile instanceof AiDiscoverySiteProfile ? $siteProfile->default_section : 'Pages'),
             'priority' => $profile->priority ?? 500,
             'summary' => $profile?->summary,
             'markdown_override' => $profile?->markdown_override,
@@ -391,7 +392,9 @@ class AiDiscoveryTable implements TableConfigurator
             return $profile->include_in_ai_index;
         }
 
-        return self::siteProfileFor($record)?->default_include_pages ?? true;
+        $siteProfile = self::siteProfileFor($record);
+
+        return $siteProfile instanceof AiDiscoverySiteProfile ? $siteProfile->default_include_pages : true;
     }
 
     private static function readinessIssueCountFor(Page $record): int

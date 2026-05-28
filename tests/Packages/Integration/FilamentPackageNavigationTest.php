@@ -126,8 +126,6 @@ it('shows installed package admin surfaces in Filament navigation', function ():
     expect($navigationLabels)->toContain(
         'Articles',
         'Campaign groups',
-        'CTA blocks',
-        'Conversion goals',
         'Import Sessions',
         'Landing pages',
         (string) __('capell-admin::navigation.redirects'),

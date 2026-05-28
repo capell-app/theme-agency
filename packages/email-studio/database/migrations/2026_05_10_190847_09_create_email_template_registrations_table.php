@@ -12,7 +12,7 @@ return new class extends Migration
     {
         Schema::create('email_template_registrations', function (Blueprint $table): void {
             $table->id();
-            $table->foreignId('site_id')->nullable()->index();
+            $table->foreignId('site_id')->nullable()->constrained('sites')->nullOnDelete();
             $table->string('site_scope_key')->default('global')->index();
             $table->string('template_key')->index();
             $table->string('package_name')->index();

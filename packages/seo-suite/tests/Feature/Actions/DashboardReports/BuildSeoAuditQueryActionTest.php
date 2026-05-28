@@ -88,10 +88,6 @@ it('uses the site language for snapshot backed audit columns', function (): void
         ])
         ->create();
 
-    $auditedPage = BuildSeoAuditQueryAction::run()
-        ->whereKey($page->getKey())
-        ->firstOrFail();
-
     PageSeoSnapshot::query()->create([
         'page_id' => $page->getKey(),
         'site_id' => $site->getKey(),
@@ -123,6 +119,10 @@ it('uses the site language for snapshot backed audit columns', function (): void
         'search_console_status' => 'unknown',
         'computed_at' => now(),
     ]);
+
+    $auditedPage = BuildSeoAuditQueryAction::run()
+        ->whereKey($page->getKey())
+        ->firstOrFail();
 
     $reflectionMethod = new ReflectionMethod(SeoAuditTable::class, 'snapshotFor');
 

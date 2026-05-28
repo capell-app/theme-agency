@@ -11,7 +11,7 @@ it('installs campaign layouts with layout-builder compatible block references', 
 
     $layout = Layout::query()->where('key', 'campaign-lead-generation')->firstOrFail();
     $containers = $layout->getAttribute('containers');
-    $widgets = $layout->getAttribute('widgets');
+    $widgets = $layout->widgets;
 
     expect($result)->toBe(['created' => 3, 'updated' => 0, 'skipped' => 0])
         ->and($containers)->toHaveKeys(['hero', 'proof', 'form'])

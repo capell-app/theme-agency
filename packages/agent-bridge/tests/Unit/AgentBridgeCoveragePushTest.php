@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\AgentBridge\Actions\BuildAgentBridgePromptAction;
+use Capell\AgentBridge\Data\AgentBridgePromptData;
 use Capell\AgentBridge\Filament\Pages\CapellAgentBridgePromptBuilderPage;
 use Capell\AgentBridge\Models\CapellAgentBridgeAuditEntry;
 use Capell\AgentBridge\Models\CapellAgentBridgeConfirmation;
@@ -9,9 +11,7 @@ use Carbon\CarbonImmutable;
 use Filament\Schemas\Schema;
 
 it('builds prompt builder text from complete and fallback state', function (): void {
-    $page = new CapellAgentBridgePromptBuilderPage;
-
-    $prompt = invokeAgentBridgePromptBuilderMethod($page, 'promptFromState', [[
+    $prompt = BuildAgentBridgePromptAction::run(AgentBridgePromptData::fromArray([
         'goal' => 'refresh stale landing page cache',
         'area' => 'cache',
         'operation' => 'clear',
@@ -19,10 +19,10 @@ it('builds prompt builder text from complete and fallback state', function (): v
         'target' => 'Site ID 12',
         'constraints' => 'Only clear public frontend cache.',
         'success_criteria' => 'Cache clear capability preview is listed.',
-    ]]);
-    $fallbackPrompt = invokeAgentBridgePromptBuilderMethod($page, 'promptFromState', [[
+    ]));
+    $fallbackPrompt = BuildAgentBridgePromptAction::run(AgentBridgePromptData::fromArray([
         'goal' => 'inspect page readiness',
-    ]]);
+    ]));
 
     expect($prompt)
         ->toContain('refresh stale landing page cache')
@@ -40,7 +40,7 @@ it('declares prompt builder navigation metadata and option sets', function (): v
     expect(CapellAgentBridgePromptBuilderPage::shouldRegisterNavigation())->toBeFalse()
         ->and(CapellAgentBridgePromptBuilderPage::getNavigationLabel())->toBe('Capell Agent Bridge')
         ->and($page->getTitle())->toBe('Capell Agent Bridge Prompt Builder')
-        ->and(invokeAgentBridgePromptBuilderMethod($page, 'areaOptions', []))->toHaveKeys([
+        ->and(CapellAgentBridgePromptBuilderPage::areaOptions())->toHaveKeys([
             'pages',
             'cache',
             'seo',
@@ -49,7 +49,7 @@ it('declares prompt builder navigation metadata and option sets', function (): v
             'packages',
             'other',
         ])
-        ->and(invokeAgentBridgePromptBuilderMethod($page, 'operationOptions', []))->toHaveKeys([
+        ->and(CapellAgentBridgePromptBuilderPage::operationOptions())->toHaveKeys([
             'inspect',
             'create',
             'update',
@@ -58,7 +58,7 @@ it('declares prompt builder navigation metadata and option sets', function (): v
             'regenerate',
             'recommend',
         ])
-        ->and(invokeAgentBridgePromptBuilderMethod($page, 'safetyOptions', []))->toHaveKeys([
+        ->and(CapellAgentBridgePromptBuilderPage::safetyOptions())->toHaveKeys([
             'preview_first',
             'read_only',
             'prepare_confirmation',

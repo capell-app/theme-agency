@@ -23,6 +23,7 @@ use Capell\PublishingStudio\Support\Dashboard\WorkspaceMyWorkQueueDataProvider;
 use Capell\PublishingStudio\Support\Dashboard\WorkspaceRecentlyPublishedDataProvider;
 use Capell\PublishingStudio\Support\Dashboard\WorkspaceSiteStatsDataProvider;
 use Capell\PublishingStudio\Support\PublishingStudioMigrationAssistantContextResolver;
+use Capell\PublishingStudio\Support\WorkspaceSchema;
 use Capell\PublishingStudio\WorkspaceRegistry;
 use Illuminate\Support\Facades\Schema;
 
@@ -43,6 +44,9 @@ it('uses the publishing-studio context resolver for migration assistant exports'
 });
 
 it('falls back to core dashboard providers when the workspace schema is missing', function (): void {
+    (new ReflectionProperty(WorkspaceSchema::class, 'tableExists'))->setValue(null, []);
+    (new ReflectionProperty(WorkspaceSchema::class, 'columnExists'))->setValue(null, []);
+
     Schema::shouldReceive('hasTable')->with('workspaces')->andReturnFalse();
     Schema::shouldReceive('hasTable')->with('publishing_scheduler_events')->andReturnFalse();
 

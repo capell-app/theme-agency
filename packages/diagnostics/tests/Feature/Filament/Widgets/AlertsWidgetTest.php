@@ -52,8 +52,8 @@ it('shows type, theme, and language warnings when a site exists but none are con
         ->assertSee(__('capell-admin::message.language_no_default_warning'));
 
     $alerts = $livewire->get('alerts');
-    expect($alerts)->toHaveKeys(['types', 'theme', 'language'])
-        ->and($alerts['types']->type->value)->toBe(AlertTypeEnum::Warning->value)
+    expect($alerts)->toHaveKeys(['blueprints', 'theme', 'language'])
+        ->and($alerts['blueprints']->type->value)->toBe(AlertTypeEnum::Warning->value)
         ->and($alerts['theme']->type->value)->toBe(AlertTypeEnum::Warning->value)
         ->and($alerts['language']->type->value)->toBe(AlertTypeEnum::Warning->value);
 });
@@ -73,7 +73,7 @@ it('shows only language warning when default theme & site exist but no default l
 
     $alerts = $livewire->get('alerts');
     expect($alerts)->toHaveKey('language')
-        ->and($alerts)->not()->toHaveKeys(['types', 'theme'])
+        ->and($alerts)->not()->toHaveKeys(['blueprints', 'theme'])
         ->and($alerts['language']->type->value)->toBe(AlertTypeEnum::Warning->value);
 });
 
@@ -92,7 +92,7 @@ it('shows only theme warning when default language & site exist but no default t
 
     $alerts = $livewire->get('alerts');
     expect($alerts)->toHaveKey('theme')
-        ->and($alerts)->not()->toHaveKeys(['types', 'language'])
+        ->and($alerts)->not()->toHaveKeys(['blueprints', 'language'])
         ->and($alerts['theme']->type->value)->toBe(AlertTypeEnum::Warning->value);
 });
 

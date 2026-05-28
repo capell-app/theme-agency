@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Capell\AccessGate\Enums\AccessAreaStatus;
 use Capell\AccessGate\Models\Area;
 use Capell\AccessGate\Tests\Support\FakePageCacheMiddleware;
+use Capell\Core\Facades\CapellCore;
+use Capell\Core\Support\Manifest\CapellManifestData;
 use Illuminate\Routing\Router;
 
 afterEach(function (): void {
@@ -45,6 +47,15 @@ it('sets up the configured default access area', function (): void {
 it('installs publishables, runs migrations, and creates the paused default access area', function (): void {
     config()->set('access-gate.install.default_area.key', 'capell-preview');
     config()->set('access-gate.install.default_area.name', 'Capell Preview');
+
+    $manifestPath = dirname(__DIR__, 2) . '/capell.json';
+    $manifestData = json_decode((string) file_get_contents($manifestPath), true, flags: JSON_THROW_ON_ERROR);
+    throw_unless(is_array($manifestData), RuntimeException::class, 'Access Gate manifest must decode to an array.');
+
+    CapellCore::registerManifestPackage(CapellManifestData::fromArray(
+        $manifestData,
+        dirname($manifestPath),
+    ));
 
     $this->artisan('capell:access-gate-install')
         ->assertSuccessful();

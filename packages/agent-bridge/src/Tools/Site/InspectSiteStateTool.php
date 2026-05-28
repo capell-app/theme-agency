@@ -67,7 +67,7 @@ final class InspectSiteStateTool extends Tool
             'languages' => $this->countOptionalModel(Language::class),
             'pages' => $this->countOptionalModel(Page::class),
             'pageUrls' => $this->countOptionalModel(PageUrl::class),
-            'types' => $this->countOptionalModel(Blueprint::class),
+            'blueprints' => $this->countOptionalModel(Blueprint::class),
             'redirects' => $this->countRedirects(),
             'navigations' => $this->countOptionalModel(Navigation::class),
         ];

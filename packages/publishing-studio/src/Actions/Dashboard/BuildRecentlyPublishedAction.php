@@ -32,8 +32,8 @@ final class BuildRecentlyPublishedAction
             ->where($workspaceTable . '.status', WorkspaceStatusEnum::Published->value)
             ->whereNotNull($workspaceTable . '.published_at')
             ->where($workspaceTable . '.published_at', '<=', now())
-            ->orderByDesc($workspaceTable . '.published_at')
-            ->orderByDesc($pageTable . '.updated_at')
+            ->latest($workspaceTable . '.published_at')
+            ->latest($pageTable . '.updated_at')
             ->limit($limit);
 
         if ($site instanceof Site) {

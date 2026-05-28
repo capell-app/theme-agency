@@ -4,14 +4,20 @@ declare(strict_types=1);
 
 namespace Capell\AgentBridge\Tests;
 
+use BladeUI\Icons\BladeIconsServiceProvider;
 use Capell\AgentBridge\Providers\AgentBridgeServiceProvider;
 use Capell\AgentBridge\Tests\Fixtures\InstalledAgentBridgePackageServiceProvider;
 use Capell\AgentBridge\Tests\Fixtures\User;
+use Filament\Actions\ActionsServiceProvider;
+use Filament\FilamentServiceProvider;
+use Filament\Notifications\NotificationsServiceProvider;
+use Filament\Support\SupportServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Mcp\Server\McpServiceProvider as LaravelMcpServiceProvider;
+use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Spatie\LaravelSettings\LaravelSettingsServiceProvider;
 
@@ -34,6 +40,12 @@ abstract class TestCase extends OrchestraTestCase
     protected function getPackageProviders($app): array
     {
         $providers = [
+            BladeIconsServiceProvider::class,
+            SupportServiceProvider::class,
+            ActionsServiceProvider::class,
+            NotificationsServiceProvider::class,
+            FilamentServiceProvider::class,
+            LivewireServiceProvider::class,
             LaravelSettingsServiceProvider::class,
             InstalledAgentBridgePackageServiceProvider::class,
             AgentBridgeServiceProvider::class,

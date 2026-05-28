@@ -60,13 +60,13 @@ it('moves modern block interactions out of blade and into the frontend runtime',
 
 it('publishes the foundation frontend runtime build during setup', function (): void {
     $provider = file_get_contents(dirname(__DIR__, 2) . '/src/Providers/FoundationThemeServiceProvider.php');
-    $command = file_get_contents(dirname(__DIR__, 2) . '/src/Console/Commands/SetupCommand.php');
+    $action = file_get_contents(dirname(__DIR__, 2) . '/src/Actions/SetupFoundationThemePackageAction.php');
 
     expect($provider)->toContain('capell-foundation-theme-assets')
         ->and(file_exists(dirname(__DIR__, 2) . '/publishes/build/manifest.json'))->toBeTrue()
         ->and(file_exists(dirname(__DIR__, 2) . '/publishes/build/assets/capell-frontend-Bpa81WpI.js'))->toBeTrue()
-        ->and($command)->toContain('vendor:publish')
-        ->and($command)->toContain('capell-foundation-theme-assets');
+        ->and($action)->toContain('vendor:publish')
+        ->and($action)->toContain('capell-foundation-theme-assets');
 });
 
 it('owns the default body content and layout component files', function (): void {

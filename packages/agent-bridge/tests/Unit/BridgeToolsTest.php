@@ -103,7 +103,7 @@ it('returns site state without leaking content bodies', function (): void {
     expect($structuredContent['app'])
         ->toHaveKeys(['name', 'environment', 'debug'])
         ->and($structuredContent['counts'])
-        ->toHaveKeys(['sites', 'languages', 'pages', 'pageUrls', 'types', 'redirects', 'navigations']);
+        ->toHaveKeys(['sites', 'languages', 'pages', 'pageUrls', 'blueprints', 'redirects', 'navigations']);
 });
 
 it('lists site capabilities allowed by the authenticated client scopes', function (): void {

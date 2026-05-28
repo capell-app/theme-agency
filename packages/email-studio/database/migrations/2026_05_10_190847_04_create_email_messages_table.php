@@ -12,7 +12,7 @@ return new class extends Migration
     {
         Schema::create('email_messages', function (Blueprint $table): void {
             $table->id();
-            $table->foreignId('site_id')->nullable()->index();
+            $table->foreignId('site_id')->nullable()->constrained('sites')->nullOnDelete();
             $table->string('site_scope_key')->default('global')->index();
             $table->foreignId('email_profile_id')->constrained('email_profiles')->restrictOnDelete();
             $table->foreignId('email_template_id')->nullable()->constrained('email_templates')->nullOnDelete();

@@ -135,7 +135,7 @@ final class AlertsWidgetAbstract extends ResourceAlertsWidget
         $typeExpected = count(BlueprintSubjectEnum::cases());
 
         if ($typeCount < $typeExpected) {
-            $alerts->put('types', new MessageData(
+            $alerts->put('blueprints', new MessageData(
                 title: __('capell-admin::message.type_missing_heading'),
                 message: __('capell-admin::message.type_missing_warning'),
                 type: AlertTypeEnum::Warning,

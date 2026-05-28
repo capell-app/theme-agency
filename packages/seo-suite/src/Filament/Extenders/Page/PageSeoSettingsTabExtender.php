@@ -67,13 +67,13 @@ class PageSeoSettingsTabExtender implements PageSchemaExtender
             ->icon(Heroicon::OutlinedArrowTrendingUp)
             ->columns()
             ->schema([
-                $this->getSeoSettingsSection($configurator),
+                $this->getSeoSettingsSection(),
             ]);
 
         return $tabs;
     }
 
-    private function getSeoSettingsSection(Schema $schema): Section
+    private function getSeoSettingsSection(): Section
     {
         return Section::make(__('capell-seo-suite::generic.seo_settings'))
             ->collapsible()

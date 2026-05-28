@@ -23,6 +23,7 @@ use Capell\PublishingStudio\Models\WorkspaceApproval;
 use Carbon\CarbonImmutable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
+use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
@@ -199,8 +200,10 @@ it('renders page approval status for review and rejected workspaces', function (
         ->and($titleFor->invoke($widget, WorkspaceStatusEnum::Open, null))->toBe('')
         ->and($approvalsFor->invoke($widget, null))->toHaveCount(0);
 
-    $widget->record = $openPage;
-    $openView = $widget->render();
+    $openWidget = new PageApprovalStatus;
+    $openWidget->record = $openPage;
+
+    $openView = $openWidget->render();
 
     expect($openView->getData()['visible'])->toBeTrue()
         ->and($openView->getData()['approvals']->first()->action)->toBe(WorkspaceApprovalActionEnum::Rejected);
@@ -289,7 +292,7 @@ it('guards page alerts records and covers missing url deleted and expired branch
 
     $widgetWithoutRecord = pageAlertsWidgetForCoverage(null);
 
-    expect(fn (): null => $widgetWithoutRecord->mount())->toThrow(RuntimeException::class);
+    expect(fn (): Collection => $widgetWithoutRecord->alerts())->toThrow(RuntimeException::class);
 
     $expiredPage = Page::factory()->create([
         'visible_until' => CarbonImmutable::parse('2026-05-19 09:00:00', 'UTC'),

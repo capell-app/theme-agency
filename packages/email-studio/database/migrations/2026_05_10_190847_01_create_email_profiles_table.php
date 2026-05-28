@@ -12,7 +12,7 @@ return new class extends Migration
     {
         Schema::create('email_profiles', function (Blueprint $table): void {
             $table->id();
-            $table->foreignId('site_id')->nullable()->index();
+            $table->foreignId('site_id')->nullable()->constrained('sites')->nullOnDelete();
             $table->string('site_scope_key')->default('global')->index();
             $table->string('name');
             $table->string('provider')->index();

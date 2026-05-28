@@ -51,9 +51,9 @@ it('keeps the approved top-level navigation groups in order on the booted admin 
     $approvedGroups = [
         __('capell-admin::navigation.group_dashboard'),
         __('capell-admin::navigation.group_content'),
+        __('capell-admin::navigation.group_workflow'),
         __('capell-admin::navigation.group_websites'),
         __('capell-admin::navigation.group_marketing'),
-        __('capell-admin::navigation.group_workflow'),
         __('capell-admin::navigation.group_monitoring'),
         __('capell-admin::navigation.group_system'),
     ];

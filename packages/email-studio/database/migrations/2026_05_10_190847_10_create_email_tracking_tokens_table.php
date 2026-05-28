@@ -12,7 +12,7 @@ return new class extends Migration
     {
         Schema::create('email_tracking_tokens', function (Blueprint $table): void {
             $table->id();
-            $table->foreignId('site_id')->nullable()->index();
+            $table->foreignId('site_id')->nullable()->constrained('sites')->nullOnDelete();
             $table->string('site_scope_key')->default('global')->index();
             $table->foreignId('email_recipient_id')->constrained('email_recipients')->cascadeOnDelete();
             $table->string('token_hash', 64)->unique();

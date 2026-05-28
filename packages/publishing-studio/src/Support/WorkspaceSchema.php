@@ -39,9 +39,19 @@ final class WorkspaceSchema
     public static function hasTable(string $table): bool
     {
         try {
-            return self::$tableExists[$table] ??= Schema::hasTable($table);
+            if (self::$tableExists[$table] ?? false) {
+                return true;
+            }
+
+            $exists = Schema::hasTable($table);
+
+            if ($exists) {
+                self::$tableExists[$table] = true;
+            }
+
+            return $exists;
         } catch (Throwable) {
-            return self::$tableExists[$table] = false;
+            return false;
         }
     }
 
@@ -50,9 +60,19 @@ final class WorkspaceSchema
         $cacheKey = $table . ':' . $column;
 
         try {
-            return self::$columnExists[$cacheKey] ??= Schema::hasColumn($table, $column);
+            if (self::$columnExists[$cacheKey] ?? false) {
+                return true;
+            }
+
+            $exists = Schema::hasColumn($table, $column);
+
+            if ($exists) {
+                self::$columnExists[$cacheKey] = true;
+            }
+
+            return $exists;
         } catch (Throwable) {
-            return self::$columnExists[$cacheKey] = false;
+            return false;
         }
     }
 }

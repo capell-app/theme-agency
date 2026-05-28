@@ -72,10 +72,6 @@ final class InstallCampaignLayoutsAction
                     'group' => 'CampaignStudio',
                     'containers' => $this->containersForPreset($preset, $blocks),
                     'status' => true,
-                    'widgets' => collect($blocks)
-                        ->map(fn (Widget $block): string => $block->key)
-                        ->values()
-                        ->all(),
                 ],
             );
 

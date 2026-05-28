@@ -108,8 +108,7 @@
                     @foreach ($pages as $item)
                         @if ($isArticleListBlock)
                             @php
-                                $itemImage = $withImage && method_exists($item, 'relationLoaded') && $item->relationLoaded('image') ? $item->image : null;
-                                $itemImage ??= $withImage ? PublicModelMeta::get($item, 'image_source') : null;
+                                $itemImage = $withImage ? PublicModelMeta::get($item, 'image_source') : null;
                                 $itemDate = $withDate ? $item->getPublishDate() : null;
                             @endphp
 

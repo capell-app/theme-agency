@@ -8,6 +8,7 @@ $theme = Frontend::theme();
 @props([
     'align' => $block->getMeta('align'),
     'headingSize' => $block->getMeta('heading_size', 'h2'),
+    'colorScheme' => $block->getMeta('color_scheme'),
     'size' => $block->getMeta('size'),
     'style' => $block->getMeta('style', 'row'),
     'reverseOrder' => $block->getMeta('reverse_order'),
@@ -47,6 +48,7 @@ $theme = Frontend::theme();
                 :compact="true"
                 :content="$content"
                 :content-type="$block->type->content_structure"
+                :color="$colorScheme"
                 :divider="$block->getMeta('content_divider')"
                 :heading-size="$headingSize"
                 :muted="in_array($containerKey, $theme->secondary_containers)"

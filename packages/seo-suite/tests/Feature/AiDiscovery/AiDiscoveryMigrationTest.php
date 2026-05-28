@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
-use Capell\SeoSuite\Console\Commands\InstallCommand;
+use Capell\SeoSuite\Actions\InstallSeoSuitePackageAction;
 use Capell\SeoSuite\Settings\SeoSuiteSettings;
 use Composer\Autoload\ClassLoader;
 use Illuminate\Support\Facades\DB;
@@ -227,21 +227,31 @@ it('adds ai discovery seo suite settings defaults', function (): void {
 });
 
 it('publishes the complete seo suite schema and settings migrations during install', function (): void {
-    $command = new ReflectionClass(InstallCommand::class);
-    $source = file_get_contents((string) $command->getFileName());
+    $action = new ReflectionClass(InstallSeoSuitePackageAction::class);
+    $source = file_get_contents((string) $action->getFileName());
 
-    expect($source)->toContain('create_ai_creator_contexts_table')
-        ->and($source)->toContain('create_ai_generation_histories_table')
-        ->and($source)->toContain('create_ai_creator_sessions_table')
-        ->and($source)->toContain('create_ai_discovery_site_profiles_table')
-        ->and($source)->toContain('create_ai_discovery_page_profiles_table')
-        ->and($source)->toContain('create_ai_discovery_crawler_rules_table')
-        ->and($source)->toContain('create_ai_discovery_snapshots_table')
-        ->and($source)->toContain('create_broken_links_table')
-        ->and($source)->toContain('create_page_seo_snapshots_table')
-        ->and($source)->toContain('create_search_console_url_metrics_table')
-        ->and($source)->toContain('2026_05_10_190871_01_create_ai-orchestrator_settings')
-        ->and($source)->toContain('2026_05_10_190871_03_create_seo_suite_settings');
+    $migrationFiles = collect(glob(dirname(__DIR__, 3) . '/database/migrations/*.php') ?: [])
+        ->map(fn (string $path): string => basename($path))
+        ->implode("\n");
+
+    $settingsFiles = collect(glob(dirname(__DIR__, 3) . '/database/settings/*.php') ?: [])
+        ->map(fn (string $path): string => basename($path))
+        ->implode("\n");
+
+    expect($source)->toContain('PublishPackageMigrationsAction')
+        ->and($source)->toContain('RunMigrationsAction')
+        ->and($migrationFiles)->toContain('create_ai_creator_contexts_table')
+        ->and($migrationFiles)->toContain('create_ai_generation_histories_table')
+        ->and($migrationFiles)->toContain('create_ai_creator_sessions_table')
+        ->and($migrationFiles)->toContain('create_ai_discovery_site_profiles_table')
+        ->and($migrationFiles)->toContain('create_ai_discovery_page_profiles_table')
+        ->and($migrationFiles)->toContain('create_ai_discovery_crawler_rules_table')
+        ->and($migrationFiles)->toContain('create_ai_discovery_snapshots_table')
+        ->and($migrationFiles)->toContain('create_broken_links_table')
+        ->and($migrationFiles)->toContain('create_page_seo_snapshots_table')
+        ->and($migrationFiles)->toContain('create_search_console_url_metrics_table')
+        ->and($settingsFiles)->toContain('2026_05_10_190871_01_create_ai-orchestrator_settings')
+        ->and($settingsFiles)->toContain('2026_05_10_190871_03_create_seo_suite_settings');
 });
 
 /**
