@@ -1,4 +1,5 @@
 <footer class="theme-footer bg-zinc-950 text-white">
+    <h2 class="sr-only">{{ __('capell-theme-agency::generic.footer') }}</h2>
     <div
         class="mx-auto grid max-w-7xl gap-8 px-6 py-14 md:grid-cols-[1.3fr_2fr]"
     >

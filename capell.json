@@ -8,15 +8,15 @@
     "version": "4.x-dev",
     "description": "Theme Agency registers the agency theme key and expressive renderer views for studio, portfolio, and brand-led sites.",
     "product": {
-        "group": "Capell Themes",
-        "tier": "premium",
-        "bundle": "themes"
+        "group": "Capell Foundation",
+        "tier": "free",
+        "bundle": "foundation"
     },
     "namespace": "Capell\\ThemeStudio\\Agency",
     "surfaces": ["frontend"],
     "dependencies": {
         "requires": ["capell-app/core", "capell-app/foundation-theme"],
-        "optional": [],
+        "supports": [],
         "conflicts": []
     },
     "providers": {
@@ -26,7 +26,17 @@
         "admin": [],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\Agency\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "agency"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
     "database": {
         "migrations": false,
         "settings": false,
@@ -35,7 +45,8 @@
     "commands": {
         "install": null,
         "setup": null,
-        "demo": null,
+        "demo": "capell:theme-agency-demo",
+        "demoParams": ["url", "languages", "sites"],
         "doctor": null
     },
     "settings": [],
@@ -69,8 +80,44 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Theme Agency registers the agency theme key and expressive renderer views for studio, portfolio, and brand-led sites.",
-        "screenshots": [],
+        "summary": "Creative campaign and studio theme screenshots from route-backed demo layouts.",
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Theme Agency extension preview image",
+                "caption": "Theme Agency extension preview"
+            },
+            {
+                "path": "docs/assets/marketplace/agency-homepage-marketplace.jpg",
+                "alt": "Theme Agency homepage screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Agency: Homepage. Homepage composition with hero, proof, repeated content, CTA, and footer."
+            },
+            {
+                "path": "docs/assets/marketplace/agency-directory-marketplace.jpg",
+                "alt": "Theme Agency directory screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Agency: Directory. List or directory route with repeated cards, scanning rhythm, and route-backed pagination layout."
+            },
+            {
+                "path": "docs/assets/marketplace/agency-detail-marketplace.jpg",
+                "alt": "Theme Agency detail screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Agency: Detail. Detail page route with media, proof, supporting sections, and conversion path."
+            },
+            {
+                "path": "docs/assets/marketplace/agency-contact-marketplace.jpg",
+                "alt": "Theme Agency contact screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Agency: Contact. Contact or enquiry route with theme-specific routing cards and CTA treatment."
+            },
+            {
+                "path": "docs/assets/marketplace/agency-conversion-marketplace.jpg",
+                "alt": "Theme Agency conversion cta screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Agency: Conversion CTA. Conversion route focused on proof, action rhythm, and next-step clarity."
+            },
+            {
+                "path": "docs/assets/marketplace/agency-sections-marketplace.jpg",
+                "alt": "Theme Agency section suite screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Agency: Section Suite. Theme-specific section suite showing the premium components available to editors."
+            }
+        ],
         "categories": ["frontend", "themes"]
     },
     "extends": "capell-app/foundation-theme",

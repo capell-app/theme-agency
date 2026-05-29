@@ -1,12 +1,12 @@
 # Theme Agency
 
-Status: **Available, no schema impact** · Kind: **theme** · Tier: **premium** · Bundle: **themes** · Contexts: **frontend** · Product group: **Capell Themes**
+Status: **Available, no schema impact** · Kind: **theme** · Tier: **free** · Bundle: **themes** · Contexts: **frontend** · Product group: **Capell Themes**
 
 This page is the consolidated implementation overview for the Theme Agency package. It is extracted from the package README, service providers, migrations, config files, routes, resources, models, actions, and the shared Capell ERD notes where available.
 
 ## What This Package Adds
 
-Theme Agency is a standalone Capell theme package. It registers the `agency` theme key, extends Foundation Theme, and adds expressive renderer views for studio, portfolio, and brand-led sites.
+Theme Agency is a standalone Capell theme package. It registers the `agency` theme key, extends Foundation Theme, and adds expressive renderer views for studio, portfolio, and brand-led sites. Treat it as a free/basic creative preset unless a future rewrite makes it the stronger studio sales theme and absorbs Portfolio.
 
 - Agency theme service provider.
 - Theme renderer/views for agency-style theme output.
@@ -64,7 +64,7 @@ Provides an agency-focused visual option for sites managed through the normal Th
 - Theme key: `agency`
 - Product group: Capell Themes
 - Kind: theme
-- Tier: premium
+- Tier: free
 - Bundle: themes
 - Contexts: `frontend`
 - Requires: `capell-app/foundation-theme`
