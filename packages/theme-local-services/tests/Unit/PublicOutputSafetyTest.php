@@ -2,11 +2,19 @@
 
 declare(strict_types=1);
 
-it('keeps public Blade free of authoring or package metadata', function (): void {
-    $blade = implode("\n", array_map(
+function localServicesThemeBladeViews(): string
+{
+    $rootViews = glob(__DIR__ . '/../../resources/views/*.blade.php') ?: [];
+    $sectionViews = glob(__DIR__ . '/../../resources/views/**/*.blade.php') ?: [];
+
+    return implode("\n", array_map(
         static fn (string $path): string => file_get_contents($path) ?: '',
-        glob(__DIR__ . '/../../resources/views/**/*.blade.php') ?: [],
+        [...$rootViews, ...$sectionViews],
     ));
+}
+
+it('keeps public Blade free of authoring or package metadata', function (): void {
+    $blade = localServicesThemeBladeViews();
 
     expect($blade)
         ->not->toContain('capell-app/theme-local-services')
@@ -19,10 +27,7 @@ it('keeps public Blade free of authoring or package metadata', function (): void
 });
 
 it('keeps public Blade free of database query calls', function (): void {
-    $blade = implode("\n", array_map(
-        static fn (string $path): string => file_get_contents($path) ?: '',
-        glob(__DIR__ . '/../../resources/views/**/*.blade.php') ?: [],
-    ));
+    $blade = localServicesThemeBladeViews();
 
     expect($blade)
         ->not->toContain('::query(')

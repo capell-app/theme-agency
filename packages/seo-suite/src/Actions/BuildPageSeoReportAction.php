@@ -126,6 +126,7 @@ final class BuildPageSeoReportAction
             searchConsoleInsights: BuildPageSearchConsoleInsightsAction::run($page),
             canonicalUrl: ResolvePageCanonicalUrlAction::run($page, $language) ?? $previewUrl,
             robotsDirectives: ResolvePageRobotsDirectivesAction::run($page, $language),
+            intelligenceSummary: BuildPageIntelligenceSummaryAction::run($page, $site, $language),
         );
     }
 

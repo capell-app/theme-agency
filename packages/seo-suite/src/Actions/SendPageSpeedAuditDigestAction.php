@@ -29,7 +29,11 @@ final class SendPageSpeedAuditDigestAction
         $recipients = ResolveAdminNotificationRecipientsAction::run(self::NOTIFICATION_GROUP);
 
         foreach ($recipients as $recipient) {
-            if (! $recipient instanceof Model || ! $recipient instanceof Authenticatable) {
+            if (! $recipient instanceof Model) {
+                continue;
+            }
+
+            if (! $recipient instanceof Authenticatable) {
                 continue;
             }
 
@@ -54,11 +58,7 @@ final class SendPageSpeedAuditDigestAction
     {
         $notification = FilamentNotification::make('seo-suite-pagespeed-audit-' . $summary->run->getKey())
             ->title(__('capell-seo-suite::generic.pagespeed_digest_title'))
-            ->body(__('capell-seo-suite::generic.pagespeed_digest_body', [
-                'pages' => $summary->auditedPages,
-                'failed' => $summary->failedResults,
-                'poor' => $summary->poorResults,
-            ]))
+            ->body($this->databaseBody($summary))
             ->icon(Heroicon::OutlinedBolt)
             ->warning()
             ->persistent()
@@ -80,5 +80,26 @@ final class SendPageSpeedAuditDigestAction
         } catch (Throwable $throwable) {
             report($throwable);
         }
+    }
+
+    private function databaseBody(PageSpeedAuditSummaryData $summary): string
+    {
+        $body = (string) __('capell-seo-suite::generic.pagespeed_digest_body', [
+            'pages' => $summary->auditedPages,
+            'failed' => $summary->failedResults,
+            'poor' => $summary->poorResults,
+        ]);
+
+        $worst = collect([...$summary->worstMobileResults, ...$summary->worstDesktopResults])
+            ->sortBy('score')
+            ->first();
+
+        if (is_object($worst) && method_exists($worst, 'label')) {
+            return $body . ' ' . __('capell-seo-suite::generic.pagespeed_digest_worst_result', [
+                'result' => $worst->label(),
+            ]);
+        }
+
+        return $body;
     }
 }

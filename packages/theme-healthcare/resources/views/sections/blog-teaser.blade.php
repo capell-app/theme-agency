@@ -1,6 +1,14 @@
 @php
     $blogAvailable ??= false;
     $articles = $section->items ?? [];
+    $articleCount = is_countable($articles) ? count($articles) : 0;
+    $usesCarousel = $articleCount > 8;
+    $gridClass = match ($articleCount) {
+        1 => 'grid gap-4',
+        2 => 'grid gap-4 md:grid-cols-2',
+        3 => 'grid gap-4 md:grid-cols-3',
+        default => 'grid gap-4 sm:grid-cols-2 lg:grid-cols-4',
+    };
 @endphp
 
 @if (in_array($section->variant ?? null, ['gallery', 'pathways', 'spotlight'], true))
@@ -30,14 +38,14 @@
                 data-carousel="healthcare-blog-teaser"
             >
                 <div
-                    class="flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 [&::-webkit-scrollbar]:hidden"
+                    class="{{ $usesCarousel ? 'flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 [&::-webkit-scrollbar]:hidden' : $gridClass }}"
                     data-carousel-track
                 >
                     @foreach ($articles as $article)
                         @if ($blogAvailable)
                             <a
                                 href="{{ $article['url'] ?? '#' }}"
-                                class="healthcare-resource-card min-w-[250px] snap-start rounded-xl border border-stone-200 bg-white p-6 transition hover:-translate-y-1 hover:border-[#0f766e] hover:shadow-lg md:min-w-0"
+                                class="{{ $usesCarousel ? 'min-w-[270px] snap-start sm:min-w-[300px]' : '' }} healthcare-resource-card rounded-xl border border-stone-200 bg-white p-6 transition hover:-translate-y-1 hover:border-[#0f766e] hover:shadow-lg"
                             >
                                 <p
                                     class="text-xs font-black tracking-widest text-[#0f766e] uppercase"
@@ -53,7 +61,7 @@
                             </a>
                         @else
                             <article
-                                class="healthcare-resource-card rounded-xl border border-stone-200 bg-white p-6"
+                                class="{{ $usesCarousel ? 'min-w-[270px] snap-start sm:min-w-[300px]' : '' }} healthcare-resource-card rounded-xl border border-stone-200 bg-white p-6"
                             >
                                 <p
                                     class="text-xs font-black tracking-widest text-[#0f766e] uppercase"

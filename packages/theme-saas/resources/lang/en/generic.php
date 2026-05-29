@@ -16,6 +16,7 @@ return [
     'next_article' => 'Next article',
     'pagination' => 'Pagination',
     'previous_article' => 'Previous article',
+    'product_signal' => 'Product signal',
     'resource' => 'Resource',
     'resources_label' => 'Resources',
     'results_summary' => 'Results summary',
@@ -25,4 +26,5 @@ return [
     'skip_to_content' => 'Skip to content',
     'suggested_reading' => 'Suggested reading',
     'tags' => 'Tags',
+    'workflow_signal' => 'Workflow signal',
 ];

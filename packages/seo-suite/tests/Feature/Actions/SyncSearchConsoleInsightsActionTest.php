@@ -6,6 +6,7 @@ use Capell\Core\Models\Site;
 use Capell\SeoSuite\Actions\PersistSearchConsoleUrlMetricAction;
 use Capell\SeoSuite\Actions\SyncSearchConsoleInsightsAction;
 use Capell\SeoSuite\Contracts\SearchConsoleClientInterface;
+use Capell\SeoSuite\Models\SearchConsoleQueryMetric;
 use Capell\SeoSuite\Models\SearchConsoleUrlMetric;
 use Capell\SeoSuite\Support\SearchConsole\NullSearchConsoleClient;
 
@@ -18,9 +19,11 @@ it('returns unconfigured sync results without writing metrics', function (): voi
 
     expect($result)->toBe([
         'synced' => 0,
+        'query_synced' => 0,
         'configured' => false,
         'pages' => [],
-    ])->and(SearchConsoleUrlMetric::query()->count())->toBe(0);
+    ])->and(SearchConsoleUrlMetric::query()->count())->toBe(0)
+        ->and(SearchConsoleQueryMetric::query()->count())->toBe(0);
 });
 
 it('stores and queries declining search console url metrics', function (): void {
@@ -125,13 +128,30 @@ it('persists configured search console metric rows before returning declining pa
             'window_end' => now()->toDateString(),
         ],
     ];
+    $queryMetricRows = [
+        [
+            'query' => 'Capell CMS',
+            'url' => 'https://example.com/a',
+            'clicks' => 2,
+            'impressions' => 100,
+            'ctr' => 0.02,
+            'average_position' => 8.5,
+            'previous_clicks' => 4,
+            'previous_impressions' => 120,
+            'previous_ctr' => 0.03,
+            'previous_average_position' => 6.2,
+            'window_start' => now()->subDays(28)->toDateString(),
+            'window_end' => now()->toDateString(),
+        ],
+    ];
 
-    app()->instance(SearchConsoleClientInterface::class, new readonly class($metricRows) implements SearchConsoleClientInterface
+    app()->instance(SearchConsoleClientInterface::class, new readonly class($metricRows, $queryMetricRows) implements SearchConsoleClientInterface
     {
         /**
          * @param  array<int, array<string, mixed>>  $metricRows
+         * @param  array<int, array<string, mixed>>  $queryMetricRows
          */
-        public function __construct(private array $metricRows) {}
+        public function __construct(private array $metricRows, private array $queryMetricRows) {}
 
         public function isConfigured(): bool
         {
@@ -152,16 +172,26 @@ it('persists configured search console metric rows before returning declining pa
         {
             return array_slice($this->metricRows, 0, $limit);
         }
+
+        public function queryMetricRows(int $siteId, int $limit = 100): array
+        {
+            return array_slice($this->queryMetricRows, 0, $limit);
+        }
     });
 
     $result = SyncSearchConsoleInsightsAction::run((int) $site->getKey(), 10);
     $metric = SearchConsoleUrlMetric::query()->first();
+    $queryMetric = SearchConsoleQueryMetric::query()->first();
 
     expect($metric)->not()->toBeNull()
         ->and($metric->url)->toBe('https://example.com/a')
         ->and($metric->click_delta)->toBe(-20)
+        ->and($queryMetric)->not()->toBeNull()
+        ->and($queryMetric->query)->toBe('capell cms')
+        ->and($queryMetric->click_delta)->toBe(-2)
         ->and($result)->toBe([
             'synced' => 1,
+            'query_synced' => 1,
             'configured' => true,
             'pages' => [
                 [
@@ -172,4 +202,80 @@ it('persists configured search console metric rows before returning declining pa
                 ],
             ],
         ]);
+});
+
+it('imports one hundred search console rows by default while keeping declining page results narrow', function (): void {
+    $site = Site::factory()->create();
+    $metricRows = [];
+    $queryMetricRows = [];
+
+    foreach (range(1, 12) as $index) {
+        $metricRows[] = [
+            'url' => 'https://example.com/page-' . $index,
+            'clicks' => 10,
+            'impressions' => 100,
+            'ctr' => 0.1,
+            'average_position' => 4.2,
+            'previous_clicks' => 30,
+            'previous_impressions' => 180,
+            'previous_ctr' => 0.16,
+            'previous_average_position' => 3.1,
+            'window_start' => now()->subDays(28)->toDateString(),
+            'window_end' => now()->toDateString(),
+        ];
+        $queryMetricRows[] = [
+            'query' => 'Capell CMS ' . $index,
+            'url' => 'https://example.com/page-' . $index,
+            'clicks' => 2,
+            'impressions' => 100,
+            'ctr' => 0.02,
+            'average_position' => 8.5,
+            'previous_clicks' => 4,
+            'previous_impressions' => 120,
+            'previous_ctr' => 0.03,
+            'previous_average_position' => 6.2,
+            'window_start' => now()->subDays(28)->toDateString(),
+            'window_end' => now()->toDateString(),
+        ];
+    }
+
+    app()->instance(SearchConsoleClientInterface::class, new readonly class($metricRows, $queryMetricRows) implements SearchConsoleClientInterface
+    {
+        /**
+         * @param  array<int, array<string, mixed>>  $metricRows
+         * @param  array<int, array<string, mixed>>  $queryMetricRows
+         */
+        public function __construct(private array $metricRows, private array $queryMetricRows) {}
+
+        public function isConfigured(): bool
+        {
+            return true;
+        }
+
+        public function pageInsights(string $url): array
+        {
+            return [];
+        }
+
+        public function decliningPages(int $siteId, int $limit = 10): array
+        {
+            return [];
+        }
+
+        public function urlMetricRows(int $siteId, int $limit = 100): array
+        {
+            return array_slice($this->metricRows, 0, $limit);
+        }
+
+        public function queryMetricRows(int $siteId, int $limit = 100): array
+        {
+            return array_slice($this->queryMetricRows, 0, $limit);
+        }
+    });
+
+    $result = SyncSearchConsoleInsightsAction::run((int) $site->getKey());
+
+    expect($result['synced'])->toBe(12)
+        ->and($result['query_synced'])->toBe(12)
+        ->and($result['pages'])->toHaveCount(10);
 });

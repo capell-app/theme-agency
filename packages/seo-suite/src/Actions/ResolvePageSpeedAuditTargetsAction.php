@@ -14,7 +14,6 @@ use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Lorisleiva\Actions\Concerns\AsAction;
-use Throwable;
 
 final class ResolvePageSpeedAuditTargetsAction
 {
@@ -30,10 +29,6 @@ final class ResolvePageSpeedAuditTargetsAction
         $this->query($siteId, $languageId, $pageId)
             ->chunkById(50, function (EloquentCollection $pages) use (&$targets, $languageId, $limit): bool {
                 foreach ($pages as $page) {
-                    if (! $page instanceof Page) {
-                        continue;
-                    }
-
                     foreach ($this->targetsForPage($page, $languageId) as $target) {
                         $targets[] = $target;
 
@@ -59,22 +54,20 @@ final class ResolvePageSpeedAuditTargetsAction
             ->when($siteId !== null, fn (Builder $query): Builder => $query->where('site_id', $siteId))
             ->when($pageId !== null, fn (Builder $query): Builder => $query->whereKey($pageId))
             ->whereHas('site', fn (BuilderContract $query): BuilderContract => $query->where('status', true))
-            ->whereHas('pageUrls', function (BuilderContract $query) use ($languageId): BuilderContract {
-                return $query
-                    ->where('status', true)
-                    ->whereNull('type')
-                    ->when($languageId !== null, fn (BuilderContract $query): BuilderContract => $query->where('language_id', $languageId));
-            })
+            ->whereHas('pageUrls', fn (BuilderContract $query): BuilderContract => $query
+                ->where('status', true)
+                ->whereNull('type')
+                ->when($languageId !== null, fn (BuilderContract $query): BuilderContract => $query->where('language_id', $languageId)))
             ->with([
                 'site',
-                'pageUrls' => function (BuilderContract $query) use ($languageId): BuilderContract {
-                    return $query
-                        ->where('status', true)
-                        ->whereNull('type')
-                        ->when($languageId !== null, fn (BuilderContract $query): BuilderContract => $query->where('language_id', $languageId))
-                        ->with(['language', 'site', 'siteDomain'])
-                        ->ordered();
-                },
+                'pageUrls' => fn (BuilderContract $query): BuilderContract => $query
+                    ->where('status', true)
+                    ->whereNull('type')
+                    ->when($languageId !== null, fn (BuilderContract $query): BuilderContract => $query->where('language_id', $languageId))
+                    ->with(['language', 'site', 'siteDomain'])
+                    ->ordered()
+                    ->orderBy('is_manual')
+                    ->orderBy('id'),
             ])
             ->orderBy('id');
     }
@@ -85,9 +78,14 @@ final class ResolvePageSpeedAuditTargetsAction
     private function targetsForPage(Page $page, ?int $languageId): array
     {
         $targets = [];
+        $seenLanguageIds = [];
 
         foreach ($page->pageUrls as $pageUrl) {
-            if (! $pageUrl instanceof PageUrl || $pageUrl->type instanceof UrlTypeEnum) {
+            if (! $pageUrl instanceof PageUrl) {
+                continue;
+            }
+
+            if ($pageUrl->type instanceof UrlTypeEnum) {
                 continue;
             }
 
@@ -95,18 +93,21 @@ final class ResolvePageSpeedAuditTargetsAction
                 continue;
             }
 
+            if (isset($seenLanguageIds[(int) $pageUrl->language_id])) {
+                continue;
+            }
+
             $site = $pageUrl->site;
             $language = $pageUrl->language;
-
-            if (! $site instanceof Site || ! $language instanceof Language) {
+            if (! $site instanceof Site) {
                 continue;
             }
 
-            try {
-                $url = $pageUrl->full_url;
-            } catch (Throwable) {
+            if (! $language instanceof Language) {
                 continue;
             }
+
+            $url = $pageUrl->full_url;
 
             if (! str_starts_with($url, 'http://') && ! str_starts_with($url, 'https://')) {
                 continue;
@@ -118,6 +119,7 @@ final class ResolvePageSpeedAuditTargetsAction
                 language: $language,
                 url: $url,
             );
+            $seenLanguageIds[(int) $pageUrl->language_id] = true;
         }
 
         return $targets;

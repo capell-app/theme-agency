@@ -25,6 +25,14 @@ class SeoSuiteSettings extends Settings implements SettingsContract, SettingsSch
 
     public string $ai_discovery_crawler_policy = 'search_visible_training_restricted';
 
+    public bool $pagespeed_audit_enabled = true;
+
+    public bool $pagespeed_weekly_digest_enabled = true;
+
+    public int $pagespeed_scheduled_limit = 50;
+
+    public int $pagespeed_stale_after_days = 14;
+
     public static function group(): string
     {
         return 'seo_suite';

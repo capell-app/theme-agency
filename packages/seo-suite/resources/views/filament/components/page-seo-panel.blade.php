@@ -249,6 +249,80 @@
 
         <section class="border-t border-gray-200 pt-4 dark:border-gray-700">
             <div class="text-sm font-medium text-gray-950 dark:text-white">
+                {{ __('capell-seo-suite::generic.seo_panel_target_keywords') }}
+            </div>
+            @if ($intelligenceSummary === null || $intelligenceSummary->targetKeywords === [])
+                <div class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                    {{ __('capell-seo-suite::generic.seo_panel_no_target_keywords') }}
+                </div>
+            @else
+                <ul
+                    class="mt-2 flex flex-wrap gap-2 text-sm text-gray-700 dark:text-gray-300"
+                >
+                    @foreach ($intelligenceSummary->targetKeywords as $keyword)
+                        <li
+                            class="rounded-md bg-gray-50 px-2 py-1 dark:bg-gray-800"
+                        >
+                            {{ $keyword }}
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+
+            @if ($intelligenceSummary !== null && $intelligenceSummary->rankingRows !== [])
+                <div
+                    class="mt-4 text-sm font-medium text-gray-950 dark:text-white"
+                >
+                    {{ __('capell-seo-suite::generic.seo_panel_discovered_terms') }}
+                </div>
+                <ul
+                    class="mt-2 space-y-2 text-sm text-gray-700 dark:text-gray-300"
+                >
+                    @foreach ($intelligenceSummary->rankingRows as $rankingRow)
+                        <li>
+                            <span class="font-medium">
+                                {{ $rankingRow->query }}
+                            </span>
+                            <span class="text-gray-500 dark:text-gray-400">
+                                {{
+                                    __('capell-seo-suite::generic.seo_panel_ranking_summary', [
+                                        'position' => number_format($rankingRow->averagePosition, 1),
+                                        'impressions' => $rankingRow->impressions,
+                                        'clicks' => $rankingRow->clicks,
+                                    ])
+                                }}
+                            </span>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+
+            @if ($intelligenceSummary !== null && $intelligenceSummary->opportunities !== [])
+                <div
+                    class="mt-4 text-sm font-medium text-gray-950 dark:text-white"
+                >
+                    {{ __('capell-seo-suite::generic.seo_panel_editor_actions') }}
+                </div>
+                <ul
+                    class="mt-2 space-y-2 text-sm text-gray-700 dark:text-gray-300"
+                >
+                    @foreach ($intelligenceSummary->opportunities as $opportunity)
+                        <li>
+                            <span class="font-medium">
+                                {{ $opportunity->type->getLabel() }}
+                            </span>
+                            <span>{{ $opportunity->query }}</span>
+                            <span class="text-gray-500 dark:text-gray-400">
+                                {{ $opportunity->message }}
+                            </span>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </section>
+
+        <section class="border-t border-gray-200 pt-4 dark:border-gray-700">
+            <div class="text-sm font-medium text-gray-950 dark:text-white">
                 {{ __('capell-seo-suite::generic.seo_panel_robots_canonical') }}
             </div>
             <div

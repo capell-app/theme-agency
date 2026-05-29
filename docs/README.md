@@ -7,6 +7,8 @@ This directory holds **cross-cutting** documentation for the add-on packages. Pe
 For the commercial/free grouping, see [Package product groups](product-groups.md).
 For package-level upstream credits, services, and acknowledgements, see [Credits and acknowledgements](credits-and-acknowledgements.md).
 For theme package authoring, see [Creating a Capell theme](creating-a-theme.md).
+For screenshot-led theme QA and optimization, see [Theme Screenshot QA Playbook](theme-screenshot-qa-playbook.md).
+For the long-running first-party theme improvement workflow, see [Theme Premium Improvement Runbook](theme-premium-improvement-runbook.md).
 For optional package integration rules, see [Optional Package Boundaries](optional-package-boundaries.md).
 For split repository contribution flow, see [Split PR Forwarding](split-pr-forwarding.md).
 

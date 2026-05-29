@@ -75,6 +75,15 @@ class PageSpeedAuditResult extends Model
         return 'poor';
     }
 
+    public function strategyEnum(): PageSpeedStrategyEnum
+    {
+        $strategy = $this->strategy;
+
+        return $strategy instanceof PageSpeedStrategyEnum
+            ? $strategy
+            : PageSpeedStrategyEnum::from($strategy);
+    }
+
     /**
      * @param  Builder<PageSpeedAuditResult>  $query
      */

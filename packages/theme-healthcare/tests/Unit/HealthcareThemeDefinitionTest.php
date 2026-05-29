@@ -261,6 +261,7 @@ it('renders standard feature and content listing sections through healthcare reg
     expect($html)
         ->toContain('Service access')
         ->toContain('Rapid GP')
+        ->toContain('Care pathway')
         ->toContain('Patient resources')
         ->toContain('Referral checklist')
         ->not->toContain('model_id')
@@ -352,8 +353,8 @@ it('passes optional Blog availability through the registered blog teaser rendere
         ->toContain($expectedMarkup)
         ->not->toContain($missingMarkup);
 })->with([
-    'blog installed' => [true, 'href="/resources/first-consultation"', 'healthcare-resource-card rounded-xl border border-stone-200 bg-white p-6"'],
-    'blog not installed' => [false, 'healthcare-resource-card rounded-xl border border-stone-200 bg-white p-6"', 'href="/resources/first-consultation"'],
+    'blog installed' => [true, 'href="/resources/first-consultation"', '<article'],
+    'blog not installed' => [false, 'healthcare-resource-card', 'href="/resources/first-consultation"'],
 ]);
 
 it('renders optional healthcare section views without database queries', function (): void {

@@ -45,7 +45,7 @@ final class GooglePageSpeedInsightsClient implements PageSpeedInsightsClientInte
     {
         return ($this->config['enabled'] ?? false) === true
             && is_string($this->config['api_key'] ?? null)
-            && trim((string) $this->config['api_key']) !== '';
+            && trim($this->config['api_key']) !== '';
     }
 
     public function analyze(string $url, PageSpeedStrategyEnum $strategy): PageSpeedAuditResultData
@@ -91,7 +91,7 @@ final class GooglePageSpeedInsightsClient implements PageSpeedInsightsClientInte
         return Http::acceptJson()
             ->timeout((int) ($this->config['timeout'] ?? 90))
             ->connectTimeout(10)
-            ->retry(2, 500)
+            ->retry(2, 500, throw: false)
             ->get($this->requestUrl($url, $strategy));
     }
 
@@ -167,7 +167,11 @@ final class GooglePageSpeedInsightsClient implements PageSpeedInsightsClientInte
         $items = [];
 
         foreach ($audits as $key => $audit) {
-            if (! is_string($key) || ! is_array($audit)) {
+            if (! is_string($key)) {
+                continue;
+            }
+
+            if (! is_array($audit)) {
                 continue;
             }
 

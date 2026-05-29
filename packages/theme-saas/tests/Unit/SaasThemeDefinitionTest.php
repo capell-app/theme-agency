@@ -252,6 +252,8 @@ it('renders public theme markup without package identifiers', function (): void 
 
     expect($html)
         ->toContain('Launchdeck')
+        ->toContain('Product signal')
+        ->toContain('Workflow signal')
         ->not->toContain('data-capell-theme')
         ->not->toContain('capell-theme')
         ->not->toContain('capell-app/theme-saas')

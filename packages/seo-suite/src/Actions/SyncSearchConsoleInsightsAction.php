@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Date;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static array{synced: int, query_synced: int, configured: bool, pages: array<int, mixed>} run(int $siteId, int $limit = 10)
+ * @method static array{synced: int, query_synced: int, configured: bool, pages: array<int, mixed>} run(int $siteId, int $limit = 100, int $decliningPageLimit = 10)
  */
 final class SyncSearchConsoleInsightsAction
 {
@@ -19,7 +19,7 @@ final class SyncSearchConsoleInsightsAction
     /**
      * @return array{synced: int, query_synced: int, configured: bool, pages: array<int, mixed>}
      */
-    public function handle(int $siteId, int $limit = 10): array
+    public function handle(int $siteId, int $limit = 100, int $decliningPageLimit = 10): array
     {
         $client = resolve(SearchConsoleClientInterface::class);
 
@@ -66,7 +66,7 @@ final class SyncSearchConsoleInsightsAction
         }
 
         $querySynced = $this->persistQueryMetricRows($siteId, $client->queryMetricRows($siteId, $limit));
-        $pages = BuildDecliningSearchConsolePagesAction::run($siteId, $limit);
+        $pages = BuildDecliningSearchConsolePagesAction::run($siteId, $decliningPageLimit);
 
         return [
             'synced' => $synced,
@@ -86,8 +86,19 @@ final class SyncSearchConsoleInsightsAction
         foreach ($metricRows as $metricRow) {
             $query = $metricRow['query'] ?? null;
             $url = $metricRow['url'] ?? null;
+            if (! is_string($query)) {
+                continue;
+            }
 
-            if (! is_string($query) || ! is_string($url) || trim($query) === '' || trim($url) === '') {
+            if (! is_string($url)) {
+                continue;
+            }
+
+            if (trim($query) === '') {
+                continue;
+            }
+
+            if (trim($url) === '') {
                 continue;
             }
 

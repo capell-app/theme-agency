@@ -457,6 +457,22 @@ function themeDemoExtraScreenshotEntries(string $themeKey): array
         $entries[] = themeDemoHealthcareContactScreenshotEntry();
     }
 
+    if ($themeKey === 'education') {
+        $entries[] = themeDemoEducationSectionsScreenshotEntry();
+    }
+
+    if ($themeKey === 'nonprofit') {
+        $entries[] = themeDemoNonprofitSectionsScreenshotEntry();
+    }
+
+    if ($themeKey === 'local-services') {
+        $entries[] = themeDemoLocalServicesSectionsScreenshotEntry();
+    }
+
+    if ($themeKey === 'knowledge') {
+        $entries[] = themeDemoKnowledgeSectionsScreenshotEntry();
+    }
+
     if (view()->exists($viewNamespace . '::blog.index')) {
         $entries[] = [
             'surface' => 'blog-index',
@@ -496,6 +512,376 @@ function themeDemoExtraScreenshotEntries(string $themeKey): array
     }
 
     return $entries;
+}
+
+/**
+ * @return array{surface: string, type: string, layout: string, html: string, expectedText: string}
+ */
+function themeDemoEducationSectionsScreenshotEntry(): array
+{
+    $navigation = new NavigationData(
+        brandName: 'Education Demo',
+        items: [
+            ['label' => 'Courses', 'url' => '#courses'],
+            ['label' => 'Events', 'url' => '#events'],
+            ['label' => 'Apply', 'url' => '#apply'],
+        ],
+        ctaLabel: 'Apply',
+        ctaUrl: '#apply',
+    );
+
+    $page = new ThemePageData(
+        title: 'Screenshot demo education sections',
+        brand: new BrandProfileData,
+        sections: [
+            HeroSectionData::from([
+                'heading' => 'Screenshot demo education sections',
+                'summary' => 'Education-specific sections check course, instructor, event, enrolment, resource, and FAQ presentation.',
+                'actions' => [['label' => 'Browse courses', 'url' => '#courses', 'style' => 'primary']],
+            ]),
+            themeDemoEducationGenericSection('course-catalog', 'Course catalogue'),
+            themeDemoEducationGenericSection('instructors', 'Instructor team'),
+            themeDemoEducationGenericSection('events', 'Open days and workshops'),
+            themeDemoEducationGenericSection('enrolment-cta', 'Apply for the next cohort'),
+            themeDemoEducationGenericSection('resources', 'Learning resources'),
+            themeDemoEducationGenericSection('faq', 'Learner questions'),
+            CtaSectionData::from([
+                'heading' => 'Start with the right programme',
+                'summary' => 'Education sections should support discovery and conversion together.',
+                'actions' => [['label' => 'Apply now', 'url' => '#apply', 'style' => 'primary']],
+            ]),
+        ],
+        navigation: $navigation,
+        footer: new FooterData(
+            brandName: $navigation->brandName,
+            columns: [['heading' => 'Education', 'links' => $navigation->items]],
+        ),
+    );
+
+    return [
+        'surface' => 'education-sections',
+        'type' => 'theme',
+        'layout' => 'sections',
+        'html' => resolve(ThemeRegistry::class)->renderer('education')->render($page),
+        'expectedText' => 'Screenshot demo education sections',
+    ];
+}
+
+function themeDemoEducationGenericSection(string $key, string $heading): ThemeSection
+{
+    return new class($key, $heading) implements ThemeSection
+    {
+        public function __construct(
+            private readonly string $sectionKey,
+            public readonly string $heading,
+        ) {}
+
+        public function key(): string
+        {
+            return $this->sectionKey;
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return [
+                'section' => $this,
+                'heading' => $this->heading,
+            ];
+        }
+    };
+}
+
+/**
+ * @return array{surface: string, type: string, layout: string, html: string, expectedText: string}
+ */
+function themeDemoNonprofitSectionsScreenshotEntry(): array
+{
+    $navigation = new NavigationData(
+        brandName: 'Nonprofit Demo',
+        items: [
+            ['label' => 'Impact', 'url' => '#impact'],
+            ['label' => 'Campaigns', 'url' => '#campaigns'],
+            ['label' => 'Support', 'url' => '#support'],
+        ],
+        ctaLabel: 'Donate',
+        ctaUrl: '#donate',
+    );
+
+    $page = new ThemePageData(
+        title: 'Screenshot demo nonprofit sections',
+        brand: new BrandProfileData,
+        sections: [
+            HeroSectionData::from([
+                'heading' => 'Screenshot demo nonprofit sections',
+                'summary' => 'Nonprofit-specific sections check impact, campaign, supporter, event, story, and contact presentation.',
+                'actions' => [['label' => 'Support the work', 'url' => '#support', 'style' => 'primary']],
+            ]),
+            themeDemoNonprofitGenericSection('impact', 'Impact evidence'),
+            themeDemoNonprofitGenericSection('campaigns', 'Current campaigns'),
+            themeDemoNonprofitGenericSection('volunteer-donate', 'Volunteer or donate'),
+            themeDemoNonprofitGenericSection('events', 'Community events'),
+            themeDemoNonprofitGenericSection('stories', 'Supporter stories'),
+            themeDemoNonprofitGenericSection('contact', 'Route supporter questions'),
+            CtaSectionData::from([
+                'heading' => 'Back the next campaign',
+                'summary' => 'Nonprofit sections should move supporters from belief to action.',
+                'actions' => [['label' => 'Donate now', 'url' => '#donate', 'style' => 'primary']],
+            ]),
+        ],
+        navigation: $navigation,
+        footer: new FooterData(
+            brandName: $navigation->brandName,
+            columns: [['heading' => 'Nonprofit', 'links' => $navigation->items]],
+        ),
+    );
+
+    return [
+        'surface' => 'nonprofit-sections',
+        'type' => 'theme',
+        'layout' => 'sections',
+        'html' => resolve(ThemeRegistry::class)->renderer('nonprofit')->render($page),
+        'expectedText' => 'Screenshot demo nonprofit sections',
+    ];
+}
+
+function themeDemoNonprofitGenericSection(string $key, string $heading): ThemeSection
+{
+    return new class($key, $heading) implements ThemeSection
+    {
+        public function __construct(
+            private readonly string $sectionKey,
+            public readonly string $heading,
+        ) {}
+
+        public function key(): string
+        {
+            return $this->sectionKey;
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return [
+                'section' => $this,
+                'heading' => $this->heading,
+            ];
+        }
+    };
+}
+
+/**
+ * @return array{surface: string, type: string, layout: string, html: string, expectedText: string}
+ */
+function themeDemoLocalServicesSectionsScreenshotEntry(): array
+{
+    $navigation = new NavigationData(
+        brandName: 'Local Services Demo',
+        items: [
+            ['label' => 'Services', 'url' => '#services'],
+            ['label' => 'Areas', 'url' => '#areas'],
+            ['label' => 'Quote', 'url' => '#quote'],
+        ],
+        ctaLabel: 'Request quote',
+        ctaUrl: '#quote',
+    );
+
+    $page = new ThemePageData(
+        title: 'Screenshot demo local service sections',
+        brand: new BrandProfileData,
+        sections: [
+            HeroSectionData::from([
+                'heading' => 'Screenshot demo local service sections',
+                'summary' => 'Local-services-specific sections check dispatch, service routes, area coverage, quote intake, resources, and contact routing.',
+                'actions' => [['label' => 'Request quote', 'url' => '#quote', 'style' => 'primary']],
+            ]),
+            FeatureSectionData::from([
+                'heading' => 'Dispatch-ready service paths',
+                'summary' => 'Feature cards should feel like local job routes and quote workflows.',
+                'features' => themeDemoScreenshotFeatures('local-service-sections', 6),
+            ]),
+            ProofSectionData::from([
+                'heading' => 'Local proof board',
+                'summary' => 'Proof cards should read as service performance signals.',
+                'items' => themeDemoScreenshotProofItems(),
+            ]),
+            ContentListingSectionData::from([
+                'heading' => 'Service route cards',
+                'summary' => 'Listing cards should show service, area, and availability cues.',
+                'items' => themeDemoScreenshotListingItems([], 'local-service-sections', 4),
+            ]),
+            themeDemoLocalServicesGenericSection('services', 'Bookable services'),
+            themeDemoLocalServicesGenericSection('service-areas', 'Live service areas'),
+            themeDemoLocalServicesGenericSection('quote-form', 'Request a quote'),
+            themeDemoLocalServicesGenericSection('case-studies', 'Recent local wins'),
+            themeDemoLocalServicesGenericSection('resources', 'Service resources'),
+            themeDemoLocalServicesGenericSection('contact', 'Route local enquiries'),
+            CtaSectionData::from([
+                'heading' => 'Turn the next enquiry into booked work',
+                'summary' => 'Local Services sections should move from route, to quote, to confirmed service.',
+                'actions' => [['label' => 'Check availability', 'url' => '#quote', 'style' => 'primary']],
+            ]),
+        ],
+        navigation: $navigation,
+        footer: new FooterData(
+            brandName: $navigation->brandName,
+            columns: [['heading' => 'Local services', 'links' => $navigation->items]],
+        ),
+    );
+
+    return [
+        'surface' => 'local-services-sections',
+        'type' => 'theme',
+        'layout' => 'sections',
+        'html' => resolve(ThemeRegistry::class)->renderer('local-services')->render($page),
+        'expectedText' => 'Screenshot demo local service sections',
+    ];
+}
+
+function themeDemoLocalServicesGenericSection(string $key, string $heading): ThemeSection
+{
+    return new class($key, $heading) implements ThemeSection
+    {
+        public function __construct(
+            private readonly string $sectionKey,
+            public readonly string $heading,
+        ) {}
+
+        public function key(): string
+        {
+            return $this->sectionKey;
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return [
+                'section' => $this,
+                'heading' => $this->heading,
+            ];
+        }
+    };
+}
+
+/**
+ * @return array{surface: string, type: string, layout: string, html: string, expectedText: string}
+ */
+function themeDemoKnowledgeSectionsScreenshotEntry(): array
+{
+    $navigation = new NavigationData(
+        brandName: 'Knowledge Demo',
+        items: [
+            ['label' => 'Topics', 'url' => '#topics'],
+            ['label' => 'Library', 'url' => '#library'],
+            ['label' => 'Authors', 'url' => '#authors'],
+        ],
+        ctaLabel: 'Browse guides',
+        ctaUrl: '#library',
+    );
+
+    $page = new ThemePageData(
+        title: 'Screenshot demo knowledge sections',
+        brand: new BrandProfileData,
+        sections: [
+            HeroSectionData::from([
+                'heading' => 'Screenshot demo knowledge sections',
+                'summary' => 'Knowledge-specific sections check research pathways, archive rows, topic hubs, search, newsletter, and editorial team presentation.',
+                'actions' => [['label' => 'Browse guides', 'url' => '#library', 'style' => 'primary']],
+            ]),
+            FeatureSectionData::from([
+                'heading' => 'Research pathway cards',
+                'summary' => 'Feature cards should look like curated library entries and not generic marketing blocks.',
+                'features' => themeDemoScreenshotFeatures('knowledge-sections', 6),
+            ]),
+            ProofSectionData::from([
+                'heading' => 'Library evidence board',
+                'summary' => 'Proof cards should read as content depth and discovery signals.',
+                'items' => themeDemoScreenshotProofItems(),
+            ]),
+            ContentListingSectionData::from([
+                'heading' => 'Archive result rows',
+                'summary' => 'Listings should support scanning, saved-state cues, and resource metadata.',
+                'items' => themeDemoScreenshotListingItems([], 'knowledge-sections', 4),
+            ]),
+            themeDemoKnowledgeGenericSection('topic-hubs', 'Topic hubs'),
+            themeDemoKnowledgeGenericSection('featured-content', 'Featured research'),
+            themeDemoKnowledgeGenericSection('resource-library', 'Resource library'),
+            themeDemoKnowledgeGenericSection('search-listing', 'Search the archive'),
+            themeDemoKnowledgeGenericSection('authors', 'Editorial contributors'),
+            themeDemoKnowledgeGenericSection('newsletter', 'Weekly research digest'),
+            CtaSectionData::from([
+                'heading' => 'Keep the library moving',
+                'summary' => 'Knowledge sections should move readers from discovery to saved resources and return visits.',
+                'actions' => [['label' => 'Browse resources', 'url' => '#library', 'style' => 'primary']],
+            ]),
+        ],
+        navigation: $navigation,
+        footer: new FooterData(
+            brandName: $navigation->brandName,
+            columns: [['heading' => 'Knowledge', 'links' => $navigation->items]],
+        ),
+    );
+
+    return [
+        'surface' => 'knowledge-sections',
+        'type' => 'theme',
+        'layout' => 'sections',
+        'html' => resolve(ThemeRegistry::class)->renderer('knowledge')->render($page),
+        'expectedText' => 'Screenshot demo knowledge sections',
+    ];
+}
+
+function themeDemoKnowledgeGenericSection(string $key, string $heading): ThemeSection
+{
+    return new class($key, $heading) implements ThemeSection
+    {
+        public function __construct(
+            private readonly string $sectionKey,
+            public readonly string $heading,
+        ) {}
+
+        public function key(): string
+        {
+            return $this->sectionKey;
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return [
+                'section' => $this,
+                'heading' => $this->heading,
+            ];
+        }
+    };
 }
 
 /**

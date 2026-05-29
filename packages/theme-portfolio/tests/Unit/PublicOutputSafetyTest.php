@@ -2,11 +2,22 @@
 
 declare(strict_types=1);
 
-it('keeps public Blade free of authoring or package metadata', function (): void {
-    $blade = implode("\n", array_map(
+function portfolioThemeBladeViews(): string
+{
+    $viewRoot = __DIR__ . '/../../resources/views';
+    $paths = array_values(array_unique(array_merge(
+        glob($viewRoot . '/*.blade.php') ?: [],
+        glob($viewRoot . '/**/*.blade.php') ?: [],
+    )));
+
+    return implode("\n", array_map(
         static fn (string $path): string => file_get_contents($path) ?: '',
-        glob(__DIR__ . '/../../resources/views/**/*.blade.php') ?: [],
+        $paths,
     ));
+}
+
+it('keeps public Blade free of authoring or package metadata', function (): void {
+    $blade = portfolioThemeBladeViews();
 
     expect($blade)
         ->not->toContain('capell-app/theme-portfolio')
@@ -19,10 +30,7 @@ it('keeps public Blade free of authoring or package metadata', function (): void
 });
 
 it('keeps public Blade free of database query calls', function (): void {
-    $blade = implode("\n", array_map(
-        static fn (string $path): string => file_get_contents($path) ?: '',
-        glob(__DIR__ . '/../../resources/views/**/*.blade.php') ?: [],
-    ));
+    $blade = portfolioThemeBladeViews();
 
     expect($blade)
         ->not->toContain('::query(')

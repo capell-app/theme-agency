@@ -18,6 +18,7 @@ use Capell\Navigation\Providers\NavigationServiceProvider;
 use Capell\SeoSuite\Filament\Pages\AiDiscoveryPage;
 use Capell\SeoSuite\Filament\Pages\BrokenLinksPage;
 use Capell\SeoSuite\Filament\Pages\NotFoundUrlsPage;
+use Capell\SeoSuite\Filament\Pages\SearchRankingsPage;
 use Capell\SeoSuite\Filament\Pages\SeoAuditPage;
 use Capell\SeoSuite\Filament\Pages\TranslationCoveragePage;
 use Capell\SeoSuite\Providers\SeoSuiteServiceProvider;
@@ -82,6 +83,7 @@ class SeoSuiteTestCase extends AbstractTestCase
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(NotFoundUrlsPage::class));
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(BrokenLinksPage::class));
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(SeoAuditPage::class));
+        CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(SearchRankingsPage::class));
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(AiDiscoveryPage::class));
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(TranslationCoveragePage::class));
 

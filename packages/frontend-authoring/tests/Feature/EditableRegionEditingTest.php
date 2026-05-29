@@ -57,6 +57,17 @@ function bindEditableRegionAdminAccess(bool $isAdmin): void
     });
 }
 
+function editableRegionCachePathFromUrl(string $url): string
+{
+    $path = parse_url($url, PHP_URL_PATH);
+
+    if (! is_string($path) || $path === '') {
+        return '/';
+    }
+
+    return '/' . ltrim($path, '/');
+}
+
 /**
  * @param  array<array-key, mixed>  $attributes
  */
@@ -260,15 +271,15 @@ it('saves text rich html and meta edits while clearing every affected cached pag
     ];
 
     foreach ($touchedUrls as $url) {
-        $path = '/' . ltrim((string) parse_url($url, PHP_URL_PATH), '/');
-        $cachePath = $pathResolver->pathForUrl($path === '' ? '/' : $path, $siteDomain);
+        $path = editableRegionCachePathFromUrl($url);
+        $cachePath = $pathResolver->pathForUrl($path, $siteDomain);
 
         Storage::disk('page_cache')->put($cachePath, 'stale cached html');
 
         CachedModelUrl::query()->create([
             'url' => $url,
             'url_hash' => CachedModelUrl::hashUrl($url),
-            'path' => $path === '' ? '/' : $path,
+            'path' => $path,
             'site_id' => $siteDomain->site_id,
             'site_domain_id' => $siteDomain->getKey(),
             'language_id' => $siteDomain->language_id,
@@ -290,8 +301,8 @@ it('saves text rich html and meta edits while clearing every affected cached pag
     ]);
 
     foreach ($touchedUrls as $url) {
-        $path = '/' . ltrim((string) parse_url($url, PHP_URL_PATH), '/');
-        $cachePath = $pathResolver->pathForUrl($path === '' ? '/' : $path, $siteDomain);
+        $path = editableRegionCachePathFromUrl($url);
+        $cachePath = $pathResolver->pathForUrl($path, $siteDomain);
 
         expect(Storage::disk('page_cache')->exists($cachePath))->toBeFalse()
             ->and(CachedModelUrl::query()->where('url', $url)->exists())->toBeFalse();

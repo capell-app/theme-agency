@@ -160,6 +160,85 @@ it('maps current and previous search insights rows into url metric rows', functi
         ]);
 });
 
+it('maps current and previous search analytics query page rows into query metric rows', function (): void {
+    Date::setTestNow(Date::create(2024, 3, 30, 12, 0, 0));
+
+    $credentialsPath = tempnam(sys_get_temp_dir(), 'search-console-credentials');
+    $privateKey = openssl_pkey_new([
+        'private_key_bits' => 1024,
+        'private_key_type' => OPENSSL_KEYTYPE_RSA,
+    ]);
+    $privateKeyContents = '';
+
+    expect($credentialsPath)->toBeString();
+    expect($privateKey)->not()->toBeFalse();
+
+    openssl_pkey_export($privateKey, $privateKeyContents);
+
+    file_put_contents($credentialsPath, json_encode([
+        'client_email' => 'seo-suite@example.iam.gserviceaccount.com',
+        'private_key' => $privateKeyContents,
+        'token_uri' => 'https://oauth2.googleapis.com/token',
+    ], JSON_THROW_ON_ERROR));
+
+    Http::fake([
+        'https://oauth2.googleapis.com/token' => Http::response(['access_token' => 'test-token'], 200),
+        'https://searchconsole.googleapis.com/*' => Http::sequence()
+            ->push([
+                'rows' => [
+                    [
+                        'keys' => ['Capell CMS', 'https://example.com/about'],
+                        'clicks' => 10,
+                        'impressions' => 100,
+                        'ctr' => 0.1,
+                        'position' => 4.2,
+                    ],
+                ],
+            ], 200)
+            ->push([
+                'rows' => [
+                    [
+                        'keys' => ['capell cms', 'https://example.com/about'],
+                        'clicks' => 30,
+                        'impressions' => 180,
+                        'ctr' => 0.16,
+                        'position' => 3.1,
+                    ],
+                ],
+            ], 200),
+    ]);
+
+    $client = new GoogleSearchConsoleClient([
+        'enabled' => true,
+        'credentials_path' => $credentialsPath,
+        'property_url' => 'https://example.com/',
+    ]);
+
+    $metricRows = $client->queryMetricRows(siteId: 1, limit: 100);
+
+    Http::assertSent(fn ($request): bool => str_contains((string) $request->url(), '/searchAnalytics/query')
+        && $request['dimensions'] === ['query', 'page']);
+
+    unlink($credentialsPath);
+    Date::setTestNow();
+
+    expect($metricRows)->toHaveCount(1)
+        ->and($metricRows[0])->toMatchArray([
+            'query' => 'capell cms',
+            'url' => 'https://example.com/about',
+            'clicks' => 10,
+            'impressions' => 100,
+            'ctr' => 0.1,
+            'average_position' => 4.2,
+            'previous_clicks' => 30,
+            'previous_impressions' => 180,
+            'previous_ctr' => 0.16,
+            'previous_average_position' => 3.1,
+            'window_start' => '2024-03-02',
+            'window_end' => '2024-03-29',
+        ]);
+});
+
 it('returns top declining pages from stored search console metrics', function (): void {
     $credentialsPath = tempnam(sys_get_temp_dir(), 'search-console-credentials');
     $site = Site::factory()->create();

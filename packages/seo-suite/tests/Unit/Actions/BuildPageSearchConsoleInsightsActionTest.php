@@ -73,6 +73,11 @@ it('returns page insights from the configured client for the resolved page url',
         {
             return [];
         }
+
+        public function queryMetricRows(int $siteId, int $limit = 100): array
+        {
+            return [];
+        }
     };
     app()->instance(SearchConsoleClientInterface::class, $client);
 
@@ -130,6 +135,11 @@ it('coerces array and unknown search console insights from the configured client
         {
             return [];
         }
+
+        public function queryMetricRows(int $siteId, int $limit = 100): array
+        {
+            return [];
+        }
     });
 
     $insights = BuildPageSearchConsoleInsightsAction::run($page);
@@ -164,6 +174,11 @@ it('returns no search console insights when a configured client has no page url 
         }
 
         public function urlMetricRows(int $siteId, int $limit = 100): array
+        {
+            return [];
+        }
+
+        public function queryMetricRows(int $siteId, int $limit = 100): array
         {
             return [];
         }

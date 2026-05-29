@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\SeoSuite\Support\Admin;
 
 use Capell\Admin\Contracts\Extenders\PageEditExtender;
+use Capell\SeoSuite\Filament\Widgets\EditPagePageSpeedAuditWidget;
 use Capell\SeoSuite\Filament\Widgets\EditPageSeoAuditWidget;
 use Filament\Actions\Action;
 use Filament\Widgets\Widget;
@@ -27,6 +28,7 @@ class PageSeoAuditPageEditExtender implements PageEditExtender
     {
         return [
             new WidgetConfiguration(EditPageSeoAuditWidget::class, ['record' => null]),
+            new WidgetConfiguration(EditPagePageSpeedAuditWidget::class, ['record' => null]),
         ];
     }
 }

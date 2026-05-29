@@ -25,18 +25,55 @@
             >
                 @foreach ($section->features as $feature)
                     <article
-                        class="min-w-[260px] snap-start rounded-2xl border border-slate-200 bg-slate-50/70 p-6"
+                        class="group min-w-[260px] snap-start rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl"
                     >
                         <div
-                            class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-sm font-black text-white"
+                            class="mb-5 rounded-xl border border-slate-800 bg-slate-950 p-4 text-white"
                         >
-                            {{ str($feature['title'])->substr(0, 1)->upper() }}
+                            <div
+                                class="flex items-center justify-between gap-3"
+                            >
+                                <span
+                                    class="rounded-full bg-cyan-300 px-2.5 py-1 text-[0.65rem] font-black tracking-widest text-slate-950 uppercase"
+                                >
+                                    {{ $feature['type'] ?? $feature['icon'] ?? __('capell-theme-saas::generic.product_signal') }}
+                                </span>
+                                <span
+                                    class="h-2.5 w-8 rounded-full bg-blue-500"
+                                    aria-hidden="true"
+                                ></span>
+                            </div>
+                            <div class="mt-6 space-y-2" aria-hidden="true">
+                                <span
+                                    class="block h-2 rounded-full bg-white/50"
+                                ></span>
+                                <span
+                                    class="block h-2 w-2/3 rounded-full bg-white/30"
+                                ></span>
+                            </div>
+                            <div
+                                class="mt-5 grid grid-cols-3 gap-2"
+                                aria-hidden="true"
+                            >
+                                <span
+                                    class="h-8 rounded-md bg-cyan-400/30"
+                                ></span>
+                                <span
+                                    class="h-8 rounded-md bg-blue-500/40"
+                                ></span>
+                                <span class="h-8 rounded-md bg-white/10"></span>
+                            </div>
                         </div>
                         <h3 class="text-xl font-black">
                             {{ $feature['title'] }}
                         </h3>
                         <p class="mt-3 text-sm">
                             {{ $feature['description'] }}
+                        </p>
+                        <p
+                            class="mt-5 text-xs font-black tracking-widest text-cyan-700 uppercase"
+                        >
+                            {{ $feature['metric'] ?? __('capell-theme-saas::generic.workflow_signal') }}
                         </p>
                     </article>
                 @endforeach

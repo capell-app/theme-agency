@@ -16,5 +16,7 @@ final class CacheHealthData extends Data
         public readonly ?string $lastWarmedAt,
         public readonly int $siteId,
         public readonly string $siteName,
+        /** @var list<array<string, mixed>> */
+        public readonly array $eligibilityReports = [],
     ) {}
 }

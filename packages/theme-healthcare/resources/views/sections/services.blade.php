@@ -1,5 +1,13 @@
 @php
     $services = $section->features ?? $section->items ?? [];
+    $serviceCount = is_countable($services) ? count($services) : 0;
+    $usesCarousel = $serviceCount > 4;
+    $gridClass = match ($serviceCount) {
+        1 => 'grid gap-4',
+        2 => 'grid gap-4 md:grid-cols-2',
+        3 => 'grid gap-4 md:grid-cols-3',
+        default => 'grid gap-4 sm:grid-cols-2 lg:grid-cols-4',
+    };
 @endphp
 
 <section class="healthcare-services bg-white">
@@ -24,12 +32,12 @@
             data-carousel="healthcare-services"
         >
             <div
-                class="flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 sm:grid sm:grid-cols-4 [&::-webkit-scrollbar]:hidden"
+                class="{{ $usesCarousel ? 'flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 [&::-webkit-scrollbar]:hidden' : $gridClass }}"
                 data-carousel-track
             >
                 @foreach ($services as $service)
                     <article
-                        class="min-w-[240px] snap-start rounded-xl border border-stone-200 bg-[#f6fbfd] p-3"
+                        class="{{ $usesCarousel ? 'min-w-[250px] snap-start sm:min-w-[270px]' : '' }} rounded-xl border border-stone-200 bg-[#f6fbfd] p-3 transition hover:-translate-y-1 hover:border-[#0f766e] hover:shadow-lg"
                     >
                         @if ($service['image'] ?? $service['imageUrl'] ?? null)
                             <img
@@ -39,8 +47,21 @@
                             />
                         @else
                             <div
-                                class="aspect-square rounded-lg bg-white"
-                            ></div>
+                                class="flex h-32 items-end rounded-lg border border-[#d9e8ee] bg-[#14323a] p-4 text-white"
+                            >
+                                <div>
+                                    <p
+                                        class="text-[0.65rem] font-black tracking-widest text-[#8de4db] uppercase"
+                                    >
+                                        {{ $service['icon'] ?? $service['type'] ?? __('capell-theme-healthcare::generic.service_label') }}
+                                    </p>
+                                    <p
+                                        class="mt-1 text-sm font-black text-white"
+                                    >
+                                        {{ $service['metric'] ?? __('capell-theme-healthcare::generic.care_pathway') }}
+                                    </p>
+                                </div>
+                            </div>
                         @endif
                         <div class="p-2">
                             <h3 class="text-lg font-black">

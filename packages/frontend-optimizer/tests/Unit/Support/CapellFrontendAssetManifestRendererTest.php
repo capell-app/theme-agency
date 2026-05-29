@@ -29,6 +29,7 @@ it('converts a Capell manifest into a layout scoped optimizer profile', function
     $html = resolve(CapellFrontendAssetManifestRenderer::class)->render($manifest, $context)->toHtml();
 
     $profile = FrontendRenderProfile::query()->sole();
+    /** @var list<array{handle: string, critical_eligible?: bool, loading_strategy?: string, slot?: string}> $assets */
     $assets = $profile->signature['assets'];
     $runtimeAsset = collect($assets)->firstWhere('handle', 'foundation-theme:runtime');
 
@@ -88,6 +89,7 @@ it('reuses the profile hash for equivalent layout and theme asset graphs', funct
     $renderer = resolve(CapellFrontendAssetManifestRenderer::class);
 
     $renderer->render($manifest, $context);
+
     $firstHash = FrontendRenderProfile::query()->sole()->hash;
 
     $renderer->render($manifest, $context);

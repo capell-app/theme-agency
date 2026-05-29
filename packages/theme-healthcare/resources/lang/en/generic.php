@@ -11,6 +11,7 @@ return [
     'booking_static' => 'Contact route ready',
     'booking_summary_live' => 'Render a live-looking booking path without exposing authoring metadata.',
     'booking_summary_static' => 'Show service choices, contact prompts, and clear next steps without depending on an enquiry form.',
+    'care_pathway' => 'Care pathway',
     'events_live' => 'Events connected',
     'events_static' => 'Care sessions',
     'finder_filter' => 'Filter',
@@ -27,6 +28,7 @@ return [
     'preferred_service' => 'Preferred service',
     'resource' => 'Resource',
     'resources_label' => 'Resources',
+    'service_label' => 'Clinical route',
     'skip_to_content' => 'Skip to content',
     'utility_summary' => 'Same-week appointments available for priority clinics.',
 ];

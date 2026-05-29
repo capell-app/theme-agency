@@ -74,6 +74,7 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
         }
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-portfolio');
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-portfolio');
 
         CapellCore::registerVendorAsset(
             VendorAssetData::tailwindImport('resources/css/theme-portfolio.css', self::$packageName),
@@ -140,7 +141,7 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
 
     private function isFoundationSection(string $sectionKey): bool
     {
-        return in_array($sectionKey, ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'], true);
+        return in_array($sectionKey, ['navigation', 'hero', 'proof', 'content-listing', 'cta', 'footer'], true);
     }
 
     /**

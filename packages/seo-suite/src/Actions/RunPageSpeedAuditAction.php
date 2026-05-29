@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace Capell\SeoSuite\Actions;
 
 use Capell\SeoSuite\Contracts\PageSpeedInsightsClientInterface;
+use Capell\SeoSuite\Data\PageSpeedAuditDigestFindingData;
 use Capell\SeoSuite\Data\PageSpeedAuditResultData;
 use Capell\SeoSuite\Data\PageSpeedAuditSummaryData;
 use Capell\SeoSuite\Enums\PageSpeedAuditRunStatusEnum;
 use Capell\SeoSuite\Enums\PageSpeedAuditTriggerEnum;
 use Capell\SeoSuite\Enums\PageSpeedStrategyEnum;
+use Capell\SeoSuite\Models\PageSpeedAuditResult;
 use Capell\SeoSuite\Models\PageSpeedAuditRun;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
@@ -95,16 +98,19 @@ final class RunPageSpeedAuditAction
                 'completed_at' => now(),
             ]);
         } catch (Throwable $throwable) {
+            $failureCount++;
+
             $run->update([
                 'status' => PageSpeedAuditRunStatusEnum::Failed->value,
                 'success_count' => $successCount,
-                'failure_count' => $failureCount + 1,
+                'failure_count' => $failureCount,
                 'error_message' => $throwable->getMessage(),
                 'completed_at' => now(),
             ]);
         }
 
         $run->refresh();
+        $runResults = $this->runResults($run);
 
         $summary = new PageSpeedAuditSummaryData(
             run: $run,
@@ -112,10 +118,16 @@ final class RunPageSpeedAuditAction
             successfulResults: $successCount,
             failedResults: $failureCount,
             poorResults: $poorResults,
+            worstMobileResults: $this->worstResults($runResults, PageSpeedStrategyEnum::Mobile),
+            worstDesktopResults: $this->worstResults($runResults, PageSpeedStrategyEnum::Desktop),
+            biggestDrops: $this->biggestDrops($runResults),
+            belowThresholdResults: $this->belowThresholdResults($runResults),
         );
 
-        if ($notify) {
+        if ($notify && $run->status !== PageSpeedAuditRunStatusEnum::Failed) {
             SendPageSpeedAuditDigestAction::run($summary);
+        } elseif ($notify) {
+            $run->update(['notification_status' => 'not_sent_failed']);
         }
 
         return $summary;
@@ -135,5 +147,102 @@ final class RunPageSpeedAuditAction
                 errorMessage: $throwable->getMessage(),
             );
         }
+    }
+
+    /**
+     * @return Collection<int, PageSpeedAuditResult>
+     */
+    private function runResults(PageSpeedAuditRun $run): Collection
+    {
+        return PageSpeedAuditResult::query()
+            ->where('page_speed_audit_run_id', $run->getKey())
+            ->orderBy('performance_score')
+            ->get();
+    }
+
+    /**
+     * @param  Collection<int, PageSpeedAuditResult>  $results
+     * @return list<PageSpeedAuditDigestFindingData>
+     */
+    private function worstResults(Collection $results, PageSpeedStrategyEnum $strategy): array
+    {
+        return $results
+            ->filter(fn (PageSpeedAuditResult $result): bool => $result->status === 'succeeded'
+                && $result->strategy === $strategy
+                && $result->performance_score !== null)
+            ->sortBy('performance_score')
+            ->take(5)
+            ->map(fn (PageSpeedAuditResult $result): PageSpeedAuditDigestFindingData => $this->finding($result))
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @param  Collection<int, PageSpeedAuditResult>  $results
+     * @return list<PageSpeedAuditDigestFindingData>
+     */
+    private function belowThresholdResults(Collection $results): array
+    {
+        return $results
+            ->filter(fn (PageSpeedAuditResult $result): bool => $result->status === 'succeeded'
+                && $result->performance_score !== null
+                && $result->performance_score < 50)
+            ->sortBy('performance_score')
+            ->take(10)
+            ->map(fn (PageSpeedAuditResult $result): PageSpeedAuditDigestFindingData => $this->finding($result))
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @param  Collection<int, PageSpeedAuditResult>  $results
+     * @return list<PageSpeedAuditDigestFindingData>
+     */
+    private function biggestDrops(Collection $results): array
+    {
+        return $results
+            ->filter(fn (PageSpeedAuditResult $result): bool => $result->status === 'succeeded'
+                && $result->performance_score !== null)
+            ->map(function (PageSpeedAuditResult $result): ?PageSpeedAuditDigestFindingData {
+                $previous = PageSpeedAuditResult::query()
+                    ->where('page_id', $result->page_id)
+                    ->where('language_id', $result->language_id)
+                    ->where('strategy', $result->strategyEnum()->value)
+                    ->where('status', 'succeeded')
+                    ->where('id', '<>', $result->getKey())
+                    ->where('fetched_at', '<', $result->fetched_at)
+                    ->whereNotNull('performance_score')
+                    ->latest('fetched_at')
+                    ->latest('id')
+                    ->first();
+
+                if (! $previous instanceof PageSpeedAuditResult || $previous->performance_score === null) {
+                    return null;
+                }
+
+                $drop = $previous->performance_score - $result->performance_score;
+
+                if ($drop <= 0) {
+                    return null;
+                }
+
+                return $this->finding($result, $previous->performance_score, $drop);
+            })
+            ->filter()
+            ->sortByDesc(fn (PageSpeedAuditDigestFindingData $finding): int => $finding->drop ?? 0)
+            ->take(5)
+            ->values()
+            ->all();
+    }
+
+    private function finding(PageSpeedAuditResult $result, ?int $previousScore = null, ?int $drop = null): PageSpeedAuditDigestFindingData
+    {
+        return new PageSpeedAuditDigestFindingData(
+            url: $result->url,
+            strategy: $result->strategyEnum(),
+            score: $result->performance_score,
+            previousScore: $previousScore,
+            drop: $drop,
+        );
     }
 }

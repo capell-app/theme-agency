@@ -259,8 +259,11 @@ final class GoogleSearchConsoleClient implements SearchConsoleClientInterface
         foreach ($rows as $row) {
             $query = $this->searchInsightsRowQuery($row);
             $url = $this->searchInsightsRowUrl($row);
+            if ($query === null) {
+                continue;
+            }
 
-            if ($query === null || $url === null) {
+            if ($url === null) {
                 continue;
             }
 

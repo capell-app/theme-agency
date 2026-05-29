@@ -1,5 +1,7 @@
 @php
     $products = $section->features ?? $section->items ?? [];
+    $productCount = is_countable($products) ? count($products) : 0;
+    $usesCarousel = $productCount > 4;
 @endphp
 
 <section class="retail-products bg-white">
@@ -21,12 +23,12 @@
 
         <div class="theme-carousel relative mt-10" data-carousel="product-grid">
             <div
-                class="flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 [&::-webkit-scrollbar]:hidden"
+                class="{{ $usesCarousel ? 'flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 [&::-webkit-scrollbar]:hidden' : 'grid gap-4 md:grid-cols-2 lg:grid-cols-3' }}"
                 data-carousel-track
             >
                 @foreach ($products as $product)
                     <article
-                        class="group min-w-[220px] snap-start rounded-xl border border-stone-200 bg-[#fffaf3] p-3 transition hover:-translate-y-1 hover:shadow-lg lg:min-w-0"
+                        class="{{ $usesCarousel ? 'min-w-[240px] snap-start sm:min-w-[260px] lg:min-w-[280px]' : '' }} group rounded-xl border border-stone-200 bg-[#fffaf3] p-3 transition hover:-translate-y-1 hover:shadow-lg"
                     >
                         @if ($product['image'] ?? $product['imageUrl'] ?? null)
                             <img
@@ -36,8 +38,21 @@
                             />
                         @else
                             <div
-                                class="aspect-square rounded-lg bg-white"
-                            ></div>
+                                class="retail-product-placeholder flex h-28 items-end rounded-lg border border-[#e8ddd0] bg-[#17211c] p-4 text-white"
+                            >
+                                <div>
+                                    <p
+                                        class="text-[0.65rem] font-black tracking-widest text-[#f6e6d7] uppercase"
+                                    >
+                                        {{ $product['icon'] ?? $product['type'] ?? __('capell-theme-commerce::generic.product_label') }}
+                                    </p>
+                                    <p
+                                        class="mt-1 text-sm font-black text-white"
+                                    >
+                                        {{ $product['metric'] ?? __('capell-theme-commerce::generic.curated_label') }}
+                                    </p>
+                                </div>
+                            </div>
                         @endif
                         <div class="p-2">
                             <h3 class="text-lg font-black">

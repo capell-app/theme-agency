@@ -85,7 +85,7 @@ final class CriticalCssSettings
 
     public function maxInlineCssBytes(): int
     {
-        return max(1, (int) $this->setting('max_inline_css_bytes', 60000));
+        return max(1, (int) $this->setting('max_inline_css_bytes', 20000));
     }
 
     public function debugQuerySupportEnabled(): bool
