@@ -34,6 +34,7 @@ use Capell\EmailStudio\Support\EmailVariableRenderer;
 use Capell\EmailStudio\Support\Providers\FakeEmailProviderAdapter;
 use Capell\EmailStudio\Support\Providers\PostmarkEmailProviderAdapter;
 use Capell\EmailStudio\Support\Providers\SmtpEmailProviderAdapter;
+use Illuminate\Support\Facades\Schema;
 use Spatie\LaravelData\DataCollection;
 
 it('keeps email studio send input and provider payloads as typed data', function (): void {
@@ -159,6 +160,23 @@ it('persists registered email templates through the registry', function (): void
         ->and($registrations[0]->getAttribute('template_key'))->toBe('welcome')
         ->and($registrations[0]->getAttribute('variables'))->toBe(['name', 'email'])
         ->and($registrations[0]->getAttribute('site_scope_key'))->toBe('primary');
+});
+
+it('skips email template persistence before migrations create the registration table', function (): void {
+    Schema::shouldReceive('hasTable')
+        ->once()
+        ->with((new EmailTemplateRegistration)->getTable())
+        ->andReturnFalse();
+
+    $registrations = (new EmailTemplateRegistry)
+        ->register(
+            key: 'welcome',
+            name: 'Welcome',
+            variables: ['name'],
+        )
+        ->persist();
+
+    expect($registrations)->toBe([]);
 });
 
 it('casts email studio model state and links event tracking records', function (): void {

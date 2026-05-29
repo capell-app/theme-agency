@@ -20,7 +20,7 @@
         "rector": "@php vendor/bin/rector",
         "lint": "@php vendor/bin/pint --parallel packages tests",
         "lint:changed": "zsh ./scripts/lint-changed.sh",
-        "analyze": "PHP_INI_SCAN_DIR= vendor/bin/phpstan analyse --memory-limit=-1 --configuration=phpstan.neon",
+        "analyze": "@php vendor/bin/phpstan analyse --memory-limit=-1 --configuration=phpstan.neon",
         "prettier": "npx prettier --write \"packages/**/*.{css,js,yml,json,md,blade.php}\"",
         "eslint": "npx eslint 'packages/**/resources/js/**/*.js' --max-warnings=0",
         "check:composer-paths": "@php scripts/check-composer-local-paths.php",

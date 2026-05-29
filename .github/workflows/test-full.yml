@@ -71,7 +71,7 @@ jobs:
           key: dependencies-php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-testbench-${{ matrix.testbench }}-livewire-${{ matrix.livewire }}-${{ matrix.db }}-${{ hashFiles('composer.json', 'composer.lock', '.github/workflows/test-full.yml') }}
 
       - name: Setup Node
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: 22
           cache: npm
@@ -201,8 +201,7 @@ jobs:
           $output = file_get_contents('full-test-output.txt');
 
           if ($output === false) {
-              fwrite(STDERR, "Unable to read full-test-output.txt.\n");
-              exit(1);
+              throw new RuntimeException('Unable to read full-test-output.txt.');
           }
 
           $patterns = [
@@ -227,8 +226,7 @@ jobs:
           }
 
           if ($tests === null || $assertions === null) {
-              fwrite(STDERR, "Unable to parse final test and assertion counts from Pest output.\n");
-              exit(1);
+              throw new RuntimeException('Unable to parse final test and assertion counts from Pest output.');
           }
 
           file_put_contents(

@@ -6,6 +6,7 @@ namespace Capell\EmailStudio\Support;
 
 use Capell\EmailStudio\Actions\RegisterEmailTemplateAction;
 use Capell\EmailStudio\Models\EmailTemplateRegistration;
+use Illuminate\Support\Facades\Schema;
 
 class EmailTemplateRegistry
 {
@@ -44,6 +45,10 @@ class EmailTemplateRegistry
      */
     public function persist(): array
     {
+        if (! Schema::hasTable((new EmailTemplateRegistration)->getTable())) {
+            return [];
+        }
+
         return array_map(
             static fn (array $registration): EmailTemplateRegistration => RegisterEmailTemplateAction::run(...$registration),
             $this->registrations,
