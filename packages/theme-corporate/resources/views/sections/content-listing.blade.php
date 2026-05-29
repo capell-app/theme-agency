@@ -203,26 +203,48 @@
                     @endforeach
                 </div>
             @else
-                <div class="grid gap-3 lg:grid-cols-[1.05fr_0.95fr] lg:gap-4">
+                <div class="grid gap-4">
                     @foreach ($section->items as $item)
                         <a
                             href="{{ $item['url'] ?? '#' }}"
-                            class="{{ $loop->first ? 'lg:row-span-3' : 'grid grid-cols-[6.5rem_1fr] lg:grid-cols-[8rem_1fr]' }} group overflow-hidden rounded-[0.35rem] border border-slate-200 bg-white transition hover:border-slate-950 dark:border-white/10 dark:bg-white/[0.03] dark:hover:border-white"
+                            class="group grid overflow-hidden border border-slate-200 bg-white transition hover:border-slate-950 md:grid-cols-[0.75fr_1.45fr_0.55fr] dark:border-white/10 dark:bg-white/[0.03] dark:hover:border-white"
                         >
                             @if (! empty($item['image']))
                                 <img
                                     src="{{ $item['image'] }}"
                                     alt=""
-                                    class="{{ $loop->first ? 'aspect-[5/3] sm:aspect-[16/10]' : 'h-full min-h-28 sm:aspect-[4/3] lg:h-full' }} w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+                                    class="h-full min-h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02]"
                                 />
+                            @else
+                                <span
+                                    class="min-h-48 bg-slate-950 p-5 dark:bg-black"
+                                    aria-hidden="true"
+                                >
+                                    <span
+                                        class="block h-2 w-24 bg-[var(--theme-accent)]"
+                                    ></span>
+                                    <span
+                                        class="mt-10 block h-2 w-4/5 bg-white/35"
+                                    ></span>
+                                    <span
+                                        class="mt-3 block h-2 w-3/5 bg-white/25"
+                                    ></span>
+                                    <span
+                                        class="mt-3 block h-2 w-2/5 bg-white/25"
+                                    ></span>
+                                </span>
                             @endif
 
-                            <span class="block p-4 sm:p-5 lg:p-6">
+                            <span class="block min-w-0 p-4 sm:p-5 lg:p-6">
                                 <span
-                                    class="mb-2 flex flex-wrap items-center gap-2 text-xs text-slate-500 sm:mb-3 lg:mb-4 dark:text-slate-400"
+                                    class="mb-2 flex flex-wrap items-center gap-2 text-xs font-semibold tracking-[0.12em] text-slate-500 uppercase sm:mb-3 lg:mb-4 dark:text-slate-400"
                                 >
                                     @if (! empty($item['type']))
                                         <span>{{ $item['type'] }}</span>
+                                    @else
+                                        <span>
+                                            {{ __('capell-theme-corporate::generic.briefing_signal') }}
+                                        </span>
                                     @endif
 
                                     @if (! empty($item['publishedAt']) && ! empty($item['publishedDate']))
@@ -238,13 +260,13 @@
                                     @endif
                                 </span>
                                 <span
-                                    class="{{ $loop->first ? 'text-xl sm:text-2xl' : 'text-base' }} block leading-tight font-semibold text-slate-950 dark:text-white"
+                                    class="block text-lg leading-tight font-semibold text-slate-950 sm:text-xl dark:text-white"
                                 >
                                     {{ $item['title'] }}
                                 </span>
                                 @if (! empty($item['summary']))
                                     <span
-                                        class="mt-2 line-clamp-2 block text-sm leading-6 text-slate-600 sm:line-clamp-3 dark:text-slate-300"
+                                        class="mt-2 block text-sm leading-6 text-slate-600 dark:text-slate-300"
                                     >
                                         {{ $item['summary'] }}
                                     </span>
@@ -263,6 +285,25 @@
                                         @endforeach
                                     </span>
                                 @endif
+                            </span>
+                            <span
+                                class="border-t border-slate-200 bg-[#f7f8f6] p-4 text-sm md:border-t-0 md:border-l dark:border-white/10 dark:bg-white/[0.03]"
+                            >
+                                <span
+                                    class="block text-xs font-semibold tracking-[0.16em] text-slate-500 uppercase dark:text-slate-400"
+                                >
+                                    {{ __('capell-theme-corporate::generic.register_signal') }}
+                                </span>
+                                <span
+                                    class="mt-3 block font-mono text-3xl font-semibold text-[var(--theme-primary)] dark:text-[var(--theme-accent)]"
+                                >
+                                    {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                                </span>
+                                <span
+                                    class="mt-3 block text-xs font-semibold text-slate-600 dark:text-slate-300"
+                                >
+                                    {{ __('capell-theme-corporate::generic.approved_signal') }}
+                                </span>
                             </span>
                         </a>
                     @endforeach

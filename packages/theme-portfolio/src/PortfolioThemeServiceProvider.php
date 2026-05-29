@@ -141,7 +141,7 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
 
     private function isFoundationSection(string $sectionKey): bool
     {
-        return in_array($sectionKey, ['navigation', 'hero', 'proof', 'content-listing', 'cta', 'footer'], true);
+        return $sectionKey === 'navigation';
     }
 
     /**

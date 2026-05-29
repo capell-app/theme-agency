@@ -7,7 +7,7 @@
                 <p
                     class="mb-3 text-xs font-semibold tracking-[0.16em] text-[var(--theme-accent)] uppercase"
                 >
-                    Proof
+                    {{ __('capell-theme-corporate::generic.assurance_label') }}
                 </p>
                 <h2
                     class="max-w-xl text-2xl leading-tight font-semibold sm:text-3xl lg:text-4xl"
@@ -33,7 +33,7 @@
                 >
                     @foreach ($section->items as $item)
                         <figure
-                            class="min-w-[260px] snap-start rounded-[0.35rem] border border-white/10 bg-white/[0.03] p-5 sm:p-6 md:min-w-0"
+                            class="min-w-[260px] snap-start border border-white/10 bg-white/[0.03] p-5 sm:p-6 md:min-w-0"
                         >
                             @if (! empty($item['image']))
                                 <button
@@ -50,13 +50,18 @@
                                 </button>
                             @endif
 
-                            <blockquote
-                                class="text-sm leading-7 text-slate-200"
+                            <p
+                                class="font-mono text-3xl font-semibold text-white"
                             >
-                                {{ $item['quote'] ?? $item['metric'] ?? $item['summary'] ?? '' }}
+                                {{ $item['metric'] ?? str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                            </p>
+                            <blockquote
+                                class="mt-4 text-sm leading-7 text-slate-200"
+                            >
+                                {{ $item['quote'] ?? $item['summary'] ?? '' }}
                             </blockquote>
                             <figcaption
-                                class="mt-5 flex flex-wrap items-center gap-2 text-xs text-slate-400"
+                                class="mt-5 flex flex-wrap items-center gap-2 border-t border-white/10 pt-4 text-xs text-slate-400"
                             >
                                 <span class="font-semibold text-white">
                                     {{ $item['title'] ?? $item['name'] ?? $item['logo'] ?? '' }}

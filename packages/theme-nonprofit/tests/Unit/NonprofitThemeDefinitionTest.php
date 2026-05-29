@@ -6,6 +6,7 @@ use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
 use Capell\Core\ThemeStudio\Data\FeatureSectionData;
+use Capell\Core\ThemeStudio\Data\HeroSectionData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\Tests\Packages\PackagesTestCase;
 use Capell\ThemeStudio\Nonprofit\NonprofitThemeServiceProvider;
@@ -77,5 +78,35 @@ it('renders standard sections through Nonprofit views', function (): void {
         ->toContain('Back the next campaign')
         ->toContain('Supporter action')
         ->toContain('Donate now')
+        ->not->toContain('capell-app/theme-nonprofit');
+});
+
+it('renders hydrated hero data through the Nonprofit hero view', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(NonprofitThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new NonprofitThemeServiceProvider($this->app))->boot($registry);
+
+    $renderer = $registry->sectionRenderer('nonprofit', 'hero');
+
+    expect($renderer)->not->toBeNull();
+
+    $html = $renderer->render(HeroSectionData::from([
+        'heading' => 'Fund the next community appeal',
+        'summary' => 'Hydrated nonprofit hero summary.',
+        'actions' => [
+            ['label' => 'Donate today', 'url' => '#donate'],
+            ['label' => 'Join the team', 'url' => '#volunteer'],
+        ],
+    ]));
+
+    expect($html)
+        ->toContain('Campaign command centre')
+        ->toContain('Fund the next community appeal')
+        ->toContain('Hydrated nonprofit hero summary.')
+        ->toContain('Donate today')
+        ->toContain('Join the team')
+        ->toContain('Winter support fund')
         ->not->toContain('capell-app/theme-nonprofit');
 });

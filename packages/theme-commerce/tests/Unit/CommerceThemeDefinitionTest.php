@@ -200,6 +200,7 @@ it('renders public theme markup without forbidden package or authoring tokens', 
 
     expect($html)
         ->toContain('Stone &amp; Loom')
+        ->toContain('Retail proof ledger')
         ->not->toContain('data-capell-theme')
         ->not->toContain('capell-theme')
         ->not->toContain('capell-app/theme-commerce')

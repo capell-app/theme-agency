@@ -140,7 +140,7 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
 
     private function isFoundationSection(string $sectionKey): bool
     {
-        return in_array($sectionKey, ['navigation', 'hero', 'footer'], true);
+        return in_array($sectionKey, ['navigation', 'footer'], true);
     }
 
     /**

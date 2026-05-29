@@ -23,7 +23,7 @@
 
         <div class="theme-carousel relative mt-10" data-carousel="product-grid">
             <div
-                class="{{ $usesCarousel ? 'flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 [&::-webkit-scrollbar]:hidden' : 'grid gap-4 md:grid-cols-2 lg:grid-cols-3' }}"
+                class="{{ $usesCarousel ? 'flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 md:grid md:grid-cols-3 md:overflow-visible md:pr-0 lg:grid-cols-4 [&::-webkit-scrollbar]:hidden' : 'grid gap-4 md:grid-cols-2 lg:grid-cols-3' }}"
                 data-carousel-track
             >
                 @foreach ($products as $product)

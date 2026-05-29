@@ -141,7 +141,7 @@ final class EducationThemeServiceProvider extends ServiceProvider
 
     private function isFoundationSection(string $sectionKey): bool
     {
-        return in_array($sectionKey, ['navigation', 'hero', 'proof', 'footer'], true);
+        return in_array($sectionKey, ['navigation', 'proof', 'footer'], true);
     }
 
     /**

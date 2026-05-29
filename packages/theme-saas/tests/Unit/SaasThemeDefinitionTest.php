@@ -252,6 +252,9 @@ it('renders public theme markup without package identifiers', function (): void 
 
     expect($html)
         ->toContain('Launchdeck')
+        ->toContain('Growth ledger')
+        ->toContain('Resource pipeline')
+        ->toContain('Conversion command')
         ->toContain('Product signal')
         ->toContain('Workflow signal')
         ->not->toContain('data-capell-theme')
@@ -328,6 +331,7 @@ it('renders marketing-safe blog fallbacks when Blog is not installed', function 
         ->toContain('saas-insights-index')
         ->toContain('Growth resources')
         ->toContain('Activation forecast')
+        ->toContain('Resource brief')
         ->not->toContain('href="/blog/activation-forecast"')
         ->not->toContain('capell-app/theme-saas')
         ->not->toContain('capell-theme-saas')

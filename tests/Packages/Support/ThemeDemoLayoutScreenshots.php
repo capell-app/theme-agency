@@ -453,8 +453,21 @@ function themeDemoExtraScreenshotEntries(string $themeKey): array
         return $entries;
     }
 
+    if ($themeKey === 'commerce') {
+        $entries[] = themeDemoCommerceSectionsScreenshotEntry();
+    }
+
     if ($themeKey === 'healthcare') {
+        $entries[] = themeDemoHealthcareSectionsScreenshotEntry();
         $entries[] = themeDemoHealthcareContactScreenshotEntry();
+    }
+
+    if ($themeKey === 'saas') {
+        $entries[] = themeDemoSaasSectionsScreenshotEntry();
+    }
+
+    if ($themeKey === 'portfolio') {
+        $entries[] = themeDemoPortfolioSectionsScreenshotEntry();
     }
 
     if ($themeKey === 'education') {
@@ -471,6 +484,14 @@ function themeDemoExtraScreenshotEntries(string $themeKey): array
 
     if ($themeKey === 'knowledge') {
         $entries[] = themeDemoKnowledgeSectionsScreenshotEntry();
+    }
+
+    if ($themeKey === 'corporate') {
+        $entries[] = themeDemoCorporateSectionsScreenshotEntry();
+    }
+
+    if ($themeKey === 'agency') {
+        $entries[] = themeDemoAgencySectionsScreenshotEntry();
     }
 
     if (view()->exists($viewNamespace . '::blog.index')) {
@@ -512,6 +533,617 @@ function themeDemoExtraScreenshotEntries(string $themeKey): array
     }
 
     return $entries;
+}
+
+/**
+ * @return array{surface: string, type: string, layout: string, html: string, expectedText: string}
+ */
+function themeDemoCommerceSectionsScreenshotEntry(): array
+{
+    $navigation = new NavigationData(
+        brandName: 'Commerce Demo',
+        items: [
+            ['label' => 'Catalog', 'url' => '#catalog'],
+            ['label' => 'Products', 'url' => '#products'],
+            ['label' => 'Guides', 'url' => '#guides'],
+        ],
+        ctaLabel: 'Shop',
+        ctaUrl: '#shop',
+    );
+
+    $actions = [
+        ['label' => 'View catalog', 'url' => '#catalog', 'style' => 'primary'],
+        ['label' => 'Plan campaign', 'url' => '#campaign', 'style' => 'secondary'],
+    ];
+
+    $productFinder = new class implements ThemeSection
+    {
+        public function key(): string
+        {
+            return 'product-finder';
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return [
+                'section' => (object) [
+                    'heading' => 'Find the right buying path',
+                    'summary' => 'Product finder sections should expose useful retail filters and shopping intent.',
+                    'items' => [
+                        ['group' => 'Use', 'options' => ['Everyday', 'Travel', 'Gifting']],
+                        ['group' => 'Margin', 'options' => ['Hero stock', 'Bundle', 'Clearance']],
+                        ['group' => 'Season', 'options' => ['Launch', 'Peak', 'Evergreen']],
+                    ],
+                ],
+            ];
+        }
+    };
+
+    $collections = new class implements ThemeSection
+    {
+        public function key(): string
+        {
+            return 'collections';
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return [
+                'section' => (object) [
+                    'heading' => 'Merchandised collection cards',
+                    'summary' => 'Collections should feel editorial, image-led, and clearly shoppable.',
+                    'items' => themeDemoScreenshotListingItems([], 'commerce-sections', 6),
+                ],
+            ];
+        }
+    };
+
+    $productGrid = new class implements ThemeSection
+    {
+        public function key(): string
+        {
+            return 'product-grid';
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return [
+                'section' => (object) [
+                    'heading' => 'Premium stock cards',
+                    'summary' => 'Product cards should support dense retail scanning without losing visual warmth.',
+                    'features' => collect(themeDemoScreenshotFeatures('commerce-sections', 8))
+                        ->map(fn (array $feature, int $index): array => $feature + [
+                            'price' => '$' . (48 + ($index * 12)),
+                        ])
+                        ->all(),
+                ],
+            ];
+        }
+    };
+
+    $comparison = new class implements ThemeSection
+    {
+        public function key(): string
+        {
+            return 'comparison';
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return [
+                'section' => (object) [
+                    'heading' => 'Compare buying missions',
+                    'summary' => 'Comparison sections should help shoppers choose by intent, not only by feature.',
+                    'items' => [
+                        ['title' => 'New arrivals', 'summary' => 'High-velocity launch stock with fresh merchandising cues.'],
+                        ['title' => 'Giftable bundles', 'summary' => 'Curated sets that increase average order value.'],
+                        ['title' => 'Editorial staples', 'summary' => 'Evergreen products supported by buying guides.'],
+                    ],
+                ],
+            ];
+        }
+    };
+
+    $catalog = new class implements ThemeSection
+    {
+        public function key(): string
+        {
+            return 'catalog';
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return [
+                'section' => (object) [
+                    'heading' => 'Catalog connection surface',
+                    'summary' => 'Catalog panels should look intentional whether Shopify is installed or not.',
+                    'items' => [
+                        ['title' => 'Live inventory'],
+                        ['title' => 'Editorial collections'],
+                        ['title' => 'Campaign stock'],
+                    ],
+                ],
+            ];
+        }
+    };
+
+    $blogTeaser = new class implements ThemeSection
+    {
+        public function key(): string
+        {
+            return 'blog-teaser';
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return [
+                'section' => (object) [
+                    'heading' => 'Retail buying guides',
+                    'summary' => 'Resource cards should support commerce content without leaking package state.',
+                    'items' => [
+                        ['title' => 'Build a seasonal buying guide', 'summary' => 'Show shoppers how to choose by use case.', 'url' => '#guide-1'],
+                        ['title' => 'Bundle stock without clutter', 'summary' => 'Keep related products easy to compare.', 'url' => '#guide-2'],
+                        ['title' => 'Turn proof into product confidence', 'summary' => 'Use retail proof close to conversion paths.', 'url' => '#guide-3'],
+                    ],
+                ],
+            ];
+        }
+    };
+
+    $page = new ThemePageData(
+        title: 'Screenshot demo commerce sections',
+        brand: new BrandProfileData,
+        sections: [
+            HeroSectionData::from([
+                'heading' => 'Screenshot demo commerce sections',
+                'summary' => 'Commerce-specific sections check catalog panels, product grids, collection cards, retail proof, resources, and conversion surfaces.',
+                'actions' => $actions,
+            ]),
+            $catalog,
+            $productFinder,
+            $productGrid,
+            $collections,
+            $comparison,
+            ProofSectionData::from([
+                'heading' => 'Retail proof ledger',
+                'summary' => 'Proof should fit the merchandising story and stay fully visible on desktop.',
+                'items' => themeDemoScreenshotProofItems(),
+            ]),
+            $blogTeaser,
+            CtaSectionData::from([
+                'heading' => 'Plan the next retail campaign',
+                'summary' => 'Commerce CTAs should feel like a product and merchandising conversion path.',
+                'actions' => $actions,
+                'metrics' => [
+                    ['value' => '24h', 'label' => 'Launch plan'],
+                    ['value' => '3x', 'label' => 'Bundle paths'],
+                    ['value' => '12', 'label' => 'Stock stories'],
+                ],
+            ]),
+        ],
+        navigation: $navigation,
+        footer: new FooterData(
+            brandName: $navigation->brandName,
+            columns: [['heading' => 'Commerce', 'links' => $navigation->items]],
+        ),
+    );
+
+    return [
+        'surface' => 'commerce-sections',
+        'type' => 'theme',
+        'layout' => 'sections',
+        'html' => resolve(ThemeRegistry::class)->renderer('commerce')->render($page),
+        'expectedText' => 'Screenshot demo commerce sections',
+    ];
+}
+
+/**
+ * @return array{surface: string, type: string, layout: string, html: string, expectedText: string}
+ */
+function themeDemoHealthcareSectionsScreenshotEntry(): array
+{
+    $navigation = new NavigationData(
+        brandName: 'Healthcare Demo',
+        items: [
+            ['label' => 'Services', 'url' => '#services'],
+            ['label' => 'Clinicians', 'url' => '#clinicians'],
+            ['label' => 'Resources', 'url' => '#resources'],
+        ],
+        ctaLabel: 'Book',
+        ctaUrl: '#book',
+    );
+
+    $actions = [
+        ['label' => 'Book appointment', 'url' => '#book', 'style' => 'primary'],
+        ['label' => 'Find care', 'url' => '#services', 'style' => 'secondary'],
+    ];
+
+    $page = new ThemePageData(
+        title: 'Screenshot demo healthcare sections',
+        brand: new BrandProfileData,
+        sections: [
+            HeroSectionData::from([
+                'heading' => 'Screenshot demo healthcare sections',
+                'summary' => 'Healthcare-specific sections check service discovery, clinician cards, booking, sessions, care pathways, locations, resources, proof, and conversion surfaces.',
+                'actions' => $actions,
+            ]),
+            themeDemoHealthcareGenericSection('service-finder', [
+                'heading' => 'Find the right clinical route',
+                'summary' => 'Service finder sections should help patients choose a route without feeling like a generic filter panel.',
+                'items' => [
+                    ['group' => 'Need', 'options' => ['GP', 'Diagnostics', 'Physio']],
+                    ['group' => 'Access', 'options' => ['Same week', 'Remote', 'Specialist']],
+                    ['group' => 'Patient', 'options' => ['Adult', 'Family', 'Corporate']],
+                ],
+            ]),
+            themeDemoHealthcareGenericSection('services', [
+                'heading' => 'Clinical service cards',
+                'summary' => 'Service cards should show complete desktop grids while preserving mobile scanning.',
+                'features' => themeDemoScreenshotFeatures('healthcare-sections', 8),
+            ]),
+            themeDemoHealthcareGenericSection('clinicians', [
+                'heading' => 'Clinician pathway cards',
+                'summary' => 'Clinician cards should feel like care routes rather than generic profile tiles.',
+                'items' => [
+                    ['type' => 'Consultant', 'title' => 'Dr Amara Patel', 'summary' => 'Rapid access medicine and referral planning.', 'url' => '#clinician-1'],
+                    ['type' => 'Diagnostics', 'title' => 'Imaging team', 'summary' => 'Clear next steps after tests and scans.', 'url' => '#clinician-2'],
+                    ['type' => 'Therapy', 'title' => 'Rehab clinic', 'summary' => 'Recovery plans for mobility and pain.', 'url' => '#clinician-3'],
+                    ['type' => 'Virtual', 'title' => 'Remote care', 'summary' => 'Follow-up support after appointments.', 'url' => '#clinician-4'],
+                ],
+            ]),
+            themeDemoHealthcareGenericSection('booking', [
+                'heading' => 'Request the right appointment',
+                'summary' => 'Booking sections should present useful service choices and next-step confidence.',
+                'items' => [
+                    ['title' => 'Same-week triage'],
+                    ['title' => 'Specialist referral'],
+                    ['title' => 'Remote follow-up'],
+                ],
+            ]),
+            themeDemoHealthcareGenericSection('events', [
+                'heading' => 'Care sessions and clinics',
+                'summary' => 'Event fallbacks should look like intentional care sessions.',
+                'items' => [
+                    ['date' => 'Tue 09:30', 'title' => 'Heart health clinic', 'summary' => 'Consultant-led checks and advice.', 'url' => '#event-1'],
+                    ['date' => 'Thu 14:00', 'title' => 'Physio assessment', 'summary' => 'Movement screening and treatment plans.', 'url' => '#event-2'],
+                    ['date' => 'Fri 11:00', 'title' => 'Virtual medication review', 'summary' => 'Remote support for ongoing care.', 'url' => '#event-3'],
+                ],
+            ]),
+            themeDemoHealthcareGenericSection('comparison', [
+                'heading' => 'Compare care pathways',
+                'summary' => 'Comparison sections should support patient choice, not plain feature grids.',
+                'items' => [
+                    ['title' => 'Rapid access', 'summary' => 'Same-week appointment with a clear referral path.'],
+                    ['title' => 'Managed care', 'summary' => 'Ongoing plan with diagnostics, review, and follow-up.'],
+                    ['title' => 'Remote support', 'summary' => 'Digital-first check-ins for lower-risk follow-up needs.'],
+                    ['title' => 'Specialist route', 'summary' => 'Consultant-led pathway for complex conditions.'],
+                ],
+            ]),
+            ProofSectionData::from([
+                'heading' => 'Clinical trust indicators',
+                'summary' => 'Proof should feel patient-safe and evidence-led.',
+                'items' => themeDemoScreenshotProofItems(),
+            ]),
+            themeDemoHealthcareGenericSection('blog-teaser', [
+                'heading' => 'Patient resource cards',
+                'summary' => 'Resource cards should read like care guidance without leaking optional package state.',
+                'items' => [
+                    ['type' => 'Guide', 'title' => 'Preparing for a first consultation', 'summary' => 'What to bring and what to expect.', 'url' => '#resource-1'],
+                    ['type' => 'Checklist', 'title' => 'Choosing the right service', 'summary' => 'Match symptoms and goals to care routes.', 'url' => '#resource-2'],
+                    ['type' => 'Advice', 'title' => 'Aftercare questions', 'summary' => 'Follow-up prompts for recovery and review.', 'url' => '#resource-3'],
+                ],
+            ]),
+            themeDemoHealthcareGenericSection('contact', [
+                'heading' => 'Route contact by care need',
+                'summary' => 'Contact cards should guide appointments, referrals, urgent access, and remote care.',
+                'locations' => [
+                    ['label' => 'Clinic', 'title' => 'Central clinic', 'summary' => 'Appointments and referrals.', 'phone' => '+44 20 0000 1000'],
+                    ['label' => 'Urgent', 'title' => 'Rapid access', 'summary' => 'Priority questions and triage.', 'phone' => '+44 20 0000 2000'],
+                    ['label' => 'Virtual', 'title' => 'Remote care', 'summary' => 'Digital consultations and follow-up.', 'phone' => '+44 20 0000 3000'],
+                    ['label' => 'Partners', 'title' => 'Referral team', 'summary' => 'Clinical partner enquiries.', 'phone' => '+44 20 0000 4000'],
+                ],
+            ]),
+            CtaSectionData::from([
+                'heading' => 'Book the right care route',
+                'summary' => 'Healthcare CTAs should move patients from uncertainty to the right next appointment.',
+                'actions' => $actions,
+            ]),
+        ],
+        navigation: $navigation,
+        footer: new FooterData(
+            brandName: $navigation->brandName,
+            columns: [['heading' => 'Healthcare', 'links' => $navigation->items]],
+        ),
+    );
+
+    return [
+        'surface' => 'healthcare-sections',
+        'type' => 'theme',
+        'layout' => 'sections',
+        'html' => resolve(ThemeRegistry::class)->renderer('healthcare')->render($page),
+        'expectedText' => 'Screenshot demo healthcare sections',
+    ];
+}
+
+/**
+ * @param  array<string, mixed>  $viewData
+ */
+function themeDemoHealthcareGenericSection(string $key, array $viewData): ThemeSection
+{
+    return new readonly class($key, $viewData) implements ThemeSection
+    {
+        /**
+         * @param  array<string, mixed>  $viewData
+         */
+        public function __construct(
+            private string $sectionKey,
+            private array $viewData,
+        ) {}
+
+        public function key(): string
+        {
+            return $this->sectionKey;
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return ['section' => (object) $this->viewData];
+        }
+    };
+}
+
+/**
+ * @return array{surface: string, type: string, layout: string, html: string, expectedText: string}
+ */
+function themeDemoSaasSectionsScreenshotEntry(): array
+{
+    $navigation = new NavigationData(
+        brandName: 'SaaS Demo',
+        items: [
+            ['label' => 'Product', 'url' => '#product'],
+            ['label' => 'Proof', 'url' => '#proof'],
+            ['label' => 'Pricing', 'url' => '#pricing'],
+        ],
+        ctaLabel: 'Demo',
+        ctaUrl: '#demo',
+    );
+
+    $actions = [
+        ['label' => 'Start trial', 'url' => '#trial', 'style' => 'primary'],
+        ['label' => 'Book demo', 'url' => '#demo', 'style' => 'secondary'],
+    ];
+
+    $comparison = new class implements ThemeSection
+    {
+        public function key(): string
+        {
+            return 'comparison';
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return [
+                'section' => (object) [
+                    'heading' => 'Compare activation paths',
+                    'summary' => 'Comparison sections should read like product decision support, not plain tables.',
+                    'items' => [
+                        ['title' => 'Self serve', 'summary' => 'Fast setup paths for high-intent trial teams.'],
+                        ['title' => 'Sales assisted', 'summary' => 'Deeper onboarding for larger account motions.'],
+                        ['title' => 'Expansion', 'summary' => 'Lifecycle nudges for teams ready to grow usage.'],
+                    ],
+                ],
+            ];
+        }
+    };
+
+    $calculator = new class implements ThemeSection
+    {
+        public function key(): string
+        {
+            return 'calculator';
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return [
+                'section' => (object) [
+                    'heading' => 'Model the activation lift',
+                    'summary' => 'Calculator sections should feel like a product planning surface.',
+                    'items' => [
+                        ['title' => 'Trial conversion', 'summary' => 'Improve trial-to-qualified-account movement.', 'metric' => '+18%'],
+                        ['title' => 'Activation speed', 'summary' => 'Compress time-to-first-value for new teams.', 'metric' => '2.4x'],
+                        ['title' => 'Expansion signal', 'summary' => 'Surface health scores before renewal risk appears.', 'metric' => '91%'],
+                    ],
+                ],
+            ];
+        }
+    };
+
+    $page = new ThemePageData(
+        title: 'Screenshot demo SaaS sections',
+        brand: new BrandProfileData,
+        sections: [
+            HeroSectionData::from([
+                'heading' => 'Screenshot demo SaaS sections',
+                'summary' => 'SaaS-specific sections check growth ledgers, resource pipelines, comparison, calculator, and conversion command surfaces.',
+                'actions' => $actions,
+            ]),
+            ProofSectionData::from([
+                'heading' => 'Growth proof ledger',
+                'summary' => 'Proof should combine product telemetry, outcomes, and trust signals.',
+                'items' => themeDemoScreenshotProofItems(),
+            ]),
+            FeatureSectionData::from([
+                'heading' => 'Product workflow cards',
+                'summary' => 'Feature cards should look like product capabilities rather than service cards.',
+                'features' => themeDemoScreenshotFeatures('saas-sections', 6),
+            ]),
+            ContentListingSectionData::from([
+                'heading' => 'Resource pipeline cards',
+                'summary' => 'Listing cards should support resource scanning with product-led hierarchy.',
+                'items' => themeDemoScreenshotListingItems([], 'saas-sections', 6),
+            ]),
+            $comparison,
+            $calculator,
+            CtaSectionData::from([
+                'heading' => 'Launch the next growth experiment',
+                'summary' => 'SaaS CTAs should feel like a product conversion surface with a clear pipeline.',
+                'actions' => $actions,
+            ]),
+        ],
+        navigation: $navigation,
+        footer: new FooterData(
+            brandName: $navigation->brandName,
+            columns: [['heading' => 'Product', 'links' => $navigation->items]],
+        ),
+    );
+
+    return [
+        'surface' => 'saas-sections',
+        'type' => 'theme',
+        'layout' => 'sections',
+        'html' => resolve(ThemeRegistry::class)->renderer('saas')->render($page),
+        'expectedText' => 'Screenshot demo SaaS sections',
+    ];
+}
+
+/**
+ * @return array{surface: string, type: string, layout: string, html: string, expectedText: string}
+ */
+function themeDemoPortfolioSectionsScreenshotEntry(): array
+{
+    $navigation = new NavigationData(
+        brandName: 'Portfolio Demo',
+        items: [
+            ['label' => 'Work', 'url' => '#work'],
+            ['label' => 'Evidence', 'url' => '#evidence'],
+            ['label' => 'Contact', 'url' => '#contact'],
+        ],
+        ctaLabel: 'Book',
+        ctaUrl: '#contact',
+    );
+
+    $actions = [
+        ['label' => 'View case studies', 'url' => '#work', 'style' => 'primary'],
+        ['label' => 'Request media kit', 'url' => '#contact', 'style' => 'secondary'],
+    ];
+
+    $page = new ThemePageData(
+        title: 'Screenshot demo portfolio sections',
+        brand: new BrandProfileData,
+        sections: [
+            HeroSectionData::from([
+                'heading' => 'Screenshot demo portfolio sections',
+                'summary' => 'Portfolio-specific sections check editorial work cards, evidence ledgers, studio capabilities, and conversion surfaces.',
+                'actions' => $actions,
+            ]),
+            ProofSectionData::from([
+                'heading' => 'Evidence-led portfolio proof',
+                'summary' => 'Proof blocks should feel like measurable creator outcomes instead of generic metric cards.',
+                'items' => themeDemoScreenshotProofItems(),
+            ]),
+            FeatureSectionData::from([
+                'heading' => 'Studio capability cards',
+                'summary' => 'Capabilities should feel like a consultant or creator studio system.',
+                'features' => themeDemoScreenshotFeatures('portfolio-sections', 6),
+            ]),
+            ContentListingSectionData::from([
+                'heading' => 'Selected work index',
+                'summary' => 'Listing cards should carry image-first case-study hierarchy and useful scanning cues.',
+                'items' => themeDemoScreenshotListingItems([], 'portfolio-sections', 6),
+            ]),
+            CtaSectionData::from([
+                'heading' => 'Plan the next portfolio story',
+                'summary' => 'Portfolio CTAs should feel specific to creative direction and case-study planning.',
+                'actions' => $actions,
+            ]),
+        ],
+        navigation: $navigation,
+        footer: new FooterData(
+            brandName: $navigation->brandName,
+            columns: [['heading' => 'Portfolio', 'links' => $navigation->items]],
+        ),
+    );
+
+    return [
+        'surface' => 'portfolio-sections',
+        'type' => 'theme',
+        'layout' => 'sections',
+        'html' => resolve(ThemeRegistry::class)->renderer('portfolio')->render($page),
+        'expectedText' => 'Screenshot demo portfolio sections',
+    ];
 }
 
 /**
@@ -882,6 +1514,130 @@ function themeDemoKnowledgeGenericSection(string $key, string $heading): ThemeSe
             ];
         }
     };
+}
+
+/**
+ * @return array{surface: string, type: string, layout: string, html: string, expectedText: string}
+ */
+function themeDemoCorporateSectionsScreenshotEntry(): array
+{
+    $navigation = new NavigationData(
+        brandName: 'Corporate Demo',
+        items: [
+            ['label' => 'Governance', 'url' => '#governance'],
+            ['label' => 'Reports', 'url' => '#reports'],
+            ['label' => 'Contact', 'url' => '#contact'],
+        ],
+        ctaLabel: 'Contact',
+        ctaUrl: '#contact',
+    );
+
+    $page = new ThemePageData(
+        title: 'Screenshot demo corporate sections',
+        brand: new BrandProfileData,
+        sections: [
+            HeroSectionData::from([
+                'heading' => 'Screenshot demo corporate sections',
+                'summary' => 'Corporate-specific sections check governance cards, assurance metrics, board-ready listing rows, and formal conversion surfaces.',
+                'actions' => [['label' => 'View reports', 'url' => '#reports', 'style' => 'primary']],
+            ]),
+            FeatureSectionData::from([
+                'heading' => 'Governance operating model',
+                'summary' => 'Feature cards should read as policy, risk, delivery, and reporting systems.',
+                'features' => themeDemoScreenshotFeatures('corporate-sections', 6),
+            ]),
+            ProofSectionData::from([
+                'heading' => 'Assurance evidence',
+                'summary' => 'Proof cards should present sober board-grade metrics and outcomes.',
+                'items' => themeDemoScreenshotProofItems(),
+            ]),
+            ContentListingSectionData::from([
+                'heading' => 'Board register rows',
+                'summary' => 'Listing cards should avoid cramped editorial cards and scan like formal register entries.',
+                'items' => themeDemoScreenshotListingItems([], 'corporate-sections', 5),
+            ]),
+            CtaSectionData::from([
+                'heading' => 'Move the next decision forward',
+                'summary' => 'Corporate sections should support briefing, review, approval, and accountable follow-through.',
+                'actions' => [['label' => 'Book advisory', 'url' => '#contact', 'style' => 'primary']],
+            ]),
+        ],
+        navigation: $navigation,
+        footer: new FooterData(
+            brandName: $navigation->brandName,
+            columns: [['heading' => 'Corporate', 'links' => $navigation->items]],
+        ),
+    );
+
+    return [
+        'surface' => 'corporate-sections',
+        'type' => 'theme',
+        'layout' => 'sections',
+        'html' => resolve(ThemeRegistry::class)->renderer('corporate')->render($page),
+        'expectedText' => 'Screenshot demo corporate sections',
+    ];
+}
+
+/**
+ * @return array{surface: string, type: string, layout: string, html: string, expectedText: string}
+ */
+function themeDemoAgencySectionsScreenshotEntry(): array
+{
+    $navigation = new NavigationData(
+        brandName: 'Agency Demo',
+        items: [
+            ['label' => 'Work', 'url' => '#work'],
+            ['label' => 'Studio', 'url' => '#studio'],
+            ['label' => 'Launch', 'url' => '#launch'],
+        ],
+        ctaLabel: 'Start',
+        ctaUrl: '#launch',
+    );
+
+    $page = new ThemePageData(
+        title: 'Screenshot demo agency sections',
+        brand: new BrandProfileData,
+        sections: [
+            HeroSectionData::from([
+                'heading' => 'Screenshot demo agency sections',
+                'summary' => 'Agency-specific sections check campaign boards, work-wall cards, proof reels, and launch-room conversion surfaces.',
+                'actions' => [['label' => 'View work', 'url' => '#work', 'style' => 'primary']],
+            ]),
+            FeatureSectionData::from([
+                'heading' => 'Campaign system cards',
+                'summary' => 'Feature cards should feel like a studio production system, not generic service cards.',
+                'features' => themeDemoScreenshotFeatures('agency-sections', 6),
+            ]),
+            ProofSectionData::from([
+                'heading' => 'Studio proof wall',
+                'summary' => 'Proof should combine visual confidence, campaign metrics, and clear outcomes.',
+                'items' => themeDemoScreenshotProofItems(),
+            ]),
+            ContentListingSectionData::from([
+                'heading' => 'Work wall cards',
+                'summary' => 'Listing cards should use real media when present and high-quality studio boards otherwise.',
+                'items' => themeDemoScreenshotListingItems([], 'agency-sections', 6),
+            ]),
+            CtaSectionData::from([
+                'heading' => 'Open the next launch room',
+                'summary' => 'Agency CTAs should feel campaign-led and immediate.',
+                'actions' => [['label' => 'Start a brief', 'url' => '#launch', 'style' => 'primary']],
+            ]),
+        ],
+        navigation: $navigation,
+        footer: new FooterData(
+            brandName: $navigation->brandName,
+            columns: [['heading' => 'Agency', 'links' => $navigation->items]],
+        ),
+    );
+
+    return [
+        'surface' => 'agency-sections',
+        'type' => 'theme',
+        'layout' => 'sections',
+        'html' => resolve(ThemeRegistry::class)->renderer('agency')->render($page),
+        'expectedText' => 'Screenshot demo agency sections',
+    ];
 }
 
 /**

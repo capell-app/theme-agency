@@ -8,18 +8,27 @@ use BackedEnum;
 use BadMethodCallException;
 use Capell\Diagnostics\Enums\DiagnosticsPermission;
 use Capell\Diagnostics\Filament\Pages\Tables\QueueHealthTable;
+use Capell\Diagnostics\Filament\Widgets\QueueOperationsStatsWidget;
+use Capell\Diagnostics\Models\FailedJob;
+use Capell\Diagnostics\Models\PendingQueueJob;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Pages\Page;
+use Filament\Resources\Concerns\HasTabs;
+use Filament\Schemas\Components\EmbeddedTable;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Schema as SchemaFacade;
 use Override;
 
 class QueueHealthPage extends Page implements HasActions, HasTable
 {
+    use HasTabs;
     use InteractsWithActions;
     use InteractsWithTable;
 
@@ -28,8 +37,6 @@ class QueueHealthPage extends Page implements HasActions, HasTable
     protected static ?string $slug = 'dashboard-dashboard_reports/queue-health';
 
     protected static ?int $navigationSort = 2;
-
-    protected string $view = 'capell-admin::components.pages.table';
 
     #[Override]
     public static function getNavigationLabel(): string
@@ -83,8 +90,64 @@ class QueueHealthPage extends Page implements HasActions, HasTable
         return __('capell-diagnostics::package.queue_health');
     }
 
+    public function mount(): void
+    {
+        $this->loadDefaultActiveTab();
+    }
+
+    /**
+     * @return array<string, Tab>
+     */
+    public function getTabs(): array
+    {
+        $tabs = [
+            'history' => Tab::make(__('capell-diagnostics::package.queue_operations_tab_history')),
+        ];
+
+        $failedJob = new FailedJob;
+
+        if (SchemaFacade::connection($failedJob->getConnectionName())->hasTable($failedJob->getTable())) {
+            $tabs['failed'] = Tab::make(__('capell-diagnostics::package.queue_operations_tab_failed'));
+        }
+
+        if ($this->shouldShowPendingJobsTab()) {
+            $tabs['pending'] = Tab::make(__('capell-diagnostics::package.queue_operations_tab_pending'));
+        }
+
+        return $tabs;
+    }
+
+    public function content(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                $this->getTabsContentComponent(),
+                EmbeddedTable::make(),
+            ]);
+    }
+
     public function table(Table $table): Table
     {
-        return QueueHealthTable::configure($table);
+        return QueueHealthTable::configure($table, $this);
+    }
+
+    public function shouldShowPendingJobsTab(): bool
+    {
+        $pendingJob = new PendingQueueJob;
+
+        return config('queue.default') === 'database'
+            && (bool) config('capell-diagnostics.queue_monitor.pending_jobs_enabled', true)
+            && SchemaFacade::connection($pendingJob->getConnectionName())->hasTable($pendingJob->getTable());
+    }
+
+    /**
+     * @return array<int, class-string>
+     */
+    #[Override]
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            QueueOperationsStatsWidget::class,
+        ];
     }
 }

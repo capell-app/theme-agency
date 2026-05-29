@@ -6,9 +6,13 @@ use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
 use Capell\Core\ThemeStudio\Data\FeatureSectionData;
+use Capell\Core\ThemeStudio\Data\HeroSectionData;
 use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\Tests\Packages\PackagesTestCase;
 use Capell\ThemeStudio\Knowledge\KnowledgeThemeServiceProvider;
+
+uses(PackagesTestCase::class);
 
 it('defines the Knowledge theme contract', function (): void {
     $definition = KnowledgeThemeServiceProvider::definition();
@@ -92,5 +96,35 @@ it('renders standard sections through Knowledge views', function (): void {
         ->toContain('Build the library path')
         ->toContain('Knowledge path')
         ->toContain('Browse guides')
+        ->not->toContain('capell-app/theme-knowledge');
+});
+
+it('renders hydrated hero data through the Knowledge hero view', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(KnowledgeThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new KnowledgeThemeServiceProvider($this->app))->boot($registry);
+
+    $renderer = $registry->sectionRenderer('knowledge', 'hero');
+
+    expect($renderer)->not->toBeNull();
+
+    $html = $renderer->render(HeroSectionData::from([
+        'heading' => 'Open the research library',
+        'summary' => 'Hydrated knowledge hero summary.',
+        'actions' => [
+            ['label' => 'Search resources', 'url' => '#search'],
+            ['label' => 'Subscribe to digest', 'url' => '#digest'],
+        ],
+    ]));
+
+    expect($html)
+        ->toContain('Editorial command centre')
+        ->toContain('Open the research library')
+        ->toContain('Hydrated knowledge hero summary.')
+        ->toContain('Search resources')
+        ->toContain('Subscribe to digest')
+        ->toContain('Reading queue')
         ->not->toContain('capell-app/theme-knowledge');
 });

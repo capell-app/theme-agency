@@ -6,6 +6,7 @@ use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
 use Capell\Core\ThemeStudio\Data\FeatureSectionData;
+use Capell\Core\ThemeStudio\Data\HeroSectionData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\Tests\Packages\PackagesTestCase;
 use Capell\ThemeStudio\Education\EducationThemeServiceProvider;
@@ -77,5 +78,34 @@ it('renders standard sections through Education views', function (): void {
         ->toContain('Open the next cohort')
         ->toContain('Enrolment')
         ->toContain('Apply now')
+        ->not->toContain('capell-app/theme-education');
+});
+
+it('renders hydrated hero data through the Education hero view', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(EducationThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new EducationThemeServiceProvider($this->app))->boot($registry);
+
+    $renderer = $registry->sectionRenderer('education', 'hero');
+
+    expect($renderer)->not->toBeNull();
+
+    $html = $renderer->render(HeroSectionData::from([
+        'heading' => 'Launch a cohort pathway',
+        'summary' => 'Hydrated education hero summary.',
+        'actions' => [
+            ['label' => 'View courses', 'url' => '#courses'],
+            ['label' => 'Talk to admissions', 'url' => '#admissions'],
+        ],
+    ]));
+
+    expect($html)
+        ->toContain('Learning pathway')
+        ->toContain('Launch a cohort pathway')
+        ->toContain('Hydrated education hero summary.')
+        ->toContain('View courses')
+        ->toContain('Talk to admissions')
         ->not->toContain('capell-app/theme-education');
 });

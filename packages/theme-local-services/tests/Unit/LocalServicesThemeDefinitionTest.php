@@ -6,6 +6,7 @@ use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
 use Capell\Core\ThemeStudio\Data\FeatureSectionData;
+use Capell\Core\ThemeStudio\Data\HeroSectionData;
 use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\Tests\Packages\PackagesTestCase;
@@ -95,5 +96,35 @@ it('renders standard sections through Local Services views', function (): void {
         ->toContain('Book the next service slot')
         ->toContain('Bookable work')
         ->toContain('Request quote')
+        ->not->toContain('capell-app/theme-local-services');
+});
+
+it('renders hydrated hero data through the Local Services hero view', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(LocalServicesThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new LocalServicesThemeServiceProvider($this->app))->boot($registry);
+
+    $renderer = $registry->sectionRenderer('local-services', 'hero');
+
+    expect($renderer)->not->toBeNull();
+
+    $html = $renderer->render(HeroSectionData::from([
+        'heading' => 'Book a service team this week',
+        'summary' => 'Hydrated local services hero summary.',
+        'actions' => [
+            ['label' => 'Request a quote', 'url' => '#quote'],
+            ['label' => 'View service areas', 'url' => '#areas'],
+        ],
+    ]));
+
+    expect($html)
+        ->toContain('Quote desk')
+        ->toContain('Book a service team this week')
+        ->toContain('Hydrated local services hero summary.')
+        ->toContain('Request a quote')
+        ->toContain('View service areas')
+        ->toContain('Live route board')
         ->not->toContain('capell-app/theme-local-services');
 });

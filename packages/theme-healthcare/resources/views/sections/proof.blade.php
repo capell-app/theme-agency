@@ -20,12 +20,12 @@
             data-carousel="healthcare-proof"
         >
             <div
-                class="flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 md:grid md:grid-cols-3 [&::-webkit-scrollbar]:hidden"
+                class="flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 md:grid md:grid-cols-3 md:overflow-visible md:pr-0 [&::-webkit-scrollbar]:hidden"
                 data-carousel-track
             >
                 @foreach (($section->items ?? []) as $item)
                     <figure
-                        class="min-w-[270px] snap-start rounded-2xl border border-white/10 bg-white/[0.04] p-6"
+                        class="min-w-[270px] snap-start rounded-2xl border border-white/10 bg-white/[0.04] p-6 md:min-w-0"
                     >
                         <blockquote class="text-2xl font-black text-white">
                             {{ $item['metric'] ?? $item['quote'] ?? '' }}

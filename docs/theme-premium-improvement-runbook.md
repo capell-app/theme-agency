@@ -185,6 +185,35 @@ Fix issues in these categories:
 
 Premium does not mean more static content. It means better defaults, richer configurable structures, stronger screenshots, and stronger coverage.
 
+## Theme Differentiation Standard
+
+Treat visual similarity as a defect, even when each theme passes tests. A theme should be recognizable from a full-page screenshot without reading the theme name.
+
+Every theme pass must check these identity levers:
+
+- section rhythm: editorial, dashboard-like, campaign-led, directory-led, search-led, or conversion-led
+- card anatomy: what appears inside cards, not only border radius and colors
+- media strategy: photography, abstract product panels, publication cards, headshots, maps, work samples, or impact visuals
+- proof style: metrics, logos, testimonials, clinical trust, retail signals, case-study outcomes, campaign impact, or operational reliability
+- CTA language and layout: theme-specific action paths rather than generic button groups
+- empty/system states: designed for the theme domain, not reused Foundation recovery panels
+- footer and navigation: reflect the theme's information architecture and user intent
+
+Do not solve similarity with palette changes alone. If two themes share the same hero split, repeated cards, proof grid, CTA band, and footer structure, one of them needs a structural pass.
+
+Use this quick distinction matrix while reviewing screenshots:
+
+- `commerce`: merchandising-first, product dense, stock/checkout/catalog cues, dark retail proof panels.
+- `healthcare`: trust-first, appointment and service paths, calm clinical hierarchy, accessible contact routes.
+- `saas`: product-led, feature comparison, calculator/trial proof, documentation and integration cues.
+- `portfolio`: work-led, editorial case-study rhythm, creator credentials, media-kit and newsletter surfaces.
+- `education`: course-led, instructor/event/resource scanning, enrolment and cohort signals.
+- `nonprofit`: campaign-led, impact numbers, donation/volunteer paths, stories and events.
+- `local-services`: quote-led, service-area and locality cues, job photos, urgency and availability signals.
+- `knowledge`: search-led, hub/resource density, tags, reading paths, saved-resource style affordances.
+- `corporate`: boardroom restraint, enterprise proof, governance/operations signals, clean report-like rhythm.
+- `agency`: expressive studio energy, case-study outcomes, process, client logos, bolder visual movement than Corporate.
+
 ## Theme Targets
 
 `commerce`: retail-specific rhythm, dense but readable product cards, strong catalog and checkout-adjacent cues.

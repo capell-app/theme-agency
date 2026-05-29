@@ -179,6 +179,10 @@ it('renders public theme markup without package identifiers', function (): void 
 
     expect($html)
         ->toContain('Northstar Studio')
+        ->toContain('Campaign system')
+        ->toContain('Proof wall')
+        ->toContain('Work wall')
+        ->toContain('Launch room')
         ->not->toContain('data-capell-theme')
         ->not->toContain('capell-theme')
         ->not->toContain('capell-app/theme-agency')

@@ -4,9 +4,18 @@
     <section class="saas-directory bg-white">
         <div class="px-6">
             <div class="grid gap-4 md:grid-cols-[0.75fr_1fr] md:items-end">
-                <h2 class="text-4xl font-black tracking-tight text-slate-950">
-                    {{ $section->heading }}
-                </h2>
+                <div>
+                    <p
+                        class="text-xs font-black tracking-[0.18em] text-cyan-700 uppercase"
+                    >
+                        {{ __('capell-theme-saas::generic.resource_pipeline_label') }}
+                    </p>
+                    <h2
+                        class="mt-4 text-4xl font-black tracking-tight text-slate-950"
+                    >
+                        {{ $section->heading }}
+                    </h2>
+                </div>
                 @if ($section->summary)
                     <p class="max-w-2xl text-lg md:justify-self-end">
                         {{ $section->summary }}
@@ -25,26 +34,74 @@
                     @foreach ($section->items as $item)
                         <a
                             href="{{ $item['url'] ?? '#' }}"
-                            class="group min-w-[240px] snap-start rounded-2xl border border-slate-200 bg-slate-50/70 p-6 transition hover:border-blue-300 hover:bg-white md:min-w-0"
+                            class="group min-w-[260px] snap-start overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl md:min-w-0"
                         >
-                            @if ($item['type'] ?? null)
-                                <p
-                                    class="mb-4 text-xs font-black tracking-widest text-cyan-700 uppercase"
-                                >
-                                    {{ $item['type'] }}
-                                </p>
-                            @endif
-
-                            <h3
-                                class="text-xl font-black group-hover:text-blue-700"
+                            <span
+                                class="block bg-slate-950 p-4 text-white"
+                                aria-hidden="true"
                             >
-                                {{ $item['title'] }}
-                            </h3>
-                            <p class="mt-3 text-sm">
-                                {{ $item['summary'] ?? '' }}
-                            </p>
+                                <span class="flex items-center justify-between">
+                                    <span
+                                        class="h-2 w-20 rounded-full bg-cyan-300"
+                                    ></span>
+                                    <span
+                                        class="h-2 w-8 rounded-full bg-blue-500"
+                                    ></span>
+                                </span>
+                                <span class="mt-7 block space-y-2">
+                                    <span
+                                        class="block h-2 rounded-full bg-white/45"
+                                    ></span>
+                                    <span
+                                        class="block h-2 w-2/3 rounded-full bg-white/25"
+                                    ></span>
+                                </span>
+                                <span class="mt-5 grid grid-cols-3 gap-2">
+                                    <span
+                                        class="h-8 rounded-md bg-cyan-400/30"
+                                    ></span>
+                                    <span
+                                        class="h-8 rounded-md bg-blue-500/40"
+                                    ></span>
+                                    <span
+                                        class="h-8 rounded-md bg-white/10"
+                                    ></span>
+                                </span>
+                            </span>
+
+                            <span class="block p-6">
+                                @if ($item['type'] ?? null)
+                                    <p
+                                        class="mb-4 text-xs font-black tracking-widest text-cyan-700 uppercase"
+                                    >
+                                        {{ $item['type'] }}
+                                    </p>
+                                @endif
+
+                                <h3
+                                    class="text-xl font-black group-hover:text-blue-700"
+                                >
+                                    {{ $item['title'] }}
+                                </h3>
+                                <p class="mt-3 text-sm">
+                                    {{ $item['summary'] ?? '' }}
+                                </p>
+                                <span
+                                    class="mt-5 inline-flex rounded-full bg-slate-950 px-3 py-1.5 text-xs font-black text-white"
+                                >
+                                    {{ __('capell-theme-saas::generic.open_resource_label') }}
+                                </span>
+                            </span>
                         </a>
                     @endforeach
+
+                    @if (empty($section->items))
+                        <div
+                            class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-slate-600"
+                        >
+                            {{ __('capell-theme-saas::generic.empty_resource_pipeline') }}
+                        </div>
+                    @endif
                 </div>
 
                 <button

@@ -22,12 +22,12 @@
             data-carousel="healthcare-comparison"
         >
             <div
-                class="flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 md:grid md:grid-cols-2 [&::-webkit-scrollbar]:hidden"
+                class="flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 md:grid md:grid-cols-2 md:overflow-visible md:pr-0 [&::-webkit-scrollbar]:hidden"
                 data-carousel-track
             >
                 @foreach ($items as $item)
                     <article
-                        class="min-w-[300px] snap-start rounded-xl border border-stone-200 bg-white p-5"
+                        class="min-w-[300px] snap-start rounded-xl border border-stone-200 bg-white p-5 md:min-w-0"
                     >
                         <h3 class="text-lg font-black text-[#14323a]">
                             {{ $item['title'] ?? $item['label'] ?? '' }}

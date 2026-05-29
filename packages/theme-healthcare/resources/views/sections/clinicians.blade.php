@@ -16,13 +16,13 @@
             data-carousel="healthcare-clinicians"
         >
             <div
-                class="flex snap-x snap-mandatory [scrollbar-width:none] gap-5 overflow-x-auto pr-6 pb-2 [&::-webkit-scrollbar]:hidden"
+                class="flex snap-x snap-mandatory [scrollbar-width:none] gap-5 overflow-x-auto pr-6 pb-2 lg:grid lg:grid-cols-4 lg:overflow-visible lg:pr-0 [&::-webkit-scrollbar]:hidden"
                 data-carousel-track
             >
                 @foreach (($section->items ?? []) as $item)
                     <a
                         href="{{ $item['url'] ?? '#' }}"
-                        class="group min-w-[240px] snap-start overflow-hidden rounded-xl border border-stone-200 bg-white transition hover:-translate-y-1 hover:border-[#0f766e] hover:shadow-lg md:min-w-0"
+                        class="group min-w-[240px] snap-start overflow-hidden rounded-xl border border-stone-200 bg-white transition hover:-translate-y-1 hover:border-[#0f766e] hover:shadow-lg lg:min-w-0"
                     >
                         @if ($item['image'] ?? $item['imageUrl'] ?? null)
                             <img

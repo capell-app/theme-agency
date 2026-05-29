@@ -32,12 +32,12 @@
             data-carousel="healthcare-services"
         >
             <div
-                class="{{ $usesCarousel ? 'flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 [&::-webkit-scrollbar]:hidden' : $gridClass }}"
+                class="{{ $usesCarousel ? 'flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 md:grid md:grid-cols-3 md:overflow-visible md:pr-0 lg:grid-cols-4 [&::-webkit-scrollbar]:hidden' : $gridClass }}"
                 data-carousel-track
             >
                 @foreach ($services as $service)
                     <article
-                        class="{{ $usesCarousel ? 'min-w-[250px] snap-start sm:min-w-[270px]' : '' }} rounded-xl border border-stone-200 bg-[#f6fbfd] p-3 transition hover:-translate-y-1 hover:border-[#0f766e] hover:shadow-lg"
+                        class="{{ $usesCarousel ? 'min-w-[250px] snap-start sm:min-w-[270px] md:min-w-0' : '' }} rounded-xl border border-stone-200 bg-[#f6fbfd] p-3 transition hover:-translate-y-1 hover:border-[#0f766e] hover:shadow-lg"
                     >
                         @if ($service['image'] ?? $service['imageUrl'] ?? null)
                             <img

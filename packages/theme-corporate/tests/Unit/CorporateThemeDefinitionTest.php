@@ -163,6 +163,10 @@ it('renders public theme markup without package identifiers', function (): void 
 
     expect($html)
         ->toContain('Northbridge Advisory')
+        ->toContain('Operating model')
+        ->toContain('Assurance')
+        ->toContain('Board action')
+        ->toContain('Register')
         ->not->toContain('data-capell-theme')
         ->not->toContain('capell-theme')
         ->not->toContain('capell-app/theme-corporate')

@@ -20,12 +20,12 @@
             data-carousel="healthcare-contact"
         >
             <div
-                class="flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 sm:grid sm:grid-cols-2 [&::-webkit-scrollbar]:hidden"
+                class="flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 sm:grid sm:grid-cols-2 sm:overflow-visible sm:pr-0 [&::-webkit-scrollbar]:hidden"
                 data-carousel-track
             >
                 @foreach ($locations as $location)
                     <article
-                        class="min-w-[260px] snap-start rounded-lg border border-[#d9e8ee] bg-white p-6"
+                        class="min-w-[260px] snap-start rounded-lg border border-[#d9e8ee] bg-white p-6 sm:min-w-0"
                     >
                         <p
                             class="text-xs font-black tracking-widest text-[#2563eb] uppercase"
