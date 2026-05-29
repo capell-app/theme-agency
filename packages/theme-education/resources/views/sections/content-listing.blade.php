@@ -3,12 +3,10 @@
 @endphp
 
 <section class="theme-section theme-section-content-listing bg-white">
-    <div class="mx-auto max-w-5xl px-6 py-14">
-        <div class="grid gap-5 md:grid-cols-[0.72fr_1fr] md:items-end">
+    <div class="mx-auto max-w-6xl px-6 py-16 lg:py-20">
+        <div class="grid gap-5 md:grid-cols-[0.7fr_1fr] md:items-end">
             <div>
-                <p
-                    class="text-xs font-black tracking-[0.18em] text-[#14b8a6] uppercase"
-                >
+                <p class="text-xs font-black text-[#0f766e] uppercase">
                     {{ __('capell-theme-education::generic.learning_resources_label') }}
                 </p>
                 <h2
@@ -19,7 +17,9 @@
             </div>
 
             @if (($summary ?? $section->summary ?? null) !== null)
-                <p class="max-w-2xl text-lg text-slate-600 md:justify-self-end">
+                <p
+                    class="max-w-2xl text-lg leading-8 text-slate-600 md:justify-self-end"
+                >
                     {{ $summary ?? $section->summary }}
                 </p>
             @endif
@@ -37,37 +37,49 @@
                 </p>
             </div>
         @else
-            <div class="mt-10 grid gap-4 md:grid-cols-3">
+            <div class="mt-10 grid gap-5 md:grid-cols-6">
                 @foreach ($listingItems as $item)
+                    @php
+                        $image = $item['image'] ?? $item['imageUrl'] ?? $item['mediaUrl'] ?? null;
+                    @endphp
+
                     <article
-                        class="group flex min-h-full flex-col overflow-hidden border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-[#4338ca] hover:shadow-xl"
+                        class="{{ $loop->first ? 'md:col-span-3 md:row-span-2' : 'md:col-span-3 lg:col-span-2' }} group grid min-h-full overflow-hidden border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-[#4338ca] hover:shadow-xl"
                     >
-                        @if ($item['image'] ?? $item['imageUrl'] ?? null)
+                        @if (is_string($image) && $image !== '')
                             <img
-                                src="{{ $item['image'] ?? $item['imageUrl'] }}"
+                                src="{{ $image }}"
                                 alt=""
-                                class="aspect-[4/2.4] w-full object-cover"
+                                class="{{ $loop->first ? 'aspect-[16/8]' : 'aspect-[4/2.5]' }} w-full object-cover"
                             />
                         @else
                             <div
-                                class="aspect-[4/2.4] bg-[#eef6ff] p-4"
+                                class="{{ $loop->first ? 'aspect-[16/8]' : 'aspect-[4/2.5]' }} bg-[#eef6ff] p-4"
                                 aria-hidden="true"
                             >
                                 <div class="grid h-full grid-cols-3 gap-2">
                                     <span class="bg-white"></span>
                                     <span class="bg-[#4338ca]/20"></span>
-                                    <span class="bg-white"></span>
+                                    <span class="bg-[#14b8a6]/25"></span>
                                 </div>
                             </div>
                         @endif
 
-                        <div class="flex flex-1 flex-col p-5">
-                            <p
-                                class="text-xs font-black tracking-[0.16em] text-[#4338ca] uppercase"
-                            >
-                                {{ $item['type'] ?? __('capell-theme-education::generic.resource_signal') }}
-                            </p>
-                            <h3 class="mt-3 text-lg font-black text-[#0f172a]">
+                        <div class="grid gap-4 p-5">
+                            <div class="flex items-start justify-between gap-3">
+                                <p
+                                    class="text-xs font-black text-[#4338ca] uppercase"
+                                >
+                                    {{ $item['type'] ?? __('capell-theme-education::generic.resource_signal') }}
+                                </p>
+                                <p
+                                    class="font-mono text-sm font-black text-slate-400"
+                                >
+                                    {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                                </p>
+                            </div>
+
+                            <h3 class="text-xl font-black text-[#0f172a]">
                                 @if ($item['url'] ?? null)
                                     <a
                                         href="{{ $item['url'] }}"
@@ -79,13 +91,11 @@
                                     {{ $item['title'] }}
                                 @endif
                             </h3>
-                            <p class="mt-3 text-sm leading-6 text-slate-600">
+                            <p class="text-sm leading-6 text-slate-600">
                                 {{ $item['summary'] ?? $item['description'] ?? '' }}
                             </p>
-                            <div
-                                class="mt-5 flex flex-wrap gap-2 text-xs font-bold"
-                            >
-                                @foreach (($item['meta'] ?? []) ?: [__('capell-theme-education::generic.resource_meta_signal')] as $meta)
+                            <div class="flex flex-wrap gap-2 text-xs font-bold">
+                                @foreach (($item['meta'] ?? []) ?: [__('capell-theme-education::generic.resource_meta_signal'), __('capell-theme-education::generic.course_outcome_signal')] as $meta)
                                     <span
                                         class="bg-[#eef2ff] px-3 py-1 text-[#4338ca]"
                                     >

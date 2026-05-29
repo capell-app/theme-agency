@@ -16,6 +16,7 @@ use Capell\Core\ThemeStudio\Data\ThemePageData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Corporate\CorporateThemeServiceProvider;
 use Capell\ThemeStudio\Corporate\Health\ThemeCorporateHealthCheck;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 
 it('defines the corporate free renderer contract', function (): void {
@@ -68,6 +69,29 @@ it('declares renderers for every included corporate section', function (): void 
         'cta',
         'footer',
     ]);
+});
+
+it('renders the corporate hero with a board briefing fallback', function (): void {
+    View::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-corporate::sections.hero', [
+        'section' => new HeroSectionData(
+            heading: 'Governance for growing teams',
+            eyebrow: 'Advisory',
+            summary: 'Practical strategy, compliance, and delivery support.',
+            actions: [['label' => 'Explore services', 'url' => '/services']],
+        ),
+    ])->render();
+
+    expect($html)
+        ->toContain('Governance for growing teams')
+        ->toContain('Board briefing')
+        ->toContain('Board pack')
+        ->toContain('Pack ready')
+        ->toContain('Decision log')
+        ->toContain('Agenda')
+        ->not->toContain('capell-app/theme-corporate');
 });
 
 it('registers corporate only when the theme package is installed', function (): void {

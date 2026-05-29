@@ -7,8 +7,8 @@ Use this scale when creating a new Capell theme, changing one existing theme, or
 | Tier       | Packages                                                                                                                                                                                                                                       | Role                                                                                                                                                           | Expected depth                                                                                                                    |
 | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | Foundation | `capell-app/foundation-theme`                                                                                                                                                                                                                  | Default frontend runtime, shared renderer conventions, Tailwind asset generation, media URL handling, generic Blade components, and base Layout Builder areas. | Boring, stable, shared. Changes here affect every child theme.                                                                    |
-| Basic/free | `capell-app/theme-agency`, `capell-app/theme-corporate`                                                                                                                                                                                        | First-party visual treatments for common service, portfolio, B2B, public-sector, and professional sites.                                                       | Thin child themes with polished presets, page wrappers, and the standard section set.                                             |
-| Premium    | `capell-app/theme-commerce`, `capell-app/theme-education`, `capell-app/theme-healthcare`, `capell-app/theme-knowledge`, `capell-app/theme-local-services`, `capell-app/theme-nonprofit`, `capell-app/theme-portfolio`, `capell-app/theme-saas` | Higher-value themes for domains that need richer page patterns, optional package integrations, and more content states.                                        | Extra renderer layers, domain sections, optional package fallbacks, richer marketplace screenshots, and more regression coverage. |
+| Basic/free | `capell-app/theme-agency`, `capell-app/theme-corporate`                                                                                                                                                                                        | First-party visual treatments for creative/campaign and business/boardroom sites when the standard section set is enough.                                      | Thin child themes with polished presets, page wrappers, and the standard section set.                                             |
+| Premium    | `capell-app/theme-commerce`, `capell-app/theme-education`, `capell-app/theme-healthcare`, `capell-app/theme-knowledge`, `capell-app/theme-local-services`, `capell-app/theme-nonprofit`, `capell-app/theme-portfolio`, `capell-app/theme-saas` | Higher-value themes for domains that need richer page patterns, optional package integrations, more content states, or a distinct case-study workflow.         | Extra renderer layers, domain sections, optional package fallbacks, richer marketplace screenshots, and more regression coverage. |
 
 Foundation is the normal/default theme. Basic and premium themes extend Foundation rather than replacing it unless Foundation's rendering contract is genuinely the wrong base.
 
@@ -149,6 +149,40 @@ Premium themes need more than a colour palette over the standard sections. They 
 - Clear health checks for missing manifests, optional integrations, and stale theme data.
 
 Premium does not mean more static content. It means better defaults, richer configurable structures, and stronger coverage.
+
+## Non-Overlap Standard
+
+First-party themes should not overlap where it is avoidable. A premium theme must own a distinct buyer and primary workflow. If two themes share the same buyer, homepage anatomy, card system, proof treatment, listing rhythm, and conversion path, keep the stronger product lane and demote, merge, or fold the weaker one into Foundation.
+
+Current lane ownership:
+
+- `commerce`: merchandising and buying journeys.
+- `healthcare`: service, clinician, care-pathway, and appointment journeys.
+- `saas`: product, comparison, trial, and documentation journeys.
+- `knowledge`: search-led resource and reading journeys.
+- `local-services`: quote, locality, dispatch, and job-proof journeys.
+- `nonprofit`: campaign, donation, volunteer, impact, and story journeys.
+- `education`: course, cohort, instructor, event, and enrolment journeys.
+- `portfolio`: premium studio/case-study lane for work outcomes, case files, media kits, and audience-building paths.
+- `agency`: basic creative/campaign preset with expressive launch-room treatment; do not duplicate Portfolio's case-study workflow.
+- `corporate`: basic business/boardroom preset unless it becomes a distinct enterprise workflow.
+
+Future local-business verticals should extend this non-overlap standard rather than duplicate `local-services`.
+
+Recommended vertical lanes:
+
+- `theme-restaurant`: menu, reservation, private dining, events, opening-hours, and offer journeys.
+- `theme-equestrian`: riding lessons, clinics, camps, instructor/horse profiles, rider-level paths, and events-calendar journeys.
+- `theme-estate-agents`: property search, featured listings, valuation, local guide, agent proof, and viewing-request journeys.
+- `theme-salon`: treatment menu, stylist profiles, availability, before/after proof, reviews, and appointment-request journeys.
+- `theme-practice`: local professional services for solicitors, accountants, and advisers, centred on practice areas, credentials, consultation intake, resources, and compliance/trust.
+
+These themes should not own models, migrations, or admin resources by default. If a vertical needs live records or interactive filtering, put the data behaviour in an existing or new companion package and let the theme register a public-safe presentation layer. Examples:
+
+- Use `capell-app/events` for equestrian lessons, clinics, camps, restaurant events, and fitness/studio classes.
+- Use `capell-app/form-builder` for reservations, appointment requests, valuations, rider assessments, and client intake.
+- Use `capell-app/search` or a future `capell-app/property-listings` package for estate-agent search.
+- Use Livewire for public interaction only when it improves the visitor workflow: property search filters, event/class filters, appointment availability, menu filters, or intake routing. Components need stable loop keys, loading states, empty states, and package-missing fallbacks.
 
 ## Verification
 

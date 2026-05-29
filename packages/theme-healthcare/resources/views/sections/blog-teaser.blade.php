@@ -42,38 +42,68 @@
                     data-carousel-track
                 >
                     @foreach ($articles as $article)
+                        @php
+                            $imageUrl = $article['imageUrl'] ?? ($article['mediaUrl'] ?? null);
+                            $imageAlt = $article['imageAlt'] ?? ($article['mediaAlt'] ?? ($article['title'] ?? ''));
+                            $resourceType = $article['type'] ?? __('capell-theme-healthcare::generic.article_label');
+                        @endphp
+
                         @if ($blogAvailable)
                             <a
                                 href="{{ $article['url'] ?? '#' }}"
-                                class="{{ $usesCarousel ? 'min-w-[270px] snap-start sm:min-w-[300px]' : '' }} healthcare-resource-card rounded-xl border border-stone-200 bg-white p-6 transition hover:-translate-y-1 hover:border-[#0f766e] hover:shadow-lg"
+                                class="{{ $usesCarousel ? 'min-w-[270px] snap-start sm:min-w-[300px]' : '' }} healthcare-resource-card overflow-hidden rounded-xl border border-stone-200 bg-white transition hover:-translate-y-1 hover:border-[#0f766e] hover:shadow-lg"
                             >
-                                <p
-                                    class="text-xs font-black tracking-widest text-[#0f766e] uppercase"
-                                >
-                                    {{ $article['type'] ?? __('capell-theme-healthcare::generic.article_label') }}
-                                </p>
-                                <h3 class="mt-4 text-xl font-black">
-                                    {{ $article['title'] }}
-                                </h3>
-                                <p class="mt-3 text-sm">
-                                    {{ $article['summary'] ?? '' }}
-                                </p>
+                                @include('capell-theme-healthcare::sections.partials.resource-card-media', [
+                                    'imageUrl' => $imageUrl,
+                                    'imageAlt' => $imageAlt,
+                                    'resourceType' => $resourceType,
+                                ])
+                                <span class="block p-6">
+                                    <span
+                                        class="text-xs font-black tracking-widest text-[#0f766e] uppercase"
+                                    >
+                                        {{ $resourceType }}
+                                    </span>
+                                    <span class="mt-4 block text-xl font-black">
+                                        {{ $article['title'] }}
+                                    </span>
+                                    <span class="mt-3 block text-sm">
+                                        {{ $article['summary'] ?? '' }}
+                                    </span>
+                                    <span
+                                        class="mt-5 inline-flex rounded-full bg-[#e0f2f1] px-3 py-1 text-xs font-black text-[#0f766e]"
+                                    >
+                                        {{ __('capell-theme-healthcare::generic.clinical_review') }}
+                                    </span>
+                                </span>
                             </a>
                         @else
                             <article
-                                class="{{ $usesCarousel ? 'min-w-[270px] snap-start sm:min-w-[300px]' : '' }} healthcare-resource-card rounded-xl border border-stone-200 bg-white p-6"
+                                class="{{ $usesCarousel ? 'min-w-[270px] snap-start sm:min-w-[300px]' : '' }} healthcare-resource-card overflow-hidden rounded-xl border border-stone-200 bg-white"
                             >
-                                <p
-                                    class="text-xs font-black tracking-widest text-[#0f766e] uppercase"
-                                >
-                                    {{ __('capell-theme-healthcare::generic.resource') }}
-                                </p>
-                                <h3 class="mt-4 text-xl font-black">
-                                    {{ $article['title'] }}
-                                </h3>
-                                <p class="mt-3 text-sm">
-                                    {{ $article['summary'] ?? '' }}
-                                </p>
+                                @include('capell-theme-healthcare::sections.partials.resource-card-media', [
+                                    'imageUrl' => $imageUrl,
+                                    'imageAlt' => $imageAlt,
+                                    'resourceType' => __('capell-theme-healthcare::generic.resource'),
+                                ])
+                                <div class="p-6">
+                                    <p
+                                        class="text-xs font-black tracking-widest text-[#0f766e] uppercase"
+                                    >
+                                        {{ __('capell-theme-healthcare::generic.resource') }}
+                                    </p>
+                                    <h3 class="mt-4 text-xl font-black">
+                                        {{ $article['title'] }}
+                                    </h3>
+                                    <p class="mt-3 text-sm">
+                                        {{ $article['summary'] ?? '' }}
+                                    </p>
+                                    <p
+                                        class="mt-5 inline-flex rounded-full bg-[#e0f2f1] px-3 py-1 text-xs font-black text-[#0f766e]"
+                                    >
+                                        {{ __('capell-theme-healthcare::generic.clinical_review') }}
+                                    </p>
+                                </div>
                             </article>
                         @endif
                     @endforeach

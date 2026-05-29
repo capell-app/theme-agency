@@ -7,6 +7,7 @@ use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
 use Capell\Core\ThemeStudio\Data\FeatureSectionData;
 use Capell\Core\ThemeStudio\Data\HeroSectionData;
+use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\Tests\Packages\PackagesTestCase;
 use Capell\ThemeStudio\Nonprofit\NonprofitThemeServiceProvider;
@@ -62,6 +63,16 @@ it('renders standard sections through Nonprofit views', function (): void {
             actions: [['label' => 'Donate now', 'url' => '#donate', 'style' => 'primary']],
         ));
 
+    $proofHtml = $registry
+        ->sectionRenderer('nonprofit', 'proof')
+        ->render(new ProofSectionData(
+            heading: 'Campaign outcomes',
+            summary: 'Proof should feel like supporter and campaign evidence.',
+            items: [
+                ['metric' => '84%', 'name' => 'Funded', 'summary' => 'Supporters moved the appeal toward its next milestone.'],
+            ],
+        ));
+
     expect($featureHtml)
         ->toContain('Impact pathways')
         ->toContain('Impact paths')
@@ -78,6 +89,13 @@ it('renders standard sections through Nonprofit views', function (): void {
         ->toContain('Back the next campaign')
         ->toContain('Supporter action')
         ->toContain('Donate now')
+        ->not->toContain('capell-app/theme-nonprofit');
+
+    expect($proofHtml)
+        ->toContain('Supporter proof')
+        ->toContain('Campaign proof')
+        ->toContain('84%')
+        ->toContain('Funded')
         ->not->toContain('capell-app/theme-nonprofit');
 });
 

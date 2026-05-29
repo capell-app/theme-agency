@@ -17,7 +17,45 @@ The first-party child themes covered by this playbook are:
 - `portfolio`
 - `saas`
 
-These all extend Foundation. In internal docs, only some are classed as premium, but when Ben asks for the "10 premium themes", treat that as this full first-party child-theme set.
+These all extend Foundation. When Ben asks for the "10 premium themes", treat that as the full first-party child-theme screenshot quality pass, not a decision that all ten should remain paid/premium products. Every theme still needs route-backed screenshots and public-safety checks. Premium-depth polish should be reserved for themes with a distinct buyer and domain workflow.
+
+Current direction:
+
+- Premium focus: `commerce`, `healthcare`, `saas`, `knowledge`, `local-services`, `nonprofit`, `education`, and `portfolio`.
+- Premium studio lane: `portfolio` owns the work outcome, case-file, media-kit, and audience-building workflow.
+- Basic/free creative lane: keep `agency` as an expressive campaign/launch-room preset; do not duplicate Portfolio's deeper case-study workflow.
+- Basic/free business lane: keep `corporate` as a polished boardroom/business preset unless a future enterprise workflow justifies premium depth.
+
+Do not solve similarity by adding more colour variants. If a theme cannot be recognised from a full-page screenshot without reading its name, it needs structural work or should stay out of the premium lane.
+
+## Non-Overlap Rule
+
+Premium themes should not overlap where it is avoidable. Each premium candidate needs a clear buyer and primary workflow:
+
+- `commerce`: merchandising and buying journeys.
+- `healthcare`: service, clinician, care-pathway, and appointment journeys.
+- `saas`: product, comparison, trial, and documentation journeys.
+- `knowledge`: search-led resource and reading journeys.
+- `local-services`: quote, locality, dispatch, and job-proof journeys.
+- `nonprofit`: campaign, donation, volunteer, impact, and story journeys.
+- `education`: course, cohort, instructor, event, and enrolment journeys.
+- Studio lane: `portfolio` is the single premium studio/case-study theme.
+- `agency`: basic creative/campaign preset, separate from Portfolio.
+- `corporate`: basic business/boardroom preset unless it becomes a distinct enterprise workflow.
+
+If two themes share the same buyer, section anatomy, proof style, listing cards, and CTA path, treat that as a merge/demotion signal. The right fix is to choose the stronger product lane, not to keep both and make another colour pass.
+
+## Future Local-Business Premium Themes
+
+For new local-business premium themes, prefer fewer strong verticals over many thin colour swaps. The recommended first set is:
+
+- `theme-estate-agents`: property search, valuation CTA, viewings, local guides, and agent proof.
+- `theme-equestrian`: riding lessons, clinics, camps, instructor/horse profiles, and events-calendar booking paths.
+- `theme-restaurant`: menus, reservations, private dining, events, reviews, opening times, and offers.
+- `theme-salon`: treatment menus, stylist profiles, availability prompts, before/after proof, reviews, and appointment requests.
+- `theme-practice`: solicitors, accountants, and local advisers with practice areas, credentials, consultation intake, resources, and trust/compliance proof.
+
+Screenshot QA for these themes must prove the vertical workflow, not only the standard page set. For example, Estate Agents needs property search and listing/detail screenshots; Equestrian needs lesson/event calendar screenshots; Restaurant needs menu and reservation/event screenshots. Livewire-powered screenshots should include default, filtered, loading/empty-equivalent, and missing optional package fallback states where feasible.
 
 ## Source Of Truth
 
@@ -42,16 +80,16 @@ Relevant shared references:
 
 ## Fixed Execution Order
 
-Work one theme at a time. Do not batch-edit several themes before validation.
+Work one theme at a time. Do not batch-edit several themes before validation. The order prioritises themes with the clearest premium buyer before conditional/basic themes.
 
 1. `commerce`
 2. `healthcare`
 3. `saas`
-4. `portfolio`
-5. `education`
+4. `knowledge`
+5. `local-services`
 6. `nonprofit`
-7. `local-services`
-8. `knowledge`
+7. `education`
+8. `portfolio`
 9. `corporate`
 10. `agency`
 
@@ -96,6 +134,14 @@ Review these extra surfaces when present:
 
 Do not rely on a green screenshot test alone. The test proves capture, expected text, image loading, and fixture shape. It does not prove the design is good.
 
+For contact-sheet review, use the safe generator rather than hand-writing `montage` commands:
+
+```bash
+npm run screenshots:contact-sheets -- --out=/tmp/capell-theme-audit/contact-sheets
+```
+
+The generator groups committed route-backed screenshot fixtures by surface, labels each tile by theme key, and refuses to write inside `tests/Packages/Fixtures/theme-demo-layout-screenshots`. Use `--surface=homepage` or repeat `--surface` to build a smaller set.
+
 ## Visual Quality Bar
 
 Fix issues in these categories:
@@ -114,13 +160,13 @@ Keep the visual language appropriate to the theme:
 - `commerce`: retail-specific rhythm, dense but readable product cards, strong catalog and checkout-adjacent cues.
 - `healthcare`: high-trust clinical presentation, clear service/contact paths, calm operational states.
 - `saas`: product-grade comparison, calculator, proof, and blog surfaces.
-- `portfolio`: editorial creator or consultant feel, richer work and case-study treatment.
+- `portfolio`: premium studio/case-study treatment with work outcomes, case files, media-kit, and audience-building surfaces.
 - `education`: course and instructor scanning, event/resource clarity, enrolment flow.
 - `nonprofit`: clear campaign, impact, volunteer, donate, story, and event hierarchy.
 - `local-services`: quote-led conversion, locality cues, service-area clarity.
 - `knowledge`: search-led and hub-led discovery, readable resource density.
-- `corporate`: restrained high-trust enterprise presentation.
-- `agency`: more expressive than Corporate while staying clean and production-safe.
+- `corporate`: restrained boardroom/business presentation, board-pack and governance cues, production-ready but basic/free.
+- `agency`: expressive campaign and launch-room preset, visually energetic while staying clean and production-safe.
 
 Avoid making every theme feel like a palette swap. Repeated cards, proof sections, CTAs, footers, and recovery pages should carry the theme's domain.
 
@@ -222,6 +268,8 @@ Hardening:
 
 Quality target: premium editorial creator or consultant feel; richer work and case-study surfaces; intentional media-kit and newsletter sections.
 
+Current status: conditional keep or merge into Agency. The package owns the right section names, but the current homepage and visual-review screenshots still share too much proof/card rhythm with neighbouring themes. The next pass should rewrite the visual hierarchy around work outcomes, selected case studies, process, credentials, media-kit, and newsletter conversion before this theme is treated as premium-ready. If that rewrite is not strong enough, merge the useful sections into Agency instead.
+
 ### Education
 
 Primary sections:
@@ -315,6 +363,8 @@ Hardening:
 
 Quality target: restrained, high-trust enterprise presentation; clearly distinct from Agency and Foundation.
 
+Current status: polished basic/business preset or fold into Foundation. Keep it safe and visually distinct while it exists, but do not spend premium-depth effort unless the theme gets a sharper rewrite brief around governance, investor relations, compliance, or enterprise operations.
+
 ### Agency
 
 Primary sections:
@@ -331,6 +381,8 @@ Hardening:
 - Add `packages/theme-agency/tests/Unit/PublicOutputSafetyTest.php` if missing.
 
 Quality target: more expressive than Corporate; clearly distinct from `default`; clean and production-safe.
+
+Current status: free/basic creative preset or merge with Portfolio. Keep it usable as a studio starter theme, but do not treat it as premium unless it gains a stronger studio sales workflow: proposal, process, client proof, campaign outcomes, and case-study depth. Only one of Agency or Portfolio should own the premium studio lane.
 
 ## Test Hardening Matrix
 

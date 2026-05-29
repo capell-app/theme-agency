@@ -83,6 +83,9 @@ it('renders standard sections through Local Services views', function (): void {
     expect($proofHtml)
         ->toContain('Local proof board')
         ->toContain('Local proof')
+        ->toContain('Route board')
+        ->toContain('Arrival window')
+        ->toContain('Completion proof')
         ->toContain('24h')
         ->not->toContain('capell-app/theme-local-services');
 

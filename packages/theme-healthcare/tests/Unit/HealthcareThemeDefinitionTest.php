@@ -206,6 +206,9 @@ it('renders public healthcare markup without forbidden package or authoring toke
 
     expect($html)
         ->toContain('Aster Clinic')
+        ->toContain('Clinical trust')
+        ->toContain('Safety review')
+        ->toContain('Escalation route')
         ->not->toContain('data-capell-theme')
         ->not->toContain('capell-theme')
         ->not->toContain('capell-app/theme-healthcare')
@@ -250,7 +253,7 @@ it('renders standard feature and content listing sections through healthcare reg
                 heading: 'Patient resources',
                 summary: 'Standard content listing data renders through the healthcare resource view.',
                 items: [
-                    ['title' => 'Referral checklist', 'summary' => 'Prepare for your first appointment.', 'url' => '/resources/referral-checklist'],
+                    ['title' => 'Referral checklist', 'summary' => 'Prepare for your first appointment.', 'url' => '/resources/referral-checklist', 'imageUrl' => '/images/referral.jpg'],
                 ],
             ),
         ],
@@ -264,6 +267,8 @@ it('renders standard feature and content listing sections through healthcare reg
         ->toContain('Care pathway')
         ->toContain('Patient resources')
         ->toContain('Referral checklist')
+        ->toContain('/images/referral.jpg')
+        ->toContain('Clinically reviewed')
         ->not->toContain('model_id')
         ->not->toContain('field_path');
 });

@@ -21,55 +21,70 @@
 
             <div class="grid gap-4 sm:grid-cols-2">
                 @foreach ($section->items as $item)
-                    <figure
-                        class="{{ $loop->first ? 'sm:col-span-2' : '' }} overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] shadow-2xl shadow-black/20"
+                    <article
+                        class="{{ $loop->first ? 'sm:col-span-2' : '' }} overflow-hidden rounded-2xl border border-white/10 bg-[#071225] shadow-2xl shadow-black/20"
                     >
                         <div
-                            class="grid min-h-full gap-0 md:grid-cols-[0.9fr_1.1fr]"
+                            class="{{ $loop->first ? 'md:grid-cols-[0.78fr_0.92fr_0.58fr]' : 'md:grid-cols-[0.78fr_1fr]' }} grid min-h-full gap-0"
                         >
                             <div
-                                class="flex min-h-36 items-end bg-[#071225] p-5"
-                                aria-hidden="true"
+                                class="flex min-h-36 items-end bg-slate-900 p-5"
                             >
                                 <div class="w-full">
                                     <div
                                         class="flex items-center justify-between gap-3"
                                     >
                                         <span
-                                            class="h-2 w-20 rounded-full bg-cyan-300"
-                                        ></span>
+                                            class="text-xs font-black text-cyan-200 uppercase"
+                                        >
+                                            {{ __('capell-theme-saas::generic.activation_stage_label') }}
+                                        </span>
                                         <span
-                                            class="h-2 w-10 rounded-full bg-blue-500"
-                                        ></span>
+                                            class="rounded-full bg-blue-500 px-2 py-1 text-xs font-black text-white"
+                                        >
+                                            {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                                        </span>
                                     </div>
-                                    <div class="mt-8 space-y-2">
+                                    <div
+                                        class="mt-8 grid grid-cols-3 gap-2 text-center text-[0.65rem] font-black uppercase"
+                                    >
                                         <span
-                                            class="block h-2 rounded-full bg-white/50"
-                                        ></span>
+                                            class="rounded-md bg-cyan-300 px-2 py-3 text-slate-950"
+                                        >
+                                            {{ __('capell-theme-saas::generic.trial_step_label') }}
+                                        </span>
                                         <span
-                                            class="block h-2 w-2/3 rounded-full bg-white/25"
-                                        ></span>
+                                            class="rounded-md bg-blue-500 px-2 py-3 text-white"
+                                        >
+                                            {{ __('capell-theme-saas::generic.aha_step_label') }}
+                                        </span>
+                                        <span
+                                            class="rounded-md bg-white/10 px-2 py-3 text-slate-200"
+                                        >
+                                            {{ __('capell-theme-saas::generic.expansion_step_label') }}
+                                        </span>
                                     </div>
-                                    <div class="mt-5 grid grid-cols-3 gap-2">
+                                    <div
+                                        class="mt-4 h-2 rounded-full bg-white/10"
+                                    >
                                         <span
-                                            class="h-8 rounded-md bg-cyan-400/30"
-                                        ></span>
-                                        <span
-                                            class="h-8 rounded-md bg-blue-500/40"
-                                        ></span>
-                                        <span
-                                            class="h-8 rounded-md bg-white/10"
+                                            class="block h-2 w-3/4 rounded-full bg-cyan-300"
                                         ></span>
                                     </div>
                                 </div>
                             </div>
 
-                            <figcaption class="p-5 sm:p-6">
-                                <blockquote
-                                    class="text-3xl font-black text-white"
+                            <div class="p-5 sm:p-6">
+                                <p
+                                    class="text-xs font-black text-cyan-300 uppercase"
+                                >
+                                    {{ $item['name'] ?? $item['logo'] ?? __('capell-theme-saas::generic.outcome_signal') }}
+                                </p>
+                                <p
+                                    class="mt-4 text-5xl leading-none font-black text-white"
                                 >
                                     {{ $item['metric'] ?? $item['quote'] ?? '' }}
-                                </blockquote>
+                                </p>
                                 @if ($item['summary'] ?? null)
                                     <p
                                         class="mt-3 text-sm leading-6 text-slate-300"
@@ -78,19 +93,59 @@
                                     </p>
                                 @endif
 
-                                <p
-                                    class="mt-5 border-t border-white/10 pt-4 text-xs font-black tracking-widest text-cyan-300 uppercase"
-                                >
-                                    {{ $item['name'] ?? $item['logo'] ?? __('capell-theme-saas::generic.outcome_signal') }}
-                                </p>
                                 @if ($item['role'] ?? null)
-                                    <p class="mt-1 text-sm text-slate-400">
+                                    <p class="mt-3 text-sm text-slate-400">
                                         {{ $item['role'] }}
                                     </p>
                                 @endif
-                            </figcaption>
+                            </div>
+
+                            @if ($loop->first)
+                                <div
+                                    class="border-t border-white/10 bg-white/[0.04] p-5 md:border-t-0 md:border-l"
+                                >
+                                    <div class="grid gap-3">
+                                        <div
+                                            class="rounded-lg border border-white/10 p-3"
+                                        >
+                                            <p
+                                                class="text-xs font-black text-slate-400 uppercase"
+                                            >
+                                                {{ __('capell-theme-saas::generic.cohort_label') }}
+                                            </p>
+                                            <span
+                                                class="mt-3 block h-2 rounded-full bg-cyan-300"
+                                            ></span>
+                                        </div>
+                                        <div
+                                            class="rounded-lg border border-white/10 p-3"
+                                        >
+                                            <p
+                                                class="text-xs font-black text-slate-400 uppercase"
+                                            >
+                                                {{ __('capell-theme-saas::generic.event_label') }}
+                                            </p>
+                                            <span
+                                                class="mt-3 block h-2 rounded-full bg-blue-500"
+                                            ></span>
+                                        </div>
+                                        <div
+                                            class="rounded-lg border border-white/10 p-3"
+                                        >
+                                            <p
+                                                class="text-xs font-black text-slate-400 uppercase"
+                                            >
+                                                {{ __('capell-theme-saas::generic.health_label') }}
+                                            </p>
+                                            <span
+                                                class="mt-3 block h-2 rounded-full bg-emerald-300"
+                                            ></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
-                    </figure>
+                    </article>
                 @endforeach
             </div>
         </div>

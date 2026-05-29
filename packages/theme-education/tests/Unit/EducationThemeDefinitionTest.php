@@ -7,6 +7,7 @@ use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
 use Capell\Core\ThemeStudio\Data\FeatureSectionData;
 use Capell\Core\ThemeStudio\Data\HeroSectionData;
+use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\Tests\Packages\PackagesTestCase;
 use Capell\ThemeStudio\Education\EducationThemeServiceProvider;
@@ -62,10 +63,20 @@ it('renders standard sections through Education views', function (): void {
             actions: [['label' => 'Apply now', 'url' => '#apply', 'style' => 'primary']],
         ));
 
+    $proofHtml = $registry
+        ->sectionRenderer('education', 'proof')
+        ->render(new ProofSectionData(
+            heading: 'Cohort outcomes',
+            summary: 'Proof should use education-specific cohort evidence.',
+            items: [
+                ['metric' => '92%', 'name' => 'Completion', 'summary' => 'Learners complete the pathway with mentor review.'],
+            ],
+        ));
+
     expect($featureHtml)
         ->toContain('Programme pathways')
         ->toContain('Learning pathways')
-        ->toContain('Cohort ready')
+        ->toContain('Pathway step')
         ->not->toContain('capell-app/theme-education');
 
     expect($listingHtml)
@@ -77,7 +88,14 @@ it('renders standard sections through Education views', function (): void {
     expect($ctaHtml)
         ->toContain('Open the next cohort')
         ->toContain('Enrolment')
+        ->toContain('Choose track')
         ->toContain('Apply now')
+        ->not->toContain('capell-app/theme-education');
+
+    expect($proofHtml)
+        ->toContain('Cohort evidence')
+        ->toContain('92%')
+        ->toContain('Completion')
         ->not->toContain('capell-app/theme-education');
 });
 

@@ -31,6 +31,7 @@ use Capell\Core\ThemeStudio\Theme\ThemePageAdapterRegistry;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Capell\FoundationTheme\Providers\FoundationThemeServiceProvider;
+use Capell\FoundationTheme\Support\Demo\ThemeDemoMedia;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
 use Capell\Frontend\Facades\Frontend;
 use Illuminate\Console\Command;
@@ -236,7 +237,8 @@ function assertThemeDemoLayoutScreenshots(string $themeKey, Collection $pages, a
         $htmlPath = themeDemoScreenshotHtmlPath($themeKey, $surface, $expected['type'], $expected['layout']);
         file_put_contents($htmlPath, $html);
 
-        assertThemeDemoScreenshotHtmlContainsExpectedSurface($surface, $html);
+        assertThemeDemoScreenshotHtmlContainsExpectedSurface($themeKey, $surface, $html);
+        assertThemeDemoScreenshotHtmlAvoidsPlaceholderCopy($html);
 
         $manifest['entries'][] = [
             'surface' => $surface,
@@ -253,6 +255,7 @@ function assertThemeDemoLayoutScreenshots(string $themeKey, Collection $pages, a
         file_put_contents($htmlPath, $entry['html']);
 
         expect($entry['html'])->toContain($entry['expectedText']);
+        assertThemeDemoScreenshotHtmlAvoidsPlaceholderCopy($entry['html']);
 
         $manifest['entries'][] = [
             'surface' => $entry['surface'],
@@ -288,7 +291,29 @@ function assertThemeDemoLayoutScreenshots(string $themeKey, Collection $pages, a
         expect($entry['screenshotPath'])->toBeFile()
             ->and($entry['loadedImageCount'])->toBe($entry['imageCount'])
             ->and($entry['blank'])->toBeFalse();
+
+        assertThemeDemoScreenshotImageDimensions($entry);
     }
+}
+
+/**
+ * @param  array{screenshotPath: string, viewport?: array{width?: int, height?: int}}  $entry
+ */
+function assertThemeDemoScreenshotImageDimensions(array $entry): void
+{
+    $dimensions = getimagesize($entry['screenshotPath']);
+
+    expect($dimensions)->toBeArray();
+
+    $expectedWidth = (int) data_get($entry, 'viewport.width', 1440);
+    $minimumHeight = (int) data_get($entry, 'viewport.height', 1100);
+    $maximumHeight = max($minimumHeight * 8, 12000);
+
+    expect($dimensions[0] ?? null)
+        ->toBe($expectedWidth)
+        ->and($dimensions[1] ?? null)
+        ->toBeGreaterThanOrEqual($minimumHeight)
+        ->toBeLessThanOrEqual($maximumHeight);
 }
 
 function themeDemoScreenshotHtml(string $themeKey, Page $page, string $surface): string
@@ -369,16 +394,16 @@ function registerThemeDemoScreenshotPageAdapter(string $themeKey): void
                 }
 
                 return new ThemePageData(
-                    title: 'Theme Demo',
+                    title: 'Theme content unavailable',
                     brand: new BrandProfileData,
                     sections: [
                         HeroSectionData::from([
-                            'heading' => 'Theme Demo',
-                            'summary' => 'Demo content is unavailable for this request.',
+                            'heading' => 'Theme content unavailable',
+                            'summary' => 'Public content is unavailable for this request.',
                         ]),
                     ],
-                    navigation: new NavigationData(brandName: 'Theme Demo'),
-                    footer: new FooterData(brandName: 'Theme Demo'),
+                    navigation: new NavigationData(brandName: 'Capell Foundation'),
+                    footer: new FooterData(brandName: 'Capell Foundation'),
                 );
             }
         },
@@ -435,9 +460,52 @@ function themeDemoScreenshotContactLayoutHtml(Page $page): string
     ]) . '</div>';
 }
 
-function assertThemeDemoScreenshotHtmlContainsExpectedSurface(string $surface, string $html): void
+function assertThemeDemoScreenshotHtmlContainsExpectedSurface(string $themeKey, string $surface, string $html): void
 {
-    expect($html)->toContain(themeDemoScreenshotExpectedText($surface));
+    expect($html)->toContain(themeDemoScreenshotExpectedText($surface, $themeKey));
+}
+
+function assertThemeDemoScreenshotHtmlAvoidsPlaceholderCopy(string $html): void
+{
+    $forbiddenPhrases = [
+        'Screenshot demo',
+        'Screenshot blog',
+        'Theme Demo',
+        'Demo content is unavailable',
+        'Featured demo',
+        'demo entries',
+        'demo entry',
+        'demo copy',
+        'Theme visual review surface',
+        'Theme system review surface',
+        'Primary action',
+        'Secondary action',
+        'Review conversion section',
+        'Theme review unavailable',
+        'Review content is unavailable',
+        'Full-page review',
+        'Support-page review',
+        'Premium homepage review',
+        'Premium directory review',
+        'Premium detail review',
+        'Premium contact review',
+        'Premium empty-state review',
+        'Premium recovery review',
+        'Premium maintenance review',
+        'Premium system-page review',
+        'Premium conversion review',
+        'Premium theme review',
+        'screenshot review',
+        'screenshot content',
+        'theme fixture',
+        'fixture data',
+        'real fixture',
+        'review copy',
+    ];
+
+    foreach ($forbiddenPhrases as $phrase) {
+        expect($html)->not->toContain($phrase);
+    }
 }
 
 /**
@@ -502,14 +570,14 @@ function themeDemoExtraScreenshotEntries(string $themeKey): array
             'html' => view($viewNamespace . '::blog.index', [
                 'blogAvailable' => true,
                 'articles' => $articles,
-                'heading' => 'Screenshot demo blog index',
-                'summary' => 'Screenshot demo blog index with enough entries to review cards, pagination, filters, and sidebar treatments.',
+                'heading' => 'Editorial archive',
+                'summary' => 'A seeded archive with enough entries to check cards, pagination, filters, and sidebar treatments.',
                 'total' => 42,
                 'from' => 1,
                 'to' => count($articles),
                 'searchEnabled' => true,
             ])->render(),
-            'expectedText' => 'Screenshot demo blog index',
+            'expectedText' => 'Editorial archive',
         ];
     }
 
@@ -520,15 +588,15 @@ function themeDemoExtraScreenshotEntries(string $themeKey): array
             'layout' => 'article',
             'html' => view($viewNamespace . '::blog.article', [
                 'blogAvailable' => true,
-                'title' => 'Screenshot demo blog article',
-                'summary' => 'Screenshot demo blog article with long-form copy, navigation, and suggestions.',
-                'body' => 'This article body is intentionally plain text for screenshot review. It checks line length, typography, spacing, and article container contrast without requiring the Blog package.',
+                'title' => 'Long-form article',
+                'summary' => 'A seeded article with long-form copy, navigation, and suggested reading.',
+                'body' => 'This article body is intentionally plain text for article layout checks. It checks line length, typography, spacing, and article container contrast without requiring the Blog package.',
                 'archiveUrl' => '#blog',
                 'previousArticle' => $articles[0],
                 'nextArticle' => $articles[1],
                 'suggestions' => array_slice($articles, 2, 3),
             ])->render(),
-            'expectedText' => 'Screenshot demo blog article',
+            'expectedText' => 'Long-form article',
         ];
     }
 
@@ -541,7 +609,7 @@ function themeDemoExtraScreenshotEntries(string $themeKey): array
 function themeDemoCommerceSectionsScreenshotEntry(): array
 {
     $navigation = new NavigationData(
-        brandName: 'Commerce Demo',
+        brandName: themeDemoScreenshotBrandName('commerce'),
         items: [
             ['label' => 'Catalog', 'url' => '#catalog'],
             ['label' => 'Products', 'url' => '#products'],
@@ -608,7 +676,7 @@ function themeDemoCommerceSectionsScreenshotEntry(): array
                 'section' => (object) [
                     'heading' => 'Merchandised collection cards',
                     'summary' => 'Collections should feel editorial, image-led, and clearly shoppable.',
-                    'items' => themeDemoScreenshotListingItems([], 'commerce-sections', 6),
+                    'items' => themeDemoScreenshotListingItems([], 'commerce-sections', 6, 'commerce'),
                 ],
             ];
         }
@@ -635,7 +703,7 @@ function themeDemoCommerceSectionsScreenshotEntry(): array
                 'section' => (object) [
                     'heading' => 'Premium stock cards',
                     'summary' => 'Product cards should support dense retail scanning without losing visual warmth.',
-                    'features' => collect(themeDemoScreenshotFeatures('commerce-sections', 8))
+                    'features' => collect(themeDemoScreenshotFeatures('commerce-sections', 8, 'commerce'))
                         ->map(fn (array $feature, int $index): array => $feature + [
                             'price' => '$' . (48 + ($index * 12)),
                         ])
@@ -739,11 +807,11 @@ function themeDemoCommerceSectionsScreenshotEntry(): array
     };
 
     $page = new ThemePageData(
-        title: 'Screenshot demo commerce sections',
+        title: 'Commerce merchandising section suite',
         brand: new BrandProfileData,
         sections: [
             HeroSectionData::from([
-                'heading' => 'Screenshot demo commerce sections',
+                'heading' => 'Commerce merchandising section suite',
                 'summary' => 'Commerce-specific sections check catalog panels, product grids, collection cards, retail proof, resources, and conversion surfaces.',
                 'actions' => $actions,
             ]),
@@ -755,7 +823,7 @@ function themeDemoCommerceSectionsScreenshotEntry(): array
             ProofSectionData::from([
                 'heading' => 'Retail proof ledger',
                 'summary' => 'Proof should fit the merchandising story and stay fully visible on desktop.',
-                'items' => themeDemoScreenshotProofItems(),
+                'items' => themeDemoScreenshotProofItems('commerce'),
             ]),
             $blogTeaser,
             CtaSectionData::from([
@@ -781,7 +849,7 @@ function themeDemoCommerceSectionsScreenshotEntry(): array
         'type' => 'theme',
         'layout' => 'sections',
         'html' => resolve(ThemeRegistry::class)->renderer('commerce')->render($page),
-        'expectedText' => 'Screenshot demo commerce sections',
+        'expectedText' => 'Commerce merchandising section suite',
     ];
 }
 
@@ -791,7 +859,7 @@ function themeDemoCommerceSectionsScreenshotEntry(): array
 function themeDemoHealthcareSectionsScreenshotEntry(): array
 {
     $navigation = new NavigationData(
-        brandName: 'Healthcare Demo',
+        brandName: themeDemoScreenshotBrandName('healthcare'),
         items: [
             ['label' => 'Services', 'url' => '#services'],
             ['label' => 'Clinicians', 'url' => '#clinicians'],
@@ -807,11 +875,11 @@ function themeDemoHealthcareSectionsScreenshotEntry(): array
     ];
 
     $page = new ThemePageData(
-        title: 'Screenshot demo healthcare sections',
+        title: 'Healthcare care pathway section suite',
         brand: new BrandProfileData,
         sections: [
             HeroSectionData::from([
-                'heading' => 'Screenshot demo healthcare sections',
+                'heading' => 'Healthcare care pathway section suite',
                 'summary' => 'Healthcare-specific sections check service discovery, clinician cards, booking, sessions, care pathways, locations, resources, proof, and conversion surfaces.',
                 'actions' => $actions,
             ]),
@@ -827,7 +895,7 @@ function themeDemoHealthcareSectionsScreenshotEntry(): array
             themeDemoHealthcareGenericSection('services', [
                 'heading' => 'Clinical service cards',
                 'summary' => 'Service cards should show complete desktop grids while preserving mobile scanning.',
-                'features' => themeDemoScreenshotFeatures('healthcare-sections', 8),
+                'features' => themeDemoScreenshotFeatures('healthcare-sections', 8, 'healthcare'),
             ]),
             themeDemoHealthcareGenericSection('clinicians', [
                 'heading' => 'Clinician pathway cards',
@@ -854,7 +922,7 @@ function themeDemoHealthcareSectionsScreenshotEntry(): array
                 'items' => [
                     ['date' => 'Tue 09:30', 'title' => 'Heart health clinic', 'summary' => 'Consultant-led checks and advice.', 'url' => '#event-1'],
                     ['date' => 'Thu 14:00', 'title' => 'Physio assessment', 'summary' => 'Movement screening and treatment plans.', 'url' => '#event-2'],
-                    ['date' => 'Fri 11:00', 'title' => 'Virtual medication review', 'summary' => 'Remote support for ongoing care.', 'url' => '#event-3'],
+                    ['date' => 'Fri 11:00', 'title' => 'Virtual medication check-in', 'summary' => 'Remote support for ongoing care.', 'url' => '#event-3'],
                 ],
             ]),
             themeDemoHealthcareGenericSection('comparison', [
@@ -862,7 +930,7 @@ function themeDemoHealthcareSectionsScreenshotEntry(): array
                 'summary' => 'Comparison sections should support patient choice, not plain feature grids.',
                 'items' => [
                     ['title' => 'Rapid access', 'summary' => 'Same-week appointment with a clear referral path.'],
-                    ['title' => 'Managed care', 'summary' => 'Ongoing plan with diagnostics, review, and follow-up.'],
+                    ['title' => 'Managed care', 'summary' => 'Ongoing plan with diagnostics, assessment, and follow-up.'],
                     ['title' => 'Remote support', 'summary' => 'Digital-first check-ins for lower-risk follow-up needs.'],
                     ['title' => 'Specialist route', 'summary' => 'Consultant-led pathway for complex conditions.'],
                 ],
@@ -870,7 +938,7 @@ function themeDemoHealthcareSectionsScreenshotEntry(): array
             ProofSectionData::from([
                 'heading' => 'Clinical trust indicators',
                 'summary' => 'Proof should feel patient-safe and evidence-led.',
-                'items' => themeDemoScreenshotProofItems(),
+                'items' => themeDemoScreenshotProofItems('healthcare'),
             ]),
             themeDemoHealthcareGenericSection('blog-teaser', [
                 'heading' => 'Patient resource cards',
@@ -878,7 +946,7 @@ function themeDemoHealthcareSectionsScreenshotEntry(): array
                 'items' => [
                     ['type' => 'Guide', 'title' => 'Preparing for a first consultation', 'summary' => 'What to bring and what to expect.', 'url' => '#resource-1'],
                     ['type' => 'Checklist', 'title' => 'Choosing the right service', 'summary' => 'Match symptoms and goals to care routes.', 'url' => '#resource-2'],
-                    ['type' => 'Advice', 'title' => 'Aftercare questions', 'summary' => 'Follow-up prompts for recovery and review.', 'url' => '#resource-3'],
+                    ['type' => 'Advice', 'title' => 'Aftercare questions', 'summary' => 'Follow-up prompts for recovery and next steps.', 'url' => '#resource-3'],
                 ],
             ]),
             themeDemoHealthcareGenericSection('contact', [
@@ -909,7 +977,7 @@ function themeDemoHealthcareSectionsScreenshotEntry(): array
         'type' => 'theme',
         'layout' => 'sections',
         'html' => resolve(ThemeRegistry::class)->renderer('healthcare')->render($page),
-        'expectedText' => 'Screenshot demo healthcare sections',
+        'expectedText' => 'Healthcare care pathway section suite',
     ];
 }
 
@@ -954,7 +1022,7 @@ function themeDemoHealthcareGenericSection(string $key, array $viewData): ThemeS
 function themeDemoSaasSectionsScreenshotEntry(): array
 {
     $navigation = new NavigationData(
-        brandName: 'SaaS Demo',
+        brandName: themeDemoScreenshotBrandName('saas'),
         items: [
             ['label' => 'Product', 'url' => '#product'],
             ['label' => 'Proof', 'url' => '#proof'],
@@ -1032,28 +1100,28 @@ function themeDemoSaasSectionsScreenshotEntry(): array
     };
 
     $page = new ThemePageData(
-        title: 'Screenshot demo SaaS sections',
+        title: 'SaaS product workflow section suite',
         brand: new BrandProfileData,
         sections: [
             HeroSectionData::from([
-                'heading' => 'Screenshot demo SaaS sections',
+                'heading' => 'SaaS product workflow section suite',
                 'summary' => 'SaaS-specific sections check growth ledgers, resource pipelines, comparison, calculator, and conversion command surfaces.',
                 'actions' => $actions,
             ]),
             ProofSectionData::from([
                 'heading' => 'Growth proof ledger',
                 'summary' => 'Proof should combine product telemetry, outcomes, and trust signals.',
-                'items' => themeDemoScreenshotProofItems(),
+                'items' => themeDemoScreenshotProofItems('saas'),
             ]),
             FeatureSectionData::from([
                 'heading' => 'Product workflow cards',
                 'summary' => 'Feature cards should look like product capabilities rather than service cards.',
-                'features' => themeDemoScreenshotFeatures('saas-sections', 6),
+                'features' => themeDemoScreenshotFeatures('saas-sections', 6, 'saas'),
             ]),
             ContentListingSectionData::from([
                 'heading' => 'Resource pipeline cards',
                 'summary' => 'Listing cards should support resource scanning with product-led hierarchy.',
-                'items' => themeDemoScreenshotListingItems([], 'saas-sections', 6),
+                'items' => themeDemoScreenshotListingItems([], 'saas-sections', 6, 'saas'),
             ]),
             $comparison,
             $calculator,
@@ -1075,7 +1143,7 @@ function themeDemoSaasSectionsScreenshotEntry(): array
         'type' => 'theme',
         'layout' => 'sections',
         'html' => resolve(ThemeRegistry::class)->renderer('saas')->render($page),
-        'expectedText' => 'Screenshot demo SaaS sections',
+        'expectedText' => 'SaaS product workflow section suite',
     ];
 }
 
@@ -1085,7 +1153,7 @@ function themeDemoSaasSectionsScreenshotEntry(): array
 function themeDemoPortfolioSectionsScreenshotEntry(): array
 {
     $navigation = new NavigationData(
-        brandName: 'Portfolio Demo',
+        brandName: themeDemoScreenshotBrandName('portfolio'),
         items: [
             ['label' => 'Work', 'url' => '#work'],
             ['label' => 'Evidence', 'url' => '#evidence'],
@@ -1101,28 +1169,34 @@ function themeDemoPortfolioSectionsScreenshotEntry(): array
     ];
 
     $page = new ThemePageData(
-        title: 'Screenshot demo portfolio sections',
+        title: 'Portfolio case study section suite',
         brand: new BrandProfileData,
         sections: [
             HeroSectionData::from([
-                'heading' => 'Screenshot demo portfolio sections',
+                'heading' => 'Portfolio case study section suite',
                 'summary' => 'Portfolio-specific sections check editorial work cards, evidence ledgers, studio capabilities, and conversion surfaces.',
                 'actions' => $actions,
             ]),
+            themeDemoPortfolioGenericSection('work-grid', 'Selected work board', 6),
+            themeDemoPortfolioGenericSection('case-studies', 'Case-study carousel', 6),
+            themeDemoPortfolioGenericSection('services', 'Studio services', 3),
+            themeDemoPortfolioGenericSection('testimonials', 'Client outcome notes'),
+            themeDemoPortfolioGenericSection('speaking-media-kit', 'Media kit and speaking package'),
+            themeDemoPortfolioGenericSection('newsletter', 'Audience and newsletter path'),
             ProofSectionData::from([
                 'heading' => 'Evidence-led portfolio proof',
                 'summary' => 'Proof blocks should feel like measurable creator outcomes instead of generic metric cards.',
-                'items' => themeDemoScreenshotProofItems(),
+                'items' => themeDemoScreenshotProofItems('portfolio'),
             ]),
             FeatureSectionData::from([
                 'heading' => 'Studio capability cards',
                 'summary' => 'Capabilities should feel like a consultant or creator studio system.',
-                'features' => themeDemoScreenshotFeatures('portfolio-sections', 6),
+                'features' => themeDemoScreenshotFeatures('portfolio-sections', 6, 'portfolio'),
             ]),
             ContentListingSectionData::from([
                 'heading' => 'Selected work index',
                 'summary' => 'Listing cards should carry image-first case-study hierarchy and useful scanning cues.',
-                'items' => themeDemoScreenshotListingItems([], 'portfolio-sections', 6),
+                'items' => themeDemoScreenshotListingItems([], 'portfolio-sections', 6, 'portfolio'),
             ]),
             CtaSectionData::from([
                 'heading' => 'Plan the next portfolio story',
@@ -1142,8 +1216,46 @@ function themeDemoPortfolioSectionsScreenshotEntry(): array
         'type' => 'theme',
         'layout' => 'sections',
         'html' => resolve(ThemeRegistry::class)->renderer('portfolio')->render($page),
-        'expectedText' => 'Screenshot demo portfolio sections',
+        'expectedText' => 'Portfolio case study section suite',
     ];
+}
+
+function themeDemoPortfolioGenericSection(string $key, string $heading, int $itemCount = 0): ThemeSection
+{
+    return new class($key, $heading, $itemCount) implements ThemeSection
+    {
+        public function __construct(
+            private readonly string $sectionKey,
+            public readonly string $heading,
+            private readonly int $itemCount,
+        ) {}
+
+        public function key(): string
+        {
+            return $this->sectionKey;
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return [
+                'section' => (object) [
+                    'heading' => $this->heading,
+                    'items' => $this->itemCount > 0
+                        ? themeDemoScreenshotListingItems([], 'portfolio-' . $this->sectionKey, $this->itemCount, 'portfolio')
+                        : [],
+                ],
+                'heading' => $this->heading,
+            ];
+        }
+    };
 }
 
 /**
@@ -1152,7 +1264,7 @@ function themeDemoPortfolioSectionsScreenshotEntry(): array
 function themeDemoEducationSectionsScreenshotEntry(): array
 {
     $navigation = new NavigationData(
-        brandName: 'Education Demo',
+        brandName: themeDemoScreenshotBrandName('education'),
         items: [
             ['label' => 'Courses', 'url' => '#courses'],
             ['label' => 'Events', 'url' => '#events'],
@@ -1163,11 +1275,11 @@ function themeDemoEducationSectionsScreenshotEntry(): array
     );
 
     $page = new ThemePageData(
-        title: 'Screenshot demo education sections',
+        title: 'Education course pathway section suite',
         brand: new BrandProfileData,
         sections: [
             HeroSectionData::from([
-                'heading' => 'Screenshot demo education sections',
+                'heading' => 'Education course pathway section suite',
                 'summary' => 'Education-specific sections check course, instructor, event, enrolment, resource, and FAQ presentation.',
                 'actions' => [['label' => 'Browse courses', 'url' => '#courses', 'style' => 'primary']],
             ]),
@@ -1195,7 +1307,7 @@ function themeDemoEducationSectionsScreenshotEntry(): array
         'type' => 'theme',
         'layout' => 'sections',
         'html' => resolve(ThemeRegistry::class)->renderer('education')->render($page),
-        'expectedText' => 'Screenshot demo education sections',
+        'expectedText' => 'Education course pathway section suite',
     ];
 }
 
@@ -1237,7 +1349,7 @@ function themeDemoEducationGenericSection(string $key, string $heading): ThemeSe
 function themeDemoNonprofitSectionsScreenshotEntry(): array
 {
     $navigation = new NavigationData(
-        brandName: 'Nonprofit Demo',
+        brandName: themeDemoScreenshotBrandName('nonprofit'),
         items: [
             ['label' => 'Impact', 'url' => '#impact'],
             ['label' => 'Campaigns', 'url' => '#campaigns'],
@@ -1248,11 +1360,11 @@ function themeDemoNonprofitSectionsScreenshotEntry(): array
     );
 
     $page = new ThemePageData(
-        title: 'Screenshot demo nonprofit sections',
+        title: 'Nonprofit impact section suite',
         brand: new BrandProfileData,
         sections: [
             HeroSectionData::from([
-                'heading' => 'Screenshot demo nonprofit sections',
+                'heading' => 'Nonprofit impact section suite',
                 'summary' => 'Nonprofit-specific sections check impact, campaign, supporter, event, story, and contact presentation.',
                 'actions' => [['label' => 'Support the work', 'url' => '#support', 'style' => 'primary']],
             ]),
@@ -1280,7 +1392,7 @@ function themeDemoNonprofitSectionsScreenshotEntry(): array
         'type' => 'theme',
         'layout' => 'sections',
         'html' => resolve(ThemeRegistry::class)->renderer('nonprofit')->render($page),
-        'expectedText' => 'Screenshot demo nonprofit sections',
+        'expectedText' => 'Nonprofit impact section suite',
     ];
 }
 
@@ -1322,7 +1434,7 @@ function themeDemoNonprofitGenericSection(string $key, string $heading): ThemeSe
 function themeDemoLocalServicesSectionsScreenshotEntry(): array
 {
     $navigation = new NavigationData(
-        brandName: 'Local Services Demo',
+        brandName: themeDemoScreenshotBrandName('local-services'),
         items: [
             ['label' => 'Services', 'url' => '#services'],
             ['label' => 'Areas', 'url' => '#areas'],
@@ -1333,28 +1445,28 @@ function themeDemoLocalServicesSectionsScreenshotEntry(): array
     );
 
     $page = new ThemePageData(
-        title: 'Screenshot demo local service sections',
+        title: 'Local service booking section suite',
         brand: new BrandProfileData,
         sections: [
             HeroSectionData::from([
-                'heading' => 'Screenshot demo local service sections',
+                'heading' => 'Local service booking section suite',
                 'summary' => 'Local-services-specific sections check dispatch, service routes, area coverage, quote intake, resources, and contact routing.',
                 'actions' => [['label' => 'Request quote', 'url' => '#quote', 'style' => 'primary']],
             ]),
             FeatureSectionData::from([
                 'heading' => 'Dispatch-ready service paths',
                 'summary' => 'Feature cards should feel like local job routes and quote workflows.',
-                'features' => themeDemoScreenshotFeatures('local-service-sections', 6),
+                'features' => themeDemoScreenshotFeatures('local-service-sections', 6, 'local-services'),
             ]),
             ProofSectionData::from([
                 'heading' => 'Local proof board',
                 'summary' => 'Proof cards should read as service performance signals.',
-                'items' => themeDemoScreenshotProofItems(),
+                'items' => themeDemoScreenshotProofItems('local-services'),
             ]),
             ContentListingSectionData::from([
                 'heading' => 'Service route cards',
                 'summary' => 'Listing cards should show service, area, and availability cues.',
-                'items' => themeDemoScreenshotListingItems([], 'local-service-sections', 4),
+                'items' => themeDemoScreenshotListingItems([], 'local-service-sections', 4, 'local-services'),
             ]),
             themeDemoLocalServicesGenericSection('services', 'Bookable services'),
             themeDemoLocalServicesGenericSection('service-areas', 'Live service areas'),
@@ -1380,7 +1492,7 @@ function themeDemoLocalServicesSectionsScreenshotEntry(): array
         'type' => 'theme',
         'layout' => 'sections',
         'html' => resolve(ThemeRegistry::class)->renderer('local-services')->render($page),
-        'expectedText' => 'Screenshot demo local service sections',
+        'expectedText' => 'Local service booking section suite',
     ];
 }
 
@@ -1422,7 +1534,7 @@ function themeDemoLocalServicesGenericSection(string $key, string $heading): The
 function themeDemoKnowledgeSectionsScreenshotEntry(): array
 {
     $navigation = new NavigationData(
-        brandName: 'Knowledge Demo',
+        brandName: themeDemoScreenshotBrandName('knowledge'),
         items: [
             ['label' => 'Topics', 'url' => '#topics'],
             ['label' => 'Library', 'url' => '#library'],
@@ -1433,28 +1545,28 @@ function themeDemoKnowledgeSectionsScreenshotEntry(): array
     );
 
     $page = new ThemePageData(
-        title: 'Screenshot demo knowledge sections',
+        title: 'Knowledge archive section suite',
         brand: new BrandProfileData,
         sections: [
             HeroSectionData::from([
-                'heading' => 'Screenshot demo knowledge sections',
+                'heading' => 'Knowledge archive section suite',
                 'summary' => 'Knowledge-specific sections check research pathways, archive rows, topic hubs, search, newsletter, and editorial team presentation.',
                 'actions' => [['label' => 'Browse guides', 'url' => '#library', 'style' => 'primary']],
             ]),
             FeatureSectionData::from([
                 'heading' => 'Research pathway cards',
                 'summary' => 'Feature cards should look like curated library entries and not generic marketing blocks.',
-                'features' => themeDemoScreenshotFeatures('knowledge-sections', 6),
+                'features' => themeDemoScreenshotFeatures('knowledge-sections', 6, 'knowledge'),
             ]),
             ProofSectionData::from([
                 'heading' => 'Library evidence board',
                 'summary' => 'Proof cards should read as content depth and discovery signals.',
-                'items' => themeDemoScreenshotProofItems(),
+                'items' => themeDemoScreenshotProofItems('knowledge'),
             ]),
             ContentListingSectionData::from([
                 'heading' => 'Archive result rows',
                 'summary' => 'Listings should support scanning, saved-state cues, and resource metadata.',
-                'items' => themeDemoScreenshotListingItems([], 'knowledge-sections', 4),
+                'items' => themeDemoScreenshotListingItems([], 'knowledge-sections', 4, 'knowledge'),
             ]),
             themeDemoKnowledgeGenericSection('topic-hubs', 'Topic hubs'),
             themeDemoKnowledgeGenericSection('featured-content', 'Featured research'),
@@ -1480,7 +1592,7 @@ function themeDemoKnowledgeSectionsScreenshotEntry(): array
         'type' => 'theme',
         'layout' => 'sections',
         'html' => resolve(ThemeRegistry::class)->renderer('knowledge')->render($page),
-        'expectedText' => 'Screenshot demo knowledge sections',
+        'expectedText' => 'Knowledge archive section suite',
     ];
 }
 
@@ -1522,7 +1634,7 @@ function themeDemoKnowledgeGenericSection(string $key, string $heading): ThemeSe
 function themeDemoCorporateSectionsScreenshotEntry(): array
 {
     $navigation = new NavigationData(
-        brandName: 'Corporate Demo',
+        brandName: themeDemoScreenshotBrandName('corporate'),
         items: [
             ['label' => 'Governance', 'url' => '#governance'],
             ['label' => 'Reports', 'url' => '#reports'],
@@ -1533,32 +1645,32 @@ function themeDemoCorporateSectionsScreenshotEntry(): array
     );
 
     $page = new ThemePageData(
-        title: 'Screenshot demo corporate sections',
+        title: 'Corporate boardroom section suite',
         brand: new BrandProfileData,
         sections: [
             HeroSectionData::from([
-                'heading' => 'Screenshot demo corporate sections',
+                'heading' => 'Corporate boardroom section suite',
                 'summary' => 'Corporate-specific sections check governance cards, assurance metrics, board-ready listing rows, and formal conversion surfaces.',
                 'actions' => [['label' => 'View reports', 'url' => '#reports', 'style' => 'primary']],
             ]),
             FeatureSectionData::from([
                 'heading' => 'Governance operating model',
                 'summary' => 'Feature cards should read as policy, risk, delivery, and reporting systems.',
-                'features' => themeDemoScreenshotFeatures('corporate-sections', 6),
+                'features' => themeDemoScreenshotFeatures('corporate-sections', 6, 'corporate'),
             ]),
             ProofSectionData::from([
                 'heading' => 'Assurance evidence',
                 'summary' => 'Proof cards should present sober board-grade metrics and outcomes.',
-                'items' => themeDemoScreenshotProofItems(),
+                'items' => themeDemoScreenshotProofItems('corporate'),
             ]),
             ContentListingSectionData::from([
                 'heading' => 'Board register rows',
                 'summary' => 'Listing cards should avoid cramped editorial cards and scan like formal register entries.',
-                'items' => themeDemoScreenshotListingItems([], 'corporate-sections', 5),
+                'items' => themeDemoScreenshotListingItems([], 'corporate-sections', 5, 'corporate'),
             ]),
             CtaSectionData::from([
                 'heading' => 'Move the next decision forward',
-                'summary' => 'Corporate sections should support briefing, review, approval, and accountable follow-through.',
+                'summary' => 'Corporate sections should support briefing, approval, and accountable follow-through.',
                 'actions' => [['label' => 'Book advisory', 'url' => '#contact', 'style' => 'primary']],
             ]),
         ],
@@ -1574,7 +1686,7 @@ function themeDemoCorporateSectionsScreenshotEntry(): array
         'type' => 'theme',
         'layout' => 'sections',
         'html' => resolve(ThemeRegistry::class)->renderer('corporate')->render($page),
-        'expectedText' => 'Screenshot demo corporate sections',
+        'expectedText' => 'Corporate boardroom section suite',
     ];
 }
 
@@ -1584,7 +1696,7 @@ function themeDemoCorporateSectionsScreenshotEntry(): array
 function themeDemoAgencySectionsScreenshotEntry(): array
 {
     $navigation = new NavigationData(
-        brandName: 'Agency Demo',
+        brandName: themeDemoScreenshotBrandName('agency'),
         items: [
             ['label' => 'Work', 'url' => '#work'],
             ['label' => 'Studio', 'url' => '#studio'],
@@ -1595,28 +1707,28 @@ function themeDemoAgencySectionsScreenshotEntry(): array
     );
 
     $page = new ThemePageData(
-        title: 'Screenshot demo agency sections',
+        title: 'Agency campaign section suite',
         brand: new BrandProfileData,
         sections: [
             HeroSectionData::from([
-                'heading' => 'Screenshot demo agency sections',
+                'heading' => 'Agency campaign section suite',
                 'summary' => 'Agency-specific sections check campaign boards, work-wall cards, proof reels, and launch-room conversion surfaces.',
                 'actions' => [['label' => 'View work', 'url' => '#work', 'style' => 'primary']],
             ]),
             FeatureSectionData::from([
                 'heading' => 'Campaign system cards',
                 'summary' => 'Feature cards should feel like a studio production system, not generic service cards.',
-                'features' => themeDemoScreenshotFeatures('agency-sections', 6),
+                'features' => themeDemoScreenshotFeatures('agency-sections', 6, 'agency'),
             ]),
             ProofSectionData::from([
                 'heading' => 'Studio proof wall',
                 'summary' => 'Proof should combine visual confidence, campaign metrics, and clear outcomes.',
-                'items' => themeDemoScreenshotProofItems(),
+                'items' => themeDemoScreenshotProofItems('agency'),
             ]),
             ContentListingSectionData::from([
                 'heading' => 'Work wall cards',
                 'summary' => 'Listing cards should use real media when present and high-quality studio boards otherwise.',
-                'items' => themeDemoScreenshotListingItems([], 'agency-sections', 6),
+                'items' => themeDemoScreenshotListingItems([], 'agency-sections', 6, 'agency'),
             ]),
             CtaSectionData::from([
                 'heading' => 'Open the next launch room',
@@ -1636,7 +1748,7 @@ function themeDemoAgencySectionsScreenshotEntry(): array
         'type' => 'theme',
         'layout' => 'sections',
         'html' => resolve(ThemeRegistry::class)->renderer('agency')->render($page),
-        'expectedText' => 'Screenshot demo agency sections',
+        'expectedText' => 'Agency campaign section suite',
     ];
 }
 
@@ -1645,7 +1757,7 @@ function themeDemoAgencySectionsScreenshotEntry(): array
  */
 function themeDemoHealthcareContactScreenshotEntry(): array
 {
-    $section = new class(heading: 'Screenshot demo healthcare contact', summary: 'Dedicated healthcare contact cards verify the theme-specific contact section.', locations: [['label' => 'Clinic', 'title' => 'Central clinic', 'summary' => 'Appointments, referrals, and care plans routed from one place.', 'phone' => '+44 20 0000 1000'], ['label' => 'Urgent', 'title' => 'Rapid access', 'summary' => 'Fast-track support for priority care questions.', 'phone' => '+44 20 0000 2000'], ['label' => 'Virtual', 'title' => 'Remote care', 'summary' => 'Digital-first consultations and follow-up support.', 'phone' => '+44 20 0000 3000'], ['label' => 'Partners', 'title' => 'Referral team', 'summary' => 'Partnership and clinical referral enquiries.', 'phone' => '+44 20 0000 4000']]) implements ThemeSection
+    $section = new class(heading: 'Healthcare contact route check', summary: 'Dedicated healthcare contact cards verify the theme-specific contact section.', locations: [['label' => 'Clinic', 'title' => 'Central clinic', 'summary' => 'Appointments, referrals, and care plans routed from one place.', 'phone' => '+44 20 0000 1000'], ['label' => 'Urgent', 'title' => 'Rapid access', 'summary' => 'Fast-track support for priority care questions.', 'phone' => '+44 20 0000 2000'], ['label' => 'Virtual', 'title' => 'Remote care', 'summary' => 'Digital-first consultations and follow-up support.', 'phone' => '+44 20 0000 3000'], ['label' => 'Partners', 'title' => 'Referral team', 'summary' => 'Partnership and clinical referral enquiries.', 'phone' => '+44 20 0000 4000']]) implements ThemeSection
     {
         /**
          * @param  array<int, array<string, string>>  $locations
@@ -1673,12 +1785,12 @@ function themeDemoHealthcareContactScreenshotEntry(): array
     };
 
     $page = new ThemePageData(
-        title: 'Screenshot demo healthcare contact',
+        title: 'Healthcare contact route check',
         brand: new BrandProfileData,
         sections: [
             HeroSectionData::from([
-                'heading' => 'Screenshot demo healthcare contact',
-                'summary' => 'A healthcare-specific contact review uses the real contact section renderer.',
+                'heading' => 'Healthcare contact route check',
+                'summary' => 'A healthcare-specific contact route uses the real contact section renderer.',
             ]),
             $section,
             CtaSectionData::from([
@@ -1687,8 +1799,8 @@ function themeDemoHealthcareContactScreenshotEntry(): array
                 'actions' => [['label' => 'Start contact', 'url' => '#contact', 'style' => 'primary']],
             ]),
         ],
-        navigation: new NavigationData(brandName: 'Healthcare Demo'),
-        footer: new FooterData(brandName: 'Healthcare Demo'),
+        navigation: new NavigationData(brandName: themeDemoScreenshotBrandName('healthcare')),
+        footer: new FooterData(brandName: themeDemoScreenshotBrandName('healthcare')),
     );
 
     return [
@@ -1696,7 +1808,7 @@ function themeDemoHealthcareContactScreenshotEntry(): array
         'type' => 'theme',
         'layout' => 'contact',
         'html' => resolve(ThemeRegistry::class)->renderer('healthcare')->render($page),
-        'expectedText' => 'Screenshot demo healthcare contact',
+        'expectedText' => 'Healthcare contact route check',
     ];
 }
 
@@ -1705,22 +1817,26 @@ function themeDemoHealthcareContactScreenshotEntry(): array
  */
 function themeDemoGenericReviewScreenshotEntries(string $themeKey): array
 {
+    $copy = themeDemoScreenshotThemeCopy($themeKey);
+    $visualTitle = 'Explore ' . $copy['plural'];
+    $systemTitle = ucfirst($copy['singular']) . ' support route';
+
     return [
         themeDemoGenericReviewScreenshotEntry(
             themeKey: $themeKey,
             surface: 'visual-review',
             layout: 'full',
-            expectedText: 'Screenshot demo visual review',
-            title: 'Screenshot demo visual review',
-            summary: 'A broad theme review surface checks hero, proof, feature, listing, CTA, navigation, and footer rhythm in one screenshot.',
+            expectedText: $visualTitle,
+            title: $visualTitle,
+            summary: 'A full-page composition checks hero, proof, ' . $copy['feature'] . ' cards, listings, CTA rhythm, navigation, and footer treatment.',
         ),
         themeDemoGenericReviewScreenshotEntry(
             themeKey: $themeKey,
             surface: 'system-review',
             layout: 'system',
-            expectedText: 'Screenshot demo system review',
-            title: 'Screenshot demo system review',
-            summary: 'A compact system-style review surface checks support copy, recovery actions, and smaller page structure.',
+            expectedText: $systemTitle,
+            title: $systemTitle,
+            summary: 'A compact support surface checks recovery copy, operational actions, and smaller page structure for this buyer journey.',
         ),
     ];
 }
@@ -1736,15 +1852,16 @@ function themeDemoGenericReviewScreenshotEntry(
     string $title,
     string $summary,
 ): array {
+    $copy = themeDemoScreenshotThemeCopy($themeKey);
     $actions = [
-        ['label' => 'Primary action', 'url' => '#primary', 'style' => 'primary'],
-        ['label' => 'Secondary action', 'url' => '#secondary', 'style' => 'secondary'],
+        ['label' => 'Open ' . $copy['singular'], 'url' => '#primary', 'style' => 'primary'],
+        ['label' => 'Compare ' . $copy['plural'], 'url' => '#secondary', 'style' => 'secondary'],
     ];
     $navigation = new NavigationData(
-        brandName: ucfirst(str_replace('-', ' ', $themeKey)) . ' Demo',
+        brandName: themeDemoScreenshotBrandName($themeKey),
         items: [
             ['label' => 'Home', 'url' => '#home'],
-            ['label' => 'Review', 'url' => '#review'],
+            ['label' => 'Proof', 'url' => '#proof'],
             ['label' => 'Contact', 'url' => '#contact'],
         ],
         ctaLabel: 'Contact',
@@ -1760,30 +1877,30 @@ function themeDemoGenericReviewScreenshotEntry(
                 'actions' => $actions,
             ]),
             ProofSectionData::from([
-                'heading' => 'Review proof points',
-                'summary' => 'The count test keeps the visual review set broad enough to be useful.',
-                'items' => themeDemoScreenshotProofItems(),
+                'heading' => $copy['proofHeading'],
+                'summary' => $copy['proofSummary'],
+                'items' => themeDemoScreenshotProofItems($themeKey),
             ]),
             FeatureSectionData::from([
-                'heading' => 'Review feature cards',
-                'summary' => 'Repeated cards catch missing titles, unreadable copy, and awkward spacing.',
-                'features' => themeDemoScreenshotFeatures($surface, 4),
+                'heading' => $copy['featuresHeading'],
+                'summary' => $copy['featuresSummary'],
+                'features' => themeDemoScreenshotFeatures($surface, 4, $themeKey),
             ]),
             ContentListingSectionData::from([
-                'heading' => 'Review listing cards',
-                'summary' => 'Listing cards cover repeated link/card treatment outside the homepage.',
-                'items' => themeDemoScreenshotListingItems([], $surface, 4),
+                'heading' => $copy['listingHeading'],
+                'summary' => $copy['listingSummary'],
+                'items' => themeDemoScreenshotListingItems([], $surface, 4, $themeKey),
             ]),
             CtaSectionData::from([
-                'heading' => 'Review conversion section',
-                'summary' => 'CTA treatment should be readable in every theme.',
+                'heading' => 'Move visitors through ' . $copy['plural'],
+                'summary' => 'CTA treatment should feel specific to this workflow while staying readable in every theme.',
                 'actions' => $actions,
             ]),
         ],
         navigation: $navigation,
         footer: new FooterData(
             brandName: $navigation->brandName,
-            columns: [['heading' => 'Review', 'links' => $navigation->items]],
+            columns: [['heading' => 'Explore', 'links' => $navigation->items]],
         ),
     );
 
@@ -1808,8 +1925,8 @@ function themeDemoScreenshotBlogArticles(): array
 {
     return collect(range(1, 6))
         ->map(fn (int $number): array => [
-            'title' => 'Screenshot blog article ' . $number,
-            'summary' => 'Blog card copy for screenshot review across index, article navigation, and suggested reading.',
+            'title' => 'Editorial article ' . $number,
+            'summary' => 'Blog card copy for editorial layout across index, article navigation, and suggested reading.',
             'url' => '#blog-article-' . $number,
             'type' => 'Insight',
         ])
@@ -1838,27 +1955,28 @@ function createThemeDemoScreenshotMaintenancePage(string $themeKey, Collection $
     }
 
     $languages = Language::query()->get();
-    $themeName = ucfirst(str_replace('-', ' ', $themeKey));
+    $themeName = themeDemoScreenshotThemeName($themeKey);
+    $copy = themeDemoScreenshotThemeCopy($themeKey);
     $renderData = [
-        'summary' => 'Screenshot demo maintenance for the ' . $themeName . ' theme.',
+        'summary' => themeDemoScreenshotExpectedText('maintenance', $themeKey) . ' with status copy, recovery actions, and supporting content.',
         'hero' => [
             'heading' => $themeName . ' maintenance mode',
-            'summary' => 'Screenshot demo maintenance with status copy, recovery actions, and supporting content.',
+            'summary' => 'Maintenance mode with status copy, recovery actions, and supporting content.',
             'actions' => [
                 ['label' => 'Check status', 'url' => '#status', 'style' => 'primary'],
                 ['label' => 'Contact support', 'url' => '#contact', 'style' => 'secondary'],
             ],
         ],
-        'features_heading' => 'Maintenance status checks',
-        'features_summary' => 'System pages need the same visual coverage as content pages.',
-        'features' => themeDemoScreenshotFeatures('maintenance', 3),
+        'features_heading' => $copy['maintenanceHeading'],
+        'features_summary' => $copy['maintenanceSummary'],
+        'features' => themeDemoScreenshotFeatures('maintenance', 3, $themeKey),
         'proof' => [
-            'heading' => 'Maintenance proof points',
-            'items' => themeDemoScreenshotProofItems(),
+            'heading' => $copy['detailProofHeading'],
+            'items' => themeDemoScreenshotProofItems($themeKey),
         ],
         'cta' => [
-            'heading' => 'Back online soon',
-            'summary' => 'Maintenance screenshots verify recovery messaging and action styling.',
+            'heading' => $copy['maintenanceCtaHeading'],
+            'summary' => $copy['maintenanceCtaSummary'],
             'actions' => [
                 ['label' => 'Return home', 'url' => '#home', 'style' => 'primary'],
             ],
@@ -1867,7 +1985,7 @@ function createThemeDemoScreenshotMaintenancePage(string $themeKey, Collection $
 
     /** @var Page $page */
     $page = resolve(PageCreator::class)->createPage([
-        'name' => $themeName . ' Demo Maintenance',
+        'name' => $themeName . ' Maintenance Status',
         'type_key' => PageTypeEnum::Maintenance,
         'layout_key' => LayoutEnum::System,
         'visible_from' => now()->subDay()->format('Y-m-d'),
@@ -1882,14 +2000,14 @@ function createThemeDemoScreenshotMaintenancePage(string $themeKey, Collection $
         'translations' => $languages
             ->mapWithKeys(fn (Language $language): array => [
                 (string) $language->code => [
-                    'title' => $themeName . ' Demo Maintenance',
-                    'content' => '<h2>Maintenance preview</h2><p>Maintenance mode screenshot content.</p>',
+                    'title' => $themeName . ' Maintenance Status',
+                    'content' => '<h2>Maintenance preview</h2><p>Maintenance mode status content.</p>',
                     'summary' => $renderData['summary'],
                     'meta' => [
                         'description' => $renderData['summary'],
                         'hero' => $renderData['hero']['summary'],
                         'hero_title' => $renderData['hero']['heading'],
-                        'label' => $themeName . ' Demo Maintenance',
+                        'label' => $themeName . ' Maintenance Status',
                         'link_text' => 'Check status',
                         'slug' => 'theme-' . $themeKey . '-maintenance',
                         'theme_demo' => $renderData,
@@ -1925,23 +2043,24 @@ function createThemeDemoScreenshotSystemPage(string $themeKey, Collection $pages
     }
 
     $languages = Language::query()->get();
-    $themeName = ucfirst(str_replace('-', ' ', $themeKey));
+    $themeName = themeDemoScreenshotThemeName($themeKey);
+    $copy = themeDemoScreenshotThemeCopy($themeKey);
     $renderData = [
-        'summary' => 'Screenshot demo system page for the ' . $themeName . ' theme.',
+        'summary' => themeDemoScreenshotExpectedText('system', $themeKey) . ' with operational copy, recovery actions, and support context.',
         'hero' => [
             'heading' => $themeName . ' system page',
-            'summary' => 'Screenshot demo system page with operational copy, recovery actions, and support context.',
+            'summary' => 'System page with operational copy, recovery actions, and support context.',
             'actions' => [
                 ['label' => 'Open support', 'url' => '#support', 'style' => 'primary'],
                 ['label' => 'View status', 'url' => '#status', 'style' => 'secondary'],
             ],
         ],
-        'features_heading' => 'System page checks',
-        'features_summary' => 'System page type screenshots make the core type and layout matrix explicit.',
-        'features' => themeDemoScreenshotFeatures('system', 3),
+        'features_heading' => $copy['systemHeading'],
+        'features_summary' => $copy['systemSummary'],
+        'features' => themeDemoScreenshotFeatures('system', 3, $themeKey),
         'cta' => [
-            'heading' => 'System page recovery action',
-            'summary' => 'System pages need the same readable CTA treatment as marketing pages.',
+            'heading' => $copy['systemCtaHeading'],
+            'summary' => $copy['systemCtaSummary'],
             'actions' => [
                 ['label' => 'Continue', 'url' => '#continue', 'style' => 'primary'],
             ],
@@ -1950,7 +2069,7 @@ function createThemeDemoScreenshotSystemPage(string $themeKey, Collection $pages
 
     /** @var Page $page */
     $page = resolve(PageCreator::class)->createPage([
-        'name' => $themeName . ' Demo System',
+        'name' => $themeName . ' System Support',
         'type_key' => PageTypeEnum::System,
         'layout_key' => LayoutEnum::System,
         'visible_from' => now()->subDay()->format('Y-m-d'),
@@ -1965,14 +2084,14 @@ function createThemeDemoScreenshotSystemPage(string $themeKey, Collection $pages
         'translations' => $languages
             ->mapWithKeys(fn (Language $language): array => [
                 (string) $language->code => [
-                    'title' => $themeName . ' Demo System',
-                    'content' => '<h2>System page preview</h2><p>System page screenshot content.</p>',
+                    'title' => $themeName . ' System Support',
+                    'content' => '<h2>System page preview</h2><p>System page support content.</p>',
                     'summary' => $renderData['summary'],
                     'meta' => [
                         'description' => $renderData['summary'],
                         'hero' => $renderData['hero']['summary'],
                         'hero_title' => $renderData['hero']['heading'],
-                        'label' => $themeName . ' Demo System',
+                        'label' => $themeName . ' System Support',
                         'link_text' => 'Open support',
                         'slug' => 'theme-' . $themeKey . '-system',
                         'theme_demo' => $renderData,
@@ -2033,8 +2152,8 @@ function themeDemoScreenshotRenderData(Page $page): array
  */
 function themeDemoScreenshotEnrichedRenderData(string $themeKey, string $surface, array $renderData): array
 {
-    $themeName = ucfirst(str_replace('-', ' ', $themeKey));
-    $expectedText = themeDemoScreenshotExpectedText($surface);
+    $themeName = themeDemoScreenshotThemeName($themeKey);
+    $expectedText = themeDemoScreenshotExpectedText($surface, $themeKey);
     $mediaUrls = themeDemoScreenshotMediaUrls($renderData);
     $primaryMedia = $mediaUrls[0] ?? data_get($renderData, 'hero.mediaUrl', data_get($renderData, 'mediaUrl'));
     $actions = [
@@ -2046,20 +2165,44 @@ function themeDemoScreenshotEnrichedRenderData(string $themeKey, string $surface
     $base = array_replace_recursive($renderData, [
         'summary' => $expectedText . ' for the ' . $themeName . ' theme.',
         'actions' => $actions,
+        'navigation' => [
+            'brandName' => themeDemoScreenshotBrandName($themeKey),
+            'items' => [
+                ['label' => 'Work', 'url' => '#work'],
+                ['label' => 'Proof', 'url' => '#proof'],
+                ['label' => 'Contact', 'url' => '#contact'],
+            ],
+            'ctaLabel' => 'Enquire',
+            'ctaUrl' => '#contact',
+        ],
+        'footer' => [
+            'brandName' => themeDemoScreenshotBrandName($themeKey),
+            'summary' => $expectedText . ' keeps this buyer journey close to a real public site.',
+            'columns' => [
+                [
+                    'heading' => 'Explore',
+                    'links' => [
+                        ['label' => 'Work', 'url' => '#work'],
+                        ['label' => 'Proof', 'url' => '#proof'],
+                        ['label' => 'Contact', 'url' => '#contact'],
+                    ],
+                ],
+            ],
+        ],
     ]);
 
     $base['hero'] = array_replace_recursive(
         is_array(data_get($renderData, 'hero')) ? data_get($renderData, 'hero') : [],
         [
-            'heading' => themeDemoScreenshotHeroHeading($themeName, $surface),
+            'heading' => themeDemoScreenshotHeroHeading($themeKey, $themeName, $surface),
             'summary' => $expectedText . ' with richer seeded content, media, actions, and supporting sections.',
             'actions' => $actions,
             'mediaUrl' => is_string($primaryMedia) ? $primaryMedia : null,
-            'mediaAlt' => $themeName . ' screenshot demo media',
+            'mediaAlt' => $themeName . ' showcase media',
         ],
     );
 
-    return array_replace_recursive($base, themeDemoScreenshotSurfaceRenderData($surface, $mediaUrls, $actions));
+    return array_replace_recursive($base, themeDemoScreenshotSurfaceRenderData($themeKey, $surface, $mediaUrls, $actions));
 }
 
 /**
@@ -2067,154 +2210,452 @@ function themeDemoScreenshotEnrichedRenderData(string $themeKey, string $surface
  * @param  array<int, array<string, string>>  $actions
  * @return array<string, mixed>
  */
-function themeDemoScreenshotSurfaceRenderData(string $surface, array $mediaUrls, array $actions): array
+function themeDemoScreenshotSurfaceRenderData(string $themeKey, string $surface, array $mediaUrls, array $actions): array
 {
+    $copy = themeDemoScreenshotThemeCopy($themeKey);
+
     return match ($surface) {
         'homepage' => [
-            'features_heading' => 'Homepage feature system',
-            'features_summary' => 'The homepage screenshot is deliberately deep enough to show full theme rhythm.',
-            'features' => themeDemoScreenshotFeatures($surface, 9),
+            'features_heading' => $copy['featuresHeading'],
+            'features_summary' => $copy['featuresSummary'],
+            'features' => themeDemoScreenshotFeatures($surface, 9, $themeKey),
             'proof' => [
-                'heading' => 'Homepage proof points',
-                'summary' => 'Metrics and evidence blocks sit close to the homepage hero.',
-                'items' => themeDemoScreenshotProofItems(),
+                'heading' => $copy['proofHeading'],
+                'summary' => $copy['proofSummary'],
+                'items' => themeDemoScreenshotProofItems($themeKey),
             ],
-            'heading' => 'Featured homepage entries',
-            'items' => themeDemoScreenshotListingItems($mediaUrls, $surface, 6),
+            'heading' => $copy['listingHeading'],
+            'items' => themeDemoScreenshotListingItems($mediaUrls, $surface, 6, $themeKey),
             'cta' => [
-                'heading' => 'Screenshot demo homepage conversion band',
-                'summary' => 'The homepage screenshot includes a full final conversion section.',
+                'heading' => $copy['ctaHeading'],
+                'summary' => $copy['ctaSummary'],
                 'actions' => $actions,
             ],
         ],
         'directory' => [
-            'heading' => 'Directory result cards',
-            'items' => themeDemoScreenshotListingItems($mediaUrls, $surface, 8),
+            'heading' => $copy['directoryHeading'],
+            'items' => themeDemoScreenshotListingItems($mediaUrls, $surface, 8, $themeKey),
             'cta' => [
-                'heading' => 'Filter the directory',
-                'summary' => 'Directory screenshots focus on repeated cards, images, and scanning density.',
+                'heading' => $copy['directoryCtaHeading'],
+                'summary' => $copy['directorySummary'],
                 'actions' => [$actions[0]],
             ],
         ],
         'detail' => [
             'proof' => [
-                'heading' => 'Detail page facts',
-                'summary' => 'Detail screenshots need rich supporting context without looking like an index.',
-                'items' => array_slice(themeDemoScreenshotProofItems(), 0, 3),
+                'heading' => $copy['detailProofHeading'],
+                'summary' => $copy['detailProofSummary'],
+                'items' => array_slice(themeDemoScreenshotProofItems($themeKey), 0, 3),
             ],
-            'features_heading' => 'Detail page sections',
-            'features_summary' => 'Long-form pages check compact content blocks after the hero.',
-            'features' => themeDemoScreenshotFeatures($surface, 3),
+            'features_heading' => $copy['detailFeaturesHeading'],
+            'features_summary' => $copy['detailFeaturesSummary'],
+            'features' => themeDemoScreenshotFeatures($surface, 3, $themeKey),
             'cta' => [
-                'heading' => 'Continue from the detail page',
-                'summary' => 'A detail page CTA checks action spacing after long copy.',
+                'heading' => $copy['detailCtaHeading'],
+                'summary' => $copy['detailCtaSummary'],
                 'actions' => [$actions[0], $actions[1]],
             ],
         ],
         'contact' => [
-            'features_heading' => 'Contact routing options',
-            'features_summary' => 'Contact screenshots check forms, routing cards, and support details.',
-            'features' => [
-                ['title' => 'Project scoping', 'description' => 'Route new builds and content-model planning to the right team.', 'icon' => 'Scope'],
-                ['title' => 'Support', 'description' => 'Surface help paths for existing sites without losing contact clarity.', 'icon' => 'Help'],
-                ['title' => 'Partnerships', 'description' => 'Keep commercial and agency enquiries visible in the same layout.', 'icon' => 'Partner'],
-            ],
+            'features_heading' => $copy['contactHeading'],
+            'features_summary' => $copy['contactSummary'],
+            'features' => $copy['contactRoutes'],
             'cta' => [
-                'heading' => 'Send an enquiry',
-                'summary' => 'This static demo form checks the visual contact layout without submitting data.',
+                'heading' => $copy['contactCtaHeading'],
+                'summary' => $copy['contactCtaSummary'],
                 'actions' => [$actions[0]],
             ],
         ],
         'empty' => [
-            'heading' => 'Empty state results',
+            'heading' => $copy['emptyHeading'],
             'items' => [],
             'cta' => [
-                'heading' => 'Reset the empty state',
-                'summary' => 'Empty screenshots focus on readable recovery messaging.',
+                'heading' => $copy['emptyCtaHeading'],
+                'summary' => $copy['emptySummary'],
                 'actions' => [$actions[0]],
             ],
         ],
         'not-found' => [
-            'features_heading' => 'Recovery links',
-            'features_summary' => '404 pages need clear navigation choices and calm spacing.',
-            'features' => themeDemoScreenshotFeatures($surface, 3),
+            'features_heading' => $copy['recoveryHeading'],
+            'features_summary' => $copy['recoverySummary'],
+            'features' => themeDemoScreenshotFeatures($surface, 3, $themeKey),
             'cta' => [
-                'heading' => 'Find the right page',
-                'summary' => 'A compact recovery CTA checks system layout action styling.',
+                'heading' => $copy['recoveryCtaHeading'],
+                'summary' => $copy['recoveryCtaSummary'],
                 'actions' => [$actions[0], $actions[1]],
             ],
         ],
         'maintenance' => [
             'proof' => [
-                'heading' => 'Maintenance status',
-                'summary' => 'Status screenshots need short operational proof points.',
-                'items' => array_slice(themeDemoScreenshotProofItems(), 0, 3),
+                'heading' => $copy['maintenanceHeading'],
+                'summary' => $copy['maintenanceSummary'],
+                'items' => array_slice(themeDemoScreenshotProofItems($themeKey), 0, 3),
             ],
             'cta' => [
-                'heading' => 'Back online soon',
-                'summary' => 'Maintenance screenshots verify recovery messaging and action styling.',
+                'heading' => $copy['maintenanceCtaHeading'],
+                'summary' => $copy['maintenanceCtaSummary'],
                 'actions' => [$actions[0]],
             ],
         ],
         'system' => [
-            'features_heading' => 'System page checks',
-            'features_summary' => 'System page screenshots make operational support layouts explicit.',
-            'features' => themeDemoScreenshotFeatures($surface, 4),
+            'features_heading' => $copy['systemHeading'],
+            'features_summary' => $copy['systemSummary'],
+            'features' => themeDemoScreenshotFeatures($surface, 4, $themeKey),
             'cta' => [
-                'heading' => 'System page recovery action',
-                'summary' => 'System pages need the same readable CTA treatment as marketing pages.',
+                'heading' => $copy['systemCtaHeading'],
+                'summary' => $copy['systemCtaSummary'],
                 'actions' => [$actions[0]],
             ],
         ],
         'cta' => [
             'proof' => [
-                'heading' => 'CTA evidence',
-                'summary' => 'Conversion-only screenshots check proof blocks and action rhythm.',
-                'items' => array_slice(themeDemoScreenshotProofItems(), 0, 2),
+                'heading' => $copy['ctaProofHeading'],
+                'summary' => $copy['ctaProofSummary'],
+                'items' => array_slice(themeDemoScreenshotProofItems($themeKey), 0, 2),
             ],
             'cta' => [
-                'heading' => 'Screenshot demo CTA',
-                'summary' => 'CTA pages should feel purposeful rather than another generic content page.',
+                'heading' => $copy['ctaHeading'],
+                'summary' => $copy['ctaSummary'],
                 'actions' => $actions,
             ],
         ],
         default => [
-            'features' => themeDemoScreenshotFeatures($surface, 4),
-            'items' => themeDemoScreenshotListingItems($mediaUrls, $surface, 4),
+            'features' => themeDemoScreenshotFeatures($surface, 4, $themeKey),
+            'items' => themeDemoScreenshotListingItems($mediaUrls, $surface, 4, $themeKey),
         ],
     };
 }
 
-function themeDemoScreenshotExpectedText(string $surface): string
+function themeDemoScreenshotExpectedText(string $surface, ?string $themeKey = null): string
 {
+    if ($themeKey !== null) {
+        $copy = themeDemoScreenshotThemeCopy($themeKey);
+        $themeName = themeDemoScreenshotThemeName($themeKey);
+
+        return match ($surface) {
+            'homepage' => 'Featured ' . $copy['plural'],
+            'directory' => 'Browse ' . $copy['plural'],
+            'detail' => ucfirst($copy['singular']) . ' detail preview',
+            'contact' => 'Start the ' . $copy['singular'] . ' conversation',
+            'empty' => 'No ' . $copy['plural'] . ' yet',
+            'not-found' => $themeName . ' page not found',
+            'maintenance' => $themeName . ' maintenance mode',
+            'system' => $themeName . ' system page',
+            'cta' => 'Convert with ' . $copy['plural'],
+            default => 'Explore ' . $copy['plural'],
+        };
+    }
+
     return match ($surface) {
-        'homepage' => 'Screenshot demo homepage',
-        'directory' => 'Screenshot demo directory',
-        'detail' => 'Screenshot demo detail',
-        'contact' => 'Screenshot demo contact',
-        'empty' => 'Screenshot demo empty state',
-        'not-found' => 'Screenshot demo not found',
-        'maintenance' => 'Screenshot demo maintenance',
-        'system' => 'Screenshot demo system page',
-        'cta' => 'Screenshot demo CTA',
-        default => 'Screenshot demo page',
+        'homepage' => 'Featured foundation entries',
+        'directory' => 'Browse foundation entries',
+        'detail' => 'Foundation entry detail preview',
+        'contact' => 'Start the foundation entry conversation',
+        'empty' => 'No foundation entries yet',
+        'not-found' => 'Capell Foundation page not found',
+        'maintenance' => 'Capell Foundation maintenance mode',
+        'system' => 'Capell Foundation system page',
+        'cta' => 'Convert with foundation entries',
+        default => 'Explore foundation entries',
     };
 }
 
-function themeDemoScreenshotHeroHeading(string $themeName, string $surface): string
+function themeDemoScreenshotThemeName(string $themeKey): string
+{
+    return ucfirst(str_replace('-', ' ', $themeKey));
+}
+
+function themeDemoScreenshotBrandName(string $themeKey): string
+{
+    return match ($themeKey) {
+        'agency' => 'Northstar Studio',
+        'commerce' => 'Harbour Goods',
+        'corporate' => 'Alder Group',
+        'education' => 'Pathway School',
+        'healthcare' => 'Cedar Clinic',
+        'knowledge' => 'Archive House',
+        'local-services' => 'Ready Local',
+        'nonprofit' => 'Common Good',
+        'portfolio' => 'Atelier North',
+        'saas' => 'SignalOps',
+        default => 'Capell Foundation',
+    };
+}
+
+function themeDemoScreenshotSurfaceLabel(string $surface): string
 {
     return match ($surface) {
-        'homepage' => $themeName . ' homepage screenshot demo',
-        'directory' => 'Browse ' . $themeName . ' demo entries',
-        'detail' => $themeName . ' long-form detail preview',
-        'contact' => 'Start the ' . $themeName . ' conversation',
-        'empty' => 'No ' . $themeName . ' results yet',
+        'homepage' => 'Homepage composition',
+        'directory' => 'Directory layout',
+        'detail' => 'Detail layout',
+        'contact' => 'Contact route',
+        'empty' => 'Empty-state recovery',
+        'not-found' => 'Recovery route',
+        'maintenance' => 'Maintenance route',
+        'system' => 'System page',
+        'cta' => 'Conversion route',
+        'visual-review' => 'Full-page composition',
+        'system-review' => 'Support-page route',
+        'commerce-sections' => 'Commerce section suite',
+        'healthcare-sections' => 'Healthcare section suite',
+        'saas-sections' => 'SaaS section suite',
+        'portfolio-sections' => 'Portfolio section suite',
+        'education-sections' => 'Education section suite',
+        'nonprofit-sections' => 'Nonprofit section suite',
+        'local-service-sections' => 'Local service section suite',
+        'knowledge-sections' => 'Knowledge section suite',
+        'corporate-sections' => 'Corporate section suite',
+        'agency-sections' => 'Agency section suite',
+        default => ucfirst(str_replace('-', ' ', $surface)),
+    };
+}
+
+function themeDemoScreenshotHeroHeading(string $themeKey, string $themeName, string $surface): string
+{
+    $copy = themeDemoScreenshotThemeCopy($themeKey);
+
+    return match ($surface) {
+        'homepage' => $copy['homepageHeroHeading'],
+        'directory' => $copy['directoryHeroHeading'],
+        'detail' => $copy['detailHeroHeading'],
+        'contact' => $copy['contactHeroHeading'],
+        'empty' => $copy['emptyHeroHeading'],
         'not-found' => $themeName . ' page not found',
         'maintenance' => $themeName . ' maintenance mode',
         'system' => $themeName . ' system page',
-        'cta' => 'Convert with the ' . $themeName . ' theme',
-        default => $themeName . ' screenshot demo',
+        'cta' => $copy['ctaHeroHeading'],
+        default => $themeName . ' premium showcase',
     };
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function themeDemoScreenshotThemeCopy(string $themeKey): array
+{
+    $copy = [
+        'agency' => [
+            'singular' => 'campaign room',
+            'plural' => 'campaign rooms',
+            'feature' => 'creative route',
+            'proof' => [
+                ['metric' => '3', 'name' => 'Launch tracks', 'summary' => 'Campaign, content, and conversion routes stay visible.'],
+                ['metric' => '8', 'name' => 'Asset drops', 'summary' => 'Creative assets stay grouped for quick sign-off.'],
+                ['metric' => '24h', 'name' => 'Launch room', 'summary' => 'Short-cycle work has an obvious next step.'],
+                ['metric' => 'Live', 'name' => 'Campaign state', 'summary' => 'Visitors can see what is ready now.'],
+            ],
+            'contactRoutes' => [
+                ['title' => 'Campaign brief', 'description' => 'Route new launch and content briefs into a focused scoping path.', 'icon' => 'Brief'],
+                ['title' => 'Production support', 'description' => 'Give active retainers a clear way to request delivery help.', 'icon' => 'Ops'],
+                ['title' => 'Partner enquiry', 'description' => 'Keep collaborations visible without diluting the primary lead path.', 'icon' => 'Collab'],
+            ],
+        ],
+        'commerce' => [
+            'singular' => 'buying path',
+            'plural' => 'merchandise stories',
+            'feature' => 'retail signal',
+            'proof' => [
+                ['metric' => '12', 'name' => 'Collections', 'summary' => 'Merchandised groups stay visible across the journey.'],
+                ['metric' => '35', 'name' => 'Product cards', 'summary' => 'Dense retail cards remain readable.'],
+                ['metric' => '100%', 'name' => 'Stock proof', 'summary' => 'Promotional and product evidence sit together.'],
+                ['metric' => '1k', 'name' => 'Buyer paths', 'summary' => 'Browsing and conversion routes stay connected.'],
+            ],
+            'contactRoutes' => [
+                ['title' => 'Trade order', 'description' => 'Route wholesale, bulk, and buying enquiries to the right team.', 'icon' => 'Trade'],
+                ['title' => 'Product support', 'description' => 'Keep sizing, delivery, and stock questions close to conversion.', 'icon' => 'Help'],
+                ['title' => 'Partnerships', 'description' => 'Separate campaign and collaboration enquiries from shopper support.', 'icon' => 'Partner'],
+            ],
+        ],
+        'corporate' => [
+            'singular' => 'board paper',
+            'plural' => 'board papers',
+            'feature' => 'governance check',
+            'proof' => [
+                ['metric' => '12', 'name' => 'Briefing packs', 'summary' => 'Formal decision material stays structured.'],
+                ['metric' => '35', 'name' => 'Service notes', 'summary' => 'Dense operational pages keep their hierarchy.'],
+                ['metric' => '100%', 'name' => 'Approval trail', 'summary' => 'Evidence remains visible without marketing noise.'],
+                ['metric' => '1x', 'name' => 'Decision path', 'summary' => 'The next action stays explicit.'],
+            ],
+            'contactRoutes' => [
+                ['title' => 'Procurement', 'description' => 'Route formal buying and supplier questions cleanly.', 'icon' => 'Procure'],
+                ['title' => 'Investor support', 'description' => 'Keep governance, reporting, and stakeholder requests distinct.', 'icon' => 'IR'],
+                ['title' => 'Service desk', 'description' => 'Give existing customers a restrained support route.', 'icon' => 'Desk'],
+            ],
+        ],
+        'education' => [
+            'singular' => 'learning pathway',
+            'plural' => 'course pathways',
+            'feature' => 'learner step',
+            'proof' => [
+                ['metric' => '12', 'name' => 'Modules', 'summary' => 'Course structure stays clear before enrolment.'],
+                ['metric' => '35', 'name' => 'Learners', 'summary' => 'Cohort proof sits close to programme content.'],
+                ['metric' => '100%', 'name' => 'Outcome led', 'summary' => 'Every card points to a clear learner result.'],
+                ['metric' => '1:1', 'name' => 'Mentor path', 'summary' => 'Support routes are visible before application.'],
+            ],
+            'contactRoutes' => [
+                ['title' => 'Programme advice', 'description' => 'Route course questions to admissions and teaching teams.', 'icon' => 'Course'],
+                ['title' => 'Learner support', 'description' => 'Keep support and accessibility requests easy to find.', 'icon' => 'Care'],
+                ['title' => 'Partnerships', 'description' => 'Separate employer and school enquiries from enrolment.', 'icon' => 'Partner'],
+            ],
+        ],
+        'healthcare' => [
+            'singular' => 'care route',
+            'plural' => 'service pathways',
+            'feature' => 'clinical signal',
+            'proof' => [
+                ['metric' => '12', 'name' => 'Care routes', 'summary' => 'Service pathways stay clear and calm.'],
+                ['metric' => '35', 'name' => 'Clinicians', 'summary' => 'People and appointments remain connected.'],
+                ['metric' => '100%', 'name' => 'Patient-ready', 'summary' => 'Critical details avoid low-contrast treatment.'],
+                ['metric' => '1x', 'name' => 'Booking path', 'summary' => 'The next clinical step is visible.'],
+            ],
+            'contactRoutes' => [
+                ['title' => 'Appointment route', 'description' => 'Send patients toward the right service or clinic location.', 'icon' => 'Appt'],
+                ['title' => 'Clinical support', 'description' => 'Keep urgent and non-urgent support routes visually distinct.', 'icon' => 'Care'],
+                ['title' => 'Referral enquiry', 'description' => 'Separate referrer and partnership enquiries from patient booking.', 'icon' => 'Refer'],
+            ],
+        ],
+        'knowledge' => [
+            'singular' => 'research brief',
+            'plural' => 'archive entries',
+            'feature' => 'source check',
+            'proof' => [
+                ['metric' => '420+', 'name' => 'Guides', 'summary' => 'Large libraries still need a strong entry point.'],
+                ['metric' => '36', 'name' => 'Topics', 'summary' => 'Facet and topic structures remain visible.'],
+                ['metric' => '12k', 'name' => 'Saved', 'summary' => 'Reader intent supports conversion paths.'],
+                ['metric' => '1x', 'name' => 'Editorial queue', 'summary' => 'Editorial state stays clear.'],
+            ],
+            'contactRoutes' => [
+                ['title' => 'Editorial query', 'description' => 'Route topic, source, and correction requests to editors.', 'icon' => 'Edit'],
+                ['title' => 'Research support', 'description' => 'Give readers a clear path for deeper help.', 'icon' => 'Source'],
+                ['title' => 'Sponsorship', 'description' => 'Separate commercial enquiries from editorial contact.', 'icon' => 'Sponsor'],
+            ],
+        ],
+        'local-services' => [
+            'singular' => 'service call',
+            'plural' => 'local jobs',
+            'feature' => 'dispatch step',
+            'proof' => [
+                ['metric' => '24h', 'name' => 'Quote window', 'summary' => 'Service response promises stay prominent.'],
+                ['metric' => '18', 'name' => 'Postcodes', 'summary' => 'Local coverage remains easy to scan.'],
+                ['metric' => '07', 'name' => 'Crews', 'summary' => 'Dispatch capacity supports trust.'],
+                ['metric' => '1x', 'name' => 'Job route', 'summary' => 'The next booking step is obvious.'],
+            ],
+            'contactRoutes' => [
+                ['title' => 'Urgent job', 'description' => 'Route time-sensitive work toward the fastest response path.', 'icon' => 'Now'],
+                ['title' => 'Planned quote', 'description' => 'Keep larger estimates and surveys distinct from urgent work.', 'icon' => 'Quote'],
+                ['title' => 'Service area', 'description' => 'Help visitors check coverage before they submit details.', 'icon' => 'Area'],
+            ],
+        ],
+        'nonprofit' => [
+            'singular' => 'impact story',
+            'plural' => 'campaign stories',
+            'feature' => 'supporter route',
+            'proof' => [
+                ['metric' => '12%', 'name' => 'Target left', 'summary' => 'Campaign progress remains visible.'],
+                ['metric' => '84%', 'name' => 'Funded', 'summary' => 'Donation momentum is easy to understand.'],
+                ['metric' => '31', 'name' => 'Volunteers', 'summary' => 'Action paths go beyond donation.'],
+                ['metric' => '1x', 'name' => 'Impact route', 'summary' => 'Visitors can choose a useful next step.'],
+            ],
+            'contactRoutes' => [
+                ['title' => 'Donate', 'description' => 'Keep donation questions close to campaign proof.', 'icon' => 'Give'],
+                ['title' => 'Volunteer', 'description' => 'Route practical help without hiding financial support.', 'icon' => 'Help'],
+                ['title' => 'Partnerships', 'description' => 'Separate funder and organisation enquiries from supporter contact.', 'icon' => 'Ally'],
+            ],
+        ],
+        'portfolio' => [
+            'singular' => 'case file',
+            'plural' => 'studio cases',
+            'feature' => 'outcome note',
+            'proof' => [
+                ['metric' => '+42%', 'name' => 'Outcome lift', 'summary' => 'Case-study proof stays attached to work.'],
+                ['metric' => '120+', 'name' => 'Assets', 'summary' => 'Project evidence can be visually dense.'],
+                ['metric' => '5h', 'name' => 'Proof deck', 'summary' => 'Short proof blocks support a premium studio flow.'],
+                ['metric' => '1x', 'name' => 'Case path', 'summary' => 'Visitors move from work to enquiry cleanly.'],
+            ],
+            'contactRoutes' => [
+                ['title' => 'New brief', 'description' => 'Route serious project enquiries into case-study-led scoping.', 'icon' => 'Brief'],
+                ['title' => 'Media request', 'description' => 'Keep speaking and press enquiries visible but secondary.', 'icon' => 'Media'],
+                ['title' => 'Collaboration', 'description' => 'Separate partner enquiries from direct client work.', 'icon' => 'Collab'],
+            ],
+        ],
+        'saas' => [
+            'singular' => 'product workflow',
+            'plural' => 'activation paths',
+            'feature' => 'product signal',
+            'proof' => [
+                ['metric' => '12', 'name' => 'Workflows', 'summary' => 'Feature density stays product-led.'],
+                ['metric' => '35', 'name' => 'Teams', 'summary' => 'Proof blocks support trial confidence.'],
+                ['metric' => '100%', 'name' => 'Setup path', 'summary' => 'Activation and support stay connected.'],
+                ['metric' => '1x', 'name' => 'Demo route', 'summary' => 'Conversion remains obvious after detail content.'],
+            ],
+            'contactRoutes' => [
+                ['title' => 'Demo request', 'description' => 'Route qualified prospects toward a product walkthrough.', 'icon' => 'Demo'],
+                ['title' => 'Support', 'description' => 'Keep customer help distinct from sales conversion.', 'icon' => 'Help'],
+                ['title' => 'Partnerships', 'description' => 'Separate integration and channel enquiries from trials.', 'icon' => 'API'],
+            ],
+        ],
+    ][$themeKey] ?? [
+        'singular' => 'foundation entry',
+        'plural' => 'foundation entries',
+        'feature' => 'foundation block',
+        'proof' => themeDemoScreenshotProofItems(),
+        'contactRoutes' => [
+            ['title' => 'Project scoping', 'description' => 'Route new builds and content-model planning to the right team.', 'icon' => 'Scope'],
+            ['title' => 'Support', 'description' => 'Surface help paths for existing sites without losing contact clarity.', 'icon' => 'Help'],
+            ['title' => 'Partnerships', 'description' => 'Keep commercial and agency enquiries visible in the same layout.', 'icon' => 'Partner'],
+        ],
+    ];
+
+    $singular = $copy['singular'];
+    $plural = $copy['plural'];
+    $feature = $copy['feature'];
+
+    return $copy + [
+        'homepageHeroHeading' => 'Featured ' . $plural,
+        'directoryHeroHeading' => 'Browse ' . $plural,
+        'detailHeroHeading' => ucfirst($singular) . ' detail preview',
+        'contactHeroHeading' => 'Start the ' . $singular . ' conversation',
+        'emptyHeroHeading' => 'No ' . $plural . ' yet',
+        'ctaHeroHeading' => 'Convert with ' . $plural,
+        'featuresHeading' => ucfirst($feature) . ' cards',
+        'featuresSummary' => 'Repeated ' . $feature . ' cards check wrapping, hierarchy, and theme-specific scanning.',
+        'proofHeading' => ucfirst($singular) . ' proof points',
+        'proofSummary' => 'Metrics and evidence stay tied to the buyer workflow for this theme.',
+        'listingHeading' => 'Featured ' . $plural,
+        'listingSummary' => ucfirst($plural) . ' cover repeated card treatment outside the homepage.',
+        'directoryHeading' => ucfirst($plural),
+        'directoryCtaHeading' => 'Filter ' . $plural,
+        'directorySummary' => 'Directory pages focus on repeated ' . $singular . ' cards, imagery, and scanning density.',
+        'detailProofHeading' => ucfirst($singular) . ' facts',
+        'detailProofSummary' => 'Detail pages need supporting proof without turning into another index.',
+        'detailFeaturesHeading' => ucfirst($singular) . ' sections',
+        'detailFeaturesSummary' => 'Long-form pages check compact content blocks after the hero.',
+        'detailCtaHeading' => 'Continue from this ' . $singular,
+        'detailCtaSummary' => 'A detail page CTA checks action spacing after richer content.',
+        'contactHeading' => ucfirst($singular) . ' enquiry routes',
+        'contactSummary' => 'Contact pages check routing cards, support details, and form-adjacent decisions.',
+        'contactCtaHeading' => 'Send a ' . $singular . ' enquiry',
+        'contactCtaSummary' => 'This static demo form checks contact layout without submitting data.',
+        'emptyHeading' => 'No visible ' . $plural,
+        'emptyCtaHeading' => 'Reset the ' . $singular . ' search',
+        'emptySummary' => 'Empty states focus on readable recovery messaging for this theme workflow.',
+        'recoveryHeading' => ucfirst($singular) . ' recovery links',
+        'recoverySummary' => '404 pages need clear navigation choices that still match the theme lane.',
+        'recoveryCtaHeading' => 'Find the right ' . $singular,
+        'recoveryCtaSummary' => 'A compact recovery CTA checks system layout action styling.',
+        'maintenanceHeading' => ucfirst($singular) . ' maintenance status',
+        'maintenanceSummary' => 'Status pages need short operational proof points.',
+        'maintenanceCtaHeading' => ucfirst($singular) . ' updates resume soon',
+        'maintenanceCtaSummary' => 'Maintenance pages verify recovery messaging and action styling.',
+        'systemHeading' => ucfirst($singular) . ' system checks',
+        'systemSummary' => 'System pages make operational support layouts explicit for this theme.',
+        'systemCtaHeading' => ucfirst($singular) . ' recovery action',
+        'systemCtaSummary' => 'System pages need the same readable CTA treatment as marketing pages.',
+        'ctaProofHeading' => ucfirst($singular) . ' conversion evidence',
+        'ctaProofSummary' => 'Conversion-only pages check proof blocks and action rhythm.',
+        'ctaHeading' => 'Move visitors through ' . $plural,
+        'ctaSummary' => 'CTA pages should feel like a domain-specific next step, not another generic content page.',
+    ];
 }
 
 /**
@@ -2244,13 +2685,17 @@ function themeDemoScreenshotMediaUrls(array $renderData): array
 /**
  * @return array<int, array{title: string, description: string, icon: string}>
  */
-function themeDemoScreenshotFeatures(string $surface, int $count = 6): array
+function themeDemoScreenshotFeatures(string $surface, int $count = 6, ?string $themeKey = null): array
 {
+    $copy = $themeKey === null ? null : themeDemoScreenshotThemeCopy($themeKey);
+    $feature = is_array($copy) ? $copy['feature'] : 'foundation block';
+    $surfaceLabel = themeDemoScreenshotSurfaceLabel($surface);
+
     return collect(range(1, $count))
         ->map(fn (int $number): array => [
-            'title' => 'Screenshot feature ' . $number,
-            'description' => ucfirst($surface) . ' demo copy checks card spacing, wrapping, and section density.',
-            'icon' => 'Demo ' . $number,
+            'title' => ucfirst($feature) . ' ' . $number,
+            'description' => $surfaceLabel . ' checks ' . $feature . ' spacing, wrapping, and section density.',
+            'icon' => 'Step ' . $number,
         ])
         ->all();
 }
@@ -2258,13 +2703,21 @@ function themeDemoScreenshotFeatures(string $surface, int $count = 6): array
 /**
  * @return array<int, array{metric: string, name: string, summary: string}>
  */
-function themeDemoScreenshotProofItems(): array
+function themeDemoScreenshotProofItems(?string $themeKey = null): array
 {
+    if ($themeKey !== null) {
+        $copy = themeDemoScreenshotThemeCopy($themeKey);
+
+        if (isset($copy['proof']) && is_array($copy['proof'])) {
+            return $copy['proof'];
+        }
+    }
+
     return [
         ['metric' => '12', 'name' => 'Layouts', 'summary' => 'Page type and layout combinations stay visible.'],
         ['metric' => '35', 'name' => 'Screens', 'summary' => 'Every first-party theme surface gets a PNG.'],
-        ['metric' => '100%', 'name' => 'Demo data', 'summary' => 'Screenshots render seeded content instead of fallbacks.'],
-        ['metric' => '1x', 'name' => 'Install', 'summary' => 'Each theme demo is installed once per test file.'],
+        ['metric' => '100%', 'name' => 'Seeded data', 'summary' => 'Screenshots render seeded content instead of fallbacks.'],
+        ['metric' => '1x', 'name' => 'Install', 'summary' => 'Each theme surface is installed once per test file.'],
     ];
 }
 
@@ -2272,17 +2725,26 @@ function themeDemoScreenshotProofItems(): array
  * @param  array<int, string>  $mediaUrls
  * @return array<int, array<string, string>>
  */
-function themeDemoScreenshotListingItems(array $mediaUrls, string $surface, int $count = 4): array
+function themeDemoScreenshotListingItems(array $mediaUrls, string $surface, int $count = 4, ?string $themeKey = null): array
 {
+    $copy = $themeKey === null ? null : themeDemoScreenshotThemeCopy($themeKey);
+    $singular = is_array($copy) ? $copy['singular'] : 'foundation entry';
+    $surfaceLabel = themeDemoScreenshotSurfaceLabel($surface);
+    $listingMediaUrls = $mediaUrls;
+
+    if ($listingMediaUrls === [] && $themeKey !== null) {
+        $listingMediaUrls = ThemeDemoMedia::groupedForTheme($themeKey)['listing'];
+    }
+
     return collect(range(1, $count))
-        ->map(function (int $number) use ($mediaUrls, $surface): array {
-            $mediaUrl = $mediaUrls[($number - 1) % max(1, count($mediaUrls))] ?? null;
+        ->map(function (int $number) use ($listingMediaUrls, $singular, $surfaceLabel): array {
+            $mediaUrl = $listingMediaUrls[($number - 1) % max(1, count($listingMediaUrls))] ?? null;
 
             return array_filter([
-                'title' => 'Screenshot listing item ' . $number,
-                'summary' => ucfirst($surface) . ' listing copy proves repeated cards render with real fixture data.',
-                'url' => '#screenshot-item-' . $number,
-                'type' => 'Demo',
+                'title' => ucfirst($singular) . ' ' . $number,
+                'summary' => $surfaceLabel . ' proves repeated ' . $singular . ' cards render with realistic public content.',
+                'url' => '#item-' . $number,
+                'type' => ucfirst($singular),
                 'imageUrl' => $mediaUrl,
                 'mediaUrl' => $mediaUrl,
             ], fn (?string $value): bool => $value !== null);
@@ -2391,12 +2853,12 @@ function themeDemoScreenshotNavigation(array $renderData): NavigationData
     $navigation = data_get($renderData, 'navigation');
 
     if (is_array($navigation) && array_is_list($navigation)) {
-        return new NavigationData(brandName: 'Theme Demo', items: $navigation);
+        return new NavigationData(brandName: 'Capell Foundation', items: $navigation);
     }
 
     if (is_array($navigation)) {
         return NavigationData::from([
-            'brandName' => data_get($navigation, 'brandName', 'Theme Demo'),
+            'brandName' => data_get($navigation, 'brandName', 'Capell Foundation'),
             'items' => data_get($navigation, 'items', []),
             'ctaLabel' => data_get($navigation, 'ctaLabel'),
             'ctaUrl' => data_get($navigation, 'ctaUrl'),
@@ -2404,7 +2866,7 @@ function themeDemoScreenshotNavigation(array $renderData): NavigationData
     }
 
     return new NavigationData(
-        brandName: 'Theme Demo',
+        brandName: 'Capell Foundation',
         items: [
             ['label' => 'Home', 'url' => '#home'],
             ['label' => 'Directory', 'url' => '#directory'],

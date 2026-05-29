@@ -6,14 +6,12 @@
 
 <section class="theme-section theme-section-cta bg-[#0f172a] text-white">
     @isset($heading)
-        <div class="mx-auto max-w-5xl px-6 py-16">
+        <div class="mx-auto max-w-6xl px-6 py-16">
             <div
-                class="grid gap-8 border border-white/20 bg-white/5 p-8 shadow-2xl shadow-black/20 md:grid-cols-[1.1fr_0.9fr] md:p-12"
+                class="grid gap-8 border border-white/20 bg-white/5 p-8 shadow-2xl shadow-black/20 md:grid-cols-[1fr_1fr] md:p-12"
             >
                 <div>
-                    <p
-                        class="text-xs font-black tracking-[0.16em] text-[#fb923c] uppercase"
-                    >
+                    <p class="text-xs font-black text-[#fb923c] uppercase">
                         {{ __('capell-theme-portfolio::generic.final_action_label') }}
                     </p>
                     <h2
@@ -27,25 +25,42 @@
                         </p>
                     @endif
                 </div>
-                <div class="flex flex-col justify-end gap-4">
-                    <div class="grid gap-2" aria-hidden="true">
-                        <span class="h-3 w-32 rounded-full bg-white/80"></span>
-                        <span class="h-3 w-48 rounded-full bg-white/30"></span>
-                        <span class="h-3 w-40 rounded-full bg-[#fb923c]"></span>
+
+                <div class="grid gap-5">
+                    <div class="grid gap-3 bg-[#070b1a] p-5" aria-hidden="true">
+                        <div class="grid grid-cols-3 gap-3">
+                            <span
+                                class="bg-white/10 p-3 text-xs font-black text-white/70 uppercase"
+                            >
+                                {{ __('capell-theme-portfolio::generic.brief_label') }}
+                            </span>
+                            <span
+                                class="bg-white/10 p-3 text-xs font-black text-white/70 uppercase"
+                            >
+                                {{ __('capell-theme-portfolio::generic.proof_signal') }}
+                            </span>
+                            <span
+                                class="bg-white/10 p-3 text-xs font-black text-white/70 uppercase"
+                            >
+                                {{ __('capell-theme-portfolio::generic.publish_label') }}
+                            </span>
+                        </div>
+                        <span class="block h-2 w-3/4 bg-white/70"></span>
+                        <span class="block h-2 w-1/2 bg-[#fb923c]"></span>
                     </div>
 
                     <div class="flex flex-wrap gap-3">
                         @forelse ($actions as $action)
                             <a
                                 href="{{ $action['url'] ?? '#' }}"
-                                class="{{ ($action['style'] ?? 'primary') === 'secondary' ? 'border border-white/25 bg-transparent text-white' : 'bg-white text-[#0f172a]' }} inline-flex rounded-full px-5 py-3 text-sm font-black"
+                                class="{{ ($action['style'] ?? 'primary') === 'secondary' ? 'border border-white/25 bg-transparent text-white' : 'bg-white text-[#0f172a]' }} inline-flex px-5 py-3 text-sm font-black"
                             >
                                 {{ $action['label'] ?? __('capell-theme-portfolio::generic.view_case_label') }}
                             </a>
                         @empty
                             <a
                                 href="#"
-                                class="inline-flex rounded-full bg-white px-5 py-3 text-sm font-black text-[#0f172a]"
+                                class="inline-flex bg-white px-5 py-3 text-sm font-black text-[#0f172a]"
                             >
                                 {{ __('capell-theme-portfolio::generic.book_call_label') }}
                             </a>

@@ -44,7 +44,6 @@ use Capell\WordPressImporter\Tests\WordPressImporterTestCase;
 use Illuminate\Support\Collection;
 use Illuminate\Testing\PendingCommand;
 use Pest\Expectation;
-use RuntimeException;
 
 /**
  * @param  class-string  $testCase

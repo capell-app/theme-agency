@@ -9,6 +9,7 @@ For package-level upstream credits, services, and acknowledgements, see [Credits
 For theme package authoring, see [Creating a Capell theme](creating-a-theme.md).
 For screenshot-led theme QA and optimization, see [Theme Screenshot QA Playbook](theme-screenshot-qa-playbook.md).
 For the long-running first-party theme improvement workflow, see [Theme Premium Improvement Runbook](theme-premium-improvement-runbook.md).
+For planned local-business premium themes, see [Local Business Premium Theme Plan](local-business-premium-theme-plan.md).
 For optional package integration rules, see [Optional Package Boundaries](optional-package-boundaries.md).
 For split repository contribution flow, see [Split PR Forwarding](split-pr-forwarding.md).
 

@@ -39,29 +39,57 @@
                                     {{ $feature['type'] ?? $feature['icon'] ?? __('capell-theme-saas::generic.product_signal') }}
                                 </span>
                                 <span
-                                    class="h-2.5 w-8 rounded-full bg-blue-500"
-                                    aria-hidden="true"
-                                ></span>
+                                    class="rounded-full bg-blue-500 px-2.5 py-1 text-[0.65rem] font-black tracking-widest text-white uppercase"
+                                >
+                                    {{ __('capell-theme-saas::generic.experiment_label') }}
+                                </span>
                             </div>
-                            <div class="mt-6 space-y-2" aria-hidden="true">
-                                <span
-                                    class="block h-2 rounded-full bg-white/50"
-                                ></span>
-                                <span
-                                    class="block h-2 w-2/3 rounded-full bg-white/30"
-                                ></span>
-                            </div>
+
                             <div
-                                class="mt-5 grid grid-cols-3 gap-2"
-                                aria-hidden="true"
+                                class="mt-6 rounded-lg border border-white/10 bg-white/[0.04] p-3"
                             >
-                                <span
-                                    class="h-8 rounded-md bg-cyan-400/30"
-                                ></span>
-                                <span
-                                    class="h-8 rounded-md bg-blue-500/40"
-                                ></span>
-                                <span class="h-8 rounded-md bg-white/10"></span>
+                                <p
+                                    class="text-xs font-black text-cyan-200 uppercase"
+                                >
+                                    {{ __('capell-theme-saas::generic.activation_flow_label') }}
+                                </p>
+                                <div
+                                    class="mt-4 grid grid-cols-3 gap-2 text-center text-[0.65rem] font-black uppercase"
+                                >
+                                    <span
+                                        class="rounded-md bg-cyan-300 px-2 py-2 text-slate-950"
+                                    >
+                                        {{ __('capell-theme-saas::generic.trial_step_label') }}
+                                    </span>
+                                    <span
+                                        class="rounded-md bg-blue-500 px-2 py-2 text-white"
+                                    >
+                                        {{ __('capell-theme-saas::generic.aha_step_label') }}
+                                    </span>
+                                    <span
+                                        class="rounded-md bg-white/10 px-2 py-2 text-slate-200"
+                                    >
+                                        {{ __('capell-theme-saas::generic.expansion_step_label') }}
+                                    </span>
+                                </div>
+                                <div
+                                    class="mt-4 h-1.5 rounded-full bg-white/10"
+                                >
+                                    <span
+                                        class="block h-1.5 w-2/3 rounded-full bg-cyan-300"
+                                    ></span>
+                                </div>
+                            </div>
+
+                            <div
+                                class="mt-3 grid grid-cols-2 gap-2 text-[0.65rem] font-black text-slate-200 uppercase"
+                            >
+                                <span class="rounded-md bg-white/10 px-2 py-2">
+                                    {{ __('capell-theme-saas::generic.event_label') }}
+                                </span>
+                                <span class="rounded-md bg-white/10 px-2 py-2">
+                                    {{ __('capell-theme-saas::generic.rule_label') }}
+                                </span>
                             </div>
                         </div>
                         <h3 class="text-xl font-black">

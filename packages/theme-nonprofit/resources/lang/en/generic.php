@@ -34,6 +34,8 @@ return [
     'hero_campaign_value' => '84%',
     'impact_paths_label' => 'Impact paths',
     'impact_signal' => 'Impact path',
+    'proof_label' => 'Supporter proof',
+    'supporter_metric_label' => 'Campaign proof',
     'donor_signal' => 'Donor ready',
     'action_signal' => 'Action led',
     'story_cards_label' => 'Stories and proof',

@@ -117,7 +117,7 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
 
         $view = 'capell-theme-knowledge::sections.' . $sectionKey;
 
-        if (! view()->exists($view)) {
+        if ($sectionKey !== 'hero' && ! view()->exists($view)) {
             return null;
         }
 

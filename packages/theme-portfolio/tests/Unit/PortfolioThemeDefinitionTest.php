@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
 use Capell\Core\ThemeStudio\Data\FeatureSectionData;
@@ -86,6 +87,7 @@ it('renders hydrated hero data through the Portfolio hero view', function (): vo
 it('renders portfolio-owned standard sections instead of foundation fallbacks', function (): void {
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(PortfolioThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/content-sections');
 
     $registry = new ThemeRegistry;
     (new PortfolioThemeServiceProvider($this->app))->boot($registry);
@@ -93,10 +95,12 @@ it('renders portfolio-owned standard sections instead of foundation fallbacks', 
     $proof = $registry->sectionRenderer('portfolio', 'proof');
     $listing = $registry->sectionRenderer('portfolio', 'content-listing');
     $cta = $registry->sectionRenderer('portfolio', 'cta');
+    $caseStudies = $registry->sectionRenderer('portfolio', 'case-studies');
 
     expect($proof)->not->toBeNull()
         ->and($listing)->not->toBeNull()
-        ->and($cta)->not->toBeNull();
+        ->and($cta)->not->toBeNull()
+        ->and($caseStudies)->not->toBeNull();
 
     expect($proof->render(new ProofSectionData(
         heading: 'Measured outcomes',
@@ -131,5 +135,48 @@ it('renders portfolio-owned standard sections instead of foundation fallbacks', 
         ->toContain('Final action')
         ->toContain('Start a brief')
         ->not->toContain('Book a strategy call')
+        ->not->toContain('capell-app/theme-portfolio');
+
+    expect($caseStudies->render(new readonly class implements ThemeSection
+    {
+        public function key(): string
+        {
+            return 'case-studies';
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return [
+                'heading' => 'Case-study operating system',
+                'summary' => 'Case sections should show scope, role, timeline, outcomes, and assets.',
+                'items' => [
+                    [
+                        'title' => 'Launch narrative rebuild',
+                        'summary' => 'A premium studio case file with measurable outcomes.',
+                        'type' => 'Case study',
+                        'metric' => '+58%',
+                        'scope' => 'Strategy / Story / Design',
+                        'role' => 'Studio lead',
+                        'timeline' => '5 weeks',
+                    ],
+                ],
+            ];
+        }
+    }))
+        ->toContain('Case file system')
+        ->toContain('Case-study operating system')
+        ->toContain('Launch narrative rebuild')
+        ->toContain('Scope')
+        ->toContain('Studio lead')
+        ->toContain('5 weeks')
+        ->toContain('+58%')
         ->not->toContain('capell-app/theme-portfolio');
 });

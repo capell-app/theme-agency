@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
 use Capell\Core\ThemeStudio\Data\FeatureSectionData;
@@ -32,6 +33,7 @@ it('defines the Knowledge theme contract', function (): void {
 it('renders standard sections through Knowledge views', function (): void {
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(KnowledgeThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/search');
 
     $registry = new ThemeRegistry;
     (new KnowledgeThemeServiceProvider($this->app))->boot($registry);
@@ -74,6 +76,42 @@ it('renders standard sections through Knowledge views', function (): void {
             actions: [['label' => 'Browse guides', 'url' => '#guides', 'style' => 'primary']],
         ));
 
+    $searchHtml = $registry
+        ->sectionRenderer('knowledge', 'search-listing')
+        ->render(new readonly class implements ThemeSection
+        {
+            public function key(): string
+            {
+                return 'search-listing';
+            }
+
+            public function fallbackKey(): ?string
+            {
+                return null;
+            }
+
+            /**
+             * @return array<string, mixed>
+             */
+            public function toViewData(): array
+            {
+                return [
+                    'heading' => 'Search the archive',
+                    'summary' => 'Search surfaces should feel like a resource discovery workflow.',
+                    'filters' => ['Strategy', 'Operations'],
+                    'items' => [
+                        [
+                            'title' => 'Research operations guide',
+                            'summary' => 'A guide with sources, owner, and next reading route.',
+                            'type' => 'Guide',
+                            'score' => '97%',
+                            'meta' => ['Reviewed', 'Queue'],
+                        ],
+                    ],
+                ];
+            }
+        });
+
     expect($featureHtml)
         ->toContain('Research pathways')
         ->toContain('Research paths')
@@ -96,6 +134,16 @@ it('renders standard sections through Knowledge views', function (): void {
         ->toContain('Build the library path')
         ->toContain('Knowledge path')
         ->toContain('Browse guides')
+        ->not->toContain('capell-app/theme-knowledge');
+
+    expect($searchHtml)
+        ->toContain('Search the archive')
+        ->toContain('Facet filters')
+        ->toContain('Source map')
+        ->toContain('Research operations guide')
+        ->toContain('Relevance')
+        ->toContain('97%')
+        ->toContain('Connected search index')
         ->not->toContain('capell-app/theme-knowledge');
 });
 
