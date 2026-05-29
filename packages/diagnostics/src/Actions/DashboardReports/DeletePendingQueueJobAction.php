@@ -14,9 +14,7 @@ final class DeletePendingQueueJobAction extends Action
     {
         $pendingJob = $job instanceof PendingQueueJob ? $job : PendingQueueJob::query()->find($job);
 
-        if (! $pendingJob instanceof PendingQueueJob) {
-            throw new RuntimeException('Pending queue job could not be found.');
-        }
+        throw_unless($pendingJob instanceof PendingQueueJob, RuntimeException::class, 'Pending queue job could not be found.');
 
         $id = (int) $pendingJob->getKey();
         $pendingJob->delete();

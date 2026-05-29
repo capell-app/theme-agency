@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Diagnostics\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Override;
 
@@ -16,6 +17,8 @@ use Override;
  */
 final class PendingQueueJob extends Model
 {
+    use HasFactory;
+
     public $timestamps = false;
 
     /**
@@ -41,7 +44,7 @@ final class PendingQueueJob extends Model
      * @param  Builder<self>  $query
      * @return Builder<self>
      */
-    public function scopeForConfiguredQueues(Builder $query, array $queues): Builder
+    protected function scopeForConfiguredQueues(Builder $query, array $queues): Builder
     {
         if ($queues === []) {
             return $query;
@@ -50,7 +53,7 @@ final class PendingQueueJob extends Model
         return $query->whereIn('queue', $queues);
     }
 
-    public function getOperationStatusAttribute(): string
+    protected function getOperationStatusAttribute(): string
     {
         if ($this->reserved_at !== null) {
             return 'processing';
@@ -63,7 +66,7 @@ final class PendingQueueJob extends Model
         return 'pending';
     }
 
-    public function getOperationNameAttribute(): string
+    protected function getOperationNameAttribute(): string
     {
         $payload = $this->payload;
 
@@ -78,22 +81,22 @@ final class PendingQueueJob extends Model
             : (string) __('capell-diagnostics::package.unknown_job');
     }
 
-    public function getAttemptsCountAttribute(): int
+    protected function getAttemptsCountAttribute(): int
     {
         return (int) $this->attempts;
     }
 
-    public function getOperationStartedAtAttribute(): mixed
+    protected function getOperationStartedAtAttribute(): mixed
     {
         return $this->created_at;
     }
 
-    public function getOperationFinishedAtAttribute(): null
+    protected function getOperationFinishedAtAttribute(): null
     {
         return null;
     }
 
-    public function getDurationSecondsAttribute(): null
+    protected function getDurationSecondsAttribute(): null
     {
         return null;
     }

@@ -1222,12 +1222,12 @@ function themeDemoPortfolioSectionsScreenshotEntry(): array
 
 function themeDemoPortfolioGenericSection(string $key, string $heading, int $itemCount = 0): ThemeSection
 {
-    return new class($key, $heading, $itemCount) implements ThemeSection
+    return new readonly class($key, $heading, $itemCount) implements ThemeSection
     {
         public function __construct(
-            private readonly string $sectionKey,
-            public readonly string $heading,
-            private readonly int $itemCount,
+            private string $sectionKey,
+            public string $heading,
+            private int $itemCount,
         ) {}
 
         public function key(): string
@@ -1313,11 +1313,11 @@ function themeDemoEducationSectionsScreenshotEntry(): array
 
 function themeDemoEducationGenericSection(string $key, string $heading): ThemeSection
 {
-    return new class($key, $heading) implements ThemeSection
+    return new readonly class($key, $heading) implements ThemeSection
     {
         public function __construct(
-            private readonly string $sectionKey,
-            public readonly string $heading,
+            private string $sectionKey,
+            public string $heading,
         ) {}
 
         public function key(): string
@@ -1398,11 +1398,11 @@ function themeDemoNonprofitSectionsScreenshotEntry(): array
 
 function themeDemoNonprofitGenericSection(string $key, string $heading): ThemeSection
 {
-    return new class($key, $heading) implements ThemeSection
+    return new readonly class($key, $heading) implements ThemeSection
     {
         public function __construct(
-            private readonly string $sectionKey,
-            public readonly string $heading,
+            private string $sectionKey,
+            public string $heading,
         ) {}
 
         public function key(): string
@@ -1498,11 +1498,11 @@ function themeDemoLocalServicesSectionsScreenshotEntry(): array
 
 function themeDemoLocalServicesGenericSection(string $key, string $heading): ThemeSection
 {
-    return new class($key, $heading) implements ThemeSection
+    return new readonly class($key, $heading) implements ThemeSection
     {
         public function __construct(
-            private readonly string $sectionKey,
-            public readonly string $heading,
+            private string $sectionKey,
+            public string $heading,
         ) {}
 
         public function key(): string
@@ -1598,11 +1598,11 @@ function themeDemoKnowledgeSectionsScreenshotEntry(): array
 
 function themeDemoKnowledgeGenericSection(string $key, string $heading): ThemeSection
 {
-    return new class($key, $heading) implements ThemeSection
+    return new readonly class($key, $heading) implements ThemeSection
     {
         public function __construct(
-            private readonly string $sectionKey,
-            public readonly string $heading,
+            private string $sectionKey,
+            public string $heading,
         ) {}
 
         public function key(): string
@@ -1819,7 +1819,7 @@ function themeDemoGenericReviewScreenshotEntries(string $themeKey): array
 {
     $copy = themeDemoScreenshotThemeCopy($themeKey);
     $visualTitle = 'Explore ' . $copy['plural'];
-    $systemTitle = ucfirst($copy['singular']) . ' support route';
+    $systemTitle = ucfirst((string) $copy['singular']) . ' support route';
 
     return [
         themeDemoGenericReviewScreenshotEntry(
@@ -2335,7 +2335,7 @@ function themeDemoScreenshotExpectedText(string $surface, ?string $themeKey = nu
         return match ($surface) {
             'homepage' => 'Featured ' . $copy['plural'],
             'directory' => 'Browse ' . $copy['plural'],
-            'detail' => ucfirst($copy['singular']) . ' detail preview',
+            'detail' => ucfirst((string) $copy['singular']) . ' detail preview',
             'contact' => 'Start the ' . $copy['singular'] . ' conversation',
             'empty' => 'No ' . $copy['plural'] . ' yet',
             'not-found' => $themeName . ' page not found',
@@ -2693,7 +2693,7 @@ function themeDemoScreenshotFeatures(string $surface, int $count = 6, ?string $t
 
     return collect(range(1, $count))
         ->map(fn (int $number): array => [
-            'title' => ucfirst($feature) . ' ' . $number,
+            'title' => ucfirst((string) $feature) . ' ' . $number,
             'description' => $surfaceLabel . ' checks ' . $feature . ' spacing, wrapping, and section density.',
             'icon' => 'Step ' . $number,
         ])
@@ -2741,10 +2741,10 @@ function themeDemoScreenshotListingItems(array $mediaUrls, string $surface, int 
             $mediaUrl = $listingMediaUrls[($number - 1) % max(1, count($listingMediaUrls))] ?? null;
 
             return array_filter([
-                'title' => ucfirst($singular) . ' ' . $number,
+                'title' => ucfirst((string) $singular) . ' ' . $number,
                 'summary' => $surfaceLabel . ' proves repeated ' . $singular . ' cards render with realistic public content.',
                 'url' => '#item-' . $number,
-                'type' => ucfirst($singular),
+                'type' => ucfirst((string) $singular),
                 'imageUrl' => $mediaUrl,
                 'mediaUrl' => $mediaUrl,
             ], fn (?string $value): bool => $value !== null);

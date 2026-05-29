@@ -40,7 +40,7 @@ final class QueueMonitor extends BaseQueueMonitor
      * @param  Builder<self>  $query
      * @return Builder<self>
      */
-    public function scopeFailed(Builder $query): Builder
+    protected function scopeFailed(Builder $query): Builder
     {
         return $query
             ->whereNotNull('finished_at')
@@ -51,7 +51,7 @@ final class QueueMonitor extends BaseQueueMonitor
      * @param  Builder<self>  $query
      * @return Builder<self>
      */
-    public function scopeSucceeded(Builder $query): Builder
+    protected function scopeSucceeded(Builder $query): Builder
     {
         return $query
             ->whereNotNull('finished_at')
@@ -62,12 +62,12 @@ final class QueueMonitor extends BaseQueueMonitor
      * @param  Builder<self>  $query
      * @return Builder<self>
      */
-    public function scopeRunning(Builder $query): Builder
+    protected function scopeRunning(Builder $query): Builder
     {
         return $query->whereNull('finished_at');
     }
 
-    public function getOperationStatusAttribute(): string
+    protected function getOperationStatusAttribute(): string
     {
         if ($this->finished_at === null) {
             return 'running';
@@ -76,27 +76,27 @@ final class QueueMonitor extends BaseQueueMonitor
         return $this->failed ? 'failed' : 'succeeded';
     }
 
-    public function getOperationNameAttribute(): string
+    protected function getOperationNameAttribute(): string
     {
         return $this->name ?: (string) __('capell-diagnostics::package.unknown_job');
     }
 
-    public function getAttemptsCountAttribute(): int
+    protected function getAttemptsCountAttribute(): int
     {
         return $this->attempt;
     }
 
-    public function getOperationStartedAtAttribute(): mixed
+    protected function getOperationStartedAtAttribute(): mixed
     {
         return $this->started_at;
     }
 
-    public function getOperationFinishedAtAttribute(): mixed
+    protected function getOperationFinishedAtAttribute(): mixed
     {
         return $this->finished_at;
     }
 
-    public function getDurationSecondsAttribute(): ?int
+    protected function getDurationSecondsAttribute(): ?int
     {
         if ($this->started_at === null || $this->finished_at === null) {
             return null;

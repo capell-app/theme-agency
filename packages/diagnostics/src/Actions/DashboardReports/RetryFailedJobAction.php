@@ -16,17 +16,11 @@ final class RetryFailedJobAction extends Action
     {
         $uuid = $job instanceof FailedJob ? $job->uuid : $job;
 
-        if (! is_string($uuid) || $uuid === '') {
-            throw new RuntimeException('Failed job UUID is missing.');
-        }
+        throw_if(! is_string($uuid) || $uuid === '', RuntimeException::class, 'Failed job UUID is missing.');
 
-        if (! Schema::connection((new FailedJob)->getConnectionName())->hasTable((new FailedJob)->getTable())) {
-            throw new RuntimeException('Failed job could not be found.');
-        }
+        throw_unless(Schema::connection((new FailedJob)->getConnectionName())->hasTable((new FailedJob)->getTable()), RuntimeException::class, 'Failed job could not be found.');
 
-        if (! FailedJob::query()->where('uuid', $uuid)->exists()) {
-            throw new RuntimeException('Failed job could not be found.');
-        }
+        throw_unless(FailedJob::query()->where('uuid', $uuid)->exists(), RuntimeException::class, 'Failed job could not be found.');
 
         Artisan::call('queue:retry', ['id' => [$uuid]]);
 

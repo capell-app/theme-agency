@@ -20,10 +20,12 @@ final class DiscoverQueueMonitorQueuesAction extends Action
         );
 
         foreach (Arr::wrap(config('capell-diagnostics.queue_monitor.queue_config_paths', [])) as $path) {
-            if (! is_string($path) || $path === '') {
+            if (! is_string($path)) {
                 continue;
             }
-
+            if ($path === '') {
+                continue;
+            }
             $queue = config($path);
 
             if (is_string($queue) && $queue !== '') {

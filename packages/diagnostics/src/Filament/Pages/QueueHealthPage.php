@@ -117,6 +117,7 @@ class QueueHealthPage extends Page implements HasActions, HasTable
         return $tabs;
     }
 
+    #[Override]
     public function content(Schema $schema): Schema
     {
         return $schema

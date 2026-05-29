@@ -28,7 +28,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
 use RuntimeException;
 
 class QueueHealthTable implements TableConfigurator
@@ -41,7 +41,7 @@ class QueueHealthTable implements TableConfigurator
                 TextColumn::make('operation_status')
                     ->label(__('capell-diagnostics::package.status'))
                     ->badge()
-                    ->formatStateUsing(fn (string $state): string => __("capell-diagnostics::package.queue_operations_status_{$state}"))
+                    ->formatStateUsing(fn (string $state): string => __('capell-diagnostics::package.queue_operations_status_' . $state))
                     ->color(fn (string $state): string => match ($state) {
                         'succeeded' => 'success',
                         'failed' => 'danger',
@@ -174,9 +174,9 @@ class QueueHealthTable implements TableConfigurator
                 ->action(function (Model $record): void {
                     try {
                         RetryFailedJobAction::run($record);
-                    } catch (RuntimeException $exception) {
+                    } catch (RuntimeException $runtimeException) {
                         Notification::make('capell-diagnostics-queue-retry-failed')
-                            ->title($exception->getMessage())
+                            ->title($runtimeException->getMessage())
                             ->danger()
                             ->send();
 
@@ -230,9 +230,9 @@ class QueueHealthTable implements TableConfigurator
 
                     try {
                         $retried = RetrySelectedFailedJobsAction::run($failedJobs);
-                    } catch (RuntimeException $exception) {
+                    } catch (RuntimeException $runtimeException) {
                         Notification::make('capell-diagnostics-queue-bulk-retry-failed')
-                            ->title($exception->getMessage())
+                            ->title($runtimeException->getMessage())
                             ->danger()
                             ->send();
 
@@ -315,11 +315,11 @@ class QueueHealthTable implements TableConfigurator
         $until = $data['until'] ?? null;
 
         if (is_string($from) && $from !== '') {
-            $query->where('created_at', '>=', Carbon::parse($from)->startOfDay()->timestamp);
+            $query->where('created_at', '>=', Date::parse($from)->startOfDay()->timestamp);
         }
 
         if (is_string($until) && $until !== '') {
-            $query->where('created_at', '<=', Carbon::parse($until)->endOfDay()->timestamp);
+            $query->where('created_at', '<=', Date::parse($until)->endOfDay()->timestamp);
         }
 
         return $query;

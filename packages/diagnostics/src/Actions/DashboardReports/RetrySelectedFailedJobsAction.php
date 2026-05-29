@@ -25,22 +25,16 @@ final class RetrySelectedFailedJobsAction extends Action
             ->values()
             ->all();
 
-        if ($uuids === []) {
-            throw new RuntimeException('No failed jobs were selected for retry.');
-        }
+        throw_if($uuids === [], RuntimeException::class, 'No failed jobs were selected for retry.');
 
-        if (! Schema::connection((new FailedJob)->getConnectionName())->hasTable((new FailedJob)->getTable())) {
-            throw new RuntimeException('One or more failed jobs could not be found.');
-        }
+        throw_unless(Schema::connection((new FailedJob)->getConnectionName())->hasTable((new FailedJob)->getTable()), RuntimeException::class, 'One or more failed jobs could not be found.');
 
         $existing = FailedJob::query()
             ->whereIn('uuid', $uuids)
             ->pluck('uuid')
             ->all();
 
-        if (count($existing) !== count($uuids)) {
-            throw new RuntimeException('One or more failed jobs could not be found.');
-        }
+        throw_if(count($existing) !== count($uuids), RuntimeException::class, 'One or more failed jobs could not be found.');
 
         Artisan::call('queue:retry', ['id' => $uuids]);
 

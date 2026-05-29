@@ -42,12 +42,12 @@ final class FailedJob extends Model
         return is_string($connection) && $connection !== '' ? $connection : config('database.default');
     }
 
-    public function getOperationStatusAttribute(): string
+    protected function getOperationStatusAttribute(): string
     {
         return 'failed';
     }
 
-    public function getOperationNameAttribute(): string
+    protected function getOperationNameAttribute(): string
     {
         $payload = json_decode((string) $this->payload, true);
 
@@ -62,27 +62,27 @@ final class FailedJob extends Model
             : (string) __('capell-diagnostics::package.unknown_job');
     }
 
-    public function getAttemptsCountAttribute(): ?int
+    protected function getAttemptsCountAttribute(): ?int
     {
         return null;
     }
 
-    public function getOperationStartedAtAttribute(): mixed
+    protected function getOperationStartedAtAttribute(): mixed
     {
         return $this->failed_at;
     }
 
-    public function getOperationFinishedAtAttribute(): mixed
+    protected function getOperationFinishedAtAttribute(): mixed
     {
         return $this->failed_at;
     }
 
-    public function getExceptionMessageAttribute(): ?string
+    protected function getExceptionMessageAttribute(): ?string
     {
         return $this->exception;
     }
 
-    public function getDurationSecondsAttribute(): null
+    protected function getDurationSecondsAttribute(): null
     {
         return null;
     }
