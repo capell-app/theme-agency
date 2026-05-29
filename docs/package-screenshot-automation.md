@@ -32,3 +32,18 @@ Deployment can generate package screenshots from the committed screenshot manife
 ## Notes
 
 The package repo does not need to run a browser during docs generation. It commits the contract that the demo/docs deployment can consume after package installation.
+
+## GitHub Automation
+
+`Package Screenshots` validates screenshot manifests on pull requests that touch `packages/**/docs/screenshots.json`. It rebuilds `docs/package-screenshot-manifest.json`, validates package manifests, and fails when the aggregate manifest is not committed.
+
+After changes land on `4.x`, the same workflow captures screenshots for packages whose `docs/screenshots.json` changed and uploads the generated files as a workflow artifact. The workflow can also be run manually for a package:
+
+```bash
+gh workflow run screenshots.yml \
+  -f package=blog \
+  -f package_repository=capell-app/blog \
+  -f package_ref=main
+```
+
+Split package repositories can call the workflow with `workflow_call` and pass their repository name, package slug, and ref. The workflow checks out `capell-app/capell`, `capell-app/capell-packages`, and `capell-app/capell-screenshot-runner` from GitHub inside the runner workspace, then overlays the split package into `packages/{package}` before capture.

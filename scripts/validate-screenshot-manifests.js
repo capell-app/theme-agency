@@ -3,10 +3,15 @@ const path = require('path')
 
 const root = process.cwd()
 const manifestPath = path.join(root, 'docs/package-screenshot-manifest.json')
-const packageDirs = fs
+const allPackageDirs = fs
     .readdirSync(path.join(root, 'packages'), { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
+const onlyPackages = collectOnlyPackages(process.argv.slice(2))
+const packageDirs =
+    onlyPackages.size > 0
+        ? allPackageDirs.filter((packageName) => onlyPackages.has(packageName))
+        : allPackageDirs
 
 const failures = []
 
@@ -15,6 +20,64 @@ const manifestPackages = new Set([
     ...(manifest.packages ?? []).map((entry) => entry.package),
     ...(manifest.entries ?? []).map((entry) => entry.package),
 ])
+
+function readFlagValue(argv, index, flag) {
+    const current = argv[index]
+
+    if (current === flag) {
+        const nextValue = argv[index + 1] ?? ''
+
+        return nextValue.startsWith('-') ? '' : nextValue
+    }
+
+    if (current.startsWith(`${flag}=`)) {
+        return current.slice(flag.length + 1)
+    }
+
+    return null
+}
+
+function collectOnlyPackages(argv) {
+    const packages = new Set()
+
+    for (let index = 0; index < argv.length; index += 1) {
+        const onlyValue = readFlagValue(argv, index, '--only')
+
+        if (onlyValue !== null) {
+            if (onlyValue !== '') {
+                packages.add(onlyValue)
+            }
+
+            if (argv[index] === '--only') {
+                index += 1
+            }
+
+            continue
+        }
+
+        const onlyFile = readFlagValue(argv, index, '--only-file')
+
+        if (onlyFile === null) {
+            continue
+        }
+
+        if (onlyFile !== '') {
+            for (const packageName of fs
+                .readFileSync(onlyFile, 'utf8')
+                .split(/\r?\n/)
+                .map((line) => line.trim())
+                .filter(Boolean)) {
+                packages.add(packageName)
+            }
+        }
+
+        if (argv[index] === '--only-file') {
+            index += 1
+        }
+    }
+
+    return packages
+}
 
 for (const packageName of packageDirs) {
     const screenshotsPath = path.join(
@@ -104,6 +167,10 @@ for (const packageName of packageDirs) {
 }
 
 for (const packageName of manifestPackages) {
+    if (onlyPackages.size > 0 && !onlyPackages.has(packageName)) {
+        continue
+    }
+
     const screenshotsPath = path.join(
         root,
         'packages',

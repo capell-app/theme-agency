@@ -3,6 +3,8 @@
     "scripts": {
         "docs:publish": "cd ../../../capell-docs && CAPELL_PACKAGES_PATH=../packages/capell/capell-packages-4 npm run sync:local:packages && npm run build",
         "screenshots:manifest": "node scripts/build-package-screenshot-manifest.js",
+        "screenshots:capture": "node scripts/run-package-screenshots.js",
+        "screenshots:capture:check": "node scripts/run-package-screenshots.js --dry-run",
         "screenshots:check": "node scripts/validate-screenshot-manifests.js",
         "screenshots:validate": "node scripts/validate-screenshot-manifests.js",
         "prettier": "npx prettier --write 'packages/**/*.{css,js,yml,json,md,blade.php}'",
