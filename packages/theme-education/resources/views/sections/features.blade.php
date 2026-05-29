@@ -2,7 +2,9 @@
     $features = $section->features ?? $section->items ?? [];
 @endphp
 
-<section class="theme-section theme-section-features bg-[#f8fbff]">
+<section
+    class="education-feature-section theme-section theme-section-features bg-[#f8fbff]"
+>
     <div class="mx-auto max-w-6xl px-6 py-16 lg:py-20">
         <div class="grid gap-6 md:grid-cols-[0.66fr_1fr] md:items-end">
             <div>
@@ -28,7 +30,7 @@
         <div class="mt-10 grid gap-4 md:grid-cols-3">
             @foreach ($features as $feature)
                 <article
-                    class="group grid min-h-full grid-rows-[auto_1fr] border border-[#c7d2fe] bg-white shadow-sm transition hover:-translate-y-1 hover:border-[#4338ca] hover:shadow-xl"
+                    class="education-pathway-card group grid min-h-full grid-rows-[auto_1fr] border border-[#c7d2fe] bg-white shadow-sm transition hover:-translate-y-1 hover:border-[#4338ca] hover:shadow-xl"
                 >
                     <div class="border-b border-[#dbeafe] bg-[#eef6ff] p-5">
                         <div class="flex items-start justify-between gap-4">
@@ -45,7 +47,7 @@
                                 </p>
                             </div>
                             <div
-                                class="grid w-28 grid-cols-3 gap-1"
+                                class="education-mini-map grid w-28 grid-cols-3 gap-1"
                                 aria-hidden="true"
                             >
                                 <span class="h-8 bg-white"></span>
@@ -66,7 +68,7 @@
                             {{ $feature['description'] ?? $feature['summary'] ?? '' }}
                         </p>
                         <div
-                            class="mt-5 grid grid-cols-3 border border-[#dbeafe] bg-[#f8fbff] text-center text-[0.68rem] font-black text-slate-600"
+                            class="education-step-grid mt-5 grid grid-cols-3 border border-[#dbeafe] bg-[#f8fbff] text-center text-[0.68rem] font-black text-slate-600"
                         >
                             <span class="p-2">
                                 {{ __('capell-theme-education::generic.enrolment_step_one') }}

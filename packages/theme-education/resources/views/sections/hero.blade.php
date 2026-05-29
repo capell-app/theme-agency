@@ -16,7 +16,7 @@
 @endphp
 
 <section
-    class="theme-section theme-section-hero bg-[#f8fbff] px-6 py-16 lg:py-20"
+    class="education-hero theme-section theme-section-hero bg-[#f8fbff] px-6 py-16 lg:py-20"
 >
     @isset($heading)
         <div
@@ -53,7 +53,7 @@
                 </div>
 
                 <dl
-                    class="mt-8 grid max-w-xl grid-cols-3 border border-indigo-100 bg-white"
+                    class="education-cohort-strip mt-8 grid max-w-xl grid-cols-3"
                 >
                     <div class="p-4">
                         <dt class="text-xs font-black text-[#0f766e] uppercase">
@@ -82,11 +82,9 @@
                 </dl>
             </div>
 
-            <div
-                class="border border-indigo-100 bg-white p-3 shadow-2xl shadow-indigo-950/10"
-            >
+            <div class="education-learning-board bg-white p-3">
                 <div class="grid gap-3 lg:grid-cols-[1fr_0.52fr]">
-                    <div class="bg-[#eef6ff] p-4">
+                    <div class="education-media-frame bg-[#eef6ff] p-4">
                         @if ($imageUrl)
                             <img
                                 src="{{ $imageUrl }}"
@@ -129,7 +127,7 @@
                     </div>
 
                     <div class="grid gap-3">
-                        <div class="border border-indigo-100 bg-[#ecfeff] p-4">
+                        <div class="education-path-card bg-[#ecfeff] p-4">
                             <p
                                 class="text-xs font-black text-[#0f766e] uppercase"
                             >
@@ -138,8 +136,14 @@
                             <p class="mt-3 text-lg font-black text-[#020617]">
                                 {{ __('capell-theme-education::generic.curriculum_value') }}
                             </p>
+                            <div class="mt-4 grid gap-1.5" aria-hidden="true">
+                                <span class="h-1.5 w-4/5 bg-[#0f766e]"></span>
+                                <span
+                                    class="h-1.5 w-2/3 bg-[#0f766e]/30"
+                                ></span>
+                            </div>
                         </div>
-                        <div class="border border-indigo-100 bg-[#eef2ff] p-4">
+                        <div class="education-path-card bg-[#eef2ff] p-4">
                             <p
                                 class="text-xs font-black text-[#4338ca] uppercase"
                             >
@@ -148,8 +152,17 @@
                             <p class="mt-3 text-lg font-black text-[#020617]">
                                 {{ __('capell-theme-education::generic.mentor_path_value') }}
                             </p>
+                            <div
+                                class="mt-4 grid grid-cols-4 gap-1.5"
+                                aria-hidden="true"
+                            >
+                                <span class="h-8 bg-[#4338ca]/20"></span>
+                                <span class="h-8 bg-[#4338ca]/35"></span>
+                                <span class="h-8 bg-[#4338ca]/50"></span>
+                                <span class="h-8 bg-[#4338ca]"></span>
+                            </div>
                         </div>
-                        <div class="border border-indigo-100 bg-[#fff7ed] p-4">
+                        <div class="education-path-card bg-[#fff7ed] p-4">
                             <p
                                 class="text-xs font-black text-[#c2410c] uppercase"
                             >
@@ -163,6 +176,9 @@
                                 <span class="h-8 bg-[#14b8a6]"></span>
                                 <span class="h-8 bg-[#fb923c]"></span>
                             </div>
+                            <p class="mt-3 text-xs font-black text-[#c2410c]">
+                                {{ __('capell-theme-education::generic.enrolment_ready_label') }}
+                            </p>
                         </div>
                     </div>
                 </div>

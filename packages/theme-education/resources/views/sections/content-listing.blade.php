@@ -2,7 +2,9 @@
     $listingItems = $items ?? $section->items ?? [];
 @endphp
 
-<section class="theme-section theme-section-content-listing bg-white">
+<section
+    class="education-resource-section theme-section theme-section-content-listing bg-white"
+>
     <div class="mx-auto max-w-6xl px-6 py-16 lg:py-20">
         <div class="grid gap-5 md:grid-cols-[0.7fr_1fr] md:items-end">
             <div>
@@ -27,7 +29,7 @@
 
         @if ($listingItems === [])
             <div
-                class="mt-10 border border-dashed border-[#c7d2fe] bg-[#f8fbff] p-8"
+                class="education-empty-state mt-10 border border-dashed border-[#c7d2fe] bg-[#f8fbff] p-8"
             >
                 <p class="text-sm font-black text-[#4338ca]">
                     {{ __('capell-theme-education::generic.listing_empty_title') }}
@@ -44,7 +46,7 @@
                     @endphp
 
                     <article
-                        class="{{ $loop->first ? 'md:col-span-3 md:row-span-2' : 'md:col-span-3 lg:col-span-2' }} group grid min-h-full overflow-hidden border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-[#4338ca] hover:shadow-xl"
+                        class="education-resource-card {{ $loop->first ? 'md:col-span-3 md:row-span-2' : 'md:col-span-3 lg:col-span-2' }} group grid min-h-full overflow-hidden border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-[#4338ca] hover:shadow-xl"
                     >
                         @if (is_string($image) && $image !== '')
                             <img

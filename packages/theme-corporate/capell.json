@@ -82,7 +82,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Corporate theme screenshots across homepage, services, governance, resources, forms, and search layouts.",
+        "summary": "Business and governance theme screenshots from route-backed demo layouts.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
@@ -90,49 +90,34 @@
                 "caption": "Theme Corporate extension preview"
             },
             {
-                "path": "docs/assets/marketplace/corporate-homepage-layout.svg",
-                "alt": "Theme Corporate corporate homepage screenshot showing trust-led hero, capability bands, proof, cta.",
-                "caption": "Theme Corporate: Corporate homepage. Trust-led hero, capability bands, proof, CTA."
+                "path": "docs/assets/marketplace/corporate-homepage-marketplace.jpg",
+                "alt": "Theme Corporate homepage screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Corporate: Homepage. Homepage composition with hero, proof, repeated content, CTA, and footer."
             },
             {
-                "path": "docs/assets/marketplace/corporate-services-layout.svg",
-                "alt": "Theme Corporate services page screenshot showing service cards, process, outcomes, contact cta.",
-                "caption": "Theme Corporate: Services page. Service cards, process, outcomes, contact CTA."
+                "path": "docs/assets/marketplace/corporate-directory-marketplace.jpg",
+                "alt": "Theme Corporate directory screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Corporate: Directory. List or directory route with repeated cards, scanning rhythm, and route-backed pagination layout."
             },
             {
-                "path": "docs/assets/marketplace/corporate-governance-layout.svg",
-                "alt": "Theme Corporate governance page screenshot showing policy sections, document cards, leadership proof. Requires capell-app/document-lifecycle.",
-                "caption": "Theme Corporate: Governance page. Policy sections, document cards, leadership proof. Requires capell-app/document-lifecycle."
+                "path": "docs/assets/marketplace/corporate-detail-marketplace.jpg",
+                "alt": "Theme Corporate detail screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Corporate: Detail. Detail page route with media, proof, supporting sections, and conversion path."
             },
             {
-                "path": "docs/assets/marketplace/corporate-resources-layout.svg",
-                "alt": "Theme Corporate resources listing screenshot showing resource cards, filters, topic navigation. Requires capell-app/tags.",
-                "caption": "Theme Corporate: Resources listing. Resource cards, filters, topic navigation. Requires capell-app/tags."
+                "path": "docs/assets/marketplace/corporate-contact-marketplace.jpg",
+                "alt": "Theme Corporate contact screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Corporate: Contact. Contact or enquiry route with theme-specific routing cards and CTA treatment."
             },
             {
-                "path": "docs/assets/marketplace/corporate-article-layout.svg",
-                "alt": "Theme Corporate thought leadership article screenshot showing article body, author, related resources. Requires capell-app/blog.",
-                "caption": "Theme Corporate: Thought leadership article. Article body, author, related resources. Requires capell-app/blog."
+                "path": "docs/assets/marketplace/corporate-conversion-marketplace.jpg",
+                "alt": "Theme Corporate conversion cta screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Corporate: Conversion CTA. Conversion route focused on proof, action rhythm, and next-step clarity."
             },
             {
-                "path": "docs/assets/marketplace/corporate-contact-layout.svg",
-                "alt": "Theme Corporate contact form page screenshot showing office details, form fields, routing notes. Requires capell-app/form-builder.",
-                "caption": "Theme Corporate: Contact form page. Office details, form fields, routing notes. Requires capell-app/form-builder."
-            },
-            {
-                "path": "docs/assets/marketplace/corporate-locations-layout.svg",
-                "alt": "Theme Corporate locations page screenshot showing office cards, address metadata, map-ready panels. Requires capell-app/address.",
-                "caption": "Theme Corporate: Locations page. Office cards, address metadata, map-ready panels. Requires capell-app/address."
-            },
-            {
-                "path": "docs/assets/marketplace/corporate-search-layout.svg",
-                "alt": "Theme Corporate search results page screenshot showing search field, grouped results, snippets. Requires capell-app/search.",
-                "caption": "Theme Corporate: Search results page. Search field, grouped results, snippets. Requires capell-app/search."
-            },
-            {
-                "path": "docs/assets/marketplace/corporate-investor-event-layout.svg",
-                "alt": "Theme Corporate event detail page screenshot showing agenda, registration, related documents. Requires capell-app/events.",
-                "caption": "Theme Corporate: Event detail page. Agenda, registration, related documents. Requires capell-app/events."
+                "path": "docs/assets/marketplace/corporate-sections-marketplace.jpg",
+                "alt": "Theme Corporate section suite screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Corporate: Section Suite. Theme-specific section suite showing the premium components available to editors."
             }
         ],
         "categories": ["frontend", "themes"]

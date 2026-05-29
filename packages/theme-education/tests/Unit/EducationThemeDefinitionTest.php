@@ -77,18 +77,21 @@ it('renders standard sections through Education views', function (): void {
         ->toContain('Programme pathways')
         ->toContain('Learning pathways')
         ->toContain('Pathway step')
+        ->toContain('education-pathway-card')
         ->not->toContain('capell-app/theme-education');
 
     expect($listingHtml)
         ->toContain('Learning resources')
         ->toContain('Open day guide')
         ->toContain('Learner ready')
+        ->toContain('education-resource-card')
         ->not->toContain('capell-app/theme-education');
 
     expect($ctaHtml)
         ->toContain('Open the next cohort')
         ->toContain('Enrolment')
         ->toContain('Choose track')
+        ->toContain('education-enrolment-panel')
         ->toContain('Apply now')
         ->not->toContain('capell-app/theme-education');
 
@@ -123,6 +126,8 @@ it('renders hydrated hero data through the Education hero view', function (): vo
         ->toContain('Learning pathway')
         ->toContain('Launch a cohort pathway')
         ->toContain('Hydrated education hero summary.')
+        ->toContain('education-learning-board')
+        ->toContain('Interview-ready path')
         ->toContain('View courses')
         ->toContain('Talk to admissions')
         ->not->toContain('capell-app/theme-education');

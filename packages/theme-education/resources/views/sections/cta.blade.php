@@ -1,7 +1,7 @@
-<section class="theme-section theme-section-cta bg-white">
+<section class="education-cta-section theme-section theme-section-cta bg-white">
     <div class="mx-auto max-w-6xl px-6 py-16">
         <div
-            class="grid gap-8 bg-[#050b24] p-8 text-white md:grid-cols-[0.72fr_1fr] md:items-center md:p-10"
+            class="education-enrolment-panel grid gap-8 bg-[#050b24] p-8 text-white md:grid-cols-[0.72fr_1fr] md:items-center md:p-10"
         >
             <div>
                 <p class="text-xs font-black text-[#5eead4] uppercase">
@@ -18,7 +18,7 @@
                 </p>
 
                 <div
-                    class="mt-6 grid gap-3 bg-[#0f1b3d] p-4 sm:grid-cols-3"
+                    class="education-enrolment-steps mt-6 grid gap-3 bg-[#0f1b3d] p-4 sm:grid-cols-3"
                     aria-hidden="true"
                 >
                     <span

@@ -82,7 +82,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Commerce theme screenshots across catalog, product, article, campaign, and conversion page layouts.",
+        "summary": "Retail buying-path theme screenshots from route-backed demo layouts.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
@@ -90,49 +90,34 @@
                 "caption": "Theme Commerce extension preview"
             },
             {
-                "path": "docs/assets/marketplace/commerce-homepage-layout.svg",
-                "alt": "Theme Commerce commerce homepage screenshot showing retail hero, collection tiles, product rail, proof.",
-                "caption": "Theme Commerce: Commerce homepage. Retail hero, collection tiles, product rail, proof."
+                "path": "docs/assets/marketplace/commerce-homepage-marketplace.jpg",
+                "alt": "Theme Commerce homepage screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Commerce: Homepage. Homepage composition with hero, proof, repeated content, CTA, and footer."
             },
             {
-                "path": "docs/assets/marketplace/commerce-collection-layout.svg",
-                "alt": "Theme Commerce collection listing screenshot showing filters, product grid, merchandising banner. Requires capell-app/shopify-commerce.",
-                "caption": "Theme Commerce: Collection listing. Filters, product grid, merchandising banner. Requires capell-app/shopify-commerce."
+                "path": "docs/assets/marketplace/commerce-directory-marketplace.jpg",
+                "alt": "Theme Commerce directory screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Commerce: Directory. List or directory route with repeated cards, scanning rhythm, and route-backed pagination layout."
             },
             {
-                "path": "docs/assets/marketplace/commerce-product-layout.svg",
-                "alt": "Theme Commerce product detail page screenshot showing gallery, price, variants, recommendations, cta. Requires capell-app/shopify-commerce.",
-                "caption": "Theme Commerce: Product detail page. Gallery, price, variants, recommendations, CTA. Requires capell-app/shopify-commerce."
+                "path": "docs/assets/marketplace/commerce-detail-marketplace.jpg",
+                "alt": "Theme Commerce detail screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Commerce: Detail. Detail page route with media, proof, supporting sections, and conversion path."
             },
             {
-                "path": "docs/assets/marketplace/commerce-lookbook-layout.svg",
-                "alt": "Theme Commerce lookbook page screenshot showing image-led editorial sections and shoppable cards. Requires capell-app/media-library.",
-                "caption": "Theme Commerce: Lookbook page. Image-led editorial sections and shoppable cards. Requires capell-app/media-library."
+                "path": "docs/assets/marketplace/commerce-contact-marketplace.jpg",
+                "alt": "Theme Commerce contact screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Commerce: Contact. Contact or enquiry route with theme-specific routing cards and CTA treatment."
             },
             {
-                "path": "docs/assets/marketplace/commerce-buying-guide-layout.svg",
-                "alt": "Theme Commerce buying guide article screenshot showing editorial content, related products, author details. Requires capell-app/blog.",
-                "caption": "Theme Commerce: Buying guide article. Editorial content, related products, author details. Requires capell-app/blog."
+                "path": "docs/assets/marketplace/commerce-conversion-marketplace.jpg",
+                "alt": "Theme Commerce conversion cta screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Commerce: Conversion CTA. Conversion route focused on proof, action rhythm, and next-step clarity."
             },
             {
-                "path": "docs/assets/marketplace/commerce-newsletter-layout.svg",
-                "alt": "Theme Commerce newsletter capture page screenshot showing signup block, incentives, consent messaging. Requires capell-app/newsletter.",
-                "caption": "Theme Commerce: Newsletter capture page. Signup block, incentives, consent messaging. Requires capell-app/newsletter."
-            },
-            {
-                "path": "docs/assets/marketplace/commerce-store-event-layout.svg",
-                "alt": "Theme Commerce retail event page screenshot showing event details, location, registration cta. Requires capell-app/events.",
-                "caption": "Theme Commerce: Retail event page. Event details, location, registration CTA. Requires capell-app/events."
-            },
-            {
-                "path": "docs/assets/marketplace/commerce-search-layout.svg",
-                "alt": "Theme Commerce product search page screenshot showing search field, filters, result grid, empty state. Requires capell-app/search.",
-                "caption": "Theme Commerce: Product search page. Search field, filters, result grid, empty state. Requires capell-app/search."
-            },
-            {
-                "path": "docs/assets/marketplace/commerce-campaign-layout.svg",
-                "alt": "Theme Commerce promotion campaign page screenshot showing offer hero, countdown, segmented ctas. Requires capell-app/campaign-studio.",
-                "caption": "Theme Commerce: Promotion campaign page. Offer hero, countdown, segmented CTAs. Requires capell-app/campaign-studio."
+                "path": "docs/assets/marketplace/commerce-sections-marketplace.jpg",
+                "alt": "Theme Commerce section suite screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Commerce: Section Suite. Theme-specific section suite showing the premium components available to editors."
             }
         ],
         "categories": ["frontend", "themes"]

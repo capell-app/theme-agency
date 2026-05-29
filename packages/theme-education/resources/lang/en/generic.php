@@ -39,6 +39,7 @@ return [
     'enrolment_step_one' => 'Choose track',
     'enrolment_step_two' => 'Meet mentor',
     'enrolment_step_three' => 'Start cohort',
+    'enrolment_ready_label' => 'Interview-ready path',
     'instructors_label' => 'Teaching team',
     'instructors_summary' => 'Give programme leads, mentors, and assessors a visible role in the enrolment story.',
     'instructor_card_title' => 'Named educator profile',
