@@ -25,6 +25,7 @@
         "capell-app/admin": "^4.0",
         "capell-app/core": "^4.0",
         "capell-app/html-cache": "^4.0 || 4.x-dev",
+        "croustibat/filament-jobs-monitor": "^4.4",
         "lorisleiva/laravel-actions": "^2.8",
         "spatie/laravel-data": "^4.5"
     },

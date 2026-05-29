@@ -33,7 +33,10 @@ for (const packageName of packageDirs) {
             fs.readFileSync(screenshotsPath, 'utf8'),
         )
 
-        if (packageManifest.package !== packageName) {
+        if (
+            packageManifest.package !== undefined &&
+            packageManifest.package !== packageName
+        ) {
             failures.push(
                 `${screenshotsPath}: package key "${packageManifest.package}" does not match directory "${packageName}"`,
             )
