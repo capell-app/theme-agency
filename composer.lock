@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d07b290e63c63780e4aad25350b3fe41",
+    "content-hash": "b3cef3e34f7cf60f02e9f2956a49ca82",
     "packages": [
         {
             "name": "aimeos/laravel-nestedset",
@@ -715,19 +715,18 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:capell-app/admin.git",
-                "reference": "a0b96befada63545211cd5665ec54298c936635d"
+                "reference": "c40ac7ebf743f54a0be3e955d882817445555d0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/capell-app/admin/zipball/a0b96befada63545211cd5665ec54298c936635d",
-                "reference": "a0b96befada63545211cd5665ec54298c936635d",
+                "url": "https://api.github.com/repos/capell-app/admin/zipball/c40ac7ebf743f54a0be3e955d882817445555d0b",
+                "reference": "c40ac7ebf743f54a0be3e955d882817445555d0b",
                 "shasum": ""
             },
             "require": {
                 "amidesfahani/filament-tinyeditor": "^4.0",
                 "awcodes/filament-badgeable-column": "^3.0|^4.0",
                 "bezhansalleh/filament-shield": "^4.1",
-                "capell-app/content-blocks": "self.version",
                 "capell-app/core": "self.version",
                 "cms-multi/filament-clear-cache": "^3.0",
                 "codewithdennis/filament-select-tree": "^4.0",
@@ -744,7 +743,6 @@
                 "laravel/framework": "^11.44.2|^12.0|^13.0",
                 "laravel/prompts": "^0.2|^0.3",
                 "lorisleiva/laravel-actions": "^2.8",
-                "pboivin/filament-peek": "^3.0|^4.0",
                 "php": "^8.3",
                 "saade/filament-adjacency-list": "^4.0.2",
                 "spatie/laravel-package-tools": "^1.15",
@@ -792,74 +790,10 @@
                 "laravel"
             ],
             "support": {
-                "source": "https://github.com/capell-app/admin/tree/4.x",
+                "source": "https://github.com/capell-app/admin/tree/v2.0.29",
                 "issues": "https://github.com/capell-app/admin/issues"
             },
-            "time": "2026-05-18T19:44:56+00:00"
-        },
-        {
-            "name": "capell-app/content-blocks",
-            "version": "4.x-dev",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:capell-app/block-library.git",
-                "reference": "80852ce17cbc92384482645b9fa832859aa1ec09"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/capell-app/block-library/zipball/80852ce17cbc92384482645b9fa832859aa1ec09",
-                "reference": "80852ce17cbc92384482645b9fa832859aa1ec09",
-                "shasum": ""
-            },
-            "require": {
-                "capell-app/core": "*",
-                "filament/forms": "^4.7|^5.2",
-                "lorisleiva/laravel-actions": "*",
-                "php": "^8.3",
-                "spatie/laravel-package-tools": "*"
-            },
-            "suggest": {
-                "capell-app/content-sections": "Registers reusable section blocks against typed block definitions.",
-                "capell-app/foundation-theme": "Renders package block views through the default frontend theme."
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Capell\\ContentBlocks\\Providers\\ContentBlocksServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Capell\\ContentBlocks\\": "src/"
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "Howdu",
-                    "email": "cms.multi2@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Shared typed content block primitives for Capell packages.",
-            "homepage": "https://github.com/capell-app/content-blocks",
-            "keywords": [
-                "capell",
-                "cms",
-                "content-blocks",
-                "filamentphp",
-                "laravel"
-            ],
-            "support": {
-                "source": "https://github.com/capell-app/block-library/tree/4.x",
-                "issues": "https://github.com/capell-app/block-library/issues"
-            },
-            "time": "2026-05-18T19:48:57+00:00"
+            "time": "2026-05-29T15:02:43+00:00"
         },
         {
             "name": "capell-app/core",
@@ -867,12 +801,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:capell-app/core.git",
-                "reference": "c2ef4096d229bc886f5abe21c57d840bf63b1ea0"
+                "reference": "ed3440adb1f249e0ba6f2518a21893b707f48402"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/capell-app/core/zipball/c2ef4096d229bc886f5abe21c57d840bf63b1ea0",
-                "reference": "c2ef4096d229bc886f5abe21c57d840bf63b1ea0",
+                "url": "https://api.github.com/repos/capell-app/core/zipball/ed3440adb1f249e0ba6f2518a21893b707f48402",
+                "reference": "ed3440adb1f249e0ba6f2518a21893b707f48402",
                 "shasum": ""
             },
             "require": {
@@ -928,10 +862,10 @@
             ],
             "description": "Core for Capell.",
             "support": {
-                "source": "https://github.com/capell-app/core/tree/v2.0.28",
+                "source": "https://github.com/capell-app/core/tree/v2.0.29",
                 "issues": "https://github.com/capell-app/core/issues"
             },
-            "time": "2026-05-20T06:24:04+00:00"
+            "time": "2026-05-29T15:02:43+00:00"
         },
         {
             "name": "capell-app/frontend",
@@ -939,17 +873,16 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:capell-app/frontend.git",
-                "reference": "ace01fa66952c806c8dca0e1e04f47ee6ec84b5f"
+                "reference": "9ebd3f512e0ac3baffcb235710b3bc7a1725b142"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/capell-app/frontend/zipball/ace01fa66952c806c8dca0e1e04f47ee6ec84b5f",
-                "reference": "ace01fa66952c806c8dca0e1e04f47ee6ec84b5f",
+                "url": "https://api.github.com/repos/capell-app/frontend/zipball/9ebd3f512e0ac3baffcb235710b3bc7a1725b142",
+                "reference": "9ebd3f512e0ac3baffcb235710b3bc7a1725b142",
                 "shasum": ""
             },
             "require": {
                 "blade-ui-kit/blade-heroicons": "^2.5",
-                "capell-app/content-blocks": "self.version",
                 "capell-app/core": "self.version",
                 "ext-dom": "*",
                 "guzzlehttp/guzzle": "^7.5",
@@ -959,7 +892,6 @@
                 "lorisleiva/laravel-actions": "^2.6",
                 "michaloravec/laravel-paginateroute": "^1.0",
                 "php": "^8.3",
-                "silber/page-cache": "^1.0",
                 "spatie/laravel-permission": "^5.0|^6.0",
                 "spatie/laravel-translatable": "^6.0",
                 "symfony/html-sanitizer": "^7.0|^8.0",
@@ -1003,10 +935,10 @@
                 "laravel"
             ],
             "support": {
-                "source": "https://github.com/capell-app/frontend/tree/4.x",
+                "source": "https://github.com/capell-app/frontend/tree/v2.0.29",
                 "issues": "https://github.com/capell-app/frontend/issues"
             },
-            "time": "2026-05-18T19:49:39+00:00"
+            "time": "2026-05-29T15:02:43+00:00"
         },
         {
             "name": "capell-app/installer",
@@ -1014,18 +946,18 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:capell-app/installer.git",
-                "reference": "a3db33dc01c1a35601e9c57b5a217becebf536d2"
+                "reference": "372d2785e65c055864df500a74392691ca0400b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/capell-app/installer/zipball/a3db33dc01c1a35601e9c57b5a217becebf536d2",
-                "reference": "a3db33dc01c1a35601e9c57b5a217becebf536d2",
+                "url": "https://api.github.com/repos/capell-app/installer/zipball/372d2785e65c055864df500a74392691ca0400b4",
+                "reference": "372d2785e65c055864df500a74392691ca0400b4",
                 "shasum": ""
             },
             "require": {
                 "capell-app/core": "self.version",
                 "ext-intl": "*",
-                "php": "^8.2",
+                "php": "^8.3",
                 "spatie/laravel-package-tools": "^1.14.1"
             },
             "default-branch": true,
@@ -1069,10 +1001,10 @@
                 "laravel"
             ],
             "support": {
-                "source": "https://github.com/capell-app/installer/tree/v2.0.25",
+                "source": "https://github.com/capell-app/installer/tree/v2.0.29",
                 "issues": "https://github.com/capell-app/installer/issues"
             },
-            "time": "2026-05-18T11:38:53+00:00"
+            "time": "2026-05-29T15:02:47+00:00"
         },
         {
             "name": "capell-app/marketplace",
@@ -1080,12 +1012,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:capell-app/marketplace.git",
-                "reference": "0d1b8ae3d877bc80114158ba3143b1b93bca62b2"
+                "reference": "df1d640f89f80b8fa16899aca008d744f585426a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/capell-app/marketplace/zipball/0d1b8ae3d877bc80114158ba3143b1b93bca62b2",
-                "reference": "0d1b8ae3d877bc80114158ba3143b1b93bca62b2",
+                "url": "https://api.github.com/repos/capell-app/marketplace/zipball/df1d640f89f80b8fa16899aca008d744f585426a",
+                "reference": "df1d640f89f80b8fa16899aca008d744f585426a",
                 "shasum": ""
             },
             "require": {
@@ -1093,7 +1025,7 @@
                 "capell-app/core": "*",
                 "laravel/framework": "^11.45.3|^12.41.1|^13.0",
                 "lorisleiva/laravel-actions": "^2.8",
-                "php": "^8.2",
+                "php": "^8.3",
                 "spatie/laravel-data": "^4.5",
                 "spatie/laravel-package-tools": "^1.14.1"
             },
@@ -1133,10 +1065,10 @@
             ],
             "description": "Extension marketplace browsing and acquisition for Capell CMS.",
             "support": {
-                "source": "https://github.com/capell-app/marketplace/tree/v2.0.25",
+                "source": "https://github.com/capell-app/marketplace/tree/v2.0.29",
                 "issues": "https://github.com/capell-app/marketplace/issues"
             },
-            "time": "2026-05-18T11:38:58+00:00"
+            "time": "2026-05-29T15:02:43+00:00"
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -9308,71 +9240,6 @@
             "time": "2022-12-17T21:53:22+00:00"
         },
         {
-            "name": "silber/page-cache",
-            "version": "v1.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/JosephSilber/page-cache.git",
-                "reference": "5202e88e0322cc991591450d951545adb8cbd92c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/JosephSilber/page-cache/zipball/5202e88e0322cc991591450d951545adb8cbd92c",
-                "reference": "5202e88e0322cc991591450d951545adb8cbd92c",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/contracts": "^11.0|^12.0|^13.0",
-                "illuminate/filesystem": "^11.0|^12.0|^13.0",
-                "php": "^8.2",
-                "symfony/http-foundation": "^7.0|^8.0"
-            },
-            "require-dev": {
-                "illuminate/container": "^11.0|^12.0|^13.0",
-                "laravel/pint": "^1.14",
-                "mockery/mockery": "^1.6.9",
-                "pestphp/pest": "^3.7|^4.0",
-                "phpunit/phpunit": "^11.0|^12.0",
-                "symfony/var-dumper": "^7.0|^8.0"
-            },
-            "suggest": {
-                "illuminate/console": "Allows clearing the cache via artisan"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Silber\\PageCache\\LaravelServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Silber\\PageCache\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Joseph Silber",
-                    "email": "contact@josephsilber.com"
-                }
-            ],
-            "description": "Caches responses as static files on disk for lightning fast page loads.",
-            "keywords": [
-                "cache",
-                "laravel"
-            ],
-            "support": {
-                "issues": "https://github.com/JosephSilber/page-cache/issues",
-                "source": "https://github.com/JosephSilber/page-cache/tree/v1.1.2"
-            },
-            "time": "2026-03-18T13:07:35+00:00"
-        },
-        {
             "name": "spatie/eloquent-sortable",
             "version": "5.0.1",
             "source": {
@@ -11752,16 +11619,16 @@
         },
         {
             "name": "symfony/html-sanitizer",
-            "version": "v7.4.8",
+            "version": "v7.4.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/html-sanitizer.git",
-                "reference": "9a79c53c4bf0a8a7b0d3d917fe03eda605ea6438"
+                "reference": "761f6c49dfd103ee08b3cd09ece588b069e18ec9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/html-sanitizer/zipball/9a79c53c4bf0a8a7b0d3d917fe03eda605ea6438",
-                "reference": "9a79c53c4bf0a8a7b0d3d917fe03eda605ea6438",
+                "url": "https://api.github.com/repos/symfony/html-sanitizer/zipball/761f6c49dfd103ee08b3cd09ece588b069e18ec9",
+                "reference": "761f6c49dfd103ee08b3cd09ece588b069e18ec9",
                 "shasum": ""
             },
             "require": {
@@ -11802,7 +11669,7 @@
                 "sanitizer"
             ],
             "support": {
-                "source": "https://github.com/symfony/html-sanitizer/tree/v7.4.8"
+                "source": "https://github.com/symfony/html-sanitizer/tree/v7.4.13"
             },
             "funding": [
                 {
@@ -11822,20 +11689,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-03-24T13:12:05+00:00"
+            "time": "2026-05-24T11:20:33+00:00"
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v7.4.8",
+            "version": "v7.4.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "9381209597ec66c25be154cbf2289076e64d1eab"
+                "reference": "bc354f47c62301e990b7874fa662326368508e2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/9381209597ec66c25be154cbf2289076e64d1eab",
-                "reference": "9381209597ec66c25be154cbf2289076e64d1eab",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/bc354f47c62301e990b7874fa662326368508e2c",
+                "reference": "bc354f47c62301e990b7874fa662326368508e2c",
                 "shasum": ""
             },
             "require": {
@@ -11884,7 +11751,7 @@
             "description": "Defines an object-oriented layer for the HTTP specification",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-foundation/tree/v7.4.8"
+                "source": "https://github.com/symfony/http-foundation/tree/v7.4.13"
             },
             "funding": [
                 {
@@ -11904,20 +11771,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-03-24T13:12:05+00:00"
+            "time": "2026-05-24T11:20:33+00:00"
         },
         {
             "name": "symfony/http-kernel",
-            "version": "v7.4.11",
+            "version": "v7.4.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "eb9d68199af3fcfb3fb4d2e227367b68f8c1bb88"
+                "reference": "9df847980c436451f4f51d1284491bb4356dd989"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/eb9d68199af3fcfb3fb4d2e227367b68f8c1bb88",
-                "reference": "eb9d68199af3fcfb3fb4d2e227367b68f8c1bb88",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/9df847980c436451f4f51d1284491bb4356dd989",
+                "reference": "9df847980c436451f4f51d1284491bb4356dd989",
                 "shasum": ""
             },
             "require": {
@@ -12003,7 +11870,7 @@
             "description": "Provides a structured process for converting a Request into a Response",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-kernel/tree/v7.4.11"
+                "source": "https://github.com/symfony/http-kernel/tree/v7.4.13"
             },
             "funding": [
                 {
@@ -12023,7 +11890,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-13T17:55:00+00:00"
+            "time": "2026-05-27T08:31:43+00:00"
         },
         {
             "name": "symfony/mailer",
@@ -12111,16 +11978,16 @@
         },
         {
             "name": "symfony/mime",
-            "version": "v7.4.9",
+            "version": "v7.4.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mime.git",
-                "reference": "2d550c4758ba4c47519a6667c36553d535705b0c"
+                "reference": "a845722765c4f6b2ce88beaf4f4479975b186770"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mime/zipball/2d550c4758ba4c47519a6667c36553d535705b0c",
-                "reference": "2d550c4758ba4c47519a6667c36553d535705b0c",
+                "url": "https://api.github.com/repos/symfony/mime/zipball/a845722765c4f6b2ce88beaf4f4479975b186770",
+                "reference": "a845722765c4f6b2ce88beaf4f4479975b186770",
                 "shasum": ""
             },
             "require": {
@@ -12176,7 +12043,7 @@
                 "mime-type"
             ],
             "support": {
-                "source": "https://github.com/symfony/mime/tree/v7.4.9"
+                "source": "https://github.com/symfony/mime/tree/v7.4.13"
             },
             "funding": [
                 {
@@ -12196,7 +12063,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-04-29T13:21:53+00:00"
+            "time": "2026-05-23T16:22:37+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -12365,16 +12232,16 @@
         },
         {
             "name": "symfony/polyfill-intl-idn",
-            "version": "v1.37.0",
+            "version": "v1.38.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-idn.git",
-                "reference": "9614ac4d8061dc257ecc64cba1b140873dce8ad3"
+                "reference": "dc21118016c039a66235cf93d96b435ffb282412"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-idn/zipball/9614ac4d8061dc257ecc64cba1b140873dce8ad3",
-                "reference": "9614ac4d8061dc257ecc64cba1b140873dce8ad3",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-idn/zipball/dc21118016c039a66235cf93d96b435ffb282412",
+                "reference": "dc21118016c039a66235cf93d96b435ffb282412",
                 "shasum": ""
             },
             "require": {
@@ -12428,7 +12295,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-intl-idn/tree/v1.37.0"
+                "source": "https://github.com/symfony/polyfill-intl-idn/tree/v1.38.1"
             },
             "funding": [
                 {
@@ -12448,7 +12315,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-10T14:38:51+00:00"
+            "time": "2026-05-25T15:22:23+00:00"
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
@@ -13094,16 +12961,16 @@
         },
         {
             "name": "symfony/routing",
-            "version": "v7.4.9",
+            "version": "v7.4.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
-                "reference": "287771d8bc86eacb30678dd10eda6c64a859951f"
+                "reference": "3a162171bb008e5e0f15dce6581373a4c0e8390d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/routing/zipball/287771d8bc86eacb30678dd10eda6c64a859951f",
-                "reference": "287771d8bc86eacb30678dd10eda6c64a859951f",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/3a162171bb008e5e0f15dce6581373a4c0e8390d",
+                "reference": "3a162171bb008e5e0f15dce6581373a4c0e8390d",
                 "shasum": ""
             },
             "require": {
@@ -13155,7 +13022,7 @@
                 "url"
             ],
             "support": {
-                "source": "https://github.com/symfony/routing/tree/v7.4.9"
+                "source": "https://github.com/symfony/routing/tree/v7.4.13"
             },
             "funding": [
                 {
@@ -13175,7 +13042,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-04-22T15:21:55+00:00"
+            "time": "2026-05-24T11:20:33+00:00"
         },
         {
             "name": "symfony/service-contracts",
@@ -20250,8 +20117,7 @@
         "capell-app/frontend": 20,
         "capell-app/installer": 20,
         "capell-app/marketplace": 20,
-        "rappasoft/laravel-authentication-log": 20,
-        "saade/filament-adjacency-list": 20
+        "rappasoft/laravel-authentication-log": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

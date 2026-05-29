@@ -189,6 +189,9 @@
         "sinnbeck/laravel-dom-assertions": "^3.0",
         "spatie/laravel-ray": "^1.36"
     },
+    "replace": {
+        "capell-app/content-blocks": "self.version"
+    },
     "autoload": {
         "psr-4": {
             "Capell\\Address\\": "packages/address/src",
@@ -270,7 +273,21 @@
             "Capell\\ThemeStudio\\Education\\": "packages/theme-education/src",
             "Capell\\ThemeStudio\\Nonprofit\\": "packages/theme-nonprofit/src",
             "Capell\\ThemeStudio\\Portfolio\\": "packages/theme-portfolio/src"
-        }
+        },
+        "exclude-from-classmap": [
+            "packages/foundation-theme/tests/Unit/FoundationThemeFinalCoverageTest.php",
+            "packages/foundation-theme/tests/Unit/ThemeRegistryTest.php",
+            "packages/layout-builder/tests/Feature/Livewire/LayoutBuilderContentFirstTest.php",
+            "packages/layout-builder/tests/Unit/LayoutBuilderResidualActionCoverageTest.php",
+            "packages/layout-builder/tests/Unit/LayoutBuilderThirdRoundResidualCoverageTest.php",
+            "packages/layout-builder/tests/Unit/Livewire/LayoutBuilderContainerBlockMutationCoverageTest.php",
+            "packages/layout-builder/tests/Unit/Livewire/ManagesAssetsCoverageTest.php",
+            "packages/layout-builder/tests/Unit/Support/Creator/DemoBlockCreatorCoverageTest.php",
+            "packages/layout-builder/tests/Unit/Support/Creator/StandardDemoBlockCreatorCoverageTest.php",
+            "packages/migration-assistant/tests/Unit/MigrationAssistantCoverageTest.php",
+            "packages/search/tests/Unit/SearchAdditionalCoverageTest.php",
+            "tests/Packages/Support/ThemeFrontendTestSupport.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

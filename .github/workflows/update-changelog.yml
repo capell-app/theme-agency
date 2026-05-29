@@ -11,7 +11,7 @@ on:
         type: string
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   update:
@@ -44,14 +44,22 @@ jobs:
             if (!releaseNotes) {
               core.info(`Release notes are empty for ${tagName}; generating notes from GitHub.`);
 
-              const generated = await github.rest.repos.generateReleaseNotes({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                tag_name: tagName,
-                target_commitish: targetCommitish,
-              });
+              try {
+                const generated = await github.rest.repos.generateReleaseNotes({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  tag_name: tagName,
+                  target_commitish: targetCommitish,
+                });
 
-              releaseNotes = (generated.data.body || '').trim();
+                releaseNotes = (generated.data.body || '').trim();
+              } catch (error) {
+                core.warning(`Unable to generate release notes for ${tagName}: ${error.message}`);
+              }
+            }
+
+            if (!releaseNotes) {
+              releaseNotes = '- No release notes provided.';
             }
 
             const releaseDate = release.published_at

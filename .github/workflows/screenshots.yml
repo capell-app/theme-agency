@@ -191,7 +191,7 @@ jobs:
         if: inputs.dry_run != true
         uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2
         with:
-          php-version: 8.3
+          php-version: 8.4
           extensions: curl, dom, fileinfo, gd, intl, json, libxml, mbstring, pdo_sqlite, simplexml, sqlite3, zip
           tools: composer:v2
           coverage: none

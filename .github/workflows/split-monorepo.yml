@@ -130,6 +130,46 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - id: previous-tag
         uses: 'WyriHaximus/github-action-get-previous-tag@61819f33034117e6c686e6a31dba995a85afc9de' # master
+      - name: Ensure split repository branch exists
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          REPOSITORY_NAME: ${{ matrix.repository_name }}
+          SPLIT_BRANCH: 4.x
+        run: |
+          set -euo pipefail
+
+          repository_url="https://x-access-token:${ACCESS_TOKEN}@github.com/capell-app/${REPOSITORY_NAME}.git"
+
+          if git ls-remote --exit-code --heads "${repository_url}" "${SPLIT_BRANCH}" > /dev/null; then
+            echo "Split repository branch ${SPLIT_BRANCH} already exists for ${REPOSITORY_NAME}."
+            exit 0
+          fi
+
+          worktree="$(mktemp -d)"
+          trap 'rm -rf "${worktree}"' EXIT
+
+          if git clone --depth=1 "${repository_url}" "${worktree}"; then
+            cd "${worktree}"
+            default_branch="$(git remote show origin | sed -n '/HEAD branch/s/.*: //p' || true)"
+
+            if [ -n "${default_branch}" ] && git rev-parse --verify "origin/${default_branch}" > /dev/null 2>&1; then
+              git checkout -B "${SPLIT_BRANCH}" "origin/${default_branch}"
+              git push origin "HEAD:${SPLIT_BRANCH}"
+              exit 0
+            else
+              git checkout --orphan "${SPLIT_BRANCH}"
+            fi
+          else
+            git init "${worktree}"
+            cd "${worktree}"
+            git remote add origin "${repository_url}"
+            git checkout --orphan "${SPLIT_BRANCH}"
+          fi
+
+          git config user.name 'capell-app'
+          git config user.email 'appcapello@gmail.com'
+          git commit --allow-empty -m "Initialize ${SPLIT_BRANCH} branch"
+          git push origin "${SPLIT_BRANCH}"
       - name: Monorepo Split of ${{ matrix.repository_name }}
         uses: danharrin/monorepo-split-github-action@14e42e2437f674b8987c1f50ca3689116aea1893 # v2.4.5
         env:

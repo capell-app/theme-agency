@@ -74,6 +74,24 @@ it('does not duplicate hero defaults on repeated setup', function (): void {
         ->and(Widget::query()->where('key', 'hero')->count())->toBe(1);
 });
 
+it('installs hero defaults when home layout containers are null', function (): void {
+    resolve(LayoutCreator::class)->setup();
+
+    Layout::query()
+        ->where('key', LayoutEnum::Home->value)
+        ->firstOrFail()
+        ->update(['containers' => null]);
+
+    Widget::query()->where('key', 'hero')->delete();
+
+    test()->artisan('capell:hero-setup')->assertSuccessful();
+
+    $homeLayout = Layout::query()->where('key', LayoutEnum::Home->value)->firstOrFail();
+
+    expect(array_keys($homeLayout->containers))->toBe(['hero', 'main'])
+        ->and($homeLayout->widgets)->toBe(['hero', 'page-content']);
+});
+
 it('force updates an existing hero container without replacing custom home copy', function (): void {
     resolve(LayoutCreator::class)->setup();
 

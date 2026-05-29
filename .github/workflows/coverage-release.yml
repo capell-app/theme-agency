@@ -15,12 +15,21 @@ jobs:
       matrix:
         php: [8.4]
         laravel: [11.*]
+        testbench: [9.*]
+        livewire: [^3.7]
         db: [sqlite]
     env:
       COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.ACCESS_TOKEN }}"} }'
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Checkout Capell monorepo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          repository: capell-app/capell
+          ref: 4.x
+          token: ${{ secrets.ACCESS_TOKEN }}
+          path: capell-4
       - name: Setup PHP
         uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2
         with:
@@ -28,6 +37,30 @@ jobs:
           extensions: curl, dom, fileinfo, intl, json, libxml, mbstring, simplexml, zip, pcov
           tools: composer:v2
           coverage: pcov
+
+      - name: Use Capell monorepo packages
+        run: |
+          php <<'PHP'
+          <?php
+
+          declare(strict_types=1);
+
+          $composerFile = 'composer.json';
+          $composer = json_decode((string) file_get_contents($composerFile), true, flags: JSON_THROW_ON_ERROR);
+
+          array_unshift($composer['repositories'], [
+              'type' => 'path',
+              'url' => 'capell-4/packages/*',
+              'options' => [
+                  'symlink' => false,
+              ],
+          ]);
+
+          file_put_contents(
+              $composerFile,
+              json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . PHP_EOL,
+          );
+          PHP
 
       - name: Pin path package versions
         env:
@@ -44,6 +77,10 @@ jobs:
 
           foreach ($composer['repositories'] as &$repository) {
               if (($repository['type'] ?? null) !== 'path') {
+                  continue;
+              }
+
+              if (str_starts_with((string) ($repository['url'] ?? ''), 'capell-4/')) {
                   continue;
               }
 
@@ -66,7 +103,39 @@ jobs:
           PHP
 
       - name: Install PHP dependencies
-        run: composer install --no-interaction --no-progress --ansi --optimize-autoloader
+        run: |
+          composer remove --no-interaction --no-progress --ansi --dev --no-update laravel/pao
+          composer require --no-interaction --no-progress --ansi --no-update \
+            "laravel/framework:${{ matrix.laravel }}"
+          composer require --no-interaction --no-progress --ansi --dev --no-update \
+            "orchestra/testbench:${{ matrix.testbench }}"
+          composer require --no-interaction --no-progress --ansi --no-update \
+            "livewire/livewire:${{ matrix.livewire }}"
+
+          composer remove --no-interaction --no-progress --ansi --dev --no-update mrpunyapal/peststan pestphp/pest-plugin-livewire calebdw/larastan-livewire
+          composer require --no-interaction --no-progress --ansi --dev --no-update \
+            soyhuce/phpstan-extension:^1.1 \
+            pestphp/pest:^3.0 \
+            pestphp/pest-plugin-arch:^3.0 \
+            pestphp/pest-plugin-laravel:^3.0 \
+            pestphp/pest-plugin-livewire:^3.0 \
+            pestphp/pest-plugin-type-coverage:^3.0 \
+            phpstan/phpstan:^1.10.57 \
+            phpstan/phpstan-mockery:^1.0 \
+            phpstan/phpstan-strict-rules:^1.0 \
+            canvural/larastan-strict-rules:^2.0 \
+            phpstan/phpstan-beberlei-assert:^1.0 \
+            rector/rector:^1.0 \
+            driftingly/rector-laravel:^1.0 \
+            larastan/larastan:^2.0
+          composer require --no-interaction --no-progress --ansi --no-update \
+            filament/filament:^4.7 \
+            filament/support:^4.7 \
+            pboivin/filament-peek:^3.0 \
+            symfony/html-sanitizer:^7.0 \
+            openspout/openspout:^4.22
+
+          composer update --no-interaction --no-progress --ansi --optimize-autoloader --with-all-dependencies -W
 
       - name: Configure environment
         run: |

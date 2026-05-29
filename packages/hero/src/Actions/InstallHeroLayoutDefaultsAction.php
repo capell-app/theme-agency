@@ -43,7 +43,8 @@ final class InstallHeroLayoutDefaultsAction
 
         $this->installNeutralHomeHeroContent();
 
-        $hadHeroContainer = array_key_exists('hero', $homeLayout->containers);
+        $containers = is_array($homeLayout->containers) ? $homeLayout->containers : [];
+        $hadHeroContainer = array_key_exists('hero', $containers);
 
         if ($hadHeroContainer && ! $force) {
             return ['created' => 0, 'updated' => 0, 'skipped' => 1];
@@ -60,7 +61,7 @@ final class InstallHeroLayoutDefaultsAction
                         ['widget_key' => $heroBlock->key],
                     ],
                 ],
-                ...$this->mainContainer($homeLayout->containers),
+                ...$this->mainContainer($containers),
             ],
         ]);
 
