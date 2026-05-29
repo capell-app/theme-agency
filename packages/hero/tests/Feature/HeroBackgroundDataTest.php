@@ -6,6 +6,7 @@ use Capell\Core\Models\Media;
 use Capell\Core\Models\Theme;
 use Capell\Hero\Actions\ResolveHeroBackgroundDataAction;
 use Capell\Hero\Actions\ResolveHeroMediaDataAction;
+use Capell\Hero\Data\HeroBackgroundData;
 use Capell\Hero\Data\HeroMediaData;
 use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Models\WidgetAsset;
@@ -79,6 +80,35 @@ it('allows widget and asset layers to turn the hero background off', function ()
     expect(ResolveHeroBackgroundDataAction::run($theme, $block, $asset)->enabled)->toBeFalse();
 });
 
+it('ignores invalid hero background values and clamps opacity', function (): void {
+    $theme = Theme::factory()->create([
+        'meta' => [
+            'hero_background' => [
+                'mode' => 'custom',
+                'background_color' => 'not-a-color',
+                'accent_color' => '#ABC',
+                'accent_color_alt' => '#123456',
+                'overlay_style' => 'unknown',
+                'overlay_opacity' => '2.8',
+            ],
+        ],
+    ]);
+
+    $background = ResolveHeroBackgroundDataAction::run($theme);
+
+    expect($background->backgroundColor)->toBe(HeroBackgroundData::defaults()->backgroundColor)
+        ->and($background->accentColor)->toBe('#abc')
+        ->and($background->accentColorAlt)->toBe('#123456')
+        ->and($background->overlayStyle)->toBe(HeroBackgroundData::defaults()->overlayStyle)
+        ->and($background->overlayOpacity)->toBe(1.0)
+        ->and($background->cssVariables())->toMatchArray([
+            '--capell-hero-background-color' => HeroBackgroundData::defaults()->backgroundColor,
+            '--capell-hero-overlay-opacity' => '1',
+            '--capell-hero-accent-color' => '#abc',
+            '--capell-hero-accent-color-alt' => '#123456',
+        ]);
+});
+
 it('resolves responsive hero media from theme block and asset layers', function (): void {
     $theme = Theme::factory()->create([
         'meta' => [
@@ -148,6 +178,30 @@ it('allows a hero media layer to disable inherited responsive media', function (
     ]));
 
     expect(ResolveHeroMediaDataAction::run($theme, $block)->enabled)->toBeFalse();
+});
+
+it('reports hero media presence and prefers desktop posters', function (): void {
+    $desktopImage = new Media;
+    $tabletImage = new Media;
+    $desktopVideo = new Media;
+
+    $media = new HeroMediaData(
+        enabled: true,
+        autoplay: true,
+        loop: true,
+        muted: true,
+        pauseWhenOutOfView: true,
+        preload: HeroMediaData::PreloadMetadata,
+        videos: ['desktop' => $desktopVideo],
+        images: ['tablet' => $tabletImage, 'desktop' => $desktopImage],
+    );
+
+    expect($media->hasVideo())->toBeTrue()
+        ->and($media->hasImage())->toBeTrue()
+        ->and($media->poster())->toBe($desktopImage)
+        ->and(HeroMediaData::disabled()->hasVideo())->toBeFalse()
+        ->and(HeroMediaData::disabled()->hasImage())->toBeFalse()
+        ->and(HeroMediaData::disabled()->poster())->toBeNull();
 });
 
 function mediaFor(Theme|Widget|WidgetAsset $model, string $collection, string $fileName, string $mimeType): Media

@@ -209,7 +209,7 @@
         {!! RenderHtmlContentAction::run($content, $pageVariables) !!}
     @endif
 
-    {{ $slot }}
+    {{ $slot ?? '' }}
 
     @if ($divider === 'below_content')
         <div

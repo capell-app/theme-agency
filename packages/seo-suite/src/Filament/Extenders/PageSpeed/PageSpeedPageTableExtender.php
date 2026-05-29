@@ -71,6 +71,10 @@ final class PageSpeedPageTableExtender implements PageTableExtender
      */
     public function modifyQuery(Builder $query): Builder
     {
+        if (! $query->getModel() instanceof Page) {
+            return $query;
+        }
+
         return $query->with([
             'latestMobilePageSpeedAuditResult',
             'latestDesktopPageSpeedAuditResult',
