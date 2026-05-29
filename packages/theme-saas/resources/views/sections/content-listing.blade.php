@@ -34,7 +34,7 @@
                     @foreach ($section->items as $item)
                         <a
                             href="{{ $item['url'] ?? '#' }}"
-                            class="group min-w-[260px] snap-start overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl md:min-w-0"
+                            class="group min-w-[260px] snap-start overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl md:min-w-0"
                         >
                             <span
                                 class="block bg-slate-950 p-4 text-white"
@@ -97,9 +97,46 @@
 
                     @if (empty($section->items))
                         <div
-                            class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-slate-600"
+                            class="saas-empty-pipeline rounded-lg p-6 md:col-span-3"
                         >
-                            {{ __('capell-theme-saas::generic.empty_resource_pipeline') }}
+                            <div
+                                class="grid gap-6 md:grid-cols-[0.85fr_1.15fr] md:items-center"
+                            >
+                                <div>
+                                    <p
+                                        class="text-xs font-black tracking-[0.18em] text-cyan-300 uppercase"
+                                    >
+                                        {{ __('capell-theme-saas::generic.empty_pipeline_label') }}
+                                    </p>
+                                    <p
+                                        class="mt-3 max-w-md text-lg font-black text-white"
+                                    >
+                                        {{ __('capell-theme-saas::generic.empty_resource_pipeline') }}
+                                    </p>
+                                </div>
+                                <div
+                                    class="grid gap-3 rounded-lg border border-white/10 bg-white/[0.04] p-4"
+                                    aria-hidden="true"
+                                >
+                                    <span
+                                        class="h-2 w-28 rounded-full bg-cyan-300"
+                                    ></span>
+                                    <span class="grid grid-cols-3 gap-2">
+                                        <span
+                                            class="h-16 rounded-md bg-cyan-300/20"
+                                        ></span>
+                                        <span
+                                            class="h-16 rounded-md bg-emerald-300/20"
+                                        ></span>
+                                        <span
+                                            class="h-16 rounded-md bg-amber-300/20"
+                                        ></span>
+                                    </span>
+                                    <span
+                                        class="h-2 w-2/3 rounded-full bg-white/25"
+                                    ></span>
+                                </div>
+                            </div>
                         </div>
                     @endif
                 </div>

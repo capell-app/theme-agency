@@ -24,9 +24,7 @@
                     @endif
                 </div>
 
-                <div
-                    class="rounded-2xl border border-white/15 bg-slate-950/90 p-5 shadow-xl"
-                >
+                <div class="saas-command-panel p-5 shadow-xl">
                     <div class="grid gap-3" aria-hidden="true">
                         <span
                             class="text-xs font-black tracking-[0.18em] text-cyan-200 uppercase"
@@ -36,6 +34,26 @@
                         <span class="h-2 rounded-full bg-white/70"></span>
                         <span class="h-2 w-3/4 rounded-full bg-white/30"></span>
                         <span class="h-2 w-1/2 rounded-full bg-cyan-300"></span>
+                    </div>
+
+                    <div
+                        class="mt-5 grid grid-cols-3 gap-2 text-center text-[0.65rem] font-black uppercase"
+                    >
+                        <span
+                            class="rounded-md bg-cyan-300 px-2 py-2 text-slate-950"
+                        >
+                            {{ __('capell-theme-saas::generic.trial_step_label') }}
+                        </span>
+                        <span
+                            class="rounded-md bg-emerald-300 px-2 py-2 text-slate-950"
+                        >
+                            {{ __('capell-theme-saas::generic.activation_label') }}
+                        </span>
+                        <span
+                            class="rounded-md bg-amber-300 px-2 py-2 text-slate-950"
+                        >
+                            {{ __('capell-theme-saas::generic.expansion_step_label') }}
+                        </span>
                     </div>
 
                     <div class="mt-6 flex flex-wrap gap-3">

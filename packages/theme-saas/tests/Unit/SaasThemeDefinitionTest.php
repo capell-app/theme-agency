@@ -124,6 +124,9 @@ it('keeps the source stylesheet aligned with the public saas renderer selectors'
 
     expect($css)
         ->toContain('.saas-shell')
+        ->toContain('.saas-product-console')
+        ->toContain('.saas-empty-pipeline')
+        ->toContain('.saas-command-panel')
         ->toContain('.saas-final-cta')
         ->toContain('.saas-cta')
         ->not->toContain('.layout-container > .capell-block-homepage-section');
@@ -258,7 +261,9 @@ it('renders public theme markup without package identifiers', function (): void 
         ->toContain('Product signal')
         ->toContain('Workflow signal')
         ->toContain('Activation flow')
+        ->toContain('Live workspace')
         ->toContain('Activation stage')
+        ->toContain('Activation')
         ->toContain('Cohort')
         ->not->toContain('data-capell-theme')
         ->not->toContain('capell-theme')
