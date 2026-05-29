@@ -31,7 +31,9 @@
     ];
 @endphp
 
-<section class="theme-section theme-section-search-listing bg-[#f8fafc]">
+<section
+    class="theme-section theme-section-search-listing knowledge-search-console bg-[#07111f]"
+>
     <div class="mx-auto max-w-6xl px-6 py-14">
         @isset($heading)
             <div class="grid gap-5 lg:grid-cols-[0.72fr_1fr] lg:items-end">
@@ -42,14 +44,14 @@
                         {{ __('capell-theme-knowledge::generic.search_label') }}
                     </p>
                     <h2
-                        class="mt-4 text-4xl font-black tracking-tight text-[#111827]"
+                        class="mt-4 text-4xl font-black tracking-tight text-white"
                     >
                         {{ $heading }}
                     </h2>
                 </div>
 
                 @isset($summary)
-                    <p class="max-w-2xl text-lg leading-8 text-slate-600">
+                    <p class="max-w-2xl text-lg leading-8 text-slate-300">
                         {{ $summary }}
                     </p>
                 @endisset
@@ -57,23 +59,23 @@
         @endisset
 
         <div
-            class="mt-8 border border-[#bfdbfe] bg-white p-4 shadow-xl shadow-blue-950/5"
+            class="mt-8 border border-white/10 bg-[#0f1b2f] p-4 shadow-xl shadow-black/20"
         >
             <div class="grid gap-4 lg:grid-cols-[1fr_0.72fr]">
-                <div class="border border-[#dbeafe] bg-[#eff6ff] p-4">
-                    <p class="text-sm font-bold text-slate-600">
+                <div class="border border-white/10 bg-[#111f36] p-4">
+                    <p class="text-sm font-bold text-slate-300">
                         {{ $searchAvailable ?? false ? __('capell-theme-knowledge::generic.search_connected') : __('capell-theme-knowledge::generic.search_static') }}
                     </p>
 
                     <div class="mt-5 grid gap-3 md:grid-cols-[1fr_auto]">
                         <div
-                            class="border border-[#dbeafe] bg-white px-4 py-3 text-sm font-bold text-slate-500"
+                            class="border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold text-slate-300"
                         >
                             {{ __('capell-theme-knowledge::generic.search_placeholder') }}
                         </div>
                         <button
                             type="button"
-                            class="bg-[#1d4ed8] px-5 py-3 text-sm font-black text-white"
+                            class="bg-[#f59e0b] px-5 py-3 text-sm font-black text-[#07111f]"
                         >
                             {{ __('capell-theme-knowledge::generic.search_action') }}
                         </button>
@@ -89,7 +91,7 @@
                             @foreach ($filters as $filter)
                                 <button
                                     type="button"
-                                    class="border border-[#bfdbfe] bg-white px-3 py-2 text-xs font-black text-[#1e40af]"
+                                    class="border border-white/10 bg-white/5 px-3 py-2 text-xs font-black text-[#bfdbfe]"
                                 >
                                     {{ $filter }}
                                 </button>
@@ -98,9 +100,9 @@
                     </div>
                 </div>
 
-                <div class="border border-[#fde68a] bg-[#fffbeb] p-4">
+                <div class="border border-[#f59e0b]/40 bg-[#f59e0b]/10 p-4">
                     <p
-                        class="text-xs font-black tracking-[0.16em] text-[#b45309] uppercase"
+                        class="text-xs font-black tracking-[0.16em] text-[#fbbf24] uppercase"
                     >
                         {{ __('capell-theme-knowledge::generic.search_source_label') }}
                     </p>
@@ -126,7 +128,9 @@
 
             <div class="mt-4 grid gap-4 lg:grid-cols-3">
                 @foreach ($searchItems as $item)
-                    <article class="border border-slate-200 bg-[#f8fafc] p-4">
+                    <article
+                        class="knowledge-result-card border border-white/10 bg-[#f8fbff] p-4"
+                    >
                         <div class="flex items-start justify-between gap-4">
                             <p
                                 class="text-xs font-black tracking-[0.16em] text-[#1d4ed8] uppercase"

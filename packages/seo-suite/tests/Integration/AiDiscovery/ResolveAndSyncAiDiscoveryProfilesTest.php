@@ -11,7 +11,6 @@ use Capell\SeoSuite\Enums\AiDiscoveryStatusEnum;
 use Capell\SeoSuite\Models\AiDiscoveryPageProfile;
 use Capell\SeoSuite\Models\AiDiscoverySiteProfile;
 use Composer\Autoload\ClassLoader;
-use RuntimeException;
 
 $composerAutoloader = require getcwd() . '/vendor/autoload.php';
 

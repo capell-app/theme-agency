@@ -42,7 +42,7 @@ it('renders standard sections through Local Services views', function (): void {
             heading: 'Quote-ready service routes',
             summary: 'Feature cards should look like local jobs and estimate paths.',
             features: [
-                ['title' => 'Rapid estimate triage', 'summary' => 'Match the right team to each enquiry.', 'type' => 'Dispatch'],
+                ['title' => 'Rapid estimate triage', 'description' => 'Match the right team to each enquiry.', 'type' => 'Dispatch'],
             ],
         ));
 

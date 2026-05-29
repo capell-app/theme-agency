@@ -36,7 +36,7 @@ class QueueHealthTable implements TableConfigurator
     public static function configure(Table $table, ?QueueHealthPage $page = null): Table
     {
         return $table
-            ->query(fn (): Builder => BuildQueueHealthQueryAction::run($page?->activeTab ?? 'history'))
+            ->query(fn (): Builder => BuildQueueHealthQueryAction::run($page->activeTab ?? 'history'))
             ->columns([
                 TextColumn::make('operation_status')
                     ->label(__('capell-diagnostics::package.status'))
@@ -105,9 +105,15 @@ class QueueHealthTable implements TableConfigurator
                 ->query(fn (Builder $query, array $data): Builder => self::applyStatusFilter($query, $data['value'] ?? null)),
             SelectFilter::make('queue')
                 ->label(__('capell-diagnostics::package.queue'))
-                ->options(fn (): array => collect(DiscoverQueueMonitorQueuesAction::run())
-                    ->mapWithKeys(fn (string $queue): array => [$queue => $queue])
-                    ->all()),
+                ->options(function (): array {
+                    $options = [];
+
+                    foreach (DiscoverQueueMonitorQueuesAction::run() as $queue) {
+                        $options[$queue] = $queue;
+                    }
+
+                    return $options;
+                }),
             Filter::make('date_range')
                 ->label(__('capell-diagnostics::package.date_range'))
                 ->schema([
@@ -224,7 +230,7 @@ class QueueHealthTable implements TableConfigurator
                 ->icon('heroicon-o-arrow-path')
                 ->color('warning')
                 ->requiresConfirmation()
-                ->visible(fn (): bool => ($page?->activeTab ?? 'history') === 'failed')
+                ->visible(fn (): bool => ($page->activeTab ?? 'history') === 'failed')
                 ->action(function (EloquentCollection $records): void {
                     $failedJobs = $records->filter(fn (Model $record): bool => $record instanceof FailedJob);
 
@@ -248,6 +254,12 @@ class QueueHealthTable implements TableConfigurator
         ];
     }
 
+    /**
+     * @template TModel of Model
+     *
+     * @param  Builder<TModel>  $query
+     * @return Builder<TModel>
+     */
     private static function applyStatusFilter(Builder $query, mixed $status): Builder
     {
         if (! is_string($status) || $status === '') {
@@ -282,7 +294,11 @@ class QueueHealthTable implements TableConfigurator
     }
 
     /**
+     * @template TModel of Model
+     *
+     * @param  Builder<TModel>  $query
      * @param  array<string, mixed>  $data
+     * @return Builder<TModel>
      */
     private static function applyDateFilter(Builder $query, array $data): Builder
     {
@@ -307,7 +323,11 @@ class QueueHealthTable implements TableConfigurator
     }
 
     /**
+     * @template TModel of Model
+     *
+     * @param  Builder<TModel>  $query
      * @param  array<string, mixed>  $data
+     * @return Builder<TModel>
      */
     private static function applyPendingJobDateFilter(Builder $query, array $data): Builder
     {
@@ -325,6 +345,12 @@ class QueueHealthTable implements TableConfigurator
         return $query;
     }
 
+    /**
+     * @template TModel of Model
+     *
+     * @param  Builder<TModel>  $query
+     * @return Builder<TModel>
+     */
     private static function applyJobClassFilter(Builder $query, mixed $name): Builder
     {
         if (! is_string($name) || $name === '') {

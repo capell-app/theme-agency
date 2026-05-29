@@ -23,9 +23,11 @@ final class DiscoverQueueMonitorQueuesAction extends Action
             if (! is_string($path)) {
                 continue;
             }
+
             if ($path === '') {
                 continue;
             }
+
             $queue = config($path);
 
             if (is_string($queue) && $queue !== '') {

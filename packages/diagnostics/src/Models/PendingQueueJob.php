@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Capell\Diagnostics\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Override;
 
 /**
@@ -14,15 +16,19 @@ use Override;
  * @property string|null $queue
  * @property array<string, mixed>|null $payload
  * @property int $attempts
+ * @property Carbon|null $available_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $reserved_at
  */
 final class PendingQueueJob extends Model
 {
+    /** @use HasFactory<Factory<static>> */
     use HasFactory;
 
     public $timestamps = false;
 
     /**
-     * @var array<string>
+     * @var list<string>
      */
     protected $guarded = [];
 
@@ -42,6 +48,7 @@ final class PendingQueueJob extends Model
 
     /**
      * @param  Builder<self>  $query
+     * @param  array<int, string>  $queues
      * @return Builder<self>
      */
     protected function scopeForConfiguredQueues(Builder $query, array $queues): Builder

@@ -44,7 +44,7 @@ it('renders standard sections through Knowledge views', function (): void {
             heading: 'Research pathways',
             summary: 'Feature cards should look like curated library entries.',
             features: [
-                ['title' => 'Editorial research', 'summary' => 'Collect expert notes and topic paths.', 'type' => 'Guide'],
+                ['title' => 'Editorial research', 'description' => 'Collect expert notes and topic paths.', 'type' => 'Guide'],
             ],
         ));
 
@@ -133,11 +133,14 @@ it('renders standard sections through Knowledge views', function (): void {
     expect($ctaHtml)
         ->toContain('Build the library path')
         ->toContain('Knowledge path')
+        ->toContain('knowledge-cta')
         ->toContain('Browse guides')
         ->not->toContain('capell-app/theme-knowledge');
 
     expect($searchHtml)
         ->toContain('Search the archive')
+        ->toContain('knowledge-search-console')
+        ->toContain('knowledge-result-card')
         ->toContain('Facet filters')
         ->toContain('Source map')
         ->toContain('Research operations guide')
@@ -171,6 +174,8 @@ it('renders hydrated hero data through the Knowledge hero view', function (): vo
         ->toContain('Editorial command centre')
         ->toContain('Open the research library')
         ->toContain('Hydrated knowledge hero summary.')
+        ->toContain('knowledge-hero')
+        ->toContain('knowledge-command-panel')
         ->toContain('Search resources')
         ->toContain('Subscribe to digest')
         ->toContain('Reading queue')

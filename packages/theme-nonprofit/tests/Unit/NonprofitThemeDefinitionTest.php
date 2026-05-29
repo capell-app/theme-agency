@@ -41,7 +41,7 @@ it('renders standard sections through Nonprofit views', function (): void {
             heading: 'Impact pathways',
             summary: 'Supporter cards should feel specific to nonprofit work.',
             features: [
-                ['title' => 'Campaign paths', 'summary' => 'Move supporters from belief to action.', 'type' => 'Campaigns'],
+                ['title' => 'Campaign paths', 'description' => 'Move supporters from belief to action.', 'type' => 'Campaigns'],
             ],
         ));
 

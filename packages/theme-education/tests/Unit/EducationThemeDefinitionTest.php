@@ -41,7 +41,7 @@ it('renders standard sections through Education views', function (): void {
             heading: 'Programme pathways',
             summary: 'Course cards should feel specific to education.',
             features: [
-                ['title' => 'Course discovery', 'summary' => 'Find the right programme.', 'type' => 'Courses'],
+                ['title' => 'Course discovery', 'description' => 'Find the right programme.', 'type' => 'Courses'],
             ],
         ));
 

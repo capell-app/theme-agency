@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Diagnostics\Models;
 
+use Carbon\CarbonImmutable;
 use Croustibat\FilamentJobsMonitor\Models\QueueMonitor as BaseQueueMonitor;
 use Illuminate\Database\Eloquent\Builder;
 use Override;
@@ -17,16 +18,20 @@ use Override;
  * @property int $attempt
  * @property int|null $progress
  * @property string|null $exception_message
+ * @property CarbonImmutable|null $created_at
+ * @property CarbonImmutable|null $finished_at
+ * @property CarbonImmutable|null $started_at
+ * @property CarbonImmutable|null $updated_at
  */
 final class QueueMonitor extends BaseQueueMonitor
 {
     /**
-     * @var array<string>
+     * @var list<string>
      */
     protected $fillable = [];
 
     /**
-     * @var array<string>
+     * @var list<string>
      */
     protected $guarded = [];
 

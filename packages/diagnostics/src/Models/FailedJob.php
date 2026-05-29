@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Diagnostics\Models;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,7 @@ use Override;
  * @property string|null $queue
  * @property string|null $payload
  * @property string|null $exception
+ * @property CarbonImmutable|null $failed_at
  */
 final class FailedJob extends Model
 {
@@ -24,7 +26,7 @@ final class FailedJob extends Model
     public $timestamps = false;
 
     /**
-     * @var array<string>
+     * @var list<string>
      */
     protected $guarded = [];
 
@@ -62,7 +64,7 @@ final class FailedJob extends Model
             : (string) __('capell-diagnostics::package.unknown_job');
     }
 
-    protected function getAttemptsCountAttribute(): ?int
+    protected function getAttemptsCountAttribute(): null
     {
         return null;
     }

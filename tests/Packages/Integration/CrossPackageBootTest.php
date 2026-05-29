@@ -10,7 +10,6 @@ use Capell\Admin\Support\AdminSurfaceLookup;
 use Capell\Blog\Providers\BlogServiceProvider;
 use Capell\Core\Facades\CapellCore;
 use Capell\SeoSuite\Providers\SeoSuiteServiceProvider;
-use ReflectionClass;
 
 /**
  * These tests boot the same set of packages PackagesTestCase already boots

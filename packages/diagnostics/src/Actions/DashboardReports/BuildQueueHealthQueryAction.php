@@ -8,14 +8,13 @@ use Capell\Diagnostics\Models\FailedJob;
 use Capell\Diagnostics\Models\PendingQueueJob;
 use Capell\Diagnostics\Models\QueueMonitor;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Lorisleiva\Actions\Action;
 
 final class BuildQueueHealthQueryAction extends Action
 {
     /**
-     * @return Builder<Model>
+     * @return Builder<QueueMonitor>|Builder<FailedJob>|Builder<PendingQueueJob>
      */
     public function handle(?string $activeTab = null): Builder
     {
@@ -27,7 +26,7 @@ final class BuildQueueHealthQueryAction extends Action
     }
 
     /**
-     * @return Builder<Model>
+     * @return Builder<QueueMonitor>
      */
     private function monitorHistoryQuery(): Builder
     {
@@ -42,7 +41,7 @@ final class BuildQueueHealthQueryAction extends Action
     }
 
     /**
-     * @return Builder<Model>
+     * @return Builder<FailedJob>|Builder<QueueMonitor>
      */
     private function failedJobsQuery(): Builder
     {
@@ -56,7 +55,7 @@ final class BuildQueueHealthQueryAction extends Action
     }
 
     /**
-     * @return Builder<Model>
+     * @return Builder<PendingQueueJob>|Builder<QueueMonitor>
      */
     private function pendingJobsQuery(): Builder
     {

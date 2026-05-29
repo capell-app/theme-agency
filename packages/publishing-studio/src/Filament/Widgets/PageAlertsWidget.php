@@ -200,7 +200,7 @@ class PageAlertsWidget extends ResourceAlertsWidget
 
         if ($this->record instanceof Page) {
             $this->recordKey ??= (int) $this->record->getKey();
-            $this->resolvedRecord = $this->record;
+            $this->resolvedRecord = $this->hydratePageRecord($this->record);
 
             return $this->resolvedRecord;
         }
@@ -217,13 +217,20 @@ class PageAlertsWidget extends ResourceAlertsWidget
             return null;
         }
 
-        $this->resolvedRecord->load([
+        $this->resolvedRecord = $this->hydratePageRecord($this->resolvedRecord);
+
+        return $this->resolvedRecord;
+    }
+
+    private function hydratePageRecord(Page $page): Page
+    {
+        $page->load([
             'site' => fn (BuilderContract $query): BuilderContract => $query->withTrashed(),
             'type',
             'pageUrls',
         ]);
 
-        return $this->resolvedRecord;
+        return $page;
     }
 
     private function draftStatusAlert(): ?MessageData
