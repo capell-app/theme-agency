@@ -1,9 +1,117 @@
 {
-    "screenshots": [
+    "package": "theme-portfolio",
+    "composerName": "capell-app/theme-portfolio",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "public/docs/screenshots/packages/theme-portfolio",
+    "entries": [
         {
-            "path": "docs/assets/marketplace/extension-card.jpg",
-            "alt": "Theme Portfolio extension preview image",
-            "caption": "Theme Portfolio preview"
+            "id": "theme-admin-list-showing-portfolio",
+            "title": "Theme admin list showing Portfolio.",
+            "package": "theme-portfolio",
+            "surface": "admin",
+            "targetType": "filament-resource",
+            "target": "ThemeResource:index",
+            "required": true,
+            "notes": "Capture with Foundation Theme, Layout Builder, and capell-app/theme-portfolio installed in the isolated demo harness.",
+            "useCase": "An administrator confirms the Portfolio theme is available for a premium studio or case-study site.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-portfolio/theme-admin-list-showing-portfolio.png"
+        },
+        {
+            "id": "frontend-page-rendered-with-portfolio-theme",
+            "title": "Frontend page rendered with Portfolio theme.",
+            "package": "theme-portfolio",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-portfolio-demo",
+            "required": true,
+            "notes": "Capture a seeded studio page with work grid, case studies, services, proof, testimonials, media kit, newsletter, CTA, and footer.",
+            "useCase": "A studio, consultant, or creator sees how the theme sells work outcomes without overlapping Agency's campaign preset.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-portfolio/frontend-page-rendered-with-portfolio-theme.png"
+        },
+        {
+            "id": "portfolio-homepage-layout",
+            "title": "Portfolio homepage.",
+            "package": "theme-portfolio",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/portfolio-homepage-layout",
+            "required": true,
+            "notes": "Capture work-led hero, case-file proof, selected work, audience path, and enquiry CTA.",
+            "useCase": "A premium studio reviews whether the first viewport feels like a serious case-study product rather than a basic creative preset.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-portfolio/portfolio-homepage-layout.png"
+        },
+        {
+            "id": "portfolio-work-grid-layout",
+            "title": "Selected work board.",
+            "package": "theme-portfolio",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/portfolio-work-grid-layout",
+            "required": true,
+            "notes": "Capture dense work cards with media treatment, role/scope metadata, outcome labels, and filtering rhythm.",
+            "useCase": "A visitor can scan relevant work without the theme feeling like a blog, gallery, or Agency services grid.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-portfolio/portfolio-work-grid-layout.png"
+        },
+        {
+            "id": "portfolio-case-study-layout",
+            "title": "Case-study detail.",
+            "package": "theme-portfolio",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/portfolio-case-study-layout",
+            "required": true,
+            "notes": "Capture outcome ledger, challenge/approach/result sections, scope cards, and next-project CTA.",
+            "useCase": "A studio proves premium value through measurable work outcomes instead of broad testimonials.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-portfolio/portfolio-case-study-layout.png"
+        },
+        {
+            "id": "portfolio-services-layout",
+            "title": "Studio capabilities.",
+            "package": "theme-portfolio",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/portfolio-services-layout",
+            "required": true,
+            "notes": "Capture studio service cards, engagement shape, process hints, and proof-linked capabilities.",
+            "useCase": "A visitor understands what can be bought without the theme becoming a local-services page.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-portfolio/portfolio-services-layout.png"
+        },
+        {
+            "id": "portfolio-media-kit-layout",
+            "title": "Media kit and speaking package.",
+            "package": "theme-portfolio",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/portfolio-media-kit-layout",
+            "required": true,
+            "notes": "Capture speaking, press, audience, and newsletter paths with compact credibility proof.",
+            "useCase": "A creator or consultant can sell authority and audience-building without needing a separate knowledge theme.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-portfolio/portfolio-media-kit-layout.png"
+        },
+        {
+            "id": "portfolio-newsletter-layout",
+            "title": "Audience and newsletter path.",
+            "package": "theme-portfolio",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/portfolio-newsletter-layout",
+            "required": true,
+            "notes": "Capture newsletter CTA, audience proof, and work-to-subscriber conversion copy.",
+            "useCase": "A studio checks that audience growth supports the portfolio lane without becoming Knowledge's resource archive.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-portfolio/portfolio-newsletter-layout.png"
+        },
+        {
+            "id": "theme-preview-url-output",
+            "title": "Signed admin preview route.",
+            "package": "theme-portfolio",
+            "surface": "admin",
+            "targetType": "admin-url",
+            "target": "capell.admin.theme-preview",
+            "required": true,
+            "notes": "Capture a signed preview URL generated for the seeded Portfolio theme, site, and page.",
+            "useCase": "An administrator previews a case-study page with the Portfolio theme applied before publishing the theme choice.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-portfolio/theme-preview-url-output.png"
         }
     ]
 }

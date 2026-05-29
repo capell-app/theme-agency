@@ -60,6 +60,10 @@ class PrepareRenderProfileAction
             return false;
         }
 
+        if (config('queue.default') === 'sync') {
+            return false;
+        }
+
         if (! is_string($profile->critical_css_path) || $profile->critical_css_path === '') {
             return true;
         }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Capell\AgentBridge\Support\KnowledgeRepository;
 
 it('discovers package manifests with capability metadata', function (): void {
-    app()->setBasePath(getcwd());
+    app()->setBasePath(getcwd() ?: dirname(__DIR__, 4));
 
     $packages = collect((new KnowledgeRepository)->packages());
 
@@ -22,7 +22,7 @@ it('discovers package manifests with capability metadata', function (): void {
 });
 
 it('discovers and reads configured public markdown documents', function (): void {
-    app()->setBasePath(getcwd());
+    app()->setBasePath(getcwd() ?: dirname(__DIR__, 4));
 
     config()->set('capell-agent-bridge.public_docs_paths', [
         base_path('packages/agent-bridge/docs'),
@@ -41,7 +41,7 @@ it('discovers and reads configured public markdown documents', function (): void
 });
 
 it('returns null for documents outside the configured public paths', function (): void {
-    app()->setBasePath(getcwd());
+    app()->setBasePath(getcwd() ?: dirname(__DIR__, 4));
 
     config()->set('capell-agent-bridge.public_docs_paths', [
         base_path('packages/agent-bridge/docs'),

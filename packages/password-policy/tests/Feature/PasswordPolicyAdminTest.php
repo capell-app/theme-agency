@@ -130,9 +130,11 @@ it('opens password policy settings from the extensions page action modal', funct
     $settingsSurfaces = resolve(ExtensionManagementSurfaceRegistry::class)
         ->surfacesForPackage(PasswordPolicyServiceProvider::$packageName);
 
-    expect($settingsSurfaces[0]->settingsGroup ?? null)
+    expect($settingsSurfaces)->not->toBeEmpty();
+
+    expect($settingsSurfaces[0]->settingsGroup)
         ->toBe('password_policy')
-        ->and($settingsSurfaces[0]->label ?? null)
+        ->and($settingsSurfaces[0]->label)
         ->toBe('capell-password-policy::settings.title');
 });
 

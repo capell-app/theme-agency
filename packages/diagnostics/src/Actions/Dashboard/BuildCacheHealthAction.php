@@ -8,9 +8,11 @@ use Capell\Core\Enums\UrlTypeEnum;
 use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Diagnostics\Data\Dashboard\CacheHealthData;
+use Capell\HtmlCache\Actions\BuildHtmlCacheEligibilityReportAction;
 use Capell\HtmlCache\Models\CachedModelUrl;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
@@ -81,6 +83,40 @@ final class BuildCacheHealthAction
             lastWarmedAt: $lastWarmedAt,
             siteId: $site->id,
             siteName: $site->name,
+            eligibilityReports: $this->eligibilityReports($site),
         );
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function eligibilityReports(Site $site): array
+    {
+        return PageUrl::query()
+            ->with(['siteDomain', 'pageable'])
+            ->where('site_id', $site->id)
+            ->enabled()
+            ->limit(5)
+            ->get()
+            ->map(function (PageUrl $pageUrl): array {
+                $siteDomain = $pageUrl->siteDomain;
+
+                if ($siteDomain === null) {
+                    return BuildHtmlCacheEligibilityReportAction::run(
+                        Request::create($pageUrl->url, \Symfony\Component\HttpFoundation\Request::METHOD_GET),
+                        pageUrl: $pageUrl,
+                    )->toArray();
+                }
+
+                $url = rtrim($siteDomain->full_url, '/') . $pageUrl->url;
+
+                return BuildHtmlCacheEligibilityReportAction::run(
+                    Request::create($url, \Symfony\Component\HttpFoundation\Request::METHOD_GET),
+                    pageUrl: $pageUrl,
+                )->toArray();
+            })
+            ->filter()
+            ->values()
+            ->all();
     }
 }

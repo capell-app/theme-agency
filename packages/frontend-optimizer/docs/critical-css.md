@@ -56,6 +56,8 @@ If the profile has no eligible stylesheet paths, the browser-side collector fall
 
 Public rendering must not block on generation. Until CSS exists, `RenderProfileAssetRenderer` renders normal stylesheet output for the profile. If generation fails, `GenerateCriticalCssAction` records the failed run and leaves rendering on the fallback path.
 
+Automatic generation is skipped when the app is using Laravel's `sync` queue connection, because that would run Playwright inside the public response. Use a real queue connection and worker for automatic generation.
+
 Generated CSS is only inlined when all of these are true:
 
 - critical CSS is enabled in `FrontendOptimizerSettings`
@@ -64,6 +66,8 @@ Generated CSS is only inlined when all of these are true:
 - the file is within `max_inline_css_bytes`
 
 If any check fails, the renderer keeps normal asset tags and omits `data-critical-css`.
+
+When generated critical CSS is inlined, the renderer also prepends a tiny stability reset for browser-default body margin. This prevents the deferred full stylesheet from moving the whole page after first paint if the generated critical CSS does not include the reset rule.
 
 ## Page Type Opt-Out
 

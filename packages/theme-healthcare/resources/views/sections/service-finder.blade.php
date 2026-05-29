@@ -5,9 +5,13 @@
 <section class="healthcare-finder bg-white">
     <div class="grid gap-8 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div>
-            <h2>{{ $section->heading }}</h2>
+            <h2 class="text-4xl font-black tracking-tight text-[#14323a]">
+                {{ $section->heading }}
+            </h2>
             @if ($section->summary ?? null)
-                <p class="mt-4 max-w-xl text-lg">{{ $section->summary }}</p>
+                <p class="mt-4 max-w-xl text-lg text-stone-600">
+                    {{ $section->summary }}
+                </p>
             @endif
         </div>
 

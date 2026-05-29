@@ -29,11 +29,13 @@ use Capell\SeoSuite\Http\Controllers\PageMarkdownController;
 use Capell\SeoSuite\Http\Controllers\RobotsTxtController;
 use Capell\SeoSuite\Models\AiDiscoveryCrawlerRule;
 use Capell\SeoSuite\Models\AiDiscoveryPageProfile;
+use Capell\SeoSuite\Models\AiDiscoverySiteProfile;
 use Capell\SeoSuite\Models\AiDiscoverySnapshot;
 use Composer\Autoload\ClassLoader;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 $composerAutoloader = require getcwd() . '/vendor/autoload.php';
@@ -103,8 +105,14 @@ it('groups llms txt entries by section and orders by priority', function (): voi
         ->and($content)->toContain('## Guides')
         ->and($content)->toContain('Second AI summary')
         ->and($content)->toContain('First AI summary')
-        ->and($content)->not->toContain('SEO fallback')
-        ->and(strpos($content, 'Second Page'))->toBeLessThan(strpos($content, 'First Page'));
+        ->and($content)->not->toContain('SEO fallback');
+
+    $secondPagePosition = strpos($content, 'Second Page');
+    $firstPagePosition = strpos($content, 'First Page');
+
+    throw_if($secondPagePosition === false || $firstPagePosition === false, RuntimeException::class, 'Expected both page titles to be present in llms.txt content.');
+
+    expect($secondPagePosition)->toBeLessThan($firstPagePosition);
 });
 
 it('falls back to canonical page url when markdown pages are disabled', function (): void {
@@ -414,6 +422,8 @@ it('serves current frontend pages as markdown for text markdown accept requests'
 
     $response = resolve(FrontendPageController::class)();
 
+    throw_unless($response instanceof Response, RuntimeException::class, 'Expected frontend page controller to return a Symfony response.');
+
     expect($response->getStatusCode())->toBe(200)
         ->and($response->headers->get('Content-Type'))->toBe('text/markdown; charset=utf-8')
         ->and($response->getContent())->toContain('Accept markdown body.');
@@ -631,6 +641,8 @@ it('syncs site language ai discovery settings from site translation meta', funct
 
     $profile = ResolveAiDiscoveryProfileAction::run($site, $language);
 
+    throw_unless($profile instanceof AiDiscoverySiteProfile, RuntimeException::class, 'Expected site-level AI discovery profile.');
+
     expect($profile->llms_txt_enabled)->toBeFalse()
         ->and($profile->llms_full_txt_enabled)->toBeTrue()
         ->and($profile->markdown_pages_enabled)->toBeFalse()
@@ -756,7 +768,7 @@ it('serves llms txt with markdown headers and only persists snapshots on cache m
         ->and($firstResponse->headers->get('Content-Type'))->toBe('text/markdown; charset=utf-8')
         ->and($firstResponse->headers->getCacheControlDirective('public'))->toBeTrue()
         ->and($firstResponse->headers->getCacheControlDirective('max-age'))->toBe('3600')
-        ->and($firstResponse->headers->get('ETag'))->toBe('"' . hash('sha256', $firstResponse->getContent()) . '"')
+        ->and($firstResponse->headers->get('ETag'))->toBe('"' . hash('sha256', (string) $firstResponse->getContent()) . '"')
         ->and(Cache::has($cacheKey))->toBeTrue()
         ->and($secondResponse->getContent())->toBe($firstResponse->getContent())
         ->and(AiDiscoverySnapshot::query()->count())->toBe(1)

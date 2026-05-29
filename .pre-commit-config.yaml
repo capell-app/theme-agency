@@ -12,7 +12,7 @@ repos:
       - id: trailing-whitespace
       - id: mixed-line-ending
       - id: check-added-large-files
-        args: ['--maxkb=1024']
+        args: ['--maxkb=2048']
         exclude: packages/admin/publishes/build/js/components/html-code-editor.js
       - id: detect-private-key
 

@@ -104,6 +104,12 @@ trait ManagesLayoutBuilderState
     {
         $this->layoutModified = $modified;
 
+        $this->visualPreviewStatus = $modified ? 'stale' : 'current';
+
+        if ($modified) {
+            $this->dispatch('capell-layout-builder-authoring-dirty');
+        }
+
         if (! $this->inPageContext()) {
             return;
         }

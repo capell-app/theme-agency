@@ -34,7 +34,7 @@ final class CapellAgentBridgeToken extends Model
         'expires_at',
     ];
 
-    protected $table = 'capell_agent-bridge_tokens';
+    protected $table = 'capell_agent_bridge_tokens';
 
     public static function hashPlainTextToken(string $plainTextToken): string
     {

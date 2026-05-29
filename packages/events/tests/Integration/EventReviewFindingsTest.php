@@ -3,9 +3,13 @@
 declare(strict_types=1);
 
 use Capell\Admin\Filament\Resources\Pages\PageResource;
+use Capell\Core\Contracts\Pageable;
 use Capell\Core\Models\Language;
+use Capell\Core\Models\Layout;
 use Capell\Core\Models\PageUrl;
+use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
+use Capell\Core\Models\Theme;
 use Capell\Events\Actions\BuildCalendarFeedAction;
 use Capell\Events\Actions\QueryPublicEventOccurrencesAction;
 use Capell\Events\Actions\RegisterForEventOccurrenceAction;
@@ -21,13 +25,17 @@ use Capell\Events\Filament\Resources\Events\EventResource;
 use Capell\Events\Filament\Resources\Events\Pages\CreateEvent;
 use Capell\Events\Filament\Resources\Events\Pages\EditEvent;
 use Capell\Events\Filament\Resources\Events\Pages\ListEvents;
+use Capell\Events\Http\Controllers\CalendarFeedController;
 use Capell\Events\Models\Event;
 use Capell\Events\Models\EventNotificationLog;
 use Capell\Events\Models\EventOccurrence;
 use Capell\Events\Models\EventRegistration;
 use Capell\Events\Notifications\EventRegistrationNotification;
 use Capell\Events\Providers\EventsServiceProvider;
+use Capell\Frontend\Contracts\FrontendContextReader;
+use Capell\Frontend\Support\CapellFrontendContext;
 use Carbon\CarbonImmutable;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 use Spatie\LaravelPackageTools\Package;
@@ -64,6 +72,94 @@ it('uses an event page url plus occurrence date for public occurrence urls and f
 
     expect($occurrence->load('event.pageUrl')->occurrenceUrl())->toEndWith('/events/community-event/2026-06-10')
         ->and(BuildCalendarFeedAction::run($site))->toContain('/events/community-event/2026-06-10');
+});
+
+it('serves calendar feeds with freshness headers and conditional etag support', function (): void {
+    $event = Event::factory()->create([
+        'starts_at' => CarbonImmutable::parse('2026-06-10 10:00:00', 'UTC'),
+        'visible_from' => CarbonImmutable::parse('2026-01-01 00:00:00', 'UTC'),
+    ]);
+    $site = $event->site;
+    $language = Language::query()->firstOrFail();
+    SiteDomain::factory()->for($site)->for($language)->default()->create();
+
+    EventOccurrence::factory()->create([
+        'event_id' => $event->getKey(),
+        'starts_at' => CarbonImmutable::parse('2026-06-10 10:00:00', 'UTC'),
+        'occurrence_key' => '20260610T100000',
+    ]);
+
+    app()->instance(CapellFrontendContext::class, new CapellFrontendContext(new readonly class($site) implements FrontendContextReader
+    {
+        public function __construct(private Site $site) {}
+
+        public function site(): Site
+        {
+            return $this->site;
+        }
+
+        public function language(): ?Language
+        {
+            return null;
+        }
+
+        public function page(): ?Pageable
+        {
+            return null;
+        }
+
+        public function layout(): ?Layout
+        {
+            return null;
+        }
+
+        public function theme(): ?Theme
+        {
+            return null;
+        }
+
+        public function params(): array
+        {
+            return [];
+        }
+
+        public function slug(): ?string
+        {
+            return null;
+        }
+
+        public function isError(): bool
+        {
+            return false;
+        }
+
+        public function setFrontendData(string $key, mixed $value): self
+        {
+            return $this;
+        }
+
+        public function getFrontendData(?string $key = null): mixed
+        {
+            return $key === null ? [] : null;
+        }
+    }));
+
+    $response = (new CalendarFeedController)(Request::create('/events.ics'));
+
+    expect($response->getStatusCode())->toBe(200)
+        ->and((string) $response->headers->get('Content-Type'))->toContain('text/calendar; charset=UTF-8')
+        ->and((string) $response->headers->get('Cache-Control'))
+        ->toContain('public')
+        ->toContain('max-age=3600')
+        ->and($response->headers->get('ETag'))->not->toBeNull();
+
+    $conditionalRequest = Request::create('/events.ics', Symfony\Component\HttpFoundation\Request::METHOD_GET, [], [], [], [
+        'HTTP_IF_NONE_MATCH' => (string) $response->headers->get('ETag'),
+    ]);
+
+    $conditionalResponse = (new CalendarFeedController)($conditionalRequest);
+
+    expect($conditionalResponse->getStatusCode())->toBe(304);
 });
 
 it('excludes stale private unpublished and cancelled occurrences from public queries', function (): void {

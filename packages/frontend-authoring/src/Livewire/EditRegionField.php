@@ -6,6 +6,7 @@ namespace Capell\FrontendAuthoring\Livewire;
 
 use Capell\Frontend\Contracts\AdminAccessCheckerInterface;
 use Capell\FrontendAuthoring\Actions\UpdateEditableRegionAction;
+use Capell\FrontendAuthoring\Actions\ValidateEditableRegionPayloadAction;
 use Capell\FrontendAuthoring\Data\EditableRegionPayloadData;
 use Capell\FrontendAuthoring\Support\EditableRegionSigner;
 use Filament\Forms\Components\Textarea;
@@ -43,10 +44,10 @@ class EditRegionField extends LivewireComponent implements HasForms
 
     public function mount(string $payload): void
     {
-        $this->authorizeAdmin();
+        $user = $this->authorizeAdmin();
 
         $this->payload = $payload;
-        $region = $this->region();
+        $region = $this->region($user);
         $this->label = $region->label;
         $this->type = $region->type;
 
@@ -66,11 +67,11 @@ class EditRegionField extends LivewireComponent implements HasForms
 
     public function save(): void
     {
-        $this->authorizeAdmin();
+        $user = $this->authorizeAdmin();
 
         /** @var array{value?: mixed} $state */
         $state = $this->form->getState();
-        $result = UpdateEditableRegionAction::run($this->region(), (string) ($state['value'] ?? ''));
+        $result = UpdateEditableRegionAction::run($this->region($user), (string) ($state['value'] ?? ''), $user);
         $this->savedStatus = $result['status'];
 
         $this->dispatch(
@@ -123,16 +124,21 @@ class EditRegionField extends LivewireComponent implements HasForms
         abort(403);
     }
 
-    private function region(): EditableRegionPayloadData
+    private function region(AuthenticatableContract $user): EditableRegionPayloadData
     {
-        return resolve(EditableRegionSigner::class)->decode($this->payload);
+        return ValidateEditableRegionPayloadAction::run(
+            resolve(EditableRegionSigner::class)->decode($this->payload),
+            $user,
+        );
     }
 
-    private function authorizeAdmin(): void
+    private function authorizeAdmin(): AuthenticatableContract
     {
         $user = auth()->user();
 
         abort_unless($user instanceof AuthenticatableContract, 403);
         abort_unless(resolve(AdminAccessCheckerInterface::class)->isAdmin($user), 403);
+
+        return $user;
     }
 }

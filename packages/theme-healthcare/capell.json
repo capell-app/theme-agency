@@ -86,7 +86,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Theme Healthcare registers the healthcare theme key and clinical renderer views for appointments, services, clinicians, resources, and locations.",
+        "summary": "Clinic and care-route theme screenshots from route-backed demo layouts.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
@@ -94,24 +94,34 @@
                 "caption": "Theme Healthcare extension preview"
             },
             {
-                "path": "docs/assets/marketplace/healthcare-homepage-layout.svg",
-                "alt": "Theme Healthcare homepage screenshot showing appointment hero, service finder, clinician proof, CTA.",
-                "caption": "Theme Healthcare: Homepage. Appointment hero, service finder, clinician proof, CTA."
+                "path": "docs/assets/marketplace/healthcare-homepage-marketplace.jpg",
+                "alt": "Theme Healthcare homepage screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Healthcare: Homepage. Homepage composition with hero, proof, repeated content, CTA, and footer."
             },
             {
-                "path": "docs/assets/marketplace/healthcare-services-layout.svg",
-                "alt": "Theme Healthcare service listing screenshot showing service filters, cards, booking prompt.",
-                "caption": "Theme Healthcare: Service listing. Filters, cards, booking prompt."
+                "path": "docs/assets/marketplace/healthcare-directory-marketplace.jpg",
+                "alt": "Theme Healthcare directory screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Healthcare: Directory. List or directory route with repeated cards, scanning rhythm, and route-backed pagination layout."
             },
             {
-                "path": "docs/assets/marketplace/healthcare-clinician-layout.svg",
-                "alt": "Theme Healthcare clinician detail screenshot showing biography, availability, related services.",
-                "caption": "Theme Healthcare: Clinician detail. Biography, availability, related services."
+                "path": "docs/assets/marketplace/healthcare-detail-marketplace.jpg",
+                "alt": "Theme Healthcare detail screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Healthcare: Detail. Detail page route with media, proof, supporting sections, and conversion path."
             },
             {
-                "path": "docs/assets/marketplace/healthcare-contact-layout.svg",
-                "alt": "Theme Healthcare contact screenshot showing locations, enquiry panel, urgent care guidance.",
-                "caption": "Theme Healthcare: Contact page. Locations, enquiry panel, urgent care guidance."
+                "path": "docs/assets/marketplace/healthcare-contact-marketplace.jpg",
+                "alt": "Theme Healthcare contact screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Healthcare: Contact. Contact or enquiry route with theme-specific routing cards and CTA treatment."
+            },
+            {
+                "path": "docs/assets/marketplace/healthcare-conversion-marketplace.jpg",
+                "alt": "Theme Healthcare conversion cta screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Healthcare: Conversion CTA. Conversion route focused on proof, action rhythm, and next-step clarity."
+            },
+            {
+                "path": "docs/assets/marketplace/healthcare-sections-marketplace.jpg",
+                "alt": "Theme Healthcare section suite screenshot from the route-backed Capell demo layout.",
+                "caption": "Theme Healthcare: Section Suite. Theme-specific section suite showing the premium components available to editors."
             }
         ],
         "categories": ["frontend", "themes"]

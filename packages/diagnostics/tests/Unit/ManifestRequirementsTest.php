@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 use Capell\Diagnostics\Providers\AdminServiceProvider;
 use Capell\Diagnostics\Providers\DiagnosticsServiceProvider;
+use Illuminate\Support\Facades\File;
 
 describe('diagnostics capell.json manifest', function (): void {
     it('declares admin and console package metadata', function (): void {
         $manifest = json_decode(
-            file_get_contents(__DIR__ . '/../../capell.json'),
+            File::get(__DIR__ . '/../../capell.json'),
             associative: true,
         );
 

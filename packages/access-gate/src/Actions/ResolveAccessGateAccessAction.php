@@ -44,7 +44,7 @@ final class ResolveAccessGateAccessAction
         $baseAreasQuery = Area::query()
             ->whereIn('key', $areaKeys);
 
-        $areaExists = (clone $baseAreasQuery)->exists();
+        (clone $baseAreasQuery)->exists();
 
         $areas = $baseAreasQuery
             ->when($siteScopeEnabled, function (Builder $query) use ($siteId): void {
@@ -59,7 +59,7 @@ final class ResolveAccessGateAccessAction
             ->get();
 
         if ($areas->isEmpty()) {
-            return new AccessGateAccessResultData($areaExists && $siteScopeEnabled && $siteId !== null);
+            return new AccessGateAccessResultData(false);
         }
 
         $gatingAreas = $areas

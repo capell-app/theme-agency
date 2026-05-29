@@ -5,7 +5,9 @@
 <section class="saas-calculator bg-white">
     <div class="grid gap-8 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div>
-            <h2>{{ $section->heading }}</h2>
+            <h2 class="text-4xl font-black tracking-tight text-slate-950">
+                {{ $section->heading }}
+            </h2>
             @if ($section->summary ?? null)
                 <p class="mt-4 max-w-xl text-lg">{{ $section->summary }}</p>
             @endif

@@ -20,7 +20,7 @@
             "capell-app/core",
             "capell-app/html-cache"
         ],
-        "supports": [],
+        "supports": ["croustibat/filament-jobs-monitor"],
         "conflicts": []
     },
     "providers": {
@@ -102,12 +102,34 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Diagnostics adds operational diagnostics for cache, configuration drift, migrations, packages, registries, queues, permissions, setup health, and Tailwind build status.",
+        "summary": "Diagnostics adds operational diagnostics for cache, configuration drift, migrations, packages, registries, permissions, setup health, Tailwind build status, and Queue Operations powered by croustibat/filament-jobs-monitor telemetry.",
+        "credits": [
+            {
+                "name": "croustibat/filament-jobs-monitor",
+                "url": "https://github.com/ultraviolettes/filament-jobs-monitor",
+                "role": "Upstream queue telemetry dependency used by Diagnostics Queue Operations."
+            }
+        ],
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Diagnostics extension preview image",
                 "caption": "Diagnostics extension preview"
+            },
+            {
+                "path": "docs/assets/screenshots/queue-health-page.png",
+                "alt": "Queue Operations page with dummy queue monitor history, failed jobs, and pending jobs",
+                "caption": "Queue Operations wraps croustibat/filament-jobs-monitor telemetry in a Capell-native diagnostics page"
+            },
+            {
+                "path": "docs/assets/screenshots/diagnostics-dashboard.png",
+                "alt": "Diagnostics dashboard with dummy package and command provider data",
+                "caption": "Diagnostics dashboard for Capell operational checks"
+            },
+            {
+                "path": "docs/assets/screenshots/command-palette-page.png",
+                "alt": "Diagnostics command palette with dummy Capell operations commands",
+                "caption": "Command palette for trusted Diagnostics and capell:* operations"
             }
         ],
         "categories": ["admin", "console", "operations"]

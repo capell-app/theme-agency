@@ -12,7 +12,7 @@ Diagnostics adds operational diagnostics for cache, configuration drift, migrati
 - System health admin pages.
 - Developer tools dashboard page.
 - Permission audit report.
-- Queue health report.
+- Queue Operations report backed by [`croustibat/filament-jobs-monitor`](https://github.com/ultraviolettes/filament-jobs-monitor) queue telemetry.
 - Health widgets for cache, content, migrations, registry, setup, packages, and Tailwind.
 - Secure command palette discovery, execution, feedback, and audit logging for developer tools, system health, queue health, and trusted `capell:*` Artisan operations.
 
@@ -25,8 +25,20 @@ Keeps diagnostics in actions and data objects so admin pages can show health inf
 - Command palette actions discover providers dynamically, authorize commands, validate parameters, execute navigation or Artisan commands, and record audit runs.
 - Actions build each health report.
 - Data objects describe report rows and dashboard state.
-- FailedJob model supports queue reporting.
+- QueueMonitor, FailedJob, and PendingQueueJob models support Queue Operations reporting.
 - CommandPaletteRun model records command palette execution history.
+
+## Queue Operations
+
+Diagnostics uses [`croustibat/filament-jobs-monitor`](https://packagist.org/packages/croustibat/filament-jobs-monitor), maintained at [`ultraviolettes/filament-jobs-monitor`](https://github.com/ultraviolettes/filament-jobs-monitor), as its low-level queue monitor. The upstream package listens to Laravel queue events and writes `queue_monitors` rows; Capell owns the Diagnostics page, permissions, Capell queue discovery, retry/delete Actions, retention config, and screenshot fixtures.
+
+- Upstream navigation is disabled so operators use the Capell-native Queue Operations page.
+- `queue_monitors` is created by a guarded Diagnostics migration when the upstream table is not already installed.
+- Queue names are discovered from `capell-diagnostics.queue_monitor.queues`, package queue config paths, and the active Laravel queue connection.
+- Pending database queue jobs are shown only when the database queue driver and jobs table are active.
+- Retry, bulk retry, pending deletion, and pruning are handled by Diagnostics Actions.
+
+See [queue-operations.md](queue-operations.md) for the focused runbook and upstream credit requirements.
 
 ## Operational Notes
 
@@ -40,12 +52,16 @@ Helps operators and agencies see setup problems before they become publishing or
 ## Data And Retention
 
 - This package owns the `command_palette_runs` table for command palette audit history.
+- This package ships a guarded, upstream-compatible `queue_monitors` migration for `croustibat/filament-jobs-monitor` telemetry.
 - It reads existing Laravel and Capell state such as config, migrations, failed jobs, permissions, packages, registries, and Tailwind outputs.
 
 ## Screenshot Plan
 
 - Developer tools dashboard.
 - Health widgets on the admin dashboard.
+- Queue Operations page with dummy `queue_monitors`, failed-job, and pending-job data.
+
+![Queue Operations page](../../../public/docs/screenshots/packages/diagnostics/queue-health-page.png)
 
 ## Pitfalls
 
@@ -69,13 +85,14 @@ Helps operators and agencies see setup problems before they become publishing or
 - Contexts: `admin`, `console`
 - Requires: `capell-app/core`, `capell-app/admin`
 - Optional dependencies: None listed.
+- Queue telemetry dependency: `croustibat/filament-jobs-monitor`.
 
 ## Admin Surfaces
 
 - DiagnosticsPage (packages/diagnostics/src/Filament/Pages/DiagnosticsPage.php, slug `diagnostics`)
 - CommandPalettePage (packages/diagnostics/src/Filament/Pages/CommandPalettePage.php, slug `diagnostics/command-palette`)
 - PermissionAuditPage (packages/diagnostics/src/Filament/Pages/PermissionAuditPage.php, slug `dashboard-dashboard_reports/permission-audit`)
-- QueueHealthPage (packages/diagnostics/src/Filament/Pages/QueueHealthPage.php, slug `dashboard-dashboard_reports/queue-health`)
+- QueueHealthPage / Queue Operations (packages/diagnostics/src/Filament/Pages/QueueHealthPage.php, slug `dashboard-dashboard_reports/queue-health`)
 - SystemHealthPage (packages/diagnostics/src/Filament/Pages/SystemHealthPage.php, slug `system-health`)
 
 ## Commands
@@ -116,10 +133,13 @@ Diagnostics owns the command palette UI, server-side authorization, validation, 
 ## Migrations
 
 - `create_command_palette_runs_table`: stores command id, label, type, user, parameters, status, output, exit code, and executed timestamps.
+- `create_queue_monitors_table`: guarded upstream-compatible table for `croustibat/filament-jobs-monitor` queue telemetry.
 
 ## ERD Excerpt
 
 `command_palette_runs` belongs to an optional user record and records each command palette execution for audit and debugging.
+
+`queue_monitors` records queue job id, name, queue, attempt, progress, start/finish timestamps, failed state, exception summary, and optional tenant id. Rows are written by `croustibat/filament-jobs-monitor` and read by Capell Diagnostics.
 
 ## Screenshot Automation
 
@@ -131,3 +151,5 @@ Deployment should read [screenshots.json](screenshots.json), install the package
 - Permission audit page.
 - Queue health page.
 - Health widgets on the admin dashboard.
+
+The committed dummy-data screenshots live under `public/docs/screenshots/packages/diagnostics`; their HTML fixture lives at `packages/diagnostics/docs/assets/screenshots/diagnostics-dummy-screens.html`.

@@ -13,12 +13,12 @@ return new class extends Migration
         Schema::create('email_suppressions', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('site_id')->nullable()->constrained('sites')->nullOnDelete();
-            $table->string('site_scope_key')->default('global')->index();
+            $table->string('site_scope_key', 128)->default('global')->index();
             $table->string('email')->index();
             $table->string('normalized_email')->index();
             $table->string('email_hash', 64)->index();
-            $table->string('reason')->index();
-            $table->string('source')->default('manual')->index();
+            $table->string('reason', 64)->index();
+            $table->string('source', 64)->default('manual')->index();
             $table->text('notes')->nullable();
             $table->timestamp('suppressed_at')->nullable();
             $table->timestamp('released_at')->nullable();

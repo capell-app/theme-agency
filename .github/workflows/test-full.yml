@@ -177,4 +177,97 @@ jobs:
           fi
 
       - name: Execute full test suite
-        run: composer run test:all:ci
+        id: full-suite
+        continue-on-error: true
+        shell: bash
+        env:
+          NO_COLOR: '1'
+        run: |
+          set +e
+          composer run test:all:ci 2>&1 | tee full-test-output.txt
+          test_exit_code=${PIPESTATUS[0]}
+          echo "exit_code=${test_exit_code}" >> "$GITHUB_OUTPUT"
+          exit "${test_exit_code}"
+
+      - name: Parse engineering metrics
+        id: engineering-metrics
+        if: ${{ steps.full-suite.outputs.exit_code == '0' && matrix.php == '8.4' && matrix.laravel == '12.*' && matrix.stability == 'prefer-stable' && matrix.db == 'mysql' }}
+        run: |
+          php <<'PHP'
+          <?php
+
+          declare(strict_types=1);
+
+          $output = file_get_contents('full-test-output.txt');
+
+          if ($output === false) {
+              throw new RuntimeException('Unable to read full-test-output.txt.');
+          }
+
+          $patterns = [
+              '/Tests:\s*([0-9][0-9,]*)\s*,\s*Assertions:\s*([0-9][0-9,]*)/i',
+              '/Tests:\s*([0-9][0-9,]*)\s*passed\s*\(\s*([0-9][0-9,]*)\s+assertions?\s*\)/i',
+          ];
+
+          $tests = null;
+          $assertions = null;
+
+          foreach ($patterns as $pattern) {
+              if (preg_match_all($pattern, $output, $matches, PREG_SET_ORDER) === 0) {
+                  continue;
+              }
+
+              $lastMatch = $matches[count($matches) - 1];
+
+              $tests = (int) str_replace(',', '', $lastMatch[1]);
+              $assertions = (int) str_replace(',', '', $lastMatch[2]);
+
+              break;
+          }
+
+          if ($tests === null || $assertions === null) {
+              throw new RuntimeException('Unable to parse final test and assertion counts from Pest output.');
+          }
+
+          file_put_contents(
+              getenv('GITHUB_OUTPUT'),
+              sprintf("tests=%d\nassertions=%d\n", $tests, $assertions),
+              FILE_APPEND,
+          );
+
+          fwrite(STDOUT, sprintf("Parsed engineering metrics: %d tests, %d assertions.\n", $tests, $assertions));
+          PHP
+
+      - name: Send engineering metrics dispatch
+        if: ${{ steps.engineering-metrics.outcome == 'success' }}
+        env:
+          ENGINEERING_METRICS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        with:
+          github-token: ${{ secrets.ACCESS_TOKEN }}
+          script: |
+            if (!process.env.ENGINEERING_METRICS_TOKEN) {
+              core.setFailed('Missing ACCESS_TOKEN secret.');
+              return;
+            }
+
+            const client_payload = {
+              source: 'capell-packages',
+              tests: Number('${{ steps.engineering-metrics.outputs.tests }}'),
+              assertions: Number('${{ steps.engineering-metrics.outputs.assertions }}'),
+              run_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              sha: context.sha,
+              phpstan_level: 6,
+            };
+
+            await github.rest.repos.createDispatchEvent({
+              owner: 'capell-app',
+              repo: 'capell-app',
+              event_type: 'engineering-metrics',
+              client_payload,
+            });
+            core.info(`Dispatched engineering-metrics payload: ${JSON.stringify(client_payload)}`);
+
+      - name: Fail job if full suite failed
+        if: ${{ steps.full-suite.outputs.exit_code != '0' }}
+        run: exit 1

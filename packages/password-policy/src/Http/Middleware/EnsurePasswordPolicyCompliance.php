@@ -7,6 +7,7 @@ namespace Capell\PasswordPolicy\Http\Middleware;
 use Capell\PasswordPolicy\Actions\EvaluatePasswordPolicyAction;
 use Capell\PasswordPolicy\Filament\Pages\ForcedPasswordChangePage;
 use Closure;
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,15 +26,20 @@ class EnsurePasswordPolicyCompliance
             return $next($request);
         }
 
-        return redirect(ForcedPasswordChangePage::getUrl());
+        return redirect(ForcedPasswordChangePage::getUrl(panel: Filament::getCurrentPanel()?->getId()));
     }
 
     private function isAllowedRoute(Request $request): bool
     {
-        if ($request->is('admin/password-policy/change-password')) {
+        $changePasswordPath = parse_url(
+            ForcedPasswordChangePage::getUrl(panel: Filament::getCurrentPanel()?->getId()),
+            PHP_URL_PATH,
+        );
+
+        if (is_string($changePasswordPath) && $request->is(ltrim($changePasswordPath, '/'))) {
             return true;
         }
 
-        return $request->routeIs('filament.admin.auth.logout');
+        return $request->routeIs('filament.*.auth.logout');
     }
 }

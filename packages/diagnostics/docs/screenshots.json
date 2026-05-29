@@ -4,6 +4,14 @@
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
     "outputDirectory": "public/docs/screenshots/packages/diagnostics",
+    "dummyDataFixture": "packages/diagnostics/docs/assets/screenshots/diagnostics-dummy-screens.html",
+    "credits": [
+        {
+            "name": "croustibat/filament-jobs-monitor",
+            "url": "https://github.com/ultraviolettes/filament-jobs-monitor",
+            "usage": "Queue Operations history screenshots show Capell's admin wrapper around upstream queue monitor telemetry."
+        }
+    ],
     "entries": [
         {
             "id": "diagnostics-dashboard",
@@ -13,8 +21,9 @@
             "targetType": "admin-surface",
             "target": "DiagnosticsPage",
             "required": true,
-            "notes": "Capture as a super admin or a user with diagnostics access. The page depends on registered makers and registry inspector data from the installed host app.",
+            "notes": "Capture as a super admin or a user with diagnostics access. The committed fixture uses dummy package and command-provider data; live captures depend on registered makers and registry inspector data from the installed host app.",
             "screenshotPath": "public/docs/screenshots/packages/diagnostics/diagnostics-dashboard.png",
+            "darkScreenshotPath": "public/docs/screenshots/packages/diagnostics/diagnostics-dashboard-dark.png",
             "useCase": "A developer inspects package maker safety, registered configurators, components, and blocks from the diagnostics dashboard."
         },
         {
@@ -25,8 +34,9 @@
             "targetType": "admin-surface",
             "target": "DiagnosticsPage",
             "required": true,
-            "notes": "Capture the main admin dashboard or System Health dashboard after diagnostics widgets register. Some widgets show richer output only when the host app has package, migration, cache, Tailwind, or content graph state to report.",
+            "notes": "Capture the main admin dashboard or System Health dashboard after diagnostics widgets register. The committed fixture uses dummy package, queue, and operations data; live widgets show richer output only when the host app has package, migration, cache, Tailwind, or content graph state to report.",
             "screenshotPath": "public/docs/screenshots/packages/diagnostics/health-widgets-on-the-admin-dashboard.png",
+            "darkScreenshotPath": "public/docs/screenshots/packages/diagnostics/health-widgets-on-the-admin-dashboard-dark.png",
             "useCase": "An operator checks the installed site's health widgets before investigating a deployment or publishing issue."
         },
         {
@@ -39,6 +49,7 @@
             "required": true,
             "notes": "Capture as a super admin or diagnostics user. Select a safe navigation command if the runner can preserve selected-command state; avoid executing destructive capell:* commands during screenshot capture.",
             "screenshotPath": "public/docs/screenshots/packages/diagnostics/command-palette-page.png",
+            "darkScreenshotPath": "public/docs/screenshots/packages/diagnostics/command-palette-page-dark.png",
             "useCase": "A developer searches trusted diagnostics and capell:* commands, reviews required parameters, and sees confirmation state before execution."
         },
         {
@@ -51,6 +62,7 @@
             "required": true,
             "notes": "Requires a super admin role and capell.dashboard.system_health_enabled=true. Widget detail depends on host setup, migration, package, registry, content graph, cache, config, and Tailwind state.",
             "screenshotPath": "public/docs/screenshots/packages/diagnostics/system-health-page.png",
+            "darkScreenshotPath": "public/docs/screenshots/packages/diagnostics/system-health-page-dark.png",
             "useCase": "A super admin reviews system health panels before changing package setup or publishing configuration."
         },
         {
@@ -63,19 +75,21 @@
             "required": true,
             "notes": "Requires a user with the viewPermissionAuditPage diagnostics permission and registered permissions/roles in the host app.",
             "screenshotPath": "public/docs/screenshots/packages/diagnostics/permission-audit-page.png",
+            "darkScreenshotPath": "public/docs/screenshots/packages/diagnostics/permission-audit-page-dark.png",
             "useCase": "An administrator audits registered permissions and role coverage after installing or removing packages."
         },
         {
             "id": "queue-health-page",
-            "title": "Queue health page.",
+            "title": "Queue Operations page.",
             "package": "diagnostics",
             "surface": "admin",
             "targetType": "admin-page",
             "target": "QueueHealthPage",
             "required": true,
-            "notes": "Capture with at least one failed job row when possible; an empty queue table is valid but less useful for documentation.",
+            "notes": "Capture with dummy queue monitor history, failed job rows, and database pending jobs. This page credits croustibat/filament-jobs-monitor as the upstream telemetry source while showing the Capell-owned operations UX.",
             "screenshotPath": "public/docs/screenshots/packages/diagnostics/queue-health-page.png",
-            "useCase": "An operator reviews failed job summaries and queue health before retrying or debugging background work."
+            "darkScreenshotPath": "public/docs/screenshots/packages/diagnostics/queue-health-page-dark.png",
+            "useCase": "An operator reviews queue monitor history, failed jobs, pending jobs, and retry/delete controls before debugging background work."
         }
     ]
 }

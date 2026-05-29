@@ -48,6 +48,10 @@ it('moves modern block interactions out of blade and into the frontend runtime',
         ->toContain('data-billing-toggle')
         ->toContain('data-carousel-direction')
         ->toContain('data-carousel-slide')
+        ->toContain('data-theme-pathways')
+        ->toContain('data-pathway-panel')
+        ->toContain('data-theme-spotlight')
+        ->toContain('data-spotlight-tab')
         ->and($blocksCss)->toContain('@keyframes faqFadeIn')
         ->and($faq)->not->toContain('<style')
         ->and($faq)->not->toContain('<script')
@@ -160,4 +164,22 @@ it('does not own premium demo kit homepage section styling', function (): void {
     $themeCss = file_get_contents(dirname(__DIR__, 2) . '/resources/css/theme/theme.css');
 
     expect($themeCss)->not->toContain('capell-block-homepage-section');
+});
+
+it('delegates shared interactive listing variants from child themes to foundation', function (): void {
+    $basePath = dirname(__DIR__, 3);
+
+    $views = [
+        $basePath . '/theme-agency/resources/views/sections/content-listing.blade.php',
+        $basePath . '/theme-corporate/resources/views/sections/content-listing.blade.php',
+        $basePath . '/theme-commerce/resources/views/sections/collections.blade.php',
+        $basePath . '/theme-healthcare/resources/views/sections/blog-teaser.blade.php',
+        $basePath . '/theme-saas/resources/views/sections/content-listing.blade.php',
+    ];
+
+    foreach ($views as $view) {
+        expect(file_get_contents($view))
+            ->toContain("'gallery', 'pathways', 'spotlight'")
+            ->toContain('capell-foundation-theme::theme.sections.content-listing');
+    }
 });

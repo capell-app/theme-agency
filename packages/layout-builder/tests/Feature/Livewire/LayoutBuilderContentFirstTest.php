@@ -10,21 +10,37 @@ use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Layout;
 use Capell\Core\Models\Page;
+use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
+use Capell\Core\Models\SiteDomain;
 use Capell\Core\Models\Translation;
+use Capell\Frontend\Contracts\AdminAccessCheckerInterface;
+use Capell\FrontendAuthoring\Http\Controllers\EditRegionController;
+use Capell\FrontendAuthoring\Support\EditableRegionSigner;
+use Capell\FrontendAuthoring\Support\EditorSurfaceRegistry;
+use Capell\FrontendAuthoring\Support\EditorSurfaces\FieldEditorSurface;
+use Capell\HtmlCache\Models\CachedModelUrl;
+use Capell\HtmlCache\Support\Cache\HtmlCachePathResolver;
+use Capell\LayoutBuilder\Actions\BuildLayoutBuilderTreeAction;
 use Capell\LayoutBuilder\Data\AdminBlockPreviewData;
 use Capell\LayoutBuilder\Livewire\Filament\LayoutBuilder;
 use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Models\WidgetAsset;
+use Capell\LayoutBuilder\Support\FrontendAuthoring\LayoutBuilderEditableRegionContributor;
+use Capell\LayoutBuilder\Support\FrontendAuthoring\LayoutBuilderEditorSurface;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema as SchemaFacade;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Spatie\Permission\Models\Permission;
 
@@ -38,15 +54,19 @@ afterEach(function (): void {
     SchemaFacade::dropIfExists('layout_builder_non_publishable_assets');
 });
 
-it('uses the content first editor mode by default from the package namespace', function (): void {
+it('renders the visual layout builder by default from the package namespace', function (): void {
     $layout = Layout::factory()->create(['containers' => [
         'main' => ['widgets' => []],
     ]]);
 
     Livewire::test(LayoutBuilder::class, ['layout' => $layout])
         ->assertSet('editorMode', 'content_first')
-        ->assertSee(__('capell-layout-builder::generic.content_first_editor'))
-        ->assertSee(__('capell-layout-builder::message.content_inventory_empty'));
+        ->assertSee(__('capell-layout-builder::heading.layout_structure'))
+        ->assertDontSee('Inspector')
+        ->assertSee(__('capell-layout-builder::message.preview_status_current'))
+        ->assertSee(__('capell-layout-builder::message.container_empty'))
+        ->assertSeeHtml('data-capell-layout-builder-admin-preview="true"')
+        ->assertSeeHtml('capell-layout-builder:request-page-state');
 });
 
 it('resolves lazy mount scalar identifiers into builder models', function (): void {
@@ -70,6 +90,267 @@ it('resolves lazy mount scalar identifiers into builder models', function (): vo
         ->assertSet('editorMode', 'content_first');
 });
 
+it('selects the requested block when mounted from frontend authoring', function (): void {
+    $site = Site::factory()->create();
+    $firstBlock = Widget::factory()->create(['key' => 'hero', 'name' => 'Hero banner']);
+    $secondBlock = Widget::factory()->create(['key' => 'proof', 'name' => 'Proof block']);
+    $layout = Layout::factory()->site($site)->create(['containers' => [
+        'main' => ['widgets' => [
+            ['widget_key' => $firstBlock->key, 'occurrence' => 1],
+            ['widget_key' => $secondBlock->key, 'occurrence' => 1],
+        ]],
+    ]]);
+    $page = Page::factory()->for($site)->create([
+        'layout_id' => $layout->getKey(),
+    ]);
+
+    $component = Livewire::test(LayoutBuilder::class, [
+        'siteId' => $site->getKey(),
+        'layoutId' => $layout->getKey(),
+        'pageId' => $page->getKey(),
+        'pageClass' => Page::class,
+        'initialContainerKey' => 'main',
+        'initialBlockIndex' => 1,
+    ])
+        ->assertSet('selectedContainerKey', 'main')
+        ->assertSet('selectedBlockIndex', 1);
+
+    expect($component->instance()->selectedBlock()?->name)->toBe('Proof block');
+});
+
+it('dispatches frontend authoring dirty and saved lifecycle events', function (): void {
+    $layout = Layout::factory()->create(['containers' => [
+        'main' => ['widgets' => []],
+    ]]);
+
+    Livewire::test(LayoutBuilder::class, ['layout' => $layout])
+        ->call('layoutUpdated')
+        ->assertDispatched('capell-layout-builder-authoring-dirty')
+        ->call('saveLayout')
+        ->assertDispatched('capell-layout-builder-authoring-saved');
+});
+
+it('clears cached pages affected by frontend authoring block edits', function (): void {
+    Storage::fake('page_cache');
+    config(['capell-admin.auto_refresh_cache' => false]);
+
+    $language = Language::factory()->create();
+    $site = Site::factory()->create(['language_id' => $language->getKey()]);
+    $siteDomain = SiteDomain::factory()
+        ->for($site)
+        ->for($language)
+        ->create([
+            'scheme' => 'https',
+            'domain' => 'example.test',
+            'path' => '/',
+            'status' => true,
+        ]);
+    $block = Widget::factory()->create(['key' => 'hero', 'name' => 'Hero banner']);
+    $layout = Layout::factory()->site($site)->create(['containers' => [
+        'main' => ['widgets' => [
+            ['widget_key' => $block->key, 'occurrence' => 1],
+        ]],
+    ]]);
+    $page = Page::factory()->for($site)->create([
+        'layout_id' => $layout->getKey(),
+    ]);
+
+    $pathResolver = resolve(HtmlCachePathResolver::class);
+    $urls = [
+        'https://example.test/page-using-hero',
+        'https://example.test/another-page-using-hero',
+    ];
+
+    foreach ($urls as $url) {
+        $cachePath = $pathResolver->pathForUrl(parse_url($url, PHP_URL_PATH) ?: '/', $siteDomain);
+
+        Storage::disk('page_cache')->put($cachePath, 'stale cached html');
+
+        CachedModelUrl::query()->create([
+            'cacheable_type' => $block->getMorphClass(),
+            'cacheable_id' => $block->getKey(),
+            'url' => $url,
+            'url_hash' => CachedModelUrl::hashUrl($url),
+            'site_id' => $site->getKey(),
+            'site_domain_id' => $siteDomain->getKey(),
+            'language_id' => $language->getKey(),
+            'path' => parse_url($url, PHP_URL_PATH) ?: '/',
+            'cached_at' => now(),
+        ]);
+    }
+
+    $imageUrl = 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=720&q=75';
+
+    Livewire::test(LayoutBuilder::class, [
+        'siteId' => $site->getKey(),
+        'layoutId' => $layout->getKey(),
+        'pageId' => $page->getKey(),
+        'pageClass' => Page::class,
+        'initialContainerKey' => 'main',
+        'initialBlockIndex' => 0,
+    ])
+        ->mountAction('editBlock', arguments: [
+            'containerKey' => 'main',
+            'blockIndex' => 0,
+        ])
+        ->assertSchemaComponentExists('meta.image_source.type')
+        ->assertSchemaComponentExists('meta.image_source.url')
+        ->setActionData([
+            ...$block->attributesToArray(),
+            'name' => 'Updated hero banner',
+            'meta' => [
+                ...(array) $block->meta,
+                'image_source' => [
+                    'type' => 'url',
+                    'url' => $imageUrl,
+                ],
+            ],
+        ])
+        ->callMountedAction([
+            'containerKey' => 'main',
+            'blockIndex' => 0,
+        ])
+        ->assertHasNoActionErrors()
+        ->assertDispatched('capell-layout-builder-authoring-saved');
+
+    expect($block->fresh()->meta['image_source']['url'] ?? null)->toBe($imageUrl);
+
+    foreach ($urls as $url) {
+        $cachePath = $pathResolver->pathForUrl(parse_url($url, PHP_URL_PATH) ?: '/', $siteDomain);
+
+        expect(Storage::disk('page_cache')->exists($cachePath))->toBeFalse()
+            ->and(CachedModelUrl::query()->where('url', $url)->exists())->toBeFalse();
+    }
+});
+
+it('contributes frontend authoring regions for page layout blocks and block assets', function (): void {
+    $language = Language::factory()->create();
+    $site = Site::factory()->create(['language_id' => $language->getKey()]);
+    $siteDomain = SiteDomain::factory()
+        ->for($site)
+        ->for($language)
+        ->create([
+            'scheme' => 'https',
+            'domain' => 'example.test',
+            'path' => '/',
+            'status' => true,
+        ]);
+    $block = Widget::factory()->create(['key' => 'hero', 'name' => 'Hero banner']);
+    $layout = Layout::factory()->site($site)->create(['containers' => [
+        'main' => ['widgets' => [
+            ['widget_key' => $block->key, 'occurrence' => 1],
+        ]],
+    ]]);
+    $page = Page::factory()->for($site)->create([
+        'layout_id' => $layout->getKey(),
+    ]);
+    $translation = Translation::factory()
+        ->translatable($page)
+        ->language($language)
+        ->create();
+    $pageUrl = PageUrl::factory()
+        ->site($site)
+        ->language($language)
+        ->page($page)
+        ->create(['url' => '/layout-authoring']);
+
+    $page->setRelation('translation', $translation);
+    $pageUrl->setRelation('pageable', $page);
+    $pageUrl->setRelation('siteDomain', $siteDomain);
+
+    $regions = (new LayoutBuilderEditableRegionContributor)($pageUrl);
+
+    expect($regions)->toHaveCount(3)
+        ->and(collect($regions)->pluck('surface')->unique()->values()->all())->toBe(['layout-builder'])
+        ->and(collect($regions)->pluck('field')->all())->toBe(['layout', 'block', 'assets'])
+        ->and($regions[1]->selector)->toBe(LayoutBuilderEditableRegionContributor::blockSelector((int) $layout->getKey(), 'main', 0))
+        ->and($regions[1]->context)->toMatchArray([
+            'layoutId' => $layout->getKey(),
+            'siteId' => $site->getKey(),
+            'pageId' => $page->getKey(),
+            'pageClass' => Page::class,
+            'initialContainerKey' => 'main',
+            'initialBlockIndex' => 0,
+        ]);
+
+    $payload = resolve(EditableRegionSigner::class)->decode(resolve(EditableRegionSigner::class)->encode($regions[1]));
+
+    expect($payload->surface)->toBe('layout-builder')
+        ->and($payload->target)->toBe('layout.block.main.0');
+});
+
+it('renders the signed frontend authoring layout builder editor surface', function (): void {
+    view()->addNamespace('capell', __DIR__ . '/../../../../frontend-authoring/resources/views');
+
+    app()->instance(AdminAccessCheckerInterface::class, new readonly class implements AdminAccessCheckerInterface
+    {
+        public function isAdmin(Authenticatable $user): bool
+        {
+            return true;
+        }
+    });
+    $registry = new EditorSurfaceRegistry;
+    $registry->register(new FieldEditorSurface);
+    $registry->register(new LayoutBuilderEditorSurface);
+
+    app()->instance(EditorSurfaceRegistry::class, $registry);
+    if (! Route::has('capell-frontend.authoring.edit')) {
+        Route::get('authoring/regions/{payload}', EditRegionController::class)
+            ->middleware(['web', 'auth', 'signed'])
+            ->name('capell-frontend.authoring.edit');
+    }
+
+    Gate::before(fn (Authenticatable $user, string $ability): ?bool => $ability === 'frontend-authoring.edit' ? true : null);
+
+    $language = Language::factory()->create();
+    $site = Site::factory()->create(['language_id' => $language->getKey()]);
+    $siteDomain = SiteDomain::factory()
+        ->for($site)
+        ->for($language)
+        ->create([
+            'scheme' => 'https',
+            'domain' => 'example.test',
+            'path' => '/',
+            'status' => true,
+        ]);
+    $block = Widget::factory()->create(['key' => 'hero', 'name' => 'Hero banner']);
+    $layout = Layout::factory()->site($site)->create(['containers' => [
+        'main' => ['widgets' => [
+            ['widget_key' => $block->key, 'occurrence' => 1],
+        ]],
+    ]]);
+    $page = Page::factory()->for($site)->create([
+        'layout_id' => $layout->getKey(),
+    ]);
+    $translation = Translation::factory()
+        ->translatable($page)
+        ->language($language)
+        ->create();
+    $pageUrl = PageUrl::factory()
+        ->site($site)
+        ->language($language)
+        ->page($page)
+        ->create(['url' => '/layout-authoring']);
+
+    $page->setRelation('translation', $translation);
+    $pageUrl->setRelation('pageable', $page);
+    $pageUrl->setRelation('siteDomain', $siteDomain);
+
+    $regions = (new LayoutBuilderEditableRegionContributor)($pageUrl);
+    $signedUrl = resolve(EditableRegionSigner::class)->signedEditUrl($regions[1]);
+
+    $this->get($signedUrl)
+        ->assertOk()
+        ->assertSee('<html lang="en" class="fi">', false)
+        ->assertSee('capell-layout-builder-authoring')
+        ->assertSee('css/capell-layout-builder/capell-layout-builder-filament.css')
+        ->assertSee("[x-cloak='']", false)
+        ->assertSee('capell-authoring:editor-loaded')
+        ->assertSee('capell-layout-builder-authoring-saved')
+        ->assertSee('wire:snapshot', false)
+        ->assertSee('Hero banner');
+});
+
 it('resolves the saved admin block preview view without checking the filesystem', function (): void {
     $previewData = new AdminBlockPreviewData(
         view: 'capell-layout-builder::filament.layout-builder.previews.custom',
@@ -90,7 +371,7 @@ it('resolves the saved admin block preview view without checking the filesystem'
         ->toBe('capell-layout-builder::filament.layout-builder.previews.custom');
 });
 
-it('can switch from content first to advanced layout and back from the package namespace', function (): void {
+it('keeps legacy editor mode transitions available inside the visual editor from the package namespace', function (): void {
     $block = Widget::factory()->create(['key' => 'hero', 'name' => 'Hero banner']);
     $layout = Layout::factory()->create(['containers' => [
         'main' => ['widgets' => [
@@ -101,7 +382,7 @@ it('can switch from content first to advanced layout and back from the package n
     Livewire::test(LayoutBuilder::class, ['layout' => $layout])
         ->call('showAdvancedLayout', 'main:0:1:page:1:0')
         ->assertSet('editorMode', 'layout_first')
-        ->assertSee(__('capell-layout-builder::button.return_to_content'))
+        ->assertSee(__('capell-layout-builder::heading.layout_structure'))
         ->call('showContentEditor')
         ->assertSet('editorMode', 'content_first')
         ->assertSet('returnToContentItemKey', 'main:0:1:page:1:0');
@@ -119,8 +400,9 @@ it('lets content editors use content first without advanced layout access from t
 
     $component = Livewire::test(LayoutBuilder::class, ['layout' => $layout])
         ->assertSet('editorMode', 'content_first')
-        ->assertSee(__('capell-layout-builder::generic.content_first_editor'))
-        ->assertDontSee(__('capell-layout-builder::button.advanced_layout'));
+        ->assertSee(__('capell-layout-builder::heading.layout_structure'))
+        ->assertDontSee(__('capell-layout-builder::button.add_container'))
+        ->assertDontSee(__('capell-layout-builder::button.add_block'));
 
     $component
         ->call('showAdvancedLayout')
@@ -215,7 +497,7 @@ it('keeps saving non publishable builder asset records through the existing path
     expect($freshAsset instanceof LayoutBuilderNonPublishableAsset ? $freshAsset->title : null)->toBe('Updated title');
 });
 
-it('renders content first rows as custom action triggers instead of per row action schemas from the package namespace', function (): void {
+it('renders widget rows in the structure tree and wires preview widget actions from the package namespace', function (): void {
     $block = Widget::factory()->create(['key' => 'featured', 'name' => 'Featured']);
     $asset = Page::factory()->withTranslations()->create(['name' => 'Featured page']);
     WidgetAsset::factory()
@@ -230,29 +512,62 @@ it('renders content first rows as custom action triggers instead of per row acti
         ]],
     ]]);
 
+    $tree = BuildLayoutBuilderTreeAction::run(
+        containers: $layout->containers,
+        containerBlocks: ['main' => [$block]],
+        assets: ['main' => [[]]],
+        page: null,
+        selectedContainerKey: 'main',
+        selectedBlockIndex: 0,
+    );
+
+    expect($tree->containers[0]->nodeId)
+        ->toBe(hash('xxh128', 'container:main'))
+        ->and($tree->containers[0]->blocks[0]->nodeId)
+        ->toBe(hash('xxh128', 'block:main:0'));
+
     Livewire::test(LayoutBuilder::class, ['layout' => $layout])
-        ->assertSee(__('capell-layout-builder::form.search_content_inventory'))
-        ->assertSee(__('capell-layout-builder::message.content_inventory_search_empty'))
-        ->assertSee(__('capell-layout-builder::message.content_inventory_search_hint'))
-        ->assertSeeHtml('data-layout-content-search-input')
-        ->assertSeeHtml('data-layout-content-search-empty')
-        ->assertSeeHtml('data-layout-content-search=')
-        ->assertSeeHtml('data-layout-content-source-field=')
-        ->assertSeeHtml('data-layout-content-action="editBlockAsset"')
+        ->assertSee(__('capell-layout-builder::form.search_layout_tree'))
+        ->assertSee('Featured')
+        ->assertSeeHtml('data-layout-builder-tree-search')
+        ->assertSeeHtml('data-clb-preview-node')
+        ->assertSeeHtml('previewBlockActions')
+        ->assertSeeHtml('runPreviewAction')
+        ->assertSeeHtml('editBlock')
+        ->assertSeeHtml('duplicateBlock')
+        ->assertSeeHtml('removeBlock')
+        ->assertDontSeeHtml('visual-inspector')
+        ->call('selectBlock', 'main', 0)
+        ->assertSet('selectedContainerKey', 'main')
+        ->assertSet('selectedBlockIndex', 0)
+        ->assertSee(__('capell-layout-builder::button.edit_block'))
         ->assertSeeHtml('mountAction')
-        ->assertSeeHtml('wire:key="layout-content-group-')
-        ->assertSeeHtml('wire:key="layout-content-item-');
+        ->assertDontSeeHtml('data-layout-content-action="editBlockAsset"');
 
-    $contentFirstView = file_get_contents(__DIR__ . '/../../../resources/views/livewire/filament/layout-builder/content-first.blade.php');
-    $assetRowView = file_get_contents(__DIR__ . '/../../../resources/views/components/filament/layout-builder/asset.blade.php');
+    Livewire::test(LayoutBuilder::class, ['layout' => $layout])
+        ->set('visualPreviewNodeMap', [])
+        ->call('selectPreviewNode', hash('xxh128', 'block:main:0'))
+        ->assertSet('selectedContainerKey', 'main')
+        ->assertSet('selectedBlockIndex', 0);
 
-    expect($contentFirstView)
+    $treeView = file_get_contents(__DIR__ . '/../../../resources/views/livewire/filament/layout-builder/visual-tree.blade.php');
+    $editorView = file_get_contents(__DIR__ . '/../../../resources/views/livewire/filament/layout-builder/visual-editor.blade.php');
+
+    expect($treeView)
         ->not->toContain('$this->editBlockAssetAction')
-        ->and($assetRowView)
-        ->not->toContain('$this->editBlockAssetAction');
+        ->and($editorView)
+        ->not->toContain('visual-inspector')
+        ->toContain('mountAction(actionName, args)')
+        ->toContain("node.setAttribute('role', 'button')")
+        ->toContain("node.setAttribute('aria-label', label)")
+        ->toContain("['Enter', ' '].includes(event.key)")
+        ->toContain('aria-haspopup="menu"')
+        ->toContain('aria-expanded="false"')
+        ->toContain('role="menu"')
+        ->toContain('role="menuitem"');
 });
 
-it('renders block copy source rows with an edit action from the package namespace', function (): void {
+it('renders block copy in the visual preview from the package namespace', function (): void {
     $language = Language::factory()->create();
     $block = Widget::factory()->create(['key' => 'hero', 'name' => 'Hero banner']);
     $asset = Page::factory()->withTranslations()->create(['name' => 'Featured page']);
@@ -276,12 +591,13 @@ it('renders block copy source rows with an edit action from the package namespac
         ]],
     ]]);
 
-    Livewire::test(LayoutBuilder::class, ['layout' => $layout])
-        ->assertSee(__('capell-layout-builder::generic.block_content_sources'))
-        ->assertSee(__('capell-layout-builder::generic.rendered_text'))
+    $component = Livewire::test(LayoutBuilder::class, ['layout' => $layout])
         ->assertSee('Every section can be rebuilt in the layout builder')
-        ->assertSee(__('capell-layout-builder::button.edit_block_copy'))
-        ->assertSeeHtml('data-layout-content-action="editBlock"');
+        ->assertSeeHtml('data-clb-preview-node-type="block"');
+
+    expect($component->get('visualPreviewHtml'))
+        ->toContain('Every section can be rebuilt in the layout builder')
+        ->toContain('Widget-owned support copy.');
 });
 
 it('sends layout only editors straight to the advanced layout editor from the package namespace', function (): void {
@@ -297,7 +613,7 @@ it('sends layout only editors straight to the advanced layout editor from the pa
     Livewire::test(LayoutBuilder::class, ['layout' => $layout])
         ->assertSet('editorMode', 'layout_first')
         ->assertSee(__('capell-layout-builder::heading.layout_record', ['name' => $layout->name]))
-        ->assertDontSee(__('capell-layout-builder::generic.content_first_editor'));
+        ->assertSee(__('capell-layout-builder::heading.layout_structure'));
 });
 
 it('moves responsive layout mutations through undo and redo stacks from the package namespace', function (): void {

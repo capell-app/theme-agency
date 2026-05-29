@@ -12,6 +12,7 @@ use Capell\Admin\Support\AdminSurfaceLookup;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Layout;
 use Capell\Core\Models\Site;
+use Capell\HtmlCache\Actions\ClearCachedUrlsForModelAction;
 use Capell\LayoutBuilder\Enums\ConfiguratorTypeEnum;
 use Capell\LayoutBuilder\Exceptions\MissingBlockAssetException;
 use Capell\LayoutBuilder\Filament\Resources\Pages\Tables\PageSelectionTable;
@@ -978,6 +979,7 @@ final class LayoutBuilderActionFactory
             $this->livewire->dispatch('workspace-changed', workspaceId: $draftableNewAssetWorkspace->id);
 
             $action->success();
+            $this->notifyFrontendAuthoringSaved('pending_approval');
 
             return;
         }
@@ -1288,6 +1290,7 @@ final class LayoutBuilderActionFactory
         $livewire->layoutUpdated();
 
         $action->success();
+        $this->notifyFrontendAuthoringSaved();
     }
 
     /**
@@ -1627,5 +1630,27 @@ final class LayoutBuilderActionFactory
         $configurator->saveRelationships();
 
         $record->update($data);
+
+        $this->clearCachedPagesForWidget($record);
+        $this->notifyFrontendAuthoringSaved();
+    }
+
+    private function clearCachedPagesForWidget(Widget $record): void
+    {
+        $actionClass = ClearCachedUrlsForModelAction::class;
+
+        if (! class_exists($actionClass)) {
+            return;
+        }
+
+        $actionClass::run(
+            $record,
+            refresh: config('capell-admin.auto_refresh_cache') === true,
+        );
+    }
+
+    private function notifyFrontendAuthoringSaved(string $status = 'published'): void
+    {
+        $this->livewire->dispatch('capell-layout-builder-authoring-saved', status: $status, redirectUrl: null);
     }
 }

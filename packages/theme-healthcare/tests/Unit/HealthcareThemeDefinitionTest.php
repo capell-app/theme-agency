@@ -206,6 +206,9 @@ it('renders public healthcare markup without forbidden package or authoring toke
 
     expect($html)
         ->toContain('Aster Clinic')
+        ->toContain('Clinical trust')
+        ->toContain('Safety review')
+        ->toContain('Escalation route')
         ->not->toContain('data-capell-theme')
         ->not->toContain('capell-theme')
         ->not->toContain('capell-app/theme-healthcare')
@@ -250,7 +253,7 @@ it('renders standard feature and content listing sections through healthcare reg
                 heading: 'Patient resources',
                 summary: 'Standard content listing data renders through the healthcare resource view.',
                 items: [
-                    ['title' => 'Referral checklist', 'summary' => 'Prepare for your first appointment.', 'url' => '/resources/referral-checklist'],
+                    ['title' => 'Referral checklist', 'summary' => 'Prepare for your first appointment.', 'url' => '/resources/referral-checklist', 'imageUrl' => '/images/referral.jpg'],
                 ],
             ),
         ],
@@ -261,8 +264,11 @@ it('renders standard feature and content listing sections through healthcare reg
     expect($html)
         ->toContain('Service access')
         ->toContain('Rapid GP')
+        ->toContain('Care pathway')
         ->toContain('Patient resources')
         ->toContain('Referral checklist')
+        ->toContain('/images/referral.jpg')
+        ->toContain('Clinically reviewed')
         ->not->toContain('model_id')
         ->not->toContain('field_path');
 });
@@ -352,8 +358,8 @@ it('passes optional Blog availability through the registered blog teaser rendere
         ->toContain($expectedMarkup)
         ->not->toContain($missingMarkup);
 })->with([
-    'blog installed' => [true, 'href="/resources/first-consultation"', 'healthcare-resource-card rounded-xl border border-stone-200 bg-white p-6"'],
-    'blog not installed' => [false, 'healthcare-resource-card rounded-xl border border-stone-200 bg-white p-6"', 'href="/resources/first-consultation"'],
+    'blog installed' => [true, 'href="/resources/first-consultation"', '<article'],
+    'blog not installed' => [false, 'healthcare-resource-card', 'href="/resources/first-consultation"'],
 ]);
 
 it('renders optional healthcare section views without database queries', function (): void {

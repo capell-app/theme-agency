@@ -11,7 +11,6 @@ use Capell\PublishingStudio\Filament\Resources\Pages\Actions\SaveAsDraftFormActi
 use Capell\PublishingStudio\Filament\Widgets\PageAlertsWidget;
 use Capell\PublishingStudio\Livewire\PageApprovalStatus;
 use Filament\Actions\Action;
-use Filament\Widgets\WidgetConfiguration;
 
 class PublishingStudioPageEditExtender implements PageEditExtender
 {
@@ -29,8 +28,8 @@ class PublishingStudioPageEditExtender implements PageEditExtender
     public function getHeaderWidgets(): array
     {
         return [
-            new WidgetConfiguration(PageAlertsWidget::class, ['record' => null]),
-            new WidgetConfiguration(PageApprovalStatus::class, ['record' => null]),
+            PageAlertsWidget::class,
+            PageApprovalStatus::class,
         ];
     }
 }

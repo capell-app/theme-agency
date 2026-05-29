@@ -6,11 +6,12 @@ Start at the [package README](../README.md) when deciding whether to install thi
 
 ## Guides
 
-| Doc                                                             | Use it for                                                                         |
-| --------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| [Command Palette](command-palette.md)                           | Focused package workflow, setup, troubleshooting, or implementation details.       |
-| [Credits And Acknowledgements](credits-and-acknowledgements.md) | Upstream services, dependencies, and acknowledgements.                             |
-| [Overview](overview.md)                                         | Package boundary, runtime surfaces, install notes, and first troubleshooting path. |
+| Doc                                                             | Use it for                                                                           |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| [Command Palette](command-palette.md)                           | Focused package workflow, setup, troubleshooting, or implementation details.         |
+| [Credits And Acknowledgements](credits-and-acknowledgements.md) | Upstream services, dependencies, and acknowledgements.                               |
+| [Overview](overview.md)                                         | Package boundary, runtime surfaces, install notes, and first troubleshooting path.   |
+| [Queue Operations](queue-operations.md)                         | Capell queue telemetry, failed jobs, pending jobs, screenshots, and upstream credit. |
 
 ## Read Next
 

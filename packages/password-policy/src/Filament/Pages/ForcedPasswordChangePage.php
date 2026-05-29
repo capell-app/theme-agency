@@ -7,6 +7,7 @@ namespace Capell\PasswordPolicy\Filament\Pages;
 use BackedEnum;
 use Capell\PasswordPolicy\Actions\UpdatePasswordAction;
 use Capell\PasswordPolicy\Data\PasswordChangeData;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -102,6 +103,8 @@ class ForcedPasswordChangePage extends Page implements HasForms
             ->title(__('capell-password-policy::password_change.updated'))
             ->send();
 
-        return redirect('/admin');
+        $panelPath = Filament::getCurrentPanel()?->getPath() ?? 'admin';
+
+        return redirect('/' . trim($panelPath, '/'));
     }
 }

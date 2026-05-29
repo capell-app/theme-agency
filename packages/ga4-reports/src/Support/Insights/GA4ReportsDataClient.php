@@ -16,7 +16,7 @@ use JsonException;
 
 final class GA4ReportsDataClient implements GA4ReportsDataClientInterface
 {
-    private const string SCOPE = 'https://www.googleapis.com/auth/insights.readonly';
+    private const string SCOPE = 'https://www.googleapis.com/auth/analytics.readonly';
 
     private const int PAGE_METRIC_PAGE_SIZE = 250;
 
@@ -178,7 +178,7 @@ final class GA4ReportsDataClient implements GA4ReportsDataClientInterface
 
         $response = Http::withToken($accessToken)
             ->acceptJson()
-            ->post('https://insightsdata.googleapis.com/v1beta/properties/' . $window->propertyId . ':runReport', $payload);
+            ->post('https://analyticsdata.googleapis.com/v1beta/properties/' . $window->propertyId . ':runReport', $payload);
 
         if (! $response->successful()) {
             throw new GA4ReportsApiException('GA4 Reports Data API request failed with HTTP status ' . $response->status() . '.');

@@ -1,9 +1,285 @@
-<section class="theme-section theme-section-case-studies">
-    @isset($heading)
-        <h2>{{ $heading }}</h2>
-    @endisset
+@php
+    $heading ??= $section->heading ?? null;
+    $summary ??= $section->summary ?? null;
+    $caseItems = $items ?? $section->items ?? [];
 
-    <p>
-        {{ $contentSectionsAvailable ?? false ? 'Connected case-study library' : 'Static case studies' }}
-    </p>
+    if ($caseItems === []) {
+        $caseItems = [
+            [
+                'title' => 'Premium portfolio redesign',
+                'summary' => 'Brand-forward campaign work rebuilt around proof, conversion, and credibility.',
+                'type' => __('capell-theme-portfolio::generic.featured_heading'),
+                'metric' => __('capell-theme-portfolio::generic.outcome_metric'),
+                'scope' => 'Strategy / UX / Visual system',
+                'role' => 'Lead studio',
+                'timeline' => '6 weeks',
+            ],
+            [
+                'title' => 'Product storytelling platform',
+                'summary' => 'Structured narratives and media-led landing paths for high-intent traffic.',
+                'type' => __('capell-theme-portfolio::generic.portfolio_copy'),
+                'metric' => '3.4x',
+                'scope' => 'Narrative / Design / Build',
+                'role' => 'Creative partner',
+                'timeline' => '8 weeks',
+            ],
+            [
+                'title' => 'Editorial design system',
+                'summary' => 'Content-first experiences built to keep visitors reading and converting.',
+                'type' => __('capell-theme-portfolio::generic.project_heading'),
+                'metric' => '120+',
+                'scope' => 'Content model / Components',
+                'role' => 'Systems lead',
+                'timeline' => '4 weeks',
+            ],
+        ];
+    }
+@endphp
+
+<section
+    id="case-studies"
+    class="theme-section theme-section-case-studies bg-[#070b1a] text-white"
+>
+    <div class="mx-auto max-w-6xl px-6 py-16 lg:py-20">
+        <div class="grid gap-8 lg:grid-cols-[0.76fr_1fr] lg:items-end">
+            <div>
+                <p class="text-xs font-black text-[#fb923c] uppercase">
+                    {{ __('capell-theme-portfolio::generic.case_studies_label') }}
+                </p>
+                @isset($heading)
+                    <h2
+                        class="mt-4 max-w-3xl text-4xl font-black tracking-tight"
+                    >
+                        {{ $heading }}
+                    </h2>
+                @endisset
+            </div>
+
+            <div class="grid gap-4">
+                <p class="max-w-2xl text-base leading-7 text-slate-300">
+                    {{ $summary ?? ($contentSectionsAvailable ?? false ? __('capell-theme-portfolio::generic.case_studies_connected') : __('capell-theme-portfolio::generic.case_studies_static')) }}
+                </p>
+                <div class="grid gap-3 sm:grid-cols-3">
+                    <div class="border border-white/10 bg-white/[0.06] p-4">
+                        <p class="text-xs font-black text-[#fb923c] uppercase">
+                            {{ __('capell-theme-portfolio::generic.case_scope_label') }}
+                        </p>
+                        <p class="mt-2 text-sm font-black text-white">
+                            Strategy to launch
+                        </p>
+                    </div>
+                    <div class="border border-white/10 bg-white/[0.06] p-4">
+                        <p class="text-xs font-black text-[#fb923c] uppercase">
+                            {{ __('capell-theme-portfolio::generic.case_artifacts_label') }}
+                        </p>
+                        <p class="mt-2 text-sm font-black text-white">
+                            Deck, page, story
+                        </p>
+                    </div>
+                    <div class="border border-white/10 bg-white/[0.06] p-4">
+                        <p class="text-xs font-black text-[#fb923c] uppercase">
+                            {{ __('capell-theme-portfolio::generic.case_role_label') }}
+                        </p>
+                        <p class="mt-2 text-sm font-black text-white">
+                            Studio-led
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="theme-carousel relative mt-10"
+            data-carousel="portfolio-case-studies"
+        >
+            <div
+                class="flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-4 pb-2 [&::-webkit-scrollbar]:hidden"
+                data-carousel-track
+            >
+                @foreach ($caseItems as $item)
+                    <article
+                        class="grid min-w-[82%] snap-start overflow-hidden border border-white/10 bg-white/[0.06] shadow-2xl shadow-black/20 md:min-w-[560px] lg:min-w-[640px] lg:grid-cols-[0.72fr_1fr]"
+                    >
+                        <div class="bg-[#111827] p-5">
+                            <div
+                                class="flex aspect-[4/3] flex-col justify-between border border-white/10 bg-[#030712] p-5"
+                            >
+                                <div
+                                    class="flex items-start justify-between gap-4"
+                                >
+                                    <p
+                                        class="text-xs font-black text-[#fb923c] uppercase"
+                                    >
+                                        {{ __('capell-theme-portfolio::generic.case_slide_label') }}
+                                    </p>
+                                    <p
+                                        class="font-mono text-sm font-black text-white/45"
+                                    >
+                                        {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                                    </p>
+                                </div>
+
+                                <div class="space-y-3" aria-hidden="true">
+                                    <span
+                                        class="block h-2 w-28 bg-[#fb923c]"
+                                    ></span>
+                                    <span
+                                        class="block h-3 w-3/4 bg-white/35"
+                                    ></span>
+                                    <span
+                                        class="block h-3 w-1/2 bg-white/20"
+                                    ></span>
+                                    <span class="mt-5 grid grid-cols-3 gap-3">
+                                        <span class="h-12 bg-white/15"></span>
+                                        <span class="h-12 bg-[#1f3173]"></span>
+                                        <span class="h-12 bg-white/10"></span>
+                                    </span>
+                                </div>
+
+                                <div
+                                    class="grid grid-cols-3 gap-2 text-[0.65rem] font-black text-white/65 uppercase"
+                                >
+                                    <span>
+                                        {{ __('capell-theme-portfolio::generic.brief_label') }}
+                                    </span>
+                                    <span>
+                                        {{ __('capell-theme-portfolio::generic.build_label') }}
+                                    </span>
+                                    <span>
+                                        {{ __('capell-theme-portfolio::generic.publish_label') }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid content-between gap-6 p-5 sm:p-6">
+                            <div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span
+                                        class="bg-[#fff7ed] px-3 py-1 text-xs font-black text-[#9a3412] uppercase"
+                                    >
+                                        {{ $item['type'] ?? __('capell-theme-portfolio::generic.featured_heading') }}
+                                    </span>
+                                    <span
+                                        class="bg-[#1f3173] px-3 py-1 text-xs font-black text-white uppercase"
+                                    >
+                                        {{ __('capell-theme-portfolio::generic.outcome_label') }}
+                                        {{ $item['metric'] ?? __('capell-theme-portfolio::generic.outcome_metric') }}
+                                    </span>
+                                </div>
+
+                                <h3 class="mt-5 text-2xl font-black text-white">
+                                    {{ $item['title'] ?? $item['name'] ?? '' }}
+                                </h3>
+                                <p
+                                    class="mt-3 text-sm leading-7 text-slate-300"
+                                >
+                                    {{ $item['summary'] ?? $item['description'] ?? __('capell-theme-portfolio::generic.case_method_summary') }}
+                                </p>
+                            </div>
+
+                            <div
+                                class="grid gap-3 border-t border-white/10 pt-5 sm:grid-cols-3"
+                            >
+                                <div>
+                                    <p
+                                        class="text-xs font-black text-[#fb923c] uppercase"
+                                    >
+                                        {{ __('capell-theme-portfolio::generic.case_scope_label') }}
+                                    </p>
+                                    <p
+                                        class="mt-2 text-sm font-bold text-slate-200"
+                                    >
+                                        {{ $item['scope'] ?? __('capell-theme-portfolio::generic.case_method_label') }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p
+                                        class="text-xs font-black text-[#fb923c] uppercase"
+                                    >
+                                        {{ __('capell-theme-portfolio::generic.case_role_label') }}
+                                    </p>
+                                    <p
+                                        class="mt-2 text-sm font-bold text-slate-200"
+                                    >
+                                        {{ $item['role'] ?? 'Creative lead' }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p
+                                        class="text-xs font-black text-[#fb923c] uppercase"
+                                    >
+                                        {{ __('capell-theme-portfolio::generic.case_timeline_label') }}
+                                    </p>
+                                    <p
+                                        class="mt-2 text-sm font-bold text-slate-200"
+                                    >
+                                        {{ $item['timeline'] ?? '4-8 weeks' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                @endforeach
+            </div>
+
+            <div class="mt-5 flex gap-3">
+                <button
+                    type="button"
+                    class="theme-carousel-button border border-white/20 bg-white/10 px-4 py-2 text-xs font-black text-white uppercase"
+                    aria-label="Previous case studies"
+                    data-carousel-prev
+                >
+                    Prev
+                </button>
+                <button
+                    type="button"
+                    class="theme-carousel-button border border-white/20 bg-white/10 px-4 py-2 text-xs font-black text-white uppercase"
+                    aria-label="Next case studies"
+                    data-carousel-next
+                >
+                    Next
+                </button>
+            </div>
+        </div>
+    </div>
 </section>
+
+<script>
+    document
+        .querySelectorAll('[data-carousel="portfolio-case-studies"]')
+        .forEach((carousel) => {
+            const track = carousel.querySelector('[data-carousel-track]')
+            const prev = carousel.querySelector('[data-carousel-prev]')
+            const next = carousel.querySelector('[data-carousel-next]')
+
+            if (!track || !prev || !next) {
+                return
+            }
+
+            const step = () =>
+                Math.max(320, Math.floor(track.clientWidth * 0.82))
+
+            const updateButtons = () => {
+                const canScroll = track.scrollWidth > track.clientWidth + 1
+                prev.disabled = !canScroll || track.scrollLeft <= 2
+                next.disabled =
+                    !canScroll ||
+                    track.scrollLeft >=
+                        track.scrollWidth - track.clientWidth - 2
+
+                prev.classList.toggle('opacity-40', prev.disabled)
+                next.classList.toggle('opacity-40', next.disabled)
+            }
+
+            prev.addEventListener('click', () =>
+                track.scrollBy({ left: -step(), behavior: 'smooth' }),
+            )
+            next.addEventListener('click', () =>
+                track.scrollBy({ left: step(), behavior: 'smooth' }),
+            )
+            track.addEventListener('scroll', updateButtons, { passive: true })
+            window.addEventListener('resize', updateButtons)
+            updateButtons()
+        })
+</script>

@@ -73,7 +73,7 @@ it('maps GA4 daily and page report rows into data objects', function (): void {
 
     Http::fake([
         'https://oauth2.googleapis.com/token' => Http::response(['access_token' => 'test-token'], 200),
-        'https://insightsdata.googleapis.com/*' => Http::sequence()
+        'https://analyticsdata.googleapis.com/*' => Http::sequence()
             ->push([
                 'rows' => [[
                     'dimensionValues' => [
@@ -148,7 +148,7 @@ it('throws when the GA4 API fails', function (): void {
 
     Http::fake([
         'https://oauth2.googleapis.com/token' => Http::response(['access_token' => 'test-token'], 200),
-        'https://insightsdata.googleapis.com/*' => Http::response([], 500),
+        'https://analyticsdata.googleapis.com/*' => Http::response([], 500),
     ]);
 
     $client = new GA4ReportsDataClient([

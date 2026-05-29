@@ -5,7 +5,11 @@
 <section class="saas-comparison bg-slate-50">
     <div class="px-6">
         <div class="mx-auto max-w-3xl text-center">
-            <h2 class="mx-auto">{{ $section->heading }}</h2>
+            <h2
+                class="mx-auto max-w-2xl text-4xl font-black tracking-tight text-slate-950"
+            >
+                {{ $section->heading }}
+            </h2>
             @if ($section->summary ?? null)
                 <p class="mx-auto mt-4 max-w-2xl text-lg">
                     {{ $section->summary }}

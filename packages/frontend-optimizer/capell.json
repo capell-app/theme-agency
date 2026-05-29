@@ -50,7 +50,12 @@
         "Capell\\FrontendOptimizer\\Settings\\FrontendOptimizerSettings"
     ],
     "permissions": [],
-    "capabilities": ["frontend-optimizer", "frontend-optimizer-frontend"],
+    "capabilities": [
+        "frontend-optimizer",
+        "frontend-optimizer-frontend",
+        "frontend-assets",
+        "cache-blocking"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,

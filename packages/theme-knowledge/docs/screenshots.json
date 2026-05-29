@@ -1,9 +1,117 @@
 {
-    "screenshots": [
+    "package": "theme-knowledge",
+    "composerName": "capell-app/theme-knowledge",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "public/docs/screenshots/packages/theme-knowledge",
+    "entries": [
         {
-            "path": "docs/assets/marketplace/extension-card.jpg",
-            "alt": "Theme Knowledge extension preview image",
-            "caption": "Theme Knowledge preview"
+            "id": "theme-admin-list-showing-knowledge",
+            "title": "Theme admin list showing Knowledge.",
+            "package": "theme-knowledge",
+            "surface": "admin",
+            "targetType": "filament-resource",
+            "target": "ThemeResource:index",
+            "required": true,
+            "notes": "Capture with Foundation Theme, Layout Builder, and capell-app/theme-knowledge installed in the isolated demo harness.",
+            "useCase": "An administrator confirms the Knowledge theme is available for an editorial, research, or resource site.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-knowledge/theme-admin-list-showing-knowledge.png"
+        },
+        {
+            "id": "frontend-page-rendered-with-knowledge-theme",
+            "title": "Frontend page rendered with Knowledge theme.",
+            "package": "theme-knowledge",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-knowledge-demo",
+            "required": true,
+            "notes": "Capture a seeded resource hub with search-led hero, topic hubs, featured content, resource library, newsletter, authors, proof, and footer.",
+            "useCase": "A publisher sees how the theme turns a content archive into a searchable reader journey.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-knowledge/frontend-page-rendered-with-knowledge-theme.png"
+        },
+        {
+            "id": "knowledge-homepage-layout",
+            "title": "Knowledge homepage.",
+            "package": "theme-knowledge",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/knowledge-homepage-layout",
+            "required": true,
+            "notes": "Capture the editorial command-centre hero, search box, queue cards, proof, and topic routing.",
+            "useCase": "A resource-site buyer checks whether the first viewport feels like a serious library rather than a blog skin.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-knowledge/knowledge-homepage-layout.png"
+        },
+        {
+            "id": "knowledge-search-layout",
+            "title": "Search results and facets.",
+            "package": "theme-knowledge",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/knowledge-search-layout",
+            "required": true,
+            "notes": "Capture search results with relevance scoring, source-map indicators, facets, and no-results recovery.",
+            "useCase": "A reader can find guides, research notes, and templates without the page collapsing into a plain listing.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-knowledge/knowledge-search-layout.png"
+        },
+        {
+            "id": "knowledge-topic-hubs-layout",
+            "title": "Topic hubs.",
+            "package": "theme-knowledge",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/knowledge-topic-hubs-layout",
+            "required": true,
+            "notes": "Capture topic hub cards, guide/research/template groupings, and editorial pathway copy.",
+            "useCase": "An editorial team reviews how the theme makes deep archives browseable by subject.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-knowledge/knowledge-topic-hubs-layout.png"
+        },
+        {
+            "id": "knowledge-featured-content-layout",
+            "title": "Featured research.",
+            "package": "theme-knowledge",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/knowledge-featured-content-layout",
+            "required": true,
+            "notes": "Capture featured content with evidence labels, reading queue, author metadata, and related resources.",
+            "useCase": "A publisher checks that high-value research can be promoted without looking like a standard news card.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-knowledge/knowledge-featured-content-layout.png"
+        },
+        {
+            "id": "knowledge-newsletter-layout",
+            "title": "Research digest signup.",
+            "package": "theme-knowledge",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/knowledge-newsletter-layout",
+            "required": true,
+            "notes": "Capture newsletter CTA with digest copy, static fallback, and optional newsletter package state.",
+            "useCase": "A publisher checks how the theme turns reading intent into an owned-audience signup.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-knowledge/knowledge-newsletter-layout.png"
+        },
+        {
+            "id": "knowledge-author-bench-layout",
+            "title": "Author bench.",
+            "package": "theme-knowledge",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/knowledge-author-bench-layout",
+            "required": true,
+            "notes": "Capture editor and author cards with credibility signals and publication routes.",
+            "useCase": "A research site can prove expertise without moving into portfolio or agency territory.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-knowledge/knowledge-author-bench-layout.png"
+        },
+        {
+            "id": "theme-preview-url-output",
+            "title": "Signed admin preview route.",
+            "package": "theme-knowledge",
+            "surface": "admin",
+            "targetType": "admin-url",
+            "target": "capell.admin.theme-preview",
+            "required": true,
+            "notes": "Capture a signed preview URL generated for the seeded Knowledge theme, site, and page.",
+            "useCase": "An administrator previews a resource page with the Knowledge theme applied before publishing the theme choice.",
+            "screenshotPath": "public/docs/screenshots/packages/theme-knowledge/theme-preview-url-output.png"
         }
     ]
 }

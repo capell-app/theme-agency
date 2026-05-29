@@ -18,6 +18,7 @@ use Capell\Navigation\Providers\NavigationServiceProvider;
 use Capell\SeoSuite\Filament\Pages\AiDiscoveryPage;
 use Capell\SeoSuite\Filament\Pages\BrokenLinksPage;
 use Capell\SeoSuite\Filament\Pages\NotFoundUrlsPage;
+use Capell\SeoSuite\Filament\Pages\SearchRankingsPage;
 use Capell\SeoSuite\Filament\Pages\SeoAuditPage;
 use Capell\SeoSuite\Filament\Pages\TranslationCoveragePage;
 use Capell\SeoSuite\Providers\SeoSuiteServiceProvider;
@@ -68,11 +69,11 @@ class SeoSuiteTestCase extends AbstractTestCase
         CapellCore::forcePackageInstalled(AdminServiceProvider::$packageName);
         CapellCore::registerPackage(
             FrontendServiceProvider::$packageName,
-            path: realpath(__DIR__ . '/../../frontend'),
+            path: realpath(__DIR__ . '/../../frontend') ?: null,
         );
         CapellCore::registerPackage(
             InsightsServiceProvider::$packageName,
-            path: realpath(__DIR__ . '/../../insights'),
+            path: realpath(__DIR__ . '/../../insights') ?: null,
         );
         CapellCore::forcePackageInstalled(InsightsServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(FrontendServiceProvider::$packageName);
@@ -82,6 +83,7 @@ class SeoSuiteTestCase extends AbstractTestCase
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(NotFoundUrlsPage::class));
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(BrokenLinksPage::class));
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(SeoAuditPage::class));
+        CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(SearchRankingsPage::class));
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(AiDiscoveryPage::class));
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(TranslationCoveragePage::class));
 
@@ -89,7 +91,7 @@ class SeoSuiteTestCase extends AbstractTestCase
         // discover and include navigation's migrations in the ordered workspace.
         CapellCore::registerPackage(
             NavigationServiceProvider::$packageName,
-            path: realpath(__DIR__ . '/../../navigation'),
+            path: realpath(__DIR__ . '/../../navigation') ?: null,
         );
         CapellCore::forcePackageInstalled(NavigationServiceProvider::$packageName);
     }

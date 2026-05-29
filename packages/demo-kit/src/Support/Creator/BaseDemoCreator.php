@@ -605,7 +605,7 @@ abstract class BaseDemoCreator
                     ['label' => 'Migration planning', 'title' => 'Move from legacy CMSs', 'copy' => 'Map pages, redirects, media, structured fields, and verification work into a clear migration path.'],
                     ['label' => 'Partnerships', 'title' => 'Agency and technology work', 'copy' => 'Discuss delivery partnerships, packaged integrations, and repeatable theme or content operations.'],
                 ],
-                'cta' => ['label' => 'Use the contact form', 'href' => '#contact-form-contact-form-0'],
+                'cta' => ['label' => 'Use the contact form', 'href' => '#contact-static-form-title'],
             ],
         ];
 
@@ -741,19 +741,6 @@ abstract class BaseDemoCreator
                     ],
                     'widgets' => [
                         ['widget_key' => $demoPageContentBlock->key],
-                    ],
-                ],
-                'contact-form' => [
-                    'meta' => [
-                        'colspan' => 5,
-                        'spacing' => 'lg',
-                        'html_class' => 'capell-demo-contact-form-column',
-                    ],
-                    'widgets' => [
-                        [
-                            'widget_key' => 'contact-form',
-                            'form_handle' => 'contact',
-                        ],
                     ],
                 ],
                 'bottom-banner' => [
@@ -1325,7 +1312,7 @@ abstract class BaseDemoCreator
     }
 
     /**
-     * @param  Collection<int, Model>  $languages
+     * @param  Collection<int, Language>  $languages
      * @return Collection<int, Model>
      */
     protected function createTestimonials(Collection $languages): Collection
@@ -1387,10 +1374,6 @@ abstract class BaseDemoCreator
             $translations = [];
 
             foreach ($languages as $language) {
-                if (! $language instanceof Language) {
-                    continue;
-                }
-
                 if ($content->translations->contains('language_id', $language->id)) {
                     continue;
                 }
@@ -1411,7 +1394,7 @@ abstract class BaseDemoCreator
     }
 
     /**
-     * @param  Collection<int, Model>  $languages
+     * @param  Collection<int, Language>  $languages
      * @return Collection<int, Model>
      */
     protected function createTeamMembers(Collection $languages): Collection
@@ -1526,10 +1509,6 @@ abstract class BaseDemoCreator
             $translations = [];
 
             foreach ($languages as $language) {
-                if (! $language instanceof Language) {
-                    continue;
-                }
-
                 if ($content->translations->contains('language_id', $language->id)) {
                     continue;
                 }

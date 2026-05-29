@@ -12,6 +12,8 @@ use Illuminate\Support\HtmlString;
 
 class RenderProfileAssetRenderer
 {
+    private const string STABILITY_RESET_CSS = 'body { margin: 0; }';
+
     public function __construct(
         private readonly Factory $filesystems,
         private readonly CriticalCssSettings $criticalCssSettings,
@@ -30,7 +32,7 @@ class RenderProfileAssetRenderer
 
         if ($this->shouldInlineCriticalCss($profile)) {
             $hasInlineCriticalCss = true;
-            $html[] = '<style data-critical-css>' . $this->escapeStyleContents($this->filesystems->disk('local')->get((string) $profile->critical_css_path)) . '</style>';
+            $html[] = '<style data-critical-css>' . $this->escapeStyleContents($this->criticalCssContents($profile)) . '</style>';
         }
 
         foreach ($this->assetsFromProfile($profile) as $asset) {
@@ -97,6 +99,10 @@ class RenderProfileAssetRenderer
             return '';
         }
 
+        if ($this->shouldBlockUntilCriticalCssExists($asset, $hasInlineCriticalCss)) {
+            return sprintf('<link rel="stylesheet" href="%s">', $href);
+        }
+
         return match ($strategy) {
             AssetLoadingStrategy::Critical => $hasInlineCriticalCss ? '' : sprintf('<link rel="stylesheet" href="%s">', $href),
             AssetLoadingStrategy::Blocking => sprintf('<link rel="stylesheet" href="%s">', $href),
@@ -106,6 +112,22 @@ class RenderProfileAssetRenderer
             AssetLoadingStrategy::Interaction,
             AssetLoadingStrategy::Idle => sprintf('<link rel="stylesheet" href="%s" media="print" onload="this.media=\'all\'"><noscript><link rel="stylesheet" href="%s"></noscript>', $href, $href),
         };
+    }
+
+    /** @param array<string, mixed> $asset */
+    private function shouldBlockUntilCriticalCssExists(array $asset, bool $hasInlineCriticalCss): bool
+    {
+        if ($hasInlineCriticalCss) {
+            return false;
+        }
+
+        if (($asset['critical_eligible'] ?? false) !== true) {
+            return false;
+        }
+
+        $strategy = AssetLoadingStrategy::tryFrom((string) ($asset['loading_strategy'] ?? '')) ?? AssetLoadingStrategy::Deferred;
+
+        return $strategy === AssetLoadingStrategy::Deferred;
     }
 
     /** @param array<string, mixed> $asset */
@@ -120,13 +142,27 @@ class RenderProfileAssetRenderer
 
         return match ($strategy) {
             AssetLoadingStrategy::Blocking => sprintf('<script src="%s"></script>', $src),
-            AssetLoadingStrategy::Interaction,
-            AssetLoadingStrategy::Idle,
+            AssetLoadingStrategy::Interaction => $this->renderIdleScript($src),
+            AssetLoadingStrategy::Idle => $this->renderIdleScript($src),
             AssetLoadingStrategy::Lazy,
             AssetLoadingStrategy::Critical,
             AssetLoadingStrategy::Preload,
             AssetLoadingStrategy::Deferred => sprintf('<script type="module" defer src="%s"></script>', $src),
         };
+    }
+
+    private function renderIdleScript(string $src): string
+    {
+        $jsonSrc = json_encode($src, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+
+        if (! is_string($jsonSrc)) {
+            return '';
+        }
+
+        return sprintf(
+            '<script type="module">(()=>{const load=()=>import(%s);("requestIdleCallback"in window?window.requestIdleCallback(load,{timeout:1800}):window.setTimeout(load,900));})();</script>',
+            $jsonSrc,
+        );
     }
 
     private function escape(string $value): string
@@ -137,5 +173,29 @@ class RenderProfileAssetRenderer
     private function escapeStyleContents(string $value): string
     {
         return str_ireplace('</style', '<\\/style', $value);
+    }
+
+    private function criticalCssContents(FrontendRenderProfile $profile): string
+    {
+        return self::STABILITY_RESET_CSS . PHP_EOL . $this->sanitizeInlineCriticalCss(
+            (string) $this->filesystems->disk('local')->get((string) $profile->critical_css_path),
+        );
+    }
+
+    private function sanitizeInlineCriticalCss(string $css): string
+    {
+        $css = preg_replace('/\s*@property\s+--[^{]+\{[^}]*\}/', '', $css) ?? $css;
+
+        $css = preg_replace(
+            '/\s*\.\\\\@container,\s*\.\\\\\[container-type\\\\:inline-size\\\\\]\s*\{\s*container-type:\s*inline-size;\s*\}/',
+            '',
+            $css,
+        ) ?? $css;
+
+        return preg_replace(
+            '/\s+and\s+\(not\s+\(margin-trim:\s*inline\)\)/',
+            ' and (not (color:rgb(from red r g b)))',
+            $css,
+        ) ?? $css;
     }
 }

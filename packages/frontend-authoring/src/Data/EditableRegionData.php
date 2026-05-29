@@ -12,10 +12,15 @@ final class EditableRegionData
         public string $type,
         public string $selector,
         public string $editUrl,
+        public string $surface = 'field',
+        public ?string $target = null,
+        public ?string $description = null,
+        /** @var array<string, mixed> */
+        public array $context = [],
     ) {}
 
     /**
-     * @return array<string, string>
+     * @return array<string, mixed>
      */
     public function toArray(): array
     {
@@ -25,6 +30,10 @@ final class EditableRegionData
             'type' => $this->type,
             'selector' => $this->selector,
             'edit_url' => $this->editUrl,
+            'surface' => $this->surface,
+            'target' => $this->target,
+            'description' => $this->description,
+            'context' => $this->context,
         ];
     }
 }

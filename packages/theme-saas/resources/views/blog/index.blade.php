@@ -80,39 +80,113 @@
                     @if ($blogAvailable)
                         <a
                             href="{{ $article['url'] ?? '#' }}"
-                            class="rounded-lg border border-slate-200 bg-slate-50 p-6 transition hover:border-blue-300 hover:bg-white"
+                            class="grid gap-5 rounded-xl border border-slate-200 bg-white p-4 no-underline shadow-sm shadow-slate-950/5 transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-950/10 md:grid-cols-[10rem_minmax(0,1fr)]"
                         >
-                            <p
-                                class="text-xs font-black tracking-widest text-cyan-700 uppercase"
+                            <div
+                                class="rounded-lg border border-slate-800 bg-slate-950 p-4"
+                                aria-hidden="true"
                             >
-                                {{ $article['type'] ?? __('capell-theme-saas::generic.insight') }}
-                            </p>
-                            <h2
-                                class="mt-4 text-2xl font-black tracking-normal"
-                            >
-                                {{ $article['title'] }}
-                            </h2>
-                            <p class="mt-3 text-sm leading-6 text-slate-600">
-                                {{ $article['summary'] ?? '' }}
-                            </p>
+                                <div class="flex items-center justify-between">
+                                    <span
+                                        class="h-2 w-16 rounded-full bg-cyan-300"
+                                    ></span>
+                                    <span
+                                        class="h-2 w-8 rounded-full bg-blue-500"
+                                    ></span>
+                                </div>
+                                <div class="mt-5 space-y-2">
+                                    <span
+                                        class="block h-2 rounded-full bg-white/45"
+                                    ></span>
+                                    <span
+                                        class="block h-2 w-3/4 rounded-full bg-white/25"
+                                    ></span>
+                                </div>
+                                <div class="mt-5 grid grid-cols-3 gap-2">
+                                    <span
+                                        class="h-7 rounded-md bg-cyan-500/50"
+                                    ></span>
+                                    <span
+                                        class="h-7 rounded-md bg-blue-500/50"
+                                    ></span>
+                                    <span
+                                        class="h-7 rounded-md bg-white/10"
+                                    ></span>
+                                </div>
+                            </div>
+
+                            <div class="self-center">
+                                <p
+                                    class="text-xs font-black tracking-widest text-cyan-700 uppercase"
+                                >
+                                    {{ $article['type'] ?? __('capell-theme-saas::generic.growth_brief_label') }}
+                                </p>
+                                <h2
+                                    class="mt-3 text-2xl font-black tracking-normal"
+                                >
+                                    {{ $article['title'] }}
+                                </h2>
+                                <p
+                                    class="mt-3 max-w-2xl text-sm leading-6 text-slate-600"
+                                >
+                                    {{ $article['summary'] ?? '' }}
+                                </p>
+                            </div>
                         </a>
                     @else
                         <article
-                            class="rounded-lg border border-slate-200 bg-slate-50 p-6"
+                            class="grid gap-5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm shadow-slate-950/5 md:grid-cols-[10rem_minmax(0,1fr)]"
                         >
-                            <p
-                                class="text-xs font-black tracking-widest text-cyan-700 uppercase"
+                            <div
+                                class="rounded-lg border border-slate-800 bg-slate-950 p-4"
+                                aria-hidden="true"
                             >
-                                {{ __('capell-theme-saas::generic.resource') }}
-                            </p>
-                            <h2
-                                class="mt-4 text-2xl font-black tracking-normal"
-                            >
-                                {{ $article['title'] }}
-                            </h2>
-                            <p class="mt-3 text-sm leading-6 text-slate-600">
-                                {{ $article['summary'] ?? '' }}
-                            </p>
+                                <div class="flex items-center justify-between">
+                                    <span
+                                        class="h-2 w-16 rounded-full bg-cyan-300"
+                                    ></span>
+                                    <span
+                                        class="h-2 w-8 rounded-full bg-blue-500"
+                                    ></span>
+                                </div>
+                                <div class="mt-5 space-y-2">
+                                    <span
+                                        class="block h-2 rounded-full bg-white/45"
+                                    ></span>
+                                    <span
+                                        class="block h-2 w-3/4 rounded-full bg-white/25"
+                                    ></span>
+                                </div>
+                                <div class="mt-5 grid grid-cols-3 gap-2">
+                                    <span
+                                        class="h-7 rounded-md bg-cyan-500/50"
+                                    ></span>
+                                    <span
+                                        class="h-7 rounded-md bg-blue-500/50"
+                                    ></span>
+                                    <span
+                                        class="h-7 rounded-md bg-white/10"
+                                    ></span>
+                                </div>
+                            </div>
+
+                            <div class="self-center">
+                                <p
+                                    class="text-xs font-black tracking-widest text-cyan-700 uppercase"
+                                >
+                                    {{ __('capell-theme-saas::generic.resource_brief_label') }}
+                                </p>
+                                <h2
+                                    class="mt-3 text-2xl font-black tracking-normal"
+                                >
+                                    {{ $article['title'] }}
+                                </h2>
+                                <p
+                                    class="mt-3 max-w-2xl text-sm leading-6 text-slate-600"
+                                >
+                                    {{ $article['summary'] ?? '' }}
+                                </p>
+                            </div>
                         </article>
                     @endif
                 @endforeach

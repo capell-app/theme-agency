@@ -11,6 +11,7 @@ it('keeps every package manifest in an approved product group', function (): voi
         'collaboration' => 'Capell Collaboration',
         'commerce' => 'Capell Commerce',
         'commercial' => 'Capell Commercial',
+        'comments' => 'Capell Engagement',
         'communications' => 'Capell Communications',
         'content-product' => 'Capell Content',
         'form-builder' => 'Capell FormBuilder',
@@ -80,6 +81,9 @@ it('groups packages into the current product bundles', function (): void {
         'collaboration' => [
             'notes/capell.json',
         ],
+        'comments' => [
+            'comments/capell.json',
+        ],
         'commerce' => [
             'shopify-commerce/capell.json',
         ],
@@ -113,6 +117,11 @@ it('groups packages into the current product bundles', function (): void {
             'tags/capell.json',
             'theme-agency/capell.json',
             'theme-corporate/capell.json',
+            'theme-education/capell.json',
+            'theme-knowledge/capell.json',
+            'theme-local-services/capell.json',
+            'theme-nonprofit/capell.json',
+            'theme-portfolio/capell.json',
             'welcome-tour/capell.json',
         ],
         'growth' => [
@@ -162,6 +171,52 @@ it('removes business solutions package references', function (): void {
         ->and(file_get_contents(packageRepositoryPath('composer.local.json')))->not->toContain('theme-business-solutions')
         ->and(file_get_contents(packageRepositoryPath('README.md')))->not->toContain('theme-business-solutions')
         ->and(file_get_contents(packageRepositoryPath('docs/README.md')))->not->toContain('Theme Business Solutions');
+});
+
+it('keeps theme marketplace screenshots backed by committed assets', function (): void {
+    $missing = [];
+
+    foreach (packageManifestPayloads() as $path => $manifest) {
+        if (($manifest['kind'] ?? null) !== 'theme') {
+            continue;
+        }
+
+        $screenshots = data_get($manifest, 'marketplace.screenshots', []);
+
+        if (! is_array($screenshots) || count($screenshots) < 6) {
+            $missing[$path][] = 'Theme manifests must expose an extension card and at least five marketplace screenshots.';
+
+            continue;
+        }
+
+        foreach ($screenshots as $index => $screenshot) {
+            $assetPath = is_array($screenshot) ? ($screenshot['path'] ?? null) : null;
+
+            if (! is_string($assetPath) || $assetPath === '') {
+                $missing[$path][] = sprintf('marketplace.screenshots.%d.path is missing.', $index);
+
+                continue;
+            }
+
+            if (preg_match('/\.(jpe?g|png|svg|webp)$/i', $assetPath) !== 1) {
+                $missing[$path][] = sprintf('%s is not a supported image asset.', $assetPath);
+
+                continue;
+            }
+
+            $absolutePath = packageRepositoryPath('packages/' . dirname($path) . '/' . $assetPath);
+
+            if (! is_file($absolutePath)) {
+                $missing[$path][] = sprintf('%s does not exist.', $assetPath);
+            }
+        }
+    }
+
+    expect($missing)->toBe(
+        [],
+        'Theme marketplace screenshot paths must resolve to committed package assets: ' .
+        json_encode($missing, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
+    );
 });
 
 /**

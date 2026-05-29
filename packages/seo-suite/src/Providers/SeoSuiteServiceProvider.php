@@ -9,6 +9,7 @@ use Capell\Admin\Contracts\Extenders\PageEditExtender;
 use Capell\Admin\Contracts\Extenders\PageHeaderActionExtender;
 use Capell\Admin\Contracts\Extenders\PageResourceWidgetExtender;
 use Capell\Admin\Contracts\Extenders\PageSchemaExtender;
+use Capell\Admin\Contracts\Extenders\PageTableExtender;
 use Capell\Admin\Contracts\Extenders\SiteHeaderActionExtender;
 use Capell\Admin\Contracts\Extenders\SiteSchemaExtender;
 use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
@@ -17,6 +18,7 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Filament\Resources\Pages\Pages\EditPage;
 use Capell\Admin\Support\AdminEventRegistry;
 use Capell\Admin\Support\CapellAdminManager;
+use Capell\Admin\Support\Notifications\AdminNotificationGroupRegistry;
 use Capell\Core\Actions\RegisterBlazeOptimizedViewsAction;
 use Capell\Core\Contracts\Pageable;
 use Capell\Core\Enums\PackageTypeEnum;
@@ -38,8 +40,11 @@ use Capell\SeoSuite\Actions\ClearAiDiscoveryCacheAction;
 use Capell\SeoSuite\Console\Commands\ClearAiCacheCommand;
 use Capell\SeoSuite\Console\Commands\InstallCommand;
 use Capell\SeoSuite\Console\Commands\MonitorAiUsageCommand;
+use Capell\SeoSuite\Console\Commands\PageSpeedAuditCommand;
 use Capell\SeoSuite\Console\Commands\SetupCommand;
+use Capell\SeoSuite\Console\Commands\SyncSearchConsoleCommand;
 use Capell\SeoSuite\Console\Commands\TestOpenAiConnectionCommand;
+use Capell\SeoSuite\Contracts\PageSpeedInsightsClientInterface;
 use Capell\SeoSuite\Contracts\Schemas\SearchMetaDataSectionExtenderResolverInterface;
 use Capell\SeoSuite\Contracts\SearchConsoleClientInterface;
 use Capell\SeoSuite\Contracts\SeoPublishReportProvider;
@@ -50,11 +55,13 @@ use Capell\SeoSuite\Events\AiGenerationFailed;
 use Capell\SeoSuite\Filament\Extenders\Page\PageSeoPanelSchemaExtender;
 use Capell\SeoSuite\Filament\Extenders\Page\PageSeoSettingsTabExtender;
 use Capell\SeoSuite\Filament\Extenders\Page\SearchMetaSchemaExtender;
+use Capell\SeoSuite\Filament\Extenders\PageSpeed\PageSpeedPageTableExtender;
 use Capell\SeoSuite\Filament\Extenders\Site\SiteDetailsMetaExtender;
 use Capell\SeoSuite\Filament\Extenders\Site\SiteTranslationMetaExtender;
 use Capell\SeoSuite\Filament\Pages\AiDiscoveryPage;
 use Capell\SeoSuite\Filament\Pages\BrokenLinksPage;
 use Capell\SeoSuite\Filament\Pages\NotFoundUrlsPage;
+use Capell\SeoSuite\Filament\Pages\SearchRankingsPage;
 use Capell\SeoSuite\Filament\Pages\SeoAuditPage;
 use Capell\SeoSuite\Filament\Pages\TranslationCoveragePage;
 use Capell\SeoSuite\Filament\Settings\AIOrchestratorSettingsSchema;
@@ -63,6 +70,7 @@ use Capell\SeoSuite\Filament\Settings\SeoSettingsSchema;
 use Capell\SeoSuite\Filament\Settings\StructuredDataSettingsSchema;
 use Capell\SeoSuite\Filament\Widgets\AiDiscoveryCoverageWidget;
 use Capell\SeoSuite\Filament\Widgets\SearchConsoleOverviewWidget;
+use Capell\SeoSuite\Filament\Widgets\SearchIntelligenceWidget;
 use Capell\SeoSuite\Filament\Widgets\SearchMovementWidget;
 use Capell\SeoSuite\Filament\Widgets\SeoOpportunitiesWidget;
 use Capell\SeoSuite\Filament\Widgets\TopSearchPagesWidget;
@@ -86,6 +94,10 @@ use Capell\SeoSuite\Models\AiDiscoverySnapshot;
 use Capell\SeoSuite\Models\AIGenerationHistory;
 use Capell\SeoSuite\Models\BrokenLink;
 use Capell\SeoSuite\Models\PageSeoSnapshot;
+use Capell\SeoSuite\Models\PageSpeedAuditResult;
+use Capell\SeoSuite\Models\PageSpeedAuditRun;
+use Capell\SeoSuite\Models\SearchConsoleQueryMetric;
+use Capell\SeoSuite\Models\SearchConsoleUrlMetric;
 use Capell\SeoSuite\Policies\AiCreatorPolicy;
 use Capell\SeoSuite\Settings\AIOrchestratorSettings;
 use Capell\SeoSuite\Settings\SeoSuiteSettings;
@@ -105,6 +117,8 @@ use Capell\SeoSuite\Support\Cache\RateLimitCache;
 use Capell\SeoSuite\Support\ContentGraph\BrokenLinkContentGraphExtractor;
 use Capell\SeoSuite\Support\ContentGraph\PageSeoSnapshotContentGraphExtractor;
 use Capell\SeoSuite\Support\ContentTargetResolver;
+use Capell\SeoSuite\Support\PageSpeed\GooglePageSpeedInsightsClient;
+use Capell\SeoSuite\Support\PageSpeed\NullPageSpeedInsightsClient;
 use Capell\SeoSuite\Support\Pipelines\AiCreatorPipeline;
 use Capell\SeoSuite\Support\PrismProvider;
 use Capell\SeoSuite\Support\PromptRepository;
@@ -122,13 +136,17 @@ use Capell\SiteDiscovery\Contracts\DiscoveryOutputSource;
 use Capell\SiteDiscovery\Support\DiscoveryOutputRegistry;
 use Closure;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -139,6 +157,18 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
     public static string $packageName = 'capell-app/seo-suite';
 
     public static PackageTypeEnum $type = PackageTypeEnum::Plugin;
+
+    /**
+     * @return list<string>
+     */
+    public static function getSettingMigrations(): array
+    {
+        return [
+            '2026_05_10_190871_01_create_ai-orchestrator_settings',
+            '2026_05_10_190871_03_create_seo_suite_settings',
+            '2026_05_29_000001_add_pagespeed_seo_suite_settings',
+        ];
+    }
 
     public function configurePackage(Package $package): void
     {
@@ -151,7 +181,9 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
                 ClearAiCacheCommand::class,
                 InstallCommand::class,
                 MonitorAiUsageCommand::class,
+                PageSpeedAuditCommand::class,
                 SetupCommand::class,
+                SyncSearchConsoleCommand::class,
                 TestOpenAiConnectionCommand::class,
             ]);
     }
@@ -298,6 +330,10 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             PageSeoAuditPageResourceWidgetExtender::class,
         ], PageResourceWidgetExtender::TAG);
 
+        $this->app->tag([
+            PageSpeedPageTableExtender::class,
+        ], PageTableExtender::TAG);
+
         return $this;
     }
 
@@ -357,6 +393,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
         $adminManager->registerExtensionPage(static::$packageName, NotFoundUrlsPage::class);
         $adminManager->registerExtensionPage(static::$packageName, BrokenLinksPage::class);
         $adminManager->registerExtensionPage(static::$packageName, SeoAuditPage::class);
+        $adminManager->registerExtensionPage(static::$packageName, SearchRankingsPage::class);
         $adminManager->registerExtensionPage(static::$packageName, AiDiscoveryPage::class);
         $adminManager->registerExtensionManagementSurface(ExtensionManagementSurfaceData::settings(
             packageName: static::$packageName,
@@ -382,6 +419,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
         CapellAdmin::registerDashboardWidget(TopSearchPagesWidget::class, DashboardEnum::Main);
         CapellAdmin::registerDashboardWidget(SearchMovementWidget::class, DashboardEnum::Main);
         CapellAdmin::registerDashboardWidget(SeoOpportunitiesWidget::class, DashboardEnum::Main);
+        CapellAdmin::registerDashboardWidget(SearchIntelligenceWidget::class, DashboardEnum::Main);
         CapellAdmin::registerDashboardWidget(AiDiscoveryCoverageWidget::class, DashboardEnum::Main);
 
         return $this;
@@ -495,7 +533,9 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             ->registerBlazeComponents()
             ->bindSchemaTemplateRegistry()
             ->bindSearchConsoleClient()
+            ->bindPageSpeedInsightsClient()
             ->bindSeoPublishReportProvider()
+            ->registerNotificationGroups()
             ->registerAdminEvents()
             ->registerAdminExtenders()
             ->registerPageSchemaExtenders()
@@ -513,6 +553,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             ->registerFilamentPages()
             ->registerDashboardSettingsContributor()
             ->registerDashboardWidgets()
+            ->registerPageSpeedSchedule()
             ->registerFrontendViews()
             ->registerRenderHooks()
             ->registerLlmsTxtRoute();
@@ -623,6 +664,84 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
         return $this;
     }
 
+    private function bindPageSpeedInsightsClient(): self
+    {
+        $this->app->singleton(PageSpeedInsightsClientInterface::class, function (): PageSpeedInsightsClientInterface {
+            $config = config('capell-seo-suite.pagespeed', []);
+
+            if (! is_array($config)) {
+                return new NullPageSpeedInsightsClient;
+            }
+
+            $apiKey = $config['api_key'] ?? null;
+
+            if (($config['enabled'] ?? false) !== true || ! is_string($apiKey) || trim($apiKey) === '') {
+                return new NullPageSpeedInsightsClient;
+            }
+
+            return new GooglePageSpeedInsightsClient($config);
+        });
+
+        return $this;
+    }
+
+    private function registerNotificationGroups(): self
+    {
+        $this->app->afterResolving(AdminNotificationGroupRegistry::class, function (AdminNotificationGroupRegistry $registry): void {
+            $registry->register(
+                key: 'seo_suite_pagespeed_reports',
+                label: (string) __('capell-seo-suite::generic.pagespeed_digest_group_label'),
+                description: (string) __('capell-seo-suite::generic.pagespeed_digest_group_description'),
+                defaultRecipients: fn (): EloquentCollection => $this->defaultPageSpeedDigestRecipients(),
+            );
+        });
+
+        return $this;
+    }
+
+    private function registerPageSpeedSchedule(): self
+    {
+        if (! Schema::hasTable('settings')) {
+            return $this;
+        }
+
+        if (! $this->pageSpeedAuditsAreConfigured()) {
+            return $this;
+        }
+
+        $settings = $this->app->make(SeoSuiteSettings::class);
+
+        if (! $settings->pagespeed_audit_enabled || ! $settings->pagespeed_weekly_digest_enabled) {
+            return $this;
+        }
+
+        $limit = max(1, $settings->pagespeed_scheduled_limit);
+
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule) use ($limit): void {
+            $schedule
+                ->command('capell:seo-suite:pagespeed-audit', ['--notify' => true, '--limit' => $limit])
+                ->weeklyOn(1, '06:00')
+                ->withoutOverlapping();
+        });
+
+        return $this;
+    }
+
+    private function pageSpeedAuditsAreConfigured(): bool
+    {
+        $config = config('capell-seo-suite.pagespeed', []);
+
+        if (! is_array($config)) {
+            return false;
+        }
+
+        $apiKey = $config['api_key'] ?? null;
+
+        return ($config['enabled'] ?? false) === true
+            && is_string($apiKey)
+            && trim($apiKey) !== '';
+    }
+
     /**
      * @return array<int, string>
      */
@@ -653,7 +772,11 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             AiDiscoveryCrawlerRule::class,
             AiDiscoverySnapshot::class,
             BrokenLink::class,
+            PageSpeedAuditRun::class,
+            PageSpeedAuditResult::class,
             PageSeoSnapshot::class,
+            SearchConsoleUrlMetric::class,
+            SearchConsoleQueryMetric::class,
         ]);
 
         return $this;
@@ -666,6 +789,49 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             fn (Page $page): HasMany => $page->hasMany(PageSeoSnapshot::class, 'page_id'),
         );
 
+        Page::resolveRelationUsing(
+            'pageSpeedAuditResults',
+            fn (Page $page): HasMany => $page->hasMany(PageSpeedAuditResult::class, 'page_id'),
+        );
+
+        Page::resolveRelationUsing(
+            'latestMobilePageSpeedAuditResult',
+            fn (Page $page): HasOne => $page->hasOne(PageSpeedAuditResult::class, 'page_id')
+                ->where('strategy', 'mobile')
+                ->latestOfMany('fetched_at'),
+        );
+
+        Page::resolveRelationUsing(
+            'latestDesktopPageSpeedAuditResult',
+            fn (Page $page): HasOne => $page->hasOne(PageSpeedAuditResult::class, 'page_id')
+                ->where('strategy', 'desktop')
+                ->latestOfMany('fetched_at'),
+        );
+
         return $this;
+    }
+
+    /**
+     * @return EloquentCollection<int, Model>
+     */
+    private function defaultPageSpeedDigestRecipients(): EloquentCollection
+    {
+        $userModel = config('auth.providers.users.model');
+
+        if (! is_string($userModel) || ! is_a($userModel, Model::class, true)) {
+            return new EloquentCollection;
+        }
+
+        return $userModel::query()
+            ->get()
+            ->filter(function (Model $user): bool {
+                if (method_exists($user, 'isGlobalAdmin') && $user->isGlobalAdmin()) {
+                    return true;
+                }
+
+                return method_exists($user, 'hasRole')
+                    && $user->hasRole(config('capell.roles.super_admin', 'super_admin'));
+            })
+            ->values();
     }
 }

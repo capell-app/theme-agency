@@ -96,14 +96,19 @@ Each package README follows the same shape:
 
 Use the [Capell Theme Scale](docs/theme-scale.md) when creating a theme, changing renderer contracts, or deciding whether configuration belongs in theme settings, page blueprints, widget blueprints, Layout Builder assets, or Blade.
 
-| Package                                                 | Composer package              | Tier    | Purpose                                      |
-| ------------------------------------------------------- | ----------------------------- | ------- | -------------------------------------------- |
-| [foundation-theme](packages/foundation-theme/README.md) | `capell-app/foundation-theme` | Free    | Default frontend runtime and renderer.       |
-| [theme-agency](packages/theme-agency/README.md)         | `capell-app/theme-agency`     | Free    | Expressive agency theme for Capell.          |
-| [theme-corporate](packages/theme-corporate/README.md)   | `capell-app/theme-corporate`  | Free    | Trust-led corporate theme for Capell.        |
-| [theme-commerce](packages/theme-commerce/README.md)     | `capell-app/theme-commerce`   | Premium | Image-led commerce theme for Capell.         |
-| [theme-healthcare](packages/theme-healthcare/README.md) | `capell-app/theme-healthcare` | Premium | Appointment-led healthcare theme for Capell. |
-| [theme-saas](packages/theme-saas/README.md)             | `capell-app/theme-saas`       | Premium | Product-led SaaS theme for Capell.           |
+| Package                                                         | Composer package                  | Tier    | Purpose                                                        |
+| --------------------------------------------------------------- | --------------------------------- | ------- | -------------------------------------------------------------- |
+| [foundation-theme](packages/foundation-theme/README.md)         | `capell-app/foundation-theme`     | Free    | Default frontend runtime and renderer.                         |
+| [theme-agency](packages/theme-agency/README.md)                 | `capell-app/theme-agency`         | Free    | Expressive agency theme for portfolio and service sites.       |
+| [theme-corporate](packages/theme-corporate/README.md)           | `capell-app/theme-corporate`      | Free    | Trust-led corporate theme for business and governance content. |
+| [theme-commerce](packages/theme-commerce/README.md)             | `capell-app/theme-commerce`       | Premium | Editorial commerce theme for product-led pages.                |
+| [theme-education](packages/theme-education/README.md)           | `capell-app/theme-education`      | Premium | Course and school theme for learning programmes.               |
+| [theme-healthcare](packages/theme-healthcare/README.md)         | `capell-app/theme-healthcare`     | Premium | Appointment-led healthcare theme for clinics and resources.    |
+| [theme-knowledge](packages/theme-knowledge/README.md)           | `capell-app/theme-knowledge`      | Premium | Resource-library theme for publishers and knowledge bases.     |
+| [theme-local-services](packages/theme-local-services/README.md) | `capell-app/theme-local-services` | Premium | Quote-led theme for local service businesses.                  |
+| [theme-nonprofit](packages/theme-nonprofit/README.md)           | `capell-app/theme-nonprofit`      | Premium | Impact-led theme for charities, campaigns, and civic sites.    |
+| [theme-portfolio](packages/theme-portfolio/README.md)           | `capell-app/theme-portfolio`      | Premium | Portfolio theme for creators, consultants, and case studies.   |
+| [theme-saas](packages/theme-saas/README.md)                     | `capell-app/theme-saas`           | Premium | Product-led SaaS theme for launches, docs, and pricing.        |
 
 ## Install Pattern
 
@@ -147,6 +152,28 @@ composer preflight
 ```
 
 Do not run `php artisan` in this repository. Testbench provides the Laravel context for package tests.
+
+## Docker Harness
+
+Use Docker when you need a clean shell for agent, CI, or local verification. This is a CLI package-development harness, not the `capell-app.test` application runtime.
+
+Start the services:
+
+```bash
+docker compose up -d
+```
+
+Run common checks inside the PHP 8.4 container:
+
+```bash
+docker compose exec app composer install
+docker compose exec app composer test
+docker compose exec app composer analyze
+docker compose exec app npm install
+docker compose exec app npm run eslint
+```
+
+The harness provides MariaDB, Redis, Mailpit, Composer, Node 22, and the PHP extensions used by the package test suite. It mounts the sibling Capell package directory at `/home/capell/packages/capell` so local path repositories continue to work when `capell-4` and `capell-packages-4` live beside each other.
 
 ## Contributing Through Split Repositories
 

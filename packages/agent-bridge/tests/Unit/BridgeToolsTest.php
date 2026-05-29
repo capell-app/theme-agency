@@ -71,7 +71,7 @@ it('previews a boost capability through the registry', function (): void {
 });
 
 it('lists knowledge packages as structured content', function (): void {
-    app()->setBasePath(getcwd());
+    app()->setBasePath(getcwd() ?: dirname(__DIR__, 4));
 
     $response = (new ListKnowledgePackagesTool)->handle(new KnowledgeRepository);
 
@@ -83,7 +83,7 @@ it('lists knowledge packages as structured content', function (): void {
 });
 
 it('reads allowed knowledge documents by repository path', function (): void {
-    app()->setBasePath(getcwd());
+    app()->setBasePath(getcwd() ?: dirname(__DIR__, 4));
     config()->set('capell-agent-bridge.public_docs_paths', [
         base_path('packages/agent-bridge/docs'),
     ]);
@@ -249,6 +249,46 @@ it('hashes capability payloads deterministically regardless of key order', funct
     ]))->toBe(InvokeAgentBridgeCapabilityPreviewAction::payloadHash([
         'first' => 'value',
         'second' => ['nested' => true],
+    ]));
+});
+
+it('hashes nested capability payload objects deterministically while preserving list order', function (): void {
+    expect(InvokeAgentBridgeCapabilityPreviewAction::payloadHash([
+        'filters' => [
+            'second' => true,
+            'first' => [
+                'beta' => 'two',
+                'alpha' => 'one',
+            ],
+        ],
+        'steps' => [
+            ['name' => 'first'],
+            ['name' => 'second'],
+        ],
+    ]))->toBe(InvokeAgentBridgeCapabilityPreviewAction::payloadHash([
+        'steps' => [
+            ['name' => 'first'],
+            ['name' => 'second'],
+        ],
+        'filters' => [
+            'first' => [
+                'alpha' => 'one',
+                'beta' => 'two',
+            ],
+            'second' => true,
+        ],
+    ]))->not->toBe(InvokeAgentBridgeCapabilityPreviewAction::payloadHash([
+        'filters' => [
+            'first' => [
+                'alpha' => 'one',
+                'beta' => 'two',
+            ],
+            'second' => true,
+        ],
+        'steps' => [
+            ['name' => 'second'],
+            ['name' => 'first'],
+        ],
     ]));
 });
 

@@ -61,8 +61,8 @@ Core documentation should describe these packages as optional unless a host appl
 | SEO Suite           | `capell-app/seo-suite`           | Capell Search & SEO / premium   | admin, frontend, console | Optional package manifest present; avoid implying this feature is part of core. |
 | Site Discovery      | `capell-app/site-discovery`      | Capell Search & SEO / premium   | admin, frontend, console | Optional package manifest present; avoid implying this feature is part of core. |
 | Tags                | `capell-app/tags`                | Capell Foundation / free        | admin, console           | Optional package manifest present; avoid implying this feature is part of core. |
-| Theme Agency        | `capell-app/theme-agency`        | Capell Themes / premium         | frontend                 | Optional package manifest present; avoid implying this feature is part of core. |
-| Theme Corporate     | `capell-app/theme-corporate`     | Capell Themes / premium         | frontend                 | Optional package manifest present; avoid implying this feature is part of core. |
+| Theme Agency        | `capell-app/theme-agency`        | Capell Themes / free            | frontend                 | Optional package manifest present; avoid implying this feature is part of core. |
+| Theme Corporate     | `capell-app/theme-corporate`     | Capell Themes / free            | frontend                 | Optional package manifest present; avoid implying this feature is part of core. |
 | Theme Saas          | `capell-app/theme-saas`          | Capell Themes / premium         | frontend                 | Optional package manifest present; avoid implying this feature is part of core. |
 | Translation Manager | `capell-app/translation-manager` | Capell Admin / premium          | admin                    | Optional package manifest present; avoid implying this feature is part of core. |
 | Welcome Tour        | `capell-app/welcome-tour`        | Capell Foundation / free        | admin                    | Optional package manifest present; avoid implying this feature is part of core. |

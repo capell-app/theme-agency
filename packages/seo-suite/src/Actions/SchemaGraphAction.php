@@ -30,7 +30,7 @@ class SchemaGraphAction
         $nodes[] = $this->stripContext($organizationSchema);
 
         // WebSite schema
-        $websiteSchema = $this->buildWebSiteSchema($site, $language);
+        $websiteSchema = $this->buildWebSiteSchema($site);
         $nodes[] = $websiteSchema;
 
         // WebPage / Article schema
@@ -83,7 +83,7 @@ class SchemaGraphAction
     /**
      * @return array<string, mixed>
      */
-    private function buildWebSiteSchema(Site $site, Language $language): array
+    private function buildWebSiteSchema(Site $site): array
     {
         $siteUrl = $site->siteDomain?->full_url;
 
@@ -94,20 +94,6 @@ class SchemaGraphAction
             'url' => $siteUrl,
             'publisher' => $siteUrl !== null && $siteUrl !== '' ? ['@id' => SchemaEntityTypeEnum::Organization->toId($siteUrl)] : null,
         ];
-
-        // Add SearchAction if site has a search/results page
-        $searchPageUrl = Page::getFirstPageByTypeForSite('results', $site, $language)?->pageUrl?->full_url;
-
-        if ($searchPageUrl !== null && $searchPageUrl !== '') {
-            $configurator['potentialAction'] = [
-                '@type' => 'SearchAction',
-                'target' => [
-                    '@type' => 'EntryPoint',
-                    'urlTemplate' => $searchPageUrl . '?q={search_term_string}',
-                ],
-                'query-input' => 'required name=search_term_string',
-            ];
-        }
 
         return array_filter($configurator, static fn (mixed $value): bool => $value !== null);
     }

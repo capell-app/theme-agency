@@ -15,7 +15,11 @@
                 </p>
             @endif
 
-            <h1>{{ $section->heading }}</h1>
+            <h1
+                class="max-w-2xl text-4xl font-black tracking-tight text-[#17211c] lg:text-5xl"
+            >
+                {{ $section->heading }}
+            </h1>
 
             @if ($section->summary ?? null)
                 <p class="mt-7 max-w-2xl text-xl">
@@ -32,6 +36,23 @@
                         {{ $action['label'] }}
                     </a>
                 @endforeach
+            </div>
+            <div class="mt-8 grid grid-cols-3 gap-2 sm:max-w-xl">
+                <div
+                    class="rounded-full bg-[#17211c] px-3 py-2 text-center text-xs font-black tracking-[0.12em] text-white uppercase"
+                >
+                    Premium stock visuals
+                </div>
+                <div
+                    class="rounded-full border border-stone-300 bg-white px-3 py-2 text-center text-xs font-black tracking-[0.12em] text-[#17211c] uppercase"
+                >
+                    Fast checkout
+                </div>
+                <div
+                    class="rounded-full border border-stone-300 bg-white px-3 py-2 text-center text-xs font-black tracking-[0.12em] text-[#17211c] uppercase"
+                >
+                    Built for conversion
+                </div>
             </div>
         </div>
 

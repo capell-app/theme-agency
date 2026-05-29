@@ -96,6 +96,8 @@ vendor/bin/pest packages/public-actions/tests --configuration=phpunit.xml
 ## Maintenance Notes
 
 - Treat public routes as untrusted input and keep validation, permission checks, and side effects inside actions or dedicated services.
+- Use `Idempotency-Key` for retryable public submissions; duplicate keys replay the stored submission result instead of creating another submission.
+- Spam protection runs through adapters registered in `PublicActionSpamProtectionAdapterRegistry`; honeypot is enabled by default and Turnstile can be enabled through config.
 - Put behaviour changes in `src/Actions/`; UI classes, commands, and controllers should call actions instead of owning domain logic.
 - Use package `Data` classes at boundaries instead of passing anonymous arrays between layers.
 - Use backed enums for persisted values and enum labels for Filament options.

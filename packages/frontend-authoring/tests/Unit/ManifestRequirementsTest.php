@@ -1,15 +1,16 @@
 <?php
 
 declare(strict_types=1);
+use Illuminate\Support\Facades\File;
 
 describe('frontend authoring capell.json manifest', function (): void {
     $authoringManifest = fn (): array => json_decode(
-        file_get_contents(__DIR__ . '/../../capell.json'),
+        File::get(__DIR__ . '/../../capell.json'),
         associative: true,
     );
 
     $screenshotManifest = fn (): array => json_decode(
-        file_get_contents(__DIR__ . '/../../docs/screenshots.json'),
+        File::get(__DIR__ . '/../../docs/screenshots.json'),
         associative: true,
     );
 
@@ -37,6 +38,13 @@ describe('frontend authoring capell.json manifest', function (): void {
             ->and($manifest['composerRequires'])->toContain('capell-app/frontend')
             ->and($manifest['composerRequires'])->toContain('capell-app/foundation-theme')
             ->and($manifest['composerRequires'])->toContain('capell-app/frontend-authoring');
+    });
+
+    it('does not require Filament Peek for frontend authoring screenshots', function () use ($screenshotManifest): void {
+        $manifest = $screenshotManifest();
+
+        expect($manifest['composerRequires'])->not->toContain('capell-app/filament-peek')
+            ->and($manifest['composerRequires'])->not->toContain('pboivin/filament-peek');
     });
 
     it('declares browser tests for public safety and admin editing', function () use ($screenshotManifest): void {

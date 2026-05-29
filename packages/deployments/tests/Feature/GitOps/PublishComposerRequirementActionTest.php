@@ -80,7 +80,7 @@ it('publishes composer requirements through pull requests and enables automerge 
         ->and($result->pullRequestId)->toBe(123)
         ->and($result->commitSha)->toBeNull()
         ->and($provider->branches)->toHaveCount(1)
-        ->and($provider->branches[0]['from'])->toBe('composer-sha')
+        ->and($provider->branches[0]['from'])->toBe('branch-commit-sha')
         ->and($provider->commits)->toHaveCount(1)
         ->and($provider->commits[0]['branch'])->toStartWith('capell/add-extension-pr-extension-')
         ->and($provider->autoMergedPullRequestIds)->toBe([123]);

@@ -3,9 +3,13 @@
 declare(strict_types=1);
 
 use Capell\Comments\Actions\BuildPublicThreadAction;
+use Capell\Comments\Actions\ResolvePublicCommentableThreadAction;
+use Capell\Comments\Data\PublicCommentableThreadData;
 use Capell\Comments\Data\PublicCommentData;
+use Capell\Comments\Enums\CommentPublicationPolicy;
 use Capell\Comments\Enums\CommentStatus;
 use Capell\Comments\Models\Comment;
+use Capell\Comments\Settings\CommentSettings;
 use Capell\Core\Models\Language;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ViewErrorBag;
@@ -134,6 +138,70 @@ it('scopes public comments to the commentable language when present', function (
         ->and($comments[0]->body)->toBe('English comment');
 });
 
+it('does not expose approved comments when comments are disabled for public reads', function (): void {
+    $page = $this->createCommentsPage();
+
+    Comment::factory()->create([
+        'site_id' => $page->site_id,
+        'commentable_type' => $page->getMorphClass(),
+        'commentable_id' => $page->getKey(),
+        'body' => 'Approved but disabled',
+    ]);
+
+    bindPublicThreadCommentSettings(['enabled' => false]);
+
+    expect(BuildPublicThreadAction::run($page))->toBe([]);
+});
+
+it('does not resolve public threads when the commentable is not publicly visible', function (): void {
+    $page = $this->createCommentsPage();
+    $page->forceFill(['visible_from' => now()->addDay()])->save();
+
+    Comment::factory()->create([
+        'site_id' => $page->site_id,
+        'commentable_type' => $page->getMorphClass(),
+        'commentable_id' => $page->getKey(),
+        'body' => 'Approved but hidden page',
+    ]);
+
+    expect(BuildPublicThreadAction::run($page))->toBe([])
+        ->and(ResolvePublicCommentableThreadAction::run($page))->toBeNull();
+});
+
+it('does not expose approved comments when public publication is disabled for the commentable type', function (): void {
+    $page = $this->createCommentsPage();
+
+    Comment::factory()->create([
+        'site_id' => $page->site_id,
+        'commentable_type' => $page->getMorphClass(),
+        'commentable_id' => $page->getKey(),
+        'body' => 'Approved but unavailable',
+    ]);
+
+    bindPublicThreadCommentSettings(['publication_policy' => CommentPublicationPolicy::Disabled->value]);
+
+    expect(BuildPublicThreadAction::run($page))->toBe([]);
+});
+
+it('resolves public commentable thread metadata and approved comments', function (): void {
+    $page = $this->createCommentsPage();
+    Comment::factory()->create([
+        'site_id' => $page->site_id,
+        'commentable_type' => $page->getMorphClass(),
+        'commentable_id' => $page->getKey(),
+        'body' => 'Visible thread comment',
+    ]);
+
+    $thread = ResolvePublicCommentableThreadAction::run($page);
+
+    expect($thread)
+        ->toBeInstanceOf(PublicCommentableThreadData::class)
+        ->commentableType->toBe('page')
+        ->siteId->toBe((int) $page->site_id)
+        ->and($thread->comments)->toHaveCount(1)
+        ->and($thread->comments[0]->body)->toBe('Visible thread comment');
+});
+
 it('escapes public comment output and hides pending comments when rendered', function (): void {
     $approved = new PublicCommentData(
         publicId: 'public-comment',
@@ -166,3 +234,26 @@ it('keeps auto injected cached shell free of livewire component state', function
         ->and($html)->not->toContain('wire:snapshot')
         ->and($html)->not->toContain('commentable_id');
 });
+
+/**
+ * @param  array<string, mixed>  $overrides
+ */
+function bindPublicThreadCommentSettings(array $overrides): void
+{
+    /** @var CommentSettings $settings */
+    $settings = (new ReflectionClass(CommentSettings::class))->newInstanceWithoutConstructor();
+    $settings->enabled = true;
+    $settings->identity_mode = 'both';
+    $settings->publication_policy = CommentPublicationPolicy::RequireApproval->value;
+    $settings->verification_flow = 'verify_then_moderate';
+    $settings->require_email_verification = true;
+    $settings->max_depth = 4;
+    $settings->site_overrides = [];
+    $settings->commentable_type_overrides = [];
+
+    foreach ($overrides as $property => $value) {
+        $settings->{$property} = $value;
+    }
+
+    app()->instance(CommentSettings::class, $settings);
+}

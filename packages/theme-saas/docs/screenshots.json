@@ -19,7 +19,7 @@
         },
         {
             "id": "theme-preview-url-output",
-            "title": "Theme preview URL output.",
+            "title": "Signed admin preview route.",
             "package": "theme-saas",
             "surface": "admin",
             "targetType": "admin-url",
@@ -49,8 +49,8 @@
             "targetType": "frontend-url",
             "target": "/saas-homepage-layout",
             "required": true,
-            "notes": "Capture Theme SaaS saas homepage with product hero, feature proof, dashboard panels, cta. No additional package note required.",
-            "useCase": "A buyer reviews how Theme SaaS handles the saas homepage page layout before installing the theme.",
+            "notes": "Capture the product homepage with activation hero, feature proof, dashboard panels, workflow cards, and trial CTA.",
+            "useCase": "A SaaS team checks that the theme sells product workflow and activation rather than broad startup marketing.",
             "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-homepage-layout.png"
         },
         {
@@ -61,8 +61,8 @@
             "targetType": "frontend-url",
             "target": "/saas-feature-layout",
             "required": true,
-            "notes": "Capture Theme SaaS feature page with feature narrative, comparison blocks, proof, cta. No additional package note required.",
-            "useCase": "A buyer reviews how Theme SaaS handles the feature page page layout before installing the theme.",
+            "notes": "Capture feature narrative, workflow steps, comparison blocks, proof, and demo CTA.",
+            "useCase": "A product team reviews whether feature pages explain jobs-to-be-done instead of becoming a services grid.",
             "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-feature-layout.png"
         },
         {
@@ -73,8 +73,8 @@
             "targetType": "frontend-url",
             "target": "/saas-pricing-layout",
             "required": true,
-            "notes": "Capture Theme SaaS pricing page with plan cards, comparison table, faq, cta. Requires capell-app/content-sections; show this package note on the captured image.",
-            "useCase": "A buyer reviews how Theme SaaS handles the pricing page page layout before installing the theme.",
+            "notes": "Capture pricing plan cards, feature comparison, FAQ, trial risk reducers, and CTA. Requires capell-app/content-sections; show this package note on the captured image.",
+            "useCase": "A SaaS buyer can compare plans and move toward a trial without the page feeling like Commerce merchandising.",
             "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-pricing-layout.png"
         },
         {
@@ -85,8 +85,8 @@
             "targetType": "frontend-url",
             "target": "/saas-docs-layout",
             "required": true,
-            "notes": "Capture Theme SaaS documentation page with docs nav, article content, related links. Requires capell-app/document-lifecycle; show this package note on the captured image.",
-            "useCase": "A buyer reviews how Theme SaaS handles the documentation page page layout before installing the theme.",
+            "notes": "Capture docs navigation, article content, related links, and product onboarding CTA. Requires capell-app/document-lifecycle; show this package note on the captured image.",
+            "useCase": "A product team checks that docs support activation without overlapping Knowledge's editorial archive.",
             "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-docs-layout.png"
         },
         {
@@ -97,8 +97,8 @@
             "targetType": "frontend-url",
             "target": "/saas-blog-layout",
             "required": true,
-            "notes": "Capture Theme SaaS product blog article with article hero, author, related articles. Requires capell-app/blog; show this package note on the captured image.",
-            "useCase": "A buyer reviews how Theme SaaS handles the product blog article page layout before installing the theme.",
+            "notes": "Capture a product article with hero, author, related resources, feature links, and demo CTA. Requires capell-app/blog; show this package note on the captured image.",
+            "useCase": "A SaaS team can publish launches and education while keeping product activation visible.",
             "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-blog-layout.png"
         },
         {
@@ -109,8 +109,8 @@
             "targetType": "frontend-url",
             "target": "/saas-demo-request-layout",
             "required": true,
-            "notes": "Capture Theme SaaS demo request page with qualification form, routing, success state. Requires capell-app/form-builder; show this package note on the captured image.",
-            "useCase": "A buyer reviews how Theme SaaS handles the demo request page page layout before installing the theme.",
+            "notes": "Capture demo request qualification, routing, success state, and product proof. Requires capell-app/form-builder; show this package note on the captured image.",
+            "useCase": "A sales team checks that demo conversion stays tied to product workflow rather than broad contact.",
             "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-demo-request-layout.png"
         },
         {
@@ -121,8 +121,8 @@
             "targetType": "frontend-url",
             "target": "/saas-webinar-layout",
             "required": true,
-            "notes": "Capture Theme SaaS webinar landing page with agenda, speakers, registration cta. Requires capell-app/events; show this package note on the captured image.",
-            "useCase": "A buyer reviews how Theme SaaS handles the webinar landing page page layout before installing the theme.",
+            "notes": "Capture webinar agenda, speakers, product takeaways, and registration CTA. Requires capell-app/events; show this package note on the captured image.",
+            "useCase": "A SaaS team can run product education events without drifting into Agency campaign pages.",
             "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-webinar-layout.png"
         },
         {
@@ -133,8 +133,8 @@
             "targetType": "frontend-url",
             "target": "/saas-search-layout",
             "required": true,
-            "notes": "Capture Theme SaaS knowledge search page with search field, docs/blog results, snippets. Requires capell-app/search; show this package note on the captured image.",
-            "useCase": "A buyer reviews how Theme SaaS handles the knowledge search page page layout before installing the theme.",
+            "notes": "Capture product knowledge search with docs/blog results, snippets, and onboarding recovery. Requires capell-app/search; show this package note on the captured image.",
+            "useCase": "A user can find product help without the page becoming a general Knowledge theme search experience.",
             "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-search-layout.png"
         },
         {
@@ -145,8 +145,8 @@
             "targetType": "frontend-url",
             "target": "/saas-campaign-layout",
             "required": true,
-            "notes": "Capture Theme SaaS launch campaign page with variant hero, segments, campaign analytics. Requires capell-app/campaign-studio; show this package note on the captured image.",
-            "useCase": "A buyer reviews how Theme SaaS handles the launch campaign page page layout before installing the theme.",
+            "notes": "Capture product launch campaign with variant hero, audience segments, activation proof, and campaign analytics. Requires capell-app/campaign-studio; show this package note on the captured image.",
+            "useCase": "A SaaS team can announce launches while keeping the page centred on product activation, not Agency creative delivery.",
             "screenshotPath": "public/docs/screenshots/packages/theme-saas/saas-campaign-layout.png"
         }
     ]

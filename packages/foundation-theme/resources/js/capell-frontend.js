@@ -119,6 +119,112 @@ const slideCarousel = (button) => {
     goToCarouselSlide(carousel, nextIndex)
 }
 
+const setSpotlightPanel = (spotlight, activeIndex) => {
+    spotlight.querySelectorAll('[data-spotlight-tab]').forEach((tab) => {
+        const isActive = Number(tab.dataset.spotlightIndex ?? 0) === activeIndex
+
+        tab.dataset.active = isActive ? 'true' : 'false'
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false')
+        tab.tabIndex = isActive ? 0 : -1
+    })
+
+    spotlight.querySelectorAll('[data-spotlight-panel]').forEach((panel) => {
+        panel.hidden = Number(panel.dataset.spotlightIndex ?? 0) !== activeIndex
+    })
+}
+
+const activateSpotlightTab = (tab) => {
+    const spotlight = tab.closest('[data-theme-spotlight]')
+
+    if (!spotlight) {
+        return
+    }
+
+    setSpotlightPanel(spotlight, Number(tab.dataset.spotlightIndex ?? 0))
+}
+
+const moveSpotlightTabFocus = (tab, direction) => {
+    const spotlight = tab.closest('[data-theme-spotlight]')
+    const tabs = Array.from(
+        spotlight?.querySelectorAll('[data-spotlight-tab]') ?? [],
+    )
+
+    if (tabs.length === 0) {
+        return
+    }
+
+    const currentIndex = tabs.indexOf(tab)
+    const nextIndex = (currentIndex + direction + tabs.length) % tabs.length
+    const nextTab = tabs[nextIndex]
+
+    nextTab.focus()
+    activateSpotlightTab(nextTab)
+}
+
+const setPathwayPanel = (pathways, activePanel) => {
+    pathways.querySelectorAll('[data-pathway-panel]').forEach((panel) => {
+        const isActive = panel === activePanel
+
+        if (!isActive && panel.open) {
+            panel.open = false
+        }
+
+        panel.dataset.active = isActive && panel.open ? 'true' : 'false'
+    })
+}
+
+const initPathways = (root = document) => {
+    root.querySelectorAll('[data-theme-pathways]').forEach((pathways) => {
+        if (pathways.dataset.initialized === 'true') {
+            return
+        }
+
+        const panels = Array.from(
+            pathways.querySelectorAll('[data-pathway-panel]'),
+        )
+        const openPanel = panels.find((panel) => panel.open) ?? panels[0]
+
+        if (openPanel) {
+            openPanel.open = true
+            setPathwayPanel(pathways, openPanel)
+        }
+
+        panels.forEach((panel) => {
+            panel.addEventListener('toggle', () => {
+                if (panel.open) {
+                    setPathwayPanel(pathways, panel)
+                } else {
+                    panel.dataset.active = 'false'
+                }
+            })
+        })
+
+        pathways.dataset.initialized = 'true'
+    })
+}
+
+const initSpotlights = (root = document) => {
+    root.querySelectorAll('[data-theme-spotlight]').forEach((spotlight) => {
+        if (spotlight.dataset.initialized === 'true') {
+            return
+        }
+
+        const activeTab =
+            spotlight.querySelector(
+                '[data-spotlight-tab][aria-selected="true"]',
+            ) ?? spotlight.querySelector('[data-spotlight-tab]')
+
+        if (activeTab) {
+            setSpotlightPanel(
+                spotlight,
+                Number(activeTab.dataset.spotlightIndex ?? 0),
+            )
+        }
+
+        spotlight.dataset.initialized = 'true'
+    })
+}
+
 document.addEventListener('click', (event) => {
     const faqButton = event.target.closest('[data-faq-category-tab]')
 
@@ -157,8 +263,43 @@ document.addEventListener('click', (event) => {
                 Number(carouselDot.dataset.carouselSlide ?? 0),
             )
         }
+
+        return
+    }
+
+    const spotlightTab = event.target.closest('[data-spotlight-tab]')
+
+    if (spotlightTab) {
+        activateSpotlightTab(spotlightTab)
     }
 })
+
+document.addEventListener('keydown', (event) => {
+    const spotlightTab = event.target.closest('[data-spotlight-tab]')
+
+    if (
+        !spotlightTab ||
+        !['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(event.key)
+    ) {
+        return
+    }
+
+    event.preventDefault()
+    moveSpotlightTabFocus(
+        spotlightTab,
+        ['ArrowDown', 'ArrowRight'].includes(event.key) ? 1 : -1,
+    )
+})
+
+if (typeof document !== 'undefined') {
+    initPathways()
+    initSpotlights()
+
+    document.addEventListener('livewire:navigated', () => {
+        initPathways()
+        initSpotlights()
+    })
+}
 
 document.addEventListener('alpine:init', () => {
     window.Alpine.plugin(Tooltip)

@@ -19,6 +19,7 @@ use Capell\PublicActions\Models\PublicAction;
 use Capell\PublicActions\Models\PublicActionDestination;
 use Capell\PublicActions\Models\PublicActionSubmission;
 use Capell\PublicActions\Support\PublicActionHandlerRegistry;
+use Capell\PublicActions\Support\PublicActionSpamProtectionAdapterRegistry;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -43,6 +44,7 @@ final class SubmitPublicActionAction
 
     public function __construct(
         private readonly PublicActionHandlerRegistry $handlers,
+        private readonly PublicActionSpamProtectionAdapterRegistry $spamProtectionAdapters,
     ) {}
 
     /**
@@ -55,13 +57,28 @@ final class SubmitPublicActionAction
         $publicAction = $this->resolve($action, $request);
 
         $this->assertActionIsAvailable($publicAction);
+        $this->assertSpamProtectionPasses($input, $request);
 
         $payload = $this->validatedPayload($publicAction, $input);
+        $idempotencyKey = $this->idempotencyKey($input, $request);
+
+        if ($idempotencyKey !== null) {
+            $existingSubmission = PublicActionSubmission::query()
+                ->where('public_action_id', $publicAction->getKey())
+                ->where('idempotency_key', $idempotencyKey)
+                ->first();
+
+            if ($existingSubmission instanceof PublicActionSubmission) {
+                return $this->resultFromExistingSubmission($publicAction, $existingSubmission, $request);
+            }
+        }
+
         $submission = PublicActionSubmission::query()->create([
             'public_action_id' => $publicAction->getKey(),
             'site_id' => $publicAction->site_id,
             'source_type' => $payload['source_type'] ?? null,
             'source_id' => $payload['source_id'] ?? null,
+            'idempotency_key' => $idempotencyKey,
             'payload' => Arr::except($payload, ['source_type', 'source_id']),
             'metadata' => $this->metadata($publicAction, $request)->toArray(),
             'status' => PublicActionSubmissionStatus::Received,
@@ -97,6 +114,12 @@ final class SubmitPublicActionAction
 
         $submission->forceFill([
             'status' => $result->success ? PublicActionSubmissionStatus::Handled : PublicActionSubmissionStatus::Failed,
+            'metadata' => [
+                ...($submission->metadata ?? []),
+                'result_success' => $result->success,
+                'result_message' => $result->message,
+                'result_redirect_url' => $result->redirectUrl,
+            ],
         ])->save();
 
         if ($result->success) {
@@ -179,6 +202,9 @@ final class SubmitPublicActionAction
             '_token',
             '_method',
             'g-recaptcha-response',
+            'cf-turnstile-response',
+            '_hp',
+            'idempotency_key',
             'source_type',
             'source_id',
         ]);
@@ -311,6 +337,64 @@ final class SubmitPublicActionAction
         }
 
         throw new InvalidArgumentException(sprintf('Public action handler [%s] is not registered.', $action->handler_key));
+    }
+
+    /**
+     * @param  array<string, mixed>  $input
+     *
+     * @throws ValidationException
+     */
+    private function assertSpamProtectionPasses(array $input, ?Request $request): void
+    {
+        foreach ($this->spamProtectionAdapters->enabled() as $adapter) {
+            $result = $adapter->check($input, $request);
+
+            if ($result->passed) {
+                continue;
+            }
+
+            throw ValidationException::withMessages([
+                $result->field ?? 'spam' => $result->message ?? __('capell-public-actions::generic.spam_detected'),
+            ]);
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $input
+     *
+     * @throws ValidationException
+     */
+    private function idempotencyKey(array $input, ?Request $request): ?string
+    {
+        $candidate = $request?->header('Idempotency-Key') ?? $input['idempotency_key'] ?? null;
+
+        if ($candidate === null || $candidate === '') {
+            return null;
+        }
+
+        if (! is_string($candidate) || strlen($candidate) > 128 || preg_match('/^[A-Za-z0-9._:-]+$/', $candidate) !== 1) {
+            throw ValidationException::withMessages([
+                'idempotency_key' => __('validation.regex', ['attribute' => 'idempotency key']),
+            ]);
+        }
+
+        return $candidate;
+    }
+
+    private function resultFromExistingSubmission(
+        PublicAction $action,
+        PublicActionSubmission $submission,
+        ?Request $request,
+    ): PublicActionResultData {
+        return $this->resultWithActionDefaults($action, $submission, new PublicActionResultData(
+            success: $submission->status === PublicActionSubmissionStatus::Handled,
+            message: is_string($submission->metadata['result_message'] ?? null)
+                ? $submission->metadata['result_message']
+                : null,
+            redirectUrl: is_string($submission->metadata['result_redirect_url'] ?? null)
+                ? $submission->metadata['result_redirect_url']
+                : null,
+        ), $request);
     }
 
     private function metadata(PublicAction $action, ?Request $request): PublicActionMetadataData

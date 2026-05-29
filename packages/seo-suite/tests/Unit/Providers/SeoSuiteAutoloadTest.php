@@ -26,3 +26,22 @@ it('registers seo suite settings and extension settings surface', function (): v
 
     expect($surfaces[0]->settingsGroup ?? null)->toBe('seo_suite');
 });
+
+it('does not schedule PageSpeed audits unless the API client is configured', function (): void {
+    $provider = new SeoSuiteServiceProvider(app());
+    $method = new ReflectionMethod(SeoSuiteServiceProvider::class, 'pageSpeedAuditsAreConfigured');
+
+    config([
+        'capell-seo-suite.pagespeed.enabled' => true,
+        'capell-seo-suite.pagespeed.api_key' => null,
+    ]);
+
+    expect($method->invoke($provider))->toBeFalse();
+
+    config([
+        'capell-seo-suite.pagespeed.enabled' => true,
+        'capell-seo-suite.pagespeed.api_key' => 'test-key',
+    ]);
+
+    expect($method->invoke($provider))->toBeTrue();
+});

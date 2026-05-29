@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Capell\SeoSuite\Filament\Pages\AiDiscoveryPage;
 use Capell\SeoSuite\Filament\Pages\BrokenLinksPage;
 use Capell\SeoSuite\Filament\Pages\NotFoundUrlsPage;
+use Capell\SeoSuite\Filament\Pages\SearchRankingsPage;
 use Capell\SeoSuite\Filament\Pages\SeoAuditPage;
 use Capell\SeoSuite\Filament\Pages\TranslationCoveragePage;
 
@@ -20,5 +21,7 @@ it('keeps seo monitoring links contained under seo audit', function (): void {
         ->and(AiDiscoveryPage::getNavigationParentItem())->toBe($parentItem)
         ->and(AiDiscoveryPage::getNavigationSort())->toBe(13)
         ->and(TranslationCoveragePage::getNavigationParentItem())->toBe($parentItem)
-        ->and(TranslationCoveragePage::getNavigationSort())->toBe(14);
+        ->and(TranslationCoveragePage::getNavigationSort())->toBe(14)
+        ->and(SearchRankingsPage::getNavigationParentItem())->toBe($parentItem)
+        ->and(SearchRankingsPage::getNavigationSort())->toBe(15);
 });

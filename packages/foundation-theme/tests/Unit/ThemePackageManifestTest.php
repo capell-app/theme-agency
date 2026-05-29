@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\FoundationTheme\Providers\FoundationThemeServiceProvider;
+
 it('declares foundation as the default theme package', function (): void {
     $manifest = themePackageManifest('foundation-theme');
     $composer = themePackageComposer('foundation-theme');
@@ -12,6 +14,24 @@ it('declares foundation as the default theme package', function (): void {
         ->and($manifest['kind'])->toBe('theme')
         ->and($manifest['themeKey'])->toBe('default')
         ->and($manifest['extends'])->toBeNull();
+});
+
+it('defines the Foundation Theme Studio parent contract', function (): void {
+    $definition = FoundationThemeServiceProvider::definition();
+
+    expect($definition->key)->toBe('default')
+        ->and($definition->package)->toBe('capell-app/foundation-theme')
+        ->and($definition->extends)->toBeNull()
+        ->and($definition->includedSections)->toContain('navigation')
+        ->and($definition->includedSections)->toContain('hero')
+        ->and($definition->includedSections)->toContain('features')
+        ->and($definition->includedSections)->toContain('proof')
+        ->and($definition->includedSections)->toContain('content-listing')
+        ->and($definition->includedSections)->toContain('cta')
+        ->and($definition->includedSections)->toContain('footer')
+        ->and($definition->presets)->toHaveCount(1)
+        ->and($definition->runtime->value)->toBe('blade')
+        ->and($definition->assets)->toHaveKey('css');
 });
 
 it('declares standalone theme packages extending foundation', function (string $packageDirectory, string $composerName, string $themeKey): void {

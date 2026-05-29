@@ -1,12 +1,12 @@
 # Theme Corporate
 
-Status: **Available, no schema impact** · Kind: **theme** · Tier: **premium** · Bundle: **themes** · Contexts: **frontend** · Product group: **Capell Themes**
+Status: **Available, no schema impact** · Kind: **theme** · Tier: **free** · Bundle: **themes** · Contexts: **frontend** · Product group: **Capell Themes**
 
 This page is the consolidated implementation overview for the Theme Corporate package. It is extracted from the package README, service providers, migrations, config files, routes, resources, models, actions, and the shared Capell ERD notes where available.
 
 ## What This Package Adds
 
-Theme Corporate is a standalone Capell theme package. It registers the `corporate` theme key, extends Foundation Theme, and adds restrained renderer views for B2B, public sector, and professional-service sites.
+Theme Corporate is a standalone Capell theme package. It registers the `corporate` theme key, extends Foundation Theme, and adds restrained renderer views for B2B, public sector, and professional-service sites. Treat it as a polished basic/business preset unless a future rewrite gives it a deeper enterprise workflow; if it remains only a standard section stack, fold the best restrained defaults into Foundation.
 
 - Corporate theme service provider.
 - Theme renderer/views for corporate theme output.
@@ -63,7 +63,7 @@ Provides a corporate visual option for sites that need restrained, trust-focused
 - Theme key: `corporate`
 - Product group: Capell Themes
 - Kind: theme
-- Tier: premium
+- Tier: free
 - Bundle: themes
 - Contexts: `frontend`
 - Requires: `capell-app/foundation-theme`

@@ -6,9 +6,13 @@
 <section class="healthcare-care bg-white">
     <div class="grid gap-8 px-6 lg:grid-cols-[1fr_0.9fr] lg:items-center">
         <div>
-            <h2>{{ $section->heading }}</h2>
+            <h2 class="text-4xl font-black tracking-tight text-[#14323a]">
+                {{ $section->heading }}
+            </h2>
             @if ($section->summary ?? null)
-                <p class="mt-4 max-w-2xl text-lg">{{ $section->summary }}</p>
+                <p class="mt-4 max-w-2xl text-lg text-stone-600">
+                    {{ $section->summary }}
+                </p>
             @endif
 
             <div class="mt-8 flex flex-wrap gap-3">

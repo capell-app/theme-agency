@@ -31,7 +31,16 @@ use Capell\Newsletter\Models\ProviderConnection;
 use Capell\Newsletter\Models\Subscriber;
 use Capell\Newsletter\Models\SyncAttempt;
 use Capell\Newsletter\Support\NewsletterSettingsResolver;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Route;
+
+it('keeps provider webhook posts outside the browser csrf boundary', function (): void {
+    $route = Route::getRoutes()->getByName('capell-newsletter.provider-webhook');
+
+    expect($route)->not->toBeNull()
+        ->and($route?->excludedMiddleware())->toContain(VerifyCsrfToken::class);
+});
 
 it('fails closed for production provider webhooks without a valid secret', function (): void {
     $site = $this->createNewsletterSite();

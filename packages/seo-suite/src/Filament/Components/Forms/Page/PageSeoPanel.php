@@ -117,6 +117,7 @@ class PageSeoPanel extends View
             'linkIssues' => $hasReport ? $report->issuesForKey(SeoCheckKeyEnum::InternalLinks) : [],
             'schemaIssues' => $hasReport ? $report->issuesForKey(SeoCheckKeyEnum::Schema) : [],
             'searchConsoleIssues' => $hasReport ? $report->issuesForKey(SeoCheckKeyEnum::SearchConsole) : [],
+            'intelligenceSummary' => $hasReport ? $report->intelligenceSummary : null,
             'redirectOpportunities' => $hasReport ? $report->redirectOpportunities : [],
             'robotsIssues' => $hasReport ? [
                 ...$report->issuesForKey(SeoCheckKeyEnum::Robots),

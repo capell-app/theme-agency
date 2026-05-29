@@ -55,6 +55,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Testing\PendingCommand;
 use Illuminate\View\Factory as ViewFactory;
 use LaraZeus\SpatieTranslatable\SpatieTranslatableServiceProvider;
 use Livewire\Blaze\BlazeServiceProvider;
@@ -65,6 +66,7 @@ use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\WorkbenchServiceProvider;
 use Override;
+use RuntimeException;
 use Saade\FilamentAdjacencyList\FilamentAdjacencyListServiceProvider;
 use Sinnbeck\DomAssertions\DomAssertionsServiceProvider;
 use Spatie\Activitylog\ActivitylogServiceProvider;
@@ -195,6 +197,19 @@ abstract class AbstractTestCase extends TestCase
     }
 
     abstract protected function getPackageServiceName(): string;
+
+    /**
+     * @param  array<string, mixed>  $parameters
+     */
+    #[Override]
+    public function artisan($command, $parameters = []): PendingCommand
+    {
+        $pendingCommand = parent::artisan($command, $parameters);
+
+        throw_unless($pendingCommand instanceof PendingCommand, RuntimeException::class, 'Capell package tests expect console output mocking to remain enabled.');
+
+        return $pendingCommand;
+    }
 
     /**
      * @param  Application  $app

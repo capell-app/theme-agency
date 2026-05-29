@@ -22,7 +22,6 @@ use Filament\Notifications\Notification;
 use Filament\Support\Enums\Size;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Support\Collection;
-use RuntimeException;
 
 class PageAlertsWidget extends ResourceAlertsWidget
 {
@@ -30,7 +29,7 @@ class PageAlertsWidget extends ResourceAlertsWidget
 
     public ?int $recordKey = null;
 
-    private ?Pageable $resolvedRecord = null;
+    private ?Page $resolvedRecord = null;
 
     public function mount(): void
     {
@@ -51,7 +50,13 @@ class PageAlertsWidget extends ResourceAlertsWidget
             ->link()
             ->size(Size::Small)
             ->action(function (): void {
-                ClearCachedUrlsForModelAction::dispatch($this->pageRecord());
+                $record = $this->pageRecord();
+
+                if (! $record instanceof Page) {
+                    return;
+                }
+
+                ClearCachedUrlsForModelAction::dispatch($record);
 
                 Notification::make()
                     ->title(__('capell-admin::notification.page_cache_cleared'))
@@ -97,6 +102,10 @@ class PageAlertsWidget extends ResourceAlertsWidget
     {
         $record = $this->pageRecord();
         $alerts = collect();
+
+        if (! $record instanceof Page) {
+            return $alerts;
+        }
 
         $pageStatus = $this->draftStatusAlert();
 
@@ -183,35 +192,54 @@ class PageAlertsWidget extends ResourceAlertsWidget
         return $alerts;
     }
 
-    protected function pageRecord(): Pageable
+    protected function pageRecord(): ?Page
     {
-        if ($this->resolvedRecord instanceof Pageable) {
+        if ($this->resolvedRecord instanceof Page) {
             return $this->resolvedRecord;
         }
 
-        if ($this->record instanceof Pageable) {
+        if ($this->record instanceof Page) {
             $this->recordKey ??= (int) $this->record->getKey();
-            $this->resolvedRecord = $this->record;
-        } elseif ($this->recordKey !== null) {
-            $this->resolvedRecord = Page::query()
-                ->withTrashed()
-                ->find($this->recordKey);
+            $this->resolvedRecord = $this->hydratePageRecord($this->record);
+
+            return $this->resolvedRecord;
         }
 
-        throw_unless($this->resolvedRecord instanceof Pageable, RuntimeException::class, 'Record must be an instance of ' . Page::class);
+        if ($this->recordKey === null) {
+            return null;
+        }
 
-        $this->resolvedRecord->load([
+        $this->resolvedRecord = Page::query()
+            ->withTrashed()
+            ->find($this->recordKey);
+
+        if (! $this->resolvedRecord instanceof Page) {
+            return null;
+        }
+
+        $this->resolvedRecord = $this->hydratePageRecord($this->resolvedRecord);
+
+        return $this->resolvedRecord;
+    }
+
+    private function hydratePageRecord(Page $page): Page
+    {
+        $page->load([
             'site' => fn (BuilderContract $query): BuilderContract => $query->withTrashed(),
             'type',
             'pageUrls',
         ]);
 
-        return $this->resolvedRecord;
+        return $page;
     }
 
     private function draftStatusAlert(): ?MessageData
     {
         $record = $this->pageRecord();
+
+        if (! $record instanceof Page) {
+            return null;
+        }
 
         $workspaceId = $record->getAttribute('workspace_id');
 
@@ -256,7 +284,7 @@ class PageAlertsWidget extends ResourceAlertsWidget
      */
     private function getResource(): string
     {
-        return GetResourceFromBlueprintAction::run(ResourceEnum::Page, $this->pageRecord()->type) ?? PageResource::class;
+        return GetResourceFromBlueprintAction::run(ResourceEnum::Page, $this->pageRecord()?->type) ?? PageResource::class;
     }
 
     private function initialRecordKey(): ?int

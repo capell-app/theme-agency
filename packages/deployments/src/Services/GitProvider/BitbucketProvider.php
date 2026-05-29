@@ -37,6 +37,17 @@ final class BitbucketProvider implements GitProviderContract
         );
     }
 
+    public function getBranchCommitSha(DeploymentConnection $conn, string $branch): string
+    {
+        $branchData = $this->client($conn)
+            ->retry(2, 200, throw: false)
+            ->get(sprintf('/repositories/%s/%s/refs/branches/%s', $conn->repo_owner, $conn->repo_name, $branch))
+            ->throw()
+            ->json();
+
+        return (string) $branchData['target']['hash'];
+    }
+
     /**
      * @param  array<int, RepoFile>  $files
      */

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
+use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
 use Capell\Core\Models\Translation;
@@ -26,6 +27,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
@@ -55,34 +57,91 @@ function bindEditableRegionAdminAccess(bool $isAdmin): void
     });
 }
 
+function editableRegionCachePathFromUrl(string $url): string
+{
+    $path = parse_url($url, PHP_URL_PATH);
+
+    if (! is_string($path) || $path === '') {
+        return '/';
+    }
+
+    return '/' . ltrim($path, '/');
+}
+
 /**
  * @param  array<array-key, mixed>  $attributes
  */
 function createEditableRegionTranslation(array $attributes = []): Translation
 {
-    $page = Page::factory()->create();
+    $language = Language::factory()->create();
+    $site = Site::factory()->create(['language_id' => $language->getKey()]);
+    SiteDomain::factory()
+        ->for($site)
+        ->for($language)
+        ->create([
+            'scheme' => 'https',
+            'domain' => 'example.test',
+            'path' => '/',
+            'status' => true,
+        ]);
+    $page = Page::factory()->site($site)->create();
 
-    return Translation::factory()
+    $translation = Translation::factory()
         ->translatable($page)
+        ->language($language)
         ->create([
             'title' => 'Original title',
             'content' => '<p>Original content</p>',
-            'meta' => ['seo' => ['description' => 'Original description']],
+            'meta' => ['description' => 'Original description', 'seo' => ['description' => 'Original description']],
             ...$attributes,
         ]);
+    PageUrl::factory()
+        ->site($site)
+        ->language($language)
+        ->page($page)
+        ->create(['url' => '/current']);
+
+    return $translation;
 }
 
 function editableRegionPayload(Translation $translation, string $field = 'title'): EditableRegionPayloadData
 {
+    $page = $translation->translatable;
+    assert($page instanceof Page);
+
+    $pageUrl = PageUrl::query()
+        ->where('pageable_type', $page->getMorphClass())
+        ->where('pageable_id', $page->getKey())
+        ->firstOrFail();
+
+    $page->setRelation('translation', $translation);
+    $pageUrl->setRelation('pageable', $page);
+
     return new EditableRegionPayloadData(
         model: Translation::class,
         recordKey: (int) $translation->getKey(),
         field: $field,
-        label: 'Editable field',
-        type: 'text',
-        selector: '[data-editable]',
-        currentUrl: 'https://example.test/current',
+        label: $field === 'content' ? 'Page content' : ($field === 'title' ? 'Page title' : 'Page description'),
+        type: $field === 'content' ? 'html' : ($field === 'title' ? 'text' : 'textarea'),
+        selector: $field === 'content'
+            ? config('capell-frontend-authoring.selectors.page_content', '#main .content-component:first-of-type')
+            : config('capell-frontend-authoring.selectors.page_title', '#main h1:first-of-type'),
+        currentUrl: $pageUrl->full_url,
+        pageUrlId: (int) $pageUrl->getKey(),
+        siteId: (int) $pageUrl->site_id,
+        languageId: (int) $pageUrl->language_id,
+        regionKey: match ($field) {
+            'title' => 'page.title',
+            'content' => 'page.content',
+            'meta.description' => 'page.meta.description',
+            default => 'test.' . $field,
+        },
     );
+}
+
+function allowEditableRegionEdits(): void
+{
+    Gate::before(fn (Authenticatable $user, string $ability): ?bool => $ability === 'frontend-authoring.edit' ? true : null);
 }
 
 it('collects affected cached urls for the edited model record', function (): void {
@@ -188,6 +247,89 @@ it('updates allowed editable region fields and rejects unknown fields', function
     expect(fn (): array => UpdateEditableRegionAction::run(editableRegionPayload($translation, 'admin.hidden'), 'Nope'))
         ->toThrow(HttpException::class);
 });
+
+it('saves text rich html and meta edits while clearing every affected cached page', function (string $field, string $value, Closure $assertSaved): void {
+    Storage::fake('page_cache');
+
+    $translation = createEditableRegionTranslation();
+    $page = $translation->translatable;
+    assert($page instanceof Page);
+
+    $pageUrl = PageUrl::query()
+        ->where('pageable_type', $page->getMorphClass())
+        ->where('pageable_id', $page->getKey())
+        ->firstOrFail();
+    $siteDomain = SiteDomain::query()
+        ->where('site_id', $pageUrl->site_id)
+        ->where('language_id', $pageUrl->language_id)
+        ->firstOrFail();
+    $pathResolver = resolve(HtmlCachePathResolver::class);
+
+    $touchedUrls = [
+        $pageUrl->full_url,
+        'https://example.test/also-uses-this-copy',
+    ];
+
+    foreach ($touchedUrls as $url) {
+        $path = editableRegionCachePathFromUrl($url);
+        $cachePath = $pathResolver->pathForUrl($path, $siteDomain);
+
+        Storage::disk('page_cache')->put($cachePath, 'stale cached html');
+
+        CachedModelUrl::query()->create([
+            'url' => $url,
+            'url_hash' => CachedModelUrl::hashUrl($url),
+            'path' => $path,
+            'site_id' => $siteDomain->site_id,
+            'site_domain_id' => $siteDomain->getKey(),
+            'language_id' => $siteDomain->language_id,
+            'cacheable_type' => $translation->getMorphClass(),
+            'cacheable_id' => $translation->getKey(),
+        ]);
+    }
+
+    $result = UpdateEditableRegionAction::run(editableRegionPayload($translation, $field), $value);
+
+    $translation->refresh();
+    $assertSaved($translation);
+
+    expect($result)->toMatchArray([
+        'cleared' => 2,
+        'urls' => $touchedUrls,
+        'status' => 'published',
+        'redirect_url' => null,
+    ]);
+
+    foreach ($touchedUrls as $url) {
+        $path = editableRegionCachePathFromUrl($url);
+        $cachePath = $pathResolver->pathForUrl($path, $siteDomain);
+
+        expect(Storage::disk('page_cache')->exists($cachePath))->toBeFalse()
+            ->and(CachedModelUrl::query()->where('url', $url)->exists())->toBeFalse();
+    }
+})->with([
+    'plain text title' => [
+        'title',
+        'User tested title',
+        function (Translation $translation): void {
+            expect($translation->title)->toBe('User tested title');
+        },
+    ],
+    'rich html content' => [
+        'content',
+        '<h2>User tested heading</h2><p><strong>Rich</strong> body copy.</p>',
+        function (Translation $translation): void {
+            expect($translation->content)->toBe('<h2>User tested heading</h2><p><strong>Rich</strong> body copy.</p>');
+        },
+    ],
+    'meta description' => [
+        'meta.seo.description',
+        'User tested SEO description',
+        function (Translation $translation): void {
+            expect($translation->meta)->toHaveKey('seo.description', 'User tested SEO description');
+        },
+    ],
+]);
 
 it('saves inline edits into an approval workspace and returns a preview redirect when approval is required', function (): void {
     Config::set('capell-frontend-authoring.workflow.require_approval', true);
@@ -342,14 +484,24 @@ it('protects the edit region route with authentication admin access and signed u
     get($signedUrl)->assertForbidden();
 
     bindEditableRegionAdminAccess(true);
+    allowEditableRegionEdits();
 
-    $request = Request::create('/authoring/regions/' . $signer->encode(editableRegionPayload($translation)));
+    get($signedUrl)->assertOk()
+        ->assertSee('<html lang="en" class="fi">', false)
+        ->assertSee('capell-authoring-editor-shell')
+        ->assertSee("[x-cloak='']", false)
+        ->assertSee('capell-authoring:editor-loaded')
+        ->assertSee('wire:snapshot', false)
+        ->assertSee('Page title');
+
+    $encodedPayload = $signer->encode(editableRegionPayload($translation));
+    $request = Request::create('/authoring/regions/' . $encodedPayload);
     $request->setUserResolver(fn (): User => $user);
 
-    $view = resolve(EditRegionController::class)->__invoke($request, 'encoded-payload');
+    $view = resolve(EditRegionController::class)->__invoke($request, $encodedPayload);
 
     expect($view->name())->toBe('capell::editor.region')
-        ->and($view->getData())->toHaveKey('payload', 'encoded-payload');
+        ->and($view->getData())->toHaveKey('payload', $encodedPayload);
 
     $tamperedUrl = str_replace('signature=', 'signature=invalid', $signedUrl);
     getJson($tamperedUrl)->assertForbidden();

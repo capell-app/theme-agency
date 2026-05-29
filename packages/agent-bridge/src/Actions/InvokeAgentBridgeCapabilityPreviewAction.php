@@ -28,9 +28,7 @@ final class InvokeAgentBridgeCapabilityPreviewAction
      */
     public static function payloadHash(array $payload): string
     {
-        ksort($payload);
-
-        return hash('sha256', json_encode($payload, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        return hash('sha256', json_encode(self::canonicalPayload($payload), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     }
 
     /**
@@ -116,5 +114,24 @@ final class InvokeAgentBridgeCapabilityPreviewAction
             'expiresAt' => $confirmation->expires_at->toIso8601String(),
             'preview' => $preview->toPayload(),
         ];
+    }
+
+    /**
+     * @param  array<array-key, mixed>  $payload
+     * @return array<array-key, mixed>
+     */
+    private static function canonicalPayload(array $payload): array
+    {
+        if (! array_is_list($payload)) {
+            ksort($payload);
+        }
+
+        foreach ($payload as $key => $value) {
+            if (is_array($value)) {
+                $payload[$key] = self::canonicalPayload($value);
+            }
+        }
+
+        return $payload;
     }
 }

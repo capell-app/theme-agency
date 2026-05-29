@@ -33,7 +33,7 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/nonprofit.jpg',
             tags: ['Impact', 'Campaigns', 'Donations'],
             bestFit: ['Charities', 'Civic organisations', 'Campaign teams'],
-            includedSections: ['navigation', 'hero', 'impact', 'campaigns', 'volunteer-donate', 'events', 'stories', 'contact', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'impact', 'campaigns', 'volunteer-donate', 'events', 'stories', 'contact', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'nonprofit',
@@ -73,6 +73,7 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
             return;
         }
 
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-nonprofit');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-nonprofit');
 
         CapellCore::registerVendorAsset(
@@ -95,24 +96,53 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
                 layoutView: 'capell-theme-nonprofit::page',
                 sectionRenderers: [],
             ),
-            sectionRenderers: array_map(
-                fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer => array_key_exists($sectionKey, $this->optionalSectionIntegrations($campaignStudioAvailable, $formBuilderAvailable, $eventsAvailable, $blogAvailable))
-                    ? new PackageAwareSectionRenderer(
-                        themeKey: self::THEME_KEY,
-                        sectionKey: $sectionKey,
-                        view: 'capell-theme-nonprofit::sections.' . $sectionKey,
-                        integrations: $this->optionalSectionIntegrations($campaignStudioAvailable, $formBuilderAvailable, $eventsAvailable, $blogAvailable)[$sectionKey],
-                        failLoudly: true,
-                    )
-                    : new ViewSectionRenderer(
-                        themeKey: self::THEME_KEY,
-                        sectionKey: $sectionKey,
-                        view: 'capell-theme-nonprofit::sections.' . $sectionKey,
-                        failLoudly: true,
-                    ),
-                self::definition()->includedSections,
-            ),
+            sectionRenderers: collect(self::definition()->includedSections)
+                ->map(fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer|null => $this->sectionRenderer(
+                    $sectionKey,
+                    $this->optionalSectionIntegrations($campaignStudioAvailable, $formBuilderAvailable, $eventsAvailable, $blogAvailable),
+                ))
+                ->filter()
+                ->values()
+                ->all(),
         );
+    }
+
+    /**
+     * @param  array<string, array<string, bool>>  $optionalIntegrations
+     */
+    private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ViewSectionRenderer|PackageAwareSectionRenderer|null
+    {
+        if ($this->isFoundationSection($sectionKey)) {
+            return null;
+        }
+
+        $view = 'capell-theme-nonprofit::sections.' . $sectionKey;
+
+        if (! view()->exists($view)) {
+            return null;
+        }
+
+        if (array_key_exists($sectionKey, $optionalIntegrations)) {
+            return new PackageAwareSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: $sectionKey,
+                view: $view,
+                integrations: $optionalIntegrations[$sectionKey],
+                failLoudly: true,
+            );
+        }
+
+        return new ViewSectionRenderer(
+            themeKey: self::THEME_KEY,
+            sectionKey: $sectionKey,
+            view: $view,
+            failLoudly: true,
+        );
+    }
+
+    private function isFoundationSection(string $sectionKey): bool
+    {
+        return in_array($sectionKey, ['navigation', 'footer'], true);
     }
 
     /**

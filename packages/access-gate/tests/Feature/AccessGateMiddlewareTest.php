@@ -183,9 +183,11 @@ it('blocks protected content when the active access area is assigned to the curr
     expect($rendered)->toBeFalse();
 });
 
-it('allows protected content when the active access area is assigned to a different site', function (): void {
+it('fails closed when a protected route has no access area for the current site', function (): void {
     defineAccessGateSiteTables();
     defineAccessGateSiteDomain(siteId: 1, domain: 'example.test');
+
+    $rendered = false;
 
     Area::factory()->create([
         'site_id' => 2,
@@ -194,11 +196,19 @@ it('allows protected content when the active access area is assigned to a differ
         'identity_mode' => IdentityMode::Hybrid,
     ]);
 
-    Route::middleware('access-gate:preview')->get('/access-gate-test/site-mismatch', fn (): string => 'secret');
+    Route::middleware('access-gate:preview')->get('/access-gate-test/site-mismatch', function () use (&$rendered): string {
+        $rendered = true;
+
+        return 'secret';
+    });
 
     $this->get('http://example.test/access-gate-test/site-mismatch')
-        ->assertOk()
-        ->assertSee('secret');
+        ->assertRedirect(route('capell-access-gate.request', [
+            'area' => 'preview',
+            'redirect' => 'http://example.test/access-gate-test/site-mismatch',
+        ]));
+
+    expect($rendered)->toBeFalse();
 });
 
 it('reports the resolved access area when status checks are denied', function (): void {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\Comments\Livewire;
 
-use Capell\Comments\Actions\BuildPublicThreadAction;
 use Capell\Comments\Actions\CreateCommentAction;
+use Capell\Comments\Actions\ResolvePublicCommentableThreadAction;
 use Capell\Comments\Data\CreateCommentData;
 use Capell\Comments\Data\PublicCommentData;
 use Capell\Core\Contracts\Extensions\RegistersExtensionFrontendComponent;
@@ -110,10 +110,11 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
             return;
         }
 
-        $this->comments = BuildPublicThreadAction::run(
+        $thread = ResolvePublicCommentableThreadAction::run(
             commentable: $commentable,
             rootLimit: (int) config('capell-comments.root_page_size', 20),
         );
+        $this->comments = $thread->comments ?? [];
     }
 
     private function resolveCommentable(): ?Model
@@ -130,6 +131,8 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
 
         $type = $payload['type'] ?? null;
         $id = $payload['id'] ?? null;
+        $siteId = $payload['site_id'] ?? null;
+        $languageId = $payload['language_id'] ?? null;
 
         if (! is_string($type) || ! is_numeric($id)) {
             return null;
@@ -142,6 +145,18 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
 
         /** @var Model|null $model */
         $model = $class::query()->find((int) $id);
+
+        if (! $model instanceof Model) {
+            return null;
+        }
+
+        if (is_numeric($siteId) && (int) $model->getAttribute('site_id') !== (int) $siteId) {
+            return null;
+        }
+
+        if (is_numeric($languageId) && (int) $model->getAttribute('language_id') !== (int) $languageId) {
+            return null;
+        }
 
         return $model;
     }

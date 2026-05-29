@@ -27,4 +27,12 @@ return [
         'route_level_required' => 'Page cache middleware is in the web group. Ensure protected routes apply access-gate before cache reads.',
     ],
     'passed' => 'Access Gate doctor checks passed.',
+    'site_scoped_areas' => [
+        'missing_site_config' => 'Site-scoped access areas are missing explicit config for at least one site: :areas.',
+        'missing_site_config_remediation' => 'Add an all-sites area row or create a matching site-scoped area for each site that can use the protected route key.',
+        'no_sites' => 'No sites exist; site-scoped area coverage was skipped.',
+        'not_enabled' => 'Site-scoped access areas are not enabled.',
+        'ok' => 'Site-scoped access area coverage looks safe.',
+        'sites_missing' => 'Sites table is unavailable; site-scoped area coverage was skipped.',
+    ],
 ];

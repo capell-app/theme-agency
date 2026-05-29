@@ -12,6 +12,8 @@ use Capell\HtmlCache\Models\CachedModelUrl;
 use Capell\Tests\Fixtures\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Testing\TestResponse;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\postJson;
@@ -33,18 +35,37 @@ function fakeAdminAccessChecker(bool $isAdmin = true): void
     });
 }
 
+function allowFrontendAuthoringEditsForBeaconTests(): void
+{
+    Gate::before(fn (Authenticatable $user, string $ability): ?bool => $ability === 'frontend-authoring.edit' ? true : null);
+}
+
+/**
+ * @param  array<string, string>  $headers
+ */
+function postSameOriginBeacon(string $url, array $headers = []): TestResponse
+{
+    $scheme = (string) parse_url($url, PHP_URL_SCHEME);
+    $host = (string) parse_url($url, PHP_URL_HOST);
+    $port = parse_url($url, PHP_URL_PORT);
+    $origin = $scheme . '://' . $host . (is_int($port) ? ':' . $port : '');
+
+    return postJson($origin . '/beacon', ['url' => $url], [
+        'Host' => $host . (is_int($port) ? ':' . $port : ''),
+        'X-Forwarded-Proto' => $scheme,
+    ] + $headers);
+}
+
 it('returns 404 if no site domain', function (): void {
     $user = User::factory()->create(['name' => 'Test User']);
     actingAs($user);
 
-    $response = postJson(route('capell-frontend.beacon'), [
-        'url' => 'https://example.com/foo',
-    ]);
+    $response = postSameOriginBeacon('https://example.com/foo');
 
     $response->assertStatus(404);
 });
 
-it('returns csrf token and user info for authenticated user', function (): void {
+it('returns only csrf token for authenticated non-admin users', function (): void {
     $user = User::factory()->create(['name' => 'Test User']);
     actingAs($user);
 
@@ -52,19 +73,52 @@ it('returns csrf token and user info for authenticated user', function (): void 
     $language = Language::factory()->create();
     $siteDomain = SiteDomain::factory()->for($site)->for($language)->create();
 
-    $response = postJson(route('capell-frontend.beacon'), [
-        'url' => $siteDomain->full_url,
-    ]);
+    $response = postSameOriginBeacon($siteDomain->full_url);
 
     $response->assertOk();
     $response->assertJsonStructure([
         'csrf_token',
-        'user' => ['id', 'name'],
     ]);
-    $response->assertJson(['user' => ['id' => $user->getKey(), 'name' => 'Test User']]);
+    $response->assertJsonMissingPath('user');
 });
 
 it('returns beacon scripts for admin user with url', function (): void {
+    $user = User::factory()->create(['name' => 'Test User']);
+    actingAs($user);
+
+    fakeAdminAccessChecker();
+    allowFrontendAuthoringEditsForBeaconTests();
+
+    $site = Site::factory()->create();
+    $language = Language::factory()->create();
+    SiteDomain::factory()->for($site)->for($language)->create();
+    $page = Page::factory()->site($site)->create();
+    PageUrl::factory()->for($site)->for($language)->page($page)->create();
+
+    $response = postSameOriginBeacon($page->pageUrl->full_url);
+
+    $response->assertOk();
+    $response->assertJsonStructure([
+        'scripts',
+    ]);
+
+    expect($response->json('scripts.0'))
+        ->toContain('CapellFrontendAuthoring')
+        ->toContain('edit_url')
+        ->not->toContain(")\n=>")
+        ->not->toContain("querySelectorAll( 'button, iframe, a[href], input, select,\ntextarea")
+        ->toContain('capell-authoring-overlay-layer')
+        ->toContain('capell-authoring-editing')
+        ->toContain('capell-authoring-control')
+        ->toContain('capell-authoring-toolbar')
+        ->toContain('Admin editing')
+        ->toContain('Not cached')
+        ->toContain('Show edit areas')
+        ->toContain(':count editable areas')
+        ->not->toContain('capell-frontend-authoring::');
+});
+
+it('does not expose editable region urls to admins without frontend authoring permission', function (): void {
     $user = User::factory()->create(['name' => 'Test User']);
     actingAs($user);
 
@@ -76,22 +130,15 @@ it('returns beacon scripts for admin user with url', function (): void {
     $page = Page::factory()->site($site)->create();
     PageUrl::factory()->for($site)->for($language)->page($page)->create();
 
-    $response = postJson(route('capell-frontend.beacon'), [
-        'url' => $page->pageUrl->full_url,
-    ]);
+    $response = postSameOriginBeacon($page->pageUrl->full_url);
 
     $response->assertOk();
-    $response->assertJsonStructure([
-        'scripts',
-    ]);
 
     expect($response->json('scripts.0'))
         ->toContain('CapellFrontendAuthoring')
-        ->toContain('edit_url')
-        ->toContain('.capell-authoring-region:hover > .capell-authoring-button')
-        ->toContain('capell-authoring-toolbar')
-        ->toContain('Admin editing')
-        ->toContain('Not cached');
+        ->not->toContain('/authoring/regions/')
+        ->not->toContain('recordKey')
+        ->not->toContain('meta.description');
 });
 
 it('returns page and html cache context in admin authoring banner script', function (): void {
@@ -99,6 +146,7 @@ it('returns page and html cache context in admin authoring banner script', funct
     actingAs($user);
 
     fakeAdminAccessChecker();
+    allowFrontendAuthoringEditsForBeaconTests();
 
     $site = Site::factory()->create();
     $language = Language::factory()->create();
@@ -125,9 +173,7 @@ it('returns page and html cache context in admin authoring banner script', funct
         'last_seen_at' => now()->subMinutes(5),
     ]);
 
-    $response = postJson(route('capell-frontend.beacon'), [
-        'url' => $pageUrl->full_url,
-    ]);
+    $response = postSameOriginBeacon($pageUrl->full_url);
 
     $response->assertOk();
 
@@ -146,6 +192,7 @@ it('escapes hostile page and editor names in admin authoring banner script', fun
     actingAs($user);
 
     fakeAdminAccessChecker();
+    allowFrontendAuthoringEditsForBeaconTests();
 
     $site = Site::factory()->create();
     $language = Language::factory()->create();
@@ -161,9 +208,7 @@ it('escapes hostile page and editor names in admin authoring banner script', fun
         'url' => '/hostile',
     ]);
 
-    $response = postJson(route('capell-frontend.beacon'), [
-        'url' => $pageUrl->full_url,
-    ]);
+    $response = postSameOriginBeacon($pageUrl->full_url);
 
     $response->assertOk();
 
@@ -183,6 +228,7 @@ it('does not return authoring scripts for cross-origin admin beacons', function 
     actingAs($user);
 
     fakeAdminAccessChecker();
+    allowFrontendAuthoringEditsForBeaconTests();
 
     $site = Site::factory()->create();
     $language = Language::factory()->create();
@@ -190,9 +236,7 @@ it('does not return authoring scripts for cross-origin admin beacons', function 
     $page = Page::factory()->site($site)->create();
     PageUrl::factory()->for($site)->for($language)->page($page)->create();
 
-    $response = postJson(route('capell-frontend.beacon'), [
-        'url' => $page->pageUrl->full_url,
-    ], [
+    $response = postSameOriginBeacon($page->pageUrl->full_url, [
         'Origin' => 'https://attacker.example',
         'Sec-Fetch-Site' => 'cross-site',
     ]);
@@ -209,6 +253,43 @@ it('does not return authoring scripts for cross-origin admin beacons', function 
         ->not->toContain('recordKey');
 });
 
+it('does not return authoring scripts when the posted url origin differs from the beacon request origin', function (): void {
+    $user = User::factory()->create();
+    actingAs($user);
+
+    fakeAdminAccessChecker();
+    allowFrontendAuthoringEditsForBeaconTests();
+
+    $site = Site::factory()->create();
+    $language = Language::factory()->create();
+    SiteDomain::factory()
+        ->for($site)
+        ->for($language)
+        ->create([
+            'scheme' => 'https',
+            'domain' => 'example.test',
+            'path' => '/',
+            'status' => true,
+        ]);
+    $page = Page::factory()->site($site)->create();
+    PageUrl::factory()->for($site)->for($language)->page($page)->create();
+
+    $response = postJson(route('capell-frontend.beacon'), ['url' => $page->pageUrl->full_url], [
+        'Host' => 'admin.example.test',
+        'X-Forwarded-Proto' => 'https',
+    ]);
+
+    $response->assertOk();
+    $response->assertJsonStructure(['csrf_token']);
+    $response->assertJsonMissingPath('scripts');
+    $response->assertJsonMissingPath('user');
+
+    expect($response->getContent())
+        ->not->toContain('CapellFrontendAuthoring')
+        ->not->toContain('edit_url')
+        ->not->toContain('recordKey');
+});
+
 it('does not return authoring scripts or metadata for non-admin authenticated user', function (): void {
     $user = User::factory()->create();
     actingAs($user);
@@ -221,12 +302,11 @@ it('does not return authoring scripts or metadata for non-admin authenticated us
     $page = Page::factory()->site($site)->create();
     PageUrl::factory()->for($site)->for($language)->page($page)->create();
 
-    $response = postJson(route('capell-frontend.beacon'), [
-        'url' => $page->pageUrl->full_url,
-    ]);
+    $response = postSameOriginBeacon($page->pageUrl->full_url);
 
     $response->assertOk();
     $response->assertJsonMissingPath('scripts');
+    $response->assertJsonMissingPath('user');
     $response->assertJsonMissingPath('editable_regions');
     $response->assertJsonMissingPath('editor_html');
 
@@ -243,9 +323,7 @@ it('returns only csrf token for guest', function (): void {
     $language = Language::factory()->create();
     $siteDomain = SiteDomain::factory()->for($site)->for($language)->create();
 
-    $response = postJson(route('capell-frontend.beacon'), [
-        'url' => $siteDomain->full_url,
-    ]);
+    $response = postSameOriginBeacon($siteDomain->full_url);
 
     $response->assertOk();
     $response->assertJsonStructure(['csrf_token']);
@@ -290,6 +368,16 @@ it('renders page data without throwing when configured beacon route is missing',
     $rendered = view('capell::components.page-data')->render();
 
     expect($rendered)->toContain('"url":null');
+});
+
+it('renders page data with a same origin beacon path', function (): void {
+    $rendered = view('capell::components.page-data')->render();
+
+    expect($rendered)
+        ->toContain('"url":"\/beacon"')
+        ->toContain('new URL(beacon.url, window.location.origin)')
+        ->toContain('requestIdleCallback')
+        ->not->toContain('http:\/\/localhost\/beacon');
 });
 
 it('page data does not render authoring metadata into cached html', function (): void {

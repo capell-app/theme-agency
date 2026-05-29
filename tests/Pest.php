@@ -42,6 +42,7 @@ use Capell\Tests\Packages\UninstalledPackagesTestCase;
 use Capell\WelcomeTour\Tests\WelcomeTourTestCase;
 use Capell\WordPressImporter\Tests\WordPressImporterTestCase;
 use Illuminate\Support\Collection;
+use Illuminate\Testing\PendingCommand;
 use Pest\Expectation;
 
 /**
@@ -77,6 +78,18 @@ function groupCapellPackageSuiteTests(string $suite): void
 
     pest()->group($group, 'package')->in(sprintf('../packages/*/tests/%s', $suite));
     pest()->group($group, 'workspace')->in(sprintf('Packages/%s', $suite));
+}
+
+/**
+ * @param  array<string, mixed>  $parameters
+ */
+function capell_artisan(string $command, array $parameters = []): PendingCommand
+{
+    $pendingCommand = test()->artisan($command, $parameters);
+
+    throw_unless($pendingCommand instanceof PendingCommand, RuntimeException::class, 'Capell package command tests expect console output mocking to remain enabled.');
+
+    return $pendingCommand;
 }
 
 /**

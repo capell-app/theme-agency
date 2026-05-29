@@ -16,8 +16,6 @@ use Capell\LayoutBuilder\Support\Creator\DemoCreator;
 use Illuminate\Console\Command;
 use Mockery\MockInterface;
 
-use function Pest\Laravel\artisan;
-
 it('adds hero meta to blog and article pages when blog package is installed', function (): void {
     AddHeroBlockToLayoutAction::shouldRun()->once();
     Blueprint::factory()->type('section')->create(['key' => 'hero']);
@@ -59,7 +57,7 @@ it('adds hero meta to blog and article pages when blog package is installed', fu
         capell_expect($meta)->not()->toHaveKey('hero');
     }
 
-    artisan('capell:hero-demo --sites=DemoSite')
+    $this->artisan('capell:hero-demo --sites=DemoSite')
         ->expectsOutput('Demo hero content has been successfully created for site: DemoSite')
         ->expectsOutput('Hero demo content inserted successfully.')
         ->assertExitCode(Command::SUCCESS);

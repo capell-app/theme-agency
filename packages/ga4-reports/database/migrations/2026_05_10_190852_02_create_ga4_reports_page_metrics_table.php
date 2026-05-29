@@ -14,7 +14,7 @@ return new class extends Migration
 
         Schema::create($tableName, function (Blueprint $table): void {
             $table->id();
-            $table->string('property_id');
+            $table->string('property_id', 128);
             $table->date('metric_date');
             $table->string('page_path', 512);
             $table->string('page_title')->nullable();

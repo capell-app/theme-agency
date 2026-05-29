@@ -22,7 +22,6 @@ describe('MetaSchemaEnum', function (): void {
             'breadcrumb' => 'capell::schema.breadcrumb',
             'image' => 'capell::schema.image',
             'organization' => 'capell::schema.organization',
-            'graph' => 'capell::schema.graph',
         ]);
     });
 

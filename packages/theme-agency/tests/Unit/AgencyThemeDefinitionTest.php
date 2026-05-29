@@ -16,6 +16,7 @@ use Capell\Core\ThemeStudio\Data\ThemePageData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Agency\AgencyThemeServiceProvider;
 use Capell\ThemeStudio\Agency\Health\ThemeAgencyHealthCheck;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 
 it('defines the agency free renderer contract', function (): void {
@@ -68,6 +69,48 @@ it('declares renderers for every included agency section', function (): void {
         'cta',
         'footer',
     ]);
+});
+
+it('renders proof headings readably inside the white proof panel', function (): void {
+    View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
+
+    $html = view('capell-theme-agency::sections.proof', [
+        'section' => new ProofSectionData(
+            heading: 'Proof that the theme can carry real pages',
+            summary: 'Proof copy should remain visible.',
+            items: [['quote' => 'Faster launches', 'name' => 'Studio team']],
+        ),
+    ])->render();
+
+    expect($html)
+        ->toContain('Proof that the theme can carry real pages')
+        ->toContain('text-zinc-950');
+});
+
+it('renders the agency hero with a campaign launch board fallback', function (): void {
+    View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-agency::sections.hero', [
+        'section' => new HeroSectionData(
+            heading: 'Focused launch systems',
+            eyebrow: 'Studio',
+            summary: 'Strategy, identity, and delivery for growing teams.',
+            actions: [
+                ['label' => 'View work', 'url' => '/work'],
+                ['label' => 'Start project', 'url' => '/contact', 'style' => 'secondary'],
+            ],
+        ),
+    ])->render();
+
+    expect($html)
+        ->toContain('Focused launch systems')
+        ->toContain('Launch board')
+        ->toContain('Campaign scene')
+        ->toContain('Channels')
+        ->toContain('Live sprint')
+        ->toContain('Start project')
+        ->not->toContain('capell-app/theme-agency');
 });
 
 it('registers agency only when the theme package is installed', function (): void {
@@ -163,6 +206,10 @@ it('renders public theme markup without package identifiers', function (): void 
 
     expect($html)
         ->toContain('Northstar Studio')
+        ->toContain('Campaign system')
+        ->toContain('Proof wall')
+        ->toContain('Work wall')
+        ->toContain('Launch room')
         ->not->toContain('data-capell-theme')
         ->not->toContain('capell-theme')
         ->not->toContain('capell-app/theme-agency')

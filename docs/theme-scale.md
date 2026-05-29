@@ -4,11 +4,11 @@ Use this scale when creating a new Capell theme, changing one existing theme, or
 
 ## Theme Tiers
 
-| Tier       | Packages                                                                            | Role                                                                                                                                                           | Expected depth                                                                                                                    |
-| ---------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Foundation | `capell-app/foundation-theme`                                                       | Default frontend runtime, shared renderer conventions, Tailwind asset generation, media URL handling, generic Blade components, and base Layout Builder areas. | Boring, stable, shared. Changes here affect every child theme.                                                                    |
-| Basic/free | `capell-app/theme-agency`, `capell-app/theme-corporate`                             | First-party visual treatments for common service, portfolio, B2B, public-sector, and professional sites.                                                       | Thin child themes with polished presets, page wrappers, and the standard section set.                                             |
-| Premium    | `capell-app/theme-commerce`, `capell-app/theme-healthcare`, `capell-app/theme-saas` | Higher-value themes for domains that need richer page patterns, optional package integrations, and more content states.                                        | Extra renderer layers, domain sections, optional package fallbacks, richer marketplace screenshots, and more regression coverage. |
+| Tier       | Packages                                                                                                                                                                                                                                       | Role                                                                                                                                                           | Expected depth                                                                                                                    |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Foundation | `capell-app/foundation-theme`                                                                                                                                                                                                                  | Default frontend runtime, shared renderer conventions, Tailwind asset generation, media URL handling, generic Blade components, and base Layout Builder areas. | Boring, stable, shared. Changes here affect every child theme.                                                                    |
+| Basic/free | `capell-app/theme-agency`, `capell-app/theme-corporate`                                                                                                                                                                                        | First-party visual treatments for creative/campaign and business/boardroom sites when the standard section set is enough.                                      | Thin child themes with polished presets, page wrappers, and the standard section set.                                             |
+| Premium    | `capell-app/theme-commerce`, `capell-app/theme-education`, `capell-app/theme-healthcare`, `capell-app/theme-knowledge`, `capell-app/theme-local-services`, `capell-app/theme-nonprofit`, `capell-app/theme-portfolio`, `capell-app/theme-saas` | Higher-value themes for domains that need richer page patterns, optional package integrations, more content states, or a distinct case-study workflow.         | Extra renderer layers, domain sections, optional package fallbacks, richer marketplace screenshots, and more regression coverage. |
 
 Foundation is the normal/default theme. Basic and premium themes extend Foundation rather than replacing it unless Foundation's rendering contract is genuinely the wrong base.
 
@@ -81,12 +81,49 @@ Start with Foundation unless there is a strong reason not to.
 3. Require `capell-app/core` and `capell-app/foundation-theme`. Add supported optional packages only when renderers actually integrate with them.
 4. Register the package with `CapellCore::registerPackage()` in `register()`.
 5. In `boot()`, stop early when the package is not installed, load views, and register the theme definition, page wrapper, and section renderers.
-6. Add the standard section set first: `navigation`, `hero`, `features`, `proof`, `content-listing`, `cta`, and `footer`.
-7. Add premium/domain sections only when the theme has a real domain need and a safe fallback for missing optional packages.
-8. Add demo content through an Action. Store content and block configuration in Capell data; keep presentation in views.
-9. Add focused tests for the definition, manifest requirements, renderer registration, optional package fallback, and public-output safety.
+6. Add the standard section set first: `navigation`, `hero`, `features`, `proof`, `content-listing`, `search`, `pagination`, `form`, `cta`, and `footer`.
+7. Ship the required page set: homepage, landing page, plain-text about page with imagery, list page with pagination, search page, contact form page, and at least one resource/detail page.
+8. Add premium/domain sections only when the theme has a real domain need and a safe fallback for missing optional packages.
+9. Add demo content through an Action. Store content and block configuration in Capell data; keep presentation in views.
+10. Add focused tests for the definition, manifest requirements, renderer registration, optional package fallback, public-output safety, required page coverage, and screenshot metadata.
 
 Theme keys are content identifiers. Renaming one is a migration, not a cosmetic package rename.
+
+## Screenshot And Marketplace Requirements
+
+Every first-party theme package must ship marketplace documentation that can feed Capell App, package docs, and generated marketplace pages.
+
+Each theme needs at least five screenshots. Store the manifest in `packages/<theme>/docs/screenshots.json`, and keep the image assets under `packages/<theme>/docs/assets/marketplace/`. Each screenshot entry must include:
+
+- `path`: image path relative to the package root.
+- `title`: concise screen name, such as `Homepage`, `Search`, or `Contact form`.
+- `description`: what the screen contains and what visitor problem it solves.
+- `layout`: how the page is normally assembled with Layout Builder sections, containers, blocks, and optional package data.
+- `editable`: which parts editors can change in Capell CMS without a Blade change.
+- `useful`: why this screen matters for the theme's target buyer.
+- `distinctive`: what makes the screen different from the same page type in the other themes.
+
+The five minimum screenshots are:
+
+1. Homepage with a strong theme-specific visual direction.
+2. Landing page for a campaign, service, course, product, cause, or case study.
+3. List page with pagination.
+4. Search results page.
+5. Contact or conversion form page.
+
+Add more screenshots for domain-specific value: product collection, clinician directory, course catalogue, resource hub, donation path, case study, event listing, pricing, docs, or newsletter surfaces. Screenshots must show real page composition and imagery, not placeholder arcs, blank cards, or the same section order with different colours.
+
+## Visual Differentiation
+
+Themes should share enough structure that maintainers know how to test and customise them, but they must not feel like colour swaps. Keep these contracts consistent across every theme:
+
+- The required page set above exists and renders safely.
+- Search and list pages support pagination.
+- Contact or conversion forms have a first-class section.
+- Imagery is available on all important page types, including text-led about pages.
+- Public output stays free of editor/admin metadata.
+
+Make each theme visually different through layout rhythm, section order, media treatment, card density, typography scale, CTA placement, and domain-specific sections. Avoid copying the same homepage, list, search, and contact layout across themes unless Foundation owns that shared fallback and the child theme deliberately overrides the parts that define its market.
 
 ## Applying Logic Across All Themes
 
@@ -113,6 +150,40 @@ Premium themes need more than a colour palette over the standard sections. They 
 
 Premium does not mean more static content. It means better defaults, richer configurable structures, and stronger coverage.
 
+## Non-Overlap Standard
+
+First-party themes should not overlap where it is avoidable. A premium theme must own a distinct buyer and primary workflow. If two themes share the same buyer, homepage anatomy, card system, proof treatment, listing rhythm, and conversion path, keep the stronger product lane and demote, merge, or fold the weaker one into Foundation.
+
+Current lane ownership:
+
+- `commerce`: merchandising and buying journeys.
+- `healthcare`: service, clinician, care-pathway, and appointment journeys.
+- `saas`: product, comparison, trial, and documentation journeys.
+- `knowledge`: search-led resource and reading journeys.
+- `local-services`: quote, locality, dispatch, and job-proof journeys.
+- `nonprofit`: campaign, donation, volunteer, impact, and story journeys.
+- `education`: course, cohort, instructor, event, and enrolment journeys.
+- `portfolio`: premium studio/case-study lane for work outcomes, case files, media kits, and audience-building paths.
+- `agency`: basic creative/campaign preset with expressive launch-room treatment; do not duplicate Portfolio's case-study workflow.
+- `corporate`: basic business/boardroom preset unless it becomes a distinct enterprise workflow.
+
+Future local-business verticals should extend this non-overlap standard rather than duplicate `local-services`.
+
+Recommended vertical lanes:
+
+- `theme-restaurant`: menu, reservation, private dining, events, opening-hours, and offer journeys.
+- `theme-equestrian`: riding lessons, clinics, camps, instructor/horse profiles, rider-level paths, and events-calendar journeys.
+- `theme-estate-agents`: property search, featured listings, valuation, local guide, agent proof, and viewing-request journeys.
+- `theme-salon`: treatment menu, stylist profiles, availability, before/after proof, reviews, and appointment-request journeys.
+- `theme-practice`: local professional services for solicitors, accountants, and advisers, centred on practice areas, credentials, consultation intake, resources, and compliance/trust.
+
+These themes should not own models, migrations, or admin resources by default. If a vertical needs live records or interactive filtering, put the data behaviour in an existing or new companion package and let the theme register a public-safe presentation layer. Examples:
+
+- Use `capell-app/events` for equestrian lessons, clinics, camps, restaurant events, and fitness/studio classes.
+- Use `capell-app/form-builder` for reservations, appointment requests, valuations, rider assessments, and client intake.
+- Use `capell-app/search` or a future `capell-app/property-listings` package for estate-agent search.
+- Use Livewire for public interaction only when it improves the visitor workflow: property search filters, event/class filters, appointment availability, menu filters, or intake routing. Components need stable loop keys, loading states, empty states, and package-missing fallbacks.
+
 ## Verification
 
 For documentation-only theme changes, check links and terminology against the package manifests and README files.
@@ -131,49 +202,20 @@ vendor/bin/pest packages/foundation-theme/tests packages/layout-builder/tests --
 
 Use `composer preflight` before committing broader theme/runtime changes.
 
-## Theme Inheritance
-
-Core Theme Studio supports parent theme fallback through `ThemeDefinitionData::$extends`. First-party child themes should set `extends: 'default'` in their runtime definition and `extends: "capell-app/foundation-theme"` in `capell.json`.
-
-When a child theme does not register a renderer for a section, `ThemeRegistry` resolves the renderer through the parent theme chain. Child renderers still win. Missing sections still fail loudly when neither the child nor any parent can render the section.
-
-Use inheritance to avoid copying standard Foundation views into thin child themes. Only override sections where the theme has distinct domain presentation.
-
 ## First-Party Theme Catalogue
 
-The modern first-party catalogue now includes these Foundation child themes:
+The first-party catalogue includes these Foundation child themes:
 
-- `local-services`: quote-led service businesses, local proof, service areas, quote forms, resources, and contact paths.
-- `knowledge`: editorial/resource sites, topic hubs, featured content, resource libraries, search-led listings, newsletter, and authors.
+- `agency`: studios, portfolios, service pages, case studies, campaigns, lead forms, and search.
+- `commerce`: product collections, lookbooks, buying guides, product stories, search, and newsletter conversion.
+- `corporate`: governance, services, resources, locations, contact paths, and formal proof.
 - `education`: schools and course providers, course catalogues, instructors, events, enrolment CTAs, resources, and FAQs.
+- `healthcare`: services, clinicians, appointment CTAs, care pathways, events, resources, and contact paths.
+- `knowledge`: editorial/resource sites, topic hubs, featured content, resource libraries, search-led listings, newsletter, and authors.
+- `local-services`: quote-led service businesses, local proof, service areas, quote forms, resources, and contact paths.
 - `nonprofit`: charities and civic sites, impact, campaigns, volunteer/donate CTAs, events, stories, and contact paths.
 - `portfolio`: creators and consultants, work grids, case studies, services, testimonials, speaking/media kit, and newsletter paths.
-
-Each package stays thin: no migrations, models, routes, or admin resources. Optional integrations are surfaced through safe render data and must never leak package metadata, authoring state, signed editor URLs, or admin selectors to public output.
-
-## Theme Marketplace Cards
-
-Theme admin cards should read like a product marketplace, not a database table. Cards can use installed theme records, registered theme definitions, and manifest/admin metadata to show preview images, best-fit use cases, tags, section count, package identity, demo readiness, install state, and compatibility warnings.
-
-Keep card copy and labels translated through `capell-admin::*`.
-
-## Theme Inheritance
-
-Core Theme Studio supports parent theme fallback through `ThemeDefinitionData::$extends`. First-party child themes should set `extends: 'default'` in their runtime definition and `extends: "capell-app/foundation-theme"` in `capell.json`.
-
-When a child theme does not register a renderer for a section, `ThemeRegistry` resolves the renderer through the parent theme chain. Child renderers still win. Missing sections still fail loudly when neither the child nor any parent can render the section.
-
-Use inheritance to avoid copying standard Foundation views into thin child themes. Only override sections where the theme has distinct domain presentation.
-
-## First-Party Theme Catalogue
-
-The modern first-party catalogue now includes these Foundation child themes:
-
-- `local-services`: quote-led service businesses, local proof, service areas, quote forms, resources, and contact paths.
-- `knowledge`: editorial/resource sites, topic hubs, featured content, resource libraries, search-led listings, newsletter, and authors.
-- `education`: schools and course providers, course catalogues, instructors, events, enrolment CTAs, resources, and FAQs.
-- `nonprofit`: charities and civic sites, impact, campaigns, volunteer/donate CTAs, events, stories, and contact paths.
-- `portfolio`: creators and consultants, work grids, case studies, services, testimonials, speaking/media kit, and newsletter paths.
+- `saas`: product marketing, pricing, docs, feature pages, proof, comparison, launches, and demo requests.
 
 Each package stays thin: no migrations, models, routes, or admin resources. Optional integrations are surfaced through safe render data and must never leak package metadata, authoring state, signed editor URLs, or admin selectors to public output.
 

@@ -33,7 +33,7 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/knowledge.jpg',
             tags: ['Editorial', 'Resources', 'Search'],
             bestFit: ['Knowledge bases', 'Resource hubs', 'Content teams'],
-            includedSections: ['navigation', 'hero', 'topic-hubs', 'featured-content', 'resource-library', 'search-listing', 'newsletter', 'authors', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'topic-hubs', 'featured-content', 'resource-library', 'search-listing', 'newsletter', 'authors', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'knowledge',
@@ -73,6 +73,7 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
             return;
         }
 
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-knowledge');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-knowledge');
 
         CapellCore::registerVendorAsset(
@@ -94,24 +95,53 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
                 layoutView: 'capell-theme-knowledge::page',
                 sectionRenderers: [],
             ),
-            sectionRenderers: array_map(
-                fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer => array_key_exists($sectionKey, $this->optionalSectionIntegrations($blogAvailable, $searchAvailable, $newsletterAvailable))
-                    ? new PackageAwareSectionRenderer(
-                        themeKey: self::THEME_KEY,
-                        sectionKey: $sectionKey,
-                        view: 'capell-theme-knowledge::sections.' . $sectionKey,
-                        integrations: $this->optionalSectionIntegrations($blogAvailable, $searchAvailable, $newsletterAvailable)[$sectionKey],
-                        failLoudly: true,
-                    )
-                    : new ViewSectionRenderer(
-                        themeKey: self::THEME_KEY,
-                        sectionKey: $sectionKey,
-                        view: 'capell-theme-knowledge::sections.' . $sectionKey,
-                        failLoudly: true,
-                    ),
-                self::definition()->includedSections,
-            ),
+            sectionRenderers: collect(self::definition()->includedSections)
+                ->map(fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer|null => $this->sectionRenderer(
+                    $sectionKey,
+                    $this->optionalSectionIntegrations($blogAvailable, $searchAvailable, $newsletterAvailable),
+                ))
+                ->filter()
+                ->values()
+                ->all(),
         );
+    }
+
+    /**
+     * @param  array<string, array<string, bool>>  $optionalIntegrations
+     */
+    private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ViewSectionRenderer|PackageAwareSectionRenderer|null
+    {
+        if ($this->isFoundationSection($sectionKey)) {
+            return null;
+        }
+
+        $view = 'capell-theme-knowledge::sections.' . $sectionKey;
+
+        if ($sectionKey !== 'hero' && ! view()->exists($view)) {
+            return null;
+        }
+
+        if (array_key_exists($sectionKey, $optionalIntegrations)) {
+            return new PackageAwareSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: $sectionKey,
+                view: $view,
+                integrations: $optionalIntegrations[$sectionKey],
+                failLoudly: true,
+            );
+        }
+
+        return new ViewSectionRenderer(
+            themeKey: self::THEME_KEY,
+            sectionKey: $sectionKey,
+            view: $view,
+            failLoudly: true,
+        );
+    }
+
+    private function isFoundationSection(string $sectionKey): bool
+    {
+        return in_array($sectionKey, ['navigation', 'footer'], true);
     }
 
     /**

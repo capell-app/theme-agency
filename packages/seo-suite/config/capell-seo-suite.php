@@ -24,6 +24,12 @@ return [
         'credentials_path' => env('CAPELL_SEO_TOOLS_SEARCH_CONSOLE_CREDENTIALS'),
         'property_url' => env('CAPELL_SEO_TOOLS_SEARCH_CONSOLE_PROPERTY_URL'),
     ],
+    'pagespeed' => [
+        'enabled' => env('CAPELL_SEO_SUITE_PAGESPEED_ENABLED', true),
+        'api_key' => env('CAPELL_SEO_SUITE_PAGESPEED_API_KEY'),
+        'timeout' => env('CAPELL_SEO_SUITE_PAGESPEED_TIMEOUT', 90),
+        'weekly_schedule' => env('CAPELL_SEO_SUITE_PAGESPEED_WEEKLY_SCHEDULE', 'monday_0600'),
+    ],
     'ai_discovery' => [
         'crawler_policy' => env('CAPELL_SEO_SUITE_AI_DISCOVERY_CRAWLER_POLICY', 'search_visible_training_restricted'),
         'crawler_policy_presets' => [

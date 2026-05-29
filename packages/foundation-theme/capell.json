@@ -45,7 +45,7 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [],
+    "capabilities": ["frontend-assets", "cache-blocking"],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,

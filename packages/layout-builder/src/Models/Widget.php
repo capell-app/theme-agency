@@ -104,6 +104,12 @@ class Widget extends Model implements Blueprintable, HasMedia, Publishable, Stat
     {
         $this->addMediaCollection(MediaCollectionEnum::Image->value)->singleFile();
         $this->addMediaCollection(MediaCollectionEnum::BackgroundImage->value)->singleFile();
+        $this->addMediaCollection('hero_video_desktop')->singleFile();
+        $this->addMediaCollection('hero_video_tablet')->singleFile();
+        $this->addMediaCollection('hero_video_mobile')->singleFile();
+        $this->addMediaCollection('hero_image_desktop')->singleFile();
+        $this->addMediaCollection('hero_image_tablet')->singleFile();
+        $this->addMediaCollection('hero_image_mobile')->singleFile();
     }
 
     /** @return BelongsTo<CoreBlueprint, $this> */
@@ -154,10 +160,13 @@ class Widget extends Model implements Blueprintable, HasMedia, Publishable, Stat
 
     public function getMetaComponent(): ?string
     {
+        $blueprint = $this->loadedBlueprint();
+        $blueprintMeta = $blueprint instanceof CoreBlueprint ? ($blueprint->meta ?? []) : [];
+
         $value = $this->component
             ?? $this->meta['component']
-            ?? $this->blueprint->component
-            ?? $this->blueprint?->meta['component']
+            ?? ($blueprint instanceof CoreBlueprint ? $blueprint->component : null)
+            ?? ($blueprintMeta['component'] ?? null)
             ?? null;
 
         return $value === null ? null : (string) $value;
@@ -165,10 +174,13 @@ class Widget extends Model implements Blueprintable, HasMedia, Publishable, Stat
 
     public function getComponentItem(): ?string
     {
+        $blueprint = $this->loadedBlueprint();
+        $blueprintMeta = $blueprint instanceof CoreBlueprint ? ($blueprint->meta ?? []) : [];
+
         $value = $this->component_item
             ?? $this->meta['component_item']
-            ?? $this->blueprint->component_item
-            ?? $this->blueprint?->meta['component_item']
+            ?? ($blueprint instanceof CoreBlueprint ? $blueprint->component_item : null)
+            ?? ($blueprintMeta['component_item'] ?? null)
             ?? null;
 
         return $value === null ? null : (string) $value;
@@ -176,10 +188,13 @@ class Widget extends Model implements Blueprintable, HasMedia, Publishable, Stat
 
     public function getViewFile(): ?string
     {
+        $blueprint = $this->loadedBlueprint();
+        $blueprintMeta = $blueprint instanceof CoreBlueprint ? ($blueprint->meta ?? []) : [];
+
         $value = $this->view_file
             ?? $this->meta['view_file']
-            ?? $this->blueprint->view_file
-            ?? $this->blueprint?->meta['view_file']
+            ?? ($blueprint instanceof CoreBlueprint ? $blueprint->view_file : null)
+            ?? ($blueprintMeta['view_file'] ?? null)
             ?? null;
 
         return $value === null ? null : (string) $value;
@@ -354,6 +369,15 @@ class Widget extends Model implements Blueprintable, HasMedia, Publishable, Stat
             'visible_until' => 'datetime',
             'status' => 'boolean',
         ];
+    }
+
+    private function loadedBlueprint(): ?CoreBlueprint
+    {
+        $blueprint = $this->relationLoaded('blueprint')
+            ? $this->getRelation('blueprint')
+            : ($this->relationLoaded('type') ? $this->getRelation('type') : null);
+
+        return $blueprint instanceof CoreBlueprint ? $blueprint : null;
     }
 
     private function nullableComponentString(mixed $value): ?string

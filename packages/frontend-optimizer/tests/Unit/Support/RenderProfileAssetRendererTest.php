@@ -36,7 +36,7 @@ it('renders only profile assets and inline critical css when available', functio
 
     $html = resolve(RenderProfileAssetRenderer::class)->render($profile->hash)->toHtml();
 
-    expect($html)->toContain('<style data-critical-css>.hero { display: grid; }</style>')
+    expect($html)->toContain('<style data-critical-css>body { margin: 0; }' . PHP_EOL . '.hero { display: grid; }</style>')
         ->and($html)->toContain('<link rel="stylesheet" href="/build/base.css">')
         ->and($html)->toContain('<link rel="preload" as="style" href="/build/carousel.css"')
         ->and($html)->toContain('<script type="module" defer src="/build/carousel.js"></script>')
@@ -161,5 +161,41 @@ it('escapes inline critical css style terminators', function (): void {
     $html = resolve(RenderProfileAssetRenderer::class)->render($profile->hash)->toHtml();
 
     expect($html)->toContain('<\\/style>')
+        ->and($html)->toContain('body { margin: 0; }')
         ->and($html)->not->toContain('</style>"; }');
+});
+
+it('sanitizes validator hostile generated critical css without dropping critical styles', function (): void {
+    Storage::fake('local');
+
+    $profileData = ResolveRenderProfileAction::run(
+        scope: OptimizationScope::Layout,
+        context: ['layout' => 'landing'],
+        assetSets: [FrontendAssetSet::make()->css('hero', '/build/hero.css', AssetLoadingStrategy::Critical)],
+    );
+
+    $profile = PersistRenderProfileAction::run($profileData);
+    $profile->forceFill([
+        'critical_css_path' => 'capell/frontend-optimizer/critical-css/test.css',
+        'status' => OptimizationStatus::Generated->value,
+    ])->save();
+
+    Storage::disk('local')->put('capell/frontend-optimizer/critical-css/test.css', implode('', [
+        '@supports (((-webkit-hyphens:none)) and (not (margin-trim: inline))) {',
+        '*{--tw-border-style:solid}',
+        '}',
+        '.\\@container, .\\[container-type\\:inline-size\\] { container-type: inline-size; }',
+        '@property --tw-content{syntax:"*";inherits:false;initial-value:""}',
+        '.hero{display:grid}',
+    ]));
+
+    $html = resolve(RenderProfileAssetRenderer::class)->render($profile->hash)->toHtml();
+
+    expect($html)
+        ->toContain('@supports (((-webkit-hyphens:none)) and (not (color:rgb(from red r g b))))')
+        ->toContain('*{--tw-border-style:solid}')
+        ->toContain('.hero{display:grid}')
+        ->not->toContain('margin-trim')
+        ->not->toContain('container-type')
+        ->not->toContain('@property');
 });

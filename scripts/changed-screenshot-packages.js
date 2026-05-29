@@ -1,7 +1,4 @@
 const fs = require('fs')
-const path = require('path')
-
-const root = process.cwd()
 
 const paths = fs
     .readFileSync(0, 'utf8')
@@ -12,22 +9,21 @@ const paths = fs
 const packages = new Set()
 
 for (const filePath of paths) {
-    const packageMatch = filePath.match(
-        /^packages\/([^/]+)\//,
+    const monorepoMatch = filePath.match(
+        /^packages\/([^/]+)\/docs\/screenshots\.json$/,
     )
 
+    if (monorepoMatch !== null) {
+        packages.add(monorepoMatch[1])
+
+        continue
+    }
+
     if (
-        packageMatch !== null &&
-        fs.existsSync(
-            path.join(
-                root,
-                'packages',
-                packageMatch[1],
-                'docs/screenshots.json',
-            ),
-        )
+        filePath === 'docs/screenshots.json' &&
+        process.env.CAPELL_PACKAGE_SLUG
     ) {
-        packages.add(packageMatch[1])
+        packages.add(process.env.CAPELL_PACKAGE_SLUG)
     }
 }
 

@@ -22,6 +22,7 @@ use Capell\LayoutBuilder\Support\Livewire\OpaqueBlockReference;
 use Capell\LayoutBuilder\Support\Loader\LayoutLoader;
 use Closure;
 use Exception;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Cache;
@@ -154,7 +155,7 @@ abstract class AbstractBlock extends Component
             'blockData' => $this->blockData(),
         ], $data);
 
-        return view($this->getComponent(), $data);
+        return resolve(Factory::class)->make($this->getComponent(), $data);
     }
 
     /**

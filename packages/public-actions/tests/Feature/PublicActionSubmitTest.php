@@ -65,6 +65,78 @@ it('returns json for json submissions', function (): void {
         ]);
 });
 
+it('replays duplicate submissions with the same idempotency key without creating another submission', function (): void {
+    PublicAction::factory()->create([
+        'key' => 'idempotent-action',
+        'handler_key' => 'test.handler',
+        'payload_schema' => [
+            'fields' => [
+                ['key' => 'email', 'type' => 'email', 'required' => true],
+            ],
+        ],
+    ]);
+
+    $this
+        ->withHeader('Idempotency-Key', 'request-123')
+        ->postJson('/actions/idempotent-action', [
+            'email' => 'first@example.test',
+        ])
+        ->assertOk()
+        ->assertJson(['success' => true]);
+
+    $this
+        ->withHeader('Idempotency-Key', 'request-123')
+        ->postJson('/actions/idempotent-action', [
+            'email' => 'second@example.test',
+        ])
+        ->assertOk()
+        ->assertJson(['success' => true]);
+
+    $submission = PublicActionSubmission::query()->firstOrFail();
+
+    expect(PublicActionSubmission::query()->count())->toBe(1)
+        ->and($submission->idempotency_key)->toBe('request-123')
+        ->and($submission->payload)->toBe(['email' => 'first@example.test']);
+});
+
+it('rejects filled honeypot fields before creating a submission', function (): void {
+    PublicAction::factory()->create([
+        'key' => 'honeypot-action',
+        'handler_key' => 'test.handler',
+    ]);
+
+    $this->postJson('/actions/honeypot-action', [
+        'email' => 'person@example.test',
+        '_hp' => 'filled by bot',
+    ])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['_hp']);
+
+    expect(PublicActionSubmission::query()->count())->toBe(0);
+});
+
+it('supports turnstile spam protection adapters when configured', function (): void {
+    config()->set('capell-public-actions.spam_protection.enabled', ['turnstile']);
+    config()->set('capell-public-actions.spam_protection.turnstile.secret', 'secret-key');
+
+    Http::fake([
+        'https://challenges.cloudflare.com/turnstile/v0/siteverify' => Http::response(['success' => true]),
+    ]);
+
+    PublicAction::factory()->create([
+        'key' => 'turnstile-action',
+        'handler_key' => 'test.handler',
+    ]);
+
+    $this->postJson('/actions/turnstile-action', [
+        'email' => 'person@example.test',
+        'cf-turnstile-response' => 'token',
+    ])->assertOk();
+
+    expect(PublicActionSubmission::query()->firstOrFail()->payload)
+        ->not->toHaveKey('cf-turnstile-response');
+});
+
 it('ignores public payload redirects to other hosts', function (): void {
     PublicAction::factory()->create([
         'key' => 'redirect-action',

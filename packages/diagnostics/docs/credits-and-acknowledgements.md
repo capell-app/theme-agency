@@ -18,12 +18,15 @@ Package role: Developer and operational diagnostics for Capell CMS.
 
 ## Open-source Packages And Authors
 
+- [Filament Jobs Monitor](https://github.com/ultraviolettes/filament-jobs-monitor), published on Packagist as [`croustibat/filament-jobs-monitor`](https://packagist.org/packages/croustibat/filament-jobs-monitor), provides the Laravel queue-event telemetry behind Diagnostics Queue Operations. Capell deliberately treats this package as the upstream monitor and wraps it instead of forking it.
 - [Laravel Actions](https://github.com/lorisleiva/laravel-actions), by Loris Leiva, keeps package behaviour in small action classes instead of burying it in pages, commands, or controllers.
 - [Spatie Laravel Data](https://github.com/spatie/laravel-data), by Ruben Van Assche and Spatie, keeps request state, settings, and package results typed at the boundaries.
 
 ## What We Especially Appreciate
 
 Diagnostics pays off when something is already broken. It gathers package, cache, queue, migration, and permission state into one admin surface so bug reports can start from evidence.
+
+The Queue Operations page is a good example of that boundary: [`croustibat/filament-jobs-monitor`](https://github.com/ultraviolettes/filament-jobs-monitor) captures queue monitor history, while Capell Diagnostics adds Capell queue discovery, guarded install defaults, typed Actions, safer retry/delete controls, and product-specific screenshots.
 
 ## Keeping This Page Current
 

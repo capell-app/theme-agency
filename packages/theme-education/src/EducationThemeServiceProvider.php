@@ -33,7 +33,7 @@ final class EducationThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/education.jpg',
             tags: ['Education', 'Courses', 'Enrolment'],
             bestFit: ['Schools', 'Course providers', 'Training teams'],
-            includedSections: ['navigation', 'hero', 'course-catalog', 'instructors', 'events', 'enrolment-cta', 'resources', 'faq', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'course-catalog', 'instructors', 'events', 'enrolment-cta', 'resources', 'faq', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'education',
@@ -73,6 +73,7 @@ final class EducationThemeServiceProvider extends ServiceProvider
             return;
         }
 
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'capell-theme-education');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'capell-theme-education');
 
         CapellCore::registerVendorAsset(
@@ -94,24 +95,53 @@ final class EducationThemeServiceProvider extends ServiceProvider
                 layoutView: 'capell-theme-education::page',
                 sectionRenderers: [],
             ),
-            sectionRenderers: array_map(
-                fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer => array_key_exists($sectionKey, $this->optionalSectionIntegrations($eventsAvailable, $formBuilderAvailable, $blogAvailable))
-                    ? new PackageAwareSectionRenderer(
-                        themeKey: self::THEME_KEY,
-                        sectionKey: $sectionKey,
-                        view: 'capell-theme-education::sections.' . $sectionKey,
-                        integrations: $this->optionalSectionIntegrations($eventsAvailable, $formBuilderAvailable, $blogAvailable)[$sectionKey],
-                        failLoudly: true,
-                    )
-                    : new ViewSectionRenderer(
-                        themeKey: self::THEME_KEY,
-                        sectionKey: $sectionKey,
-                        view: 'capell-theme-education::sections.' . $sectionKey,
-                        failLoudly: true,
-                    ),
-                self::definition()->includedSections,
-            ),
+            sectionRenderers: collect(self::definition()->includedSections)
+                ->map(fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer|null => $this->sectionRenderer(
+                    $sectionKey,
+                    $this->optionalSectionIntegrations($eventsAvailable, $formBuilderAvailable, $blogAvailable),
+                ))
+                ->filter()
+                ->values()
+                ->all(),
         );
+    }
+
+    /**
+     * @param  array<string, array<string, bool>>  $optionalIntegrations
+     */
+    private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ViewSectionRenderer|PackageAwareSectionRenderer|null
+    {
+        if ($this->isFoundationSection($sectionKey)) {
+            return null;
+        }
+
+        $view = 'capell-theme-education::sections.' . $sectionKey;
+
+        if (! view()->exists($view)) {
+            return null;
+        }
+
+        if (array_key_exists($sectionKey, $optionalIntegrations)) {
+            return new PackageAwareSectionRenderer(
+                themeKey: self::THEME_KEY,
+                sectionKey: $sectionKey,
+                view: $view,
+                integrations: $optionalIntegrations[$sectionKey],
+                failLoudly: true,
+            );
+        }
+
+        return new ViewSectionRenderer(
+            themeKey: self::THEME_KEY,
+            sectionKey: $sectionKey,
+            view: $view,
+            failLoudly: true,
+        );
+    }
+
+    private function isFoundationSection(string $sectionKey): bool
+    {
+        return in_array($sectionKey, ['navigation', 'footer'], true);
     }
 
     /**

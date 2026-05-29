@@ -1,4 +1,4 @@
-name: Screenshot Manifests
+name: Package Screenshots
 
 permissions:
   contents: read
@@ -9,23 +9,31 @@ on:
       - 4.x
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
-      - 'packages/**'
       - 'packages/**/docs/screenshots.json'
       - 'docs/package-screenshot-manifest.json'
+      - 'scripts/*screenshot*.js'
       - '.github/workflows/screenshots.yml'
   push:
     branches:
       - 4.x
     paths:
-      - 'packages/**'
       - 'packages/**/docs/screenshots.json'
-      - 'docs/package-screenshot-manifest.json'
+      - 'scripts/*screenshot*.js'
       - '.github/workflows/screenshots.yml'
   workflow_dispatch:
     inputs:
       package:
-        description: 'Optional manifest package to capture, such as theme-saas, layout-builder, blog, or diagnostics'
+        description: 'Optional package slug to capture, such as blog'
         required: false
+        type: string
+      package_repository:
+        description: 'Optional split package repository, such as capell-app/blog'
+        required: false
+        type: string
+      package_ref:
+        description: 'Git ref for package_repository'
+        required: false
+        default: '4.x'
         type: string
       screenshot_runner_ref:
         description: 'Git ref for capell-app/capell-screenshot-runner'
@@ -37,6 +45,34 @@ on:
         required: false
         default: false
         type: boolean
+  workflow_call:
+    inputs:
+      package:
+        description: 'Package slug to capture, such as blog'
+        required: true
+        type: string
+      package_repository:
+        description: 'Split package repository, such as capell-app/blog'
+        required: true
+        type: string
+      package_ref:
+        description: 'Git ref for package_repository'
+        required: false
+        default: '4.x'
+        type: string
+      screenshot_runner_ref:
+        description: 'Git ref for capell-app/capell-screenshot-runner'
+        required: false
+        default: 'main'
+        type: string
+      dry_run:
+        description: 'Validate the capture selection without building the screenshot app'
+        required: false
+        default: false
+        type: boolean
+    secrets:
+      ACCESS_TOKEN:
+        required: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}-${{ inputs.package || 'changed' }}
@@ -48,35 +84,60 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout packages repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 0
+
       - name: Use Node.js 20.x
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: '20.x'
 
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Determine changed screenshot packages
+        id: packages
+        run: |
+          git diff --name-only "${{ github.event.pull_request.base.sha }}" "${{ github.sha }}" \
+            | node scripts/changed-screenshot-packages.js > /tmp/capell-screenshot-packages.txt
+
+          if [ ! -s /tmp/capell-screenshot-packages.txt ]; then
+            echo "No package screenshot manifests changed."
+            echo "has_packages=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "Packages selected for validation:"
+          cat /tmp/capell-screenshot-packages.txt
+          echo "has_packages=true" >> "$GITHUB_OUTPUT"
+
+      - name: Rebuild aggregate screenshot manifest
+        if: steps.packages.outputs.has_packages == 'true'
+        run: npm run screenshots:manifest
+
       - name: Validate screenshot manifests
-        run: node scripts/validate-screenshot-manifests.js
+        if: steps.packages.outputs.has_packages == 'true'
+        run: npm run screenshots:validate -- --only-file /tmp/capell-screenshot-packages.txt
 
   capture-package-screenshots:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     env:
       COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.ACCESS_TOKEN }}"} }'
-      CAPELL_CORE_REPO_PATH: ${{ github.workspace }}/repositories/capell
       CAPELL_PACKAGES_REPO_PATH: ${{ github.workspace }}/repositories/capell-packages
-      CAPELL_PACKAGES_REPO: ${{ github.workspace }}/repositories/capell-packages
-      CAPELL_REPO: ${{ github.workspace }}/repositories/capell
       CAPELL_SCREENSHOT_RUNNER_PATH: ${{ github.workspace }}/services/capell-screenshot-runner
+      CAPELL_REPO: ${{ github.workspace }}/repositories/capell
+      CAPELL_PACKAGES_REPO: ${{ github.workspace }}/repositories/capell-packages
       CAPELL_SCREENSHOT_APP_PATH: ${{ github.workspace }}/services/capell-screenshot-runner
       CAPELL_ADMIN_URL: http://127.0.0.1:8000/admin
       CAPELL_FRONTEND_URL: http://127.0.0.1:8000
-      CAPELL_SCREENSHOT_SKIP_COMPOSER_UPDATE: 'true'
       DB_CONNECTION: sqlite
       DB_DATABASE: ${{ github.workspace }}/services/capell-screenshot-runner/database/database.sqlite
 
     steps:
-      - name: Checkout package repository
+      - name: Checkout packages repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           repository: capell-app/capell-packages
@@ -85,37 +146,15 @@ jobs:
           fetch-depth: 0
           path: repositories/capell-packages
 
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - name: Checkout Capell core repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
-          node-version: 22
-
-      - name: Determine manifests to capture
-        id: packages
-        working-directory: repositories/capell-packages
-        run: |
-          if [ -n "${{ inputs.package }}" ]; then
-            printf '%s\n' "${{ inputs.package }}" > /tmp/capell-package-screenshot-packages.txt
-          elif [ "${{ github.event_name }}" = "push" ]; then
-            git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" \
-              | node scripts/changed-screenshot-packages.js > /tmp/capell-package-screenshot-packages.txt
-          else
-            find packages -path '*/docs/screenshots.json' -print \
-              | node scripts/changed-screenshot-packages.js > /tmp/capell-package-screenshot-packages.txt
-          fi
-
-          if [ ! -s /tmp/capell-package-screenshot-packages.txt ]; then
-            echo "No changed screenshot manifests found."
-            echo "has_packages=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          echo "Manifests selected for capture:"
-          cat /tmp/capell-package-screenshot-packages.txt
-          echo "has_packages=true" >> "$GITHUB_OUTPUT"
+          repository: capell-app/capell
+          ref: 4.x
+          token: ${{ secrets.ACCESS_TOKEN }}
+          path: repositories/capell
 
       - name: Checkout screenshot runner
-        if: steps.packages.outputs.has_packages == 'true'
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           repository: capell-app/capell-screenshot-runner
@@ -123,61 +162,117 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           path: services/capell-screenshot-runner
 
-      - name: Checkout core repository
-        if: steps.packages.outputs.has_packages == 'true' && inputs.dry_run != true
+      - name: Checkout split package repository
+        if: inputs.package_repository != ''
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
-          repository: capell-app/capell
-          ref: 4.x
+          repository: ${{ inputs.package_repository }}
+          ref: ${{ inputs.package_ref }}
           token: ${{ secrets.ACCESS_TOKEN }}
-          fetch-depth: 0
-          path: repositories/capell
+          path: package-source
+
+      - name: Overlay split package into package monorepo
+        if: inputs.package_repository != ''
+        run: |
+          if [ -z "${{ inputs.package }}" ]; then
+            echo "The package input is required when package_repository is set."
+            exit 1
+          fi
+
+          mkdir -p "repositories/capell-packages/packages/${{ inputs.package }}"
+          rsync -a --delete --exclude '.git' package-source/ "repositories/capell-packages/packages/${{ inputs.package }}/"
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
 
       - name: Setup PHP
-        if: steps.packages.outputs.has_packages == 'true' && inputs.dry_run != true
+        if: inputs.dry_run != true
         uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2
         with:
-          php-version: 8.4
+          php-version: 8.3
           extensions: curl, dom, fileinfo, gd, intl, json, libxml, mbstring, pdo_sqlite, simplexml, sqlite3, zip
           tools: composer:v2
           coverage: none
 
-      - name: Install package Node dependencies
-        if: steps.packages.outputs.has_packages == 'true'
+      - name: Install package repository Node dependencies
         working-directory: repositories/capell-packages
         run: npm ci
 
       - name: Install screenshot runner Node dependencies
-        if: steps.packages.outputs.has_packages == 'true'
         working-directory: services/capell-screenshot-runner
         run: npm ci
 
       - name: Install Playwright browser
-        if: steps.packages.outputs.has_packages == 'true' && inputs.dry_run != true
+        if: inputs.dry_run != true
         working-directory: services/capell-screenshot-runner
         run: npm run install:browsers
 
-      - name: Prepare screenshot runner app
-        if: steps.packages.outputs.has_packages == 'true' && inputs.dry_run != true
+      - name: Configure screenshot runner Composer repositories
+        if: inputs.dry_run != true
         working-directory: services/capell-screenshot-runner
-        run: npm run prepare:app
+        run: node scripts/configure-composer-repositories.mjs
+
+      - name: Prepare screenshot app environment
+        if: inputs.dry_run != true
+        working-directory: services/capell-screenshot-runner
+        run: |
+          cp .env.example .env
+          touch database/database.sqlite
+          composer install --no-interaction --no-progress --ansi
+          php artisan key:generate --ansi
+
+      - name: Determine packages to capture
+        id: packages
+        working-directory: repositories/capell-packages
+        run: |
+          if [ -n "${{ inputs.package }}" ]; then
+            printf '%s\n' "${{ inputs.package }}" > /tmp/capell-screenshot-packages.txt
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" \
+              | node scripts/changed-screenshot-packages.js > /tmp/capell-screenshot-packages.txt
+          else
+            find packages -path '*/docs/screenshots.json' -print \
+              | node scripts/changed-screenshot-packages.js > /tmp/capell-screenshot-packages.txt
+          fi
+
+          if [ ! -s /tmp/capell-screenshot-packages.txt ]; then
+            echo "No changed screenshot packages found."
+            echo "has_packages=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "Packages selected for capture:"
+          cat /tmp/capell-screenshot-packages.txt
+          echo "has_packages=true" >> "$GITHUB_OUTPUT"
+
+      - name: Rebuild aggregate screenshot manifest
+        if: steps.packages.outputs.has_packages == 'true'
+        working-directory: repositories/capell-packages
+        run: npm run screenshots:manifest
+
+      - name: Validate screenshot manifests
+        if: steps.packages.outputs.has_packages == 'true'
+        working-directory: repositories/capell-packages
+        run: npm run screenshots:validate
 
       - name: Capture selected screenshots
         if: steps.packages.outputs.has_packages == 'true' && inputs.dry_run != true
         working-directory: repositories/capell-packages
-        run: npm run screenshots -- --only-file /tmp/capell-package-screenshot-packages.txt
+        run: npm run screenshots:capture -- --only-file /tmp/capell-screenshot-packages.txt
 
       - name: Dry-run selected screenshots
         if: steps.packages.outputs.has_packages == 'true' && inputs.dry_run == true
         working-directory: repositories/capell-packages
-        run: npm run screenshots:runner-check -- --only-file /tmp/capell-package-screenshot-packages.txt --skip-build
+        run: npm run screenshots:capture:check -- --only-file /tmp/capell-screenshot-packages.txt --skip-build
 
       - name: Upload generated screenshots
-        if: steps.packages.outputs.has_packages == 'true' && inputs.dry_run != true
+        if: steps.packages.outputs.has_packages == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: capell-package-screenshots-${{ inputs.package || github.sha }}
           path: |
-            repositories/capell-packages/packages/*/docs/images/screenshots
             repositories/capell-packages/public/docs/screenshots/packages
+            repositories/capell-packages/docs/package-screenshot-manifest.json
           if-no-files-found: warn

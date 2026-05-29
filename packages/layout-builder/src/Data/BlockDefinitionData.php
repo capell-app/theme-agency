@@ -191,7 +191,7 @@ class BlockDefinitionData extends Data
                     'container' => ContainerWidthEnum::Full,
                     'background_color' => 'light-gray',
                     'spacing' => 'md',
-                    'margin' => 0,
+                    'margin' => ['none'],
                     'padding' => ['md'],
                 ],
                 admin: [
@@ -359,6 +359,48 @@ class BlockDefinitionData extends Data
                     'margin' => ['none'],
                     'padding' => ['xl'],
                 ],
+            ),
+            new self(
+                key: 'kitchen-sink-rich-text',
+                name: 'Kitchen Sink Rich Text',
+                typeCreatorMethod: 'kitchenSinkReferenceBlockType',
+                meta: ['component' => BlockComponentEnum::KitchenSinkRichText, 'padding' => ['lg']],
+            ),
+            new self(
+                key: 'kitchen-sink-structured-text',
+                name: 'Kitchen Sink Structured Text',
+                typeCreatorMethod: 'kitchenSinkReferenceBlockType',
+                meta: ['component' => BlockComponentEnum::KitchenSinkStructuredText, 'padding' => ['lg']],
+            ),
+            new self(
+                key: 'kitchen-sink-data-display',
+                name: 'Kitchen Sink Data Display',
+                typeCreatorMethod: 'kitchenSinkReferenceBlockType',
+                meta: ['component' => BlockComponentEnum::KitchenSinkDataDisplay, 'padding' => ['lg']],
+            ),
+            new self(
+                key: 'kitchen-sink-forms',
+                name: 'Kitchen Sink Forms',
+                typeCreatorMethod: 'kitchenSinkReferenceBlockType',
+                meta: ['component' => BlockComponentEnum::KitchenSinkForms, 'padding' => ['lg']],
+            ),
+            new self(
+                key: 'kitchen-sink-interactions',
+                name: 'Kitchen Sink Interactions',
+                typeCreatorMethod: 'kitchenSinkReferenceBlockType',
+                meta: ['component' => BlockComponentEnum::KitchenSinkInteractions, 'padding' => ['lg']],
+            ),
+            new self(
+                key: 'kitchen-sink-embeds',
+                name: 'Kitchen Sink Embeds',
+                typeCreatorMethod: 'kitchenSinkReferenceBlockType',
+                meta: ['component' => BlockComponentEnum::KitchenSinkEmbeds, 'padding' => ['lg']],
+            ),
+            new self(
+                key: 'kitchen-sink-utility-states',
+                name: 'Kitchen Sink Utility States',
+                typeCreatorMethod: 'kitchenSinkReferenceBlockType',
+                meta: ['component' => BlockComponentEnum::KitchenSinkUtilityStates, 'padding' => ['lg']],
             ),
         ];
     }

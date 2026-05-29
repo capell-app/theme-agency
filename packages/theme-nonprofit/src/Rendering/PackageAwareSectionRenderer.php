@@ -6,6 +6,7 @@ namespace Capell\ThemeStudio\Nonprofit\Rendering;
 
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Contracts\ThemeSection;
+use Illuminate\Contracts\View\Factory;
 use Throwable;
 
 final readonly class PackageAwareSectionRenderer implements SectionRenderer
@@ -38,7 +39,7 @@ final readonly class PackageAwareSectionRenderer implements SectionRenderer
         }
 
         try {
-            return view($this->view, [
+            return resolve(Factory::class)->make($this->view, [
                 ...$section->toViewData(),
                 ...$this->integrations,
             ])->render();

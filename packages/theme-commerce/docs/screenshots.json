@@ -19,7 +19,7 @@
         },
         {
             "id": "theme-preview-url-output",
-            "title": "Theme preview URL output.",
+            "title": "Signed admin preview route.",
             "package": "theme-commerce",
             "surface": "admin",
             "targetType": "admin-url",
@@ -49,8 +49,8 @@
             "targetType": "frontend-url",
             "target": "/commerce-homepage-layout",
             "required": true,
-            "notes": "Capture Theme Commerce commerce homepage with retail hero, collection tiles, product rail, proof. No additional package note required.",
-            "useCase": "A buyer reviews how Theme Commerce handles the commerce homepage page layout before installing the theme.",
+            "notes": "Capture the retail homepage with merchandising hero, collection tiles, buying-path proof, product rail, and conversion CTA.",
+            "useCase": "A retailer checks that the theme feels like a buying journey rather than a plain catalogue wrapper.",
             "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-homepage-layout.png"
         },
         {
@@ -61,8 +61,8 @@
             "targetType": "frontend-url",
             "target": "/commerce-collection-layout",
             "required": true,
-            "notes": "Capture Theme Commerce collection listing with filters, product grid, merchandising banner. Requires capell-app/shopify-commerce; show this package note on the captured image.",
-            "useCase": "A buyer reviews how Theme Commerce handles the collection listing page layout before installing the theme.",
+            "notes": "Capture collection filters, product grid density, merchandising banner, and buyer-intent cards. Requires capell-app/shopify-commerce; show this package note on the captured image.",
+            "useCase": "A retailer reviews whether shoppers can scan ranges, campaigns, and stock signals quickly.",
             "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-collection-layout.png"
         },
         {
@@ -73,8 +73,8 @@
             "targetType": "frontend-url",
             "target": "/commerce-product-layout",
             "required": true,
-            "notes": "Capture Theme Commerce product detail page with gallery, price, variants, recommendations, cta. Requires capell-app/shopify-commerce; show this package note on the captured image.",
-            "useCase": "A buyer reviews how Theme Commerce handles the product detail page page layout before installing the theme.",
+            "notes": "Capture product detail with gallery, price, variants, stock proof, recommendations, and basket CTA. Requires capell-app/shopify-commerce; show this package note on the captured image.",
+            "useCase": "A retailer checks that product pages keep purchase intent, proof, and merchandising context together.",
             "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-product-layout.png"
         },
         {
@@ -85,8 +85,8 @@
             "targetType": "frontend-url",
             "target": "/commerce-lookbook-layout",
             "required": true,
-            "notes": "Capture Theme Commerce lookbook page with image-led editorial sections and shoppable cards. Requires capell-app/media-library; show this package note on the captured image.",
-            "useCase": "A buyer reviews how Theme Commerce handles the lookbook page page layout before installing the theme.",
+            "notes": "Capture an image-led lookbook with editorial groupings, shoppable cards, and collection pathways. Requires capell-app/media-library; show this package note on the captured image.",
+            "useCase": "A retailer can sell a range visually without the page becoming Portfolio's work gallery.",
             "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-lookbook-layout.png"
         },
         {
@@ -97,8 +97,8 @@
             "targetType": "frontend-url",
             "target": "/commerce-buying-guide-layout",
             "required": true,
-            "notes": "Capture Theme Commerce buying guide article with editorial content, related products, author details. Requires capell-app/blog; show this package note on the captured image.",
-            "useCase": "A buyer reviews how Theme Commerce handles the buying guide article page layout before installing the theme.",
+            "notes": "Capture a buying guide article with editorial copy, product recommendations, author details, and collection CTAs. Requires capell-app/blog; show this package note on the captured image.",
+            "useCase": "A retailer checks that advice content supports purchase decisions instead of becoming a plain blog.",
             "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-buying-guide-layout.png"
         },
         {
@@ -109,8 +109,8 @@
             "targetType": "frontend-url",
             "target": "/commerce-newsletter-layout",
             "required": true,
-            "notes": "Capture Theme Commerce newsletter capture page with signup block, incentives, consent messaging. Requires capell-app/newsletter; show this package note on the captured image.",
-            "useCase": "A buyer reviews how Theme Commerce handles the newsletter capture page page layout before installing the theme.",
+            "notes": "Capture a retail newsletter page with incentive copy, consent messaging, product context, and signup block. Requires capell-app/newsletter; show this package note on the captured image.",
+            "useCase": "A retailer reviews how the theme converts browsing intent into owned-audience growth.",
             "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-newsletter-layout.png"
         },
         {
@@ -121,8 +121,8 @@
             "targetType": "frontend-url",
             "target": "/commerce-store-event-layout",
             "required": true,
-            "notes": "Capture Theme Commerce retail event page with event details, location, registration cta. Requires capell-app/events; show this package note on the captured image.",
-            "useCase": "A buyer reviews how Theme Commerce handles the retail event page page layout before installing the theme.",
+            "notes": "Capture a retail event page with event details, store location, featured products, and registration CTA. Requires capell-app/events; show this package note on the captured image.",
+            "useCase": "A retailer can promote launches and in-store events without leaving the merchandising lane.",
             "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-store-event-layout.png"
         },
         {
@@ -133,8 +133,8 @@
             "targetType": "frontend-url",
             "target": "/commerce-search-layout",
             "required": true,
-            "notes": "Capture Theme Commerce product search page with search field, filters, result grid, empty state. Requires capell-app/search; show this package note on the captured image.",
-            "useCase": "A buyer reviews how Theme Commerce handles the product search page page layout before installing the theme.",
+            "notes": "Capture product search with filters, result grid, stock signals, and empty-state recovery. Requires capell-app/search; show this package note on the captured image.",
+            "useCase": "A shopper can refine buying paths without the page looking like Knowledge search or a standard directory.",
             "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-search-layout.png"
         },
         {
@@ -145,8 +145,8 @@
             "targetType": "frontend-url",
             "target": "/commerce-campaign-layout",
             "required": true,
-            "notes": "Capture Theme Commerce promotion campaign page with offer hero, countdown, segmented ctas. Requires capell-app/campaign-studio; show this package note on the captured image.",
-            "useCase": "A buyer reviews how Theme Commerce handles the promotion campaign page page layout before installing the theme.",
+            "notes": "Capture a promotion campaign with offer hero, countdown, product groups, and segmented CTAs. Requires capell-app/campaign-studio; show this package note on the captured image.",
+            "useCase": "A retailer checks that campaigns stay tied to buying paths rather than becoming Agency launch pages.",
             "screenshotPath": "public/docs/screenshots/packages/theme-commerce/commerce-campaign-layout.png"
         }
     ]

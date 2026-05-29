@@ -71,6 +71,8 @@
                         class="mr-2 inline-block h-4 w-4 align-top"
                         src="{{ asset("vendor/blade-country-flags/4x3-{$pageLanguage['flag']}.svg") }}"
                         alt=""
+                        width="16"
+                        height="16"
                         loading="lazy"
                     />
                     {{ $pageLanguage['name'] }}

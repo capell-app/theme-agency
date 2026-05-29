@@ -23,7 +23,6 @@ use Capell\PublishingStudio\Models\WorkspaceApproval;
 use Carbon\CarbonImmutable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
-use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
@@ -292,7 +291,7 @@ it('guards page alerts records and covers missing url deleted and expired branch
 
     $widgetWithoutRecord = pageAlertsWidgetForCoverage(null);
 
-    expect(fn (): Collection => $widgetWithoutRecord->alerts())->toThrow(RuntimeException::class);
+    expect($widgetWithoutRecord->alerts())->toBeEmpty();
 
     $expiredPage = Page::factory()->create([
         'visible_until' => CarbonImmutable::parse('2026-05-19 09:00:00', 'UTC'),

@@ -12,6 +12,8 @@ interface GitProviderContract
 {
     public function getFile(DeploymentConnection $conn, string $path): RepoFile;
 
+    public function getBranchCommitSha(DeploymentConnection $conn, string $branch): string;
+
     /** @param array<int, RepoFile> $files */
     public function commitFiles(
         DeploymentConnection $conn,

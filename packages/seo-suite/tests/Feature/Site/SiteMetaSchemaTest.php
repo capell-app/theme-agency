@@ -109,6 +109,32 @@ test('can see webpage meta schema', function (): void {
         );
 });
 
+test('renders stored graph schema settings through the seo head hook', function (): void {
+    $site = Site::factory()
+        ->withTranslations(siteDomainData: [
+            'scheme' => 'https',
+            'domain' => 'graph.test',
+            'path' => null,
+        ])
+        ->meta([
+            'meta_schema' => [
+                MetaSchemaEnum::Graph->getComponent(),
+            ],
+            'business_name' => 'Graph Business',
+        ])
+        ->create();
+
+    $page = Page::factory()
+        ->site($site)
+        ->withTranslations()
+        ->create();
+
+    get($page->pageUrl->full_url)
+        ->assertOk()
+        ->assertSee('"@graph"', false)
+        ->assertSee('Graph Business');
+});
+
 test('renders complete seo head output from shared public resolvers', function (): void {
     $site = Site::factory()
         ->withTranslations(siteDomainData: [

@@ -16,9 +16,12 @@ use Capell\DemoKit\Console\Commands\AdminDemoCommand;
 use Capell\DemoKit\Console\Commands\DemoCommand;
 use Capell\DemoKit\Console\Commands\DemoKitDoctorCommand;
 use Capell\DemoKit\Console\Commands\FullDemoCommand;
+use Capell\DemoKit\Console\Commands\KitchenSinkDemoCommand;
 use Capell\DemoKit\Console\Commands\RefreshDemoStitchPagesCommand;
 use Capell\DemoKit\Filament\Pages\DemoKitPage;
 use Capell\DemoKit\Livewire\ResourcesLibrary;
+use Capell\DemoKit\Support\KitchenSinkPublicBlockPayloadContributor;
+use Capell\LayoutBuilder\Contracts\PublicBlockPayloadContributor;
 use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 
@@ -44,6 +47,7 @@ final class DemoKitServiceProvider extends AbstractPackageServiceProvider
                 FullDemoCommand::class,
                 DemoKitDoctorCommand::class,
                 RefreshDemoStitchPagesCommand::class,
+                KitchenSinkDemoCommand::class,
             ]);
     }
 
@@ -55,6 +59,7 @@ final class DemoKitServiceProvider extends AbstractPackageServiceProvider
         $package->demoParams = ['url', 'user', 'languages', 'sites', 'site-count', 'page-count', 'seed', 'force'];
 
         $this->registerAdminPanelExtensions();
+        $this->registerPublicBlockPayloadContributors();
     }
 
     public function packageBooted(): void
@@ -94,6 +99,15 @@ final class DemoKitServiceProvider extends AbstractPackageServiceProvider
             type: 'layout-block',
             blade: 'capell-demo-kit::block.homepage-section',
         ));
+    }
+
+    private function registerPublicBlockPayloadContributors(): void
+    {
+        if (! interface_exists(PublicBlockPayloadContributor::class)) {
+            return;
+        }
+
+        $this->app->tag([KitchenSinkPublicBlockPayloadContributor::class], PublicBlockPayloadContributor::TAG);
     }
 
     private function registerAdminPanelExtensions(): void

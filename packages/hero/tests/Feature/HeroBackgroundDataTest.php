@@ -2,10 +2,15 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Models\Media;
 use Capell\Core\Models\Theme;
 use Capell\Hero\Actions\ResolveHeroBackgroundDataAction;
+use Capell\Hero\Actions\ResolveHeroMediaDataAction;
+use Capell\Hero\Data\HeroBackgroundData;
+use Capell\Hero\Data\HeroMediaData;
 use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Models\WidgetAsset;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 it('resolves hero background from theme block and asset layers', function (): void {
     $theme = Theme::factory()->create([
@@ -74,3 +79,139 @@ it('allows widget and asset layers to turn the hero background off', function ()
 
     expect(ResolveHeroBackgroundDataAction::run($theme, $block, $asset)->enabled)->toBeFalse();
 });
+
+it('ignores invalid hero background values and clamps opacity', function (): void {
+    $theme = Theme::factory()->create([
+        'meta' => [
+            'hero_background' => [
+                'mode' => 'custom',
+                'background_color' => 'not-a-color',
+                'accent_color' => '#ABC',
+                'accent_color_alt' => '#123456',
+                'overlay_style' => 'unknown',
+                'overlay_opacity' => '2.8',
+            ],
+        ],
+    ]);
+
+    $background = ResolveHeroBackgroundDataAction::run($theme);
+
+    expect($background->backgroundColor)->toBe(HeroBackgroundData::defaults()->backgroundColor)
+        ->and($background->accentColor)->toBe('#abc')
+        ->and($background->accentColorAlt)->toBe('#123456')
+        ->and($background->overlayStyle)->toBe(HeroBackgroundData::defaults()->overlayStyle)
+        ->and($background->overlayOpacity)->toBe(1.0)
+        ->and($background->cssVariables())->toMatchArray([
+            '--capell-hero-background-color' => HeroBackgroundData::defaults()->backgroundColor,
+            '--capell-hero-overlay-opacity' => '1',
+            '--capell-hero-accent-color' => '#abc',
+            '--capell-hero-accent-color-alt' => '#123456',
+        ]);
+});
+
+it('resolves responsive hero media from theme block and asset layers', function (): void {
+    $theme = Theme::factory()->create([
+        'meta' => [
+            'hero_media' => [
+                'mode' => 'custom',
+                'autoplay' => true,
+                'loop' => true,
+                'muted' => true,
+                'pause_when_out_of_view' => true,
+                'preload' => 'metadata',
+            ],
+        ],
+    ]);
+    $block = Widget::factory()->create([
+        'meta' => [
+            'hero_media' => [
+                'mode' => 'custom',
+                'loop' => false,
+                'preload' => 'none',
+            ],
+        ],
+    ]);
+    $asset = WidgetAsset::factory()->create([
+        'meta' => [
+            'hero_media' => [
+                'mode' => 'custom',
+                'autoplay' => false,
+            ],
+        ],
+    ]);
+
+    $themeDesktopVideo = mediaFor($theme, HeroMediaData::CollectionDesktopVideo, 'theme-desktop.webm', 'video/webm');
+    $blockMobileVideo = mediaFor($block, HeroMediaData::CollectionMobileVideo, 'block-mobile.mp4', 'video/mp4');
+    $assetDesktopImage = mediaFor($asset, HeroMediaData::CollectionDesktopImage, 'asset-desktop.jpg', 'image/jpeg');
+
+    $theme->setRelation('media', new EloquentCollection([$themeDesktopVideo]));
+    $block->setRelation('media', new EloquentCollection([$blockMobileVideo]));
+    $asset->setRelation('media', new EloquentCollection([$assetDesktopImage]));
+
+    $media = ResolveHeroMediaDataAction::run($theme, $block, $asset);
+
+    expect($media->enabled)->toBeTrue()
+        ->and($media->autoplay)->toBeFalse()
+        ->and($media->loop)->toBeFalse()
+        ->and($media->muted)->toBeTrue()
+        ->and($media->pauseWhenOutOfView)->toBeTrue()
+        ->and($media->preload)->toBe(HeroMediaData::PreloadNone)
+        ->and($media->videos['desktop']->is($themeDesktopVideo))->toBeTrue()
+        ->and($media->videos['mobile']->is($blockMobileVideo))->toBeTrue()
+        ->and($media->images['desktop']->is($assetDesktopImage))->toBeTrue();
+});
+
+it('allows a hero media layer to disable inherited responsive media', function (): void {
+    $theme = Theme::factory()->create([
+        'meta' => [
+            'hero_media' => ['mode' => 'custom'],
+        ],
+    ]);
+    $block = Widget::factory()->create([
+        'meta' => [
+            'hero_media' => ['mode' => 'off'],
+        ],
+    ]);
+
+    $theme->setRelation('media', new EloquentCollection([
+        mediaFor($theme, HeroMediaData::CollectionDesktopVideo, 'theme-desktop.webm', 'video/webm'),
+    ]));
+
+    expect(ResolveHeroMediaDataAction::run($theme, $block)->enabled)->toBeFalse();
+});
+
+it('reports hero media presence and prefers desktop posters', function (): void {
+    $desktopImage = new Media;
+    $tabletImage = new Media;
+    $desktopVideo = new Media;
+
+    $media = new HeroMediaData(
+        enabled: true,
+        autoplay: true,
+        loop: true,
+        muted: true,
+        pauseWhenOutOfView: true,
+        preload: HeroMediaData::PreloadMetadata,
+        videos: ['desktop' => $desktopVideo],
+        images: ['tablet' => $tabletImage, 'desktop' => $desktopImage],
+    );
+
+    expect($media->hasVideo())->toBeTrue()
+        ->and($media->hasImage())->toBeTrue()
+        ->and($media->poster())->toBe($desktopImage)
+        ->and(HeroMediaData::disabled()->hasVideo())->toBeFalse()
+        ->and(HeroMediaData::disabled()->hasImage())->toBeFalse()
+        ->and(HeroMediaData::disabled()->poster())->toBeNull();
+});
+
+function mediaFor(Theme|Widget|WidgetAsset $model, string $collection, string $fileName, string $mimeType): Media
+{
+    return Media::factory()
+        ->model($model)
+        ->state([
+            'collection_name' => $collection,
+            'file_name' => $fileName,
+            'mime_type' => $mimeType,
+        ])
+        ->create();
+}
