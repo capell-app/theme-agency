@@ -9,6 +9,7 @@ on:
       - 4.x
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
+      - 'packages/**'
       - 'packages/**/docs/screenshots.json'
       - 'docs/package-screenshot-manifest.json'
       - '.github/workflows/screenshots.yml'
@@ -16,6 +17,7 @@ on:
     branches:
       - 4.x
     paths:
+      - 'packages/**'
       - 'packages/**/docs/screenshots.json'
       - 'docs/package-screenshot-manifest.json'
       - '.github/workflows/screenshots.yml'

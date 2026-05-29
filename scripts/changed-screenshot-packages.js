@@ -1,4 +1,7 @@
 const fs = require('fs')
+const path = require('path')
+
+const root = process.cwd()
 
 const paths = fs
     .readFileSync(0, 'utf8')
@@ -10,10 +13,20 @@ const packages = new Set()
 
 for (const filePath of paths) {
     const packageMatch = filePath.match(
-        /^packages\/([^/]+)\/docs\/screenshots\.json$/,
+        /^packages\/([^/]+)\//,
     )
 
-    if (packageMatch !== null) {
+    if (
+        packageMatch !== null &&
+        fs.existsSync(
+            path.join(
+                root,
+                'packages',
+                packageMatch[1],
+                'docs/screenshots.json',
+            ),
+        )
+    ) {
         packages.add(packageMatch[1])
     }
 }
