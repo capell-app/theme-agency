@@ -35,6 +35,16 @@ on:
         required: false
         default: '4.x'
         type: string
+      screenshot_runner_ref:
+        description: 'Git ref for capell-app/capell-screenshot-runner'
+        required: false
+        default: 'main'
+        type: string
+      dry_run:
+        description: 'Validate the capture selection without building the screenshot app'
+        required: false
+        default: false
+        type: boolean
   workflow_call:
     inputs:
       package:
@@ -50,6 +60,16 @@ on:
         required: false
         default: '4.x'
         type: string
+      screenshot_runner_ref:
+        description: 'Git ref for capell-app/capell-screenshot-runner'
+        required: false
+        default: 'main'
+        type: string
+      dry_run:
+        description: 'Validate the capture selection without building the screenshot app'
+        required: false
+        default: false
+        type: boolean
     secrets:
       ACCESS_TOKEN:
         required: true
@@ -138,7 +158,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           repository: capell-app/capell-screenshot-runner
-          ref: main
+          ref: ${{ inputs.screenshot_runner_ref || 'main' }}
           token: ${{ secrets.ACCESS_TOKEN }}
           path: services/capell-screenshot-runner
 
@@ -168,6 +188,7 @@ jobs:
           node-version: 22
 
       - name: Setup PHP
+        if: inputs.dry_run != true
         uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2
         with:
           php-version: 8.3
@@ -184,14 +205,17 @@ jobs:
         run: npm ci
 
       - name: Install Playwright browser
+        if: inputs.dry_run != true
         working-directory: services/capell-screenshot-runner
         run: npm run install:browsers
 
       - name: Configure screenshot runner Composer repositories
+        if: inputs.dry_run != true
         working-directory: services/capell-screenshot-runner
         run: node scripts/configure-composer-repositories.mjs
 
       - name: Prepare screenshot app environment
+        if: inputs.dry_run != true
         working-directory: services/capell-screenshot-runner
         run: |
           cp .env.example .env
@@ -234,9 +258,14 @@ jobs:
         run: npm run screenshots:validate
 
       - name: Capture selected screenshots
-        if: steps.packages.outputs.has_packages == 'true'
+        if: steps.packages.outputs.has_packages == 'true' && inputs.dry_run != true
         working-directory: repositories/capell-packages
         run: npm run screenshots:capture -- --only-file /tmp/capell-screenshot-packages.txt
+
+      - name: Dry-run selected screenshots
+        if: steps.packages.outputs.has_packages == 'true' && inputs.dry_run == true
+        working-directory: repositories/capell-packages
+        run: npm run screenshots:capture:check -- --only-file /tmp/capell-screenshot-packages.txt --skip-build
 
       - name: Upload generated screenshots
         if: steps.packages.outputs.has_packages == 'true'
