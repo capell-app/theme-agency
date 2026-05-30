@@ -222,6 +222,7 @@ jobs:
           touch database/database.sqlite
           ln -sfn "$CAPELL_REPO" ../capell-4
           ln -sfn "$CAPELL_PACKAGES_REPO" ../capell-packages-4
+          mkdir -p bootstrap/cache storage/framework/cache/data storage/framework/sessions storage/framework/views
           composer install --no-interaction --no-progress --ansi
           php artisan key:generate --ansi
 
