@@ -220,6 +220,8 @@ jobs:
         run: |
           cp .env.example .env
           touch database/database.sqlite
+          ln -sfn "$CAPELL_REPO" ../capell-4
+          ln -sfn "$CAPELL_PACKAGES_REPO" ../capell-packages-4
           composer install --no-interaction --no-progress --ansi
           php artisan key:generate --ansi
 
