@@ -5,7 +5,7 @@ Browser URL: `http://127.0.0.1:8000`
 PHP runtime: Homebrew PHP 8.5.5 via PHP's built-in server.
 Core baseline packages: `capell-app/core`, `capell-app/admin`, `capell-app/frontend`, `capell-app/installer`, `capell-app/marketplace`
 
-Devilbox is present at `/Users/ben/devilbox`, but this harness currently uses the simpler built-in PHP server because no dedicated Devilbox vhost was configured during Task 1.
+This audit harness uses the built-in PHP server by default, with Docker available for clean package verification.
 
 ## Bootstrap Commands Used
 

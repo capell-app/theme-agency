@@ -108,7 +108,7 @@ Any model in draft/publish must implement `Capell\Core\Contracts\Draftable` and 
 ## Docker Harness
 
 - Use the Docker harness when you need a clean, repeatable agent environment or when host PHP/Node/Composer state is suspect.
-- It is a CLI package-development harness, not the CapelApp or Devilbox web runtime. Do not change `capell-app.test` routing or Devilbox vhosts when working with it.
+- It is the supported local package-development runtime for Capell package work. Do not recreate old `capell-app.test` host routing unless Ben explicitly asks for it.
 - Start it with `docker compose up -d`; run checks with `docker compose exec app composer test`, `docker compose exec app composer analyze`, or a narrower package/file Pest command.
 - For one-off tool checks without starting services, use `docker compose run --rm --no-deps app <command>`.
 - The harness mounts this repo at `/home/capell/current` and the sibling Capell package directory at `/home/capell/packages/capell`, so local path repositories work when `capell-4` and `capell-packages-4` are beside each other.

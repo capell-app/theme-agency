@@ -6,7 +6,7 @@
 
 **Architecture:** Use one fresh accessible Capell demo app as the reproducible harness, reset it between packages, and install only Capell core plus the package under audit and its declared hard dependencies. Each package is handled sequentially inside its batch so screenshots, menus, docs, and feature suggestions are attributable to that package instead of to previously installed packages.
 
-**Tech Stack:** Capell 4, Laravel, Filament, Composer path repositories, Devilbox or local PHP 8.3 runtime, Playwright/browser screenshot capture, Pest for package-level verification.
+**Tech Stack:** Capell 4, Laravel, Filament, Composer path repositories, Docker or local PHP 8.4 runtime, Playwright/browser screenshot capture, Pest for package-level verification.
 
 ---
 
@@ -105,7 +105,7 @@ Expected: `composer require capell-app/{package}:4.x-dev` resolves local package
 
 - [ ] **Step 4: Make the app accessible**
 
-Run the app through Devilbox or the simplest available local PHP runtime. The app must be reachable in a browser at one stable URL, for example:
+Run the app through Docker or the simplest available local PHP runtime. The app must be reachable in a browser at one stable URL, for example:
 
 ```text
 https://capell-package-demo-audit.test
@@ -122,7 +122,7 @@ Create `docs/package-demo-audit-harness.md` with:
 
 Demo app path: `/Users/ben/Sites/packages/capell/capell-package-demo-audit`
 Browser URL: `https://capell-package-demo-audit.test`
-PHP runtime: Devilbox or documented equivalent
+PHP runtime: Docker or documented equivalent
 Core baseline packages: `capell-app/core`, `capell-app/admin`, `capell-app/frontend`, `capell-app/installer`, `capell-app/marketplace`
 
 ## Reset Command

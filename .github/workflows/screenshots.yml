@@ -135,6 +135,7 @@ jobs:
       CAPELL_FRONTEND_URL: http://127.0.0.1:8000
       DB_CONNECTION: sqlite
       DB_DATABASE: ${{ github.workspace }}/services/capell-screenshot-runner/database/database.sqlite
+      CAPELL_SCREENSHOT_SKIP_COMPOSER_UPDATE: 'true'
 
     steps:
       - name: Checkout packages repository
@@ -209,22 +210,10 @@ jobs:
         working-directory: services/capell-screenshot-runner
         run: npm run install:browsers
 
-      - name: Configure screenshot runner Composer repositories
+      - name: Prepare screenshot runner app
         if: inputs.dry_run != true
         working-directory: services/capell-screenshot-runner
-        run: node scripts/configure-composer-repositories.mjs
-
-      - name: Prepare screenshot app environment
-        if: inputs.dry_run != true
-        working-directory: services/capell-screenshot-runner
-        run: |
-          cp .env.example .env
-          touch database/database.sqlite
-          ln -sfn "$CAPELL_REPO" ../capell-4
-          ln -sfn "$CAPELL_PACKAGES_REPO" ../capell-packages-4
-          mkdir -p bootstrap/cache storage/framework/cache/data storage/framework/sessions storage/framework/views
-          composer install --no-interaction --no-progress --ansi
-          php artisan key:generate --ansi
+        run: npm run prepare:app
 
       - name: Determine packages to capture
         id: packages

@@ -35,9 +35,9 @@
             "package": "theme-corporate",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/theme-corporate-demo",
+            "target": "/theme-corporate",
             "required": true,
-            "notes": "Capture the isolated demo route that renders navigation, hero, features, proof, content listing, CTA, and footer through the Corporate renderer.",
+            "notes": "Capture the seeded Corporate Demo Homepage route that renders navigation, hero, features, proof, content listing, CTA, and footer through the Corporate renderer.",
             "useCase": "A visitor sees a seeded public page rendered through every Corporate theme section.",
             "screenshotPath": "public/docs/screenshots/packages/theme-corporate/frontend-page-rendered-with-corporate-theme.png"
         },
