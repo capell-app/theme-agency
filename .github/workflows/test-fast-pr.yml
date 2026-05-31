@@ -138,11 +138,11 @@ jobs:
           composer remove --no-interaction --no-progress --ansi --dev --no-update mrpunyapal/peststan pestphp/pest-plugin-livewire calebdw/larastan-livewire
           composer require --no-interaction --no-progress --ansi --dev --no-update \
             soyhuce/phpstan-extension:^1.1 \
-            pestphp/pest:^3.0 \
-            pestphp/pest-plugin-arch:^3.0 \
-            pestphp/pest-plugin-laravel:^3.0 \
-            pestphp/pest-plugin-livewire:^3.0 \
-            pestphp/pest-plugin-type-coverage:^3.0 \
+            pestphp/pest:^4.4 \
+            pestphp/pest-plugin-arch:^4.0 \
+            pestphp/pest-plugin-laravel:^4.0 \
+            pestphp/pest-plugin-livewire:^4.0 \
+            pestphp/pest-plugin-type-coverage:^4.0 \
             phpstan/phpstan:^1.10.57 \
             phpstan/phpstan-mockery:^1.0 \
             phpstan/phpstan-strict-rules:^1.0 \
