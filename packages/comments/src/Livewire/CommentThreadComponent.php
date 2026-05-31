@@ -47,8 +47,8 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
         return Crypt::encryptString(json_encode([
             'type' => $commentable->getMorphClass(),
             'id' => $commentable->getKey(),
-            'site_id' => $commentable->getAttribute('site_id'),
-            'language_id' => $commentable->getAttribute('language_id'),
+            'site_id' => self::optionalAttribute($commentable, 'site_id'),
+            'language_id' => self::optionalAttribute($commentable, 'language_id'),
         ], JSON_THROW_ON_ERROR));
     }
 
@@ -70,8 +70,8 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
         CreateCommentAction::run(new CreateCommentData(
             commentable: $commentable,
             body: $this->body,
-            siteId: is_numeric($commentable->getAttribute('site_id')) ? (int) $commentable->getAttribute('site_id') : null,
-            languageId: is_numeric($commentable->getAttribute('language_id')) ? (int) $commentable->getAttribute('language_id') : null,
+            siteId: is_numeric(self::optionalAttribute($commentable, 'site_id')) ? (int) self::optionalAttribute($commentable, 'site_id') : null,
+            languageId: is_numeric(self::optionalAttribute($commentable, 'language_id')) ? (int) self::optionalAttribute($commentable, 'language_id') : null,
             authorName: $this->authorName,
             authorEmail: $this->authorEmail,
             user: auth()->user() instanceof Model ? auth()->user() : null,
@@ -99,6 +99,13 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
     public function render(): View
     {
         return view('capell-comments::livewire.thread');
+    }
+
+    private static function optionalAttribute(Model $model, string $key): mixed
+    {
+        return array_key_exists($key, $model->getAttributes())
+            ? $model->getAttribute($key)
+            : null;
     }
 
     private function refreshComments(): void
@@ -150,11 +157,11 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
             return null;
         }
 
-        if (is_numeric($siteId) && (int) $model->getAttribute('site_id') !== (int) $siteId) {
+        if (is_numeric($siteId) && (int) self::optionalAttribute($model, 'site_id') !== (int) $siteId) {
             return null;
         }
 
-        if (is_numeric($languageId) && (int) $model->getAttribute('language_id') !== (int) $languageId) {
+        if (is_numeric($languageId) && (int) self::optionalAttribute($model, 'language_id') !== (int) $languageId) {
             return null;
         }
 

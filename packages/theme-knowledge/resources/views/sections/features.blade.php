@@ -70,7 +70,7 @@
                             {{ __('capell-theme-knowledge::generic.topic_signal') }}
                         </span>
                         <span class="bg-[#fef3c7] px-3 py-1 text-[#92400e]">
-                            {{ __('capell-theme-knowledge::generic.editor_signal') }}
+                            {{ __('capell-theme-knowledge::generic.review_signal') }}
                         </span>
                     </div>
                 </article>

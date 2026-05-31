@@ -142,11 +142,22 @@ class SubscribeFromFormSubmissionAction
             sourceId: $submissionId,
             consentText: $mapping->consent_text,
             consentVersion: $mapping->consent_version,
-            ipAddress: $metadata?->ipAddress,
-            userAgent: $metadata?->userAgent,
-            url: $metadata?->url,
-            referer: $metadata?->referer,
+            ipAddress: $this->metadataString($metadata, 'ipAddress'),
+            userAgent: $this->metadataString($metadata, 'userAgent'),
+            url: $this->metadataString($metadata, 'url'),
+            referer: $this->metadataString($metadata, 'referer'),
         );
+    }
+
+    private function metadataString(?object $metadata, string $field): ?string
+    {
+        if ($metadata === null || ! property_exists($metadata, $field)) {
+            return null;
+        }
+
+        $value = $metadata->{$field};
+
+        return is_scalar($value) ? (string) $value : null;
     }
 
     private function formModelClass(): string

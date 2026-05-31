@@ -58,6 +58,20 @@ class DiagnosticsPage extends Page implements HasActions
             );
     }
 
+    public static function userCanRunMakers(): bool
+    {
+        $user = auth()->user();
+        if (self::userHasSuperAdminRole()) {
+            return true;
+        }
+
+        if (Gate::allows(DiagnosticsPermission::AccessDiagnostics->value)) {
+            return true;
+        }
+
+        return $user?->can(DiagnosticsPermission::AccessDiagnostics->value) === true;
+    }
+
     #[Override]
     public function getTitle(): string|Htmlable
     {
@@ -112,7 +126,11 @@ class DiagnosticsPage extends Page implements HasActions
     protected function getHeaderActions(): array
     {
         return $this->makers()
-            ->map(fn (MakerDefinitionData $maker): Action => RunMakerFilamentAction::make($maker->key))
+            ->map(
+                fn (MakerDefinitionData $maker): Action => RunMakerFilamentAction::make($maker->key)
+                    ->authorize(fn (): bool => self::userCanRunMakers())
+                    ->hidden(fn (): bool => ! self::userCanRunMakers()),
+            )
             ->values()
             ->all();
     }

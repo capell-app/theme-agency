@@ -52,13 +52,23 @@ final class ClaimAccessGateTokenController
         }
 
         $requestedHost = parse_url($requestedUrl, PHP_URL_HOST);
+        $requestedScheme = parse_url($requestedUrl, PHP_URL_SCHEME);
         $allowedHosts = collect($area->claim_url_hosts ?? [])
-            ->filter(fn (mixed $host): bool => $host !== '')
-            ->push($request->getHost())
+            ->filter(fn (string $host): bool => $host !== '')
             ->unique()
             ->values();
+        $requestHost = $request->getHost();
 
-        if (! is_string($requestedHost) || $allowedHosts->doesntContain($requestedHost)) {
+        if ($requestHost !== '') {
+            $allowedHosts->push($requestHost);
+        }
+
+        if (
+            ! is_string($requestedScheme)
+            || ! in_array(strtolower($requestedScheme), ['http', 'https'], true)
+            || ! is_string($requestedHost)
+            || $allowedHosts->doesntContain($requestedHost)
+        ) {
             return url('/');
         }
 

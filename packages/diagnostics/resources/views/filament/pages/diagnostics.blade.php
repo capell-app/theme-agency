@@ -47,7 +47,7 @@
                             @if (is_array($value))
                                 {{ implode(', ', $value) }}
                             @else
-                                {{ is_bool($value) ? ($value ? 'yes' : 'no') : $value }}
+                                {{ is_bool($value) ? ($value ? __('capell-diagnostics::package.yes') : __('capell-diagnostics::package.no')) : $value }}
                             @endif
                         </dd>
                     </div>
@@ -56,7 +56,9 @@
         </section>
 
         <section>
-            <h2 class="text-lg font-semibold">Makers</h2>
+            <h2 class="text-lg font-semibold">
+                {{ __('capell-diagnostics::package.makers') }}
+            </h2>
             <ul class="mt-3 space-y-2">
                 @foreach ($this->makers() as $maker)
                     <li class="rounded-lg border border-gray-200 p-3">
@@ -73,7 +75,9 @@
         </section>
 
         <section>
-            <h2 class="text-lg font-semibold">Registry</h2>
+            <h2 class="text-lg font-semibold">
+                {{ __('capell-diagnostics::package.registry') }}
+            </h2>
             <ul class="mt-3 space-y-2">
                 @foreach ($this->configurators()->merge($this->components())->merge($this->blocks()) as $source)
                     <li class="rounded-lg border border-gray-200 p-3">

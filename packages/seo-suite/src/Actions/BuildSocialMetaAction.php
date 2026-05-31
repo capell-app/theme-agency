@@ -58,6 +58,10 @@ class BuildSocialMetaAction
     {
         $translation = $page->translation;
 
+        if ($translation === null) {
+            return $page->name;
+        }
+
         $socialTitle = $translation->getMeta('social_title');
         if ($socialTitle !== null && $socialTitle !== '') {
             return $socialTitle;
@@ -80,6 +84,10 @@ class BuildSocialMetaAction
     private function resolveSocialDescription(Pageable $page): string
     {
         $translation = $page->translation;
+
+        if ($translation === null) {
+            return '';
+        }
 
         $socialDescription = $translation->getMeta('social_description');
         if ($socialDescription !== null && $socialDescription !== '') {

@@ -12,6 +12,7 @@ use Capell\Newsletter\Models\ProviderSubscriber;
 use Capell\Newsletter\Models\Subscriber;
 use Capell\Newsletter\Models\SyncAttempt;
 use Capell\Newsletter\Support\Providers\ProviderAdapterRegistry;
+use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
@@ -21,11 +22,11 @@ class SyncSubscriberToProviderAction
 
     public function handle(SyncAttempt $syncAttempt): SyncAttempt
     {
-        $syncAttempt->forceFill([
-            'sync_status' => SyncStatus::Running,
-            'attempts' => $syncAttempt->attempts + 1,
-            'last_attempted_at' => now(),
-        ])->save();
+        if (! $this->claimForSync($syncAttempt)) {
+            return $syncAttempt->fresh() ?? $syncAttempt;
+        }
+
+        $syncAttempt = $syncAttempt->fresh(['subscriber', 'providerAudience', 'providerConnection']) ?? $syncAttempt;
 
         $subscriber = $syncAttempt->subscriber;
         $audience = $syncAttempt->providerAudience;
@@ -75,6 +76,18 @@ class SyncSubscriberToProviderAction
         return $syncAttempt->refresh();
     }
 
+    private function claimForSync(SyncAttempt $syncAttempt): bool
+    {
+        return SyncAttempt::query()
+            ->whereKey($syncAttempt->getKey())
+            ->where('sync_status', SyncStatus::Pending)
+            ->update([
+                'sync_status' => SyncStatus::Running,
+                'attempts' => DB::raw('attempts + 1'),
+                'last_attempted_at' => now(),
+            ]) === 1;
+    }
+
     /**
      * @return array<int, ProviderInterestData>
      */
@@ -111,7 +124,7 @@ class SyncSubscriberToProviderAction
         $syncAttempt->forceFill([
             'sync_status' => $retryDelay === null ? SyncStatus::Failed : SyncStatus::RetryScheduled,
             'error_message' => $errorMessage,
-            'next_retry_at' => is_numeric($retryDelay) ? now()->addMinutes($retryDelay) : null,
+            'next_retry_at' => is_numeric($retryDelay) ? now()->addMinutes((int) $retryDelay) : null,
         ])->save();
 
         return $syncAttempt->refresh();

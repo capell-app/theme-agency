@@ -363,7 +363,7 @@ it('renders and stores configured public request fields', function (): void {
 
     $registration = Registration::query()->where('email_normalized', 'mona@example.test')->firstOrFail();
 
-    expect($registration->field_values['provider_username']['value'])->toBe('octocat');
+    expect($registration->field_values['provider_username']['value'] ?? null)->toBe('octocat');
     Notification::assertSentOnDemand(AccessRequestReceivedNotification::class);
 });
 
@@ -592,6 +592,23 @@ it('does not redirect claimed users to untrusted requested urls', function (): v
         ->assertRedirect(url('/'));
 });
 
+it('does not redirect claimed users to non-http requested urls on trusted hosts', function (): void {
+    $area = Area::factory()->create([
+        'claim_url_hosts' => ['localhost'],
+    ]);
+    $registration = Registration::factory()
+        ->for($area, 'area')
+        ->create(['requested_url' => 'javascript://localhost/preview']);
+    $grant = Grant::factory()
+        ->for($area, 'area')
+        ->for($registration, 'registration')
+        ->create();
+    $issuedClaimToken = resolve(CreateAccessGateClaimTokenAction::class)->handle($grant);
+
+    $this->get(route('capell-access-gate.claim', ['token' => $issuedClaimToken->plainTextToken]))
+        ->assertRedirect(url('/'));
+});
+
 it('revokes the local browser token on access gate logout', function (): void {
     $area = Area::factory()->create([
         'key' => 'preview',
@@ -606,6 +623,67 @@ it('revokes the local browser token on access gate logout', function (): void {
         ->assertCookieExpired(config('access-gate.cookies.browser_token.name'));
 
     expect(BrowserToken::query()->firstOrFail()->status)->toBe(BrowserTokenStatus::Revoked);
+});
+
+it('resolves public access request areas within the current site context', function (): void {
+    defineAccessGateSiteTables();
+    defineAccessGateSiteDomain(1, 'localhost');
+    defineAccessGateSiteDomain(2, 'hidden.test');
+
+    $localArea = Area::factory()->create([
+        'key' => 'preview',
+        'site_id' => 1,
+        'name' => 'Local Preview',
+        'identity_mode' => IdentityMode::Hybrid,
+    ]);
+    Area::factory()->create([
+        'key' => 'hidden-preview',
+        'site_id' => 2,
+        'name' => 'Hidden Preview',
+        'identity_mode' => IdentityMode::Hybrid,
+    ]);
+
+    $this->get('http://localhost/access/request/preview')
+        ->assertOk()
+        ->assertSee('Local Preview')
+        ->assertDontSee('Hidden Preview');
+
+    $this->post('http://localhost/access/request/preview', [
+        'email' => 'ben@example.test',
+    ])->assertRedirect(route('capell-access-gate.request', ['area' => 'preview']));
+
+    expect(Registration::query()->firstOrFail()->access_area_id)->toBe($localArea->getKey());
+
+    $this->get('http://localhost/access/request/hidden-preview')->assertNotFound();
+    $this->post('http://localhost/access/request/hidden-preview', [
+        'email' => 'hidden@example.test',
+    ])->assertNotFound();
+
+    expect(Registration::query()->count())->toBe(1);
+});
+
+it('does not revoke another site access gate browser token through the current site logout route', function (): void {
+    defineAccessGateSiteTables();
+    defineAccessGateSiteDomain(1, 'localhost');
+    defineAccessGateSiteDomain(2, 'hidden.test');
+
+    Area::factory()->create([
+        'key' => 'preview',
+        'site_id' => 1,
+    ]);
+    $hiddenArea = Area::factory()->create([
+        'key' => 'hidden-preview',
+        'site_id' => 2,
+    ]);
+    $hiddenGrant = Grant::factory()->for($hiddenArea, 'area')->create();
+    $hiddenToken = resolve(CreateAccessGateBrowserTokenAction::class)->handle($hiddenGrant);
+
+    $this
+        ->withCookie(config('access-gate.cookies.browser_token.name'), $hiddenToken->plainTextToken)
+        ->post('http://localhost/access/logout/hidden-preview')
+        ->assertNotFound();
+
+    expect(BrowserToken::query()->firstOrFail()->status)->toBe(BrowserTokenStatus::Active);
 });
 
 function defineAccessGateSiteTables(): void

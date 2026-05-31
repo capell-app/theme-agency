@@ -92,7 +92,7 @@ final class BuildCacheHealthAction
      */
     private function eligibilityReports(Site $site): array
     {
-        return PageUrl::query()
+        return array_values(PageUrl::query()
             ->with(['siteDomain', 'pageable'])
             ->where('site_id', $site->id)
             ->enabled()
@@ -117,6 +117,6 @@ final class BuildCacheHealthAction
             })
             ->filter()
             ->values()
-            ->all();
+            ->all());
     }
 }

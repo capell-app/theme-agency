@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
@@ -42,6 +43,9 @@ it('defines the commerce premium renderer contract', function (): void {
             'product-grid',
             'comparison',
             'catalog',
+            'lookbook',
+            'promotion',
+            'buying-guide',
             'proof',
             'blog-teaser',
             'cta',
@@ -71,6 +75,9 @@ it('declares renderers for every commerce section', function (): void {
         'product-grid',
         'comparison',
         'catalog',
+        'lookbook',
+        'promotion',
+        'buying-guide',
         'proof',
         'blog-teaser',
         'cta',
@@ -266,6 +273,62 @@ it('renders standard feature and content listing sections through commerce regis
         ->not->toContain('field_path');
 });
 
+it('renders new premium commerce layouts through the registry', function (): void {
+    View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(CommerceThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new CommerceThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $lookbookRenderer = $registry->sectionRenderer('commerce', 'lookbook');
+    $promotionRenderer = $registry->sectionRenderer('commerce', 'promotion');
+    $buyingGuideRenderer = $registry->sectionRenderer('commerce', 'buying-guide');
+
+    assert($lookbookRenderer instanceof SectionRenderer);
+    assert($promotionRenderer instanceof SectionRenderer);
+    assert($buyingGuideRenderer instanceof SectionRenderer);
+
+    $lookbookHtml = $lookbookRenderer->render(commerceThemeSection('lookbook', [
+        'heading' => 'Autumn material stories',
+        'summary' => 'Editorial merchandising for collection discovery.',
+        'items' => [
+            ['title' => 'Waxed cotton', 'summary' => 'Weather-ready product story.'],
+        ],
+    ]));
+
+    $promotionHtml = $promotionRenderer->render(commerceThemeSection('promotion', [
+        'heading' => 'Spring offer board',
+        'items' => [
+            ['title' => 'Member preview', 'summary' => 'Segmented offer for early access buyers.'],
+        ],
+    ]));
+
+    $buyingGuideHtml = $buyingGuideRenderer->render(commerceThemeSection('buying-guide', [
+        'heading' => 'Choose the right field jacket',
+        'items' => [
+            ['title' => 'Canvas weight guide', 'summary' => 'Advice content for purchase confidence.'],
+        ],
+    ]));
+
+    expect($lookbookHtml)
+        ->toContain('Autumn material stories')
+        ->toContain('Waxed cotton')
+        ->not->toContain('capell-app/theme-commerce');
+
+    expect($promotionHtml)
+        ->toContain('Spring offer board')
+        ->toContain('Member preview')
+        ->not->toContain('capell-app/theme-commerce');
+
+    expect($buyingGuideHtml)
+        ->toContain('Choose the right field jacket')
+        ->toContain('Canvas weight guide')
+        ->not->toContain('capell-app/theme-commerce');
+});
+
 it('passes optional Shopify availability through the registered catalog renderer', function (bool $shopifyInstalled, string $expectedMarkup, string $missingMarkup): void {
     View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
     resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
@@ -280,6 +343,7 @@ it('passes optional Shopify availability through the registered catalog renderer
     $renderer = $registry->sectionRenderer('commerce', 'catalog');
 
     expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
 
     $html = $renderer->render(commerceThemeSection('catalog', [
         'heading' => 'Connect the catalog',
@@ -312,6 +376,7 @@ it('passes optional Blog availability through the registered blog teaser rendere
     $renderer = $registry->sectionRenderer('commerce', 'blog-teaser');
 
     expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
 
     $html = $renderer->render(commerceThemeSection('blog-teaser', [
         'heading' => 'Buying guides',

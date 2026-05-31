@@ -10,11 +10,15 @@ use Capell\ShopifyCommerce\Data\ShopifyProductVariantData;
 use Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Capell\ShopifyCommerce\Models\ShopifyProduct;
+use Carbon\CarbonInterface;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RuntimeException;
+use SplFileObject;
 use Throwable;
 
 final class ImportShopifyProductBulkSyncAction
@@ -32,23 +36,29 @@ final class ImportShopifyProductBulkSyncAction
                 return 0;
             }
 
-            throw_if(! is_string($connection->bulk_operation_url) || $connection->bulk_operation_url === '', RuntimeException::class, 'Shopify bulk operation URL is missing.');
+            $bulkOperationUrl = $connection->bulk_operation_url;
+            throw_if(! is_string($bulkOperationUrl) || $bulkOperationUrl === '', RuntimeException::class, 'Shopify bulk operation URL is missing.');
 
             try {
                 $connection->forceFill(['sync_status' => 'importing'])->save();
 
-                $products = $this->downloadProducts($connection->bulk_operation_url);
-                $seenProductGids = [];
+                $products = $this->downloadProducts($bulkOperationUrl);
+                $syncedAt = now();
+                $imported = 0;
 
-                DB::transaction(function () use ($connection, $products, &$seenProductGids): void {
+                DB::transaction(function () use ($connection, $products, $syncedAt, &$imported): void {
                     foreach ($products as $product) {
-                        $seenProductGids[] = $product->shopifyGid;
-                        $this->persistProduct($connection, $product);
+                        $this->persistProduct($connection, $product, $syncedAt);
+                        $imported++;
                     }
 
                     ShopifyProduct::query()
                         ->where('connection_id', $connection->getKey())
-                        ->whereNotIn('shopify_gid', $seenProductGids)
+                        ->where(function (Builder $query) use ($syncedAt): void {
+                            $query
+                                ->whereNull('synced_at')
+                                ->orWhere('synced_at', '<', $syncedAt);
+                        })
                         ->delete();
                 });
 
@@ -67,7 +77,7 @@ final class ImportShopifyProductBulkSyncAction
                     InvalidateShopifyProductSearchCacheAction::run($connection);
                 }
 
-                return count($products);
+                return $imported;
             } catch (Throwable $throwable) {
                 $connection->refresh();
 
@@ -85,35 +95,53 @@ final class ImportShopifyProductBulkSyncAction
     }
 
     /**
-     * @return array<int, ShopifyProductData>
+     * @return iterable<int, ShopifyProductData>
      */
-    private function downloadProducts(string $url): array
+    private function downloadProducts(string $url): iterable
     {
-        $response = Http::get($url);
+        $path = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'capell-shopify-bulk-' . Str::uuid()->toString();
 
-        throw_unless($response->successful(), RuntimeException::class, 'Shopify bulk operation download failed.');
+        try {
+            $response = Http::timeout($this->httpTimeout())
+                ->sink($path)
+                ->get($url);
 
-        $products = [];
-        $lines = preg_split('/\r\n|\r|\n/', $response->body()) ?: [];
+            throw_unless($response->successful(), RuntimeException::class, 'Shopify bulk operation download failed.');
 
-        foreach ($lines as $line) {
-            if (trim($line) === '') {
-                continue;
+            if (filesize($path) === 0 && $response->body() !== '') {
+                file_put_contents($path, $response->body());
             }
 
-            $node = json_decode($line, true);
-            if (! is_array($node)) {
-                continue;
-            }
+            $file = new SplFileObject($path, 'r');
 
-            if (! is_string($node['id'] ?? null)) {
-                continue;
-            }
+            while (! $file->eof()) {
+                $line = $file->fgets();
 
-            $products[] = $this->mapProductNode($node);
+                if (trim($line) === '') {
+                    continue;
+                }
+
+                $node = json_decode($line, true);
+                if (! is_array($node)) {
+                    continue;
+                }
+
+                if (! is_string($node['id'] ?? null)) {
+                    continue;
+                }
+
+                yield $this->mapProductNode($node);
+            }
+        } finally {
+            if (is_file($path)) {
+                unlink($path);
+            }
         }
+    }
 
-        return $products;
+    private function httpTimeout(): int
+    {
+        return max(1, (int) config('capell-shopify-commerce.http_timeout', 15));
     }
 
     /**
@@ -184,7 +212,7 @@ final class ImportShopifyProductBulkSyncAction
         );
     }
 
-    private function persistProduct(ShopifyConnection $connection, ShopifyProductData $product): void
+    private function persistProduct(ShopifyConnection $connection, ShopifyProductData $product, CarbonInterface $syncedAt): void
     {
         /** @var ShopifyProduct $model */
         $model = ShopifyProduct::query()->updateOrCreate(
@@ -200,7 +228,7 @@ final class ImportShopifyProductBulkSyncAction
                 'options' => $product->options,
                 'featured_image' => $product->featuredImage,
                 'raw_snapshot' => $product->rawSnapshot,
-                'synced_at' => now(),
+                'synced_at' => $syncedAt,
             ],
         );
 

@@ -59,6 +59,8 @@ abstract class BaseAction implements ActionContract
 
         throw_unless($this->validate(['context' => $context, 'options' => $options]), InvalidArgumentException::class, 'Invalid AI action input: missing context or malformed options.');
 
+        throw_unless($context instanceof AiActionContextInterface, InvalidArgumentException::class, 'Invalid AI action input: missing context.');
+
         $this->before($context, $options);
 
         try {

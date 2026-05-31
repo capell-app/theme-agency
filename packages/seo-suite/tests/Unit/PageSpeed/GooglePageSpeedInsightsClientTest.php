@@ -57,11 +57,12 @@ it('maps PageSpeed Insights lighthouse payloads into audit data', function (): v
     ]);
 
     $result = $client->analyze('https://example.test/about', PageSpeedStrategyEnum::Mobile);
+    $largestContentfulPaint = $result->metrics['largest-contentful-paint'] ?? [];
 
     expect($result->successful)->toBeTrue()
         ->and($result->performanceScore())->toBe(82)
         ->and($result->categoryScores['accessibility'])->toBe(91)
-        ->and($result->metrics['largest-contentful-paint']['display_value'])->toBe('2.4 s')
+        ->and($largestContentfulPaint['display_value'] ?? null)->toBe('2.4 s')
         ->and($result->opportunities[0]->key)->toBe('uses-optimized-images')
         ->and($result->diagnostics[0]->key)->toBe('dom-size')
         ->and($result->lighthouseVersion)->toBe('12.0.0')

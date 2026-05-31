@@ -41,7 +41,7 @@ trait TestingFrontend
             config(['view.compiled' => $compiledViewPath]);
 
             if (app()->bound('blade.compiler')) {
-                $bladeCompiler = $this->app->make('blade.compiler');
+                $bladeCompiler = app()->make('blade.compiler');
 
                 if ($bladeCompiler instanceof BladeCompiler) {
                     $cachePath = new ReflectionProperty(BladeCompiler::class, 'cachePath');
@@ -69,7 +69,7 @@ trait TestingFrontend
 
         $this->withoutVite();
 
-        if (class_exists(ThemeRegistry::class) && $this->app->bound(ThemeRegistry::class)) {
+        if (class_exists(ThemeRegistry::class) && app()->bound(ThemeRegistry::class)) {
             resolve(ThemeRegistry::class)->reset();
         }
     }

@@ -70,8 +70,9 @@ it('returns the next opening moment when currently closed', function (): void {
 
     $nextOpensAt = (new ReleaseWindowGuard)->nextOpensAt($saturday);
 
-    expect($nextOpensAt)->not->toBeNull()
-        ->and($nextOpensAt->format('Y-m-d H:i'))->toBe('2026-04-20 09:00');
+    $nextOpensAt = publishingStudioTestInstance($nextOpensAt, CarbonImmutable::class);
+
+    expect($nextOpensAt->format('Y-m-d H:i'))->toBe('2026-04-20 09:00');
 });
 
 it('returns null from nextOpensAt when the feature is disabled', function (): void {

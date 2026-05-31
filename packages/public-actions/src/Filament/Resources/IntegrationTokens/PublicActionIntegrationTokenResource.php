@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\PublicActions\Filament\Resources\IntegrationTokens;
 
 use BackedEnum;
+use Capell\Admin\Support\SiteScope;
 use Capell\Core\Facades\CapellCore;
 use Capell\PublicActions\Actions\RevokePublicActionIntegrationTokenAction;
 use Capell\PublicActions\Enums\PublicActionIntegrationProvider;
@@ -67,6 +68,12 @@ final class PublicActionIntegrationTokenResource extends Resource
     public static function getModel(): string
     {
         return PublicActionIntegrationToken::class;
+    }
+
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return SiteScope::applyForCurrentActor(parent::getEloquentQuery());
     }
 
     #[Override]

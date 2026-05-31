@@ -41,9 +41,17 @@ class BeaconController extends BaseController
             return response()->json($data);
         }
 
-        [$siteDomain, $url] = LoadSiteDomainFromUrlAction::run($request->url, sites: SiteLoader::getSites());
+        $resolvedSiteDomain = LoadSiteDomainFromUrlAction::run($request->url, sites: SiteLoader::getSites());
 
-        if (! $siteDomain) {
+        if (! is_array($resolvedSiteDomain)) {
+            return response()->json([
+                'message' => 'Not Found',
+            ], 404);
+        }
+
+        [$siteDomain, $url] = $resolvedSiteDomain;
+
+        if (! $siteDomain instanceof SiteDomain) {
             return response()->json([
                 'message' => 'Not Found',
             ], 404);
@@ -135,7 +143,10 @@ class BeaconController extends BaseController
     {
         return $scheme === $request->getScheme()
             && strcasecmp($host, $request->getHost()) === 0
-            && $this->normalisePort($scheme, $port) === $this->normalisePort($request->getScheme(), $request->getPort());
+            && $this->normalisePort($scheme, $port) === $this->normalisePort(
+                $request->getScheme(),
+                is_numeric($request->getPort()) ? (int) $request->getPort() : null,
+            );
     }
 
     private function normalisePort(string $scheme, ?int $port): int

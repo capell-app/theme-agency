@@ -6,6 +6,7 @@ namespace Capell\CampaignStudio\Filament\Extenders\Page;
 
 use Capell\Admin\Contracts\Extenders\PageSchemaExtender;
 use Capell\Admin\Enums\PageTranslationSchemaHookEnum;
+use Capell\Admin\Support\SiteScope;
 use Capell\CampaignStudio\Models\CampaignConversionGoal;
 use Capell\CampaignStudio\Models\CampaignGroup;
 use Filament\Forms\Components\Select;
@@ -72,7 +73,7 @@ final class CampaignPageSchemaExtender implements PageSchemaExtender
             return [];
         }
 
-        return CampaignGroup::query()->pluck('name', 'id')->toArray();
+        return SiteScope::applyForCurrentActor(CampaignGroup::query())->pluck('name', 'id')->toArray();
     }
 
     /**
@@ -84,6 +85,6 @@ final class CampaignPageSchemaExtender implements PageSchemaExtender
             return [];
         }
 
-        return CampaignConversionGoal::query()->pluck('name', 'id')->toArray();
+        return SiteScope::applyForCurrentActor(CampaignConversionGoal::query())->pluck('name', 'id')->toArray();
     }
 }

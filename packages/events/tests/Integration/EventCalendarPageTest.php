@@ -13,7 +13,11 @@ beforeEach(function (): void {
     Permission::create(['name' => 'View:EventCalendarPage', 'guard_name' => 'web']);
 
     test()->actingAsAdmin();
-    auth()->user()->givePermissionTo('View:EventCalendarPage');
+    $adminUser = auth()->user();
+
+    throw_if($adminUser === null, RuntimeException::class, 'Expected event calendar admin user to be authenticated.');
+
+    $adminUser->givePermissionTo('View:EventCalendarPage');
 });
 
 it('renders the admin event calendar page as a livewire component', function (): void {

@@ -19,7 +19,7 @@
 <x-capell::dropdown
     :name="$currentDropdownName"
     background="bg-white"
-    class="capell-foundation-theme-menu-dropdown max-lg:inset-0 max-lg:rounded-none max-lg:border-0 max-lg:shadow-none"
+    class="site-menu-dropdown max-lg:inset-0 max-lg:rounded-none max-lg:border-0 max-lg:shadow-none"
     container-tag="li"
     container-class="group flex lg:relative"
     panel-tag="ul"

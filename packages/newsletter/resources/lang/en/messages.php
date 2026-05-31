@@ -8,6 +8,8 @@ return [
     'confirmation_subject' => 'Confirm your newsletter subscription',
     'confirmed' => 'Your newsletter subscription has been confirmed.',
     'duplicate_import_email' => 'This email appears more than once in the import file.',
+    'import_file_too_large' => 'The import file is larger than the allowed :max kilobytes.',
+    'import_too_many_rows' => 'The import file contains more than the allowed :max rows.',
     'invalid_token' => 'This newsletter link is invalid or has expired.',
     'missing_consent_basis' => 'A consent basis is required before importing subscribers.',
     'unsubscribed' => 'You have been unsubscribed.',

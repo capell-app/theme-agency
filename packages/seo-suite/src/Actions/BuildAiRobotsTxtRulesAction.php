@@ -36,10 +36,10 @@ final class BuildAiRobotsTxtRulesAction
                 $rule->user_agent,
                 $rule->path,
             ]))
-            ->map(fn (Collection $ruleGroup): AiDiscoveryCrawlerRule => $ruleGroup
+            ->map(fn (Collection $ruleGroup): ?AiDiscoveryCrawlerRule => $ruleGroup
                 ->sortByDesc(fn (AiDiscoveryCrawlerRule $rule): int => $rule->site_id === null ? 0 : 1)
                 ->first())
-            ->filter(fn (AiDiscoveryCrawlerRule $rule): bool => $rule->enabled)
+            ->filter(fn (?AiDiscoveryCrawlerRule $rule): bool => $rule instanceof AiDiscoveryCrawlerRule && $rule->enabled)
             ->sortBy([
                 ['provider', 'asc'],
                 ['user_agent', 'asc'],

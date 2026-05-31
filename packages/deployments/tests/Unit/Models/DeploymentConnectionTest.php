@@ -18,8 +18,13 @@ it('encrypts access_token at rest', function (): void {
         'access_token_encrypted' => 'plain-token-abc',
     ])->save();
 
-    expect($connection->fresh()->access_token_encrypted)->toBe('plain-token-abc');
-    expect(DB::table('deployment_connections')->first()->access_token_encrypted)
+    $connection->refresh();
+    $databaseRecord = DB::table('deployment_connections')->first();
+
+    throw_unless($databaseRecord instanceof stdClass, RuntimeException::class, 'Expected deployment connection database record to exist.');
+
+    expect($connection->access_token_encrypted)->toBe('plain-token-abc');
+    expect($databaseRecord->access_token_encrypted)
         ->not->toBe('plain-token-abc');
 });
 

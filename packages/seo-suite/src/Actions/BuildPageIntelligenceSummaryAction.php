@@ -44,7 +44,7 @@ final class BuildPageIntelligenceSummaryAction
         return new PageIntelligenceSummaryData(
             targetKeywords: $targetKeywords,
             rankingRows: $this->rankingRows($site, $url),
-            opportunities: BuildSeoIntelligenceOpportunitiesAction::run(limit: 10, url: $url)->all(),
+            opportunities: array_values(BuildSeoIntelligenceOpportunitiesAction::run(limit: 10, url: $url)->all()),
         );
     }
 
@@ -65,7 +65,7 @@ final class BuildPageIntelligenceSummaryAction
      */
     private function rankingRows(Site $site, string $url): array
     {
-        return SearchConsoleQueryMetric::query()
+        return array_values(SearchConsoleQueryMetric::query()
             ->latestWindow()
             ->where('site_id', $site->getKey())
             ->where('url_hash', hash('sha256', $url))
@@ -80,17 +80,17 @@ final class BuildPageIntelligenceSummaryAction
                 windowEnd: $metric->window_end,
                 clicks: $metric->clicks,
                 impressions: $metric->impressions,
-                ctr: $metric->ctr,
-                averagePosition: $metric->average_position,
+                ctr: (float) ($metric->ctr ?? 0.0),
+                averagePosition: (float) ($metric->average_position ?? 0.0),
                 previousClicks: $metric->previous_clicks,
                 previousImpressions: $metric->previous_impressions,
-                previousCtr: $metric->previous_ctr,
-                previousAveragePosition: $metric->previous_average_position,
+                previousCtr: (float) ($metric->previous_ctr ?? 0.0),
+                previousAveragePosition: (float) ($metric->previous_average_position ?? 0.0),
                 clickDelta: $metric->click_delta,
                 impressionDelta: $metric->impression_delta,
-                positionDelta: $metric->position_delta,
+                positionDelta: (float) ($metric->position_delta ?? 0.0),
             ))
             ->values()
-            ->all();
+            ->all());
     }
 }

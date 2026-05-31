@@ -94,5 +94,8 @@
         ],
         "categories": ["foundation", "frontend"]
     },
-    "scopes": ["frontend"]
+    "scopes": ["frontend"],
+    "contributionTraceability": {
+        "deferredContributions": ["configurator"]
+    }
 }

@@ -2,10 +2,16 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Database\Factories\UserFactory;
+use Capell\SeoSuite\Actions\GenerateAiLayoutAction;
+use Capell\SeoSuite\Actions\SubmitAiCreatorDraftAction;
 use Capell\SeoSuite\Data\AiContentBriefData;
+use Capell\SeoSuite\DataObjects\AiCreatorData;
 use Capell\SeoSuite\Filament\Actions\AiContentBriefAction;
 use Capell\SeoSuite\Filament\Actions\AiCreatorAction;
 use Capell\SeoSuite\Filament\Actions\AiImageGeneratorAction;
+use Capell\SeoSuite\Models\AiCreatorContext;
+use Capell\SeoSuite\Models\AiCreatorSession;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Textarea;
@@ -13,6 +19,7 @@ use Filament\Forms\Components\ViewField;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Components\Wizard;
 
 /**
@@ -29,7 +36,42 @@ function seoSuiteFakeGet(array $state): Get
 
         public function __invoke(string|Component $path = '', bool $isAbsolute = false): mixed
         {
+            if ($path instanceof Component) {
+                $path = $path->getName();
+            }
+
             return data_get($this->state, $path);
+        }
+    };
+}
+
+/**
+ * @param  array<string, mixed>  $state
+ */
+function seoSuiteFakeSet(array &$state): Set
+{
+    return new class($state) extends Set
+    {
+        /**
+         * @param  array<string, mixed>  $state
+         */
+        public function __construct(private array &$state) {}
+
+        public function __invoke(
+            string|Component $path,
+            mixed $state,
+            bool $isAbsolute = false,
+            bool $shouldCallUpdatedHooks = true,
+        ): mixed {
+            unset($isAbsolute, $shouldCallUpdatedHooks);
+
+            if ($path instanceof Component) {
+                $path = $path->getName();
+            }
+
+            data_set($this->state, $path, $state);
+
+            return null;
         }
     };
 }
@@ -137,4 +179,87 @@ it('builds ai creator brand step defaults without existing site context', functi
         ->and($schema[1]->getName())->toBe('industry')
         ->and($schema[2]->getName())->toBe('target_audience')
         ->and($schema[3]->getName())->toBe('brand_voice_notes');
+});
+
+it('generates ai creator layout preview state from brand inputs', function (): void {
+    $user = UserFactory::new()->create();
+    auth()->login($user);
+
+    $generator = Mockery::mock(GenerateAiLayoutAction::class);
+    $generator->shouldReceive('handle')
+        ->once()
+        ->withArgs(function (AiCreatorData $data) use ($user): bool {
+            AiCreatorSession::query()->create([
+                'site_id' => $data->siteId,
+                'user_id' => $user->getKey(),
+                'status' => 'review',
+                'stage' => 2,
+                'intent' => $data->intent,
+                'layout_proposal' => [],
+                'generated_output' => [],
+                'ai_messages' => [],
+            ]);
+
+            return $data->siteId === 0
+                && $data->userId === $user->getKey()
+                && $data->intent === 'Build a service landing page.'
+                && $data->pageCount === 2;
+        })
+        ->andReturn([
+            [
+                'section_type' => 'hero',
+                'fields' => ['headline' => 'Launch faster'],
+            ],
+        ]);
+    app()->instance(GenerateAiLayoutAction::class, $generator);
+
+    $action = AiCreatorAction::make();
+    $state = [];
+    $generateLayout = new ReflectionMethod(AiCreatorAction::class, 'generateLayout');
+
+    $generateLayout->invoke($action, seoSuiteFakeGet([
+        'intent' => 'Build a service landing page.',
+        'page_count' => 2,
+        'tone' => 'friendly',
+        'industry' => 'consulting',
+        'target_audience' => 'Founders',
+        'brand_voice_notes' => 'Concise and practical.',
+    ]), seoSuiteFakeSet($state));
+
+    $context = AiCreatorContext::query()->firstOrFail();
+
+    expect($context->site_id)->toBe(0)
+        ->and($context->tone)->toBe('friendly')
+        ->and($state['ai_session_id'])->toBeInt()
+        ->and($state['layout_preview'][0]['section_type'])->toBe('hero')
+        ->and($state['layout_preview'][0]['fields_preview'])->toContain('Launch faster');
+});
+
+it('submits ai creator review sessions for the authenticated user', function (): void {
+    $user = UserFactory::new()->create();
+    auth()->login($user);
+
+    $session = AiCreatorSession::query()->create([
+        'site_id' => 0,
+        'user_id' => $user->getKey(),
+        'status' => 'review',
+        'stage' => 3,
+        'intent' => 'Submit this draft.',
+        'layout_proposal' => [],
+        'generated_output' => [],
+        'ai_messages' => [],
+    ]);
+
+    $submit = Mockery::mock(SubmitAiCreatorDraftAction::class);
+    $submit->shouldReceive('handle')
+        ->once()
+        ->withArgs(fn (AiCreatorSession $handledSession, int $userId, ?int $siteId): bool => $handledSession->is($session)
+            && $userId === $user->getKey()
+            && $siteId === null);
+    app()->instance(SubmitAiCreatorDraftAction::class, $submit);
+
+    $action = AiCreatorAction::make();
+    $runCreator = new ReflectionMethod(AiCreatorAction::class, 'runCreator');
+
+    $runCreator->invoke($action, ['ai_session_id' => $session->getKey()]);
 });

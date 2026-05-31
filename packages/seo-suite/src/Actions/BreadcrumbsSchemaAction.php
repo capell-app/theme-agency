@@ -32,11 +32,12 @@ class BreadcrumbsSchemaAction
             $return = [];
 
             $canonicalPages->each(function (Page $canonicalPage) use ($language, $site, &$return): void {
+                $pageUrl = $canonicalPage->pageUrl;
                 $item = [
                     '@context' => 'https://schema.org',
                     '@type' => 'BreadcrumbList',
-                    '@id' => $canonicalPage->pageUrl->full_url !== null && $canonicalPage->pageUrl->full_url !== ''
-                        ? SchemaEntityTypeEnum::BreadcrumbList->toId($canonicalPage->pageUrl->full_url)
+                    '@id' => $pageUrl?->full_url !== null && $pageUrl->full_url !== ''
+                        ? SchemaEntityTypeEnum::BreadcrumbList->toId($pageUrl->full_url)
                         : null,
                     'itemListElement' => [],
                 ];
@@ -44,11 +45,14 @@ class BreadcrumbsSchemaAction
                 $canonicalPageAncestors = PageLoader::getPageAncestors($canonicalPage, $language, $site);
 
                 $canonicalPageAncestors?->each(function (Page $ancestorPage, int $index) use (&$item): void {
+                    $translation = $ancestorPage->translation;
+                    $pageUrl = $ancestorPage->pageUrl;
+
                     $item['itemListElement'][] = [
                         '@type' => 'ListItem',
                         'position' => $index + 1,
-                        'name' => strip_tags((string) $ancestorPage->translation->label),
-                        'item' => $ancestorPage->pageUrl->full_url,
+                        'name' => strip_tags((string) ($translation->label ?? $ancestorPage->name)),
+                        'item' => $pageUrl?->full_url,
                     ];
                 });
 
@@ -59,21 +63,25 @@ class BreadcrumbsSchemaAction
         }
 
         if ($ancestors?->isNotEmpty()) {
+            $pageUrl = $page->pageUrl;
             $item = [
                 '@context' => 'https://schema.org',
                 '@type' => 'BreadcrumbList',
-                '@id' => $page->pageUrl->full_url !== null && $page->pageUrl->full_url !== ''
-                    ? SchemaEntityTypeEnum::BreadcrumbList->toId($page->pageUrl->full_url)
+                '@id' => $pageUrl?->full_url !== null && $pageUrl->full_url !== ''
+                    ? SchemaEntityTypeEnum::BreadcrumbList->toId($pageUrl->full_url)
                     : null,
                 'itemListElement' => [],
             ];
 
             $ancestors->each(function (Page $ancestorPage, int $index) use (&$item): void {
+                $translation = $ancestorPage->translation;
+                $pageUrl = $ancestorPage->pageUrl;
+
                 $item['itemListElement'][] = [
                     '@type' => 'ListItem',
                     'position' => $index + 1,
-                    'name' => strip_tags((string) $ancestorPage->translation->label),
-                    'item' => $ancestorPage->pageUrl->full_url,
+                    'name' => strip_tags((string) ($translation->label ?? $ancestorPage->name)),
+                    'item' => $pageUrl?->full_url,
                 ];
             });
 

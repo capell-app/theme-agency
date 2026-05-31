@@ -30,5 +30,5 @@ it('materializes generated occurrences without replacing overrides', function ()
 
     expect($occurrences)->toHaveCount(2)
         ->and(EventOccurrence::query()->where('event_id', $event->id)->count())->toBe(2)
-        ->and(EventOccurrence::query()->where('occurrence_key', '20260601T100000')->first()->starts_at->hour)->toBe(14);
+        ->and(EventOccurrence::query()->where('occurrence_key', '20260601T100000')->firstOrFail()->starts_at->hour)->toBe(14);
 });

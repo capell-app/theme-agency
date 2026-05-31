@@ -11,6 +11,7 @@ use Capell\FilamentPeek\Actions\CreatePagePreviewSnapshotAction;
 use Capell\FilamentPeek\Providers\FilamentPeekServiceProvider;
 use Filament\Actions\Action;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
 use Pboivin\FilamentPeek\Facades\Peek;
 
@@ -25,9 +26,13 @@ final class PeekPagePreviewAction extends Action
             ->tooltip(__('capell-filament-peek::actions.preview.tooltip'))
             ->icon(Heroicon::OutlinedEye)
             ->color('gray')
-            ->authorize(fn (Page $record): bool => Gate::allows('update', $record))
-            ->visible(fn (): bool => CapellCore::isPackageInstalled(FilamentPeekServiceProvider::$packageName))
-            ->action(function (Page $record, EditPage $livewire): void {
+            ->authorize(fn (?Model $record): bool => $record instanceof Page && Gate::allows('update', $record))
+            ->visible(fn (?Model $record): bool => $record instanceof Page && CapellCore::isPackageInstalled(FilamentPeekServiceProvider::$packageName))
+            ->action(function (Model $record, EditPage $livewire): void {
+                if (! $record instanceof Page) {
+                    return;
+                }
+
                 $snapshot = CreatePagePreviewSnapshotAction::run(
                     page: $record,
                     formState: $this->formState($livewire),

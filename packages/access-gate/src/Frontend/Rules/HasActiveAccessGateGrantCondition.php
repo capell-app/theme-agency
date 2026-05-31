@@ -52,9 +52,9 @@ final class HasActiveAccessGateGrantCondition implements FrontendRuleCondition
             return [];
         }
 
-        return collect($areaKeys)
+        return array_values(collect($areaKeys)
             ->filter(fn (mixed $areaKey): bool => is_string($areaKey) && $areaKey !== '')
             ->values()
-            ->all();
+            ->all());
     }
 }

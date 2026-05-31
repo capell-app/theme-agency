@@ -19,10 +19,10 @@ it('persists a field comment and resolves/reopens it', function (): void {
     expect($comment->isResolved())->toBeFalse();
 
     $comment->resolve();
-    expect($comment->fresh()->isResolved())->toBeTrue();
+    expect(publishingStudioTestInstance($comment->fresh(), WorkspaceFieldComment::class)->isResolved())->toBeTrue();
 
     $comment->reopen();
-    expect($comment->fresh()->isResolved())->toBeFalse();
+    expect(publishingStudioTestInstance($comment->fresh(), WorkspaceFieldComment::class)->isResolved())->toBeFalse();
 });
 
 it('queries unresolved comments for a given field path', function (): void {
@@ -50,6 +50,8 @@ it('queries unresolved comments for a given field path', function (): void {
         ->whereNull('resolved_at')
         ->get();
 
+    $comment = publishingStudioTestInstance($unresolved->first(), WorkspaceFieldComment::class);
+
     expect($unresolved)->toHaveCount(1)
-        ->and($unresolved->first()->body)->toBe('open');
+        ->and($comment->body)->toBe('open');
 });

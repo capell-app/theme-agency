@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\PublishingStudio\Actions;
 
+use Capell\PublishingStudio\Contracts\CountableReleaseWorkspaceItemContributor;
+use Capell\PublishingStudio\Contracts\ReleaseWorkspaceItemContributor;
 use Capell\PublishingStudio\Data\ReleaseWorkspaceItemData;
 use Capell\PublishingStudio\Data\ReleaseWorkspaceSummaryData;
 use Capell\PublishingStudio\Models\Workspace;
@@ -23,11 +25,15 @@ final class BuildReleaseWorkspaceSummaryAction
         foreach ($registry->contributors() as $contributorClass) {
             $contributor = resolve($contributorClass);
 
+            if (! $contributor instanceof ReleaseWorkspaceItemContributor) {
+                continue;
+            }
+
             $remainingLimit = max(0, $limit - count($items));
 
-            if (method_exists($contributor, 'countFor')) {
-                $itemCount += (int) $contributor->countFor($workspace);
-                $contributorItems = method_exists($contributor, 'limitedItemsFor') && $remainingLimit > 0
+            if ($contributor instanceof CountableReleaseWorkspaceItemContributor) {
+                $itemCount += $contributor->countFor($workspace);
+                $contributorItems = $remainingLimit > 0
                     ? $contributor->limitedItemsFor($workspace, $remainingLimit)
                     : [];
             } else {
@@ -39,7 +45,7 @@ final class BuildReleaseWorkspaceSummaryAction
                     continue;
                 }
 
-                if (! method_exists($contributor, 'countFor')) {
+                if (! $contributor instanceof CountableReleaseWorkspaceItemContributor) {
                     $itemCount++;
                 }
 

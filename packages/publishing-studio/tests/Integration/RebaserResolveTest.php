@@ -75,8 +75,9 @@ it('keep-mine leaves the workspace copy untouched', function (): void {
         ->where('workspace_id', $workspace->id)
         ->first();
 
-    expect($workspaceRow)->not->toBeNull()
-        ->and($workspaceRow->name)->toBe('my changes');
+    $workspaceRow = publishingStudioTestInstance($workspaceRow, WorkspaceDraftableFixture::class);
+
+    expect($workspaceRow->name)->toBe('my changes');
 });
 
 it('throws on an unknown choice value rather than silently no-opping', function (): void {

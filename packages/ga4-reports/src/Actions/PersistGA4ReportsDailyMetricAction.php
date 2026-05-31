@@ -14,26 +14,38 @@ final class PersistGA4ReportsDailyMetricAction
 
     public function handle(GA4ReportsDailyMetricData $metric): GA4ReportsDailyMetric
     {
-        $dailyMetric = GA4ReportsDailyMetric::query()
-            ->where('property_id', $metric->propertyId)
-            ->whereDate('metric_date', $metric->metricDate->toDateString())
-            ->first() ?? new GA4ReportsDailyMetric([
+        GA4ReportsDailyMetric::query()->upsert(
+            [[
                 'property_id' => $metric->propertyId,
                 'metric_date' => $metric->metricDate->toDateString(),
-            ]);
+                'total_users' => $metric->totalUsers,
+                'sessions' => $metric->sessions,
+                'screen_page_views' => $metric->screenPageViews,
+                'engaged_sessions' => $metric->engagedSessions,
+                'engagement_rate' => $metric->engagementRate,
+                'average_session_duration' => $metric->averageSessionDuration,
+                'event_count' => $metric->eventCount,
+                'conversions' => $metric->conversions,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]],
+            ['property_id', 'metric_date'],
+            [
+                'total_users',
+                'sessions',
+                'screen_page_views',
+                'engaged_sessions',
+                'engagement_rate',
+                'average_session_duration',
+                'event_count',
+                'conversions',
+                'updated_at',
+            ],
+        );
 
-        $dailyMetric->fill([
-            'total_users' => $metric->totalUsers,
-            'sessions' => $metric->sessions,
-            'screen_page_views' => $metric->screenPageViews,
-            'engaged_sessions' => $metric->engagedSessions,
-            'engagement_rate' => $metric->engagementRate,
-            'average_session_duration' => $metric->averageSessionDuration,
-            'event_count' => $metric->eventCount,
-            'conversions' => $metric->conversions,
-        ]);
-        $dailyMetric->save();
-
-        return $dailyMetric;
+        return GA4ReportsDailyMetric::query()
+            ->where('property_id', $metric->propertyId)
+            ->whereDate('metric_date', $metric->metricDate->toDateString())
+            ->firstOrFail();
     }
 }

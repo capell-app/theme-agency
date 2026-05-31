@@ -31,7 +31,13 @@ class ProviderInterestMappingResource extends Resource
     {
         return $configurator->components([
             Select::make('provider_audience_id')
-                ->relationship('providerAudience', 'name')
+                ->relationship(
+                    'providerAudience',
+                    'name',
+                    modifyQueryUsing: fn (Builder $query): Builder => $query->whereHas('providerConnection', function (Builder $connectionQuery): void {
+                        SiteScope::applyForCurrentActor($connectionQuery);
+                    }),
+                )
                 ->label(__('capell-newsletter::navigation.provider_audiences'))
                 ->required(),
             Select::make('tag_id')

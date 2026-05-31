@@ -34,7 +34,7 @@ class UserActivityMiddleware
         /** @var User|null $user */
         $user = $request->user();
 
-        if (! method_exists($user, 'authentications')) {
+        if (! $user instanceof User || ! method_exists($user, 'authentications')) {
             return;
         }
 

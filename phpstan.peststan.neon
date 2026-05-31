@@ -15,6 +15,21 @@ parametersSchema:
 
 services:
     -
+        class: Capell\Tests\PHPStan\FactoryNewDynamicStaticMethodReturnTypeExtension
+        tags:
+            - phpstan.broker.dynamicStaticMethodReturnTypeExtension
+
+    -
+        class: Capell\Tests\PHPStan\PageLoaderGetPagesDynamicStaticMethodReturnTypeExtension
+        tags:
+            - phpstan.broker.dynamicStaticMethodReturnTypeExtension
+
+    -
+        class: Capell\Tests\PHPStan\TagLoaderGetTagsDynamicStaticMethodReturnTypeExtension
+        tags:
+            - phpstan.broker.dynamicStaticMethodReturnTypeExtension
+
+    -
         class: PestStan\Type\Pest\PestFileDiscoverer
         arguments:
             scanPaths: %paths%

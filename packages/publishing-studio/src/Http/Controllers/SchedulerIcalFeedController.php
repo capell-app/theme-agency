@@ -31,7 +31,7 @@ final class SchedulerIcalFeedController
         }
 
         $feed = BuildSchedulerIcalFeedAction::run($feedToken);
-        $etag = '"' . sha1((string) $feed) . '"';
+        $etag = '"' . hash('sha256', (string) $feed) . '"';
         $lastModified = $feedToken->updated_at?->toRfc7231String() ?? now()->toRfc7231String();
 
         if ($request->headers->get('If-None-Match') === $etag) {

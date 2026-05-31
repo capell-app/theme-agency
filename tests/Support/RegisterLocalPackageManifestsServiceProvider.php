@@ -52,12 +52,12 @@ final class RegisterLocalPackageManifestsServiceProvider extends ServiceProvider
      */
     private function installedPackageManifestPaths(array $packageNames): array
     {
-        return collect($packageNames)
+        return array_values(collect($packageNames)
             ->filter(fn (string $packageName): bool => InstalledVersions::isInstalled($packageName))
             ->map(fn (string $packageName): ?string => InstalledVersions::getInstallPath($packageName))
             ->filter(fn (?string $path): bool => is_string($path) && is_file($path . '/capell.json'))
             ->map(fn (string $path): string => $path . '/capell.json')
             ->values()
-            ->all();
+            ->all());
     }
 }

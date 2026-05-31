@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 return [
     'enabled' => env('CAPELL_DEPLOYMENTS_ENABLED', true),
+    'http_timeout' => env('CAPELL_DEPLOYMENTS_HTTP_TIMEOUT', 10),
     'oauth' => [
         'github' => [
             'client_id' => env('CAPELL_GITHUB_CLIENT_ID'),

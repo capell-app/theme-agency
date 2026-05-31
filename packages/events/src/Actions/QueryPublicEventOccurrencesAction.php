@@ -23,8 +23,8 @@ class QueryPublicEventOccurrencesAction
      */
     public function handle(Site $site, CarbonImmutable $startsAt, CarbonImmutable $endsAt, ?int $limit = null): Collection
     {
-        return EventOccurrence::query()
-            ->with(['event.pageUrl', 'event.translations', 'venue'])
+        $query = EventOccurrence::query()
+            ->with(['event.pageUrl', 'event.translation', 'event.translations', 'venue'])
             ->whereHas('event', function (Builder $query) use ($site): void {
                 $query
                     ->where('site_id', $site->getKey())
@@ -33,8 +33,12 @@ class QueryPublicEventOccurrencesAction
             })
             ->public()
             ->inRange($startsAt, $endsAt)
-            ->ordered()
-            ->when($limit !== null, fn (Builder $query): Builder => $query->limit($limit))
-            ->get();
+            ->ordered();
+
+        if ($limit !== null) {
+            $query->limit($limit);
+        }
+
+        return $query->get();
     }
 }

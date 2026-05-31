@@ -1,0 +1,108 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/payments",
+    "slug": "payments",
+    "displayName": "Payments",
+    "kind": "package",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Payments adds a provider-neutral payment record layer and native Stripe Checkout foundation for Capell.",
+    "product": {
+        "group": "Capell Commerce",
+        "tier": "premium",
+        "bundle": "commerce"
+    },
+    "namespace": "Capell\\Payments",
+    "surfaces": ["admin", "frontend", "console"],
+    "dependencies": {
+        "requires": ["capell-app/core"],
+        "supports": ["capell-app/access-gate", "capell-app/form-builder"],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": ["Capell\\Payments\\Providers\\PaymentsServiceProvider"],
+        "runtime": ["Capell\\Payments\\Providers\\PaymentsServiceProvider"],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [],
+    "database": {
+        "migrations": true,
+        "settings": false,
+        "requiredTables": [
+            "payment_customers",
+            "payment_checkout_sessions",
+            "payment_intents",
+            "payment_subscriptions"
+        ],
+        "protectedTables": [
+            "payment_customers",
+            "payment_checkout_sessions",
+            "payment_intents",
+            "payment_subscriptions"
+        ]
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "actions": {
+        "checkout": "Capell\\Payments\\Actions\\CreateCheckoutSessionAction"
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "stripe-checkout",
+        "one-off-payments",
+        "subscriptions",
+        "donations",
+        "paid-downloads",
+        "paid-gated-access",
+        "form-payment-fields"
+    ],
+    "performance": {
+        "frontendRenderBudgetMs": 0,
+        "adminQueryBudget": 40,
+        "cacheTags": ["payments"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "customer"],
+            "sensitiveOutput": true,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "payments.package-health",
+            "label": "Payments models, migrations, and gateway configuration are discoverable.",
+            "class": "Capell\\Payments\\Health\\PaymentsHealthCheck",
+            "severity": "critical",
+            "surface": "admin"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Provider-neutral payment records with native Stripe Checkout support.",
+        "screenshots": [],
+        "categories": ["commerce", "integrations"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": [
+            "admin-resource",
+            "form-field",
+            "frontend-route",
+            "migration",
+            "model",
+            "webhook"
+        ]
+    }
+}

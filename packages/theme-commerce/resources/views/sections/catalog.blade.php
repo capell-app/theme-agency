@@ -4,8 +4,10 @@
 @endphp
 
 <section class="retail-catalog bg-white">
-    <div class="grid gap-8 px-6 lg:grid-cols-[1fr_0.9fr] lg:items-center">
-        <div>
+    <div
+        class="grid min-w-0 gap-8 px-6 lg:grid-cols-[1fr_0.9fr] lg:items-center"
+    >
+        <div class="min-w-0">
             <h2 class="text-4xl font-black tracking-tight text-[#17211c]">
                 {{ $section->heading }}
             </h2>
@@ -16,11 +18,11 @@
             @endif
 
             <div
-                class="theme-carousel relative mt-8"
+                class="theme-carousel relative mt-8 max-w-full min-w-0 overflow-hidden"
                 data-carousel="commerce-catalog"
             >
                 <div
-                    class="flex snap-x snap-mandatory [scrollbar-width:none] gap-3 overflow-x-auto pr-6 pb-2 sm:grid sm:grid-cols-3 [&::-webkit-scrollbar]:hidden"
+                    class="flex max-w-full snap-x snap-mandatory [scrollbar-width:none] gap-3 overflow-x-auto pr-6 pb-2 sm:grid sm:grid-cols-3 [&::-webkit-scrollbar]:hidden"
                     data-carousel-track
                 >
                     @foreach ($items as $item)
@@ -35,7 +37,7 @@
                 <button
                     type="button"
                     class="theme-carousel-button carousel-prev absolute top-1/2 left-2 hidden -translate-y-1/2 rounded-full border border-stone-200 bg-white p-2 text-sm font-semibold shadow-md"
-                    aria-label="Previous catalog segments"
+                    aria-label="{{ __('capell-theme-commerce::generic.carousel_previous') }}"
                     data-carousel-prev
                 >
                     ‹
@@ -43,7 +45,7 @@
                 <button
                     type="button"
                     class="theme-carousel-button carousel-next absolute top-1/2 right-2 hidden -translate-y-1/2 rounded-full border border-stone-200 bg-white p-2 text-sm font-semibold shadow-md"
-                    aria-label="Next catalog segments"
+                    aria-label="{{ __('capell-theme-commerce::generic.carousel_next') }}"
                     data-carousel-next
                 >
                     ›
@@ -83,44 +85,3 @@
         </div>
     </div>
 </section>
-
-<script>
-    document
-        .querySelectorAll('[data-carousel="commerce-catalog"]')
-        .forEach((carousel) => {
-            const track = carousel.querySelector('[data-carousel-track]')
-            const prev = carousel.querySelector('[data-carousel-prev]')
-            const next = carousel.querySelector('[data-carousel-next]')
-
-            if (!track || !prev || !next) {
-                return
-            }
-
-            const step = () =>
-                Math.max(260, Math.floor(track.clientWidth * 0.82))
-
-            const updateButtons = () => {
-                const canScroll = track.scrollWidth > track.clientWidth + 1
-                prev.classList.toggle(
-                    'hidden',
-                    !canScroll || track.scrollLeft <= 2,
-                )
-                next.classList.toggle(
-                    'hidden',
-                    !canScroll ||
-                        track.scrollLeft >=
-                            track.scrollWidth - track.clientWidth - 2,
-                )
-            }
-
-            prev.addEventListener('click', () =>
-                track.scrollBy({ left: -step(), behavior: 'smooth' }),
-            )
-            next.addEventListener('click', () =>
-                track.scrollBy({ left: step(), behavior: 'smooth' }),
-            )
-            track.addEventListener('scroll', updateButtons, { passive: true })
-            window.addEventListener('resize', updateButtons)
-            updateButtons()
-        })
-</script>

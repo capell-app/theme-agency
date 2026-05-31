@@ -1,0 +1,103 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/experiments",
+    "slug": "experiments",
+    "displayName": "Experiments",
+    "kind": "package",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Experiments provides A/B testing, variant allocation, audience rules, goal tracking, and winner reporting for Capell.",
+    "product": {
+        "group": "Capell Growth",
+        "tier": "premium",
+        "bundle": "growth"
+    },
+    "namespace": "Capell\\Experiments",
+    "surfaces": ["admin", "frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core"],
+        "supports": [
+            "capell-app/campaign-studio",
+            "capell-app/form-builder",
+            "capell-app/insights"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\Experiments\\Providers\\ExperimentsServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [],
+    "database": {
+        "migrations": true,
+        "settings": false,
+        "requiredTables": [
+            "experiments",
+            "experiment_variants",
+            "experiment_goals",
+            "experiment_audience_rules",
+            "experiment_allocations",
+            "experiment_goal_events"
+        ]
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "experiments",
+        "variant-allocation",
+        "audience-rules",
+        "goal-tracking",
+        "winner-reporting"
+    ],
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 40,
+        "cacheTags": ["experiments"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "visitor"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "experiments.package-health",
+            "label": "Experiments package models, migrations, and allocation surfaces are discoverable.",
+            "class": "Capell\\Experiments\\Health\\ExperimentsHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Run A/B tests with audience rules, sticky variant allocation, goal tracking, and winner reports.",
+        "screenshots": [],
+        "categories": ["growth", "analytics", "frontend"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": [
+            "admin-resource",
+            "migration",
+            "model",
+            "frontend-component"
+        ]
+    }
+}

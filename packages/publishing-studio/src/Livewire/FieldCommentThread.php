@@ -10,16 +10,21 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class FieldCommentThread extends Component
 {
+    #[Locked]
     public int $workspaceId;
 
+    #[Locked]
     public string $entityType;
 
+    #[Locked]
     public string $entityUuid;
 
+    #[Locked]
     public string $fieldPath;
 
     public string $newComment = '';
@@ -88,6 +93,8 @@ class FieldCommentThread extends Component
 
     public function render(): View
     {
+        Gate::authorize('view', Workspace::query()->findOrFail($this->workspaceId));
+
         return view('capell-publishing-studio::components.publishing-studio.field-comment-thread', [
             'comments' => $this->getCommentsProperty(),
         ]);

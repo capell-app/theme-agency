@@ -21,7 +21,7 @@ class PreviewAction extends Action
         $this->label(__('capell-admin::workspace.actions.preview'))
             ->icon(Heroicon::OutlinedEye)
             ->color('gray')
-            ->authorize('view')
+            ->authorize('preview')
             ->visible(fn (): bool => CapellCore::isPackageInstalled('capell-app/frontend'))
             ->url(fn (Workspace $record): string => (new GenerateWorkspacePreviewUrlAction)->handle($record))
             ->openUrlInNewTab();

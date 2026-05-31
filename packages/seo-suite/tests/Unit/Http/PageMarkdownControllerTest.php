@@ -53,5 +53,16 @@ it('builds canonical markdown request urls with query strings', function (): voi
     $method = new ReflectionMethod(PageMarkdownController::class, 'canonicalRequestUrl');
     $request = Request::create('https://example.test/ignored?preview=1');
 
-    expect($method->invoke($controller, $request, 'docs/page.md'))->toBe('https://example.test/docs/page?preview=1');
+    expect($method->invoke($controller, $request, 'docs/page.md'))->toBe('https://example.test/docs/page?preview=1')
+        ->and($method->invoke($controller, Request::create('https://example.test/ignored'), 'index.md'))->toBe('https://example.test/index');
+});
+
+it('returns an empty 404 markdown response instead of aborting for optional accept-header rendering', function (): void {
+    $controller = new PageMarkdownController;
+    $method = new ReflectionMethod(PageMarkdownController::class, 'unavailable');
+
+    $response = $method->invoke($controller, false);
+
+    expect($response->getStatusCode())->toBe(404)
+        ->and($response->getContent())->toBe('');
 });

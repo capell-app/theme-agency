@@ -11,8 +11,12 @@ use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
 use Capell\Core\Models\Theme;
 use Capell\Events\Actions\BuildCalendarFeedAction;
+use Capell\Events\Actions\BuildEventSchemaAction;
+use Capell\Events\Actions\ProcessDueEventNotificationLogsAction;
 use Capell\Events\Actions\QueryPublicEventOccurrencesAction;
 use Capell\Events\Actions\RegisterForEventOccurrenceAction;
+use Capell\Events\Actions\ResolvePublicEventSchemaOccurrenceAction;
+use Capell\Events\Actions\ScheduleEventNotificationsAction;
 use Capell\Events\Actions\SendEventNotificationAction;
 use Capell\Events\Actions\UpdateRegistrationStatusAction;
 use Capell\Events\Data\EventRegistrationData;
@@ -26,6 +30,7 @@ use Capell\Events\Filament\Resources\Events\Pages\CreateEvent;
 use Capell\Events\Filament\Resources\Events\Pages\EditEvent;
 use Capell\Events\Filament\Resources\Events\Pages\ListEvents;
 use Capell\Events\Http\Controllers\CalendarFeedController;
+use Capell\Events\Livewire\EventCalendar;
 use Capell\Events\Models\Event;
 use Capell\Events\Models\EventNotificationLog;
 use Capell\Events\Models\EventOccurrence;
@@ -35,6 +40,10 @@ use Capell\Events\Providers\EventsServiceProvider;
 use Capell\Frontend\Contracts\FrontendContextReader;
 use Capell\Frontend\Support\CapellFrontendContext;
 use Carbon\CarbonImmutable;
+use Illuminate\Console\Scheduling\Event as ScheduledEvent;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
@@ -54,7 +63,7 @@ it('uses an event page url plus occurrence date for public occurrence urls and f
         'visible_from' => CarbonImmutable::parse('2026-01-01 00:00:00', 'UTC'),
     ]);
     $site = $event->site;
-    $language = Language::query()->firstOrFail();
+    $language = Language::factory()->english()->create();
     SiteDomain::factory()->for($site)->for($language)->default()->create();
 
     PageUrl::factory()
@@ -80,7 +89,7 @@ it('serves calendar feeds with freshness headers and conditional etag support', 
         'visible_from' => CarbonImmutable::parse('2026-01-01 00:00:00', 'UTC'),
     ]);
     $site = $event->site;
-    $language = Language::query()->firstOrFail();
+    $language = Language::factory()->english()->create();
     SiteDomain::factory()->for($site)->for($language)->default()->create();
 
     EventOccurrence::factory()->create([
@@ -211,7 +220,7 @@ it('does not overbook capacity and rejects overflow when waitlist is disabled', 
         new EventRegistrationData(name: 'Alice Example', email: 'alice@example.com'),
     );
 
-    expect(fn () => RegisterForEventOccurrenceAction::run(
+    expect(fn (): mixed => RegisterForEventOccurrenceAction::run(
         $occurrence->refresh(),
         new EventRegistrationData(name: 'Bob Example', email: 'bob@example.com'),
     ))->toThrow(ValidationException::class)
@@ -232,6 +241,157 @@ it('does not resend duplicate notification logs that are already queued or sent'
         ->where('event_registration_id', $registration->getKey())
         ->where('type', EventNotificationTypeEnum::Confirmation)
         ->count())->toBe(1);
+});
+
+it('prevents duplicate registration notification log identities at the database layer', function (): void {
+    $registration = EventRegistration::factory()->create();
+
+    EventNotificationLog::query()->create([
+        'event_occurrence_id' => $registration->event_occurrence_id,
+        'event_registration_id' => $registration->getKey(),
+        'type' => EventNotificationTypeEnum::Confirmation,
+        'recipient_email' => $registration->email,
+        'status' => 'queued',
+        'scheduled_for' => now(),
+    ]);
+
+    expect(fn (): mixed => EventNotificationLog::query()->create([
+        'event_occurrence_id' => $registration->event_occurrence_id,
+        'event_registration_id' => $registration->getKey(),
+        'type' => EventNotificationTypeEnum::Confirmation,
+        'recipient_email' => $registration->email,
+        'status' => 'queued',
+        'scheduled_for' => now(),
+    ]))->toThrow(QueryException::class);
+});
+
+it('keeps scheduled reminders idempotent for repeated registration scheduling', function (): void {
+    Notification::fake();
+
+    $occurrence = EventOccurrence::factory()->create([
+        'starts_at' => CarbonImmutable::parse('2026-06-10 10:00:00', 'UTC'),
+    ]);
+    $registration = EventRegistration::factory()->for($occurrence, 'occurrence')->create([
+        'email' => 'repeat-attendee@example.com',
+    ]);
+
+    ScheduleEventNotificationsAction::run($registration);
+    ScheduleEventNotificationsAction::run($registration->refresh());
+
+    expect(EventNotificationLog::query()
+        ->where('event_registration_id', $registration->getKey())
+        ->where('type', EventNotificationTypeEnum::Reminder)
+        ->where('recipient_email', 'repeat-attendee@example.com')
+        ->count())->toBe(1);
+});
+
+it('processes due queued reminder notifications without sending future reminders', function (): void {
+    Notification::fake();
+
+    $dueOccurrence = EventOccurrence::factory()->create([
+        'starts_at' => CarbonImmutable::parse('2026-06-10 10:00:00', 'UTC'),
+    ]);
+    $futureOccurrence = EventOccurrence::factory()->create([
+        'starts_at' => CarbonImmutable::parse('2026-06-11 10:00:00', 'UTC'),
+    ]);
+    $dueRegistration = EventRegistration::factory()->for($dueOccurrence, 'occurrence')->create([
+        'email' => 'due-attendee@example.test',
+    ]);
+    $futureRegistration = EventRegistration::factory()->for($futureOccurrence, 'occurrence')->create([
+        'email' => 'future-attendee@example.test',
+    ]);
+
+    $dueLog = EventNotificationLog::query()->create([
+        'event_occurrence_id' => $dueOccurrence->getKey(),
+        'event_registration_id' => $dueRegistration->getKey(),
+        'type' => EventNotificationTypeEnum::Reminder,
+        'recipient_email' => $dueRegistration->email,
+        'status' => 'queued',
+        'scheduled_for' => now()->subMinute(),
+    ]);
+    $futureLog = EventNotificationLog::query()->create([
+        'event_occurrence_id' => $futureOccurrence->getKey(),
+        'event_registration_id' => $futureRegistration->getKey(),
+        'type' => EventNotificationTypeEnum::Reminder,
+        'recipient_email' => $futureRegistration->email,
+        'status' => 'queued',
+        'scheduled_for' => now()->addHour(),
+    ]);
+
+    expect(ProcessDueEventNotificationLogsAction::run())->toBe(1)
+        ->and($dueLog->refresh()->status)->toBe('sent')
+        ->and($dueLog->sent_at)->not->toBeNull()
+        ->and($futureLog->refresh()->status)->toBe('queued');
+
+    Notification::assertSentOnDemand(EventRegistrationNotification::class);
+});
+
+it('registers scheduled processing for due event notification logs', function (): void {
+    $schedule = new Schedule;
+    app()->instance(Schedule::class, $schedule);
+
+    $provider = new EventsServiceProvider(app());
+    $method = new ReflectionMethod(EventsServiceProvider::class, 'registerSchedule');
+    $method->invoke($provider);
+
+    $event = collect($schedule->events())
+        ->first(fn (mixed $scheduledEvent): bool => $scheduledEvent->description === 'capell-events:process-notifications');
+
+    throw_unless($event instanceof ScheduledEvent, RuntimeException::class, 'Expected events notification schedule to be registered.');
+
+    expect($event->withoutOverlapping)->toBeTrue()
+        ->and($event->onOneServer)->toBeTrue();
+});
+
+it('hydrates public event schema occurrences before building JSON-LD', function (): void {
+    $language = Language::factory()->english()->create();
+    $occurrence = EventOccurrence::factory()->create([
+        'starts_at' => CarbonImmutable::parse('2026-06-10 10:00:00', 'UTC'),
+        'booking_url' => 'https://example.test/book',
+        'capacity' => null,
+    ]);
+    $event = $occurrence->event;
+    $site = $event->site;
+
+    SiteDomain::factory()->for($site)->for($language)->default()->create();
+    PageUrl::factory()
+        ->page($event)
+        ->site($site)
+        ->language($language)
+        ->state(['url' => '/events/lazy-safe'])
+        ->create();
+    $event->translations()->create([
+        'language_id' => $language->getKey(),
+        'title' => 'Hydrated schema event',
+        'meta' => ['meta_description' => 'Schema description'],
+    ]);
+
+    $resolvedOccurrence = ResolvePublicEventSchemaOccurrenceAction::run($event);
+
+    throw_unless($resolvedOccurrence instanceof EventOccurrence, RuntimeException::class, 'Expected public event occurrence.');
+
+    Model::preventLazyLoading();
+
+    try {
+        $schema = BuildEventSchemaAction::run($resolvedOccurrence);
+    } finally {
+        Model::preventLazyLoading(false);
+    }
+
+    expect($schema['name'])->toBe('Hydrated schema event')
+        ->and($schema['url'])->toEndWith('/events/lazy-safe/2026-06-10');
+});
+
+it('falls back safely when public calendar month state is tampered', function (): void {
+    $event = Event::factory()->create();
+    bindEventsFrontendSite($event->site);
+
+    $calendar = new EventCalendar;
+    $calendar->mount('../../not-a-month');
+    $calendar->nextMonth();
+    $calendar->previousMonth();
+
+    expect($calendar->month)->toMatch('/^\d{4}-\d{2}$/');
 });
 
 it('refreshes occurrence registration count after waitlist promotion', function (): void {
@@ -256,3 +416,61 @@ it('refreshes occurrence registration count after waitlist promotion', function 
     expect($occurrence->refresh()->registration_count)->toBe(1)
         ->and($occurrence->registrations()->where('status', EventRegistrationStatusEnum::Pending)->count())->toBe(1);
 });
+
+function bindEventsFrontendSite(Site $site): void
+{
+    app()->instance(CapellFrontendContext::class, new CapellFrontendContext(new readonly class($site) implements FrontendContextReader
+    {
+        public function __construct(private Site $site) {}
+
+        public function site(): Site
+        {
+            return $this->site;
+        }
+
+        public function language(): ?Language
+        {
+            return null;
+        }
+
+        public function page(): ?Pageable
+        {
+            return null;
+        }
+
+        public function layout(): ?Layout
+        {
+            return null;
+        }
+
+        public function theme(): ?Theme
+        {
+            return null;
+        }
+
+        public function params(): array
+        {
+            return [];
+        }
+
+        public function slug(): ?string
+        {
+            return null;
+        }
+
+        public function isError(): bool
+        {
+            return false;
+        }
+
+        public function setFrontendData(string $key, mixed $value): self
+        {
+            return $this;
+        }
+
+        public function getFrontendData(?string $key = null): mixed
+        {
+            return $key === null ? [] : null;
+        }
+    }));
+}

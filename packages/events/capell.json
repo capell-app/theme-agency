@@ -25,6 +25,7 @@
             "capell-app/address",
             "capell-app/form-builder",
             "capell-app/seo-suite",
+            "capell-app/site-discovery",
             "capell-app/tags"
         ],
         "conflicts": []
@@ -125,7 +126,8 @@
             "model",
             "page-type",
             "page-variation",
-            "route"
+            "route",
+            "scheduled-job"
         ]
     }
 }

@@ -18,9 +18,7 @@
 >
     <section class="px-6 py-12 md:px-12 md:py-16">
         @if ($block->translation)
-            <div
-                class="mx-auto mb-12 max-w-2xl text-center"
-            >
+            <div class="mx-auto mb-12 max-w-2xl text-center">
                 @if ($block->translation->title)
                     <h2
                         class="text-3xl font-bold tracking-tight text-gray-900 md:text-4xl"
@@ -30,9 +28,7 @@
                 @endif
 
                 @if ($block->translation->content)
-                    <p
-                        class="mt-3 text-lg text-gray-500"
-                    >
+                    <p class="mt-3 text-lg text-gray-500">
                         {{ strip_tags($block->translation->content) }}
                     </p>
                 @endif
@@ -65,13 +61,18 @@
         >
             @forelse ($block->assets as $blockAsset)
                 @php
-                    $price = $blockAsset->asset->getMeta('price', '0');
-                    $priceAnnual = $blockAsset->asset->getMeta('price_annual', $price);
-                    $featured = (bool) $blockAsset->asset->getMeta('featured', false);
-                    $ctaLabel = $blockAsset->asset->getMeta('cta_label', 'Get Started');
-                    $ctaUrl = $blockAsset->asset->getMeta('cta_url', '#');
-                    $features = $blockAsset->asset->getMeta('features', []);
+                    $blockAssetRelations = method_exists($blockAsset, 'getRelations') ? $blockAsset->getRelations() : [];
+                    $asset = $blockAssetRelations['asset'] ?? null;
+                    $assetRelations = $asset !== null && method_exists($asset, 'getRelations') ? $asset->getRelations() : [];
+                    $assetTranslation = $assetRelations['translation'] ?? null;
+                    $price = $asset?->getMeta('price', '0') ?? '0';
+                    $priceAnnual = $asset?->getMeta('price_annual', $price) ?? $price;
+                    $featured = (bool) ($asset?->getMeta('featured', false) ?? false);
+                    $ctaLabel = $asset?->getMeta('cta_label', 'Get Started') ?? 'Get Started';
+                    $ctaUrl = $asset?->getMeta('cta_url', '#') ?? '#';
+                    $features = $asset?->getMeta('features', []) ?? [];
                 @endphp
+                @continue($asset === null)
 
                 @if ($featured)
                     <div
@@ -87,15 +88,15 @@
                             </span>
                         </div>
 
-                        @if ($blockAsset->asset->translation?->title)
+                        @if ($assetTranslation?->title)
                             <h3 class="mb-1 text-2xl font-bold tracking-tight text-white">
-                                {{ $blockAsset->asset->translation->title }}
+                                {{ $assetTranslation->title }}
                             </h3>
                         @endif
 
-                        @if ($blockAsset->asset->translation?->content)
+                        @if ($assetTranslation?->content)
                             <p class="mb-6 text-sm text-stone-400">
-                                {{ strip_tags($blockAsset->asset->translation->content) }}
+                                {{ strip_tags($assetTranslation->content) }}
                             </p>
                         @endif
 
@@ -132,15 +133,15 @@
                         data-price-monthly="{{ $price }}"
                         data-price-annual="{{ $priceAnnual }}"
                     >
-                        @if ($blockAsset->asset->translation?->title)
+                        @if ($assetTranslation?->title)
                             <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900">
-                                {{ $blockAsset->asset->translation->title }}
+                                {{ $assetTranslation->title }}
                             </h3>
                         @endif
 
-                        @if ($blockAsset->asset->translation?->content)
+                        @if ($assetTranslation?->content)
                             <p class="mb-6 text-sm text-gray-500">
-                                {{ strip_tags($blockAsset->asset->translation->content) }}
+                                {{ strip_tags($assetTranslation->content) }}
                             </p>
                         @endif
 

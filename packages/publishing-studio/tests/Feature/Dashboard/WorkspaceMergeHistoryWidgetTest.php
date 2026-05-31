@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\PublishingStudio\Data\Dashboard\MergeHistoryEntryData;
 use Capell\PublishingStudio\Data\Dashboard\WorkspaceMergeHistoryData;
 use Capell\PublishingStudio\Filament\Widgets\WorkspaceMergeHistoryWidgetAbstract as WorkspaceMergeHistoryWidget;
 use Capell\PublishingStudio\Models\Workspace;
@@ -64,6 +65,8 @@ it('optimizes queries using withCount for page count', function (): void {
     expect($result->entries)->toBeInstanceOf(DataCollection::class);
     // Verify page count is available
     if ($result->entries->count() > 0) {
-        expect($result->entries->first()->pageCount)->toBeInt();
+        $entry = publishingStudioTestInstance($result->entries->first(), MergeHistoryEntryData::class);
+
+        expect($entry->pageCount)->toBeInt();
     }
 });

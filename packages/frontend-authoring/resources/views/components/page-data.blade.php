@@ -1,12 +1,6 @@
 <?php
-use Capell\Frontend\Facades\Frontend;
 use Capell\Frontend\Support\Context\FrontendContext;
 use Illuminate\Support\Facades\Route;
-
-$site = Frontend::site();
-$page = Frontend::page();
-$language = Frontend::language();
-$theme = Frontend::theme();
 
 $routeName = config('capell-page.frontend.route_name', 'capell-frontend.beacon');
 $beaconRoute = is_string($routeName) && Route::has($routeName) ? route($routeName, [], false) : null;

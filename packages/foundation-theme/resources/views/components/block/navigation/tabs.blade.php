@@ -1,47 +1,10 @@
-@php
-    use Capell\Frontend\Facades\Frontend;
-    use Capell\Navigation\Actions\BuildNavigationRenderModelAction;
-    use Capell\Navigation\Data\NavigationRenderContextData;
-    use Capell\Navigation\Data\NavigationRenderData;
-    use Capell\Navigation\Models\Navigation;
-    use Capell\Navigation\Support\Loader\NavigationLoader;
-
-    if (! isset($menu)) {
-        $menu = null;
-
-        if (isset($block->meta['navigation_id']) && is_numeric($block->meta['navigation_id'])) {
-            $menu = NavigationLoader::getNavigationById($block->meta['navigation_id']);
-        } elseif (isset($block->meta['navigation']) && is_string($block->meta['navigation'])) {
-            $menu = NavigationLoader::getNavigation(
-                $block->meta['navigation'],
-                Frontend::site(),
-                Frontend::language(),
-            );
-        }
-    }
-
-    if (! isset($navigationRenderData)) {
-        $navigationRenderData = null;
-        if ($menu instanceof Navigation) {
-            $navigationRenderData = BuildNavigationRenderModelAction::run(new NavigationRenderContextData(
-                navigation: $menu,
-                page: Frontend::page(),
-                site: Frontend::site(),
-                language: Frontend::language(),
-                siteDomain: Frontend::site()->siteDomain,
-            ));
-        }
-    }
-
-    if (! isset($items)) {
-        $items = $navigationRenderData instanceof NavigationRenderData ? $navigationRenderData->items : collect();
-    }
-@endphp
-
 @props([
     'container' => '',
     'containerKey',
     'containerWidth' => null,
+    'items' => collect(),
+    'loop',
+    'block',
 ])
 @if ($items->isNotEmpty() || ! config('capell-layout-builder.block.skip_render_empty', true))
     <x-capell-foundation-theme::block.wrapper

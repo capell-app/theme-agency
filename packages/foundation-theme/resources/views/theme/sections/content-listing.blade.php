@@ -3,8 +3,9 @@
     $isPathways = ($section->variant ?? null) === 'pathways';
     $isSpotlight = ($section->variant ?? null) === 'spotlight';
     $sectionId = $isGallery ? 'gallery' : ($isSpotlight ? 'spotlight' : 'content');
-    $carouselId = 'theme-gallery-' . substr(md5($section->heading), 0, 10);
-    $spotlightId = 'theme-spotlight-' . substr(md5($section->heading), 0, 10);
+    $sectionHash = substr(hash('xxh128', (string) $section->heading), 0, 10);
+    $carouselId = 'theme-gallery-' . $sectionHash;
+    $spotlightId = 'theme-spotlight-' . $sectionHash;
 @endphp
 
 <section

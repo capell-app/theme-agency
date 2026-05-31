@@ -13,8 +13,10 @@ use Capell\LoginAudit\Filament\Settings\LoginAuditSettingsSchema;
 use Capell\LoginAudit\Http\Middleware\UserActivityMiddleware;
 use Capell\LoginAudit\Models\LoginAudit;
 use Capell\LoginAudit\Observers\LoginAuditObserver;
+use Capell\LoginAudit\Policies\LoginAuditPolicy;
 use Capell\LoginAudit\Settings\LoginAuditSettings;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Override;
 use Rappasoft\LaravelAuthenticationLog\Models\AuthenticationLog as VendorLoginAudit;
@@ -51,6 +53,7 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
 
             $this
                 ->registerModels()
+                ->registerPolicies()
                 ->registerSettings()
                 ->registerProtectedTables()
                 ->registerMiddlewareAliases();
@@ -79,6 +82,13 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
         Config::set('authentication-log.db_connection', config('login-audit.db_connection'));
 
         CapellCore::registerModels([LoginAudit::class]);
+
+        return $this;
+    }
+
+    private function registerPolicies(): self
+    {
+        Gate::policy(LoginAudit::class, LoginAuditPolicy::class);
 
         return $this;
     }

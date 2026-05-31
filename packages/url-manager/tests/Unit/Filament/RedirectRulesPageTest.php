@@ -1,0 +1,230 @@
+<?php
+
+declare(strict_types=1);
+
+use Capell\Admin\Support\CapellAdminManager;
+use Capell\Admin\Support\Extensions\ExtensionPageRegistry;
+use Capell\Core\Contracts\RedirectResolver;
+use Capell\Core\Data\RedirectDecisionData;
+use Capell\Core\Facades\CapellCore;
+use Capell\Core\Models\Language;
+use Capell\Core\Models\PageUrl;
+use Capell\Core\Models\Site;
+use Capell\UrlManager\Actions\BuildRedirectRulesCsvAction;
+use Capell\UrlManager\Actions\BuildRedirectRulesCsvTemplateAction;
+use Capell\UrlManager\Actions\DeleteRedirectRuleAction;
+use Capell\UrlManager\Actions\ImportRedirectRulesAction;
+use Capell\UrlManager\Actions\ParseRedirectRulesCsvAction;
+use Capell\UrlManager\Actions\PreviewRedirectRulesImportAction;
+use Capell\UrlManager\Actions\ResolveRedirectRulesCsvContentsAction;
+use Capell\UrlManager\Actions\SetRedirectRuleStatusAction;
+use Capell\UrlManager\Actions\UpdateRedirectRuleAction;
+use Capell\UrlManager\Actions\UpsertRedirectRuleAction;
+use Capell\UrlManager\Data\RedirectRuleData;
+use Capell\UrlManager\Enums\RedirectRuleStatus;
+use Capell\UrlManager\Enums\UrlManagerPermission;
+use Capell\UrlManager\Filament\Pages\NotFoundOpportunitiesPage;
+use Capell\UrlManager\Filament\Pages\RedirectRulesPage;
+use Capell\UrlManager\Models\RedirectRule;
+use Capell\UrlManager\Providers\UrlManagerServiceProvider;
+use Capell\UrlManager\Support\Redirects\UrlManagerRedirectResolver;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
+
+use function Pest\Laravel\assertDatabaseHas;
+
+it('creates and edits redirect rules through the admin action handlers', function (): void {
+    $redirectRule = UpsertRedirectRuleAction::run(new RedirectRuleData(
+        sourceUrl: '/legacy/',
+        targetUrl: '/current/',
+        statusCode: 301,
+        notes: 'Imported from sitemap review.',
+    ));
+
+    expect(RedirectRule::query()->count())->toBe(1)
+        ->and($redirectRule->source_url)->toBe('/legacy')
+        ->and($redirectRule->target_url)->toBe('/current');
+
+    UpdateRedirectRuleAction::run($redirectRule, new RedirectRuleData(
+        sourceUrl: '/legacy-updated/',
+        targetUrl: '/current-updated/',
+        statusCode: 308,
+        preserveQuery: false,
+        notes: 'Updated after launch.',
+    ));
+
+    expect($redirectRule->refresh())
+        ->source_url->toBe('/legacy-updated')
+        ->target_url->toBe('/current-updated')
+        ->status_code->toBe(308)
+        ->preserve_query->toBeFalse();
+});
+
+it('imports and exports redirect rules through the admin header action handlers', function (): void {
+    $csv = <<<'CSV'
+source_url,target_url,status_code,match_type,status,preserve_query,notes
+/old-one,/new-one,301,exact,active,1,One
+/old-two,/new-two,308,exact,inactive,0,Two
+CSV;
+
+    $result = ImportRedirectRulesAction::run(ParseRedirectRulesCsvAction::run($csv));
+
+    expect($result->imported)->toBe(2)
+        ->and($result->skipped)->toBe(0)
+        ->and(RedirectRule::query()->count())->toBe(2);
+
+    assertDatabaseHas('url_manager_redirect_rules', [
+        'source_url' => '/old-one',
+        'target_url' => '/new-one',
+    ]);
+
+    $exportedRows = ParseRedirectRulesCsvAction::run(BuildRedirectRulesCsvAction::run());
+
+    expect($exportedRows)
+        ->toHaveCount(2)
+        ->and($exportedRows[0]['source_url'])->toBe('/old-one')
+        ->and($exportedRows[1]['source_url'])->toBe('/old-two');
+});
+
+it('previews redirect imports and exposes a CSV import template', function (): void {
+    $csv = <<<'CSV'
+source_url,target_url,status_code,match_type,status,preserve_query,notes
+/valid,/target,301,exact,active,1,Valid
+/self,/self,301,exact,active,1,Invalid
+CSV;
+
+    $result = PreviewRedirectRulesImportAction::run(ParseRedirectRulesCsvAction::run($csv));
+    $template = BuildRedirectRulesCsvTemplateAction::run();
+
+    expect($result->imported)->toBe(1)
+        ->and($result->skipped)->toBe(1)
+        ->and($result->errors[0])->toContain('A redirect cannot point to itself.')
+        ->and($template)->toContain('source_url,target_url,site_id,language_id,status_code,match_type,status,preserve_query,notes');
+});
+
+it('resolves redirect imports from uploaded files or pasted csv contents', function (): void {
+    Storage::fake('local');
+    Storage::disk('local')->put('redirect-imports/sample.csv', "source_url,target_url\n/from-file,/target-file\n");
+
+    $fromFile = ResolveRedirectRulesCsvContentsAction::run(['csv' => 'redirect-imports/sample.csv']);
+    $fromInline = ResolveRedirectRulesCsvContentsAction::run([
+        'csv' => 'redirect-imports/sample.csv',
+        'csv_contents' => "source_url,target_url\n/from-inline,/target-inline\n",
+    ]);
+
+    expect($fromFile)->toContain('/from-file')
+        ->and($fromInline)->toContain('/from-inline')
+        ->and($fromInline)->not->toContain('/from-file');
+});
+
+it('rejects redirect import files over the configured size limit', function (): void {
+    Storage::fake('local');
+    Storage::disk('local')->put('redirect-imports/large.csv', str_repeat('a', 2049));
+
+    ResolveRedirectRulesCsvContentsAction::run(['csv' => 'redirect-imports/large.csv'], maxKilobytes: 1);
+})->throws(ValidationException::class);
+
+it('activates disables and deletes redirect rules through admin action handlers', function (): void {
+    $redirectRule = UpsertRedirectRuleAction::run(new RedirectRuleData(
+        sourceUrl: '/legacy',
+        targetUrl: '/current',
+    ));
+
+    $updated = SetRedirectRuleStatusAction::run($redirectRule, RedirectRuleStatus::Inactive);
+
+    expect($updated)->toBe(1)
+        ->and($redirectRule->refresh()->status)->toBe(RedirectRuleStatus::Inactive);
+
+    $updated = SetRedirectRuleStatusAction::run(collect([$redirectRule]), RedirectRuleStatus::Active);
+
+    expect($updated)->toBe(1)
+        ->and($redirectRule->refresh()->status)->toBe(RedirectRuleStatus::Active);
+
+    DeleteRedirectRuleAction::run($redirectRule);
+
+    expect(RedirectRule::query()->count())->toBe(0);
+});
+
+it('guards url manager pages behind view or manage permissions', function (): void {
+    expect(RedirectRulesPage::canAccess())->toBeFalse()
+        ->and(NotFoundOpportunitiesPage::canAccess())->toBeFalse();
+
+    Gate::define(
+        UrlManagerPermission::ManageRedirectRules->value,
+        static fn (?object $user = null): bool => true,
+    );
+    Gate::define(
+        UrlManagerPermission::ViewNotFoundOpportunitiesPage->value,
+        static fn (?object $user = null): bool => true,
+    );
+
+    expect(RedirectRulesPage::canAccess())->toBeTrue()
+        ->and(NotFoundOpportunitiesPage::canAccess())->toBeTrue();
+});
+
+it('registers installed package admin pages and frontend redirect resolver behavior', function (): void {
+    CapellCore::forcePackageInstalled(UrlManagerServiceProvider::$packageName);
+    expect(CapellCore::isPackageInstalled(UrlManagerServiceProvider::$packageName))->toBeTrue();
+
+    app()->singleton(ExtensionPageRegistry::class, fn (): ExtensionPageRegistry => new ExtensionPageRegistry);
+    app()->singleton(CapellAdminManager::class, fn (): CapellAdminManager => new CapellAdminManager);
+    app()->bind(RedirectResolver::class, fn (): RedirectResolver => new class implements RedirectResolver
+    {
+        public function resolve(Site $site, Language $language, string $url, ?int $pageId = null, ?PageUrl $pageUrl = null): ?RedirectDecisionData
+        {
+            return null;
+        }
+    });
+
+    (new UrlManagerServiceProvider(app()))->registeringPackage();
+
+    $extensionPages = collect(resolve(ExtensionPageRegistry::class)->entries())
+        ->pluck('page');
+
+    expect($extensionPages)
+        ->toContain(RedirectRulesPage::class)
+        ->toContain(NotFoundOpportunitiesPage::class)
+        ->and(resolve(RedirectResolver::class))->toBeInstanceOf(UrlManagerRedirectResolver::class);
+
+    RedirectRule::query()->create([
+        'site_id' => 1,
+        'language_id' => 1,
+        'source_url' => '/moved',
+        'source_hash' => hash('sha256', '/moved'),
+        'target_url' => '/settled',
+        'target_hash' => hash('sha256', '/settled'),
+        'status_code' => 302,
+        'match_type' => 'exact',
+        'status' => 'active',
+        'preserve_query' => true,
+    ]);
+
+    app()->instance('request', Request::create('/moved?campaign=spring', Symfony\Component\HttpFoundation\Request::METHOD_GET));
+
+    $decision = resolve(RedirectResolver::class)->resolve(
+        site: urlManagerFilamentTestSite(),
+        language: urlManagerFilamentTestLanguage(),
+        url: '/moved',
+    );
+
+    expect($decision?->targetUrl)->toBe('/settled?campaign=spring')
+        ->and($decision?->statusCode)->toBe(302);
+});
+
+function urlManagerFilamentTestSite(): Site
+{
+    $site = new Site;
+    $site->forceFill(['id' => 1]);
+
+    return $site;
+}
+
+function urlManagerFilamentTestLanguage(): Language
+{
+    $language = new Language;
+    $language->forceFill(['id' => 1]);
+
+    return $language;
+}

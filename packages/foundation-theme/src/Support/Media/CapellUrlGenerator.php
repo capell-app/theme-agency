@@ -7,6 +7,9 @@ namespace Capell\FoundationTheme\Support\Media;
 use Capell\Frontend\Support\State\FrontendState;
 use DateTimeInterface;
 use Illuminate\Support\Str;
+use RuntimeException;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
 use Spatie\MediaLibrary\Support\UrlGenerator\BaseUrlGenerator;
 
 class CapellUrlGenerator extends BaseUrlGenerator
@@ -34,6 +37,8 @@ class CapellUrlGenerator extends BaseUrlGenerator
 
     public function getResponsiveImagesDirectoryUrl(): string
     {
+        throw_if(! $this->pathGenerator instanceof PathGenerator || ! $this->media instanceof Media, RuntimeException::class, 'Unable to resolve media path generator.');
+
         $path = $this->pathGenerator->getPathForResponsiveImages($this->media);
 
         $url = $this->getDisk()->url($path);

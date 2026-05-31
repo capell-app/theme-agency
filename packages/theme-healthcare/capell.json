@@ -94,34 +94,29 @@
                 "caption": "Theme Healthcare extension preview"
             },
             {
-                "path": "docs/assets/marketplace/healthcare-homepage-marketplace.jpg",
-                "alt": "Theme Healthcare homepage screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Healthcare: Homepage. Homepage composition with hero, proof, repeated content, CTA, and footer."
+                "path": "docs/assets/marketplace/healthcare-clinician-layout.svg",
+                "alt": "Theme Healthcare Clinician Layout image",
+                "caption": "Theme Healthcare Clinician Layout"
             },
             {
-                "path": "docs/assets/marketplace/healthcare-directory-marketplace.jpg",
-                "alt": "Theme Healthcare directory screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Healthcare: Directory. List or directory route with repeated cards, scanning rhythm, and route-backed pagination layout."
+                "path": "docs/assets/marketplace/healthcare-contact-layout.svg",
+                "alt": "Theme Healthcare Contact Layout image",
+                "caption": "Theme Healthcare Contact Layout"
             },
             {
-                "path": "docs/assets/marketplace/healthcare-detail-marketplace.jpg",
-                "alt": "Theme Healthcare detail screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Healthcare: Detail. Detail page route with media, proof, supporting sections, and conversion path."
+                "path": "docs/assets/marketplace/healthcare-homepage-layout.svg",
+                "alt": "Theme Healthcare Homepage Layout image",
+                "caption": "Theme Healthcare Homepage Layout"
             },
             {
-                "path": "docs/assets/marketplace/healthcare-contact-marketplace.jpg",
-                "alt": "Theme Healthcare contact screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Healthcare: Contact. Contact or enquiry route with theme-specific routing cards and CTA treatment."
+                "path": "docs/assets/marketplace/healthcare-services-layout.svg",
+                "alt": "Theme Healthcare Services Layout image",
+                "caption": "Theme Healthcare Services Layout"
             },
             {
-                "path": "docs/assets/marketplace/healthcare-conversion-marketplace.jpg",
-                "alt": "Theme Healthcare conversion cta screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Healthcare: Conversion CTA. Conversion route focused on proof, action rhythm, and next-step clarity."
-            },
-            {
-                "path": "docs/assets/marketplace/healthcare-sections-marketplace.jpg",
-                "alt": "Theme Healthcare section suite screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Healthcare: Section Suite. Theme-specific section suite showing the premium components available to editors."
+                "path": "docs/assets/marketplace/hero-desktop.jpg",
+                "alt": "Theme Healthcare Hero Desktop image",
+                "caption": "Theme Healthcare Hero Desktop"
             }
         ],
         "categories": ["frontend", "themes"]

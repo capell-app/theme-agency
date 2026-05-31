@@ -6,6 +6,7 @@ namespace Capell\AccessGate\Policies;
 
 use BezhanSalleh\FilamentShield\Facades\FilamentShield;
 use BezhanSalleh\FilamentShield\Support\Utils;
+use Capell\AccessGate\Support\AccessGateSiteScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Str;
@@ -22,7 +23,8 @@ abstract class AbstractAccessGateResourcePolicy
 
     public function view(User $user, Model $record): bool
     {
-        return $this->hasAnyPermission($user, ['view_any', 'view']);
+        return $this->hasAnyPermission($user, ['view_any', 'view'])
+            && AccessGateSiteScope::actorCanUseRecord($user, $record);
     }
 
     public function create(User $user): bool
@@ -32,12 +34,14 @@ abstract class AbstractAccessGateResourcePolicy
 
     public function update(User $user, Model $record): bool
     {
-        return $this->hasPermission($user, 'update');
+        return $this->hasPermission($user, 'update')
+            && AccessGateSiteScope::actorCanUseRecord($user, $record);
     }
 
     public function delete(User $user, Model $record): bool
     {
-        return $this->hasPermission($user, 'delete');
+        return $this->hasPermission($user, 'delete')
+            && AccessGateSiteScope::actorCanUseRecord($user, $record);
     }
 
     public function deleteAny(User $user): bool
@@ -47,7 +51,8 @@ abstract class AbstractAccessGateResourcePolicy
 
     public function restore(User $user, Model $record): bool
     {
-        return $this->hasPermission($user, 'restore');
+        return $this->hasPermission($user, 'restore')
+            && AccessGateSiteScope::actorCanUseRecord($user, $record);
     }
 
     public function restoreAny(User $user): bool
@@ -57,7 +62,8 @@ abstract class AbstractAccessGateResourcePolicy
 
     public function forceDelete(User $user, Model $record): bool
     {
-        return $this->hasPermission($user, 'force_delete');
+        return $this->hasPermission($user, 'force_delete')
+            && AccessGateSiteScope::actorCanUseRecord($user, $record);
     }
 
     public function forceDeleteAny(User $user): bool

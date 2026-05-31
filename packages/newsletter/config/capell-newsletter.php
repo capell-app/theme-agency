@@ -31,6 +31,10 @@ return [
         'queue' => null,
         'retry_minutes' => [5, 30, 120],
     ],
+    'imports' => [
+        'max_file_kb' => 2048,
+        'max_rows' => 10000,
+    ],
     'webhooks' => [
         'signature_headers' => [
             'kit' => 'X-Kit-Webhook-Signature',

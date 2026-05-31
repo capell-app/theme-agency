@@ -106,7 +106,7 @@ it('limits root comments before loading replies', function (): void {
         ->and($comments[0]->publicId)->toBe($first->public_id)
         ->and($comments[0]->children)->toHaveCount(1)
         ->and(array_map(
-            fn (object $comment): mixed => $comment->publicId,
+            fn (PublicCommentData $comment): string => $comment->publicId,
             $comments,
         ))->not->toContain($second->public_id);
 });
@@ -114,7 +114,8 @@ it('limits root comments before loading replies', function (): void {
 it('scopes public comments to the commentable language when present', function (): void {
     $page = $this->createCommentsPage();
     $otherLanguage = Language::factory()->create();
-    $languageId = (int) $page->site->language_id;
+    $site = $page->site()->firstOrFail();
+    $languageId = (int) $site->language_id;
     $page->setAttribute('language_id', $languageId);
 
     Comment::factory()->create([
@@ -193,6 +194,8 @@ it('resolves public commentable thread metadata and approved comments', function
     ]);
 
     $thread = ResolvePublicCommentableThreadAction::run($page);
+
+    throw_unless($thread instanceof PublicCommentableThreadData, RuntimeException::class, 'Expected public comment thread data to resolve.');
 
     expect($thread)
         ->toBeInstanceOf(PublicCommentableThreadData::class)

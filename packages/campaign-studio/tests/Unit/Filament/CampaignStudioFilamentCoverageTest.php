@@ -44,7 +44,11 @@ it('builds campaign studio resource form schemas', function (): void {
         ->each->toBeInstanceOf(Section::class);
 
     $ctaFields = collect($ctaComponents)
-        ->flatMap(fn (Section $section): array => ReadsRawSchemaComponents::childComponents($section))
+        ->flatMap(function (object $section): array {
+            throw_unless($section instanceof Section);
+
+            return ReadsRawSchemaComponents::childComponents($section);
+        })
         ->values();
 
     expect($ctaFields)

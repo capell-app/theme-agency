@@ -13,7 +13,6 @@ use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Knowledge\Console\Commands\DemoCommand;
-use Capell\ThemeStudio\Knowledge\Rendering\PackageAwareSectionRenderer;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -33,7 +32,7 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/knowledge.jpg',
             tags: ['Editorial', 'Resources', 'Search'],
             bestFit: ['Knowledge bases', 'Resource hubs', 'Content teams'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'topic-hubs', 'featured-content', 'resource-library', 'search-listing', 'newsletter', 'authors', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'topic-hubs', 'topic-index', 'reading-path', 'source-map', 'featured-content', 'resource-library', 'search-listing', 'newsletter', 'authors', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'knowledge',
@@ -43,6 +42,9 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
                     values: [
                         'primaryColor' => '#1d4ed8',
                         'accentColor' => '#f59e0b',
+                        'neutralColor' => '#172033',
+                        'surfaceColor' => '#f8fafc',
+                        'foregroundColor' => '#172033',
                         'headingFont' => 'sora',
                         'bodyFont' => 'inter',
                         'spacing' => 'balanced',
@@ -51,6 +53,9 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
                         'layoutPresentation' => 'structured',
                         'motionIntensity' => 'subtle',
                         'mediaTreatment' => 'framed',
+                        'radius' => 'md',
+                        'headingScale' => 'balanced',
+                        'cardDensity' => 'compact',
                     ],
                 ),
             ],
@@ -96,7 +101,7 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
                 sectionRenderers: [],
             ),
             sectionRenderers: collect(self::definition()->includedSections)
-                ->map(fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer|null => $this->sectionRenderer(
+                ->map(fn (string $sectionKey): ?ViewSectionRenderer => $this->sectionRenderer(
                     $sectionKey,
                     $this->optionalSectionIntegrations($blogAvailable, $searchAvailable, $newsletterAvailable),
                 ))
@@ -109,7 +114,7 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
     /**
      * @param  array<string, array<string, bool>>  $optionalIntegrations
      */
-    private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ViewSectionRenderer|PackageAwareSectionRenderer|null
+    private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ?ViewSectionRenderer
     {
         if ($this->isFoundationSection($sectionKey)) {
             return null;
@@ -122,12 +127,12 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
         }
 
         if (array_key_exists($sectionKey, $optionalIntegrations)) {
-            return new PackageAwareSectionRenderer(
+            return new ViewSectionRenderer(
                 themeKey: self::THEME_KEY,
                 sectionKey: $sectionKey,
                 view: $view,
-                integrations: $optionalIntegrations[$sectionKey],
                 failLoudly: true,
+                extraViewData: $optionalIntegrations[$sectionKey],
             );
         }
 
@@ -152,6 +157,7 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
         return [
             'resource-library' => ['blogAvailable' => $blogAvailable],
             'search-listing' => ['searchAvailable' => $searchAvailable],
+            'topic-index' => ['searchAvailable' => $searchAvailable],
             'newsletter' => ['newsletterAvailable' => $newsletterAvailable],
         ];
     }

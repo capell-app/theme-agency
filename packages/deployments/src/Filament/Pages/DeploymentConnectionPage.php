@@ -31,7 +31,7 @@ final class DeploymentConnectionPage extends Page
     #[Override]
     public static function getNavigationGroup(): string
     {
-        return 'System';
+        return (string) __('capell-deployments::navigation.system');
     }
 
     #[Override]
@@ -49,11 +49,25 @@ final class DeploymentConnectionPage extends Page
     #[Override]
     public static function canAccess(): bool
     {
-        if (Gate::allows(self::viewPermission())) {
+        if (Gate::allows(self::viewPermission()) || Gate::allows(self::managePermission())) {
             return true;
         }
 
-        return auth()->user()?->can(self::viewPermission()) === true;
+        $user = auth()->user();
+        if ($user?->can(self::viewPermission()) === true) {
+            return true;
+        }
+
+        return $user?->can(self::managePermission()) === true;
+    }
+
+    public static function canManageConnections(): bool
+    {
+        if (Gate::allows(self::managePermission())) {
+            return true;
+        }
+
+        return auth()->user()?->can(self::managePermission()) === true;
     }
 
     #[Override]
@@ -74,6 +88,8 @@ final class DeploymentConnectionPage extends Page
 
     public function getGitHubOAuthUrl(): string
     {
+        $this->authorizeManageConnections();
+
         $raw = config('capell-deployments.oauth.github.client_id');
         $clientId = is_string($raw) ? $raw : '';
 
@@ -87,6 +103,8 @@ final class DeploymentConnectionPage extends Page
 
     public function getGitLabOAuthUrl(): string
     {
+        $this->authorizeManageConnections();
+
         $raw = config('capell-deployments.oauth.gitlab.client_id');
         $clientId = is_string($raw) ? $raw : '';
 
@@ -101,6 +119,8 @@ final class DeploymentConnectionPage extends Page
 
     public function getBitbucketOAuthUrl(): string
     {
+        $this->authorizeManageConnections();
+
         $raw = config('capell-deployments.oauth.bitbucket.client_id');
         $clientId = is_string($raw) ? $raw : '';
 
@@ -114,7 +134,7 @@ final class DeploymentConnectionPage extends Page
 
     public function disconnect(int $connectionId): void
     {
-        throw_unless(self::canAccess(), HttpException::class, 403);
+        $this->authorizeManageConnections();
 
         if (! Schema::hasTable('deployment_connections')) {
             return;
@@ -134,5 +154,15 @@ final class DeploymentConnectionPage extends Page
     private static function viewPermission(): string
     {
         return 'View:' . class_basename(self::class);
+    }
+
+    private static function managePermission(): string
+    {
+        return 'Manage:' . class_basename(self::class);
+    }
+
+    private function authorizeManageConnections(): void
+    {
+        throw_unless(self::canManageConnections(), HttpException::class, 403);
     }
 }

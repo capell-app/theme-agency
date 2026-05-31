@@ -22,6 +22,16 @@ use Capell\SeoSuite\Support\PromptRepository;
 use Capell\SeoSuite\Support\SectionRegistry;
 use Illuminate\Support\Facades\Event;
 
+/**
+ * @return array<string, mixed>
+ */
+function aiWorkflowHistoryMetadata(?AIGenerationHistory $history): array
+{
+    throw_if(! $history instanceof AIGenerationHistory || ! is_array($history->metadata), RuntimeException::class, 'Expected AI generation history metadata.');
+
+    return $history->metadata;
+}
+
 function aiWorkflowContext(): AiActionContextInterface
 {
     return new class implements AiActionContextInterface
@@ -177,13 +187,14 @@ it('generates sanitized page content through the action seam and records history
         ->and($recorder->records[0])->toBeInstanceOf(AiGenerationResultData::class);
 
     $history = AIGenerationHistory::query()->latest('id')->first();
+    $metadata = aiWorkflowHistoryMetadata($history);
 
     expect($history?->action)->toBe('GeneratorPageContentAction')
         ->and($history?->output)->toBe($result)
         ->and($history?->pageable_id)->toBe(321)
         ->and($history?->pageable_type)->toBe('core_page')
         ->and($history?->language_id)->toBe(7)
-        ->and($history?->metadata['ai_params']['temperature'])->toBe(0.7);
+        ->and($metadata['ai_params']['temperature'] ?? null)->toBe(0.7);
 });
 
 it('suggests page titles with rendered prompt parameters and persisted parsed output', function (): void {
@@ -219,10 +230,11 @@ it('suggests page titles with rendered prompt parameters and persisted parsed ou
         ->and($recorder->records[0])->toBeInstanceOf(AiGenerationResultData::class);
 
     $history = AIGenerationHistory::query()->latest('id')->first();
+    $metadata = aiWorkflowHistoryMetadata($history);
 
     expect($history?->action)->toBe('SuggestPageTitlesAction')
         ->and($history?->output)->toBe("First SEO Title\nSecond SEO Title")
-        ->and($history?->metadata['ai_messages'][0]['content'])->toBe('Write titles.');
+        ->and($metadata['ai_messages'][0]['content'] ?? null)->toBe('Write titles.');
 });
 
 it('suggests meta descriptions with rendered prompt parameters and persisted parsed output', function (): void {
@@ -265,14 +277,15 @@ it('suggests meta descriptions with rendered prompt parameters and persisted par
         ->and($recorder->records[0])->toBeInstanceOf(AiGenerationResultData::class);
 
     $history = AIGenerationHistory::query()->latest('id')->first();
+    $metadata = aiWorkflowHistoryMetadata($history);
 
     expect($history?->action)->toBe('SuggestMetaDescriptionsAction')
         ->and($history?->output)->toBe("Build scalable Laravel CMS platform-builder with practical SEO foundations.\nPlan a CMS platform that keeps teams publishing confidently.")
         ->and($history?->pageable_id)->toBe(321)
         ->and($history?->pageable_type)->toBe('core_page')
         ->and($history?->language_id)->toBe(7)
-        ->and($history?->metadata['ai_messages'][0]['content'])->toBe('Write descriptions.')
-        ->and($history?->metadata['ai_params']['model'])->toBe('workflow-meta-model');
+        ->and($metadata['ai_messages'][0]['content'] ?? null)->toBe('Write descriptions.')
+        ->and($metadata['ai_params']['model'] ?? null)->toBe('workflow-meta-model');
 });
 
 it('stops meta description generation at the rate limiter before provider calls or history writes', function (): void {
@@ -357,11 +370,12 @@ it('generates an AI creator layout, updates the session, and stores history thro
 
     $session = AiCreatorSession::query()->latest('id')->first();
     $history = AIGenerationHistory::query()->latest('id')->first();
+    $metadata = aiWorkflowHistoryMetadata($history);
 
     expect($session?->status)->toBe('review')
         ->and($session?->stage)->toBe(3)
         ->and($session?->layout_proposal)->toBe($sections)
         ->and($session?->ai_history_id)->toBe($history?->id)
         ->and($history?->action)->toBe('ai_creator_layout')
-        ->and($history?->metadata['ai_creator_session_id'])->toBe($session?->id);
+        ->and($metadata['ai_creator_session_id'] ?? null)->toBe($session?->id);
 });

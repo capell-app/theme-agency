@@ -22,6 +22,10 @@ final class GA4ReportsDataClient implements GA4ReportsDataClientInterface
 
     private const int MAX_PAGE_METRIC_ROWS = 5000;
 
+    private ?string $accessToken = null;
+
+    private int $accessTokenExpiresAt = 0;
+
     /**
      * @param  array<string, mixed>  $config
      */
@@ -178,6 +182,7 @@ final class GA4ReportsDataClient implements GA4ReportsDataClientInterface
 
         $response = Http::withToken($accessToken)
             ->acceptJson()
+            ->timeout($this->httpTimeout())
             ->post('https://analyticsdata.googleapis.com/v1beta/properties/' . $window->propertyId . ':runReport', $payload);
 
         if (! $response->successful()) {
@@ -326,8 +331,13 @@ final class GA4ReportsDataClient implements GA4ReportsDataClientInterface
 
     private function accessToken(): string
     {
+        $now = Date::now()->getTimestamp();
+        if ($this->accessToken !== null && $this->accessTokenExpiresAt > $now + 60) {
+            return $this->accessToken;
+        }
+
         $credentials = $this->credentials();
-        $issuedAt = Date::now()->getTimestamp();
+        $issuedAt = $now;
         $expiresAt = $issuedAt + 3600;
         $assertion = $this->jwt([
             'iss' => $credentials['client_email'],
@@ -337,16 +347,26 @@ final class GA4ReportsDataClient implements GA4ReportsDataClientInterface
             'exp' => $expiresAt,
         ], $credentials['private_key']);
 
-        $response = Http::asForm()->post($credentials['token_uri'] ?? 'https://oauth2.googleapis.com/token', [
-            'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-            'assertion' => $assertion,
-        ]);
+        $response = Http::asForm()
+            ->timeout($this->httpTimeout())
+            ->post($credentials['token_uri'] ?? 'https://oauth2.googleapis.com/token', [
+                'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+                'assertion' => $assertion,
+            ]);
 
         if (! $response->successful()) {
             throw new GA4ReportsApiException('GA4 Reports token request failed with HTTP status ' . $response->status() . '.');
         }
 
-        return is_string($response->json('access_token')) ? $response->json('access_token') : '';
+        $accessToken = $response->json('access_token');
+        if (! is_string($accessToken) || $accessToken === '') {
+            return '';
+        }
+
+        $this->accessToken = $accessToken;
+        $this->accessTokenExpiresAt = $expiresAt;
+
+        return $accessToken;
     }
 
     /**
@@ -358,8 +378,23 @@ final class GA4ReportsDataClient implements GA4ReportsDataClientInterface
             $this->base64UrlEncode(json_encode(['alg' => 'RS256', 'typ' => 'JWT'], JSON_THROW_ON_ERROR)),
             $this->base64UrlEncode(json_encode($claims, JSON_THROW_ON_ERROR)),
         ];
+        $privateKeyResource = openssl_pkey_get_private($privateKey);
+
+        throw_unless(
+            $privateKeyResource !== false,
+            GA4ReportsApiException::class,
+            'GA4 Reports credentials private key could not sign authentication token.',
+        );
+
         $signature = '';
-        openssl_sign(implode('.', $segments), $signature, $privateKey, OPENSSL_ALGO_SHA256);
+        $signed = openssl_sign(implode('.', $segments), $signature, $privateKeyResource, OPENSSL_ALGO_SHA256);
+
+        throw_unless(
+            $signed && $signature !== '',
+            GA4ReportsApiException::class,
+            'GA4 Reports credentials private key could not sign authentication token.',
+        );
+
         $segments[] = $this->base64UrlEncode($signature);
 
         return implode('.', $segments);
@@ -382,5 +417,10 @@ final class GA4ReportsDataClient implements GA4ReportsDataClientInterface
         $credentialsPath = $this->config['credentials_path'] ?? null;
 
         return is_string($credentialsPath) ? trim($credentialsPath) : '';
+    }
+
+    private function httpTimeout(): int
+    {
+        return max(1, (int) ($this->config['http_timeout'] ?? 20));
     }
 }

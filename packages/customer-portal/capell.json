@@ -1,0 +1,101 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/customer-portal",
+    "slug": "customer-portal",
+    "displayName": "Customer Portal",
+    "kind": "package",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Customer Portal provides the package-local domain foundation for authenticated customer self-service.",
+    "product": {
+        "group": "Capell Content",
+        "tier": "premium",
+        "bundle": "content-product"
+    },
+    "namespace": "Capell\\CustomerPortal",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/core"],
+        "supports": [
+            "capell-app/access-gate",
+            "capell-app/document-lifecycle",
+            "capell-app/events",
+            "capell-app/newsletter",
+            "capell-app/payments"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\CustomerPortal\\Providers\\CustomerPortalServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [],
+    "database": {
+        "migrations": true,
+        "settings": false,
+        "requiredTables": ["portal_accounts", "portal_support_requests"]
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "customer-portal",
+        "portal-profile",
+        "portal-preferences",
+        "portal-dashboard-items",
+        "portal-support-requests"
+    ],
+    "performance": {
+        "frontendRenderBudgetMs": 0,
+        "adminQueryBudget": 20,
+        "cacheTags": ["customer-portal"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "user"],
+            "sensitiveOutput": true,
+            "invalidationSources": [],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "customer-portal.package-health",
+            "label": "Customer Portal package models, migrations, and service provider are discoverable.",
+            "class": "Capell\\CustomerPortal\\Health\\CustomerPortalHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Customer Portal gives Capell sites a safe authenticated self-service foundation.",
+        "screenshots": [],
+        "categories": ["frontend", "crm", "self-service"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": [
+            "authenticated-routes",
+            "portal-dashboard-ui",
+            "access-gate-resource-feed",
+            "payments-feed",
+            "document-feed",
+            "event-registration-feed",
+            "newsletter-preference-feed"
+        ]
+    }
+}

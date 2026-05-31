@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\PublicActions\Listeners;
 
 use Capell\PublicActions\Actions\SubmitPublicActionAction;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
 final class SubmitPublicActionFromFormSubmission
@@ -35,13 +36,13 @@ final class SubmitPublicActionFromFormSubmission
     {
         $mappings = config('capell-public-actions.form_builder.mappings', []);
 
-        if (! is_array($mappings) || ! is_object($form)) {
+        if (! is_array($mappings) || ! $form instanceof Model) {
             return null;
         }
 
         $candidates = array_filter([
             'id:' . ($form->getKey() ?? ''),
-            (string) ($form->handle ?? ''),
+            (string) ($form->getAttribute('handle') ?? ''),
         ], static fn (string $candidate): bool => $candidate !== '' && $candidate !== 'id:');
 
         foreach ($candidates as $candidate) {

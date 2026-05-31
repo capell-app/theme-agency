@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
@@ -41,8 +42,11 @@ it('defines the healthcare premium renderer contract', function (): void {
             'content-listing',
             'service-finder',
             'services',
+            'care-pathway',
             'clinicians',
             'booking',
+            'locations',
+            'insurance-trust',
             'events',
             'proof',
             'comparison',
@@ -74,8 +78,11 @@ it('declares renderers for every healthcare and fallback section', function (): 
         'content-listing',
         'service-finder',
         'services',
+        'care-pathway',
         'clinicians',
         'booking',
+        'locations',
+        'insurance-trust',
         'events',
         'comparison',
         'proof',
@@ -273,6 +280,61 @@ it('renders standard feature and content listing sections through healthcare reg
         ->not->toContain('field_path');
 });
 
+it('renders new premium healthcare layouts through the registry', function (): void {
+    View::addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(HealthcareThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new HealthcareThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $carePathwayRenderer = $registry->sectionRenderer('healthcare', 'care-pathway');
+    $locationsRenderer = $registry->sectionRenderer('healthcare', 'locations');
+    $trustRenderer = $registry->sectionRenderer('healthcare', 'insurance-trust');
+
+    assert($carePathwayRenderer instanceof SectionRenderer);
+    assert($locationsRenderer instanceof SectionRenderer);
+    assert($trustRenderer instanceof SectionRenderer);
+
+    $carePathwayHtml = $carePathwayRenderer->render(healthcareThemeSection('care-pathway', [
+        'heading' => 'Find the right care route',
+        'items' => [
+            ['title' => 'Same-week assessment', 'summary' => 'Route patients to the right appointment path.'],
+        ],
+    ]));
+
+    $locationsHtml = $locationsRenderer->render(healthcareThemeSection('locations', [
+        'heading' => 'Clinic access points',
+        'items' => [
+            ['title' => 'North clinic', 'summary' => 'Opening hours and contact routing.'],
+        ],
+    ]));
+
+    $trustHtml = $trustRenderer->render(healthcareThemeSection('insurance-trust', [
+        'heading' => 'Cover and trust signals',
+        'items' => [
+            ['title' => 'Recognised providers', 'summary' => 'Clear trust information for patient decisions.'],
+        ],
+    ]));
+
+    expect($carePathwayHtml)
+        ->toContain('Find the right care route')
+        ->toContain('Same-week assessment')
+        ->not->toContain('capell-app/theme-healthcare');
+
+    expect($locationsHtml)
+        ->toContain('Clinic access points')
+        ->toContain('North clinic')
+        ->not->toContain('capell-app/theme-healthcare');
+
+    expect($trustHtml)
+        ->toContain('Cover and trust signals')
+        ->toContain('Recognised providers')
+        ->not->toContain('capell-app/theme-healthcare');
+});
+
 it('passes optional Form Builder availability through the registered booking renderer', function (bool $formBuilderInstalled, string $expectedMarkup, string $missingMarkup): void {
     View::addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/views');
     resolve(Translator::class)->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
@@ -287,6 +349,7 @@ it('passes optional Form Builder availability through the registered booking ren
     $renderer = $registry->sectionRenderer('healthcare', 'booking');
 
     expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
 
     $html = $renderer->render(healthcareThemeSection('booking', [
         'heading' => 'Request an appointment',
@@ -318,6 +381,7 @@ it('passes optional Events availability through the registered events renderer',
     $renderer = $registry->sectionRenderer('healthcare', 'events');
 
     expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
 
     $html = $renderer->render(healthcareThemeSection('events', [
         'heading' => 'Care sessions',
@@ -346,6 +410,7 @@ it('passes optional Blog availability through the registered blog teaser rendere
     $renderer = $registry->sectionRenderer('healthcare', 'blog-teaser');
 
     expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
 
     $html = $renderer->render(healthcareThemeSection('blog-teaser', [
         'heading' => 'Care resources',

@@ -46,7 +46,7 @@ class WorkspaceActivityFeed
                 event: $row->event,
                 causerId: $row->causer_id,
                 causerType: $row->causer_type,
-                occurredAt: CarbonImmutable::instance($row->created_at),
+                occurredAt: CarbonImmutable::instance($row->created_at ?? now()),
             );
         })->values();
     }

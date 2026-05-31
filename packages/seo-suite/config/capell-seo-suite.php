@@ -23,6 +23,7 @@ return [
         'enabled' => env('CAPELL_SEO_TOOLS_SEARCH_CONSOLE_ENABLED', false),
         'credentials_path' => env('CAPELL_SEO_TOOLS_SEARCH_CONSOLE_CREDENTIALS'),
         'property_url' => env('CAPELL_SEO_TOOLS_SEARCH_CONSOLE_PROPERTY_URL'),
+        'timeout' => env('CAPELL_SEO_TOOLS_SEARCH_CONSOLE_TIMEOUT', 20),
     ],
     'pagespeed' => [
         'enabled' => env('CAPELL_SEO_SUITE_PAGESPEED_ENABLED', true),

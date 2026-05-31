@@ -12,7 +12,7 @@
             'summary' => __('capell-theme-knowledge::generic.search_result_guide_summary'),
             'type' => __('capell-theme-knowledge::generic.guide_signal'),
             'score' => '94%',
-            'meta' => [__('capell-theme-knowledge::generic.editor_signal'), __('capell-theme-knowledge::generic.reading_signal')],
+            'meta' => [__('capell-theme-knowledge::generic.review_signal'), __('capell-theme-knowledge::generic.reading_signal')],
         ],
         [
             'title' => __('capell-theme-knowledge::generic.search_result_research'),

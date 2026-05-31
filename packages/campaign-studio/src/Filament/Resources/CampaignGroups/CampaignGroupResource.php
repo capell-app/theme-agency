@@ -34,8 +34,10 @@ final class CampaignGroupResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    /** @var class-string<CampaignGroupForm> */
     private static string $formConfigurator = CampaignGroupForm::class;
 
+    /** @var class-string<CampaignGroupsTable> */
     private static string $tableConfigurator = CampaignGroupsTable::class;
 
     /** @return class-string<CampaignGroupForm> */

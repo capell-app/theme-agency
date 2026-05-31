@@ -183,6 +183,7 @@ final class AdminServiceProvider extends ServiceProvider
      */
     private function campaignOverview(): array
     {
+        /** @var array{active_campaign-studio: int, conversions: int, conversion_rate: int|float|string}|null $overview */
         static $overview = null;
 
         if (is_array($overview)) {
@@ -192,6 +193,7 @@ final class AdminServiceProvider extends ServiceProvider
         $now = CarbonImmutable::now();
         $rangeStart = $now->startOfWeek();
         $rangeEnd = $now->endOfWeek();
+        /** @var array{active_campaign-studio: int, conversions: int, conversion_rate: int|float|string} $overview */
         $overview = BuildCampaignOverviewStatsAction::run($rangeStart, $rangeEnd);
 
         return $overview;

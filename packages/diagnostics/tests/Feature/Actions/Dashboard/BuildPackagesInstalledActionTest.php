@@ -39,7 +39,7 @@ it('hydrates installed package health metadata from local package manifests', fu
 
     try {
         $result = (new BuildPackagesInstalledAction($installedJsonPath, $packagesPath))->handle();
-        $package = $result->packages->toCollection()->first();
+        $package = diagnosticsPackageInfo($result->packages->toCollection()->first());
 
         expect($result->packages)->toHaveCount(1)
             ->and($package->name)->toBe('events')
@@ -68,7 +68,7 @@ it('still lists unknown capell packages when no local manifest is available', fu
 
     try {
         $result = (new BuildPackagesInstalledAction($installedJsonPath, $packagesPath))->handle();
-        $package = $result->packages->toCollection()->first();
+        $package = diagnosticsPackageInfo($result->packages->toCollection()->first());
 
         expect($result->packages)->toHaveCount(1)
             ->and($package->name)->toBe('custom-package')
@@ -116,7 +116,7 @@ it('hydrates installed package metadata from composer install paths', function (
 
     try {
         $result = (new BuildPackagesInstalledAction($installedJsonPath, $packagesPath))->handle();
-        $package = $result->packages->toCollection()->first();
+        $package = diagnosticsPackageInfo($result->packages->toCollection()->first());
 
         expect($result->packages)->toHaveCount(1)
             ->and($package->name)->toBe('events')
@@ -147,15 +147,18 @@ it('reads health check counts from real package manifests', function (): void {
         $packagesPath = dirname(__DIR__, 5);
         $result = (new BuildPackagesInstalledAction($installedJsonPath, $packagesPath))->handle();
         $packages = $result->packages->toCollection()->keyBy('composerName');
+        $apiPackage = diagnosticsPackageInfo($packages->get('capell-app/api'));
+        $diagnosticsPackage = diagnosticsPackageInfo($packages->get('capell-app/diagnostics'));
+        $migrationAssistantPackage = diagnosticsPackageInfo($packages->get('capell-app/migration-assistant'));
 
         expect($packages)->toHaveKeys([
             'capell-app/api',
             'capell-app/diagnostics',
             'capell-app/migration-assistant',
         ])
-            ->and($packages->get('capell-app/api')->healthCheckCount)->toBeGreaterThan(0)
-            ->and($packages->get('capell-app/diagnostics')->healthCheckCount)->toBeGreaterThan(0)
-            ->and($packages->get('capell-app/migration-assistant')->healthCheckCount)->toBeGreaterThan(0);
+            ->and($apiPackage->healthCheckCount)->toBeGreaterThan(0)
+            ->and($diagnosticsPackage->healthCheckCount)->toBeGreaterThan(0)
+            ->and($migrationAssistantPackage->healthCheckCount)->toBeGreaterThan(0);
     } finally {
         File::deleteDirectory($temporaryRoot);
     }

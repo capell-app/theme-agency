@@ -2,12 +2,24 @@
 
 This file records the review and verification pass for the package documentation rebuild.
 
+## Follow-Up - 2026-05-30
+
+- Current package workspace scan: 56 Composer package directories.
+- Added or expanded buyer/developer docs for `agent-delivery`, `comments`,
+  `filament-peek`, `theme-education`, `theme-knowledge`,
+  `theme-local-services`, `theme-nonprofit`, and `theme-portfolio`.
+- Added missing screenshot manifests for `agent-delivery`, `comments`,
+  `filament-peek`, and `shopify-commerce`, then regenerated
+  `docs/package-screenshot-manifest.json`.
+- The 47-package counts below are retained as historical evidence from the
+  original 2026-05-23 pass, not as the current workspace count.
+
 ## Scope Reviewed
 
 - Added a shared package docs standard at `docs/package-documentation-standard.md`.
 - Added the package documentation audit matrix at `docs/internal/package-documentation-review-2026-05-23.md`.
-- Added package-local docs indexes at `packages/*/docs/README.md` for all 47 packages.
-- Added `Why It Helps Your Capell Workflow` and `Best Used With` sections to all 47 package READMEs.
+- Added package-local docs indexes at `packages/*/docs/README.md` for the original 47-package set.
+- Added `Why It Helps Your Capell Workflow` and `Best Used With` sections to the original 47 package READMEs.
 - Added/kept Shopify Commerce README and workflow docs from the first pass.
 - Replaced stale legacy extension headings with current package headings.
 - Replaced package-catalog language where older wording implied stale distribution concepts.
@@ -15,14 +27,14 @@ This file records the review and verification pass for the package documentation
 
 ## Developer Review
 
-| Check                      | Result | Notes                                                                                                                             |
-| -------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------- |
-| Package coverage           | Pass   | 47 composer package directories; 47 package READMEs; 47 package `docs/README.md` index files.                                     |
-| README workflow section    | Pass   | Every package README has `## Why It Helps Your Capell Workflow`.                                                                  |
-| README docs index link     | Pass   | Every package README links to `docs/README.md`.                                                                                   |
-| Local Markdown links       | Pass   | Checked 340 Markdown files; all 1,110 local targets resolve.                                                                      |
-| Stale headings             | Pass   | No remaining legacy extension headings in package docs.                                                                           |
-| Generated screenshot links | Fixed  | Broken image links in SEO Suite, Campaign Studio, and Login Audit overview docs were converted to text targets until files exist. |
+| Check                      | Result | Notes                                                                                                                                   |
+| -------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Package coverage           | Pass   | Historical pass: original package count was 47 with matching READMEs and docs indexes. Current follow-up covers 56 package directories. |
+| README workflow section    | Pass   | Every package README has `## Why It Helps Your Capell Workflow`.                                                                        |
+| README docs index link     | Pass   | Every package README links to `docs/README.md`.                                                                                         |
+| Local Markdown links       | Pass   | Checked 340 Markdown files; all 1,110 local targets resolve.                                                                            |
+| Stale headings             | Pass   | No remaining legacy extension headings in package docs.                                                                                 |
+| Generated screenshot links | Fixed  | Broken image links in SEO Suite, Campaign Studio, and Login Audit overview docs were converted to text targets until files exist.       |
 
 ## Content Writer Review
 

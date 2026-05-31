@@ -16,6 +16,7 @@ use Capell\AccessGate\Filament\Resources\AccessAreas\Pages\ListAccessAreas;
 use Capell\AccessGate\Filament\Resources\Concerns\AccessGateFilamentOptions;
 use Capell\AccessGate\Models\Area;
 use Capell\AccessGate\Providers\AccessGateServiceProvider;
+use Capell\AccessGate\Support\AccessGateSiteScope;
 use Capell\Admin\Support\SiteScope;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Site;
@@ -31,6 +32,8 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Schema as DatabaseSchema;
 use Override;
@@ -63,7 +66,9 @@ final class AccessAreaResource extends Resource
                 Select::make('site_id')
                     ->label(__('capell-access-gate::filament.fields.site'))
                     ->helperText(__('capell-access-gate::filament.fields.site_help'))
-                    ->options(fn (): array => self::canScopeToSites() ? Site::getOptions()->all() : [])
+                    ->options(fn (): array => self::canScopeToSites()
+                        ? AccessGateSiteScope::applyAreaOptionsScope(Site::query()->select(['name', 'id'])->ordered())->pluck('name', 'id')->all()
+                        : [])
                     ->searchable()
                     ->preload()
                     ->visible(fn (): bool => self::canScopeToSites()),
@@ -210,9 +215,58 @@ final class AccessAreaResource extends Resource
         ];
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public static function prepareFormDataForPersistence(array $data): array
+    {
+        if (! self::canScopeToSites()) {
+            $data['site_id'] = null;
+
+            return $data;
+        }
+
+        $siteId = self::siteIdFromData($data['site_id'] ?? null);
+        $actor = auth()->user();
+
+        if ($siteId === null) {
+            throw_unless(
+                $actor instanceof Authenticatable && SiteScope::isGlobalActor($actor),
+                AuthorizationException::class,
+            );
+
+            $data['site_id'] = null;
+
+            return $data;
+        }
+
+        $site = Site::query()->find($siteId);
+
+        throw_unless(
+            $site instanceof Site && SiteScope::actorCanUseSite($actor, $site),
+            AuthorizationException::class,
+        );
+
+        $data['site_id'] = $siteId;
+
+        return $data;
+    }
+
     private static function canScopeToSites(): bool
     {
         return DatabaseSchema::hasTable('sites')
             && DatabaseSchema::hasColumn((new Area)->getTable(), 'site_id');
+    }
+
+    private static function siteIdFromData(mixed $siteId): ?int
+    {
+        if ($siteId === null || $siteId === '') {
+            return null;
+        }
+
+        throw_unless(is_int($siteId) || is_numeric($siteId), AuthorizationException::class);
+
+        return (int) $siteId;
     }
 }

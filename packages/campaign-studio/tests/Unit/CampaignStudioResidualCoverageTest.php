@@ -33,11 +33,14 @@ it('covers campaign studio model relationships and casts', function (): void {
     $cta = (new CampaignCtaBlock)->forceFill([
         'actions' => [['label' => 'Book demo', 'url' => '/demo']],
     ]);
+    $attribution = $conversion->attribution;
+
+    throw_if($attribution === null, RuntimeException::class, 'Expected campaign conversion attribution data.');
 
     expect($conversion->campaignGroup()->getRelated())->toBeInstanceOf(CampaignGroup::class)
         ->and($conversion->landingPage()->getRelated())->toBeInstanceOf(CampaignLandingPage::class)
         ->and($conversion->goal()->getRelated())->toBeInstanceOf(CampaignConversionGoal::class)
-        ->and($conversion->attribution->toArray())->toMatchArray(['utm_source' => 'newsletter'])
+        ->and($attribution->toArray())->toMatchArray(['utm_source' => 'newsletter'])
         ->and($group->landingPages()->getRelated())->toBeInstanceOf(CampaignLandingPage::class)
         ->and($group->conversionGoals()->getRelated())->toBeInstanceOf(CampaignConversionGoal::class)
         ->and($group->conversions()->getRelated())->toBeInstanceOf(CampaignConversion::class)

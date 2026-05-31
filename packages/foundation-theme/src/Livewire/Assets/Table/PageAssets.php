@@ -34,6 +34,10 @@ class PageAssets extends AbstractAssets implements HasPageResource
     {
         $query = parent::getFilteredTableQuery();
 
+        if (! $query instanceof Builder) {
+            return Page::query()->whereRaw('1 = 0');
+        }
+
         if (isset($this->getTableFilterState('filter')['language_id'])) {
             $language_id = $this->getTableFilterState('filter')['language_id'];
         } else {
@@ -59,6 +63,7 @@ class PageAssets extends AbstractAssets implements HasPageResource
     {
         /* @var class-string<\Capell\Core\Models\Page> $model */
         $model = Page::class;
+        $pageId = $this->tableArguments['pageId'] ?? null;
 
         return $model::with([
             'translations.language',
@@ -72,8 +77,8 @@ class PageAssets extends AbstractAssets implements HasPageResource
             'type',
         ])
             ->when(
-                $this->tableArguments['pageId'] ?? null,
-                fn (BuilderContract $query): BuilderContract => $query->whereKeyNot($this->tableArguments['pageId']),
+                is_numeric($pageId),
+                fn (BuilderContract $query): BuilderContract => $query->whereKeyNot((int) $pageId),
             )
             ->when(
                 $this->existingRecords,

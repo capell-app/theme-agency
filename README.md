@@ -23,7 +23,10 @@ Each package README follows the same shape:
 | Publish articles, archives, and tagged content | [blog](packages/blog/README.md), [tags](packages/tags/README.md), [site-discovery](packages/site-discovery/README.md)                                                                                          | Adds article workflow, taxonomy, public archives, and sitemap discovery.               |
 | Add campaign and conversion reporting          | [campaign-studio](packages/campaign-studio/README.md), [insights](packages/insights/README.md), [ga4-reports](packages/ga4-reports/README.md)                                                                  | Connects landing pages, goals, first-party events, and GA4 snapshots.                  |
 | Improve technical SEO and search               | [seo-suite](packages/seo-suite/README.md), [search](packages/search/README.md), [site-discovery](packages/site-discovery/README.md)                                                                            | Covers metadata, structured data, sitemaps, public search, and discoverability checks. |
+| Expose public content to agents                | [agent-delivery](packages/agent-delivery/README.md), [site-discovery](packages/site-discovery/README.md), [seo-suite](packages/seo-suite/README.md)                                                            | Adds public-safe manifests, semantic chunks, and discovery outputs.                    |
 | Prepare demos, screenshots, and fixture sites  | [demo-kit](packages/demo-kit/README.md), [foundation-theme](packages/foundation-theme/README.md)                                                                                                               | Generates repeatable demo sites, package demo content, and frontend theme output.      |
+| Preview unsaved page edits                     | [filament-peek](packages/filament-peek/README.md), [frontend-authoring](packages/frontend-authoring/README.md), [publishing-studio](packages/publishing-studio/README.md)                                      | Separates temporary editor preview state from saved public pages.                      |
+| Add public comments and moderation             | [comments](packages/comments/README.md), [blog](packages/blog/README.md), [email-studio](packages/email-studio/README.md)                                                                                      | Adds moderated frontend discussion and admin review tools.                             |
 | Tighten admin operations and access controls   | [diagnostics](packages/diagnostics/README.md), [dashboard-reports](packages/dashboard-reports/README.md), [password-policy](packages/password-policy/README.md), [login-audit](packages/login-audit/README.md) | Adds health checks, dashboard signals, password enforcement, and login visibility.     |
 
 ## Package Index
@@ -48,6 +51,7 @@ Each package README follows the same shape:
 
 | Package                                                       | Composer package                 | Purpose                                                                                    |
 | ------------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------ |
+| [filament-peek](packages/filament-peek/README.md)             | `capell-app/filament-peek`       | Private unsaved Page preview snapshots for Capell Admin.                                   |
 | [frontend-authoring](packages/frontend-authoring/README.md)   | `capell-app/frontend-authoring`  | Authenticated admin in-page editing bridge for public frontend pages.                      |
 | [frontend-optimizer](packages/frontend-optimizer/README.md)   | `capell-app/frontend-optimizer`  | Profile-based CSS and JavaScript delivery for public pages.                                |
 | [html-cache](packages/html-cache/README.md)                   | `capell-app/html-cache`          | Static HTML cache, dependency indexing, and cache administration.                          |
@@ -60,6 +64,7 @@ Each package README follows the same shape:
 | Package                                               | Composer package             | Purpose                                                                                                    |
 | ----------------------------------------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | [access-gate](packages/access-gate/README.md)         | `capell-app/access-gate`     | Public access gates, entitlement checks, and gated delivery foundations.                                   |
+| [comments](packages/comments/README.md)               | `capell-app/comments`        | Moderated public comment threads for registered Capell content.                                            |
 | [form-builder](packages/form-builder/README.md)       | `capell-app/form-builder`    | Editor-managed forms, fields, submissions, validation, and notifications.                                  |
 | [newsletter](packages/newsletter/README.md)           | `capell-app/newsletter`      | Audience management, subscriptions, consent state, imports, notifications, and public subscription routes. |
 | [password-policy](packages/password-policy/README.md) | `capell-app/password-policy` | Password expiry, forced password changes, and password safety policy.                                      |
@@ -80,17 +85,18 @@ Each package README follows the same shape:
 
 ### Operations, Agents, And Migration
 
-| Package                                                       | Composer package                 | Purpose                                                                        |
-| ------------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------ |
-| [agent-bridge](packages/agent-bridge/README.md)               | `capell-app/agent-bridge`        | Agent Bridge servers and capability adapters.                                  |
-| [ai-orchestrator](packages/ai-orchestrator/README.md)         | `capell-app/ai-orchestrator`     | AI providers, prompts, structured requests, and package integration workflows. |
-| [demo-kit](packages/demo-kit/README.md)                       | `capell-app/demo-kit`            | Demo content and media setup for Capell packages.                              |
-| [deployments](packages/deployments/README.md)                 | `capell-app/deployments`         | Repository deployment connections and Composer publishing.                     |
-| [diagnostics](packages/diagnostics/README.md)                 | `capell-app/diagnostics`         | Developer and operational diagnostics.                                         |
-| [login-audit](packages/login-audit/README.md)                 | `capell-app/login-audit`         | Authentication log and login visibility.                                       |
-| [media-ai](packages/media-ai/README.md)                       | `capell-app/media-ai`            | Optional AI-assisted media actions.                                            |
-| [migration-assistant](packages/migration-assistant/README.md) | `capell-app/migration-assistant` | Export, import, rollback report, and migration workflow support.               |
-| [wordpress-importer](packages/wordpress-importer/README.md)   | `capell-app/wordpress-importer`  | WordPress WXR import source for Migration Assistant.                           |
+| Package                                                       | Composer package                 | Purpose                                                                          |
+| ------------------------------------------------------------- | -------------------------------- | -------------------------------------------------------------------------------- |
+| [agent-bridge](packages/agent-bridge/README.md)               | `capell-app/agent-bridge`        | Agent Bridge servers and capability adapters.                                    |
+| [agent-delivery](packages/agent-delivery/README.md)           | `capell-app/agent-delivery`      | Public-safe page manifests and semantic chunks for agents and search assistants. |
+| [ai-orchestrator](packages/ai-orchestrator/README.md)         | `capell-app/ai-orchestrator`     | AI providers, prompts, structured requests, and package integration workflows.   |
+| [demo-kit](packages/demo-kit/README.md)                       | `capell-app/demo-kit`            | Demo content and media setup for Capell packages.                                |
+| [deployments](packages/deployments/README.md)                 | `capell-app/deployments`         | Repository deployment connections and Composer publishing.                       |
+| [diagnostics](packages/diagnostics/README.md)                 | `capell-app/diagnostics`         | Developer and operational diagnostics.                                           |
+| [login-audit](packages/login-audit/README.md)                 | `capell-app/login-audit`         | Authentication log and login visibility.                                         |
+| [media-ai](packages/media-ai/README.md)                       | `capell-app/media-ai`            | Optional AI-assisted media actions.                                              |
+| [migration-assistant](packages/migration-assistant/README.md) | `capell-app/migration-assistant` | Export, import, rollback report, and migration workflow support.                 |
+| [wordpress-importer](packages/wordpress-importer/README.md)   | `capell-app/wordpress-importer`  | WordPress WXR import source for Migration Assistant.                             |
 
 ### Themes
 

@@ -2,7 +2,7 @@ includes:
     - ./phpstan-ignore-errors.neon
 
 parameters:
-    level: 6
+    level: 8
     reportUnmatchedIgnoredErrors: false
     treatPhpDocTypesAsCertain: false
     checkAuthCallsWhenInRequestScope: false
@@ -37,6 +37,7 @@ parameters:
         - packages/migration-assistant/config
         - packages/foundation-theme/config
         - packages/filament-peek/config
+        - packages/ga4-reports/config
         - packages/deployments/config
         - packages/layout-builder/config
         - packages/agent-bridge/config

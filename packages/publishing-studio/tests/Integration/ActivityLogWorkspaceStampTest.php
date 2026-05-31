@@ -20,8 +20,9 @@ it('stamps the active workspace id on activitylog entries', function (): void {
 
     $activity = Activity::query()->latest('id')->first();
 
-    expect($activity)->not->toBeNull()
-        ->and($activity->properties?->get('workspace_id'))->toBe($workspace->id);
+    $activity = publishingStudioTestInstance($activity, Activity::class);
+
+    expect($activity->properties?->get('workspace_id'))->toBe($workspace->id);
 });
 
 it('does not stamp workspace id when no workspace is active', function (): void {
@@ -34,6 +35,7 @@ it('does not stamp workspace id when no workspace is active', function (): void 
 
     $activity = Activity::query()->latest('id')->first();
 
-    expect($activity)->not->toBeNull()
-        ->and($activity->properties?->get('workspace_id'))->toBeNull();
+    $activity = publishingStudioTestInstance($activity, Activity::class);
+
+    expect($activity->properties?->get('workspace_id'))->toBeNull();
 });

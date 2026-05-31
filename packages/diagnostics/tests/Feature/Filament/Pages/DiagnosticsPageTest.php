@@ -13,6 +13,7 @@ use Spatie\Permission\Models\Role;
 beforeEach(function (): void {
     Role::findOrCreate(config('capell.roles.super_admin', 'super_admin'));
     Permission::findOrCreate('accessDiagnostics');
+    Permission::findOrCreate('viewDiagnostics');
 });
 
 it('documents extension authoring on the developer tools page', function (): void {
@@ -32,6 +33,23 @@ it('allows super admins to access developer tools', function (): void {
     $this->actingAs($user);
 
     expect(DiagnosticsPage::canAccess())->toBeTrue();
+});
+
+it('does not expose maker actions to view-only diagnostics users', function (): void {
+    $user = $this->createUserWithPermission('viewDiagnostics');
+
+    $this->actingAs($user);
+
+    expect(DiagnosticsPage::canAccess())->toBeTrue()
+        ->and(DiagnosticsPage::userCanRunMakers())->toBeFalse();
+});
+
+it('allows access diagnostics users to run maker actions', function (): void {
+    $user = $this->createUserWithPermission('accessDiagnostics');
+
+    $this->actingAs($user);
+
+    expect(DiagnosticsPage::userCanRunMakers())->toBeTrue();
 });
 
 it('registers developer tools and health pages as extension pages', function (): void {

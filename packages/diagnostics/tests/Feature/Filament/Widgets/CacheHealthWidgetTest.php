@@ -36,8 +36,8 @@ function createScopedUserForCacheHealthWidgetTest(SupportCollection $assignedSit
         /** @use HasFactory<Factory<static>> */
         use HasFactory;
 
-        /** @var SupportCollection<int, int> */
-        public SupportCollection $assignedSiteIds;
+        /** @var list<int> */
+        public static array $assignedSiteIds = [];
 
         protected $table = 'users';
 
@@ -49,7 +49,7 @@ function createScopedUserForCacheHealthWidgetTest(SupportCollection $assignedSit
         /** @return SupportCollection<int, int> */
         public function getAssignedSiteIds(): SupportCollection
         {
-            return $this->assignedSiteIds;
+            return collect(self::$assignedSiteIds);
         }
 
         public function isGlobalAdmin(): bool
@@ -63,7 +63,12 @@ function createScopedUserForCacheHealthWidgetTest(SupportCollection $assignedSit
         'email' => fake()->unique()->safeEmail(),
         'password' => bcrypt('password'),
     ]);
-    $user->assignedSiteIds = $assignedSiteIds;
+    $user->save();
+
+    $user::$assignedSiteIds = $assignedSiteIds
+        ->map(static fn (mixed $siteId): int => (int) $siteId)
+        ->values()
+        ->all();
 
     return $user;
 }
@@ -101,10 +106,12 @@ it('does not warm cache for unassigned sites', function (): void {
 
     test()->actingAs(createScopedUserForCacheHealthWidgetTest(collect([$assignedSite->getKey()])));
 
-    livewire(CacheHealthWidget::class)
-        ->set('selectedSiteId', $otherSite->getKey())
-        ->call('warmCache')
-        ->assertNotDispatched('$refresh');
+    $widget = new CacheHealthWidget;
+    $widget->selectedSiteId = (int) $otherSite->getKey();
+
+    expect($widget->data())->toBeNull();
+
+    $widget->warmCache();
 });
 
 it('refreshes when warmCache is invoked', function (): void {

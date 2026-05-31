@@ -15,7 +15,23 @@ class PersistRenderProfileAction
 
     public function handle(RenderProfileData $profile, ?string $manifestPath = null): FrontendRenderProfile
     {
-        $renderProfile = FrontendRenderProfile::query()->firstOrNew(['hash' => $profile->hash]);
+        $values = [
+            'critical_css_path' => null,
+            'label' => $profile->label,
+            'manifest' => $manifestPath === null ? null : ['path' => $manifestPath],
+            'scope' => $profile->scope->value,
+            'signature' => $profile->signature,
+            'status' => OptimizationStatus::Pending->value,
+        ];
+
+        $renderProfile = FrontendRenderProfile::query()->createOrFirst(
+            ['hash' => $profile->hash],
+            $values,
+        );
+
+        if ($renderProfile->wasRecentlyCreated) {
+            return $renderProfile;
+        }
 
         $renderProfile->fill([
             'label' => $profile->label,
@@ -23,13 +39,6 @@ class PersistRenderProfileAction
             'scope' => $profile->scope->value,
             'signature' => $profile->signature,
         ]);
-
-        if (! $renderProfile->exists) {
-            $renderProfile->fill([
-                'critical_css_path' => null,
-                'status' => OptimizationStatus::Pending->value,
-            ]);
-        }
 
         $renderProfile->save();
 

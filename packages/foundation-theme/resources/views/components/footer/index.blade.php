@@ -69,7 +69,7 @@
 
 <button
     type="button"
-    class="capell-foundation-theme-footer scroll-top hover:bg-primary focus:bg-primary text-primary sticky bottom-0 left-full z-999 hidden h-10 w-10 -translate-x-6 items-center justify-center rounded-t-sm bg-gray-200 transition hover:text-white focus:text-white"
+    class="site-scroll-top scroll-top hover:bg-primary focus:bg-primary text-primary sticky bottom-0 left-full z-999 hidden h-10 w-10 -translate-x-6 items-center justify-center rounded-t-sm bg-gray-200 transition hover:text-white focus:text-white"
     aria-label="{{ __('capell-foundation-theme::generic.scroll_to_top') }}"
     title="{{ __('capell-foundation-theme::generic.scroll_to_top') }}"
     onclick="
@@ -143,6 +143,8 @@
             @endif
         </div>
     </div>
+
+    <x-capell::footer.related-sites :$relatedSites />
 
     @if ($subFooterMenuItems?->isNotEmpty() || $footerCopy || count($siteLanguages) > 1)
         <div class="bg-[var(--bg-color-footer-muted)]">

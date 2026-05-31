@@ -24,7 +24,7 @@ final class WorkspacePeekPreviewAction extends Action
             ->tooltip(__('capell-publishing-studio::workspace.actions.preview_modal_tooltip'))
             ->icon(Heroicon::OutlinedComputerDesktop)
             ->color('gray')
-            ->authorize('view')
+            ->authorize('preview')
             ->visible(fn (): bool => CapellCore::isPackageInstalled('capell-app/frontend'))
             ->action(function (): void {
                 Peek::ensurePluginIsLoaded();

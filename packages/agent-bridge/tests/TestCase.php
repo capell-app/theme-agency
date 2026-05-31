@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\AgentBridge\Tests;
 
+use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use BladeUI\Icons\BladeIconsServiceProvider;
 use Capell\AgentBridge\Providers\AgentBridgeServiceProvider;
 use Capell\AgentBridge\Tests\Fixtures\InstalledAgentBridgePackageServiceProvider;
@@ -12,6 +13,7 @@ use Filament\Actions\ActionsServiceProvider;
 use Filament\FilamentServiceProvider;
 use Filament\Notifications\NotificationsServiceProvider;
 use Filament\Support\SupportServiceProvider;
+use Filament\Tables\TablesServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -41,11 +43,13 @@ abstract class TestCase extends OrchestraTestCase
     {
         $providers = [
             BladeIconsServiceProvider::class,
+            BladeHeroiconsServiceProvider::class,
             SupportServiceProvider::class,
             ActionsServiceProvider::class,
             NotificationsServiceProvider::class,
             FilamentServiceProvider::class,
             LivewireServiceProvider::class,
+            TablesServiceProvider::class,
             LaravelSettingsServiceProvider::class,
             InstalledAgentBridgePackageServiceProvider::class,
             AgentBridgeServiceProvider::class,

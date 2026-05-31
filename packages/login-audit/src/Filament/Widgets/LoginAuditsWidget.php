@@ -131,20 +131,24 @@ final class LoginAuditsWidget extends BaseWidget implements CapellWidgetContract
      */
     protected function paginateTableQuery(Builder $query): CursorPaginator
     {
+        $recordsPerPage = $this->getTableRecordsPerPage();
+
         return $query->cursorPaginate(
-            perPage: ($this->getTableRecordsPerPage() === 'all') ? $query->count() : $this->getTableRecordsPerPage(),
+            perPage: $recordsPerPage === 'all' ? $query->count() : (int) $recordsPerPage,
             cursorName: (in_array($this->getTable()->getQueryStringIdentifier(), [null, '', '0'], true) ? 'login-audits' : $this->getTable()->getQueryStringIdentifier()) . '_cursor',
         );
     }
 
     private function getFilamentUrl(LoginAudit $record): string
     {
-        if ($record->authenticatable === null) {
+        $panel = Filament::getCurrentOrDefaultPanel();
+
+        if ($record->authenticatable === null || $panel === null) {
             return '';
         }
 
         return route(
-            'filament.' . Filament::getCurrentOrDefaultPanel()->getId() . '.resources.' . Str::plural(Str::lower(class_basename($record->authenticatable::class))) . '.edit',
+            'filament.' . $panel->getId() . '.resources.' . Str::plural(Str::lower(class_basename($record->authenticatable::class))) . '.edit',
             ['record' => $record->authenticatable_id],
         );
     }

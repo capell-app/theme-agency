@@ -31,7 +31,7 @@ $theme = Frontend::theme();
 
 @if ($block->assets->isNotEmpty() || ! config('capell-layout-builder.block.skip_render_empty', true))
     <x-capell-foundation-theme::block.wrapper
-        class="capell-foundation-theme-block-asset block-assets-blocks relative"
+        class="site-block-asset block-assets-blocks relative"
         :$container
         :$containerKey
         :$containerWidth

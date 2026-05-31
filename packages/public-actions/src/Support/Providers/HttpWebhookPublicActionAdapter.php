@@ -63,6 +63,7 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
                 responseSummary: $summary,
                 externalId: $response->header('X-Request-Id'),
                 errorMessage: $response->successful() ? null : $summary,
+                dispatchStatus: $status,
             );
         } catch (ConnectionException $exception) {
             return $this->recordException($attempt, $destination, $exception, PublicActionDispatchStatus::Retryable);
@@ -207,14 +208,14 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
             return [];
         }
 
-        return collect($records)
+        return array_values(collect($records)
             ->flatMap(static fn (array $record): array => array_values(array_filter([
                 is_string($record['ip'] ?? null) ? $record['ip'] : null,
                 is_string($record['ipv6'] ?? null) ? $record['ipv6'] : null,
             ], static fn (?string $address): bool => $address !== null && $address !== '')))
             ->unique()
             ->values()
-            ->all();
+            ->all());
     }
 
     private function nextAttemptNumber(PublicActionDestination $destination, PublicActionSubmission $submission): int
@@ -241,6 +242,7 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
         return new PublicActionDispatchResultData(
             success: false,
             errorMessage: $message,
+            dispatchStatus: $status,
         );
     }
 

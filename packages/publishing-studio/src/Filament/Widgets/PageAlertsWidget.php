@@ -14,6 +14,7 @@ use Capell\Core\Actions\GetResourceFromBlueprintAction;
 use Capell\Core\Contracts\Pageable;
 use Capell\Core\Enums\PublishStatusEnum;
 use Capell\Core\Models\Page;
+use Capell\Core\Models\Site;
 use Capell\HtmlCache\Actions\ClearCachedUrlsForModelAction;
 use Capell\HtmlCache\Models\CachedModelUrl;
 use Capell\PublishingStudio\Filament\Resources\PublishingStudio\WorkspaceResource;
@@ -70,19 +71,33 @@ class PageAlertsWidget extends ResourceAlertsWidget
         return Action::make('viewSite')
             ->label(__('capell-admin::button.edit_site'))
             ->link()
-            ->url(SiteResource::getUrl('edit', ['record' => $this->pageRecord()->site->id]));
+            ->url(function (): ?string {
+                $site = $this->pageRecord()?->site;
+
+                return $site instanceof Site
+                    ? SiteResource::getUrl('edit', ['record' => $site->id])
+                    : null;
+            });
     }
 
     public function viewCanonicalsAction(): Action
     {
         return Action::make('viewCanonicals')
             ->label(__('capell-admin::button.view_pages'))
-            ->visible(fn (): bool => (bool) $this->pageRecord()->canonical_pages_count)
+            ->visible(function (): bool {
+                $record = $this->pageRecord();
+
+                return $record instanceof Page && (bool) $record->canonical_pages_count;
+            })
             ->url(
-                self::getResource()::getUrl(
-                    'index',
-                    ['filters[filter][canonical_page_id]' => $this->pageRecord()->getKey()],
-                ),
+                function (): string {
+                    $record = $this->pageRecord();
+
+                    return self::getResource()::getUrl(
+                        'index',
+                        $record instanceof Page ? ['filters[filter][canonical_page_id]' => $record->getKey()] : [],
+                    );
+                },
             );
     }
 
@@ -121,7 +136,9 @@ class PageAlertsWidget extends ResourceAlertsWidget
             ));
         }
 
-        if ($record->site->trashed()) {
+        $site = $record->site;
+
+        if ($site instanceof Site && $site->trashed()) {
             $alerts->put('deleted_site', new MessageData(
                 message: __('capell-admin::message.page_site_deleted'),
                 type: AlertTypeEnum::Warning,
@@ -284,7 +301,9 @@ class PageAlertsWidget extends ResourceAlertsWidget
      */
     private function getResource(): string
     {
-        return GetResourceFromBlueprintAction::run(ResourceEnum::Page, $this->pageRecord()?->type) ?? PageResource::class;
+        $resource = GetResourceFromBlueprintAction::run(ResourceEnum::Page, $this->pageRecord()?->type);
+
+        return is_string($resource) && is_a($resource, PageResource::class, true) ? $resource : PageResource::class;
     }
 
     private function initialRecordKey(): ?int

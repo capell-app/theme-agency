@@ -63,6 +63,17 @@ test('can see website meta schema', function (): void {
         );
 });
 
+test('keeps website schema data loading out of public blade', function (): void {
+    $view = file_get_contents(dirname(__DIR__, 3) . '/resources/views/components/schema/website.blade.php');
+
+    expect($view)
+        ->not->toContain('Page::')
+        ->not->toContain('::query(')
+        ->not->toContain('DB::')
+        ->not->toContain('Frontend::')
+        ->not->toContain('->pageUrl');
+});
+
 test('can see webpage meta schema', function (): void {
     $site = Site::factory()
         ->withTranslations()
@@ -89,7 +100,7 @@ test('can see webpage meta schema', function (): void {
         ->assertElementExists(
             'script[type="application/ld+json"]',
             function (AssertElement $elm) use ($page): BaseAssert {
-                $json = $elm->getParser()->getText();
+                $json = (string) $elm->getParser()->getText();
                 $data = json_decode($json, true);
 
                 expect($data)->toBeArray()

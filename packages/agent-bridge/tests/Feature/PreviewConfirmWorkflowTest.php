@@ -14,8 +14,9 @@ use Capell\AgentBridge\Support\CapellAgentBridgeCapabilityRegistry;
 use Capell\AgentBridge\Tests\Fixtures\FakeCapabilityAction;
 use Capell\AgentBridge\Tests\Fixtures\User;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Gate;
 
-function registerFakeCapability(string $scope = 'capell.fake.write'): void
+function registerFakeCapability(string $scope = 'capell.fake.write', ?string $policyAbility = null): void
 {
     resolve(CapellAgentBridgeCapabilityRegistry::class)->register(new CapabilityData(
         key: 'capell.fake.write',
@@ -25,6 +26,7 @@ function registerFakeCapability(string $scope = 'capell.fake.write'): void
         server: CapabilityServerEnum::Site,
         risk: CapabilityRiskEnum::High,
         actionClass: FakeCapabilityAction::class,
+        policyAbility: $policyAbility,
         auditEvent: 'capell_agent-bridge.fake.write',
     ));
 }
@@ -69,6 +71,14 @@ it('previews and confirms a mutating capability with the same payload', function
     expect($result['mode'])->toBe('confirmed')
         ->and($result['result']['message'])->toBe('Executed fake capability.')
         ->and(CapellAgentBridgeConfirmation::query()->whereNotNull('used_at')->count())->toBe(1);
+
+    expect(fn (): array => ConfirmAgentBridgeCapabilityAction::run(
+        confirmationToken: $preview['confirmationToken'],
+        payload: $payload,
+        client: $client,
+        token: $created['token'],
+        user: $user,
+    ))->toThrow(AuthorizationException::class, 'The Agent Bridge confirmation token is invalid or expired.');
 });
 
 it('rejects confirmation when the payload changes after preview', function (): void {
@@ -103,3 +113,27 @@ it('rejects confirmation when the payload changes after preview', function (): v
         user: $user,
     );
 })->throws(AuthorizationException::class, 'The Agent Bridge confirmation payload has changed.');
+
+it('rejects policy protected capability previews when no authenticated user is available', function (): void {
+    registerFakeCapability(policyAbility: 'preview fake capability');
+
+    Gate::define('preview fake capability', static fn (User $user): bool => true);
+
+    $created = CreateAgentBridgeTokenAction::run(User::query()->create([
+        'name' => 'Token Owner',
+        'email' => 'owner@example.com',
+        'password' => 'secret',
+    ]), 'Test client', ['capell.fake.write']);
+    $client = new AuthenticatedAgentBridgeClientData(
+        tokenId: (int) $created['token']->getKey(),
+        name: 'Test client',
+        scopes: ['capell.fake.write'],
+    );
+
+    InvokeAgentBridgeCapabilityPreviewAction::run(
+        capabilityKey: 'capell.fake.write',
+        payload: ['name' => 'Original'],
+        client: $client,
+        token: $created['token'],
+    );
+})->throws(AuthorizationException::class, 'Agent Bridge policy ability [preview fake capability] requires an authenticated user.');

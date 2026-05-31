@@ -1,0 +1,98 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/automation-studio",
+    "slug": "automation-studio",
+    "displayName": "Automation Studio",
+    "kind": "package",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Automation Studio provides rule-based workflow orchestration for Capell package events, Public Actions, and future agent capabilities.",
+    "product": {
+        "group": "Capell Automation",
+        "tier": "premium",
+        "bundle": "automation"
+    },
+    "namespace": "Capell\\AutomationStudio",
+    "surfaces": ["admin", "console"],
+    "dependencies": {
+        "requires": ["capell-app/core"],
+        "supports": [
+            "capell-app/access-gate",
+            "capell-app/campaign-studio",
+            "capell-app/form-builder",
+            "capell-app/public-actions",
+            "capell-app/publishing-studio"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\AutomationStudio\\Providers\\AutomationStudioServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "automation-rules",
+        "automation-triggers",
+        "automation-actions",
+        "public-actions-bridge",
+        "agent-capability-queue"
+    ],
+    "performance": {
+        "frontendRenderBudgetMs": 0,
+        "adminQueryBudget": 20,
+        "cacheTags": ["automation-studio"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": [],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "automation-studio.package-health",
+            "label": "Automation Studio registries and trigger/action defaults are discoverable.",
+            "class": "Capell\\AutomationStudio\\Health\\AutomationStudioHealthCheck",
+            "severity": "critical",
+            "surface": "admin"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Automation Studio connects Capell package events to rule-based workflow actions.",
+        "screenshots": [],
+        "categories": ["admin", "automation", "console"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": [
+            "admin-resource",
+            "model",
+            "migration",
+            "queue-job"
+        ]
+    }
+}

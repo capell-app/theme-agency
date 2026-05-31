@@ -25,10 +25,25 @@ use Capell\Newsletter\Filament\Resources\Segments\SegmentResource;
 use Capell\Newsletter\Filament\Resources\Subscribers\SubscriberResource;
 use Capell\Newsletter\Filament\Resources\SyncAttempts\SyncAttemptResource;
 use Capell\Newsletter\Filament\Widgets\NewsletterOverviewStatsWidget;
+use Capell\Newsletter\Models\FormMapping;
+use Capell\Newsletter\Models\ImportBatch;
+use Capell\Newsletter\Models\ProviderAudience;
+use Capell\Newsletter\Models\ProviderConnection;
+use Capell\Newsletter\Models\ProviderInterestMapping;
+use Capell\Newsletter\Models\Segment;
 use Capell\Newsletter\Models\Subscriber;
 use Capell\Newsletter\Models\SyncAttempt;
+use Capell\Newsletter\Policies\FormMappingPolicy;
+use Capell\Newsletter\Policies\ImportBatchPolicy;
+use Capell\Newsletter\Policies\ProviderAudiencePolicy;
+use Capell\Newsletter\Policies\ProviderConnectionPolicy;
+use Capell\Newsletter\Policies\ProviderInterestMappingPolicy;
+use Capell\Newsletter\Policies\SegmentPolicy;
+use Capell\Newsletter\Policies\SubscriberPolicy;
+use Capell\Newsletter\Policies\SyncAttemptPolicy;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -43,6 +58,7 @@ class AdminServiceProvider extends ServiceProvider
             }
 
             $this
+                ->registerPolicies()
                 ->registerResources();
         });
     }
@@ -65,7 +81,10 @@ class AdminServiceProvider extends ServiceProvider
             ->registerMarketingStudioActions();
 
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
-            $schedule->command('newsletter:sync-retry-due')->everyFiveMinutes();
+            $schedule->command('newsletter:sync-retry-due')
+                ->everyFiveMinutes()
+                ->withoutOverlapping()
+                ->onOneServer();
         });
     }
 
@@ -129,6 +148,20 @@ class AdminServiceProvider extends ServiceProvider
                 group: $resource->name,
             ));
         }
+
+        return $this;
+    }
+
+    private function registerPolicies(): self
+    {
+        Gate::policy(FormMapping::class, FormMappingPolicy::class);
+        Gate::policy(ImportBatch::class, ImportBatchPolicy::class);
+        Gate::policy(ProviderAudience::class, ProviderAudiencePolicy::class);
+        Gate::policy(ProviderConnection::class, ProviderConnectionPolicy::class);
+        Gate::policy(ProviderInterestMapping::class, ProviderInterestMappingPolicy::class);
+        Gate::policy(Segment::class, SegmentPolicy::class);
+        Gate::policy(Subscriber::class, SubscriberPolicy::class);
+        Gate::policy(SyncAttempt::class, SyncAttemptPolicy::class);
 
         return $this;
     }

@@ -177,6 +177,10 @@ class PageMarkdownController extends BaseController
             return null;
         }
 
+        if (! is_string($pageUrl->pageable_type) || ! is_int($pageUrl->pageable_id)) {
+            return null;
+        }
+
         $page = PageLoader::loadPage(
             type: $pageUrl->pageable_type,
             id: $pageUrl->pageable_id,

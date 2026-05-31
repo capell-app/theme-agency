@@ -27,6 +27,8 @@ class RecordConsentEventAction
         ?ProviderConnection $providerConnection = null,
         array $metadata = [],
     ): ConsentEvent {
+        $metadata = $this->metadataWithUtmAttribution($metadata, $evidence);
+
         return ConsentEvent::query()->create([
             'subscriber_id' => $subscriber->getKey(),
             'site_id' => $subscriber->site_id,
@@ -38,6 +40,27 @@ class RecordConsentEventAction
             'evidence' => $evidence?->toArray(),
             'metadata' => $metadata,
             'occurred_at' => now(),
+        ]);
+    }
+
+    /**
+     * @param  array<string, mixed>  $metadata
+     * @return array<string, mixed>
+     */
+    private function metadataWithUtmAttribution(array $metadata, ?ConsentEvidenceData $evidence): array
+    {
+        if (array_key_exists('utm_attribution', $metadata)) {
+            return $metadata;
+        }
+
+        $attribution = ResolveUtmAttributionAction::run($evidence);
+
+        if ($attribution === null) {
+            return $metadata;
+        }
+
+        return array_merge($metadata, [
+            'utm_attribution' => $attribution->toMetadataArray(),
         ]);
     }
 }

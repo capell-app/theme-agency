@@ -32,10 +32,13 @@
 ])
 @php
     $pages ??= $block->assets
-        ->map(fn (object $blockAsset): ?object => $blockAsset->asset)
+        ->map(fn (object $blockAsset): ?object => method_exists($blockAsset, 'getRelations') ? ($blockAsset->getRelations()['asset'] ?? null) : null)
         ->filter()
         ->values();
     $isArticleListBlock = in_array($block->key, ['latest-articles', 'popular-articles'], true);
+    $currentPageRelations = method_exists($page, 'getRelations') ? $page->getRelations() : [];
+    $currentPageTranslation = $currentPageRelations['translation'] ?? null;
+    $currentPageType = $currentPageRelations['type'] ?? null;
 
     if ($componentItem === 'capell::list.item') {
         $componentItem = AssetComponentEnum::Card->value;
@@ -57,21 +60,21 @@
         >
             @php
                 $showTitle = $block->getMeta("container_options.{$containerKey}.hide_title") !== true
-                    && ($block->translation?->title || ($showPageTitle && $page->translation->title));
+                    && ($block->translation?->title || ($showPageTitle && $currentPageTranslation?->title));
                 $showContent = $block->getMeta("container_options.{$containerKey}.hide_content") !== true
-                    && ($block->translation?->content || ($showPageContent && $page->translation->content));
+                    && ($block->translation?->content || ($showPageContent && $currentPageTranslation?->content));
             @endphp
 
             @if ($showTitle || $showContent)
                 <x-capell::content
                     class="block-content"
                     :compact="true"
-                    :content="$showContent ? ($block->translation->content ?: ($showPageContent ? $page->translation->content : null)) : null"
-                    :content-type="$block->translation->content ? $block->type->content_structure : ($showPageContent ? $page->type->content_structure : null)"
+                    :content="$showContent ? ($block->translation->content ?: ($showPageContent ? $currentPageTranslation?->content : null)) : null"
+                    :content-type="$block->translation->content ? $block->type->content_structure : ($showPageContent ? $currentPageType?->content_structure : null)"
                     :divider="$block->getMeta('content_divider')"
                     :muted="in_array($containerKey, $theme->secondary_containers)"
                     :text-align="$block->getMeta('align')"
-                    :title="$showTitle ? ($block->translation->title ?: ($showPageTitle ? $page->translation->title : null)) : null"
+                    :title="$showTitle ? ($block->translation->title ?: ($showPageTitle ? $currentPageTranslation?->title : null)) : null"
                     :heading-style="$block->getMeta('heading_style')"
                     :heading-tag="$showPageTitle ? 'h1' : null"
                 />
@@ -106,6 +109,14 @@
                     ])
                 >
                     @foreach ($pages as $item)
+                        @php
+                            $itemRelations = method_exists($item, 'getRelations') ? $item->getRelations() : [];
+                            $itemImage = $withImage ? ($itemRelations['image'] ?? null) : null;
+                            $itemPageUrl = $itemRelations['pageUrl'] ?? null;
+                            $itemParent = $withParent ? ($itemRelations['parent'] ?? null) : null;
+                            $itemTranslation = $itemRelations['translation'] ?? null;
+                        @endphp
+
                         @if ($isArticleListBlock)
                             @php
                                 $itemImage = $withImage ? PublicModelMeta::get($item, 'image_source') : null;
@@ -121,8 +132,8 @@
                             >
                                 @if ($itemImage)
                                     <a
-                                        href="{{ $item->pageUrl->full_url }}"
-                                        title="{{ htmlspecialchars(strip_tags($item->translation->title)) }}"
+                                        href="{{ $itemPageUrl?->full_url }}"
+                                        title="{{ htmlspecialchars(strip_tags($itemTranslation?->title ?? '')) }}"
                                         @class([
                                             'block min-w-0 overflow-hidden after:!hidden after:!content-none',
                                             'aspect-[16/8] rounded-md bg-slate-100 dark:bg-slate-800' => $containerKey !== 'sidebar',
@@ -133,7 +144,7 @@
                                         <x-capell::image-source
                                             :image="$itemImage"
                                             loading="lazy"
-                                            :alt="$item->translation->title"
+                                            :alt="$itemTranslation?->title"
                                             :width="320"
                                             :height="240"
                                             sizes="{{ $containerKey === 'sidebar' ? '(min-width: 1024px) 16rem, 92vw' : '(min-width: 1024px) 18rem, 92vw' }}"
@@ -144,8 +155,8 @@
 
                                 <div class="flex min-w-0 flex-col gap-2">
                                     <a
-                                        href="{{ $item->pageUrl->full_url }}"
-                                        title="{{ htmlspecialchars(strip_tags($item->translation->title)) }}"
+                                        href="{{ $itemPageUrl?->full_url }}"
+                                        title="{{ htmlspecialchars(strip_tags($itemTranslation?->title ?? '')) }}"
                                         @class([
                                             'hover:text-primary focus:text-primary line-clamp-3 leading-snug font-semibold text-slate-950 no-underline transition after:!hidden after:!content-none dark:text-white',
                                             'text-[0.95rem]' => $containerKey !== 'sidebar',
@@ -153,10 +164,10 @@
                                         ])
                                         @wireNavigate
                                     >
-                                        {{ $item->translation->title }}
+                                        {{ $itemTranslation?->title }}
                                     </a>
 
-                                    @if ($withSummary && $item->translation->summary)
+                                    @if ($withSummary && $itemTranslation?->summary)
                                         <p
                                             @class([
                                                 'line-clamp-2 text-slate-600 dark:text-slate-300',
@@ -164,7 +175,7 @@
                                                 'text-[0.86rem] leading-5' => $containerKey === 'sidebar',
                                             ])
                                         >
-                                            {{ $item->translation->summary }}
+                                            {{ $itemTranslation->summary }}
                                         </p>
                                     @endif
 
@@ -186,14 +197,14 @@
                                 :$containerKey
                                 :count="$withChildCount ? $item->children_count : null"
                                 :icon="(bool) $block->getMeta('icon')"
-                                :image="$withImage ? $item->image : null"
+                                :image="$itemImage"
                                 :$loop
-                                :parent="$withParent && method_exists($item, 'loadParent') ? $item->loadParent($language) : null"
+                                :parent="$itemParent"
                                 :publish-date="$withDate ? $item->getPublishDate() : null"
                                 :$size
-                                :summary="$item->translation->summary"
-                                :title="$item->translation->title"
-                                :url="$item->pageUrl->full_url"
+                                :summary="$itemTranslation?->summary"
+                                :title="$itemTranslation?->title"
+                                :url="$itemPageUrl?->full_url"
                                 :$withSummary
                             />
                         @endif

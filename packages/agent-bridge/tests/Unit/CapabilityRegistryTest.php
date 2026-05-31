@@ -32,9 +32,12 @@ it('filters capabilities by server and client scopes', function (): void {
     ));
 
     $visible = $registry->visibleFor(CapabilityServerEnum::Site, ['capell.fake.read']);
+    $capability = $visible->first();
+
+    throw_unless($capability instanceof CapabilityData, RuntimeException::class, 'Expected visible capability to resolve.');
 
     expect($visible)->toHaveCount(1)
-        ->and($visible->first()->key)->toBe('capell.fake.read');
+        ->and($capability->key)->toBe('capell.fake.read');
 });
 
 it('prevents duplicate capability keys', function (): void {

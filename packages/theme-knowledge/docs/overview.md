@@ -1,3 +1,58 @@
 # Theme Knowledge
 
-Editorial and resource-library theme for knowledge bases, publishers, and content-led teams.
+Status: **Available, no schema impact** · Kind: **theme** · Theme key:
+**knowledge** · Contexts: **frontend, console** · Product group:
+**Capell Foundation** · Commercial proposal: **paid first-party theme**
+
+Theme Knowledge helps a Capell site present editorial content, resource hubs,
+authors, topic pages, search paths, and newsletter conversion in one coherent
+frontend theme.
+
+## What This Package Adds
+
+- A `knowledge` theme definition and preset.
+- Knowledge-specific CSS and page wrapper.
+- Section renderers for topic hubs, featured content, resource library, search
+  listing, newsletter, authors, proof, CTA, and footer flows.
+- Optional renderer awareness for Blog, Search, and Newsletter.
+- A demo command that installs route-backed knowledge demo pages.
+- Theme health and management-page manifest contributions.
+
+## Why It Matters
+
+For a non-technical owner, this theme answers: "Can visitors find useful
+content, trust its source, and keep following our updates?" It gives the site
+the structure of a serious resource library without asking the owner to plan
+renderer internals.
+
+For developers, the package keeps editorial presentation separate from
+Foundation Theme. Optional package integrations are checked at render time
+instead of assumed.
+
+## Runtime Shape
+
+- `KnowledgeThemeServiceProvider` registers the theme when
+  `capell-app/theme-knowledge` is installed.
+- `DemoCommand` calls `InstallKnowledgeThemeDemoAction`.
+- Core `ViewSectionRenderer` extra view data guards optional Blog, Search, and Newsletter
+  sections.
+- `ThemeKnowledgeHealthCheck` exposes package health to diagnostics.
+
+## Data And Persistence
+
+This package owns no database tables, settings, models, or routes. It reads
+Foundation Theme runtime data and Capell page content.
+
+## Screenshot Plan
+
+`docs/screenshots.json` describes marketplace screenshots for homepage,
+directory, detail, contact, conversion CTA, and section-suite states.
+
+## Verification
+
+```bash
+vendor/bin/pest packages/theme-knowledge/tests --configuration=phpunit.xml
+```
+
+The focused tests cover theme definition, manifest requirements, package-aware
+rendering, and public output safety.

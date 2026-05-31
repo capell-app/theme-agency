@@ -18,6 +18,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsObject;
+use RuntimeException;
 use Throwable;
 
 class UpdateEditableRegionAction
@@ -27,17 +28,17 @@ class UpdateEditableRegionAction
     /**
      * @return array{cleared: int, urls: list<string>, status: string, redirect_url: string|null}
      */
-    public function handle(EditableRegionPayloadData $payload, string $value, ?AuthenticatableContract $user = null): array
+    public function handle(EditableRegionPayloadData $payload, string $value, AuthenticatableContract $user): array
     {
-        if ($user instanceof AuthenticatableContract) {
-            $payload = ValidateEditableRegionPayloadAction::run($payload, $user);
-        }
+        $payload = ValidateEditableRegionPayloadAction::run($payload, $user);
 
         /** @var class-string<Model> $modelClass */
         $modelClass = $payload->model;
         abort_unless(is_subclass_of($modelClass, Model::class), 403);
 
         $record = $modelClass::query()->findOrFail($payload->recordKey);
+        throw_unless($record instanceof Model, RuntimeException::class, 'Editable region record must resolve to an Eloquent model.');
+
         $urls = CollectAffectedCachedUrlsAction::run($record);
 
         if ($this->shouldRequireApproval($record)) {
@@ -106,7 +107,11 @@ class UpdateEditableRegionAction
         }
 
         $path = parse_url($payload->currentUrl, PHP_URL_PATH);
-        $previewUrl = (new $previewUrlActionClass)->handle($workspace->fresh(), is_string($path) ? $path : '/');
+        $freshWorkspace = $workspace->fresh();
+
+        throw_unless($freshWorkspace instanceof Workspace, RuntimeException::class, 'Inline editing workspace must exist before generating a preview URL.');
+
+        $previewUrl = (new $previewUrlActionClass)->handle($freshWorkspace, is_string($path) ? $path : '/');
 
         return [
             'cleared' => 0,

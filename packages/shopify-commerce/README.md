@@ -79,6 +79,7 @@ The publishable config lives at `config/capell-shopify-commerce.php` in the host
 - [Docs index](docs/README.md)
 - [Overview](docs/overview.md)
 - [OAuth and catalog sync](docs/oauth-and-catalog-sync.md)
+- [Screenshot manifest](docs/screenshots.json)
 
 ## Verification
 

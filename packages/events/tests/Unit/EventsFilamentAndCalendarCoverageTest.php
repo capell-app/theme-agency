@@ -16,18 +16,26 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 it('builds visible calendar weeks for a whole month grid', function (): void {
     $weeks = (new CalendarMonth)->weeks(CarbonImmutable::parse('2026-02-15'));
+    $firstWeek = $weeks->first();
+    $lastWeek = $weeks->last();
+
+    throw_if(! $firstWeek instanceof CalendarWeek || ! $lastWeek instanceof CalendarWeek, RuntimeException::class, 'Expected calendar month to return first and last weeks.');
+
+    $firstDay = $firstWeek->days->first();
+    $lastDay = $lastWeek->days->last();
+
+    throw_if(! $firstDay instanceof CarbonImmutable || ! $lastDay instanceof CarbonImmutable, RuntimeException::class, 'Expected calendar weeks to contain first and last days.');
 
     expect($weeks)->toHaveCount(5)
-        ->and($weeks->first())->toBeInstanceOf(CalendarWeek::class)
-        ->and($weeks->first()->days)->toHaveCount(7)
-        ->and($weeks->first()->days->first()->toDateString())->toBe('2026-01-26')
-        ->and($weeks->last()->days->last()->toDateString())->toBe('2026-03-01');
+        ->and($firstWeek)->toBeInstanceOf(CalendarWeek::class)
+        ->and($firstWeek->days)->toHaveCount(7)
+        ->and($firstDay->toDateString())->toBe('2026-01-26')
+        ->and($lastDay->toDateString())->toBe('2026-03-01');
 });
 
 it('builds the event resource form schema', function (): void {
@@ -38,7 +46,7 @@ it('builds the event resource form schema', function (): void {
         ->each->toBeInstanceOf(Section::class);
 
     $fields = collect($components)
-        ->flatMap(function (Component $section): array {
+        ->flatMap(function (mixed $section): array {
             throw_unless($section instanceof Section);
 
             return ReadsRawSchemaComponents::childComponents($section);

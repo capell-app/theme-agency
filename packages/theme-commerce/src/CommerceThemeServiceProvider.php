@@ -35,7 +35,7 @@ class CommerceThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/commerce.jpg',
             tags: ['Commerce', 'Catalog', 'Conversion'],
             bestFit: ['Retail catalogs', 'DTC brands', 'Product-led publishers'],
-            includedSections: ['navigation', 'hero', 'features', 'content-listing', 'product-finder', 'collections', 'product-grid', 'comparison', 'catalog', 'proof', 'blog-teaser', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'content-listing', 'product-finder', 'collections', 'product-grid', 'comparison', 'catalog', 'lookbook', 'promotion', 'buying-guide', 'proof', 'blog-teaser', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'commerce',
@@ -115,6 +115,8 @@ class CommerceThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         $blogAvailable = CapellCore::isPackageInstalled('capell-app/blog');
+        $campaignStudioAvailable = CapellCore::isPackageInstalled('capell-app/campaign-studio');
+        $mediaLibraryAvailable = CapellCore::isPackageInstalled('capell-app/media-library');
         $shopifyAvailable = CapellCore::isPackageInstalled('capell-app/shopify-commerce');
 
         return [
@@ -127,6 +129,9 @@ class CommerceThemeServiceProvider extends ServiceProvider
             'product-grid' => new ViewSectionRenderer(self::THEME_KEY, 'product-grid', 'capell-theme-commerce::sections.product-grid', failLoudly: true),
             'comparison' => new ViewSectionRenderer(self::THEME_KEY, 'comparison', 'capell-theme-commerce::sections.comparison', failLoudly: true),
             'catalog' => new CatalogSectionRenderer(self::THEME_KEY, $shopifyAvailable, failLoudly: true),
+            'lookbook' => new ViewSectionRenderer(self::THEME_KEY, 'lookbook', 'capell-theme-commerce::sections.lookbook', failLoudly: true, extraViewData: ['mediaLibraryAvailable' => $mediaLibraryAvailable]),
+            'promotion' => new ViewSectionRenderer(self::THEME_KEY, 'promotion', 'capell-theme-commerce::sections.promotion', failLoudly: true, extraViewData: ['campaignStudioAvailable' => $campaignStudioAvailable]),
+            'buying-guide' => new ViewSectionRenderer(self::THEME_KEY, 'buying-guide', 'capell-theme-commerce::sections.buying-guide', failLoudly: true, extraViewData: ['blogAvailable' => $blogAvailable]),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-commerce::sections.proof', failLoudly: true),
             'blog-teaser' => new BlogTeaserSectionRenderer(self::THEME_KEY, $blogAvailable, failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-commerce::sections.cta', failLoudly: true),

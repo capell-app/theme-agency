@@ -8,6 +8,7 @@ use Capell\Insights\Enums\InsightsEventType;
 use Capell\Insights\Models\InsightsEvent;
 use Capell\Insights\Models\InsightsVisit;
 use Capell\SeoSuite\Filament\Pages\NotFoundUrlsPage;
+use Capell\Tests\Fixtures\Models\User;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\Testing\TestAction;
@@ -23,6 +24,15 @@ use Illuminate\Support\Collection as SupportCollection;
 
 use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
+
+function notFoundUrlsAuthenticatedUser(): User
+{
+    $user = auth()->user();
+
+    throw_unless($user instanceof User, RuntimeException::class, 'Expected authenticated test user.');
+
+    return $user;
+}
 
 use Spatie\Permission\Models\Permission;
 
@@ -154,7 +164,7 @@ it('can not render not found urls page without permission', function (): void {
 });
 
 test('can sort not found urls by total visitors and last viewed at', function (): void {
-    auth()->user()->givePermissionTo('View:NotFoundUrlsPage');
+    notFoundUrlsAuthenticatedUser()->givePermissionTo('View:NotFoundUrlsPage');
 
     $missingPageType = resolve(Page::class)->getMorphClass();
 
@@ -237,7 +247,7 @@ test('can sort not found urls by total visitors and last viewed at', function ()
 });
 
 test('can search not found urls by url', function (): void {
-    auth()->user()->givePermissionTo('View:NotFoundUrlsPage');
+    notFoundUrlsAuthenticatedUser()->givePermissionTo('View:NotFoundUrlsPage');
 
     $missingPageType = resolve(Page::class)->getMorphClass();
 
@@ -277,7 +287,7 @@ test('can search not found urls by url', function (): void {
 });
 
 test('escapes logged not found urls before rendering links', function (): void {
-    auth()->user()->givePermissionTo('View:NotFoundUrlsPage');
+    notFoundUrlsAuthenticatedUser()->givePermissionTo('View:NotFoundUrlsPage');
 
     insightsEventForNotFoundUrlsPageTest([
         'url' => "/missing/'><script>alert(1)</script>",
@@ -293,7 +303,7 @@ test('escapes logged not found urls before rendering links', function (): void {
 });
 
 test('does not render unsafe logged not found urls as links', function (): void {
-    auth()->user()->givePermissionTo('View:NotFoundUrlsPage');
+    notFoundUrlsAuthenticatedUser()->givePermissionTo('View:NotFoundUrlsPage');
 
     insightsEventForNotFoundUrlsPageTest([
         'url' => 'javascript:alert(1)',
@@ -309,7 +319,7 @@ test('does not render unsafe logged not found urls as links', function (): void 
 });
 
 test('can bulk delete selected not found urls', function (): void {
-    auth()->user()->givePermissionTo('View:NotFoundUrlsPage');
+    notFoundUrlsAuthenticatedUser()->givePermissionTo('View:NotFoundUrlsPage');
 
     $missingPageType = resolve(Page::class)->getMorphClass();
 

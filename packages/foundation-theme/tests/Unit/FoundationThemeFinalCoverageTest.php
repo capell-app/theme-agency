@@ -37,6 +37,7 @@ use Capell\Navigation\Enums\NavigationItemType;
 use Capell\Navigation\Models\Navigation as NavigationModel;
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -47,6 +48,14 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
+
+function foundationThemeFinalView(mixed $view): View
+{
+    expect($view)->toBeInstanceOf(View::class);
+    assert($view instanceof View);
+
+    return $view;
+}
 
 it('builds enabled layout neighbor links from adjacent published pages', function (): void {
     [$language, $site, $type] = foundationThemeFinalPageSurface();
@@ -129,13 +138,15 @@ it('mounts successful child and sibling page blocks with hydrated frontend conte
     foundationThemeFinalFrontendState($language, $site, $theme, $layout, $currentChild->load('type', 'layout'));
 
     $siblings = new Siblings([], 'main', 0, new stdClass, $block);
+    $childrenPages = $children->pages ?? collect();
+    $siblingPages = $siblings->pages ?? collect();
 
     expect($children->pages)->not->toBeNull()
-        ->and($children->pages->pluck('id')->all())->toContain($currentChild->id, $siblingChild->id)
-        ->and($children->render()->name())->toBe('capell-foundation-theme::components.block.asset.pages')
+        ->and($childrenPages->pluck('id')->all())->toContain($currentChild->id, $siblingChild->id)
+        ->and(foundationThemeFinalView($children->render())->name())->toBe('capell-foundation-theme::components.block.asset.pages')
         ->and($siblings->pages)->not->toBeNull()
-        ->and($siblings->pages->pluck('id')->all())->toContain($siblingChild->id)
-        ->and($siblings->pages->pluck('id')->all())->not->toContain($currentChild->id);
+        ->and($siblingPages->pluck('id')->all())->toContain($siblingChild->id)
+        ->and($siblingPages->pluck('id')->all())->not->toContain($currentChild->id);
 });
 
 it('mounts the livewire pages block around selected page assets', function (): void {
@@ -382,10 +393,10 @@ it('renders navigation and breadcrumbs with frontend context data', function ():
     expect($navigationComponent->items)->not->toBeNull()
         ->and($navigationComponent->items)->toHaveCount(1)
         ->and($navigationComponent->menu?->getKey())->toBe($navigation->getKey())
-        ->and($navigationComponent->render()->name())->toBe('capell-foundation-theme::components.block.navigation.index')
+        ->and(foundationThemeFinalView($navigationComponent->render())->name())->toBe('capell-foundation-theme::components.block.navigation.index')
         ->and($navigationByKeyComponent->menu?->getKey())->toBe($navigation->getKey())
         ->and($emptyNavigationComponent->render())->toBe('')
-        ->and($breadcrumbs->render()->name())->toBe('capell-foundation-theme::components.block.page.breadcrumbs');
+        ->and(foundationThemeFinalView($breadcrumbs->render())->name())->toBe('capell-foundation-theme::components.block.page.breadcrumbs');
 });
 
 it('covers content neighbor links and small frontend context helper branches', function (): void {

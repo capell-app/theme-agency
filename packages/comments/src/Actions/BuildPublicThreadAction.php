@@ -9,13 +9,16 @@ use Capell\Comments\Data\PublicCommentData;
 use Capell\Comments\Enums\CommentPublicationPolicy;
 use Capell\Comments\Enums\CommentStatus;
 use Capell\Comments\Models\Comment;
+use Capell\Comments\Models\CommentAuthor;
 use Capell\Comments\Support\CommentableRegistry;
 use Capell\Comments\Support\CommentSettingsResolver;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
+use RuntimeException;
 
 class BuildPublicThreadAction
 {
@@ -35,6 +38,8 @@ class BuildPublicThreadAction
             return [];
         }
 
+        $languageId = $this->optionalAttribute($commentable, 'language_id');
+
         /** @var EloquentCollection<int, Comment> $roots */
         $roots = Comment::query()
             ->with(['author'])
@@ -42,8 +47,8 @@ class BuildPublicThreadAction
             ->where('commentable_id', $commentable->getKey())
             ->where('status', CommentStatus::Approved)
             ->when(
-                is_numeric($commentable->getAttribute('language_id')),
-                fn (Builder $query): Builder => $query->where('language_id', (int) $commentable->getAttribute('language_id')),
+                is_numeric($languageId),
+                fn (Builder $query): Builder => $query->where('language_id', (int) $languageId),
             )
             ->whereNull('parent_id')
             ->oldest('submitted_at')
@@ -64,8 +69,8 @@ class BuildPublicThreadAction
             ->where('commentable_id', $commentable->getKey())
             ->where('status', CommentStatus::Approved)
             ->when(
-                is_numeric($commentable->getAttribute('language_id')),
-                fn (Builder $query): Builder => $query->where('language_id', (int) $commentable->getAttribute('language_id')),
+                is_numeric($languageId),
+                fn (Builder $query): Builder => $query->where('language_id', (int) $languageId),
             )
             ->where(function (Builder $query) use ($rootIds): void {
                 $query
@@ -77,10 +82,10 @@ class BuildPublicThreadAction
 
         $byParent = $comments->groupBy(fn (Comment $comment): int => (int) ($comment->parent_id ?? 0));
 
-        return $roots
+        return array_values($roots
             ->map(fn (Comment $comment): PublicCommentData => $this->toData($comment, $byParent))
             ->values()
-            ->all();
+            ->all());
     }
 
     private function canRead(Model $commentable): bool
@@ -98,6 +103,13 @@ class BuildPublicThreadAction
             && $this->settings->publicationPolicy($siteId, $commentableType->key) !== CommentPublicationPolicy::Disabled;
     }
 
+    private function optionalAttribute(Model $model, string $key): mixed
+    {
+        return array_key_exists($key, $model->getAttributes())
+            ? $model->getAttribute($key)
+            : null;
+    }
+
     /**
      * @param  Collection<int, Collection<int, Comment>>  $byParent
      */
@@ -105,18 +117,23 @@ class BuildPublicThreadAction
     {
         /** @var Collection<int, Comment> $children */
         $children = $byParent->get((int) $comment->getKey(), collect());
+        $author = $comment->author;
+        $submittedAt = $comment->submitted_at;
+
+        throw_unless($author instanceof CommentAuthor, RuntimeException::class, 'Public comments require an author.');
+        throw_unless($submittedAt instanceof CarbonImmutable, RuntimeException::class, 'Public comments require a submitted timestamp.');
 
         return new PublicCommentData(
             publicId: (string) $comment->public_id,
             body: $comment->body,
-            authorName: (string) $comment->author->name,
-            submittedAt: $comment->submitted_at->toImmutable(),
+            authorName: (string) $author->name,
+            submittedAt: $submittedAt,
             depth: (int) $comment->depth,
             replyCount: $children->count(),
-            children: $children
+            children: array_values($children
                 ->map(fn (Comment $child): PublicCommentData => $this->toData($child, $byParent))
                 ->values()
-                ->all(),
+                ->all()),
         );
     }
 }

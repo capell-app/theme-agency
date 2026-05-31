@@ -13,16 +13,30 @@ The package README still counts as package documentation, but it is not enough f
 
 ## Packages Missing Substantive Docs
 
-No first-party package is currently missing a substantive public docs file. Every package with a `composer.json` now has at least a README plus either `docs/overview.md` or a more specific package guide.
+No first-party package is currently missing a substantive public docs file. The
+2026-05-30 scan covers 56 Composer package directories, and every package with a
+`composer.json` now has at least a README plus either `docs/overview.md` or a
+more specific package guide.
+
+The same follow-up scan confirms every package directory now has
+`docs/screenshots.json`, and the aggregate screenshot manifest has been
+regenerated from those package-local manifests.
 
 ## Recently Closed Gaps
 
-| Package             | Product group     | Contexts        | Added docs    | Notes                                                                |
-| ------------------- | ----------------- | --------------- | ------------- | -------------------------------------------------------------------- |
-| `dashboard-reports` | Capell Operations | admin           | `overview.md` | Covers dashboard widgets, data providers, and page-derived reports.  |
-| `ga4-reports`       | Capell Growth     | admin, console  | `overview.md` | Covers GA4 settings, sync command, local snapshots, and data client. |
-| `password-policy`   | Capell Operations | admin, console  | `overview.md` | Covers settings, Actions, password history, and enforcement flow.    |
-| `demo-kit`          | Capell Foundation | admin, frontend | `overview.md` | Covers demo commands, repeatable plans, seeds, and package dispatch. |
+| Package                | Product group     | Contexts          | Added docs                      | Notes                                                                                     |
+| ---------------------- | ----------------- | ----------------- | ------------------------------- | ----------------------------------------------------------------------------------------- |
+| `comments`             | Capell Engagement | admin, frontend   | `docs/README.md`, `overview.md` | Covers moderation, public thread safety, settings, routes, and DTOs.                      |
+| `filament-peek`        | Capell Foundation | admin, frontend   | `docs/README.md`, `overview.md` | Covers private unsaved preview snapshots and signed preview routes.                       |
+| `theme-education`      | Capell Foundation | frontend, console | expanded README/docs/overview   | Covers education sections, demo command, and optional integrations.                       |
+| `theme-knowledge`      | Capell Foundation | frontend, console | expanded README/docs/overview   | Covers resource-library sections and optional Blog/Search/Newsletter integrations.        |
+| `theme-local-services` | Capell Foundation | frontend, console | expanded README/docs/overview   | Covers quote-led service sections and optional Blog/Form Builder integrations.            |
+| `theme-nonprofit`      | Capell Foundation | frontend, console | expanded README/docs/overview   | Covers impact/supporter sections and optional campaign/form/event/story integrations.     |
+| `theme-portfolio`      | Capell Foundation | frontend, console | expanded README/docs/overview   | Covers portfolio sections, optional media/newsletter integrations, and product direction. |
+| `dashboard-reports`    | Capell Operations | admin             | `overview.md`                   | Covers dashboard widgets, data providers, and page-derived reports.                       |
+| `ga4-reports`          | Capell Growth     | admin, console    | `overview.md`                   | Covers GA4 settings, sync command, local snapshots, and data client.                      |
+| `password-policy`      | Capell Operations | admin, console    | `overview.md`                   | Covers settings, Actions, password history, and enforcement flow.                         |
+| `demo-kit`             | Capell Foundation | admin, frontend   | `overview.md`                   | Covers demo commands, repeatable plans, seeds, and package dispatch.                      |
 
 ## Implementation Plan
 

@@ -63,9 +63,9 @@ class PageTitleWithSlugInputExtender implements PageTitleWithSlugInputExtenderCo
             return null;
         }
 
-        return Schema::end([
-            $component->getAction($this->titleSuggestionsActionName),
-        ]);
+        $action = $component->getAction($this->titleSuggestionsActionName);
+
+        return $action instanceof Action ? Schema::end([$action]) : null;
     }
 
     private function isEnabled(): bool
@@ -150,7 +150,7 @@ class PageTitleWithSlugInputExtender implements PageTitleWithSlugInputExtenderCo
             keywords: $keywords,
             pageId: $record?->translatable_id,
             pageType: $record?->translatable_type,
-            languageId: $record?->language_id,
+            languageId: (int) ($record->language_id ?? 0),
         );
 
         $options = [

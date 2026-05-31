@@ -28,7 +28,7 @@
                         type="button"
                         id="healthcare-events-prev"
                         class="rounded-full border border-[#d9e8ee] px-3 py-1 text-xs font-bold text-[#0f766e] transition hover:bg-[#f6fbfd]"
-                        aria-label="Previous events"
+                        aria-label="{{ __('capell-theme-healthcare::generic.carousel_previous') }}"
                     >
                         Previous
                     </button>
@@ -36,7 +36,7 @@
                         type="button"
                         id="healthcare-events-next"
                         class="rounded-full border border-[#d9e8ee] px-3 py-1 text-xs font-bold text-[#0f766e] transition hover:bg-[#f6fbfd]"
-                        aria-label="Next events"
+                        aria-label="{{ __('capell-theme-healthcare::generic.carousel_next') }}"
                     >
                         Next
                     </button>

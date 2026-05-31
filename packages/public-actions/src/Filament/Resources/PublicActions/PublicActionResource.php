@@ -27,6 +27,8 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Schema as DatabaseSchema;
 use Override;
@@ -62,7 +64,9 @@ final class PublicActionResource extends Resource
                 ->required(),
             Select::make('site_id')
                 ->label(__('capell-public-actions::filament.fields.site'))
-                ->options(fn (): array => self::canScopeToSites() ? Site::getOptions()->all() : [])
+                ->options(fn (): array => self::canScopeToSites()
+                    ? SiteScope::applyForCurrentActor(Site::query()->select(['name', 'id']), 'id')->ordered()->pluck('name', 'id')->all()
+                    : [])
                 ->searchable()
                 ->preload()
                 ->visible(fn (): bool => self::canScopeToSites())
@@ -70,7 +74,8 @@ final class PublicActionResource extends Resource
             TextInput::make('site_scope_key')
                 ->label(__('capell-public-actions::filament.fields.site_scope_key'))
                 ->default('global')
-                ->required(),
+                ->disabled()
+                ->dehydrated(false),
             TextInput::make('success_redirect_url')
                 ->label(__('capell-public-actions::filament.fields.success_redirect_url'))
                 ->url(),
@@ -152,6 +157,47 @@ final class PublicActionResource extends Resource
     }
 
     /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public static function prepareFormDataForPersistence(array $data): array
+    {
+        if (! self::canScopeToSites()) {
+            $data['site_id'] = null;
+            $data['site_scope_key'] = 'global';
+
+            return $data;
+        }
+
+        $siteId = self::siteIdFromData($data['site_id'] ?? null);
+        $actor = auth()->user();
+
+        if ($siteId === null) {
+            throw_unless(
+                $actor instanceof Authenticatable && SiteScope::isGlobalActor($actor),
+                AuthorizationException::class,
+            );
+
+            $data['site_id'] = null;
+            $data['site_scope_key'] = 'global';
+
+            return $data;
+        }
+
+        $site = Site::query()->find($siteId);
+
+        throw_unless(
+            $site instanceof Site && SiteScope::actorCanUseSite($actor, $site),
+            AuthorizationException::class,
+        );
+
+        $data['site_id'] = $siteId;
+        $data['site_scope_key'] = 'site:' . $siteId;
+
+        return $data;
+    }
+
+    /**
      * @return array<string, string>
      */
     private static function handlerOptions(): array
@@ -164,5 +210,16 @@ final class PublicActionResource extends Resource
     private static function canScopeToSites(): bool
     {
         return DatabaseSchema::hasTable('sites');
+    }
+
+    private static function siteIdFromData(mixed $siteId): ?int
+    {
+        if ($siteId === null || $siteId === '') {
+            return null;
+        }
+
+        throw_unless(is_int($siteId) || is_numeric($siteId), AuthorizationException::class);
+
+        return (int) $siteId;
     }
 }

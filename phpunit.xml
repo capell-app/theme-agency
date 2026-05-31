@@ -5,7 +5,7 @@
     backupStaticProperties="false"
     beStrictAboutOutputDuringTests="false"
     beStrictAboutTestsThatDoNotTestAnything="true"
-    bootstrap="vendor/autoload.php"
+    bootstrap="tests/bootstrap.php"
     cacheResult="true"
     colors="true"
     failOnRisky="true"
@@ -22,14 +22,21 @@
         <testsuite name="Feature">
             <directory suffix="Test.php">./packages/*/tests/Feature</directory>
             <directory suffix="Test.php">./tests/Packages/Feature</directory>
-            <!-- media-library requires awcodes/filament-curator which is not in the root vendor -->
-            <exclude>./packages/media-library/tests</exclude>
         </testsuite>
         <testsuite name="Integration">
             <directory suffix="Test.php">./packages/*/tests/Integration</directory>
             <directory suffix="Test.php">./tests/Packages/Integration</directory>
-            <!-- media-library requires awcodes/filament-curator which is not in the root vendor -->
-            <exclude>./packages/media-library/tests</exclude>
+        </testsuite>
+        <testsuite name="Admin">
+            <directory suffix="Test.php">./packages/*/tests/Admin</directory>
+        </testsuite>
+        <testsuite name="PackageRoot">
+            <file>./tests/Packages/AllPackages/AdminPageDetailsSaveTest.php</file>
+            <file>./tests/Packages/AllPackages/GlobalSearchTest.php</file>
+            <file>./tests/Packages/Arch/PageAndActionCoverageTest.php</file>
+            <file>./tests/Packages/Arch/PackageMigrationLoadingTest.php</file>
+            <file>./tests/Packages/Arch/ManifestProviderClassExistsTest.php</file>
+            <file>./tests/Packages/Arch/PackageSettingsFeatureHealthTest.php</file>
         </testsuite>
         <testsuite name="Unit">
             <directory suffix="Test.php">./packages/*/tests/Unit</directory>
@@ -55,14 +62,15 @@
         </exclude>
     </source>
     <php>
-        <ini name="memory_limit" value="4096M"/>
+        <ini name="memory_limit" value="-1"/>
         <server name="APP_ENV" value="testing"/>
         <env name="APP_KEY" value="12345678901234567890123456789012"/>
         <env name="BCRYPT_ROUNDS" value="12"/>
         <env name="CACHE_STORE" value="array"/>
         <env name="CURATOR_GLIDE_TOKEN" value="123456789"/>
-        <env name="DB_CONNECTION" value="sqlite"/>
-        <env name="DB_DATABASE" value=":memory:"/>
+        <env name="DB_CONNECTION" value="sqlite" force="true"/>
+        <env name="DB_DATABASE" value=":memory:" force="true"/>
+        <env name="DB_URL" value="" force="true"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="QUEUE_CONNECTION" value="sync"/>

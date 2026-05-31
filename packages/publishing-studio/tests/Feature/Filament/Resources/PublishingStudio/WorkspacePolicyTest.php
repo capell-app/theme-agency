@@ -136,3 +136,38 @@ it('user with approve permission cannot approve a workspace not in review', func
 
     expect($policy->approve($user, $workspace))->toBeFalse();
 });
+
+// --- publish ---
+
+it('user with publish permission can publish an approved workspace', function (): void {
+    $user = User::factory()->create();
+    $user->givePermissionTo(InstallWorkspaceRolesAction::PERMISSION_PUBLISH);
+
+    $workspace = Workspace::factory()->create(['status' => WorkspaceStatusEnum::Approved]);
+
+    $policy = new WorkspacePolicy;
+
+    expect($policy->publish($user, $workspace))->toBeTrue();
+});
+
+it('user with publish permission can manage a scheduled workspace publish', function (): void {
+    $user = User::factory()->create();
+    $user->givePermissionTo(InstallWorkspaceRolesAction::PERMISSION_PUBLISH);
+
+    $workspace = Workspace::factory()->create(['status' => WorkspaceStatusEnum::Scheduled]);
+
+    $policy = new WorkspacePolicy;
+
+    expect($policy->publish($user, $workspace))->toBeTrue();
+});
+
+it('user with publish permission cannot publish an open workspace', function (): void {
+    $user = User::factory()->create();
+    $user->givePermissionTo(InstallWorkspaceRolesAction::PERMISSION_PUBLISH);
+
+    $workspace = Workspace::factory()->create(['status' => WorkspaceStatusEnum::Open]);
+
+    $policy = new WorkspacePolicy;
+
+    expect($policy->publish($user, $workspace))->toBeFalse();
+});

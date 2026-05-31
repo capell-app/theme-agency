@@ -80,6 +80,53 @@ function createMediaAIGlobalUser(): Authenticatable
     return $user;
 }
 
+function createMediaAIReadOnlyUser(): Authenticatable
+{
+    $user = new class extends Authenticatable implements FilamentUser
+    {
+        /** @use HasFactory<Factory<static>> */
+        use HasFactory;
+
+        protected $table = 'users';
+
+        public function canAccessPanel(Panel $panel): bool
+        {
+            return true;
+        }
+
+        public function isGlobalAdmin(): bool
+        {
+            return false;
+        }
+
+        public function hasRole(string $role): bool
+        {
+            return false;
+        }
+
+        public function checkPermissionTo(string $permission): bool
+        {
+            return false;
+        }
+
+        /** @return Collection<int, int> */
+        public function getAssignedSiteIds(): Collection
+        {
+            return collect();
+        }
+    };
+
+    $user->forceFill([
+        'name' => 'Media AIOrchestrator Read Only',
+        'email' => fake()->unique()->safeEmail(),
+        'password' => bcrypt('password'),
+    ])->save();
+
+    Relation::morphMap(['test-media-ai-read-only-user' => $user::class], merge: true);
+
+    return $user;
+}
+
 function createMediaAIImage(): CapellMedia
 {
     $page = Page::factory()->create();
@@ -128,4 +175,12 @@ it('passes image doctor requests to the configured ai-orchestrator implementatio
     expect($doctor->media?->is($media))->toBeTrue()
         ->and($doctor->request?->operation)->toBe('remove_background')
         ->and($doctor->request?->instructions)->toBe('Remove the background and keep the subject sharp.');
+});
+
+it('authorizes doctor requests against the media update policy', function (): void {
+    test()->actingAs(createMediaAIReadOnlyUser());
+
+    $action = (new MediaAIEditActionExtender)->getHeaderActions(new EditMedia)[0];
+
+    expect($action->record(createMediaAIImage())->isAuthorized())->toBeFalse();
 });

@@ -1,4 +1,5 @@
 @php
+    use Capell\PublishingStudio\Enums\WorkspaceApprovalActionEnum;
     use Capell\PublishingStudio\Models\WorkspaceApproval;
     use Illuminate\Support\Collection;
 
@@ -20,8 +21,6 @@
         >
             @foreach ($approvals as $approval)
                 @php
-                    use Capell\PublishingStudio\Enums\WorkspaceApprovalActionEnum;
-
                     $color = match ($approval->action) {
                         WorkspaceApprovalActionEnum::Approved => 'bg-green-500',
                         WorkspaceApprovalActionEnum::Rejected => 'bg-red-500',

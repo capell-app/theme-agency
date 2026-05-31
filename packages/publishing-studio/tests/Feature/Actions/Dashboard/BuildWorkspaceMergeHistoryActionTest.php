@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Models\Page;
 use Capell\PublishingStudio\Actions\Dashboard\BuildWorkspaceMergeHistoryAction;
+use Capell\PublishingStudio\Data\Dashboard\MergeHistoryEntryData;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 
@@ -49,8 +50,9 @@ it('returns correct page count per workspace', function (): void {
     $entry = $result->entries->toCollection()
         ->first(fn (object $item): bool => $item->workspaceId === $workspace->id);
 
-    expect($entry)->not->toBeNull()
-        ->and($entry->pageCount)->toBe(4);
+    $entry = publishingStudioTestInstance($entry, MergeHistoryEntryData::class);
+
+    expect($entry->pageCount)->toBe(4);
 });
 
 it('includes actor name when workspace has a creator', function (): void {
@@ -66,8 +68,9 @@ it('includes actor name when workspace has a creator', function (): void {
     $entry = $result->entries->toCollection()
         ->first(fn (object $item): bool => $item->workspaceId === $workspace->id);
 
-    expect($entry)->not->toBeNull()
-        ->and($entry->actorName)->toBe('Alice Publisher');
+    $entry = publishingStudioTestInstance($entry, MergeHistoryEntryData::class);
+
+    expect($entry->actorName)->toBe('Alice Publisher');
 });
 
 it('calculates duration open hours from created_at to published_at', function (): void {
@@ -84,8 +87,9 @@ it('calculates duration open hours from created_at to published_at', function ()
     $entry = $result->entries->toCollection()
         ->first(fn (object $item): bool => $item->workspaceId === $workspace->id);
 
-    expect($entry)->not->toBeNull()
-        ->and($entry->durationOpenHours)->toBeGreaterThanOrEqual(2 * 24);
+    $entry = publishingStudioTestInstance($entry, MergeHistoryEntryData::class);
+
+    expect($entry->durationOpenHours)->toBeGreaterThanOrEqual(2 * 24);
 });
 
 it('returns an empty collection when no published publishing-studio exist', function (): void {

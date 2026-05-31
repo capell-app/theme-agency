@@ -125,7 +125,7 @@ it('demotes the previous live version when makeLive is true', function (): void 
     $publisher = new Publisher;
     $newVersion = $publisher->publish($workspace);
 
-    $originalLive = Version::query()->find($originalLiveId);
+    $originalLive = publishingStudioTestInstance(Version::query()->find($originalLiveId), Version::class);
 
     expect($originalLive->is_live)->toBeFalse()
         ->and($newVersion->is_live)->toBeTrue()

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\AccessGate\Http\Controllers;
 
 use Capell\AccessGate\Actions\CreateRegistrationAction;
+use Capell\AccessGate\Actions\ResolveAccessGateAreaForRequestAction;
 use Capell\AccessGate\Enums\IdentityMode;
 use Capell\AccessGate\Models\Area;
 use Capell\AccessGate\Support\RegistrationFieldRegistry;
@@ -21,7 +22,7 @@ final class StoreAccessRequestController
 
     public function __invoke(Request $request, string $area): RedirectResponse
     {
-        $accessArea = Area::query()->where('key', $area)->firstOrFail();
+        $accessArea = ResolveAccessGateAreaForRequestAction::run($request, $area);
 
         if (config('access-gate.registration.methods.email.enabled', true) !== true) {
             throw ValidationException::withMessages([
@@ -100,6 +101,10 @@ final class StoreAccessRequestController
             return null;
         }
 
+        if (! $this->hasHttpScheme($requestedUrl)) {
+            return null;
+        }
+
         if ($host === $request->getHost()) {
             return $requestedUrl;
         }
@@ -109,5 +114,12 @@ final class StoreAccessRequestController
             ->all();
 
         return in_array($host, $allowedHosts, true) ? $requestedUrl : null;
+    }
+
+    private function hasHttpScheme(string $url): bool
+    {
+        $scheme = parse_url($url, PHP_URL_SCHEME);
+
+        return is_string($scheme) && in_array(strtolower($scheme), ['http', 'https'], true);
     }
 }

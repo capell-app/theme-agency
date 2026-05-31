@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Capell\Admin\Contracts\Extenders\PageSchemaExtender;
 use Capell\Admin\Enums\PageTranslationSchemaHookEnum;
+use Capell\Core\Models\Language;
+use Capell\Core\Models\Page;
+use Capell\Core\Models\Site;
 use Capell\SeoSuite\Data\PageSeoReportData;
 use Capell\SeoSuite\Data\RedirectOpportunityData;
 use Capell\SeoSuite\Data\SeoIssueData;
@@ -147,4 +150,53 @@ it('exposes redirect opportunities to the page SEO panel view data', function ()
     expect($viewData['redirectOpportunities'])->toHaveCount(1)
         ->and($viewData['redirectOpportunities'][0])->toBeInstanceOf(RedirectOpportunityData::class)
         ->and($viewData['redirectOpportunities'][0]->sourceUrl)->toBe('https://example.test/old-page');
+});
+
+it('resolves AI brief context and empty report view state from the current page workflow', function (): void {
+    $english = Language::factory()->create(['name' => 'English', 'code' => 'en']);
+    $french = Language::factory()->create(['name' => 'French', 'code' => 'fr']);
+    $site = Site::factory()
+        ->language($english)
+        ->withTranslations([$english, $french])
+        ->create();
+    $page = Page::factory()
+        ->site($site)
+        ->withTranslations([$english, $french])
+        ->create(['name' => 'SEO panel context page']);
+
+    $panel = PageSeoPanel::make()->model($page);
+    $missingRecordPanel = PageSeoPanel::make()->model(new Page);
+    $viewDataForReport = new ReflectionMethod(PageSeoPanel::class, 'viewDataForReport');
+    $firstTranslationLanguageId = new ReflectionMethod(PageSeoPanel::class, 'firstTranslationLanguageId');
+
+    $frenchContext = $panel->resolveAiContentBriefContext($french->getKey());
+    $fallbackContext = $panel->resolveAiContentBriefContext();
+    $emptyViewData = $viewDataForReport->invoke($panel, null);
+
+    expect($frenchContext)->toBeArray()
+        ->and($frenchContext['page']->is($page))->toBeTrue()
+        ->and($frenchContext['site']->is($site))->toBeTrue()
+        ->and($frenchContext['language']->is($french))->toBeTrue()
+        ->and($fallbackContext)->toBeArray()
+        ->and($fallbackContext['language'])->toBeInstanceOf(Language::class)
+        ->and($missingRecordPanel->resolveAiContentBriefContext())->toBeNull()
+        ->and($panel->resolveLanguageIdFromState(seoSuitePagePanelFakeGet([
+            'language_id' => '',
+            '../language_id' => '',
+            '../../language_id' => null,
+        ])))->toBeNull()
+        ->and($firstTranslationLanguageId->invoke($panel, [
+            ['language_id' => null],
+            ['language_id' => $french->getKey()],
+        ]))->toBe($french->getKey())
+        ->and($firstTranslationLanguageId->invoke($panel, ['not-an-array']))->toBeNull()
+        ->and($emptyViewData)->toMatchArray([
+            'report' => null,
+            'hasReport' => false,
+            'linkIssues' => [],
+            'schemaIssues' => [],
+            'searchConsoleIssues' => [],
+            'redirectOpportunities' => [],
+            'passedCheckValues' => [],
+        ]);
 });

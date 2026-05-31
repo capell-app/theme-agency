@@ -77,11 +77,11 @@ it('captures immutable per-entity publish revisions for changed workspace rows',
         ->and($editedRevision->version_id)->toBe($version->id)
         ->and($editedRevision->version)->toBe(1)
         ->and($editedRevision->notes)->toBe('release notes')
-        ->and($editedRevision->before_payload['name'])->toBe('live-original')
-        ->and($editedRevision->after_payload['name'])->toBe('workspace-edited')
-        ->and($editedRevision->after_payload['workspace_id'])->toBe(0)
+        ->and(publishingStudioTestArray($editedRevision->before_payload)['name'])->toBe('live-original')
+        ->and(publishingStudioTestArray($editedRevision->after_payload)['name'])->toBe('workspace-edited')
+        ->and(publishingStudioTestArray($editedRevision->after_payload)['workspace_id'])->toBe(0)
         ->and($newRevision->before_payload)->toBeNull()
-        ->and($newRevision->after_payload['name'])->toBe('workspace-new');
+        ->and(publishingStudioTestArray($newRevision->after_payload)['name'])->toBe('workspace-new');
 });
 
 it('does not create revisions until a workspace is published', function (): void {
@@ -264,8 +264,8 @@ it('captures restored revisions when rolling back a published version', function
         ->firstOrFail();
 
     expect($revision->version_id)->toBe($rollbackRecord->id)
-        ->and($revision->before_payload['name'])->toBe('keeper')
-        ->and($revision->after_payload['name'])->toBe('keeper')
+        ->and(publishingStudioTestArray($revision->before_payload)['name'])->toBe('keeper')
+        ->and(publishingStudioTestArray($revision->after_payload)['name'])->toBe('keeper')
         ->and($revision->notes)->toBe('regression');
 });
 
@@ -306,7 +306,7 @@ it('captures restored revisions when rolling back a single entity', function ():
         ->firstOrFail();
 
     expect($revision->version_id)->toBe($targetVersion->id)
-        ->and($revision->before_payload['name'])->toBe('current value')
-        ->and($revision->after_payload['name'])->toBe('previous value')
+        ->and(publishingStudioTestArray($revision->before_payload)['name'])->toBe('current value')
+        ->and(publishingStudioTestArray($revision->after_payload)['name'])->toBe('previous value')
         ->and($revision->notes)->toBe('restore one item');
 });

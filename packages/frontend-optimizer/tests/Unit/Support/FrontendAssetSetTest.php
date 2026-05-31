@@ -24,11 +24,16 @@ it('collects css and js assets with loading strategies', function (): void {
         )
         ->all();
 
+    $javascriptAsset = $assets->get(0);
+    $stylesheetAsset = $assets->get(1);
+
+    throw_if($javascriptAsset === null || $stylesheetAsset === null, RuntimeException::class, 'Expected frontend asset set to contain css and js assets.');
+
     expect($assets)->toHaveCount(2)
-        ->and($assets[0]->kind)->toBe(AssetKind::Js)
-        ->and($assets[0]->loadingStrategy)->toBe(AssetLoadingStrategy::Lazy)
-        ->and($assets[1]->criticalEligible)->toBeTrue()
-        ->and($assets[1]->slot)->toBe(AssetSlot::AboveFold);
+        ->and($javascriptAsset->kind)->toBe(AssetKind::Js)
+        ->and($javascriptAsset->loadingStrategy)->toBe(AssetLoadingStrategy::Lazy)
+        ->and($stylesheetAsset->criticalEligible)->toBeTrue()
+        ->and($stylesheetAsset->slot)->toBe(AssetSlot::AboveFold);
 });
 
 it('rejects critical javascript assets', function (): void {

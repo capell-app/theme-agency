@@ -8,9 +8,9 @@
     "version": "4.x-dev",
     "description": "Editorial and resource-library theme for knowledge bases, publishers, and content-led teams.",
     "product": {
-        "group": "Capell Foundation",
-        "tier": "free",
-        "bundle": "foundation"
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Knowledge",
     "surfaces": ["frontend"],
@@ -90,34 +90,29 @@
                 "caption": "Theme Knowledge extension preview"
             },
             {
-                "path": "docs/assets/marketplace/knowledge-homepage-marketplace.jpg",
-                "alt": "Theme Knowledge homepage screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Knowledge: Homepage. Homepage composition with hero, proof, repeated content, CTA, and footer."
+                "path": "docs/assets/marketplace/knowledge-docs-layout.svg",
+                "alt": "Theme Knowledge Docs Layout image",
+                "caption": "Theme Knowledge Docs Layout"
             },
             {
-                "path": "docs/assets/marketplace/knowledge-directory-marketplace.jpg",
-                "alt": "Theme Knowledge directory screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Knowledge: Directory. List or directory route with repeated cards, scanning rhythm, and route-backed pagination layout."
+                "path": "docs/assets/marketplace/knowledge-homepage-layout.svg",
+                "alt": "Theme Knowledge Homepage Layout image",
+                "caption": "Theme Knowledge Homepage Layout"
             },
             {
-                "path": "docs/assets/marketplace/knowledge-detail-marketplace.jpg",
-                "alt": "Theme Knowledge detail screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Knowledge: Detail. Detail page route with media, proof, supporting sections, and conversion path."
+                "path": "docs/assets/marketplace/knowledge-search-layout.svg",
+                "alt": "Theme Knowledge Search Layout image",
+                "caption": "Theme Knowledge Search Layout"
             },
             {
-                "path": "docs/assets/marketplace/knowledge-contact-marketplace.jpg",
-                "alt": "Theme Knowledge contact screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Knowledge: Contact. Contact or enquiry route with theme-specific routing cards and CTA treatment."
+                "path": "docs/assets/marketplace/hero-desktop.jpg",
+                "alt": "Theme Knowledge Hero Desktop image",
+                "caption": "Theme Knowledge Hero Desktop"
             },
             {
-                "path": "docs/assets/marketplace/knowledge-conversion-marketplace.jpg",
-                "alt": "Theme Knowledge conversion cta screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Knowledge: Conversion CTA. Conversion route focused on proof, action rhythm, and next-step clarity."
-            },
-            {
-                "path": "docs/assets/marketplace/knowledge-sections-marketplace.jpg",
-                "alt": "Theme Knowledge section suite screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Knowledge: Section Suite. Theme-specific section suite showing the premium components available to editors."
+                "path": "docs/assets/marketplace/hero-mobile.jpg",
+                "alt": "Theme Knowledge Hero Mobile image",
+                "caption": "Theme Knowledge Hero Mobile"
             }
         ],
         "categories": ["frontend", "themes"]

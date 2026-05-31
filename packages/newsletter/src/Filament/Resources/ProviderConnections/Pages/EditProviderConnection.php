@@ -20,4 +20,32 @@ class EditProviderConnection extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    #[Override]
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        $data['credentials'] = [];
+
+        return $data;
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    #[Override]
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $submittedCredentials = is_array($data['credentials'] ?? null) ? $data['credentials'] : [];
+
+        if ($submittedCredentials === []) {
+            unset($data['credentials']);
+        }
+
+        return $data;
+    }
 }

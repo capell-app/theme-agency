@@ -12,6 +12,7 @@ use Capell\Core\Models\Language;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\Theme;
 use Capell\FormBuilder\Providers\FormBuilderServiceProvider;
+use Capell\Newsletter\Providers\AdminServiceProvider as NewsletterAdminServiceProvider;
 use Capell\Newsletter\Providers\NewsletterServiceProvider;
 use Capell\Tags\Providers\TagsServiceProvider;
 use Capell\Tests\AbstractTestCase;
@@ -56,6 +57,7 @@ class NewsletterTestCase extends AbstractTestCase
             TagsServiceProvider::class,
             FormBuilderServiceProvider::class,
             NewsletterServiceProvider::class,
+            NewsletterAdminServiceProvider::class,
             LivewireServiceProvider::class,
         ];
     }

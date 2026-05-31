@@ -1,6 +1,6 @@
-.capell-theme-education {
-    --capell-theme-primary: #4338ca;
-    --capell-theme-accent: #14b8a6;
+.education-shell {
+    --site-theme-primary: #4338ca;
+    --site-theme-accent: #14b8a6;
     --education-ink: #020617;
     --education-paper: #f8fbff;
     --education-line: #c7d2fe;
@@ -20,8 +20,39 @@
         2rem 2rem;
 }
 
-.capell-theme-education :is(h1, h2, h3) {
+.education-shell :is(h1, h2, h3) {
     letter-spacing: 0;
+}
+
+.education-shell section {
+    padding-block: clamp(4rem, 7vw, 7rem);
+}
+
+:where(
+    .education-shell a,
+    .education-shell button,
+    .education-shell input,
+    .education-shell textarea,
+    .education-shell select
+):focus-visible {
+    outline: 3px solid rgb(20 184 166 / 78%);
+    outline-offset: 3px;
+}
+
+.education-skip-link {
+    background: #111827;
+    color: #ffffff;
+    font-weight: 800;
+    left: 1rem;
+    padding: 0.75rem 1rem;
+    position: fixed;
+    top: 1rem;
+    transform: translateY(-150%);
+    z-index: 50;
+}
+
+.education-skip-link:focus {
+    transform: translateY(0);
 }
 
 .education-hero,

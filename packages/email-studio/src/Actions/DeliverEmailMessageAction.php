@@ -7,10 +7,12 @@ namespace Capell\EmailStudio\Actions;
 use Capell\EmailStudio\Enums\EmailMessageStatus;
 use Capell\EmailStudio\Enums\EmailRecipientStatus;
 use Capell\EmailStudio\Models\EmailMessage;
+use Capell\EmailStudio\Models\EmailProfile;
 use Capell\EmailStudio\Support\EmailProviderRegistry;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
+use RuntimeException;
 use Throwable;
 
 class DeliverEmailMessageAction
@@ -41,8 +43,12 @@ class DeliverEmailMessageAction
         }
 
         try {
+            $profile = $emailMessage->profile;
+
+            throw_unless($profile instanceof EmailProfile, RuntimeException::class, 'Email message profile must be loaded before delivery.');
+
             $providerResult = resolve(EmailProviderRegistry::class)
-                ->adapter($emailMessage->profile->provider)
+                ->adapter($profile->provider)
                 ->send($emailMessage->fresh(['profile', 'recipients']) ?? $emailMessage);
         } catch (Throwable $throwable) {
             $this->markProviderFailure($emailMessage, $throwable->getMessage());

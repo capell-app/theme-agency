@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, and publish checks.",
+    "description": "SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery outputs, crawler policy controls, and planned generated-output diagnostics.",
     "product": {
         "group": "Capell Search & SEO",
         "tier": "premium",
@@ -90,7 +90,7 @@
         },
         {
             "key": "seo-suite.ai-discovery",
-            "label": "AI discovery outputs llms.txt and markdown page surfaces.",
+            "label": "AI Discovery outputs llms.txt, robots.txt, and Markdown page surfaces.",
             "class": "Capell\\SeoSuite\\Health\\SeoSuiteHealthCheck",
             "severity": "warning",
             "surface": "frontend"
@@ -103,7 +103,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, and publish checks.",
+        "summary": "SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery outputs, crawler policy controls, and planned generated-output diagnostics.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",

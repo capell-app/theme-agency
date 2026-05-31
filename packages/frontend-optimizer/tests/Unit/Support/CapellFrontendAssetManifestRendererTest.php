@@ -32,6 +32,13 @@ it('converts a Capell manifest into a layout scoped optimizer profile', function
     /** @var list<array{handle: string, critical_eligible?: bool, loading_strategy?: string, slot?: string}> $assets */
     $assets = $profile->signature['assets'];
     $runtimeAsset = collect($assets)->firstWhere('handle', 'foundation-theme:runtime');
+    $firstAsset = $assets[0];
+
+    expect($firstAsset)->toHaveKeys(['critical_eligible', 'loading_strategy', 'slot']);
+    expect($runtimeAsset)->not->toBeNull();
+
+    assert(isset($firstAsset['critical_eligible'], $firstAsset['loading_strategy'], $firstAsset['slot']));
+    assert(is_array($runtimeAsset) && isset($runtimeAsset['loading_strategy']));
 
     expect($html)
         ->toContain('<link rel="stylesheet" href="http://localhost/build/resources/css/capell/frontend.css">')
@@ -42,11 +49,10 @@ it('converts a Capell manifest into a layout scoped optimizer profile', function
         ->not->toContain('capell-app/foundation-theme')
         ->and($profile->scope)->toBe('layout')
         ->and($profile->label)->toBe($context->layout?->key . ' / ' . $context->theme?->key)
-        ->and($assets[0]['handle'])->toBe('foundation-theme:css')
-        ->and($assets[0]['critical_eligible'])->toBeTrue()
-        ->and($assets[0]['loading_strategy'])->toBe('deferred')
-        ->and($assets[0]['slot'])->toBe('above_fold')
-        ->and($runtimeAsset)->not->toBeNull()
+        ->and($firstAsset['handle'])->toBe('foundation-theme:css')
+        ->and($firstAsset['critical_eligible'])->toBeTrue()
+        ->and($firstAsset['loading_strategy'])->toBe('deferred')
+        ->and($firstAsset['slot'])->toBe('above_fold')
         ->and($runtimeAsset['loading_strategy'])->toBe('idle');
 
     Bus::assertDispatched(GenerateCriticalCssJob::class);

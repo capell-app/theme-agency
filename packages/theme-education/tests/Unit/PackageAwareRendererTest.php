@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\Tests\Packages\PackagesTestCase;
@@ -21,6 +22,7 @@ it('passes optional package availability into public section renderers', functio
     $renderer = $registry->sectionRenderer('education', 'events');
 
     expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
 
     $html = $renderer->render(new readonly class('events') implements ThemeSection
     {

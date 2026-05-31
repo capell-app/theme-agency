@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Capell\FoundationTheme\View\Components\Block\Page;
 
+use Capell\Core\Contracts\Pageable;
 use Capell\Core\Enums\PageOrderEnum;
+use Capell\Core\Models\Language;
 use Capell\Frontend\Facades\Frontend;
 use Capell\Frontend\Support\Loader\PageLoader;
 use Capell\Frontend\Support\Logging\FrontendLogger;
+use Illuminate\Database\Eloquent\Model;
 
 class Children extends AbstractPagesBlock
 {
@@ -16,6 +19,13 @@ class Children extends AbstractPagesBlock
     protected function mountBlock(): void
     {
         $page = Frontend::page();
+        $language = Frontend::language();
+
+        if (! $page instanceof Pageable || ! $page instanceof Model || ! $language instanceof Language) {
+            $this->skipRender = true;
+
+            return;
+        }
 
         if (! $page->hasPageHierarchy()) {
             $logger = resolve(FrontendLogger::class);
@@ -23,7 +33,7 @@ class Children extends AbstractPagesBlock
             $logger->warning('Frontend: page has no page hierarchy for children block', [
                 'pageable_type' => $page->getMorphClass(),
                 'pageable_id' => $page->getKey(),
-                'layout_id' => $page->layout->key,
+                'layout_id' => $page->layout?->key,
             ]);
 
             $this->skipRender = true;
@@ -38,9 +48,9 @@ class Children extends AbstractPagesBlock
         }
 
         $this->pages = PageLoader::getPages(
-            language: Frontend::language(),
+            language: $language,
             site: Frontend::site(),
-            page: Frontend::page(),
+            page: $page,
             type: 'children',
             ordering: PageOrderEnum::Alphabetical,
             withChildrenCount: $this->block->meta['with_children_count'] ?? false,

@@ -146,8 +146,8 @@ final class BuildAiDiscoveryPageEntriesAction
 
     private function markdownUrl(string $url): string
     {
-        $trimmedUrl = mb_rtrim($url, '/');
-        $path = parse_url($trimmedUrl, PHP_URL_PATH);
+        $trimmedUrl = rtrim($url, '/');
+        $path = $trimmedUrl !== '' ? parse_url($trimmedUrl, PHP_URL_PATH) : false;
 
         if (! is_string($path) || $path === '') {
             return $trimmedUrl . '/index.md';

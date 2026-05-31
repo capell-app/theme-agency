@@ -2,8 +2,14 @@
 
 declare(strict_types=1);
 
+use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\CampaignConversionGoalResource;
+use Capell\CampaignStudio\Filament\Resources\CampaignCtaBlocks\CampaignCtaBlockResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignGroups\CampaignGroupResource;
+use Capell\CampaignStudio\Models\CampaignConversionGoal;
+use Capell\CampaignStudio\Models\CampaignCtaBlock;
 use Capell\CampaignStudio\Models\CampaignGroup;
+use Capell\CampaignStudio\Policies\CampaignConversionGoalPolicy;
+use Capell\CampaignStudio\Policies\CampaignCtaBlockPolicy;
 use Capell\CampaignStudio\Policies\CampaignGroupPolicy;
 use Capell\Core\Models\Site;
 use Filament\Models\Contracts\FilamentUser;
@@ -16,7 +22,7 @@ use Illuminate\Support\Collection as SupportCollection;
 
 /**
  * @param  Collection<array-key, mixed>  $assignedSiteIds
- * @param  array<array-key, mixed>  $permissions
+ * @param  list<string>  $permissions
  */
 function campaignStudioScopedUser(SupportCollection $assignedSiteIds, array $permissions = []): Authenticatable
 {
@@ -81,6 +87,7 @@ test('campaign group policy denies records outside the actor site assignments', 
     $otherSite = Site::factory()->create();
     $assignedGroup = CampaignGroup::factory()->create(['site_id' => $assignedSite->getKey()]);
     $otherGroup = CampaignGroup::factory()->create(['site_id' => $otherSite->getKey()]);
+    $globalGroup = CampaignGroup::factory()->create(['site_id' => null]);
     $user = campaignStudioScopedUser(
         collect([$assignedSite->getKey()]),
         ['Update:CampaignGroup'],
@@ -89,5 +96,78 @@ test('campaign group policy denies records outside the actor site assignments', 
     $policy = new CampaignGroupPolicy;
 
     expect($policy->update($user, $assignedGroup))->toBeTrue()
-        ->and($policy->update($user, $otherGroup))->toBeFalse();
+        ->and($policy->update($user, $otherGroup))->toBeFalse()
+        ->and($policy->update($user, $globalGroup))->toBeFalse();
+});
+
+test('campaign CTA and goal resources scope by their campaign group site', function (): void {
+    $assignedSite = Site::factory()->create();
+    $otherSite = Site::factory()->create();
+    $assignedGroup = CampaignGroup::factory()->create(['site_id' => $assignedSite->getKey()]);
+    $otherGroup = CampaignGroup::factory()->create(['site_id' => $otherSite->getKey()]);
+    $assignedCtaBlock = CampaignCtaBlock::factory()->create([
+        'campaign_group_id' => $assignedGroup->getKey(),
+        'site_id' => null,
+    ]);
+    CampaignCtaBlock::factory()->create([
+        'campaign_group_id' => $otherGroup->getKey(),
+        'site_id' => null,
+    ]);
+    $assignedGoal = CampaignConversionGoal::factory()->create([
+        'campaign_group_id' => $assignedGroup->getKey(),
+        'site_id' => null,
+    ]);
+    CampaignConversionGoal::factory()->create([
+        'campaign_group_id' => $otherGroup->getKey(),
+        'site_id' => null,
+    ]);
+
+    auth()->setUser(campaignStudioScopedUser(collect([$assignedSite->getKey()])));
+
+    expect(CampaignCtaBlockResource::getEloquentQuery()->pluck('id')->all())
+        ->toEqualCanonicalizing([$assignedCtaBlock->getKey()])
+        ->and(CampaignConversionGoalResource::getEloquentQuery()->pluck('id')->all())
+        ->toEqualCanonicalizing([$assignedGoal->getKey()]);
+});
+
+test('campaign CTA and goal policies deny group-owned records outside actor sites', function (): void {
+    $assignedSite = Site::factory()->create();
+    $otherSite = Site::factory()->create();
+    $assignedGroup = CampaignGroup::factory()->create(['site_id' => $assignedSite->getKey()]);
+    $otherGroup = CampaignGroup::factory()->create(['site_id' => $otherSite->getKey()]);
+    $assignedCtaBlock = CampaignCtaBlock::factory()->create([
+        'campaign_group_id' => $assignedGroup->getKey(),
+        'site_id' => null,
+    ]);
+    $otherCtaBlock = CampaignCtaBlock::factory()->create([
+        'campaign_group_id' => $otherGroup->getKey(),
+        'site_id' => null,
+    ]);
+    $globalGroupCtaBlock = CampaignCtaBlock::factory()->create([
+        'campaign_group_id' => CampaignGroup::factory()->create(['site_id' => null])->getKey(),
+        'site_id' => null,
+    ]);
+    $assignedGoal = CampaignConversionGoal::factory()->create([
+        'campaign_group_id' => $assignedGroup->getKey(),
+        'site_id' => null,
+    ]);
+    $otherGoal = CampaignConversionGoal::factory()->create([
+        'campaign_group_id' => $otherGroup->getKey(),
+        'site_id' => null,
+    ]);
+    $globalGroupGoal = CampaignConversionGoal::factory()->create([
+        'campaign_group_id' => CampaignGroup::factory()->create(['site_id' => null])->getKey(),
+        'site_id' => null,
+    ]);
+    $user = campaignStudioScopedUser(
+        collect([$assignedSite->getKey()]),
+        ['Update:CampaignCtaBlock', 'Update:CampaignConversionGoal'],
+    );
+
+    expect((new CampaignCtaBlockPolicy)->update($user, $assignedCtaBlock))->toBeTrue()
+        ->and((new CampaignCtaBlockPolicy)->update($user, $otherCtaBlock))->toBeFalse()
+        ->and((new CampaignCtaBlockPolicy)->update($user, $globalGroupCtaBlock))->toBeFalse()
+        ->and((new CampaignConversionGoalPolicy)->update($user, $assignedGoal))->toBeTrue()
+        ->and((new CampaignConversionGoalPolicy)->update($user, $otherGoal))->toBeFalse()
+        ->and((new CampaignConversionGoalPolicy)->update($user, $globalGroupGoal))->toBeFalse();
 });

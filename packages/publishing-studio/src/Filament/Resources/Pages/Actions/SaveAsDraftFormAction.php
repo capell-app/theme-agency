@@ -32,7 +32,11 @@ class SaveAsDraftFormAction extends Action
             ->form(fn (): array => $this->formSchema())
             ->fillForm(fn (): array => $this->defaults())
             ->action(function (array $data): void {
-                $this->getLivewire()->saveAsDraftWithLocation($data);
+                $livewire = $this->getLivewire();
+
+                if (is_object($livewire) && method_exists($livewire, 'saveAsDraftWithLocation')) {
+                    $livewire->saveAsDraftWithLocation($data);
+                }
             });
     }
 
@@ -80,13 +84,14 @@ class SaveAsDraftFormAction extends Action
     /** @return array<int|string, string> */
     private function workspaceOptions(?Workspace $active): array
     {
-        return Workspace::query()
-            ->where('status', WorkspaceStatusEnum::Open)
-            ->when(
-                $active,
-                fn ($query) => $query->where('id', '!=', $active->id),
-            )
-            ->get()
+        $query = Workspace::query()
+            ->where('status', WorkspaceStatusEnum::Open);
+
+        if ($active instanceof Workspace) {
+            $query->where('id', '!=', $active->id);
+        }
+
+        return $query->get()
             ->filter(fn (Workspace $workspace): bool => auth()->user()?->can('update', $workspace) === true)
             ->pluck('name', 'id')
             ->all();
@@ -102,7 +107,8 @@ class SaveAsDraftFormAction extends Action
 
     private function isEditingDraft(): bool
     {
-        $record = $this->getLivewire()->getRecord();
+        $livewire = $this->getLivewire();
+        $record = is_object($livewire) && method_exists($livewire, 'getRecord') ? $livewire->getRecord() : null;
 
         if (! $record instanceof Model) {
             return false;

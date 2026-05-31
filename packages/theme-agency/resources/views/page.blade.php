@@ -3,7 +3,7 @@
 </a>
 
 <div
-    style="{{ collect($brand->tokens())->map(fn ($value, $token) => $token . ':' . $value)->implode(';') }}"
+    style="{{ collect($brand->tokens())->map(fn (mixed $value, string $token): string => $token . ':' . $value)->implode(';') }}"
     class="site-theme-shell min-h-screen bg-zinc-950 text-zinc-950 antialiased"
 >
     {!! $content !!}

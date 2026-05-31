@@ -8,6 +8,8 @@ use Capell\AccessGate\Actions\SubmitAccessGatePublicAction;
 use Capell\AccessGate\Console\Commands\AccessGateDoctorCommand;
 use Capell\AccessGate\Console\Commands\AccessGateInstallCommand;
 use Capell\AccessGate\Console\Commands\AccessGateSetupCommand;
+use Capell\AccessGate\Contracts\AccessRequestMethod;
+use Capell\AccessGate\Contracts\RegistrationField;
 use Capell\AccessGate\Enums\ResourceEnum;
 use Capell\AccessGate\Frontend\Rules\AccessGateAreaStatusCondition;
 use Capell\AccessGate\Frontend\Rules\AccessGateRegistrationStatusCondition;
@@ -163,6 +165,10 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
                 continue;
             }
 
+            if (! is_a($method, AccessRequestMethod::class, true)) {
+                continue;
+            }
+
             $registry->register($method);
         }
 
@@ -181,6 +187,10 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
 
         foreach ($fields as $field) {
             if (! is_string($field)) {
+                continue;
+            }
+
+            if (! is_a($field, RegistrationField::class, true)) {
                 continue;
             }
 
@@ -350,10 +360,10 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
             return [];
         }
 
-        return collect($aliases)
+        return array_values(collect($aliases)
             ->filter(fn (mixed $alias): bool => is_string($alias) && $alias !== '')
             ->values()
-            ->all();
+            ->all());
     }
 
     /**
@@ -363,13 +373,13 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
     {
         $registeredMiddleware = $router->getMiddleware();
 
-        return collect($this->pageCacheAliases())
+        return array_values(collect($this->pageCacheAliases())
             ->flatMap(fn (string $alias): array => array_values(array_filter([
                 $alias,
                 $registeredMiddleware[$alias] ?? null,
             ], is_string(...))))
             ->values()
-            ->all();
+            ->all());
     }
 
     /**
@@ -378,15 +388,24 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
     private function existingMiddlewarePriority(Router $router): array
     {
         if (! $this->app->bound(HttpKernel::class)) {
-            return $router->middlewarePriority;
+            return $this->middlewarePriorityList($router->middlewarePriority);
         }
 
         $kernel = $this->app->make(HttpKernel::class);
 
         if (! method_exists($kernel, 'getMiddlewarePriority')) {
-            return $router->middlewarePriority;
+            return $this->middlewarePriorityList($router->middlewarePriority);
         }
 
-        return $kernel->getMiddlewarePriority();
+        return $this->middlewarePriorityList($kernel->getMiddlewarePriority());
+    }
+
+    /**
+     * @param  array<array-key, mixed>  $middlewarePriority
+     * @return list<string>
+     */
+    private function middlewarePriorityList(array $middlewarePriority): array
+    {
+        return array_values(array_filter($middlewarePriority, is_string(...)));
     }
 }

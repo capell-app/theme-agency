@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\PublicActions\Filament\Resources\Destinations;
 
 use BackedEnum;
+use Capell\Admin\Support\SiteScope;
 use Capell\Core\Facades\CapellCore;
 use Capell\PublicActions\Enums\PublicActionDestinationStatus;
 use Capell\PublicActions\Filament\Resources\Concerns\PublicActionFilamentOptions;
@@ -40,7 +41,11 @@ final class PublicActionDestinationResource extends Resource
         return $schema->columns(['default' => 1, 'lg' => 2])->schema([
             Select::make('public_action_id')
                 ->label(__('capell-public-actions::filament.fields.action'))
-                ->relationship('action', 'name')
+                ->relationship(
+                    'action',
+                    'name',
+                    modifyQueryUsing: fn (Builder $query): Builder => SiteScope::applyForCurrentActor($query),
+                )
                 ->searchable()
                 ->preload()
                 ->required(),
@@ -96,6 +101,13 @@ final class PublicActionDestinationResource extends Resource
     public static function getModel(): string
     {
         return PublicActionDestination::class;
+    }
+
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereHas('action', fn (Builder $query): Builder => SiteScope::applyForCurrentActor($query));
     }
 
     #[Override]

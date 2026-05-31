@@ -35,7 +35,8 @@
                     <a
                         href="{{ BuildCampaignUrlAction::run($action->url, $action->utm ?? $ctaBlock->default_utm ?? new UtmData) }}"
                         class="layout-builder-btn {{ $action->style === 'secondary' ? 'layout-builder-btn-secondary' : 'layout-builder-btn-primary' }}"
-                        data-campaign-id="{{ $ctaBlock->campaign_group_id }}"
+                        data-campaign="{{ $ctaBlock->campaignGroup?->slug }}"
+                        data-campaign-cta="{{ $ctaBlock->key }}"
                         data-campaign-goal="{{ $action->goalKey }}"
                         data-campaign-location="cta-block"
                     >

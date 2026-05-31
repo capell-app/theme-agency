@@ -68,7 +68,10 @@ function installThemeDemoScreenshotFixture(
     expect($provider)->toBeInstanceOf(ServiceProvider::class);
 
     $provider->register();
-    app()->call([$provider, 'boot'], ['themeRegistry' => resolve(ThemeRegistry::class)]);
+
+    if (method_exists($provider, 'boot')) {
+        app()->call(static fn (): mixed => $provider->boot(resolve(ThemeRegistry::class)));
+    }
 
     registerThemeDemoScreenshotPageAdapter($themeKey);
 
@@ -227,7 +230,8 @@ function assertThemeDemoLayoutScreenshots(string $themeKey, Collection $pages, a
             fn (Page $candidate): bool => data_get($candidate->meta, 'theme_demo.surface') === $surface,
         );
 
-        expect($page)->toBeInstanceOf(Page::class);
+        $page = capell_test_instance($page, Page::class);
+
         expect($page->type?->key)->toBe($expected['type']);
         expect($page->layout?->key)->toBe($expected['layout']);
         expect($page->pageUrl)->toBeInstanceOf(PageUrl::class);
@@ -248,6 +252,16 @@ function assertThemeDemoLayoutScreenshots(string $themeKey, Collection $pages, a
             'screenshotPath' => themeDemoScreenshotPath($themeKey, $surface, $expected['type'], $expected['layout']),
             'viewport' => themeDemoScreenshotViewport($surface),
         ];
+
+        if (themeDemoScreenshotNeedsMobileVariant($themeKey, $surface)) {
+            $manifest['entries'][] = themeDemoMobileScreenshotEntry(
+                $themeKey,
+                $surface,
+                $expected['type'],
+                $expected['layout'],
+                $htmlPath,
+            );
+        }
     }
 
     foreach (themeDemoExtraScreenshotEntries($themeKey) as $entry) {
@@ -265,6 +279,16 @@ function assertThemeDemoLayoutScreenshots(string $themeKey, Collection $pages, a
             'screenshotPath' => themeDemoScreenshotPath($themeKey, $entry['surface'], $entry['type'], $entry['layout']),
             'viewport' => themeDemoScreenshotViewport($entry['surface']),
         ];
+
+        if (themeDemoScreenshotNeedsMobileVariant($themeKey, $entry['surface'])) {
+            $manifest['entries'][] = themeDemoMobileScreenshotEntry(
+                $themeKey,
+                $entry['surface'],
+                $entry['type'],
+                $entry['layout'],
+                $htmlPath,
+            );
+        }
     }
 
     $result = runThemeDemoScreenshotCapture($themeKey, $manifest);
@@ -290,10 +314,58 @@ function assertThemeDemoLayoutScreenshots(string $themeKey, Collection $pages, a
     foreach ($result['entries'] as $entry) {
         expect($entry['screenshotPath'])->toBeFile()
             ->and($entry['loadedImageCount'])->toBe($entry['imageCount'])
-            ->and($entry['blank'])->toBeFalse();
+            ->and($entry['blank'])->toBeFalse()
+            ->and($entry['horizontalOverflow'])->toBeFalse(
+                'Screenshot has top-level horizontal overflow: ' . json_encode($entry['overflowingElements'] ?? [], JSON_THROW_ON_ERROR),
+            );
 
         assertThemeDemoScreenshotImageDimensions($entry);
     }
+}
+
+/**
+ * @return array{surface: string, type: string, layout: string, htmlPath: string, screenshotPath: string, viewport: array{width: int, height: int}}
+ */
+function themeDemoMobileScreenshotEntry(
+    string $themeKey,
+    string $surface,
+    string $type,
+    string $layout,
+    string $htmlPath,
+): array {
+    $mobileSurface = $surface . '-mobile';
+
+    return [
+        'surface' => $mobileSurface,
+        'type' => $type,
+        'layout' => $layout,
+        'htmlPath' => $htmlPath,
+        'screenshotPath' => themeDemoScreenshotPath($themeKey, $mobileSurface, $type, $layout),
+        'viewport' => themeDemoMobileScreenshotViewport(),
+    ];
+}
+
+function themeDemoScreenshotNeedsMobileVariant(string $themeKey, string $surface): bool
+{
+    if (! themeDemoScreenshotIsPremiumTheme($themeKey)) {
+        return false;
+    }
+
+    return $surface === 'homepage' || $surface === $themeKey . '-sections';
+}
+
+function themeDemoScreenshotIsPremiumTheme(string $themeKey): bool
+{
+    return in_array($themeKey, [
+        'commerce',
+        'education',
+        'healthcare',
+        'knowledge',
+        'local-services',
+        'nonprofit',
+        'portfolio',
+        'saas',
+    ], true);
 }
 
 /**
@@ -307,7 +379,9 @@ function assertThemeDemoScreenshotImageDimensions(array $entry): void
 
     $expectedWidth = (int) data_get($entry, 'viewport.width', 1440);
     $minimumHeight = (int) data_get($entry, 'viewport.height', 1100);
-    $maximumHeight = max($minimumHeight * 8, 12000);
+    $maximumHeight = $expectedWidth < 768
+        ? max($minimumHeight * 14, 16000)
+        : max($minimumHeight * 8, 12000);
 
     expect($dimensions[0] ?? null)
         ->toBe($expectedWidth)
@@ -333,9 +407,9 @@ function themeDemoScreenshotUsesRouteBackedHtml(Page $page): bool
 
 function themeDemoScreenshotRouteBackedHtml(Page $page, string $surface): string
 {
-    expect($page->pageUrl)->toBeInstanceOf(PageUrl::class);
+    $pageUrl = capell_test_instance($page->pageUrl, PageUrl::class);
 
-    $response = get($page->pageUrl->full_url);
+    $response = get($pageUrl->full_url);
     $statusCode = 200;
 
     if ($response->baseResponse->getStatusCode() !== $statusCode) {
@@ -354,7 +428,15 @@ function themeDemoScreenshotRouteFailureMessage(
     TestResponse $response,
     int $expectedStatusCode,
 ): string {
-    $exceptionSummary = 'none';
+    $exceptionSummary = $response->exceptions
+        ->map(fn (Throwable $exception): string => sprintf(
+            '%s: %s at %s:%d',
+            $exception::class,
+            $exception->getMessage(),
+            $exception->getFile(),
+            $exception->getLine(),
+        ))
+        ->implode(' | ') ?: 'none';
 
     return sprintf(
         'Expected %s route [%s] to return %d, received %d. Type [%s] meta: %s. Exception: %s',
@@ -444,7 +526,7 @@ function themeDemoScreenshotContactLayoutHtml(Page $page): string
 {
     $site = Site::query()->find($page->site_id);
 
-    expect($site)->toBeInstanceOf(Site::class);
+    $site = capell_test_instance($site, Site::class);
 
     $page->loadMissing(['translation']);
     $site->loadMissing(['translation', 'defaultDomain', 'siteDomain']);
@@ -3011,7 +3093,12 @@ function themeDemoScreenshotThemeCssPath(string $themeKey): ?string
         'agency' => themeDemoRepositoryPath('packages/theme-agency/resources/css/theme-agency.css'),
         'commerce' => themeDemoRepositoryPath('packages/theme-commerce/resources/css/theme-commerce.css'),
         'corporate' => themeDemoRepositoryPath('packages/theme-corporate/resources/css/theme-corporate.css'),
+        'education' => themeDemoRepositoryPath('packages/theme-education/resources/css/theme-education.css'),
         'healthcare' => themeDemoRepositoryPath('packages/theme-healthcare/resources/css/theme-healthcare.css'),
+        'knowledge' => themeDemoRepositoryPath('packages/theme-knowledge/resources/css/theme-knowledge.css'),
+        'local-services' => themeDemoRepositoryPath('packages/theme-local-services/resources/css/theme-local-services.css'),
+        'nonprofit' => themeDemoRepositoryPath('packages/theme-nonprofit/resources/css/theme-nonprofit.css'),
+        'portfolio' => themeDemoRepositoryPath('packages/theme-portfolio/resources/css/theme-portfolio.css'),
         'saas' => themeDemoRepositoryPath('packages/theme-saas/resources/css/theme-saas.css'),
         default => null,
     };
@@ -3062,6 +3149,14 @@ function themeDemoScreenshotViewport(string $surface): array
     }
 
     return ['width' => 1440, 'height' => 1100];
+}
+
+/**
+ * @return array{width: int, height: int}
+ */
+function themeDemoMobileScreenshotViewport(): array
+{
+    return ['width' => 390, 'height' => 1200];
 }
 
 function themeDemoScreenshotName(string $themeKey, string $surface, string $type, string $layout): string

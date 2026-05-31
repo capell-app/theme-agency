@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\PublicActions\Actions\DispatchPublicActionDestinationAction;
 use Capell\PublicActions\Enums\PublicActionDispatchStatus;
+use Capell\PublicActions\Jobs\DispatchPublicActionDestinationJob;
 use Capell\PublicActions\Models\PublicAction;
 use Capell\PublicActions\Models\PublicActionDestination;
 use Capell\PublicActions\Models\PublicActionDispatchAttempt;
@@ -82,6 +83,28 @@ it('records provider failures as retryable and redacts response summaries', func
         ->and($attempt->response_summary)->not->toContain('https://hooks.example.test/fail');
 });
 
+it('releases webhook dispatch jobs when provider failures are retryable', function (): void {
+    config()->set('capell-public-actions.dispatch_retry_seconds', 45);
+
+    Http::fake([
+        'https://hooks.example.test/retry-job' => Http::response('try later', 503),
+    ]);
+
+    $destination = PublicActionDestination::factory()->create([
+        'adapter' => 'http_webhook',
+        'endpoint_url' => 'https://hooks.example.test/retry-job',
+    ]);
+    $submission = PublicActionSubmission::factory()->create();
+
+    $job = new DispatchPublicActionDestinationJob($destination, $submission);
+    $job->withFakeQueueInteractions();
+    $job->handle(resolve(DispatchPublicActionDestinationAction::class));
+
+    $job->assertReleased(45);
+
+    expect(PublicActionDispatchAttempt::query()->firstOrFail()->status)->toBe(PublicActionDispatchStatus::Retryable);
+});
+
 it('records connection failures as retryable without leaking secrets', function (): void {
     Http::fake(function (): never {
         throw new ConnectionException('Could not connect with secret-token');
@@ -120,11 +143,15 @@ it('increments retry attempts while keeping the same request hash for unchanged 
     resolve(DispatchPublicActionDestinationAction::class)->handle($destination, $submission);
 
     $attempts = PublicActionDispatchAttempt::query()->orderBy('attempt')->get();
+    $firstAttempt = $attempts->get(0);
+    $secondAttempt = $attempts->get(1);
+
+    throw_if(! $firstAttempt instanceof PublicActionDispatchAttempt || ! $secondAttempt instanceof PublicActionDispatchAttempt, RuntimeException::class, 'Expected two public action dispatch attempts.');
 
     expect($attempts)->toHaveCount(2)
-        ->and($attempts[0]->attempt)->toBe(1)
-        ->and($attempts[1]->attempt)->toBe(2)
-        ->and($attempts[0]->request_hash)->toBe($attempts[1]->request_hash);
+        ->and($firstAttempt->attempt)->toBe(1)
+        ->and($secondAttempt->attempt)->toBe(2)
+        ->and($firstAttempt->request_hash)->toBe($secondAttempt->request_hash);
 });
 
 it('can dispatch with the adapter directly for registered adapter use cases', function (): void {

@@ -58,7 +58,11 @@ it('keeps the approved top-level navigation groups in order on the booted admin 
         __('capell-admin::navigation.group_system'),
     ];
 
-    $labels = collect(Filament::getCurrentPanel()->getNavigationGroups())
+    $panel = Filament::getCurrentPanel();
+
+    throw_if($panel === null, RuntimeException::class, 'Expected Filament panel to be available.');
+
+    $labels = collect($panel->getNavigationGroups())
         ->filter(fn (mixed $navigationGroup): bool => $navigationGroup instanceof NavigationGroup)
         ->map(fn (NavigationGroup $navigationGroup): ?string => $navigationGroup->getLabel())
         ->filter()

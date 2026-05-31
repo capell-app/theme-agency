@@ -48,6 +48,8 @@ use Capell\Tests\Support\LegacyAdminBridgeFallbackHost;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Table;
 use Spatie\LaravelSettings\Migrations\SettingsMigration;
 use Spatie\LaravelSettings\Migrations\SettingsMigrator;
 
@@ -137,6 +139,18 @@ function createPublishingStudioBridgeWorkspaceFor(User $user, string $slug): Wor
     ])->save();
 
     return $workspace;
+}
+
+function publishingStudioBridgeRelationManagerTable(): Table
+{
+    $livewire = Mockery::mock(HasTable::class);
+    $livewire->shouldIgnoreMissing();
+    $livewire->shouldReceive('makeFilamentTranslatableContentDriver')->andReturn(null)->byDefault();
+    $livewire->shouldReceive('getTableFilterState')->andReturn([])->byDefault();
+    $livewire->shouldReceive('isTableLoaded')->andReturnTrue()->byDefault();
+    $livewire->shouldReceive('getTableArguments')->andReturn([])->byDefault();
+
+    return Table::make($livewire);
 }
 
 it('registers and hydrates publishing studio settings', function (): void {
@@ -285,6 +299,26 @@ it('adds content workflow sidebar summaries and relation managers when both brid
         ->and(WorkspaceFieldCommentsRelationManager::scopedQueryForUser($user)->count())->toBe(1)
         ->and(PreviewLinksRelationManager::scopedQueryForUser($user)->count())->toBe(1)
         ->and(VersionsRelationManager::scopedQueryForUser($user)->count())->toBe(1);
+});
+
+it('builds publishing studio user relation manager tables for the bridge surface', function (): void {
+    $user = User::factory()->create();
+    $relationManagers = [
+        WorkspacesRelationManager::class,
+        WorkspaceReviewAssignmentsRelationManager::class,
+        WorkspaceApprovalsRelationManager::class,
+        WorkspaceFieldCommentsRelationManager::class,
+        PreviewLinksRelationManager::class,
+        VersionsRelationManager::class,
+    ];
+
+    foreach ($relationManagers as $relationManager) {
+        $instance = new $relationManager;
+        $table = $instance->table(publishingStudioBridgeRelationManagerTable());
+
+        expect($relationManager::getTitle($user, 'edit'))->toBeString()
+            ->and($table->getColumns())->not->toBeEmpty();
+    }
 });
 
 it('does not support the bridge when admin disables publishing studio user bridge', function (): void {

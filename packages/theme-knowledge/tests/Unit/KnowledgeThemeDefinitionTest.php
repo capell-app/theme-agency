@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
@@ -38,79 +39,82 @@ it('renders standard sections through Knowledge views', function (): void {
     $registry = new ThemeRegistry;
     (new KnowledgeThemeServiceProvider($this->app))->boot($registry);
 
-    $featureHtml = $registry
-        ->sectionRenderer('knowledge', 'features')
-        ->render(new FeatureSectionData(
-            heading: 'Research pathways',
-            summary: 'Feature cards should look like curated library entries.',
-            features: [
-                ['title' => 'Editorial research', 'description' => 'Collect expert notes and topic paths.', 'type' => 'Guide'],
-            ],
-        ));
+    $featureRenderer = $registry->sectionRenderer('knowledge', 'features');
+    $proofRenderer = $registry->sectionRenderer('knowledge', 'proof');
+    $listingRenderer = $registry->sectionRenderer('knowledge', 'content-listing');
+    $ctaRenderer = $registry->sectionRenderer('knowledge', 'cta');
+    $searchRenderer = $registry->sectionRenderer('knowledge', 'search-listing');
 
-    $proofHtml = $registry
-        ->sectionRenderer('knowledge', 'proof')
-        ->render(ProofSectionData::from([
-            'heading' => 'Library evidence',
-            'summary' => 'Proof should use knowledge-base signals.',
-            'items' => [
-                ['metric' => '420+', 'name' => 'Resources', 'summary' => 'Structured resources stay easy to scan.'],
-            ],
-        ]));
+    assert($featureRenderer instanceof SectionRenderer);
+    assert($proofRenderer instanceof SectionRenderer);
+    assert($listingRenderer instanceof SectionRenderer);
+    assert($ctaRenderer instanceof SectionRenderer);
+    assert($searchRenderer instanceof SectionRenderer);
 
-    $listingHtml = $registry
-        ->sectionRenderer('knowledge', 'content-listing')
-        ->render(new ContentListingSectionData(
-            heading: 'Research archive',
-            summary: 'Listings should carry archive and reading queue cues.',
-            items: [
-                ['title' => 'Content operations guide', 'summary' => 'A practical guide for editorial teams.', 'type' => 'Guide'],
-            ],
-        ));
+    $featureHtml = $featureRenderer->render(new FeatureSectionData(
+        heading: 'Research pathways',
+        summary: 'Feature cards should look like curated library entries.',
+        features: [
+            ['title' => 'Editorial research', 'description' => 'Collect expert notes and topic paths.', 'type' => 'Guide'],
+        ],
+    ));
 
-    $ctaHtml = $registry
-        ->sectionRenderer('knowledge', 'cta')
-        ->render(new CtaSectionData(
-            heading: 'Build the library path',
-            summary: 'Move readers from discovery to saved resources.',
-            actions: [['label' => 'Browse guides', 'url' => '#guides', 'style' => 'primary']],
-        ));
+    $proofHtml = $proofRenderer->render(ProofSectionData::from([
+        'heading' => 'Library evidence',
+        'summary' => 'Proof should use knowledge-base signals.',
+        'items' => [
+            ['metric' => '420+', 'name' => 'Resources', 'summary' => 'Structured resources stay easy to scan.'],
+            ['metric' => '18', 'name' => 'Topics'],
+        ],
+    ]));
 
-    $searchHtml = $registry
-        ->sectionRenderer('knowledge', 'search-listing')
-        ->render(new readonly class implements ThemeSection
+    $listingHtml = $listingRenderer->render(new ContentListingSectionData(
+        heading: 'Research archive',
+        summary: 'Listings should carry archive and reading queue cues.',
+        items: [
+            ['title' => 'Content operations guide', 'summary' => 'A practical guide for editorial teams.', 'type' => 'Guide'],
+        ],
+    ));
+
+    $ctaHtml = $ctaRenderer->render(new CtaSectionData(
+        heading: 'Build the library path',
+        summary: 'Move readers from discovery to saved resources.',
+        actions: [['label' => 'Browse guides', 'url' => '#guides', 'style' => 'primary']],
+    ));
+
+    $searchHtml = $searchRenderer->render(new readonly class implements ThemeSection
+    {
+        public function key(): string
         {
-            public function key(): string
-            {
-                return 'search-listing';
-            }
+            return 'search-listing';
+        }
 
-            public function fallbackKey(): ?string
-            {
-                return null;
-            }
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
 
-            /**
-             * @return array<string, mixed>
-             */
-            public function toViewData(): array
-            {
-                return [
-                    'heading' => 'Search the archive',
-                    'summary' => 'Search surfaces should feel like a resource discovery workflow.',
-                    'filters' => ['Strategy', 'Operations'],
-                    'items' => [
-                        [
-                            'title' => 'Research operations guide',
-                            'summary' => 'A guide with sources, owner, and next reading route.',
-                            'type' => 'Guide',
-                            'score' => '97%',
-                            'meta' => ['Reviewed', 'Queue'],
-                        ],
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return [
+                'heading' => 'Search the archive',
+                'summary' => 'Search surfaces should feel like a resource discovery workflow.',
+                'filters' => ['Strategy', 'Operations'],
+                'items' => [
+                    [
+                        'title' => 'Research operations guide',
+                        'summary' => 'A guide with sources, owner, and next reading route.',
+                        'type' => 'Guide',
+                        'score' => '97%',
+                        'meta' => ['Reviewed', 'Queue'],
                     ],
-                ];
-            }
-        });
+                ],
+            ];
+        }
+    });
 
     expect($featureHtml)
         ->toContain('Research pathways')
@@ -160,6 +164,7 @@ it('renders hydrated hero data through the Knowledge hero view', function (): vo
     $renderer = $registry->sectionRenderer('knowledge', 'hero');
 
     expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
 
     $html = $renderer->render(HeroSectionData::from([
         'heading' => 'Open the research library',
@@ -181,3 +186,90 @@ it('renders hydrated hero data through the Knowledge hero view', function (): vo
         ->toContain('Reading queue')
         ->not->toContain('capell-app/theme-knowledge');
 });
+
+it('renders new premium knowledge layouts through the registry', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(KnowledgeThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new KnowledgeThemeServiceProvider($this->app))->boot($registry);
+
+    $readingPathRenderer = $registry->sectionRenderer('knowledge', 'reading-path');
+    $sourceMapRenderer = $registry->sectionRenderer('knowledge', 'source-map');
+    $topicIndexRenderer = $registry->sectionRenderer('knowledge', 'topic-index');
+
+    assert($readingPathRenderer instanceof SectionRenderer);
+    assert($sourceMapRenderer instanceof SectionRenderer);
+    assert($topicIndexRenderer instanceof SectionRenderer);
+
+    $readingPathHtml = $readingPathRenderer->render(knowledgeThemeSection('reading-path', [
+        'heading' => 'Follow a reading path',
+        'items' => [
+            ['title' => 'Start with fundamentals', 'summary' => 'A staged route through the core resources.'],
+        ],
+    ]));
+
+    $sourceMapHtml = $sourceMapRenderer->render(knowledgeThemeSection('source-map', [
+        'heading' => 'Map the evidence',
+        'items' => [
+            ['title' => 'Reviewed sources', 'summary' => 'Citation and freshness proof for editorial teams.'],
+        ],
+    ]));
+
+    $topicIndexHtml = $topicIndexRenderer->render(knowledgeThemeSection('topic-index', [
+        'heading' => 'Browse topic routes',
+        'items' => [
+            ['title' => 'Operations', 'summary' => 'Dense topic routing for a library-grade index.'],
+        ],
+    ]));
+
+    expect($readingPathHtml)
+        ->toContain('Follow a reading path')
+        ->toContain('Start with fundamentals')
+        ->not->toContain('capell-app/theme-knowledge');
+
+    expect($sourceMapHtml)
+        ->toContain('Map the evidence')
+        ->toContain('Reviewed sources')
+        ->not->toContain('capell-app/theme-knowledge');
+
+    expect($topicIndexHtml)
+        ->toContain('Browse topic routes')
+        ->toContain('Operations')
+        ->not->toContain('capell-app/theme-knowledge');
+});
+
+/**
+ * @param  array<string, mixed>  $viewData
+ */
+function knowledgeThemeSection(string $key, array $viewData): ThemeSection
+{
+    return new readonly class($key, $viewData) implements ThemeSection
+    {
+        /**
+         * @param  array<string, mixed>  $viewData
+         */
+        public function __construct(
+            private string $sectionKey,
+            private array $viewData,
+        ) {}
+
+        public function key(): string
+        {
+            return $this->sectionKey;
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return ['section' => (object) $this->viewData];
+        }
+    };
+}

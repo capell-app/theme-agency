@@ -125,13 +125,14 @@ class LoginAuditsTable implements TableConfigurator
     private static function getAuthenticatableUrl(LoginAudit $record): ?string
     {
         $authenticatable = $record->authenticatable;
+        $panel = Filament::getCurrentOrDefaultPanel();
 
-        if (! $authenticatable instanceof Model) {
+        if (! $authenticatable instanceof Model || $panel === null) {
             return null;
         }
 
         return route(
-            'filament.' . Filament::getCurrentOrDefaultPanel()->getId() . '.resources.' . Str::plural(Str::lower(class_basename($authenticatable::class))) . '.edit',
+            'filament.' . $panel->getId() . '.resources.' . Str::plural(Str::lower(class_basename($authenticatable::class))) . '.edit',
             ['record' => $authenticatable->getKey()],
         );
     }

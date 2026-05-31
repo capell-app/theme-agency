@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Models\Site;
 use Capell\Newsletter\Actions\ParseSubscriberCsvRowsAction;
 use Capell\Newsletter\Contracts\NewsletterAudienceProvider;
 use Capell\Newsletter\Data\ConsentEvidenceData;
@@ -28,6 +29,7 @@ use Capell\Newsletter\Support\NewsletterAudienceRegistry;
 use Capell\Newsletter\Support\NewsletterSettingsResolver;
 use Capell\Newsletter\Support\SegmentAudienceProvider;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\ValidationException;
 
 it('maps newsletter data objects across snake case boundaries', function (): void {
     $subscriber = SubscriberData::from([
@@ -158,6 +160,16 @@ CSV);
     ]);
 });
 
+it('rejects subscriber CSV imports above the configured row limit', function (): void {
+    config()->set('capell-newsletter.imports.max_rows', 1);
+
+    ParseSubscriberCsvRowsAction::run(<<<'CSV'
+email,first_name
+ada@example.com,Ada
+grace@example.com,Grace
+CSV);
+})->throws(ValidationException::class);
+
 it('aggregates newsletter audiences from registered providers in registration order', function (): void {
     $registry = new NewsletterAudienceRegistry;
 
@@ -229,8 +241,10 @@ it('resolves newsletter resubscribe policy from settings with safe fallback', fu
 });
 
 it('lists active newsletter segments as audiences for a site', function (): void {
+    $site = Site::factory()->create();
+
     Segment::query()->create([
-        'site_id' => 7,
+        'site_id' => $site->getKey(),
         'name' => 'Beta',
         'handle' => 'beta',
         'type' => SegmentType::Static,
@@ -238,7 +252,7 @@ it('lists active newsletter segments as audiences for a site', function (): void
         'is_active' => true,
     ]);
     Segment::query()->create([
-        'site_id' => 7,
+        'site_id' => $site->getKey(),
         'name' => 'Alpha',
         'handle' => 'alpha',
         'type' => SegmentType::Static,
@@ -246,7 +260,7 @@ it('lists active newsletter segments as audiences for a site', function (): void
         'is_active' => true,
     ]);
     Segment::query()->create([
-        'site_id' => 7,
+        'site_id' => $site->getKey(),
         'name' => 'Inactive',
         'handle' => 'inactive',
         'type' => SegmentType::Static,
@@ -254,6 +268,6 @@ it('lists active newsletter segments as audiences for a site', function (): void
         'is_active' => false,
     ]);
 
-    expect((new SegmentAudienceProvider)->audiencesForSite(7)->pluck('handle')->all())
+    expect((new SegmentAudienceProvider)->audiencesForSite((int) $site->getKey())->pluck('handle')->all())
         ->toBe(['alpha', 'beta']);
 });

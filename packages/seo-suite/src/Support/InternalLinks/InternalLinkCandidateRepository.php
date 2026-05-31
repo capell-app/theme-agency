@@ -24,7 +24,7 @@ final class InternalLinkCandidateRepository
      */
     public function forPage(Page $page, Site $site, Language $language): array
     {
-        return Page::query()
+        return array_values(Page::query()
             ->where('site_id', $site->id)
             ->whereKeyNot($page->getKey())
             ->whereHas('translations', fn (Builder $query): Builder => $query->where('language_id', $language->id))
@@ -50,8 +50,8 @@ final class InternalLinkCandidateRepository
             )
             ->publishedDate()
             ->with([
-                'translation' => fn (Builder|Relation $query): Builder|Relation => $query->where('language_id', $language->id),
-                'pageUrls' => fn (Builder|Relation $query): Builder|Relation => $this->pageUrlQuery($query, $site, $language)
+                'translation' => fn (Relation $query): Relation => $query->where('language_id', $language->id),
+                'pageUrls' => fn (Relation $query): Relation => $this->pageUrlRelationQuery($query, $site, $language)
                     ->latest('id'),
                 'pageUrls.siteDomain',
             ])
@@ -59,14 +59,32 @@ final class InternalLinkCandidateRepository
             ->map(fn (Page $candidatePage): ?array => $this->candidateData($candidatePage))
             ->filter()
             ->values()
-            ->all();
+            ->all());
     }
 
     /**
-     * @param  Builder<Model>|Relation<Model, Model, mixed>  $query
-     * @return Builder<Model>|Relation<Model, Model, mixed>
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
      */
-    private function pageUrlQuery(Builder|Relation $query, Site $site, Language $language): Builder|Relation
+    private function pageUrlQuery(Builder $query, Site $site, Language $language): Builder
+    {
+        return $query
+            ->where('site_id', $site->id)
+            ->where('language_id', $language->id)
+            ->where('status', true)
+            ->whereNotNull('url')
+            ->where('url', '!=', '')
+            ->where(
+                fn (Builder $query): Builder => $query->whereNull('type')
+                    ->orWhere('type', '!=', UrlTypeEnum::Redirect),
+            );
+    }
+
+    /**
+     * @param  Relation<Model, Model, mixed>  $query
+     * @return Relation<Model, Model, mixed>
+     */
+    private function pageUrlRelationQuery(Relation $query, Site $site, Language $language): Relation
     {
         return $query
             ->where('site_id', $site->id)

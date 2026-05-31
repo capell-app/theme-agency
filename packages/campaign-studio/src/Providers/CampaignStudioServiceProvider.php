@@ -19,10 +19,12 @@ use Capell\CampaignStudio\Policies\CampaignConversionGoalPolicy;
 use Capell\CampaignStudio\Policies\CampaignCtaBlockPolicy;
 use Capell\CampaignStudio\Policies\CampaignGroupPolicy;
 use Capell\CampaignStudio\Policies\CampaignLandingPagePolicy;
+use Capell\CampaignStudio\Support\PublicUrls\CampaignLandingPagePublicUrlContributor;
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Events\PageSaved;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\SiteDiscovery\Contracts\PublicUrlContributor;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
@@ -80,6 +82,7 @@ final class CampaignStudioServiceProvider extends AbstractPackageServiceProvider
             ->registerSchemaExtenders()
             ->registerPackageAssets()
             ->registerProtectedTables()
+            ->registerPublicUrlContributors()
             ->registerListeners();
     }
 
@@ -150,6 +153,16 @@ final class CampaignStudioServiceProvider extends AbstractPackageServiceProvider
             }
 
             CapellCore::registerProtectedTable(fn (): string => $tableName);
+        }
+
+        return $this;
+    }
+
+    private function registerPublicUrlContributors(): self
+    {
+        if (interface_exists(PublicUrlContributor::class)) {
+            $this->app->singleton(CampaignLandingPagePublicUrlContributor::class);
+            $this->app->tag([CampaignLandingPagePublicUrlContributor::class], PublicUrlContributor::TAG);
         }
 
         return $this;

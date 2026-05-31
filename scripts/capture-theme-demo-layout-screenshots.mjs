@@ -89,6 +89,78 @@ async function captureEntry(entry) {
 
         return textLength === 0 && paintedElements === 0
     })
+    const overflowState = await page.evaluate(() => {
+        const documentElement = document.documentElement
+        const body = document.body
+        const viewportWidth = window.innerWidth
+        const documentWidth = Math.max(
+            documentElement?.scrollWidth ?? 0,
+            body?.scrollWidth ?? 0,
+        )
+        const tolerance = 2
+        const hasClippedHorizontalOverflowAncestor = (element) => {
+            let parent = element.parentElement
+
+            while (parent && parent !== body) {
+                const style = window.getComputedStyle(parent)
+                const rect = parent.getBoundingClientRect()
+                const scrollsHorizontally =
+                    ['auto', 'scroll'].includes(style.overflowX) &&
+                    parent.scrollWidth > parent.clientWidth + tolerance
+                const clipsHorizontally = ['clip', 'hidden'].includes(
+                    style.overflowX,
+                )
+                const ancestorFitsViewport =
+                    rect.left >= -tolerance &&
+                    rect.right <= viewportWidth + tolerance
+
+                if (
+                    scrollsHorizontally ||
+                    (clipsHorizontally && ancestorFitsViewport)
+                ) {
+                    return true
+                }
+
+                parent = parent.parentElement
+            }
+
+            return false
+        }
+        const overflowingElements = Array.from(
+            document.querySelectorAll('body *'),
+        )
+            .map((element) => {
+                const rect = element.getBoundingClientRect()
+
+                return {
+                    element,
+                    tag: element.tagName.toLowerCase(),
+                    className:
+                        typeof element.className === 'string'
+                            ? element.className
+                            : '',
+                    left: Math.round(rect.left),
+                    right: Math.round(rect.right),
+                    width: Math.round(rect.width),
+                }
+            })
+            .filter(
+                (element) =>
+                    element.width > 0 &&
+                    (element.left < -tolerance ||
+                        element.right > viewportWidth + tolerance) &&
+                    !hasClippedHorizontalOverflowAncestor(element.element),
+            )
+            .map(({ element, ...overflowingElement }) => overflowingElement)
+            .slice(0, 5)
+
+        return {
+            documentWidth,
+            viewportWidth,
+            horizontalOverflow: overflowingElements.length > 0,
+            overflowingElements,
+        }
+    })
 
     await page.close()
 
@@ -97,9 +169,11 @@ async function captureEntry(entry) {
         type: entry.type,
         layout: entry.layout,
         screenshotPath: entry.screenshotPath,
+        viewport,
         imageCount: imageState.length,
         loadedImageCount: imageState.filter((image) => image.loaded).length,
         blank,
+        ...overflowState,
     }
 }
 

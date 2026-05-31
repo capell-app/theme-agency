@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\PublicActions\Data;
 
+use Capell\PublicActions\Enums\PublicActionDispatchStatus;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
@@ -17,5 +18,6 @@ class PublicActionDispatchResultData extends Data
         public ?string $responseSummary = null,
         public ?string $externalId = null,
         public ?string $errorMessage = null,
+        public ?PublicActionDispatchStatus $dispatchStatus = null,
     ) {}
 }

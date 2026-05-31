@@ -37,6 +37,7 @@ use Capell\FoundationTheme\Support\Interceptors\Themes\FoundationThemeIntercepto
 use Capell\FoundationTheme\Support\Media\CapellUrlGenerator;
 use Capell\FoundationTheme\Support\Tailwind\TailwindAssetsGenerator;
 use Capell\FoundationTheme\View\Components\Actions as ActionsComponent;
+use Capell\FoundationTheme\View\Components\App\Body as AppBodyComponent;
 use Capell\FoundationTheme\View\Components\Block\Page\Breadcrumbs as PageBreadcrumbsComponent;
 use Capell\FoundationTheme\View\Components\Block\Page\Children as PageChildrenComponent;
 use Capell\FoundationTheme\View\Components\Block\Page\Content as PageContentComponent;
@@ -45,6 +46,7 @@ use Capell\FoundationTheme\View\Components\Block\Page\Siblings as PageSiblingsCo
 use Capell\FoundationTheme\View\Components\Block\Slot as SlotComponent;
 use Capell\FoundationTheme\View\Components\Footer\Index as FooterIndexComponent;
 use Capell\FoundationTheme\View\Components\Layout\Index as LayoutIndexComponent;
+use Capell\FoundationTheme\View\Components\Layout\Main as LayoutMainComponent;
 use Capell\FoundationTheme\View\Components\Media\Svg;
 use Capell\Frontend\Contracts\AssetsRegistryInterface;
 use Capell\Frontend\Contracts\FrontendAssetContributor;
@@ -222,8 +224,10 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
         resolve(ViewFactory::class)->prependNamespace('capell', __DIR__ . '/../../resources/views');
 
         Blade::anonymousComponentPath(__DIR__ . '/../../resources/views/components', 'capell');
+        Blade::component(AppBodyComponent::class, 'capell::app.body');
         Blade::component(FooterIndexComponent::class, 'capell::footer.index');
         Blade::component(LayoutIndexComponent::class, 'capell::layout.index');
+        Blade::component(LayoutMainComponent::class, 'capell::layout.main');
     }
 
     private function registerSettingsSchemas(): void

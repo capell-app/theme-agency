@@ -31,6 +31,7 @@ return new class extends Migration
 
             $table->index(
                 ['authenticatable_type', 'authenticatable_id', 'login_at'],
+                'auth_log_auth_login_at_index',
             );
         });
     }

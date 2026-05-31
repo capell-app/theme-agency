@@ -6,6 +6,7 @@ use Capell\Core\Models\Layout;
 use Capell\Core\Models\Page;
 use Capell\FilamentPeek\Actions\CreatePagePreviewSnapshotAction;
 use Capell\FilamentPeek\Actions\StoreLayoutBuilderPreviewStateAction;
+use Capell\FilamentPeek\Data\LayoutBuilderPreviewStateData;
 use Illuminate\Support\Facades\Cache;
 
 it('stores private expiring page preview snapshots for the current user', function (): void {
@@ -44,6 +45,8 @@ it('caches the latest layout builder preview state per user and page', function 
     );
 
     $state = resolve(StoreLayoutBuilderPreviewStateAction::class)->resolve($page, $user);
+
+    throw_unless($state instanceof LayoutBuilderPreviewStateData, RuntimeException::class, 'Expected layout builder preview state to resolve.');
 
     expect($state)->not->toBeNull()
         ->and($state->layoutId)->toBe($layout->id)

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\PublishingStudio\Activity\WorkspaceActivityEntry;
 use Capell\PublishingStudio\Activity\WorkspaceActivityFeed;
 use Capell\PublishingStudio\Models\Workspace;
 use Spatie\Activitylog\Models\Activity;
@@ -30,10 +31,13 @@ it('returns recent workspace activity rows ordered newest first', function (): v
         ->whereIn('description', ['submitted', 'approved'])
         ->values();
 
+    $firstEntry = publishingStudioTestInstance($feed->first(), WorkspaceActivityEntry::class);
+    $lastEntry = publishingStudioTestInstance($feed->last(), WorkspaceActivityEntry::class);
+
     expect($feed)->toHaveCount(2)
-        ->and($feed->first()->description)->toBe('approved')
-        ->and($feed->first()->workspaceName)->toBe('second')
-        ->and($feed->last()->workspaceName)->toBe('first');
+        ->and($firstEntry->description)->toBe('approved')
+        ->and($firstEntry->workspaceName)->toBe('second')
+        ->and($lastEntry->workspaceName)->toBe('first');
 });
 
 it('honours the limit parameter', function (): void {

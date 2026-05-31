@@ -14,6 +14,7 @@ use Capell\PublishingStudio\Filament\Resources\PublishingStudio\Pages\ManagePubl
 use Capell\PublishingStudio\Filament\Resources\PublishingStudio\Schemas\WorkspaceForm;
 use Capell\PublishingStudio\Filament\Resources\PublishingStudio\Tables\PublishingStudioTable;
 use Capell\PublishingStudio\Models\Workspace;
+use Capell\PublishingStudio\Support\WorkspaceAccess;
 use Capell\PublishingStudio\Support\WorkspaceSchema;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -57,7 +58,7 @@ class WorkspaceResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()
+        return WorkspaceAccess::scopeVisibleTo(parent::getEloquentQuery(), auth()->user())
             ->with([
                 'creator',
                 'editor',

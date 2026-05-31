@@ -1,0 +1,119 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/privacy-center",
+    "slug": "privacy-center",
+    "displayName": "Privacy Center",
+    "kind": "package",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Privacy Center provides package-owned consent, policy acceptance, privacy request, retention rule, export, and delete workflow foundations.",
+    "product": {
+        "group": "Capell Operations",
+        "tier": "premium",
+        "bundle": "operations"
+    },
+    "namespace": "Capell\\PrivacyCenter",
+    "surfaces": ["admin", "console"],
+    "dependencies": {
+        "requires": ["capell-app/core"],
+        "supports": [
+            "capell-app/access-gate",
+            "capell-app/contacts",
+            "capell-app/insights",
+            "capell-app/newsletter"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\PrivacyCenter\\Providers\\PrivacyCenterServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [],
+    "database": {
+        "migrations": true,
+        "settings": false,
+        "requiredTables": [
+            "privacy_consent_policies",
+            "privacy_consent_records",
+            "privacy_policy_acceptances",
+            "privacy_retention_rules",
+            "privacy_requests"
+        ]
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "privacy-center",
+        "privacy-center-consent",
+        "privacy-center-retention",
+        "privacy-center-subject-requests"
+    ],
+    "performance": {
+        "frontendRenderBudgetMs": 0,
+        "adminQueryBudget": 40,
+        "cacheTags": ["privacy-center"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "subject"],
+            "sensitiveOutput": true,
+            "invalidationSources": [
+                {
+                    "model": "Capell\\PrivacyCenter\\Models\\ConsentPolicy",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\PrivacyCenter\\Models\\ConsentRecord",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\PrivacyCenter\\Models\\PrivacyRequest",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\PrivacyCenter\\Models\\RetentionRule",
+                    "events": ["created", "updated", "deleted"]
+                }
+            ],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "privacy-center.package-health",
+            "label": "Privacy Center package models, migrations, and service provider are discoverable.",
+            "class": "Capell\\PrivacyCenter\\Health\\PrivacyCenterHealthCheck",
+            "severity": "critical",
+            "surface": "admin"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Privacy Center provides the compliance workflow foundation for consent, retention, privacy requests, exports, deletion, and policy acceptance.",
+        "screenshots": [],
+        "categories": ["admin", "compliance", "operations"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": [
+            "admin-resource",
+            "dashboard-widget",
+            "scheduled-job",
+            "package-integration"
+        ]
+    }
+}

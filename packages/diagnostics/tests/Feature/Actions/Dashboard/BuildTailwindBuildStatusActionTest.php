@@ -118,8 +118,8 @@ it('dashboard-dashboard_reports never_built when output file is missing', functi
 
     $result = BuildTailwindBuildStatusAction::run();
 
-    $siteRow = $result->sites->toCollection()
-        ->first(fn (object $row): bool => $row->siteName === $site->name);
+    $siteRow = diagnosticsTailwindSiteStatus($result->sites->toCollection()
+        ->first(fn (object $row): bool => $row->siteName === $site->name));
 
     expect($siteRow)->not->toBeNull()
         ->and($siteRow->status)->toBe('never_built')
@@ -139,8 +139,8 @@ it('dashboard-dashboard_reports fresh when output is newer than source', functio
     try {
         $result = BuildTailwindBuildStatusAction::run();
 
-        $siteRow = $result->sites->toCollection()
-            ->first(fn (object $row): bool => $row->siteName === $site->name);
+        $siteRow = diagnosticsTailwindSiteStatus($result->sites->toCollection()
+            ->first(fn (object $row): bool => $row->siteName === $site->name));
 
         expect($siteRow)->not->toBeNull()
             ->and($siteRow->status)->toBe('fresh')
@@ -164,8 +164,8 @@ it('dashboard-dashboard_reports stale when source is newer than output', functio
     try {
         $result = BuildTailwindBuildStatusAction::run();
 
-        $siteRow = $result->sites->toCollection()
-            ->first(fn (object $row): bool => $row->siteName === $site->name);
+        $siteRow = diagnosticsTailwindSiteStatus($result->sites->toCollection()
+            ->first(fn (object $row): bool => $row->siteName === $site->name));
 
         expect($siteRow)->not->toBeNull()
             ->and($siteRow->status)->toBe('stale')

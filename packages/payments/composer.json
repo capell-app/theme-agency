@@ -1,0 +1,44 @@
+{
+    "name": "capell-app/payments",
+    "description": "Payments and Stripe checkout foundation for Capell CMS.",
+    "type": "library",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "Capell\\Payments\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Capell\\Payments\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Capell\\Payments\\Providers\\PaymentsServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.3",
+        "capell-app/core": "^4.0 || 4.x-dev",
+        "laravel/framework": "^11.45.3|^12.41.1|^13.0",
+        "lorisleiva/laravel-actions": "^2.8",
+        "spatie/laravel-data": "^4.5",
+        "spatie/laravel-package-tools": "^1.14.1"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.15|^10.8|^11.0",
+        "pestphp/pest": "^3.8|^4.3",
+        "pestphp/pest-plugin-laravel": "^3.0|^4.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "keywords": [
+        "capell",
+        "cms",
+        "payments",
+        "stripe"
+    ]
+}

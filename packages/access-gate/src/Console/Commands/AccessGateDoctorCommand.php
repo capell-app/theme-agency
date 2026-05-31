@@ -309,7 +309,7 @@ final class AccessGateDoctorCommand extends Command
     }
 
     /**
-     * @param  list<string>  $middleware
+     * @param  array<array-key, mixed>  $middleware
      * @param  list<string>  $aliases
      */
     private function firstMiddlewarePosition(array $middleware, array $aliases): ?int
@@ -340,10 +340,10 @@ final class AccessGateDoctorCommand extends Command
             return [];
         }
 
-        return collect($aliases)
+        return array_values(collect($aliases)
             ->filter(fn (mixed $alias): bool => is_string($alias) && $alias !== '')
             ->values()
-            ->all();
+            ->all());
     }
 
     private function priorityRunsAccessGateBeforePageCache(Router $router): bool
@@ -369,12 +369,12 @@ final class AccessGateDoctorCommand extends Command
     {
         $registeredMiddleware = $router->getMiddleware();
 
-        return collect($this->pageCacheAliases())
+        return array_values(collect($this->pageCacheAliases())
             ->flatMap(fn (string $alias): array => array_values(array_filter([
                 $alias,
                 $registeredMiddleware[$alias] ?? null,
             ], is_string(...))))
             ->values()
-            ->all();
+            ->all());
     }
 }

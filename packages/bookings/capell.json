@@ -1,0 +1,101 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/bookings",
+    "slug": "bookings",
+    "displayName": "Bookings",
+    "kind": "plugin",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Bookings adds services, staff, locations, availability windows, and appointment requests.",
+    "product": {
+        "group": "Capell Operations",
+        "tier": "premium",
+        "bundle": "operations"
+    },
+    "namespace": "Capell\\Bookings",
+    "surfaces": ["console"],
+    "dependencies": {
+        "requires": ["capell-app/core"],
+        "supports": [
+            "capell-app/address",
+            "capell-app/events",
+            "capell-app/form-builder",
+            "capell-app/notifications",
+            "capell-app/seo-suite"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": ["Capell\\Bookings\\Providers\\BookingsServiceProvider"],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [],
+    "database": {
+        "migrations": true,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "actions": {
+        "createAppointmentRequest": "Capell\\Bookings\\Actions\\CreateAppointmentRequestAction",
+        "confirmAppointmentRequest": "Capell\\Bookings\\Actions\\ConfirmAppointmentRequestAction"
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "bookings",
+        "bookings-availability",
+        "bookings-appointment-requests"
+    ],
+    "performance": {
+        "frontendRenderBudgetMs": 0,
+        "adminQueryBudget": 20,
+        "cacheTags": ["bookings"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": [],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "bookings.package-health",
+            "label": "Bookings models, migrations, and appointment request actions are discoverable.",
+            "class": "Capell\\Bookings\\Health\\BookingsHealthCheck",
+            "severity": "critical",
+            "surface": "admin"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Bookings adds appointment request workflows for healthcare, services, education, consulting, nonprofit, and portfolio sites.",
+        "screenshots": [],
+        "categories": ["admin", "calendar", "operations"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": [
+            "admin-resource",
+            "calendar-export",
+            "migration",
+            "model",
+            "notification",
+            "public-form",
+            "route"
+        ]
+    }
+}

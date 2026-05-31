@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\PublicActions\Filament\Resources\DispatchAttempts;
 
 use BackedEnum;
+use Capell\Admin\Support\SiteScope;
 use Capell\Core\Facades\CapellCore;
 use Capell\PublicActions\Enums\PublicActionDispatchStatus;
 use Capell\PublicActions\Filament\Resources\Concerns\PublicActionFilamentOptions;
@@ -59,6 +60,13 @@ final class PublicActionDispatchAttemptResource extends Resource
     public static function getModel(): string
     {
         return PublicActionDispatchAttempt::class;
+    }
+
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereHas('submission', fn (Builder $query): Builder => SiteScope::applyForCurrentActor($query));
     }
 
     #[Override]

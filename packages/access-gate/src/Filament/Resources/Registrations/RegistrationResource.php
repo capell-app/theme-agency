@@ -16,6 +16,7 @@ use Capell\AccessGate\Filament\Resources\Concerns\AccessGateFilamentOptions;
 use Capell\AccessGate\Filament\Resources\Registrations\Pages\ListRegistrations;
 use Capell\AccessGate\Models\Registration;
 use Capell\AccessGate\Providers\AccessGateServiceProvider;
+use Capell\AccessGate\Support\AccessGateSiteScope;
 use Capell\Core\Facades\CapellCore;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
@@ -96,13 +97,13 @@ final class RegistrationResource extends Resource
             ->filters([
                 SelectFilter::make('access_area_id')
                     ->label(__('capell-access-gate::filament.fields.area'))
-                    ->relationship('area', 'key'),
+                    ->relationship('area', 'key', modifyQueryUsing: fn (Builder $query): Builder => AccessGateSiteScope::applyAreaOptionsScope($query)),
                 SelectFilter::make('status')
                     ->label(__('capell-access-gate::filament.fields.status'))
                     ->options(self::enumOptions(RegistrationStatus::class, 'capell-access-gate::filament.registration_status')),
                 SelectFilter::make('requested_host')
                     ->label(__('capell-access-gate::filament.fields.requested_host'))
-                    ->options(fn (): array => Registration::query()
+                    ->options(fn (): array => AccessGateSiteScope::applyAreaScope(Registration::query())
                         ->whereNotNull('requested_host')
                         ->distinct()
                         ->pluck('requested_host', 'requested_host')
@@ -150,6 +151,12 @@ final class RegistrationResource extends Resource
     public static function getModel(): string
     {
         return Registration::class;
+    }
+
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return AccessGateSiteScope::applyAreaScope(parent::getEloquentQuery());
     }
 
     #[Override]

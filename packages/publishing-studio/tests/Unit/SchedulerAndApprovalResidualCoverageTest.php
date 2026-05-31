@@ -20,11 +20,15 @@ use Capell\PublishingStudio\Livewire\WorkspaceApprovalHistory;
 use Capell\PublishingStudio\Models\SchedulerEvent;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Models\WorkspaceApproval;
+use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Carbon\CarbonImmutable;
+use Filament\Actions\Action;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
+
+uses(CreatesAdminUser::class);
 
 it('configures the scheduled publishing table columns filters actions and pagination', function (): void {
     $table = ScheduledPublishingTable::configure(publishingStudioTableForCoverage());
@@ -45,11 +49,14 @@ it('configures the scheduled publishing table columns filters actions and pagina
             'state',
             'quick',
         ])
-        ->and(collect($table->getActions())->map(fn (mixed $action): string => $action->getName())->all())->toBe([
-            'details',
-            'retry',
-            'cancel',
-        ])
+        ->and(collect($table->getActions())
+            ->filter(fn (mixed $action): bool => method_exists($action, 'getName'))
+            ->map(fn (object $action): string => $action->getName())
+            ->all())->toBe([
+                'details',
+                'retry',
+                'cancel',
+            ])
         ->and($table->getDefaultSortColumn())->toBe('scheduled_for')
         ->and($table->getDefaultSortDirection())->toBe('asc')
         ->and($table->getPaginationPageOptions())->toBe([10, 25, 50]);
@@ -161,7 +168,52 @@ it('builds scheduled publishing table helper values and safe details markup', fu
         ->and($markup->toHtml())->toContain('&lt;broken&gt;');
 });
 
+it('runs scheduled publishing retry and cancel table actions against scheduler event records', function (): void {
+    $this->actingAsAdmin();
+
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-05-21 09:00:00', 'UTC'));
+
+    $workspace = Workspace::factory()->create(['name' => 'Table Action Workspace']);
+    $failedEvent = schedulerEventForCoverage(
+        workspace: $workspace,
+        siteId: null,
+        eventType: SchedulerEventTypeEnum::Embargo,
+        state: SchedulerEventStateEnum::Failed,
+        scheduledFor: CarbonImmutable::parse('2026-05-21 08:00:00', 'UTC'),
+        failure: 'Previous failure',
+    );
+    $scheduledEvent = schedulerEventForCoverage(
+        workspace: $workspace,
+        siteId: null,
+        eventType: SchedulerEventTypeEnum::ReviewReminder,
+        state: SchedulerEventStateEnum::Scheduled,
+        scheduledFor: CarbonImmutable::parse('2026-05-22 08:00:00', 'UTC'),
+    );
+
+    $table = ScheduledPublishingTable::configure(publishingStudioTableForCoverage());
+    $retry = publishingStudioTableActionForCoverage($table, 'retry');
+    $cancel = publishingStudioTableActionForCoverage($table, 'cancel');
+    $failedRecord = $failedEvent->fresh();
+    $scheduledRecord = $scheduledEvent->fresh();
+
+    expect($failedRecord)->toBeInstanceOf(SchedulerEvent::class)
+        ->and($scheduledRecord)->toBeInstanceOf(SchedulerEvent::class);
+
+    $failedRecordData = scheduledPublishingTableRecordForCoverage(publishingStudioTestInstance($failedRecord, SchedulerEvent::class));
+    $scheduledRecordData = scheduledPublishingTableRecordForCoverage(publishingStudioTestInstance($scheduledRecord, SchedulerEvent::class));
+
+    publishingStudioRunTableAction($retry, $failedRecordData);
+    publishingStudioRunTableAction($cancel, $scheduledRecordData);
+
+    expect($failedEvent->refresh()->state)->toBe(SchedulerEventStateEnum::Executed)
+        ->and($failedEvent->claim_token)->toBeNull()
+        ->and($scheduledEvent->refresh()->state)->toBe(SchedulerEventStateEnum::Cancelled)
+        ->and($scheduledEvent->skipped_reason)->toBe('cancelled_by_editor');
+});
+
 it('renders page approval status for review and rejected workspaces', function (): void {
+    $this->actingAsAdmin();
+
     $reviewWorkspace = Workspace::factory()->inReview()->create();
     $openWorkspace = Workspace::factory()->open()->create();
     $reviewPage = Page::factory()->create(['workspace_id' => $reviewWorkspace->id]);
@@ -209,6 +261,8 @@ it('renders page approval status for review and rejected workspaces', function (
 });
 
 it('loads workspace approval history for mounted records only', function (): void {
+    $this->actingAsAdmin();
+
     $workspace = Workspace::factory()->create();
     $user = $this->createUser();
     WorkspaceApproval::factory()
@@ -275,15 +329,20 @@ it('builds page alerts for draft cache status deleted site and canonical referen
 
     $alerts = $widget->alerts();
 
+    $pageStatusAlert = publishingStudioTestInstance($alerts->get('pageStatus'), MessageData::class);
+    $deletedSiteAlert = publishingStudioTestInstance($alerts->get('deleted_site'), MessageData::class);
+    $referencedAlert = publishingStudioTestInstance($alerts->get('referenced'), MessageData::class);
+    $pendingAlert = publishingStudioTestInstance($alerts->get('pending'), MessageData::class);
+    $cachedAlert = publishingStudioTestInstance($alerts->get('cached'), MessageData::class);
+
     expect($alerts->keys()->all())->toContain('pageStatus', 'deleted_site', 'referenced', 'pending', 'cached')
-        ->and($alerts->get('pageStatus'))->toBeInstanceOf(MessageData::class)
-        ->and($alerts->get('pageStatus')->message)->toContain('Launch Workspace')
-        ->and($alerts->get('pageStatus')->type)->toBe(AlertTypeEnum::Info)
-        ->and($alerts->get('pageStatus')->action)->toHaveCount(2)
-        ->and($alerts->get('deleted_site')->type)->toBe(AlertTypeEnum::Warning)
-        ->and($alerts->get('referenced')->type)->toBe(AlertTypeEnum::Info)
-        ->and($alerts->get('pending')->type)->toBe(AlertTypeEnum::Warning)
-        ->and($alerts->get('cached')->type)->toBe(AlertTypeEnum::Info);
+        ->and($pageStatusAlert->message)->toContain('Launch Workspace')
+        ->and($pageStatusAlert->type)->toBe(AlertTypeEnum::Info)
+        ->and($pageStatusAlert->action)->toHaveCount(2)
+        ->and($deletedSiteAlert->type)->toBe(AlertTypeEnum::Warning)
+        ->and($referencedAlert->type)->toBe(AlertTypeEnum::Info)
+        ->and($pendingAlert->type)->toBe(AlertTypeEnum::Warning)
+        ->and($cachedAlert->type)->toBe(AlertTypeEnum::Info);
 });
 
 it('guards page alerts records and covers missing url deleted and expired branches', function (): void {
@@ -310,13 +369,76 @@ it('guards page alerts records and covers missing url deleted and expired branch
 
     $deletedAlerts = $deletedWidget->alerts();
 
+    $missingUrlAlert = publishingStudioTestInstance($expiredAlerts->get('missingUrl'), MessageData::class);
+    $expiredAlert = publishingStudioTestInstance($expiredAlerts->get('expired'), MessageData::class);
+    $deletedAlert = publishingStudioTestInstance($deletedAlerts->get('deleted'), MessageData::class);
+
     expect($expiredPage->fresh()->publish_status)->toBe(PublishStatusEnum::expired)
         ->and($expiredAlerts->keys()->all())->toContain('missingUrl', 'expired')
         ->and($expiredAlerts->keys()->all())->not->toContain('pageStatus')
-        ->and($expiredAlerts->get('missingUrl')->type)->toBe(AlertTypeEnum::Warning)
-        ->and($expiredAlerts->get('expired')->type)->toBe(AlertTypeEnum::Warning)
+        ->and($missingUrlAlert->type)->toBe(AlertTypeEnum::Warning)
+        ->and($expiredAlert->type)->toBe(AlertTypeEnum::Warning)
         ->and($deletedAlerts->keys()->all())->toContain('deleted', 'missingUrl')
-        ->and($deletedAlerts->get('deleted')->type)->toBe(AlertTypeEnum::Warning);
+        ->and($deletedAlert->type)->toBe(AlertTypeEnum::Warning);
+});
+
+it('hydrates page alerts from route and record keys while running widget actions', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-05-20 09:00:00', 'UTC'));
+
+    $site = Site::factory()->withTranslations()->create();
+    $page = Page::factory()->site($site)->withTranslations()->create();
+
+    PageUrl::withoutEvents(
+        fn (): PageUrl => PageUrl::factory()
+            ->page($page)
+            ->site($site)
+            ->language($site->language)
+            ->state(['url' => '/routed-page'])
+            ->create(),
+    );
+
+    Page::factory()
+        ->site($site)
+        ->canonicalPage($page)
+        ->create();
+
+    CachedModelUrl::query()->create([
+        'url' => 'https://example.test/routed-page',
+        'url_hash' => CachedModelUrl::hashUrl('https://example.test/routed-page'),
+        'path' => '/routed-page',
+        'site_id' => $site->id,
+        'language_id' => $site->language_id,
+        'cacheable_type' => $page->getMorphClass(),
+        'cacheable_id' => $page->getKey(),
+        'cached_at' => CarbonImmutable::parse('2026-05-20 08:30:00', 'UTC'),
+        'last_seen_at' => CarbonImmutable::parse('2026-05-20 08:45:00', 'UTC'),
+    ]);
+
+    request()->setRouteResolver(static fn (): object => publishingStudioRouteRecord($page));
+
+    $routeWidget = pageAlertsWidgetForCoverage(null);
+    $routeWidget->mount();
+
+    $keyWidget = pageAlertsWidgetForCoverage(null);
+    $keyWidget->recordKey = (int) $page->getKey();
+    $keyWidget->hydrate();
+
+    $keyAlerts = $keyWidget->alerts();
+
+    publishingStudioRunWidgetAction($keyWidget->clearCacheAction());
+    publishingStudioRunWidgetAction(pageAlertsWidgetForCoverage(null)->clearCacheAction());
+
+    request()->setRouteResolver(static fn (): object => publishingStudioRouteRecord((string) $page->getKey()));
+
+    $numericRouteWidget = pageAlertsWidgetForCoverage(null);
+    $numericRouteWidget->mount();
+
+    expect($routeWidget->recordKey)->toBe($page->getKey())
+        ->and($numericRouteWidget->recordKey)->toBe($page->getKey())
+        ->and($keyAlerts->keys()->all())->toContain('cached', 'referenced')
+        ->and($keyWidget->viewSiteAction()->getUrl())->toContain((string) $site->getKey())
+        ->and($keyWidget->viewCanonicalsAction()->isVisible())->toBeTrue()
+        ->and($keyWidget->viewCanonicalsAction()->getUrl())->toContain((string) $page->getKey());
 });
 
 function schedulerEventForCoverage(
@@ -348,6 +470,83 @@ function publishingStudioTableForCoverage(): Table
     $livewire->shouldReceive('makeFilamentTranslatableContentDriver')->andReturn(null);
 
     return Table::make($livewire);
+}
+
+function publishingStudioTableActionForCoverage(Table $table, string $name): Action
+{
+    $action = collect($table->getActions())
+        ->first(fn (mixed $candidate): bool => $candidate instanceof Action && $candidate->getName() === $name);
+
+    expect($action)->toBeInstanceOf(Action::class);
+
+    return publishingStudioTestInstance($action, Action::class);
+}
+
+/**
+ * @param  array<string, mixed>  $record
+ */
+function publishingStudioRunTableAction(Action $action, array $record): void
+{
+    $closure = $action->getActionFunction();
+
+    expect($closure)->not->toBeNull();
+
+    throw_if(! $closure instanceof Closure, RuntimeException::class, 'Scheduled publishing action must define a callable action.');
+
+    $action->evaluate($closure, ['record' => $record]);
+}
+
+function publishingStudioRunWidgetAction(Action $action): void
+{
+    $closure = $action->getActionFunction();
+
+    expect($closure)->not->toBeNull();
+
+    throw_if(! $closure instanceof Closure, RuntimeException::class, 'Publishing Studio widget action must define a callable action.');
+
+    $action->evaluate($closure);
+}
+
+function publishingStudioRouteRecord(mixed $record): object
+{
+    return new readonly class($record)
+    {
+        public function __construct(private mixed $record) {}
+
+        public function parameter(string $key, mixed $default = null): mixed
+        {
+            return $key === 'record' ? $this->record : $default;
+        }
+    };
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function scheduledPublishingTableRecordForCoverage(SchedulerEvent $event): array
+{
+    return [
+        'id' => 'scheduler-event-' . $event->getKey(),
+        'source_type' => $event->source_type,
+        'source_id' => $event->source_id,
+        'title' => $event->workspace?->name ?? 'Scheduler event',
+        'event_type' => $event->event_type->value,
+        'event_type_label' => $event->event_type->getLabel(),
+        'event_type_color' => $event->event_type->getColor(),
+        'scheduled_for' => $event->scheduled_for,
+        'status' => $event->state->getLabel(),
+        'description' => null,
+        'record_url' => null,
+        'state' => $event->state->value,
+        'state_label' => $event->state->getLabel(),
+        'state_color' => $event->state->getColor(),
+        'site_id' => $event->site_id,
+        'site_name' => null,
+        'owner_id' => null,
+        'owner_name' => null,
+        'timezone' => $event->display_timezone,
+        'failure' => $event->last_failure_message,
+    ];
 }
 
 function pageAlertsWidgetForCoverage(?Page $page): PageAlertsWidget

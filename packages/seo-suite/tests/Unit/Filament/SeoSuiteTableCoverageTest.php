@@ -10,12 +10,19 @@ use Capell\Core\Models\Site;
 use Capell\Core\Models\Translation;
 use Capell\SeoSuite\Actions\ResolveAiDiscoveryProfileAction;
 use Capell\SeoSuite\Actions\UpdateAiDiscoveryPageInclusionAction;
+use Capell\SeoSuite\Enums\SeoCheckKeyEnum;
+use Capell\SeoSuite\Filament\Pages\SearchRankingsPage;
 use Capell\SeoSuite\Filament\Pages\Tables\AiDiscoveryTable;
 use Capell\SeoSuite\Filament\Pages\Tables\SeoAuditTable;
 use Capell\SeoSuite\Filament\Pages\Tables\TranslationCoverageTable;
 use Capell\SeoSuite\Models\AiDiscoveryPageProfile;
 use Capell\SeoSuite\Models\PageSeoSnapshot;
+use Capell\SeoSuite\Models\SearchConsoleQueryMetric;
+use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
+use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 it('exposes translation coverage table columns for page, language completeness, missing languages, and author', function (): void {
     $method = new ReflectionMethod(TranslationCoverageTable::class, 'configure');
@@ -87,6 +94,111 @@ it('exposes ai discovery table columns, filters, row actions, and bulk actions',
             'edit_page',
         ])
         ->and($bulkActionNames)->toBe(['include_ai_index', 'exclude_ai_index']);
+});
+
+it('configures and drives ai discovery table actions through profile workflows', function (): void {
+    resetAiDiscoveryTableCaches();
+
+    $language = Language::factory()->create(['name' => 'English', 'code' => 'en']);
+    $site = Site::factory()
+        ->language($language)
+        ->withTranslations($language, siteDomainData: [
+            'domain' => 'example.test',
+            'scheme' => 'https',
+            'path' => null,
+            'default' => true,
+        ])
+        ->create();
+    $page = Page::factory()
+        ->site($site)
+        ->type(Blueprint::factory()->page()->create(['status' => true]))
+        ->withTranslations($language, [
+            'title' => 'Discovery workflow page',
+            'meta' => ['summary' => 'Workflow summary from translation metadata.'],
+        ])
+        ->create(['name' => 'Discovery workflow']);
+
+    PageUrl::factory()
+        ->site($site)
+        ->language($language)
+        ->page($page)
+        ->state(['url' => '/discovery-workflow'])
+        ->create();
+    PageUrl::query()
+        ->where('pageable_id', $page->getKey())
+        ->where('pageable_type', $page->getMorphClass())
+        ->update(['url' => '/discovery-workflow']);
+
+    ResolveAiDiscoveryProfileAction::run($site, $language)->update([
+        'default_include_pages' => false,
+        'default_section' => 'Docs',
+        'markdown_pages_enabled' => true,
+    ]);
+
+    $table = AiDiscoveryTable::configure(seoSuiteTableForCoverage());
+    $actions = collect((new ReflectionMethod(AiDiscoveryTable::class, 'getTableActions'))->invoke(null))
+        ->keyBy(fn (Action $action): string => $action->getName());
+    $bulkActions = collect((new ReflectionMethod(AiDiscoveryTable::class, 'getBulkActions'))->invoke(null))
+        ->keyBy(fn (BulkAction $action): string => $action->getName());
+
+    $editAction = $actions->get('edit_ai_discovery');
+    $includeAction = $actions->get('include_ai_index');
+    $excludeAction = $actions->get('exclude_ai_index');
+    $fillSummaryAction = $actions->get('fill_ai_summary');
+    $bulkIncludeAction = $bulkActions->get('include_ai_index');
+    $bulkExcludeAction = $bulkActions->get('exclude_ai_index');
+
+    expect($table->getQuery())->not->toBeNull()
+        ->and($table->getDefaultSortColumn())->toBe('updated_at')
+        ->and($editAction)->toBeInstanceOf(Action::class)
+        ->and($includeAction)->toBeInstanceOf(Action::class)
+        ->and($excludeAction)->toBeInstanceOf(Action::class)
+        ->and($fillSummaryAction)->toBeInstanceOf(Action::class)
+        ->and($bulkIncludeAction)->toBeInstanceOf(BulkAction::class)
+        ->and($bulkExcludeAction)->toBeInstanceOf(BulkAction::class);
+
+    $editAction = seoSuiteTableAction($editAction);
+    $includeAction = seoSuiteTableAction($includeAction);
+    $excludeAction = seoSuiteTableAction($excludeAction);
+    $fillSummaryAction = seoSuiteTableAction($fillSummaryAction);
+    $bulkIncludeAction = seoSuiteBulkAction($bulkIncludeAction);
+    $bulkExcludeAction = seoSuiteBulkAction($bulkExcludeAction);
+
+    evaluateSeoSuiteTableAction($editAction, $page, [
+        'include_in_ai_index' => true,
+        'section' => 'Guides',
+        'priority' => 250,
+        'summary' => '',
+        'markdown_override' => 'Manual markdown body',
+        'exclude_reason' => null,
+    ]);
+
+    $profile = AiDiscoveryPageProfile::query()
+        ->where('page_id', $page->getKey())
+        ->where('site_id', $site->getKey())
+        ->where('language_id', $language->getKey())
+        ->firstOrFail();
+
+    expect($profile->include_in_ai_index)->toBeTrue()
+        ->and($profile->section)->toBe('Guides')
+        ->and($profile->priority)->toBe(250)
+        ->and($profile->markdown_override)->toBe('Manual markdown body');
+
+    evaluateSeoSuiteTableAction($fillSummaryAction, $page->fresh());
+
+    expect($profile->refresh()->summary)->toBe('Workflow summary from translation metadata.');
+
+    evaluateSeoSuiteTableAction($excludeAction, $page->fresh());
+    expect($profile->refresh()->include_in_ai_index)->toBeFalse();
+
+    evaluateSeoSuiteTableAction($includeAction, $page->fresh());
+    expect($profile->refresh()->include_in_ai_index)->toBeTrue();
+
+    evaluateSeoSuiteBulkAction($bulkExcludeAction, new EloquentCollection([$page->fresh()]));
+    expect($profile->refresh()->include_in_ai_index)->toBeFalse();
+
+    evaluateSeoSuiteBulkAction($bulkIncludeAction, new EloquentCollection([$page->fresh()]));
+    expect($profile->refresh()->include_in_ai_index)->toBeTrue();
 });
 
 it('builds markdown urls for included ai discovery pages with public urls', function (): void {
@@ -181,6 +293,79 @@ function reflectedComponentNames(ReflectionMethod $method): array
     }
 
     return $names;
+}
+
+function seoSuiteTableForCoverage(): Table
+{
+    $livewire = Mockery::mock(HasTable::class);
+    $livewire->shouldIgnoreMissing();
+    $livewire->shouldReceive('makeFilamentTranslatableContentDriver')->andReturn(null)->byDefault();
+    $livewire->shouldReceive('getTableFilterState')->andReturn([])->byDefault();
+    $livewire->shouldReceive('isTableLoaded')->andReturnTrue()->byDefault();
+    $livewire->shouldReceive('getTableArguments')->andReturn([])->byDefault();
+
+    return Table::make($livewire);
+}
+
+function resetAiDiscoveryTableCaches(): void
+{
+    foreach (['profiles', 'siteProfiles', 'readinessIssueCounts', 'markdownDiscoverability'] as $propertyName) {
+        $property = new ReflectionProperty(AiDiscoveryTable::class, $propertyName);
+        $property->setValue(null, []);
+    }
+}
+
+function seoSuiteTableAction(mixed $action): Action
+{
+    throw_unless($action instanceof Action, RuntimeException::class, 'Expected an AI Discovery table action.');
+
+    return $action;
+}
+
+function seoSuiteBulkAction(mixed $action): BulkAction
+{
+    throw_unless($action instanceof BulkAction, RuntimeException::class, 'Expected an AI Discovery bulk action.');
+
+    return $action;
+}
+
+/**
+ * @param  array<array-key, mixed>  $data
+ */
+function evaluateSeoSuiteTableAction(Action $action, Page $record, array $data = []): void
+{
+    $closure = $action->getActionFunction();
+
+    expect($closure)->not->toBeNull();
+
+    $action->evaluate(
+        $closure,
+        [
+            'record' => $record,
+            'action' => $action,
+            'data' => $data,
+        ],
+        [
+            Page::class => $record,
+            Action::class => $action,
+        ],
+    );
+}
+
+/**
+ * @param  EloquentCollection<int, Page>  $records
+ */
+function evaluateSeoSuiteBulkAction(BulkAction $action, EloquentCollection $records): void
+{
+    $closure = $action->getActionFunction();
+
+    expect($closure)->not->toBeNull();
+
+    $action->evaluate(
+        $closure,
+        ['records' => $records],
+        [EloquentCollection::class => $records],
+    );
 }
 
 it('uses translation metadata before labels for seo audit search preview titles', function (): void {
@@ -291,3 +476,188 @@ it('filters seo audit pages by snapshot status and ignores blank status filters'
         ->and($blankQuery->exists())->toBeTrue()
         ->and($missingQuery->exists())->toBeFalse();
 });
+
+it('filters seo audit pages by severity issue score band and snapshot lifecycle state', function (): void {
+    $language = Language::factory()->create();
+    $site = Site::factory()->language($language)->withTranslations($language)->create();
+    $criticalPage = Page::factory()->site($site)->withTranslations($language)->create(['name' => 'Critical page']);
+    $warningPage = Page::factory()->site($site)->withTranslations($language)->create(['name' => 'Warning page']);
+    $cleanPage = Page::factory()->site($site)->withTranslations($language)->create(['name' => 'Clean page']);
+    $missingSnapshotPage = Page::factory()->site($site)->withTranslations($language)->create(['name' => 'Missing snapshot']);
+
+    PageSeoSnapshot::query()->create([
+        'page_id' => $criticalPage->getKey(),
+        'site_id' => $site->getKey(),
+        'language_id' => $language->getKey(),
+        'score' => 35,
+        'critical_count' => 1,
+        'warning_count' => 0,
+        'notice_count' => 0,
+        'passed_count' => 1,
+        'schema_status' => 'missing',
+        'robots_status' => 'warning',
+        'canonical_status' => 'missing',
+        'search_console_status' => 'unknown',
+        'issue_keys' => [SeoCheckKeyEnum::MetaTitle->value],
+        'computed_at' => now()->subDays(2),
+    ]);
+    PageSeoSnapshot::query()->create([
+        'page_id' => $warningPage->getKey(),
+        'site_id' => $site->getKey(),
+        'language_id' => $language->getKey(),
+        'score' => 75,
+        'critical_count' => 0,
+        'warning_count' => 1,
+        'notice_count' => 0,
+        'passed_count' => 2,
+        'schema_status' => 'warning',
+        'robots_status' => 'passed',
+        'canonical_status' => 'passed',
+        'search_console_status' => 'unknown',
+        'issue_keys' => [SeoCheckKeyEnum::MetaDescription->value],
+        'computed_at' => now(),
+    ]);
+    PageSeoSnapshot::query()->create([
+        'page_id' => $cleanPage->getKey(),
+        'site_id' => $site->getKey(),
+        'language_id' => $language->getKey(),
+        'score' => 95,
+        'critical_count' => 0,
+        'warning_count' => 0,
+        'notice_count' => 0,
+        'passed_count' => 4,
+        'schema_status' => 'passed',
+        'robots_status' => 'passed',
+        'canonical_status' => 'passed',
+        'search_console_status' => 'passed',
+        'issue_keys' => [],
+        'computed_at' => now(),
+    ]);
+
+    $filters = SeoAuditTable::configure(seoSuiteTableForCoverage())->getFilters();
+    $pageIds = [$criticalPage->getKey(), $warningPage->getKey(), $cleanPage->getKey(), $missingSnapshotPage->getKey()];
+
+    $criticalQuery = Page::query()->whereKey($pageIds);
+    $warningQuery = Page::query()->whereKey($pageIds);
+    $cleanQuery = Page::query()->whereKey($pageIds);
+    $issueQuery = Page::query()->whereKey($pageIds);
+    $excellentQuery = Page::query()->whereKey($pageIds);
+    $goodQuery = Page::query()->whereKey($pageIds);
+    $poorQuery = Page::query()->whereKey($pageIds);
+    $staleQuery = Page::query()->whereKey($pageIds);
+    $missingQuery = Page::query()->whereKey($pageIds);
+    $scannedQuery = Page::query()->whereKey($pageIds);
+
+    $filters['severity']->apply($criticalQuery, ['value' => 'critical']);
+    $filters['severity']->apply($warningQuery, ['value' => 'warning']);
+    $filters['severity']->apply($cleanQuery, ['value' => 'clean']);
+    $filters['issue_key']->apply($issueQuery, ['value' => SeoCheckKeyEnum::MetaTitle->value]);
+    $filters['score_band']->apply($excellentQuery, ['value' => 'excellent']);
+    $filters['score_band']->apply($goodQuery, ['value' => 'good']);
+    $filters['score_band']->apply($poorQuery, ['value' => 'poor']);
+    $filters['snapshot_state']->apply($staleQuery, ['value' => 'stale']);
+    $filters['snapshot_state']->apply($missingQuery, ['value' => 'missing']);
+    $filters['snapshot_state']->apply($scannedQuery, ['value' => 'scanned']);
+
+    expect($criticalQuery->pluck('id')->all())->toBe([$criticalPage->getKey()])
+        ->and($warningQuery->pluck('id')->all())->toBe([$warningPage->getKey()])
+        ->and($cleanQuery->pluck('id')->all())->toBe([$cleanPage->getKey()])
+        ->and($issueQuery->pluck('id')->all())->toBe([$criticalPage->getKey()])
+        ->and($excellentQuery->pluck('id')->all())->toBe([$cleanPage->getKey()])
+        ->and($goodQuery->pluck('id')->all())->toBe([$warningPage->getKey()])
+        ->and($poorQuery->pluck('id')->all())->toBe([$criticalPage->getKey()])
+        ->and($staleQuery->pluck('id')->all())->toBe([$criticalPage->getKey()])
+        ->and($missingQuery->pluck('id')->all())->toBe([$missingSnapshotPage->getKey()])
+        ->and($scannedQuery->pluck('id')->sort()->values()->all())->toBe([
+            $criticalPage->getKey(),
+            $warningPage->getKey(),
+            $cleanPage->getKey(),
+        ]);
+});
+
+it('builds search ranking columns and filters opportunity metric rows', function (): void {
+    $site = Site::factory()->create();
+    $quickWin = seoSuiteSearchMetric($site, [
+        'query' => 'cms implementation',
+        'impressions' => 250,
+        'ctr' => 0.05,
+        'average_position' => 8.2,
+        'click_delta' => 4,
+    ]);
+    $lowCtr = seoSuiteSearchMetric($site, [
+        'query' => 'cms pricing',
+        'impressions' => 800,
+        'ctr' => 0.01,
+        'average_position' => 2.3,
+        'click_delta' => 1,
+    ]);
+    $declining = seoSuiteSearchMetric($site, [
+        'query' => 'cms migration',
+        'impressions' => 120,
+        'ctr' => 0.04,
+        'average_position' => 12.5,
+        'click_delta' => -6,
+    ]);
+
+    $table = SearchRankingsPage::table(seoSuiteTableHarness());
+    $filter = $table->getFilters()['opportunity'];
+
+    $quickWinQuery = SearchConsoleQueryMetric::query();
+    $lowCtrQuery = SearchConsoleQueryMetric::query();
+    $decliningQuery = SearchConsoleQueryMetric::query();
+    $blankQuery = SearchConsoleQueryMetric::query();
+
+    $filter->apply($quickWinQuery, ['value' => 'quick_win']);
+    $filter->apply($lowCtrQuery, ['value' => 'ctr']);
+    $filter->apply($decliningQuery, ['value' => 'declining']);
+    $filter->apply($blankQuery, ['value' => null]);
+
+    expect(array_keys($table->getColumns()))->toContain('site.name', 'query', 'url', 'clicks', 'impressions', 'ctr', 'average_position', 'click_delta')
+        ->and(array_keys($table->getFilters()))->toBe(['opportunity'])
+        ->and($quickWinQuery->pluck('id')->all())->toContain($quickWin->getKey(), $declining->getKey())
+        ->and($lowCtrQuery->pluck('id')->all())->toBe([$lowCtr->getKey()])
+        ->and($decliningQuery->pluck('id')->all())->toBe([$declining->getKey()])
+        ->and($blankQuery->count())->toBe(3);
+});
+
+function seoSuiteTableHarness(): Table
+{
+    $livewire = Mockery::mock(HasTable::class);
+    $livewire->shouldIgnoreMissing();
+    $livewire->shouldReceive('makeFilamentTranslatableContentDriver')->andReturn(null)->byDefault();
+    $livewire->shouldReceive('getTableFilterState')->andReturn([])->byDefault();
+    $livewire->shouldReceive('isTableLoaded')->andReturnTrue()->byDefault();
+    $livewire->shouldReceive('getTableArguments')->andReturn([])->byDefault();
+
+    return Table::make($livewire);
+}
+
+/**
+ * @param  array<string, mixed>  $attributes
+ */
+function seoSuiteSearchMetric(Site $site, array $attributes): SearchConsoleQueryMetric
+{
+    $query = (string) $attributes['query'];
+    $url = 'https://example.test/' . str_replace(' ', '-', $query);
+
+    /** @var SearchConsoleQueryMetric $metric */
+    $metric = SearchConsoleQueryMetric::query()->create([
+        'site_id' => $site->getKey(),
+        'query' => $query,
+        'query_hash' => hash('sha256', $query),
+        'url' => $url,
+        'url_hash' => hash('sha256', $url),
+        'clicks' => 10,
+        'impressions' => $attributes['impressions'],
+        'ctr' => $attributes['ctr'],
+        'average_position' => $attributes['average_position'],
+        'click_delta' => $attributes['click_delta'],
+        'impression_delta' => 0,
+        'position_delta' => 0,
+        'window_start' => now()->subDays(7)->toDateString(),
+        'window_end' => now()->toDateString(),
+        'synced_at' => now(),
+    ]);
+
+    return $metric;
+}

@@ -71,16 +71,20 @@ function themeFrontendBootTheme(string $themeKey): void
 {
     themeFrontendRegisterFoundationRenderer();
 
-    $theme = themeFrontendFirstPartyThemes()[$themeKey] ?? null;
+    $themes = themeFrontendFirstPartyThemes();
 
-    expect($theme)->not->toBeNull();
+    throw_unless(array_key_exists($themeKey, $themes), RuntimeException::class, sprintf('Unknown theme key [%s].', $themeKey));
+
+    $theme = $themes[$themeKey];
 
     CapellCore::forcePackageInstalled($theme['package']);
 
     $provider = new $theme['provider'](app());
     $provider->register();
 
-    app()->call([$provider, 'boot'], ['themeRegistry' => resolve(ThemeRegistry::class)]);
+    if (method_exists($provider, 'boot')) {
+        app()->call(static fn (): mixed => $provider->boot(resolve(ThemeRegistry::class)));
+    }
 
     themeFrontendRegisterStringRendererForTheme($themeKey);
 }
@@ -307,7 +311,7 @@ function themeFrontendMigrateHtmlCacheTables(): void
 
         $migrationInstance = require dirname(__DIR__, 3) . '/packages/html-cache/database/migrations/' . $migration . '.php';
 
-        if (method_exists($migrationInstance, 'up')) {
+        if (is_object($migrationInstance) && method_exists($migrationInstance, 'up')) {
             $migrationInstance->up();
         }
     }

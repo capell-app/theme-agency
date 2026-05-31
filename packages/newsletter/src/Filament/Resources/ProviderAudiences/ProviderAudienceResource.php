@@ -32,7 +32,11 @@ class ProviderAudienceResource extends Resource
     {
         return $configurator->components([
             Select::make('provider_connection_id')
-                ->relationship('providerConnection', 'name')
+                ->relationship(
+                    'providerConnection',
+                    'name',
+                    modifyQueryUsing: fn (Builder $query): Builder => SiteScope::applyForCurrentActor($query),
+                )
                 ->required(),
             TextInput::make('name')->label(__('capell-newsletter::form.name'))->required(),
             TextInput::make('remote_id')->label(__('capell-newsletter::form.remote_id'))->required(),

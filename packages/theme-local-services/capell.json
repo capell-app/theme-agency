@@ -8,9 +8,9 @@
     "version": "4.x-dev",
     "description": "Quote-led service business theme for local operators, trades, clinics, and consultancies.",
     "product": {
-        "group": "Capell Foundation",
-        "tier": "free",
-        "bundle": "foundation"
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\LocalServices",
     "surfaces": ["frontend"],
@@ -90,34 +90,29 @@
                 "caption": "Theme Local Services extension preview"
             },
             {
-                "path": "docs/assets/marketplace/local-services-homepage-marketplace.jpg",
-                "alt": "Theme Local Services homepage screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Local Services: Homepage. Homepage composition with hero, proof, repeated content, CTA, and footer."
+                "path": "docs/assets/marketplace/local-services-booking-layout.svg",
+                "alt": "Theme Local Services Booking Layout image",
+                "caption": "Theme Local Services Booking Layout"
             },
             {
-                "path": "docs/assets/marketplace/local-services-directory-marketplace.jpg",
-                "alt": "Theme Local Services directory screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Local Services: Directory. List or directory route with repeated cards, scanning rhythm, and route-backed pagination layout."
+                "path": "docs/assets/marketplace/local-services-homepage-layout.svg",
+                "alt": "Theme Local Services Homepage Layout image",
+                "caption": "Theme Local Services Homepage Layout"
             },
             {
-                "path": "docs/assets/marketplace/local-services-detail-marketplace.jpg",
-                "alt": "Theme Local Services detail screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Local Services: Detail. Detail page route with media, proof, supporting sections, and conversion path."
+                "path": "docs/assets/marketplace/local-services-location-layout.svg",
+                "alt": "Theme Local Services Location Layout image",
+                "caption": "Theme Local Services Location Layout"
             },
             {
-                "path": "docs/assets/marketplace/local-services-contact-marketplace.jpg",
-                "alt": "Theme Local Services contact screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Local Services: Contact. Contact or enquiry route with theme-specific routing cards and CTA treatment."
+                "path": "docs/assets/marketplace/hero-desktop.jpg",
+                "alt": "Theme Local Services Hero Desktop image",
+                "caption": "Theme Local Services Hero Desktop"
             },
             {
-                "path": "docs/assets/marketplace/local-services-conversion-marketplace.jpg",
-                "alt": "Theme Local Services conversion cta screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Local Services: Conversion CTA. Conversion route focused on proof, action rhythm, and next-step clarity."
-            },
-            {
-                "path": "docs/assets/marketplace/local-services-sections-marketplace.jpg",
-                "alt": "Theme Local Services section suite screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Local Services: Section Suite. Theme-specific section suite showing the premium components available to editors."
+                "path": "docs/assets/marketplace/hero-mobile.jpg",
+                "alt": "Theme Local Services Hero Mobile image",
+                "caption": "Theme Local Services Hero Mobile"
             }
         ],
         "categories": ["frontend", "themes"]

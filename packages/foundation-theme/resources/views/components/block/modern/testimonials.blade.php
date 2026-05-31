@@ -57,9 +57,15 @@
                     >
                         @forelse ($assets as $blockAsset)
                             @php
-                                $icon = $blockAsset->asset->getMeta('icon');
-                                $role = $blockAsset->asset->getMeta('position');
+                                $blockAssetRelations = method_exists($blockAsset, 'getRelations') ? $blockAsset->getRelations() : [];
+                                $asset = $blockAssetRelations['asset'] ?? null;
+                                $assetRelations = $asset !== null && method_exists($asset, 'getRelations') ? $asset->getRelations() : [];
+                                $assetTranslation = $assetRelations['translation'] ?? null;
+                                $icon = $asset?->getMeta('icon');
+                                $role = $asset?->getMeta('position');
                             @endphp
+
+                            @continue($asset === null)
 
                             <div class="carousel-slide min-w-full">
                                 <div
@@ -71,12 +77,12 @@
                                         &ldquo;
                                     </div>
 
-                                    @if ($blockAsset->asset->translation?->content)
+                                    @if ($assetTranslation?->content)
                                         <blockquote class="mb-6">
                                             <p
                                                 class="text-lg leading-relaxed text-gray-700 italic"
                                             >
-                                                {{ strip_tags($blockAsset->asset->translation->content) }}
+                                                {{ strip_tags($assetTranslation->content) }}
                                             </p>
                                         </blockquote>
                                     @endif
@@ -99,11 +105,11 @@
                                         @endif
 
                                         <div>
-                                            @if ($blockAsset->asset->translation?->title)
+                                            @if ($assetTranslation?->title)
                                                 <p
                                                     class="font-bold text-gray-900"
                                                 >
-                                                    {{ $blockAsset->asset->translation->title }}
+                                                    {{ $assetTranslation->title }}
                                                 </p>
                                             @endif
 
@@ -156,9 +162,15 @@
             <div class="{{ $responsiveGrid }} {{ $gridClass }}">
                 @forelse ($assets as $blockAsset)
                     @php
-                        $icon = $blockAsset->asset->getMeta('icon');
-                        $role = $blockAsset->asset->getMeta('position');
+                        $blockAssetRelations = method_exists($blockAsset, 'getRelations') ? $blockAsset->getRelations() : [];
+                        $asset = $blockAssetRelations['asset'] ?? null;
+                        $assetRelations = $asset !== null && method_exists($asset, 'getRelations') ? $asset->getRelations() : [];
+                        $assetTranslation = $assetRelations['translation'] ?? null;
+                        $icon = $asset?->getMeta('icon');
+                        $role = $asset?->getMeta('position');
                     @endphp
+
+                    @continue($asset === null)
 
                     <div
                         class="min-w-full snap-start rounded-xl border border-stone-200 bg-white p-6 md:min-w-0 md:p-8"
@@ -169,12 +181,12 @@
                             &ldquo;
                         </div>
 
-                        @if ($blockAsset->asset->translation?->content)
+                        @if ($assetTranslation?->content)
                             <blockquote class="mb-6">
                                 <p
                                     class="text-lg leading-relaxed text-gray-700 italic"
                                 >
-                                    {{ strip_tags($blockAsset->asset->translation->content) }}
+                                    {{ strip_tags($assetTranslation->content) }}
                                 </p>
                             </blockquote>
                         @endif
@@ -197,9 +209,9 @@
                             @endif
 
                             <div>
-                                @if ($blockAsset->asset->translation?->title)
+                                @if ($assetTranslation?->title)
                                     <p class="font-bold text-gray-900">
-                                        {{ $blockAsset->asset->translation->title }}
+                                        {{ $assetTranslation->title }}
                                     </p>
                                 @endif
 

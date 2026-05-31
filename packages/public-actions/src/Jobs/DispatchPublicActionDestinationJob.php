@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\PublicActions\Jobs;
 
 use Capell\PublicActions\Actions\DispatchPublicActionDestinationAction;
+use Capell\PublicActions\Enums\PublicActionDispatchStatus;
 use Capell\PublicActions\Models\PublicActionDestination;
 use Capell\PublicActions\Models\PublicActionSubmission;
 use Illuminate\Bus\Queueable;
@@ -31,6 +32,17 @@ final class DispatchPublicActionDestinationJob implements ShouldQueue
 
     public function handle(DispatchPublicActionDestinationAction $dispatchDestination): void
     {
-        $dispatchDestination->handle($this->destination, $this->submission);
+        $result = $dispatchDestination->handle($this->destination, $this->submission);
+
+        if ($result->dispatchStatus === PublicActionDispatchStatus::Retryable && $this->attempts() < $this->tries) {
+            $this->release($this->retryDelaySeconds());
+        }
+    }
+
+    private function retryDelaySeconds(): int
+    {
+        $delay = config('capell-public-actions.dispatch_retry_seconds', 60);
+
+        return is_numeric($delay) && (int) $delay > 0 ? (int) $delay : 60;
     }
 }

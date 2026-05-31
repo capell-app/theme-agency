@@ -40,9 +40,13 @@ it('reschedules event occurrences with override metadata', function (): void {
 
     $rescheduled = RescheduleOccurrenceAction::run($occurrence, $startsAt, $endsAt);
     $rescheduledOverrideData = $rescheduled->override_data;
+    $rescheduledStartsAt = $rescheduled->starts_at;
+    $rescheduledEndsAt = $rescheduled->ends_at;
 
-    expect($rescheduled->starts_at->equalTo($startsAt))->toBeTrue()
-        ->and($rescheduled->ends_at->equalTo($endsAt))->toBeTrue()
+    throw_if(! $rescheduledStartsAt instanceof CarbonImmutable || ! $rescheduledEndsAt instanceof CarbonImmutable, RuntimeException::class, 'Expected rescheduled occurrence timestamps to be cast.');
+
+    expect($rescheduledStartsAt->equalTo($startsAt))->toBeTrue()
+        ->and($rescheduledEndsAt->equalTo($endsAt))->toBeTrue()
         ->and($rescheduled->is_override)->toBeTrue()
         ->and($rescheduledOverrideData['source'])->toBe('calendar')
         ->and($rescheduledOverrideData['rescheduled_at'])->not->toBeNull();
@@ -59,9 +63,10 @@ it('ensures event publishing defaults for event pages and listing pages', functi
         'key' => 'events',
         'type' => BlueprintSubjectEnum::Page,
     ])->firstOrFail();
+    $eventTypeMeta = $eventType->meta ?? [];
 
-    expect($eventType->meta['schema']['type'])->toBe('Event')
-        ->and($eventType->meta['with_date'])->toBeTrue()
+    expect($eventTypeMeta['schema']['type'] ?? null)->toBe('Event')
+        ->and($eventTypeMeta['with_date'] ?? null)->toBeTrue()
         ->and($listingType->component)->toBe(LivewireComponentEnum::EventsCalendarPage->value)
         ->and(Layout::query()->where('key', 'event')->exists())->toBeTrue()
         ->and(Layout::query()->where('key', LayoutEnum::Results->value)->exists())->toBeTrue();

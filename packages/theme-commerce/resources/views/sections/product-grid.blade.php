@@ -127,7 +127,7 @@
             <button
                 type="button"
                 class="theme-carousel-button carousel-prev absolute top-1/2 left-2 hidden -translate-y-1/2 rounded-full border border-stone-200 bg-white p-2 text-sm font-semibold shadow-md"
-                aria-label="Previous products"
+                aria-label="{{ __('capell-theme-commerce::generic.carousel_previous') }}"
                 data-carousel-prev
             >
                 ‹
@@ -135,7 +135,7 @@
             <button
                 type="button"
                 class="theme-carousel-button carousel-next absolute top-1/2 right-2 hidden -translate-y-1/2 rounded-full border border-stone-200 bg-white p-2 text-sm font-semibold shadow-md"
-                aria-label="Next products"
+                aria-label="{{ __('capell-theme-commerce::generic.carousel_next') }}"
                 data-carousel-next
             >
                 ›
@@ -143,48 +143,3 @@
         </div>
     </div>
 </section>
-
-<script>
-    document
-        .querySelectorAll('[data-carousel="product-grid"]')
-        .forEach((carousel) => {
-            const track = carousel.querySelector('[data-carousel-track]')
-            const prev = carousel.querySelector('[data-carousel-prev]')
-            const next = carousel.querySelector('[data-carousel-next]')
-
-            if (!track || !prev || !next) {
-                return
-            }
-
-            const step = () =>
-                Math.max(260, Math.floor(track.clientWidth * 0.85))
-
-            const updateButtons = () => {
-                const canScroll = track.scrollWidth > track.clientWidth + 1
-                prev.classList.toggle(
-                    'hidden',
-                    !canScroll || track.scrollLeft <= 2,
-                )
-                next.classList.toggle(
-                    'hidden',
-                    !canScroll ||
-                        track.scrollLeft >=
-                            track.scrollWidth - track.clientWidth - 2,
-                )
-            }
-
-            const scrollByAmount = (direction) => {
-                track.scrollBy({
-                    left: direction * step(),
-                    behavior: 'smooth',
-                })
-            }
-
-            prev.addEventListener('click', () => scrollByAmount(-1))
-            next.addEventListener('click', () => scrollByAmount(1))
-            track.addEventListener('scroll', updateButtons, { passive: true })
-            window.addEventListener('resize', updateButtons)
-
-            updateButtons()
-        })
-</script>

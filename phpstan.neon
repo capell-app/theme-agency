@@ -5,9 +5,13 @@ includes:
     - ./phpstan.peststan.neon
     - vendor/tomasvotruba/type-coverage/config/extension.neon
     - ./phpstan.common.neon
+    - ./phpstan-preflight-baseline.neon
 
 parameters:
     paths:
         - packages
         - tests
+    configDirectories:
+        - config
+        - packages/*/config
     tmpDir: /tmp/phpstan/capell-packages

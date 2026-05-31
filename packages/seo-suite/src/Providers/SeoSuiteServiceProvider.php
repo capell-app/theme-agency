@@ -38,6 +38,7 @@ use Capell\Frontend\Support\Render\RenderHookRegistry;
 use Capell\SeoSuite\Actions\Ai\RecordAiGenerationAction;
 use Capell\SeoSuite\Actions\ClearAiDiscoveryCacheAction;
 use Capell\SeoSuite\Console\Commands\ClearAiCacheCommand;
+use Capell\SeoSuite\Console\Commands\DoctorCommand;
 use Capell\SeoSuite\Console\Commands\InstallCommand;
 use Capell\SeoSuite\Console\Commands\MonitorAiUsageCommand;
 use Capell\SeoSuite\Console\Commands\PageSpeedAuditCommand;
@@ -131,8 +132,12 @@ use Capell\SeoSuite\Support\SchemaTemplates\WebPageSchemaTemplate;
 use Capell\SeoSuite\Support\SearchConsole\GoogleSearchConsoleClient;
 use Capell\SeoSuite\Support\SearchConsole\NullSearchConsoleClient;
 use Capell\SeoSuite\Support\SectionRegistry;
+use Capell\SeoSuite\Support\SiteDiscovery\AiDiscoveryGeneratedOutputCoverageSource;
 use Capell\SeoSuite\Targets\FlatJsonTarget;
+use Capell\SeoSuite\View\Composers\SchemaComponentComposer;
+use Capell\SeoSuite\View\Composers\WebsiteSchemaComposer;
 use Capell\SiteDiscovery\Contracts\DiscoveryOutputSource;
+use Capell\SiteDiscovery\Contracts\GeneratedOutputCoverageSource;
 use Capell\SiteDiscovery\Support\DiscoveryOutputRegistry;
 use Closure;
 use Filament\Support\Icons\Heroicon;
@@ -147,6 +152,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -179,6 +185,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             ->hasConfigFile(self::$name)
             ->hasCommands([
                 ClearAiCacheCommand::class,
+                DoctorCommand::class,
                 InstallCommand::class,
                 MonitorAiUsageCommand::class,
                 PageSpeedAuditCommand::class,
@@ -428,6 +435,13 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
     protected function registerFrontendViews(): self
     {
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'capell');
+        View::composer([
+            'capell::components.schema.breadcrumb',
+            'capell::components.schema.image',
+            'capell::components.schema.organization',
+            'capell::components.schema.webpage',
+        ], SchemaComponentComposer::class);
+        View::composer('capell::components.schema.website', WebsiteSchemaComposer::class);
 
         return $this;
     }
@@ -544,6 +558,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             ->registerAiEventListeners()
             ->registerAiDiscoveryEventListeners()
             ->registerAiDiscoveryOutputSource()
+            ->registerAiDiscoveryGeneratedOutputCoverage()
             ->registerAiDiscoveryModelCacheInvalidation()
             ->registerBrokenLinkEventListeners()
             ->registerSettingsSchema()
@@ -573,6 +588,18 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             $registry = $this->app->make(DiscoveryOutputRegistry::class);
             $registry->register($this->app->make(AiDiscoveryDiscoveryOutputSource::class));
         }
+
+        return $this;
+    }
+
+    private function registerAiDiscoveryGeneratedOutputCoverage(): self
+    {
+        if (! interface_exists(GeneratedOutputCoverageSource::class)) {
+            return $this;
+        }
+
+        $this->app->singleton(AiDiscoveryGeneratedOutputCoverageSource::class);
+        $this->app->tag([AiDiscoveryGeneratedOutputCoverageSource::class], GeneratedOutputCoverageSource::TAG);
 
         return $this;
     }
@@ -721,7 +748,8 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             $schedule
                 ->command('capell:seo-suite:pagespeed-audit', ['--notify' => true, '--limit' => $limit])
                 ->weeklyOn(1, '06:00')
-                ->withoutOverlapping();
+                ->withoutOverlapping()
+                ->onOneServer();
         });
 
         return $this;
@@ -753,7 +781,11 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             return [];
         }
 
-        $files = glob($directory . '/*.php') !== false ? glob($directory . '/*.php') : [];
+        $files = glob($directory . '/*.php');
+
+        if ($files === false) {
+            return [];
+        }
 
         return array_map(
             static fn (string $path): string => pathinfo($path, PATHINFO_FILENAME),

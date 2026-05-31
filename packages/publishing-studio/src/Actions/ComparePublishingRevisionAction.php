@@ -43,14 +43,18 @@ final class ComparePublishingRevisionAction
                 continue;
             }
 
-            $changes[$key] = [
+            $changes[(string) $key] = [
                 'before' => $beforeValue,
                 'after' => $afterValue,
             ];
         }
 
+        $modelClass = is_string($revision->revisionable_type) && is_subclass_of($revision->revisionable_type, Model::class)
+            ? $revision->revisionable_type
+            : Model::class;
+
         return [
-            'model' => $revision->revisionable_type,
+            'model' => $modelClass,
             'uuid' => $revision->revisionable_uuid,
             'revision_id' => (int) $revision->getKey(),
             'revision_version' => $revision->version,

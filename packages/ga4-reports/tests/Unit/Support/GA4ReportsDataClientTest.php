@@ -24,7 +24,8 @@ function createGA4ReportsCredentialsFile(): string
     $privateKeyContents = '';
 
     expect($credentialsPath)->toBeString();
-    expect($privateKey)->not()->toBeFalse();
+
+    throw_if($privateKey === false, RuntimeException::class, 'Expected OpenSSL to create a private key for GA4 credentials.');
 
     openssl_pkey_export($privateKey, $privateKeyContents);
 
@@ -115,8 +116,8 @@ it('maps GA4 daily and page report rows into data objects', function (): void {
         'credentials_path' => $credentialsPath,
     ]);
     $window = new GA4ReportsWindowData(
-        startsAt: CarbonImmutable::create(2026, 5, 4),
-        endsAt: CarbonImmutable::create(2026, 5, 4),
+        startsAt: CarbonImmutable::parse('2026-05-04'),
+        endsAt: CarbonImmutable::parse('2026-05-04'),
         propertyId: '123456789',
     );
 
@@ -158,10 +159,38 @@ it('throws when the GA4 API fails', function (): void {
     ]);
 
     expect(fn (): array => $client->dailyMetrics(new GA4ReportsWindowData(
-        startsAt: CarbonImmutable::create(2026, 5, 4),
-        endsAt: CarbonImmutable::create(2026, 5, 4),
+        startsAt: CarbonImmutable::parse('2026-05-04'),
+        endsAt: CarbonImmutable::parse('2026-05-04'),
         propertyId: '123456789',
     )))->toThrow(GA4ReportsApiException::class, 'GA4 Reports Data API request failed with HTTP status 500.');
+
+    unlink($credentialsPath);
+});
+
+it('fails clearly when credentials cannot sign the auth token', function (): void {
+    $credentialsPath = tempnam(sys_get_temp_dir(), 'ga4-invalid-credentials');
+
+    expect($credentialsPath)->toBeString();
+
+    file_put_contents($credentialsPath, json_encode([
+        'client_email' => 'ga4-reports@example.iam.gserviceaccount.com',
+        'private_key' => 'not-a-private-key',
+        'token_uri' => 'https://oauth2.googleapis.com/token',
+    ], JSON_THROW_ON_ERROR));
+
+    Http::fake();
+
+    $client = new GA4ReportsDataClient([
+        'enabled' => true,
+        'property_id' => '123456789',
+        'credentials_path' => $credentialsPath,
+    ]);
+
+    expect(fn (): array => $client->dailyMetrics(new GA4ReportsWindowData(
+        startsAt: CarbonImmutable::parse('2026-05-04'),
+        endsAt: CarbonImmutable::parse('2026-05-04'),
+        propertyId: '123456789',
+    )))->toThrow(GA4ReportsApiException::class, 'private key could not sign authentication token');
 
     unlink($credentialsPath);
 });
@@ -169,12 +198,15 @@ it('throws when the GA4 API fails', function (): void {
 it('orders and paginates GA4 page report rows', function (): void {
     $credentialsPath = createGA4ReportsCredentialsFile();
     $insightsPayloads = [];
+    $timeouts = [];
     $firstPageRows = array_map(
         createGA4ReportsPageReportRow(...),
         range(1, 250),
     );
 
-    Http::fake(function (Request $request) use (&$insightsPayloads, $firstPageRows): PromiseInterface {
+    Http::fake(function (Request $request, array $options) use (&$insightsPayloads, &$timeouts, $firstPageRows): PromiseInterface {
+        $timeouts[] = $options['timeout'] ?? null;
+
         if ($request->url() === 'https://oauth2.googleapis.com/token') {
             return Http::response(['access_token' => 'test-token'], 200);
         }
@@ -190,11 +222,12 @@ it('orders and paginates GA4 page report rows', function (): void {
         'enabled' => true,
         'property_id' => '123456789',
         'credentials_path' => $credentialsPath,
+        'http_timeout' => 14,
     ]);
 
     $metrics = $client->pageMetrics(new GA4ReportsWindowData(
-        startsAt: CarbonImmutable::create(2026, 5, 4),
-        endsAt: CarbonImmutable::create(2026, 5, 4),
+        startsAt: CarbonImmutable::parse('2026-05-04'),
+        endsAt: CarbonImmutable::parse('2026-05-04'),
         propertyId: '123456789',
     ));
 
@@ -206,5 +239,6 @@ it('orders and paginates GA4 page report rows', function (): void {
         ->and($insightsPayloads[0]['offset'])->toBe(0)
         ->and($insightsPayloads[0]['orderBys'][0]['metric']['metricName'])->toBe('screenPageViews')
         ->and($insightsPayloads[0]['orderBys'][0]['desc'])->toBeTrue()
-        ->and($insightsPayloads[1]['offset'])->toBe(250);
+        ->and($insightsPayloads[1]['offset'])->toBe(250)
+        ->and($timeouts)->toBe([14, 14, 14]);
 });

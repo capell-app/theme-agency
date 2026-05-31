@@ -30,14 +30,24 @@ it('inserts tagged contributor actions after preview and before validate', funct
     $recordActionsMethod = $tableReflection->getMethod('getRecordActions');
 
     $actionNames = capell_test_collect($recordActionsMethod->invoke(null))
-        ->filter(fn (object $action): bool => method_exists($action, 'getName'))
+        ->filter(fn (mixed $action): bool => is_object($action) && method_exists($action, 'getName'))
         ->map(fn (object $action): string => $action->getName())
         ->values();
+
+    $previewIndex = $actionNames->search('preview');
+    $peeklessPreviewIndex = $actionNames->search('peekless-preview');
+    $validateIndex = $actionNames->search('validate');
+
+    expect($previewIndex)->toBeInt()
+        ->and($peeklessPreviewIndex)->toBeInt()
+        ->and($validateIndex)->toBeInt();
+
+    throw_if(! is_int($previewIndex) || ! is_int($peeklessPreviewIndex) || ! is_int($validateIndex), RuntimeException::class, 'Expected preview, peekless preview, and validate actions to be present.');
 
     expect($actionNames->all())
         ->toContain('preview')
         ->toContain('peekless-preview')
         ->toContain('validate')
-        ->and($actionNames->search('peekless-preview'))->toBeGreaterThan($actionNames->search('preview'))
-        ->and($actionNames->search('peekless-preview'))->toBeLessThan($actionNames->search('validate'));
+        ->and($peeklessPreviewIndex)->toBeGreaterThan($previewIndex)
+        ->and($peeklessPreviewIndex)->toBeLessThan($validateIndex);
 });

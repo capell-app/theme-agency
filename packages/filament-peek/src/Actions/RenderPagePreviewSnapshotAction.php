@@ -69,11 +69,13 @@ final class RenderPagePreviewSnapshotAction
 
         $previewPage = $this->previewPage($page, $snapshot);
         $site = $previewPage->site;
+
+        abort_unless($site instanceof Site, 404);
+
         $language = $previewPage->translation->language ?? $site->language;
         $layout = $previewPage->layout;
         $theme = $layout->theme ?? $site->theme;
 
-        abort_unless($site instanceof Site, 404);
         abort_unless($language instanceof Language, 404);
         abort_unless($layout instanceof Layout, 404);
 
@@ -158,9 +160,10 @@ final class RenderPagePreviewSnapshotAction
     private function resolveLayout(Page $page, Page $previewPage, PagePreviewSnapshotData $snapshot): ?Layout
     {
         $layoutId = $snapshot->layoutBuilderState->layoutId ?? (int) $previewPage->layout_id;
+        $loadedLayout = $page->layout;
 
-        $layout = ((int) $page->layout_id === $layoutId && $page->relationLoaded('layout'))
-            ? clone $page->layout
+        $layout = ((int) $page->layout_id === $layoutId && $page->relationLoaded('layout') && $loadedLayout instanceof Layout)
+            ? clone $loadedLayout
             : Layout::query()->with('theme')->find($layoutId);
 
         if (! $layout instanceof Layout) {
@@ -328,16 +331,17 @@ final class RenderPagePreviewSnapshotAction
         throw_if($renderer === null, RuntimeException::class, 'No Capell frontend renderer is available for Filament Peek preview.');
 
         $renderContext->runtimeManifest = $runtimeResolution->runtimeManifest;
-        $renderContext->publicRenderData = BuildPublicPageRenderDataAction::run($renderContext);
+        $publicRenderData = BuildPublicPageRenderDataAction::run($renderContext);
+        $renderContext->publicRenderData = $publicRenderData;
 
         $context->setFrontendData('runtimeManifest', $runtimeResolution->runtimeManifest);
-        $context->setFrontendData('publicPageRenderData', $renderContext->publicRenderData);
-        $context->setFrontendData('assetManifest', $renderContext->publicRenderData->assetManifest);
-        $context->setFrontendData('mediaHints', $renderContext->publicRenderData->mediaHints);
+        $context->setFrontendData('publicPageRenderData', $publicRenderData);
+        $context->setFrontendData('assetManifest', $publicRenderData->assetManifest);
+        $context->setFrontendData('mediaHints', $publicRenderData->mediaHints);
         $context->setFrontendData(
             'lcpMediaUrl',
-            isset($renderContext->publicRenderData->mediaHints[0])
-                ? $renderContext->publicRenderData->mediaHints[0]->url
+            isset($publicRenderData->mediaHints[0])
+                ? $publicRenderData->mediaHints[0]->url
                 : null,
         );
         $context->setFrontendData(
@@ -391,11 +395,11 @@ final class RenderPagePreviewSnapshotAction
             $previewMedia->setAttribute('model_type', $page->getMorphClass());
             $previewMedia->setAttribute('model_id', $page->getKey());
 
-            $media = $this->newMediaCollection($media
+            $media = $this->newMediaCollection(array_values($media
                 ->reject(fn (Media $candidate): bool => $candidate->collection_name === $collection->value)
                 ->push($previewMedia)
                 ->values()
-                ->all());
+                ->all()));
         }
 
         return $media;

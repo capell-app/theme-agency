@@ -102,10 +102,10 @@ it('ignores invalid hero background values and clamps opacity', function (): voi
         ->and($background->overlayStyle)->toBe(HeroBackgroundData::defaults()->overlayStyle)
         ->and($background->overlayOpacity)->toBe(1.0)
         ->and($background->cssVariables())->toMatchArray([
-            '--capell-hero-background-color' => HeroBackgroundData::defaults()->backgroundColor,
-            '--capell-hero-overlay-opacity' => '1',
-            '--capell-hero-accent-color' => '#abc',
-            '--capell-hero-accent-color-alt' => '#123456',
+            '--hero-background-color' => HeroBackgroundData::defaults()->backgroundColor,
+            '--hero-overlay-opacity' => '1',
+            '--hero-accent-color' => '#abc',
+            '--hero-accent-color-alt' => '#123456',
         ]);
 });
 
@@ -149,6 +149,11 @@ it('resolves responsive hero media from theme block and asset layers', function 
     $asset->setRelation('media', new EloquentCollection([$assetDesktopImage]));
 
     $media = ResolveHeroMediaDataAction::run($theme, $block, $asset);
+    $desktopVideo = $media->videos['desktop'] ?? null;
+    $mobileVideo = $media->videos['mobile'] ?? null;
+    $desktopImage = $media->images['desktop'] ?? null;
+
+    throw_if(! $desktopVideo instanceof Media || ! $mobileVideo instanceof Media || ! $desktopImage instanceof Media, RuntimeException::class, 'Expected responsive hero media assets to resolve.');
 
     expect($media->enabled)->toBeTrue()
         ->and($media->autoplay)->toBeFalse()
@@ -156,9 +161,9 @@ it('resolves responsive hero media from theme block and asset layers', function 
         ->and($media->muted)->toBeTrue()
         ->and($media->pauseWhenOutOfView)->toBeTrue()
         ->and($media->preload)->toBe(HeroMediaData::PreloadNone)
-        ->and($media->videos['desktop']->is($themeDesktopVideo))->toBeTrue()
-        ->and($media->videos['mobile']->is($blockMobileVideo))->toBeTrue()
-        ->and($media->images['desktop']->is($assetDesktopImage))->toBeTrue();
+        ->and($desktopVideo->is($themeDesktopVideo))->toBeTrue()
+        ->and($mobileVideo->is($blockMobileVideo))->toBeTrue()
+        ->and($desktopImage->is($assetDesktopImage))->toBeTrue();
 });
 
 it('allows a hero media layer to disable inherited responsive media', function (): void {

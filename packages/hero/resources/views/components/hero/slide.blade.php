@@ -15,6 +15,7 @@
     'first' => false,
     'height' => '',
     'heroBackground' => null,
+    'backgroundKey' => null,
     'heroMedia' => null,
     'slideBgImgClass' => '',
     'title' => null,
@@ -46,7 +47,7 @@
             ])
         }}
     >
-        <x-capell-hero::hero.background :background="$heroBackground" />
+        <x-capell-hero::hero.background :background="$heroBackground" :instance-key="$backgroundKey" />
         <x-capell-hero::hero.media :media="$heroMedia" />
 
         @if ($backgroundImage)

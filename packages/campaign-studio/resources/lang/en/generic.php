@@ -28,4 +28,10 @@ return [
         'status' => 'Status',
     ],
     'landing_page' => 'Landing page',
+    'landing_page_variant_match_types' => [
+        'first_available' => 'First available landing page',
+        'primary' => 'Primary landing page',
+        'utm_content' => 'UTM content',
+        'utm_term' => 'UTM term',
+    ],
 ];

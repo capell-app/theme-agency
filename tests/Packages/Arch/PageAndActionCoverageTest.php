@@ -107,7 +107,14 @@ function packageSourceClassesMatching(string $pathPattern): array
             continue;
         }
 
-        $classes[$namespaceMatch[1] . '\\' . $classMatch[1]] = $file->getRelativePathname();
+        $class = $namespaceMatch[1] . '\\' . $classMatch[1];
+
+        if (! class_exists($class)) {
+            continue;
+        }
+
+        /** @var class-string $class */
+        $classes[$class] = $file->getRelativePathname();
     }
 
     ksort($classes);

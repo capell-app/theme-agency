@@ -10,6 +10,20 @@ use Capell\SeoSuite\Models\SearchConsoleQueryMetric;
 use Capell\SeoSuite\Models\SearchConsoleUrlMetric;
 use Capell\SeoSuite\Support\SearchConsole\NullSearchConsoleClient;
 
+function syncSearchConsoleUrlMetric(?SearchConsoleUrlMetric $metric): SearchConsoleUrlMetric
+{
+    throw_unless($metric instanceof SearchConsoleUrlMetric, RuntimeException::class, 'Expected search console URL metric.');
+
+    return $metric;
+}
+
+function syncSearchConsoleQueryMetric(?SearchConsoleQueryMetric $metric): SearchConsoleQueryMetric
+{
+    throw_unless($metric instanceof SearchConsoleQueryMetric, RuntimeException::class, 'Expected search console query metric.');
+
+    return $metric;
+}
+
 it('returns unconfigured sync results without writing metrics', function (): void {
     $site = Site::factory()->create();
 
@@ -47,9 +61,9 @@ it('stores and queries declining search console url metrics', function (): void 
     $metric = SearchConsoleUrlMetric::query()
         ->decliningPages((int) $site->getKey(), 10)
         ->first();
+    $metric = syncSearchConsoleUrlMetric($metric);
 
-    expect($metric)->not()->toBeNull()
-        ->and($metric->url)->toBe('https://example.com/a')
+    expect($metric->url)->toBe('https://example.com/a')
         ->and($metric->click_delta)->toBe(-20);
 });
 
@@ -180,13 +194,11 @@ it('persists configured search console metric rows before returning declining pa
     });
 
     $result = SyncSearchConsoleInsightsAction::run((int) $site->getKey(), 10);
-    $metric = SearchConsoleUrlMetric::query()->first();
-    $queryMetric = SearchConsoleQueryMetric::query()->first();
+    $metric = syncSearchConsoleUrlMetric(SearchConsoleUrlMetric::query()->first());
+    $queryMetric = syncSearchConsoleQueryMetric(SearchConsoleQueryMetric::query()->first());
 
-    expect($metric)->not()->toBeNull()
-        ->and($metric->url)->toBe('https://example.com/a')
+    expect($metric->url)->toBe('https://example.com/a')
         ->and($metric->click_delta)->toBe(-20)
-        ->and($queryMetric)->not()->toBeNull()
         ->and($queryMetric->query)->toBe('capell cms')
         ->and($queryMetric->click_delta)->toBe(-2)
         ->and($result)->toBe([

@@ -1,0 +1,121 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/knowledge-base",
+    "slug": "knowledge-base",
+    "displayName": "Knowledge Base",
+    "kind": "package",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Knowledge Base provides versioned docs articles, collections, feedback, related article links, public navigation data, search weighting, and AI-readable docs output.",
+    "product": {
+        "group": "Capell Content",
+        "tier": "premium",
+        "bundle": "content-product"
+    },
+    "namespace": "Capell\\KnowledgeBase",
+    "surfaces": ["frontend", "admin"],
+    "dependencies": {
+        "requires": ["capell-app/core"],
+        "supports": [
+            "capell-app/search",
+            "capell-app/seo-suite",
+            "capell-app/site-discovery",
+            "capell-app/theme-knowledge"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\KnowledgeBase\\Providers\\KnowledgeBaseServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [],
+    "database": {
+        "migrations": true,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "knowledge-base",
+        "knowledge-base-articles",
+        "knowledge-base-feedback",
+        "knowledge-base-public-output",
+        "knowledge-base-ai-output"
+    ],
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 40,
+        "cacheTags": ["knowledge-base"],
+        "cacheSafety": {
+            "cacheable": true,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [
+                {
+                    "model": "Capell\\KnowledgeBase\\Models\\KnowledgeBaseArticle",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                },
+                {
+                    "model": "Capell\\KnowledgeBase\\Models\\KnowledgeBaseArticleVersion",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                }
+            ],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "knowledge-base.package-health",
+            "label": "Knowledge Base package models, migrations, and public output actions are discoverable.",
+            "class": "Capell\\KnowledgeBase\\Health\\KnowledgeBaseHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Versioned docs content, public knowledge navigation, feedback capture, related articles, and AI-readable documentation output.",
+        "screenshots": [],
+        "categories": ["content", "frontend", "search-seo"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": [
+            "admin-resource",
+            "ai-discovery-output",
+            "migration",
+            "model",
+            "route",
+            "search-index",
+            "theme-integration"
+        ]
+    }
+}

@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Capell\FoundationTheme\Livewire\Block;
 
+use Capell\Core\Contracts\Pageable;
 use Capell\Core\Enums\PageOrderEnum;
+use Capell\Core\Models\Language;
+use Capell\Core\Models\Site;
 use Capell\Frontend\Facades\Frontend;
 use Capell\Frontend\Support\Loader\PageLoader;
 use Closure;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
 use Livewire\WithPagination;
@@ -44,7 +48,15 @@ class Pages extends AbstractBlock
     protected function mountBlock(): void
     {
         $page = Frontend::page();
+        $language = Frontend::language();
+        $site = Frontend::site();
         $block = $this->block();
+
+        if (! $page instanceof Pageable || ! $page instanceof Model || ! $language instanceof Language || ! $site instanceof Site) {
+            $this->skipRender = true;
+
+            return;
+        }
 
         $limit = $block->meta['limit'] ?? config('capell-frontend.pagination_limit', 12);
 
@@ -55,13 +67,20 @@ class Pages extends AbstractBlock
 
         $morphModel = $block->getMeta('page_model');
 
+        $modelClass = null;
+
         if ($morphModel !== null) {
-            $morphModel = Relation::getMorphedModel($morphModel);
+            $resolvedModelClass = Relation::getMorphedModel($morphModel);
+
+            if (is_string($resolvedModelClass) && is_subclass_of($resolvedModelClass, Pageable::class)) {
+                /** @var class-string<Pageable<Model>> $resolvedModelClass */
+                $modelClass = $resolvedModelClass;
+            }
         }
 
         $this->pages = PageLoader::getPages(
-            language: Frontend::language(),
-            site: Frontend::site(),
+            language: $language,
+            site: $site,
             page: $page,
             limit: $limit,
             paginationPage: $paginationPage,
@@ -73,8 +92,8 @@ class Pages extends AbstractBlock
             withParent: $block->meta['with_parent'] ?? false,
             withDate: $block->meta['with_date'] ?? false,
             paginationKey: $paginationKey,
-            cacheKeyPrepend: sprintf('page-%d-block-%d-container-%s-%d', $page->id, $block->id, $this->containerKey, $this->occurrence),
-            morphModel: $morphModel,
+            cacheKeyPrepend: sprintf('page-%d-block-%d-container-%s-%d', (int) $page->getKey(), $block->id, $this->containerKey, $this->occurrence),
+            morphModel: $modelClass,
             modifyQuery: function (Builder $query) use ($selection): void {
                 $query->whereIn('id', $selection);
             },

@@ -161,7 +161,7 @@ it('adds installer actions only when installer package is present', function ():
 
     $alerts = livewire(AlertsWidget::class)->get('alerts');
     $actionNames = collect(Arr::wrap($alerts['installer']->action ?? []))
-        ->map(fn (mixed $action): ?string => method_exists($action, 'getName') ? $action->getName() : null)
+        ->map(fn (mixed $action): ?string => is_object($action) && method_exists($action, 'getName') ? $action->getName() : null)
         ->all();
 
     if (class_exists(InstallerServiceProvider::class)) {

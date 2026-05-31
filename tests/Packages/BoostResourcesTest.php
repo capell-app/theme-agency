@@ -19,6 +19,7 @@ it('ships Laravel Boost guidelines for every package and skills only where usefu
         'form-builder',
         'agent-bridge',
         'media-library',
+        'migration-assistant',
         'layout-builder',
         'navigation',
         'redirects',

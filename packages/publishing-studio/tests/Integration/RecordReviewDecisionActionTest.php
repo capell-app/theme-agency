@@ -59,7 +59,8 @@ it('refuses to record a decision twice on the same assignment', function (): voi
     $workspace = Workspace::factory()->create(['status' => WorkspaceStatusEnum::InReview]);
     $assignment = makeAssignment($workspace);
     (new RecordReviewDecisionAction)->handle($assignment, ReviewDecisionEnum::Approved);
+    $freshAssignment = publishingStudioTestInstance($assignment->fresh(), WorkspaceReviewAssignment::class);
 
-    expect(fn (): Workspace => (new RecordReviewDecisionAction)->handle($assignment->fresh(), ReviewDecisionEnum::Approved))
+    expect(fn (): Workspace => (new RecordReviewDecisionAction)->handle($freshAssignment, ReviewDecisionEnum::Approved))
         ->toThrow(InvalidReviewDecisionException::class);
 });

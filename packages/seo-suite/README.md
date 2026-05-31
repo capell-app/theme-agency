@@ -1,6 +1,6 @@
 # SEO Suite
 
-SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery output, crawler policy controls, and publish checks.
+SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery output, crawler policy controls, publish checks, and planned generated-output diagnostics.
 
 ## At A Glance
 
@@ -13,7 +13,7 @@ SEO Suite adds metadata panels, structured data, broken link tracking, Search Co
 
 ## Why It Helps Your Capell Workflow
 
-- Adds metadata panels, structured data, broken-link tracking, Search Console insights, AI content briefs, and publish checks.
+- Adds metadata panels, structured data, broken-link tracking, Search Console insights, AI content briefs, generated-output diagnostics, and publish checks.
 - Helps owners improve discoverability while giving editors concrete readiness signals before publishing.
 - Gives developers schema, sitemap, AI, and publish-gate extension points without mixing SEO behavior into core pages.
 
@@ -25,13 +25,14 @@ SEO Suite adds metadata panels, structured data, broken link tracking, Search Co
 
 ## What It Adds
 
-SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery output, crawler policy controls, and publish checks.
+SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery output, crawler policy controls, generated-output diagnostics, and publish checks.
 
 - Page and site SEO schema extenders.
 - SEO audit, AI Discovery, broken links, not-found URLs, and translation coverage pages.
 - AI creator actions for briefs, images, layouts, metadata suggestions, and draft application.
 - AI Discovery for `llms.txt`, optional `llms-full.txt`, page Markdown URLs, `Accept: text/markdown`, configurable AI crawler rules, and page-readiness audits.
 - Search Console sync and dashboard reports.
+- Planned diagnostics for route ownership, generated document content types, sitemap quality, crawler policy, public-output leaks, and stale AI Discovery snapshots.
 
 ## Why It Matters
 
@@ -152,7 +153,63 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Run `php artisan capell:seo-suite-install` in the host app after Composer install. The command publishes all SEO Suite schema migrations and settings migrations.
 - Regenerate Filament Shield permissions in demo/admin apps after installation: `php artisan shield:generate --all --panel=admin`.
 - Run migrations through the host application package install flow.
+- Make sure the web server routes generated discovery documents through Laravel. SEO Suite owns `/llms.txt`, `/llms-full.txt`, `/robots.txt`, `/index.md`, and `/{url}.md`; do not let a static-file rule return `404` before the Laravel front controller can run.
 - In this repository, verify package changes with `vendor/bin/pest`; do not use `php artisan`.
+
+### Web Server Routing
+
+The default Laravel Apache `.htaccess` works because it rewrites any missing file to `public/index.php`. Custom Apache or nginx configs often add static-file shortcuts for `.txt`, `.xml`, or `.md`; those shortcuts must exclude SEO Suite routes.
+
+For nginx, put exact discovery routes before generic static-asset locations:
+
+```nginx
+location = /robots.txt    { try_files /__missing__ /index.php$is_args$args; }
+location = /llms.txt      { try_files /__missing__ /index.php$is_args$args; }
+location = /llms-full.txt { try_files /__missing__ /index.php$is_args$args; }
+location = /index.md      { try_files /__missing__ /index.php$is_args$args; }
+location ~ ^/.+\.md$      { try_files $uri /__missing__ /index.php$is_args$args; }
+
+location / {
+    try_files $uri $uri/ /index.php$is_args$args;
+}
+```
+
+For Apache, keep Laravel's front-controller rewrite active for missing files:
+
+```apache
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L]
+```
+
+If a vhost has explicit static handlers for `*.txt` or `*.md`, add exceptions for `/robots.txt`, `/llms.txt`, `/llms-full.txt`, `/index.md`, and generated page Markdown URLs before those static handlers.
+
+## Approved Improvement Roadmap
+
+These items are approved product direction for the package. Keep implementation in Actions, console commands, typed Data objects, package settings, and Filament pages rather than embedding SEO behavior in host applications.
+
+### Diagnostics And Install Safety
+
+- `capell:seo-suite-doctor` checks route registration, route collisions, installed package state, AI Discovery settings, generated document responses, redirects, content types, public cache headers, sitemap XML, public-output leak markers, and web-server interception symptoms.
+- SEO Suite owns `/robots.txt`, `/llms.txt`, `/llms-full.txt`, `/index.md`, and `/{url}.md` unless a host app intentionally overrides those routes and delegates to SEO Suite generators.
+- Add install/setup diagnostics that warn when generated Markdown is returned with HTTP `404`, when a static vhost block handles `.txt` or `.md` before Laravel, or when the package is installed without Site Discovery outputs available.
+
+### AI Discovery Quality
+
+- Expand the AI Discovery admin page into a coverage dashboard that shows included pages, excluded pages with reasons, missing summaries, duplicate entity names, stale snapshots, unavailable Markdown views, and sitemap-visible pages missing from AI Discovery.
+- Add stale-cache controls and a regenerate action for AI Discovery outputs so editors can refresh `llms.txt`, `llms-full.txt`, robots, and page Markdown after content or policy changes.
+- Keep crawler policy presets explicit: search-visible/training-restricted, open, restrictive, and private or staging lockdown. Render `robots.txt` from policy objects and override rows rather than one-off strings.
+
+### Public Output Auditing
+
+- Add a public-output leak scanner that crawls generated sitemap, AI Discovery, Markdown, and robots outputs and fails if it finds admin URLs, signed URLs, model IDs, field paths, Livewire internals, unpublished content, or editor-only metadata.
+- Add a structured data audit surface that previews each page graph and flags missing required fields, duplicate/conflicting entities, invalid URLs, stale marketplace pricing or rating values, and JSON-LD validation failures.
+
+### Integration With Site Discovery
+
+- Consume a unified Site Discovery URL registry as the canonical source for public URLs, canonical status, robots directives, site/language scope, source package, last modified state, and output eligibility.
+- Compare AI Discovery coverage against sitemap coverage so public indexable pages do not silently drop out of `llms.txt` or page Markdown output.
 
 ## Admin And Access
 

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\Core\Data\PackageData;
+use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\PackageTypeEnum;
 use Capell\Core\Events\PackageInstalled;
 use Capell\Core\Events\PackageUninstalled;
@@ -57,12 +58,21 @@ use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
+
+function foundationThemeCoverageView(mixed $view): View
+{
+    expect($view)->toBeInstanceOf(View::class);
+    assert($view instanceof View);
+
+    return $view;
+}
 
 it('generates tailwind assets from configured app sources and packages', function (): void {
     $targetPath = sys_get_temp_dir() . '/capell-foundation-theme-coverage/frontend.css';
@@ -122,6 +132,54 @@ it('collects default tailwind assets without writing files', function (): void {
         ->and($registry->plugins())->toContain('@tailwindcss/forms')
         ->and($registry->sources())->not->toBeEmpty()
         ->and($registry->themeColors())->not->toBeEmpty();
+});
+
+it('generates tailwind assets from installed vendor assets and validates configured sources', function (): void {
+    $targetDirectory = sys_get_temp_dir() . '/capell-foundation-theme-vendor-assets';
+    $targetPath = $targetDirectory . '/frontend.css';
+    $matchedSource = $targetDirectory . '/views/example.blade.php';
+    $packageName = 'vendor/foundation-theme-coverage';
+
+    (new Filesystem)->ensureDirectoryExists(dirname($matchedSource));
+    file_put_contents($matchedSource, '<div>Coverage</div>');
+
+    config([
+        'capell-foundation-theme.tailwind' => [
+            'imports' => ['', 'resources/css/app.css', '@tailwindcss/forms'],
+            'plugins' => ['@tailwindcss/typography'],
+            'sources' => [
+                '',
+                123,
+                $matchedSource,
+                'resources/views/**/*.blade.php',
+                'missing/**/*.blade.php',
+            ],
+            'validate_sources' => true,
+        ],
+    ]);
+
+    CapellCore::forcePackageInstalled($packageName);
+    CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('tippy.js', $packageName));
+    CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('resources/css/package.css', $packageName));
+    CapellCore::registerVendorAsset(VendorAssetData::tailwindPlugin('@tailwindcss/container-queries', $packageName));
+    CapellCore::registerVendorAsset(VendorAssetData::tailwindSource('resources/views/**/*.blade.php', $packageName));
+    CapellCore::registerVendorAsset(VendorAssetData::tailwindThemeColor('coverage-accent', '#abcdef', $packageName));
+    CapellCore::registerVendorAsset(VendorAssetData::tailwindThemeColor('bad;color', '#123456', $packageName));
+    CapellCore::registerVendorAsset(VendorAssetData::tailwindImport('missing-package.css', 'vendor/not-installed'));
+
+    (new TailwindAssetsGenerator(new Filesystem))->generate($targetPath);
+
+    $css = (string) file_get_contents($targetPath);
+
+    capell_expect($css)
+        ->toContain('@import "tippy.js";')
+        ->toContain('@import "@tailwindcss/forms";')
+        ->toContain('package.css')
+        ->toContain('@plugin "@tailwindcss/container-queries";')
+        ->toContain('@source "')
+        ->toContain('--color-coverage-accent: #abcdef;')
+        ->not->toContain('bad;color')
+        ->not->toContain('missing-package.css');
 });
 
 it('runs foundation tailwind command report generate and package-change listener paths', function (): void {
@@ -273,7 +331,7 @@ it('skips empty asset blocks without touching frontend context', function (strin
         loop: new stdClass,
         block: $block,
     );
-
+    /** @var Asset|Carousel|Accordion $component */
     capell_expect($component->render())->toBe('');
 })->with([
     'asset' => [Asset::class],
@@ -395,7 +453,7 @@ it('skips empty navigation and page listing blocks without public markup', funct
         loop: new stdClass,
         block: $block,
     );
-
+    /** @var Navigation|Children|Siblings|Latest|Pages $component */
     capell_expect($component->render())->toBe('');
 })->with([
     'navigation' => [Navigation::class],
@@ -440,10 +498,10 @@ it('renders page content and layout components from frontend context', function 
 
     capell_expect($content->previousPage)->toBeNull()
         ->and($content->nextPage)->toBeNull()
-        ->and($content->render()->name())->toBe('capell-foundation-theme::components.block.page.content')
-        ->and($index->render()->name())->toBe('capell::components.layout.index')
+        ->and(foundationThemeCoverageView($content->render())->name())->toBe('capell-foundation-theme::components.block.page.content')
+        ->and(foundationThemeCoverageView($index->render())->name())->toBe('capell::components.layout.index')
         ->and($index->isSystemPageLayout)->toBeFalse()
-        ->and($main->render()->name())->toBe('capell::components.layout.main')
+        ->and(foundationThemeCoverageView($main->render())->name())->toBe('capell::components.layout.main')
         ->and($main->finalCta)->toBe(['label' => 'Start']);
 });
 

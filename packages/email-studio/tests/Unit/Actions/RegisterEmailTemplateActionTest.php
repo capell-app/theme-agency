@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Models\Site;
 use Capell\EmailStudio\Actions\RegisterEmailTemplateAction;
 use Capell\EmailStudio\Models\EmailTemplateRegistration;
 
 it('upserts registered templates by package, key, and site scope', function (): void {
+    Site::factory()->create(['id' => 12]);
+
     $registration = RegisterEmailTemplateAction::run(
         key: 'forms.confirmation',
         name: 'Form confirmation',

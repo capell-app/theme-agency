@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Models\Site;
 use Capell\EmailStudio\Data\EmailAddressData;
 use Capell\EmailStudio\Data\EmailContextData;
 use Capell\EmailStudio\Data\EmailHeaderData;
@@ -34,8 +35,14 @@ use Capell\EmailStudio\Support\EmailVariableRenderer;
 use Capell\EmailStudio\Support\Providers\FakeEmailProviderAdapter;
 use Capell\EmailStudio\Support\Providers\PostmarkEmailProviderAdapter;
 use Capell\EmailStudio\Support\Providers\SmtpEmailProviderAdapter;
+use Illuminate\Contracts\Mail\Mailer as MailerContract;
+use Illuminate\Mail\Message;
+use Illuminate\Mail\PendingMail;
+use Illuminate\Mail\SentMessage;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use Spatie\LaravelData\DataCollection;
+use Symfony\Component\Mime\Email as SymfonyEmail;
 
 it('keeps email studio send input and provider payloads as typed data', function (): void {
     $to = EmailAddressData::collect([new EmailAddressData('ben@example.com', 'Ben')], DataCollection::class);
@@ -128,6 +135,70 @@ it('normalizes provider webhooks and inbound replies without leaking transport d
         ->and($fakeReply->htmlBody)->toBe('<p>Reply</p>');
 });
 
+it('delivers queued recipients through the smtp provider and maps provider message ids', function (): void {
+    $profile = EmailProfile::factory()->create([
+        'from_email' => 'sender@example.com',
+        'from_name' => 'Sender',
+        'reply_to_email' => 'reply@example.com',
+        'reply_to_name' => 'Reply',
+        'provider_settings' => ['mailer' => 'smtp-coverage'],
+    ]);
+    $message = EmailMessage::factory()
+        ->for($profile, 'profile')
+        ->create([
+            'subject' => 'Workflow update',
+            'rendered_html' => '<p>Hello team</p>',
+            'rendered_text' => 'Hello team',
+        ]);
+    $to = EmailRecipient::factory()->for($message, 'message')->create([
+        'type' => 'to',
+        'email' => 'to@example.com',
+        'name' => 'To Recipient',
+        'status' => EmailRecipientStatus::Queued,
+    ]);
+    $cc = EmailRecipient::factory()->for($message, 'message')->create([
+        'type' => 'cc',
+        'email' => 'cc@example.com',
+        'name' => 'CC Recipient',
+        'status' => EmailRecipientStatus::Queued,
+    ]);
+    $bcc = EmailRecipient::factory()->for($message, 'message')->create([
+        'type' => 'bcc',
+        'email' => 'bcc@example.com',
+        'name' => 'BCC Recipient',
+        'status' => EmailRecipientStatus::Queued,
+    ]);
+    EmailRecipient::factory()->for($message, 'message')->create([
+        'type' => 'to',
+        'email' => 'sent@example.com',
+        'status' => EmailRecipientStatus::Sent,
+    ]);
+
+    $mailer = new CapturingEmailStudioMailer;
+    Mail::shouldReceive('mailer')
+        ->once()
+        ->with('smtp-coverage')
+        ->andReturn($mailer);
+
+    $result = (new SmtpEmailProviderAdapter)->send($message);
+
+    expect($result->successful)->toBeTrue()
+        ->and($result->recipientProviderMessageIds)->toBe([
+            $to->getKey() => 'smtp-' . $message->getKey() . '-' . $to->getKey(),
+            $cc->getKey() => 'smtp-' . $message->getKey() . '-' . $cc->getKey(),
+            $bcc->getKey() => 'smtp-' . $message->getKey() . '-' . $bcc->getKey(),
+        ])
+        ->and($mailer->message)->toBeInstanceOf(SymfonyEmail::class)
+        ->and($mailer->message?->getSubject())->toBe('Workflow update')
+        ->and($mailer->message?->getFrom()[0]->getAddress())->toBe('sender@example.com')
+        ->and($mailer->message?->getReplyTo()[0]->getAddress())->toBe('reply@example.com')
+        ->and($mailer->message?->getTo()[0]->getAddress())->toBe('to@example.com')
+        ->and($mailer->message?->getCc()[0]->getAddress())->toBe('cc@example.com')
+        ->and($mailer->message?->getBcc()[0]->getAddress())->toBe('bcc@example.com')
+        ->and($mailer->message?->getHtmlBody())->toBe('<p>Hello team</p>')
+        ->and($mailer->message?->getTextBody())->toBe('Hello team');
+});
+
 it('registers email provider adapters and exposes package health metadata', function (): void {
     $registry = new EmailProviderRegistry;
     $adapter = new PostmarkEmailProviderAdapter;
@@ -141,6 +212,8 @@ it('registers email provider adapters and exposes package health metadata', func
 });
 
 it('persists registered email templates through the registry', function (): void {
+    Site::factory()->create(['id' => 5]);
+
     $registry = new EmailTemplateRegistry;
 
     $registrations = $registry
@@ -224,3 +297,43 @@ it('casts email studio model state and links event tracking records', function (
         ->and($event->message->is($message))->toBeTrue()
         ->and($token->refresh()->recipient->is($recipient))->toBeTrue();
 });
+
+final class CapturingEmailStudioMailer implements MailerContract
+{
+    public ?SymfonyEmail $message = null;
+
+    public function to(mixed $users): PendingMail
+    {
+        throw new BadMethodCallException('The coverage mailer only supports send().');
+    }
+
+    public function bcc(mixed $users): PendingMail
+    {
+        throw new BadMethodCallException('The coverage mailer only supports send().');
+    }
+
+    public function raw(mixed $text, mixed $callback): ?SentMessage
+    {
+        throw new BadMethodCallException('The coverage mailer only supports send().');
+    }
+
+    public function send(mixed $view, array $data = [], mixed $callback = null): ?SentMessage
+    {
+        unset($view, $data);
+
+        $message = new SymfonyEmail;
+
+        if ($callback instanceof Closure) {
+            $callback(new Message($message));
+        }
+
+        $this->message = $message;
+
+        return null;
+    }
+
+    public function sendNow(mixed $mailable, array $data = [], mixed $callback = null): ?SentMessage
+    {
+        return $this->send($mailable, $data, $callback);
+    }
+}

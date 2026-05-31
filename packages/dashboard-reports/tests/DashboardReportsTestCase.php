@@ -32,7 +32,7 @@ class DashboardReportsTestCase extends AbstractTestCase
             __DIR__ . '/../../../vendor/capell-app/admin/database/settings',
         );
 
-        if ($this->app->bound(SettingsMigrationProviderInterface::class)) {
+        if ($this->app instanceof Application && $this->app->bound(SettingsMigrationProviderInterface::class)) {
             $this->registerAndMigrateSettings(
                 resolve(SettingsMigrationProviderInterface::class)->getSettingMigrations(),
                 __DIR__ . '/../../../vendor/capell-app/frontend/database/settings',

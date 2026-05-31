@@ -13,8 +13,10 @@ use Capell\DocumentLifecycle\Enums\ResourceEnum;
 use Capell\DocumentLifecycle\Models\Document;
 use Capell\DocumentLifecycle\Models\DocumentAcceptance;
 use Capell\DocumentLifecycle\Models\DocumentPublication;
+use Capell\DocumentLifecycle\Policies\DocumentPolicy;
 use Capell\PublishingStudio\Models\PublishingRevision;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Gate;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -50,6 +52,7 @@ class DocumentLifecycleServiceProvider extends AbstractPackageServiceProvider
             }
 
             $this
+                ->registerPolicies()
                 ->registerModels()
                 ->registerMorphMap()
                 ->registerProtectedTables()
@@ -61,6 +64,13 @@ class DocumentLifecycleServiceProvider extends AbstractPackageServiceProvider
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(static::$packageName);
+    }
+
+    private function registerPolicies(): self
+    {
+        Gate::policy(Document::class, DocumentPolicy::class);
+
+        return $this;
     }
 
     private function registerAdminResources(): self

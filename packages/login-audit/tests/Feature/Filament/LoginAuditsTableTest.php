@@ -2,12 +2,30 @@
 
 declare(strict_types=1);
 
+use BezhanSalleh\FilamentShield\Facades\FilamentShield;
+use BezhanSalleh\FilamentShield\Support\Utils;
 use Capell\LoginAudit\Filament\Resources\LoginAudits\LoginAuditResource;
 use Capell\LoginAudit\Filament\Resources\LoginAudits\Tables\LoginAuditsTable;
 use Capell\LoginAudit\Models\LoginAudit;
 use Capell\Tests\Fixtures\Models\User;
+use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\HtmlString;
+use Spatie\Permission\Models\Permission;
+
+uses(CreatesAdminUser::class);
+
+function loginAuditPermission(string $affix): string
+{
+    $permissions = Utils::getConfig()->permissions;
+
+    return FilamentShield::defaultPermissionKeyBuilder(
+        affix: $affix,
+        separator: $permissions->separator,
+        subject: 'LoginAudit',
+        case: $permissions->case,
+    );
+}
 
 function authenticationLogAuthenticatableColumn(): TextColumn
 {
@@ -68,6 +86,18 @@ it('configures the vendor authentication log table to display user names', funct
 it('uses operator friendly access log navigation under users', function (): void {
     expect(LoginAuditResource::getNavigationLabel())->toBe('Access Logs')
         ->and(LoginAuditResource::getNavigationGroup())->toBe(__('capell-admin::navigation.group_users'));
+});
+
+it('requires explicit login audit permission for resource access', function (): void {
+    Permission::findOrCreate(loginAuditPermission('view_any'));
+
+    test()->actingAsUser();
+
+    expect(LoginAuditResource::canViewAny())->toBeFalse();
+
+    test()->actingAs(test()->createUserWithPermission(loginAuditPermission('view_any')));
+
+    expect(LoginAuditResource::canViewAny())->toBeTrue();
 });
 
 it('renders a placeholder for orphaned authentication logs', function (): void {

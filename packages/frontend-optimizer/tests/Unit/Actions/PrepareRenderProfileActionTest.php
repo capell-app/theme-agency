@@ -35,6 +35,29 @@ it('prepares a render profile and dispatches critical css generation when missin
         fn (GenerateCriticalCssJob $job): bool => $job->renderProfileId === $profile->id
             && $job->url === 'https://example.test/landing',
     );
+    expect($profile->status)->toBe(OptimizationStatus::Queued->value);
+});
+
+it('does not dispatch duplicate critical css jobs while a profile is already queued', function (): void {
+    Storage::fake('local');
+    Bus::fake();
+    config()->set('queue.default', 'database');
+
+    $arguments = [
+        'scope' => OptimizationScope::Layout,
+        'context' => ['layout' => 'landing'],
+        'assetSets' => [
+            FrontendAssetSet::make()
+                ->css('hero', '/build/hero.css', AssetLoadingStrategy::Critical, criticalEligible: true),
+        ],
+        'url' => 'https://example.test/landing',
+        'label' => 'Landing',
+    ];
+
+    PrepareRenderProfileAction::run(...$arguments);
+    PrepareRenderProfileAction::run(...$arguments);
+
+    Bus::assertDispatchedTimes(GenerateCriticalCssJob::class, 1);
 });
 
 it('does not dispatch generation from public rendering when the queue is synchronous', function (): void {

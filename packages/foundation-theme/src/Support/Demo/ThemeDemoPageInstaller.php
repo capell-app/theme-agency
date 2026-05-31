@@ -106,6 +106,10 @@ final class ThemeDemoPageInstaller
             'blueprint_id' => $site->blueprint_id ?? $siteType->getKey(),
             'language_id' => $site->language_id ?? $primaryLanguage?->getKey(),
             'theme_id' => $theme->getKey(),
+            'meta' => [
+                'meta_schema' => [],
+                ...($site->meta ?? []),
+            ],
             'status' => true,
             'default' => $site->exists ? $site->default : ! Site::query()->default()->exists(),
         ]);
@@ -118,8 +122,23 @@ final class ThemeDemoPageInstaller
                     'title' => $siteName,
                     'content' => '<p>' . e($siteName) . ' demo site.</p>',
                     'meta' => [
+                        'title_after_text' => null,
                         'description' => sprintf('%s theme demo site for preview content.', $siteName),
                         'footer_copy' => sprintf('<p>%s demo content.</p>', $siteName),
+                        'label' => null,
+                        'ai_discovery' => [
+                            'llms_txt_enabled' => false,
+                            'llms_full_txt_enabled' => false,
+                            'markdown_pages_enabled' => false,
+                            'accept_markdown_enabled' => false,
+                            'default_include_pages' => false,
+                            'status' => null,
+                            'default_section' => null,
+                            'max_full_txt_pages' => null,
+                            'max_full_txt_bytes' => null,
+                            'cache_ttl_seconds' => null,
+                            'intro_markdown' => null,
+                        ],
                     ],
                 ],
             );

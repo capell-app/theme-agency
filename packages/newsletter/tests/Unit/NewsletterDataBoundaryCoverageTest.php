@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Capell\Newsletter\Data\ConsentEvidenceData;
 use Capell\Newsletter\Data\FormMappingData;
+use Capell\Newsletter\Data\PreferenceCenterData;
+use Capell\Newsletter\Data\PreferenceCenterSegmentData;
+use Capell\Newsletter\Data\PreferenceCenterUpdateData;
 use Capell\Newsletter\Data\ProviderAudienceData;
 use Capell\Newsletter\Data\ProviderInterestData;
 use Capell\Newsletter\Data\ProviderSubscriberData;
@@ -34,6 +37,15 @@ it('keeps newsletter subscriber and provider data typed across boundaries', func
     );
     $mapping = new FormMappingData(1, 'email', fixedTagIds: [5], requiresDoubleOptIn: false);
     $consent = new ConsentEvidenceData('form', '42', 'I agree', ipAddress: '127.0.0.1');
+    $preferenceCenter = new PreferenceCenterData(
+        subscriberId: 1,
+        siteId: 1,
+        email: 'ben@example.com',
+        status: SubscriberStatus::Subscribed,
+        canReceiveNewsletter: true,
+        segments: [new PreferenceCenterSegmentData(5, 'Product updates', 'product-updates', true)],
+    );
+    $preferenceUpdate = new PreferenceCenterUpdateData(segmentIds: [5]);
 
     expect($subscriber->status->isSendable())->toBeTrue()
         ->and(SubscriberStatus::Pending->isSendable())->toBeFalse()
@@ -42,6 +54,8 @@ it('keeps newsletter subscriber and provider data typed across boundaries', func
         ->and($consent->sourceType)->toBe('form')
         ->and(new ProviderAudienceData('aud-1', 'Main'))->remoteId->toBe('aud-1')
         ->and(new ProviderSyncResultData(false, errorMessage: 'No'))->errorMessage->toBe('No')
+        ->and($preferenceCenter->segments[0]->selected)->toBeTrue()
+        ->and($preferenceUpdate->segmentIds)->toBe([5])
         ->and(new ProviderWebhookEventData('ben@example.com', SubscriberStatus::Unsubscribed, 'unsubscribe'))->eventType
         ->toBe('unsubscribe');
 });
@@ -55,6 +69,8 @@ it('exposes newsletter labels and persisted enum values', function (): void {
         ->and(SegmentType::SavedFilter->getLabel())->toBeString()
         ->and(SyncStatus::RetryScheduled->getLabel())->toBeString()
         ->and(ImportBatchStatus::DryRun->value)->toBe('dry_run')
+        ->and(ImportBatchStatus::Processing->value)->toBe('processing')
         ->and(ImportBatchType::Export->value)->toBe('export')
+        ->and(PublicTokenType::PreferenceCenter->value)->toBe('preference_center')
         ->and(PublicTokenType::Unsubscribe->value)->toBe('unsubscribe');
 });

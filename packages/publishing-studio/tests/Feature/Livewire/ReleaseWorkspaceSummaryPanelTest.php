@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Models\Page;
+use Capell\Core\Models\Site;
 use Capell\PublishingStudio\Enums\WorkspaceKindEnum;
 use Capell\PublishingStudio\Enums\WorkspaceStatusEnum;
 use Capell\PublishingStudio\Livewire\ReleaseWorkspaceSummaryPanel;
@@ -12,6 +14,7 @@ use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
 
 uses(CreatesAdminUser::class);
 
@@ -64,6 +67,29 @@ it('authorizes workspace access inside the release panel component', function ()
     $this->actingAsUser();
 
     $workspace = Workspace::factory()->create(['kind' => WorkspaceKindEnum::Release]);
+
+    livewire(ReleaseWorkspaceSummaryPanel::class, ['record' => $workspace])
+        ->assertForbidden();
+});
+
+it('forbids release summaries outside the actor site scope', function (): void {
+    Permission::findOrCreate('View:Workspace');
+
+    $allowedSite = Site::factory()->create();
+    $blockedSite = Site::factory()->create();
+    $viewer = test()->createUserWithPermission('View:Workspace');
+    $viewer->assignedSiteIds = collect([(int) $allowedSite->getKey()]);
+
+    test()->actingAs($viewer);
+
+    $workspace = Workspace::factory()->create([
+        'kind' => WorkspaceKindEnum::Release,
+        'status' => WorkspaceStatusEnum::Approved,
+    ]);
+    Page::factory()->create([
+        'workspace_id' => $workspace->getKey(),
+        'site_id' => $blockedSite->getKey(),
+    ]);
 
     livewire(ReleaseWorkspaceSummaryPanel::class, ['record' => $workspace])
         ->assertForbidden();

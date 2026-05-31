@@ -8,6 +8,7 @@ use Capell\Admin\Policies\Concerns\ResolvesShieldPermission;
 use Capell\PublishingStudio\Enums\PublishingStudioPermission;
 use Capell\PublishingStudio\Enums\WorkspaceStatusEnum;
 use Capell\PublishingStudio\Models\Workspace;
+use Capell\PublishingStudio\Support\WorkspaceAccess;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 
@@ -37,7 +38,8 @@ class WorkspacePolicy
 
     public function view(Authenticatable $user, Workspace $workspace): bool
     {
-        return $this->userHasPermission($user, self::permission('view', self::SUBJECT));
+        return $this->userHasPermission($user, self::permission('view', self::SUBJECT))
+            && WorkspaceAccess::actorCanUseWorkspace($user, $workspace);
     }
 
     public function create(Authenticatable $user): bool
@@ -48,12 +50,19 @@ class WorkspacePolicy
     public function update(Authenticatable $user, Workspace $workspace): bool
     {
         return $this->userHasPermission($user, self::permission('update', self::SUBJECT))
+            && WorkspaceAccess::actorCanUseWorkspace($user, $workspace)
             && $workspace->isEditable();
     }
 
     public function delete(Authenticatable $user, Workspace $workspace): bool
     {
-        return $this->userHasPermission($user, self::permission('delete', self::SUBJECT));
+        return $this->userHasPermission($user, self::permission('delete', self::SUBJECT))
+            && WorkspaceAccess::actorCanUseWorkspace($user, $workspace);
+    }
+
+    public function preview(Authenticatable $user, Workspace $workspace): bool
+    {
+        return $this->view($user, $workspace);
     }
 
     /** Submit a workspace for review (junior-level action). */
@@ -63,7 +72,8 @@ class WorkspacePolicy
             return false;
         }
 
-        return $workspace->status === WorkspaceStatusEnum::Open;
+        return WorkspaceAccess::actorCanUseWorkspace($user, $workspace)
+            && $workspace->status === WorkspaceStatusEnum::Open;
     }
 
     /** Approve a workspace that is in review (senior-level action). */
@@ -73,7 +83,8 @@ class WorkspacePolicy
             return false;
         }
 
-        return $workspace->status === WorkspaceStatusEnum::InReview;
+        return WorkspaceAccess::actorCanUseWorkspace($user, $workspace)
+            && $workspace->status === WorkspaceStatusEnum::InReview;
     }
 
     /** Reject a workspace that is in review (senior-level action). */
@@ -84,7 +95,8 @@ class WorkspacePolicy
             return false;
         }
 
-        return $workspace->status === WorkspaceStatusEnum::InReview;
+        return WorkspaceAccess::actorCanUseWorkspace($user, $workspace)
+            && $workspace->status === WorkspaceStatusEnum::InReview;
     }
 
     /** Publish an approved workspace onto live (release-level action). */
@@ -94,7 +106,10 @@ class WorkspacePolicy
             return false;
         }
 
-        return $workspace->status === WorkspaceStatusEnum::Approved;
+        return WorkspaceAccess::actorCanUseWorkspace($user, $workspace) && in_array($workspace->status, [
+            WorkspaceStatusEnum::Approved,
+            WorkspaceStatusEnum::Scheduled,
+        ], true);
     }
 
     /**

@@ -5,7 +5,7 @@
 ])
 
 @if ($campaignGroup)
-        data-campaign-id="{{ $campaignGroup->getKey() }}"
+        data-campaign="{{ $campaignGroup->slug }}"
 @endif
 
 @if ($conversionGoal)

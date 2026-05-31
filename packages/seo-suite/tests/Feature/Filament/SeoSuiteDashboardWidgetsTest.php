@@ -248,9 +248,10 @@ it('builds SEO opportunities and AI Discovery coverage from scoped rows', functi
 
     $opportunities = BuildSeoOpportunityRowsAction::run();
     $coverage = BuildAiDiscoveryCoverageStatsAction::run();
+    $opportunity = $opportunities->first();
 
     expect($opportunities)->toHaveCount(1)
-        ->and($opportunities->first()['critical_count'])->toBe(2)
+        ->and($opportunity['critical_count'] ?? null)->toBe(2)
         ->and($coverage)->toMatchArray([
             'included' => 1,
             'excluded' => 0,

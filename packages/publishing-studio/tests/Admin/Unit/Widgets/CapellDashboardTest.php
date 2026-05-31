@@ -5,19 +5,21 @@ declare(strict_types=1);
 use Capell\Admin\Enums\DashboardEnum;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Filament\Pages\CapellDashboard;
+use Capell\Admin\Filament\Widgets\Dashboard\CapellFilamentInfoWidget;
 use Capell\Admin\Filament\Widgets\Dashboard\ListPagesWidget;
 use Capell\Admin\Filament\Widgets\Dashboard\MyWorkQueueWidget;
 use Capell\Admin\Filament\Widgets\Dashboard\RecentlyPublishedWidget;
-use Capell\Admin\Filament\Widgets\Dashboard\SiteStatsOverviewWidget;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
 use Capell\LoginAudit\Filament\Widgets\LoginAuditsWidget;
 use Capell\PublishingStudio\Filament\Widgets\WorkspaceActivityWidgetAbstract;
-use Filament\Widgets\FilamentInfoWidget;
 
-it('getColumns returns the dashboard grid columns', function (): void {
+it('getColumns returns the responsive dashboard grid columns', function (): void {
     $dashboard = new CapellDashboard;
-    expect($dashboard->getColumns())->toBe(2);
+    expect($dashboard->getColumns())->toBe([
+        'default' => 1,
+        'lg' => 2,
+    ]);
 });
 
 it('getWidgets contains all expected widget classes', function (): void {
@@ -27,11 +29,10 @@ it('getWidgets contains all expected widget classes', function (): void {
     $widgets = $dashboard->getWidgets();
 
     expect($widgets)
-        ->toContain(SiteStatsOverviewWidget::class)
         ->toContain(WorkspaceActivityWidgetAbstract::class)
         ->toContain(MyWorkQueueWidget::class)
         ->toContain(RecentlyPublishedWidget::class)
-        ->toContain(FilamentInfoWidget::class);
+        ->toContain(CapellFilamentInfoWidget::class);
 });
 
 it('registers workspace-owned admin widgets when publishing-studio are installed', function (): void {

@@ -105,6 +105,8 @@ it('encrypts destination secrets and submission payloads at rest', function (): 
     $storedDestination = DB::table('public_action_destinations')->where('id', $destination->getKey())->first();
     $storedSubmission = DB::table('public_action_submissions')->where('id', $submission->getKey())->first();
 
+    throw_if(! $storedDestination instanceof stdClass || ! $storedSubmission instanceof stdClass, RuntimeException::class, 'Expected encrypted public action rows to exist.');
+
     expect((string) $storedDestination->endpoint_url)->not->toContain('hooks.example.test')
         ->and((string) $storedDestination->secret)->not->toContain('plain-secret')
         ->and((string) $storedDestination->headers)->not->toContain('plain-secret')
@@ -139,6 +141,8 @@ it('hashes and revokes integration tokens without storing the plain token', func
     ]);
 
     $storedToken = DB::table('public_action_integration_tokens')->where('id', $integrationToken->getKey())->first();
+
+    throw_unless($storedToken instanceof stdClass, RuntimeException::class, 'Expected public action integration token row to exist.');
 
     expect((string) $storedToken->token_hash)->toBe(hash('sha256', $plainTextToken))
         ->and((string) $storedToken->token_hash)->not->toBe($plainTextToken)

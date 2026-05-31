@@ -88,34 +88,29 @@
                 "caption": "Theme Saas extension preview"
             },
             {
-                "path": "docs/assets/marketplace/saas-homepage-marketplace.jpg",
-                "alt": "Theme SaaS homepage screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme SaaS: Homepage. Homepage composition with hero, proof, repeated content, CTA, and footer."
+                "path": "docs/assets/marketplace/saas-blog-layout.svg",
+                "alt": "Theme Saas Blog Layout image",
+                "caption": "Theme Saas Blog Layout"
             },
             {
-                "path": "docs/assets/marketplace/saas-directory-marketplace.jpg",
-                "alt": "Theme SaaS directory screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme SaaS: Directory. List or directory route with repeated cards, scanning rhythm, and route-backed pagination layout."
+                "path": "docs/assets/marketplace/saas-campaign-layout.svg",
+                "alt": "Theme Saas Campaign Layout image",
+                "caption": "Theme Saas Campaign Layout"
             },
             {
-                "path": "docs/assets/marketplace/saas-detail-marketplace.jpg",
-                "alt": "Theme SaaS detail screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme SaaS: Detail. Detail page route with media, proof, supporting sections, and conversion path."
+                "path": "docs/assets/marketplace/saas-demo-request-layout.svg",
+                "alt": "Theme Saas Demo Request Layout image",
+                "caption": "Theme Saas Demo Request Layout"
             },
             {
-                "path": "docs/assets/marketplace/saas-contact-marketplace.jpg",
-                "alt": "Theme SaaS contact screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme SaaS: Contact. Contact or enquiry route with theme-specific routing cards and CTA treatment."
+                "path": "docs/assets/marketplace/saas-docs-layout.svg",
+                "alt": "Theme Saas Docs Layout image",
+                "caption": "Theme Saas Docs Layout"
             },
             {
-                "path": "docs/assets/marketplace/saas-conversion-marketplace.jpg",
-                "alt": "Theme SaaS conversion cta screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme SaaS: Conversion CTA. Conversion route focused on proof, action rhythm, and next-step clarity."
-            },
-            {
-                "path": "docs/assets/marketplace/saas-sections-marketplace.jpg",
-                "alt": "Theme SaaS section suite screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme SaaS: Section Suite. Theme-specific section suite showing the premium components available to editors."
+                "path": "docs/assets/marketplace/saas-feature-layout.svg",
+                "alt": "Theme Saas Feature Layout image",
+                "caption": "Theme Saas Feature Layout"
             }
         ],
         "categories": ["frontend", "themes"]

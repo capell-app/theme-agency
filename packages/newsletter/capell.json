@@ -109,6 +109,7 @@
     "contributionTraceability": {
         "deferredContributions": [
             "admin-resource",
+            "dashboard-widget",
             "model",
             "overview-stat",
             "route",

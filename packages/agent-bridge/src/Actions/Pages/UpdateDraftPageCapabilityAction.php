@@ -7,14 +7,14 @@ namespace Capell\AgentBridge\Actions\Pages;
 use Capell\AgentBridge\Contracts\CapellAgentBridgeCapabilityAction;
 use Capell\AgentBridge\Data\CapabilityInvocationData;
 use Capell\AgentBridge\Data\CapabilityResultData;
-use Capell\Core\Models\Page;
-use Illuminate\Database\Eloquent\Model;
+use Capell\AgentBridge\Support\AgentBridgePageAccess;
 
 final class UpdateDraftPageCapabilityAction implements CapellAgentBridgeCapabilityAction
 {
     public function preview(CapabilityInvocationData $invocation): CapabilityResultData
     {
         $payload = $this->validatedPayload($invocation->payload);
+        AgentBridgePageAccess::authorizedPage($invocation->user, (int) $payload['page_id']);
 
         return new CapabilityResultData(
             ok: true,
@@ -29,10 +29,7 @@ final class UpdateDraftPageCapabilityAction implements CapellAgentBridgeCapabili
     public function execute(CapabilityInvocationData $invocation): CapabilityResultData
     {
         $payload = $this->validatedPayload($invocation->payload);
-        $pageClass = $this->pageClass();
-        $page = $pageClass::query()
-            ->whereKey($payload['page_id'])
-            ->firstOrFail();
+        $page = AgentBridgePageAccess::authorizedPage($invocation->user, (int) $payload['page_id']);
 
         $updates = array_intersect_key($payload, array_flip([
             'name',
@@ -70,11 +67,5 @@ final class UpdateDraftPageCapabilityAction implements CapellAgentBridgeCapabili
         ])->validate();
 
         return $payload;
-    }
-
-    /** @return class-string<Model> */
-    private function pageClass(): string
-    {
-        return Page::class;
     }
 }

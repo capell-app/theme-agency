@@ -6,7 +6,7 @@ Deployment can generate package screenshots from the committed screenshot manife
 
 1. Install the package and its declared dependencies from `capell.json`.
 2. If the screenshot manifest declares `composerRequires`, Composer require every listed package before seeding demo data. This is required for cross-package screenshots such as frontend authoring, where the editable page depends on core, admin, frontend, a theme beacon, and the authoring package.
-3. Run migrations and package setup/demo commands listed in `docs/overview.md`.
+3. Run migrations, then package install, setup, and demo commands from `capell.json` in that order when present. `commands.demoParams` declares the prompt/options the runner must provide so captures use populated package demo data.
 4. Authenticate as an admin user with the required role or permission.
 5. Resolve `admin-surface` targets through Filament resources or pages.
 6. Resolve `frontend-url` targets through seeded demo routes or package route names.
@@ -28,6 +28,11 @@ Deployment can generate package screenshots from the committed screenshot manife
 - `browserTests`: optional browser scenario contracts the deployment runner must execute after package installation.
 - `runner`: optional screenshot runner path, such as `scripts/capture-admin-screenshots.mjs`.
 - `capture.fullPage`: when true, the runner should capture the full scrollable page instead of only the viewport.
+- Aggregate package entries include `installCommand`, `setupCommand`, `demoCommand`, `demoParams`, and `doctorCommand` copied from each package `capell.json`. The screenshot runner should treat those fields as the authoritative demo lifecycle before capture.
+
+## Marketplace Visual Assets
+
+Package marketplace screenshots declared in `capell.json` must point at committed files under `docs/assets/marketplace/`. The package-side validator checks those paths so marketplace pages cannot ship with broken gallery images.
 
 ## Notes
 
@@ -37,7 +42,7 @@ The package repo does not need to run a browser during docs generation. It commi
 
 `Package Screenshots` validates screenshot manifests on pull requests that touch `packages/**/docs/screenshots.json`. It rebuilds `docs/package-screenshot-manifest.json`, validates package manifests, and fails when the aggregate manifest is not committed.
 
-After changes land on `4.x`, the same workflow captures screenshots for packages whose `docs/screenshots.json` changed and uploads the generated files as a workflow artifact. The workflow can also be run manually for a package:
+After changes land on `4.x`, the same workflow captures screenshots for packages whose `docs/screenshots.json` changed and uploads the generated files as a workflow artifact. The runner receives the package lifecycle commands through `docs/package-screenshot-manifest.json`, so package demos should be installed before admin or frontend screenshots are taken. The workflow can also be run manually for a package:
 
 ```bash
 gh workflow run screenshots.yml \

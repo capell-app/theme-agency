@@ -20,7 +20,8 @@ class CampaignCtaBlockFactory extends Factory
 
     public function definition(): array
     {
-        $name = $this->faker->unique()->words(3, true);
+        $words = $this->faker->unique()->words(3);
+        $name = is_array($words) ? implode(' ', $words) : $words;
 
         return [
             'campaign_group_id' => CampaignGroup::factory(),

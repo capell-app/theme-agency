@@ -6,6 +6,7 @@ namespace Capell\CampaignStudio\Filament\Resources\CampaignCtaBlocks\Schemas;
 
 use Capell\Admin\Data\Configurators\ConfiguratorContextData;
 use Capell\Admin\Filament\Contracts\FormConfigurator;
+use Capell\Admin\Support\SiteScope;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -15,6 +16,7 @@ use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 final class CampaignCtaBlockForm implements FormConfigurator
 {
@@ -28,7 +30,7 @@ final class CampaignCtaBlockForm implements FormConfigurator
                     ->schema([
                         Select::make('campaign_group_id')
                             ->label(__('capell-campaign-studio::form.campaign_group'))
-                            ->relationship('campaignGroup', 'name')
+                            ->relationship('campaignGroup', 'name', modifyQueryUsing: fn (Builder $query): Builder => SiteScope::applyForCurrentActor($query))
                             ->required(),
                         TextInput::make('site_id')
                             ->label(__('capell-campaign-studio::form.site'))

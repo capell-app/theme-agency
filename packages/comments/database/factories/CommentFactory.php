@@ -23,7 +23,7 @@ class CommentFactory extends Factory
     public function definition(): array
     {
         return [
-            'site_id' => fn (array $attributes): int => CommentAuthor::query()->findOrFail($attributes['comment_author_id'])->site_id,
+            'site_id' => fn (array $attributes): int => CommentAuthor::query()->findOrFail((int) $attributes['comment_author_id'])->site_id,
             'language_id' => null,
             'comment_author_id' => CommentAuthor::factory(),
             'commentable_type' => 'page',

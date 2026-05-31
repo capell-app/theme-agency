@@ -25,11 +25,12 @@ final class BuildPublishingTrendAction
         for ($bucket = 0; $bucket < 7; $bucket++) {
             $bucketStart = $rangeStart->addSeconds($bucket * $bucketSeconds);
             $bucketEnd = $rangeStart->addSeconds(($bucket + 1) * $bucketSeconds);
+            $includeRangeEnd = $bucket === 6;
 
             $points[] = new PublishingTrendPointData(
                 label: $bucketStart->format('M j'),
-                publishedCount: $this->publishedWithin($bucketStart, $bucketEnd),
-                scheduledCount: $this->scheduledWithin($bucketStart, $bucketEnd),
+                publishedCount: $this->publishedWithin($bucketStart, $bucketEnd, $includeRangeEnd),
+                scheduledCount: $this->scheduledWithin($bucketStart, $bucketEnd, $includeRangeEnd),
             );
         }
 
@@ -54,19 +55,25 @@ final class BuildPublishingTrendAction
         };
     }
 
-    private function publishedWithin(CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd): int
+    private function publishedWithin(CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd, bool $includeRangeEnd): int
     {
         return $this->basePageQuery()
             ->publishedDate()
-            ->where(fn (Builder $query): Builder => $this->publishedMarkerWithin($query, $rangeStart, $rangeEnd))
+            ->where(fn (Builder $query): Builder => $this->publishedMarkerWithin($query, $rangeStart, $rangeEnd, $includeRangeEnd))
             ->count();
     }
 
-    private function scheduledWithin(CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd): int
+    private function scheduledWithin(CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd, bool $includeRangeEnd): int
     {
         return $this->basePageQuery()
             ->pending()
-            ->whereBetween((new Page)->qualifyColumn('visible_from'), [$rangeStart, $rangeEnd])
+            ->where(fn (Builder $query): Builder => $this->timestampWithin(
+                $query,
+                (new Page)->qualifyColumn('visible_from'),
+                $rangeStart,
+                $rangeEnd,
+                $includeRangeEnd,
+            ))
             ->count();
     }
 
@@ -74,15 +81,38 @@ final class BuildPublishingTrendAction
      * @param  Builder<Page>  $query
      * @return Builder<Page>
      */
-    private function publishedMarkerWithin(Builder $query, CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd): Builder
+    private function publishedMarkerWithin(Builder $query, CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd, bool $includeRangeEnd): Builder
     {
         return $query
-            ->whereBetween($query->getModel()->qualifyColumn('visible_from'), [$rangeStart, $rangeEnd])
-            ->orWhere(function (Builder $fallbackQuery) use ($rangeStart, $rangeEnd): void {
+            ->where(fn (Builder $query): Builder => $this->timestampWithin(
+                $query,
+                $query->getModel()->qualifyColumn('visible_from'),
+                $rangeStart,
+                $rangeEnd,
+                $includeRangeEnd,
+            ))
+            ->orWhere(function (Builder $fallbackQuery) use ($rangeStart, $rangeEnd, $includeRangeEnd): void {
                 $fallbackQuery
                     ->whereNull($fallbackQuery->getModel()->qualifyColumn('visible_from'))
-                    ->whereBetween($fallbackQuery->getModel()->qualifyColumn('created_at'), [$rangeStart, $rangeEnd]);
+                    ->where(fn (Builder $query): Builder => $this->timestampWithin(
+                        $query,
+                        $fallbackQuery->getModel()->qualifyColumn('created_at'),
+                        $rangeStart,
+                        $rangeEnd,
+                        $includeRangeEnd,
+                    ));
             });
+    }
+
+    /**
+     * @param  Builder<Page>  $query
+     * @return Builder<Page>
+     */
+    private function timestampWithin(Builder $query, string $column, CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd, bool $includeRangeEnd): Builder
+    {
+        return $query
+            ->where($column, '>=', $rangeStart)
+            ->where($column, $includeRangeEnd ? '<=' : '<', $rangeEnd);
     }
 
     /**

@@ -6,7 +6,10 @@ namespace Capell\GA4Reports\Actions;
 
 use Capell\GA4Reports\Contracts\GA4ReportsDataClientInterface;
 use Capell\GA4Reports\Data\GA4ReportsSyncResultData;
+use Capell\GA4Reports\Data\GA4ReportsWindowData;
 use Capell\GA4Reports\Models\GA4ReportsSyncRun;
+use Illuminate\Contracts\Cache\Lock;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
@@ -28,6 +31,12 @@ final class SyncGA4ReportsMetricsAction
 
         if (! $client->isConfigured()) {
             return new GA4ReportsSyncResultData(false, __('capell-ga4-reports::sync.not_configured'));
+        }
+
+        $lock = $this->acquireLock($window);
+
+        if (! $lock instanceof Lock) {
+            return new GA4ReportsSyncResultData(false, __('capell-ga4-reports::sync.already_running'));
         }
 
         $syncRun = GA4ReportsSyncRun::query()->create([
@@ -71,6 +80,28 @@ final class SyncGA4ReportsMetricsAction
             ]);
 
             return new GA4ReportsSyncResultData(false, __('capell-ga4-reports::sync.failed'));
+        } finally {
+            $lock->release();
         }
+    }
+
+    private function acquireLock(GA4ReportsWindowData $window): ?Lock
+    {
+        $seconds = config('capell-ga4-reports.sync_lock_seconds', 3600);
+        $lockSeconds = is_numeric($seconds) ? max(60, (int) $seconds) : 3600;
+        $lock = Cache::lock($this->lockKey($window), $lockSeconds);
+
+        return $lock->get() ? $lock : null;
+    }
+
+    private function lockKey(GA4ReportsWindowData $window): string
+    {
+        return implode(':', [
+            'capell-ga4-reports',
+            'sync',
+            $window->propertyId,
+            $window->startsAt->toDateString(),
+            $window->endsAt->toDateString(),
+        ]);
     }
 }

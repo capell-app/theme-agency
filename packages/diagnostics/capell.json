@@ -50,7 +50,8 @@
         "viewDiagnostics",
         "View:PermissionAuditPage",
         "View:CommandPalettePage",
-        "View:QueueHealthPage"
+        "View:QueueHealthPage",
+        "Manage:QueueHealthPage"
     ],
     "capabilities": ["diagnostics", "diagnostics-admin", "diagnostics-console"],
     "performance": {
@@ -115,21 +116,6 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Diagnostics extension preview image",
                 "caption": "Diagnostics extension preview"
-            },
-            {
-                "path": "docs/assets/screenshots/queue-health-page.png",
-                "alt": "Queue Operations page with dummy queue monitor history, failed jobs, and pending jobs",
-                "caption": "Queue Operations wraps croustibat/filament-jobs-monitor telemetry in a Capell-native diagnostics page"
-            },
-            {
-                "path": "docs/assets/screenshots/diagnostics-dashboard.png",
-                "alt": "Diagnostics dashboard with dummy package and command provider data",
-                "caption": "Diagnostics dashboard for Capell operational checks"
-            },
-            {
-                "path": "docs/assets/screenshots/command-palette-page.png",
-                "alt": "Diagnostics command palette with dummy Capell operations commands",
-                "caption": "Command palette for trusted Diagnostics and capell:* operations"
             }
         ],
         "categories": ["admin", "console", "operations"]

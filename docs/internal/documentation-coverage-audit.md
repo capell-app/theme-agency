@@ -2,9 +2,18 @@
 
 Generated from the current `packages/*` code, package READMEs, package `docs/` files, and `capell.json` manifests. Treat this as an internal checklist before expanding public docs.
 
+Status 2026-05-30: this audit is now historical evidence from the earlier
+coverage pass. The current package workspace has 56 Composer package
+directories. The newer documentation loop added or expanded entry docs for
+`agent-delivery`, `comments`, `filament-peek`, `theme-education`,
+`theme-knowledge`, `theme-local-services`, `theme-nonprofit`, and
+`theme-portfolio`; use the current package files as source of truth before
+acting on the original matrix below.
+
 ## Scope
 
-- Package directories checked: 42
+- Package directories checked during original audit: 42
+- Current Composer package directories on 2026-05-30: 56
 - Manifest-backed feature packages: 41
 - Commands: 38
 - Service providers: 58

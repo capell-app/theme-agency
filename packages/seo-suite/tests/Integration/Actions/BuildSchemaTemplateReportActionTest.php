@@ -17,7 +17,7 @@ use Capell\SeoSuite\Enums\SeoIssueSeverityEnum;
 use Capell\SeoSuite\Support\SchemaTemplates\SchemaTemplateRegistry;
 
 /**
- * @param  array<array-key, mixed>  $requiredFields
+ * @param  list<string>  $requiredFields
  * @param  array<array-key, mixed>  $schema
  */
 function schemaTemplateReportTestTemplate(string $schemaType, array $schema, array $requiredFields): SchemaTemplate

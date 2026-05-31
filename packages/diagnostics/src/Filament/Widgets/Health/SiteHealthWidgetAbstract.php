@@ -25,8 +25,7 @@ final class SiteHealthWidgetAbstract extends Widget implements CapellWidgetContr
 
     protected string $view = 'capell-diagnostics::widgets.site-health';
 
-    /** @var int|string|array<string, int|null> */
-    protected int|string|array $columnSpan = ['md' => 1];
+    protected int|string|array $columnSpan = 'full';
 
     protected static ?int $sort = 6;
 

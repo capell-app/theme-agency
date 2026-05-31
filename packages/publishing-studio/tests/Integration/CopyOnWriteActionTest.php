@@ -79,8 +79,9 @@ it('cloneForEdit leaves the live row on disk untouched', function (): void {
         ->withoutGlobalScopes()
         ->find($originalId);
 
-    capell_expect($stored)->not->toBeNull()
-        ->and($stored->name)->toBe('live-name')
+    $stored = publishingStudioTestInstance($stored, ShadowableDraftableFixture::class);
+
+    capell_expect($stored->name)->toBe('live-name')
         ->and($stored->workspace_id)->toBe(0)
         ->and($stored->uuid)->toBe($originalUuid);
 });
@@ -121,6 +122,8 @@ it('cloneForEdit stamps the shadow flag on the live row', function (): void {
     $liveAfter = ShadowableDraftableFixture::query()
         ->withoutGlobalScopes()
         ->find($liveRow->id);
+
+    $liveAfter = publishingStudioTestInstance($liveAfter, ShadowableDraftableFixture::class);
 
     capell_expect($liveAfter->shadowed_by_workspace_id)->toBe($workspace->id)
         ->and($liveRow->shadowed_by_workspace_id)->toBe($workspace->id);
@@ -163,6 +166,8 @@ it('cloneForDelete persists the clone and soft-deletes it to mark a tombstone', 
     $storedLive = ShadowableDraftableFixture::query()
         ->withoutGlobalScopes()
         ->find($liveRow->id);
+
+    $storedLive = publishingStudioTestInstance($storedLive, ShadowableDraftableFixture::class);
 
     capell_expect($storedLive->trashed())->toBeFalse()
         ->and($storedLive->shadowed_by_workspace_id)->toBe($workspace->id);
@@ -213,6 +218,8 @@ it('clearShadow only clears the flag when the workspace id matches', function ()
         ->withoutGlobalScopes()
         ->find($liveRow->id);
 
+    $stillShadowed = publishingStudioTestInstance($stillShadowed, ShadowableDraftableFixture::class);
+
     capell_expect($stillShadowed->shadowed_by_workspace_id)->toBe($ownerWorkspace->id);
 
     // The matching workspace resets it.
@@ -221,6 +228,8 @@ it('clearShadow only clears the flag when the workspace id matches', function ()
     $cleared = ShadowableDraftableFixture::query()
         ->withoutGlobalScopes()
         ->find($liveRow->id);
+
+    $cleared = publishingStudioTestInstance($cleared, ShadowableDraftableFixture::class);
 
     capell_expect($cleared->shadowed_by_workspace_id)->toBe(0);
 });

@@ -26,12 +26,12 @@ class ScheduleEventNotificationsAction
             return;
         }
 
-        EventNotificationLog::query()->firstOrCreate([
+        EventNotificationLog::query()->createOrFirst([
             'event_occurrence_id' => $occurrence->getKey(),
             'event_registration_id' => $registration->getKey(),
             'type' => EventNotificationTypeEnum::Reminder,
-        ], [
             'recipient_email' => $registration->email,
+        ], [
             'status' => 'queued',
             'scheduled_for' => $occurrence->starts_at->subDay(),
         ]);

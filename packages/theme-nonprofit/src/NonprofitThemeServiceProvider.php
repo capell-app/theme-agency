@@ -13,7 +13,6 @@ use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Nonprofit\Console\Commands\DemoCommand;
-use Capell\ThemeStudio\Nonprofit\Rendering\PackageAwareSectionRenderer;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -33,7 +32,7 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/nonprofit.jpg',
             tags: ['Impact', 'Campaigns', 'Donations'],
             bestFit: ['Charities', 'Civic organisations', 'Campaign teams'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'impact', 'campaigns', 'volunteer-donate', 'events', 'stories', 'contact', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'impact', 'donation-impact', 'campaigns', 'volunteer-donate', 'volunteer-shifts', 'annual-report-proof', 'events', 'stories', 'contact', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'nonprofit',
@@ -43,6 +42,9 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
                     values: [
                         'primaryColor' => '#166534',
                         'accentColor' => '#eab308',
+                        'neutralColor' => '#132016',
+                        'surfaceColor' => '#f7fbf5',
+                        'foregroundColor' => '#132016',
                         'headingFont' => 'sora',
                         'bodyFont' => 'inter',
                         'spacing' => 'balanced',
@@ -51,6 +53,9 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
                         'layoutPresentation' => 'structured',
                         'motionIntensity' => 'subtle',
                         'mediaTreatment' => 'framed',
+                        'radius' => 'md',
+                        'headingScale' => 'balanced',
+                        'cardDensity' => 'compact',
                     ],
                 ),
             ],
@@ -97,7 +102,7 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
                 sectionRenderers: [],
             ),
             sectionRenderers: collect(self::definition()->includedSections)
-                ->map(fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer|null => $this->sectionRenderer(
+                ->map(fn (string $sectionKey): ?ViewSectionRenderer => $this->sectionRenderer(
                     $sectionKey,
                     $this->optionalSectionIntegrations($campaignStudioAvailable, $formBuilderAvailable, $eventsAvailable, $blogAvailable),
                 ))
@@ -110,7 +115,7 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
     /**
      * @param  array<string, array<string, bool>>  $optionalIntegrations
      */
-    private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ViewSectionRenderer|PackageAwareSectionRenderer|null
+    private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ?ViewSectionRenderer
     {
         if ($this->isFoundationSection($sectionKey)) {
             return null;
@@ -123,12 +128,12 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
         }
 
         if (array_key_exists($sectionKey, $optionalIntegrations)) {
-            return new PackageAwareSectionRenderer(
+            return new ViewSectionRenderer(
                 themeKey: self::THEME_KEY,
                 sectionKey: $sectionKey,
                 view: $view,
-                integrations: $optionalIntegrations[$sectionKey],
                 failLoudly: true,
+                extraViewData: $optionalIntegrations[$sectionKey],
             );
         }
 
@@ -152,7 +157,9 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
     {
         return [
             'campaigns' => ['campaignStudioAvailable' => $campaignStudioAvailable],
+            'donation-impact' => ['campaignStudioAvailable' => $campaignStudioAvailable],
             'volunteer-donate' => ['formBuilderAvailable' => $formBuilderAvailable],
+            'volunteer-shifts' => ['formBuilderAvailable' => $formBuilderAvailable, 'eventsAvailable' => $eventsAvailable],
             'events' => ['eventsAvailable' => $eventsAvailable],
             'stories' => ['blogAvailable' => $blogAvailable],
         ];

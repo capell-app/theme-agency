@@ -1,4 +1,109 @@
-.capell-theme-local-services {
-    --capell-theme-primary: #0f766e;
-    --capell-theme-accent: #f97316;
+.local-services-shell {
+    --site-theme-primary: #0f766e;
+    --site-theme-accent: #f97316;
+    --local-services-ink: var(--theme-foreground, #13231f);
+    --local-services-muted: #5f6f68;
+    --local-services-primary: var(--theme-primary, #0f766e);
+    --local-services-accent: var(--theme-accent, #f97316);
+    --local-services-surface: var(--theme-surface, #f7fbf8);
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            var(--local-services-surface) 48%,
+            #ffffff 100%
+        ),
+        linear-gradient(90deg, rgb(15 118 110 / 5%) 1px, transparent 1px),
+        linear-gradient(180deg, rgb(249 115 22 / 5%) 1px, transparent 1px);
+    background-size:
+        auto,
+        2rem 2rem,
+        2rem 2rem;
+    color: var(--local-services-ink);
+}
+
+.local-services-shell section {
+    padding-block: clamp(4rem, 7vw, 7rem);
+}
+
+:where(
+    .local-services-shell h1,
+    .local-services-shell h2,
+    .local-services-shell h3
+) {
+    color: var(--local-services-ink);
+    letter-spacing: 0;
+}
+
+:where(.local-services-shell h1) {
+    max-width: 13ch;
+    font-size: clamp(3rem, 6vw, 5.75rem);
+    font-weight: 850;
+    line-height: 0.98;
+}
+
+:where(.local-services-shell h2) {
+    max-width: 16ch;
+    font-size: clamp(2.125rem, 4vw, 3.875rem);
+    font-weight: 820;
+    line-height: 1.04;
+}
+
+:where(.local-services-shell p) {
+    color: var(--local-services-muted);
+    line-height: 1.75;
+}
+
+:where(
+    .local-services-shell a,
+    .local-services-shell button,
+    .local-services-shell input,
+    .local-services-shell textarea,
+    .local-services-shell select
+):focus-visible {
+    outline: 3px solid rgb(249 115 22 / 78%);
+    outline-offset: 3px;
+}
+
+.local-services-skip-link {
+    background: #13231f;
+    color: #ffffff;
+    font-weight: 800;
+    left: 1rem;
+    padding: 0.75rem 1rem;
+    position: fixed;
+    top: 1rem;
+    transform: translateY(-150%);
+    z-index: 50;
+}
+
+.local-services-skip-link:focus {
+    transform: translateY(0);
+}
+
+.local-services-shell :where(article) {
+    border-color: rgb(15 118 110 / 16%);
+    box-shadow: 0 20px 58px rgb(19 35 31 / 8%);
+}
+
+.local-services-shell :where(.theme-carousel-button) {
+    color: var(--local-services-ink);
+}
+
+.local-services-shell :where(.theme-section-cta, .theme-section-contact) {
+    position: relative;
+}
+
+.local-services-shell
+    :where(.theme-section-cta, .theme-section-contact)::before {
+    background: linear-gradient(
+        90deg,
+        var(--local-services-primary),
+        var(--local-services-accent)
+    );
+    content: '';
+    height: 0.25rem;
+    inset: 0 0 auto;
+    position: absolute;
 }

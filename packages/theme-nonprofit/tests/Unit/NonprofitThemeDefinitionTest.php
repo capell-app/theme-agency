@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
+use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
 use Capell\Core\ThemeStudio\Data\FeatureSectionData;
@@ -35,43 +37,45 @@ it('renders standard sections through Nonprofit views', function (): void {
     $registry = new ThemeRegistry;
     (new NonprofitThemeServiceProvider($this->app))->boot($registry);
 
-    $featureHtml = $registry
-        ->sectionRenderer('nonprofit', 'features')
-        ->render(new FeatureSectionData(
-            heading: 'Impact pathways',
-            summary: 'Supporter cards should feel specific to nonprofit work.',
-            features: [
-                ['title' => 'Campaign paths', 'description' => 'Move supporters from belief to action.', 'type' => 'Campaigns'],
-            ],
-        ));
+    $featureRenderer = $registry->sectionRenderer('nonprofit', 'features');
+    $listingRenderer = $registry->sectionRenderer('nonprofit', 'content-listing');
+    $ctaRenderer = $registry->sectionRenderer('nonprofit', 'cta');
+    $proofRenderer = $registry->sectionRenderer('nonprofit', 'proof');
 
-    $listingHtml = $registry
-        ->sectionRenderer('nonprofit', 'content-listing')
-        ->render(new ContentListingSectionData(
-            heading: 'Community stories',
-            summary: 'Cards should support campaigns and proof.',
-            items: [
-                ['title' => 'Neighbourhood appeal', 'summary' => 'Show a campaign outcome.', 'type' => 'Appeal'],
-            ],
-        ));
+    assert($featureRenderer instanceof SectionRenderer);
+    assert($listingRenderer instanceof SectionRenderer);
+    assert($ctaRenderer instanceof SectionRenderer);
+    assert($proofRenderer instanceof SectionRenderer);
 
-    $ctaHtml = $registry
-        ->sectionRenderer('nonprofit', 'cta')
-        ->render(new CtaSectionData(
-            heading: 'Back the next campaign',
-            summary: 'Move supporters into action.',
-            actions: [['label' => 'Donate now', 'url' => '#donate', 'style' => 'primary']],
-        ));
+    $featureHtml = $featureRenderer->render(new FeatureSectionData(
+        heading: 'Impact pathways',
+        summary: 'Supporter cards should feel specific to nonprofit work.',
+        features: [
+            ['title' => 'Campaign paths', 'description' => 'Move supporters from belief to action.', 'type' => 'Campaigns'],
+        ],
+    ));
 
-    $proofHtml = $registry
-        ->sectionRenderer('nonprofit', 'proof')
-        ->render(new ProofSectionData(
-            heading: 'Campaign outcomes',
-            summary: 'Proof should feel like supporter and campaign evidence.',
-            items: [
-                ['metric' => '84%', 'name' => 'Funded', 'summary' => 'Supporters moved the appeal toward its next milestone.'],
-            ],
-        ));
+    $listingHtml = $listingRenderer->render(new ContentListingSectionData(
+        heading: 'Community stories',
+        summary: 'Cards should support campaigns and proof.',
+        items: [
+            ['title' => 'Neighbourhood appeal', 'summary' => 'Show a campaign outcome.', 'type' => 'Appeal'],
+        ],
+    ));
+
+    $ctaHtml = $ctaRenderer->render(new CtaSectionData(
+        heading: 'Back the next campaign',
+        summary: 'Move supporters into action.',
+        actions: [['label' => 'Donate now', 'url' => '#donate', 'style' => 'primary']],
+    ));
+
+    $proofHtml = $proofRenderer->render(new ProofSectionData(
+        heading: 'Campaign outcomes',
+        summary: 'Proof should feel like supporter and campaign evidence.',
+        items: [
+            ['metric' => '84%', 'name' => 'Funded', 'summary' => 'Supporters moved the appeal toward its next milestone.'],
+        ],
+    ));
 
     expect($featureHtml)
         ->toContain('Impact pathways')
@@ -109,6 +113,7 @@ it('renders hydrated hero data through the Nonprofit hero view', function (): vo
     $renderer = $registry->sectionRenderer('nonprofit', 'hero');
 
     expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
 
     $html = $renderer->render(HeroSectionData::from([
         'heading' => 'Fund the next community appeal',
@@ -128,3 +133,90 @@ it('renders hydrated hero data through the Nonprofit hero view', function (): vo
         ->toContain('Winter support fund')
         ->not->toContain('capell-app/theme-nonprofit');
 });
+
+it('renders new premium nonprofit layouts through the registry', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(NonprofitThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new NonprofitThemeServiceProvider($this->app))->boot($registry);
+
+    $donationImpactRenderer = $registry->sectionRenderer('nonprofit', 'donation-impact');
+    $volunteerShiftsRenderer = $registry->sectionRenderer('nonprofit', 'volunteer-shifts');
+    $annualReportRenderer = $registry->sectionRenderer('nonprofit', 'annual-report-proof');
+
+    assert($donationImpactRenderer instanceof SectionRenderer);
+    assert($volunteerShiftsRenderer instanceof SectionRenderer);
+    assert($annualReportRenderer instanceof SectionRenderer);
+
+    $donationImpactHtml = $donationImpactRenderer->render(nonprofitThemeSection('donation-impact', [
+        'heading' => 'Fund measurable impact',
+        'items' => [
+            ['title' => 'Meals for a week', 'summary' => 'Donation ladder content with concrete outcomes.'],
+        ],
+    ]));
+
+    $volunteerShiftsHtml = $volunteerShiftsRenderer->render(nonprofitThemeSection('volunteer-shifts', [
+        'heading' => 'Join a practical shift',
+        'items' => [
+            ['title' => 'Saturday outreach', 'summary' => 'Volunteer roles grouped around real community work.'],
+        ],
+    ]));
+
+    $annualReportHtml = $annualReportRenderer->render(nonprofitThemeSection('annual-report-proof', [
+        'heading' => 'Report the outcomes',
+        'items' => [
+            ['title' => 'Transparent spend', 'summary' => 'Annual proof for supporter confidence.'],
+        ],
+    ]));
+
+    expect($donationImpactHtml)
+        ->toContain('Fund measurable impact')
+        ->toContain('Meals for a week')
+        ->not->toContain('capell-app/theme-nonprofit');
+
+    expect($volunteerShiftsHtml)
+        ->toContain('Join a practical shift')
+        ->toContain('Saturday outreach')
+        ->not->toContain('capell-app/theme-nonprofit');
+
+    expect($annualReportHtml)
+        ->toContain('Report the outcomes')
+        ->toContain('Transparent spend')
+        ->not->toContain('capell-app/theme-nonprofit');
+});
+
+/**
+ * @param  array<string, mixed>  $viewData
+ */
+function nonprofitThemeSection(string $key, array $viewData): ThemeSection
+{
+    return new readonly class($key, $viewData) implements ThemeSection
+    {
+        /**
+         * @param  array<string, mixed>  $viewData
+         */
+        public function __construct(
+            private string $sectionKey,
+            private array $viewData,
+        ) {}
+
+        public function key(): string
+        {
+            return $this->sectionKey;
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return ['section' => (object) $this->viewData];
+        }
+    };
+}

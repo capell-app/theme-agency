@@ -16,7 +16,7 @@
     "surfaces": ["frontend"],
     "dependencies": {
         "requires": ["capell-app/core"],
-        "supports": [],
+        "supports": ["capell-app/site-discovery"],
         "conflicts": []
     },
     "providers": {
@@ -70,7 +70,15 @@
             "queueInvalidation": true
         }
     },
-    "healthChecks": [],
+    "healthChecks": [
+        {
+            "key": "agent-delivery.package-health",
+            "label": "Agent Delivery package surfaces, providers, and public manifest health are discoverable by Diagnostics.",
+            "class": "Capell\\AgentDelivery\\Health\\AgentDeliveryHealthCheck",
+            "severity": "critical",
+            "surface": "admin"
+        }
+    ],
     "commercial": {
         "proposedLicense": "paid",
         "requestedCertification": "first-party",

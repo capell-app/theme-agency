@@ -75,7 +75,7 @@
         {!! $pageBlockOutput !!}
     @else
         <x-dynamic-component
-            class="capell-foundation-theme-layout-block"
+            class="site-layout-block"
             :component="$component"
             :$container
             :$containerColspan

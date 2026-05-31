@@ -10,21 +10,27 @@ use Capell\ShopifyCommerce\Exceptions\ShopifyGraphqlException;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Capell\ShopifyCommerce\Models\ShopifyProduct;
 use Capell\ShopifyCommerce\Models\ShopifyProductVariant;
+use GuzzleHttp\Promise\PromiseInterface;
+use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Support\Facades\Http;
 
 it('starts a shopify bulk product sync', function (): void {
     $connection = shopifyBulkConnection();
+    config()->set('capell-shopify-commerce.http_timeout', 6);
+    $timeouts = [];
 
-    Http::fake([
-        'foo.myshopify.com/admin/api/2026-04/graphql.json' => Http::response([
+    Http::fake(function (ClientRequest $request, array $options) use (&$timeouts): PromiseInterface {
+        $timeouts[] = $options['timeout'] ?? null;
+
+        return Http::response([
             'data' => [
                 'bulkOperationRunQuery' => [
                     'bulkOperation' => ['id' => 'gid://shopify/BulkOperation/1', 'status' => 'CREATED'],
                     'userErrors' => [],
                 ],
             ],
-        ]),
-    ]);
+        ]);
+    });
 
     expect(SyncShopifyProductsAction::run($connection))->toBe('gid://shopify/BulkOperation/1');
 
@@ -32,7 +38,8 @@ it('starts a shopify bulk product sync', function (): void {
 
     expect($connection->sync_status)->toBe('running')
         ->and($connection->bulk_operation_id)->toBe('gid://shopify/BulkOperation/1')
-        ->and($connection->last_sync_started_at)->not->toBeNull();
+        ->and($connection->last_sync_started_at)->not->toBeNull()
+        ->and($timeouts)->toBe([6]);
 });
 
 it('marks the connection as errored when starting bulk sync fails', function (): void {
@@ -98,6 +105,9 @@ it('imports bulk jsonl products, variants, prunes stale rows, and preserves mone
         'sync_status' => 'completed',
         'bulk_operation_url' => 'https://bulk.example/products.jsonl',
     ]);
+    config()->set('capell-shopify-commerce.http_timeout', 11);
+    $timeouts = [];
+    $sinks = [];
 
     ShopifyProduct::query()->create([
         'connection_id' => $connection->getKey(),
@@ -108,11 +118,14 @@ it('imports bulk jsonl products, variants, prunes stale rows, and preserves mone
         'status' => 'active',
         'options' => [],
         'raw_snapshot' => [],
-        'synced_at' => now(),
+        'synced_at' => now()->subDay(),
     ]);
 
-    Http::fake([
-        'https://bulk.example/products.jsonl' => Http::response(implode("\n", [
+    Http::fake(function (ClientRequest $request, array $options) use (&$timeouts, &$sinks): PromiseInterface {
+        $timeouts[] = $options['timeout'] ?? null;
+        $sinks[] = $options['sink'] ?? null;
+
+        return Http::response(implode("\n", [
             json_encode([
                 'id' => 'gid://shopify/Product/1',
                 'handle' => 'alpha',
@@ -134,15 +147,17 @@ it('imports bulk jsonl products, variants, prunes stale rows, and preserves mone
                     ],
                 ],
             ], JSON_THROW_ON_ERROR),
-        ])),
-    ]);
+        ]));
+    });
 
     expect(ImportShopifyProductBulkSyncAction::run($connection))->toBe(1)
         ->and(ShopifyProduct::query()->where('shopify_gid', 'gid://shopify/Product/stale')->exists())->toBeFalse()
         ->and(ShopifyProduct::query()->where('shopify_gid', 'gid://shopify/Product/1')->value('search_text'))->toBe('alpha shirt alpha')
         ->and(ShopifyProductVariant::query()->where('shopify_gid', 'gid://shopify/ProductVariant/1')->value('price_amount'))->toBe('19.999900')
         ->and($connection->refresh()->status)->toBe(ShopifyConnectionStatus::Active)
-        ->and($connection->sync_status)->toBe('idle');
+        ->and($connection->sync_status)->toBe('idle')
+        ->and($timeouts)->toBe([11])
+        ->and($sinks[0] ?? null)->toBeString();
 });
 
 it('does not reactivate revoked connections during import', function (): void {

@@ -97,10 +97,12 @@ final class GooglePageSpeedInsightsClient implements PageSpeedInsightsClientInte
 
     private function requestUrl(string $url, PageSpeedStrategyEnum $strategy): string
     {
+        $apiKey = $this->config['api_key'] ?? '';
+
         $query = http_build_query([
             'url' => $url,
             'strategy' => $strategy->value,
-            'key' => trim((string) $this->config['api_key']),
+            'key' => is_string($apiKey) ? trim($apiKey) : '',
         ]);
 
         foreach (self::CATEGORIES as $category) {

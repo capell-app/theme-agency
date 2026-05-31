@@ -73,7 +73,10 @@ it('marks rows with no live counterpart as added', function (): void {
     ]);
 
     $tree = (new WorkspaceDiffService)->diffTree($workspace);
+    $firstNode = publishingStudioTestArray($tree->first());
+    $attributes = publishingStudioTestArray($firstNode['attributes'] ?? null);
+    $nameAttributes = publishingStudioTestArray($attributes['name'] ?? null);
 
-    expect($tree->first()['kind'])->toBe('added')
-        ->and($tree->first()['attributes']['name']['status'])->toBe('added');
+    expect($firstNode['kind'] ?? null)->toBe('added')
+        ->and($nameAttributes['status'] ?? null)->toBe('added');
 });

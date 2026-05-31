@@ -6,6 +6,21 @@ use Capell\Core\Enums\LayoutEnum;
 use Capell\Core\Models\Layout;
 use Capell\Core\Support\Creator\LayoutCreator;
 
+/**
+ * @return array{meta: array<string, mixed>, widgets: array<int, array<string, mixed>>}
+ */
+function foundationThemeSetupMainContainer(Layout $layout): array
+{
+    $containers = $layout->containers;
+    $main = is_array($containers) ? ($containers['main'] ?? null) : null;
+    $meta = is_array($main) && is_array($main['meta'] ?? null) ? $main['meta'] : null;
+    $widgets = is_array($main) && is_array($main['widgets'] ?? null) ? $main['widgets'] : null;
+
+    throw_if(! is_array($meta) || ! is_array($widgets), RuntimeException::class, 'Expected the foundation home layout to have a main container.');
+
+    return ['meta' => $meta, 'widgets' => $widgets];
+}
+
 it('installs Foundation theme layout defaults without owning the home hero', function (): void {
     $homeLayout = resolve(LayoutCreator::class)->createHomeLayout();
     $homeLayout->update(['containers' => []]);
@@ -18,11 +33,12 @@ it('installs Foundation theme layout defaults without owning the home hero', fun
     test()->artisan('capell:foundation-theme-setup')->assertSuccessful();
 
     $homeLayout->refresh();
+    $mainContainer = foundationThemeSetupMainContainer($homeLayout);
 
     expect($homeLayout->containers)->not->toHaveKey('hero')
         ->and($homeLayout->containers)->toHaveKey('main')
-        ->and($homeLayout->containers['main']['meta']['colspan'])->toBe(12)
-        ->and($homeLayout->containers['main']['widgets'])->toBe([
+        ->and($mainContainer['meta']['colspan'] ?? null)->toBe(12)
+        ->and($mainContainer['widgets'])->toBe([
             ['widget_key' => 'page-content'],
         ])
         ->and($homeLayout->widgets)->toBe(['page-content'])
@@ -46,11 +62,12 @@ it('keeps home page content defaults stable on repeated setup', function (): voi
     test()->artisan('capell:foundation-theme-setup')->assertSuccessful();
 
     $homeLayout = Layout::query()->where('key', LayoutEnum::Home->value)->firstOrFail();
+    $mainContainer = foundationThemeSetupMainContainer($homeLayout);
 
     expect($homeLayout->containers)->not->toHaveKey('hero')
         ->and($homeLayout->containers)->toHaveKey('main')
-        ->and($homeLayout->containers['main']['meta']['colspan'])->toBe(12)
-        ->and($homeLayout->containers['main']['widgets'])->toBe([
+        ->and($mainContainer['meta']['colspan'] ?? null)->toBe(12)
+        ->and($mainContainer['widgets'])->toBe([
             ['widget_key' => 'page-content'],
         ])
         ->and($homeLayout->widgets)->toBe(['page-content']);

@@ -1,0 +1,101 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/contacts",
+    "slug": "contacts",
+    "displayName": "Contacts",
+    "kind": "package",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Contacts provides central contact, organisation, lead, and activity records for Capell package integrations.",
+    "product": {
+        "group": "Capell Content",
+        "tier": "premium",
+        "bundle": "content-product"
+    },
+    "namespace": "Capell\\Contacts",
+    "surfaces": ["admin"],
+    "dependencies": {
+        "requires": ["capell-app/core"],
+        "supports": [
+            "capell-app/access-gate",
+            "capell-app/campaign-studio",
+            "capell-app/comments",
+            "capell-app/events",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": ["Capell\\Contacts\\Providers\\ContactsServiceProvider"],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [],
+    "database": {
+        "migrations": true,
+        "settings": false,
+        "requiredTables": [
+            "contacts",
+            "contact_organisations",
+            "contact_organisation_memberships",
+            "contact_leads",
+            "contact_activities"
+        ]
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["contacts", "contacts-identity", "contacts-activity"],
+    "performance": {
+        "frontendRenderBudgetMs": 0,
+        "adminQueryBudget": 40,
+        "cacheTags": ["contacts"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site"],
+            "sensitiveOutput": true,
+            "invalidationSources": [],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "contacts.package-health",
+            "label": "Contacts models, migrations, and privacy-sensitive storage are discoverable.",
+            "class": "Capell\\Contacts\\Health\\ContactsHealthCheck",
+            "severity": "critical",
+            "surface": "admin"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Contacts provides the shared CRM data foundation for Capell package integrations.",
+        "screenshots": [],
+        "categories": ["admin", "crm", "contacts"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": [
+            "admin-resource",
+            "dashboard-widget",
+            "deduplication-rules",
+            "migration",
+            "model",
+            "privacy-tools",
+            "source-package-sync"
+        ]
+    }
+}

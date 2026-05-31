@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\FoundationTheme\View\Components;
 
+use Capell\Core\Models\Language;
 use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Frontend\Actions\Performance\RecordExtensionRenderContributionAction;
@@ -200,6 +201,12 @@ final class Actions extends Component
         }
 
         $site = Frontend::site();
+        $language = Frontend::language();
+
+        if (! $site instanceof Site || ! $language instanceof Language) {
+            return null;
+        }
+
         $targetSite = $action['site_id'] === $site->id
             ? $site
             : SiteLoader::getSites()->firstWhere('id', $action['site_id']);
@@ -212,7 +219,7 @@ final class Actions extends Component
             pageType: (string) $action['pageable_type'],
             pageId: (int) $action['pageable_id'],
             site: $targetSite,
-            language: Frontend::language(),
+            language: $language,
         );
     }
 }

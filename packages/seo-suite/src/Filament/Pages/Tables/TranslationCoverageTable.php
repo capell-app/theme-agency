@@ -8,6 +8,7 @@ use Capell\Admin\Filament\Components\Tables\Columns\Page\PageNameColumn;
 use Capell\Admin\Filament\Contracts\TableConfigurator;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
+use Capell\Core\Models\Site;
 use Capell\SeoSuite\Actions\DashboardReports\BuildTranslationCoverageQueryAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -51,14 +52,20 @@ class TranslationCoverageTable implements TableConfigurator
     {
         $record->loadMissing(['site.languages', 'translations']);
 
-        $siteLanguageCount = $record->site->languages->count();
+        $site = $record->site;
+
+        if (! $site instanceof Site) {
+            return 0;
+        }
+
+        $siteLanguageCount = $site->languages->count();
 
         if ($siteLanguageCount === 0) {
             return 0;
         }
 
         $translatedLanguageIds = $record->translations->pluck('language_id')->unique()->values();
-        $covered = $record->site->languages->filter(
+        $covered = $site->languages->filter(
             fn (Language $language): bool => $translatedLanguageIds->contains($language->id),
         )->count();
 
@@ -69,10 +76,15 @@ class TranslationCoverageTable implements TableConfigurator
     private static function getMissingLanguages(Page $record): array
     {
         $record->loadMissing(['site.languages', 'translations']);
+        $site = $record->site;
+
+        if (! $site instanceof Site) {
+            return [];
+        }
 
         $translatedLanguageIds = $record->translations->pluck('language_id')->unique()->values();
 
-        return $record->site->languages
+        return $site->languages
             ->reject(fn (Language $language): bool => $translatedLanguageIds->contains($language->id))
             ->pluck('name')
             ->all();

@@ -55,7 +55,11 @@ class PublishPageAction extends Action
                     ->success()
                     ->send();
 
-                $this->getLivewire()->redirectToLive();
+                $livewire = $this->getLivewire();
+
+                if (is_object($livewire) && method_exists($livewire, 'redirectToLive')) {
+                    $livewire->redirectToLive();
+                }
             });
     }
 
@@ -148,6 +152,12 @@ class PublishPageAction extends Action
             return null;
         }
 
-        return Workspace::query()->find($workspaceId);
+        if (! is_numeric($workspaceId)) {
+            return null;
+        }
+
+        return Workspace::query()
+            ->whereKey((int) $workspaceId)
+            ->first();
     }
 }

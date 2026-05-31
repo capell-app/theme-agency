@@ -24,7 +24,7 @@ final class BuildGA4ReportsTrendAction
             return [];
         }
 
-        return GA4ReportsDailyMetric::query()
+        return array_values(GA4ReportsDailyMetric::query()
             ->where('property_id', $resolvedWindow->propertyId)
             ->whereDate('metric_date', '>=', $resolvedWindow->startsAt->toDateString())
             ->whereDate('metric_date', '<=', $resolvedWindow->endsAt->toDateString())
@@ -36,6 +36,6 @@ final class BuildGA4ReportsTrendAction
                 sessions: $metric->sessions,
                 totalUsers: $metric->total_users,
             ))
-            ->all();
+            ->all());
     }
 }

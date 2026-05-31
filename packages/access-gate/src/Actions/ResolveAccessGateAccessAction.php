@@ -15,6 +15,7 @@ use Capell\AccessGate\Models\BrowserToken;
 use Capell\AccessGate\Models\Grant;
 use Capell\Core\Actions\LoadSiteDomainFromUrlAction;
 use Capell\Core\Models\SiteDomain;
+use Closure;
 use Illuminate\Contracts\Encryption\Encrypter;
 use Illuminate\Cookie\CookieValuePrefix;
 use Illuminate\Database\Eloquent\Builder;
@@ -193,10 +194,7 @@ final class ResolveAccessGateAccessAction
             ->first();
     }
 
-    /**
-     * @return callable(Builder<Grant>): void
-     */
-    private function activeGrantScope(): callable
+    private function activeGrantScope(): Closure
     {
         return function (Builder $query): void {
             $query

@@ -22,11 +22,15 @@ it('discovers command palette commands from tagged providers in sort order', fun
     app()->tag([TestCommandPaletteProvider::class], 'capell.diagnostics.command-palette-provider');
 
     $commands = DiscoverCommandPaletteCommandsAction::run();
+    $navigateIndex = array_search('test.navigate', array_keys($commands), true);
+    $artisanIndex = array_search('test.artisan', array_keys($commands), true);
+
+    throw_if(! is_int($navigateIndex) || ! is_int($artisanIndex), RuntimeException::class, 'Expected test command palette commands to be discovered.');
 
     expect(array_keys($commands))->toContain('test.navigate')
         ->and(array_keys($commands))->toContain('test.artisan')
-        ->and(array_search('test.navigate', array_keys($commands), true))
-        ->toBeLessThan(array_search('test.artisan', array_keys($commands), true));
+        ->and($navigateIndex)
+        ->toBeLessThan($artisanIndex);
 });
 
 it('validates command palette parameters using command parameter metadata', function (): void {
@@ -68,7 +72,8 @@ it('executes artisan commands with validated parameters and stores command outpu
     $user = $this->createUser();
 
     Artisan::command('capell:test-output {name} {--loud}', function (): int {
-        $message = 'Hello ' . $this->argument('name');
+        $name = $this->argument('name');
+        $message = 'Hello ' . (is_scalar($name) ? (string) $name : '');
 
         if ($this->option('loud') === true) {
             $message = strtoupper($message);

@@ -232,24 +232,32 @@ it('clears affected cached urls and removes the edited model from the cache inde
 });
 
 it('updates allowed editable region fields and rejects unknown fields', function (): void {
+    $user = User::factory()->create();
+    actingAs($user);
+    allowEditableRegionEdits();
+
     $translation = createEditableRegionTranslation();
 
-    $titleResult = UpdateEditableRegionAction::run(editableRegionPayload($translation, 'title'), 'Updated title');
-    $metaResult = UpdateEditableRegionAction::run(editableRegionPayload($translation, 'meta.seo.description'), 'Updated description');
+    $titleResult = UpdateEditableRegionAction::run(editableRegionPayload($translation, 'title'), 'Updated title', $user);
+    $metaResult = UpdateEditableRegionAction::run(editableRegionPayload($translation, 'meta.description'), 'Updated description', $user);
 
     $translation->refresh();
 
     expect($titleResult)->toMatchArray(['cleared' => 0, 'urls' => [], 'status' => 'published', 'redirect_url' => null])
         ->and($metaResult)->toMatchArray(['cleared' => 0, 'urls' => [], 'status' => 'published', 'redirect_url' => null])
         ->and($translation->title)->toBe('Updated title')
-        ->and($translation->meta)->toHaveKey('seo.description', 'Updated description');
+        ->and($translation->meta)->toHaveKey('description', 'Updated description');
 
-    expect(fn (): array => UpdateEditableRegionAction::run(editableRegionPayload($translation, 'admin.hidden'), 'Nope'))
+    expect(fn (): array => UpdateEditableRegionAction::run(editableRegionPayload($translation, 'admin.hidden'), 'Nope', $user))
         ->toThrow(HttpException::class);
 });
 
 it('saves text rich html and meta edits while clearing every affected cached page', function (string $field, string $value, Closure $assertSaved): void {
     Storage::fake('page_cache');
+
+    $user = User::factory()->create();
+    actingAs($user);
+    allowEditableRegionEdits();
 
     $translation = createEditableRegionTranslation();
     $page = $translation->translatable;
@@ -288,7 +296,7 @@ it('saves text rich html and meta edits while clearing every affected cached pag
         ]);
     }
 
-    $result = UpdateEditableRegionAction::run(editableRegionPayload($translation, $field), $value);
+    $result = UpdateEditableRegionAction::run(editableRegionPayload($translation, $field), $value, $user);
 
     $translation->refresh();
     $assertSaved($translation);
@@ -323,10 +331,10 @@ it('saves text rich html and meta edits while clearing every affected cached pag
         },
     ],
     'meta description' => [
-        'meta.seo.description',
+        'meta.description',
         'User tested SEO description',
         function (Translation $translation): void {
-            expect($translation->meta)->toHaveKey('seo.description', 'User tested SEO description');
+            expect($translation->meta)->toHaveKey('description', 'User tested SEO description');
         },
     ],
 ]);
@@ -338,11 +346,12 @@ it('saves inline edits into an approval workspace and returns a preview redirect
 
     $user = User::factory()->create();
     actingAs($user);
+    Gate::before(fn (Authenticatable $user, string $ability): ?bool => in_array($ability, ['frontend-authoring.edit', 'preview', 'view'], true) ? true : null);
     Route::get('/workflow-preview-stub', fn (): string => 'preview')->name('capell-frontend.home');
 
     $translation = createEditableRegionTranslation();
 
-    $result = UpdateEditableRegionAction::run(editableRegionPayload($translation, 'title'), 'Draft title');
+    $result = UpdateEditableRegionAction::run(editableRegionPayload($translation, 'title'), 'Draft title', $user);
 
     $translation->refresh();
     $workspace = Workspace::query()->firstOrFail();

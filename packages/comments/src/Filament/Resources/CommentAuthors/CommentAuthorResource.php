@@ -19,6 +19,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Override;
 
 class CommentAuthorResource extends Resource
@@ -54,9 +55,14 @@ class CommentAuthorResource extends Resource
                 Action::make('resend_verification')
                     ->label(__('capell-comments::table.action_resend_verification'))
                     ->icon('heroicon-o-envelope')
-                    ->visible(fn (CommentAuthor $record): bool => ! $record->isEmailVerified() && is_string($record->email) && $record->email !== '')
+                    ->visible(fn (CommentAuthor $record): bool => Gate::allows('update', $record)
+                        && ! $record->isEmailVerified()
+                        && is_string($record->email)
+                        && $record->email !== '')
                     ->requiresConfirmation()
                     ->action(function (CommentAuthor $record): void {
+                        Gate::authorize('update', $record);
+
                         RequestCommentEmailVerificationAction::run($record);
                         self::notify();
                     }),
@@ -103,13 +109,15 @@ class CommentAuthorResource extends Resource
             ->color($color)
             ->requiresConfirmation()
             ->visible(fn (CommentAuthor $record): bool => match ($name) {
-                'trust' => ! $record->isTrusted(),
-                'block' => ! $record->isBlocked(),
-                'unblock' => $record->isBlocked(),
-                'verify' => ! $record->isEmailVerified(),
+                'trust' => Gate::allows('update', $record) && ! $record->isTrusted(),
+                'block' => Gate::allows('update', $record) && ! $record->isBlocked(),
+                'unblock' => Gate::allows('update', $record) && $record->isBlocked(),
+                'verify' => Gate::allows('update', $record) && ! $record->isEmailVerified(),
                 default => false,
             })
             ->action(function (CommentAuthor $record) use ($name): void {
+                Gate::authorize('update', $record);
+
                 /** @var UpdateCommentAuthorModerationAction $action */
                 $action = resolve(UpdateCommentAuthorModerationAction::class);
                 $action->{$name}($record);

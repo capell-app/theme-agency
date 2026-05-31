@@ -6,11 +6,13 @@ namespace Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\Schem
 
 use Capell\Admin\Data\Configurators\ConfiguratorContextData;
 use Capell\Admin\Filament\Contracts\FormConfigurator;
+use Capell\Admin\Support\SiteScope;
 use Capell\CampaignStudio\Enums\ConversionGoalType;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 final class CampaignConversionGoalForm implements FormConfigurator
 {
@@ -21,7 +23,7 @@ final class CampaignConversionGoalForm implements FormConfigurator
             ->schema([
                 Select::make('campaign_group_id')
                     ->label(__('capell-campaign-studio::form.campaign_group'))
-                    ->relationship('campaignGroup', 'name')
+                    ->relationship('campaignGroup', 'name', modifyQueryUsing: fn (Builder $query): Builder => SiteScope::applyForCurrentActor($query))
                     ->required(),
                 TextInput::make('site_id')
                     ->label(__('capell-campaign-studio::form.site'))

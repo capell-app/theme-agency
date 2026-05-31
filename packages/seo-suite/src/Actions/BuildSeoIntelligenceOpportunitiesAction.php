@@ -129,7 +129,10 @@ final class BuildSeoIntelligenceOpportunitiesAction
                     clicks: (int) $group->sum('clicks'),
                     ctr: (float) $metric->ctr,
                     averagePosition: $metric->average_position,
-                    urls: $group->pluck('url')->unique()->values()->all(),
+                    urls: array_values($group->pluck('url')
+                        ->filter(fn (mixed $url): bool => is_string($url) && $url !== '')
+                        ->unique()
+                        ->all()),
                 );
             })
             ->values();
@@ -270,8 +273,8 @@ final class BuildSeoIntelligenceOpportunitiesAction
             priority: $priority,
             impressions: $metric->impressions,
             clicks: $metric->clicks,
-            ctr: $metric->ctr,
-            averagePosition: $metric->average_position,
+            ctr: (float) ($metric->ctr ?? 0.0),
+            averagePosition: (float) ($metric->average_position ?? 0.0),
         );
     }
 }

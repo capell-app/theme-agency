@@ -6,12 +6,18 @@ use Capell\PublishingStudio\Actions\ExtendPreviewLinkAction;
 use Capell\PublishingStudio\Actions\RevokePreviewLinkAction;
 use Capell\PublishingStudio\Models\PreviewLink;
 use Capell\PublishingStudio\Models\Workspace;
-use Capell\Tests\Fixtures\Models\User;
+use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Carbon\CarbonImmutable;
+use Illuminate\Contracts\Auth\Authenticatable;
+
+uses(CreatesAdminUser::class);
 
 it('revoke action sets revoked_at and makes the link unusable', function (): void {
     $workspace = Workspace::factory()->create();
-    $actor = User::factory()->create();
+    $this->actingAsAdmin();
+    $actor = auth()->user();
+
+    expect($actor)->toBeInstanceOf(Authenticatable::class);
 
     $link = PreviewLink::query()->create([
         'workspace_id' => $workspace->id,
@@ -29,13 +35,16 @@ it('revoke action sets revoked_at and makes the link unusable', function (): voi
         ->and($revoked->isRevoked())->toBeTrue()
         ->and($revoked->isUsable())->toBeFalse();
 
-    $fresh = PreviewLink::query()->find($link->id);
+    $fresh = publishingStudioTestInstance(PreviewLink::query()->find($link->id), PreviewLink::class);
     expect($fresh->revoked_at)->not->toBeNull();
 });
 
 it('extend action adds minutes to the existing expires_at and leaves the token unchanged', function (): void {
     $workspace = Workspace::factory()->create();
-    $actor = User::factory()->create();
+    $this->actingAsAdmin();
+    $actor = auth()->user();
+
+    expect($actor)->toBeInstanceOf(Authenticatable::class);
     $originalToken = PreviewLink::generateToken();
     $originalExpiresAt = CarbonImmutable::now()->addHour();
 
@@ -53,13 +62,16 @@ it('extend action adds minutes to the existing expires_at and leaves the token u
     expect($extended->token)->toBe($originalToken)
         ->and($extended->expires_at->timestamp)->toBe($expectedExpiresAt->timestamp);
 
-    $fresh = PreviewLink::query()->find($link->id);
+    $fresh = publishingStudioTestInstance(PreviewLink::query()->find($link->id), PreviewLink::class);
     expect($fresh->expires_at->timestamp)->toBe($expectedExpiresAt->timestamp);
 });
 
 it('extend action bases the new expiry on the current expires_at, not on now', function (): void {
     $workspace = Workspace::factory()->create();
-    $actor = User::factory()->create();
+    $this->actingAsAdmin();
+    $actor = auth()->user();
+
+    expect($actor)->toBeInstanceOf(Authenticatable::class);
 
     $originalExpiresAt = CarbonImmutable::now()->addHours(2);
 
@@ -72,7 +84,7 @@ it('extend action bases the new expiry on the current expires_at, not on now', f
 
     (new ExtendPreviewLinkAction)->handle($link, 60, $actor);
 
-    $fresh = PreviewLink::query()->find($link->id);
+    $fresh = publishingStudioTestInstance(PreviewLink::query()->find($link->id), PreviewLink::class);
 
     $expectedExpiresAt = $originalExpiresAt->addMinutes(60);
     expect($fresh->expires_at->timestamp)->toBe($expectedExpiresAt->timestamp);

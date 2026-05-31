@@ -63,14 +63,15 @@ it('adds hero meta to blog and article pages when blog package is installed', fu
         ->assertExitCode(Command::SUCCESS);
 
     $expectedBlogHero = '<p>' . __('capell-blog::generic.blog_intro') . '</p>';
+    $freshBlogPage = capell_test_instance($blogPage->fresh(), Page::class);
 
-    foreach ($blogPage->fresh()->translations as $blogTranslation) {
+    foreach ($freshBlogPage->translations as $blogTranslation) {
         capell_expect($blogTranslation->meta)
             ->hero->toBe($expectedBlogHero)
             ->hero_title->toBe(__('capell-blog::generic.blog'));
     }
 
-    $freshArticlePage = $articlePage->fresh();
+    $freshArticlePage = capell_test_instance($articlePage->fresh(), Article::class);
 
     foreach ($freshArticlePage->translations as $articleTranslation) {
         capell_expect($articleTranslation->meta)->hero->toBe('<h1>' . $articleTranslation->title . '</h1>');

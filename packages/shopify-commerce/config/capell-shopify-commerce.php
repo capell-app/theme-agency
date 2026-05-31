@@ -8,6 +8,7 @@ return [
     'client_secret' => env('SHOPIFY_APP_CLIENT_SECRET'),
     'default_api_version' => '2026-04',
     'default_scopes' => ['read_products'],
+    'http_timeout' => env('CAPELL_SHOPIFY_COMMERCE_HTTP_TIMEOUT', 15),
     'state_ttl_seconds' => 600,
     'default_currency' => 'USD',
 ];

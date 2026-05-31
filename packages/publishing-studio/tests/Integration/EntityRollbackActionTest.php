@@ -69,8 +69,10 @@ it('restores the single entity row referenced by the target version', function (
         ->where('workspace_id', 0)
         ->get();
 
+    $restoredRecord = publishingStudioTestInstance($restored->first(), WorkspaceDraftableFixture::class);
+
     expect($restored)->toHaveCount(1)
-        ->and($restored->first()->name)->toBe('version-1 original')
+        ->and($restoredRecord->name)->toBe('version-1 original')
         ->and($report->restoredId)->toBe($targetRow->id)
         ->and($report->replacedId)->toBe($currentLive->id);
 });

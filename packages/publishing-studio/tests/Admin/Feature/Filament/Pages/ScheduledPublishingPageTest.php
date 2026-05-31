@@ -3,9 +3,12 @@
 declare(strict_types=1);
 
 use Capell\Core\Models\Page;
+use Capell\Core\Models\Site;
 use Capell\PublishingStudio\Actions\CancelSchedulerEventAction;
 use Capell\PublishingStudio\Actions\DashboardReports\BuildContentSchedulerEventsAction;
+use Capell\PublishingStudio\Actions\InstallWorkspaceRolesAction;
 use Capell\PublishingStudio\Actions\SyncWorkspaceSchedulerEventsAction;
+use Capell\PublishingStudio\Enums\PublishingStudioPermission;
 use Capell\PublishingStudio\Enums\SchedulerEventStateEnum;
 use Capell\PublishingStudio\Enums\SchedulerEventTypeEnum;
 use Capell\PublishingStudio\Filament\Pages\ScheduledPublishingPage;
@@ -15,6 +18,9 @@ use Capell\PublishingStudio\Models\Workspace;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 
 use function Pest\Livewire\livewire;
+
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 uses(CreatesAdminUser::class);
 
@@ -135,8 +141,51 @@ test('cancel action clears the underlying workspace publish schedule', function 
 
     CancelSchedulerEventAction::run($event);
 
+    $freshEvent = publishingStudioTestInstance($event->fresh(), SchedulerEvent::class);
+
     expect($workspace->fresh()->publish_at)->toBeNull()
-        ->and($event->fresh()->state)->toBe(SchedulerEventStateEnum::Cancelled);
+        ->and($freshEvent->state)->toBe(SchedulerEventStateEnum::Cancelled);
+});
+
+test('scheduler retry and cancel actions require publish permission', function (): void {
+    Permission::findOrCreate(PublishingStudioPermission::ViewScheduledPublishingPage->value);
+    Permission::findOrCreate(InstallWorkspaceRolesAction::PERMISSION_PUBLISH);
+
+    $viewer = test()->createUserWithPermission(PublishingStudioPermission::ViewScheduledPublishingPage->value);
+    $site = Site::factory()->create(['name' => 'Scheduler Test Site']);
+    $role = Role::findOrCreate('scheduler-site-viewer', 'web');
+    $viewer->assignRoleForSite($site, $role);
+    test()->actingAs($viewer);
+
+    $workspace = Workspace::factory()->scheduled(now()->addDays(5))->create([
+        'name' => 'Permission guarded campaign',
+    ]);
+    Page::factory()->create([
+        'workspace_id' => $workspace->getKey(),
+        'site_id' => $site->getKey(),
+    ]);
+    SyncWorkspaceSchedulerEventsAction::run($workspace);
+
+    SchedulerEvent::query()
+        ->where('workspace_id', $workspace->id)
+        ->where('event_type', SchedulerEventTypeEnum::Publish->value)
+        ->firstOrFail();
+
+    SchedulerEvent::query()->create([
+        'event_type' => SchedulerEventTypeEnum::Publish,
+        'state' => SchedulerEventStateEnum::Failed,
+        'source_type' => $workspace->getMorphClass(),
+        'source_id' => $workspace->id,
+        'workspace_id' => $workspace->id,
+        'site_id' => $site->getKey(),
+        'scheduled_for' => now()->addDay(),
+        'idempotency_key' => 'permission-guarded-campaign',
+    ]);
+
+    livewire(ScheduledPublishingPage::class)
+        ->assertSee('Permission guarded campaign')
+        ->assertDontSee("mountAction('cancel'")
+        ->assertDontSee("mountAction('retry'");
 });
 
 test('scheduled publishing-studio are visible from workspace resource queries', function (): void {

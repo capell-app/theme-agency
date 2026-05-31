@@ -38,6 +38,9 @@ const manifestPackages = new Set([
     ...(manifest.packages ?? []).map((entry) => entry.package),
     ...(manifest.entries ?? []).map((entry) => entry.package),
 ])
+const manifestPackageEntries = new Map(
+    (manifest.packages ?? []).map((entry) => [entry.package, entry]),
+)
 
 function readFlagValue(argv, index, flag) {
     const current = argv[index]
@@ -192,6 +195,95 @@ function validateThemeManifest(packageName, screenshotsPath, packageManifest) {
     }
 }
 
+function validateMarketplaceScreenshots(packageName) {
+    const capellManifestPath = path.join(
+        root,
+        'packages',
+        packageName,
+        'capell.json',
+    )
+    const capellManifestLabel = relativePath(capellManifestPath)
+
+    if (!fs.existsSync(capellManifestPath)) {
+        return
+    }
+
+    let capellManifest
+
+    try {
+        capellManifest = JSON.parse(fs.readFileSync(capellManifestPath, 'utf8'))
+    } catch (error) {
+        failures.push(`${capellManifestLabel}: ${error.message}`)
+
+        return
+    }
+
+    const screenshots = capellManifest.marketplace?.screenshots
+
+    if (screenshots === undefined) {
+        return
+    }
+
+    if (!Array.isArray(screenshots)) {
+        failures.push(
+            `${capellManifestLabel}: marketplace.screenshots must be an array`,
+        )
+
+        return
+    }
+
+    for (const [index, screenshot] of screenshots.entries()) {
+        const screenshotLabel = `${capellManifestLabel}: marketplace.screenshots[${index}]`
+
+        if (typeof screenshot !== 'object' || screenshot === null) {
+            failures.push(`${screenshotLabel} must be an object`)
+
+            continue
+        }
+
+        if (!isNonEmptyString(screenshot.path)) {
+            failures.push(`${screenshotLabel}.path must be a non-empty string`)
+
+            continue
+        }
+
+        if (
+            path.isAbsolute(screenshot.path) ||
+            screenshot.path.includes('\\') ||
+            screenshot.path.split('/').includes('..')
+        ) {
+            failures.push(
+                `${screenshotLabel}.path must be a safe package-relative path`,
+            )
+
+            continue
+        }
+
+        if (!screenshot.path.startsWith('docs/assets/marketplace/')) {
+            failures.push(
+                `${screenshotLabel}.path must start with docs/assets/marketplace/`,
+            )
+        }
+
+        const absoluteScreenshotPath = path.join(
+            root,
+            'packages',
+            packageName,
+            screenshot.path,
+        )
+
+        if (!fs.existsSync(absoluteScreenshotPath)) {
+            failures.push(
+                `${screenshotLabel}.path references missing file ${relativePath(absoluteScreenshotPath)}`,
+            )
+        }
+    }
+}
+
+for (const packageName of packageDirs) {
+    validateMarketplaceScreenshots(packageName)
+}
+
 for (const packageName of packageDirs) {
     const screenshotsPath = path.join(
         root,
@@ -222,6 +314,49 @@ for (const packageName of packageDirs) {
             failures.push(
                 `${screenshotsPath}: package is missing from docs/package-screenshot-manifest.json`,
             )
+        }
+
+        const capellManifestPath = path.join(
+            root,
+            'packages',
+            packageName,
+            'capell.json',
+        )
+        const capellManifest = fs.existsSync(capellManifestPath)
+            ? JSON.parse(fs.readFileSync(capellManifestPath, 'utf8'))
+            : {}
+        const commands = capellManifest.commands ?? {}
+        const manifestPackage = manifestPackageEntries.get(packageName)
+
+        if (manifestPackage !== undefined) {
+            for (const [manifestField, commandField] of [
+                ['installCommand', 'install'],
+                ['setupCommand', 'setup'],
+                ['demoCommand', 'demo'],
+                ['doctorCommand', 'doctor'],
+            ]) {
+                if (
+                    (manifestPackage[manifestField] ?? null) !==
+                    (commands[commandField] ?? null)
+                ) {
+                    failures.push(
+                        `${screenshotsPath}: ${manifestField} must match commands.${commandField} from capell.json`,
+                    )
+                }
+            }
+
+            const demoParams = Array.isArray(commands.demoParams)
+                ? commands.demoParams
+                : []
+
+            if (
+                JSON.stringify(manifestPackage.demoParams ?? []) !==
+                JSON.stringify(demoParams)
+            ) {
+                failures.push(
+                    `${screenshotsPath}: demoParams must match commands.demoParams from capell.json`,
+                )
+            }
         }
 
         if (

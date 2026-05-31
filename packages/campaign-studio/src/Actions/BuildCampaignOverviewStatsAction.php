@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\CampaignStudio\Actions;
 
+use Capell\Admin\Support\SiteScope;
 use Capell\CampaignStudio\Models\CampaignConversion;
 use Capell\CampaignStudio\Models\CampaignGroup;
 use Carbon\CarbonImmutable;
@@ -20,8 +21,8 @@ final class BuildCampaignOverviewStatsAction
      */
     public function handle(?CarbonImmutable $startsAt = null, ?CarbonImmutable $endsAt = null): array
     {
-        $activeCampaignStudio = CampaignGroup::query()->active()->count();
-        $conversions = CampaignConversion::query()
+        $activeCampaignStudio = SiteScope::applyForCurrentActor(CampaignGroup::query())->active()->count();
+        $conversions = SiteScope::applyForCurrentActor(CampaignConversion::query())
             ->when($startsAt instanceof CarbonImmutable, fn (Builder $builder): Builder => $builder->where('converted_at', '>=', $startsAt))
             ->when($endsAt instanceof CarbonImmutable, fn (Builder $builder): Builder => $builder->where('converted_at', '<=', $endsAt))
             ->count();
@@ -44,7 +45,7 @@ final class BuildCampaignOverviewStatsAction
 
         $groupsTableName = (new CampaignGroup)->getTable();
 
-        return CampaignGroup::query()
+        return SiteScope::applyForCurrentActor(CampaignGroup::query(), $groupsTableName . '.site_id')
             ->join($visitsTableName, $groupsTableName . '.utm_campaign', '=', $visitsTableName . '.utm_campaign')
             ->when($startsAt instanceof CarbonImmutable, fn (Builder $builder): Builder => $builder->where($visitsTableName . '.last_seen_at', '>=', $startsAt))
             ->when($endsAt instanceof CarbonImmutable, fn (Builder $builder): Builder => $builder->where($visitsTableName . '.last_seen_at', '<=', $endsAt))

@@ -30,7 +30,7 @@ final class CreateRedirectForBrokenLinkAction
 
         $page = $brokenLink->page;
         $siteId = $page?->site_id;
-        $languageId = $page->pageUrls->first()->language_id
+        $languageId = $page?->pageUrls->first()->language_id
             ?? $page?->translations->first()?->language_id;
 
         if ($siteId === null || $languageId === null) {

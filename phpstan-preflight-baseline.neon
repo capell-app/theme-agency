@@ -1,0 +1,895 @@
+parameters:
+	ignoreErrors:
+		-
+			rawMessage: Trying to invoke Closure|null but it might not be a callable.
+			identifier: callable.nonCallable
+			count: 1
+			path: packages/access-gate/tests/Unit/AccessGateCoverageTest.php
+
+		-
+			rawMessage: 'Function accessGatePolicyActor() has parameter $assignedSiteIds with generic class Illuminate\Support\Collection but does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: packages/access-gate/tests/Unit/Policies/AccessGateResourcePolicyTest.php
+
+		-
+			rawMessage: 'Parameter #1 $modelClass of function accessGatePolicyRecord expects class-string<Illuminate\Database\Eloquent\Model>, string given.'
+			identifier: argument.type
+			count: 2
+			path: packages/access-gate/tests/Unit/Policies/AccessGateResourcePolicyTest.php
+
+		-
+			rawMessage: 'Function evaluateAddressSelectCallback() has parameter $parameters with no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: packages/address/tests/Feature/Filament/Components/Forms/AddressSelectTest.php
+
+		-
+			rawMessage: 'Call to an undefined method Aimeos\Nestedset\Collection<int, Capell\Core\Models\Page>|Capell\Core\Models\Page::getKey().'
+			identifier: method.notFound
+			count: 3
+			path: packages/agent-bridge/tests/Unit/PageCapabilityActionsTest.php
+
+		-
+			rawMessage: 'Call to an undefined method Aimeos\Nestedset\Collection<int, Capell\Core\Models\Page>|Capell\Core\Models\Page::pageUrls().'
+			identifier: method.notFound
+			count: 1
+			path: packages/agent-bridge/tests/Unit/PageCapabilityActionsTest.php
+
+		-
+			rawMessage: 'Call to an undefined method Aimeos\Nestedset\Collection<int, Capell\Core\Models\Page>|Capell\Core\Models\Page::refresh().'
+			identifier: method.notFound
+			count: 1
+			path: packages/agent-bridge/tests/Unit/PageCapabilityActionsTest.php
+
+		-
+			rawMessage: 'Cannot call method getKey() on Capell\Core\Models\Site|null.'
+			identifier: method.nonObject
+			count: 1
+			path: packages/campaign-studio/src/View/Components/Block/CampaignCtaBlock.php
+
+		-
+			rawMessage: 'Class AnonymousClass85f12432a76a22cd49a6a073d89d17d7 uses generic trait Illuminate\Database\Eloquent\Factories\HasFactory but does not specify its types: TFactory'
+			identifier: missingType.generics
+			count: 1
+			path: packages/comments/tests/Integration/Actions/CreateCommentActionTest.php
+
+		-
+			rawMessage: 'Class CommentAdminUrlCommentable uses generic trait Illuminate\Database\Eloquent\Factories\HasFactory but does not specify its types: TFactory'
+			identifier: missingType.generics
+			count: 1
+			path: packages/comments/tests/Integration/Filament/CommentsAdminSurfaceTest.php
+
+		-
+			rawMessage: 'Method Capell\ContentSections\Filament\Components\Forms\ContentSelect::assertCanUseSubmittedParent() has parameter $data with no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: packages/content-sections/src/Filament/Components/Forms/ContentSelect.php
+
+		-
+			rawMessage: 'Method Capell\ContentSections\Filament\Components\Forms\ContentSelect::assertCanUseSubmittedSite() has parameter $data with no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: packages/content-sections/src/Filament/Components/Forms/ContentSelect.php
+
+		-
+			rawMessage: 'Method Capell\ContentSections\Filament\Components\Forms\ContentSelect::getContentQuery() return type with generic class Illuminate\Database\Eloquent\Builder does not specify its types: TModel'
+			identifier: missingType.generics
+			count: 1
+			path: packages/content-sections/src/Filament/Components/Forms/ContentSelect.php
+
+		-
+			rawMessage: 'Parameter #1 $callback of method Illuminate\Database\Eloquent\Collection<int,Illuminate\Database\Eloquent\Model>::mapWithKeys() expects callable(Illuminate\Database\Eloquent\Model, int): array<Illuminate\Support\HtmlString>, Closure(Capell\ContentSections\Models\Section): non-empty-array<Illuminate\Support\HtmlString> given.'
+			identifier: argument.type
+			count: 1
+			path: packages/content-sections/src/Filament/Components/Forms/ContentSelect.php
+
+		-
+			rawMessage: 'Class AnonymousClass8e42a7132f0aba57c5293f912c42372a uses generic trait Illuminate\Database\Eloquent\Factories\HasFactory but does not specify its types: TFactory'
+			identifier: missingType.generics
+			count: 1
+			path: packages/content-sections/tests/Unit/ContentSectionsCoverageTest.php
+
+		-
+			rawMessage: 'Class AnonymousClass93e18dd2cd045b482c98be83760c5284 uses generic trait Illuminate\Database\Eloquent\Factories\HasFactory but does not specify its types: TFactory'
+			identifier: missingType.generics
+			count: 1
+			path: packages/content-sections/tests/Unit/ContentSectionsCoverageTest.php
+
+		-
+			rawMessage: 'Call to an undefined method Filament\Tables\Filters\BaseFilter::getOptions().'
+			identifier: method.notFound
+			count: 2
+			path: packages/content-sections/tests/Unit/Filament/ContentSectionsAdminSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Cannot call method pluck() on Illuminate\Database\Eloquent\Builder|Illuminate\Database\Eloquent\Relations\Relation|null.'
+			identifier: method.nonObject
+			count: 1
+			path: packages/content-sections/tests/Unit/Filament/ContentSectionsAdminSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method ContentSectionsActionsRepeaterHarness::getChildSchema() never returns null so it can be removed from the return type.'
+			identifier: return.unusedType
+			count: 1
+			path: packages/content-sections/tests/Unit/Filament/ContentSectionsAdminSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method ContentSectionsAssetsRepeaterHarness::getChildSchema() never returns null so it can be removed from the return type.'
+			identifier: return.unusedType
+			count: 1
+			path: packages/content-sections/tests/Unit/Filament/ContentSectionsAdminSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Unable to resolve the template type TAndValue in call to method Pest\Expectation<Filament\Tables\Filters\SelectFilter>::and()'
+			identifier: argument.templateType
+			count: 1
+			path: packages/content-sections/tests/Unit/Filament/ContentSectionsAdminSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Unable to resolve the template type TAndValue in call to method Pest\Expectation<mixed>::and()'
+			identifier: argument.templateType
+			count: 1
+			path: packages/content-sections/tests/Unit/Filament/ContentSectionsAdminSurfaceCoverageTest.php
+
+		-
+			rawMessage: Anonymous function should return Spatie\Permission\Models\Role but returns Spatie\Permission\Contracts\Role.
+			identifier: return.type
+			count: 1
+			path: packages/demo-kit/src/Actions/CreateDemoUsersAction.php
+
+		-
+			rawMessage: Instanceof between Capell\Core\Models\Blueprint and Capell\Core\Models\Blueprint will always evaluate to true.
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: packages/demo-kit/src/Support/Creator/BaseDemoCreator.php
+
+		-
+			rawMessage: 'Call to an undefined method Illuminate\Contracts\Pagination\LengthAwarePaginator::count().'
+			identifier: method.notFound
+			count: 1
+			path: packages/demo-kit/tests/Feature/ResourcesLibraryTest.php
+
+		-
+			rawMessage: 'Call to an undefined method Illuminate\Contracts\Pagination\LengthAwarePaginator::pluck().'
+			identifier: method.notFound
+			count: 1
+			path: packages/demo-kit/tests/Feature/ResourcesLibraryTest.php
+
+		-
+			rawMessage: 'Parameter #2 $languages of method Capell\DemoKit\Support\Creator\DemoCreator::refreshDemoPage() expects Illuminate\Database\Eloquent\Collection<int, Capell\Core\Models\Language>, Illuminate\Database\Eloquent\Collection<int, Illuminate\Database\Eloquent\Model> given.'
+			identifier: argument.type
+			count: 1
+			path: packages/demo-kit/tests/Unit/Support/BaseDemoCreatorCoverageTest.php
+
+		-
+			rawMessage: 'Parameter #2 $languages of method Capell\DemoKit\Support\Creator\DemoCreator::setupSite() expects Illuminate\Database\Eloquent\Collection<int, Capell\Core\Models\Language>|null, Illuminate\Database\Eloquent\Collection<int, Illuminate\Database\Eloquent\Model> given.'
+			identifier: argument.type
+			count: 1
+			path: packages/demo-kit/tests/Unit/Support/BaseDemoCreatorCoverageTest.php
+
+		-
+			rawMessage: Anonymous function with return type void returns null but should not return anything.
+			identifier: return.void
+			count: 1
+			path: packages/deployments/tests/Feature/Filament/DeploymentConnectionPageTest.php
+
+		-
+			rawMessage: 'Static property Illuminate\Foundation\Auth\User@anonymous/packages/diagnostics/tests/Feature/Filament/Widgets/CacheHealthWidgetTest.php:34::$assignedSiteIds (list<int>) does not accept array<int, int>.'
+			identifier: assign.propertyType
+			count: 1
+			path: packages/diagnostics/tests/Feature/Filament/Widgets/CacheHealthWidgetTest.php
+
+		-
+			rawMessage: 'Method CapturingEmailStudioMailer::send() has parameter $data with no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: packages/email-studio/tests/Unit/EmailStudioDataAndSupportCoverageTest.php
+
+		-
+			rawMessage: 'Method CapturingEmailStudioMailer::send() has parameter $view with no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: packages/email-studio/tests/Unit/EmailStudioDataAndSupportCoverageTest.php
+
+		-
+			rawMessage: 'Method CapturingEmailStudioMailer::sendNow() has parameter $data with no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: packages/email-studio/tests/Unit/EmailStudioDataAndSupportCoverageTest.php
+
+		-
+			rawMessage: 'Method CapturingEmailStudioMailer::sendNow() has parameter $mailable with no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: packages/email-studio/tests/Unit/EmailStudioDataAndSupportCoverageTest.php
+
+		-
+			rawMessage: 'Cannot call method isEmpty() on Illuminate\Support\Collection<(int|string), mixed>|null.'
+			identifier: method.nonObject
+			count: 1
+			path: packages/foundation-theme/src/View/Components/Block/Navigation.php
+
+		-
+			rawMessage: 'Method Capell\FoundationTheme\View\Components\Footer\Index::relatedSites() should return Illuminate\Support\Collection<int, array{description: mixed, primaryColor: mixed, title: mixed, url: mixed}> but returns Illuminate\Support\Collection<int, array{description: mixed, primaryColor: string|null, title: mixed, url: non-empty-string}>.'
+			identifier: return.type
+			count: 1
+			path: packages/foundation-theme/src/View/Components/Footer/Index.php
+
+		-
+			rawMessage: Access to an undefined property Capell\FrontendOptimizer\Models\FrontendOptimizationRun::$finished_at.
+			identifier: property.notFound
+			count: 2
+			path: packages/frontend-optimizer/tests/Unit/Actions/GenerateCriticalCssActionTest.php
+
+		-
+			rawMessage: Access to an undefined property Capell\FrontendOptimizer\Models\FrontendOptimizationRun::$started_at.
+			identifier: property.notFound
+			count: 1
+			path: packages/frontend-optimizer/tests/Unit/Actions/GenerateCriticalCssActionTest.php
+
+		-
+			rawMessage: Access to an undefined property Capell\FrontendOptimizer\Models\FrontendRenderProfile::$generated_at.
+			identifier: property.notFound
+			count: 1
+			path: packages/frontend-optimizer/tests/Unit/Actions/GenerateCriticalCssActionTest.php
+
+		-
+			rawMessage: 'Unable to resolve the template type TAndValue in call to method Pest\Expectation<mixed>::and()'
+			identifier: argument.templateType
+			count: 1
+			path: packages/frontend-optimizer/tests/Unit/Actions/GenerateCriticalCssActionTest.php
+
+		-
+			rawMessage: 'Unable to resolve the template type TAndValue in call to method Pest\Expectation<null>::and()'
+			identifier: argument.templateType
+			count: 1
+			path: packages/frontend-optimizer/tests/Unit/Actions/GenerateCriticalCssActionTest.php
+
+		-
+			rawMessage: 'Unable to resolve the template type TAndValue in call to method Pest\Expectation<string>::and()'
+			identifier: argument.templateType
+			count: 1
+			path: packages/frontend-optimizer/tests/Unit/Actions/GenerateCriticalCssActionTest.php
+
+		-
+			rawMessage: 'Unable to resolve the template type TAndValue in call to method Pest\Expectation<string|null>::and()'
+			identifier: argument.templateType
+			count: 1
+			path: packages/frontend-optimizer/tests/Unit/Actions/GenerateCriticalCssActionTest.php
+
+		-
+			rawMessage: 'Method Capell\Hero\Data\HeroBlockRenderData::__construct() has parameter $paginationResults with generic interface Illuminate\Contracts\Pagination\LengthAwarePaginator but does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: packages/hero/src/Data/HeroBlockRenderData.php
+
+		-
+			rawMessage: 'Method Capell\Hero\View\Components\Block\Hero::carousel() should return array{align: string, arrows: bool, autoPlay: bool, autoDelay: int, buttonClass: string, disableOnInteraction: bool, drag: bool, effect: string, ...} but returns array{align: string|null, arrows: bool, autoPlay: bool, autoDelay: int, buttonClass: ''hover:bg-primary…'', disableOnInteraction: bool, drag: bool, effect: string|null, ...}.'
+			identifier: return.type
+			count: 1
+			path: packages/hero/src/View/Components/Block/Hero.php
+
+		-
+			rawMessage: 'Parameter #4 $color of method Capell\Hero\View\Components\Block\Hero::slides() expects string, string|null given.'
+			identifier: argument.type
+			count: 1
+			path: packages/hero/src/View/Components/Block/Hero.php
+
+		-
+			rawMessage: 'Parameter $color of class Capell\Hero\Data\HeroBlockRenderData constructor expects string, string|null given.'
+			identifier: argument.type
+			count: 1
+			path: packages/hero/src/View/Components/Block/Hero.php
+
+		-
+			rawMessage: 'Parameter $mediaPosition of class Capell\Hero\Data\HeroBlockRenderData constructor expects string, string|null given.'
+			identifier: argument.type
+			count: 1
+			path: packages/hero/src/View/Components/Block/Hero.php
+
+		-
+			rawMessage: 'Parameter $mediaSize of class Capell\Hero\Data\HeroBlockRenderData constructor expects string, string|null given.'
+			identifier: argument.type
+			count: 1
+			path: packages/hero/src/View/Components/Block/Hero.php
+
+		-
+			rawMessage: 'Parameter $pageBackgroundAttachment of class Capell\Hero\Data\HeroBlockRenderData constructor expects string, string|null given.'
+			identifier: argument.type
+			count: 1
+			path: packages/hero/src/View/Components/Block/Hero.php
+
+		-
+			rawMessage: 'Parameter $pageBackgroundPosition of class Capell\Hero\Data\HeroBlockRenderData constructor expects string, string|null given.'
+			identifier: argument.type
+			count: 1
+			path: packages/hero/src/View/Components/Block/Hero.php
+
+		-
+			rawMessage: 'Parameter $pageBackgroundRepeat of class Capell\Hero\Data\HeroBlockRenderData constructor expects string, string|null given.'
+			identifier: argument.type
+			count: 1
+			path: packages/hero/src/View/Components/Block/Hero.php
+
+		-
+			rawMessage: 'Parameter $pageBackgroundSize of class Capell\Hero\Data\HeroBlockRenderData constructor expects string, string|null given.'
+			identifier: argument.type
+			count: 1
+			path: packages/hero/src/View/Components/Block/Hero.php
+
+		-
+			rawMessage: Property Capell\Hero\View\Components\Block\Hero::$containerIndex has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: packages/hero/src/View/Components/Block/Hero.php
+
+		-
+			rawMessage: Unable to resolve the template type TKey in call to function collect
+			identifier: argument.templateType
+			count: 1
+			path: packages/hero/src/View/Components/Block/Hero.php
+
+		-
+			rawMessage: Unable to resolve the template type TValue in call to function collect
+			identifier: argument.templateType
+			count: 1
+			path: packages/hero/src/View/Components/Block/Hero.php
+
+		-
+			rawMessage: 'Call to an undefined method Closure|Illuminate\Contracts\View\View::render().'
+			identifier: method.notFound
+			count: 1
+			path: packages/hero/tests/Feature/HeroBlockViewTest.php
+
+		-
+			rawMessage: 'Call to function method_exists() with Illuminate\Contracts\Auth\Authenticatable and ''hasPermissionTo'' will always evaluate to true.'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: packages/html-cache/src/Filament/Pages/MaintenanceCachePage.php
+
+		-
+			rawMessage: 'Expression "$this->containers[$containerKey] ?? []" on a separate line does not do anything.'
+			identifier: expr.resultUnused
+			count: 1
+			path: packages/layout-builder/src/Livewire/Filament/LayoutBuilder.php
+
+		-
+			rawMessage: Cannot access property $id on Illuminate\Database\Eloquent\Model|null.
+			identifier: property.nonObject
+			count: 2
+			path: packages/layout-builder/src/Livewire/Filament/Support/LayoutBuilderActionFactory.php
+
+		-
+			rawMessage: 'Cannot call method getAttribute() on Illuminate\Database\Eloquent\Model|null.'
+			identifier: method.nonObject
+			count: 1
+			path: packages/layout-builder/src/Livewire/Filament/Support/LayoutBuilderActionFactory.php
+
+		-
+			rawMessage: 'Parameter #2 $workspace of method Capell\LayoutBuilder\Livewire\Filament\Support\LayoutBuilderActionFactory::moveCreatedDraftableAssetIntoWorkspace() expects Illuminate\Database\Eloquent\Model, Illuminate\Database\Eloquent\Model|null given.'
+			identifier: argument.type
+			count: 1
+			path: packages/layout-builder/src/Livewire/Filament/Support/LayoutBuilderActionFactory.php
+
+		-
+			rawMessage: 'Parameter $workspace of method Capell\LayoutBuilder\Livewire\Filament\Support\LayoutBuilderActionFactory::restoreLiveDraftableAssetSnapshot() expects Illuminate\Database\Eloquent\Model, Illuminate\Database\Eloquent\Model|null given.'
+			identifier: argument.type
+			count: 1
+			path: packages/layout-builder/src/Livewire/Filament/Support/LayoutBuilderActionFactory.php
+
+		-
+			rawMessage: 'Call to an undefined method object::apply().'
+			identifier: method.notFound
+			count: 1
+			path: packages/layout-builder/tests/Unit/Filament/LayoutBuilderResourceTableCoverageTest.php
+
+		-
+			rawMessage: 'Call to an undefined method object::evaluate().'
+			identifier: method.notFound
+			count: 1
+			path: packages/layout-builder/tests/Unit/Filament/LayoutBuilderResourceTableCoverageTest.php
+
+		-
+			rawMessage: 'Call to an undefined method object::getSchemaComponents().'
+			identifier: method.notFound
+			count: 1
+			path: packages/layout-builder/tests/Unit/Filament/LayoutBuilderResourceTableCoverageTest.php
+
+		-
+			rawMessage: 'Cannot call method process() on Filament\Actions\Action|Filament\Actions\ActionGroup|null.'
+			identifier: method.nonObject
+			count: 1
+			path: packages/layout-builder/tests/Unit/Filament/LayoutBuilderResourceTableCoverageTest.php
+
+		-
+			rawMessage: 'Function layoutBuilderWidgetAssetsTable() has parameter $query with generic class Illuminate\Database\Eloquent\Builder but does not specify its types: TModel'
+			identifier: missingType.generics
+			count: 1
+			path: packages/layout-builder/tests/Unit/Filament/LayoutBuilderResourceTableCoverageTest.php
+
+		-
+			rawMessage: 'Function layoutBuilderWidgetAssetsTableLivewire() has parameter $query with generic class Illuminate\Database\Eloquent\Builder but does not specify its types: TModel'
+			identifier: missingType.generics
+			count: 1
+			path: packages/layout-builder/tests/Unit/Filament/LayoutBuilderResourceTableCoverageTest.php
+
+		-
+			rawMessage: 'Parameter #1 $component of function layoutBuilderEvaluateComponentProperty expects object, object|null given.'
+			identifier: argument.type
+			count: 1
+			path: packages/layout-builder/tests/Unit/Filament/LayoutBuilderResourceTableCoverageTest.php
+
+		-
+			rawMessage: 'Parameter #1 $components of function firstLayoutBuilderTableComponent expects array<int, mixed>, array<string, Filament\Tables\Filters\BaseFilter> given.'
+			identifier: argument.type
+			count: 1
+			path: packages/layout-builder/tests/Unit/Filament/LayoutBuilderResourceTableCoverageTest.php
+
+		-
+			rawMessage: 'Unable to resolve the template type TAndValue in call to method Pest\Expectation<mixed>::and()'
+			identifier: argument.templateType
+			count: 1
+			path: packages/layout-builder/tests/Unit/Filament/LayoutBuilderResourceTableCoverageTest.php
+
+		-
+			rawMessage: Anonymous function should return string but returns string|null.
+			identifier: return.type
+			count: 1
+			path: packages/layout-builder/tests/Unit/LayoutBuilderThirdRoundResidualCoverageTest.php
+
+		-
+			rawMessage: Offset 'main' might not exist on array<mixed>|null.
+			identifier: offsetAccess.notFound
+			count: 1
+			path: packages/layout-builder/tests/Unit/LayoutBuilderThirdRoundResidualCoverageTest.php
+
+		-
+			rawMessage: 'Cannot call method getKey() on Capell\Core\Contracts\Pageable|null.'
+			identifier: method.nonObject
+			count: 3
+			path: packages/layout-builder/tests/Unit/Livewire/LayoutBuilderActionFactoryCoverageTest.php
+
+		-
+			rawMessage: 'Cannot call method getMorphClass() on Capell\Core\Contracts\Pageable|null.'
+			identifier: method.nonObject
+			count: 3
+			path: packages/layout-builder/tests/Unit/Livewire/LayoutBuilderActionFactoryCoverageTest.php
+
+		-
+			rawMessage: 'Cannot call method setRelation() on Capell\LayoutBuilder\Models\Widget|null.'
+			identifier: method.nonObject
+			count: 1
+			path: packages/layout-builder/tests/Unit/Livewire/LayoutBuilderActionFactoryCoverageTest.php
+
+		-
+			rawMessage: 'Method LayoutBuilderActionFlowHarness::getContainerBlock() should return Capell\LayoutBuilder\Models\Widget but returns Capell\LayoutBuilder\Models\Widget|null.'
+			identifier: return.type
+			count: 1
+			path: packages/layout-builder/tests/Unit/Livewire/LayoutBuilderActionFactoryCoverageTest.php
+
+		-
+			rawMessage: 'Method LayoutBuilderActionSchemaHarness::getResource() never returns string so it can be removed from the return type.'
+			identifier: return.unusedType
+			count: 1
+			path: packages/layout-builder/tests/Unit/Livewire/LayoutBuilderActionFactoryCoverageTest.php
+
+		-
+			rawMessage: Offset 'legacy' might not exist on array<mixed>|null.
+			identifier: offsetAccess.notFound
+			count: 3
+			path: packages/layout-builder/tests/Unit/Livewire/LayoutBuilderActionFactoryCoverageTest.php
+
+		-
+			rawMessage: Offset 'primary' might not exist on array<mixed>|null.
+			identifier: offsetAccess.notFound
+			count: 1
+			path: packages/layout-builder/tests/Unit/Livewire/LayoutBuilderActionFactoryCoverageTest.php
+
+		-
+			rawMessage: 'Method Capell\LoginAudit\Policies\LoginAuditPolicy::hasAnyPermission() has parameter $abilities with no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: packages/login-audit/src/Policies/LoginAuditPolicy.php
+
+		-
+			rawMessage: 'Parameter #1 $segment of method Capell\Newsletter\Filament\Resources\Segments\Pages\ListSegments::exportSegment() expects Capell\Newsletter\Models\Segment, Illuminate\Database\Eloquent\Model given.'
+			identifier: argument.type
+			count: 1
+			path: packages/newsletter/src/Filament/Resources/Segments/Pages/ListSegments.php
+
+		-
+			rawMessage: Using nullsafe property access "?->site_id" on left side of ?? is unnecessary. Use -> instead.
+			identifier: nullsafe.neverNull
+			count: 1
+			path: packages/newsletter/src/Policies/SyncAttemptPolicy.php
+
+		-
+			rawMessage: 'Parameter #1 $dispatcher of static method Illuminate\Database\Eloquent\Model::setEventDispatcher() expects Illuminate\Contracts\Events\Dispatcher, Illuminate\Contracts\Events\Dispatcher|null given.'
+			identifier: argument.type
+			count: 1
+			path: packages/newsletter/tests/Integration/Actions/ProviderSyncActionTest.php
+
+		-
+			rawMessage: 'Class NewsletterPolicyTestUser uses generic trait Illuminate\Database\Eloquent\Factories\HasFactory but does not specify its types: TFactory'
+			identifier: missingType.generics
+			count: 1
+			path: packages/newsletter/tests/Unit/Policies/NewsletterResourcePolicyTest.php
+
+		-
+			rawMessage: 'Class AnonymousClasscfca50b981367276eead38b493583cfc uses generic trait Illuminate\Database\Eloquent\Factories\HasFactory but does not specify its types: TFactory'
+			identifier: missingType.generics
+			count: 1
+			path: packages/public-actions/tests/Unit/Listeners/SubmitPublicActionFromFormSubmissionTest.php
+
+		-
+			rawMessage: 'Parameter #1 $query of static method Capell\PublishingStudio\Support\WorkspaceAccess::scopeVisibleTo() expects Illuminate\Database\Eloquent\Builder<Capell\PublishingStudio\Models\Workspace>, Illuminate\Database\Eloquent\Builder<Illuminate\Database\Eloquent\Model> given.'
+			identifier: argument.type
+			count: 1
+			path: packages/publishing-studio/src/Filament/Resources/PreviewLinks/PreviewLinkResource.php
+
+		-
+			rawMessage: 'Method Capell\PublishingStudio\Filament\Resources\PublishingStudio\WorkspaceResource::getEloquentQuery() should return Illuminate\Database\Eloquent\Builder<Illuminate\Database\Eloquent\Model> but returns Illuminate\Database\Eloquent\Builder<Capell\PublishingStudio\Models\Workspace>.'
+			identifier: return.type
+			count: 1
+			path: packages/publishing-studio/src/Filament/Resources/PublishingStudio/WorkspaceResource.php
+
+		-
+			rawMessage: 'Parameter #1 $query of static method Capell\PublishingStudio\Support\WorkspaceAccess::scopeVisibleTo() expects Illuminate\Database\Eloquent\Builder<Capell\PublishingStudio\Models\Workspace>, Illuminate\Database\Eloquent\Builder<Illuminate\Database\Eloquent\Model> given.'
+			identifier: argument.type
+			count: 1
+			path: packages/publishing-studio/src/Filament/Resources/PublishingStudio/WorkspaceResource.php
+
+		-
+			rawMessage: 'Parameter #2 $actor of method Capell\PublishingStudio\Actions\RevokePreviewLinkAction::handle() expects Illuminate\Contracts\Auth\Authenticatable, Illuminate\Foundation\Auth\User|null given.'
+			identifier: argument.type
+			count: 1
+			path: packages/publishing-studio/tests/Integration/PreviewLinkLifecycleActionsTest.php
+
+		-
+			rawMessage: 'Parameter #3 $actor of method Capell\PublishingStudio\Actions\ExtendPreviewLinkAction::handle() expects Illuminate\Contracts\Auth\Authenticatable, Illuminate\Foundation\Auth\User|null given.'
+			identifier: argument.type
+			count: 2
+			path: packages/publishing-studio/tests/Integration/PreviewLinkLifecycleActionsTest.php
+
+		-
+			rawMessage: Access to an undefined property Capell\PublishingStudio\Models\SchedulerEvent::$claim_token.
+			identifier: property.notFound
+			count: 1
+			path: packages/publishing-studio/tests/Unit/SchedulerAndApprovalResidualCoverageTest.php
+
+		-
+			rawMessage: 'Unable to resolve the template type TAndValue in call to method Pest\Expectation<Capell\PublishingStudio\Enums\SchedulerEventStateEnum>::and()'
+			identifier: argument.templateType
+			count: 1
+			path: packages/publishing-studio/tests/Unit/SchedulerAndApprovalResidualCoverageTest.php
+
+		-
+			rawMessage: Using nullsafe property access "?->name" on left side of ?? is unnecessary. Use -> instead.
+			identifier: nullsafe.neverNull
+			count: 1
+			path: packages/publishing-studio/tests/Unit/SchedulerAndApprovalResidualCoverageTest.php
+
+		-
+			rawMessage: Cannot access property $detail on Capell\SeoSuite\Data\SeoSuiteDoctorCheckData|null.
+			identifier: property.nonObject
+			count: 5
+			path: packages/seo-suite/tests/Feature/Console/SeoSuiteDoctorCommandTest.php
+
+		-
+			rawMessage: Cannot access property $message on Capell\SeoSuite\Data\SeoSuiteDoctorCheckData|null.
+			identifier: property.nonObject
+			count: 1
+			path: packages/seo-suite/tests/Feature/Console/SeoSuiteDoctorCommandTest.php
+
+		-
+			rawMessage: Cannot access property $status on Capell\SeoSuite\Data\SeoSuiteDoctorCheckData|null.
+			identifier: property.nonObject
+			count: 10
+			path: packages/seo-suite/tests/Feature/Console/SeoSuiteDoctorCommandTest.php
+
+		-
+			rawMessage: 'Offset ''language'' might not exist on array{page: Capell\Core\Models\Page, site: Capell\Core\Models\Site, language: Capell\Core\Models\Language}|null.'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: packages/seo-suite/tests/Feature/Filament/PageSeoPanelTest.php
+
+		-
+			rawMessage: 'Offset ''page'' might not exist on array{page: Capell\Core\Models\Page, site: Capell\Core\Models\Site, language: Capell\Core\Models\Language}|null.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: packages/seo-suite/tests/Feature/Filament/PageSeoPanelTest.php
+
+		-
+			rawMessage: 'Offset ''site'' might not exist on array{page: Capell\Core\Models\Page, site: Capell\Core\Models\Site, language: Capell\Core\Models\Language}|null.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: packages/seo-suite/tests/Feature/Filament/PageSeoPanelTest.php
+
+		-
+			rawMessage: Anonymous function should return string but returns string|null.
+			identifier: return.type
+			count: 2
+			path: packages/seo-suite/tests/Unit/Filament/SeoSuiteTableCoverageTest.php
+
+		-
+			rawMessage: 'Parameter #2 $records of function evaluateSeoSuiteBulkAction expects Illuminate\Database\Eloquent\Collection<int, Capell\Core\Models\Page>, Illuminate\Database\Eloquent\Collection<int, Illuminate\Database\Eloquent\Model> given.'
+			identifier: argument.type
+			count: 2
+			path: packages/seo-suite/tests/Unit/Filament/SeoSuiteTableCoverageTest.php
+
+		-
+			rawMessage: Unable to resolve the template type TKey in call to function collect
+			identifier: argument.templateType
+			count: 2
+			path: packages/seo-suite/tests/Unit/Filament/SeoSuiteTableCoverageTest.php
+
+		-
+			rawMessage: Unable to resolve the template type TValue in call to function collect
+			identifier: argument.templateType
+			count: 2
+			path: packages/seo-suite/tests/Unit/Filament/SeoSuiteTableCoverageTest.php
+
+		-
+			rawMessage: Cannot access property $command on Illuminate\Console\Scheduling\Event|null.
+			identifier: property.nonObject
+			count: 1
+			path: packages/seo-suite/tests/Unit/Providers/SeoSuiteAutoloadTest.php
+
+		-
+			rawMessage: Cannot access property $onOneServer on Illuminate\Console\Scheduling\Event|null.
+			identifier: property.nonObject
+			count: 1
+			path: packages/seo-suite/tests/Unit/Providers/SeoSuiteAutoloadTest.php
+
+		-
+			rawMessage: Cannot access property $withoutOverlapping on Illuminate\Console\Scheduling\Event|null.
+			identifier: property.nonObject
+			count: 1
+			path: packages/seo-suite/tests/Unit/Providers/SeoSuiteAutoloadTest.php
+
+		-
+			rawMessage: Anonymous function with return type void returns null but should not return anything.
+			identifier: return.void
+			count: 3
+			path: packages/seo-suite/tests/Unit/Support/AdminActionSchemaCoverageTest.php
+
+		-
+			rawMessage: 'Cannot call method maxTokens() on Prism\Prism\Audio\SpeechToTextRequest|Prism\Prism\Audio\TextToSpeechRequest|Prism\Prism\Embeddings\Request|Prism\Prism\Images\Request|Prism\Prism\Structured\Request|Prism\Prism\Text\Request|null.'
+			identifier: method.nonObject
+			count: 1
+			path: packages/seo-suite/tests/Unit/Support/PrismProviderAndCacheTest.php
+
+		-
+			rawMessage: 'Cannot call method model() on Prism\Prism\Audio\SpeechToTextRequest|Prism\Prism\Audio\TextToSpeechRequest|Prism\Prism\Embeddings\Request|Prism\Prism\Images\Request|Prism\Prism\Structured\Request|Prism\Prism\Text\Request|null.'
+			identifier: method.nonObject
+			count: 1
+			path: packages/seo-suite/tests/Unit/Support/PrismProviderAndCacheTest.php
+
+		-
+			rawMessage: 'Cannot call method prompt() on Prism\Prism\Audio\SpeechToTextRequest|Prism\Prism\Audio\TextToSpeechRequest|Prism\Prism\Embeddings\Request|Prism\Prism\Images\Request|Prism\Prism\Structured\Request|Prism\Prism\Text\Request|null.'
+			identifier: method.nonObject
+			count: 1
+			path: packages/seo-suite/tests/Unit/Support/PrismProviderAndCacheTest.php
+
+		-
+			rawMessage: 'Cannot call method systemPrompts() on Prism\Prism\Audio\SpeechToTextRequest|Prism\Prism\Audio\TextToSpeechRequest|Prism\Prism\Embeddings\Request|Prism\Prism\Images\Request|Prism\Prism\Structured\Request|Prism\Prism\Text\Request|null.'
+			identifier: method.nonObject
+			count: 1
+			path: packages/seo-suite/tests/Unit/Support/PrismProviderAndCacheTest.php
+
+		-
+			rawMessage: 'Cannot call method temperature() on Prism\Prism\Audio\SpeechToTextRequest|Prism\Prism\Audio\TextToSpeechRequest|Prism\Prism\Embeddings\Request|Prism\Prism\Images\Request|Prism\Prism\Structured\Request|Prism\Prism\Text\Request|null.'
+			identifier: method.nonObject
+			count: 1
+			path: packages/seo-suite/tests/Unit/Support/PrismProviderAndCacheTest.php
+
+		-
+			rawMessage: 'Method Capell\Tests\Fixtures\Models\User@anonymous/packages/shopify-commerce/tests/Feature/Filament/ShopifyConnectionPageTest.php:186::getGuardNames() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: packages/shopify-commerce/tests/Feature/Filament/ShopifyConnectionPageTest.php
+
+		-
+			rawMessage: 'Cannot call method getActiveTableLocale() on class-string|object.'
+			identifier: method.nonObject
+			count: 1
+			path: packages/tags/src/Filament/Resources/Tags/Tables/TagsTable.php
+
+		-
+			rawMessage: Anonymous function should return string but returns string|null.
+			identifier: return.type
+			count: 1
+			path: packages/translation-manager/tests/Feature/Filament/TranslationManagerPageTest.php
+
+		-
+			rawMessage: 'Cannot call method evaluate() on Filament\Actions\Action|null.'
+			identifier: method.nonObject
+			count: 1
+			path: packages/translation-manager/tests/Feature/Filament/TranslationManagerPageTest.php
+
+		-
+			rawMessage: 'Cannot call method getActionFunction() on Filament\Actions\Action|null.'
+			identifier: method.nonObject
+			count: 1
+			path: packages/translation-manager/tests/Feature/Filament/TranslationManagerPageTest.php
+
+		-
+			rawMessage: Instanceof between Filament\Actions\Action and Filament\Actions\Action will always evaluate to true.
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: packages/translation-manager/tests/Feature/Filament/TranslationManagerPageTest.php
+
+		-
+			rawMessage: 'Call to function method_exists() with Capell\Admin\Filament\Contracts\TableConfigurator|class-string<Capell\Admin\Filament\Contracts\TableConfigurator> and ''configure'' will always evaluate to true.'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: tests/Packages/Feature/AdminSurfaceContractCoverageTest.php
+
+		-
+			rawMessage: 'Call to function method_exists() with class-string<Filament\Resources\Resource>|Filament\Resources\Resource and ''form'' will always evaluate to true.'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: tests/Packages/Feature/AdminSurfaceContractCoverageTest.php
+
+		-
+			rawMessage: 'Call to function method_exists() with class-string<Filament\Resources\Resource>|Filament\Resources\Resource and ''table'' will always evaluate to true.'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: tests/Packages/Feature/AdminSurfaceContractCoverageTest.php
+
+		-
+			rawMessage: 'Function packageSurfaceContractClasses() should return array<int, class-string> but returns list<string>.'
+			identifier: return.type
+			count: 1
+			path: tests/Packages/Feature/AdminSurfaceContractCoverageTest.php
+
+		-
+			rawMessage: 'Cannot call method getAddAssetAction() on class-string|object.'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Packages/Feature/AdminSurfaceSchemaBuildTest.php
+
+		-
+			rawMessage: 'Cannot call method getDefaultChildComponents() on class-string|object.'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Packages/Feature/AdminSurfaceSchemaBuildTest.php
+
+		-
+			rawMessage: Unable to resolve the template type TValue in call to function expect
+			identifier: argument.templateType
+			count: 1
+			path: tests/Packages/Feature/AdminSurfaceSchemaBuildTest.php
+
+		-
+			rawMessage: 'Function packageDashboardWidgetRecords() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:146::handle() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:158::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:193::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:202::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:213::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:224::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:235::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:246::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:276::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:288::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:299::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:342::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:354::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:382::handle() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:394::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:443::handle() return type with generic class Illuminate\Database\Eloquent\Builder does not specify its types: TModel'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:79::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Method class@anonymous/tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php:97::handle() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: Trying to invoke Closure|null but it might not be a callable.
+			identifier: callable.nonCallable
+			count: 2
+			path: tests/Packages/Feature/DashboardWidgetSurfaceCoverageTest.php
+
+		-
+			rawMessage: 'Class PackagePolicyCoverageUser uses generic trait Illuminate\Database\Eloquent\Factories\HasFactory but does not specify its types: TFactory'
+			identifier: missingType.generics
+			count: 1
+			path: tests/Packages/Feature/PackagePolicyCoverageTest.php
+
+		-
+			rawMessage: 'Function packageRuntimeContractClasses() should return list<class-string> but returns list<non-falsy-string>.'
+			identifier: return.type
+			count: 1
+			path: tests/Packages/Feature/PackageRuntimeContractCoverageTest.php

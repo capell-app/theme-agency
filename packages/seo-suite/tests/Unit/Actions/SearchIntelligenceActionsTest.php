@@ -116,8 +116,9 @@ it('detects target keywords with no search console visibility', function (): voi
     $opportunity = BuildSeoIntelligenceOpportunitiesAction::run(10)
         ->first(fn (SeoOpportunityRowData $row): bool => $row->type === SeoOpportunityTypeEnum::MissingTargetVisibility);
 
-    expect($opportunity)->not()->toBeNull()
-        ->and($opportunity->query)->toBe('primary term');
+    throw_unless($opportunity instanceof SeoOpportunityRowData, RuntimeException::class, 'Expected missing target visibility opportunity.');
+
+    expect($opportunity->query)->toBe('primary term');
 });
 
 it('matches target keywords to the page url language', function (): void {

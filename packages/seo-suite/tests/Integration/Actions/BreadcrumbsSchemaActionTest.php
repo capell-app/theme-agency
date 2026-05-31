@@ -41,8 +41,8 @@ it('generates breadcrumbs for a page with ancestors', function (): void {
     if (isset($breadcrumbs['itemListElement'])) {
         expect($breadcrumbs['itemListElement'])
             ->toHaveCount(2)
-            ->and($breadcrumbs['itemListElement'][0]['name'])->toBe($parent->translation->label)
-            ->and($breadcrumbs['itemListElement'][1]['name'])->toBe($child->translation->label);
+            ->and($breadcrumbs['itemListElement'][0]['name'])->toBe($parent->translation?->label)
+            ->and($breadcrumbs['itemListElement'][1]['name'])->toBe($child->translation?->label);
     } else {
         expect($breadcrumbs)->toBeArray();
     }

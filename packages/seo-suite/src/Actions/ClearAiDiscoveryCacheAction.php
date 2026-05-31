@@ -22,12 +22,15 @@ final class ClearAiDiscoveryCacheAction
 
     public function handle(Site $site, ?Language $language = null, ?Page $page = null): int
     {
+        $languageId = $language instanceof Language ? $language->getKey() : null;
+        $pageId = $page instanceof Page ? $page->getKey() : null;
+
         $snapshots = AiDiscoverySnapshot::query()
             ->where('site_id', $site->getKey())
-            ->when($language instanceof Language, fn (Builder $query): Builder => $query->where('language_id', $language->getKey()))
-            ->when($page instanceof Page, fn (Builder $query): Builder => $query->where(
+            ->when($languageId !== null, fn (Builder $query): Builder => $query->where('language_id', $languageId))
+            ->when($pageId !== null, fn (Builder $query): Builder => $query->where(
                 fn (Builder $pageQuery): Builder => $pageQuery
-                    ->where('page_id', $page->getKey())
+                    ->where('page_id', $pageId)
                     ->orWhereNull('page_id'),
             ))
             ->get();

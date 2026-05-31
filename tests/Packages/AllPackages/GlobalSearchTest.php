@@ -47,7 +47,11 @@ it('finds a package article after all packages are booted by its $attribute', fu
         'url' => '/blog/' . $articleUrlToken,
     ]);
 
-    $results = Filament::getGlobalSearchProvider()->getResults($searchTerm);
+    $globalSearchProvider = Filament::getGlobalSearchProvider();
+
+    throw_unless($globalSearchProvider !== null, RuntimeException::class, 'Expected Filament global search provider.');
+
+    $results = $globalSearchProvider->getResults($searchTerm);
     $articleResult = $results?->getCategories()->get(ArticleResource::getPluralModelLabel())?->first();
 
     expect($articleResult)
