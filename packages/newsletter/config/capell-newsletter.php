@@ -19,6 +19,7 @@ return [
         'segments' => 'newsletter_segments',
         'segment_subscriber' => 'newsletter_segment_subscriber',
         'import_batches' => 'newsletter_import_batches',
+        'sends' => 'newsletter_sends',
     ],
     'double_opt_in' => [
         'enabled_by_default' => true,

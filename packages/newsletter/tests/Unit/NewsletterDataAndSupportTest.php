@@ -16,6 +16,7 @@ use Capell\Newsletter\Data\SubscriberData;
 use Capell\Newsletter\Enums\AuthType;
 use Capell\Newsletter\Enums\ConfirmationMode;
 use Capell\Newsletter\Enums\ConsentEventType;
+use Capell\Newsletter\Enums\NewsletterSendStatus;
 use Capell\Newsletter\Enums\ProviderType;
 use Capell\Newsletter\Enums\ResubscribePolicy;
 use Capell\Newsletter\Enums\SegmentType;
@@ -203,6 +204,7 @@ it('defines newsletter package metadata and enum labels', function (): void {
         ->and(CapellNewsletterManager::getMigrations())->toContain(
             '2026_05_10_190861_02_create_newsletter_subscribers_table',
             '2026_05_10_190861_11_create_newsletter_import_batches_table',
+            '2026_05_31_120000_13_create_newsletter_sends_table',
         )
         ->and(SubscriberStatus::Subscribed->isSendable())->toBeTrue()
         ->and(SubscriberStatus::Pending->isSendable())->toBeFalse()
@@ -210,6 +212,7 @@ it('defines newsletter package metadata and enum labels', function (): void {
         ->and(ConfirmationMode::ProviderOwned->getLabel())->toBe('capell-newsletter::generic.confirmation_mode.provider_owned')
         ->and(ConsentEventType::ProviderWebhook->getLabel())->toBe('capell-newsletter::generic.consent_event_type.provider_webhook')
         ->and(ProviderType::Mailchimp->getLabel())->toBe('capell-newsletter::generic.provider.mailchimp')
+        ->and(NewsletterSendStatus::Scheduled->getLabel())->toBe('Scheduled')
         ->and(ResubscribePolicy::RequireDoubleOptIn->getLabel())->toBe('capell-newsletter::generic.resubscribe_policy.require_double_opt_in')
         ->and(SegmentType::SavedFilter->getLabel())->toBe('capell-newsletter::generic.segment_type.saved_filter')
         ->and(SyncStatus::RetryScheduled->getLabel())->toBe('capell-newsletter::generic.sync_status.retry_scheduled');

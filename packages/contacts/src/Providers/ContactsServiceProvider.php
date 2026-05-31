@@ -37,6 +37,8 @@ final class ContactsServiceProvider extends AbstractPackageServiceProvider
 
     public function packageRegistered(): void
     {
+        $this->app->register(AdminServiceProvider::class);
+
         $this->app->booted(function (): void {
             if (! $this->isPackageInstalled()) {
                 return;

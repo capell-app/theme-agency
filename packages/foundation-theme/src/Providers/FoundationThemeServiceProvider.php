@@ -458,18 +458,6 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
                 classViewPath: __DIR__ . '/../../resources/views/livewire',
             );
 
-            if (! $this->app->bound('livewire.factory')) {
-                return;
-            }
-
-            resolve('livewire.factory')->resolveMissingComponent(
-                static fn (string $name): ?string => match ($name) {
-                    'capell::block.pages' => Pages::class,
-                    'capell-foundation-theme::block.pages' => Pages::class,
-                    'capell-foundation-theme::assets.table.page-assets' => PageAssets::class,
-                    default => null,
-                },
-            );
         };
 
         if ($this->app->isBooted()) {

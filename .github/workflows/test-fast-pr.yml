@@ -24,7 +24,7 @@ concurrency:
 jobs:
   test-fast:
     if: github.event.pull_request.draft == false
-    name: Tests (fast PR suite)
+    name: Test - shard ${{ matrix.shard }}/3
     runs-on: ubuntu-latest
     env:
       COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.ACCESS_TOKEN }}"} }'
@@ -37,6 +37,19 @@ jobs:
             testbench: 9.*
             livewire: ^3.7
             db: sqlite
+            shard: 1
+          - php: 8.3
+            laravel: 11.*
+            testbench: 9.*
+            livewire: ^3.7
+            db: sqlite
+            shard: 2
+          - php: 8.3
+            laravel: 11.*
+            testbench: 9.*
+            livewire: ^3.7
+            db: sqlite
+            shard: 3
 
     steps:
       - name: Checkout code
@@ -151,5 +164,5 @@ jobs:
           echo "DB_CONNECTION=sqlite" >> .env
           echo "DB_DATABASE=:memory:" >> .env
 
-      - name: Execute fast PR tests
-        run: composer run test:all:ci
+      - name: Run test:fast
+        run: PEST_SHARD=${{ matrix.shard }}/3 composer run test:fast:ci

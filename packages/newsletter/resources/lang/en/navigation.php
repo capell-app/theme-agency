@@ -6,6 +6,7 @@ return [
     'form_mappings' => 'Form Mappings',
     'import_batches' => 'Imports / Exports',
     'newsletter_tags' => 'Newsletter Tags',
+    'newsletter_sends' => 'Newsletter Sends',
     'provider_audiences' => 'Provider Audiences',
     'provider_connections' => 'Provider Connections',
     'provider_interest_mappings' => 'Provider Interest Mappings',

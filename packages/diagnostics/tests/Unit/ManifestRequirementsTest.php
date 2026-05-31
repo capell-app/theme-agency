@@ -21,6 +21,10 @@ describe('diagnostics capell.json manifest', function (): void {
             ])
             ->and($manifest['surfaces'])->toContain('admin')
             ->and($manifest['providers']['runtime'])->toContain(DiagnosticsServiceProvider::class)
-            ->and($manifest['providers']['admin'])->toContain(AdminServiceProvider::class);
+            ->and($manifest['providers']['admin'])->toContain(AdminServiceProvider::class)
+            ->and($manifest['database']['requiredTables'])->toContain(
+                'command_palette_runs',
+                'queue_monitors',
+            );
     });
 });

@@ -15,8 +15,10 @@
         "post-autoload-dump": [
             "@clear",
             "@prepare",
-            "CACHE_STORE=array \"$PHP_BINARY\" vendor/bin/testbench package:discover --ansi"
+            "CACHE_STORE=array \"$PHP_BINARY\" vendor/bin/testbench package:discover --ansi",
+            "@patch:pest-shards"
         ],
+        "patch:pest-shards": "@php scripts/patch-pest-shards.php",
         "rector": "@php vendor/bin/rector",
         "lint": "@php vendor/bin/pint --parallel packages tests",
         "lint:changed": "zsh ./scripts/lint-changed.sh",

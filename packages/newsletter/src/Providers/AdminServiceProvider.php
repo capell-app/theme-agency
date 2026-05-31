@@ -17,6 +17,7 @@ use Capell\Newsletter\Enums\SubscriberStatus;
 use Capell\Newsletter\Enums\SyncStatus;
 use Capell\Newsletter\Filament\Resources\FormMappings\FormMappingResource;
 use Capell\Newsletter\Filament\Resources\ImportBatches\ImportBatchResource;
+use Capell\Newsletter\Filament\Resources\NewsletterSends\NewsletterSendResource;
 use Capell\Newsletter\Filament\Resources\NewsletterTags\NewsletterTagResource;
 use Capell\Newsletter\Filament\Resources\ProviderAudiences\ProviderAudienceResource;
 use Capell\Newsletter\Filament\Resources\ProviderConnections\ProviderConnectionResource;
@@ -27,6 +28,7 @@ use Capell\Newsletter\Filament\Resources\SyncAttempts\SyncAttemptResource;
 use Capell\Newsletter\Filament\Widgets\NewsletterOverviewStatsWidget;
 use Capell\Newsletter\Models\FormMapping;
 use Capell\Newsletter\Models\ImportBatch;
+use Capell\Newsletter\Models\NewsletterSend;
 use Capell\Newsletter\Models\ProviderAudience;
 use Capell\Newsletter\Models\ProviderConnection;
 use Capell\Newsletter\Models\ProviderInterestMapping;
@@ -35,6 +37,7 @@ use Capell\Newsletter\Models\Subscriber;
 use Capell\Newsletter\Models\SyncAttempt;
 use Capell\Newsletter\Policies\FormMappingPolicy;
 use Capell\Newsletter\Policies\ImportBatchPolicy;
+use Capell\Newsletter\Policies\NewsletterSendPolicy;
 use Capell\Newsletter\Policies\ProviderAudiencePolicy;
 use Capell\Newsletter\Policies\ProviderConnectionPolicy;
 use Capell\Newsletter\Policies\ProviderInterestMappingPolicy;
@@ -156,6 +159,7 @@ class AdminServiceProvider extends ServiceProvider
     {
         Gate::policy(FormMapping::class, FormMappingPolicy::class);
         Gate::policy(ImportBatch::class, ImportBatchPolicy::class);
+        Gate::policy(NewsletterSend::class, NewsletterSendPolicy::class);
         Gate::policy(ProviderAudience::class, ProviderAudiencePolicy::class);
         Gate::policy(ProviderConnection::class, ProviderConnectionPolicy::class);
         Gate::policy(ProviderInterestMapping::class, ProviderInterestMappingPolicy::class);
@@ -191,6 +195,15 @@ class AdminServiceProvider extends ServiceProvider
             section: MarketingStudioSectionEnum::Audience,
             icon: 'heroicon-o-users',
             sort: 20,
+        ));
+
+        CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(
+            key: 'newsletter.sends',
+            label: fn (): string => __('capell-newsletter::navigation.newsletter_sends'),
+            url: fn (): string => NewsletterSendResource::getUrl(),
+            section: MarketingStudioSectionEnum::Campaigns,
+            icon: 'heroicon-o-paper-airplane',
+            sort: 30,
         ));
 
         CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(

@@ -42,6 +42,7 @@ use Capell\SeoSuite\Console\Commands\DoctorCommand;
 use Capell\SeoSuite\Console\Commands\InstallCommand;
 use Capell\SeoSuite\Console\Commands\MonitorAiUsageCommand;
 use Capell\SeoSuite\Console\Commands\PageSpeedAuditCommand;
+use Capell\SeoSuite\Console\Commands\RefreshAiDiscoveryMarkdownCommand;
 use Capell\SeoSuite\Console\Commands\SetupCommand;
 use Capell\SeoSuite\Console\Commands\SyncSearchConsoleCommand;
 use Capell\SeoSuite\Console\Commands\TestOpenAiConnectionCommand;
@@ -189,6 +190,7 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
                 InstallCommand::class,
                 MonitorAiUsageCommand::class,
                 PageSpeedAuditCommand::class,
+                RefreshAiDiscoveryMarkdownCommand::class,
                 SetupCommand::class,
                 SyncSearchConsoleCommand::class,
                 TestOpenAiConnectionCommand::class,

@@ -25,11 +25,13 @@ use Capell\Events\Policies\EventOccurrencePolicy;
 use Capell\Events\Policies\EventPolicy;
 use Capell\Events\Policies\EventRegistrationPolicy;
 use Capell\Events\Policies\EventVenuePolicy;
+use Capell\Events\Support\EditorialCalendar\EventsEditorialCalendarEventContributor;
 use Capell\Events\Support\EventModelRegistrar;
 use Capell\Events\Support\PublicUrls\EventsPublicUrlContributor;
 use Capell\Events\Support\RenderHooks\RegisterEventSchemaHooks;
 use Capell\Events\Support\Schema\EventSchemaTemplate;
 use Capell\Frontend\Support\Render\RenderHookRegistry;
+use Capell\PublishingStudio\Contracts\EditorialCalendarEventContributor;
 use Capell\PublishingStudio\WorkspaceRegistry;
 use Capell\SeoSuite\Enums\SchemaTemplateTypeEnum;
 use Capell\SeoSuite\Support\SchemaTemplates\SchemaTemplateRegistry;
@@ -124,6 +126,7 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
             ->registerSchedule()
             ->registerSeoSchemaTemplate()
             ->registerPublicUrlContributors()
+            ->registerEditorialCalendarContributors()
             ->registerPublishingStudio()
             ->registerAboutCommand();
     }
@@ -287,6 +290,16 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
         if (interface_exists(PublicUrlContributor::class)) {
             $this->app->singleton(EventsPublicUrlContributor::class);
             $this->app->tag([EventsPublicUrlContributor::class], PublicUrlContributor::TAG);
+        }
+
+        return $this;
+    }
+
+    private function registerEditorialCalendarContributors(): self
+    {
+        if (interface_exists(EditorialCalendarEventContributor::class)) {
+            $this->app->singleton(EventsEditorialCalendarEventContributor::class);
+            $this->app->tag([EventsEditorialCalendarEventContributor::class], EditorialCalendarEventContributor::TAG);
         }
 
         return $this;

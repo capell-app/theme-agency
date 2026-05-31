@@ -10,6 +10,8 @@ return [
     'last_attempted_at' => 'Last attempted',
     'operation' => 'Operation',
     'provider' => 'Provider',
+    'scheduled_at' => 'Scheduled at',
+    'sent_at' => 'Sent at',
     'status' => 'Status',
     'subscribed_at' => 'Subscribed',
     'sync_status' => 'Sync status',

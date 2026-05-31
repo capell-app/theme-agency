@@ -15,7 +15,7 @@
     "namespace": "Capell\\Contacts",
     "surfaces": ["admin"],
     "dependencies": {
-        "requires": ["capell-app/core"],
+        "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
             "capell-app/access-gate",
             "capell-app/campaign-studio",
@@ -31,7 +31,7 @@
         "metadata": [],
         "install": [],
         "runtime": ["Capell\\Contacts\\Providers\\ContactsServiceProvider"],
-        "admin": [],
+        "admin": ["Capell\\Contacts\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
     "contributes": [],
@@ -53,7 +53,12 @@
         "doctor": null
     },
     "settings": [],
-    "permissions": [],
+    "permissions": [
+        "View:Contact",
+        "View:Organisation",
+        "View:Lead",
+        "View:ContactActivity"
+    ],
     "capabilities": ["contacts", "contacts-identity", "contacts-activity"],
     "performance": {
         "frontendRenderBudgetMs": 0,
@@ -89,7 +94,6 @@
     },
     "contributionTraceability": {
         "deferredContributions": [
-            "admin-resource",
             "dashboard-widget",
             "deduplication-rules",
             "migration",

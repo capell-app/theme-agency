@@ -15,6 +15,8 @@ it('declares the contacts package manifest contract', function (): void {
         ->toHaveKey('manifest-version', 3)
         ->toHaveKey('name', 'capell-app/contacts')
         ->toHaveKey('namespace', 'Capell\\Contacts')
+        ->and($manifest['dependencies']['requires'])->toContain('capell-app/admin', 'capell-app/core')
+        ->and($manifest['providers']['admin'])->toContain('Capell\\Contacts\\Providers\\AdminServiceProvider')
         ->and($manifest['database']['migrations'])->toBeTrue()
         ->and($manifest['database']['requiredTables'])->toBe([
             'contacts',
@@ -23,5 +25,11 @@ it('declares the contacts package manifest contract', function (): void {
             'contact_leads',
             'contact_activities',
         ])
+        ->and($manifest['permissions'])->toContain(
+            'View:Contact',
+            'View:Organisation',
+            'View:Lead',
+            'View:ContactActivity',
+        )
         ->and($manifest['performance']['cacheSafety']['sensitiveOutput'])->toBeTrue();
 });

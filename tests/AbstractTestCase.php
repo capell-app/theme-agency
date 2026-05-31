@@ -167,14 +167,6 @@ abstract class AbstractTestCase extends TestCase
         Blade::component(Siblings::class, 'capell-layout-builder::widget.page.siblings');
         Livewire::component('capell-layout-builder::filament.layout-builder', LayoutBuilder::class);
 
-        if (app()->bound('livewire.factory')) {
-            resolve('livewire.factory')->resolveMissingComponent(
-                static fn (string $name): ?string => $name === 'capell-layout-builder::filament.layout-builder'
-                    ? LayoutBuilder::class
-                    : null,
-            );
-        }
-
         Http::preventStrayRequests();
 
         Relation::morphMap([

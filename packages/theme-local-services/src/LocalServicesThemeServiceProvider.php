@@ -127,11 +127,11 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
 
         if (array_key_exists($sectionKey, $optionalIntegrations)) {
             return new ViewSectionRenderer(
-                themeKey: self::THEME_KEY,
-                sectionKey: $sectionKey,
-                view: $view,
-                failLoudly: true,
-                extraViewData: $optionalIntegrations[$sectionKey],
+                self::THEME_KEY,
+                $sectionKey,
+                $view,
+                true,
+                $optionalIntegrations[$sectionKey],
             );
         }
 

@@ -36,7 +36,7 @@
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": []
+        "requiredTables": ["command_palette_runs", "queue_monitors"]
     },
     "commands": {
         "install": null,
