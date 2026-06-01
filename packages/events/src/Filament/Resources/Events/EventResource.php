@@ -136,7 +136,7 @@ class EventResource extends PageResource
     }
 
     #[Override]
-    public static function getResourceName(): ?string
+    public static function getResourceName(): string
     {
         return strtolower(ResourceEnum::Event->name);
     }
