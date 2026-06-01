@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Capell\Bookings\Support;
 
+use Capell\Bookings\Models\AppointmentAuditLog;
 use Capell\Bookings\Models\AppointmentRequest;
+use Capell\Bookings\Models\BookingAvailabilityException;
 use Capell\Bookings\Models\BookingAvailabilityWindow;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingService;
@@ -22,7 +24,9 @@ class BookingsModelRegistrar
         BookingStaffMember::class,
         BookingLocation::class,
         BookingAvailabilityWindow::class,
+        BookingAvailabilityException::class,
         AppointmentRequest::class,
+        AppointmentAuditLog::class,
     ];
 
     public static function register(): void

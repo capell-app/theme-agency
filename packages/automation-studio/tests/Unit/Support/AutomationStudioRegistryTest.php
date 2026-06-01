@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\AutomationStudio\Actions\RegisterAutomationStudioDefaultsAction;
 use Capell\AutomationStudio\Contracts\AutomationActionHandler;
 use Capell\AutomationStudio\Data\AutomationActionDefinitionData;
 use Capell\AutomationStudio\Data\AutomationActionResultData;
@@ -13,6 +14,11 @@ use Capell\AutomationStudio\Enums\AutomationTriggerType;
 use Capell\AutomationStudio\Support\AutomationActionRegistry;
 use Capell\AutomationStudio\Support\AutomationRuleRegistry;
 use Capell\AutomationStudio\Support\AutomationTriggerRegistry;
+use Capell\AutomationStudio\Support\Handlers\CreateContactNoteAutomationActionHandler;
+use Capell\AutomationStudio\Support\Handlers\QueueAgentCapabilityAutomationActionHandler;
+use Capell\AutomationStudio\Support\Handlers\SendEmailAutomationActionHandler;
+use Capell\AutomationStudio\Support\Handlers\SubscribeUserAutomationActionHandler;
+use Capell\AutomationStudio\Support\Handlers\TagContactAutomationActionHandler;
 use Capell\FormBuilder\Events\FormSubmitted;
 
 it('registers trigger and action definitions', function (): void {
@@ -55,4 +61,22 @@ it('resolves registered object action handlers', function (): void {
     $actions->registerHandler(AutomationActionType::SendEmail, $handler);
 
     expect($actions->handler(AutomationActionType::SendEmail))->toBe($handler);
+});
+
+it('registers native automation handlers by default', function (): void {
+    $triggers = new AutomationTriggerRegistry;
+    $actions = new AutomationActionRegistry;
+
+    (new RegisterAutomationStudioDefaultsAction($triggers, $actions))->handle();
+
+    expect($actions->definition(AutomationActionType::SendEmail)?->handler)->toBe(SendEmailAutomationActionHandler::class)
+        ->and($actions->definition(AutomationActionType::QueueAgentCapability)?->handler)->toBe(QueueAgentCapabilityAutomationActionHandler::class)
+        ->and($actions->definition(AutomationActionType::TagContact)?->handler)->toBe(TagContactAutomationActionHandler::class)
+        ->and($actions->definition(AutomationActionType::CreateNote)?->handler)->toBe(CreateContactNoteAutomationActionHandler::class)
+        ->and($actions->definition(AutomationActionType::SubscribeUser)?->handler)->toBe(SubscribeUserAutomationActionHandler::class)
+        ->and($actions->handler(AutomationActionType::SendEmail))->toBeInstanceOf(SendEmailAutomationActionHandler::class)
+        ->and($actions->handler(AutomationActionType::QueueAgentCapability))->toBeInstanceOf(QueueAgentCapabilityAutomationActionHandler::class)
+        ->and($actions->handler(AutomationActionType::TagContact))->toBeInstanceOf(TagContactAutomationActionHandler::class)
+        ->and($actions->handler(AutomationActionType::CreateNote))->toBeInstanceOf(CreateContactNoteAutomationActionHandler::class)
+        ->and($actions->handler(AutomationActionType::SubscribeUser))->toBeInstanceOf(SubscribeUserAutomationActionHandler::class);
 });

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\PublishingStudio\Filament\Widgets;
 
-use Capell\PublishingStudio\Actions\DashboardReports\BuildVisibleContentSchedulerEventsAction;
-use Capell\PublishingStudio\Data\SchedulerEventData;
+use Capell\PublishingStudio\Actions\DashboardReports\BuildVisibleEditorialCalendarEventsAction;
+use Capell\PublishingStudio\Data\EditorialCalendarEventData;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
@@ -17,12 +17,12 @@ final class ContentSchedulerCalendarWidget extends Widget
     protected int|string|array $columnSpan = 'full';
 
     /**
-     * @return Collection<string, Collection<int, SchedulerEventData>>
+     * @return Collection<string, Collection<int, EditorialCalendarEventData>>
      */
     #[Computed]
     public function eventsByDate(): Collection
     {
-        return BuildVisibleContentSchedulerEventsAction::run()
-            ->groupBy(fn (SchedulerEventData $event): string => $event->scheduledFor->format('Y-m-d'));
+        return BuildVisibleEditorialCalendarEventsAction::run()
+            ->groupBy(fn (EditorialCalendarEventData $event): string => $event->startsAt->format('Y-m-d'));
     }
 }

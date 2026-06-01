@@ -12,4 +12,9 @@ final class PaymentGatewayConfigurationException extends RuntimeException
     {
         return new self('Stripe checkout requires a configured STRIPE_SECRET value.');
     }
+
+    public static function missingStripeWebhookSecret(): self
+    {
+        return new self('Stripe webhooks require a configured STRIPE_WEBHOOK_SECRET value.');
+    }
 }

@@ -29,6 +29,7 @@ use Capell\AccessGate\Policies\ClaimTokenPolicy;
 use Capell\AccessGate\Policies\GrantPolicy;
 use Capell\AccessGate\Policies\RegistrationPolicy;
 use Capell\AccessGate\Support\AccessRequestMethodRegistry;
+use Capell\AccessGate\Support\Payments\AccessGatePaymentFulfillmentHandler;
 use Capell\AccessGate\Support\RegistrationFieldRegistry;
 use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Facades\CapellAdmin;
@@ -104,7 +105,8 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
                 ->registerPolicies()
                 ->registerAdminResources()
                 ->registerFrontendRuleConditions()
-                ->registerProtectedTables();
+                ->registerProtectedTables()
+                ->registerPaymentFulfillmentHandler();
         });
     }
 
@@ -330,6 +332,18 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
         foreach ($this->protectedTables() as $tableName) {
             CapellCore::registerProtectedTable(fn (): string => $tableName);
         }
+
+        return $this;
+    }
+
+    private function registerPaymentFulfillmentHandler(): self
+    {
+        if (! interface_exists('Capell\\Payments\\Contracts\\PaymentFulfillmentHandler')) {
+            return $this;
+        }
+
+        $this->app->singleton(AccessGatePaymentFulfillmentHandler::class);
+        $this->app->tag([AccessGatePaymentFulfillmentHandler::class], 'capell.payments.fulfillment_handler');
 
         return $this;
     }

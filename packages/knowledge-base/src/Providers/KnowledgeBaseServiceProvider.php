@@ -27,6 +27,8 @@ final class KnowledgeBaseServiceProvider extends AbstractPackageServiceProvider
             ->name(self::$name)
             ->hasConfigFile('capell-knowledge-base')
             ->hasTranslations()
+            ->hasViews()
+            ->hasRoute('web')
             ->hasMigrations([
                 '2026_05_31_000001_create_knowledge_base_tables',
             ]);
@@ -34,6 +36,8 @@ final class KnowledgeBaseServiceProvider extends AbstractPackageServiceProvider
 
     public function packageRegistered(): void
     {
+        $this->app->register(AdminServiceProvider::class);
+
         $this->app->booted(function (): void {
             if (! $this->isPackageInstalled()) {
                 return;

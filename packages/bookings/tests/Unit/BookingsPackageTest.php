@@ -9,7 +9,9 @@ require_once __DIR__ . '/../Pest.php';
 use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
 use Capell\Bookings\Enums\BookingAvailabilityStatusEnum;
 use Capell\Bookings\Enums\BookingLocationTypeEnum;
+use Capell\Bookings\Models\AppointmentAuditLog;
 use Capell\Bookings\Models\AppointmentRequest;
+use Capell\Bookings\Models\BookingAvailabilityException;
 use Capell\Bookings\Models\BookingAvailabilityWindow;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingService;
@@ -38,6 +40,15 @@ it('keeps package manifest requirements aligned with composer requirements', fun
 
     expect($composerPackageRequirements)->toBe($manifestRequirements)
         ->and($manifest['database']['migrations'])->toBeTrue()
+        ->and($manifest['database']['requiredTables'])->toBe([
+            'booking_services',
+            'booking_staff_members',
+            'booking_locations',
+            'booking_availability_windows',
+            'booking_availability_exceptions',
+            'appointment_requests',
+            'appointment_audit_logs',
+        ])
         ->and($manifest['providers']['runtime'])->toContain(BookingsServiceProvider::class);
 });
 
@@ -51,6 +62,12 @@ it('casts enums and exposes core relationships', function (): void {
         'location_id' => $location->getKey(),
         'status' => BookingAvailabilityStatusEnum::Available,
     ]);
+    $availabilityException = BookingAvailabilityException::factory()->create([
+        'service_id' => $service->getKey(),
+        'staff_member_id' => $staffMember->getKey(),
+        'location_id' => $location->getKey(),
+        'status' => BookingAvailabilityStatusEnum::Blocked,
+    ]);
     $appointmentRequest = AppointmentRequest::factory()->create([
         'service_id' => $service->getKey(),
         'staff_member_id' => $staffMember->getKey(),
@@ -60,15 +77,23 @@ it('casts enums and exposes core relationships', function (): void {
 
     expect($service->settings)->toBe(['intake' => true])
         ->and($service->availabilityWindows()->getRelated())->toBeInstanceOf(BookingAvailabilityWindow::class)
+        ->and($service->availabilityExceptions()->getRelated())->toBeInstanceOf(BookingAvailabilityException::class)
         ->and($service->appointmentRequests()->getRelated())->toBeInstanceOf(AppointmentRequest::class)
         ->and($staffMember->settings)->toBe(['calendar' => 'primary'])
         ->and($staffMember->availabilityWindows()->getRelated())->toBeInstanceOf(BookingAvailabilityWindow::class)
+        ->and($staffMember->availabilityExceptions()->getRelated())->toBeInstanceOf(BookingAvailabilityException::class)
         ->and($location->type)->toBe(BookingLocationTypeEnum::Virtual)
+        ->and($location->availabilityExceptions()->getRelated())->toBeInstanceOf(BookingAvailabilityException::class)
         ->and($availabilityWindow->status)->toBe(BookingAvailabilityStatusEnum::Available)
+        ->and($availabilityException->status)->toBe(BookingAvailabilityStatusEnum::Blocked)
+        ->and($availabilityException->service?->is($service))->toBeTrue()
+        ->and($availabilityException->staffMember?->is($staffMember))->toBeTrue()
+        ->and($availabilityException->location?->is($location))->toBeTrue()
         ->and($availabilityWindow->service?->is($service))->toBeTrue()
         ->and($availabilityWindow->staffMember?->is($staffMember))->toBeTrue()
         ->and($availabilityWindow->location?->is($location))->toBeTrue()
         ->and($appointmentRequest->status)->toBe(AppointmentRequestStatusEnum::Requested)
         ->and($appointmentRequest->status->blocksCapacity())->toBeTrue()
-        ->and($appointmentRequest->service?->is($service))->toBeTrue();
+        ->and($appointmentRequest->service?->is($service))->toBeTrue()
+        ->and($appointmentRequest->auditLogs()->getRelated())->toBeInstanceOf(AppointmentAuditLog::class);
 });

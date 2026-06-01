@@ -52,13 +52,23 @@
         "doctor": null
     },
     "settings": [],
+    "actions": {
+        "allocateVariant": "Capell\\Experiments\\Actions\\AllocateVariantAction",
+        "buildWinnerReport": "Capell\\Experiments\\Actions\\BuildWinnerReportAction",
+        "declareExperimentWinner": "Capell\\Experiments\\Actions\\DeclareExperimentWinnerAction",
+        "recordGoalEvent": "Capell\\Experiments\\Actions\\RecordGoalEventAction",
+        "resolveExperimentVariantForContext": "Capell\\Experiments\\Actions\\ResolveExperimentVariantForContextAction"
+    },
     "permissions": [],
     "capabilities": [
         "experiments",
         "variant-allocation",
+        "request-context-variant-resolution",
         "audience-rules",
         "goal-tracking",
-        "winner-reporting"
+        "winner-reporting",
+        "winner-declaration",
+        "cache-variation-metadata"
     ],
     "performance": {
         "frontendRenderBudgetMs": 20,
@@ -93,11 +103,6 @@
         "categories": ["growth", "analytics", "frontend"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-resource",
-            "migration",
-            "model",
-            "frontend-component"
-        ]
+        "deferredContributions": ["admin-resource", "frontend-component"]
     }
 }

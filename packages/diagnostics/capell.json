@@ -53,7 +53,15 @@
         "View:QueueHealthPage",
         "Manage:QueueHealthPage"
     ],
-    "capabilities": ["diagnostics", "diagnostics-admin", "diagnostics-console"],
+    "capabilities": [
+        "diagnostics",
+        "diagnostics-admin",
+        "diagnostics-console",
+        "diagnostics-cross-package-install-health",
+        "diagnostics-public-output-safety",
+        "diagnostics-infrastructure-status",
+        "diagnostics-package-ownership"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,

@@ -31,5 +31,10 @@ it('declares the contacts package manifest contract', function (): void {
             'View:Lead',
             'View:ContactActivity',
         )
+        ->and($manifest['actions']['syncContactSourceRecord'])->toBe('Capell\\Contacts\\Actions\\SyncContactSourceRecordAction')
+        ->and($manifest['capabilities'])->toContain(
+            'contacts-source-identity',
+            'contacts-source-sync',
+        )
         ->and($manifest['performance']['cacheSafety']['sensitiveOutput'])->toBeTrue();
 });

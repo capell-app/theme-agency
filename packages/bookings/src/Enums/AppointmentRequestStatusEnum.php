@@ -20,6 +20,11 @@ enum AppointmentRequestStatusEnum: string implements HasLabel
         return $this === self::Requested;
     }
 
+    public function canCancel(): bool
+    {
+        return in_array($this, [self::Requested, self::Confirmed], true);
+    }
+
     public function blocksCapacity(): bool
     {
         return in_array($this, [self::Requested, self::Confirmed], true);

@@ -26,6 +26,7 @@ Keeps diagnostics in actions and data objects so admin pages can show health inf
 - Actions build each health report.
 - Data objects describe report rows and dashboard state.
 - QueueMonitor, FailedJob, and PendingQueueJob models support Queue Operations reporting.
+- Infrastructure status reports cover cache, queue, mail, and storage configuration.
 - CommandPaletteRun model records command palette execution history.
 
 ## Queue Operations

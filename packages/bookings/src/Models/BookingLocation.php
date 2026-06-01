@@ -53,6 +53,14 @@ class BookingLocation extends Model
     }
 
     /**
+     * @return HasMany<BookingAvailabilityException, $this>
+     */
+    public function availabilityExceptions(): HasMany
+    {
+        return $this->hasMany(BookingAvailabilityException::class, 'location_id');
+    }
+
+    /**
      * @return HasMany<AppointmentRequest, $this>
      */
     public function appointmentRequests(): HasMany

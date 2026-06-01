@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Bookings\Tests;
 
+use Capell\Bookings\Providers\BookingsServiceProvider;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -33,6 +34,7 @@ class BookingsTestCase extends TestCase
         return [
             ActionServiceProvider::class,
             LaravelDataServiceProvider::class,
+            BookingsServiceProvider::class,
         ];
     }
 

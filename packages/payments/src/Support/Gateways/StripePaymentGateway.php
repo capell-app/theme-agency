@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Payments\Support\Gateways;
 
+use Capell\Payments\Actions\ResolvePaymentSettingAction;
 use Capell\Payments\Contracts\PaymentGateway;
 use Capell\Payments\Data\CheckoutLineItemData;
 use Capell\Payments\Data\CheckoutSessionData;
@@ -20,7 +21,7 @@ final class StripePaymentGateway implements PaymentGateway
 {
     public function createCheckoutSession(CreateCheckoutSessionData $data): CheckoutSessionData
     {
-        $secretKey = config('capell-payments.stripe.secret_key');
+        $secretKey = ResolvePaymentSettingAction::run('capell-payments.stripe.secret_key', 'stripe_secret_key');
 
         if (! is_string($secretKey) || $secretKey === '') {
             throw PaymentGatewayConfigurationException::missingStripeSecret();
@@ -181,25 +182,25 @@ final class StripePaymentGateway implements PaymentGateway
 
     private function apiBaseUrl(): string
     {
-        $apiBaseUrl = config('capell-payments.stripe.api_base_url', 'https://api.stripe.com');
+        $apiBaseUrl = ResolvePaymentSettingAction::run('capell-payments.stripe.api_base_url', 'stripe_api_base_url', 'https://api.stripe.com');
 
         return rtrim(is_string($apiBaseUrl) ? $apiBaseUrl : 'https://api.stripe.com', '/');
     }
 
     private function apiVersion(): string
     {
-        $apiVersion = config('capell-payments.stripe.api_version', '2026-02-25.clover');
+        $apiVersion = ResolvePaymentSettingAction::run('capell-payments.stripe.api_version', 'stripe_api_version', '2026-02-25.clover');
 
         return is_string($apiVersion) && $apiVersion !== '' ? $apiVersion : '2026-02-25.clover';
     }
 
     private function timeout(): int
     {
-        return (int) config('capell-payments.stripe.timeout', 20);
+        return (int) ResolvePaymentSettingAction::run('capell-payments.stripe.timeout', 'stripe_timeout', 20);
     }
 
     private function connectTimeout(): int
     {
-        return (int) config('capell-payments.stripe.connect_timeout', 5);
+        return (int) ResolvePaymentSettingAction::run('capell-payments.stripe.connect_timeout', 'stripe_connect_timeout', 5);
     }
 }

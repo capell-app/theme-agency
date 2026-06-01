@@ -22,6 +22,9 @@ use Override;
  * @property int|null $site_id
  * @property string|null $source_type
  * @property int|null $source_id
+ * @property string|null $source_key
+ * @property string|null $source_identifier
+ * @property string|null $source_identifier_hash
  * @property string|null $email
  * @property string|null $email_hash
  * @property string|null $phone
@@ -39,6 +42,9 @@ class Contact extends Model
         'site_id',
         'source_type',
         'source_id',
+        'source_key',
+        'source_identifier',
+        'source_identifier_hash',
         'email',
         'email_hash',
         'phone',
@@ -66,6 +72,13 @@ class Contact extends Model
         return $normalizedPhone === null ? null : self::hashIdentity($normalizedPhone);
     }
 
+    public static function sourceIdentifierHash(?string $sourceIdentifier): ?string
+    {
+        $normalizedIdentifier = self::normalizeSourceIdentifier($sourceIdentifier);
+
+        return $normalizedIdentifier === null ? null : self::hashIdentity($normalizedIdentifier);
+    }
+
     public static function normalizeEmail(?string $email): ?string
     {
         if (! is_string($email) || trim($email) === '') {
@@ -84,6 +97,15 @@ class Contact extends Model
         $normalizedPhone = preg_replace('/[^0-9+]/', '', trim($phone));
 
         return is_string($normalizedPhone) && $normalizedPhone !== '' ? $normalizedPhone : null;
+    }
+
+    public static function normalizeSourceIdentifier(?string $sourceIdentifier): ?string
+    {
+        if (! is_string($sourceIdentifier) || trim($sourceIdentifier) === '') {
+            return null;
+        }
+
+        return Str::lower(trim($sourceIdentifier));
     }
 
     #[Override]
@@ -150,6 +172,7 @@ class Contact extends Model
         static::saving(function (Contact $contact): void {
             $contact->email_hash = self::emailHash($contact->email);
             $contact->phone_hash = self::phoneHash($contact->phone);
+            $contact->source_identifier_hash = self::sourceIdentifierHash($contact->source_identifier);
         });
     }
 
@@ -173,6 +196,7 @@ class Contact extends Model
         return [
             'email' => 'encrypted',
             'phone' => 'encrypted',
+            'source_identifier' => 'encrypted',
             'first_name' => 'encrypted',
             'last_name' => 'encrypted',
             'display_name' => 'encrypted',

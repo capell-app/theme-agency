@@ -44,4 +44,7 @@ return [
         'exists' => 'Exists',
         'missing' => 'Missing',
     ],
+    'errors' => [
+        'no_winner' => 'This experiment does not have enough allocation data to declare a winner.',
+    ],
 ];

@@ -85,6 +85,7 @@
         "approval-history",
         "content-compare",
         "dry-run-validation",
+        "editorial-calendar-aggregation",
         "editorial-timeline",
         "embargo-windows",
         "entity-restore",

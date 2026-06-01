@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\CampaignStudio\Enums\ConversionGoalType;
+use Capell\CampaignStudio\Events\CampaignConverted;
 use Capell\CampaignStudio\Listeners\RecordFormSubmissionConversion;
 use Capell\CampaignStudio\Models\CampaignConversion;
 use Capell\CampaignStudio\Models\CampaignConversionGoal;
@@ -13,8 +14,11 @@ use Capell\Core\Models\PageUrl;
 use Capell\FormBuilder\Data\SubmissionMetaData;
 use Capell\FormBuilder\Events\FormSubmitted;
 use Capell\FormBuilder\Models\Form;
+use Illuminate\Support\Facades\Event;
 
 it('records form conversions with submission source and landing page attribution', function (): void {
+    Event::fake([CampaignConverted::class]);
+
     $campaignGroup = CampaignGroup::factory()->create([
         'utm_campaign' => 'spring-launch',
     ]);
@@ -84,4 +88,6 @@ it('records form conversions with submission source and landing page attribution
         ->and($attribution->utmMedium)->toBe('email')
         ->and($attribution->utmTerm)->toBe('launch')
         ->and($attribution->utmContent)->toBe('hero');
+
+    Event::assertDispatchedTimes(CampaignConverted::class, 1);
 });

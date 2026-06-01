@@ -11,6 +11,7 @@ use Capell\CustomerPortal\Models\PortalSupportRequest;
 use Capell\CustomerPortal\Support\PortalDashboardItemRegistry;
 use Capell\CustomerPortal\Support\PortalPreferencesProviderRegistry;
 use Capell\CustomerPortal\Support\PortalProfileProviderRegistry;
+use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Override;
 use Spatie\LaravelPackageTools\Package;
@@ -27,6 +28,8 @@ final class CustomerPortalServiceProvider extends AbstractPackageServiceProvider
             ->name(self::$name)
             ->hasConfigFile('capell-customer-portal')
             ->hasTranslations()
+            ->hasViews()
+            ->hasRoute('web')
             ->hasMigrations([
                 '2026_05_31_150000_01_create_portal_accounts_table',
                 '2026_05_31_150000_02_create_portal_support_requests_table',
@@ -35,9 +38,12 @@ final class CustomerPortalServiceProvider extends AbstractPackageServiceProvider
 
     public function packageRegistered(): void
     {
+        $this->app->register(AdminServiceProvider::class);
+
         $this->app->singleton(PortalDashboardItemRegistry::class);
         $this->app->singleton(PortalProfileProviderRegistry::class);
         $this->app->singleton(PortalPreferencesProviderRegistry::class);
+        $this->app->singleton(PortalSelfServiceItemRegistry::class);
 
         $this->app->booted(function (): void {
             if (! $this->isPackageInstalled()) {

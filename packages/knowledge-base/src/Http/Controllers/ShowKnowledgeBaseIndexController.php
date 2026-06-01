@@ -1,0 +1,31 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Capell\KnowledgeBase\Http\Controllers;
+
+use Capell\KnowledgeBase\Actions\BuildPublicKnowledgeBaseNavigationAction;
+use Capell\KnowledgeBase\Data\PublicKnowledgeBaseNavigationItemData;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+
+final class ShowKnowledgeBaseIndexController
+{
+    public function __invoke(Request $request): Response
+    {
+        $navigation = BuildPublicKnowledgeBaseNavigationAction::run()
+            ->map(static fn (PublicKnowledgeBaseNavigationItemData $item): array => $item->toArray())
+            ->all();
+
+        return $this->cacheable(response()->view('capell-knowledge-base::index', [
+            'navigation' => $navigation,
+        ]));
+    }
+
+    private function cacheable(Response $response): Response
+    {
+        $response->headers->set('Cache-Control', 'public, max-age=300, stale-while-revalidate=300');
+
+        return $response;
+    }
+}

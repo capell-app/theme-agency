@@ -22,5 +22,26 @@ return [
         'checkout_sessions' => 'payment_checkout_sessions',
         'payment_intents' => 'payment_intents',
         'subscriptions' => 'payment_subscriptions',
+        'webhook_events' => 'payment_webhook_events',
+        'refunds' => 'payment_refunds',
+        'disputes' => 'payment_disputes',
+        'download_entitlements' => 'payment_download_entitlements',
+    ],
+
+    'portal' => [
+        'middleware' => ['web', 'auth'],
+    ],
+
+    'form_builder' => [
+        'default_currency' => Env::get('CAPELL_FORM_PAYMENT_CURRENCY', 'gbp'),
+        'success_path' => '/payments/form/success',
+        'cancel_path' => '/payments/form/cancel',
+        'checkout_url_ttl_minutes' => 60,
+    ],
+
+    'paid_downloads' => [
+        'default_disk' => Env::get('CAPELL_PAID_DOWNLOAD_DISK', 'local'),
+        'entitlement_ttl_minutes' => 10080,
+        'signed_url_ttl_minutes' => 60,
     ],
 ];

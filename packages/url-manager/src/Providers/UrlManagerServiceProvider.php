@@ -13,6 +13,9 @@ use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\UrlManager\Filament\Pages\NotFoundOpportunitiesPage;
 use Capell\UrlManager\Filament\Pages\RedirectRulesPage;
 use Capell\UrlManager\Listeners\RecordRedirectForChangedPageUrl;
+use Capell\UrlManager\Models\NotFoundOpportunity;
+use Capell\UrlManager\Models\RedirectHit;
+use Capell\UrlManager\Models\RedirectRule;
 use Capell\UrlManager\Support\Redirects\UrlManagerRedirectResolver;
 use Illuminate\Support\Facades\Event;
 use Spatie\LaravelPackageTools\Package;
@@ -44,9 +47,31 @@ final class UrlManagerServiceProvider extends AbstractPackageServiceProvider
         }
 
         $this
+            ->registerModels()
+            ->registerProtectedTables()
             ->registerRedirectResolver()
             ->registerChangedUrlListener()
             ->registerAdminPages();
+    }
+
+    private function registerModels(): self
+    {
+        CapellCore::registerModels([
+            RedirectRule::class,
+            RedirectHit::class,
+            NotFoundOpportunity::class,
+        ]);
+
+        return $this;
+    }
+
+    private function registerProtectedTables(): self
+    {
+        CapellCore::registerProtectedTable('url_manager_redirect_rules');
+        CapellCore::registerProtectedTable('url_manager_redirect_hits');
+        CapellCore::registerProtectedTable('url_manager_not_found_opportunities');
+
+        return $this;
     }
 
     private function registerRedirectResolver(): self

@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use Capell\Newsletter\Actions\BuildDueNewsletterSendsAction;
 use Capell\Newsletter\Actions\ScheduleNewsletterSendAction;
+use Capell\Newsletter\Actions\UpdateNewsletterSendStatusAction;
 use Capell\Newsletter\Enums\NewsletterSendStatus;
 use Capell\Newsletter\Enums\SegmentType;
 use Capell\Newsletter\Models\NewsletterSend;
@@ -62,4 +64,74 @@ it('rejects scheduling a send against a segment from another site', function ():
         scheduledAt: CarbonImmutable::parse('2026-05-20 10:00:00', 'UTC'),
         segmentId: (int) $segment->getKey(),
     );
+})->throws(ValidationException::class);
+
+it('builds due newsletter sends in schedule order', function (): void {
+    $site = $this->createNewsletterSite();
+    $now = CarbonImmutable::parse('2026-05-31 12:00:00', 'UTC');
+    $firstDue = NewsletterSend::factory()->create([
+        'site_id' => $site->getKey(),
+        'status' => NewsletterSendStatus::Scheduled,
+        'scheduled_at' => $now->subHour(),
+    ]);
+    $secondDue = NewsletterSend::factory()->create([
+        'site_id' => $site->getKey(),
+        'status' => NewsletterSendStatus::Scheduled,
+        'scheduled_at' => $now->subMinutes(10),
+    ]);
+    NewsletterSend::factory()->create([
+        'site_id' => $site->getKey(),
+        'status' => NewsletterSendStatus::Scheduled,
+        'scheduled_at' => $now->addHour(),
+    ]);
+    NewsletterSend::factory()->create([
+        'site_id' => $site->getKey(),
+        'status' => NewsletterSendStatus::Draft,
+        'scheduled_at' => $now->subHours(2),
+    ]);
+
+    $sends = BuildDueNewsletterSendsAction::run($now);
+
+    expect($sends->pluck('id')->all())->toBe([
+        $firstDue->getKey(),
+        $secondDue->getKey(),
+    ]);
+});
+
+it('updates newsletter send lifecycle timestamps and metadata', function (): void {
+    $send = NewsletterSend::factory()->create([
+        'status' => NewsletterSendStatus::Scheduled,
+        'scheduled_at' => CarbonImmutable::parse('2026-05-31 12:00:00', 'UTC'),
+        'metadata' => ['template' => 'release-note'],
+    ]);
+    $startedAt = CarbonImmutable::parse('2026-05-31 12:01:00', 'UTC');
+    $sentAt = CarbonImmutable::parse('2026-05-31 12:05:00', 'UTC');
+
+    UpdateNewsletterSendStatusAction::run($send, NewsletterSendStatus::Sending, $startedAt, [
+        'provider' => ['id' => 'campaign-123'],
+    ]);
+    UpdateNewsletterSendStatusAction::run($send->refresh(), NewsletterSendStatus::Sent, $sentAt, [
+        'provider' => ['status' => 'sent'],
+    ]);
+
+    expect($send->refresh()->status)->toBe(NewsletterSendStatus::Sent)
+        ->and($send->sent_at?->toIso8601String())->toBe('2026-05-31T12:05:00+00:00')
+        ->and($send->metadata)->toMatchArray([
+            'template' => 'release-note',
+            'provider' => [
+                'id' => 'campaign-123',
+                'status' => 'sent',
+            ],
+            'delivery' => [
+                'started_at' => $startedAt->toISOString(),
+            ],
+        ]);
+});
+
+it('rejects marking a scheduled newsletter send as sent before sending', function (): void {
+    $send = NewsletterSend::factory()->create([
+        'status' => NewsletterSendStatus::Scheduled,
+    ]);
+
+    UpdateNewsletterSendStatusAction::run($send, NewsletterSendStatus::Sent);
 })->throws(ValidationException::class);

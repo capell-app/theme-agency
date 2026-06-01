@@ -53,13 +53,26 @@
         "doctor": null
     },
     "settings": [],
+    "actions": {
+        "findOrCreateContact": "Capell\\Contacts\\Actions\\FindOrCreateContactAction",
+        "recordContactActivity": "Capell\\Contacts\\Actions\\RecordContactActivityAction",
+        "syncContactSourceRecord": "Capell\\Contacts\\Actions\\SyncContactSourceRecordAction",
+        "tagContact": "Capell\\Contacts\\Actions\\TagContactAction"
+    },
     "permissions": [
         "View:Contact",
         "View:Organisation",
         "View:Lead",
         "View:ContactActivity"
     ],
-    "capabilities": ["contacts", "contacts-identity", "contacts-activity"],
+    "capabilities": [
+        "contacts",
+        "contacts-identity",
+        "contacts-source-identity",
+        "contacts-source-sync",
+        "contacts-activity",
+        "contacts-tags"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
@@ -96,10 +109,9 @@
         "deferredContributions": [
             "dashboard-widget",
             "deduplication-rules",
-            "migration",
             "model",
             "privacy-tools",
-            "source-package-sync"
+            "source-package-adapters"
         ]
     }
 }

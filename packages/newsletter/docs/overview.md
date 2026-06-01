@@ -2,7 +2,7 @@
 
 Status: **Available, schema-owning** · Kind: **package** · Tier: **premium** · Bundle: **newsletter** · Contexts: **admin, frontend** · Product group: **Capell Marketing**
 
-Newsletter manages audience capture, subscriber records, consent evidence, provider connections, provider sync attempts, segments, imports, and public subscription lifecycle routes.
+Newsletter manages audience capture, subscriber records, consent evidence, provider connections, provider sync attempts, segments, imports, campaign sends, preference center updates, UTM attribution, and public subscription lifecycle routes.
 
 ## Install
 
@@ -23,6 +23,7 @@ The package requires `capell-app/admin`, `capell-app/core`, `capell-app/form-bui
 - `SegmentResource`
 - `ImportBatchResource`
 - `SyncAttemptResource`
+- `NewsletterSendResource`
 - Newsletter overview stats for subscribed, pending, and failed/retry-scheduled sync attempts.
 - Newsletter settings schema.
 
@@ -33,6 +34,13 @@ The package requires `capell-app/admin`, `capell-app/core`, `capell-app/form-bui
 - `POST /newsletter/providers/{providerConnection}/webhook` for provider webhooks.
 
 Public routes should expose only confirmation/unsubscribe/webhook outcomes and must not leak admin labels, provider secrets, subscriber internals, or form-builder mapping details.
+
+## Campaign Sends
+
+- `ScheduleNewsletterSendAction` creates scheduled campaign send records with segment/provider audience and UTM metadata.
+- `BuildDueNewsletterSendsAction` returns due scheduled sends in deterministic schedule order for workers or Automation Studio.
+- `UpdateNewsletterSendStatusAction` records lifecycle transitions for sending, sent, failed, and cancelled states with timestamps and delivery metadata.
+- Scheduled sends contribute to Publishing Studio's editorial calendar as `newsletter.send` events when Publishing Studio is installed.
 
 ## Screenshot Plan
 

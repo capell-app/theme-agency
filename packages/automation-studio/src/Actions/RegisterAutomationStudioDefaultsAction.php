@@ -11,9 +11,16 @@ use Capell\AutomationStudio\Enums\AutomationActionType;
 use Capell\AutomationStudio\Enums\AutomationTriggerType;
 use Capell\AutomationStudio\Support\AutomationActionRegistry;
 use Capell\AutomationStudio\Support\AutomationTriggerRegistry;
+use Capell\AutomationStudio\Support\Handlers\CreateContactNoteAutomationActionHandler;
 use Capell\AutomationStudio\Support\Handlers\DispatchPublicActionAutomationActionHandler;
+use Capell\AutomationStudio\Support\Handlers\DispatchWebhookAutomationActionHandler;
+use Capell\AutomationStudio\Support\Handlers\QueueAgentCapabilityAutomationActionHandler;
+use Capell\AutomationStudio\Support\Handlers\SendEmailAutomationActionHandler;
+use Capell\AutomationStudio\Support\Handlers\SubscribeUserAutomationActionHandler;
+use Capell\AutomationStudio\Support\Handlers\TagContactAutomationActionHandler;
 use Capell\PublishingStudio\Events\WorkspaceStateChanged;
 use Lorisleiva\Actions\Concerns\AsAction;
+use Throwable;
 
 final class RegisterAutomationStudioDefaultsAction
 {
@@ -34,49 +41,97 @@ final class RegisterAutomationStudioDefaultsAction
     {
         $this->triggers->register(new AutomationTriggerDefinitionData(
             type: AutomationTriggerType::FormSubmitted,
-            label: AutomationTriggerType::FormSubmitted->getLabel(),
+            label: $this->triggerLabel(AutomationTriggerType::FormSubmitted),
             eventClass: implode('\\', ['Capell', 'FormBuilder', 'Events', 'FormSubmitted']),
         ));
 
         $this->triggers->register(new AutomationTriggerDefinitionData(
             type: AutomationTriggerType::AccessApproved,
-            label: AutomationTriggerType::AccessApproved->getLabel(),
+            label: $this->triggerLabel(AutomationTriggerType::AccessApproved),
             eventClass: RegistrationApproved::class,
         ));
 
         $this->triggers->register(new AutomationTriggerDefinitionData(
             type: AutomationTriggerType::PagePublished,
-            label: AutomationTriggerType::PagePublished->getLabel(),
+            label: $this->triggerLabel(AutomationTriggerType::PagePublished),
             eventClass: WorkspaceStateChanged::class,
         ));
 
         $this->triggers->register(new AutomationTriggerDefinitionData(
             type: AutomationTriggerType::CampaignConverted,
-            label: AutomationTriggerType::CampaignConverted->getLabel(),
+            label: $this->triggerLabel(AutomationTriggerType::CampaignConverted),
             eventClass: 'Capell\\CampaignStudio\\Events\\CampaignConverted',
         ));
     }
 
     private function registerActions(): void
     {
-        foreach ([
-            AutomationActionType::SendEmail,
-            AutomationActionType::Webhook,
-            AutomationActionType::TagContact,
-            AutomationActionType::CreateNote,
-            AutomationActionType::SubscribeUser,
-            AutomationActionType::QueueAgentCapability,
-        ] as $actionType) {
-            $this->actions->registerDefinition(new AutomationActionDefinitionData(
-                type: $actionType,
-                label: $actionType->getLabel(),
-            ));
-        }
+        $this->actions->registerDefinition(new AutomationActionDefinitionData(
+            type: AutomationActionType::SendEmail,
+            label: $this->actionLabel(AutomationActionType::SendEmail),
+            handler: SendEmailAutomationActionHandler::class,
+        ));
+
+        $this->actions->registerDefinition(new AutomationActionDefinitionData(
+            type: AutomationActionType::QueueAgentCapability,
+            label: $this->actionLabel(AutomationActionType::QueueAgentCapability),
+            handler: QueueAgentCapabilityAutomationActionHandler::class,
+        ));
+
+        $this->actions->registerDefinition(new AutomationActionDefinitionData(
+            type: AutomationActionType::Webhook,
+            label: $this->actionLabel(AutomationActionType::Webhook),
+            handler: DispatchWebhookAutomationActionHandler::class,
+        ));
+
+        $this->actions->registerDefinition(new AutomationActionDefinitionData(
+            type: AutomationActionType::TagContact,
+            label: $this->actionLabel(AutomationActionType::TagContact),
+            handler: TagContactAutomationActionHandler::class,
+        ));
+
+        $this->actions->registerDefinition(new AutomationActionDefinitionData(
+            type: AutomationActionType::CreateNote,
+            label: $this->actionLabel(AutomationActionType::CreateNote),
+            handler: CreateContactNoteAutomationActionHandler::class,
+        ));
+
+        $this->actions->registerDefinition(new AutomationActionDefinitionData(
+            type: AutomationActionType::SubscribeUser,
+            label: $this->actionLabel(AutomationActionType::SubscribeUser),
+            handler: SubscribeUserAutomationActionHandler::class,
+        ));
 
         $this->actions->registerDefinition(new AutomationActionDefinitionData(
             type: AutomationActionType::PublicAction,
-            label: AutomationActionType::PublicAction->getLabel(),
+            label: $this->actionLabel(AutomationActionType::PublicAction),
             handler: DispatchPublicActionAutomationActionHandler::class,
         ));
+    }
+
+    private function triggerLabel(AutomationTriggerType $type): string
+    {
+        try {
+            if (function_exists('app') && app()->bound('translator')) {
+                return $type->getLabel();
+            }
+        } catch (Throwable) {
+            //
+        }
+
+        return ucwords(str_replace('_', ' ', $type->value));
+    }
+
+    private function actionLabel(AutomationActionType $type): string
+    {
+        try {
+            if (function_exists('app') && app()->bound('translator')) {
+                return $type->getLabel();
+            }
+        } catch (Throwable) {
+            //
+        }
+
+        return ucwords(str_replace('_', ' ', $type->value));
     }
 }

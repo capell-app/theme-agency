@@ -8,4 +8,7 @@ return [
         'support_requests' => 'portal_support_requests',
     ],
     'hash_secret' => null,
+    'route_prefix' => 'portal',
+    'middleware' => ['web', 'auth'],
+    'site_id' => null,
 ];

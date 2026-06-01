@@ -1,6 +1,6 @@
 # SEO Suite
 
-SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery output, crawler policy controls, publish checks, and planned generated-output diagnostics.
+SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery output, crawler policy controls, publish checks, and generated-output diagnostics.
 
 ## At A Glance
 
@@ -32,7 +32,7 @@ SEO Suite adds metadata panels, structured data, broken link tracking, Search Co
 - AI creator actions for briefs, images, layouts, metadata suggestions, and draft application.
 - AI Discovery for `llms.txt`, optional `llms-full.txt`, page Markdown URLs, `Accept: text/markdown`, configurable AI crawler rules, and page-readiness audits.
 - Search Console sync and dashboard reports.
-- Planned diagnostics for route ownership, generated document content types, sitemap quality, crawler policy, public-output leaks, and stale AI Discovery snapshots.
+- Diagnostics for route ownership, generated document content types, sitemap quality, crawler policy, public-output leaks, and stale AI Discovery snapshots.
 
 ## Why It Matters
 

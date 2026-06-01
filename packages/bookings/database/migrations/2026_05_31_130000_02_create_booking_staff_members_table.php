@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('timezone')->default('UTC');
             $table->string('profile_url')->nullable();
+            $table->string('calendar_feed_token', 80)->nullable()->unique();
             $table->boolean('active')->default(true)->index();
             $table->json('settings')->nullable();
             $table->json('meta')->nullable();

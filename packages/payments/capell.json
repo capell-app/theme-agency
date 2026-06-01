@@ -15,7 +15,7 @@
     "namespace": "Capell\\Payments",
     "surfaces": ["admin", "frontend", "console"],
     "dependencies": {
-        "requires": ["capell-app/core"],
+        "requires": ["capell-app/admin", "capell-app/core"],
         "supports": ["capell-app/access-gate", "capell-app/form-builder"],
         "conflicts": []
     },
@@ -23,24 +23,32 @@
         "metadata": [],
         "install": ["Capell\\Payments\\Providers\\PaymentsServiceProvider"],
         "runtime": ["Capell\\Payments\\Providers\\PaymentsServiceProvider"],
-        "admin": [],
+        "admin": ["Capell\\Payments\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
     "contributes": [],
     "database": {
         "migrations": true,
-        "settings": false,
+        "settings": true,
         "requiredTables": [
             "payment_customers",
             "payment_checkout_sessions",
             "payment_intents",
-            "payment_subscriptions"
+            "payment_subscriptions",
+            "payment_webhook_events",
+            "payment_refunds",
+            "payment_disputes",
+            "payment_download_entitlements"
         ],
         "protectedTables": [
             "payment_customers",
             "payment_checkout_sessions",
             "payment_intents",
-            "payment_subscriptions"
+            "payment_subscriptions",
+            "payment_webhook_events",
+            "payment_refunds",
+            "payment_disputes",
+            "payment_download_entitlements"
         ]
     },
     "commands": {
@@ -50,10 +58,23 @@
         "doctor": null
     },
     "actions": {
-        "checkout": "Capell\\Payments\\Actions\\CreateCheckoutSessionAction"
+        "checkout": "Capell\\Payments\\Actions\\CreateCheckoutSessionAction",
+        "billingPortal": "Capell\\Payments\\Actions\\CreateBillingPortalSessionAction",
+        "formPaymentCheckoutUrl": "Capell\\Payments\\Actions\\CreateFormPaymentCheckoutUrlAction",
+        "formPaymentCheckout": "Capell\\Payments\\Actions\\CreateFormPaymentCheckoutSessionAction",
+        "paidDownloadUrl": "Capell\\Payments\\Actions\\CreatePaidDownloadUrlAction",
+        "subscriptionEntitlement": "Capell\\Payments\\Actions\\ResolveSubscriptionEntitlementAction"
     },
-    "settings": [],
-    "permissions": [],
+    "settings": ["Capell\\Payments\\Settings\\PaymentsSettings"],
+    "permissions": [
+        "View:PaymentCustomer",
+        "View:CheckoutSession",
+        "View:PaymentIntent",
+        "View:Subscription",
+        "View:PaymentWebhookEvent",
+        "View:PaymentRefund",
+        "View:PaymentDispute"
+    ],
     "capabilities": [
         "stripe-checkout",
         "one-off-payments",
@@ -61,7 +82,14 @@
         "donations",
         "paid-downloads",
         "paid-gated-access",
-        "form-payment-fields"
+        "form-payment-fields",
+        "stripe-webhooks",
+        "refund-records",
+        "dispute-records",
+        "payments-admin",
+        "payment-fulfillment-handlers",
+        "stripe-billing-portal",
+        "subscription-entitlements"
     ],
     "performance": {
         "frontendRenderBudgetMs": 0,

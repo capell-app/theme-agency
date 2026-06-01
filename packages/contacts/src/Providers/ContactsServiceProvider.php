@@ -32,6 +32,7 @@ final class ContactsServiceProvider extends AbstractPackageServiceProvider
                 '2026_05_31_000003_create_contact_organisation_memberships_table',
                 '2026_05_31_000004_create_contact_leads_table',
                 '2026_05_31_000005_create_contact_activities_table',
+                '2026_05_31_000006_add_source_identity_to_contacts_table',
             ]);
     }
 

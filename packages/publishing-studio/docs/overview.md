@@ -14,6 +14,7 @@ PublishingStudio is Capell's premium editorial timeline package. It brings the p
 - Release Workspaces for grouped editorial releases that move coordinated content and package-owned draftable changes live atomically.
 - Approval history for submit, approve, reject, and request-changes decisions.
 - Scheduled publishing with release windows, unpublish dates, embargo windows, review reminders, immediate publishing, version history, rollback, and entity restore.
+- Editorial calendar aggregation across core page schedules, Publishing Studio workspace schedules, Blog articles, Campaign Studio campaign dates, Newsletter sends, and Events occurrences through `EditorialCalendarEventContributor`.
 - Activity timeline, stale drafts, Migration Assistant import adapters, load-test fixtures, and prune commands for editorial and operational audit trails.
 
 ## Developer Notes

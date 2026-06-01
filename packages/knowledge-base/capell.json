@@ -15,7 +15,7 @@
     "namespace": "Capell\\KnowledgeBase",
     "surfaces": ["frontend", "admin"],
     "dependencies": {
-        "requires": ["capell-app/core"],
+        "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
             "capell-app/search",
             "capell-app/seo-suite",
@@ -30,14 +30,35 @@
         "runtime": [
             "Capell\\KnowledgeBase\\Providers\\KnowledgeBaseServiceProvider"
         ],
-        "admin": [],
+        "admin": ["Capell\\KnowledgeBase\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-resource",
+            "key": "knowledge-base.collections",
+            "class": "Capell\\KnowledgeBase\\Manifest\\KnowledgeBaseCollectionResourceContribution",
+            "resourceClass": "Capell\\KnowledgeBase\\Filament\\Resources\\Collections\\KnowledgeBaseCollectionResource",
+            "group": "KnowledgeBaseCollection"
+        },
+        {
+            "type": "admin-resource",
+            "key": "knowledge-base.articles",
+            "class": "Capell\\KnowledgeBase\\Manifest\\KnowledgeBaseArticleResourceContribution",
+            "resourceClass": "Capell\\KnowledgeBase\\Filament\\Resources\\Articles\\KnowledgeBaseArticleResource",
+            "group": "KnowledgeBaseArticle"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": []
+        "requiredTables": [
+            "knowledge_base_collections",
+            "knowledge_base_articles",
+            "knowledge_base_article_versions",
+            "knowledge_base_article_feedback",
+            "knowledge_base_related_articles"
+        ]
     },
     "commands": {
         "install": null,
@@ -46,12 +67,30 @@
         "doctor": null
     },
     "settings": [],
+    "actions": {
+        "buildAiReadableKnowledgeBaseOutput": "Capell\\KnowledgeBase\\Actions\\BuildAiReadableKnowledgeBaseOutputAction",
+        "buildKnowledgeBaseSearchDocuments": "Capell\\KnowledgeBase\\Actions\\BuildKnowledgeBaseSearchDocumentsAction",
+        "buildPublicKnowledgeBaseArticleData": "Capell\\KnowledgeBase\\Actions\\BuildPublicKnowledgeBaseArticleDataAction",
+        "buildPublicKnowledgeBaseNavigation": "Capell\\KnowledgeBase\\Actions\\BuildPublicKnowledgeBaseNavigationAction",
+        "createKnowledgeBaseArticle": "Capell\\KnowledgeBase\\Actions\\CreateKnowledgeBaseArticleAction",
+        "createKnowledgeBaseArticleVersion": "Capell\\KnowledgeBase\\Actions\\CreateKnowledgeBaseArticleVersionAction",
+        "publishKnowledgeBaseArticleVersion": "Capell\\KnowledgeBase\\Actions\\PublishKnowledgeBaseArticleVersionAction",
+        "recordKnowledgeBaseArticleFeedback": "Capell\\KnowledgeBase\\Actions\\RecordKnowledgeBaseArticleFeedbackAction",
+        "relateKnowledgeBaseArticles": "Capell\\KnowledgeBase\\Actions\\RelateKnowledgeBaseArticlesAction"
+    },
     "permissions": [],
     "capabilities": [
         "knowledge-base",
         "knowledge-base-articles",
+        "knowledge-base-admin-authoring",
         "knowledge-base-feedback",
+        "knowledge-base-related-articles",
+        "knowledge-base-versioned-articles",
+        "knowledge-base-public-routes",
+        "knowledge-base-public-navigation",
         "knowledge-base-public-output",
+        "knowledge-base-search-documents",
+        "knowledge-base-search-weighting",
         "knowledge-base-ai-output"
     ],
     "performance": {
@@ -108,14 +147,6 @@
         "categories": ["content", "frontend", "search-seo"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-resource",
-            "ai-discovery-output",
-            "migration",
-            "model",
-            "route",
-            "search-index",
-            "theme-integration"
-        ]
+        "deferredContributions": ["theme-integration"]
     }
 }

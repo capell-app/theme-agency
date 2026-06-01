@@ -10,6 +10,8 @@ use Capell\AutomationStudio\Listeners\DispatchAutomationFromAccessApproval;
 use Capell\AutomationStudio\Listeners\DispatchAutomationFromCampaignConversion;
 use Capell\AutomationStudio\Listeners\DispatchAutomationFromFormSubmission;
 use Capell\AutomationStudio\Listeners\DispatchAutomationFromWorkspaceStateChanged;
+use Capell\AutomationStudio\Models\AutomationRule;
+use Capell\AutomationStudio\Models\AutomationRun;
 use Capell\AutomationStudio\Support\AutomationActionRegistry;
 use Capell\AutomationStudio\Support\AutomationRuleRegistry;
 use Capell\AutomationStudio\Support\AutomationTriggerRegistry;
@@ -30,11 +32,17 @@ final class AutomationStudioServiceProvider extends AbstractPackageServiceProvid
     {
         $package
             ->name(self::$name)
-            ->hasTranslations();
+            ->hasTranslations()
+            ->hasMigrations([
+                '2026_05_31_170000_01_create_automation_rules_table',
+                '2026_05_31_170000_02_create_automation_runs_table',
+            ]);
     }
 
     public function packageRegistered(): void
     {
+        $this->app->register(AdminServiceProvider::class);
+
         $this->app->singleton(AutomationActionRegistry::class);
         $this->app->singleton(AutomationRuleRegistry::class);
         $this->app->singleton(AutomationTriggerRegistry::class);
@@ -47,6 +55,10 @@ final class AutomationStudioServiceProvider extends AbstractPackageServiceProvid
         if (! $this->isPackageInstalled()) {
             return;
         }
+
+        $this
+            ->registerModels()
+            ->registerProtectedTables();
 
         $this->registerPackageEventListeners();
     }
@@ -63,6 +75,24 @@ final class AutomationStudioServiceProvider extends AbstractPackageServiceProvid
         $this->listenIfClassExists(RegistrationApproved::class, DispatchAutomationFromAccessApproval::class);
         $this->listenIfClassExists(WorkspaceStateChanged::class, DispatchAutomationFromWorkspaceStateChanged::class);
         $this->listenIfClassExists('Capell\\CampaignStudio\\Events\\CampaignConverted', DispatchAutomationFromCampaignConversion::class);
+    }
+
+    private function registerModels(): self
+    {
+        CapellCore::registerModels([
+            AutomationRule::class,
+            AutomationRun::class,
+        ]);
+
+        return $this;
+    }
+
+    private function registerProtectedTables(): self
+    {
+        CapellCore::registerProtectedTable('automation_rules');
+        CapellCore::registerProtectedTable('automation_runs');
+
+        return $this;
     }
 
     /**

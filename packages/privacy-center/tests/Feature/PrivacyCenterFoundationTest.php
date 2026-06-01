@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\PrivacyCenter\Actions\AnonymizePrivacySubjectAction;
+use Capell\PrivacyCenter\Actions\ApplyRetentionRulesAction;
 use Capell\PrivacyCenter\Actions\BuildPrivacyExportAction;
 use Capell\PrivacyCenter\Actions\CreateRetentionRuleAction;
 use Capell\PrivacyCenter\Actions\MarkPrivacyRequestFulfilledAction;
@@ -24,8 +25,10 @@ use Capell\PrivacyCenter\Enums\RetentionAction;
 use Capell\PrivacyCenter\Models\ConsentRecord;
 use Capell\PrivacyCenter\Models\PolicyAcceptance;
 use Capell\PrivacyCenter\Models\PrivacyRequest;
+use Capell\PrivacyCenter\Models\RetentionRule;
 use Capell\PrivacyCenter\Tests\PrivacyCenterTestCase;
 use Capell\PrivacyCenter\Tests\PrivacyCenterTestSubject;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Schema;
 
 require_once dirname(__DIR__) . '/autoload.php';
@@ -144,4 +147,74 @@ it('anonymizes package-owned subject links for delete workflows', function (): v
         ->and(ConsentRecord::query()->first()?->subject_type)->toBeNull()
         ->and(PolicyAcceptance::query()->first()?->subject_type)->toBeNull()
         ->and(PrivacyRequest::query()->first()?->email_hash)->toBeNull();
+});
+
+it('applies active retention rules to expired privacy records', function (): void {
+    request()->server->set('REMOTE_ADDR', '203.0.113.42');
+    request()->headers->set('User-Agent', 'Privacy Center Test Browser');
+
+    $siteId = $this->createPrivacyCenterSite();
+    $subject = PrivacyCenterTestSubject::query()->create(['name' => 'Retention Subject']);
+    $now = Date::parse('2026-05-31 12:00:00', 'UTC');
+
+    $oldConsent = RecordConsentAction::run(new ConsentRecordData(
+        category: CookieCategory::Analytics,
+        decision: ConsentDecision::Granted,
+        siteId: $siteId,
+        evidence: ['surface' => 'old-banner'],
+        decidedAt: $now->copy()->subDays(45),
+    ), $subject);
+    $recentConsent = RecordConsentAction::run(new ConsentRecordData(
+        category: CookieCategory::Marketing,
+        decision: ConsentDecision::Granted,
+        siteId: $siteId,
+        evidence: ['surface' => 'recent-banner'],
+        decidedAt: $now->copy()->subDays(5),
+    ), $subject);
+    CreateRetentionRuleAction::run(new RetentionRuleData(
+        dataDomain: 'privacy-center',
+        retentionDays: 30,
+        siteId: $siteId,
+        recordType: ConsentRecord::class,
+        action: RetentionAction::Anonymize,
+    ));
+
+    $results = ApplyRetentionRulesAction::run($now);
+
+    expect($results)->toHaveCount(1)
+        ->and($results->first()?->matchedRecords)->toBe(1)
+        ->and($results->first()?->affectedRecords)->toBe(1)
+        ->and($oldConsent->refresh()->subject_type)->toBeNull()
+        ->and($oldConsent->ip_hash)->toBeNull()
+        ->and($oldConsent->evidence)->toBeNull()
+        ->and($recentConsent->refresh()->subject_type)->toBe(PrivacyCenterTestSubject::class)
+        ->and($recentConsent->evidence)->toBe(['surface' => 'recent-banner']);
+});
+
+it('marks expired privacy records for retention review without deleting them', function (): void {
+    $siteId = $this->createPrivacyCenterSite();
+    $now = Date::parse('2026-05-31 12:00:00', 'UTC');
+    $request = OpenPrivacyRequestAction::run(new PrivacyRequestData(
+        type: PrivacyRequestType::Export,
+        siteId: $siteId,
+        email: 'review@example.test',
+        submittedAt: $now->copy()->subDays(60),
+    ));
+
+    CreateRetentionRuleAction::run(new RetentionRuleData(
+        dataDomain: 'privacy-requests',
+        retentionDays: 30,
+        siteId: $siteId,
+        recordType: PrivacyRequest::class,
+        action: RetentionAction::Review,
+    ));
+
+    ApplyRetentionRulesAction::run($now);
+
+    $metadata = $request->refresh()->metadata;
+
+    expect($metadata['retention_review']['data_domain'] ?? null)->toBe('privacy-requests')
+        ->and($metadata['retention_review']['rule_id'] ?? null)->toBe(RetentionRule::query()->value('id'))
+        ->and($metadata['retention_review']['marked_at'] ?? null)->toBeString()
+        ->and(RetentionRule::query()->count())->toBe(1);
 });

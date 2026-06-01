@@ -12,6 +12,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Override;
 
+/**
+ * @property string|null $calendar_feed_token
+ * @property string $display_name
+ */
 class BookingStaffMember extends Model
 {
     /** @use HasFactory<BookingStaffMemberFactory> */
@@ -26,6 +30,7 @@ class BookingStaffMember extends Model
      */
     protected $fillable = [
         'active',
+        'calendar_feed_token',
         'display_name',
         'email',
         'meta',
@@ -44,6 +49,14 @@ class BookingStaffMember extends Model
     public function availabilityWindows(): HasMany
     {
         return $this->hasMany(BookingAvailabilityWindow::class, 'staff_member_id');
+    }
+
+    /**
+     * @return HasMany<BookingAvailabilityException, $this>
+     */
+    public function availabilityExceptions(): HasMany
+    {
+        return $this->hasMany(BookingAvailabilityException::class, 'staff_member_id');
     }
 
     /**

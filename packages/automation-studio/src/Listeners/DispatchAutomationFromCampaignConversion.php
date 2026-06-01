@@ -25,7 +25,10 @@ final class DispatchAutomationFromCampaignConversion
             sourceId: $conversion instanceof Model ? (string) $conversion->getKey() : null,
             payload: [
                 'conversion_id' => $conversion instanceof Model ? $conversion->getKey() : null,
-                'goal_id' => $conversion instanceof Model ? $conversion->getAttribute('goal_id') : null,
+                'campaign_group_id' => $conversion instanceof Model ? $conversion->getAttribute('campaign_group_id') : null,
+                'campaign_conversion_goal_id' => $conversion instanceof Model ? $conversion->getAttribute('campaign_conversion_goal_id') : null,
+                'campaign_landing_page_id' => $conversion instanceof Model ? $conversion->getAttribute('campaign_landing_page_id') : null,
+                'site_id' => $conversion instanceof Model ? $conversion->getAttribute('site_id') : null,
                 'source_type' => $conversion instanceof Model ? $conversion->getAttribute('source_type') : null,
                 'source_id' => $conversion instanceof Model ? $conversion->getAttribute('source_id') : null,
             ],

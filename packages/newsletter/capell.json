@@ -36,7 +36,21 @@
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": []
+        "requiredTables": [
+            "newsletter_provider_connections",
+            "newsletter_subscribers",
+            "newsletter_provider_audiences",
+            "newsletter_consent_events",
+            "newsletter_provider_interest_mappings",
+            "newsletter_provider_subscribers",
+            "newsletter_public_tokens",
+            "newsletter_segments",
+            "newsletter_sync_attempts",
+            "newsletter_form_mappings",
+            "newsletter_import_batches",
+            "newsletter_processed_webhook_events",
+            "newsletter_sends"
+        ]
     },
     "commands": {
         "install": null,
@@ -45,8 +59,24 @@
         "doctor": null
     },
     "settings": [],
+    "actions": {
+        "buildDueNewsletterSends": "Capell\\Newsletter\\Actions\\BuildDueNewsletterSendsAction",
+        "scheduleNewsletterSend": "Capell\\Newsletter\\Actions\\ScheduleNewsletterSendAction",
+        "updateNewsletterSendStatus": "Capell\\Newsletter\\Actions\\UpdateNewsletterSendStatusAction"
+    },
     "permissions": [],
-    "capabilities": ["newsletter", "newsletter-admin", "newsletter-frontend"],
+    "capabilities": [
+        "newsletter",
+        "newsletter-admin",
+        "newsletter-frontend",
+        "newsletter-segments",
+        "newsletter-preference-center",
+        "newsletter-campaign-sends",
+        "newsletter-send-lifecycle",
+        "newsletter-utm-attribution",
+        "newsletter-unsubscribe-routes",
+        "newsletter-automation-hooks"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,

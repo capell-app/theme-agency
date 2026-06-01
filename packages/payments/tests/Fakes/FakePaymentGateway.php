@@ -10,10 +10,14 @@ use Capell\Payments\Data\CreateCheckoutSessionData;
 
 final class FakePaymentGateway implements PaymentGateway
 {
+    public ?CreateCheckoutSessionData $lastRequest = null;
+
     public function __construct(private readonly CheckoutSessionData $sessionData) {}
 
     public function createCheckoutSession(CreateCheckoutSessionData $data): CheckoutSessionData
     {
+        $this->lastRequest = $data;
+
         return $this->sessionData;
     }
 }

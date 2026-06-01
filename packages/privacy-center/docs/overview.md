@@ -11,6 +11,7 @@ It intentionally does not replace package-specific consent capture in packages s
 - Policy version acceptance records.
 - Privacy subject requests for access, export, deletion, correction, restriction, and objection workflows.
 - Retention rules for package-owned or integration-owned data domains.
+- Retention execution Actions for delete, anonymize, and review workflows.
 - Export and anonymization Actions that operate on Privacy Center records first.
 
 ## Integration Contract
@@ -21,6 +22,8 @@ Integrating packages should call Actions instead of writing Privacy Center table
 - `RecordPolicyAcceptanceAction`
 - `OpenPrivacyRequestAction`
 - `CreateRetentionRuleAction`
+- `ApplyRetentionRuleAction`
+- `ApplyRetentionRulesAction`
 - `BuildPrivacyExportAction`
 - `AnonymizePrivacySubjectAction`
 

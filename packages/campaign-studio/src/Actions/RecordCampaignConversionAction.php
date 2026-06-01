@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\CampaignStudio\Actions;
 
 use Capell\CampaignStudio\Data\ConversionAttributionData;
+use Capell\CampaignStudio\Events\CampaignConverted;
 use Capell\CampaignStudio\Models\CampaignConversion;
 use Capell\CampaignStudio\Models\CampaignConversionGoal;
 use Capell\CampaignStudio\Models\CampaignGroup;
@@ -54,6 +55,10 @@ final class RecordCampaignConversionAction
         $conversion = $this->hasIdentity($identity)
             ? CampaignConversion::query()->firstOrCreate($identity, $values)
             : CampaignConversion::query()->create([...$identity, ...$values]);
+
+        if ($conversion instanceof CampaignConversion && $conversion->wasRecentlyCreated) {
+            CampaignConverted::dispatch($conversion);
+        }
 
         return $conversion instanceof CampaignConversion ? $conversion : null;
     }

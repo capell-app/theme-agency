@@ -52,11 +52,25 @@
         "doctor": null
     },
     "settings": [],
+    "actions": {
+        "applyRetentionRule": "Capell\\PrivacyCenter\\Actions\\ApplyRetentionRuleAction",
+        "applyRetentionRules": "Capell\\PrivacyCenter\\Actions\\ApplyRetentionRulesAction",
+        "buildPrivacyExport": "Capell\\PrivacyCenter\\Actions\\BuildPrivacyExportAction",
+        "openPrivacyRequest": "Capell\\PrivacyCenter\\Actions\\OpenPrivacyRequestAction",
+        "recordConsent": "Capell\\PrivacyCenter\\Actions\\RecordConsentAction",
+        "recordPolicyAcceptance": "Capell\\PrivacyCenter\\Actions\\RecordPolicyAcceptanceAction"
+    },
     "permissions": [],
     "capabilities": [
         "privacy-center",
         "privacy-center-consent",
+        "privacy-center-cookie-categories",
+        "privacy-center-insights-consent-mirror",
         "privacy-center-retention",
+        "privacy-center-retention-execution",
+        "privacy-center-privacy-exports",
+        "privacy-center-delete-workflows",
+        "privacy-center-policy-acceptance",
         "privacy-center-subject-requests"
     ],
     "performance": {

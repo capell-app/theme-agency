@@ -1,3 +1,3 @@
 # Knowledge Base Docs
 
-See `implementation-plan.md` for the package foundation and follow-up slices.
+Knowledge Base includes collections, versioned articles, public documentation routes, related articles, reader feedback capture, search document output, and AI-readable article output.

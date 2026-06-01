@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\Bookings\Actions;
 
+use Capell\Bookings\Enums\AppointmentAuditEventEnum;
+use Capell\Bookings\Enums\AppointmentNotificationTypeEnum;
 use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
 use Capell\Bookings\Models\AppointmentRequest;
 use Carbon\CarbonImmutable;
@@ -33,10 +35,24 @@ class ConfirmAppointmentRequestAction
                 ]);
             }
 
+            $previousStatus = $lockedAppointmentRequest->status;
+
             $lockedAppointmentRequest->forceFill([
                 'status' => AppointmentRequestStatusEnum::Confirmed,
                 'confirmed_at' => CarbonImmutable::now(),
             ])->save();
+
+            RecordAppointmentAuditLogAction::run(
+                appointmentRequest: $lockedAppointmentRequest,
+                event: AppointmentAuditEventEnum::Confirmed,
+                statusFrom: $previousStatus,
+                statusTo: AppointmentRequestStatusEnum::Confirmed,
+            );
+
+            QueueAppointmentNotificationAction::run(
+                appointmentRequest: $lockedAppointmentRequest,
+                type: AppointmentNotificationTypeEnum::Confirmation,
+            );
 
             return $lockedAppointmentRequest;
         });

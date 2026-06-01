@@ -21,9 +21,87 @@ final class BuildInfrastructureStatusAction
     public function handle(): array
     {
         return [
+            $this->cacheStatus(),
+            $this->queueStatus(),
             $this->mailStatus(),
             $this->storageStatus(),
         ];
+    }
+
+    private function cacheStatus(): InfrastructureStatusData
+    {
+        $defaultStore = config('cache.default');
+
+        if (! is_string($defaultStore) || $defaultStore === '') {
+            return $this->status(
+                key: 'cache',
+                label: (string) __('capell-diagnostics::package.infrastructure_cache'),
+                status: 'error',
+                detail: (string) __('capell-diagnostics::package.infrastructure_cache_missing_default'),
+            );
+        }
+
+        $storeConfig = config('cache.stores.' . $defaultStore);
+
+        if (! is_array($storeConfig)) {
+            return $this->status(
+                key: 'cache',
+                label: (string) __('capell-diagnostics::package.infrastructure_cache'),
+                status: 'error',
+                detail: (string) __('capell-diagnostics::package.infrastructure_cache_missing_store', ['store' => $defaultStore]),
+            );
+        }
+
+        $driver = $storeConfig['driver'] ?? $defaultStore;
+        $status = in_array($driver, ['array', 'null'], true) ? 'warning' : 'ok';
+
+        return $this->status(
+            key: 'cache',
+            label: (string) __('capell-diagnostics::package.infrastructure_cache'),
+            status: $status,
+            detail: (string) __('capell-diagnostics::package.infrastructure_cache_configured', [
+                'store' => $defaultStore,
+                'driver' => is_string($driver) ? $driver : 'unknown',
+            ]),
+        );
+    }
+
+    private function queueStatus(): InfrastructureStatusData
+    {
+        $defaultConnection = config('queue.default');
+
+        if (! is_string($defaultConnection) || $defaultConnection === '') {
+            return $this->status(
+                key: 'queue',
+                label: (string) __('capell-diagnostics::package.infrastructure_queue'),
+                status: 'error',
+                detail: (string) __('capell-diagnostics::package.infrastructure_queue_missing_default'),
+            );
+        }
+
+        $connectionConfig = config('queue.connections.' . $defaultConnection);
+
+        if (! is_array($connectionConfig)) {
+            return $this->status(
+                key: 'queue',
+                label: (string) __('capell-diagnostics::package.infrastructure_queue'),
+                status: 'error',
+                detail: (string) __('capell-diagnostics::package.infrastructure_queue_missing_connection', ['connection' => $defaultConnection]),
+            );
+        }
+
+        $driver = $connectionConfig['driver'] ?? $defaultConnection;
+        $status = in_array($driver, ['sync', 'null'], true) ? 'warning' : 'ok';
+
+        return $this->status(
+            key: 'queue',
+            label: (string) __('capell-diagnostics::package.infrastructure_queue'),
+            status: $status,
+            detail: (string) __('capell-diagnostics::package.infrastructure_queue_configured', [
+                'connection' => $defaultConnection,
+                'driver' => is_string($driver) ? $driver : 'unknown',
+            ]),
+        );
     }
 
     private function mailStatus(): InfrastructureStatusData

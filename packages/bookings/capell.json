@@ -13,9 +13,9 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\Bookings",
-    "surfaces": ["console"],
+    "surfaces": ["admin", "console", "frontend"],
     "dependencies": {
-        "requires": ["capell-app/core"],
+        "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
             "capell-app/address",
             "capell-app/events",
@@ -29,14 +29,53 @@
         "metadata": [],
         "install": [],
         "runtime": ["Capell\\Bookings\\Providers\\BookingsServiceProvider"],
-        "admin": [],
-        "frontend": []
+        "admin": ["Capell\\Bookings\\Providers\\BookingsServiceProvider"],
+        "frontend": ["Capell\\Bookings\\Providers\\BookingsServiceProvider"]
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingServiceResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingServices\\BookingServiceResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingStaffMemberResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingStaffMembers\\BookingStaffMemberResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingLocationResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingLocations\\BookingLocationResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingAvailabilityWindowResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingAvailabilityWindows\\BookingAvailabilityWindowResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\BookingAvailabilityExceptionResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\BookingAvailabilityExceptions\\BookingAvailabilityExceptionResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Bookings\\Manifest\\AppointmentRequestResourceContribution",
+            "resourceClass": "Capell\\Bookings\\Filament\\Resources\\AppointmentRequests\\AppointmentRequestResource"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": []
+        "requiredTables": [
+            "booking_services",
+            "booking_staff_members",
+            "booking_locations",
+            "booking_availability_windows",
+            "booking_availability_exceptions",
+            "appointment_requests",
+            "appointment_audit_logs"
+        ]
     },
     "commands": {
         "install": null,
@@ -45,15 +84,52 @@
         "doctor": null
     },
     "actions": {
+        "createAvailabilityException": "Capell\\Bookings\\Actions\\CreateAvailabilityExceptionAction",
         "createAppointmentRequest": "Capell\\Bookings\\Actions\\CreateAppointmentRequestAction",
-        "confirmAppointmentRequest": "Capell\\Bookings\\Actions\\ConfirmAppointmentRequestAction"
+        "confirmAppointmentRequest": "Capell\\Bookings\\Actions\\ConfirmAppointmentRequestAction",
+        "cancelAppointmentRequest": "Capell\\Bookings\\Actions\\CancelAppointmentRequestAction",
+        "queueAppointmentReminder": "Capell\\Bookings\\Actions\\QueueAppointmentReminderAction",
+        "createStaffCalendarFeedUrl": "Capell\\Bookings\\Actions\\CreateStaffCalendarFeedUrlAction",
+        "buildStaffCalendarFeed": "Capell\\Bookings\\Actions\\BuildStaffCalendarFeedAction"
     },
     "settings": [],
-    "permissions": [],
+    "permissions": [
+        "View:BookingService",
+        "Create:BookingService",
+        "Update:BookingService",
+        "Delete:BookingService",
+        "View:BookingStaffMember",
+        "Create:BookingStaffMember",
+        "Update:BookingStaffMember",
+        "Delete:BookingStaffMember",
+        "View:BookingLocation",
+        "Create:BookingLocation",
+        "Update:BookingLocation",
+        "Delete:BookingLocation",
+        "View:BookingAvailabilityWindow",
+        "Create:BookingAvailabilityWindow",
+        "Update:BookingAvailabilityWindow",
+        "Delete:BookingAvailabilityWindow",
+        "View:BookingAvailabilityException",
+        "Create:BookingAvailabilityException",
+        "Update:BookingAvailabilityException",
+        "Delete:BookingAvailabilityException",
+        "View:AppointmentRequest",
+        "Update:AppointmentRequest"
+    ],
     "capabilities": [
         "bookings",
         "bookings-availability",
-        "bookings-appointment-requests"
+        "bookings-availability-exceptions",
+        "bookings-holidays",
+        "bookings-capacity",
+        "bookings-lead-times",
+        "bookings-service-buffers",
+        "bookings-appointment-requests",
+        "bookings-appointment-audit",
+        "bookings-notifications",
+        "bookings-reminders",
+        "bookings-calendar-feeds"
     ],
     "performance": {
         "frontendRenderBudgetMs": 0,

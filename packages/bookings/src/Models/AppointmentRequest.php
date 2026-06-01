@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
 /**
@@ -86,6 +87,14 @@ class AppointmentRequest extends Model
     public function location(): BelongsTo
     {
         return $this->belongsTo(BookingLocation::class, 'location_id');
+    }
+
+    /**
+     * @return HasMany<AppointmentAuditLog, $this>
+     */
+    public function auditLogs(): HasMany
+    {
+        return $this->hasMany(AppointmentAuditLog::class, 'appointment_request_id');
     }
 
     /**

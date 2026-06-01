@@ -14,7 +14,7 @@ SEO Suite adds metadata panels, AI Discovery outputs, structured data, broken li
 - AI Discovery generation for `llms.txt`, optional `llms-full.txt`, per-page Markdown views, `robots.txt` AI crawler rules, and page-readiness audit signals.
 - AI Discovery admin management for browsing pages, filling summaries, toggling page inclusion, previewing Markdown, and reviewing readiness issue counts.
 - Search Console sync and dashboard reports.
-- Approved roadmap items for generated-output diagnostics, route ownership checks, AI Discovery coverage, sitemap parity, public-output leak scanning, and structured data quality reporting.
+- Generated-output diagnostics, route ownership checks, AI Discovery coverage, sitemap parity, public-output leak scanning, structured data reporting, and stale-output regeneration controls.
 
 ## Developer Notes
 
@@ -55,20 +55,16 @@ Gives editors and site operators practical checks before publishing and operatio
 - Requires Site Discovery for public page discovery and sitemap outputs.
 - Adds config for AI provider/model, image model, Search Console, publish gates, and prompts.
 
-## Approved Roadmap
+## Diagnostics
 
-These improvements are approved for future implementation and should be treated as part of the package direction when planning issues or marketplace positioning.
+`capell:seo-suite-doctor` verifies route ownership, installed dependencies, generated document status codes, content types, cache headers, crawler policy, Site Discovery availability, and common web-server interception symptoms.
 
-1. Add `capell:seo-suite-doctor` to verify route ownership, installed dependencies, generated document status codes, content types, cache headers, crawler policy, Site Discovery availability, and web-server interception symptoms.
-2. Make route ownership visible for `/robots.txt`, `/llms.txt`, `/llms-full.txt`, `/index.md`, and `/{url}.md`, including warnings when host routes override SEO Suite routes without delegating to the package generators.
-3. Turn AI Discovery into a coverage dashboard showing included pages, excluded reasons, missing summaries, stale snapshots, Markdown availability, noindex conflicts, and sitemap-visible pages missing from AI outputs.
-4. Use Site Discovery as the canonical public URL registry for sitemap, AI Discovery, robots, structured data, Search Console, and audit workflows.
-5. Add sitemap and AI Discovery parity checks so every generated output contains only canonical, indexable, public URLs and excludes redirects, private surfaces, drafts, and noindex pages.
-6. Add public-output leak scanning for generated sitemap, Markdown, robots, and AI Discovery responses.
-7. Add structured data auditing with graph preview, required-field checks, URL validation, duplicate entity detection, and marketplace-specific stale pricing or rating warnings.
-8. Keep crawler policy presets as first-class configuration and render robots output from policy objects plus site-specific override rows.
-9. Add preview-as-crawler actions for sitemap, robots, `llms.txt`, page Markdown, and schema output.
-10. Add stale-output indicators and regenerate actions for AI Discovery and related public outputs.
+The doctor and dashboard actions expose AI Discovery coverage, excluded reasons, missing summaries, stale snapshots, Markdown availability, noindex conflicts, public-output leak scanning, sitemap XML validity, unsafe sitemap URLs, structured data reports, and stale Markdown regeneration controls.
+
+## Remaining Roadmap
+
+- Add preview-as-crawler actions for sitemap, robots, `llms.txt`, page Markdown, and schema output.
+- Expand structured data auditing with marketplace-specific stale pricing or rating warnings.
 
 ## Data And Retention
 

@@ -23,6 +23,7 @@ Connects Capell pages, FormBuilder, Insights, and core layout builder APIs throu
 - Migrations create campaign groups, goals, landing pages, CTA blocks, and conversions.
 - Filament resources cover each owned model.
 - Listeners sync landing pages and form submission conversions.
+- `CampaignConverted` is dispatched when a conversion row is newly recorded, giving Automation Studio and other packages a stable conversion trigger without importing Campaign Studio internals.
 
 ## Operational Notes
 

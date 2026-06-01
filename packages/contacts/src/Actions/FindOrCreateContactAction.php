@@ -33,6 +33,8 @@ final class FindOrCreateContactAction
         $this->fillWhenPresent($contact, 'first_name', $identity->firstName);
         $this->fillWhenPresent($contact, 'last_name', $identity->lastName);
         $this->fillWhenPresent($contact, 'display_name', $identity->displayName);
+        $this->fillWhenPresent($contact, 'source_key', $identity->sourceKey);
+        $this->fillWhenPresent($contact, 'source_identifier', $identity->sourceIdentifier);
 
         if ($identity->profile !== null && $identity->profile !== []) {
             $contact->profile = array_replace($contact->profile ?? [], $identity->profile);
@@ -61,6 +63,16 @@ final class FindOrCreateContactAction
             return Contact::query()
                 ->where('site_id', $identity->siteId)
                 ->where('phone_hash', $phoneHash)
+                ->first();
+        }
+
+        $sourceIdentifierHash = Contact::sourceIdentifierHash($identity->sourceIdentifier);
+
+        if ($identity->sourceKey !== null && trim($identity->sourceKey) !== '' && $sourceIdentifierHash !== null) {
+            return Contact::query()
+                ->where('site_id', $identity->siteId)
+                ->where('source_key', trim($identity->sourceKey))
+                ->where('source_identifier_hash', $sourceIdentifierHash)
                 ->first();
         }
 

@@ -22,6 +22,8 @@ final class ContactIdentityData extends Data
         public ?string $firstName = null,
         public ?string $lastName = null,
         public ?string $displayName = null,
+        public ?string $sourceKey = null,
+        public ?string $sourceIdentifier = null,
         public ?array $profile = null,
         public ?CarbonInterface $seenAt = null,
     ) {}

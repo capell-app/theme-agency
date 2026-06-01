@@ -7,7 +7,9 @@ require_once __DIR__ . '/../Pest.php';
 use Capell\Experiments\Actions\AllocateVariantAction;
 use Capell\Experiments\Actions\BuildWinnerReportAction;
 use Capell\Experiments\Actions\CreateExperimentAction;
+use Capell\Experiments\Actions\DeclareExperimentWinnerAction;
 use Capell\Experiments\Actions\RecordGoalEventAction;
+use Capell\Experiments\Actions\ResolveExperimentVariantForContextAction;
 use Capell\Experiments\Data\ExperimentAudienceRuleData;
 use Capell\Experiments\Data\ExperimentContextData;
 use Capell\Experiments\Data\ExperimentData;
@@ -20,6 +22,8 @@ use Capell\Experiments\Enums\ExperimentGoalType;
 use Capell\Experiments\Enums\ExperimentStatus;
 use Capell\Experiments\Enums\ExperimentSubjectType;
 use Capell\Experiments\Models\ExperimentAllocation;
+use Carbon\CarbonImmutable;
+use Illuminate\Validation\ValidationException;
 
 it('creates an experiment aggregate with variants goals and audience rules', function (): void {
     $experiment = CreateExperimentAction::run(new ExperimentData(
@@ -94,6 +98,62 @@ it('allocates sticky variants records goals and builds a winner report', functio
         ->and($report->variants)->toHaveCount(2);
 });
 
+it('declares the winning variant from report data and ends the experiment', function (): void {
+    $experiment = CreateExperimentAction::run(new ExperimentData(
+        name: 'Signup form CTA test',
+        status: ExperimentStatus::Active,
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+            new ExperimentVariantData(name: 'Benefit CTA', key: 'benefit-cta'),
+        ],
+        goals: [
+            new ExperimentGoalData(name: 'Signup', key: 'signup', type: ExperimentGoalType::CustomEvent, isPrimary: true),
+        ],
+    ));
+    $goal = $experiment->goals()->firstOrFail();
+    $controlVariant = $experiment->variants()->where('key', 'control')->firstOrFail();
+    $benefitVariant = $experiment->variants()->where('key', 'benefit-cta')->firstOrFail();
+    $controlRecord = ExperimentAllocation::query()->create([
+        'experiment_id' => $experiment->getKey(),
+        'experiment_variant_id' => $controlVariant->getKey(),
+        'allocation_key' => 'visitor-control',
+        'allocation_hash' => hash('sha256', 'visitor-control'),
+        'allocated_at' => now(),
+    ]);
+    $benefitRecord = ExperimentAllocation::query()->create([
+        'experiment_id' => $experiment->getKey(),
+        'experiment_variant_id' => $benefitVariant->getKey(),
+        'allocation_key' => 'visitor-benefit',
+        'allocation_hash' => hash('sha256', 'visitor-benefit'),
+        'allocated_at' => now(),
+    ]);
+
+    RecordGoalEventAction::run($benefitRecord, $goal, new ExperimentGoalEventData(eventKey: 'signup'));
+    RecordGoalEventAction::run($benefitRecord, $goal, new ExperimentGoalEventData(eventKey: 'signup'));
+    RecordGoalEventAction::run($controlRecord, $goal, new ExperimentGoalEventData(eventKey: 'signup'));
+
+    $declaredAt = CarbonImmutable::parse('2026-06-01 10:00:00', 'UTC');
+    $experiment = DeclareExperimentWinnerAction::run($experiment, $goal, $declaredAt);
+
+    expect($experiment->status)->toBe(ExperimentStatus::Ended)
+        ->and($experiment->winning_variant_id)->toBe($benefitVariant->getKey())
+        ->and($experiment->winner_declared_at?->toIso8601String())->toBe('2026-06-01T10:00:00+00:00')
+        ->and($experiment->ends_at?->toIso8601String())->toBe('2026-06-01T10:00:00+00:00')
+        ->and($experiment->metadata['winner_report']['winning_variant_id'])->toBe($benefitVariant->getKey());
+});
+
+it('does not declare a winner without allocation data', function (): void {
+    $experiment = CreateExperimentAction::run(new ExperimentData(
+        name: 'Empty experiment',
+        status: ExperimentStatus::Active,
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+        ],
+    ));
+
+    DeclareExperimentWinnerAction::run($experiment);
+})->throws(ValidationException::class);
+
 it('does not allocate visitors outside required audience rules', function (): void {
     $experiment = CreateExperimentAction::run(new ExperimentData(
         name: 'Pricing page test',
@@ -116,4 +176,77 @@ it('does not allocate visitors outside required audience rules', function (): vo
 
     expect($miss)->toBeNull()
         ->and($match)->not->toBeNull();
+});
+
+it('resolves an active request context variant with cache variation metadata', function (): void {
+    CreateExperimentAction::run(new ExperimentData(
+        name: 'Pricing hero test',
+        key: 'pricing-hero-test',
+        status: ExperimentStatus::Active,
+        siteId: 12,
+        subjectType: ExperimentSubjectType::Page,
+        subjectId: 42,
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', weight: 0, isControl: true),
+            new ExperimentVariantData(name: 'Benefit lead', key: 'benefit-lead', payload: ['headline' => 'Ship faster']),
+        ],
+        audienceRules: [
+            new ExperimentAudienceRuleData(
+                type: AudienceRuleType::Path,
+                key: 'path',
+                operator: AudienceOperator::StartsWith,
+                value: '/pricing',
+            ),
+        ],
+    ));
+
+    $context = new ExperimentContextData(
+        siteId: 12,
+        subjectType: 'page',
+        subjectId: 42,
+        source: 'insights',
+        externalId: 'visit-123',
+        path: '/pricing/pro',
+    );
+
+    $firstResolution = ResolveExperimentVariantForContextAction::run('visitor-123', $context);
+    $secondResolution = ResolveExperimentVariantForContextAction::run('visitor-123', $context);
+
+    expect($firstResolution)->not->toBeNull()
+        ->and($firstResolution?->experimentKey)->toBe('pricing-hero-test')
+        ->and($firstResolution?->variantKey)->toBe('benefit-lead')
+        ->and($firstResolution?->variantPayload)->toBe(['headline' => 'Ship faster'])
+        ->and($firstResolution?->cacheVariationKey)->toBe('experiment:pricing-hero-test:benefit-lead')
+        ->and($firstResolution?->cacheVaryBy)->toBe([
+            'experiment' => 'pricing-hero-test',
+            'variant' => 'benefit-lead',
+        ])
+        ->and($firstResolution?->isNewAllocation)->toBeTrue()
+        ->and($secondResolution?->isNewAllocation)->toBeFalse()
+        ->and($secondResolution?->variantId)->toBe($firstResolution?->variantId);
+});
+
+it('returns no resolved variant when request context misses active experiments', function (): void {
+    CreateExperimentAction::run(new ExperimentData(
+        name: 'Pricing page test',
+        status: ExperimentStatus::Active,
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control'),
+        ],
+        audienceRules: [
+            new ExperimentAudienceRuleData(
+                type: AudienceRuleType::Path,
+                key: 'path',
+                operator: AudienceOperator::StartsWith,
+                value: '/pricing',
+            ),
+        ],
+    ));
+
+    $resolution = ResolveExperimentVariantForContextAction::run(
+        allocationKey: 'visitor-456',
+        context: new ExperimentContextData(path: '/blog'),
+    );
+
+    expect($resolution)->toBeNull();
 });
