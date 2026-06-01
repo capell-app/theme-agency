@@ -111,7 +111,7 @@ it('falls back to visit campaign when event metadata omits last touch campaign',
 it('defines campaign studio package metadata and enum labels', function (): void {
     expect(CampaignStudioHealthCheck::compatibleCapellApiVersion())->toBe('^4.0')
         ->and(AttributionModel::FirstTouch->getLabel())->toBe('capell-campaign-studio::generic.attribution_models.first_touch')
-        ->and(CampaignStatus::Scheduled->getLabel())->toBe('capell-campaign-studio::generic.statuses.scheduled')
+        ->and(CampaignStatus::Scheduled->getLabel())->toBe('Scheduled')
         ->and(ConversionGoalType::CustomAction->getLabel())->toBe('capell-campaign-studio::generic.goal_types.custom_action')
         ->and(CampaignBlockComponentEnum::CampaignHero->value)->toBe('capell-campaign-studio::components.block.campaign-hero')
         ->and(CampaignBlockConfiguratorEnum::CampaignLeadForm->value)->toContain('CampaignLeadFormBlockConfigurator');

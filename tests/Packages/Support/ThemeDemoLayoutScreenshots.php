@@ -291,6 +291,10 @@ function assertThemeDemoLayoutScreenshots(string $themeKey, Collection $pages, a
         }
     }
 
+    if (getenv('ACT') === 'true') {
+        test()->markTestSkipped('Theme demo screenshot capture requires native Chromium; local act amd64 emulation crashes Chromium.');
+    }
+
     $result = runThemeDemoScreenshotCapture($themeKey, $manifest);
     $expectedScreenshotNames = collect($manifest['entries'])
         ->map(fn (array $entry): string => basename($entry['screenshotPath']))
