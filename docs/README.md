@@ -12,6 +12,7 @@ For the long-running first-party theme improvement workflow, see [Theme Premium 
 For planned local-business premium themes, see [Local Business Premium Theme Plan](local-business-premium-theme-plan.md).
 For optional package integration rules, see [Optional Package Boundaries](optional-package-boundaries.md).
 For split repository contribution flow, see [Split PR Forwarding](split-pr-forwarding.md).
+For the package Blade view coverage ratchet, see [Blade View Coverage](blade-view-coverage.md).
 
 Use package `overview.md` pages for search-facing package summaries and task-level orientation. Use focused package docs for API, data, workflow, provider, and extension contracts.
 

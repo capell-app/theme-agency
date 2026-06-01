@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5cf014f455fcd0ed5ecd27b20743e8d8",
+    "content-hash": "0d695c2334f50d23c95ac46e6ad7d82d",
     "packages": [
         {
             "name": "aimeos/laravel-nestedset",
@@ -14826,6 +14826,72 @@
                 }
             ],
             "time": "2026-03-04T14:03:08+00:00"
+        },
+        {
+            "name": "capell-app/pest-plugin-blade-coverage",
+            "version": "v0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/capell-app/pest-plugin-blade-coverage.git",
+                "reference": "f3d0fb77b7b5660881c940dfadb0838402b1b02c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/capell-app/pest-plugin-blade-coverage/zipball/f3d0fb77b7b5660881c940dfadb0838402b1b02c",
+                "reference": "f3d0fb77b7b5660881c940dfadb0838402b1b02c",
+                "shasum": ""
+            },
+            "require": {
+                "pestphp/pest-plugin": "^3.0|^4.0",
+                "php": "^8.3"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.25",
+                "orchestra/testbench": "^9.0|^10.0|^11.0",
+                "pestphp/pest": "^3.0|^4.1",
+                "pestphp/pest-plugin-laravel": "^3.0|^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "pest": {
+                    "plugins": [
+                        "Capell\\PestBladeCoverage\\BladeCoveragePlugin"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Capell\\PestBladeCoverage\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Capell\\PestBladeCoverage\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "pint"
+                ],
+                "test": [
+                    "pest --colors=always"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Capell",
+                    "email": "hello@capell.app"
+                }
+            ],
+            "description": "Pest plugin for ratcheted Laravel Blade view coverage checks.",
+            "support": {
+                "source": "https://github.com/capell-app/pest-plugin-blade-coverage/tree/v0.1.2",
+                "issues": "https://github.com/capell-app/pest-plugin-blade-coverage/issues"
+            },
+            "time": "2026-06-01T17:30:32+00:00"
         },
         {
             "name": "composer/class-map-generator",
