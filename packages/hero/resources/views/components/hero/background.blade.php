@@ -42,13 +42,21 @@
                     y1="0"
                     y2="1"
                 >
-                    <stop offset="0%" stop-color="var(--hero-accent-color)" />
+                    <stop
+                        offset="0%"
+                        stop-color="var(--hero-accent-color)"
+                    />
                     <stop
                         offset="100%"
                         stop-color="var(--hero-accent-color-alt)"
                     />
                 </linearGradient>
-                <radialGradient id="{{ $radialId }}" cx="72%" cy="18%" r="58%">
+                <radialGradient
+                    id="{{ $radialId }}"
+                    cx="72%"
+                    cy="18%"
+                    r="58%"
+                >
                     <stop
                         offset="0%"
                         stop-color="var(--hero-accent-color-alt)"

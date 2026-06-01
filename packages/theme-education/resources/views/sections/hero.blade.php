@@ -136,7 +136,10 @@
                             <p class="mt-3 text-lg font-black text-[#020617]">
                                 {{ __('capell-theme-education::generic.curriculum_value') }}
                             </p>
-                            <div class="mt-4 grid gap-1.5" aria-hidden="true">
+                            <div
+                                class="mt-4 grid gap-1.5"
+                                aria-hidden="true"
+                            >
                                 <span class="h-1.5 w-4/5 bg-[#0f766e]"></span>
                                 <span
                                     class="h-1.5 w-2/3 bg-[#0f766e]/30"

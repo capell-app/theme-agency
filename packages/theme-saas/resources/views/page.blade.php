@@ -1,4 +1,7 @@
-<a href="#main-content" class="saas-skip-link">
+<a
+    href="#main-content"
+    class="saas-skip-link"
+>
     {{ __('capell-theme-saas::generic.skip_to_content') }}
 </a>
 

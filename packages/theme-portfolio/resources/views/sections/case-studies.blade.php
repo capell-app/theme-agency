@@ -119,7 +119,10 @@
                                     </p>
                                 </div>
 
-                                <div class="space-y-3" aria-hidden="true">
+                                <div
+                                    class="space-y-3"
+                                    aria-hidden="true"
+                                >
                                     <span
                                         class="block h-2 w-28 bg-[#fb923c]"
                                     ></span>

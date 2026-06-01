@@ -1,4 +1,7 @@
-<a href="#main-content" class="site-theme-skip-link">
+<a
+    href="#main-content"
+    class="site-theme-skip-link"
+>
     {{ __('capell-theme-agency::generic.skip_to_content') }}
 </a>
 

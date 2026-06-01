@@ -157,7 +157,10 @@
                 </div>
             </div>
         @elseif ($isGallery)
-            <div class="theme-content-gallery" data-carousel-scope>
+            <div
+                class="theme-content-gallery"
+                data-carousel-scope
+            >
                 <style>
                     .theme-content-gallery .swiper-controls .swiper-button-prev,
                     .theme-content-gallery
@@ -296,7 +299,10 @@
                 </div>
             </div>
         @elseif ($isPathways)
-            <div class="grid gap-3 lg:grid-cols-2" data-theme-pathways>
+            <div
+                class="grid gap-3 lg:grid-cols-2"
+                data-theme-pathways
+            >
                 @foreach ($section->items as $item)
                     <details
                         class="group rounded-[var(--theme-radius-value)] border border-slate-200 bg-white p-5 shadow-sm transition open:border-slate-950 open:shadow-lg"

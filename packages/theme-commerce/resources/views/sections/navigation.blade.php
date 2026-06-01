@@ -3,7 +3,10 @@
     aria-label="{{ __('capell-theme-commerce::generic.main_navigation') }}"
 >
     <div class="flex items-center justify-between px-6 py-4">
-        <a href="/" class="text-base font-black text-[#17211c]">
+        <a
+            href="/"
+            class="text-base font-black text-[#17211c]"
+        >
             {{ $section->brandName }}
         </a>
 
@@ -52,4 +55,7 @@
         </div>
     </div>
 </nav>
-<span id="main-content" tabindex="-1"></span>
+<span
+    id="main-content"
+    tabindex="-1"
+></span>

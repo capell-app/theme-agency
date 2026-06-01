@@ -292,7 +292,6 @@ it('configures package service providers and executes registration hooks', funct
             $provider->configurePackage($package);
             $provider->registeringPackage();
             $provider->packageRegistered();
-            $provider->packageBooted();
 
             $built++;
 

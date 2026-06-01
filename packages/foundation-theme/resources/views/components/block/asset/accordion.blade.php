@@ -140,7 +140,10 @@
                                 </div>
 
                                 @if ($actions || $linkedPageUrl)
-                                    <x-capell::actions :$actions class="mt-4">
+                                    <x-capell::actions
+                                        :$actions
+                                        class="mt-4"
+                                    >
                                         @if ($linkedPageUrl)
                                             <x-capell::button
                                                 :url="$linkedPageUrl"

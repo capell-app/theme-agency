@@ -20,7 +20,10 @@
             @else
                 {{-- Pending migrations --}}
                 @if ($data->pendingCount > 0)
-                    <details class="group" open>
+                    <details
+                        class="group"
+                        open
+                    >
                         <summary
                             class="flex cursor-pointer items-center justify-between gap-2 py-1 text-sm font-medium"
                         >
@@ -51,7 +54,10 @@
 
                 {{-- Orphaned registrations --}}
                 @if ($data->orphanedCount > 0)
-                    <details class="group" open>
+                    <details
+                        class="group"
+                        open
+                    >
                         <summary
                             class="flex cursor-pointer items-center justify-between gap-2 py-1 text-sm font-medium"
                         >

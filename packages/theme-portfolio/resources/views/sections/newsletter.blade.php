@@ -17,7 +17,10 @@
                     action="#"
                     aria-label="Newsletter signup"
                 >
-                    <label class="sr-only" for="portfolio-newsletter">
+                    <label
+                        class="sr-only"
+                        for="portfolio-newsletter"
+                    >
                         {{ __('capell-theme-portfolio::generic.email_label') ?? 'Email address' }}
                     </label>
                     <div class="flex min-w-[18rem] gap-2">

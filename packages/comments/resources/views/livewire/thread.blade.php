@@ -68,7 +68,10 @@
         @if ($parentPublicId !== null)
             <p>
                 {{ __('capell-comments::generic.replying') }}
-                <button type="button" wire:click="cancelReply">
+                <button
+                    type="button"
+                    wire:click="cancelReply"
+                >
                     {{ __('capell-comments::generic.cancel_reply') }}
                 </button>
             </p>
@@ -85,7 +88,10 @@
                 />
             </label>
             @error('authorName')
-                <p id="comments-author-name-error" role="alert">
+                <p
+                    id="comments-author-name-error"
+                    role="alert"
+                >
                     {{ $message }}
                 </p>
             @enderror
@@ -100,7 +106,10 @@
                 />
             </label>
             @error('authorEmail')
-                <p id="comments-author-email-error" role="alert">
+                <p
+                    id="comments-author-email-error"
+                    role="alert"
+                >
                     {{ $message }}
                 </p>
             @enderror
@@ -115,7 +124,12 @@
             ></textarea>
         </label>
         @error('body')
-            <p id="comments-body-error" role="alert">{{ $message }}</p>
+            <p
+                id="comments-body-error"
+                role="alert"
+            >
+                {{ $message }}
+            </p>
         @enderror
 
         @error('parent')
@@ -130,7 +144,10 @@
             <p role="alert">{{ $message }}</p>
         @enderror
 
-        <button type="submit" wire:loading.attr="disabled">
+        <button
+            type="submit"
+            wire:loading.attr="disabled"
+        >
             <span wire:loading.remove>
                 {{ __('capell-comments::generic.submit') }}
             </span>

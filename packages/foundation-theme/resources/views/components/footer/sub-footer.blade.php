@@ -8,7 +8,10 @@
     'items' => [],
     'siteLanguages',
 ])
-<div {{ $attributes }} class="capell-footer-sub-footer">
+<div
+    {{ $attributes }}
+    class="capell-footer-sub-footer"
+>
     <div
         @class([
             'sm:grid-col-2 grid flex-wrap items-center gap-x-4 gap-y-4 py-4 md:flex lg:grid lg:grid-cols-3 lg:py-5 xl:grid-cols-5',

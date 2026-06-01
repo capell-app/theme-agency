@@ -2,7 +2,10 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1"
+        />
         <title>{{ $article['title'] }}</title>
     </head>
     <body>
@@ -44,12 +47,23 @@
                     @csrf
                     <label>
                         {{ __('capell-knowledge-base::generic.frontend.feedback_comment') }}
-                        <textarea name="comment" rows="3"></textarea>
+                        <textarea
+                            name="comment"
+                            rows="3"
+                        ></textarea>
                     </label>
-                    <button type="submit" name="helpful" value="1">
+                    <button
+                        type="submit"
+                        name="helpful"
+                        value="1"
+                    >
                         {{ __('capell-knowledge-base::generic.frontend.feedback_helpful') }}
                     </button>
-                    <button type="submit" name="helpful" value="0">
+                    <button
+                        type="submit"
+                        name="helpful"
+                        value="0"
+                    >
                         {{ __('capell-knowledge-base::generic.frontend.feedback_not_helpful') }}
                     </button>
                 </form>

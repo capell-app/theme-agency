@@ -12,7 +12,10 @@
             {{ $this->form }}
 
             <div class="mt-6">
-                <x-filament::button type="submit" icon="heroicon-o-key">
+                <x-filament::button
+                    type="submit"
+                    icon="heroicon-o-key"
+                >
                     {{ __('capell-password-policy::password_change.submit') }}
                 </x-filament::button>
             </div>

@@ -1,4 +1,7 @@
-<a href="#main-content" class="nonprofit-skip-link">
+<a
+    href="#main-content"
+    class="nonprofit-skip-link"
+>
     {{ __('capell-theme-nonprofit::generic.skip_to_content') }}
 </a>
 

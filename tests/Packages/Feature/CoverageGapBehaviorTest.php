@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\Admin\Facades\CapellAdmin;
+use Capell\Admin\Support\CapellAdminManager;
 use Capell\AgentDelivery\Support\SiteDiscovery\AgentDeliveryGeneratedOutputCoverageSource;
 use Capell\AutomationStudio\Actions\DispatchAutomationTriggerAction;
 use Capell\AutomationStudio\Actions\LoadPersistedAutomationRulesAction;
@@ -23,6 +25,7 @@ use Capell\AutomationStudio\Models\AutomationRun;
 use Capell\AutomationStudio\Support\AutomationActionRegistry;
 use Capell\AutomationStudio\Support\AutomationRuleRegistry;
 use Capell\AutomationStudio\Support\Handlers\DispatchPublicActionAutomationActionHandler;
+use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\PageUrl;
@@ -43,6 +46,26 @@ use Capell\HtmlCache\Models\CachedModelUrl;
 use Capell\HtmlCache\Support\SiteDiscovery\HtmlCacheGeneratedOutputCoverageSource;
 use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Models\WidgetAsset;
+use Capell\Payments\Enums\ResourceEnum as PaymentResourceEnum;
+use Capell\Payments\Models\CheckoutSession;
+use Capell\Payments\Models\PaymentCustomer;
+use Capell\Payments\Models\PaymentDispute;
+use Capell\Payments\Models\PaymentIntent;
+use Capell\Payments\Models\PaymentRefund;
+use Capell\Payments\Models\PaymentWebhookEvent;
+use Capell\Payments\Models\Subscription;
+use Capell\Payments\Policies\CheckoutSessionPolicy;
+use Capell\Payments\Policies\PaymentCustomerPolicy;
+use Capell\Payments\Policies\PaymentDisputePolicy;
+use Capell\Payments\Policies\PaymentIntentPolicy;
+use Capell\Payments\Policies\PaymentRefundPolicy;
+use Capell\Payments\Policies\PaymentWebhookEventPolicy;
+use Capell\Payments\Policies\SubscriptionPolicy;
+use Capell\Payments\Providers\AdminServiceProvider as PaymentsAdminServiceProvider;
+use Capell\Payments\Providers\PaymentsServiceProvider;
+use Capell\PrivacyCenter\Enums\ResourceEnum as PrivacyResourceEnum;
+use Capell\PrivacyCenter\Providers\AdminServiceProvider as PrivacyCenterAdminServiceProvider;
+use Capell\PrivacyCenter\Providers\PrivacyCenterServiceProvider;
 use Capell\PublicActions\Actions\SubmitPublicActionAction;
 use Capell\PublicActions\Contracts\PublicActionHandler;
 use Capell\PublicActions\Data\PublicActionResultData;
@@ -58,6 +81,7 @@ use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 
 beforeEach(function (): void {
@@ -600,6 +624,35 @@ it('fails automation public action dispatch when no action key is configured', f
 
     expect($result->success)->toBeFalse()
         ->and($result->message)->toBe(__('capell-automation-studio::generic.dispatcher.public_action_key_required'));
+});
+
+it('registers payment and privacy admin resources only when their packages are installed', function (): void {
+    CapellAdmin::clearAdminSurfaceContributions();
+    app()->singleton(CapellAdminManager::class, fn (): CapellAdminManager => new CapellAdminManager);
+
+    CapellCore::forcePackageInstalled(PaymentsServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled(PrivacyCenterServiceProvider::$packageName);
+
+    (new PaymentsAdminServiceProvider(app()))->register();
+    (new PrivacyCenterAdminServiceProvider(app()))->register();
+
+    $resources = CapellAdmin::getAdminSurfaceRegistry()->resources();
+
+    expect($resources)->toContain(...array_map(
+        static fn (PaymentResourceEnum $resource): string => $resource->value,
+        PaymentResourceEnum::cases(),
+    ))
+        ->and($resources)->toContain(...array_map(
+            static fn (PrivacyResourceEnum $resource): string => $resource->value,
+            PrivacyResourceEnum::cases(),
+        ))
+        ->and(Gate::getPolicyFor(PaymentCustomer::class))->toBeInstanceOf(PaymentCustomerPolicy::class)
+        ->and(Gate::getPolicyFor(CheckoutSession::class))->toBeInstanceOf(CheckoutSessionPolicy::class)
+        ->and(Gate::getPolicyFor(PaymentIntent::class))->toBeInstanceOf(PaymentIntentPolicy::class)
+        ->and(Gate::getPolicyFor(Subscription::class))->toBeInstanceOf(SubscriptionPolicy::class)
+        ->and(Gate::getPolicyFor(PaymentWebhookEvent::class))->toBeInstanceOf(PaymentWebhookEventPolicy::class)
+        ->and(Gate::getPolicyFor(PaymentRefund::class))->toBeInstanceOf(PaymentRefundPolicy::class)
+        ->and(Gate::getPolicyFor(PaymentDispute::class))->toBeInstanceOf(PaymentDisputePolicy::class);
 });
 
 it('resolves customer portal profile and preference providers from instances and container classes', function (): void {

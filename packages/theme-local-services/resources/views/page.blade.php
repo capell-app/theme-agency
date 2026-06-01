@@ -1,4 +1,7 @@
-<a href="#main-content" class="local-services-skip-link">
+<a
+    href="#main-content"
+    class="local-services-skip-link"
+>
     {{ __('capell-theme-local-services::generic.skip_to_content') }}
 </a>
 

@@ -19,7 +19,10 @@
                         {{ $dateLabel }}
                     </div>
 
-                    <div class="space-y-2" aria-live="polite">
+                    <div
+                        class="space-y-2"
+                        aria-live="polite"
+                    >
                         @foreach ($events as $event)
                             @php
                                 $eventLabel = implode(' ', array_filter([

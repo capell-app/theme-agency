@@ -9,7 +9,11 @@
 <div class="capell-diff-panel">
     {{-- Toolbar --}}
     <div class="mb-4 flex items-center gap-3">
-        <x-filament::button wire:click="toggleMode" color="gray" size="sm">
+        <x-filament::button
+            wire:click="toggleMode"
+            color="gray"
+            size="sm"
+        >
             @if ($mode === 'side-by-side')
                 {{ __('capell-admin::workspace.compare.switch_inline') }}
             @else
@@ -17,7 +21,11 @@
             @endif
         </x-filament::button>
 
-        <x-filament::button wire:click="toggleUnchanged" color="gray" size="sm">
+        <x-filament::button
+            wire:click="toggleUnchanged"
+            color="gray"
+            size="sm"
+        >
             @if ($showUnchanged)
                 {{ __('capell-admin::workspace.compare.hide_unchanged') }}
             @else

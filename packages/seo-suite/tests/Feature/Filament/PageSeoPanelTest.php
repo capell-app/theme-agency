@@ -18,6 +18,8 @@ use Capell\SeoSuite\Filament\Extenders\Page\PageSeoPanelSchemaExtender;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\HtmlString;
 
 /**
  * @param  array<string, mixed>  $state
@@ -150,6 +152,71 @@ it('exposes redirect opportunities to the page SEO panel view data', function ()
     expect($viewData['redirectOpportunities'])->toHaveCount(1)
         ->and($viewData['redirectOpportunities'][0])->toBeInstanceOf(RedirectOpportunityData::class)
         ->and($viewData['redirectOpportunities'][0]->sourceUrl)->toBe('https://example.test/old-page');
+});
+
+it('renders a compact inline SEO panel without deep diagnostics', function (): void {
+    $report = new PageSeoReportData(
+        score: 72,
+        searchPreview: new SeoPreviewData(
+            title: 'Search title',
+            description: 'Search description',
+            url: 'https://example.test/search-page',
+        ),
+        socialPreview: new SeoPreviewData(
+            title: 'Social title',
+            description: 'Social description',
+            url: 'https://example.test/social-page',
+            imageUrl: 'https://example.test/social-image.jpg',
+        ),
+        issues: [
+            new SeoIssueData(
+                key: SeoCheckKeyEnum::MetaTitle,
+                severity: SeoIssueSeverityEnum::Critical,
+                message: 'Meta title needs attention.',
+            ),
+            new SeoIssueData(
+                key: SeoCheckKeyEnum::Schema,
+                severity: SeoIssueSeverityEnum::Warning,
+                message: 'Schema needs attention.',
+            ),
+            new SeoIssueData(
+                key: SeoCheckKeyEnum::InternalLinks,
+                severity: SeoIssueSeverityEnum::Notice,
+                message: 'Internal links need attention.',
+            ),
+        ],
+    );
+
+    $reflection = new ReflectionClass(PageSeoPanel::class);
+    $method = $reflection->getMethod('viewDataForReport');
+    $viewData = $method->invoke(PageSeoPanel::make(), $report);
+    $schemaComponent = new class
+    {
+        public function getAction(string $name): HtmlString
+        {
+            return new HtmlString($name);
+        }
+    };
+
+    $html = View::make('capell-seo-suite::filament.components.page-seo-panel', [
+        ...$viewData,
+        'schemaComponent' => $schemaComponent,
+    ])->render();
+
+    expect($html)
+        ->toContain('Search title')
+        ->toContain('Social title')
+        ->toContain('ai_content_brief')
+        ->toContain('Meta title needs attention.')
+        ->toContain('Schema needs attention.')
+        ->toContain('Internal links need attention.')
+        ->not->toContain('Links')
+        ->not->toContain('Schema</div>')
+        ->not->toContain('Redirects')
+        ->not->toContain('Search Console')
+        ->not->toContain('Target keywords')
+        ->not->toContain('Robots and canonical')
+        ->not->toContain('Passed checks');
 });
 
 it('resolves AI brief context and empty report view state from the current page workflow', function (): void {

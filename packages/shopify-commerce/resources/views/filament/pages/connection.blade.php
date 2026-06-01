@@ -37,7 +37,10 @@
         @endif
 
         @if (! $connection)
-            <form wire:submit="connect" class="space-y-4">
+            <form
+                wire:submit="connect"
+                class="space-y-4"
+            >
                 <label class="block space-y-2">
                     <span
                         class="text-sm font-medium text-gray-950 dark:text-white"

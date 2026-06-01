@@ -1,4 +1,7 @@
-<a href="#main-content" class="portfolio-skip-link">
+<a
+    href="#main-content"
+    class="portfolio-skip-link"
+>
     {{ __('capell-theme-portfolio::generic.skip_to_content') }}
 </a>
 

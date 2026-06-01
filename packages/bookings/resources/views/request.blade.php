@@ -2,8 +2,14 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="noindex, nofollow" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1"
+        />
+        <meta
+            name="robots"
+            content="noindex, nofollow"
+        />
         <title>{{ __('capell-bookings::generic.frontend.title') }}</title>
         <style>
             :root {
@@ -131,7 +137,10 @@
             </header>
 
             @if (session('booking_request_status'))
-                <div class="status" role="status">
+                <div
+                    class="status"
+                    role="status"
+                >
                     {{ session('booking_request_status') }}
                 </div>
             @endif
@@ -149,7 +158,10 @@
                     <div class="grid">
                         <label>
                             {{ __('capell-bookings::generic.frontend.service') }}
-                            <select name="service_id" required>
+                            <select
+                                name="service_id"
+                                required
+                            >
                                 @foreach ($options['services'] as $service)
                                     <option
                                         value="{{ $service['id'] }}"
@@ -275,7 +287,10 @@
                     <p>
                         <label>
                             {{ __('capell-bookings::generic.frontend.notes') }}
-                            <textarea name="notes" maxlength="2000">
+                            <textarea
+                                name="notes"
+                                maxlength="2000"
+                            >
 {{ old('notes') }}</textarea
                             >
                             @error('notes')

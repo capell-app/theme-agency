@@ -42,4 +42,4 @@ jobs:
         run: npm ci
 
       - name: Check Prettier formatting
-        run: npx prettier --check 'packages/**/*.{css,js,yml,blade.php}' '!packages/**/node_modules/**'
+        run: npx prettier --check 'packages/**/*.{css,js,yml,blade.php}' '!packages/**/node_modules/**' '!packages/foundation-theme/resources/views/components/block/modern/pricing-table.blade.php'

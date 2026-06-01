@@ -56,7 +56,6 @@ use Capell\SeoSuite\Events\AiGenerationCompleted;
 use Capell\SeoSuite\Events\AiGenerationFailed;
 use Capell\SeoSuite\Filament\Extenders\Page\PageSeoPanelSchemaExtender;
 use Capell\SeoSuite\Filament\Extenders\Page\PageSeoSettingsTabExtender;
-use Capell\SeoSuite\Filament\Extenders\Page\SearchMetaSchemaExtender;
 use Capell\SeoSuite\Filament\Extenders\PageSpeed\PageSpeedPageTableExtender;
 use Capell\SeoSuite\Filament\Extenders\Site\SiteDetailsMetaExtender;
 use Capell\SeoSuite\Filament\Extenders\Site\SiteTranslationMetaExtender;
@@ -350,7 +349,6 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
     {
         $this->app->tag(
             [
-                SearchMetaSchemaExtender::class,
                 PageSeoSettingsTabExtender::class,
                 PageSeoPanelSchemaExtender::class,
             ],

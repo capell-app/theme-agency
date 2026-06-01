@@ -50,7 +50,10 @@
     @if ($name)
         <h3 class="text-lg font-semibold text-gray-950">
             @if ($url)
-                <a href="{{ $url }}" @wireNavigate>
+                <a
+                    href="{{ $url }}"
+                    @wireNavigate
+                >
                     {{ $name }}
                 </a>
             @else

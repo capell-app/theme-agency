@@ -110,7 +110,10 @@
                     >
                         {{ __('capell-theme-knowledge::generic.search_source_label') }}
                     </p>
-                    <div class="mt-4 space-y-3" aria-hidden="true">
+                    <div
+                        class="mt-4 space-y-3"
+                        aria-hidden="true"
+                    >
                         <div class="grid grid-cols-[0.32fr_1fr_auto] gap-3">
                             <span class="h-3 bg-[#f59e0b]"></span>
                             <span class="h-3 bg-[#1d4ed8]"></span>

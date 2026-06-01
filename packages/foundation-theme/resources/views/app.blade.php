@@ -20,7 +20,10 @@
 @endphp
 
 <!DOCTYPE html>
-<html class="h-full" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html
+    class="h-full"
+    lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+>
     <x-capell::app.head
         :livewire-enabled="$usesLivewire"
         :runtime-manifest="$runtimeManifest"

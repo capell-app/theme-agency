@@ -49,3 +49,21 @@ it('reports missing site ids before creating contact notes', function (): void {
     expect($result->success)->toBeFalse()
         ->and($result->message)->toBe('A site id is required to resolve a contact.');
 });
+
+it('requires a non-empty contact note summary before resolving contacts', function (): void {
+    $result = (new CreateContactNoteAutomationActionHandler)->handle(
+        event: new AutomationTriggerEventData(
+            triggerType: AutomationTriggerType::FormSubmitted,
+            sourceType: 'form-builder.form',
+            payload: ['site_id' => 1, 'summary' => '   '],
+        ),
+        action: new AutomationRuleActionData(
+            key: 'create-note',
+            type: AutomationActionType::CreateNote,
+            settings: ['summary' => ''],
+        ),
+    );
+
+    expect($result->success)->toBeFalse()
+        ->and($result->message)->toBe('A contact note summary is required.');
+});
