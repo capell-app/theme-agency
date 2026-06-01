@@ -9,6 +9,7 @@ use Capell\SeoSuite\Enums\RobotsDirectiveEnum;
 use Capell\SeoSuite\Filament\Extenders\Page\PageSeoSettingsTabExtender;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Field;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -25,8 +26,8 @@ it('adds seo settings as a page editor tab', function (): void {
     $section = $seoTab instanceof Tab ? (ReadsRawSchemaComponents::childComponents($seoTab)[0] ?? null) : null;
     $components = $section instanceof Section ? ReadsRawSchemaComponents::childComponents($section) : [];
     $componentNames = collect($components)
-        ->filter(fn (mixed $component): bool => method_exists($component, 'getName'))
-        ->map(fn (mixed $component): string => $component->getName())
+        ->filter(fn (mixed $component): bool => $component instanceof Field)
+        ->map(fn (Field $component): string => $component->getName())
         ->all();
     $robotsField = collect($components)->first(fn (mixed $component): bool => $component instanceof CheckboxList);
     $priorityField = collect($components)->first(fn (mixed $component): bool => $component instanceof Select && $component->getName() === 'priority');

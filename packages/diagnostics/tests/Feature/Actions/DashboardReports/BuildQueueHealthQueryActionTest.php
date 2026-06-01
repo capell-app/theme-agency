@@ -9,6 +9,7 @@ use Capell\Diagnostics\Filament\Pages\Tables\QueueHealthTable;
 use Capell\Diagnostics\Models\FailedJob;
 use Capell\Diagnostics\Models\PendingQueueJob;
 use Capell\Diagnostics\Models\QueueMonitor;
+use Filament\Actions\Action;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Mockery;
@@ -47,7 +48,10 @@ it('builds queue health table columns filters and row operations', function (): 
         'operation_finished_at',
         'exception_message',
     )->and(array_keys($table->getFilters()))->toContain('status', 'queue', 'date_range', 'job_class')
-        ->and(collect($table->getActions())->map(fn (mixed $action): ?string => $action->getName())->all())->toContain('details', 'retry', 'delete_pending');
+        ->and(collect($table->getActions())
+            ->filter(fn (mixed $action): bool => $action instanceof Action)
+            ->map(fn (Action $action): ?string => $action->getName())
+            ->all())->toContain('details', 'retry', 'delete_pending');
 });
 
 it('applies queue health filters to the correct storage tables', function (): void {

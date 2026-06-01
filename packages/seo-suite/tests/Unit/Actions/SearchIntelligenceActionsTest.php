@@ -123,8 +123,9 @@ it('maps seo intelligence opportunities into dashboard rows', function (): void 
 
     $row = BuildSeoIntelligenceRowsAction::run(1)->first();
 
-    expect($row)->not->toBeNull()
-        ->and($row['id'])->toStartWith('seo-intelligence-0-')
+    throw_if($row === null, RuntimeException::class, 'Expected SEO intelligence row to be built.');
+
+    expect($row['id'])->toStartWith('seo-intelligence-0-')
         ->and($row['type'])->toBe(SeoOpportunityTypeEnum::QuickWin->getLabel())
         ->and($row['query'])->toBe('capell cms')
         ->and($row['url'])->toBe('https://example.com/about')

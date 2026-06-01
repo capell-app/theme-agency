@@ -1,4 +1,4 @@
-name: Coverage Release
+name: Release Coverage
 
 permissions:
   contents: read
@@ -9,7 +9,8 @@ on:
       - '*'
 
 jobs:
-  pest-coverage-release:
+  release-coverage:
+    name: Release coverage
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -142,7 +143,7 @@ jobs:
           echo "DB_CONNECTION=sqlite" >> .env
           echo "DB_DATABASE=:memory:" >> .env
 
-      - name: Run Pest Coverage (Clover)
+      - name: Run release coverage (Clover)
         run: php -d memory_limit=-1 -d pcov.enabled=1 -d pcov.directory=packages -d pcov.exclude="~vendor|tests|storage|bootstrap|.temp~" vendor/bin/pest --coverage --min=80 --coverage-clover=coverage/clover.xml --colors=always --stop-on-error --stop-on-failure --configuration=phpunit.xml
 
       - name: Upload Clover XML for codecov

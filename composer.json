@@ -51,14 +51,16 @@
             "@php -r \"echo PHP_EOL . 'Running Pest...' . PHP_EOL;\"",
             "@test"
         ],
-        "test:unit": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --configuration=phpunit.xml",
-        "test:group": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --group=${PEST_GROUP:-unit} --configuration=phpunit.xml",
+        "test:unit": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --compact --configuration=phpunit.xml",
+        "test:group": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --compact --group=${PEST_GROUP:-unit} --configuration=phpunit.xml",
         "test:debug": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --debug --stop-on-defect --configuration=phpunit.xml",
         "test:debug:group": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --debug --stop-on-defect --group=${PEST_GROUP:-unit} --configuration=phpunit.xml",
-        "test:fast": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --shard=${PEST_SHARD:-1/1} --stop-on-error --stop-on-failure --configuration=phpunit.xml",
-        "test:fast:ci": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --shard=${PEST_SHARD:-1/1} --configuration=phpunit.xml",
-        "test:all": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --stop-on-error --stop-on-failure --configuration=phpunit.xml",
-        "test:all:ci": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --configuration=phpunit.xml",
+        "test:fast": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --compact --shard=${PEST_SHARD:-1/1} --stop-on-error --stop-on-failure --configuration=phpunit.xml",
+        "test:fast:ci": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --compact --shard=${PEST_SHARD:-1/1} --configuration=phpunit.xml",
+        "test:all": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --compact --stop-on-error --stop-on-failure --configuration=phpunit.xml",
+        "test:all:ci": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --compact --configuration=phpunit.xml",
+        "test:shards": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --compact --update-shards --configuration=phpunit.xml",
+        "coverage:blade": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --blade-coverage --parallel --colors=always --configuration=phpunit.xml",
         "test": [
             "@clear",
             "@test:unit"
@@ -77,6 +79,11 @@
         ]
     },
     "repositories": [
+        {
+            "name": "pest-plugin-blade-coverage",
+            "type": "vcs",
+            "url": "https://github.com/capell-app/pest-plugin-blade-coverage"
+        },
         {
             "type": "vcs",
             "url": "https://github.com/capell-app/admin"
@@ -170,6 +177,7 @@
         "awcodes/filament-curator": "^4.0|^5.0",
         "barryvdh/laravel-ide-helper": "*",
         "calebdw/larastan-livewire": "^2.4",
+        "capell-app/pest-plugin-blade-coverage": "dev-main",
         "driftingly/rector-laravel": "^2.0",
         "larastan/larastan": "^3.0",
         "laravel/pail": "^1.2.3",
