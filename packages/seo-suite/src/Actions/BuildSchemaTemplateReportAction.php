@@ -34,6 +34,7 @@ class BuildSchemaTemplateReportAction
             $requiredFields = $template->requiredFields($page, $site, $language);
             $presentFields = [];
             $missingFields = [];
+            $warnings = BuildMarketplaceStructuredDataFreshnessWarningsAction::run($schema);
 
             foreach ($requiredFields as $field) {
                 if ($this->hasSchemaValue($schema, $field)) {
@@ -49,7 +50,8 @@ class BuildSchemaTemplateReportAction
                 templateType: $templateType,
                 presentFields: $presentFields,
                 missingFields: $missingFields,
-                severity: $this->severity($missingFields, $registry->pageRequires($page, $templateType)),
+                severity: $this->severity($missingFields, $warnings, $registry->pageRequires($page, $templateType)),
+                warnings: $warnings,
             );
         }
 
@@ -58,11 +60,14 @@ class BuildSchemaTemplateReportAction
 
     /**
      * @param  list<string>  $missingFields
+     * @param  list<string>  $warnings
      */
-    private function severity(array $missingFields, bool $requiredByPageType): SeoIssueSeverityEnum
+    private function severity(array $missingFields, array $warnings, bool $requiredByPageType): SeoIssueSeverityEnum
     {
         if ($missingFields === []) {
-            return SeoIssueSeverityEnum::Passed;
+            return $warnings === []
+                ? SeoIssueSeverityEnum::Passed
+                : SeoIssueSeverityEnum::Warning;
         }
 
         return $requiredByPageType

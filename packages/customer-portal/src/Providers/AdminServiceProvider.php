@@ -10,9 +10,11 @@ use Capell\Admin\Support\CapellAdminManager;
 use Capell\Core\Facades\CapellCore;
 use Capell\CustomerPortal\Enums\ResourceEnum;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 final class AdminServiceProvider extends ServiceProvider
 {
+    #[Override]
     public function register(): void
     {
         $this->app->booted(function (): void {

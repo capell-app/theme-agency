@@ -176,6 +176,15 @@
                             <span class="text-gray-500 dark:text-gray-400">
                                 {{ $schemaReport->severity->getLabel() }}
                             </span>
+                            @if ($schemaReport->warnings !== [])
+                                <ul
+                                    class="mt-1 list-disc pl-4 text-xs text-gray-500 dark:text-gray-400"
+                                >
+                                    @foreach ($schemaReport->warnings as $warning)
+                                        <li>{{ $warning }}</li>
+                                    @endforeach
+                                </ul>
+                            @endif
                         </li>
                     @endforeach
                 </ul>

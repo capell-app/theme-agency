@@ -6,12 +6,11 @@ namespace Capell\KnowledgeBase\Http\Controllers;
 
 use Capell\KnowledgeBase\Actions\BuildPublicKnowledgeBaseNavigationAction;
 use Capell\KnowledgeBase\Data\PublicKnowledgeBaseNavigationItemData;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 final class ShowKnowledgeBaseIndexController
 {
-    public function __invoke(Request $request): Response
+    public function __invoke(): Response
     {
         $navigation = BuildPublicKnowledgeBaseNavigationAction::run()
             ->map(static fn (PublicKnowledgeBaseNavigationItemData $item): array => $item->toArray())

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
 use Capell\Payments\Enums\ResourceEnum;
 use Capell\Payments\Filament\Resources\CheckoutSessions\CheckoutSessionResource;
 use Capell\Payments\Filament\Resources\Customers\PaymentCustomerResource;
@@ -10,6 +11,13 @@ use Capell\Payments\Filament\Resources\PaymentIntents\PaymentIntentResource;
 use Capell\Payments\Filament\Resources\Refunds\PaymentRefundResource;
 use Capell\Payments\Filament\Resources\Subscriptions\SubscriptionResource;
 use Capell\Payments\Filament\Resources\WebhookEvents\PaymentWebhookEventResource;
+use Capell\Payments\Manifest\CheckoutSessionResourceContribution;
+use Capell\Payments\Manifest\PaymentCustomerResourceContribution;
+use Capell\Payments\Manifest\PaymentDisputeResourceContribution;
+use Capell\Payments\Manifest\PaymentIntentResourceContribution;
+use Capell\Payments\Manifest\PaymentRefundResourceContribution;
+use Capell\Payments\Manifest\PaymentWebhookEventResourceContribution;
+use Capell\Payments\Manifest\SubscriptionResourceContribution;
 use Capell\Payments\Models\CheckoutSession;
 use Capell\Payments\Models\PaymentCustomer;
 use Capell\Payments\Models\PaymentDispute;
@@ -48,4 +56,56 @@ it('keeps payment admin records read only by policy', function (): void {
         ->and($policy->update($user, $record))->toBeFalse()
         ->and($policy->delete($user, $record))->toBeFalse()
         ->and($policy->deleteAny($user))->toBeFalse();
+});
+
+it('declares admin resources in the package manifest', function (): void {
+    $manifest = json_decode(
+        (string) file_get_contents(__DIR__ . '/../../capell.json'),
+        associative: true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    expect($manifest['contributes'])->toContain([
+        'type' => 'admin-resource',
+        'class' => PaymentCustomerResourceContribution::class,
+        'resourceClass' => PaymentCustomerResource::class,
+    ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'admin-resource',
+            'class' => CheckoutSessionResourceContribution::class,
+            'resourceClass' => CheckoutSessionResource::class,
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'admin-resource',
+            'class' => PaymentIntentResourceContribution::class,
+            'resourceClass' => PaymentIntentResource::class,
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'admin-resource',
+            'class' => SubscriptionResourceContribution::class,
+            'resourceClass' => SubscriptionResource::class,
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'admin-resource',
+            'class' => PaymentWebhookEventResourceContribution::class,
+            'resourceClass' => PaymentWebhookEventResource::class,
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'admin-resource',
+            'class' => PaymentRefundResourceContribution::class,
+            'resourceClass' => PaymentRefundResource::class,
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'admin-resource',
+            'class' => PaymentDisputeResourceContribution::class,
+            'resourceClass' => PaymentDisputeResource::class,
+        ])
+        ->and(class_implements(PaymentCustomerResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
+        ->and(class_implements(CheckoutSessionResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
+        ->and(class_implements(PaymentIntentResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
+        ->and(class_implements(SubscriptionResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
+        ->and(class_implements(PaymentWebhookEventResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
+        ->and(class_implements(PaymentRefundResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
+        ->and(class_implements(PaymentDisputeResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
+        ->and($manifest['contributionTraceability']['deferredContributions'])->not->toContain('admin-resource', 'form-field', 'migration', 'model', 'webhook');
 });

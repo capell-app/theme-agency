@@ -6,11 +6,13 @@ namespace Capell\Newsletter\Tests;
 
 use Capell\Admin\Providers\AdminServiceProvider as CapellAdminServiceProvider;
 use Capell\Admin\Providers\Filament\AdminPanelProvider;
+use Capell\Contacts\Providers\ContactsServiceProvider;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\Theme;
+use Capell\CustomerPortal\Providers\CustomerPortalServiceProvider;
 use Capell\FormBuilder\Providers\FormBuilderServiceProvider;
 use Capell\Newsletter\Providers\AdminServiceProvider as NewsletterAdminServiceProvider;
 use Capell\Newsletter\Providers\NewsletterServiceProvider;
@@ -54,6 +56,8 @@ class NewsletterTestCase extends AbstractTestCase
             ...parent::getPackageProviders($app),
             CapellAdminServiceProvider::class,
             AdminPanelProvider::class,
+            ContactsServiceProvider::class,
+            CustomerPortalServiceProvider::class,
             TagsServiceProvider::class,
             FormBuilderServiceProvider::class,
             NewsletterServiceProvider::class,
@@ -70,6 +74,8 @@ class NewsletterTestCase extends AbstractTestCase
         Config::set('app.key', 'base64:' . base64_encode(str_repeat('n', 32)));
 
         CapellCore::forcePackageInstalled(CapellAdminServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(ContactsServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(CustomerPortalServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(TagsServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(FormBuilderServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(NewsletterServiceProvider::$packageName);

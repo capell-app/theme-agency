@@ -62,7 +62,7 @@ Helps operators and agencies see setup problems before they become publishing or
 - Health widgets on the admin dashboard.
 - Queue Operations page with dummy `queue_monitors`, failed-job, and pending-job data.
 
-![Queue Operations page](../../../public/docs/screenshots/packages/diagnostics/queue-health-page.png)
+![Queue Operations page](screenshots/queue-health-page.png)
 
 ## Pitfalls
 
@@ -144,7 +144,7 @@ Diagnostics owns the command palette UI, server-side authorization, validation, 
 
 ## Screenshot Automation
 
-Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `public/docs/screenshots/packages/diagnostics`.
+Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `packages/diagnostics/docs/screenshots`.
 
 - Developer tools dashboard.
 - Command palette page.
@@ -153,4 +153,4 @@ Deployment should read [screenshots.json](screenshots.json), install the package
 - Queue health page.
 - Health widgets on the admin dashboard.
 
-The committed dummy-data screenshots live under `public/docs/screenshots/packages/diagnostics`; their HTML fixture lives at `packages/diagnostics/docs/assets/screenshots/diagnostics-dummy-screens.html`.
+The committed dummy-data screenshots live under `packages/diagnostics/docs/screenshots`; their HTML fixture lives at `packages/diagnostics/docs/assets/screenshots/diagnostics-dummy-screens.html`.

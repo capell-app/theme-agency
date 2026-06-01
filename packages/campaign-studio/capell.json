@@ -23,7 +23,7 @@
             "capell-app/insights",
             "capell-app/layout-builder"
         ],
-        "supports": ["capell-app/seo-suite"],
+        "supports": ["capell-app/experiments", "capell-app/seo-suite"],
         "conflicts": []
     },
     "providers": {
@@ -49,12 +49,17 @@
         "demo": null,
         "doctor": null
     },
+    "actions": {
+        "syncCampaignExperiment": "Capell\\CampaignStudio\\Actions\\SyncCampaignExperimentAction"
+    },
     "settings": [],
     "permissions": [],
     "capabilities": [
         "campaign-studio",
         "campaign-studio-admin",
-        "campaign-studio-frontend"
+        "campaign-studio-frontend",
+        "campaign-experiment-sync",
+        "landing-page-variant-experiments"
     ],
     "performance": {
         "frontendRenderBudgetMs": 20,

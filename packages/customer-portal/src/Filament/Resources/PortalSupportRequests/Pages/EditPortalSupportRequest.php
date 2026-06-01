@@ -9,6 +9,7 @@ use Capell\CustomerPortal\Enums\SupportRequestStatus;
 use Capell\CustomerPortal\Filament\Resources\PortalSupportRequests\PortalSupportRequestResource;
 use Capell\CustomerPortal\Models\PortalSupportRequest;
 use Filament\Resources\Pages\EditRecord;
+use Override;
 
 final class EditPortalSupportRequest extends EditRecord
 {
@@ -18,6 +19,7 @@ final class EditPortalSupportRequest extends EditRecord
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
+    #[Override]
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $record = $this->getRecord();

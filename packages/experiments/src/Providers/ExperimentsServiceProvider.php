@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Capell\Experiments\Providers;
 
+use Capell\Admin\Data\AdminSurfaceContributionData;
+use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\Experiments\Enums\ResourceEnum;
 use Capell\Experiments\Models\Experiment;
 use Capell\Experiments\Models\ExperimentAllocation;
 use Capell\Experiments\Models\ExperimentAudienceRule;
@@ -46,7 +49,8 @@ final class ExperimentsServiceProvider extends AbstractPackageServiceProvider
 
             $this
                 ->registerModels()
-                ->registerProtectedTables();
+                ->registerProtectedTables()
+                ->registerAdminResources();
         });
     }
 
@@ -78,6 +82,22 @@ final class ExperimentsServiceProvider extends AbstractPackageServiceProvider
         CapellCore::registerProtectedTable(fn (): string => config('capell-experiments.tables.goals', 'experiment_goals'));
         CapellCore::registerProtectedTable(fn (): string => config('capell-experiments.tables.goal_events', 'experiment_goal_events'));
         CapellCore::registerProtectedTable(fn (): string => config('capell-experiments.tables.audience_rules', 'experiment_audience_rules'));
+
+        return $this;
+    }
+
+    private function registerAdminResources(): self
+    {
+        if (! class_exists(CapellAdmin::class) || ! class_exists(AdminSurfaceContributionData::class)) {
+            return $this;
+        }
+
+        foreach (ResourceEnum::cases() as $resource) {
+            CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::resource(
+                class: $resource->value,
+                group: $resource->name,
+            ));
+        }
 
         return $this;
     }

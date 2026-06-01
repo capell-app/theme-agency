@@ -26,7 +26,7 @@ final class BuildDueNewsletterSendsAction
             ->where('status', NewsletterSendStatus::Scheduled)
             ->whereNotNull('scheduled_at')
             ->where('scheduled_at', '<=', $now)
-            ->orderBy('scheduled_at')
+            ->oldest('scheduled_at')
             ->limit(max(1, $limit))
             ->get();
     }

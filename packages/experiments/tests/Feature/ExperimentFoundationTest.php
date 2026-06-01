@@ -182,8 +182,8 @@ it('resolves an active request context variant with cache variation metadata', f
     CreateExperimentAction::run(new ExperimentData(
         name: 'Pricing hero test',
         key: 'pricing-hero-test',
-        status: ExperimentStatus::Active,
         siteId: 12,
+        status: ExperimentStatus::Active,
         subjectType: ExperimentSubjectType::Page,
         subjectId: 42,
         variants: [

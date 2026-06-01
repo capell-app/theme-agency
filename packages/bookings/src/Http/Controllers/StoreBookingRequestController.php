@@ -43,8 +43,7 @@ final class StoreBookingRequestController
             ],
         ));
 
-        return redirect()
-            ->route('capell-bookings.request')
+        return to_route('capell-bookings.request')
             ->with('booking_request_status', __('capell-bookings::generic.frontend.request_submitted'));
     }
 

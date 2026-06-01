@@ -18,9 +18,7 @@ final class ShowStaffCalendarFeedController
             ->where('calendar_feed_token', $token)
             ->first();
 
-        if ($staffMember === null) {
-            throw new NotFoundHttpException;
-        }
+        throw_if($staffMember === null, NotFoundHttpException::class);
 
         return response($buildStaffCalendarFeed->handle($staffMember), Response::HTTP_OK, [
             'Content-Type' => 'text/calendar; charset=utf-8',

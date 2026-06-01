@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+use Capell\Contacts\Actions\SyncContactSourceRecordAction;
+use Capell\Contacts\Actions\SyncFormSubmissionContactAction;
+use Capell\Contacts\Actions\SyncShopifyCustomerContactAction;
+use Capell\Contacts\Providers\AdminServiceProvider;
+
 require_once __DIR__ . '/../autoload.php';
 
 it('declares the contacts package manifest contract', function (): void {
@@ -16,7 +21,7 @@ it('declares the contacts package manifest contract', function (): void {
         ->toHaveKey('name', 'capell-app/contacts')
         ->toHaveKey('namespace', 'Capell\\Contacts')
         ->and($manifest['dependencies']['requires'])->toContain('capell-app/admin', 'capell-app/core')
-        ->and($manifest['providers']['admin'])->toContain('Capell\\Contacts\\Providers\\AdminServiceProvider')
+        ->and($manifest['providers']['admin'])->toContain(AdminServiceProvider::class)
         ->and($manifest['database']['migrations'])->toBeTrue()
         ->and($manifest['database']['requiredTables'])->toBe([
             'contacts',
@@ -31,10 +36,14 @@ it('declares the contacts package manifest contract', function (): void {
             'View:Lead',
             'View:ContactActivity',
         )
-        ->and($manifest['actions']['syncContactSourceRecord'])->toBe('Capell\\Contacts\\Actions\\SyncContactSourceRecordAction')
+        ->and($manifest['actions']['syncContactSourceRecord'])->toBe(SyncContactSourceRecordAction::class)
+        ->and($manifest['actions']['syncFormSubmissionContact'])->toBe(SyncFormSubmissionContactAction::class)
+        ->and($manifest['actions']['syncShopifyCustomerContact'])->toBe(SyncShopifyCustomerContactAction::class)
         ->and($manifest['capabilities'])->toContain(
             'contacts-source-identity',
             'contacts-source-sync',
+            'contacts-form-builder-source-adapter',
+            'contacts-shopify-commerce-source-adapter',
         )
         ->and($manifest['performance']['cacheSafety']['sensitiveOutput'])->toBeTrue();
 });

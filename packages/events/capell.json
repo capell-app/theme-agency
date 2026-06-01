@@ -23,6 +23,7 @@
         ],
         "supports": [
             "capell-app/address",
+            "capell-app/customer-portal",
             "capell-app/form-builder",
             "capell-app/seo-suite",
             "capell-app/site-discovery",
@@ -41,7 +42,13 @@
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": []
+        "requiredTables": [
+            "event_venues",
+            "events",
+            "event_occurrences",
+            "event_registrations",
+            "event_notification_logs"
+        ]
     },
     "commands": {
         "install": "capell:events-install",
@@ -58,7 +65,9 @@
         "events",
         "events-admin",
         "events-console",
-        "events-frontend"
+        "events-frontend",
+        "events-registration-created-event",
+        "events-customer-portal-registration-feed"
     ],
     "performance": {
         "frontendRenderBudgetMs": 20,

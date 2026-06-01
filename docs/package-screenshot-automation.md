@@ -12,7 +12,7 @@ Deployment can generate package screenshots from the committed screenshot manife
 6. Resolve `frontend-url` targets through seeded demo routes or package route names.
 7. Capture desktop and mobile screenshots. Use `scripts/capture-admin-screenshots.mjs` for admin surfaces when a manifest declares it, and keep `SCREENSHOT_FULL_PAGE=true` so long admin form builders are captured in full.
 8. Execute any `browserTests` declared by the package manifest. These tests must run against the installed browser surface, not only server-rendered Blade.
-9. Write files to `public/docs/screenshots/packages/{package}`.
+9. Write files to `packages/{package}/docs/screenshots`.
 
 ## Manifest Contract
 

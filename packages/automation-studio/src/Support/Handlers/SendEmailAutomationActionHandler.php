@@ -9,6 +9,10 @@ use Capell\AutomationStudio\Data\AutomationActionResultData;
 use Capell\AutomationStudio\Data\AutomationRuleActionData;
 use Capell\AutomationStudio\Data\AutomationTriggerEventData;
 use Capell\AutomationStudio\Support\Handlers\Concerns\ResolvesContacts;
+use Capell\EmailStudio\Actions\SendEmailAction;
+use Capell\EmailStudio\Data\EmailAddressData;
+use Capell\EmailStudio\Data\EmailHeaderData;
+use Capell\EmailStudio\Data\SendEmailData;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Override;
@@ -22,10 +26,10 @@ final class SendEmailAutomationActionHandler implements AutomationActionHandler
     #[Override]
     public function handle(AutomationTriggerEventData $event, AutomationRuleActionData $action): AutomationActionResultData
     {
-        $sendEmailDataClass = 'Capell\\EmailStudio\\Data\\SendEmailData';
-        $emailAddressDataClass = 'Capell\\EmailStudio\\Data\\EmailAddressData';
-        $emailHeaderDataClass = 'Capell\\EmailStudio\\Data\\EmailHeaderData';
-        $sendEmailActionClass = 'Capell\\EmailStudio\\Actions\\SendEmailAction';
+        $sendEmailDataClass = SendEmailData::class;
+        $emailAddressDataClass = EmailAddressData::class;
+        $emailHeaderDataClass = EmailHeaderData::class;
+        $sendEmailActionClass = SendEmailAction::class;
 
         if (
             ! class_exists($sendEmailDataClass)

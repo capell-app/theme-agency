@@ -9,6 +9,7 @@ use Capell\AutomationStudio\Data\AutomationRuleData;
 use Capell\AutomationStudio\Enums\AutomationRuleStatus;
 use Capell\AutomationStudio\Enums\AutomationTriggerType;
 use Capell\Core\Models\Site;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -23,6 +24,8 @@ use Override;
  */
 class AutomationRule extends Model
 {
+    use HasFactory;
+
     /** @var list<string> */
     protected $fillable = [
         'site_id',

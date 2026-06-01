@@ -13,11 +13,13 @@ class SchemaTemplateReportData extends Data
     /**
      * @param  list<string>  $presentFields
      * @param  list<string>  $missingFields
+     * @param  list<string>  $warnings
      */
     public function __construct(
         public SchemaTemplateTypeEnum $templateType,
         public array $presentFields,
         public array $missingFields,
         public SeoIssueSeverityEnum $severity,
+        public array $warnings = [],
     ) {}
 }

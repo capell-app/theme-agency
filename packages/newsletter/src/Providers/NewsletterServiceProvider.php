@@ -9,6 +9,8 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
+use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
+use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Capell\Newsletter\Enums\ProviderType;
 use Capell\Newsletter\Filament\Settings\NewsletterSettingsSchema;
 use Capell\Newsletter\Listeners\SubscribeFromFormSubmission;
@@ -25,6 +27,7 @@ use Capell\Newsletter\Models\Segment;
 use Capell\Newsletter\Models\Subscriber;
 use Capell\Newsletter\Models\SyncAttempt;
 use Capell\Newsletter\Settings\NewsletterSettings;
+use Capell\Newsletter\Support\CustomerPortal\NewsletterPortalSelfServiceItemProvider;
 use Capell\Newsletter\Support\EditorialCalendar\NewsletterEditorialCalendarEventContributor;
 use Capell\Newsletter\Support\NewsletterAudienceRegistry;
 use Capell\Newsletter\Support\Providers\CampaignMonitorProviderAdapter;
@@ -52,6 +55,7 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
             ->name(self::$name)
             ->hasConfigFile('capell-newsletter')
             ->hasTranslations()
+            ->hasViews()
             ->hasRoute('web')
             ->hasMigrations([
                 '2026_05_10_190861_02_create_newsletter_subscribers_table',
@@ -91,6 +95,7 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
                 ->registerProtectedTables()
                 ->registerAudienceProviders()
                 ->registerEditorialCalendarContributors()
+                ->registerCustomerPortalIntegrations()
                 ->registerListeners();
         });
     }
@@ -200,6 +205,25 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
             $this->app->singleton(NewsletterEditorialCalendarEventContributor::class);
             $this->app->tag([NewsletterEditorialCalendarEventContributor::class], EditorialCalendarEventContributor::TAG);
         }
+
+        return $this;
+    }
+
+    private function registerCustomerPortalIntegrations(): self
+    {
+        if (! class_exists(PortalSelfServiceItemRegistry::class)
+            || ! interface_exists(PortalSelfServiceItemProvider::class)) {
+            return $this;
+        }
+
+        /** @var object $registry */
+        $registry = $this->app->make(PortalSelfServiceItemRegistry::class);
+
+        if (! method_exists($registry, 'register')) {
+            return $this;
+        }
+
+        $registry->register('newsletter.preferences', NewsletterPortalSelfServiceItemProvider::class);
 
         return $this;
     }

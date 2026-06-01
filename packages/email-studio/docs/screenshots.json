@@ -3,7 +3,7 @@
     "composerName": "capell-app/email-studio",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/email-studio",
+    "outputDirectory": "packages/email-studio/docs/screenshots",
     "notes": "Email Studio currently has no package-owned Filament resource, page, widget, public route, or public Blade screen. Keep entries empty until a visible admin or frontend surface ships.",
     "blockers": [
         "No screenshot target exists in the current implementation; active surfaces are actions, jobs, provider adapters, registries, and database records.",

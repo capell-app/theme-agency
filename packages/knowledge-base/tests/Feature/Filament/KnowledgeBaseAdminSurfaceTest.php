@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\KnowledgeBase\Actions\BuildAiReadableKnowledgeBaseOutputAction;
+use Capell\KnowledgeBase\Actions\BuildKnowledgeBaseSearchDocumentsAction;
 use Capell\KnowledgeBase\Enums\ResourceEnum;
 use Capell\KnowledgeBase\Filament\Resources\Articles\KnowledgeBaseArticleResource;
 use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\CreateKnowledgeBaseArticle;
@@ -80,9 +82,9 @@ it('declares admin providers, resources, and owned tables in the manifest', func
             'group' => 'KnowledgeBaseArticle',
         ])
         ->and($manifest['actions']['buildKnowledgeBaseSearchDocuments'])
-        ->toBe('Capell\\KnowledgeBase\\Actions\\BuildKnowledgeBaseSearchDocumentsAction')
+        ->toBe(BuildKnowledgeBaseSearchDocumentsAction::class)
         ->and($manifest['actions']['buildAiReadableKnowledgeBaseOutput'])
-        ->toBe('Capell\\KnowledgeBase\\Actions\\BuildAiReadableKnowledgeBaseOutputAction')
+        ->toBe(BuildAiReadableKnowledgeBaseOutputAction::class)
         ->and($manifest['capabilities'])->toContain(
             'knowledge-base-related-articles',
             'knowledge-base-versioned-articles',

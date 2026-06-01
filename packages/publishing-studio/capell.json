@@ -66,6 +66,8 @@
         "doctor": null
     },
     "actions": {
+        "buildEditorialCalendarEvents": "Capell\\PublishingStudio\\Actions\\BuildEditorialCalendarEventsAction",
+        "buildVisibleEditorialCalendarEvents": "Capell\\PublishingStudio\\Actions\\DashboardReports\\BuildVisibleEditorialCalendarEventsAction",
         "install": "Capell\\PublishingStudio\\Actions\\InstallPublishingStudioPackageAction"
     },
     "settings": [],
@@ -86,6 +88,8 @@
         "content-compare",
         "dry-run-validation",
         "editorial-calendar-aggregation",
+        "editorial-calendar-contributors",
+        "editorial-calendar-view",
         "editorial-timeline",
         "embargo-windows",
         "entity-restore",
@@ -146,9 +150,7 @@
     },
     "contributionTraceability": {
         "deferredContributions": [
-            "admin-page",
             "admin-resource",
-            "dashboard-widget",
             "model",
             "overview-stat",
             "route",

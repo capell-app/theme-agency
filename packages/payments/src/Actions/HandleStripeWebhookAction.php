@@ -60,14 +60,14 @@ final class HandleStripeWebhookAction
                     'error' => null,
                 ])->save();
             });
-        } catch (Throwable $exception) {
+        } catch (Throwable $throwable) {
             $event->forceFill([
                 'status' => PaymentWebhookEventStatus::Failed->value,
                 'failed_at' => CarbonImmutable::now(),
-                'error' => $exception->getMessage(),
+                'error' => $throwable->getMessage(),
             ])->save();
 
-            throw $exception;
+            throw $throwable;
         }
 
         return $event->refresh();
@@ -81,9 +81,7 @@ final class HandleStripeWebhookAction
         $providerEventId = $this->stringValue($eventPayload['id'] ?? null);
         $eventType = $this->stringValue($eventPayload['type'] ?? null);
 
-        if ($providerEventId === null || $eventType === null) {
-            throw new InvalidArgumentException('Stripe webhook payload is missing an event id or type.');
-        }
+        throw_if($providerEventId === null || $eventType === null, InvalidArgumentException::class, 'Stripe webhook payload is missing an event id or type.');
 
         return PaymentWebhookEvent::query()->firstOrCreate([
             'provider' => PaymentProvider::Stripe->value,
@@ -168,7 +166,7 @@ final class HandleStripeWebhookAction
     {
         $checkoutSession = $this->recordCheckoutSession($object);
 
-        if ($checkoutSession !== null) {
+        if ($checkoutSession instanceof CheckoutSession) {
             FulfillCompletedCheckoutSessionAction::run($checkoutSession);
         }
     }

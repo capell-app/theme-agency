@@ -12,6 +12,7 @@ use Capell\Core\Support\Settings\SettingsGroupMetadata;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\ShopifyCommerce\Filament\Settings\ShopifyCommerceSettingsSchema;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
+use Capell\ShopifyCommerce\Models\ShopifyCustomer;
 use Capell\ShopifyCommerce\Models\ShopifyOAuthState;
 use Capell\ShopifyCommerce\Models\ShopifyProduct;
 use Capell\ShopifyCommerce\Models\ShopifyProductVariant;
@@ -38,6 +39,7 @@ final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvide
                 '2026_05_22_000002_create_shopify_oauth_states_table',
                 '2026_05_22_000003_create_shopify_products_table',
                 '2026_05_22_000004_create_shopify_product_variants_table',
+                '2026_06_01_000001_create_shopify_customers_table',
             ]);
     }
 
@@ -65,6 +67,7 @@ final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvide
     {
         CapellCore::registerModels([
             ShopifyConnection::class,
+            ShopifyCustomer::class,
             ShopifyOAuthState::class,
             ShopifyProduct::class,
             ShopifyProductVariant::class,
@@ -104,6 +107,7 @@ final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvide
         CapellCore::registerProtectedTable('shopify_oauth_states');
         CapellCore::registerProtectedTable('shopify_products');
         CapellCore::registerProtectedTable('shopify_product_variants');
+        CapellCore::registerProtectedTable('shopify_customers');
 
         return $this;
     }

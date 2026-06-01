@@ -48,9 +48,7 @@ it('contributes campaign start and end events to the editorial calendar', functi
 
     $firstEvent = $events->first();
 
-    if (! $firstEvent instanceof EditorialCalendarEventData) {
-        throw new RuntimeException('Expected the campaign contributor to return an editorial calendar event.');
-    }
+    throw_unless($firstEvent instanceof EditorialCalendarEventData, RuntimeException::class, 'Expected the campaign contributor to return an editorial calendar event.');
 
     expect($events)->toHaveCount(2)
         ->and($events->pluck('id')->all())->toBe([
@@ -90,9 +88,7 @@ it('is included by the publishing studio editorial calendar aggregator', functio
 
     $firstEvent = $events->first();
 
-    if (! $firstEvent instanceof EditorialCalendarEventData) {
-        throw new RuntimeException('Expected the aggregator to return a campaign editorial calendar event.');
-    }
+    throw_unless($firstEvent instanceof EditorialCalendarEventData, RuntimeException::class, 'Expected the aggregator to return a campaign editorial calendar event.');
 
     expect($events)->toHaveCount(1)
         ->and($firstEvent->sourcePackage)->toBe(CampaignStudioServiceProvider::$packageName)

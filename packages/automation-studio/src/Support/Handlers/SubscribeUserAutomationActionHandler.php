@@ -10,6 +10,12 @@ use Capell\AutomationStudio\Data\AutomationActionResultData;
 use Capell\AutomationStudio\Data\AutomationRuleActionData;
 use Capell\AutomationStudio\Data\AutomationTriggerEventData;
 use Capell\AutomationStudio\Support\Handlers\Concerns\ResolvesContacts;
+use Capell\Newsletter\Actions\ApplyNewsletterTagsAction;
+use Capell\Newsletter\Actions\UpsertSubscriberAction;
+use Capell\Newsletter\Data\ConsentEvidenceData;
+use Capell\Newsletter\Data\SubscriberData;
+use Capell\Newsletter\Enums\ConsentEventType;
+use Capell\Newsletter\Enums\SubscriberStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Override;
@@ -21,11 +27,11 @@ final class SubscribeUserAutomationActionHandler implements AutomationActionHand
     #[Override]
     public function handle(AutomationTriggerEventData $event, AutomationRuleActionData $action): AutomationActionResultData
     {
-        $subscriberDataClass = 'Capell\\Newsletter\\Data\\SubscriberData';
-        $consentEvidenceDataClass = 'Capell\\Newsletter\\Data\\ConsentEvidenceData';
-        $subscriberStatusClass = 'Capell\\Newsletter\\Enums\\SubscriberStatus';
-        $consentEventTypeClass = 'Capell\\Newsletter\\Enums\\ConsentEventType';
-        $upsertSubscriberActionClass = 'Capell\\Newsletter\\Actions\\UpsertSubscriberAction';
+        $subscriberDataClass = SubscriberData::class;
+        $consentEvidenceDataClass = ConsentEvidenceData::class;
+        $subscriberStatusClass = SubscriberStatus::class;
+        $consentEventTypeClass = ConsentEventType::class;
+        $upsertSubscriberActionClass = UpsertSubscriberAction::class;
 
         if (
             ! class_exists($subscriberDataClass)
@@ -117,7 +123,7 @@ final class SubscribeUserAutomationActionHandler implements AutomationActionHand
 
     private function applyTags(Model $subscriber, AutomationRuleActionData $action): Model
     {
-        $applyTagsActionClass = 'Capell\\Newsletter\\Actions\\ApplyNewsletterTagsAction';
+        $applyTagsActionClass = ApplyNewsletterTagsAction::class;
 
         if (! class_exists($applyTagsActionClass)) {
             return $subscriber;

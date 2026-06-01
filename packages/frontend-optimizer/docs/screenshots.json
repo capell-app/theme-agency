@@ -3,7 +3,7 @@
     "composerName": "capell-app/frontend-optimizer",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/frontend-optimizer",
+    "outputDirectory": "packages/frontend-optimizer/docs/screenshots",
     "entries": [
         {
             "id": "frontend-optimizer-profile-assets",
@@ -15,7 +15,7 @@
             "required": true,
             "notes": "Capture a public page whose theme calls @frontendOptimizerAssets(...) and verify the emitted CSS and JavaScript tags match the seeded render profile.",
             "useCase": "A developer verifies a render profile emits the expected CSS and JavaScript assets.",
-            "screenshotPath": "public/docs/screenshots/packages/frontend-optimizer/frontend-optimizer-profile-assets.png"
+            "screenshotPath": "packages/frontend-optimizer/docs/screenshots/frontend-optimizer-profile-assets.png"
         },
         {
             "id": "frontend-optimizer-critical-css-output",
@@ -27,7 +27,7 @@
             "required": true,
             "notes": "Capture the generated critical CSS or manifest artifact for a seeded render profile after the optimizer has run.",
             "useCase": "A developer reviews generated critical CSS or its manifest artifact for a seeded render profile.",
-            "screenshotPath": "public/docs/screenshots/packages/frontend-optimizer/frontend-optimizer-critical-css-output.png"
+            "screenshotPath": "packages/frontend-optimizer/docs/screenshots/frontend-optimizer-critical-css-output.png"
         }
     ]
 }

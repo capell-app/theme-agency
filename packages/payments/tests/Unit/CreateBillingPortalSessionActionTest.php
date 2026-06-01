@@ -55,7 +55,7 @@ it('creates a native Stripe billing portal session', function (): void {
 });
 
 it('requires a Stripe secret before creating billing portal sessions', function (): void {
-    config()->set('capell-payments.stripe.secret_key', null);
+    config()->set('capell-payments.stripe.secret_key');
 
     CreateBillingPortalSessionAction::run(new CreateBillingPortalSessionData(
         providerCustomerId: 'cus_123',

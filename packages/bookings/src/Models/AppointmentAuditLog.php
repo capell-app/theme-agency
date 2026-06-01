@@ -7,6 +7,7 @@ namespace Capell\Bookings\Models;
 use Capell\Bookings\Enums\AppointmentAuditEventEnum;
 use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
@@ -20,6 +21,8 @@ use Override;
  */
 class AppointmentAuditLog extends Model
 {
+    use HasFactory;
+
     protected $table = 'appointment_audit_logs';
 
     /**

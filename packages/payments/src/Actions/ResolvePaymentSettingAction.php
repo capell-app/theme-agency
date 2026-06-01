@@ -25,7 +25,7 @@ final class ResolvePaymentSettingAction
         }
 
         try {
-            $settings = app(PaymentsSettings::class);
+            $settings = resolve(PaymentsSettings::class);
         } catch (Throwable) {
             return $default;
         }

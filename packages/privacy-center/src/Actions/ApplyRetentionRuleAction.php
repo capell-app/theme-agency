@@ -46,9 +46,7 @@ final class ApplyRetentionRuleAction
     {
         $recordType = $rule->record_type;
 
-        if (! is_string($recordType) || $recordType === '' || ! is_subclass_of($recordType, Model::class)) {
-            throw new InvalidArgumentException('Privacy retention rules require a valid Eloquent record type.');
-        }
+        throw_if(! is_string($recordType) || $recordType === '' || ! is_subclass_of($recordType, Model::class), InvalidArgumentException::class, 'Privacy retention rules require a valid Eloquent record type.');
 
         return $recordType;
     }

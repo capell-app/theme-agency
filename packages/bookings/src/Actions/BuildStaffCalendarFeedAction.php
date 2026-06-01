@@ -32,7 +32,7 @@ class BuildStaffCalendarFeedAction
             ->with(['service', 'location'])
             ->where('staff_member_id', $staffMember->getKey())
             ->where('status', AppointmentRequestStatusEnum::Confirmed->value)
-            ->orderBy('requested_starts_at')
+            ->oldest('requested_starts_at')
             ->each(function (AppointmentRequest $appointmentRequest) use (&$lines): void {
                 array_push($lines, ...$this->appointmentLines($appointmentRequest));
             });
@@ -48,7 +48,7 @@ class BuildStaffCalendarFeedAction
     private function appointmentLines(AppointmentRequest $appointmentRequest): array
     {
         $summary = $appointmentRequest->service?->name ?? __('capell-bookings::generic.appointment');
-        $description = trim($appointmentRequest->customer_name . "\n" . (string) $appointmentRequest->notes);
+        $description = trim($appointmentRequest->customer_name . "\n" . $appointmentRequest->notes);
         $location = $appointmentRequest->location?->name;
 
         $lines = [

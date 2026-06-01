@@ -30,7 +30,7 @@ final class PaidDownloadFulfillmentHandler implements PaymentFulfillmentHandler
     {
         try {
             $entitlement = GrantPaidDownloadAccessAction::run($checkoutSession);
-        } catch (ValidationException $exception) {
+        } catch (ValidationException) {
             return $this->result(false, 'missing_download_reference');
         }
 

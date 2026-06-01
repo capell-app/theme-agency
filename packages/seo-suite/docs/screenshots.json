@@ -3,7 +3,7 @@
     "composerName": "capell-app/seo-suite",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/seo-suite",
+    "outputDirectory": "packages/seo-suite/docs/screenshots",
     "entries": [
         {
             "id": "seo-audit-page",
@@ -15,7 +15,7 @@
             "required": true,
             "notes": "Seed at least one page_seo_snapshots row so score, severity, and status columns are visible.",
             "useCase": "An administrator reviews SEO audit scores and remediation state for seeded pages.",
-            "screenshotPath": "public/docs/screenshots/packages/seo-suite/seo-audit-page.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/seo-audit-page.png"
         },
         {
             "id": "broken-links-page",
@@ -27,7 +27,7 @@
             "required": true,
             "notes": "Seed a broken_links row connected to a page so the source page, target URL, status, and redirect action are visible.",
             "useCase": "An administrator reviews broken link findings and their source pages.",
-            "screenshotPath": "public/docs/screenshots/packages/seo-suite/broken-links-page.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/broken-links-page.png"
         },
         {
             "id": "not-found-urls-page",
@@ -39,7 +39,7 @@
             "required": true,
             "notes": "Install and migrate capell-app/insights, then seed at least one page_view event for a missing URL.",
             "useCase": "An administrator reviews missing frontend URLs grouped by visitor count and latest view.",
-            "screenshotPath": "public/docs/screenshots/packages/seo-suite/not-found-urls-page.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/not-found-urls-page.png"
         },
         {
             "id": "translation-coverage-page",
@@ -51,7 +51,7 @@
             "required": true,
             "notes": "Seed at least one site/page/language combination so translation coverage rows are visible.",
             "useCase": "An administrator reviews missing or stale translation coverage for SEO-relevant content.",
-            "screenshotPath": "public/docs/screenshots/packages/seo-suite/translation-coverage-page.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/translation-coverage-page.png"
         },
         {
             "id": "ai-discovery-page",
@@ -63,7 +63,7 @@
             "required": true,
             "notes": "Seed AI Discovery site and page profiles so inclusion, summary, readiness, and Markdown columns are visible.",
             "useCase": "An administrator manages which public pages appear in AI-readable discovery output.",
-            "screenshotPath": "public/docs/screenshots/packages/seo-suite/ai-discovery-page.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/ai-discovery-page.png"
         },
         {
             "id": "seo-settings-page",
@@ -75,7 +75,7 @@
             "required": true,
             "notes": "Capture the extension settings page after running capell:seo-suite-install so settings rows exist.",
             "useCase": "An administrator reviews SEO audit, AI Discovery, crawler, Search Console, and AI provider settings.",
-            "screenshotPath": "public/docs/screenshots/packages/seo-suite/seo-settings-page.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/seo-settings-page.png"
         },
         {
             "id": "page-seo-panel",
@@ -87,7 +87,7 @@
             "required": true,
             "notes": "Open a seeded Page edit screen and capture the SEO tab/panel added by SEO Suite.",
             "useCase": "An editor edits page-level metadata, canonical state, social metadata, and SEO checks.",
-            "screenshotPath": "public/docs/screenshots/packages/seo-suite/page-seo-panel.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/page-seo-panel.png"
         },
         {
             "id": "search-console-insights-panel",
@@ -99,7 +99,7 @@
             "required": true,
             "notes": "Seed search_console_url_metrics so dashboard widgets show clicks, impressions, movement, and opportunities.",
             "useCase": "An administrator reviews Search Console-style performance panels when metrics are seeded.",
-            "screenshotPath": "public/docs/screenshots/packages/seo-suite/search-console-insights-panel.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/search-console-insights-panel.png"
         },
         {
             "id": "llms-txt-output",
@@ -111,7 +111,7 @@
             "required": true,
             "notes": "Seed AI Discovery site/page profiles and use visitor-facing summary text only.",
             "useCase": "An AI crawler reads the concise public page index for the site.",
-            "screenshotPath": "public/docs/screenshots/packages/seo-suite/llms-txt-output.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/llms-txt-output.png"
         },
         {
             "id": "robots-txt-output",
@@ -123,7 +123,7 @@
             "required": true,
             "notes": "Seed crawler rules or settings and capture the public crawler directives.",
             "useCase": "A crawler or operator reviews the public robot directives generated by SEO Suite.",
-            "screenshotPath": "public/docs/screenshots/packages/seo-suite/robots-txt-output.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/robots-txt-output.png"
         },
         {
             "id": "page-markdown-output",
@@ -135,7 +135,7 @@
             "required": true,
             "notes": "Enable Markdown pages on the AI Discovery site profile and capture visitor-safe Markdown.",
             "useCase": "An AI crawler reads the Markdown representation of a public page.",
-            "screenshotPath": "public/docs/screenshots/packages/seo-suite/page-markdown-output.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/page-markdown-output.png"
         }
     ]
 }

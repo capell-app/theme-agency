@@ -12,6 +12,8 @@ use Capell\Core\Data\PageTypeData;
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
+use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Capell\Events\Actions\ProcessDueEventNotificationLogsAction;
 use Capell\Events\Console\Commands\InstallCommand;
 use Capell\Events\Enums\LivewireComponentEnum;
@@ -25,6 +27,7 @@ use Capell\Events\Policies\EventOccurrencePolicy;
 use Capell\Events\Policies\EventPolicy;
 use Capell\Events\Policies\EventRegistrationPolicy;
 use Capell\Events\Policies\EventVenuePolicy;
+use Capell\Events\Support\CustomerPortal\EventsPortalSelfServiceItemProvider;
 use Capell\Events\Support\EditorialCalendar\EventsEditorialCalendarEventContributor;
 use Capell\Events\Support\EventModelRegistrar;
 use Capell\Events\Support\PublicUrls\EventsPublicUrlContributor;
@@ -127,6 +130,7 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
             ->registerSeoSchemaTemplate()
             ->registerPublicUrlContributors()
             ->registerEditorialCalendarContributors()
+            ->registerCustomerPortalIntegrations()
             ->registerPublishingStudio()
             ->registerAboutCommand();
     }
@@ -301,6 +305,25 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
             $this->app->singleton(EventsEditorialCalendarEventContributor::class);
             $this->app->tag([EventsEditorialCalendarEventContributor::class], EditorialCalendarEventContributor::TAG);
         }
+
+        return $this;
+    }
+
+    private function registerCustomerPortalIntegrations(): self
+    {
+        if (! class_exists(PortalSelfServiceItemRegistry::class)
+            || ! interface_exists(PortalSelfServiceItemProvider::class)) {
+            return $this;
+        }
+
+        /** @var object $registry */
+        $registry = $this->app->make(PortalSelfServiceItemRegistry::class);
+
+        if (! method_exists($registry, 'register')) {
+            return $this;
+        }
+
+        $registry->register('events.registrations', EventsPortalSelfServiceItemProvider::class);
 
         return $this;
     }

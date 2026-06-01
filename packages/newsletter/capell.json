@@ -22,7 +22,7 @@
             "capell-app/frontend",
             "capell-app/tags"
         ],
-        "supports": [],
+        "supports": ["capell-app/contacts", "capell-app/customer-portal"],
         "conflicts": []
     },
     "providers": {
@@ -62,6 +62,7 @@
     "actions": {
         "buildDueNewsletterSends": "Capell\\Newsletter\\Actions\\BuildDueNewsletterSendsAction",
         "scheduleNewsletterSend": "Capell\\Newsletter\\Actions\\ScheduleNewsletterSendAction",
+        "syncNewsletterSubscriberContact": "Capell\\Newsletter\\Actions\\SyncNewsletterSubscriberContactAction",
         "updateNewsletterSendStatus": "Capell\\Newsletter\\Actions\\UpdateNewsletterSendStatusAction"
     },
     "permissions": [],
@@ -75,7 +76,10 @@
         "newsletter-send-lifecycle",
         "newsletter-utm-attribution",
         "newsletter-unsubscribe-routes",
-        "newsletter-automation-hooks"
+        "newsletter-automation-hooks",
+        "newsletter-contacts-source-adapter",
+        "newsletter-customer-portal-preferences-feed",
+        "newsletter-public-preference-center"
     ],
     "performance": {
         "frontendRenderBudgetMs": 20,

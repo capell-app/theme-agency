@@ -98,7 +98,7 @@ This package has no committed ERD excerpt. Use implementation notes and extensio
 
 ## Screenshot Automation
 
-Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `public/docs/screenshots/packages/theme-healthcare`.
+Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `packages/theme-healthcare/docs/screenshots`.
 
 - Theme admin list showing Editorial Healthcare.
 - Frontend page rendered with Editorial Healthcare.

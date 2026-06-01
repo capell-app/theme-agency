@@ -58,6 +58,8 @@
         "doctor": "capell:seo-suite-doctor"
     },
     "actions": {
+        "buildCrawlerPreviewReport": "Capell\\SeoSuite\\Actions\\BuildCrawlerPreviewReportAction",
+        "buildMarketplaceStructuredDataFreshnessWarnings": "Capell\\SeoSuite\\Actions\\BuildMarketplaceStructuredDataFreshnessWarningsAction",
         "install": "Capell\\SeoSuite\\Actions\\InstallSeoSuitePackageAction"
     },
     "settings": [],
@@ -72,7 +74,9 @@
         "seo-suite-structured-data-audit",
         "seo-suite-ai-discovery-coverage",
         "seo-suite-stale-output-regeneration",
-        "seo-suite-site-discovery-registry"
+        "seo-suite-site-discovery-registry",
+        "seo-suite-marketplace-structured-data-freshness",
+        "seo-suite-crawler-preview-report"
     ],
     "performance": {
         "frontendRenderBudgetMs": 20,

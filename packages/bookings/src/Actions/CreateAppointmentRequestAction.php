@@ -155,7 +155,7 @@ class CreateAppointmentRequestAction
     ): int {
         $availabilityException = $this->matchingAvailabilityException($appointmentRequestData, $requestedEndsAt);
 
-        if ($availabilityException !== null) {
+        if ($availabilityException instanceof BookingAvailabilityException) {
             if ($availabilityException->status->allowsRequests() && $availabilityException->capacity !== null) {
                 return $availabilityException->capacity;
             }

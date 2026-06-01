@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Models\Site;
 use Capell\Newsletter\Actions\ParseSubscriberCsvRowsAction;
+use Capell\Newsletter\Actions\SyncNewsletterSubscriberContactAction;
 use Capell\Newsletter\Contracts\NewsletterAudienceProvider;
 use Capell\Newsletter\Data\ConsentEvidenceData;
 use Capell\Newsletter\Data\FormMappingData;
@@ -81,6 +82,33 @@ it('maps newsletter data objects across snake case boundaries', function (): voi
         ->and($webhook->toArray())->toHaveKey('event_type', 'unsubscribe')
         ->and($syncResult->successful)->toBeFalse()
         ->and($syncResult->toArray())->toHaveKey('error_message', 'Rejected');
+});
+
+it('declares contacts source adapter capabilities in the package manifest', function (): void {
+    $manifest = json_decode(
+        (string) file_get_contents(__DIR__ . '/../../capell.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    expect($manifest['dependencies']['supports'] ?? [])->toContain('capell-app/contacts')
+        ->and($manifest['actions'])->toHaveKey(
+            'syncNewsletterSubscriberContact',
+            SyncNewsletterSubscriberContactAction::class,
+        )
+        ->and($manifest['capabilities'])->toContain('newsletter-contacts-source-adapter');
+});
+
+it('declares customer portal preference feed capabilities in the package manifest', function (): void {
+    $manifest = json_decode(
+        (string) file_get_contents(__DIR__ . '/../../capell.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    expect($manifest['dependencies']['supports'] ?? [])->toContain('capell-app/customer-portal')
+        ->and($manifest['capabilities'])->toContain('newsletter-customer-portal-preferences-feed')
+        ->and($manifest['capabilities'])->toContain('newsletter-public-preference-center');
 });
 
 it('maps provider and form integration data objects', function (): void {

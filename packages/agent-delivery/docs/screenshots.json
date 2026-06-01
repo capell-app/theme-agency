@@ -3,7 +3,7 @@
     "composerName": "capell-app/agent-delivery",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/agent-delivery",
+    "outputDirectory": "packages/agent-delivery/docs/screenshots",
     "entries": [
         {
             "id": "page-manifest-json-response",
@@ -15,7 +15,7 @@
             "required": true,
             "notes": "Requires Agent Delivery installed and a seeded published page. Capture the JSON body for `?url=/path` and verify it only includes already-public page content.",
             "useCase": "A search assistant reads a stable public page manifest without needing admin access.",
-            "screenshotPath": "public/docs/screenshots/packages/agent-delivery/page-manifest-json-response.png"
+            "screenshotPath": "packages/agent-delivery/docs/screenshots/page-manifest-json-response.png"
         },
         {
             "id": "page-chunks-json-response",
@@ -27,7 +27,7 @@
             "required": true,
             "notes": "Requires Agent Delivery installed and a seeded published page with enough text to produce chunk records. Capture the JSON body for `?url=/path`.",
             "useCase": "An agent consumes stable semantic chunks for a published Capell page.",
-            "screenshotPath": "public/docs/screenshots/packages/agent-delivery/page-chunks-json-response.png"
+            "screenshotPath": "packages/agent-delivery/docs/screenshots/page-chunks-json-response.png"
         }
     ]
 }

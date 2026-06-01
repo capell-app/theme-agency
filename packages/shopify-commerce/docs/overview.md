@@ -6,7 +6,7 @@ Shopify Commerce connects a site-scoped Shopify store to Capell, stores the admi
 
 This package owns Shopify app credentials, authenticated OAuth routes, site-scoped connection records, local product cache tables, catalog sync Actions, and the Filament page used by admins to connect or disconnect a store.
 
-It does not own public storefront rendering, checkout, carts, orders, webhooks, or product merchandising components. Public frontend packages must not expose `shopify_connections.access_token`, OAuth state, GraphQL errors, internal product snapshots, admin URLs, or site assignment metadata in rendered HTML.
+It does not own public storefront rendering, checkout, carts, orders, webhooks, or product merchandising components. It may cache Shopify customer records for CRM integrations, but public frontend packages must not expose `shopify_connections.access_token`, OAuth state, GraphQL errors, internal product/customer snapshots, admin URLs, or site assignment metadata in rendered HTML.
 
 ## Runtime Surfaces
 

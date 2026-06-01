@@ -61,8 +61,16 @@ final class VerifyStripeWebhookSignatureAction
 
         foreach (explode(',', $signatureHeader) as $signaturePart) {
             [$key, $value] = array_pad(explode('=', trim($signaturePart), 2), 2, null);
-
-            if (! is_string($key) || $key === '' || ! is_string($value) || $value === '') {
+            if (! is_string($key)) {
+                continue;
+            }
+            if ($key === '') {
+                continue;
+            }
+            if (! is_string($value)) {
+                continue;
+            }
+            if ($value === '') {
                 continue;
             }
 

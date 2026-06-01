@@ -13,14 +13,14 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\DocumentLifecycle",
-    "surfaces": ["admin", "console"],
+    "surfaces": ["admin", "console", "frontend"],
     "dependencies": {
         "requires": [
             "capell-app/admin",
             "capell-app/core",
             "capell-app/publishing-studio"
         ],
-        "supports": [],
+        "supports": ["capell-app/customer-portal"],
         "conflicts": []
     },
     "providers": {
@@ -73,7 +73,8 @@
     "capabilities": [
         "document-lifecycle",
         "document-lifecycle-admin",
-        "document-lifecycle-acceptance"
+        "document-lifecycle-acceptance",
+        "document-lifecycle-customer-portal-document-feed"
     ],
     "performance": {
         "frontendRenderBudgetMs": 0,

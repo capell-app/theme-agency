@@ -29,6 +29,30 @@ return [
         'organisation' => 'Organisation',
         'organisations' => 'Organisations',
     ],
+    'form_builder' => [
+        'activity_summary' => 'Submitted :form form',
+        'lead_title' => ':form form submission',
+        'unknown_form' => 'Unknown',
+    ],
+    'access_gate' => [
+        'activity_summary' => 'Approved access request for :area',
+        'lead_title' => ':area access request',
+        'unknown_area' => 'Unknown access area',
+    ],
+    'events' => [
+        'activity_summary' => 'Registered for :event',
+        'unknown_event' => 'Unknown event',
+    ],
+    'campaign_studio' => [
+        'activity_summary' => 'Converted on :goal',
+        'unknown_goal' => 'Unknown campaign goal',
+    ],
+    'comments' => [
+        'activity_summary' => 'Submitted a comment',
+    ],
+    'shopify_commerce' => [
+        'activity_summary' => 'Synced Shopify customer',
+    ],
     'contact_status' => [
         'active' => 'Active',
         'archived' => 'Archived',

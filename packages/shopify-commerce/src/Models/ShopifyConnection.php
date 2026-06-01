@@ -51,6 +51,14 @@ final class ShopifyConnection extends Model
         return $this->hasMany(ShopifyProduct::class, 'connection_id');
     }
 
+    /**
+     * @return HasMany<ShopifyCustomer, $this>
+     */
+    public function customers(): HasMany
+    {
+        return $this->hasMany(ShopifyCustomer::class, 'connection_id');
+    }
+
     public function isActive(): bool
     {
         return $this->status === ShopifyConnectionStatus::Active && is_string($this->access_token) && $this->access_token !== '';

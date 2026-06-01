@@ -56,6 +56,12 @@
     "actions": {
         "findOrCreateContact": "Capell\\Contacts\\Actions\\FindOrCreateContactAction",
         "recordContactActivity": "Capell\\Contacts\\Actions\\RecordContactActivityAction",
+        "syncAccessGateRegistrationContact": "Capell\\Contacts\\Actions\\SyncAccessGateRegistrationContactAction",
+        "syncCampaignConversionContact": "Capell\\Contacts\\Actions\\SyncCampaignConversionContactAction",
+        "syncCommentContact": "Capell\\Contacts\\Actions\\SyncCommentContactAction",
+        "syncEventRegistrationContact": "Capell\\Contacts\\Actions\\SyncEventRegistrationContactAction",
+        "syncFormSubmissionContact": "Capell\\Contacts\\Actions\\SyncFormSubmissionContactAction",
+        "syncShopifyCustomerContact": "Capell\\Contacts\\Actions\\SyncShopifyCustomerContactAction",
         "syncContactSourceRecord": "Capell\\Contacts\\Actions\\SyncContactSourceRecordAction",
         "tagContact": "Capell\\Contacts\\Actions\\TagContactAction"
     },
@@ -70,6 +76,12 @@
         "contacts-identity",
         "contacts-source-identity",
         "contacts-source-sync",
+        "contacts-access-gate-source-adapter",
+        "contacts-campaign-studio-source-adapter",
+        "contacts-comments-source-adapter",
+        "contacts-events-source-adapter",
+        "contacts-form-builder-source-adapter",
+        "contacts-shopify-commerce-source-adapter",
         "contacts-activity",
         "contacts-tags"
     ],

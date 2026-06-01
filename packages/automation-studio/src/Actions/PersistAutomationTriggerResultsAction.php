@@ -28,7 +28,7 @@ final class PersistAutomationTriggerResultsAction
     ): void {
         foreach ($results as $result) {
             $rule = $this->ruleFromResult($result);
-            $action = $rule === null ? null : $this->actionFromResult($rule, $result);
+            $action = $rule instanceof AutomationRule ? $this->actionFromResult($rule, $result) : null;
 
             RecordAutomationRunAction::run(
                 event: $event,

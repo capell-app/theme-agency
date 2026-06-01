@@ -42,14 +42,14 @@ final class RecordAutomationRunAction
             'attempt_number' => $attemptNumber,
             'max_attempts' => $maxAttempts,
             'queued_at' => $idempotencyKey === null ? null : $event->occurredAt ?? $finishedAt,
-            'status' => $result === null
-                ? AutomationRunStatus::Pending
-                : ($result->success ? AutomationRunStatus::Succeeded : AutomationRunStatus::Failed),
+            'status' => $result instanceof AutomationActionResultData
+                ? ($result->success ? AutomationRunStatus::Succeeded : AutomationRunStatus::Failed)
+                : (AutomationRunStatus::Pending),
             'message' => $result?->message,
             'payload' => $event->payload,
             'context' => $result?->context ?? [],
             'started_at' => $event->occurredAt ?? $finishedAt,
-            'finished_at' => $result === null ? null : $finishedAt,
+            'finished_at' => $result instanceof AutomationActionResultData ? $finishedAt : null,
         ];
 
         if ($idempotencyKey === null) {

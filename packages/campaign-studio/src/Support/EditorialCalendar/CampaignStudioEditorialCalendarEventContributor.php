@@ -38,7 +38,7 @@ final class CampaignStudioEditorialCalendarEventContributor implements Editorial
         }
 
         if ($this->includesEventType($query, self::END_EVENT_TYPE)) {
-            $events = $events->merge($this->campaignColumnEvents($query, 'ends_at', self::END_EVENT_TYPE));
+            return $events->merge($this->campaignColumnEvents($query, 'ends_at', self::END_EVENT_TYPE));
         }
 
         return $events;

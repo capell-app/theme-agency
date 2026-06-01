@@ -12,6 +12,7 @@ use Capell\Newsletter\Enums\SegmentType;
 use Capell\Newsletter\Enums\SubscriberStatus;
 use Capell\Newsletter\Models\Segment;
 use Capell\Newsletter\Models\Subscriber;
+use Illuminate\Support\Facades\Route;
 
 it('resolves a reusable preference center token into active same-site segment preferences', function (): void {
     $site = $this->createNewsletterSite();
@@ -95,6 +96,42 @@ it('updates preference center segment selections without accepting inactive or c
         ->and($subscriber->refresh()->segments()->pluck('newsletter_segments.id')->all())->toBe([
             (int) $allowedSegment->getKey(),
         ]);
+});
+
+it('exposes a public preference center route for reusable newsletter tokens', function (): void {
+    $site = $this->createNewsletterSite();
+    $subscriber = Subscriber::factory()->create([
+        'site_id' => $site->getKey(),
+        'email' => 'portal-reader@example.com',
+        'status' => SubscriberStatus::Subscribed,
+    ]);
+    $selectedSegment = newsletterSegment((int) $site->getKey(), 'Product updates', 'product-updates');
+    $unselectedSegment = newsletterSegment((int) $site->getKey(), 'Weekly digest', 'weekly-digest');
+    $subscriber->segments()->sync([$selectedSegment->getKey()]);
+
+    $token = CreatePreferenceCenterTokenAction::run($subscriber);
+
+    $this->get(route('capell-newsletter.preferences.show', ['token' => $token]))
+        ->assertOk()
+        ->assertHeader('Cache-Control', 'no-store, private')
+        ->assertHeader('X-Robots-Tag', 'noindex, nofollow')
+        ->assertSee('Newsletter preferences')
+        ->assertSee('Product updates')
+        ->assertSee('Weekly digest')
+        ->assertDontSee('capell-app/newsletter', false)
+        ->assertDontSee('newsletter_subscriber', false)
+        ->assertDontSee('signed', false);
+
+    $this->post(route('capell-newsletter.preferences.update', ['token' => $token]), [
+        'segments' => [$unselectedSegment->getKey()],
+    ])->assertRedirect(route('capell-newsletter.preferences.show', ['token' => $token]));
+
+    expect($subscriber->refresh()->segments()->pluck('newsletter_segments.id')->all())->toBe([
+        (int) $unselectedSegment->getKey(),
+    ]);
+
+    expect(Route::has('capell-newsletter.preferences.show'))->toBeTrue()
+        ->and(Route::has('capell-newsletter.preferences.update'))->toBeTrue();
 });
 
 function newsletterSegment(int $siteId, string $name, string $handle, bool $isActive = true): Segment

@@ -3,7 +3,7 @@
     "composerName": "capell-app/agent-bridge",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/agent-bridge",
+    "outputDirectory": "packages/agent-bridge/docs/screenshots",
     "entries": [
         {
             "id": "agent-bridge-prompt-builder-page",
@@ -15,7 +15,7 @@
             "required": true,
             "notes": "Requires `capell-app/agent-bridge` installed, settings migrated, and an admin session. This page is available at the Filament slug `capell-agent-bridge/prompt-builder`.",
             "useCase": "An administrator builds a scoped prompt for an external agent using the installed Capell package context.",
-            "screenshotPath": "public/docs/screenshots/packages/agent-bridge/agent-bridge-prompt-builder-page.png"
+            "screenshotPath": "packages/agent-bridge/docs/screenshots/agent-bridge-prompt-builder-page.png"
         },
         {
             "id": "token-management-or-setup-surface",
@@ -27,7 +27,7 @@
             "required": true,
             "notes": "The token UI is exposed through user-resource schema/relation manager integration, not a standalone resource. Capture from a host user edit screen after seeding an agent bridge token.",
             "useCase": "An administrator creates or reviews a token used by a trusted Agent Bridge client.",
-            "screenshotPath": "public/docs/screenshots/packages/agent-bridge/token-management-or-setup-surface.png"
+            "screenshotPath": "packages/agent-bridge/docs/screenshots/token-management-or-setup-surface.png"
         },
         {
             "id": "capability-preview-and-confirmation-flow",
@@ -39,7 +39,7 @@
             "required": true,
             "notes": "Requires a seeded capability provider and a pending `CapellAgentBridgeConfirmation`; the base page alone will not show a confirmation flow.",
             "useCase": "An administrator reviews a proposed capability run before confirming that an agent may execute it.",
-            "screenshotPath": "public/docs/screenshots/packages/agent-bridge/capability-preview-and-confirmation-flow.png"
+            "screenshotPath": "packages/agent-bridge/docs/screenshots/capability-preview-and-confirmation-flow.png"
         },
         {
             "id": "audit-entry-review",
@@ -51,7 +51,7 @@
             "required": true,
             "notes": "Capture from the user-resource audit relation manager after seeding capability invocation records.",
             "useCase": "An administrator reviews what an Agent Bridge client previewed, confirmed, or ran for a user.",
-            "screenshotPath": "public/docs/screenshots/packages/agent-bridge/audit-entry-review.png"
+            "screenshotPath": "packages/agent-bridge/docs/screenshots/audit-entry-review.png"
         },
         {
             "id": "agent-bridge-server-health-output",
@@ -63,7 +63,7 @@
             "required": true,
             "notes": "Requires enabled Agent Bridge routes in `capell-agent-bridge.php`. Capture route/config health from the prompt builder or a harness health panel if the host app exposes one.",
             "useCase": "An operator confirms which Agent Bridge endpoints are enabled and whether token-authenticated requests can reach them.",
-            "screenshotPath": "public/docs/screenshots/packages/agent-bridge/agent-bridge-server-health-output.png"
+            "screenshotPath": "packages/agent-bridge/docs/screenshots/agent-bridge-server-health-output.png"
         }
     ]
 }

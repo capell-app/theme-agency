@@ -6,6 +6,7 @@ namespace Capell\Events\Actions;
 
 use Capell\Events\Data\EventRegistrationData;
 use Capell\Events\Enums\EventRegistrationStatusEnum;
+use Capell\Events\Events\EventRegistrationCreated;
 use Capell\Events\Models\EventOccurrence;
 use Capell\Events\Models\EventRegistration;
 use Illuminate\Support\Facades\DB;
@@ -59,6 +60,8 @@ class RegisterForEventOccurrenceAction
             $this->refreshRegistrationCount($lockedOccurrence);
 
             ScheduleEventNotificationsAction::run($registration);
+
+            event(new EventRegistrationCreated($registration->refresh()));
 
             return $registration;
         });

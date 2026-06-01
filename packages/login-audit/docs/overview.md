@@ -48,15 +48,15 @@ Helps site operators review access activity and spot account behaviour that need
 
 ## Screenshots
 
-![Authentication logs admin index](../../../public/docs/screenshots/packages/login-audit/login-audits-admin-index.png)
+![Authentication logs admin index](screenshots/login-audits-admin-index.png)
 
-![Authentication log settings screen](../../../public/docs/screenshots/packages/login-audit/login-audit-settings-screen.png)
+![Authentication log settings screen](screenshots/login-audit-settings-screen.png)
 
-![Login audit dashboard widget](../../../public/docs/screenshots/packages/login-audit/dashboard-widget.png)
+![Login audit dashboard widget](screenshots/dashboard-widget.png)
 
-User access summary screenshot target: `public/docs/screenshots/packages/login-audit/user-edit-access-summary.png`. Keep this as text until the screenshot file is committed.
+User access summary screenshot target: `packages/login-audit/docs/screenshots/user-edit-access-summary.png`. Keep this as text until the screenshot file is committed.
 
-User authentication logs relation manager screenshot target: `public/docs/screenshots/packages/login-audit/user-login-audits-relation-manager.png`. Keep this as text until the screenshot file is committed.
+User authentication logs relation manager screenshot target: `packages/login-audit/docs/screenshots/user-login-audits-relation-manager.png`. Keep this as text until the screenshot file is committed.
 
 ## Pitfalls
 
@@ -145,7 +145,7 @@ erDiagram
 
 ## Screenshot Automation
 
-Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `public/docs/screenshots/packages/login-audit`.
+Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `packages/login-audit/docs/screenshots`.
 
 - Authentication logs admin index: seeded audit records for the demo admin user.
 - Authentication log table filters: filter drawer and date/success controls.

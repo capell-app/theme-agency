@@ -26,5 +26,8 @@ return [
     'next' => 'Next',
     'no_upcoming_occurrences' => 'No upcoming occurrences.',
     'previous' => 'Previous',
+    'portal' => [
+        'registration_description' => ':quantity registered for :date.',
+    ],
     'upcoming_occurrences' => 'Upcoming occurrences',
 ];

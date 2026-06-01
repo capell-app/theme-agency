@@ -9,6 +9,7 @@ use Capell\Comments\Data\CreateCommentData;
 use Capell\Comments\Enums\CommentPublicationPolicy;
 use Capell\Comments\Enums\CommentStatus;
 use Capell\Comments\Enums\CommentTokenType;
+use Capell\Comments\Events\CommentCreated;
 use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
 use Capell\Comments\Models\CommentToken;
@@ -17,6 +18,7 @@ use Capell\Comments\Settings\CommentSettings;
 use Capell\Tests\Fixtures\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 
@@ -40,6 +42,27 @@ it('creates anonymous comments as pending email verification by default', functi
         ->and($comment->author->email)->toBe('ben@example.com');
 
     Notification::assertSentOnDemand(ConfirmCommentAuthorEmailNotification::class);
+});
+
+it('dispatches an event when a comment is created', function (): void {
+    Event::fake([CommentCreated::class]);
+    Notification::fake();
+
+    $page = $this->createCommentsPage();
+
+    $comment = CreateCommentAction::run(new CreateCommentData(
+        commentable: $page,
+        body: 'Hello world',
+        authorName: 'Ben',
+        authorEmail: 'ben@example.com',
+        ipAddress: '192.0.2.10',
+        userAgent: 'Comments test',
+    ));
+
+    Event::assertDispatched(
+        CommentCreated::class,
+        fn (CommentCreated $event): bool => $event->comment->is($comment),
+    );
 });
 
 it('auto publishes only verified trusted authors when configured', function (): void {

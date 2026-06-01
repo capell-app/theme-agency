@@ -15,7 +15,7 @@
     "namespace": "Capell\\Experiments",
     "surfaces": ["admin", "frontend"],
     "dependencies": {
-        "requires": ["capell-app/core"],
+        "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
             "capell-app/campaign-studio",
             "capell-app/form-builder",
@@ -32,7 +32,28 @@
         "admin": [],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Experiments\\Manifest\\ExperimentResourceContribution",
+            "resourceClass": "Capell\\Experiments\\Filament\\Resources\\Experiments\\ExperimentResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Experiments\\Manifest\\ExperimentVariantResourceContribution",
+            "resourceClass": "Capell\\Experiments\\Filament\\Resources\\ExperimentVariants\\ExperimentVariantResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Experiments\\Manifest\\ExperimentGoalResourceContribution",
+            "resourceClass": "Capell\\Experiments\\Filament\\Resources\\ExperimentGoals\\ExperimentGoalResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Experiments\\Manifest\\ExperimentAudienceRuleResourceContribution",
+            "resourceClass": "Capell\\Experiments\\Filament\\Resources\\ExperimentAudienceRules\\ExperimentAudienceRuleResource"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": false,
@@ -59,7 +80,24 @@
         "recordGoalEvent": "Capell\\Experiments\\Actions\\RecordGoalEventAction",
         "resolveExperimentVariantForContext": "Capell\\Experiments\\Actions\\ResolveExperimentVariantForContextAction"
     },
-    "permissions": [],
+    "permissions": [
+        "View:Experiment",
+        "Create:Experiment",
+        "Update:Experiment",
+        "Delete:Experiment",
+        "View:ExperimentVariant",
+        "Create:ExperimentVariant",
+        "Update:ExperimentVariant",
+        "Delete:ExperimentVariant",
+        "View:ExperimentGoal",
+        "Create:ExperimentGoal",
+        "Update:ExperimentGoal",
+        "Delete:ExperimentGoal",
+        "View:ExperimentAudienceRule",
+        "Create:ExperimentAudienceRule",
+        "Update:ExperimentAudienceRule",
+        "Delete:ExperimentAudienceRule"
+    ],
     "capabilities": [
         "experiments",
         "variant-allocation",
@@ -68,6 +106,7 @@
         "goal-tracking",
         "winner-reporting",
         "winner-declaration",
+        "experiments-admin",
         "cache-variation-metadata"
     ],
     "performance": {
@@ -103,6 +142,9 @@
         "categories": ["growth", "analytics", "frontend"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["admin-resource", "frontend-component"]
+        "deferredContributions": [
+            "frontend-component",
+            "allocation-report-resource"
+        ]
     }
 }

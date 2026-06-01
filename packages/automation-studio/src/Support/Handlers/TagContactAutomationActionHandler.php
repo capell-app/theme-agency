@@ -9,6 +9,7 @@ use Capell\AutomationStudio\Data\AutomationActionResultData;
 use Capell\AutomationStudio\Data\AutomationRuleActionData;
 use Capell\AutomationStudio\Data\AutomationTriggerEventData;
 use Capell\AutomationStudio\Support\Handlers\Concerns\ResolvesContacts;
+use Capell\Contacts\Actions\TagContactAction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Override;
@@ -20,7 +21,7 @@ final class TagContactAutomationActionHandler implements AutomationActionHandler
     #[Override]
     public function handle(AutomationTriggerEventData $event, AutomationRuleActionData $action): AutomationActionResultData
     {
-        $tagContactActionClass = 'Capell\\Contacts\\Actions\\TagContactAction';
+        $tagContactActionClass = TagContactAction::class;
 
         if (! class_exists($tagContactActionClass)) {
             return new AutomationActionResultData(

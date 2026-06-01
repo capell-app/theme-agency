@@ -3,7 +3,7 @@
     "composerName": "capell-app/theme-corporate",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/theme-corporate",
+    "outputDirectory": "packages/theme-corporate/docs/screenshots",
     "entries": [
         {
             "id": "theme-admin-list-showing-corporate",
@@ -15,7 +15,7 @@
             "required": true,
             "notes": "Capture after installing capell-app/theme-corporate with Foundation Theme and creating a Corporate theme record in the isolated demo harness.",
             "useCase": "An administrator sees the Corporate theme record in the host Themes admin surface.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/theme-admin-list-showing-corporate.png"
+            "screenshotPath": "packages/theme-corporate/docs/screenshots/theme-admin-list-showing-corporate.png"
         },
         {
             "id": "theme-preview-url-output",
@@ -27,7 +27,7 @@
             "required": true,
             "notes": "Capture a temporary signed preview URL generated from the host Themes table for the Corporate theme.",
             "useCase": "An administrator opens a preview URL to inspect a page with the Corporate theme applied.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/theme-preview-url-output.png"
+            "screenshotPath": "packages/theme-corporate/docs/screenshots/theme-preview-url-output.png"
         },
         {
             "id": "frontend-page-rendered-with-corporate-theme",
@@ -39,7 +39,7 @@
             "required": true,
             "notes": "Capture the seeded Corporate Demo Homepage route that renders navigation, hero, features, proof, content listing, CTA, and footer through the Corporate renderer.",
             "useCase": "A visitor sees a seeded public page rendered through every Corporate theme section.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/frontend-page-rendered-with-corporate-theme.png"
+            "screenshotPath": "packages/theme-corporate/docs/screenshots/frontend-page-rendered-with-corporate-theme.png"
         },
         {
             "id": "corporate-homepage-layout",
@@ -51,7 +51,7 @@
             "required": true,
             "notes": "Capture the basic boardroom homepage with formal hero, decision proof, capability bands, and restrained CTA.",
             "useCase": "A business team reviews Corporate as a polished basic preset for board papers and formal service sites.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-homepage-layout.png"
+            "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-homepage-layout.png"
         },
         {
             "id": "corporate-services-layout",
@@ -63,7 +63,7 @@
             "required": true,
             "notes": "Capture formal service cards, process notes, outcome proof, and contact CTA.",
             "useCase": "A business buyer checks that services read as boardroom-ready rather than SaaS features or local job cards.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-services-layout.png"
+            "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-services-layout.png"
         },
         {
             "id": "corporate-governance-layout",
@@ -75,7 +75,7 @@
             "required": true,
             "notes": "Capture governance content with policy sections, document cards, decision trail, and leadership proof. Requires capell-app/document-lifecycle; show this package note on the captured image.",
             "useCase": "A corporate team can publish formal decision material without the theme pretending to be a premium enterprise workflow.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-governance-layout.png"
+            "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-governance-layout.png"
         },
         {
             "id": "corporate-resources-layout",
@@ -87,7 +87,7 @@
             "required": true,
             "notes": "Capture board-paper and resource cards with filters, topic navigation, and formal metadata. Requires capell-app/tags; show this package note on the captured image.",
             "useCase": "A visitor can browse formal resources without the page becoming Knowledge's research archive.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-resources-layout.png"
+            "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-resources-layout.png"
         },
         {
             "id": "corporate-article-layout",
@@ -99,7 +99,7 @@
             "required": true,
             "notes": "Capture a formal article with body copy, author details, related board papers, and contact route. Requires capell-app/blog; show this package note on the captured image.",
             "useCase": "A business site can publish leadership material while keeping a restrained corporate rhythm.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-article-layout.png"
+            "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-article-layout.png"
         },
         {
             "id": "corporate-contact-layout",
@@ -111,7 +111,7 @@
             "required": true,
             "notes": "Capture office details, procurement/investor/service routing notes, form fields, and confirmation state. Requires capell-app/form-builder; show this package note on the captured image.",
             "useCase": "A business team checks that enquiries route cleanly without becoming a broad lead-generation page.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-contact-layout.png"
+            "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-contact-layout.png"
         },
         {
             "id": "corporate-locations-layout",
@@ -123,7 +123,7 @@
             "required": true,
             "notes": "Capture office cards, address metadata, map-ready panels, and regional contact routing. Requires capell-app/address; show this package note on the captured image.",
             "useCase": "A formal organisation can show locations and contact routes without local-services styling.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-locations-layout.png"
+            "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-locations-layout.png"
         },
         {
             "id": "corporate-search-layout",
@@ -135,7 +135,7 @@
             "required": true,
             "notes": "Capture search results with board-paper grouping, snippets, and conservative recovery state. Requires capell-app/search; show this package note on the captured image.",
             "useCase": "A visitor can find corporate material without the page looking like product search or an editorial archive.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-search-layout.png"
+            "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-search-layout.png"
         },
         {
             "id": "corporate-investor-event-layout",
@@ -147,7 +147,7 @@
             "required": true,
             "notes": "Capture an investor or stakeholder event with agenda, registration, related documents, and formal proof. Requires capell-app/events; show this package note on the captured image.",
             "useCase": "A corporate team can publish stakeholder events without overlapping SaaS webinars or nonprofit community events.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-corporate/corporate-investor-event-layout.png"
+            "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-investor-event-layout.png"
         }
     ]
 }

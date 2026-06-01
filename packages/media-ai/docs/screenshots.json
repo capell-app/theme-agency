@@ -3,7 +3,7 @@
     "composerName": "capell-app/media-ai",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/media-ai",
+    "outputDirectory": "packages/media-ai/docs/screenshots",
     "entries": [
         {
             "id": "media-ai-doctor-image",
@@ -16,11 +16,11 @@
             "url": "/media",
             "waitFor": "table",
             "docsPage": "packages/media-ai/docs/overview.md",
-            "output": "public/docs/screenshots/packages/media-ai/media-ai-doctor-image.png",
+            "output": "packages/media-ai/docs/screenshots/media-ai-doctor-image.png",
             "required": false,
             "notes": "Optional until the runner supports opening resource actions; captures the media surface where the action appears.",
             "useCase": "An administrator opens an image media record and uses the Doctor image action when an image doctor provider is bound.",
-            "screenshotPath": "public/docs/screenshots/packages/media-ai/media-ai-doctor-image.png"
+            "screenshotPath": "packages/media-ai/docs/screenshots/media-ai-doctor-image.png"
         }
     ]
 }

@@ -60,9 +60,9 @@ it('limits visible editorial calendar events to assigned sites for scoped editor
 
     $site = Site::factory()->create();
     $otherSite = Site::factory()->create();
-    Auth::setUser(new class((int) $site->getKey()) implements Authenticatable
+    Auth::setUser(new readonly class((int) $site->getKey()) implements Authenticatable
     {
-        public function __construct(private readonly int $siteId) {}
+        public function __construct(private int $siteId) {}
 
         public function getAuthIdentifierName(): string
         {
@@ -112,11 +112,11 @@ it('limits visible editorial calendar events to assigned sites for scoped editor
 
     app()->bind(
         'publishing-studio.tests.scoped-visible-editorial-calendar-contributor',
-        fn (): EditorialCalendarEventContributor => new class($site, $otherSite) implements EditorialCalendarEventContributor
+        fn (): EditorialCalendarEventContributor => new readonly class($site, $otherSite) implements EditorialCalendarEventContributor
         {
             public function __construct(
-                private readonly Site $site,
-                private readonly Site $otherSite,
+                private Site $site,
+                private Site $otherSite,
             ) {}
 
             public function editorialCalendarEvents(EditorialCalendarQueryData $query): iterable

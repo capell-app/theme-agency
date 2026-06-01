@@ -27,7 +27,7 @@ final class ResolveSubscriptionEntitlementAction
     ): SubscriptionEntitlementData {
         $subscription = $this->subscription($providerCustomerId, $billableType, $billableId, $provider);
 
-        if ($subscription === null) {
+        if (! $subscription instanceof Subscription) {
             return new SubscriptionEntitlementData(entitled: false, provider: $provider, providerCustomerId: $providerCustomerId);
         }
 

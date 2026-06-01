@@ -8,6 +8,7 @@ use Capell\AutomationStudio\Enums\AutomationActionType;
 use Capell\AutomationStudio\Enums\AutomationRunStatus;
 use Capell\AutomationStudio\Enums\AutomationTriggerType;
 use Capell\Core\Models\Site;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
@@ -21,6 +22,8 @@ use Override;
  */
 class AutomationRun extends Model
 {
+    use HasFactory;
+
     /** @var list<string> */
     protected $fillable = [
         'automation_rule_id',

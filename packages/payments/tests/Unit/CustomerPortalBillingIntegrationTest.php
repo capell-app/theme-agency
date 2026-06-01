@@ -4,11 +4,19 @@ declare(strict_types=1);
 
 use Capell\CustomerPortal\Actions\ResolveAuthenticatedPortalAccountAction;
 use Capell\CustomerPortal\Actions\ResolvePortalDashboardItemsAction;
+use Capell\CustomerPortal\Actions\ResolvePortalSelfServiceItemsAction;
+use Capell\CustomerPortal\Data\PortalSelfServiceItemData;
+use Capell\CustomerPortal\Enums\PortalSelfServiceItemType;
 use Capell\CustomerPortal\Models\PortalAccount;
 use Capell\Payments\Actions\ResolvePortalPaymentCustomerAction;
+use Capell\Payments\Enums\CheckoutMode;
+use Capell\Payments\Enums\CheckoutSessionStatus;
 use Capell\Payments\Enums\PaymentProvider;
+use Capell\Payments\Enums\PaymentPurpose;
 use Capell\Payments\Enums\SubscriptionStatus;
+use Capell\Payments\Models\CheckoutSession;
 use Capell\Payments\Models\PaymentCustomer;
+use Capell\Payments\Models\PaymentDownloadEntitlement;
 use Capell\Payments\Models\Subscription;
 use Capell\Payments\Tests\CustomerPortalPaymentsTestCase;
 use Illuminate\Foundation\Auth\User;
@@ -66,6 +74,85 @@ it('registers payment billing dashboard items for portal accounts', function ():
         ->and($items[0]->url)->toBe(route('capell-payments.portal.billing'))
         ->and($items[0]->count)->toBe(1)
         ->and($items[0]->meta)->toBe(['provider' => 'stripe']);
+});
+
+it('registers payment self service items for portal accounts', function (): void {
+    $siteId = $this->createPortalPaymentsSite();
+    $portalAccount = PortalAccount::query()->create([
+        'site_id' => $siteId,
+        'owner_type' => User::class,
+        'owner_id' => 1001,
+        'email' => 'morgan@example.test',
+        'display_name' => 'Morgan Customer',
+    ]);
+    $paymentCustomer = PaymentCustomer::query()->create([
+        'provider' => PaymentProvider::Stripe,
+        'provider_customer_id' => 'cus_portal_feed_123',
+        'site_id' => $siteId,
+        'billable_type' => User::class,
+        'billable_id' => '1001',
+        'email' => 'morgan@example.test',
+    ]);
+
+    Subscription::query()->create([
+        'provider' => PaymentProvider::Stripe,
+        'provider_subscription_id' => 'sub_portal_feed_123',
+        'payment_customer_id' => $paymentCustomer->getKey(),
+        'provider_customer_id' => 'cus_portal_feed_123',
+        'status' => SubscriptionStatus::Active,
+        'current_period_ends_at' => now()->addMonth(),
+    ]);
+    $checkoutSession = CheckoutSession::query()->create([
+        'provider' => PaymentProvider::Stripe,
+        'provider_session_id' => 'cs_portal_feed_123',
+        'payment_customer_id' => $paymentCustomer->getKey(),
+        'site_id' => $siteId,
+        'mode' => CheckoutMode::Payment,
+        'purpose' => PaymentPurpose::PaidDownload,
+        'status' => CheckoutSessionStatus::Complete,
+        'currency' => 'gbp',
+        'amount_total' => 1999,
+        'provider_customer_id' => 'cus_portal_feed_123',
+        'reference_id' => 'guide-001',
+        'completed_at' => now()->subHour(),
+    ]);
+    PaymentDownloadEntitlement::query()->create([
+        'checkout_session_id' => $checkoutSession->getKey(),
+        'site_id' => $siteId,
+        'download_key' => 'guide-001',
+        'download_name' => 'Paid guide',
+        'disk' => 'local',
+        'path' => 'downloads/guide.pdf',
+        'file_name' => 'guide.pdf',
+        'fulfilled_at' => now(),
+        'expires_at' => now()->addWeek(),
+    ]);
+
+    $items = ResolvePortalSelfServiceItemsAction::run($portalAccount);
+    $itemsByKeyPrefix = collect($items)->keyBy(function (PortalSelfServiceItemData $item): string {
+        $key = $item->key;
+
+        if (str_starts_with($key, 'payments.download.')) {
+            return 'download';
+        }
+
+        if (str_starts_with($key, 'payments.checkout-session.')) {
+            return 'checkout';
+        }
+
+        if (str_starts_with($key, 'payments.subscription.')) {
+            return 'subscription';
+        }
+
+        return $key;
+    });
+
+    expect($items)->toHaveCount(3)
+        ->and($itemsByKeyPrefix->get('download')->type)->toBe(PortalSelfServiceItemType::Payment)
+        ->and($itemsByKeyPrefix->get('download')->label)->toBe('Paid guide')
+        ->and($itemsByKeyPrefix->get('download')->url)->toContain('/capell/payments/downloads/')
+        ->and($itemsByKeyPrefix->get('checkout')->description)->toBe('Paid 19.99 GBP.')
+        ->and($itemsByKeyPrefix->get('subscription')->url)->toBe(route('capell-payments.portal.billing'));
 });
 
 it('resolves portal payment customers by owner metadata and decrypted email fallback', function (): void {

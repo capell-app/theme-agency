@@ -8,6 +8,7 @@ use Capell\Contacts\Data\ContactActivityData;
 use Capell\Contacts\Data\ContactIdentityData;
 use Capell\Contacts\Data\ContactSourceRecordData;
 use Capell\Contacts\Data\ContactSourceSyncResultData;
+use Capell\Contacts\Enums\ContactActivityType;
 use Capell\Contacts\Enums\LeadStatus;
 use Capell\Contacts\Models\Contact;
 use Capell\Contacts\Models\ContactActivity;
@@ -113,7 +114,7 @@ final class SyncContactSourceRecordAction
         ?Lead $lead,
         ?Organisation $organisation,
     ): ?ContactActivity {
-        if ($record->activityType === null) {
+        if (! $record->activityType instanceof ContactActivityType) {
             return null;
         }
 

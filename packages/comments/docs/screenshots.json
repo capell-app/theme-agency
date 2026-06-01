@@ -3,7 +3,7 @@
     "composerName": "capell-app/comments",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/comments",
+    "outputDirectory": "packages/comments/docs/screenshots",
     "entries": [
         {
             "id": "comment-moderation-inbox",
@@ -15,7 +15,7 @@
             "required": true,
             "notes": "Capture as an admin user after seeding pending, approved, rejected, and spam comments.",
             "useCase": "An editor reviews incoming comments and decides which public replies should appear.",
-            "screenshotPath": "public/docs/screenshots/packages/comments/comment-moderation-inbox.png"
+            "screenshotPath": "packages/comments/docs/screenshots/comment-moderation-inbox.png"
         },
         {
             "id": "comments-admin-resource",
@@ -27,7 +27,7 @@
             "required": true,
             "notes": "Capture the comments table with seeded authors, statuses, nesting, and moderation timestamps.",
             "useCase": "An administrator audits comment status and moderation activity.",
-            "screenshotPath": "public/docs/screenshots/packages/comments/comments-admin-resource.png"
+            "screenshotPath": "packages/comments/docs/screenshots/comments-admin-resource.png"
         },
         {
             "id": "comment-authors-admin-resource",
@@ -39,7 +39,7 @@
             "required": true,
             "notes": "Capture the author table without exposing raw verification tokens or visitor hashes.",
             "useCase": "An administrator reviews public display names and author moderation state.",
-            "screenshotPath": "public/docs/screenshots/packages/comments/comment-authors-admin-resource.png"
+            "screenshotPath": "packages/comments/docs/screenshots/comment-authors-admin-resource.png"
         },
         {
             "id": "public-comment-thread",
@@ -51,7 +51,7 @@
             "required": true,
             "notes": "Capture a seeded public page after the comment thread loads. Verify the output excludes moderation status, model IDs, author email, tokens, and admin URLs.",
             "useCase": "A visitor reads and replies to an approved public discussion thread.",
-            "screenshotPath": "public/docs/screenshots/packages/comments/public-comment-thread.png"
+            "screenshotPath": "packages/comments/docs/screenshots/public-comment-thread.png"
         }
     ]
 }

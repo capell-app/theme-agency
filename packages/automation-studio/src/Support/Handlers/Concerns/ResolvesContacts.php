@@ -6,6 +6,8 @@ namespace Capell\AutomationStudio\Support\Handlers\Concerns;
 
 use Capell\AutomationStudio\Data\AutomationRuleActionData;
 use Capell\AutomationStudio\Data\AutomationTriggerEventData;
+use Capell\Contacts\Actions\FindOrCreateContactAction;
+use Capell\Contacts\Data\ContactIdentityData;
 use Illuminate\Database\Eloquent\Model;
 use Throwable;
 
@@ -16,8 +18,8 @@ trait ResolvesContacts
      */
     private function resolveContact(AutomationTriggerEventData $event, AutomationRuleActionData $action): array
     {
-        $identityClass = 'Capell\\Contacts\\Data\\ContactIdentityData';
-        $findOrCreateActionClass = 'Capell\\Contacts\\Actions\\FindOrCreateContactAction';
+        $identityClass = ContactIdentityData::class;
+        $findOrCreateActionClass = FindOrCreateContactAction::class;
 
         if (! class_exists($identityClass) || ! class_exists($findOrCreateActionClass)) {
             return [

@@ -29,7 +29,7 @@ class QueueAppointmentNotificationAction
             type: $type,
         );
 
-        if ($sendAt !== null) {
+        if ($sendAt instanceof CarbonImmutable) {
             $notification->delay($sendAt);
         }
 

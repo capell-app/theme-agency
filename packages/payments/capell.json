@@ -16,7 +16,11 @@
     "surfaces": ["admin", "frontend", "console"],
     "dependencies": {
         "requires": ["capell-app/admin", "capell-app/core"],
-        "supports": ["capell-app/access-gate", "capell-app/form-builder"],
+        "supports": [
+            "capell-app/access-gate",
+            "capell-app/customer-portal",
+            "capell-app/form-builder"
+        ],
         "conflicts": []
     },
     "providers": {
@@ -26,7 +30,43 @@
         "admin": ["Capell\\Payments\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Payments\\Manifest\\PaymentCustomerResourceContribution",
+            "resourceClass": "Capell\\Payments\\Filament\\Resources\\Customers\\PaymentCustomerResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Payments\\Manifest\\CheckoutSessionResourceContribution",
+            "resourceClass": "Capell\\Payments\\Filament\\Resources\\CheckoutSessions\\CheckoutSessionResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Payments\\Manifest\\PaymentIntentResourceContribution",
+            "resourceClass": "Capell\\Payments\\Filament\\Resources\\PaymentIntents\\PaymentIntentResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Payments\\Manifest\\SubscriptionResourceContribution",
+            "resourceClass": "Capell\\Payments\\Filament\\Resources\\Subscriptions\\SubscriptionResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Payments\\Manifest\\PaymentWebhookEventResourceContribution",
+            "resourceClass": "Capell\\Payments\\Filament\\Resources\\WebhookEvents\\PaymentWebhookEventResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Payments\\Manifest\\PaymentRefundResourceContribution",
+            "resourceClass": "Capell\\Payments\\Filament\\Resources\\Refunds\\PaymentRefundResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Payments\\Manifest\\PaymentDisputeResourceContribution",
+            "resourceClass": "Capell\\Payments\\Filament\\Resources\\Disputes\\PaymentDisputeResource"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": true,
@@ -89,7 +129,9 @@
         "payments-admin",
         "payment-fulfillment-handlers",
         "stripe-billing-portal",
-        "subscription-entitlements"
+        "subscription-entitlements",
+        "customer-portal-billing-dashboard",
+        "customer-portal-payments-feed"
     ],
     "performance": {
         "frontendRenderBudgetMs": 0,
@@ -125,12 +167,8 @@
     },
     "contributionTraceability": {
         "deferredContributions": [
-            "admin-resource",
-            "form-field",
             "frontend-route",
-            "migration",
-            "model",
-            "webhook"
+            "access-gate-paid-access-integration"
         ]
     }
 }

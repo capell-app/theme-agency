@@ -13,6 +13,7 @@ use Capell\AutomationStudio\Enums\AutomationTriggerType;
 use Capell\AutomationStudio\Listeners\DispatchAutomationFromCampaignConversion;
 use Capell\AutomationStudio\Support\AutomationActionRegistry;
 use Capell\AutomationStudio\Support\AutomationRuleRegistry;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 it('dispatches campaign conversion events with conversion payload metadata', function (): void {
@@ -20,12 +21,12 @@ it('dispatches campaign conversion events with conversion payload metadata', fun
     $rules = new AutomationRuleRegistry;
     $handledPayload = new ArrayObject;
 
-    $actions->registerHandler(AutomationActionType::SendEmail, new class($handledPayload) implements AutomationActionHandler
+    $actions->registerHandler(AutomationActionType::SendEmail, new readonly class($handledPayload) implements AutomationActionHandler
     {
         /**
          * @param  ArrayObject<string, mixed>  $handledPayload
          */
-        public function __construct(private readonly ArrayObject $handledPayload) {}
+        public function __construct(private ArrayObject $handledPayload) {}
 
         public function handle(AutomationTriggerEventData $event, AutomationRuleActionData $action): AutomationActionResultData
         {
@@ -52,6 +53,8 @@ it('dispatches campaign conversion events with conversion payload metadata', fun
 
     $conversion = new class extends Model
     {
+        use HasFactory;
+
         protected $table = 'campaign_conversions';
     };
     $conversion->forceFill([

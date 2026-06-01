@@ -25,6 +25,10 @@ return [
         'publications' => 'Publications',
         'acceptances' => 'Acceptances',
     ],
+    'portal' => [
+        'accepted_status' => 'Accepted',
+        'acceptance_description' => 'Accepted version :version.',
+    ],
     'status' => [
         'draft' => 'Draft',
         'active' => 'Active',

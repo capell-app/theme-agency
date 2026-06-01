@@ -75,7 +75,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Queue Operations page with dummy queue-monitor history, failed jobs, and pending jobs.
 - Health widgets on the admin dashboard.
 
-Current dummy-data screenshots are committed under `public/docs/screenshots/packages/diagnostics`. The fixture source is `packages/diagnostics/docs/assets/screenshots/diagnostics-dummy-screens.html`.
+Current dummy-data screenshots are committed under `packages/diagnostics/docs/screenshots`. The fixture source is `packages/diagnostics/docs/assets/screenshots/diagnostics-dummy-screens.html`.
 
 ## Technical Shape
 

@@ -3,7 +3,7 @@
     "composerName": "capell-app/newsletter",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/newsletter",
+    "outputDirectory": "packages/newsletter/docs/screenshots",
     "entries": [
         {
             "id": "subscribers-admin-index",
@@ -15,7 +15,7 @@
             "required": true,
             "notes": "Shows subscriber status, site scope, consent-related columns, filters, and table actions.",
             "useCase": "A marketer reviews subscriber status, consent, site scope, tags, and filters.",
-            "screenshotPath": "public/docs/screenshots/packages/newsletter/subscribers-admin-index.png"
+            "screenshotPath": "packages/newsletter/docs/screenshots/subscribers-admin-index.png"
         },
         {
             "id": "create-edit-subscriber-form",
@@ -27,7 +27,7 @@
             "required": true,
             "notes": "Capture subscriber identity, status, site, tags, and consent-related fields.",
             "useCase": "A marketer edits subscriber identity, status, site, tags, and consent-related fields.",
-            "screenshotPath": "public/docs/screenshots/packages/newsletter/create-edit-subscriber-form.png"
+            "screenshotPath": "packages/newsletter/docs/screenshots/create-edit-subscriber-form.png"
         },
         {
             "id": "provider-connections-admin",
@@ -39,7 +39,7 @@
             "required": true,
             "notes": "Use demo-safe provider credentials only.",
             "useCase": "An operator configures a newsletter provider connection using demo-safe credentials.",
-            "screenshotPath": "public/docs/screenshots/packages/newsletter/provider-connections-admin.png"
+            "screenshotPath": "packages/newsletter/docs/screenshots/provider-connections-admin.png"
         },
         {
             "id": "provider-audiences-admin",
@@ -51,7 +51,7 @@
             "required": true,
             "notes": "Shows mapping between local sites and remote provider audiences.",
             "useCase": "An operator maps local sites to provider audiences.",
-            "screenshotPath": "public/docs/screenshots/packages/newsletter/provider-audiences-admin.png"
+            "screenshotPath": "packages/newsletter/docs/screenshots/provider-audiences-admin.png"
         },
         {
             "id": "provider-interest-mappings-admin",
@@ -63,7 +63,7 @@
             "required": true,
             "notes": "Shows remote interests mapped to local newsletter tags.",
             "useCase": "An operator maps remote provider interests to local newsletter tags.",
-            "screenshotPath": "public/docs/screenshots/packages/newsletter/provider-interest-mappings-admin.png"
+            "screenshotPath": "packages/newsletter/docs/screenshots/provider-interest-mappings-admin.png"
         },
         {
             "id": "form-mappings-admin",
@@ -75,7 +75,7 @@
             "required": true,
             "notes": "Requires form-builder hard dependency and a seeded form.",
             "useCase": "A marketer maps a seeded form-builder form into newsletter subscription handling.",
-            "screenshotPath": "public/docs/screenshots/packages/newsletter/form-mappings-admin.png"
+            "screenshotPath": "packages/newsletter/docs/screenshots/form-mappings-admin.png"
         },
         {
             "id": "newsletter-tags-admin",
@@ -87,7 +87,7 @@
             "required": true,
             "notes": "Shows package-owned newsletter tag management.",
             "useCase": "A marketer manages package-owned newsletter tags.",
-            "screenshotPath": "public/docs/screenshots/packages/newsletter/newsletter-tags-admin.png"
+            "screenshotPath": "packages/newsletter/docs/screenshots/newsletter-tags-admin.png"
         },
         {
             "id": "segments-admin",
@@ -99,7 +99,7 @@
             "required": true,
             "notes": "Shows static and dynamic segment configuration.",
             "useCase": "A marketer configures static or dynamic subscriber segments.",
-            "screenshotPath": "public/docs/screenshots/packages/newsletter/segments-admin.png"
+            "screenshotPath": "packages/newsletter/docs/screenshots/segments-admin.png"
         },
         {
             "id": "import-batches-admin",
@@ -111,7 +111,7 @@
             "required": true,
             "notes": "Requires seeded import batch state.",
             "useCase": "An operator reviews seeded import batch state and import outcomes.",
-            "screenshotPath": "public/docs/screenshots/packages/newsletter/import-batches-admin.png"
+            "screenshotPath": "packages/newsletter/docs/screenshots/import-batches-admin.png"
         },
         {
             "id": "sync-attempts-admin",
@@ -123,7 +123,7 @@
             "required": true,
             "notes": "Shows provider sync state, retry status, and failure handling.",
             "useCase": "An operator reviews provider sync attempts, retries, and failures.",
-            "screenshotPath": "public/docs/screenshots/packages/newsletter/sync-attempts-admin.png"
+            "screenshotPath": "packages/newsletter/docs/screenshots/sync-attempts-admin.png"
         },
         {
             "id": "newsletter-overview-stats",
@@ -135,7 +135,7 @@
             "required": true,
             "notes": "Capture dashboard stats for subscribed, pending, and sync failures.",
             "useCase": "A marketer checks subscribed, pending, and sync-failure dashboard stats.",
-            "screenshotPath": "public/docs/screenshots/packages/newsletter/newsletter-overview-stats.png"
+            "screenshotPath": "packages/newsletter/docs/screenshots/newsletter-overview-stats.png"
         },
         {
             "id": "confirm-subscription-route",
@@ -147,7 +147,7 @@
             "required": true,
             "notes": "Use a disposable valid token and verify no admin/provider internals are exposed.",
             "useCase": "A subscriber confirms a disposable newsletter token through the public route.",
-            "screenshotPath": "public/docs/screenshots/packages/newsletter/confirm-subscription-route.png"
+            "screenshotPath": "packages/newsletter/docs/screenshots/confirm-subscription-route.png"
         },
         {
             "id": "unsubscribe-route",
@@ -159,7 +159,7 @@
             "required": true,
             "notes": "Use a disposable valid token and verify no admin/provider internals are exposed.",
             "useCase": "A subscriber unsubscribes through a disposable public token without seeing provider internals.",
-            "screenshotPath": "public/docs/screenshots/packages/newsletter/unsubscribe-route.png"
+            "screenshotPath": "packages/newsletter/docs/screenshots/unsubscribe-route.png"
         }
     ]
 }

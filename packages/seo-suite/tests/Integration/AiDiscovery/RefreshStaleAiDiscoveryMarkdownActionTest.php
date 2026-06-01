@@ -82,9 +82,7 @@ function createRefreshableAiDiscoveryProfile(string $title): array
 
     $profile = ResolveAiDiscoveryProfileAction::run($site, $language, $page);
 
-    if (! $profile instanceof AiDiscoveryPageProfile) {
-        throw new RuntimeException('Expected a page profile when resolving AI Discovery for a page.');
-    }
+    throw_unless($profile instanceof AiDiscoveryPageProfile, RuntimeException::class, 'Expected a page profile when resolving AI Discovery for a page.');
 
     $profile->update([
         'include_in_ai_index' => true,

@@ -54,9 +54,7 @@ it('contributes event occurrences to the editorial calendar', function (): void 
 
     $firstEvent = $events->first();
 
-    if (! $firstEvent instanceof EditorialCalendarEventData) {
-        throw new RuntimeException('Expected the events contributor to return an editorial calendar event.');
-    }
+    throw_unless($firstEvent instanceof EditorialCalendarEventData, RuntimeException::class, 'Expected the events contributor to return an editorial calendar event.');
 
     expect($events)->toHaveCount(1)
         ->and($firstEvent->id)->toBe('event-occurrence-' . $occurrence->id)
@@ -97,9 +95,7 @@ it('is included by the publishing studio editorial calendar aggregator', functio
 
     $firstEvent = $events->first();
 
-    if (! $firstEvent instanceof EditorialCalendarEventData) {
-        throw new RuntimeException('Expected the aggregator to return an event editorial calendar event.');
-    }
+    throw_unless($firstEvent instanceof EditorialCalendarEventData, RuntimeException::class, 'Expected the aggregator to return an event editorial calendar event.');
 
     expect($events)->toHaveCount(1)
         ->and($firstEvent->sourcePackage)->toBe(EventsServiceProvider::$packageName)

@@ -59,12 +59,13 @@ Gives editors and site operators practical checks before publishing and operatio
 
 `capell:seo-suite-doctor` verifies route ownership, installed dependencies, generated document status codes, content types, cache headers, crawler policy, Site Discovery availability, and common web-server interception symptoms.
 
-The doctor and dashboard actions expose AI Discovery coverage, excluded reasons, missing summaries, stale snapshots, Markdown availability, noindex conflicts, public-output leak scanning, sitemap XML validity, unsafe sitemap URLs, structured data reports, and stale Markdown regeneration controls.
+The doctor and dashboard actions expose AI Discovery coverage, excluded reasons, missing summaries, stale snapshots, Markdown availability, noindex conflicts, public-output leak scanning, sitemap XML validity, unsafe sitemap URLs, structured data reports, stale Markdown regeneration controls, and crawler previews for sitemap XML, robots, `llms.txt`, `llms-full.txt`, page Markdown, and schema output.
+
+Structured data reporting also includes marketplace freshness warnings for Product/Offer prices and AggregateRating metadata, including missing or expired `priceValidUntil` values and stale or undated rating data.
 
 ## Remaining Roadmap
 
-- Add preview-as-crawler actions for sitemap, robots, `llms.txt`, page Markdown, and schema output.
-- Expand structured data auditing with marketplace-specific stale pricing or rating warnings.
+- Wire crawler-preview reports into the admin diagnostics UI.
 
 ## Data And Retention
 
@@ -95,15 +96,15 @@ SEO Suite contributes content graph edges from page SEO snapshots and broken-lin
 
 ## Screenshots
 
-![SEO audit page](../../../public/docs/screenshots/packages/seo-suite/seo-audit-page.png)
+![SEO audit page](screenshots/seo-audit-page.png)
 
-![Broken links diagnostics](../../../public/docs/screenshots/packages/seo-suite/broken-links-page.png)
+![Broken links diagnostics](screenshots/broken-links-page.png)
 
-![Translation coverage settings](../../../public/docs/screenshots/packages/seo-suite/translation-coverage-page.png)
+![Translation coverage settings](screenshots/translation-coverage-page.png)
 
-AI Discovery screenshot target: `public/docs/screenshots/packages/seo-suite/ai-discovery-page.png`. Keep this as text until the screenshot file is committed.
+AI Discovery screenshot target: `packages/seo-suite/docs/screenshots/ai-discovery-page.png`. Keep this as text until the screenshot file is committed.
 
-![Page SEO panel](../../../public/docs/screenshots/packages/seo-suite/page-seo-panel.png)
+![Page SEO panel](screenshots/page-seo-panel.png)
 
 The AI creator modal still needs a dedicated interaction capture once the demo profile can open the modal without external AI credentials.
 
@@ -220,7 +221,7 @@ erDiagram
 
 ## Screenshot Automation
 
-Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `public/docs/screenshots/packages/seo-suite`.
+Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `packages/seo-suite/docs/screenshots`.
 
 - Page SEO panel.
 - SEO audit page.

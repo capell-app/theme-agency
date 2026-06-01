@@ -15,9 +15,11 @@ use Capell\KnowledgeBase\Policies\KnowledgeBaseArticlePolicy;
 use Capell\KnowledgeBase\Policies\KnowledgeBaseCollectionPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 final class AdminServiceProvider extends ServiceProvider
 {
+    #[Override]
     public function register(): void
     {
         $this->app->booted(function (): void {

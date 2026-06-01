@@ -8,6 +8,10 @@ use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsGroupMetadata;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
+use Capell\CustomerPortal\Contracts\PortalDashboardItemProvider;
+use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
+use Capell\CustomerPortal\Support\PortalDashboardItemRegistry;
+use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Capell\Payments\Contracts\PaymentGateway;
 use Capell\Payments\Filament\Settings\PaymentsSettingsSchema;
 use Capell\Payments\Models\CheckoutSession;
@@ -20,6 +24,7 @@ use Capell\Payments\Models\PaymentWebhookEvent;
 use Capell\Payments\Models\Subscription;
 use Capell\Payments\Settings\PaymentsSettings;
 use Capell\Payments\Support\CustomerPortal\PaymentsPortalDashboardItemProvider;
+use Capell\Payments\Support\CustomerPortal\PaymentsPortalSelfServiceItemProvider;
 use Capell\Payments\Support\Fulfillment\PaidDownloadFulfillmentHandler;
 use Capell\Payments\Support\Gateways\StripePaymentGateway;
 use Filament\Support\Icons\Heroicon;
@@ -65,7 +70,7 @@ final class PaymentsServiceProvider extends AbstractPackageServiceProvider
                 ->registerSettings()
                 ->registerProtectedTables()
                 ->registerPaymentFulfillmentHandlers()
-                ->registerCustomerPortalDashboardItems();
+                ->registerCustomerPortalIntegrations();
         });
     }
 
@@ -130,21 +135,35 @@ final class PaymentsServiceProvider extends AbstractPackageServiceProvider
         return $this;
     }
 
-    private function registerCustomerPortalDashboardItems(): self
+    private function registerCustomerPortalIntegrations(): self
     {
-        if (! class_exists('Capell\\CustomerPortal\\Support\\PortalDashboardItemRegistry')
-            || ! interface_exists('Capell\\CustomerPortal\\Contracts\\PortalDashboardItemProvider')) {
+        if (! class_exists(PortalDashboardItemRegistry::class)
+            || ! interface_exists(PortalDashboardItemProvider::class)) {
             return $this;
         }
 
         /** @var object $registry */
-        $registry = $this->app->make('Capell\\CustomerPortal\\Support\\PortalDashboardItemRegistry');
+        $registry = $this->app->make(PortalDashboardItemRegistry::class);
 
         if (! method_exists($registry, 'register')) {
             return $this;
         }
 
         $registry->register('payments.billing', PaymentsPortalDashboardItemProvider::class);
+
+        if (! class_exists(PortalSelfServiceItemRegistry::class)
+            || ! interface_exists(PortalSelfServiceItemProvider::class)) {
+            return $this;
+        }
+
+        /** @var object $selfServiceRegistry */
+        $selfServiceRegistry = $this->app->make(PortalSelfServiceItemRegistry::class);
+
+        if (! method_exists($selfServiceRegistry, 'register')) {
+            return $this;
+        }
+
+        $selfServiceRegistry->register('payments.self-service', PaymentsPortalSelfServiceItemProvider::class);
 
         return $this;
     }

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\SeoSuite\Actions\BuildCrawlerPreviewReportAction;
+use Capell\SeoSuite\Actions\BuildMarketplaceStructuredDataFreshnessWarningsAction;
 use Illuminate\Support\Facades\File;
 
 it('declares implemented diagnostics commands tables and capabilities', function (): void {
@@ -27,5 +29,17 @@ it('declares implemented diagnostics commands tables and capabilities', function
             'seo-suite-ai-discovery-coverage',
             'seo-suite-stale-output-regeneration',
             'seo-suite-site-discovery-registry',
+            'seo-suite-marketplace-structured-data-freshness',
+            'seo-suite-crawler-preview-report',
+        );
+
+    expect($manifest['actions'] ?? [])
+        ->toHaveKey(
+            'buildCrawlerPreviewReport',
+            BuildCrawlerPreviewReportAction::class,
+        )
+        ->toHaveKey(
+            'buildMarketplaceStructuredDataFreshnessWarnings',
+            BuildMarketplaceStructuredDataFreshnessWarningsAction::class,
         );
 });

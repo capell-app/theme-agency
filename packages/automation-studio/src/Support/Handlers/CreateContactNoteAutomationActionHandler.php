@@ -9,6 +9,9 @@ use Capell\AutomationStudio\Data\AutomationActionResultData;
 use Capell\AutomationStudio\Data\AutomationRuleActionData;
 use Capell\AutomationStudio\Data\AutomationTriggerEventData;
 use Capell\AutomationStudio\Support\Handlers\Concerns\ResolvesContacts;
+use Capell\Contacts\Actions\RecordContactActivityAction;
+use Capell\Contacts\Data\ContactActivityData;
+use Capell\Contacts\Enums\ContactActivityType;
 use Illuminate\Database\Eloquent\Model;
 use Override;
 
@@ -19,9 +22,9 @@ final class CreateContactNoteAutomationActionHandler implements AutomationAction
     #[Override]
     public function handle(AutomationTriggerEventData $event, AutomationRuleActionData $action): AutomationActionResultData
     {
-        $activityDataClass = 'Capell\\Contacts\\Data\\ContactActivityData';
-        $activityTypeClass = 'Capell\\Contacts\\Enums\\ContactActivityType';
-        $recordActivityActionClass = 'Capell\\Contacts\\Actions\\RecordContactActivityAction';
+        $activityDataClass = ContactActivityData::class;
+        $activityTypeClass = ContactActivityType::class;
+        $recordActivityActionClass = RecordContactActivityAction::class;
 
         if (! class_exists($activityDataClass) || ! class_exists($activityTypeClass) || ! class_exists($recordActivityActionClass)) {
             return new AutomationActionResultData(

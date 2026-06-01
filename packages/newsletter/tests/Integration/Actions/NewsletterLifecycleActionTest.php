@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\Contacts\Models\Contact;
+use Capell\Contacts\Models\ContactActivity;
 use Capell\FormBuilder\Data\SubmissionMetaData;
 use Capell\FormBuilder\Data\SubmissionPayloadData;
 use Capell\FormBuilder\Events\FormSubmitted;
@@ -106,6 +108,15 @@ it('confirms and unsubscribes with one-use public tokens', function (): void {
         ->assertOk()
         ->assertSee(__('capell-newsletter::messages.confirmed'));
 
+    expect(Contact::query()->first()?->profile)->toMatchArray([
+        'newsletter' => [
+            'subscriber_id' => $subscriber->getKey(),
+            'status' => SubscriberStatus::Subscribed->value,
+            'source_form_id' => null,
+            'source_form_handle' => null,
+        ],
+    ]);
+
     $this->get(route('capell-newsletter.confirm', ['token' => $confirmToken]))
         ->assertNotFound();
 
@@ -116,4 +127,18 @@ it('confirms and unsubscribes with one-use public tokens', function (): void {
         ->assertSee(__('capell-newsletter::messages.unsubscribed'));
 
     expect($subscriber->refresh()->status)->toBe(SubscriberStatus::Unsubscribed);
+
+    expect(Contact::query()->first()?->profile)->toMatchArray([
+        'newsletter' => [
+            'subscriber_id' => $subscriber->getKey(),
+            'status' => SubscriberStatus::Unsubscribed->value,
+            'source_form_id' => null,
+            'source_form_handle' => null,
+        ],
+    ])
+        ->and(ContactActivity::query()->count())->toBe(2)
+        ->and(ContactActivity::query()->latest('id')->first()?->payload)->toMatchArray([
+            'subscriber_id' => $subscriber->getKey(),
+            'status' => SubscriberStatus::Unsubscribed->value,
+        ]);
 });

@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+use Capell\Contacts\Models\Contact;
+use Capell\Contacts\Models\ContactActivity;
+use Capell\CustomerPortal\Actions\ResolvePortalSelfServiceItemsAction;
+use Capell\CustomerPortal\Data\PortalSelfServiceItemData;
+use Capell\CustomerPortal\Enums\PortalSelfServiceItemType;
+use Capell\CustomerPortal\Models\PortalAccount;
 use Capell\Newsletter\Actions\ExportSubscribersAction;
 use Capell\Newsletter\Actions\ImportSubscribersAction;
 use Capell\Newsletter\Actions\QueueProviderSyncAction;
@@ -201,7 +207,54 @@ it('records admin updates through the subscriber lifecycle action', function ():
     ), new ConsentEvidenceData(sourceType: 'admin'), ConsentEventType::AdminUpdated);
 
     expect($subscriber)->toBeInstanceOf(Subscriber::class)
-        ->and(ConsentEvent::query()->where('subscriber_id', $subscriber->getKey())->where('event_type', ConsentEventType::AdminUpdated)->exists())->toBeTrue();
+        ->and(ConsentEvent::query()->where('subscriber_id', $subscriber->getKey())->where('event_type', ConsentEventType::AdminUpdated)->exists())->toBeTrue()
+        ->and(Contact::query()->count())->toBe(1)
+        ->and(Contact::query()->first()?->email_hash)->toBe(Contact::emailHash('admin@example.com'))
+        ->and(Contact::query()->first()?->profile)->toMatchArray([
+            'newsletter' => [
+                'subscriber_id' => $subscriber->getKey(),
+                'status' => SubscriberStatus::Subscribed->value,
+                'source_form_id' => null,
+                'source_form_handle' => null,
+            ],
+        ])
+        ->and(ContactActivity::query()->count())->toBe(1)
+        ->and(ContactActivity::query()->first()?->payload)->toMatchArray([
+            'subscriber_id' => $subscriber->getKey(),
+            'status' => SubscriberStatus::Subscribed->value,
+        ]);
+});
+
+it('registers newsletter preference self service items for portal accounts', function (): void {
+    $site = $this->createNewsletterSite();
+    $subscriber = Subscriber::factory()->create([
+        'site_id' => $site->getKey(),
+        'email' => 'portal-reader@example.com',
+        'status' => SubscriberStatus::Subscribed,
+    ]);
+    $portalAccount = PortalAccount::query()->create([
+        'site_id' => $site->getKey(),
+        'email' => 'Portal-Reader@Example.com',
+        'display_name' => 'Portal Reader',
+    ]);
+
+    $items = ResolvePortalSelfServiceItemsAction::run($portalAccount);
+    $item = collect($items)->first();
+
+    expect($items)->toHaveCount(1)
+        ->and($item)->toBeInstanceOf(PortalSelfServiceItemData::class);
+
+    throw_unless($item instanceof PortalSelfServiceItemData, RuntimeException::class, 'Expected portal item.');
+
+    expect($item->key)->toBe('newsletter.preferences.' . $subscriber->getKey())
+        ->and($item->type)->toBe(PortalSelfServiceItemType::NewsletterPreference)
+        ->and($item->label)->toBe(__('capell-newsletter::generic.portal.preferences_label'))
+        ->and($item->status)->toBe(SubscriberStatus::Subscribed->getLabel())
+        ->and($item->url)->toContain('/newsletter/preferences/')
+        ->and($item->meta)->toBe([
+            'subscriber_id' => (int) $subscriber->getKey(),
+            'status' => SubscriberStatus::Subscribed->value,
+        ]);
 });
 
 it('validates CSV imports and exports safe fields', function (): void {

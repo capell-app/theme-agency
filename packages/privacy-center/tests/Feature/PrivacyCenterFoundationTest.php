@@ -161,15 +161,15 @@ it('applies active retention rules to expired privacy records', function (): voi
         category: CookieCategory::Analytics,
         decision: ConsentDecision::Granted,
         siteId: $siteId,
-        evidence: ['surface' => 'old-banner'],
         decidedAt: $now->copy()->subDays(45),
+        evidence: ['surface' => 'old-banner'],
     ), $subject);
     $recentConsent = RecordConsentAction::run(new ConsentRecordData(
         category: CookieCategory::Marketing,
         decision: ConsentDecision::Granted,
         siteId: $siteId,
-        evidence: ['surface' => 'recent-banner'],
         decidedAt: $now->copy()->subDays(5),
+        evidence: ['surface' => 'recent-banner'],
     ), $subject);
     CreateRetentionRuleAction::run(new RetentionRuleData(
         dataDomain: 'privacy-center',

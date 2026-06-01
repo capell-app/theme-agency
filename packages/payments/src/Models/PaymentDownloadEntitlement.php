@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Payments\Models;
 
 use Carbon\CarbonInterface;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
@@ -26,6 +27,8 @@ use Override;
  */
 final class PaymentDownloadEntitlement extends Model
 {
+    use HasFactory;
+
     /** @var list<string> */
     protected $fillable = [
         'checkout_session_id',

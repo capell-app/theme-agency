@@ -3,7 +3,7 @@
     "composerName": "capell-app/theme-local-services",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/theme-local-services",
+    "outputDirectory": "packages/theme-local-services/docs/screenshots",
     "entries": [
         {
             "id": "theme-admin-list-showing-local-services",
@@ -15,7 +15,7 @@
             "required": true,
             "notes": "Capture with Foundation Theme, Layout Builder, and capell-app/theme-local-services installed in the isolated demo harness.",
             "useCase": "An administrator confirms the Local Services theme is available for quote-led local operators.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-local-services/theme-admin-list-showing-local-services.png"
+            "screenshotPath": "packages/theme-local-services/docs/screenshots/theme-admin-list-showing-local-services.png"
         },
         {
             "id": "frontend-page-rendered-with-local-services-theme",
@@ -27,7 +27,7 @@
             "required": true,
             "notes": "Capture a seeded service business page with locality hero, services, service areas, quote form, case studies, resources, contact, proof, CTA, and footer.",
             "useCase": "A local operator sees how the theme drives visitors from service need to quote request.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-local-services/frontend-page-rendered-with-local-services-theme.png"
+            "screenshotPath": "packages/theme-local-services/docs/screenshots/frontend-page-rendered-with-local-services-theme.png"
         },
         {
             "id": "local-services-homepage-layout",
@@ -39,7 +39,7 @@
             "required": true,
             "notes": "Capture locality proof, availability signals, dispatch rhythm, and conversion-oriented hero content.",
             "useCase": "A trades, maintenance, or local service team reviews whether the homepage makes coverage and response clear.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-local-services/local-services-homepage-layout.png"
+            "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-homepage-layout.png"
         },
         {
             "id": "local-services-services-layout",
@@ -51,7 +51,7 @@
             "required": true,
             "notes": "Capture service cards with urgency markers, pricing cues, eligibility notes, and quote actions.",
             "useCase": "A visitor can compare service calls without the page feeling like an agency services grid.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-local-services/local-services-services-layout.png"
+            "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-services-layout.png"
         },
         {
             "id": "local-services-service-areas-layout",
@@ -63,7 +63,7 @@
             "required": true,
             "notes": "Capture postcode/area cards, route proof, and coverage-focused CTA copy.",
             "useCase": "A local business proves it serves the visitor's area before asking for an enquiry.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-local-services/local-services-service-areas-layout.png"
+            "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-service-areas-layout.png"
         },
         {
             "id": "local-services-quote-form-layout",
@@ -75,7 +75,7 @@
             "required": true,
             "notes": "Capture the quote form section with static fallback and optional capell-app/form-builder state.",
             "useCase": "A local operator checks that quote conversion remains obvious after service discovery.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-local-services/local-services-quote-form-layout.png"
+            "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-quote-form-layout.png"
         },
         {
             "id": "local-services-job-proof-layout",
@@ -87,7 +87,7 @@
             "required": true,
             "notes": "Capture completed-job proof, before/after-style cards, local trust markers, and case study summaries.",
             "useCase": "A service business can show practical proof without overlapping Portfolio's studio case-study workflow.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-local-services/local-services-job-proof-layout.png"
+            "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-job-proof-layout.png"
         },
         {
             "id": "local-services-resources-layout",
@@ -99,7 +99,7 @@
             "required": true,
             "notes": "Capture advice/resource cards using static content or the optional blog integration when available.",
             "useCase": "A local business can answer common service questions while keeping the quote path visible.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-local-services/local-services-resources-layout.png"
+            "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-resources-layout.png"
         },
         {
             "id": "theme-preview-url-output",
@@ -111,7 +111,7 @@
             "required": true,
             "notes": "Capture a signed preview URL generated for the seeded Local Services theme, site, and page.",
             "useCase": "An administrator previews a local-service page with the theme applied before publishing the theme choice.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-local-services/theme-preview-url-output.png"
+            "screenshotPath": "packages/theme-local-services/docs/screenshots/theme-preview-url-output.png"
         }
     ]
 }

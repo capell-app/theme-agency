@@ -34,6 +34,7 @@ return [
         ],
     ],
     'landing_page' => 'Landing page',
+    'landing_page_variant' => 'Landing page variant',
     'landing_page_variant_match_types' => [
         'first_available' => 'First available landing page',
         'primary' => 'Primary landing page',

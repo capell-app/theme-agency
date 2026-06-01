@@ -15,7 +15,7 @@ Shopify Admin API connection and catalog sync foundation for Capell CMS.
 
 This package owns Shopify app configuration, admin OAuth, site-scoped Shopify connections, local catalog cache tables, catalog search, and the first-party admin page for connecting or syncing a store.
 
-It does not own storefront rendering, checkout, cart state, order import, webhook ingestion, product merchandising UI, or public frontend output. Frontend packages should consume the synced catalog through explicit Actions or package-owned view models, not by leaking Shopify admin tokens or connection metadata into public HTML.
+It does not own storefront rendering, checkout, cart state, order import, webhook ingestion, product merchandising UI, or public frontend output. It may cache Shopify customer records for CRM integrations. Frontend packages should consume synced catalog/customer records through explicit Actions or package-owned view models, not by leaking Shopify admin tokens or connection metadata into public HTML.
 
 ## Why It Helps Your Capell Workflow
 

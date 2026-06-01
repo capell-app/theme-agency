@@ -13,7 +13,7 @@ uses(TestCase::class);
 it('declares payment settings group and schema', function (): void {
     expect(PaymentsSettings::group())->toBe('payments')
         ->and(PaymentsSettings::schema())->toBe(PaymentsSettingsSchema::class)
-        ->and(PaymentsSettingsSchema::make(app(Schema::class)))->not->toBeEmpty();
+        ->and(PaymentsSettingsSchema::make(resolve(Schema::class)))->not->toBeEmpty();
 });
 
 it('prefers configured payment values over stored settings fallbacks', function (): void {
@@ -23,7 +23,7 @@ it('prefers configured payment values over stored settings fallbacks', function 
 });
 
 it('falls back to defaults when settings are unavailable', function (): void {
-    config()->set('capell-payments.stripe.secret_key', null);
+    config()->set('capell-payments.stripe.secret_key');
 
     expect(ResolvePaymentSettingAction::run('capell-payments.stripe.secret_key', 'stripe_secret_key', 'fallback'))->toBe('fallback');
 });

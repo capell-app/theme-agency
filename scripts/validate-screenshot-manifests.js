@@ -167,11 +167,11 @@ function validateThemeManifest(packageName, screenshotsPath, packageManifest) {
         if (
             isNonEmptyString(entry.screenshotPath) &&
             !entry.screenshotPath.startsWith(
-                `public/docs/screenshots/packages/${packageName}/`,
+                `packages/${packageName}/docs/screenshots/`,
             )
         ) {
             failures.push(
-                `${entryLabel}.screenshotPath must start with public/docs/screenshots/packages/${packageName}/`,
+                `${entryLabel}.screenshotPath must start with packages/${packageName}/docs/screenshots/`,
             )
         }
 

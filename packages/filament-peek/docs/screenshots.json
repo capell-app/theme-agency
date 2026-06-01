@@ -3,7 +3,7 @@
     "composerName": "capell-app/filament-peek",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/filament-peek",
+    "outputDirectory": "packages/filament-peek/docs/screenshots",
     "entries": [
         {
             "id": "page-edit-preview-actions",
@@ -15,7 +15,7 @@
             "required": true,
             "notes": "Capture the Page edit header with the Preview group showing the separate `Changes` and `Live page` actions.",
             "useCase": "An editor chooses between a temporary unsaved preview and the saved public page.",
-            "screenshotPath": "public/docs/screenshots/packages/filament-peek/page-edit-preview-actions.png"
+            "screenshotPath": "packages/filament-peek/docs/screenshots/page-edit-preview-actions.png"
         },
         {
             "id": "signed-unsaved-page-preview",
@@ -27,7 +27,7 @@
             "required": true,
             "notes": "Capture a valid signed preview URL generated from an unsaved Page edit snapshot. Do not commit real signed URLs or snapshot tokens.",
             "useCase": "An editor reviews temporary Page changes before saving them.",
-            "screenshotPath": "public/docs/screenshots/packages/filament-peek/signed-unsaved-page-preview.png"
+            "screenshotPath": "packages/filament-peek/docs/screenshots/signed-unsaved-page-preview.png"
         },
         {
             "id": "expired-preview-error",
@@ -39,7 +39,7 @@
             "required": true,
             "notes": "Capture the safe error state for an expired or missing preview snapshot without exposing cache keys or internal exception details.",
             "useCase": "An editor understands that an old temporary preview link has expired.",
-            "screenshotPath": "public/docs/screenshots/packages/filament-peek/expired-preview-error.png"
+            "screenshotPath": "packages/filament-peek/docs/screenshots/expired-preview-error.png"
         }
     ]
 }

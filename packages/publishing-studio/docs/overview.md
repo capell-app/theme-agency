@@ -57,17 +57,17 @@ Gives editorial teams a Statamic-style content history feel while remaining a se
 
 ## Screenshots
 
-![Publishing workflow dashboard](../../../public/docs/screenshots/packages/publishing-studio/editorial-timeline-dashboard.png)
+![Publishing workflow dashboard](screenshots/editorial-timeline-dashboard.png)
 
-![Preview link management](../../../public/docs/screenshots/packages/publishing-studio/preview-link-management.png)
+![Preview link management](screenshots/preview-link-management.png)
 
-![Workspace compare readiness](../../../public/docs/screenshots/packages/publishing-studio/compare-readiness.png)
+![Workspace compare readiness](screenshots/compare-readiness.png)
 
-![Scheduled publishing](../../../public/docs/screenshots/packages/publishing-studio/scheduled-publishing.png)
+![Scheduled publishing](screenshots/scheduled-publishing.png)
 
-![Stale drafts](../../../public/docs/screenshots/packages/publishing-studio/stale-drafts.png)
+![Stale drafts](screenshots/stale-drafts.png)
 
-![Rollback restore from the pages table](../../../public/docs/screenshots/packages/publishing-studio/rollback-restore.png)
+![Rollback restore from the pages table](screenshots/rollback-restore.png)
 
 The live preview, preview banner, recovery import, and activity history screenshots need seeded workspace/import data before they should be published.
 
@@ -190,7 +190,7 @@ erDiagram
 
 ## Screenshot Automation
 
-Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `public/docs/screenshots/packages/publishing-studio`.
+Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `packages/publishing-studio/docs/screenshots`.
 
 - Editorial timeline dashboard.
 - Live preview, preview link management, and preview banner.

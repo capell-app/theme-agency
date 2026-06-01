@@ -4,32 +4,29 @@ declare(strict_types=1);
 
 namespace Capell\KnowledgeBase\Policies;
 
-use Capell\KnowledgeBase\Models\KnowledgeBaseArticle;
-use Illuminate\Contracts\Auth\Authenticatable;
-
 final class KnowledgeBaseArticlePolicy
 {
-    public function viewAny(Authenticatable $user): bool
+    public function viewAny(): bool
     {
         return true;
     }
 
-    public function view(Authenticatable $user, KnowledgeBaseArticle $article): bool
+    public function view(): bool
     {
         return true;
     }
 
-    public function create(Authenticatable $user): bool
+    public function create(): bool
     {
         return true;
     }
 
-    public function update(Authenticatable $user, KnowledgeBaseArticle $article): bool
+    public function update(): bool
     {
         return true;
     }
 
-    public function delete(Authenticatable $user, KnowledgeBaseArticle $article): bool
+    public function delete(): bool
     {
         return false;
     }

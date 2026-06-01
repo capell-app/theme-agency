@@ -42,7 +42,7 @@ final class EventsEditorialCalendarEventContributor implements EditorialCalendar
                     fn (Builder $eventBuilder): Builder => $eventBuilder->whereIn('site_id', $query->siteIds),
                 ),
             )
-            ->orderBy('starts_at')
+            ->oldest('starts_at')
             ->limit($query->limit)
             ->get()
             ->map(fn (EventOccurrence $occurrence): EditorialCalendarEventData => $this->occurrenceEvent($occurrence));

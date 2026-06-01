@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\AutomationStudio\Support\Handlers;
 
+use Capell\AgentBridge\Actions\InvokeAgentBridgeCapabilityPreviewAction;
+use Capell\AgentBridge\Data\AuthenticatedAgentBridgeClientData;
 use Capell\AutomationStudio\Contracts\AutomationActionHandler;
 use Capell\AutomationStudio\Data\AutomationActionResultData;
 use Capell\AutomationStudio\Data\AutomationRuleActionData;
@@ -19,8 +21,8 @@ final class QueueAgentCapabilityAutomationActionHandler implements AutomationAct
     #[Override]
     public function handle(AutomationTriggerEventData $event, AutomationRuleActionData $action): AutomationActionResultData
     {
-        $invokeActionClass = 'Capell\\AgentBridge\\Actions\\InvokeAgentBridgeCapabilityPreviewAction';
-        $authenticatedClientDataClass = 'Capell\\AgentBridge\\Data\\AuthenticatedAgentBridgeClientData';
+        $invokeActionClass = InvokeAgentBridgeCapabilityPreviewAction::class;
+        $authenticatedClientDataClass = AuthenticatedAgentBridgeClientData::class;
 
         if (! class_exists($invokeActionClass) || ! class_exists($authenticatedClientDataClass)) {
             return new AutomationActionResultData(

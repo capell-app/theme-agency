@@ -4,13 +4,26 @@ declare(strict_types=1);
 
 namespace Capell\Contacts\Providers;
 
+use Capell\AccessGate\Events\RegistrationApproved;
+use Capell\CampaignStudio\Events\CampaignConverted;
+use Capell\Comments\Events\CommentCreated;
+use Capell\Contacts\Listeners\SyncContactFromAccessGateRegistration;
+use Capell\Contacts\Listeners\SyncContactFromCampaignConversion;
+use Capell\Contacts\Listeners\SyncContactFromComment;
+use Capell\Contacts\Listeners\SyncContactFromEventRegistration;
+use Capell\Contacts\Listeners\SyncContactFromFormSubmission;
+use Capell\Contacts\Listeners\SyncContactFromShopifyCustomer;
 use Capell\Contacts\Models\Contact;
 use Capell\Contacts\Models\ContactActivity;
 use Capell\Contacts\Models\Lead;
 use Capell\Contacts\Models\Organisation;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\Events\Events\EventRegistrationCreated;
+use Capell\FormBuilder\Events\FormSubmitted;
+use Capell\ShopifyCommerce\Events\ShopifyCustomerSynced;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Event;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -47,7 +60,13 @@ final class ContactsServiceProvider extends AbstractPackageServiceProvider
 
             $this
                 ->registerModels()
-                ->registerProtectedTables();
+                ->registerProtectedTables()
+                ->registerAccessGateSourceAdapter()
+                ->registerCampaignStudioSourceAdapter()
+                ->registerCommentsSourceAdapter()
+                ->registerEventsSourceAdapter()
+                ->registerFormBuilderSourceAdapter()
+                ->registerShopifyCommerceSourceAdapter();
         });
     }
 
@@ -102,6 +121,72 @@ final class ContactsServiceProvider extends AbstractPackageServiceProvider
 
             CapellCore::registerProtectedTable(static fn (): string => $tableName);
         }
+
+        return $this;
+    }
+
+    private function registerFormBuilderSourceAdapter(): self
+    {
+        if (! class_exists(FormSubmitted::class)) {
+            return $this;
+        }
+
+        Event::listen(FormSubmitted::class, SyncContactFromFormSubmission::class);
+
+        return $this;
+    }
+
+    private function registerAccessGateSourceAdapter(): self
+    {
+        if (! class_exists(RegistrationApproved::class)) {
+            return $this;
+        }
+
+        Event::listen(RegistrationApproved::class, SyncContactFromAccessGateRegistration::class);
+
+        return $this;
+    }
+
+    private function registerCampaignStudioSourceAdapter(): self
+    {
+        if (! class_exists(CampaignConverted::class)) {
+            return $this;
+        }
+
+        Event::listen(CampaignConverted::class, SyncContactFromCampaignConversion::class);
+
+        return $this;
+    }
+
+    private function registerCommentsSourceAdapter(): self
+    {
+        if (! class_exists(CommentCreated::class)) {
+            return $this;
+        }
+
+        Event::listen(CommentCreated::class, SyncContactFromComment::class);
+
+        return $this;
+    }
+
+    private function registerEventsSourceAdapter(): self
+    {
+        if (! class_exists(EventRegistrationCreated::class)) {
+            return $this;
+        }
+
+        Event::listen(EventRegistrationCreated::class, SyncContactFromEventRegistration::class);
+
+        return $this;
+    }
+
+    private function registerShopifyCommerceSourceAdapter(): self
+    {
+        if (! class_exists(ShopifyCustomerSynced::class)) {
+            return $this;
+        }
+
+        Event::listen(ShopifyCustomerSynced::class, SyncContactFromShopifyCustomer::class);
 
         return $this;
     }

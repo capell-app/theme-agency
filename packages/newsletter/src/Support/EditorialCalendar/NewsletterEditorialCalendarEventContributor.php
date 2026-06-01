@@ -36,7 +36,7 @@ final class NewsletterEditorialCalendarEventContributor implements EditorialCale
             ->whereBetween('scheduled_at', [$query->startsAt, $query->endsAt])
             ->when($query->state !== null, fn (Builder $builder): Builder => $builder->where('status', $query->state))
             ->when($query->siteIds !== null, fn (Builder $builder): Builder => $builder->whereIn('site_id', $query->siteIds))
-            ->orderBy('scheduled_at')
+            ->oldest('scheduled_at')
             ->limit($query->limit)
             ->get()
             ->map(fn (NewsletterSend $send): EditorialCalendarEventData => $this->sendEvent($send));
@@ -59,9 +59,7 @@ final class NewsletterEditorialCalendarEventContributor implements EditorialCale
     {
         $scheduledAt = $send->scheduled_at;
 
-        if (! $scheduledAt instanceof CarbonInterface) {
-            throw new RuntimeException('Newsletter editorial calendar sends must have a scheduled date.');
-        }
+        throw_unless($scheduledAt instanceof CarbonInterface, RuntimeException::class, 'Newsletter editorial calendar sends must have a scheduled date.');
 
         return new EditorialCalendarEventData(
             id: 'newsletter-send-' . $send->id,

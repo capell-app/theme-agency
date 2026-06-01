@@ -29,13 +29,17 @@ use Capell\AccessGate\Policies\ClaimTokenPolicy;
 use Capell\AccessGate\Policies\GrantPolicy;
 use Capell\AccessGate\Policies\RegistrationPolicy;
 use Capell\AccessGate\Support\AccessRequestMethodRegistry;
+use Capell\AccessGate\Support\CustomerPortal\AccessGatePortalSelfServiceItemProvider;
 use Capell\AccessGate\Support\Payments\AccessGatePaymentFulfillmentHandler;
 use Capell\AccessGate\Support\RegistrationFieldRegistry;
 use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
+use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Capell\Frontend\Support\Rules\FrontendRuleConditionRegistry;
+use Capell\Payments\Contracts\PaymentFulfillmentHandler;
 use Capell\PublicActions\Support\PublicActionHandlerRegistry;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
@@ -106,6 +110,7 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
                 ->registerAdminResources()
                 ->registerFrontendRuleConditions()
                 ->registerProtectedTables()
+                ->registerCustomerPortalIntegrations()
                 ->registerPaymentFulfillmentHandler();
         });
     }
@@ -338,12 +343,31 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
 
     private function registerPaymentFulfillmentHandler(): self
     {
-        if (! interface_exists('Capell\\Payments\\Contracts\\PaymentFulfillmentHandler')) {
+        if (! interface_exists(PaymentFulfillmentHandler::class)) {
             return $this;
         }
 
         $this->app->singleton(AccessGatePaymentFulfillmentHandler::class);
         $this->app->tag([AccessGatePaymentFulfillmentHandler::class], 'capell.payments.fulfillment_handler');
+
+        return $this;
+    }
+
+    private function registerCustomerPortalIntegrations(): self
+    {
+        if (! class_exists(PortalSelfServiceItemRegistry::class)
+            || ! interface_exists(PortalSelfServiceItemProvider::class)) {
+            return $this;
+        }
+
+        /** @var object $registry */
+        $registry = $this->app->make(PortalSelfServiceItemRegistry::class);
+
+        if (! method_exists($registry, 'register')) {
+            return $this;
+        }
+
+        $registry->register('access-gate.gated-resources', AccessGatePortalSelfServiceItemProvider::class);
 
         return $this;
     }

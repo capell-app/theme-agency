@@ -3,7 +3,7 @@
     "composerName": "capell-app/events",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/events",
+    "outputDirectory": "packages/events/docs/screenshots",
     "entries": [
         {
             "id": "events-index",
@@ -14,7 +14,7 @@
             "target": "EventResource:index",
             "required": true,
             "notes": "Capture with at least three seeded events across public/private or scheduled states so event table columns and controls are meaningful.",
-            "screenshotPath": "public/docs/screenshots/packages/events/events-index.png",
+            "screenshotPath": "packages/events/docs/screenshots/events-index.png",
             "useCase": "An editor reviews upcoming event records before opening one for schedule or registration changes."
         },
         {
@@ -26,7 +26,7 @@
             "target": "EventResource:create",
             "required": true,
             "notes": "Capture after event publishing defaults are registered so blueprint and layout defaults are available on create.",
-            "screenshotPath": "public/docs/screenshots/packages/events/events-create.png",
+            "screenshotPath": "packages/events/docs/screenshots/events-create.png",
             "useCase": "An editor creates an event with schedule, recurrence, visibility, publishing, and registration settings."
         },
         {
@@ -38,7 +38,7 @@
             "target": "EventResource:edit",
             "required": true,
             "notes": "Requires a seeded event with recurrence and at least one generated occurrence so event state is not blank.",
-            "screenshotPath": "public/docs/screenshots/packages/events/events-edit.png",
+            "screenshotPath": "packages/events/docs/screenshots/events-edit.png",
             "useCase": "An editor adjusts an existing recurring event and checks registration or publication state before saving."
         },
         {
@@ -50,7 +50,7 @@
             "target": "EventVenueResource",
             "required": true,
             "notes": "Capture with at least one venue that has address fields and a map URL so the management table is populated.",
-            "screenshotPath": "public/docs/screenshots/packages/events/event-venues.png",
+            "screenshotPath": "packages/events/docs/screenshots/event-venues.png",
             "useCase": "An administrator manages reusable venues for events and confirms address details are visible."
         },
         {
@@ -62,7 +62,7 @@
             "target": "EventOccurrenceResource",
             "required": true,
             "notes": "Requires generated occurrences from SyncEventOccurrencesAction, including one override or cancelled occurrence when possible.",
-            "screenshotPath": "public/docs/screenshots/packages/events/event-occurrences.png",
+            "screenshotPath": "packages/events/docs/screenshots/event-occurrences.png",
             "useCase": "An editor reviews materialized event dates, statuses, venues, and registration counts."
         },
         {
@@ -74,7 +74,7 @@
             "target": "EventRegistrationResource",
             "required": true,
             "notes": "Requires native RSVP demo data with at least one pending, confirmed, or waitlisted registration.",
-            "screenshotPath": "public/docs/screenshots/packages/events/event-registrations.png",
+            "screenshotPath": "packages/events/docs/screenshots/event-registrations.png",
             "useCase": "An administrator reviews event attendee registrations, quantities, statuses, and related occurrences."
         },
         {
@@ -86,7 +86,7 @@
             "target": "EventCalendarPage",
             "required": true,
             "notes": "Requires View:EventCalendarPage permission and seeded occurrences within the next 90 days so the header widget has visible dates.",
-            "screenshotPath": "public/docs/screenshots/packages/events/event-calendar-admin-page.png",
+            "screenshotPath": "packages/events/docs/screenshots/event-calendar-admin-page.png",
             "useCase": "An editor opens the admin calendar to scan event occurrences across the next publishing window."
         },
         {
@@ -98,7 +98,7 @@
             "target": "EventCalendarWidget",
             "required": true,
             "notes": "Capture from EventCalendarPage or any host dashboard that renders EventCalendarWidget, with occurrences in the next 90 days.",
-            "screenshotPath": "public/docs/screenshots/packages/events/event-calendar-widget.png",
+            "screenshotPath": "packages/events/docs/screenshots/event-calendar-widget.png",
             "useCase": "An editor checks the calendar widget for upcoming event dates without leaving the current admin context."
         },
         {
@@ -110,7 +110,7 @@
             "target": "EventsListingPage",
             "required": true,
             "notes": "Requires a public listing page, site/language context, and public non-cancelled occurrences. Anonymous output must not expose authoring markers, editor URLs, internal IDs, or package internals.",
-            "screenshotPath": "public/docs/screenshots/packages/events/events-listing-page.png",
+            "screenshotPath": "packages/events/docs/screenshots/events-listing-page.png",
             "useCase": "A visitor browses public upcoming events for the current site."
         },
         {
@@ -122,7 +122,7 @@
             "target": "EventsCalendarPage",
             "required": true,
             "notes": "Requires a public calendar page and seeded public occurrences. Anonymous output must stay free of editor controls, model IDs, signed URLs, and package internals.",
-            "screenshotPath": "public/docs/screenshots/packages/events/events-calendar-page.png",
+            "screenshotPath": "packages/events/docs/screenshots/events-calendar-page.png",
             "useCase": "A visitor scans public events in calendar form without seeing admin-only metadata."
         },
         {
@@ -134,7 +134,7 @@
             "target": "events.ics",
             "required": true,
             "notes": "The actual route name is capell-events.calendar-feed. Verify text/calendar output for seeded public events; screenshot can be a browser text capture of the feed body.",
-            "screenshotPath": "public/docs/screenshots/packages/events/events-ics-feed.png",
+            "screenshotPath": "packages/events/docs/screenshots/events-ics-feed.png",
             "useCase": "A visitor or calendar client subscribes to the site's public event feed."
         }
     ]

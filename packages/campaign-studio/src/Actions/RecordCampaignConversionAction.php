@@ -57,7 +57,7 @@ final class RecordCampaignConversionAction
             : CampaignConversion::query()->create([...$identity, ...$values]);
 
         if ($conversion instanceof CampaignConversion && $conversion->wasRecentlyCreated) {
-            CampaignConverted::dispatch($conversion);
+            event(new CampaignConverted($conversion));
         }
 
         return $conversion instanceof CampaignConversion ? $conversion : null;

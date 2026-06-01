@@ -85,7 +85,7 @@ for (const packageName of packageNames) {
 const manifest = {
     generatedFor: 'capell-docs-deployment',
     source: 'packages/*/docs/screenshots.json',
-    outputRoot: 'public/docs/screenshots/packages',
+    outputRoot: 'packages/*/docs/screenshots',
     requirements,
     packages,
     entries,

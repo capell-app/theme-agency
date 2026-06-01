@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\PublishingStudio\Actions\BuildEditorialCalendarEventsAction;
+use Capell\PublishingStudio\Actions\DashboardReports\BuildVisibleEditorialCalendarEventsAction;
 use Capell\PublishingStudio\Actions\Workflow\BuildPublishingWorkflowAttentionItemsAction;
 use Capell\PublishingStudio\Filament\Pages\PublishingWorkflowPage;
 use Capell\PublishingStudio\Manifest\PublishingWorkflowPageContribution;
@@ -43,9 +45,16 @@ it('keeps the full publishing lifecycle visible in package capabilities', functi
         ->toContain('live-preview')
         ->toContain('approval-history')
         ->toContain('scheduled-publishing')
+        ->toContain('editorial-calendar-aggregation')
+        ->toContain('editorial-calendar-contributors')
+        ->toContain('editorial-calendar-view')
         ->toContain('rollback-restore')
         ->toContain('version-history')
         ->toContain('preview-link-management')
         ->toContain('field-comments')
         ->toContain('review-assignments');
+
+    expect($manifest['actions'] ?? [])
+        ->toHaveKey('buildEditorialCalendarEvents', BuildEditorialCalendarEventsAction::class)
+        ->toHaveKey('buildVisibleEditorialCalendarEvents', BuildVisibleEditorialCalendarEventsAction::class);
 });
