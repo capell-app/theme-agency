@@ -80,4 +80,10 @@ return [
         'shopify_customer' => 'Shopify customer',
         'campaign_conversion' => 'Campaign conversion',
     ],
+    'widgets' => [
+        'activities' => 'Activities',
+        'contacts' => 'Contacts',
+        'open_leads' => 'Open leads',
+        'organisations' => 'Organisations',
+    ],
 ];

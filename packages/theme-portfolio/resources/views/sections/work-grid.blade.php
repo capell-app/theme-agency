@@ -1,3 +1,9 @@
+@php
+    use Capell\Core\Facades\CapellCore;
+
+    $mediaLibraryAvailable ??= CapellCore::isPackageInstalled('capell-app/media-library');
+@endphp
+
 <section
     id="work-grid"
     class="theme-section theme-section-work-grid bg-[#f8fafc]"

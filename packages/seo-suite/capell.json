@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery outputs, crawler policy controls, and planned generated-output diagnostics.",
+    "description": "SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery outputs, crawler policy controls, and generated-output diagnostics.",
     "product": {
         "group": "Capell Search & SEO",
         "tier": "premium",
@@ -31,7 +31,55 @@
         "admin": [],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\SeoSuite\\Manifest\\SeoAuditPageContribution",
+            "pageClass": "Capell\\SeoSuite\\Filament\\Pages\\SeoAuditPage",
+            "labelKey": "capell-seo-suite::generic.seo_audit"
+        },
+        {
+            "type": "admin-page",
+            "class": "Capell\\SeoSuite\\Manifest\\BrokenLinksPageContribution",
+            "pageClass": "Capell\\SeoSuite\\Filament\\Pages\\BrokenLinksPage",
+            "labelKey": "capell-admin::navigation.broken_links"
+        },
+        {
+            "type": "admin-page",
+            "class": "Capell\\SeoSuite\\Manifest\\NotFoundUrlsPageContribution",
+            "pageClass": "Capell\\SeoSuite\\Filament\\Pages\\NotFoundUrlsPage",
+            "labelKey": "capell-admin::navigation.not_found"
+        },
+        {
+            "type": "admin-page",
+            "class": "Capell\\SeoSuite\\Manifest\\AiDiscoveryPageContribution",
+            "pageClass": "Capell\\SeoSuite\\Filament\\Pages\\AiDiscoveryPage",
+            "labelKey": "capell-seo-suite::generic.ai_discovery"
+        },
+        {
+            "type": "admin-page",
+            "class": "Capell\\SeoSuite\\Manifest\\TranslationCoveragePageContribution",
+            "pageClass": "Capell\\SeoSuite\\Filament\\Pages\\TranslationCoveragePage",
+            "labelKey": "capell-admin::navigation.translation_coverage"
+        },
+        {
+            "type": "admin-page",
+            "class": "Capell\\SeoSuite\\Manifest\\SearchRankingsPageContribution",
+            "pageClass": "Capell\\SeoSuite\\Filament\\Pages\\SearchRankingsPage",
+            "labelKey": "capell-seo-suite::generic.search_rankings"
+        },
+        {
+            "type": "route",
+            "class": "Capell\\SeoSuite\\Manifest\\AiDiscoveryRoutesContribution",
+            "routes": [
+                "capell-frontend.llms-txt",
+                "capell-frontend.llms-full-txt",
+                "capell-frontend.robots-txt",
+                "capell-frontend.page-markdown-home",
+                "capell-frontend.page-markdown"
+            ]
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": true,
@@ -59,7 +107,12 @@
     },
     "actions": {
         "buildCrawlerPreviewReport": "Capell\\SeoSuite\\Actions\\BuildCrawlerPreviewReportAction",
+        "buildSeoSuiteDoctorReport": "Capell\\SeoSuite\\Actions\\BuildSeoSuiteDoctorReportAction",
+        "buildSchemaTemplateReport": "Capell\\SeoSuite\\Actions\\BuildSchemaTemplateReportAction",
         "buildMarketplaceStructuredDataFreshnessWarnings": "Capell\\SeoSuite\\Actions\\BuildMarketplaceStructuredDataFreshnessWarningsAction",
+        "clearAiDiscoveryCache": "Capell\\SeoSuite\\Actions\\ClearAiDiscoveryCacheAction",
+        "refreshStaleAiDiscoveryMarkdown": "Capell\\SeoSuite\\Actions\\RefreshStaleAiDiscoveryMarkdownAction",
+        "syncAiDiscoveryPageProfiles": "Capell\\SeoSuite\\Actions\\SyncAiDiscoveryPageProfilesAction",
         "install": "Capell\\SeoSuite\\Actions\\InstallSeoSuitePackageAction"
     },
     "settings": [],
@@ -127,7 +180,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery outputs, crawler policy controls, and planned generated-output diagnostics.",
+        "summary": "SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery outputs, crawler policy controls, and generated-output diagnostics.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
@@ -138,6 +191,6 @@
         "categories": ["admin", "console", "frontend", "search-seo"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["admin-page", "model", "route"]
+        "deferredContributions": []
     }
 }

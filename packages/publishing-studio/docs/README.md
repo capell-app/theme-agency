@@ -1,6 +1,6 @@
 # Publishing Studio Docs
 
-PublishingStudio provides preview, compare, approve, schedule, publish, restore, and rollback workflows for Capell content.
+Publishing Studio provides preview, compare, approve, editorial calendar, schedule, publish, restore, and rollback workflows for Capell content.
 
 Start at the [package README](../README.md) when deciding whether to install this package. Use the docs below for setup, extension, debugging, and verification details.
 

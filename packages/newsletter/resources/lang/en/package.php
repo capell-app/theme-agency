@@ -3,5 +3,5 @@
 declare(strict_types=1);
 
 return [
-    'description' => 'Subscriber lifecycle, consent, newsletter interests, provider sync, and audience operations for Capell.',
+    'description' => 'Subscriber lifecycle, consent, newsletter interests, segmentation, preference center, campaign sends, provider sync, and audience operations for Capell.',
 ];

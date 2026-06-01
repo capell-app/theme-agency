@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "CampaignStudio adds campaign groups, landing pages, CTA blocks, conversion goals, UTM attribution, and conversion reporting to Capell.",
+    "description": "Campaign Studio adds campaign groups, landing-page variants, audience targeting, experiments, CTA blocks, conversion goals, UTM attribution, funnel reporting, and conversion reporting to Capell.",
     "product": {
         "group": "Capell Growth",
         "tier": "premium",
@@ -37,11 +37,77 @@
             "Capell\\CampaignStudio\\Providers\\FrontendServiceProvider"
         ]
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-resource",
+            "class": "Capell\\CampaignStudio\\Manifest\\CampaignStudioAdminResourcesContribution",
+            "resourceClasses": [
+                "Capell\\CampaignStudio\\Filament\\Resources\\CampaignGroups\\CampaignGroupResource",
+                "Capell\\CampaignStudio\\Filament\\Resources\\CampaignLandingPages\\CampaignLandingPageResource",
+                "Capell\\CampaignStudio\\Filament\\Resources\\CampaignCtaBlocks\\CampaignCtaBlockResource",
+                "Capell\\CampaignStudio\\Filament\\Resources\\CampaignConversionGoals\\CampaignConversionGoalResource"
+            ]
+        },
+        {
+            "type": "configurator",
+            "class": "Capell\\CampaignStudio\\Manifest\\CampaignBlockConfiguratorsContribution",
+            "configuratorClasses": [
+                "Capell\\CampaignStudio\\Filament\\Configurators\\Blocks\\CampaignCtaBlockBlockConfigurator",
+                "Capell\\CampaignStudio\\Filament\\Configurators\\Blocks\\CampaignHeroBlockConfigurator",
+                "Capell\\CampaignStudio\\Filament\\Configurators\\Blocks\\CampaignLeadFormBlockConfigurator"
+            ]
+        },
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\CampaignStudio\\Manifest\\CampaignStudioDashboardWidgetsContribution",
+            "widgetClasses": [
+                "Capell\\CampaignStudio\\Filament\\Widgets\\TopCampaignStudioWidget",
+                "Capell\\CampaignStudio\\Filament\\Widgets\\TopLandingPagesWidget"
+            ]
+        },
+        {
+            "type": "overview-stat",
+            "class": "Capell\\CampaignStudio\\Manifest\\CampaignOverviewStatsContribution",
+            "keys": [
+                "campaign_overview",
+                "campaign_overview.conversions",
+                "campaign_overview.conversion_rate"
+            ]
+        },
+        {
+            "type": "model",
+            "class": "Capell\\CampaignStudio\\Manifest\\CampaignStudioModelsContribution",
+            "modelClasses": [
+                "Capell\\CampaignStudio\\Models\\CampaignGroup",
+                "Capell\\CampaignStudio\\Models\\CampaignLandingPage",
+                "Capell\\CampaignStudio\\Models\\CampaignCtaBlock",
+                "Capell\\CampaignStudio\\Models\\CampaignConversionGoal",
+                "Capell\\CampaignStudio\\Models\\CampaignConversion"
+            ]
+        },
+        {
+            "type": "schema-extender",
+            "class": "Capell\\CampaignStudio\\Manifest\\CampaignPageSchemaExtenderContribution",
+            "extenderClass": "Capell\\CampaignStudio\\Filament\\Extenders\\Page\\CampaignPageSchemaExtender"
+        },
+        {
+            "type": "frontend-component",
+            "class": "Capell\\CampaignStudio\\Manifest\\CampaignBlockComponentsContribution",
+            "componentClasses": [
+                "Capell\\CampaignStudio\\View\\Components\\Block\\CampaignCtaBlock"
+            ]
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": []
+        "requiredTables": [
+            "campaign_groups",
+            "campaign_landing_pages",
+            "campaign_cta_blocks",
+            "campaign_conversion_goals",
+            "campaign_conversions"
+        ]
     },
     "commands": {
         "install": null,
@@ -50,6 +116,21 @@
         "doctor": null
     },
     "actions": {
+        "applyCampaignPageDefaults": "Capell\\CampaignStudio\\Actions\\ApplyCampaignPageDefaultsAction",
+        "buildCampaignConversionFunnel": "Capell\\CampaignStudio\\Actions\\BuildCampaignConversionFunnelAction",
+        "buildCampaignLandingPageVariants": "Capell\\CampaignStudio\\Actions\\BuildCampaignLandingPageVariantsAction",
+        "buildCampaignOverviewStats": "Capell\\CampaignStudio\\Actions\\BuildCampaignOverviewStatsAction",
+        "buildCampaignUrl": "Capell\\CampaignStudio\\Actions\\BuildCampaignUrlAction",
+        "buildConversionAttribution": "Capell\\CampaignStudio\\Actions\\BuildConversionAttributionAction",
+        "buildTopCampaignStudioQuery": "Capell\\CampaignStudio\\Actions\\BuildTopCampaignStudioQueryAction",
+        "buildTopLandingPagesQuery": "Capell\\CampaignStudio\\Actions\\BuildTopLandingPagesQueryAction",
+        "recordCampaignConversion": "Capell\\CampaignStudio\\Actions\\RecordCampaignConversionAction",
+        "recordCtaClickConversion": "Capell\\CampaignStudio\\Actions\\RecordCtaClickConversionAction",
+        "recordFormSubmissionConversion": "Capell\\CampaignStudio\\Actions\\RecordFormSubmissionConversionAction",
+        "recordPageViewConversion": "Capell\\CampaignStudio\\Actions\\RecordPageViewConversionAction",
+        "resolveCampaignFromUrl": "Capell\\CampaignStudio\\Actions\\ResolveCampaignFromUrlAction",
+        "resolveCampaignLandingPageFromUrl": "Capell\\CampaignStudio\\Actions\\ResolveCampaignLandingPageFromUrlAction",
+        "resolveCampaignLandingPageVariant": "Capell\\CampaignStudio\\Actions\\ResolveCampaignLandingPageVariantAction",
         "syncCampaignExperiment": "Capell\\CampaignStudio\\Actions\\SyncCampaignExperimentAction"
     },
     "settings": [],
@@ -58,8 +139,12 @@
         "campaign-studio",
         "campaign-studio-admin",
         "campaign-studio-frontend",
+        "campaign-audience-targeting",
+        "campaign-conversion-funnel-reporting",
+        "campaign-dashboard-reporting",
         "campaign-experiment-sync",
-        "landing-page-variant-experiments"
+        "landing-page-variant-experiments",
+        "landing-page-variant-management"
     ],
     "performance": {
         "frontendRenderBudgetMs": 20,
@@ -89,7 +174,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "CampaignStudio adds campaign groups, landing pages, CTA blocks, conversion goals, UTM attribution, and conversion reporting to Capell.",
+        "summary": "Campaign Studio adds campaign groups, landing-page variants, audience targeting, experiments, CTA blocks, conversion goals, UTM attribution, funnel reporting, and conversion reporting to Capell.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
@@ -100,12 +185,6 @@
         "categories": ["admin", "frontend", "growth"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-resource",
-            "configurator",
-            "dashboard-block",
-            "model",
-            "overview-stat"
-        ]
+        "deferredContributions": []
     }
 }

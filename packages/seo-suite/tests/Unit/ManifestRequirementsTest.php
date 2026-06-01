@@ -2,8 +2,27 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Contracts\Extensions\ExtensionContribution;
 use Capell\SeoSuite\Actions\BuildCrawlerPreviewReportAction;
 use Capell\SeoSuite\Actions\BuildMarketplaceStructuredDataFreshnessWarningsAction;
+use Capell\SeoSuite\Actions\BuildSchemaTemplateReportAction;
+use Capell\SeoSuite\Actions\BuildSeoSuiteDoctorReportAction;
+use Capell\SeoSuite\Actions\ClearAiDiscoveryCacheAction;
+use Capell\SeoSuite\Actions\RefreshStaleAiDiscoveryMarkdownAction;
+use Capell\SeoSuite\Actions\SyncAiDiscoveryPageProfilesAction;
+use Capell\SeoSuite\Filament\Pages\AiDiscoveryPage;
+use Capell\SeoSuite\Filament\Pages\BrokenLinksPage;
+use Capell\SeoSuite\Filament\Pages\NotFoundUrlsPage;
+use Capell\SeoSuite\Filament\Pages\SearchRankingsPage;
+use Capell\SeoSuite\Filament\Pages\SeoAuditPage;
+use Capell\SeoSuite\Filament\Pages\TranslationCoveragePage;
+use Capell\SeoSuite\Manifest\AiDiscoveryPageContribution;
+use Capell\SeoSuite\Manifest\AiDiscoveryRoutesContribution;
+use Capell\SeoSuite\Manifest\BrokenLinksPageContribution;
+use Capell\SeoSuite\Manifest\NotFoundUrlsPageContribution;
+use Capell\SeoSuite\Manifest\SearchRankingsPageContribution;
+use Capell\SeoSuite\Manifest\SeoAuditPageContribution;
+use Capell\SeoSuite\Manifest\TranslationCoveragePageContribution;
 use Illuminate\Support\Facades\File;
 
 it('declares implemented diagnostics commands tables and capabilities', function (): void {
@@ -39,7 +58,92 @@ it('declares implemented diagnostics commands tables and capabilities', function
             BuildCrawlerPreviewReportAction::class,
         )
         ->toHaveKey(
+            'buildSeoSuiteDoctorReport',
+            BuildSeoSuiteDoctorReportAction::class,
+        )
+        ->toHaveKey(
+            'buildSchemaTemplateReport',
+            BuildSchemaTemplateReportAction::class,
+        )
+        ->toHaveKey(
             'buildMarketplaceStructuredDataFreshnessWarnings',
             BuildMarketplaceStructuredDataFreshnessWarningsAction::class,
+        )
+        ->toHaveKey(
+            'clearAiDiscoveryCache',
+            ClearAiDiscoveryCacheAction::class,
+        )
+        ->toHaveKey(
+            'refreshStaleAiDiscoveryMarkdown',
+            RefreshStaleAiDiscoveryMarkdownAction::class,
+        )
+        ->toHaveKey(
+            'syncAiDiscoveryPageProfiles',
+            SyncAiDiscoveryPageProfilesAction::class,
         );
+});
+
+it('declares implemented admin pages routes and no longer defers core seo suite surfaces', function (): void {
+    $manifest = json_decode(
+        File::get(__DIR__ . '/../../capell.json'),
+        associative: true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    expect($manifest['description'])->not->toContain('planned generated-output diagnostics')
+        ->and($manifest['marketplace']['summary'])->not->toContain('planned generated-output diagnostics')
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'admin-page',
+            'class' => SeoAuditPageContribution::class,
+            'pageClass' => SeoAuditPage::class,
+            'labelKey' => 'capell-seo-suite::generic.seo_audit',
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'admin-page',
+            'class' => BrokenLinksPageContribution::class,
+            'pageClass' => BrokenLinksPage::class,
+            'labelKey' => 'capell-admin::navigation.broken_links',
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'admin-page',
+            'class' => NotFoundUrlsPageContribution::class,
+            'pageClass' => NotFoundUrlsPage::class,
+            'labelKey' => 'capell-admin::navigation.not_found',
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'admin-page',
+            'class' => AiDiscoveryPageContribution::class,
+            'pageClass' => AiDiscoveryPage::class,
+            'labelKey' => 'capell-seo-suite::generic.ai_discovery',
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'admin-page',
+            'class' => TranslationCoveragePageContribution::class,
+            'pageClass' => TranslationCoveragePage::class,
+            'labelKey' => 'capell-admin::navigation.translation_coverage',
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'admin-page',
+            'class' => SearchRankingsPageContribution::class,
+            'pageClass' => SearchRankingsPage::class,
+            'labelKey' => 'capell-seo-suite::generic.search_rankings',
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'route',
+            'class' => AiDiscoveryRoutesContribution::class,
+            'routes' => [
+                'capell-frontend.llms-txt',
+                'capell-frontend.llms-full-txt',
+                'capell-frontend.robots-txt',
+                'capell-frontend.page-markdown-home',
+                'capell-frontend.page-markdown',
+            ],
+        ])
+        ->and($manifest['contributionTraceability']['deferredContributions'])->not->toContain('admin-page', 'model', 'route');
+
+    foreach ($manifest['contributes'] as $contribution) {
+        $class = $contribution['class'] ?? null;
+
+        expect(is_string($class) ? class_implements($class) : [])->toContain(ExtensionContribution::class);
+    }
 });

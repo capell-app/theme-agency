@@ -1,3 +1,3 @@
 # URL Manager Docs
 
-See the package [README](../README.md) for the first foundation slice, current integration points, and next implementation surfaces.
+See the package [README](../README.md) for the managed redirect, changed URL, 404 opportunity, import/export, and SEO Suite integration points.

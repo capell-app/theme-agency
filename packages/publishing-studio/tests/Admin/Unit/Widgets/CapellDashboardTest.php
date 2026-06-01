@@ -17,6 +17,7 @@ use Capell\PublishingStudio\Filament\Widgets\WorkspaceActivityWidgetAbstract;
 it('getColumns returns the responsive dashboard grid columns', function (): void {
     $dashboard = new CapellDashboard;
     expect($dashboard->getColumns())->toBeIn([
+        12,
         2,
         [
             'default' => 1,

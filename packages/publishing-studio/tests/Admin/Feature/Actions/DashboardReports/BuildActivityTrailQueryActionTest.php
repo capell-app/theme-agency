@@ -31,11 +31,11 @@ describe('BuildActivityTrailQueryAction', function (): void {
 
     it('filters by last 30 days by default', function (): void {
         // Arrange
-        $page = Page::factory()->create();
-        activity()->causedBy(auth()->user())->performedOn($page)->log('created');
+        $page = activity()->withoutLogs(fn (): Page => Page::factory()->create());
+        activity()->causedBy(auth()->user())->performedOn($page)->event('created')->log('created');
 
         // Create an old activity record (>30 days)
-        activity()->performedOn($page)->log('old-event');
+        activity()->performedOn($page)->event('created')->log('old-event');
         Activity::query()->latest()->first()?->forceFill(['created_at' => now()->subDays(31)])->saveQuietly();
 
         // Act

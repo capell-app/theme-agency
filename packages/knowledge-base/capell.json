@@ -47,6 +47,14 @@
             "class": "Capell\\KnowledgeBase\\Manifest\\KnowledgeBaseArticleResourceContribution",
             "resourceClass": "Capell\\KnowledgeBase\\Filament\\Resources\\Articles\\KnowledgeBaseArticleResource",
             "group": "KnowledgeBaseArticle"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\KnowledgeBase\\Manifest\\KnowledgeBaseModelsContribution"
+        },
+        {
+            "type": "route",
+            "class": "Capell\\KnowledgeBase\\Manifest\\KnowledgeBaseFrontendRoutesContribution"
         }
     ],
     "database": {
@@ -147,6 +155,6 @@
         "categories": ["content", "frontend", "search-seo"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["theme-integration"]
+        "deferredContributions": []
     }
 }

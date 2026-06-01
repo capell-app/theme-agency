@@ -6,7 +6,9 @@
     "homepage": "https://github.com/capell-app/privacy-center",
     "require": {
         "php": "^8.3",
+        "capell-app/admin": "^4.0 || 4.x-dev",
         "capell-app/core": "^4.0 || 4.x-dev",
+        "filament/filament": "^4.0|^5.0",
         "filament/support": "^4.7|^5.2",
         "laravel/framework": "^11.44.2|^12.0|^13.0",
         "lorisleiva/laravel-actions": "^2.8",

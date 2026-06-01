@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
 use Capell\KnowledgeBase\Actions\BuildAiReadableKnowledgeBaseOutputAction;
 use Capell\KnowledgeBase\Actions\BuildKnowledgeBaseSearchDocumentsAction;
 use Capell\KnowledgeBase\Enums\ResourceEnum;
@@ -13,6 +14,8 @@ use Capell\KnowledgeBase\Filament\Resources\Collections\Pages\CreateKnowledgeBas
 use Capell\KnowledgeBase\Filament\Resources\Collections\Pages\ListKnowledgeBaseCollections;
 use Capell\KnowledgeBase\Manifest\KnowledgeBaseArticleResourceContribution;
 use Capell\KnowledgeBase\Manifest\KnowledgeBaseCollectionResourceContribution;
+use Capell\KnowledgeBase\Manifest\KnowledgeBaseFrontendRoutesContribution;
+use Capell\KnowledgeBase\Manifest\KnowledgeBaseModelsContribution;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticle;
 use Capell\KnowledgeBase\Models\KnowledgeBaseCollection;
 use Capell\KnowledgeBase\Policies\KnowledgeBaseArticlePolicy;
@@ -81,6 +84,15 @@ it('declares admin providers, resources, and owned tables in the manifest', func
             'resourceClass' => KnowledgeBaseArticleResource::class,
             'group' => 'KnowledgeBaseArticle',
         ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'model',
+            'class' => KnowledgeBaseModelsContribution::class,
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'route',
+            'class' => KnowledgeBaseFrontendRoutesContribution::class,
+        ])
+        ->and(class_implements(KnowledgeBaseFrontendRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
         ->and($manifest['actions']['buildKnowledgeBaseSearchDocuments'])
         ->toBe(BuildKnowledgeBaseSearchDocumentsAction::class)
         ->and($manifest['actions']['buildAiReadableKnowledgeBaseOutput'])
@@ -97,7 +109,8 @@ it('declares admin providers, resources, and owned tables in the manifest', func
             'migration',
             'model',
             'search-index',
-        );
+        )
+        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
 });
 
 it('allows admin authoring but keeps destructive deletes disabled by default', function (): void {
@@ -114,12 +127,12 @@ it('allows admin authoring but keeps destructive deletes disabled by default', f
     $collectionPolicy = new KnowledgeBaseCollectionPolicy;
     $articlePolicy = new KnowledgeBaseArticlePolicy;
 
-    expect($collectionPolicy->viewAny($user))->toBeTrue()
-        ->and($collectionPolicy->create($user))->toBeTrue()
-        ->and($collectionPolicy->update($user, $collection))->toBeTrue()
-        ->and($collectionPolicy->delete($user, $collection))->toBeFalse()
-        ->and($articlePolicy->viewAny($user))->toBeTrue()
-        ->and($articlePolicy->create($user))->toBeTrue()
-        ->and($articlePolicy->update($user, $article))->toBeTrue()
-        ->and($articlePolicy->delete($user, $article))->toBeFalse();
+    expect($collectionPolicy->viewAny())->toBeTrue()
+        ->and($collectionPolicy->create())->toBeTrue()
+        ->and($collectionPolicy->update())->toBeTrue()
+        ->and($collectionPolicy->delete())->toBeFalse()
+        ->and($articlePolicy->viewAny())->toBeTrue()
+        ->and($articlePolicy->create())->toBeTrue()
+        ->and($articlePolicy->update())->toBeTrue()
+        ->and($articlePolicy->delete())->toBeFalse();
 });

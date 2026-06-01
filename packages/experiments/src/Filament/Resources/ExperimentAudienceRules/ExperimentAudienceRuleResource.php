@@ -6,6 +6,7 @@ namespace Capell\Experiments\Filament\Resources\ExperimentAudienceRules;
 
 use BackedEnum;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\Support\Database\RuntimeSchemaState;
 use Capell\Experiments\Enums\AudienceOperator;
 use Capell\Experiments\Enums\AudienceRuleType;
 use Capell\Experiments\Filament\Resources\ExperimentAudienceRules\Pages\CreateExperimentAudienceRule;
@@ -106,6 +107,10 @@ final class ExperimentAudienceRuleResource extends Resource
      */
     private static function experimentOptions(): array
     {
+        if (! resolve(RuntimeSchemaState::class)->hasTable((new Experiment)->getTable())) {
+            return [];
+        }
+
         return Experiment::query()->orderBy('name')->pluck('name', 'id')->all();
     }
 

@@ -5,7 +5,7 @@ parameters:
     universalObjectCratesClasses:
         - PHPUnit\Framework\TestCase
     scanDirectories:
-        - vendor/mrpunyapal/peststan/src
+        - ../vendor/mrpunyapal/peststan/src
 
 parametersSchema:
     peststan: structure([

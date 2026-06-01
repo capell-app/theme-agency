@@ -2,7 +2,7 @@
 
 ## Scope
 
-This slice creates the domain foundation, persistence layer, initial admin surface, and queue-backed trigger execution for Automation Studio. The goal is to give Capell packages a typed contract for triggers, rules, actions, persisted rules, audit-ready runs, operator rule management, and idempotent queued execution while avoiding hard dependencies on Public Actions, Form Builder, Campaign Studio, Access Gate, or Publishing Studio.
+This slice creates the domain foundation, persistence layer, initial admin surface, native action handlers, and queue-backed trigger execution for Automation Studio. The goal is to give Capell packages a typed contract for triggers, rules, actions, persisted rules, audit-ready runs, operator rule management, and idempotent queued execution while avoiding hard dependencies on Public Actions, Form Builder, Campaign Studio, Access Gate, Contacts, Newsletter, Email Studio, Agent Bridge, or Publishing Studio.
 
 ## Implemented
 
@@ -36,9 +36,10 @@ This slice creates the domain foundation, persistence layer, initial admin surfa
 - The native `send_email` action handler is implemented through Email Studio when that package is installed. It resolves recipients from rule settings or trigger payloads, maps variables and headers into Email Studio DTOs, and returns the queued email message id.
 - The native `queue_agent_capability` action handler is implemented through Agent Bridge when that package is installed. It invokes the Agent Bridge capability preview/execution boundary and returns Agent Bridge result or confirmation metadata.
 
-## Deliberate deferrals
+## Integration Notes
 
 - Automation Studio listens for `Capell\CampaignStudio\Events\CampaignConverted` when Campaign Studio is installed. Campaign Studio dispatches that event when a conversion row is newly recorded.
+- Native handlers are implemented and optional-package guarded. A handler reports an unavailable dependency rather than hard failing when Contacts, Newsletter, Email Studio, Public Actions, or Agent Bridge is absent.
 
 ## Next slices
 

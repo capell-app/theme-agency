@@ -6,7 +6,7 @@ This page is the consolidated implementation overview for the PublishingStudio p
 
 ## What This Package Adds
 
-PublishingStudio is Capell's premium editorial timeline package. It brings the publishing loop into one workflow: preview, compare, approve, schedule, publish, and rollback content changes while preserving a readable history of what happened and why.
+Publishing Studio is Capell's premium editorial timeline package. It brings the publishing loop into one workflow: preview, compare, approve, editorial calendar, schedule, publish, and rollback content changes while preserving a readable history of what happened and why.
 
 - Draft publishing-studio for safe copy-on-write editing.
 - Signed live preview links with expiry, revocation, access counts, and a frontend preview banner.

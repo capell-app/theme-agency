@@ -3,7 +3,10 @@
 declare(strict_types=1);
 
 use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
+use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
 use Capell\CustomerPortal\Filament\Resources\PortalSupportRequests\PortalSupportRequestResource;
+use Capell\CustomerPortal\Manifest\CustomerPortalFrontendRoutesContribution;
+use Capell\CustomerPortal\Manifest\CustomerPortalModelsContribution;
 use Capell\CustomerPortal\Manifest\PortalSupportRequestResourceContribution;
 use Capell\CustomerPortal\Providers\AdminServiceProvider;
 use Capell\CustomerPortal\Providers\CustomerPortalServiceProvider;
@@ -21,10 +24,34 @@ it('declares a cache-safe package-local foundation manifest', function (): void 
         ->and($manifest['providers']['admin'])->toBe([AdminServiceProvider::class])
         ->and($manifest['contributes'][0]['class'])->toBe(PortalSupportRequestResourceContribution::class)
         ->and($manifest['contributes'][0]['resourceClass'])->toBe(PortalSupportRequestResource::class)
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'model',
+            'class' => CustomerPortalModelsContribution::class,
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'route',
+            'class' => CustomerPortalFrontendRoutesContribution::class,
+        ])
         ->and(class_implements(PortalSupportRequestResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
+        ->and(class_implements(CustomerPortalFrontendRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
         ->and($manifest['performance']['cacheSafety']['cacheable'])->toBeFalse()
         ->and($manifest['performance']['cacheSafety']['sensitiveOutput'])->toBeTrue()
         ->and($manifest['providers']['runtime'])->toBe([
             CustomerPortalServiceProvider::class,
-        ]);
+        ])
+        ->and($manifest['capabilities'])->toContain(
+            'customer-portal-authenticated-routes',
+            'customer-portal-dashboard-ui',
+            'portal-profile',
+            'portal-preferences',
+            'portal-dashboard-items',
+            'portal-self-service-items',
+            'portal-gated-resource-feed',
+            'portal-payments-feed',
+            'portal-document-feed',
+            'portal-event-registration-feed',
+            'portal-newsletter-preference-feed',
+            'portal-support-requests',
+        )
+        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
 });

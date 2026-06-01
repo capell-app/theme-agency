@@ -12,12 +12,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Str;
 use Override;
 
 /**
  * @property string|null $name
  * @property string|null $name_key
+ * @property string|null $domain
+ * @property string|null $website
+ * @property array<string, mixed>|null $profile
+ * @property OrganisationStatus|null $status
+ * @property Pivot|null $pivot
  */
 class Organisation extends Model
 {

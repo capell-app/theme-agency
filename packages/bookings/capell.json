@@ -6,7 +6,7 @@
     "kind": "plugin",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Bookings adds services, staff, locations, availability windows, and appointment requests.",
+    "description": "Bookings adds services, staff, locations, availability, appointment requests, confirmations, reminders, and calendar feeds.",
     "product": {
         "group": "Capell Operations",
         "tier": "premium",
@@ -62,6 +62,14 @@
             "type": "admin-resource",
             "class": "Capell\\Bookings\\Manifest\\AppointmentRequestResourceContribution",
             "resourceClass": "Capell\\Bookings\\Filament\\Resources\\AppointmentRequests\\AppointmentRequestResource"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\Bookings\\Manifest\\BookingsModelsContribution"
+        },
+        {
+            "type": "route",
+            "class": "Capell\\Bookings\\Manifest\\BookingsFrontendRoutesContribution"
         }
     ],
     "database": {
@@ -159,19 +167,11 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Bookings adds appointment request workflows for healthcare, services, education, consulting, nonprofit, and portfolio sites.",
+        "summary": "Bookings adds appointment request workflows, availability, confirmations, reminders, and calendar feeds for healthcare, services, education, consulting, nonprofit, and portfolio sites.",
         "screenshots": [],
         "categories": ["admin", "calendar", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-resource",
-            "calendar-export",
-            "migration",
-            "model",
-            "notification",
-            "public-form",
-            "route"
-        ]
+        "deferredContributions": []
     }
 }

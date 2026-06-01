@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Newsletter adds subscriber capture and audience workflows for Capell sites.",
+    "description": "Newsletter adds subscriber capture, segmentation, preference center, campaign sends, automation hooks, UTM attribution, unsubscribe routes, and audience workflows for Capell sites.",
     "product": {
         "group": "Capell Marketing",
         "tier": "premium",
@@ -32,7 +32,73 @@
         "admin": ["Capell\\Newsletter\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Newsletter\\Manifest\\NewsletterAdminResourcesContribution",
+            "resourceClasses": [
+                "Capell\\Newsletter\\Filament\\Resources\\Subscribers\\SubscriberResource",
+                "Capell\\Newsletter\\Filament\\Resources\\ProviderConnections\\ProviderConnectionResource",
+                "Capell\\Newsletter\\Filament\\Resources\\ProviderAudiences\\ProviderAudienceResource",
+                "Capell\\Newsletter\\Filament\\Resources\\ProviderInterestMappings\\ProviderInterestMappingResource",
+                "Capell\\Newsletter\\Filament\\Resources\\FormMappings\\FormMappingResource",
+                "Capell\\Newsletter\\Filament\\Resources\\NewsletterTags\\NewsletterTagResource",
+                "Capell\\Newsletter\\Filament\\Resources\\Segments\\SegmentResource",
+                "Capell\\Newsletter\\Filament\\Resources\\NewsletterSends\\NewsletterSendResource",
+                "Capell\\Newsletter\\Filament\\Resources\\ImportBatches\\ImportBatchResource",
+                "Capell\\Newsletter\\Filament\\Resources\\SyncAttempts\\SyncAttemptResource"
+            ]
+        },
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\Newsletter\\Manifest\\NewsletterOverviewWidgetContribution",
+            "widgetClass": "Capell\\Newsletter\\Filament\\Widgets\\NewsletterOverviewStatsWidget"
+        },
+        {
+            "type": "overview-stat",
+            "class": "Capell\\Newsletter\\Manifest\\NewsletterOverviewStatsContribution",
+            "keys": [
+                "newsletter_overview",
+                "newsletter_overview.pending",
+                "newsletter_overview.sync_failures"
+            ]
+        },
+        {
+            "type": "route",
+            "class": "Capell\\Newsletter\\Manifest\\NewsletterFrontendRoutesContribution",
+            "routes": [
+                "capell-newsletter.confirm",
+                "capell-newsletter.unsubscribe",
+                "capell-newsletter.preferences.show",
+                "capell-newsletter.preferences.update",
+                "capell-newsletter.provider-webhook"
+            ]
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\Newsletter\\Manifest\\NewsletterSyncRetryScheduleContribution",
+            "command": "newsletter:sync-retry-due",
+            "frequency": "everyFiveMinutes"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\Newsletter\\Manifest\\NewsletterModelsContribution",
+            "modelClasses": [
+                "Capell\\Newsletter\\Models\\Subscriber",
+                "Capell\\Newsletter\\Models\\ConsentEvent",
+                "Capell\\Newsletter\\Models\\PublicToken",
+                "Capell\\Newsletter\\Models\\FormMapping",
+                "Capell\\Newsletter\\Models\\ProviderConnection",
+                "Capell\\Newsletter\\Models\\ProviderAudience",
+                "Capell\\Newsletter\\Models\\ProviderInterestMapping",
+                "Capell\\Newsletter\\Models\\ProviderSubscriber",
+                "Capell\\Newsletter\\Models\\SyncAttempt",
+                "Capell\\Newsletter\\Models\\Segment",
+                "Capell\\Newsletter\\Models\\ImportBatch",
+                "Capell\\Newsletter\\Models\\NewsletterSend"
+            ]
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": false,
@@ -60,10 +126,30 @@
     },
     "settings": [],
     "actions": {
+        "applyNewsletterTags": "Capell\\Newsletter\\Actions\\ApplyNewsletterTagsAction",
         "buildDueNewsletterSends": "Capell\\Newsletter\\Actions\\BuildDueNewsletterSendsAction",
+        "confirmSubscriber": "Capell\\Newsletter\\Actions\\ConfirmSubscriberAction",
+        "createPreferenceCenterToken": "Capell\\Newsletter\\Actions\\CreatePreferenceCenterTokenAction",
+        "createUnsubscribeToken": "Capell\\Newsletter\\Actions\\CreateUnsubscribeTokenAction",
+        "evaluateNewsletterSegment": "Capell\\Newsletter\\Actions\\EvaluateNewsletterSegmentAction",
+        "exportSubscribers": "Capell\\Newsletter\\Actions\\ExportSubscribersAction",
+        "handleProviderWebhook": "Capell\\Newsletter\\Actions\\HandleProviderWebhookAction",
+        "importSubscribers": "Capell\\Newsletter\\Actions\\ImportSubscribersAction",
+        "parseSubscriberCsvRows": "Capell\\Newsletter\\Actions\\ParseSubscriberCsvRowsAction",
+        "queueProviderSync": "Capell\\Newsletter\\Actions\\QueueProviderSyncAction",
+        "recordConsentEvent": "Capell\\Newsletter\\Actions\\RecordConsentEventAction",
+        "requestDoubleOptIn": "Capell\\Newsletter\\Actions\\RequestDoubleOptInAction",
+        "requeueDueProviderSyncAttempts": "Capell\\Newsletter\\Actions\\RequeueDueProviderSyncAttemptsAction",
+        "resolvePreferenceCenter": "Capell\\Newsletter\\Actions\\ResolvePreferenceCenterAction",
+        "resolveUtmAttribution": "Capell\\Newsletter\\Actions\\ResolveUtmAttributionAction",
         "scheduleNewsletterSend": "Capell\\Newsletter\\Actions\\ScheduleNewsletterSendAction",
+        "subscribeFromFormSubmission": "Capell\\Newsletter\\Actions\\SubscribeFromFormSubmissionAction",
         "syncNewsletterSubscriberContact": "Capell\\Newsletter\\Actions\\SyncNewsletterSubscriberContactAction",
-        "updateNewsletterSendStatus": "Capell\\Newsletter\\Actions\\UpdateNewsletterSendStatusAction"
+        "syncSubscriberToProvider": "Capell\\Newsletter\\Actions\\SyncSubscriberToProviderAction",
+        "unsubscribeSubscriber": "Capell\\Newsletter\\Actions\\UnsubscribeSubscriberAction",
+        "updateNewsletterSendStatus": "Capell\\Newsletter\\Actions\\UpdateNewsletterSendStatusAction",
+        "updatePreferenceCenter": "Capell\\Newsletter\\Actions\\UpdatePreferenceCenterAction",
+        "upsertSubscriber": "Capell\\Newsletter\\Actions\\UpsertSubscriberAction"
     },
     "permissions": [],
     "capabilities": [
@@ -130,7 +216,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Newsletter adds subscriber capture and audience workflows for Capell sites.",
+        "summary": "Newsletter adds subscriber capture, segmentation, preference center, campaign sends, automation hooks, UTM attribution, unsubscribe routes, and audience workflows for Capell sites.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
@@ -141,13 +227,6 @@
         "categories": ["admin", "frontend", "newsletter"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-resource",
-            "dashboard-widget",
-            "model",
-            "overview-stat",
-            "route",
-            "scheduled-job"
-        ]
+        "deferredContributions": []
     }
 }

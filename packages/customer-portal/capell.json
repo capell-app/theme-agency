@@ -42,6 +42,14 @@
             "class": "Capell\\CustomerPortal\\Manifest\\PortalSupportRequestResourceContribution",
             "resourceClass": "Capell\\CustomerPortal\\Filament\\Resources\\PortalSupportRequests\\PortalSupportRequestResource",
             "label": "Customer portal support request triage resource."
+        },
+        {
+            "type": "model",
+            "class": "Capell\\CustomerPortal\\Manifest\\CustomerPortalModelsContribution"
+        },
+        {
+            "type": "route",
+            "class": "Capell\\CustomerPortal\\Manifest\\CustomerPortalFrontendRoutesContribution"
         }
     ],
     "database": {
@@ -114,9 +122,6 @@
         "categories": ["admin", "frontend", "crm", "self-service"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "access-gate-resource-feed",
-            "owning-package-feed-adapters"
-        ]
+        "deferredContributions": []
     }
 }

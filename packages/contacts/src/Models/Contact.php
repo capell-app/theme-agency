@@ -29,7 +29,12 @@ use Override;
  * @property string|null $email_hash
  * @property string|null $phone
  * @property string|null $phone_hash
+ * @property string|null $first_name
+ * @property string|null $last_name
+ * @property string|null $display_name
  * @property array<string, mixed>|null $profile
+ * @property ContactStatus|null $status
+ * @property CarbonImmutable|null $first_seen_at
  * @property CarbonImmutable|null $last_seen_at
  */
 class Contact extends Model

@@ -1,4 +1,8 @@
 @php
+    use Capell\Core\Facades\CapellCore;
+
+    $searchAvailable ??= CapellCore::isPackageInstalled('capell-app/search');
+
     $filters ??= [
         __('capell-theme-knowledge::generic.topic_hub_strategy'),
         __('capell-theme-knowledge::generic.topic_hub_design'),

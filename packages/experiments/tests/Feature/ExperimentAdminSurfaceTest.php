@@ -13,11 +13,13 @@ use Capell\Experiments\Filament\Resources\ExperimentVariants\ExperimentVariantRe
 use Capell\Experiments\Manifest\ExperimentAudienceRuleResourceContribution;
 use Capell\Experiments\Manifest\ExperimentGoalResourceContribution;
 use Capell\Experiments\Manifest\ExperimentResourceContribution;
+use Capell\Experiments\Manifest\ExperimentsModelsContribution;
 use Capell\Experiments\Manifest\ExperimentVariantResourceContribution;
 use Capell\Experiments\Models\Experiment;
 use Capell\Experiments\Models\ExperimentAudienceRule;
 use Capell\Experiments\Models\ExperimentGoal;
 use Capell\Experiments\Models\ExperimentVariant;
+use Capell\Experiments\Providers\ExperimentsServiceProvider;
 
 it('declares admin resources for experiment setup records', function (): void {
     expect(ResourceEnum::cases())->toHaveCount(4)
@@ -52,7 +54,14 @@ it('declares admin manifest contributions and package requirements', function ()
 
     expect($manifest['dependencies']['requires'])->toContain('capell-app/admin', 'capell-app/core')
         ->and(array_keys($composer['require'] ?? []))->toContain('capell-app/admin', 'capell-app/core', 'filament/filament')
+        ->and($manifest['providers']['admin'])->toContain(ExperimentsServiceProvider::class)
         ->and($manifest['capabilities'])->toContain('experiments-admin')
+        ->and($manifest['dependencies']['supports'])->toContain(
+            'capell-app/campaign-studio',
+            'capell-app/frontend-optimizer',
+            'capell-app/html-cache',
+            'capell-app/insights',
+        )
         ->and($manifest['contributes'])->toContain([
             'type' => 'admin-resource',
             'class' => ExperimentResourceContribution::class,
@@ -73,8 +82,33 @@ it('declares admin manifest contributions and package requirements', function ()
             'class' => ExperimentAudienceRuleResourceContribution::class,
             'resourceClass' => ExperimentAudienceRuleResource::class,
         ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'model',
+            'class' => ExperimentsModelsContribution::class,
+        ])
         ->and(class_implements(ExperimentResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(ExperimentVariantResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(ExperimentGoalResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
-        ->and(class_implements(ExperimentAudienceRuleResourceContribution::class))->toContain(RegistersExtensionAdminResource::class);
+        ->and(class_implements(ExperimentAudienceRuleResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
+        ->and($manifest['capabilities'])->toContain(
+            'variant-allocation',
+            'request-context-variant-resolution',
+            'audience-rules',
+            'goal-tracking',
+            'winner-reporting',
+            'campaign-experiments',
+            'page-experiments',
+            'personalization-payloads',
+            'cache-variation-metadata',
+        )
+        ->and($manifest['actions'])->toHaveKeys([
+            'allocateVariant',
+            'buildWinnerReport',
+            'createExperiment',
+            'declareExperimentWinner',
+            'evaluateAudienceRules',
+            'recordGoalEvent',
+            'resolveExperimentVariantForContext',
+        ])
+        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
 });

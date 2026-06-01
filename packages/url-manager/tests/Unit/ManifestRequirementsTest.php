@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+use Capell\UrlManager\Filament\Pages\NotFoundOpportunitiesPage;
+use Capell\UrlManager\Filament\Pages\RedirectRulesPage;
+use Capell\UrlManager\Manifest\NotFoundOpportunitiesPageContribution;
+use Capell\UrlManager\Manifest\RedirectRulesPageContribution;
+use Capell\UrlManager\Manifest\UrlManagerModelsContribution;
 use Capell\UrlManager\Models\NotFoundOpportunity;
 use Capell\UrlManager\Models\RedirectHit;
 use Capell\UrlManager\Models\RedirectRule;
@@ -22,5 +27,44 @@ it('declares URL Manager owned models and protected tables', function (): void {
             'url_manager_redirect_hits',
             'url_manager_not_found_opportunities',
         ])
-        ->and($manifest['providers']['runtime'])->toContain(UrlManagerServiceProvider::class);
+        ->and($manifest['providers']['runtime'])->toContain(UrlManagerServiceProvider::class)
+        ->and($manifest['providers']['admin'])->toContain(UrlManagerServiceProvider::class)
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'admin-page',
+            'class' => RedirectRulesPageContribution::class,
+            'pageClass' => RedirectRulesPage::class,
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'admin-page',
+            'class' => NotFoundOpportunitiesPageContribution::class,
+            'pageClass' => NotFoundOpportunitiesPage::class,
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'model',
+            'class' => UrlManagerModelsContribution::class,
+        ])
+        ->and($manifest['actions'])->toHaveKeys([
+            'buildNotFoundRedirectSuggestions',
+            'convertNotFoundOpportunityToRedirect',
+            'exportRedirectRules',
+            'importRedirectRules',
+            'importSeoSuiteBrokenLinks',
+            'recordChangedUrlRedirect',
+            'recordNotFoundOpportunity',
+            'recordRedirectHit',
+            'resolveRedirectRule',
+            'upsertRedirectRule',
+        ])
+        ->and($manifest['capabilities'])->toContain(
+            'managed-redirects',
+            'changed-url-redirect-detection',
+            'redirect-hit-counts',
+            'redirect-import-export',
+            'not-found-opportunities',
+            'not-found-redirect-suggestions',
+            'seo-suite-broken-url-import',
+            'frontend-redirect-resolver',
+            'url-manager-admin',
+        )
+        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
 });

@@ -20,7 +20,6 @@ use Capell\Contacts\Models\Organisation;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Events\Events\EventRegistrationCreated;
-use Capell\FormBuilder\Events\FormSubmitted;
 use Capell\ShopifyCommerce\Events\ShopifyCustomerSynced;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Event;
@@ -127,11 +126,13 @@ final class ContactsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerFormBuilderSourceAdapter(): self
     {
-        if (! class_exists(FormSubmitted::class)) {
+        $formSubmittedEvent = implode('\\', ['Capell', 'FormBuilder', 'Events', 'FormSubmitted']);
+
+        if (! class_exists($formSubmittedEvent)) {
             return $this;
         }
 
-        Event::listen(FormSubmitted::class, SyncContactFromFormSubmission::class);
+        Event::listen($formSubmittedEvent, SyncContactFromFormSubmission::class);
 
         return $this;
     }

@@ -64,12 +64,15 @@ final class VerifyStripeWebhookSignatureAction
             if (! is_string($key)) {
                 continue;
             }
+
             if ($key === '') {
                 continue;
             }
+
             if (! is_string($value)) {
                 continue;
             }
+
             if ($value === '') {
                 continue;
             }

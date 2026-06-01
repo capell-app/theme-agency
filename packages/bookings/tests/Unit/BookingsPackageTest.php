@@ -6,9 +6,24 @@ use Capell\Bookings\Providers\BookingsServiceProvider;
 
 require_once __DIR__ . '/../Pest.php';
 
+use Capell\Bookings\Actions\BuildStaffCalendarFeedAction;
+use Capell\Bookings\Actions\CancelAppointmentRequestAction;
+use Capell\Bookings\Actions\ConfirmAppointmentRequestAction;
+use Capell\Bookings\Actions\CreateAppointmentRequestAction;
+use Capell\Bookings\Actions\CreateAvailabilityExceptionAction;
+use Capell\Bookings\Actions\CreateStaffCalendarFeedUrlAction;
+use Capell\Bookings\Actions\QueueAppointmentReminderAction;
 use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
 use Capell\Bookings\Enums\BookingAvailabilityStatusEnum;
 use Capell\Bookings\Enums\BookingLocationTypeEnum;
+use Capell\Bookings\Manifest\AppointmentRequestResourceContribution;
+use Capell\Bookings\Manifest\BookingAvailabilityExceptionResourceContribution;
+use Capell\Bookings\Manifest\BookingAvailabilityWindowResourceContribution;
+use Capell\Bookings\Manifest\BookingLocationResourceContribution;
+use Capell\Bookings\Manifest\BookingServiceResourceContribution;
+use Capell\Bookings\Manifest\BookingsFrontendRoutesContribution;
+use Capell\Bookings\Manifest\BookingsModelsContribution;
+use Capell\Bookings\Manifest\BookingStaffMemberResourceContribution;
 use Capell\Bookings\Models\AppointmentAuditLog;
 use Capell\Bookings\Models\AppointmentRequest;
 use Capell\Bookings\Models\BookingAvailabilityException;
@@ -16,6 +31,7 @@ use Capell\Bookings\Models\BookingAvailabilityWindow;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
+use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
 use Illuminate\Support\Facades\File;
 
 it('keeps package manifest requirements aligned with composer requirements', function (): void {
@@ -50,6 +66,55 @@ it('keeps package manifest requirements aligned with composer requirements', fun
             'appointment_audit_logs',
         ])
         ->and($manifest['providers']['runtime'])->toContain(BookingsServiceProvider::class);
+});
+
+it('declares implemented bookings contributions and feature capabilities', function (): void {
+    $manifest = json_decode(
+        File::get(__DIR__ . '/../../capell.json'),
+        associative: true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    $contributions = collect($manifest['contributes']);
+
+    expect($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+        && ($contribution['class'] ?? null) === BookingServiceResourceContribution::class))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === BookingStaffMemberResourceContribution::class))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === BookingLocationResourceContribution::class))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === BookingAvailabilityWindowResourceContribution::class))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === BookingAvailabilityExceptionResourceContribution::class))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === AppointmentRequestResourceContribution::class))->toBeTrue()
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'model',
+            'class' => BookingsModelsContribution::class,
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'route',
+            'class' => BookingsFrontendRoutesContribution::class,
+        ])
+        ->and(class_implements(BookingsFrontendRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
+        ->and($manifest['capabilities'])->toContain(
+            'bookings-availability',
+            'bookings-appointment-requests',
+            'bookings-notifications',
+            'bookings-reminders',
+            'bookings-calendar-feeds',
+        )
+        ->and($manifest['actions'])->toMatchArray([
+            'createAvailabilityException' => CreateAvailabilityExceptionAction::class,
+            'createAppointmentRequest' => CreateAppointmentRequestAction::class,
+            'confirmAppointmentRequest' => ConfirmAppointmentRequestAction::class,
+            'cancelAppointmentRequest' => CancelAppointmentRequestAction::class,
+            'queueAppointmentReminder' => QueueAppointmentReminderAction::class,
+            'createStaffCalendarFeedUrl' => CreateStaffCalendarFeedUrlAction::class,
+            'buildStaffCalendarFeed' => BuildStaffCalendarFeedAction::class,
+        ])
+        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
 });
 
 it('casts enums and exposes core relationships', function (): void {

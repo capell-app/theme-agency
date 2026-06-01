@@ -44,17 +44,16 @@ it('declares admin manifest contributions and composer requirements', function (
 
     $manifestRequirements = $manifest['dependencies']['requires'] ?? [];
     sort($manifestRequirements);
+    $contributions = collect($manifest['contributes']);
 
     expect($manifestRequirements)->toBe($composerPackageRequirements)
         ->and($manifest['providers']['admin'])->toContain(AdminServiceProvider::class)
-        ->and($manifest['contributes'])->toContain([
-            'type' => 'admin-resource',
-            'class' => AutomationRuleResourceContribution::class,
-        ])
-        ->and($manifest['contributes'])->toContain([
-            'type' => 'admin-resource',
-            'class' => AutomationRunResourceContribution::class,
-        ])
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === AutomationRuleResourceContribution::class
+            && ($contribution['resourceClass'] ?? null) === AutomationRuleResource::class))->toBeTrue()
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'admin-resource'
+            && ($contribution['class'] ?? null) === AutomationRunResourceContribution::class
+            && ($contribution['resourceClass'] ?? null) === AutomationRunResource::class))->toBeTrue()
         ->and(class_implements(AutomationRuleResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(AutomationRunResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and($manifest['capabilities'])->toContain('automation-admin');

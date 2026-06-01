@@ -1,6 +1,6 @@
 # Campaign Studio
 
-CampaignStudio adds campaign groups, landing pages, CTA blocks, conversion goals, UTM attribution, and conversion reporting to Capell.
+Campaign Studio adds campaign groups, landing-page variants, audience targeting, experiments, CTA blocks, conversion goals, UTM attribution, funnel reporting, and conversion reporting to Capell.
 
 ## At A Glance
 
@@ -13,7 +13,7 @@ CampaignStudio adds campaign groups, landing pages, CTA blocks, conversion goals
 
 ## Why It Helps Your Capell Workflow
 
-- Connects campaign landing pages, CTA blocks, UTM attribution, conversion goals, and reporting into one growth workflow.
+- Connects campaign landing pages, landing-page variants, audience targeting, experiments, CTA blocks, UTM attribution, conversion goals, funnel reporting, and reporting into one growth workflow.
 - Helps owners see which campaigns and pages are producing conversions without stitching together custom admin widgets.
 - Gives developers package-owned Actions and models for attribution, funnels, overview stats, and campaign URLs.
 
@@ -25,12 +25,14 @@ CampaignStudio adds campaign groups, landing pages, CTA blocks, conversion goals
 
 ## What It Adds
 
-CampaignStudio adds campaign groups, landing pages, CTA blocks, conversion goals, UTM attribution, and conversion reporting to Capell.
+Campaign Studio adds campaign groups, landing-page variants, audience targeting, experiments, CTA blocks, conversion goals, UTM attribution, funnel reporting, and conversion reporting to Capell.
 
 - Campaign Filament resources for groups, landing pages, goals, and CTA blocks.
 - Campaign dashboard blocks.
 - Page schema extender for campaign fields.
 - core layout builder block configurators for campaign hero, CTA, and lead form blocks.
+- Landing-page variant selection from UTM audience data, with optional experiment sync when Experiments is installed.
+- Campaign conversion funnel reporting from conversion goals and recorded conversions.
 - Conversion recording actions for page views, CTA clicks, and form submissions.
 
 ## Why It Matters
@@ -83,7 +85,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Config file: capell-campaign-studio.php.
 - Migrations create campaign groups, goals, landing pages, CTA blocks, and conversions.
 - Filament resources cover each owned model.
-- Listeners sync landing pages and form submission conversions.
+- Listeners sync landing pages, editorial calendar events, Site Discovery URLs, and form submission conversions.
 
 ## Code Map
 

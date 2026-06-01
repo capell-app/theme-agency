@@ -15,7 +15,7 @@
     "namespace": "Capell\\PrivacyCenter",
     "surfaces": ["admin", "console"],
     "dependencies": {
-        "requires": ["capell-app/core"],
+        "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
             "capell-app/access-gate",
             "capell-app/contacts",
@@ -30,10 +30,49 @@
         "runtime": [
             "Capell\\PrivacyCenter\\Providers\\PrivacyCenterServiceProvider"
         ],
-        "admin": [],
+        "admin": ["Capell\\PrivacyCenter\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-resource",
+            "class": "Capell\\PrivacyCenter\\Manifest\\ConsentPolicyResourceContribution",
+            "resourceClass": "Capell\\PrivacyCenter\\Filament\\Resources\\ConsentPolicies\\ConsentPolicyResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\PrivacyCenter\\Manifest\\ConsentRecordResourceContribution",
+            "resourceClass": "Capell\\PrivacyCenter\\Filament\\Resources\\ConsentRecords\\ConsentRecordResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\PrivacyCenter\\Manifest\\PolicyAcceptanceResourceContribution",
+            "resourceClass": "Capell\\PrivacyCenter\\Filament\\Resources\\PolicyAcceptances\\PolicyAcceptanceResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\PrivacyCenter\\Manifest\\PrivacyRequestResourceContribution",
+            "resourceClass": "Capell\\PrivacyCenter\\Filament\\Resources\\PrivacyRequests\\PrivacyRequestResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\PrivacyCenter\\Manifest\\RetentionRuleResourceContribution",
+            "resourceClass": "Capell\\PrivacyCenter\\Filament\\Resources\\RetentionRules\\RetentionRuleResource"
+        },
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\PrivacyCenter\\Manifest\\PrivacyCenterOverviewWidgetContribution",
+            "widgetClass": "Capell\\PrivacyCenter\\Filament\\Widgets\\PrivacyCenterOverviewWidget"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\PrivacyCenter\\Manifest\\PrivacyCenterModelsContribution"
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\PrivacyCenter\\Manifest\\PrivacyRetentionScheduleContribution"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": false,
@@ -53,12 +92,17 @@
     },
     "settings": [],
     "actions": {
+        "buildPrivacyCenterOverviewStats": "Capell\\PrivacyCenter\\Actions\\BuildPrivacyCenterOverviewStatsAction",
         "applyRetentionRule": "Capell\\PrivacyCenter\\Actions\\ApplyRetentionRuleAction",
         "applyRetentionRules": "Capell\\PrivacyCenter\\Actions\\ApplyRetentionRulesAction",
+        "anonymizePrivacySubject": "Capell\\PrivacyCenter\\Actions\\AnonymizePrivacySubjectAction",
         "buildPrivacyExport": "Capell\\PrivacyCenter\\Actions\\BuildPrivacyExportAction",
+        "createRetentionRule": "Capell\\PrivacyCenter\\Actions\\CreateRetentionRuleAction",
+        "markPrivacyRequestFulfilled": "Capell\\PrivacyCenter\\Actions\\MarkPrivacyRequestFulfilledAction",
         "openPrivacyRequest": "Capell\\PrivacyCenter\\Actions\\OpenPrivacyRequestAction",
         "recordConsent": "Capell\\PrivacyCenter\\Actions\\RecordConsentAction",
-        "recordPolicyAcceptance": "Capell\\PrivacyCenter\\Actions\\RecordPolicyAcceptanceAction"
+        "recordPolicyAcceptance": "Capell\\PrivacyCenter\\Actions\\RecordPolicyAcceptanceAction",
+        "registerConsentPolicy": "Capell\\PrivacyCenter\\Actions\\RegisterConsentPolicyAction"
     },
     "permissions": [],
     "capabilities": [
@@ -123,11 +167,6 @@
         "categories": ["admin", "compliance", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-resource",
-            "dashboard-widget",
-            "scheduled-job",
-            "package-integration"
-        ]
+        "deferredContributions": []
     }
 }

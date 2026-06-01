@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
+use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
 use Capell\Payments\Enums\ResourceEnum;
 use Capell\Payments\Filament\Resources\CheckoutSessions\CheckoutSessionResource;
 use Capell\Payments\Filament\Resources\Customers\PaymentCustomerResource;
@@ -16,6 +17,8 @@ use Capell\Payments\Manifest\PaymentCustomerResourceContribution;
 use Capell\Payments\Manifest\PaymentDisputeResourceContribution;
 use Capell\Payments\Manifest\PaymentIntentResourceContribution;
 use Capell\Payments\Manifest\PaymentRefundResourceContribution;
+use Capell\Payments\Manifest\PaymentsFrontendRoutesContribution;
+use Capell\Payments\Manifest\PaymentsModelsContribution;
 use Capell\Payments\Manifest\PaymentWebhookEventResourceContribution;
 use Capell\Payments\Manifest\SubscriptionResourceContribution;
 use Capell\Payments\Models\CheckoutSession;
@@ -100,6 +103,14 @@ it('declares admin resources in the package manifest', function (): void {
             'class' => PaymentDisputeResourceContribution::class,
             'resourceClass' => PaymentDisputeResource::class,
         ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'model',
+            'class' => PaymentsModelsContribution::class,
+        ])
+        ->and($manifest['contributes'])->toContain([
+            'type' => 'route',
+            'class' => PaymentsFrontendRoutesContribution::class,
+        ])
         ->and(class_implements(PaymentCustomerResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(CheckoutSessionResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(PaymentIntentResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
@@ -107,5 +118,51 @@ it('declares admin resources in the package manifest', function (): void {
         ->and(class_implements(PaymentWebhookEventResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(PaymentRefundResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(PaymentDisputeResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
-        ->and($manifest['contributionTraceability']['deferredContributions'])->not->toContain('admin-resource', 'form-field', 'migration', 'model', 'webhook');
+        ->and(class_implements(PaymentsFrontendRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
+        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
+});
+
+it('declares the native payments feature set without deferred package gaps', function (): void {
+    $manifest = json_decode(
+        (string) file_get_contents(__DIR__ . '/../../capell.json'),
+        associative: true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    expect($manifest['capabilities'])->toContain(
+        'stripe-checkout',
+        'one-off-payments',
+        'subscriptions',
+        'donations',
+        'paid-downloads',
+        'paid-gated-access',
+        'form-payment-fields',
+        'stripe-webhooks',
+        'stripe-billing-portal',
+        'subscription-entitlements',
+    )
+        ->and($manifest['actions'])->toHaveKeys([
+            'checkout',
+            'billingPortal',
+            'formPaymentCheckoutUrl',
+            'formPaymentCheckout',
+            'paidDownloadUrl',
+            'subscriptionEntitlement',
+        ])
+        ->and($manifest['dependencies']['supports'])->toContain(
+            'capell-app/access-gate',
+            'capell-app/customer-portal',
+            'capell-app/form-builder',
+        )
+        ->and($manifest['database']['requiredTables'])->toContain(
+            'payment_customers',
+            'payment_checkout_sessions',
+            'payment_intents',
+            'payment_subscriptions',
+            'payment_webhook_events',
+            'payment_refunds',
+            'payment_disputes',
+            'payment_download_entitlements',
+        )
+        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
 });

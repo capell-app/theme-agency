@@ -6,6 +6,7 @@ namespace Capell\Contacts\Models;
 
 use Capell\Contacts\Enums\ContactActivityType;
 use Capell\Core\Models\Site;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Override;
 
+/**
+ * @property ContactActivityType|null $type
+ * @property string|null $summary
+ * @property array<string, mixed>|null $payload
+ * @property CarbonImmutable|null $occurred_at
+ */
 class ContactActivity extends Model
 {
     /** @use HasFactory<Factory<self>> */

@@ -65,6 +65,14 @@
             "type": "admin-resource",
             "class": "Capell\\Payments\\Manifest\\PaymentDisputeResourceContribution",
             "resourceClass": "Capell\\Payments\\Filament\\Resources\\Disputes\\PaymentDisputeResource"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\Payments\\Manifest\\PaymentsModelsContribution"
+        },
+        {
+            "type": "route",
+            "class": "Capell\\Payments\\Manifest\\PaymentsFrontendRoutesContribution"
         }
     ],
     "database": {
@@ -161,14 +169,11 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Provider-neutral payment records with native Stripe Checkout support.",
+        "summary": "Provider-neutral payment records with native Stripe Checkout, subscriptions, form payments, paid downloads, and paid gated access fulfillment.",
         "screenshots": [],
         "categories": ["commerce", "integrations"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "frontend-route",
-            "access-gate-paid-access-integration"
-        ]
+        "deferredContributions": []
     }
 }

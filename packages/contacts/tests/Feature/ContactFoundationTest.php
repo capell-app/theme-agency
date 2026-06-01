@@ -14,6 +14,8 @@ use Capell\Comments\Enums\CommentStatus;
 use Capell\Comments\Events\CommentCreated;
 use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
+use Capell\Contacts\Actions\AnonymizeContactAction;
+use Capell\Contacts\Actions\BuildContactPrivacyExportAction;
 use Capell\Contacts\Actions\FindOrCreateContactAction;
 use Capell\Contacts\Actions\RecordContactActivityAction;
 use Capell\Contacts\Actions\SyncAccessGateRegistrationContactAction;
@@ -28,6 +30,7 @@ use Capell\Contacts\Data\ContactActivityData;
 use Capell\Contacts\Data\ContactIdentityData;
 use Capell\Contacts\Data\ContactSourceRecordData;
 use Capell\Contacts\Enums\ContactActivityType;
+use Capell\Contacts\Enums\ContactStatus;
 use Capell\Contacts\Enums\LeadStatus;
 use Capell\Contacts\Models\Contact;
 use Capell\Contacts\Models\Lead;
@@ -40,10 +43,16 @@ use Capell\Events\Models\EventRegistration;
 use Capell\FormBuilder\Events\FormSubmitted;
 use Capell\FormBuilder\Models\Form;
 use Capell\FormBuilder\Models\Submission;
+use Capell\Newsletter\Actions\SyncNewsletterSubscriberContactAction;
+use Capell\Newsletter\Enums\SubscriberStatus;
+use Capell\Newsletter\Models\Subscriber;
 use Capell\ShopifyCommerce\Events\ShopifyCustomerSynced;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Capell\ShopifyCommerce\Models\ShopifyCustomer;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
@@ -51,6 +60,18 @@ use Illuminate\Support\Facades\Schema;
 require_once __DIR__ . '/../autoload.php';
 
 uses(ContactsTestCase::class);
+
+beforeEach(function (): void {
+    Relation::morphMap([
+        'access_gate_registration' => Registration::class,
+        'campaign_conversion' => CampaignConversion::class,
+        'comment' => Comment::class,
+        'event_registration' => EventRegistration::class,
+        'form_builder_submission' => Submission::class,
+        'newsletter_subscriber' => Subscriber::class,
+        'shopify_customer' => ShopifyCustomer::class,
+    ], merge: true);
+});
 
 it('loads the contacts foundation tables', function (): void {
     expect(Schema::hasTable('contacts'))->toBeTrue()
@@ -216,6 +237,46 @@ it('syncs form builder submissions into contacts through the source adapter', fu
 
 it('registers the form builder submission listener when form builder is available', function (): void {
     expect(Event::hasListeners(FormSubmitted::class))->toBeTrue();
+});
+
+it('syncs newsletter subscribers into contacts through the source adapter', function (): void {
+    $siteId = $this->createContactsSite();
+    $updatedAt = Date::now()->subMinutes(8);
+
+    $subscriber = new Subscriber;
+    $subscriber->exists = true;
+    $subscriber->forceFill([
+        'id' => 3001,
+        'site_id' => $siteId,
+        'email' => 'Subscriber@Example.test',
+        'first_name' => 'Newsletter',
+        'last_name' => 'Reader',
+        'status' => SubscriberStatus::Subscribed,
+        'source_form_id' => 44,
+        'source_form_handle' => 'newsletter-footer',
+        'updated_at' => $updatedAt,
+    ]);
+
+    $result = SyncNewsletterSubscriberContactAction::run($subscriber);
+
+    expect($result)->not->toBeNull()
+        ->and($result?->contact->fresh()->email_hash)->toBe(Contact::emailHash('subscriber@example.test'))
+        ->and($result?->contact->fresh()->profile)->toMatchArray([
+            'newsletter' => [
+                'subscriber_id' => 3001,
+                'status' => 'subscribed',
+                'source_form_id' => 44,
+                'source_form_handle' => 'newsletter-footer',
+            ],
+        ])
+        ->and($result?->lead)->toBeNull()
+        ->and($result?->activity?->type)->toBe(ContactActivityType::NewsletterSubscription)
+        ->and($result?->activity?->payload)->toMatchArray([
+            'subscriber_id' => 3001,
+            'status' => 'subscribed',
+            'source_form_id' => 44,
+            'source_form_handle' => 'newsletter-footer',
+        ]);
 });
 
 it('syncs approved access gate registrations into contacts through the source adapter', function (): void {
@@ -386,6 +447,9 @@ it('syncs campaign conversions into contacts through the source adapter', functi
 
     $source = new class extends Model
     {
+        /** @use HasFactory<Factory<static>> */
+        use HasFactory;
+
         protected $guarded = [];
     };
     $source->exists = true;
@@ -631,4 +695,76 @@ it('stores normalized unique tags on contact profiles', function (): void {
     expect($taggedContact->fresh()->profile)->toMatchArray([
         'tags' => ['lead', 'vip'],
     ]);
+});
+
+it('exports and anonymizes contact privacy data', function (): void {
+    $siteId = $this->createContactsSite();
+    $contact = FindOrCreateContactAction::run(new ContactIdentityData(
+        siteId: $siteId,
+        email: 'privacy@example.test',
+        phone: '+44 7700 900123',
+        firstName: 'Privacy',
+        lastName: 'Subject',
+        displayName: 'Privacy Subject',
+        sourceKey: 'form_builder',
+        sourceIdentifier: 'submission-privacy-1',
+        profile: ['tags' => ['vip']],
+    ));
+    $organisation = Organisation::query()->create([
+        'site_id' => $siteId,
+        'name' => 'Privacy Org',
+        'domain' => 'privacy.example',
+    ]);
+    $contact->organisations()->attach($organisation->getKey(), [
+        'role' => 'Buyer',
+        'is_primary' => true,
+    ]);
+    $lead = Lead::query()->create([
+        'site_id' => $siteId,
+        'contact_id' => $contact->getKey(),
+        'organisation_id' => $organisation->getKey(),
+        'title' => 'Sensitive lead',
+        'status' => LeadStatus::Open,
+        'context' => ['message' => 'Contains personal data'],
+    ]);
+    RecordContactActivityAction::run(
+        contact: $contact,
+        activityData: new ContactActivityData(
+            type: ContactActivityType::Note,
+            summary: 'Sensitive note',
+            payload: ['source' => 'privacy-test'],
+            occurredAt: Date::now(),
+        ),
+        lead: $lead,
+        organisation: $organisation,
+    );
+
+    $export = BuildContactPrivacyExportAction::run($contact);
+    $anonymizedContact = AnonymizeContactAction::run($contact);
+
+    expect($export['contact'])->toMatchArray([
+        'email' => 'privacy@example.test',
+        'phone' => '+44 7700 900123',
+        'first_name' => 'Privacy',
+        'last_name' => 'Subject',
+        'source_identifier' => 'submission-privacy-1',
+    ])
+        ->and($export['contact'])->not->toHaveKeys(['email_hash', 'phone_hash', 'source_identifier_hash'])
+        ->and($export['organisations'][0])->toMatchArray([
+            'name' => 'Privacy Org',
+            'role' => 'Buyer',
+            'is_primary' => true,
+        ])
+        ->and($export['leads'][0]['context'])->toBe(['message' => 'Contains personal data'])
+        ->and($export['activities'][0]['summary'])->toBe('Sensitive note')
+        ->and($anonymizedContact->email)->toBeNull()
+        ->and($anonymizedContact->email_hash)->toBeNull()
+        ->and($anonymizedContact->source_identifier)->toBeNull()
+        ->and($anonymizedContact->source_identifier_hash)->toBeNull()
+        ->and($anonymizedContact->profile)->toBeNull()
+        ->and($anonymizedContact->status)->toBe(ContactStatus::Archived)
+        ->and($lead->refresh()->title)->toBeNull()
+        ->and($lead->context)->toBeNull()
+        ->and($contact->activities()->first()?->summary)->toBeNull()
+        ->and($contact->activities()->first()?->payload)->toBeNull();
 });

@@ -31,6 +31,8 @@ afterEach(function (): void {
 });
 
 it('creates appointment requests inside an active availability window', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-05-29 08:00:00', 'Europe/London'));
+
     $service = BookingService::factory()->create(['duration_minutes' => 45]);
     $staffMember = BookingStaffMember::factory()->create();
     $location = BookingLocation::factory()->create();

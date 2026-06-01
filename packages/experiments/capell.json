@@ -18,6 +18,8 @@
         "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
             "capell-app/campaign-studio",
+            "capell-app/frontend-optimizer",
+            "capell-app/html-cache",
             "capell-app/form-builder",
             "capell-app/insights"
         ],
@@ -29,7 +31,7 @@
         "runtime": [
             "Capell\\Experiments\\Providers\\ExperimentsServiceProvider"
         ],
-        "admin": [],
+        "admin": ["Capell\\Experiments\\Providers\\ExperimentsServiceProvider"],
         "frontend": []
     },
     "contributes": [
@@ -52,6 +54,10 @@
             "type": "admin-resource",
             "class": "Capell\\Experiments\\Manifest\\ExperimentAudienceRuleResourceContribution",
             "resourceClass": "Capell\\Experiments\\Filament\\Resources\\ExperimentAudienceRules\\ExperimentAudienceRuleResource"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\Experiments\\Manifest\\ExperimentsModelsContribution"
         }
     ],
     "database": {
@@ -76,7 +82,9 @@
     "actions": {
         "allocateVariant": "Capell\\Experiments\\Actions\\AllocateVariantAction",
         "buildWinnerReport": "Capell\\Experiments\\Actions\\BuildWinnerReportAction",
+        "createExperiment": "Capell\\Experiments\\Actions\\CreateExperimentAction",
         "declareExperimentWinner": "Capell\\Experiments\\Actions\\DeclareExperimentWinnerAction",
+        "evaluateAudienceRules": "Capell\\Experiments\\Actions\\EvaluateAudienceRulesAction",
         "recordGoalEvent": "Capell\\Experiments\\Actions\\RecordGoalEventAction",
         "resolveExperimentVariantForContext": "Capell\\Experiments\\Actions\\ResolveExperimentVariantForContextAction"
     },
@@ -107,6 +115,9 @@
         "winner-reporting",
         "winner-declaration",
         "experiments-admin",
+        "campaign-experiments",
+        "page-experiments",
+        "personalization-payloads",
         "cache-variation-metadata"
     ],
     "performance": {
@@ -142,9 +153,6 @@
         "categories": ["growth", "analytics", "frontend"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "frontend-component",
-            "allocation-report-resource"
-        ]
+        "deferredContributions": []
     }
 }

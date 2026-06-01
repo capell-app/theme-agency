@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Contacts provides central contact, organisation, lead, and activity records for Capell package integrations.",
+    "description": "Contacts provides central contact, organisation, lead, activity, source identity, and package adapter records for Capell CRM integrations.",
     "product": {
         "group": "Capell Content",
         "tier": "premium",
@@ -34,7 +34,33 @@
         "admin": ["Capell\\Contacts\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Contacts\\Manifest\\ContactsAdminResourcesContribution",
+            "resourceClasses": [
+                "Capell\\Contacts\\Filament\\Resources\\Contacts\\ContactResource",
+                "Capell\\Contacts\\Filament\\Resources\\Organisations\\OrganisationResource",
+                "Capell\\Contacts\\Filament\\Resources\\Leads\\LeadResource",
+                "Capell\\Contacts\\Filament\\Resources\\Activities\\ContactActivityResource"
+            ]
+        },
+        {
+            "type": "model",
+            "class": "Capell\\Contacts\\Manifest\\ContactsModelsContribution",
+            "modelClasses": [
+                "Capell\\Contacts\\Models\\Contact",
+                "Capell\\Contacts\\Models\\Organisation",
+                "Capell\\Contacts\\Models\\Lead",
+                "Capell\\Contacts\\Models\\ContactActivity"
+            ]
+        },
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\Contacts\\Manifest\\ContactsOverviewWidgetContribution",
+            "widgetClass": "Capell\\Contacts\\Filament\\Widgets\\ContactsOverviewStatsWidget"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": false,
@@ -54,6 +80,9 @@
     },
     "settings": [],
     "actions": {
+        "anonymizeContact": "Capell\\Contacts\\Actions\\AnonymizeContactAction",
+        "buildContactPrivacyExport": "Capell\\Contacts\\Actions\\BuildContactPrivacyExportAction",
+        "buildContactsOverviewStats": "Capell\\Contacts\\Actions\\BuildContactsOverviewStatsAction",
         "findOrCreateContact": "Capell\\Contacts\\Actions\\FindOrCreateContactAction",
         "recordContactActivity": "Capell\\Contacts\\Actions\\RecordContactActivityAction",
         "syncAccessGateRegistrationContact": "Capell\\Contacts\\Actions\\SyncAccessGateRegistrationContactAction",
@@ -81,8 +110,13 @@
         "contacts-comments-source-adapter",
         "contacts-events-source-adapter",
         "contacts-form-builder-source-adapter",
+        "contacts-newsletter-source-adapter",
         "contacts-shopify-commerce-source-adapter",
         "contacts-activity",
+        "contacts-dashboard-widget",
+        "contacts-deduplication-rules",
+        "contacts-privacy-export",
+        "contacts-privacy-anonymization",
         "contacts-tags"
     ],
     "performance": {
@@ -113,17 +147,11 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Contacts provides the shared CRM data foundation for Capell package integrations.",
+        "summary": "Contacts provides the shared CRM data foundation for contact, organisation, lead, activity, source identity, and first-party package adapter workflows.",
         "screenshots": [],
         "categories": ["admin", "crm", "contacts"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "dashboard-widget",
-            "deduplication-rules",
-            "model",
-            "privacy-tools",
-            "source-package-adapters"
-        ]
+        "deferredContributions": []
     }
 }

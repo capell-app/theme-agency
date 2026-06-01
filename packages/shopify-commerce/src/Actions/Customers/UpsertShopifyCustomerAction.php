@@ -22,9 +22,7 @@ final class UpsertShopifyCustomerAction
     {
         $shopifyGid = $this->stringValue($snapshot['id'] ?? $snapshot['admin_graphql_api_id'] ?? null);
 
-        if ($shopifyGid === null) {
-            throw new InvalidArgumentException('Shopify customer snapshots require an id.');
-        }
+        throw_if($shopifyGid === null, InvalidArgumentException::class, 'Shopify customer snapshots require an id.');
 
         /** @var ShopifyCustomer $customer */
         $customer = ShopifyCustomer::query()->updateOrCreate([

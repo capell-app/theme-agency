@@ -12,6 +12,7 @@ use Capell\Bookings\Models\AppointmentRequest;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
+use Capell\Core\Support\Database\RuntimeSchemaState;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -109,6 +110,10 @@ final class AppointmentRequestResource extends Resource
      */
     private static function serviceOptions(): array
     {
+        if (! resolve(RuntimeSchemaState::class)->hasTable((new BookingService)->getTable())) {
+            return [];
+        }
+
         return BookingService::query()->orderBy('name')->pluck('name', 'id')->all();
     }
 
@@ -117,6 +122,10 @@ final class AppointmentRequestResource extends Resource
      */
     private static function staffOptions(): array
     {
+        if (! resolve(RuntimeSchemaState::class)->hasTable((new BookingStaffMember)->getTable())) {
+            return [];
+        }
+
         return BookingStaffMember::query()->orderBy('display_name')->pluck('display_name', 'id')->all();
     }
 
@@ -125,6 +134,10 @@ final class AppointmentRequestResource extends Resource
      */
     private static function locationOptions(): array
     {
+        if (! resolve(RuntimeSchemaState::class)->hasTable((new BookingLocation)->getTable())) {
+            return [];
+        }
+
         return BookingLocation::query()->orderBy('name')->pluck('name', 'id')->all();
     }
 }

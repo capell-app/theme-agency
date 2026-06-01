@@ -17,7 +17,7 @@ parameters:
     enableMigrationCache: true
     generalizeEnvReturnType: true
     bootstrapFiles:
-        - phpstan/register-package-views.php
+        - register-package-views.php
     noUnnecessaryEnumerableToArrayCalls: true
     parseModelCastsMethod: false
     databaseMigrationsPath:
@@ -109,4 +109,4 @@ parameters:
         - stubs/core-layout.stub
         - stubs/capell-dynamic-surfaces.stub
     scanFiles:
-        - scripts/audit-manifest-v3.php
+        - ../scripts/audit-manifest-v3.php

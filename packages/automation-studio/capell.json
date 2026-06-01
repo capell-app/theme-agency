@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Automation Studio provides rule-based workflow orchestration for Capell package events, Public Actions, and future agent capabilities.",
+    "description": "Automation Studio provides rule-based workflow orchestration for Capell package events, native actions, Public Actions, and agent capabilities.",
     "product": {
         "group": "Capell Automation",
         "tier": "premium",
@@ -18,7 +18,9 @@
         "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
             "capell-app/access-gate",
+            "capell-app/agent-bridge",
             "capell-app/campaign-studio",
+            "capell-app/contacts",
             "capell-app/email-studio",
             "capell-app/form-builder",
             "capell-app/newsletter",
@@ -39,11 +41,21 @@
     "contributes": [
         {
             "type": "admin-resource",
-            "class": "Capell\\AutomationStudio\\Manifest\\AutomationRuleResourceContribution"
+            "class": "Capell\\AutomationStudio\\Manifest\\AutomationRuleResourceContribution",
+            "resourceClass": "Capell\\AutomationStudio\\Filament\\Resources\\AutomationRules\\AutomationRuleResource"
         },
         {
             "type": "admin-resource",
-            "class": "Capell\\AutomationStudio\\Manifest\\AutomationRunResourceContribution"
+            "class": "Capell\\AutomationStudio\\Manifest\\AutomationRunResourceContribution",
+            "resourceClass": "Capell\\AutomationStudio\\Filament\\Resources\\AutomationRuns\\AutomationRunResource"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\AutomationStudio\\Manifest\\AutomationStudioModelsContribution",
+            "modelClasses": [
+                "Capell\\AutomationStudio\\Models\\AutomationRule",
+                "Capell\\AutomationStudio\\Models\\AutomationRun"
+            ]
         }
     ],
     "database": {
@@ -59,8 +71,11 @@
     },
     "settings": [],
     "actions": {
-        "queueAutomationTrigger": "Capell\\AutomationStudio\\Actions\\QueueAutomationTriggerAction",
         "dispatchAutomationTrigger": "Capell\\AutomationStudio\\Actions\\DispatchAutomationTriggerAction",
+        "loadPersistedAutomationRules": "Capell\\AutomationStudio\\Actions\\LoadPersistedAutomationRulesAction",
+        "persistAutomationTriggerResults": "Capell\\AutomationStudio\\Actions\\PersistAutomationTriggerResultsAction",
+        "queueAutomationTrigger": "Capell\\AutomationStudio\\Actions\\QueueAutomationTriggerAction",
+        "registerAutomationStudioDefaults": "Capell\\AutomationStudio\\Actions\\RegisterAutomationStudioDefaultsAction",
         "recordAutomationRun": "Capell\\AutomationStudio\\Actions\\RecordAutomationRunAction"
     },
     "permissions": [
@@ -78,7 +93,20 @@
         "automation-admin",
         "automation-queue",
         "automation-idempotency",
+        "trigger-form-submitted",
+        "trigger-access-approved",
+        "trigger-page-published",
+        "trigger-campaign-converted",
+        "native-action-send-email",
+        "native-action-webhook",
+        "native-action-tag-contact",
+        "native-action-create-note",
+        "native-action-subscribe-user",
+        "native-action-queue-agent-capability",
         "public-actions-bridge",
+        "contacts-bridge",
+        "newsletter-bridge",
+        "email-studio-bridge",
         "agent-capability-queue"
     ],
     "performance": {
@@ -109,11 +137,11 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Automation Studio connects Capell package events to rule-based workflow actions.",
+        "summary": "Automation Studio connects Capell package events to rule-based native actions, Public Actions, and agent capability workflows.",
         "screenshots": [],
         "categories": ["admin", "automation", "console"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["native-action-handlers"]
+        "deferredContributions": []
     }
 }

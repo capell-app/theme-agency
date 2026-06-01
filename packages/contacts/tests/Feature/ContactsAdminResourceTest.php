@@ -2,11 +2,15 @@
 
 declare(strict_types=1);
 
+use Capell\Admin\Contracts\CapellWidgetContract;
+use Capell\Contacts\Actions\BuildContactsOverviewStatsAction;
+use Capell\Contacts\Enums\ContactActivityType;
 use Capell\Contacts\Enums\ResourceEnum;
 use Capell\Contacts\Filament\Resources\Activities\ContactActivityResource;
 use Capell\Contacts\Filament\Resources\Contacts\ContactResource;
 use Capell\Contacts\Filament\Resources\Leads\LeadResource;
 use Capell\Contacts\Filament\Resources\Organisations\OrganisationResource;
+use Capell\Contacts\Filament\Widgets\ContactsOverviewStatsWidget;
 use Capell\Contacts\Models\Contact;
 use Capell\Contacts\Models\ContactActivity;
 use Capell\Contacts\Models\Lead;
@@ -48,4 +52,43 @@ it('keeps contacts admin policies read only by default', function (): void {
         ->and((new OrganisationPolicy)->create($user))->toBeFalse()
         ->and((new LeadPolicy)->create($user))->toBeFalse()
         ->and((new ContactActivityPolicy)->create($user))->toBeFalse();
+});
+
+it('builds contacts overview widget stats from crm records', function (): void {
+    $siteId = $this->createContactsSite();
+    $contact = Contact::query()->create([
+        'site_id' => $siteId,
+        'email' => 'person@example.test',
+        'display_name' => 'Person Example',
+    ]);
+    Organisation::query()->create([
+        'site_id' => $siteId,
+        'name' => 'Example Ltd',
+    ]);
+    Lead::query()->create([
+        'site_id' => $siteId,
+        'contact_id' => $contact->getKey(),
+        'title' => 'Example lead',
+        'status' => 'open',
+    ]);
+    Lead::query()->create([
+        'site_id' => $siteId,
+        'contact_id' => $contact->getKey(),
+        'title' => 'Won lead',
+        'status' => 'won',
+    ]);
+    ContactActivity::query()->create([
+        'site_id' => $siteId,
+        'contact_id' => $contact->getKey(),
+        'type' => ContactActivityType::Note,
+        'summary' => 'Called contact',
+        'occurred_at' => now(),
+    ]);
+
+    expect(BuildContactsOverviewStatsAction::run())->toBe([
+        'contacts' => 1,
+        'organisations' => 1,
+        'open_leads' => 1,
+        'activities' => 1,
+    ])->and(class_implements(ContactsOverviewStatsWidget::class))->toContain(CapellWidgetContract::class);
 });

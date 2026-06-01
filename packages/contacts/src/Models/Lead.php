@@ -6,6 +6,7 @@ namespace Capell\Contacts\Models;
 
 use Capell\Contacts\Enums\LeadStatus;
 use Capell\Core\Models\Site;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Override;
 
+/**
+ * @property string|null $title
+ * @property LeadStatus|null $status
+ * @property string|null $value_amount
+ * @property string|null $currency
+ * @property array<string, mixed>|null $context
+ * @property CarbonImmutable|null $captured_at
+ * @property CarbonImmutable|null $qualified_at
+ * @property CarbonImmutable|null $closed_at
+ */
 class Lead extends Model
 {
     /** @use HasFactory<Factory<self>> */

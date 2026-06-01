@@ -6,6 +6,7 @@ namespace Capell\Experiments\Filament\Resources\ExperimentGoals;
 
 use BackedEnum;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\Support\Database\RuntimeSchemaState;
 use Capell\Experiments\Enums\ExperimentGoalType;
 use Capell\Experiments\Filament\Resources\ExperimentGoals\Pages\CreateExperimentGoal;
 use Capell\Experiments\Filament\Resources\ExperimentGoals\Pages\EditExperimentGoal;
@@ -104,6 +105,10 @@ final class ExperimentGoalResource extends Resource
      */
     private static function experimentOptions(): array
     {
+        if (! resolve(RuntimeSchemaState::class)->hasTable((new Experiment)->getTable())) {
+            return [];
+        }
+
         return Experiment::query()->orderBy('name')->pluck('name', 'id')->all();
     }
 

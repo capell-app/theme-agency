@@ -1,3 +1,9 @@
+@php
+    use Capell\Core\Facades\CapellCore;
+
+    $formBuilderAvailable ??= CapellCore::isPackageInstalled('capell-app/form-builder');
+@endphp
+
 <section class="theme-section theme-section-quote-form bg-[#f8fafc]">
     <div class="mx-auto max-w-5xl px-6 py-14">
         <div class="grid gap-8 lg:grid-cols-[0.82fr_1fr] lg:items-start">

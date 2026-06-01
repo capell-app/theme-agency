@@ -1,3 +1,9 @@
+@php
+    use Capell\Core\Facades\CapellCore;
+
+    $eventsAvailable ??= CapellCore::isPackageInstalled('capell-app/events');
+@endphp
+
 <section class="theme-section theme-section-events">
     @isset($heading)
         <div class="mx-auto max-w-5xl px-6 py-14">

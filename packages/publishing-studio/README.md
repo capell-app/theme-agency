@@ -1,6 +1,6 @@
 # Publishing Studio
 
-PublishingStudio is Capell's flagship editorial timeline workflow. It gives content teams a premium, Statamic-style publishing experience for Capell: preview, compare, approve, schedule, publish, and rollback every meaningful content change without editing live records directly.
+Publishing Studio is Capell's flagship editorial timeline workflow. It gives content teams a premium, Statamic-style publishing experience for Capell: preview, compare, approve, editorial calendar, schedule, publish, and rollback every meaningful content change without editing live records directly.
 
 ## At A Glance
 
@@ -13,7 +13,7 @@ PublishingStudio is Capell's flagship editorial timeline workflow. It gives cont
 
 ## Why It Helps Your Capell Workflow
 
-- Adds preview, compare, approval, scheduling, publishing, restore, rollback, and release workspace workflows for Capell content.
+- Adds preview, compare, approval, editorial calendar, scheduling, publishing, restore, rollback, and release workspace workflows for Capell content.
 - Helps owners manage editorial risk by making review state, publish readiness, and rollback paths visible in admin.
 - Gives developers draftable contracts, workspace registries, release contributors, and focused Actions for publishing behavior.
 
@@ -25,7 +25,7 @@ PublishingStudio is Capell's flagship editorial timeline workflow. It gives cont
 
 ## What It Adds
 
-PublishingStudio is Capell's flagship editorial timeline workflow. It gives content teams a premium, Statamic-style publishing experience for Capell: preview, compare, approve, schedule, publish, and rollback every meaningful content change without editing live records directly.
+Publishing Studio is Capell's flagship editorial timeline workflow. It gives content teams a premium, Statamic-style publishing experience for Capell: preview, compare, approve, schedule, publish, and rollback every meaningful content change without editing live records directly.
 
 - Draft publishing-studio with copy-on-write editing for Draftable content.
 - Signed live preview links, expiry/revocation management, access tracking, and a frontend workspace preview banner.
@@ -33,6 +33,7 @@ PublishingStudio is Capell's flagship editorial timeline workflow. It gives cont
 - Release Workspaces for grouping coordinated content, navigation, SEO, media, layout, and package-owned draftable changes into one previewable, approvable, schedulable, atomic publish.
 - Approval history for submit, approve, reject, and request-changes decisions, including reviewer notes and required approval levels.
 - Scheduled publishing with release-window guards, unpublish dates, embargo windows, review reminders, immediate publishing, version history, rollback, and entity-level restore.
+- Editorial calendar aggregation for page/workspace scheduler events plus tagged package contributors from Blog, Campaign Studio, Newsletter, and Events.
 - Activity timeline widgets, stale draft management, import recovery screens, load-test fixtures, and prune commands for audit-friendly editorial operations.
 
 ## Why It Matters
@@ -75,7 +76,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 ## Technical Shape
 
 - PublishingStudioServiceProvider, AdminServiceProvider, ConsoleServiceProvider register package surfaces.
-- Routes include capell/preview/exit.
+- Routes include `capell/preview/exit` and scheduler iCal feeds.
 - Migrations create publishing-studio, versions, preview links, approvals, field comments, review assignments, and workspace columns on core/external tables.
 - Events track state changes and version rollback.
 - Publish checks include accessibility, broken links, missing alt text, SEO meta, stale workspace state, URL collisions, and release-window rules.
@@ -107,7 +108,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 ## Runtime Surface
 
 - Livewire: `DiffPanel`, `FieldCommentThread`, `PageApprovalStatus`, `PublishStatusPanel`, `ReleaseWorkspaceSummaryPanel`, `WorkspaceApprovalHistory`, `WorkspaceContextBanner`, `WorkspaceSwitcher`.
-- Controllers: `ExitWorkspacePreviewController`.
+- Controllers: `ExitWorkspacePreviewController`, `SchedulerIcalFeedController`.
 - Routes: `packages/publishing-studio/routes/web.php`.
 
 ## Commands

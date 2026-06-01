@@ -23,10 +23,25 @@
         "metadata": [],
         "install": [],
         "runtime": ["Capell\\UrlManager\\Providers\\UrlManagerServiceProvider"],
-        "admin": [],
+        "admin": ["Capell\\UrlManager\\Providers\\UrlManagerServiceProvider"],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\UrlManager\\Manifest\\RedirectRulesPageContribution",
+            "pageClass": "Capell\\UrlManager\\Filament\\Pages\\RedirectRulesPage"
+        },
+        {
+            "type": "admin-page",
+            "class": "Capell\\UrlManager\\Manifest\\NotFoundOpportunitiesPageContribution",
+            "pageClass": "Capell\\UrlManager\\Filament\\Pages\\NotFoundOpportunitiesPage"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\UrlManager\\Manifest\\UrlManagerModelsContribution"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": false,
@@ -43,6 +58,23 @@
         "doctor": null
     },
     "settings": [],
+    "actions": {
+        "buildNotFoundRedirectSuggestions": "Capell\\UrlManager\\Actions\\BuildNotFoundRedirectSuggestionsAction",
+        "buildRedirectRulesCsv": "Capell\\UrlManager\\Actions\\BuildRedirectRulesCsvAction",
+        "buildRedirectRulesCsvTemplate": "Capell\\UrlManager\\Actions\\BuildRedirectRulesCsvTemplateAction",
+        "convertNotFoundOpportunityToRedirect": "Capell\\UrlManager\\Actions\\ConvertNotFoundOpportunityToRedirectAction",
+        "exportRedirectRules": "Capell\\UrlManager\\Actions\\ExportRedirectRulesAction",
+        "importRedirectRules": "Capell\\UrlManager\\Actions\\ImportRedirectRulesAction",
+        "importSeoSuiteBrokenLinks": "Capell\\UrlManager\\Actions\\ImportSeoSuiteBrokenLinksAction",
+        "previewRedirectRulesImport": "Capell\\UrlManager\\Actions\\PreviewRedirectRulesImportAction",
+        "recordChangedUrlRedirect": "Capell\\UrlManager\\Actions\\RecordChangedUrlRedirectAction",
+        "recordNotFoundOpportunity": "Capell\\UrlManager\\Actions\\RecordNotFoundOpportunityAction",
+        "recordRedirectHit": "Capell\\UrlManager\\Actions\\RecordRedirectHitAction",
+        "resolveRedirectRule": "Capell\\UrlManager\\Actions\\ResolveRedirectRuleAction",
+        "setNotFoundOpportunityStatus": "Capell\\UrlManager\\Actions\\SetNotFoundOpportunityStatusAction",
+        "setRedirectRuleStatus": "Capell\\UrlManager\\Actions\\SetRedirectRuleStatusAction",
+        "upsertRedirectRule": "Capell\\UrlManager\\Actions\\UpsertRedirectRuleAction"
+    },
     "permissions": [
         "View:RedirectRulesPage",
         "Manage:RedirectRules",
@@ -51,8 +83,14 @@
     ],
     "capabilities": [
         "managed-redirects",
+        "changed-url-redirect-detection",
+        "redirect-hit-counts",
         "redirect-import-export",
-        "not-found-opportunities"
+        "not-found-opportunities",
+        "not-found-redirect-suggestions",
+        "seo-suite-broken-url-import",
+        "frontend-redirect-resolver",
+        "url-manager-admin"
     ],
     "performance": {
         "frontendRenderBudgetMs": 0,

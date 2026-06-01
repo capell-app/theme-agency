@@ -124,7 +124,11 @@ final class SyncCampaignConversionContactAction
     private function email(array $payload): ?string
     {
         foreach ($payload as $key => $value) {
-            if (! is_string($key) || ! str_contains(mb_strtolower($key), 'email')) {
+            if (! is_string($key)) {
+                continue;
+            }
+
+            if (! str_contains(mb_strtolower($key), 'email')) {
                 continue;
             }
 

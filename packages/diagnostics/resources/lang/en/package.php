@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'description' => 'Diagnostics adds operational diagnostics for cache, configuration drift, migrations, packages, registries, queues, permissions, setup health, and Tailwind build status.',
+    'description' => 'Diagnostics adds operational diagnostics for cache, configuration drift, migrations, packages, registries, queues, mail, storage, public-output safety, permissions, package ownership, setup health, and Tailwind build status.',
     'diagnostics' => 'Diagnostics',
     'content_graph_health_edges' => 'Edges',
     'content_graph_health_heading' => 'Content graph',
@@ -92,6 +92,14 @@ return [
     'pending_job_deleted' => 'Pending queue job deleted.',
     'permission_audit' => 'Permission Audit',
     'progress' => 'Progress',
+    'public_output_safety' => 'Public output safety',
+    'public_output_safety_cacheable_without_vary' => ':package is cacheable but does not declare cache vary keys.',
+    'public_output_safety_invalid_manifest' => ':package has an unreadable Capell manifest.',
+    'public_output_safety_missing_cache_safety' => ':package does not declare performance.cacheSafety metadata.',
+    'public_output_safety_missing_packages_path' => 'No local packages directory is available for public-output safety checks.',
+    'public_output_safety_no_frontend_packages' => 'No frontend packages were found to scan.',
+    'public_output_safety_ok' => ':package declares non-sensitive public output cache safety metadata.',
+    'public_output_safety_sensitive_output' => ':package declares sensitive frontend output.',
     'prune_queue_monitors' => 'Prune history',
     'queue' => 'Queue',
     'queue_health' => 'Queue Operations',

@@ -13,6 +13,7 @@ It intentionally does not replace package-specific consent capture in packages s
 - Retention rules for package-owned or integration-owned data domains.
 - Retention execution Actions for delete, anonymize, and review workflows.
 - Export and anonymization Actions that operate on Privacy Center records first.
+- A retention schedule contribution so installers can discover the package-owned retention execution hook.
 
 ## Integration Contract
 
@@ -28,3 +29,7 @@ Integrating packages should call Actions instead of writing Privacy Center table
 - `AnonymizePrivacySubjectAction`
 
 Public frontend output must not expose Privacy Center internals, package names, model identifiers, admin URLs, or editor state.
+
+## Remaining Admin Surfaces
+
+The current package owns the compliance records and workflows. Admin resources and dashboard widgets remain as explicit manifest deferrals until there is an operator UI for policy review, request queues, and retention health.

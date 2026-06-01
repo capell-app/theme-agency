@@ -80,3 +80,42 @@ it('registers native automation handlers by default', function (): void {
         ->and($actions->handler(AutomationActionType::CreateNote))->toBeInstanceOf(CreateContactNoteAutomationActionHandler::class)
         ->and($actions->handler(AutomationActionType::SubscribeUser))->toBeInstanceOf(SubscribeUserAutomationActionHandler::class);
 });
+
+it('keeps native triggers and action handlers visible in the package manifest', function (): void {
+    $manifest = json_decode(
+        (string) file_get_contents(__DIR__ . '/../../../capell.json'),
+        associative: true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    expect($manifest['dependencies']['supports'])->toContain(
+        'capell-app/access-gate',
+        'capell-app/agent-bridge',
+        'capell-app/campaign-studio',
+        'capell-app/contacts',
+        'capell-app/email-studio',
+        'capell-app/form-builder',
+        'capell-app/newsletter',
+        'capell-app/public-actions',
+        'capell-app/publishing-studio',
+    )
+        ->and($manifest['actions'])->toHaveKey('registerAutomationStudioDefaults', RegisterAutomationStudioDefaultsAction::class)
+        ->and($manifest['actions'])->toHaveKey('loadPersistedAutomationRules')
+        ->and($manifest['capabilities'])->toContain(
+            'trigger-form-submitted',
+            'trigger-access-approved',
+            'trigger-page-published',
+            'trigger-campaign-converted',
+            'native-action-send-email',
+            'native-action-webhook',
+            'native-action-tag-contact',
+            'native-action-create-note',
+            'native-action-subscribe-user',
+            'native-action-queue-agent-capability',
+            'public-actions-bridge',
+            'contacts-bridge',
+            'newsletter-bridge',
+            'email-studio-bridge',
+            'agent-capability-queue',
+        );
+});

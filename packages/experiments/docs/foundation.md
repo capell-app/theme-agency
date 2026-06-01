@@ -11,22 +11,21 @@ This package is the package-local foundation for Capell experiments, A/B testing
 - Request context variant resolution finds active, site/subject-aware experiments, delegates sticky allocation, and returns render-safe variant payload plus cache variation metadata.
 - Goals and goal events record conversion intent and variant-level outcomes.
 - Winner reports summarize allocation count, conversion count, and conversion rate.
-- `DeclareExperimentWinnerAction` persists the selected winning variant, declaration timestamp, and report snapshot for admin/Campaign Studio consumption. Statistical confidence is intentionally a later slice.
+- `DeclareExperimentWinnerAction` persists the selected winning variant, declaration timestamp, and report snapshot for admin/Campaign Studio consumption.
 - Filament admin resources let operators manage experiments, variants, goals, and audience rules without reaching directly into database tables.
 
 ## Integration Points
 
-Future packages should integrate through explicit boundaries:
+Packages integrate through explicit boundaries:
 
 - Campaign Studio can create experiments using `subject_type=campaign`, `subject_class`, and `subject_id`.
 - Page experiments can use `subject_type=page` with a page model reference.
 - Insights can call `AllocateVariantAction` with an `ExperimentContextData` source/external ID and later call `RecordGoalEventAction`.
-- HTML Cache and Frontend Optimizer should vary cache/profile keys by the resolved variant key; this package does not currently mutate public output or caches.
+- HTML Cache and Frontend Optimizer can vary cache/profile keys by the resolved variant key from `ResolvedExperimentVariantData`.
 
-## Deliberate deferrals
+## Rendering Contract
 
-- Allocation and goal event reporting can be promoted into dedicated read-only admin resources once operators need drill-down beyond the experiment table counts and winner report action.
-- Frontend components for page/campaign variant rendering remain package-specific integration work so this package does not leak experiment metadata into public HTML by default.
+Experiments returns render-safe variant payloads and cache variation metadata through Actions/Data. Owning page, campaign, theme, HTML Cache, or Frontend Optimizer integrations consume those payloads without this package injecting Blade, JavaScript, editor markers, signed URLs, model IDs, or admin metadata into public responses.
 
 ## Public Output Safety
 

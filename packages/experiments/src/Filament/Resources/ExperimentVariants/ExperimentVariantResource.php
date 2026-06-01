@@ -6,6 +6,7 @@ namespace Capell\Experiments\Filament\Resources\ExperimentVariants;
 
 use BackedEnum;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\Support\Database\RuntimeSchemaState;
 use Capell\Experiments\Filament\Resources\ExperimentVariants\Pages\CreateExperimentVariant;
 use Capell\Experiments\Filament\Resources\ExperimentVariants\Pages\EditExperimentVariant;
 use Capell\Experiments\Filament\Resources\ExperimentVariants\Pages\ListExperimentVariants;
@@ -104,6 +105,10 @@ final class ExperimentVariantResource extends Resource
      */
     private static function experimentOptions(): array
     {
+        if (! resolve(RuntimeSchemaState::class)->hasTable((new Experiment)->getTable())) {
+            return [];
+        }
+
         return Experiment::query()->orderBy('name')->pluck('name', 'id')->all();
     }
 }
