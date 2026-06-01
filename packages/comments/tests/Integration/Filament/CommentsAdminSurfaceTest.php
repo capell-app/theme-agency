@@ -6,7 +6,9 @@ use Capell\Comments\Enums\CommentStatus;
 use Capell\Comments\Filament\Resources\CommentAuthors\CommentAuthorResource;
 use Capell\Comments\Filament\Resources\Comments\CommentResource;
 use Capell\Comments\Filament\Resources\Comments\Tables\CommentsTable;
+use Capell\Comments\Filament\Settings\Contributors\CommentsDashboardSettingsContributor;
 use Capell\Comments\Filament\Widgets\CommentStatsWidget;
+use Capell\Comments\Filament\Widgets\LatestCommentsWidget;
 use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
 use Capell\Comments\Models\CommentModerationEvent;
@@ -191,6 +193,34 @@ it('builds comment moderation stats from real comment states', function (): void
         ->and((string) $stats[1]->getValue())->toBe('1')
         ->and((string) $stats[2]->getValue())->toBe('2')
         ->and(CommentStatsWidget::compatibleCapellApiVersion())->toBe('^4.0');
+});
+
+it('declares comment dashboard settings and latest comments table metadata', function (): void {
+    Gate::before(fn (): bool => true);
+
+    $entries = (new CommentsDashboardSettingsContributor)->settingsKeys();
+    $table = (new LatestCommentsWidget)->table(commentAdminTableForCoverage());
+    $site = $this->createCommentsSite();
+    $author = CommentAuthor::factory()->create(['site_id' => $site->getKey(), 'name' => 'Taylor Editor']);
+    $comment = Comment::factory()->create([
+        'site_id' => $site->getKey(),
+        'comment_author_id' => $author->getKey(),
+        'body' => 'Useful editorial feedback',
+    ]);
+
+    expect($entries)->toBe([
+        [
+            'key' => 'comment_stats',
+            'label' => __('capell-comments::widgets.comment_stats'),
+            'group' => __('capell-comments::widgets.group'),
+        ],
+        [
+            'key' => 'latest_comments',
+            'label' => __('capell-comments::widgets.latest_comments'),
+            'group' => __('capell-comments::widgets.group'),
+        ],
+    ])->and(array_keys($table->getColumns()))->toBe(['author.name', 'body', 'status', 'submitted_at'])
+        ->and($table->getRecordUrl($comment))->toContain('tableSearch=' . $comment->getKey());
 });
 
 function commentAdminTableForCoverage(): Table

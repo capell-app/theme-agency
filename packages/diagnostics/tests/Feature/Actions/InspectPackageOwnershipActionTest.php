@@ -101,3 +101,55 @@ it('identifies package ownership for runtime routes by controller namespace', fu
         File::deleteDirectory($temporaryRoot);
     }
 });
+
+it('discovers installed capell packages from composer metadata', function (): void {
+    $temporaryRoot = sys_get_temp_dir() . '/capell_package_ownership_' . uniqid();
+    $packagePath = $temporaryRoot . '/packages/installed-demo';
+    $installedJsonPath = $temporaryRoot . '/vendor/composer/installed.json';
+
+    File::ensureDirectoryExists($packagePath);
+    File::ensureDirectoryExists(dirname($installedJsonPath));
+    File::put($packagePath . '/composer.json', json_encode([
+        'name' => 'capell-app/installed-demo',
+        'autoload' => [
+            'psr-4' => [
+                'Capell\\Diagnostics\\Tests\\Fixtures\\' => 'src/',
+                'Capell\\Diagnostics\\Tests\\Fixtures\\Database\\Factories\\' => 'database/factories/',
+            ],
+        ],
+    ], JSON_THROW_ON_ERROR));
+    File::put($installedJsonPath, json_encode([
+        'packages' => [
+            ['name' => 'vendor/ignored', 'install_path' => '../../ignored'],
+            ['name' => 'capell-app/installed-demo', 'install_path' => '../../packages/installed-demo'],
+        ],
+    ], JSON_THROW_ON_ERROR));
+
+    Route::get('/installed-owner-probe', PackageOwnershipProbeController::class);
+
+    try {
+        $action = new InspectPackageOwnershipAction(
+            customPackagesPath: $temporaryRoot . '/missing-packages-directory',
+            customInstalledJsonPath: $installedJsonPath,
+        );
+
+        $result = $action->handle('route', '/installed-owner-probe');
+        $candidate = $result->candidates->toCollection()->first();
+
+        throw_unless($candidate instanceof PackageOwnershipCandidateData, RuntimeException::class, 'Expected installed package ownership candidate.');
+
+        expect($result->foundCount)->toBe(1)
+            ->and($candidate->composerName)->toBe('capell-app/installed-demo')
+            ->and($candidate->slug)->toBe('installed-demo')
+            ->and($candidate->source)->toBe('route')
+            ->and($candidate->evidence)->toContain('uri: installed-owner-probe')
+            ->and($candidate->evidence)->toContain(PackageOwnershipProbeController::class);
+    } finally {
+        File::deleteDirectory($temporaryRoot);
+    }
+});
+
+it('rejects unknown ownership inspection kinds', function (): void {
+    expect(fn (): mixed => (new InspectPackageOwnershipAction)->handle('asset', 'capell'))
+        ->toThrow(InvalidArgumentException::class, 'Ownership inspection kind must be config, route, or table.');
+});

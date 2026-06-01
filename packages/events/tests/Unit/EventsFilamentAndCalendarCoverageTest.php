@@ -7,7 +7,9 @@ use Capell\Core\Models\Language;
 use Capell\Core\Models\Site;
 use Capell\Events\Filament\Resources\Events\EventResource;
 use Capell\Events\Filament\Resources\Events\Schemas\EventForm;
+use Capell\Events\Filament\Widgets\EventCalendarWidget;
 use Capell\Events\Models\Event;
+use Capell\Events\Models\EventOccurrence;
 use Capell\Events\Support\Calendar\CalendarMonth;
 use Capell\Events\Support\Calendar\CalendarWeek;
 use Carbon\CarbonImmutable;
@@ -75,4 +77,30 @@ it('declares event resource metadata and route defaults', function (): void {
         ->and(EventResource::getResourceName())->toBe('event')
         ->and(EventResource::getBasePath($site, $language))->toBe('/events/')
         ->and(EventResource::getPages())->toHaveKeys(['index', 'create', 'edit']);
+});
+
+it('groups upcoming event occurrences by calendar date', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-06-01 09:00:00'));
+
+    EventOccurrence::factory()->create([
+        'starts_at' => CarbonImmutable::parse('2026-06-05 10:00:00'),
+        'ends_at' => CarbonImmutable::parse('2026-06-05 12:00:00'),
+    ]);
+    EventOccurrence::factory()->create([
+        'starts_at' => CarbonImmutable::parse('2026-06-05 14:00:00'),
+        'ends_at' => CarbonImmutable::parse('2026-06-05 16:00:00'),
+    ]);
+    EventOccurrence::factory()->create([
+        'starts_at' => CarbonImmutable::parse('2026-09-15 10:00:00'),
+        'ends_at' => CarbonImmutable::parse('2026-09-15 12:00:00'),
+    ]);
+
+    try {
+        $groups = (new EventCalendarWidget)->occurrencesByDate();
+
+        expect($groups->keys()->all())->toBe(['2026-06-05'])
+            ->and($groups->get('2026-06-05'))->toHaveCount(2);
+    } finally {
+        CarbonImmutable::setTestNow();
+    }
 });
