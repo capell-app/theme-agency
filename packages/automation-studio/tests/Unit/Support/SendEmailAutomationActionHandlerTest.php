@@ -52,14 +52,11 @@ it('reports missing email recipients before invoking email studio', function ():
 });
 
 it('sends email studio payloads with resolved recipients context headers and trigger metadata', function (): void {
-    $sentEmail = new class
-    {
-        public ?SendEmailData $data = null;
-    };
+    $sentEmail = new SendEmailAutomationActionProbe;
 
     app()->instance(SendEmailAction::class, new class($sentEmail) extends SendEmailAction
     {
-        public function __construct(private readonly object $sentEmail) {}
+        public function __construct(private readonly SendEmailAutomationActionProbe $sentEmail) {}
 
         public function handle(SendEmailData $data): EmailMessage
         {
@@ -141,14 +138,11 @@ it('sends email studio payloads with resolved recipients context headers and tri
 });
 
 it('falls back to event email and site scope when optional email settings are omitted', function (): void {
-    $sentEmail = new class
-    {
-        public ?SendEmailData $data = null;
-    };
+    $sentEmail = new SendEmailAutomationActionProbe;
 
     app()->instance(SendEmailAction::class, new class($sentEmail) extends SendEmailAction
     {
-        public function __construct(private readonly object $sentEmail) {}
+        public function __construct(private readonly SendEmailAutomationActionProbe $sentEmail) {}
 
         public function handle(SendEmailData $data): EmailMessage
         {
@@ -191,3 +185,8 @@ it('falls back to event email and site scope when optional email settings are om
         ->and($sentEmail->data?->headers->items())->toBe([])
         ->and($sentEmail->data?->variables)->toMatchArray(['email' => 'subscriber@example.test', 'site_id' => 12]);
 });
+
+final class SendEmailAutomationActionProbe
+{
+    public ?SendEmailData $data = null;
+}

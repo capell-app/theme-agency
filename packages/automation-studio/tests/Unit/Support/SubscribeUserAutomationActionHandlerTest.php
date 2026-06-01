@@ -55,23 +55,11 @@ it('reports missing email addresses before subscribing users', function (): void
 });
 
 it('subscribes users with profile consent source metadata and newsletter tags', function (): void {
-    $subscription = new class
-    {
-        public ?SubscriberData $subscriberData = null;
-
-        public ?ConsentEvidenceData $evidenceData = null;
-
-        public ?ConsentEventType $eventType = null;
-
-        /** @var array<int, int|string> */
-        public array $tagIds = [];
-
-        public bool $replaceTags = false;
-    };
+    $subscription = new SubscribeUserAutomationActionProbe;
 
     app()->instance(UpsertSubscriberAction::class, new class($subscription) extends UpsertSubscriberAction
     {
-        public function __construct(private readonly object $subscription) {}
+        public function __construct(private readonly SubscribeUserAutomationActionProbe $subscription) {}
 
         public function handle(
             SubscriberData $data,
@@ -96,8 +84,9 @@ it('subscribes users with profile consent source metadata and newsletter tags', 
 
     app()->instance(ApplyNewsletterTagsAction::class, new class($subscription) extends ApplyNewsletterTagsAction
     {
-        public function __construct(private readonly object $subscription) {}
+        public function __construct(private readonly SubscribeUserAutomationActionProbe $subscription) {}
 
+        /** @param  array<int, int|string>  $tagIds */
         public function handle(Subscriber $subscriber, array $tagIds, bool $replace = false): Subscriber
         {
             $this->subscription->tagIds = $tagIds;
@@ -169,14 +158,11 @@ it('subscribes users with profile consent source metadata and newsletter tags', 
 });
 
 it('uses action settings over event payload for subscriber identity fields', function (): void {
-    $subscription = new class
-    {
-        public ?SubscriberData $subscriberData = null;
-    };
+    $subscription = new SubscribeUserAutomationActionProbe;
 
     app()->instance(UpsertSubscriberAction::class, new class($subscription) extends UpsertSubscriberAction
     {
-        public function __construct(private readonly object $subscription) {}
+        public function __construct(private readonly SubscribeUserAutomationActionProbe $subscription) {}
 
         public function handle(
             SubscriberData $data,
@@ -223,3 +209,17 @@ it('uses action settings over event payload for subscriber identity fields', fun
         ->and($subscription->subscriberData?->email)->toBe('settings@example.test')
         ->and($subscription->subscriberData?->sourceFormId)->toBe(9);
 });
+
+final class SubscribeUserAutomationActionProbe
+{
+    public ?SubscriberData $subscriberData = null;
+
+    public ?ConsentEvidenceData $evidenceData = null;
+
+    public ?ConsentEventType $eventType = null;
+
+    /** @var array<int, int|string> */
+    public array $tagIds = [];
+
+    public bool $replaceTags = false;
+}

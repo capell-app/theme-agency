@@ -33,20 +33,16 @@ it('reports missing agent bridge capability keys before invoking agent bridge', 
 });
 
 it('queues agent bridge capabilities with merged payload and scoped automation clients', function (): void {
-    $invocation = new class
-    {
-        public ?string $capabilityKey = null;
-
-        /** @var array<string, mixed> */
-        public array $payload = [];
-
-        public ?AuthenticatedAgentBridgeClientData $client = null;
-    };
+    $invocation = new QueueAgentCapabilityInvocationProbe;
 
     app()->instance(InvokeAgentBridgeCapabilityPreviewAction::class, new class($invocation)
     {
-        public function __construct(private readonly object $invocation) {}
+        public function __construct(private readonly QueueAgentCapabilityInvocationProbe $invocation) {}
 
+        /**
+         * @param  array<string, mixed>  $payload
+         * @return array<string, mixed>
+         */
         public function handle(
             string $capabilityKey,
             array $payload,
@@ -115,6 +111,10 @@ it('queues agent bridge capabilities with merged payload and scoped automation c
 it('returns agent bridge invocation failures as automation action failures', function (): void {
     app()->instance(InvokeAgentBridgeCapabilityPreviewAction::class, new class
     {
+        /**
+         * @param  array<string, mixed>  $payload
+         * @return array<string, mixed>
+         */
         public function handle(
             string $capabilityKey,
             array $payload,
@@ -146,3 +146,13 @@ it('returns agent bridge invocation failures as automation action failures', fun
         ->and($result->message)->toBe('Agent Bridge rejected the capability.')
         ->and($result->context['error_type'])->toBe(RuntimeException::class);
 });
+
+final class QueueAgentCapabilityInvocationProbe
+{
+    public ?string $capabilityKey = null;
+
+    /** @var array<string, mixed> */
+    public array $payload = [];
+
+    public ?AuthenticatedAgentBridgeClientData $client = null;
+}

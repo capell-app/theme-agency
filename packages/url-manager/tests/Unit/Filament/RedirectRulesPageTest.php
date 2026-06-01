@@ -294,15 +294,18 @@ function urlManagerTableActionNames(array $actions): array
 {
     return collect($actions)
         ->flatMap(function (mixed $action): array {
-            if (method_exists($action, 'getFlatActions')) {
+            if (is_object($action) && method_exists($action, 'getFlatActions')) {
                 return array_values(array_map(
-                    static fn (mixed $nestedAction): string => (string) $nestedAction->getName(),
+                    static fn (mixed $nestedAction): string => is_object($nestedAction) && method_exists($nestedAction, 'getName')
+                        ? (string) $nestedAction->getName()
+                        : '',
                     $action->getFlatActions(),
                 ));
             }
 
-            return method_exists($action, 'getName') ? [(string) $action->getName()] : [];
+            return is_object($action) && method_exists($action, 'getName') ? [(string) $action->getName()] : [];
         })
+        ->filter(static fn (string $name): bool => $name !== '')
         ->values()
         ->all();
 }
