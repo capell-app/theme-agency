@@ -40,6 +40,26 @@ it('returns unconfigured sync results without writing metrics', function (): voi
         ->and(SearchConsoleQueryMetric::query()->count())->toBe(0);
 });
 
+it('reports an empty search console command scope without syncing', function (): void {
+    test()->artisan('capell:seo-suite-sync-search-console', [
+        '--site' => 999999,
+        '--limit' => 0,
+    ])
+        ->assertSuccessful()
+        ->expectsOutputToContain('No sites matched the Search Console sync scope.');
+});
+
+it('stops the search console command when the client is not configured', function (): void {
+    Site::factory()->create();
+    app()->instance(SearchConsoleClientInterface::class, new NullSearchConsoleClient);
+
+    test()->artisan('capell:seo-suite-sync-search-console', [
+        '--limit' => 10,
+    ])
+        ->assertSuccessful()
+        ->expectsOutputToContain('Search Console is not configured.');
+});
+
 it('stores and queries declining search console url metrics', function (): void {
     $site = Site::factory()->create();
 

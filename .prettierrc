@@ -10,7 +10,7 @@
             "files": ["*.blade.php"],
             "options": {
                 "parser": "blade",
-                "singleAttributePerLine": false
+                "singleAttributePerLine": true
             }
         },
         {
