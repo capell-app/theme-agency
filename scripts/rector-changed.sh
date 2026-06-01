@@ -25,9 +25,13 @@ if [[ "$MODE" == "staged" ]]; then
     CHANGED_FILES+=("$file")
   done < <(git diff --cached --name-only --diff-filter=ACMRTUXB)
 elif [[ -n "${GITHUB_BASE_REF:-}" ]]; then
-  git fetch --no-tags --depth=1 origin "$GITHUB_BASE_REF"
+  if git rev-parse --verify --quiet HEAD^2 >/dev/null; then
+    BASE_COMMIT="$(git rev-parse HEAD^1)"
+  else
+    git fetch --no-tags --depth=1 origin "$GITHUB_BASE_REF"
 
-  BASE_COMMIT="$(git merge-base "origin/$GITHUB_BASE_REF" HEAD)"
+    BASE_COMMIT="$(git merge-base "origin/$GITHUB_BASE_REF" HEAD)"
+  fi
 
   while IFS= read -r file; do
     CHANGED_FILES+=("$file")
@@ -51,5 +55,11 @@ if [[ ${#PHP_FILES[@]} -eq 0 ]]; then
   exit 0
 fi
 
-echo "Running Rector on changed PHP files..."
-XDEBUG_MODE=off "$PHP_BINARY" vendor/bin/rector --no-progress-bar "${RECTOR_ARGS[@]}" "${PHP_FILES[@]}"
+BATCH_SIZE="${RECTOR_CHANGED_BATCH_SIZE:-50}"
+
+echo "Running Rector on ${#PHP_FILES[@]} changed PHP file(s)..."
+for ((offset = 0; offset < ${#PHP_FILES[@]}; offset += BATCH_SIZE)); do
+  batch=("${PHP_FILES[@]:offset:BATCH_SIZE}")
+
+  XDEBUG_MODE=off "$PHP_BINARY" vendor/bin/rector --no-progress-bar "${RECTOR_ARGS[@]}" "${batch[@]}"
+done
