@@ -3,7 +3,10 @@
     aria-label="{{ __('capell-theme-agency::generic.main_navigation') }}"
 >
     <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-        <a href="/" class="text-2xl font-black tracking-tight">
+        <a
+            href="/"
+            class="text-2xl font-black tracking-tight"
+        >
             {{ $section->brandName }}
         </a>
         <div
@@ -47,4 +50,7 @@
         @endif
     </div>
 </nav>
-<span id="main-content" tabindex="-1"></span>
+<span
+    id="main-content"
+    tabindex="-1"
+></span>

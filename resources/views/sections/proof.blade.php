@@ -18,7 +18,10 @@
             @endif
         </div>
 
-        <div class="theme-carousel relative mt-8" data-carousel="agency-proof">
+        <div
+            class="theme-carousel relative mt-8"
+            data-carousel="agency-proof"
+        >
             <div
                 class="flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 md:grid md:grid-cols-3 [&::-webkit-scrollbar]:hidden"
                 data-carousel-track

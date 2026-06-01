@@ -148,7 +148,10 @@
                             >
                                 {{ __('capell-theme-agency::generic.channel_signal') }}
                             </p>
-                            <div class="mt-4 space-y-3" aria-hidden="true">
+                            <div
+                                class="mt-4 space-y-3"
+                                aria-hidden="true"
+                            >
                                 <span
                                     class="block h-3 w-full rounded-full bg-zinc-950"
                                 ></span>
