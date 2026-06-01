@@ -3,6 +3,7 @@
     use Filament\Support\Icons\Heroicon;
 
     $state = $this->state();
+    $dateFormat = 'd/m/Y H:i';
 @endphp
 
 <div
@@ -22,47 +23,10 @@
     </div>
 
     <div class="space-y-3 px-4 py-3 text-sm">
-        {{-- Status row --}}
-        <div class="flex items-center justify-between gap-2">
-            <span class="text-gray-500 dark:text-gray-400">
-                {{ __('capell-admin::publish_panel.status') }}
-            </span>
-            <span class="font-medium text-gray-800 dark:text-gray-200">
-                {{ $state->statusLabel() }}
-            </span>
-        </div>
-
-        {{-- Workspace row (only shown when inside a workspace) --}}
-        @if ($state->hasActiveContext())
-            <div class="flex items-center justify-between gap-2">
-                <span class="text-gray-500 dark:text-gray-400">
-                    {{ __('capell-admin::publish_panel.workspace') }}
-                </span>
-                <span class="font-medium text-gray-800 dark:text-gray-200">
-                    {{ $state->contextName }}
-                    @if ($state->contextStatus !== null)
-                        <span class="ml-1 text-xs text-gray-400">
-                            ({{ $state->contextStatus }})
-                        </span>
-                    @endif
-                </span>
-            </div>
-        @endif
-
-        {{-- Last published row --}}
-        @if ($state->publishedAt !== null)
-            <div class="flex items-center justify-between gap-2">
-                <span class="text-gray-500 dark:text-gray-400">
-                    {{ __('capell-admin::publish_panel.last_published') }}
-                </span>
-                <span
-                    class="font-medium text-gray-800 dark:text-gray-200"
-                    title="{{ $state->publishedAt->toDateTimeString() }}"
-                >
-                    {{ $state->publishedAt->diffForHumans() }}
-                </span>
-            </div>
-        @endif
+        @include('capell-admin::livewire.partials.publish-status-rows', [
+            'dateFormat' => $dateFormat,
+            'state' => $state,
+        ])
 
         {{-- Preview URL --}}
         @if ($state->previewUrl !== null)

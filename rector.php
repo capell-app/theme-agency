@@ -18,6 +18,14 @@ use RectorLaravel\Set\LaravelSetList;
 use RectorLaravel\Set\LaravelSetProvider;
 use Sinnbeck\DomAssertions\Rector\Rules\AssertElementToAssertContainsElementRule;
 
+$packagePaths = [];
+
+foreach (['config', 'database', 'publishes', 'resources', 'routes', 'src', 'tests'] as $packageDirectory) {
+    foreach (glob(__DIR__ . '/packages/*/' . $packageDirectory, GLOB_ONLYDIR) ?: [] as $path) {
+        $packagePaths[] = $path;
+    }
+}
+
 return RectorConfig::configure()
     ->withSetProviders(LaravelSetProvider::class)
     ->withSets([
@@ -36,11 +44,13 @@ return RectorConfig::configure()
         removeUnusedImports: true,
     )
     ->withCache(
-        cacheDirectory: '/tmp/rector',
+        cacheDirectory: '/tmp/rector/capell-packages-4',
         cacheClass: FileCacheStorage::class,
     )
     ->withPaths([
-        __DIR__ . '/packages',
+        __DIR__ . '/rector.php',
+        ...(glob(__DIR__ . '/packages/*/rector.php') ?: []),
+        ...$packagePaths,
         __DIR__ . '/tests',
     ])
     ->withParallel(

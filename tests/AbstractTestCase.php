@@ -14,9 +14,13 @@ use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use BladeUI\Icons\BladeIconsServiceProvider;
 use Capell\Address\Models\Address;
 use Capell\Address\Models\Country;
+use Capell\Admin\Facades\CapellAdmin;
+use Capell\Admin\Support\CapellAdminManager;
 use Capell\Blog\Models\Article;
 use Capell\ContentSections\Models\Section;
+use Capell\Core\Facades\CapellCore;
 use Capell\Core\Providers\CapellServiceProvider;
+use Capell\Core\Support\CapellCoreManager;
 use Capell\FoundationTheme\View\Components\Block\Page\Breadcrumbs;
 use Capell\FoundationTheme\View\Components\Block\Page\Children;
 use Capell\FoundationTheme\View\Components\Block\Page\Content;
@@ -98,6 +102,9 @@ abstract class AbstractTestCase extends TestCase
     protected function setUp(): void
     {
         PackageTestDatabaseGuard::assertEnvironmentIsSafe();
+
+        CapellAdmin::clearResolvedInstance(CapellAdminManager::class);
+        CapellCore::clearResolvedInstance(CapellCoreManager::class);
 
         if (getenv('TEST_TOKEN')) {
             putenv('VIEW_COMPILED_PATH=storage/framework/views/phpunit-' . $this->getPackageServiceName() . '-parallel-' . getenv('TEST_TOKEN'));

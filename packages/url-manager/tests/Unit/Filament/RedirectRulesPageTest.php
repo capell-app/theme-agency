@@ -28,6 +28,7 @@ use Capell\UrlManager\Filament\Pages\RedirectRulesPage;
 use Capell\UrlManager\Models\RedirectRule;
 use Capell\UrlManager\Providers\UrlManagerServiceProvider;
 use Capell\UrlManager\Support\Redirects\UrlManagerRedirectResolver;
+use Filament\Tables\Table;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -164,6 +165,62 @@ it('guards url manager pages behind view or manage permissions', function (): vo
         ->and(NotFoundOpportunitiesPage::canAccess())->toBeTrue();
 });
 
+it('configures the redirect rules table with import export and lifecycle actions', function (): void {
+    $table = RedirectRulesPage::table(Table::make(app(RedirectRulesPage::class)));
+
+    expect(array_keys($table->getColumns()))
+        ->toBe([
+            'source_url',
+            'target_url',
+            'status_code',
+            'match_type',
+            'status',
+            'hit_count',
+            'last_hit_at',
+        ])
+        ->and(array_keys($table->getFilters()))
+        ->toBe(['status'])
+        ->and(urlManagerTableActionNames($table->getRecordActions()))
+        ->toBe(['edit', 'activateRedirectRule', 'disableRedirectRule', 'delete'])
+        ->and(urlManagerTableActionNames($table->getHeaderActions()))
+        ->toBe([
+            'create',
+            'importRedirectRules',
+            'previewRedirectImport',
+            'exportRedirectRules',
+            'downloadRedirectImportTemplate',
+        ])
+        ->and(urlManagerTableActionNames($table->getToolbarActions()))
+        ->toBe(['activateRedirectRules', 'disableRedirectRules', 'deleteRedirectRules'])
+        ->and($table->getDefaultSortColumn())
+        ->toBe('hit_count')
+        ->and($table->getDefaultSortDirection())
+        ->toBe('desc');
+});
+
+it('configures the not found opportunities table with conversion and triage actions', function (): void {
+    $table = NotFoundOpportunitiesPage::table(Table::make(app(NotFoundOpportunitiesPage::class)));
+
+    expect(array_keys($table->getColumns()))
+        ->toBe([
+            'source_url',
+            'suggested_target_url',
+            'status',
+            'hit_count',
+            'last_seen_at',
+        ])
+        ->and(array_keys($table->getFilters()))
+        ->toBe(['status'])
+        ->and(urlManagerTableActionNames($table->getRecordActions()))
+        ->toBe(['convert_to_redirect', 'ignoreOpportunity', 'reopenOpportunity'])
+        ->and(urlManagerTableActionNames($table->getToolbarActions()))
+        ->toBe(['ignoreOpportunities', 'reopenOpportunities'])
+        ->and($table->getDefaultSortColumn())
+        ->toBe('hit_count')
+        ->and($table->getDefaultSortDirection())
+        ->toBe('desc');
+});
+
 it('registers installed package admin pages and frontend redirect resolver behavior', function (): void {
     CapellCore::forcePackageInstalled(UrlManagerServiceProvider::$packageName);
     expect(CapellCore::isPackageInstalled(UrlManagerServiceProvider::$packageName))->toBeTrue();
@@ -227,4 +284,25 @@ function urlManagerFilamentTestLanguage(): Language
     $language->forceFill(['id' => 1]);
 
     return $language;
+}
+
+/**
+ * @param  array<int|string, mixed>  $actions
+ * @return array<int, string>
+ */
+function urlManagerTableActionNames(array $actions): array
+{
+    return collect($actions)
+        ->flatMap(function (mixed $action): array {
+            if (method_exists($action, 'getFlatActions')) {
+                return array_values(array_map(
+                    static fn (mixed $nestedAction): string => (string) $nestedAction->getName(),
+                    $action->getFlatActions(),
+                ));
+            }
+
+            return method_exists($action, 'getName') ? [(string) $action->getName()] : [];
+        })
+        ->values()
+        ->all();
 }

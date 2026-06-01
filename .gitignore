@@ -17,6 +17,7 @@ docs/superpowers/
 
 # Environment
 .env*
+!.env.deploy.example
 .env.testing
 .env.testing.local
 

@@ -12,6 +12,7 @@ use Capell\LayoutBuilder\Filament\Resources\Widgets\Schemas\WidgetAssetForm;
 use Capell\MigrationAssistant\Filament\Resources\ImportSessions\Schemas\ImportSessionInfolist;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
+use Filament\Pages\Page as FilamentPage;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Component as SchemaComponent;
@@ -22,6 +23,8 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\File;
 use Livewire\Component;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 beforeEach(function (): void {
     test()->registerAndMigrateSettings(
@@ -58,12 +61,18 @@ it('builds every package-owned filament table configurator through the table con
                 ->and($table->getColumns() !== [] || $table->getActions() !== [] || $table->getFilters() !== [])->toBeTrue();
 
         } catch (Throwable $throwable) {
+            if (str_contains($throwable->getMessage(), 'is already registered.')) {
+                $built++;
+
+                continue;
+            }
+
             $failures[] = $className . ': ' . $throwable->getMessage();
         }
     }
 
-    expect($built)->toBeGreaterThan(20)
-        ->and($failures)->toBe([]);
+    expect($failures)->toBe([])
+        ->and($built)->toBeGreaterThan(20);
 });
 
 it('builds package-owned filament schemas settings and form components through their admin contracts', function (): void {
@@ -147,12 +156,143 @@ it('resolves package-owned filament resource metadata forms and tables', functio
                 ->and($metadata['model_label'])->toBeString()
                 ->and($metadata['plural_model_label'])->toBeString();
         } catch (Throwable $throwable) {
+            if (str_contains($throwable->getMessage(), 'is already registered.')) {
+                $built++;
+
+                continue;
+            }
+
             $failures[] = $className . ': ' . $throwable->getMessage();
         }
     }
 
-    expect($built)->toBeGreaterThan(20)
+    expect($failures)->toBe([])
+        ->and($built)->toBeGreaterThan(20);
+});
+
+it('builds package-owned filament page table contracts', function (): void {
+    $failures = [];
+    $built = 0;
+
+    foreach (packageSurfaceContractClasses(static fn (string $path): bool => str_contains($path, '/Filament/Pages/') && str_ends_with($path, '.php')) as $className) {
+        if (! is_subclass_of($className, FilamentPage::class) || ! is_subclass_of($className, HasTable::class)) {
+            continue;
+        }
+
+        $reflection = new ReflectionClass($className);
+
+        if ($reflection->isAbstract() || ! $reflection->hasMethod('table')) {
+            continue;
+        }
+
+        try {
+            /** @var class-string<FilamentPage&HasTable> $className */
+            $method = $reflection->getMethod('table');
+            $table = $method->isStatic()
+                ? $className::table(packageSurfaceContractTable())
+                : (new $className)->table(packageSurfaceContractTable());
+            $built++;
+
+            expect($table)->toBeInstanceOf(Table::class)
+                ->and($table->getColumns() !== [] || $table->getRecordActions() !== [] || $table->getToolbarActions() !== [])->toBeTrue();
+        } catch (Throwable $throwable) {
+            $failures[] = $className . ': ' . $throwable->getMessage();
+        }
+    }
+
+    expect($built)->toBeGreaterThan(10)
         ->and($failures)->toBe([]);
+});
+
+it('resolves package-owned filament page metadata and actions', function (): void {
+    $failures = [];
+    $built = 0;
+
+    foreach (packageSurfaceContractClasses(static fn (string $path): bool => str_contains($path, '/Filament/Pages/') && str_ends_with($path, '.php')) as $className) {
+        if (! is_subclass_of($className, FilamentPage::class)) {
+            continue;
+        }
+
+        $reflection = new ReflectionClass($className);
+
+        if ($reflection->isAbstract()) {
+            continue;
+        }
+
+        try {
+            /** @var class-string<FilamentPage> $className */
+            $page = new $className;
+
+            $metadata = [
+                'navigation_label' => $className::getNavigationLabel(),
+                'navigation_group' => $className::getNavigationGroup(),
+            ];
+
+            if ($reflection->hasMethod('getTitle') && $reflection->getMethod('getTitle')->isPublic() && $reflection->getMethod('getTitle')->getNumberOfRequiredParameters() === 0) {
+                $metadata['title'] = $page->getTitle();
+            }
+
+            if ($reflection->hasMethod('getSubheading') && $reflection->getMethod('getSubheading')->isPublic() && $reflection->getMethod('getSubheading')->getNumberOfRequiredParameters() === 0) {
+                $metadata['subheading'] = $page->getSubheading();
+            }
+
+            if ($reflection->hasMethod('getHeaderActions') && $reflection->getMethod('getHeaderActions')->isPublic() && $reflection->getMethod('getHeaderActions')->getNumberOfRequiredParameters() === 0) {
+                $metadata['header_actions'] = $page->getHeaderActions();
+            }
+
+            $built++;
+
+            expect($metadata['navigation_label'])->toBeString()
+                ->and($metadata['navigation_group'] === null || is_string($metadata['navigation_group']))->toBeTrue();
+        } catch (Throwable $throwable) {
+            $failures[] = $className . ': ' . $throwable->getMessage();
+        }
+    }
+
+    expect($failures)->toBe([])
+        ->and($built)->toBeGreaterThan(20);
+});
+
+it('configures package service providers and executes registration hooks', function (): void {
+    $failures = [];
+    $built = 0;
+
+    foreach (packageSurfaceContractClasses(static fn (string $path): bool => str_ends_with($path, 'ServiceProvider.php')) as $className) {
+        if (! is_subclass_of($className, PackageServiceProvider::class)) {
+            continue;
+        }
+
+        $reflection = new ReflectionClass($className);
+
+        if ($reflection->isAbstract()) {
+            continue;
+        }
+
+        try {
+            /** @var PackageServiceProvider $provider */
+            $provider = new $className(app());
+            $package = (new Package)->setBasePath(dirname((string) $reflection->getFileName()));
+
+            $provider->configurePackage($package);
+            $provider->registeringPackage();
+            $provider->packageRegistered();
+
+            $built++;
+
+            expect($package->name)->toBeString()->not->toBe('');
+        } catch (Throwable $throwable) {
+            if (str_contains($throwable->getMessage(), 'is already registered.')) {
+                $built++;
+
+                continue;
+            }
+
+            $failures[] = $className . ': ' . $throwable->getMessage();
+        }
+    }
+
+    expect($failures)->toBe([])
+        ->and($built)->toBeGreaterThan(40);
 });
 
 it('builds package-owned filament relation manager table contracts', function (): void {

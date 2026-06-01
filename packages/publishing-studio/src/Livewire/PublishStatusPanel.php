@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\PublishingStudio\Livewire;
 
+use Capell\Admin\Actions\Pages\ResolvePagePublishStateAction;
 use Capell\Admin\Contracts\Extenders\PublishPanelExtender;
 use Capell\Admin\Data\PagePublishStateData;
 use Capell\Core\Models\Page;
@@ -53,14 +54,12 @@ class PublishStatusPanel extends Component
             Gate::authorize('preview', $workspace);
 
             $pageUrl = $page->pageUrl;
-            $path = $pageUrl !== null ? $pageUrl->url : '/';
+            $path = is_string($pageUrl?->url) ? $pageUrl->url : '/';
             $previewUrl = (new GenerateWorkspacePreviewUrlAction)->handle($workspace, $path);
         }
 
-        return new PagePublishStateData(
-            pageId: $page->id,
-            isDraft: $page->workspace_id !== 0,
-            publishedAt: $page->getAttribute('published_at'),
+        return ResolvePagePublishStateAction::run(
+            page: $page,
             previewUrl: $previewUrl,
             contextId: $workspace?->id,
             contextName: $workspace?->name,
