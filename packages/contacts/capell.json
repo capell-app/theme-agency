@@ -1,0 +1,157 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/contacts",
+    "slug": "contacts",
+    "displayName": "Contacts",
+    "kind": "package",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Contacts provides central contact, organisation, lead, activity, source identity, and package adapter records for Capell CRM integrations.",
+    "product": {
+        "group": "Capell Content",
+        "tier": "premium",
+        "bundle": "content-product"
+    },
+    "namespace": "Capell\\Contacts",
+    "surfaces": ["admin"],
+    "dependencies": {
+        "requires": ["capell-app/admin", "capell-app/core"],
+        "supports": [
+            "capell-app/access-gate",
+            "capell-app/campaign-studio",
+            "capell-app/comments",
+            "capell-app/events",
+            "capell-app/form-builder",
+            "capell-app/newsletter",
+            "capell-app/shopify-commerce"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": ["Capell\\Contacts\\Providers\\ContactsServiceProvider"],
+        "admin": ["Capell\\Contacts\\Providers\\AdminServiceProvider"],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-resource",
+            "class": "Capell\\Contacts\\Manifest\\ContactsAdminResourcesContribution",
+            "resourceClasses": [
+                "Capell\\Contacts\\Filament\\Resources\\Contacts\\ContactResource",
+                "Capell\\Contacts\\Filament\\Resources\\Organisations\\OrganisationResource",
+                "Capell\\Contacts\\Filament\\Resources\\Leads\\LeadResource",
+                "Capell\\Contacts\\Filament\\Resources\\Activities\\ContactActivityResource"
+            ]
+        },
+        {
+            "type": "model",
+            "class": "Capell\\Contacts\\Manifest\\ContactsModelsContribution",
+            "modelClasses": [
+                "Capell\\Contacts\\Models\\Contact",
+                "Capell\\Contacts\\Models\\Organisation",
+                "Capell\\Contacts\\Models\\Lead",
+                "Capell\\Contacts\\Models\\ContactActivity"
+            ]
+        },
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\Contacts\\Manifest\\ContactsOverviewWidgetContribution",
+            "widgetClass": "Capell\\Contacts\\Filament\\Widgets\\ContactsOverviewStatsWidget"
+        }
+    ],
+    "database": {
+        "migrations": true,
+        "settings": false,
+        "requiredTables": [
+            "contacts",
+            "contact_organisations",
+            "contact_organisation_memberships",
+            "contact_leads",
+            "contact_activities"
+        ]
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "settings": [],
+    "actions": {
+        "anonymizeContact": "Capell\\Contacts\\Actions\\AnonymizeContactAction",
+        "buildContactPrivacyExport": "Capell\\Contacts\\Actions\\BuildContactPrivacyExportAction",
+        "buildContactsOverviewStats": "Capell\\Contacts\\Actions\\BuildContactsOverviewStatsAction",
+        "findOrCreateContact": "Capell\\Contacts\\Actions\\FindOrCreateContactAction",
+        "recordContactActivity": "Capell\\Contacts\\Actions\\RecordContactActivityAction",
+        "syncAccessGateRegistrationContact": "Capell\\Contacts\\Actions\\SyncAccessGateRegistrationContactAction",
+        "syncCampaignConversionContact": "Capell\\Contacts\\Actions\\SyncCampaignConversionContactAction",
+        "syncCommentContact": "Capell\\Contacts\\Actions\\SyncCommentContactAction",
+        "syncEventRegistrationContact": "Capell\\Contacts\\Actions\\SyncEventRegistrationContactAction",
+        "syncFormSubmissionContact": "Capell\\Contacts\\Actions\\SyncFormSubmissionContactAction",
+        "syncShopifyCustomerContact": "Capell\\Contacts\\Actions\\SyncShopifyCustomerContactAction",
+        "syncContactSourceRecord": "Capell\\Contacts\\Actions\\SyncContactSourceRecordAction",
+        "tagContact": "Capell\\Contacts\\Actions\\TagContactAction"
+    },
+    "permissions": [
+        "View:Contact",
+        "View:Organisation",
+        "View:Lead",
+        "View:ContactActivity"
+    ],
+    "capabilities": [
+        "contacts",
+        "contacts-identity",
+        "contacts-source-identity",
+        "contacts-source-sync",
+        "contacts-access-gate-source-adapter",
+        "contacts-campaign-studio-source-adapter",
+        "contacts-comments-source-adapter",
+        "contacts-events-source-adapter",
+        "contacts-form-builder-source-adapter",
+        "contacts-newsletter-source-adapter",
+        "contacts-shopify-commerce-source-adapter",
+        "contacts-activity",
+        "contacts-dashboard-widget",
+        "contacts-deduplication-rules",
+        "contacts-privacy-export",
+        "contacts-privacy-anonymization",
+        "contacts-tags"
+    ],
+    "performance": {
+        "frontendRenderBudgetMs": 0,
+        "adminQueryBudget": 40,
+        "cacheTags": ["contacts"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site"],
+            "sensitiveOutput": true,
+            "invalidationSources": [],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "contacts.package-health",
+            "label": "Contacts models, migrations, and privacy-sensitive storage are discoverable.",
+            "class": "Capell\\Contacts\\Health\\ContactsHealthCheck",
+            "severity": "critical",
+            "surface": "admin"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Contacts provides the shared CRM data foundation for contact, organisation, lead, activity, source identity, and first-party package adapter workflows.",
+        "screenshots": [],
+        "categories": ["admin", "crm", "contacts"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": []
+    }
+}

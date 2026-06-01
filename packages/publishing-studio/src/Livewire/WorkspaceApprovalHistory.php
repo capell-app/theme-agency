@@ -8,6 +8,8 @@ use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Models\WorkspaceApproval;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 /**
@@ -18,10 +20,15 @@ use Livewire\Component;
  */
 class WorkspaceApprovalHistory extends Component
 {
+    #[Locked]
     public ?int $workspaceId = null;
 
     public function mount(?Workspace $record = null): void
     {
+        if ($record instanceof Workspace) {
+            Gate::authorize('view', $record);
+        }
+
         $this->workspaceId = $record?->getKey();
     }
 
@@ -38,6 +45,8 @@ class WorkspaceApprovalHistory extends Component
         if ($this->workspaceId === null) {
             return collect();
         }
+
+        Gate::authorize('view', Workspace::query()->findOrFail($this->workspaceId));
 
         return WorkspaceApproval::query()
             ->where('workspace_id', $this->workspaceId)

@@ -38,10 +38,10 @@
                         {{ $proof['label'] ?? $proof['name'] ?? __('capell-theme-knowledge::generic.proof_signal') }}
                     </p>
                     <p class="mt-4 text-4xl font-black text-white">
-                        {{ $proof['metric'] }}
+                        {{ $proof['metric'] ?? '' }}
                     </p>
                     <p class="mt-3 text-sm leading-6 text-slate-300">
-                        {{ $proof['summary'] }}
+                        {{ $proof['summary'] ?? $proof['description'] ?? '' }}
                     </p>
                     <span
                         class="mt-5 block h-1 bg-[#f59e0b]"

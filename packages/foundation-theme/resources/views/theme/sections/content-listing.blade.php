@@ -3,8 +3,9 @@
     $isPathways = ($section->variant ?? null) === 'pathways';
     $isSpotlight = ($section->variant ?? null) === 'spotlight';
     $sectionId = $isGallery ? 'gallery' : ($isSpotlight ? 'spotlight' : 'content');
-    $carouselId = 'theme-gallery-' . substr(md5($section->heading), 0, 10);
-    $spotlightId = 'theme-spotlight-' . substr(md5($section->heading), 0, 10);
+    $sectionHash = substr(hash('xxh128', (string) $section->heading), 0, 10);
+    $carouselId = 'theme-gallery-' . $sectionHash;
+    $spotlightId = 'theme-spotlight-' . $sectionHash;
 @endphp
 
 <section
@@ -156,7 +157,10 @@
                 </div>
             </div>
         @elseif ($isGallery)
-            <div class="theme-content-gallery" data-carousel-scope>
+            <div
+                class="theme-content-gallery"
+                data-carousel-scope
+            >
                 <style>
                     .theme-content-gallery .swiper-controls .swiper-button-prev,
                     .theme-content-gallery
@@ -295,7 +299,10 @@
                 </div>
             </div>
         @elseif ($isPathways)
-            <div class="grid gap-3 lg:grid-cols-2" data-theme-pathways>
+            <div
+                class="grid gap-3 lg:grid-cols-2"
+                data-theme-pathways
+            >
                 @foreach ($section->items as $item)
                     <details
                         class="group rounded-[var(--theme-radius-value)] border border-slate-200 bg-white p-5 shadow-sm transition open:border-slate-950 open:shadow-lg"

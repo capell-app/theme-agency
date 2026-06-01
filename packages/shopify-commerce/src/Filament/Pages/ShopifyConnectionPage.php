@@ -18,6 +18,7 @@ use Capell\ShopifyCommerce\Support\ShopifySiteContext;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\RedirectResponse;
@@ -201,6 +202,20 @@ final class ShopifyConnectionPage extends Page
         if (! Schema::hasTable('shopify_connections')) {
             return null;
         }
+
+        $actor = auth()->user();
+
+        if (! $actor instanceof Authenticatable) {
+            return null;
+        }
+
+        if ($this->selectedSiteId !== null && ! ShopifySiteContext::actorCanUseSiteId($actor, $this->selectedSiteId)) {
+            $this->selectedSiteId = ShopifySiteContext::selectedSiteId($actor);
+
+            return null;
+        }
+
+        $this->selectedSiteId = ShopifySiteContext::selectedSiteId($actor, $this->selectedSiteId);
 
         $connection = ShopifyConnection::query()
             ->when($this->selectedSiteId !== null, fn (Builder $query): Builder => $query->where('site_id', $this->selectedSiteId))

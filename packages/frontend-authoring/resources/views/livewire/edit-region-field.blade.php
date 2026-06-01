@@ -16,11 +16,20 @@
                 @endif
             </div>
 
-            <x-filament::button type="submit" wire:loading.attr="disabled">
-                <span wire:loading.remove wire:target="save">
+            <x-filament::button
+                type="submit"
+                wire:loading.attr="disabled"
+            >
+                <span
+                    wire:loading.remove
+                    wire:target="save"
+                >
                     {{ __('capell-frontend-authoring::authoring.save') }}
                 </span>
-                <span wire:loading wire:target="save">
+                <span
+                    wire:loading
+                    wire:target="save"
+                >
                     {{ __('capell-frontend-authoring::authoring.saving') }}
                 </span>
             </x-filament::button>

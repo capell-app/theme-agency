@@ -6,6 +6,7 @@ use Capell\Blog\Models\Article;
 use Capell\Blog\Support\Creator\BlogCreator;
 use Capell\Blog\Support\Sitemap\ArchivesSitemap;
 use Capell\Core\Models\Language;
+use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
 use Capell\SiteDiscovery\Data\SitemapPageData;
@@ -36,7 +37,8 @@ it('builds recursive sitemap for archive page with parent chain and month childr
         )
         ->create();
 
-    $archiveUrl = $archivePage->pageUrl->full_url;
+    $archivePageUrl = capell_test_instance($archivePage->pageUrl, PageUrl::class);
+    $archiveUrl = $archivePageUrl->full_url;
     $archivesUrl = collect([
         $archiveUrl . '/2023-01',
         $archiveUrl . '/2023-02',
@@ -50,11 +52,11 @@ it('builds recursive sitemap for archive page with parent chain and month childr
         ->toBeInstanceOf(Collection::class)
         ->toHaveCount(1);
 
-    /** @var SitemapPageData $root */
-    $root = $result->first();
+    $root = capell_test_instance($result->first(), SitemapPageData::class);
 
-    /** @var SitemapPageData $archivesNode */
-    $archivesNode = $root->children->first();
+    $rootChildren = capell_test_instance($root->children, Collection::class);
+    $archivesNode = capell_test_instance($rootChildren->first(), SitemapPageData::class);
+    $archiveNodeChildren = capell_test_instance($archivesNode->children, Collection::class);
 
     expect($root)
         ->toBeInstanceOf(SitemapPageData::class)
@@ -73,7 +75,7 @@ it('builds recursive sitemap for archive page with parent chain and month childr
         ->toBe($root->lastModified?->toAtomString())
         ->and($archivesNode->toArray()['lastModified'])
         ->toBe($archivesNode->lastModified?->toAtomString())
-        ->and($archivesNode->children->pluck('url'))
+        ->and($archiveNodeChildren->pluck('url'))
         ->toContain($archivesUrl->first())
         ->toContain($archivesUrl->get(1))
         ->toContain($archivesUrl->last());

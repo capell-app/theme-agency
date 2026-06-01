@@ -10,6 +10,7 @@ use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Models\WorkspaceApproval;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Gate;
 use Override;
 
@@ -35,7 +36,13 @@ class ResubmitForReviewAction extends Action
 
                 Gate::authorize('submitForApproval', $workspace);
 
-                $workspace->submitForApproval(auth()->user());
+                $user = auth()->user();
+
+                if (! $user instanceof User) {
+                    return;
+                }
+
+                $workspace->submitForApproval($user);
 
                 Notification::make()
                     ->title(__('capell-admin::message.resubmitted_for_review'))
@@ -98,6 +105,12 @@ class ResubmitForReviewAction extends Action
             return null;
         }
 
-        return Workspace::query()->find($workspaceId);
+        if (! is_numeric($workspaceId)) {
+            return null;
+        }
+
+        return Workspace::query()
+            ->whereKey((int) $workspaceId)
+            ->first();
     }
 }

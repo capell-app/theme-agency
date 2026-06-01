@@ -28,11 +28,11 @@
         </div>
 
         <div
-            class="theme-carousel relative mt-10"
+            class="theme-carousel relative mt-10 max-w-full min-w-0 overflow-hidden"
             data-carousel="healthcare-services"
         >
             <div
-                class="{{ $usesCarousel ? 'flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 md:grid md:grid-cols-3 md:overflow-visible md:pr-0 lg:grid-cols-4 [&::-webkit-scrollbar]:hidden' : $gridClass }}"
+                class="{{ $usesCarousel ? 'flex max-w-full snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 md:grid md:grid-cols-3 md:overflow-visible md:pr-0 lg:grid-cols-4 [&::-webkit-scrollbar]:hidden' : $gridClass }}"
                 data-carousel-track
             >
                 @foreach ($services as $service)
@@ -85,7 +85,7 @@
             <button
                 type="button"
                 class="theme-carousel-button carousel-prev absolute top-1/2 left-2 hidden -translate-y-1/2 rounded-full border border-stone-200 bg-white p-2 text-sm font-semibold shadow-md"
-                aria-label="Previous services"
+                aria-label="{{ __('capell-theme-healthcare::generic.carousel_previous') }}"
                 data-carousel-prev
             >
                 ‹
@@ -93,7 +93,7 @@
             <button
                 type="button"
                 class="theme-carousel-button carousel-next absolute top-1/2 right-2 hidden -translate-y-1/2 rounded-full border border-stone-200 bg-white p-2 text-sm font-semibold shadow-md"
-                aria-label="Next services"
+                aria-label="{{ __('capell-theme-healthcare::generic.carousel_next') }}"
                 data-carousel-next
             >
                 ›
@@ -101,44 +101,3 @@
         </div>
     </div>
 </section>
-
-<script>
-    document
-        .querySelectorAll('[data-carousel="healthcare-services"]')
-        .forEach((carousel) => {
-            const track = carousel.querySelector('[data-carousel-track]')
-            const prev = carousel.querySelector('[data-carousel-prev]')
-            const next = carousel.querySelector('[data-carousel-next]')
-
-            if (!track || !prev || !next) {
-                return
-            }
-
-            const step = () =>
-                Math.max(250, Math.floor(track.clientWidth * 0.8))
-
-            const updateButtons = () => {
-                const canScroll = track.scrollWidth > track.clientWidth + 1
-                prev.classList.toggle(
-                    'hidden',
-                    !canScroll || track.scrollLeft <= 2,
-                )
-                next.classList.toggle(
-                    'hidden',
-                    !canScroll ||
-                        track.scrollLeft >=
-                            track.scrollWidth - track.clientWidth - 2,
-                )
-            }
-
-            prev.addEventListener('click', () =>
-                track.scrollBy({ left: -step(), behavior: 'smooth' }),
-            )
-            next.addEventListener('click', () =>
-                track.scrollBy({ left: step(), behavior: 'smooth' }),
-            )
-            track.addEventListener('scroll', updateButtons, { passive: true })
-            window.addEventListener('resize', updateButtons)
-            updateButtons()
-        })
-</script>

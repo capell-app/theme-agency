@@ -4,6 +4,7 @@
     "author": "capell",
     "type": "module",
     "scripts": {
+        "build": "node --check resources/js/generate-critical-css.mjs",
         "playwright:install": "playwright install chromium"
     },
     "dependencies": {

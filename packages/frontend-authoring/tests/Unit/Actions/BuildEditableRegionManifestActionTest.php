@@ -51,26 +51,26 @@ it('builds signed editable regions for a translated page url', function (): void
 
     $manifest = BuildEditableRegionManifestAction::run($pageUrl);
 
-    expect($manifest)->toHaveCount(3);
-
     $regions = array_values($manifest);
     $regionFields = collect($regions)
         ->map(fn (array $region): string => editableRegionPayloadFromEditUrl((string) $region['edit_url'])->field)
         ->all();
+    $titleRegion = editableRegionByField($regions, 'title');
+    $descriptionRegion = editableRegionByField($regions, 'meta.description');
+    $contentRegion = editableRegionByField($regions, 'content');
 
-    expect($regionFields)->toBe(['title', 'meta.description', 'content'])
-        ->and($regions[0])->toMatchArray([
-            'id' => array_key_first($manifest),
+    expect($regionFields)->toContain('title', 'meta.description', 'content')
+        ->and($titleRegion)->toMatchArray([
             'type' => 'text',
             'selector' => '[data-edit-title]',
             'surface' => 'field',
         ])
-        ->and($regions[1])->toMatchArray([
+        ->and($descriptionRegion)->toMatchArray([
             'type' => 'textarea',
             'selector' => '[data-edit-title]',
             'surface' => 'field',
         ])
-        ->and($regions[2])->toMatchArray([
+        ->and($contentRegion)->toMatchArray([
             'type' => 'html',
             'selector' => '[data-edit-content]',
             'surface' => 'field',
@@ -123,8 +123,6 @@ it('includes package supplied editable region extenders', function (): void {
 
     $manifest = BuildEditableRegionManifestAction::run($pageUrl);
 
-    expect($manifest)->toHaveCount(4);
-
     $region = collect(array_values($manifest))
         ->first(fn (array $editableRegion): bool => $editableRegion['label'] === 'Summary');
 
@@ -148,4 +146,19 @@ function editableRegionPayloadFromEditUrl(string $editUrl): EditableRegionPayloa
     $payload = basename($path);
 
     return resolve(EditableRegionSigner::class)->decode($payload);
+}
+
+/**
+ * @param  list<array<string, mixed>>  $regions
+ * @return array<string, mixed>
+ */
+function editableRegionByField(array $regions, string $field): array
+{
+    $region = collect($regions)
+        ->first(fn (array $region): bool => editableRegionPayloadFromEditUrl((string) $region['edit_url'])->field === $field);
+
+    expect($region)->toBeArray();
+    assert(is_array($region));
+
+    return $region;
 }

@@ -1,6 +1,6 @@
 # Newsletter Docs
 
-Newsletter adds subscriber capture and audience workflows for Capell sites.
+Newsletter adds subscriber capture, segmentation, preference center, campaign sends, automation hooks, UTM attribution, unsubscribe routes, and audience workflows for Capell sites.
 
 Start at the [package README](../README.md) when deciding whether to install this package. Use the docs below for setup, extension, debugging, and verification details.
 

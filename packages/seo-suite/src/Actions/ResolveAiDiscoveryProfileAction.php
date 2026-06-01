@@ -108,11 +108,14 @@ final class ResolveAiDiscoveryProfileAction
             }
         }
 
-        foreach (['default_section', 'intro_markdown'] as $key) {
-            if (array_key_exists($key, $settings)) {
-                $value = is_scalar($settings[$key]) ? trim((string) $settings[$key]) : null;
-                $overrides[$key] = $value !== '' ? $value : null;
-            }
+        if (array_key_exists('default_section', $settings)) {
+            $value = is_scalar($settings['default_section']) ? trim((string) $settings['default_section']) : '';
+            $overrides['default_section'] = $value !== '' ? $value : 'Pages';
+        }
+
+        if (array_key_exists('intro_markdown', $settings)) {
+            $value = is_scalar($settings['intro_markdown']) ? trim((string) $settings['intro_markdown']) : null;
+            $overrides['intro_markdown'] = $value !== '' ? $value : null;
         }
 
         if (array_key_exists('status', $settings)) {

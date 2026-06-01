@@ -14,6 +14,21 @@ use Capell\LayoutBuilder\Enums\BlockComponentEnum;
 use Capell\LayoutBuilder\Models\Widget;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
+function renderHeroBlockHtml(Widget $block): string
+{
+    $component = new Hero(
+        container: [],
+        containerKey: 'main',
+        blockIndex: 0,
+        loop: (object) ['first' => true, 'last' => true],
+        block: $block,
+    );
+
+    $rendered = $component->render();
+
+    return is_string($rendered) ? $rendered : $rendered->render();
+}
+
 it('renders page translation hero content while ignoring nested page variables', function (): void {
     $language = Language::factory()->english()->create();
     $theme = Theme::factory()->defaultMeta()->create();
@@ -56,17 +71,11 @@ it('renders page translation hero content while ignoring nested page variables',
         ->withTheme($theme)
         ->withPage($page);
 
-    $view = $this->view('capell-hero::components.block.hero', [
-        'containerKey' => 'main',
-        'containerIndex' => 0,
-        'block' => $block,
-        'blockIndex' => 0,
-        'loop' => (object) ['first' => true, 'last' => true],
-    ]);
+    $html = renderHeroBlockHtml($block);
 
-    $view
-        ->assertSee('Platform Architecture')
-        ->assertSee('Build Platform Architecture for Capell without touching :page.', false);
+    expect($html)
+        ->toContain('Platform Architecture')
+        ->toContain('Build Platform Architecture for Capell without touching :page.');
 });
 
 it('skips empty hero blocks before exposing public markup', function (): void {
@@ -168,20 +177,27 @@ it('renders the inherited theme hero background without public admin metadata', 
         ->withTheme($theme)
         ->withPage($page);
 
-    $view = $this->view('capell-hero::components.block.hero', [
-        'containerKey' => 'main',
-        'containerIndex' => 0,
-        'block' => $block,
-        'blockIndex' => 0,
-        'loop' => (object) ['first' => true, 'last' => true],
-    ]);
+    $html = renderHeroBlockHtml($block);
 
-    $view
-        ->assertSee('capell-hero-background--grid', false)
-        ->assertSee('--capell-hero-background-color: #eaf2ff', false)
-        ->assertDontSee('theme_id', false)
-        ->assertDontSee('site_id', false)
-        ->assertDontSee('block_id', false);
+    expect($html)
+        ->toContain('hero-background--grid')
+        ->toContain('--hero-background-color: #eaf2ff')
+        ->toContain('hero-overlay-a-')
+        ->not->toContain('capell-hero')
+        ->not->toContain('theme_id')
+        ->not->toContain('site_id')
+        ->not->toContain('block_id');
+
+    expect($html)->toBe(renderHeroBlockHtml($block));
+});
+
+it('keeps public hero background identifiers deterministic', function (): void {
+    $themePath = dirname(__DIR__, 2);
+    $backgroundView = file_get_contents($themePath . '/resources/views/components/hero/background.blade.php');
+
+    expect($backgroundView)
+        ->not->toContain('uniqid(')
+        ->toContain("hash('xxh128'");
 });
 
 it('allows a hero block to turn the inherited background off', function (): void {
@@ -231,15 +247,7 @@ it('allows a hero block to turn the inherited background off', function (): void
         ->withTheme($theme)
         ->withPage($page);
 
-    $view = $this->view('capell-hero::components.block.hero', [
-        'containerKey' => 'main',
-        'containerIndex' => 0,
-        'block' => $block,
-        'blockIndex' => 0,
-        'loop' => (object) ['first' => true, 'last' => true],
-    ]);
-
-    $view->assertDontSee('capell-hero-background', false);
+    expect(renderHeroBlockHtml($block))->not->toContain('hero-background');
 });
 
 it('renders responsive hero media without exposing editor metadata', function (): void {
@@ -313,20 +321,15 @@ it('renders responsive hero media without exposing editor metadata', function ()
         ->withTheme($theme)
         ->withPage($page);
 
-    $view = $this->view('capell-hero::components.block.hero', [
-        'containerKey' => 'main',
-        'containerIndex' => 0,
-        'block' => $block,
-        'blockIndex' => 0,
-        'loop' => (object) ['first' => true, 'last' => true],
-    ]);
+    $html = renderHeroBlockHtml($block);
 
-    $view
-        ->assertSee('data-capell-hero-video', false)
-        ->assertSee('hero-desktop.webm', false)
-        ->assertSee('hero-mobile.jpg', false)
-        ->assertSee('data-pause-out-of-view="true"', false)
-        ->assertDontSee('hero_media', false)
-        ->assertDontSee('theme_id', false)
-        ->assertDontSee('collection_name', false);
+    expect($html)
+        ->toContain('data-hero-video')
+        ->toContain('hero-desktop.webm')
+        ->toContain('hero-mobile.jpg')
+        ->toContain('data-pause-out-of-view="true"')
+        ->not->toContain('capell-hero')
+        ->not->toContain('hero_media')
+        ->not->toContain('theme_id')
+        ->not->toContain('collection_name');
 });

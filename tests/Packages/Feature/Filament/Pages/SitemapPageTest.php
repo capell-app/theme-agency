@@ -7,6 +7,7 @@ use Capell\Blog\Models\Article;
 use Capell\Blog\Support\Creator\BlogCreator;
 use Capell\Core\Models\Site;
 use Capell\SiteDiscovery\Support\Creator\SitemapPageCreator;
+use Capell\Tests\Fixtures\Models\User;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Illuminate\View\FileViewFinder;
 use Spatie\Permission\Models\Permission;
@@ -34,7 +35,7 @@ beforeEach(function (): void {
 test('can render page', function (): void {
     Permission::create(['name' => 'View:SitemapPage', 'guard_name' => 'web']);
     test()->actingAsAdmin();
-    auth()->user()->givePermissionTo('View:SitemapPage');
+    capell_test_instance(auth()->user(), User::class)->givePermissionTo('View:SitemapPage');
 
     $site = Site::factory()->withTranslations()->create();
 

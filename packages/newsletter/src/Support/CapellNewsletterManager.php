@@ -23,6 +23,7 @@ class CapellNewsletterManager
             '2026_05_10_190861_09_create_newsletter_sync_attempts_table',
             '2026_05_10_190861_08_create_newsletter_segments_table',
             '2026_05_10_190861_11_create_newsletter_import_batches_table',
+            '2026_05_31_120000_13_create_newsletter_sends_table',
         ];
     }
 }

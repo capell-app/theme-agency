@@ -40,7 +40,7 @@ final class CapellArtisanPaletteCommandProvider implements CommandPaletteProvide
                 requiresConfirmation: $this->dangerForCommand($name) !== CommandPaletteDanger::Safe,
                 parameters: $this->parametersForCommand($consoleCommand),
                 keywords: [$name],
-                group: 'Developer tools',
+                group: (string) __('capell-diagnostics::package.command_palette_group_developer_tools'),
                 sort: 80,
             );
 

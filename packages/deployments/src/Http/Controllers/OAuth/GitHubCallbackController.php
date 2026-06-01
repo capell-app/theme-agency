@@ -8,6 +8,7 @@ use Capell\Deployments\Actions\ConnectDeploymentAction;
 use Capell\Deployments\Actions\OAuth\ValidateOAuthStateAction;
 use Capell\Deployments\Enums\GitProviderType;
 use Capell\Deployments\Filament\Pages\DeploymentConnectionPage;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -17,7 +18,7 @@ final class GitHubCallbackController
 {
     public function __invoke(Request $request): RedirectResponse
     {
-        abort_unless(DeploymentConnectionPage::canAccess(), 403);
+        abort_unless(DeploymentConnectionPage::canManageConnections(), 403);
 
         if (ValidateOAuthStateAction::run(GitProviderType::GitHub, $request->query('state')) !== true) {
             return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_invalid_state')]);
@@ -28,13 +29,22 @@ final class GitHubCallbackController
             return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_missing_code')]);
         }
 
-        $tokenResponse = Http::withHeaders(['Accept' => 'application/json'])
-            ->post('https://github.com/login/oauth/access_token', [
-                'client_id' => config('capell-deployments.oauth.github.client_id'),
-                'client_secret' => config('capell-deployments.oauth.github.client_secret'),
-                'code' => $code,
-            ])
-            ->json();
+        try {
+            $tokenResponse = Http::withHeaders(['Accept' => 'application/json'])
+                ->timeout($this->httpTimeout())
+                ->post('https://github.com/login/oauth/access_token', [
+                    'client_id' => config('capell-deployments.oauth.github.client_id'),
+                    'client_secret' => config('capell-deployments.oauth.github.client_secret'),
+                    'code' => $code,
+                ])
+                ->json();
+        } catch (ConnectionException $connectionException) {
+            Log::warning('capell-deployments: GitHub OAuth token request failed', [
+                'error' => $connectionException->getMessage(),
+            ]);
+
+            return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_failed', ['provider' => 'GitHub'])]);
+        }
 
         $accessToken = $tokenResponse['access_token'] ?? null;
         if (! is_string($accessToken) || $accessToken === '') {
@@ -43,10 +53,19 @@ final class GitHubCallbackController
             return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_failed', ['provider' => 'GitHub'])]);
         }
 
-        $userResponse = Http::withToken($accessToken)
-            ->withHeader('Accept', 'application/vnd.github+json')
-            ->get('https://api.github.com/user')
-            ->json();
+        try {
+            $userResponse = Http::withToken($accessToken)
+                ->withHeader('Accept', 'application/vnd.github+json')
+                ->timeout($this->httpTimeout())
+                ->get('https://api.github.com/user')
+                ->json();
+        } catch (ConnectionException $connectionException) {
+            Log::warning('capell-deployments: GitHub OAuth user request failed', [
+                'error' => $connectionException->getMessage(),
+            ]);
+
+            return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_user_failed', ['provider' => 'GitHub'])]);
+        }
 
         $login = $userResponse['login'] ?? null;
         if (! is_string($login) || $login === '') {
@@ -85,5 +104,10 @@ final class GitHubCallbackController
         }
 
         return $redacted;
+    }
+
+    private function httpTimeout(): int
+    {
+        return max(1, (int) config('capell-deployments.http_timeout', 10));
     }
 }

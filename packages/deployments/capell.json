@@ -41,7 +41,10 @@
         "doctor": null
     },
     "settings": [],
-    "permissions": [],
+    "permissions": [
+        "View:DeploymentConnectionPage",
+        "Manage:DeploymentConnectionPage"
+    ],
     "capabilities": ["deployments", "deployments-admin", "deployments-console"],
     "performance": {
         "frontendRenderBudgetMs": 0,

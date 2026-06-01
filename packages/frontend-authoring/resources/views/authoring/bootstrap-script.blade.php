@@ -113,7 +113,10 @@ editUrl = escapeHtml(region.edit_url); overlay.innerHTML = `
         role="status"
         aria-live="polite"
     >
-        <span class="capell-authoring-modal__spinner" aria-hidden="true"></span>
+        <span
+            class="capell-authoring-modal__spinner"
+            aria-hidden="true"
+        ></span>
         <span>${escapeHtml(labels.editorLoading)}</span>
     </div>
     <iframe

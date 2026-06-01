@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Diagnostics adds operational diagnostics for cache, configuration drift, migrations, packages, registries, queues, permissions, setup health, and Tailwind build status.",
+    "description": "Diagnostics adds operational diagnostics for cache, configuration drift, migrations, packages, registries, queues, mail, storage, public-output safety, permissions, package ownership, setup health, and Tailwind build status.",
     "product": {
         "group": "Capell Operations",
         "tier": "premium",
@@ -32,11 +32,63 @@
         "admin": ["Capell\\Diagnostics\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\Diagnostics\\Manifest\\DiagnosticsPageContribution",
+            "pageClass": "Capell\\Diagnostics\\Filament\\Pages\\DiagnosticsPage",
+            "labelKey": "capell-diagnostics::package.diagnostics"
+        },
+        {
+            "type": "admin-page",
+            "class": "Capell\\Diagnostics\\Manifest\\CommandPalettePageContribution",
+            "pageClass": "Capell\\Diagnostics\\Filament\\Pages\\CommandPalettePage",
+            "labelKey": "capell-diagnostics::package.command_palette"
+        },
+        {
+            "type": "admin-page",
+            "class": "Capell\\Diagnostics\\Manifest\\SystemHealthPageContribution",
+            "pageClass": "Capell\\Diagnostics\\Filament\\Pages\\SystemHealthPage",
+            "labelKey": "capell-diagnostics::package.system_health"
+        },
+        {
+            "type": "admin-page",
+            "class": "Capell\\Diagnostics\\Manifest\\QueueHealthPageContribution",
+            "pageClass": "Capell\\Diagnostics\\Filament\\Pages\\QueueHealthPage",
+            "labelKey": "capell-diagnostics::package.queue_health"
+        },
+        {
+            "type": "admin-page",
+            "class": "Capell\\Diagnostics\\Manifest\\PermissionAuditPageContribution",
+            "pageClass": "Capell\\Diagnostics\\Filament\\Pages\\PermissionAuditPage",
+            "labelKey": "capell-diagnostics::package.permission_audit"
+        },
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\Diagnostics\\Manifest\\SiteHealthWidgetContribution",
+            "widgetClass": "Capell\\Diagnostics\\Filament\\Widgets\\Health\\SiteHealthWidgetAbstract"
+        },
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\Diagnostics\\Manifest\\SystemHealthWidgetsContribution",
+            "widgetClasses": [
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\SetupHealthWidgetAbstract",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\AlertsWidgetAbstract",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\ContentHealthWidgetAbstract",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\ContentGraphHealthWidgetAbstract",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\RegistryHealthWidgetAbstract",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\MigrationsHealthWidgetAbstract",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\PackagesInstalledWidgetAbstract",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\ConfigDriftWidgetAbstract",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\CacheHealthWidgetAbstract",
+                "Capell\\Diagnostics\\Filament\\Widgets\\Health\\TailwindBuildStatusWidgetAbstract"
+            ]
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": []
+        "requiredTables": ["command_palette_runs", "queue_monitors"]
     },
     "commands": {
         "install": null,
@@ -44,15 +96,40 @@
         "demo": null,
         "doctor": null
     },
+    "actions": {
+        "buildCacheHealth": "Capell\\Diagnostics\\Actions\\Dashboard\\BuildCacheHealthAction",
+        "buildConfigDrift": "Capell\\Diagnostics\\Actions\\Dashboard\\BuildConfigDriftAction",
+        "buildMigrationsHealth": "Capell\\Diagnostics\\Actions\\Dashboard\\BuildMigrationsHealthAction",
+        "buildPackagesInstalled": "Capell\\Diagnostics\\Actions\\Dashboard\\BuildPackagesInstalledAction",
+        "buildRegistryHealth": "Capell\\Diagnostics\\Actions\\Dashboard\\BuildRegistryHealthAction",
+        "buildSetupHealth": "Capell\\Diagnostics\\Actions\\Dashboard\\BuildSetupHealthAction",
+        "buildTailwindBuildStatus": "Capell\\Diagnostics\\Actions\\Dashboard\\BuildTailwindBuildStatusAction",
+        "buildInfrastructureStatus": "Capell\\Diagnostics\\Actions\\DashboardReports\\BuildInfrastructureStatusAction",
+        "buildPublicOutputSafetyReport": "Capell\\Diagnostics\\Actions\\DashboardReports\\BuildPublicOutputSafetyReportAction",
+        "buildPermissionAuditQuery": "Capell\\Diagnostics\\Actions\\DashboardReports\\BuildPermissionAuditQueryAction",
+        "buildQueueHealthQuery": "Capell\\Diagnostics\\Actions\\DashboardReports\\BuildQueueHealthQueryAction",
+        "buildQueueOperationsStats": "Capell\\Diagnostics\\Actions\\DashboardReports\\BuildQueueOperationsStatsAction",
+        "ensureDiagnosticsPermissions": "Capell\\Diagnostics\\Actions\\EnsureDiagnosticsPermissionsAction",
+        "inspectPackageOwnership": "Capell\\Diagnostics\\Actions\\InspectPackageOwnershipAction"
+    },
     "settings": [],
     "permissions": [
         "accessDiagnostics",
         "viewDiagnostics",
         "View:PermissionAuditPage",
         "View:CommandPalettePage",
-        "View:QueueHealthPage"
+        "View:QueueHealthPage",
+        "Manage:QueueHealthPage"
     ],
-    "capabilities": ["diagnostics", "diagnostics-admin", "diagnostics-console"],
+    "capabilities": [
+        "diagnostics",
+        "diagnostics-admin",
+        "diagnostics-console",
+        "diagnostics-cross-package-install-health",
+        "diagnostics-public-output-safety",
+        "diagnostics-infrastructure-status",
+        "diagnostics-package-ownership"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
@@ -102,7 +179,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Diagnostics adds operational diagnostics for cache, configuration drift, migrations, packages, registries, permissions, setup health, Tailwind build status, and Queue Operations powered by croustibat/filament-jobs-monitor telemetry.",
+        "summary": "Diagnostics adds operational diagnostics for cache, configuration drift, migrations, packages, registries, queues, mail, storage, public-output safety, permissions, package ownership, setup health, Tailwind build status, and Queue Operations powered by croustibat/filament-jobs-monitor telemetry.",
         "credits": [
             {
                 "name": "croustibat/filament-jobs-monitor",
@@ -115,31 +192,11 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Diagnostics extension preview image",
                 "caption": "Diagnostics extension preview"
-            },
-            {
-                "path": "docs/assets/screenshots/queue-health-page.png",
-                "alt": "Queue Operations page with dummy queue monitor history, failed jobs, and pending jobs",
-                "caption": "Queue Operations wraps croustibat/filament-jobs-monitor telemetry in a Capell-native diagnostics page"
-            },
-            {
-                "path": "docs/assets/screenshots/diagnostics-dashboard.png",
-                "alt": "Diagnostics dashboard with dummy package and command provider data",
-                "caption": "Diagnostics dashboard for Capell operational checks"
-            },
-            {
-                "path": "docs/assets/screenshots/command-palette-page.png",
-                "alt": "Diagnostics command palette with dummy Capell operations commands",
-                "caption": "Command palette for trusted Diagnostics and capell:* operations"
             }
         ],
         "categories": ["admin", "console", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-page",
-            "dashboard-widget",
-            "page-type",
-            "route"
-        ]
+        "deferredContributions": []
     }
 }

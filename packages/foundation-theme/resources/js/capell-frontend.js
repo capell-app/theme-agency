@@ -161,6 +161,70 @@ const moveSpotlightTabFocus = (tab, direction) => {
     activateSpotlightTab(nextTab)
 }
 
+const themeCarouselScrollStep = (track) =>
+    Math.max(230, Math.floor(track.clientWidth * 0.82))
+
+const updateThemeCarouselButtons = (carousel) => {
+    const track = carousel.querySelector('[data-carousel-track]')
+    const prev = carousel.querySelector('[data-carousel-prev]')
+    const next = carousel.querySelector('[data-carousel-next]')
+
+    if (!track || !prev || !next) {
+        return
+    }
+
+    const canScroll = track.scrollWidth > track.clientWidth + 1
+
+    prev.classList.toggle('hidden', !canScroll || track.scrollLeft <= 2)
+    next.classList.toggle(
+        'hidden',
+        !canScroll ||
+            track.scrollLeft >= track.scrollWidth - track.clientWidth - 2,
+    )
+}
+
+const initThemeCarousels = (root = document) => {
+    root.querySelectorAll('[data-carousel]').forEach((carousel) => {
+        if (carousel.dataset.themeCarouselInitialized === 'true') {
+            updateThemeCarouselButtons(carousel)
+
+            return
+        }
+
+        const track = carousel.querySelector('[data-carousel-track]')
+        const prev = carousel.querySelector('[data-carousel-prev]')
+        const next = carousel.querySelector('[data-carousel-next]')
+
+        if (!track || !prev || !next) {
+            return
+        }
+
+        prev.addEventListener('click', () =>
+            track.scrollBy({
+                left: -themeCarouselScrollStep(track),
+                behavior: 'smooth',
+            }),
+        )
+        next.addEventListener('click', () =>
+            track.scrollBy({
+                left: themeCarouselScrollStep(track),
+                behavior: 'smooth',
+            }),
+        )
+        track.addEventListener(
+            'scroll',
+            () => updateThemeCarouselButtons(carousel),
+            { passive: true },
+        )
+        window.addEventListener('resize', () =>
+            updateThemeCarouselButtons(carousel),
+        )
+
+        carousel.dataset.themeCarouselInitialized = 'true'
+        updateThemeCarouselButtons(carousel)
+    })
+}
+
 const setPathwayPanel = (pathways, activePanel) => {
     pathways.querySelectorAll('[data-pathway-panel]').forEach((panel) => {
         const isActive = panel === activePanel
@@ -292,10 +356,12 @@ document.addEventListener('keydown', (event) => {
 })
 
 if (typeof document !== 'undefined') {
+    initThemeCarousels()
     initPathways()
     initSpotlights()
 
     document.addEventListener('livewire:navigated', () => {
+        initThemeCarousels()
         initPathways()
         initSpotlights()
     })

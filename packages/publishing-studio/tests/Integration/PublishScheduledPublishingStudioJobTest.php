@@ -54,8 +54,11 @@ it('publishes every scheduled workspace whose publish_at has elapsed', function 
 
     (new PublishScheduledPublishingStudioJob)->handle(new Publisher);
 
-    expect($due->fresh()->status)->toBe(WorkspaceStatusEnum::Published)
-        ->and($notDue->fresh()->status)->toBe(WorkspaceStatusEnum::Scheduled);
+    $freshDue = publishingStudioTestInstance($due->fresh(), Workspace::class);
+    $freshNotDue = publishingStudioTestInstance($notDue->fresh(), Workspace::class);
+
+    expect($freshDue->status)->toBe(WorkspaceStatusEnum::Published)
+        ->and($freshNotDue->status)->toBe(WorkspaceStatusEnum::Scheduled);
 });
 
 it('leaves a scheduled workspace in place when the release window is closed', function (): void {
@@ -71,7 +74,9 @@ it('leaves a scheduled workspace in place when the release window is closed', fu
 
     (new PublishScheduledPublishingStudioJob)->handle(new Publisher);
 
-    expect($workspace->fresh()->status)->toBe(WorkspaceStatusEnum::Scheduled);
+    $freshWorkspace = publishingStudioTestInstance($workspace->fresh(), Workspace::class);
+
+    expect($freshWorkspace->status)->toBe(WorkspaceStatusEnum::Scheduled);
 });
 
 it('ignores publishing-studio whose publish_at is still in the future', function (): void {
@@ -81,5 +86,7 @@ it('ignores publishing-studio whose publish_at is still in the future', function
 
     (new PublishScheduledPublishingStudioJob)->handle(new Publisher);
 
-    expect($workspace->fresh()->status)->toBe(WorkspaceStatusEnum::Scheduled);
+    $freshWorkspace = publishingStudioTestInstance($workspace->fresh(), Workspace::class);
+
+    expect($freshWorkspace->status)->toBe(WorkspaceStatusEnum::Scheduled);
 });

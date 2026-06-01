@@ -46,7 +46,10 @@
                                 {{ __('capell-theme-knowledge::generic.reading_signal') }}
                             </span>
                         </div>
-                        <div class="mt-4 space-y-2" aria-hidden="true">
+                        <div
+                            class="mt-4 space-y-2"
+                            aria-hidden="true"
+                        >
                             <span class="block h-2 w-3/4 bg-[#1e3a8a]"></span>
                             <span class="block h-2 w-full bg-white"></span>
                             <span class="block h-2 w-5/6 bg-white"></span>
@@ -70,7 +73,7 @@
                             {{ __('capell-theme-knowledge::generic.topic_signal') }}
                         </span>
                         <span class="bg-[#fef3c7] px-3 py-1 text-[#92400e]">
-                            {{ __('capell-theme-knowledge::generic.editor_signal') }}
+                            {{ __('capell-theme-knowledge::generic.review_signal') }}
                         </span>
                     </div>
                 </article>

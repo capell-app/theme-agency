@@ -25,9 +25,12 @@ use Capell\PasswordPolicy\Filament\Pages\ForcedPasswordChangePage;
 use Capell\PasswordPolicy\Filament\Pages\PasswordPolicySettingsPage;
 use Capell\PasswordPolicy\Providers\PasswordPolicyServiceProvider;
 use Capell\PasswordPolicy\Settings\PasswordPolicySettings;
+use Capell\Tests\Fixtures\Policies\UserPolicy;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Capell\Tests\Support\LegacyAdminBridgeFallbackHost;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
 
@@ -41,7 +44,11 @@ uses(CreatesAdminUser::class)->group('password-policy');
 beforeEach(function (): void {
     Permission::create(['name' => 'View:SettingsPage', 'guard_name' => 'web']);
     test()->actingAsAdmin();
-    auth()->user()->givePermissionTo('View:SettingsPage');
+    $adminUser = auth()->user();
+
+    throw_if($adminUser === null, RuntimeException::class, 'Expected password policy admin user to be authenticated.');
+
+    $adminUser->givePermissionTo('View:SettingsPage');
 });
 
 function invokePasswordPolicyProviderMethod(object $provider, string $method): void
@@ -118,7 +125,11 @@ it('registers the current password policy admin bridge surface', function (): vo
 
 it('opens password policy settings from the extensions page action modal', function (): void {
     Permission::create(['name' => 'View:ExtensionsPage', 'guard_name' => 'web']);
-    auth()->user()->givePermissionTo('View:ExtensionsPage');
+    $adminUser = auth()->user();
+
+    throw_if($adminUser === null, RuntimeException::class, 'Expected password policy admin user to be authenticated.');
+
+    $adminUser->givePermissionTo('View:ExtensionsPage');
 
     resetPasswordPolicyAdminBridgeState();
     invokePasswordPolicyProviderMethod(new PasswordPolicyServiceProvider(app()), 'registerAdminSurface');
@@ -293,6 +304,40 @@ it('adds password policy user table columns, filters, and require-change actions
         ->and($markUser->invoke($extender, $user))->toBeNull();
 
     expect((bool) $user->refresh()->getAttribute('must_change_password'))->toBeTrue();
+});
+
+it('requires user edit authorization before forcing password changes from table actions', function (): void {
+    Gate::policy(config('auth.providers.users.model'), UserPolicy::class);
+
+    foreach (['view_user', 'view_any_user', 'update_user'] as $permissionName) {
+        Permission::findOrCreate($permissionName);
+    }
+
+    $settings = PasswordPolicySettings::instance();
+    $settings->force_change_enabled = true;
+    $settings->save();
+
+    $targetUser = UserFactory::new()->create([
+        'must_change_password' => false,
+        'password_changed_at' => now(),
+    ]);
+
+    $viewer = test()->createUserWithPermission(['view_user', 'view_any_user']);
+    test()->actingAs($viewer);
+
+    $extender = new PasswordPolicyUserTableExtender;
+    $canMarkUser = new ReflectionMethod($extender, 'canMarkUser');
+    $markUser = new ReflectionMethod($extender, 'markUser');
+
+    expect($canMarkUser->invoke($extender, $targetUser))->toBeFalse()
+        ->and(fn (): mixed => $markUser->invoke($extender, $targetUser))->toThrow(AuthorizationException::class)
+        ->and((bool) $targetUser->refresh()->getAttribute('must_change_password'))->toBeFalse();
+
+    $viewer->givePermissionTo('update_user');
+
+    expect($canMarkUser->invoke($extender, $targetUser))->toBeTrue()
+        ->and($markUser->invoke($extender, $targetUser))->toBeNull()
+        ->and((bool) $targetUser->refresh()->getAttribute('must_change_password'))->toBeTrue();
 });
 
 it('hides force-change table actions when force-change enforcement is disabled', function (): void {

@@ -59,10 +59,19 @@ final class ConfirmAgentBridgeCapabilityAction
             Gate::forUser($user)->authorize($capability->policyAbility);
         }
 
+        $usedAt = now();
+        $claimed = CapellAgentBridgeConfirmation::query()
+            ->whereKey($confirmation->getKey())
+            ->whereNull('used_at')
+            ->where('expires_at', '>', $usedAt)
+            ->update(['used_at' => $usedAt]);
+
+        throw_if($claimed !== 1, AuthorizationException::class, 'The Agent Bridge confirmation token is invalid or expired.');
+
         $action = resolve($capability->actionClass);
         $result = $action->execute(new CapabilityInvocationData($capability, $payload, $client, $user));
 
-        $confirmation->forceFill(['used_at' => now()])->save();
+        $confirmation->forceFill(['used_at' => $usedAt]);
 
         AuditAgentBridgeCapabilityAction::run(
             event: $capability->auditEvent ?? 'capell_agent-bridge.capability.confirmed',

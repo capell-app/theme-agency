@@ -62,28 +62,11 @@ final class SubmitPublicActionAction
         $payload = $this->validatedPayload($publicAction, $input);
         $idempotencyKey = $this->idempotencyKey($input, $request);
 
-        if ($idempotencyKey !== null) {
-            $existingSubmission = PublicActionSubmission::query()
-                ->where('public_action_id', $publicAction->getKey())
-                ->where('idempotency_key', $idempotencyKey)
-                ->first();
+        $submission = $this->createSubmission($publicAction, $payload, $idempotencyKey, $request);
 
-            if ($existingSubmission instanceof PublicActionSubmission) {
-                return $this->resultFromExistingSubmission($publicAction, $existingSubmission, $request);
-            }
+        if (! $submission->wasRecentlyCreated) {
+            return $this->resultFromExistingSubmission($publicAction, $submission, $request);
         }
-
-        $submission = PublicActionSubmission::query()->create([
-            'public_action_id' => $publicAction->getKey(),
-            'site_id' => $publicAction->site_id,
-            'source_type' => $payload['source_type'] ?? null,
-            'source_id' => $payload['source_id'] ?? null,
-            'idempotency_key' => $idempotencyKey,
-            'payload' => Arr::except($payload, ['source_type', 'source_id']),
-            'metadata' => $this->metadata($publicAction, $request)->toArray(),
-            'status' => PublicActionSubmissionStatus::Received,
-            'submitted_at' => now(),
-        ]);
 
         try {
             $result = $this->resolveHandler($publicAction)->handle(new PublicActionSubmissionData(
@@ -397,6 +380,42 @@ final class SubmitPublicActionAction
         ), $request);
     }
 
+    /**
+     * @param  array<string, mixed>  $payload
+     */
+    private function createSubmission(
+        PublicAction $action,
+        array $payload,
+        ?string $idempotencyKey,
+        ?Request $request,
+    ): PublicActionSubmission {
+        $values = [
+            'site_id' => $action->site_id,
+            'source_type' => $payload['source_type'] ?? null,
+            'source_id' => $payload['source_id'] ?? null,
+            'payload' => Arr::except($payload, ['source_type', 'source_id']),
+            'metadata' => $this->metadata($action, $request)->toArray(),
+            'status' => PublicActionSubmissionStatus::Received,
+            'submitted_at' => now(),
+        ];
+
+        if ($idempotencyKey === null) {
+            return PublicActionSubmission::query()->create([
+                ...$values,
+                'public_action_id' => $action->getKey(),
+                'idempotency_key' => null,
+            ]);
+        }
+
+        return PublicActionSubmission::query()->createOrFirst(
+            [
+                'public_action_id' => $action->getKey(),
+                'idempotency_key' => $idempotencyKey,
+            ],
+            $values,
+        );
+    }
+
     private function metadata(PublicAction $action, ?Request $request): PublicActionMetadataData
     {
         if (! $request instanceof Request) {
@@ -465,9 +484,13 @@ final class SubmitPublicActionAction
             return null;
         }
 
+        $redirectScheme = parse_url($redirectUrl, PHP_URL_SCHEME);
         $redirectHost = parse_url($redirectUrl, PHP_URL_HOST);
 
-        return is_string($redirectHost) && strcasecmp($redirectHost, $request->getHost()) === 0
+        return is_string($redirectScheme)
+            && in_array(strtolower($redirectScheme), ['http', 'https'], true)
+            && is_string($redirectHost)
+            && strcasecmp($redirectHost, $request->getHost()) === 0
             ? $redirectUrl
             : null;
     }

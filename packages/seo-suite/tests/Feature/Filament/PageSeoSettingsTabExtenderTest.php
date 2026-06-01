@@ -7,8 +7,11 @@ use Capell\Admin\Testing\Filament\ReadsRawSchemaComponents;
 use Capell\Core\Models\Page;
 use Capell\SeoSuite\Enums\RobotsDirectiveEnum;
 use Capell\SeoSuite\Filament\Extenders\Page\PageSeoSettingsTabExtender;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
@@ -21,12 +24,21 @@ it('adds seo settings as a page editor tab', function (): void {
     $seoTab = $tabs[0] ?? null;
     $section = $seoTab instanceof Tab ? (ReadsRawSchemaComponents::childComponents($seoTab)[0] ?? null) : null;
     $components = $section instanceof Section ? ReadsRawSchemaComponents::childComponents($section) : [];
+    $componentNames = collect($components)
+        ->filter(fn (mixed $component): bool => method_exists($component, 'getName'))
+        ->map(fn (mixed $component): string => $component->getName())
+        ->all();
     $robotsField = collect($components)->first(fn (mixed $component): bool => $component instanceof CheckboxList);
+    $priorityField = collect($components)->first(fn (mixed $component): bool => $component instanceof Select && $component->getName() === 'priority');
     $metaTagsField = collect($components)->first(fn (mixed $component): bool => $component instanceof Textarea);
+    $aiDiscoverySection = collect($components)->first(fn (mixed $component): bool => $component instanceof Section);
+    $aiDiscoveryComponents = $aiDiscoverySection instanceof Section ? ReadsRawSchemaComponents::childComponents($aiDiscoverySection) : [];
 
     expect($tabs)->toHaveCount(1)
         ->and($seoTab)->toBeInstanceOf(Tab::class)
         ->and($section)->toBeInstanceOf(Section::class)
+        ->and($componentNames)->toContain('canonical_page_id', 'cache_time', 'priority', 'canonical_url', 'robots', 'meta_tags')
+        ->and($priorityField)->toBeInstanceOf(Select::class)
         ->and($robotsField)->toBeInstanceOf(CheckboxList::class)
         ->and($robotsField->getName())->toBe('robots')
         ->and($robotsField->getOptions())->toBe(
@@ -34,8 +46,15 @@ it('adds seo settings as a page editor tab', function (): void {
                 ->mapWithKeys(fn (RobotsDirectiveEnum $directive): array => [$directive->value => $directive->getLabel()])
                 ->all(),
         )
+        ->and($robotsField->getColumnSpan('lg'))->toBe(2)
         ->and($metaTagsField)->toBeInstanceOf(Textarea::class)
-        ->and($metaTagsField->getName())->toBe('meta_tags');
+        ->and($metaTagsField->getName())->toBe('meta_tags')
+        ->and($aiDiscoverySection)->toBeInstanceOf(Section::class)
+        ->and($aiDiscoveryComponents)->toHaveCount(6)
+        ->and($aiDiscoveryComponents[0])->toBeInstanceOf(Checkbox::class)
+        ->and($aiDiscoveryComponents[0]->getName())->toBe('ai_discovery.include_in_ai_index')
+        ->and($aiDiscoveryComponents[1])->toBeInstanceOf(TextInput::class)
+        ->and($aiDiscoveryComponents[1]->getName())->toBe('ai_discovery.section');
 });
 
 it('leaves unrelated page schema extension points unchanged', function (): void {

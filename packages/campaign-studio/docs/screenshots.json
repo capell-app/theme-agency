@@ -3,7 +3,7 @@
     "composerName": "capell-app/campaign-studio",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/campaign-studio",
+    "outputDirectory": "packages/campaign-studio/docs/screenshots",
     "entries": [
         {
             "id": "campaign-groups-index",
@@ -15,7 +15,7 @@
             "required": true,
             "notes": "Requires Campaign Studio plus required Capell extensions installed, package migrations, and seeded campaign groups linked to sites.",
             "useCase": "A marketer reviews active campaign groups before managing landing pages, CTAs, and goals.",
-            "screenshotPath": "public/docs/screenshots/packages/campaign-studio/campaign-groups-index.png"
+            "screenshotPath": "packages/campaign-studio/docs/screenshots/campaign-groups-index.png"
         },
         {
             "id": "campaign-landing-pages-index",
@@ -27,7 +27,7 @@
             "required": true,
             "notes": "Requires seeded campaign groups, target pages, primary goals, and campaign URLs. The batch harness still needs dependency extension state fixed before final install screenshots.",
             "useCase": "A marketer checks which public pages are attached to campaigns and which goal each page should optimize for.",
-            "screenshotPath": "public/docs/screenshots/packages/campaign-studio/campaign-landing-pages-index.png"
+            "screenshotPath": "packages/campaign-studio/docs/screenshots/campaign-landing-pages-index.png"
         },
         {
             "id": "campaign-conversion-goals-form",
@@ -39,7 +39,7 @@
             "required": true,
             "notes": "Requires at least one seeded campaign group. Include goal type, attribution model, and active/inactive state fields in the capture.",
             "useCase": "A marketer defines the measurable outcome that campaign landing pages and conversions report against.",
-            "screenshotPath": "public/docs/screenshots/packages/campaign-studio/campaign-conversion-goals-form.png"
+            "screenshotPath": "packages/campaign-studio/docs/screenshots/campaign-conversion-goals-form.png"
         },
         {
             "id": "cta-block-form",
@@ -51,7 +51,7 @@
             "required": true,
             "notes": "Requires a seeded campaign group and target URL or target page. Capture title, body, button/action, style, and tracking fields.",
             "useCase": "A marketer creates a reusable campaign CTA block with conversion tracking metadata.",
-            "screenshotPath": "public/docs/screenshots/packages/campaign-studio/cta-block-form.png"
+            "screenshotPath": "packages/campaign-studio/docs/screenshots/cta-block-form.png"
         },
         {
             "id": "campaign-dashboard-blocks",
@@ -63,7 +63,7 @@
             "required": true,
             "notes": "Requires the host dashboard to register Campaign Studio widgets and seeded visits, events, landing pages, goals, and conversions.",
             "useCase": "A marketer reviews campaign performance, top campaign groups, and top landing pages from the admin dashboard.",
-            "screenshotPath": "public/docs/screenshots/packages/campaign-studio/campaign-dashboard-blocks.png"
+            "screenshotPath": "packages/campaign-studio/docs/screenshots/campaign-dashboard-blocks.png"
         },
         {
             "id": "frontend-landing-page-with-campaign-blocks",
@@ -75,7 +75,7 @@
             "required": true,
             "notes": "Requires a seeded public page using campaign hero, CTA, or lead-form blocks plus Form Builder and Layout Builder. Verify public HTML does not expose admin-only campaign metadata.",
             "useCase": "A visitor lands on a campaign page with tracked hero, CTA, and lead-capture content.",
-            "screenshotPath": "public/docs/screenshots/packages/campaign-studio/frontend-landing-page-with-campaign-blocks.png"
+            "screenshotPath": "packages/campaign-studio/docs/screenshots/frontend-landing-page-with-campaign-blocks.png"
         }
     ]
 }

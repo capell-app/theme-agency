@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Capell\CampaignStudio\View\Components\Block;
 
 use Capell\CampaignStudio\Models\CampaignCtaBlock as CampaignCtaBlockModel;
+use Capell\Core\Models\Site;
+use Capell\Frontend\Facades\Frontend;
 use Capell\LayoutBuilder\Models\Widget;
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 use stdClass;
@@ -54,8 +57,18 @@ class CampaignCtaBlock extends Component
             return;
         }
 
+        $site = Frontend::site();
+
         $ctaBlocks = CampaignCtaBlockModel::query()
+            ->with('campaignGroup:id,slug,site_id')
             ->whereKey($ctaBlockIds->all())
+            ->where('is_active', true)
+            ->when($site instanceof Site, function (Builder $query) use ($site): void {
+                $query->where(function (Builder $query) use ($site): void {
+                    $query->whereNull('site_id')
+                        ->orWhere('site_id', $site->getKey());
+                });
+            })
             ->get()
             ->keyBy(fn (CampaignCtaBlockModel $ctaBlock): int => (int) $ctaBlock->getKey());
 

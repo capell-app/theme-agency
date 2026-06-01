@@ -1,3 +1,9 @@
+@php
+    use Capell\Core\Facades\CapellCore;
+
+    $campaignStudioAvailable ??= CapellCore::isPackageInstalled('capell-app/campaign-studio');
+@endphp
+
 <section class="theme-section theme-section-campaigns bg-white">
     <div class="mx-auto max-w-5xl px-6 py-14">
         @isset($heading)

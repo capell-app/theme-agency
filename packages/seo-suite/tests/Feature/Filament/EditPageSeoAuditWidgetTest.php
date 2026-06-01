@@ -21,10 +21,14 @@ beforeEach(function (): void {
 it('contributes the edit page seo audit widget from seo suite', function (): void {
     $extender = resolve(PageSeoAuditPageEditExtender::class);
     $widgets = $extender->getHeaderWidgets();
+    $widget = $widgets[0] ?? null;
 
-    expect($widgets[0])->toBeInstanceOf(WidgetConfiguration::class)
-        ->and($widgets[0]->widget)->toBe(EditPageSeoAuditWidget::class)
-        ->and($widgets[0]->getProperties())->toBe(['record' => null])
+    expect($widget)->toBeInstanceOf(WidgetConfiguration::class);
+
+    throw_unless($widget instanceof WidgetConfiguration, RuntimeException::class, 'Expected SEO audit header widget to be a widget configuration.');
+
+    expect($widget->widget)->toBe(EditPageSeoAuditWidget::class)
+        ->and($widget->getProperties())->toBe(['record' => null])
         ->and($extender->getFormActions())->toBe([]);
 });
 

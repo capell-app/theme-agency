@@ -3,7 +3,7 @@
     "composerName": "capell-app/password-policy",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/password-policy",
+    "outputDirectory": "packages/password-policy/docs/screenshots",
     "entries": [
         {
             "id": "password-policy-settings",
@@ -15,7 +15,7 @@
             "required": true,
             "notes": "Capture the System navigation settings page after the package is installed.",
             "useCase": "An administrator configures password age, reuse, complexity, and enforcement rules.",
-            "screenshotPath": "public/docs/screenshots/packages/password-policy/password-policy-settings.png"
+            "screenshotPath": "packages/password-policy/docs/screenshots/password-policy-settings.png"
         },
         {
             "id": "forced-password-change",
@@ -27,7 +27,7 @@
             "required": true,
             "notes": "Capture with a user flagged for password change so the form is visible.",
             "useCase": "A flagged administrator is forced through the password-change form before continuing in the admin panel.",
-            "screenshotPath": "public/docs/screenshots/packages/password-policy/forced-password-change.png"
+            "screenshotPath": "packages/password-policy/docs/screenshots/forced-password-change.png"
         },
         {
             "id": "user-password-policy-columns",
@@ -39,7 +39,7 @@
             "required": true,
             "notes": "Capture the core Users table with package-added password status columns, filters, and require-password-change action.",
             "useCase": "An administrator reviews password status columns, filters users by policy state, and triggers require-password-change actions.",
-            "screenshotPath": "public/docs/screenshots/packages/password-policy/user-password-policy-columns.png"
+            "screenshotPath": "packages/password-policy/docs/screenshots/user-password-policy-columns.png"
         }
     ]
 }

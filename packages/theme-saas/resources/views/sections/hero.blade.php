@@ -44,7 +44,10 @@
                 >
                     {{ __('capell-theme-saas::generic.live_workspace_label') }}
                 </span>
-                <span class="flex gap-1.5" aria-hidden="true">
+                <span
+                    class="flex gap-1.5"
+                    aria-hidden="true"
+                >
                     <span class="size-2 rounded-full bg-emerald-300"></span>
                     <span class="size-2 rounded-full bg-cyan-300"></span>
                     <span class="size-2 rounded-full bg-amber-300"></span>

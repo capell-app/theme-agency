@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Capell\FoundationTheme\View\Components\Footer;
 
+use Capell\Core\Contracts\Pageable;
 use Capell\Core\Enums\BlueprintGroupEnum;
 use Capell\Core\Enums\PageOrderEnum;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
+use Capell\Core\Models\Site;
+use Capell\Core\Models\SiteDomain;
+use Capell\Core\Models\Theme;
 use Capell\FoundationTheme\Support\NavigationAvailability;
 use Capell\Frontend\Actions\GetLayoutContainerWidthAction;
 use Capell\Frontend\Enums\RenderHookLocation;
@@ -21,6 +25,7 @@ use Capell\Navigation\Enums\NavigationHandle;
 use Capell\Navigation\Models\Navigation;
 use Capell\Navigation\Support\Loader\NavigationLoader;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 
@@ -49,6 +54,11 @@ final class Index extends Component
      */
     public Collection $latestFooterPages;
 
+    /**
+     * @var Collection<array-key, array{description: mixed, primaryColor: mixed, title: mixed, url: mixed}>
+     */
+    public Collection $relatedSites;
+
     public mixed $site;
 
     public mixed $siteLanguages;
@@ -63,35 +73,56 @@ final class Index extends Component
         public string $headingClass = 'font-heading text-sm font-semibold uppercase leading-tight tracking-[0.08em] text-[var(--color-footer-heading)]',
     ) {
         $language = Frontend::language();
-        $this->site = Frontend::site();
+        $site = Frontend::site();
         $page = Frontend::page();
-        $this->theme = Frontend::theme();
+        $theme = Frontend::theme();
+        $this->site = $site;
+        $this->theme = $theme;
         $navigationAvailable = NavigationAvailability::check();
 
-        $this->footerMenuItems = $navigationAvailable
-            ? $this->menuItems(NavigationHandle::Footer->value, $language)
-            : null;
-        $this->subFooterMenuItems = $navigationAvailable
-            ? $this->menuItems(NavigationHandle::SubFooter->value, $language)
-            : null;
-        $this->contactPage = Page::getFirstPageByTypeForSite('contact', $this->site, $language);
-        $this->siteLanguages = SiteLoader::pageLanguages($this->site, $language, $page);
-        $this->footerCopy = $this->site->translation->getMeta('footer_copy');
         $this->containerWidth = GetLayoutContainerWidthAction::run();
-        $this->footerSpacing = $this->theme->getMeta('footer_spacing', 'compact');
-        $this->footerDividerColor = (bool) $this->theme->getMeta('footer_divider') ? $this->theme->getMeta('footer_border_color') : null;
         $this->footerRenderHooks = resolve(RenderHookRegistry::class)->renderAll(
             RenderHookLocation::Footer,
             item: ['headingClass' => $this->headingClass],
             target: 'footer.index',
         );
+
+        if (! $site instanceof Site || ! $language instanceof Language || ! $page instanceof Pageable || ! $theme instanceof Theme) {
+            $this->footerMenuItems = null;
+            $this->subFooterMenuItems = null;
+            $this->contactPage = null;
+            $this->siteLanguages = collect();
+            $this->footerCopy = null;
+            $this->footerSpacing = 'compact';
+            $this->footerDividerColor = null;
+            $this->latestFooterPages = collect();
+            $this->relatedSites = collect();
+            $this->hasFooterMenu = false;
+            $this->hasLatestFooterPages = false;
+            $this->hasFooterPrimaryContent = trim($this->footerRenderHooks) !== '';
+
+            return;
+        }
+
+        $this->footerMenuItems = $navigationAvailable
+            ? $this->menuItems(NavigationHandle::Footer->value, $site, $language)
+            : null;
+        $this->subFooterMenuItems = $navigationAvailable
+            ? $this->menuItems(NavigationHandle::SubFooter->value, $site, $language)
+            : null;
+        $this->contactPage = Page::getFirstPageByTypeForSite('contact', $site, $language);
+        $this->siteLanguages = SiteLoader::pageLanguages($site, $language, $page);
+        $this->footerCopy = $site->translation?->getMeta('footer_copy');
+        $this->footerSpacing = $theme->getMeta('footer_spacing', 'compact');
+        $this->footerDividerColor = (bool) $theme->getMeta('footer_divider') ? $theme->getMeta('footer_border_color') : null;
         $this->latestFooterPages = PageLoader::getPages(
             language: $language,
-            site: $this->site,
+            site: $site,
             limit: 4,
             ordering: PageOrderEnum::Latest,
             pageGroup: BlueprintGroupEnum::Default,
         );
+        $this->relatedSites = $this->relatedSites($site, $language);
         $this->hasFooterMenu = $this->footerMenuItems?->isNotEmpty() === true;
         $this->hasLatestFooterPages = ! $this->hasFooterMenu && $this->latestFooterPages->isNotEmpty();
         $hasFooterRenderHooks = trim($this->footerRenderHooks) !== '';
@@ -103,20 +134,45 @@ final class Index extends Component
         return view('capell::components.footer.index');
     }
 
-    private function menuItems(string $key, ?Language $language): mixed
+    private function menuItems(string $key, Site $site, Language $language): mixed
     {
-        $menu = NavigationLoader::getNavigation($key, $this->site, $language);
+        $menu = NavigationLoader::getNavigation($key, $site, $language);
 
-        if (! $menu instanceof Navigation || ! $language instanceof Language) {
+        $page = Frontend::page();
+        $siteDomain = $site->siteDomain;
+
+        if (! $menu instanceof Navigation || ! $page instanceof Pageable || ! $page instanceof Model || ! $siteDomain instanceof SiteDomain) {
             return null;
         }
 
         return BuildNavigationRenderModelAction::run(new NavigationRenderContextData(
             navigation: $menu,
-            page: Frontend::page(),
-            site: $this->site,
+            page: $page,
+            site: $site,
             language: $language,
-            siteDomain: $this->site->siteDomain,
+            siteDomain: $siteDomain,
         ))->items;
+    }
+
+    /**
+     * @return Collection<int, array{description: mixed, primaryColor: mixed, title: mixed, url: mixed}>
+     */
+    private function relatedSites(Site $site, Language $language): Collection
+    {
+        return SiteLoader::related($site, $language)
+            ->map(function (Site $relatedSite): array {
+                $relations = $relatedSite->getRelations();
+                $siteDomain = $relations['siteDomain'] ?? null;
+                $translation = $relations['translation'] ?? null;
+
+                return [
+                    'description' => data_get($translation, 'meta.description'),
+                    'primaryColor' => $relatedSite->getThemeColor('primary'),
+                    'title' => data_get($translation, 'title'),
+                    'url' => data_get($siteDomain, 'full_url'),
+                ];
+            })
+            ->filter(fn (array $relatedSite): bool => is_string($relatedSite['url']) && $relatedSite['url'] !== '')
+            ->values();
     }
 }

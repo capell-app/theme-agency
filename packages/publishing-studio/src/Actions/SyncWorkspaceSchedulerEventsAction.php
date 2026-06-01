@@ -118,6 +118,6 @@ final class SyncWorkspaceSchedulerEventsAction
             ->whereNotNull('site_id')
             ->first(['site_id']);
 
-        return $page instanceof Page ? $page->site_id : null;
+        return $page instanceof Page && is_numeric($page->site_id) ? (int) $page->site_id : null;
     }
 }

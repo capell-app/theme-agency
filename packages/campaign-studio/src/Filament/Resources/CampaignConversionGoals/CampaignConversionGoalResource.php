@@ -32,8 +32,10 @@ final class CampaignConversionGoalResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    /** @var class-string<CampaignConversionGoalForm> */
     private static string $formConfigurator = CampaignConversionGoalForm::class;
 
+    /** @var class-string<CampaignConversionGoalsTable> */
     private static string $tableConfigurator = CampaignConversionGoalsTable::class;
 
     /** @return class-string<CampaignConversionGoalForm> */
@@ -63,7 +65,8 @@ final class CampaignConversionGoalResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
-        return SiteScope::applyForCurrentActor(parent::getEloquentQuery());
+        return parent::getEloquentQuery()
+            ->whereHas('campaignGroup', fn (Builder $query): Builder => SiteScope::applyForCurrentActor($query));
     }
 
     /** @return class-string<CampaignConversionGoal> */

@@ -6,7 +6,7 @@ namespace Capell\Newsletter\Actions;
 
 use Capell\Newsletter\Models\Segment;
 use Capell\Newsletter\Models\Subscriber;
-use Illuminate\Support\Collection;
+use Illuminate\Support\LazyCollection;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class ExportSubscribersAction
@@ -14,9 +14,9 @@ class ExportSubscribersAction
     use AsAction;
 
     /**
-     * @return Collection<int, array<string, mixed>>
+     * @return LazyCollection<int, array<string, mixed>>
      */
-    public function handle(int $siteId, ?Segment $segment = null): Collection
+    public function handle(int $siteId, ?Segment $segment = null): LazyCollection
     {
         $query = $segment instanceof Segment
             ? EvaluateNewsletterSegmentAction::run($segment)
@@ -24,7 +24,7 @@ class ExportSubscribersAction
 
         return $query
             ->orderBy('id')
-            ->get()
+            ->cursor()
             ->map(static fn (Subscriber $subscriber): array => [
                 'email' => $subscriber->email,
                 'first_name' => $subscriber->first_name,

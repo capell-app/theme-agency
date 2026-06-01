@@ -75,11 +75,11 @@ class PublishingStudioTestCase extends AbstractTestCase
         // NavigationServiceProvider is excluded from providers to avoid duplicate migrations
         // (BuildsOrderedMigrationWorkspace also discovers navigation's migrations). Register
         // the view namespace here so capell-navigation:: references resolve in tests.
+        $navigationViewPath = realpath(__DIR__ . '/../../navigation/resources/views');
+
         $this->app->make(Factory::class)->addNamespace(
             'capell-navigation',
-            realpath(__DIR__ . '/../../navigation/resources/views') === false
-                ? ''
-                : realpath(__DIR__ . '/../../navigation/resources/views'),
+            $navigationViewPath === false ? '' : $navigationViewPath,
         );
 
         $this->registerAndMigrateSettings(

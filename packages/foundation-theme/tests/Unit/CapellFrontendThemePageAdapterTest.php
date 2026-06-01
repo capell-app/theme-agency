@@ -14,23 +14,40 @@ use Capell\Frontend\Support\CapellFrontendContext;
 use Capell\Frontend\Support\State\FrontendState;
 use Capell\Frontend\ThemeStudio\Adapters\CapellFrontendThemePageAdapter;
 
+function capellFrontendThemeNavigation(?NavigationData $navigation): NavigationData
+{
+    throw_unless($navigation instanceof NavigationData, RuntimeException::class, 'Expected theme page navigation data.');
+
+    return $navigation;
+}
+
+function capellFrontendThemeFooter(?FooterData $footer): FooterData
+{
+    throw_unless($footer instanceof FooterData, RuntimeException::class, 'Expected theme page footer data.');
+
+    return $footer;
+}
+
 it('builds portable fallback theme data for the current frontend page', function (): void {
     $page = (new CapellFrontendThemePageAdapter)->currentPage();
     $heroSection = $page->sections[0];
+    $navigation = capellFrontendThemeNavigation($page->navigation);
+    $footer = capellFrontendThemeFooter($page->footer);
 
     expect($page->title)->toBe('Untitled page')
         ->and($page->sections)->toHaveCount(1)
         ->and($heroSection)->toBeInstanceOf(HeroSectionData::class)
         ->and($page->navigation)->toBeInstanceOf(NavigationData::class)
-        ->and($page->navigation->brandName)->toBe('Capell')
+        ->and($navigation->brandName)->toBe('Capell')
         ->and($page->footer)->toBeInstanceOf(FooterData::class)
-        ->and($page->footer->brandName)->toBe('Capell');
+        ->and($footer->brandName)->toBe('Capell');
 
     expect($heroSection->toViewData()['section'])->toBe($heroSection);
 });
 
 it('keeps default navigation usable when no package navigation is available', function (): void {
     $navigation = (new CapellFrontendThemePageAdapter)->currentPage()->navigation;
+    $navigation = capellFrontendThemeNavigation($navigation);
 
     expect($navigation)->toBeInstanceOf(NavigationData::class)
         ->and($navigation->items)->toBe([

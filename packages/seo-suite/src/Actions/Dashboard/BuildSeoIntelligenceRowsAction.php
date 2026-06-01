@@ -23,7 +23,7 @@ final class BuildSeoIntelligenceRowsAction
     {
         return BuildSeoIntelligenceOpportunitiesAction::run($limit)
             ->map(fn (SeoOpportunityRowData $row, int $index): array => [
-                'id' => 'seo-intelligence-' . $index . '-' . md5($row->type->value . $row->query . $row->url),
+                'id' => 'seo-intelligence-' . $index . '-' . hash('sha256', $row->type->value . $row->query . $row->url),
                 'type' => $row->type->getLabel(),
                 'query' => $row->query,
                 'url' => $row->url,

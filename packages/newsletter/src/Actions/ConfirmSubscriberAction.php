@@ -55,6 +55,8 @@ class ConfirmSubscriberAction
 
             $subscriber->refresh();
 
+            SyncNewsletterSubscriberContactAction::run($subscriber);
+
             return $subscriber;
         });
     }

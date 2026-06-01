@@ -33,31 +33,31 @@ final class BuildSetupHealthAction
         $checks = [
             new SetupCheckData(
                 id: 'site',
-                label: __('capell-admin::setup-health.site.label'),
+                label: $this->translationString('capell-admin::setup-health.site.label'),
                 status: $siteExists ? SetupHealthEnum::Green : SetupHealthEnum::Red,
                 fixUrl: $siteExists ? null : $this->tryGetUrl(SiteResource::class, 'create'),
-                fixLabel: $siteExists ? null : __('capell-admin::setup-health.site.fix_label'),
+                fixLabel: $siteExists ? null : $this->translationString('capell-admin::setup-health.site.fix_label'),
             ),
             new SetupCheckData(
                 id: 'language',
-                label: __('capell-admin::setup-health.language.label'),
+                label: $this->translationString('capell-admin::setup-health.language.label'),
                 status: $languageExists ? SetupHealthEnum::Green : SetupHealthEnum::Red,
                 fixUrl: $languageExists ? null : $this->tryGetUrl(LanguageResource::class, 'create'),
-                fixLabel: $languageExists ? null : __('capell-admin::setup-health.language.fix_label'),
+                fixLabel: $languageExists ? null : $this->translationString('capell-admin::setup-health.language.fix_label'),
             ),
             new SetupCheckData(
                 id: 'theme',
-                label: __('capell-admin::setup-health.theme.label'),
+                label: $this->translationString('capell-admin::setup-health.theme.label'),
                 status: $themeExists ? SetupHealthEnum::Green : SetupHealthEnum::Amber,
                 fixUrl: $themeExists ? null : $this->tryGetUrl(ThemeResource::class, 'create'),
-                fixLabel: $themeExists ? null : __('capell-admin::setup-health.theme.fix_label'),
+                fixLabel: $themeExists ? null : $this->translationString('capell-admin::setup-health.theme.fix_label'),
             ),
             new SetupCheckData(
                 id: 'type',
-                label: __('capell-admin::setup-health.type.label'),
+                label: $this->translationString('capell-admin::setup-health.type.label'),
                 status: $typeExists ? SetupHealthEnum::Green : SetupHealthEnum::Red,
                 fixUrl: $typeExists ? null : $this->tryGetUrl(BlueprintResource::class, 'create'),
-                fixLabel: $typeExists ? null : __('capell-admin::setup-health.type.fix_label'),
+                fixLabel: $typeExists ? null : $this->translationString('capell-admin::setup-health.type.fix_label'),
             ),
         ];
 
@@ -77,5 +77,12 @@ final class BuildSetupHealthAction
         } catch (Exception) {
             return null;
         }
+    }
+
+    private function translationString(string $key): string
+    {
+        $translation = __($key);
+
+        return is_string($translation) ? $translation : $key;
     }
 }

@@ -5,10 +5,12 @@ declare(strict_types=1);
 use Capell\SeoSuite\Actions\RenderContentMarkdownAction;
 
 it('renders null, plain text, arrays, and json content to markdown', function (): void {
+    $jsonContent = json_encode(['<p>JSON copy</p>', '<p>Second block</p>'], JSON_THROW_ON_ERROR);
+
     expect(RenderContentMarkdownAction::run(null))->toBe('')
         ->and(RenderContentMarkdownAction::run('  Plain copy  '))->toBe('Plain copy')
         ->and(RenderContentMarkdownAction::run(['<h2>Intro</h2>', ['<p>Nested copy</p>'], 123]))->toBe("## Intro\n\nNested copy")
-        ->and(RenderContentMarkdownAction::run(json_encode(['<p>JSON copy</p>', '<p>Second block</p>'])))->toBe("JSON copy\n\nSecond block");
+        ->and(RenderContentMarkdownAction::run($jsonContent))->toBe("JSON copy\n\nSecond block");
 });
 
 it('renders common html nodes to clean markdown', function (): void {

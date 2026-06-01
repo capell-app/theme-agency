@@ -28,7 +28,7 @@ it('extend action bumps expires_at by 24 hours', function (): void {
         ->callTableAction('extend', $link)
         ->assertHasNoTableActionErrors();
 
-    $freshLink = PreviewLink::query()->find($link->id);
+    $freshLink = publishingStudioTestInstance(PreviewLink::query()->find($link->id), PreviewLink::class);
     $expectedExpiresAt = $originalExpiresAt->addMinutes(1440);
 
     expect($freshLink->expires_at->timestamp)->toBe($expectedExpiresAt->timestamp);
@@ -49,7 +49,9 @@ it('extend action leaves the token unchanged', function (): void {
         ->callTableAction('extend', $link)
         ->assertHasNoTableActionErrors();
 
-    expect(PreviewLink::query()->find($link->id)->token)->toBe($originalToken);
+    $freshLink = publishingStudioTestInstance(PreviewLink::query()->find($link->id), PreviewLink::class);
+
+    expect($freshLink->token)->toBe($originalToken);
 });
 
 it('extend action is disabled for a revoked preview link', function (): void {

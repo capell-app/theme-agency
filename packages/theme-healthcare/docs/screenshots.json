@@ -3,7 +3,7 @@
     "composerName": "capell-app/theme-healthcare",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/theme-healthcare",
+    "outputDirectory": "packages/theme-healthcare/docs/screenshots",
     "entries": [
         {
             "id": "theme-admin-list-showing-healthcare",
@@ -15,7 +15,7 @@
             "required": true,
             "notes": "Capture with only the core Capell stack, Foundation Theme, Layout Builder, and capell-app/theme-healthcare installed in the isolated demo harness.",
             "useCase": "An administrator confirms the healthcare theme is available through the core Themes resource without installing another theme package.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-healthcare/theme-admin-list-showing-healthcare.png"
+            "screenshotPath": "packages/theme-healthcare/docs/screenshots/theme-admin-list-showing-healthcare.png"
         },
         {
             "id": "frontend-page-rendered-with-healthcare-theme",
@@ -27,7 +27,7 @@
             "required": true,
             "notes": "Capture a seeded clinic page after installing capell-app/theme-healthcare and building the Foundation Theme/frontend assets.",
             "useCase": "A patient sees an appointment-led journey through utility bar, hero, service finder, clinicians, booking, events, proof, resources, contact, CTA, and footer.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-healthcare/frontend-page-rendered-with-healthcare-theme.png"
+            "screenshotPath": "packages/theme-healthcare/docs/screenshots/frontend-page-rendered-with-healthcare-theme.png"
         },
         {
             "id": "healthcare-homepage-desktop",
@@ -39,7 +39,7 @@
             "required": true,
             "notes": "Capture the desktop care-pathway homepage with appointment hero, service finder, clinician proof, booking CTA, and footer.",
             "useCase": "A clinic owner reviews whether the first viewport builds trust and moves patients toward the right appointment route.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-healthcare/healthcare-homepage-desktop.png"
+            "screenshotPath": "packages/theme-healthcare/docs/screenshots/healthcare-homepage-desktop.png"
         },
         {
             "id": "healthcare-homepage-mobile",
@@ -51,7 +51,7 @@
             "required": true,
             "notes": "Capture the mobile care-pathway homepage with compact navigation, appointment CTA, service cards, and footer.",
             "useCase": "A clinic owner verifies mobile patient routing, tap targets, and clinical contrast before activating the theme.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-healthcare/healthcare-homepage-mobile.png"
+            "screenshotPath": "packages/theme-healthcare/docs/screenshots/healthcare-homepage-mobile.png"
         },
         {
             "id": "healthcare-services-listing",
@@ -63,7 +63,7 @@
             "required": true,
             "notes": "Capture a seeded service listing with finder controls, care-route cards, clinician hints, and booking prompts.",
             "useCase": "A patient browses care options and moves toward the right clinical enquiry path.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-healthcare/healthcare-services-listing.png"
+            "screenshotPath": "packages/theme-healthcare/docs/screenshots/healthcare-services-listing.png"
         },
         {
             "id": "healthcare-clinician-detail",
@@ -75,7 +75,7 @@
             "required": true,
             "notes": "Capture a seeded clinician or care-route detail page with image-led hero, body copy, proof, and related services.",
             "useCase": "A patient reviews clinician expertise, service context, and safe next steps.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-healthcare/healthcare-clinician-detail.png"
+            "screenshotPath": "packages/theme-healthcare/docs/screenshots/healthcare-clinician-detail.png"
         },
         {
             "id": "healthcare-contact-page",
@@ -87,7 +87,7 @@
             "required": true,
             "notes": "Capture the healthcare contact surface with locations, enquiry routing, appointment actions, and clinical support paths.",
             "useCase": "A patient finds the right contact route after browsing services without losing appointment clarity.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-healthcare/healthcare-contact-page.png"
+            "screenshotPath": "packages/theme-healthcare/docs/screenshots/healthcare-contact-page.png"
         },
         {
             "id": "theme-preview-url-output",
@@ -99,7 +99,7 @@
             "required": true,
             "notes": "Capture a signed preview URL generated with CreateThemePreviewUrlAction for the seeded healthcare theme, site, and page.",
             "useCase": "An administrator opens a signed preview URL to inspect a page with the healthcare theme applied before publishing the theme choice.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-healthcare/theme-preview-url-output.png"
+            "screenshotPath": "packages/theme-healthcare/docs/screenshots/theme-preview-url-output.png"
         }
     ]
 }

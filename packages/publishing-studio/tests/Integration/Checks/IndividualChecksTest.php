@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Capell\PublishingStudio\Tests\Integration\Checks;
 
+use Capell\Core\Models\Blueprint as PageBlueprint;
+use Capell\Core\Models\Language;
+use Capell\Core\Models\Layout;
+use Capell\Core\Models\Site;
 use Capell\PublishingStudio\Checks\AccessibilityCheck;
 use Capell\PublishingStudio\Checks\BrokenLinkCheck;
 use Capell\PublishingStudio\Checks\MissingAltTextCheck;
@@ -59,17 +63,42 @@ function ensurePageUrlsTable(): void
 function insertBasePage(Workspace $workspace, array $overrides = []): string
 {
     $uuid = (string) Str::uuid();
+    [$blueprintId, $layoutId, $siteId] = publishingStudioPageRelationIds();
 
     DB::table('pages')->insert(array_merge([
         'uuid' => $uuid,
         'name' => 'Test Page',
         'workspace_id' => $workspace->id,
-        'blueprint_id' => 1,
-        'layout_id' => 1,
-        'site_id' => 1,
+        'blueprint_id' => $blueprintId,
+        'layout_id' => $layoutId,
+        'site_id' => $siteId,
     ], $overrides));
 
     return $uuid;
+}
+
+/**
+ * @return array{int, int, int}
+ */
+function publishingStudioPageRelationIds(): array
+{
+    $language = Language::factory()->english()->create();
+    $site = Site::factory()->language($language)->create();
+    $layout = Layout::factory()->site($site)->create();
+    $blueprint = PageBlueprint::factory()->page()->create();
+
+    return [(int) $blueprint->getKey(), (int) $layout->getKey(), (int) $site->getKey()];
+}
+
+/**
+ * @return array{int, int}
+ */
+function publishingStudioUrlRelationIds(): array
+{
+    $language = Language::factory()->english()->create();
+    $site = Site::factory()->language($language)->create();
+
+    return [(int) $site->getKey(), (int) $language->getKey()];
 }
 
 // ---------------------------------------------------------------------------
@@ -170,13 +199,13 @@ describe('BrokenLinkCheck', function (): void {
         ]);
 
         // Only register one of the two URLs.
-        // site_id and language_id are NOT NULL in the real schema; supply
-        // placeholder values (SQLite does not enforce FK integrity by default).
+        [$siteId, $languageId] = publishingStudioUrlRelationIds();
+
         DB::table('page_urls')->insert([
             'url' => '/about-us',
             'workspace_id' => 0,
-            'site_id' => 1,
-            'language_id' => 1,
+            'site_id' => $siteId,
+            'language_id' => $languageId,
         ]);
 
         $check = new BrokenLinkCheck;
@@ -194,13 +223,13 @@ describe('BrokenLinkCheck', function (): void {
             'body' => '<a href="/about-us">About</a>',
         ]);
 
-        // site_id and language_id are NOT NULL in the real schema; supply
-        // placeholder values (SQLite does not enforce FK integrity by default).
+        [$siteId, $languageId] = publishingStudioUrlRelationIds();
+
         DB::table('page_urls')->insert([
             'url' => '/about-us',
             'workspace_id' => 0,
-            'site_id' => 1,
-            'language_id' => 1,
+            'site_id' => $siteId,
+            'language_id' => $languageId,
         ]);
 
         $check = new BrokenLinkCheck;

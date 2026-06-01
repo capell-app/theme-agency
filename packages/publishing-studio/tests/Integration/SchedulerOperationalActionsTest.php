@@ -124,6 +124,64 @@ it('executes unpublish scheduler events idempotently', function (): void {
         ->and($page->fresh()->visible_until)->not->toBeNull();
 });
 
+it('skips stale and missing scheduler sources without publishing old workspace state', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-05-12 09:00:00', 'UTC'));
+
+    $workspace = Workspace::factory()->published()->create([
+        'updated_at' => CarbonImmutable::parse('2026-05-12 08:30:00', 'UTC'),
+    ]);
+    $alreadyExecuted = SchedulerEvent::query()->create([
+        'event_type' => SchedulerEventTypeEnum::Embargo,
+        'state' => SchedulerEventStateEnum::Executed,
+        'source_type' => $workspace->getMorphClass(),
+        'source_id' => $workspace->id,
+        'workspace_id' => $workspace->id,
+        'scheduled_for' => CarbonImmutable::parse('2026-05-12 08:00:00', 'UTC'),
+        'idempotency_key' => 'already-executed',
+    ]);
+    $stalePublish = SchedulerEvent::query()->create([
+        'event_type' => SchedulerEventTypeEnum::Publish,
+        'state' => SchedulerEventStateEnum::Scheduled,
+        'source_type' => $workspace->getMorphClass(),
+        'source_id' => $workspace->id,
+        'workspace_id' => $workspace->id,
+        'scheduled_for' => CarbonImmutable::parse('2026-05-12 08:00:00', 'UTC'),
+        'schedule_version' => CarbonImmutable::parse('2026-05-12 08:00:00', 'UTC')->getTimestamp(),
+        'idempotency_key' => 'stale-publish',
+    ]);
+    $missingWorkspaceUnpublish = SchedulerEvent::query()->create([
+        'event_type' => SchedulerEventTypeEnum::Unpublish,
+        'state' => SchedulerEventStateEnum::Failed,
+        'source_type' => $workspace->getMorphClass(),
+        'source_id' => 999999,
+        'workspace_id' => null,
+        'scheduled_for' => CarbonImmutable::parse('2026-05-12 08:00:00', 'UTC'),
+        'schedule_version' => CarbonImmutable::parse('2026-05-12 08:00:00', 'UTC')->getTimestamp(),
+        'idempotency_key' => 'missing-workspace-unpublish',
+    ]);
+    $embargo = SchedulerEvent::query()->create([
+        'event_type' => SchedulerEventTypeEnum::Embargo,
+        'state' => SchedulerEventStateEnum::SkippedReleaseWindow,
+        'source_type' => $workspace->getMorphClass(),
+        'source_id' => $workspace->id,
+        'workspace_id' => $workspace->id,
+        'scheduled_for' => CarbonImmutable::parse('2026-05-12 08:00:00', 'UTC'),
+        'idempotency_key' => 'embargo-retry',
+    ]);
+
+    ExecuteSchedulerEventAction::run($alreadyExecuted);
+    ExecuteSchedulerEventAction::run($stalePublish);
+    ExecuteSchedulerEventAction::run($missingWorkspaceUnpublish);
+    ExecuteSchedulerEventAction::run($embargo);
+
+    expect($alreadyExecuted->refresh()->state)->toBe(SchedulerEventStateEnum::Executed)
+        ->and($stalePublish->refresh()->state)->toBe(SchedulerEventStateEnum::SkippedStale)
+        ->and($stalePublish->skipped_reason)->toBe('schedule_superseded')
+        ->and($missingWorkspaceUnpublish->refresh()->state)->toBe(SchedulerEventStateEnum::SkippedStale)
+        ->and($missingWorkspaceUnpublish->skipped_reason)->toBe('workspace_missing')
+        ->and($embargo->refresh()->state)->toBe(SchedulerEventStateEnum::Executed);
+});
+
 it('does not duplicate synced workspace events with legacy scheduler columns', function (): void {
     CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-05-01 09:00:00', 'UTC'));
 
@@ -223,9 +281,13 @@ it('protects the public iCal route with tokens, revocation, and conditional resp
         ->assertHeader('Content-Type', 'text/calendar; charset=UTF-8');
 
     expect($response->getContent())->toContain('BEGIN:VCALENDAR')
-        ->and($token->fresh()->last_used_at)->not->toBeNull();
+        ->and(publishingStudioTestInstance($token->fresh(), SchedulerIcalToken::class)->last_used_at)->not->toBeNull();
 
-    $this->withHeader('If-None-Match', $response->baseResponse->headers->get('ETag'))
+    $etag = $response->baseResponse->headers->get('ETag');
+
+    throw_unless(is_string($etag), RuntimeException::class, 'Expected iCal ETag header.');
+
+    $this->withHeader('If-None-Match', $etag)
         ->get('/capell/publishing-studio/scheduler/ical/validfeedtoken')
         ->assertStatus(304);
 

@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
+use Capell\Admin\Contracts\Extenders\PageSchemaExtender;
 use Capell\Admin\Enums\PageTranslationSchemaHookEnum;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Translation;
 use Capell\SeoSuite\Filament\Components\Forms\Page\PageSeoPanel;
-use Capell\SeoSuite\Filament\Components\Forms\SearchMetaDataSection;
 use Capell\SeoSuite\Filament\Extenders\Page\PageSeoPanelSchemaExtender;
-use Capell\SeoSuite\Filament\Extenders\Page\SearchMetaSchemaExtender;
 use Capell\SeoSuite\Filament\Extenders\Site\SiteTranslationMetaExtender;
 use Capell\SeoSuite\Handlers\ClearCircuitBreakerHandler;
 use Capell\SeoSuite\Policies\AiCreatorPolicy;
@@ -120,17 +119,12 @@ it('honours site ai creator overrides before global policy settings', function (
 });
 
 it('returns schema components only for matching seo suite extension hooks', function (): void {
-    $searchExtender = resolve(SearchMetaSchemaExtender::class);
     $panelExtender = resolve(PageSeoPanelSchemaExtender::class);
     $siteTranslationExtender = resolve(SiteTranslationMetaExtender::class);
     $page = Page::factory()->create();
     $relationManagers = ['existing'];
     $tabs = ['tab'];
 
-    $searchComponents = $searchExtender->extendTranslationComponentsForHook(
-        Schema::make(),
-        PageTranslationSchemaHookEnum::BeforeSearchMeta,
-    );
     $panelComponents = $panelExtender->extendTranslationComponentsForHook(
         Schema::make(),
         PageTranslationSchemaHookEnum::AfterSearchMeta,
@@ -140,12 +134,7 @@ it('returns schema components only for matching seo suite extension hooks', func
         PageTranslationSchemaHookEnum::AfterTitle,
     );
 
-    expect($searchComponents)->toHaveCount(1)
-        ->and($searchComponents[0])->toBeInstanceOf(SearchMetaDataSection::class)
-        ->and($searchExtender->extendTranslationComponentsForHook(Schema::make(), PageTranslationSchemaHookEnum::AfterTitle))->toBe([])
-        ->and($searchExtender->extendRelationManagers($page, $relationManagers))->toBe($relationManagers)
-        ->and($searchExtender->extendTabs(Schema::make(), $tabs))->toBe($tabs)
-        ->and($searchExtender->extendSidebarComponents(Schema::make()))->toBe([])
+    expect(collect(app()->tagged(PageSchemaExtender::TAG))->filter(fn (PageSchemaExtender $extender): bool => $extender instanceof PageSeoPanelSchemaExtender))->toHaveCount(1)
         ->and($panelComponents)->toHaveCount(1)
         ->and($panelComponents[0])->toBeInstanceOf(PageSeoPanel::class)
         ->and($panelExtender->extendTranslationComponentsForHook(Schema::make(), PageTranslationSchemaHookEnum::BeforeSearchMeta))->toBe([])

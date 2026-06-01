@@ -3,7 +3,7 @@
     "composerName": "capell-app/hero",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/hero",
+    "outputDirectory": "packages/hero/docs/screenshots",
     "entries": [
         {
             "id": "hero-home-block",
@@ -15,7 +15,7 @@
             "required": true,
             "notes": "Requires seeded layout content or the capell:hero-setup command plus a frontend theme that renders the hero block.",
             "useCase": "A visitor sees the seeded hero block rendered through Layout Builder and the active frontend theme.",
-            "screenshotPath": "public/docs/screenshots/packages/hero/hero-home-block.png"
+            "screenshotPath": "packages/hero/docs/screenshots/hero-home-block.png"
         },
         {
             "id": "hero-slide-variant",
@@ -27,7 +27,7 @@
             "required": false,
             "notes": "Capture when demo data includes slide or related hero content; omit for the minimal single-hero fixture.",
             "useCase": "A visitor sees the optional seeded slide or related-content hero variation when demo content includes it.",
-            "screenshotPath": "public/docs/screenshots/packages/hero/hero-slide-variant.png"
+            "screenshotPath": "packages/hero/docs/screenshots/hero-slide-variant.png"
         }
     ]
 }

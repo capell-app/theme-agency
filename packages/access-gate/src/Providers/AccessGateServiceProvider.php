@@ -8,6 +8,8 @@ use Capell\AccessGate\Actions\SubmitAccessGatePublicAction;
 use Capell\AccessGate\Console\Commands\AccessGateDoctorCommand;
 use Capell\AccessGate\Console\Commands\AccessGateInstallCommand;
 use Capell\AccessGate\Console\Commands\AccessGateSetupCommand;
+use Capell\AccessGate\Contracts\AccessRequestMethod;
+use Capell\AccessGate\Contracts\RegistrationField;
 use Capell\AccessGate\Enums\ResourceEnum;
 use Capell\AccessGate\Frontend\Rules\AccessGateAreaStatusCondition;
 use Capell\AccessGate\Frontend\Rules\AccessGateRegistrationStatusCondition;
@@ -27,12 +29,17 @@ use Capell\AccessGate\Policies\ClaimTokenPolicy;
 use Capell\AccessGate\Policies\GrantPolicy;
 use Capell\AccessGate\Policies\RegistrationPolicy;
 use Capell\AccessGate\Support\AccessRequestMethodRegistry;
+use Capell\AccessGate\Support\CustomerPortal\AccessGatePortalSelfServiceItemProvider;
+use Capell\AccessGate\Support\Payments\AccessGatePaymentFulfillmentHandler;
 use Capell\AccessGate\Support\RegistrationFieldRegistry;
 use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
+use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Capell\Frontend\Support\Rules\FrontendRuleConditionRegistry;
+use Capell\Payments\Contracts\PaymentFulfillmentHandler;
 use Capell\PublicActions\Support\PublicActionHandlerRegistry;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
@@ -102,7 +109,9 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
                 ->registerPolicies()
                 ->registerAdminResources()
                 ->registerFrontendRuleConditions()
-                ->registerProtectedTables();
+                ->registerProtectedTables()
+                ->registerCustomerPortalIntegrations()
+                ->registerPaymentFulfillmentHandler();
         });
     }
 
@@ -163,6 +172,10 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
                 continue;
             }
 
+            if (! is_a($method, AccessRequestMethod::class, true)) {
+                continue;
+            }
+
             $registry->register($method);
         }
 
@@ -181,6 +194,10 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
 
         foreach ($fields as $field) {
             if (! is_string($field)) {
+                continue;
+            }
+
+            if (! is_a($field, RegistrationField::class, true)) {
                 continue;
             }
 
@@ -324,6 +341,37 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
         return $this;
     }
 
+    private function registerPaymentFulfillmentHandler(): self
+    {
+        if (! interface_exists(PaymentFulfillmentHandler::class)) {
+            return $this;
+        }
+
+        $this->app->singleton(AccessGatePaymentFulfillmentHandler::class);
+        $this->app->tag([AccessGatePaymentFulfillmentHandler::class], 'capell.payments.fulfillment_handler');
+
+        return $this;
+    }
+
+    private function registerCustomerPortalIntegrations(): self
+    {
+        if (! class_exists(PortalSelfServiceItemRegistry::class)
+            || ! interface_exists(PortalSelfServiceItemProvider::class)) {
+            return $this;
+        }
+
+        /** @var object $registry */
+        $registry = $this->app->make(PortalSelfServiceItemRegistry::class);
+
+        if (! method_exists($registry, 'register')) {
+            return $this;
+        }
+
+        $registry->register('access-gate.gated-resources', AccessGatePortalSelfServiceItemProvider::class);
+
+        return $this;
+    }
+
     /**
      * @return list<string>
      */
@@ -350,10 +398,10 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
             return [];
         }
 
-        return collect($aliases)
+        return array_values(collect($aliases)
             ->filter(fn (mixed $alias): bool => is_string($alias) && $alias !== '')
             ->values()
-            ->all();
+            ->all());
     }
 
     /**
@@ -363,13 +411,13 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
     {
         $registeredMiddleware = $router->getMiddleware();
 
-        return collect($this->pageCacheAliases())
+        return array_values(collect($this->pageCacheAliases())
             ->flatMap(fn (string $alias): array => array_values(array_filter([
                 $alias,
                 $registeredMiddleware[$alias] ?? null,
             ], is_string(...))))
             ->values()
-            ->all();
+            ->all());
     }
 
     /**
@@ -378,15 +426,24 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
     private function existingMiddlewarePriority(Router $router): array
     {
         if (! $this->app->bound(HttpKernel::class)) {
-            return $router->middlewarePriority;
+            return $this->middlewarePriorityList($router->middlewarePriority);
         }
 
         $kernel = $this->app->make(HttpKernel::class);
 
         if (! method_exists($kernel, 'getMiddlewarePriority')) {
-            return $router->middlewarePriority;
+            return $this->middlewarePriorityList($router->middlewarePriority);
         }
 
-        return $kernel->getMiddlewarePriority();
+        return $this->middlewarePriorityList($kernel->getMiddlewarePriority());
+    }
+
+    /**
+     * @param  array<array-key, mixed>  $middlewarePriority
+     * @return list<string>
+     */
+    private function middlewarePriorityList(array $middlewarePriority): array
+    {
+        return array_values(array_filter($middlewarePriority, is_string(...)));
     }
 }

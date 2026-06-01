@@ -66,7 +66,7 @@ final class ResolveHeroMediaDataAction
      */
     private function layers(?Theme $theme, ?Widget $block, ?WidgetAsset $asset): array
     {
-        return collect([$theme, $block, $asset])
+        return array_values(collect([$theme, $block, $asset])
             ->filter(fn (Theme|Widget|WidgetAsset|null $model): bool => $model !== null)
             ->map(function (Theme|Widget|WidgetAsset $model): ?array {
                 $settings = $model->getMeta('hero_media', []);
@@ -75,7 +75,7 @@ final class ResolveHeroMediaDataAction
             })
             ->filter()
             ->values()
-            ->all();
+            ->all());
     }
 
     /**

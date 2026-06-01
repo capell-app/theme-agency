@@ -14,6 +14,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Gate;
 
 final class MediaAIEditActionExtender implements MediaEditActionExtender
 {
@@ -37,8 +38,11 @@ final class MediaAIEditActionExtender implements MediaEditActionExtender
                         ->rows(4)
                         ->required(),
                 ])
+                ->authorize(fn (Media $record): bool => Gate::allows('update', $record))
                 ->visible(fn (Media $record): bool => $record->isImage() && ! resolve(ImageDoctor::class) instanceof NullImageDoctor)
                 ->action(function (Media $record, array $data): void {
+                    Gate::authorize('update', $record);
+
                     $result = resolve(ImageDoctor::class)->doctor(
                         $record,
                         new ImageDoctorRequest(

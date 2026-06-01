@@ -3,11 +3,38 @@
 declare(strict_types=1);
 
 use Capell\Core\Models\Site;
+use Capell\Core\Models\SiteDomain;
 use Capell\SeoSuite\Actions\PersistSearchConsoleUrlMetricAction;
 use Capell\SeoSuite\Enums\SearchConsoleMetricEnum;
 use Capell\SeoSuite\Support\SearchConsole\GoogleSearchConsoleClient;
+use GuzzleHttp\Promise\PromiseInterface;
+use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
+
+function createSeoSuiteSearchConsoleCredentialsFile(): string
+{
+    $credentialsPath = tempnam(sys_get_temp_dir(), 'search-console-credentials');
+    $privateKey = openssl_pkey_new([
+        'private_key_bits' => 1024,
+        'private_key_type' => OPENSSL_KEYTYPE_RSA,
+    ]);
+    $privateKeyContents = '';
+
+    expect($credentialsPath)->toBeString();
+    expect($privateKey)->not()->toBeFalse();
+    assert($privateKey instanceof OpenSSLAsymmetricKey);
+
+    openssl_pkey_export($privateKey, $privateKeyContents);
+
+    file_put_contents($credentialsPath, json_encode([
+        'client_email' => 'seo-suite@example.iam.gserviceaccount.com',
+        'private_key' => $privateKeyContents,
+        'token_uri' => 'https://oauth2.googleapis.com/token',
+    ], JSON_THROW_ON_ERROR));
+
+    return $credentialsPath;
+}
 
 it('maps search insights rows into page insights', function (): void {
     $credentialsPath = tempnam(sys_get_temp_dir(), 'search-console-credentials');
@@ -19,6 +46,7 @@ it('maps search insights rows into page insights', function (): void {
 
     expect($credentialsPath)->toBeString();
     expect($privateKey)->not()->toBeFalse();
+    assert($privateKey instanceof OpenSSLAsymmetricKey);
 
     openssl_pkey_export($privateKey, $privateKeyContents);
 
@@ -61,6 +89,42 @@ it('maps search insights rows into page insights', function (): void {
         ->and($insights[3]->value)->toBe(4.2);
 });
 
+it('uses the configured timeout for search console token and query requests', function (): void {
+    $credentialsPath = createSeoSuiteSearchConsoleCredentialsFile();
+    $timeouts = [];
+
+    Http::fake(function (ClientRequest $request, array $options) use (&$timeouts): PromiseInterface {
+        $timeouts[] = $options['timeout'] ?? null;
+
+        if ($request->url() === 'https://oauth2.googleapis.com/token') {
+            return Http::response(['access_token' => 'test-token'], 200);
+        }
+
+        return Http::response([
+            'rows' => [[
+                'clicks' => 12,
+                'impressions' => 120,
+                'ctr' => 0.1,
+                'position' => 4.2,
+            ]],
+        ], 200);
+    });
+
+    $client = new GoogleSearchConsoleClient([
+        'enabled' => true,
+        'credentials_path' => $credentialsPath,
+        'property_url' => 'https://example.com/',
+        'timeout' => 17,
+    ]);
+
+    $insights = $client->pageInsights('https://example.com/about');
+
+    unlink($credentialsPath);
+
+    expect($insights)->toHaveCount(4)
+        ->and($timeouts)->toBe([17, 17]);
+});
+
 it('maps current and previous search insights rows into url metric rows', function (): void {
     Date::setTestNow(Date::create(2024, 3, 30, 12, 0, 0));
 
@@ -73,6 +137,7 @@ it('maps current and previous search insights rows into url metric rows', functi
 
     expect($credentialsPath)->toBeString();
     expect($privateKey)->not()->toBeFalse();
+    assert($privateKey instanceof OpenSSLAsymmetricKey);
 
     openssl_pkey_export($privateKey, $privateKeyContents);
 
@@ -172,6 +237,7 @@ it('maps current and previous search analytics query page rows into query metric
 
     expect($credentialsPath)->toBeString();
     expect($privateKey)->not()->toBeFalse();
+    assert($privateKey instanceof OpenSSLAsymmetricKey);
 
     openssl_pkey_export($privateKey, $privateKeyContents);
 
@@ -289,4 +355,151 @@ it('returns top declining pages from stored search console metrics', function ()
         ->and($decliningPages[0]['clicks'])->toBe(10)
         ->and($decliningPages[0]['previous_clicks'])->toBe(30)
         ->and($decliningPages[0]['click_delta'])->toBe(-20);
+});
+
+it('returns empty search console data for disabled missing and failed upstream states', function (): void {
+    $disabledClient = new GoogleSearchConsoleClient([
+        'enabled' => false,
+        'credentials_path' => null,
+    ]);
+
+    expect($disabledClient->pageInsights('https://example.com/about'))->toBe([])
+        ->and($disabledClient->decliningPages(siteId: 999))->toBe([])
+        ->and($disabledClient->urlMetricRows(siteId: 999))->toBe([])
+        ->and($disabledClient->queryMetricRows(siteId: 999))->toBe([]);
+
+    $credentialsPath = createSeoSuiteSearchConsoleCredentialsFile();
+
+    Http::fake([
+        'https://oauth2.googleapis.com/token' => Http::response(['access_token' => 'test-token'], 200),
+        'https://searchconsole.googleapis.com/*' => Http::response(['rows' => []], 200),
+    ]);
+
+    $emptyClient = new GoogleSearchConsoleClient([
+        'enabled' => true,
+        'credentials_path' => $credentialsPath,
+        'property_url' => 'https://example.com/',
+    ]);
+
+    expect($emptyClient->pageInsights('https://example.com/about'))->toBe([]);
+
+    Http::fake([
+        'https://oauth2.googleapis.com/token' => Http::response(['access_token' => 'test-token'], 200),
+        'https://searchconsole.googleapis.com/*' => Http::response(['error' => 'rate limited'], 429),
+    ]);
+
+    $failedClient = new GoogleSearchConsoleClient([
+        'enabled' => true,
+        'credentials_path' => $credentialsPath,
+        'property_url' => 'https://example.com/',
+    ]);
+
+    expect($failedClient->pageInsights('https://example.com/about'))->toBe([]);
+
+    Http::fake([
+        'https://oauth2.googleapis.com/token' => Http::response(['error' => 'invalid_grant'], 500),
+        'https://searchconsole.googleapis.com/*' => Http::response(['rows' => []], 401),
+    ]);
+
+    $tokenFailureClient = new GoogleSearchConsoleClient([
+        'enabled' => true,
+        'credentials_path' => $credentialsPath,
+        'property_url' => 'https://example.com/',
+    ]);
+
+    expect($tokenFailureClient->pageInsights('https://example.com/about'))->toBe([]);
+
+    unlink($credentialsPath);
+});
+
+it('normalizes malformed search console rows and reuses access tokens across requests', function (): void {
+    Date::setTestNow(Date::create(2024, 3, 30, 12, 0, 0));
+
+    $credentialsPath = createSeoSuiteSearchConsoleCredentialsFile();
+
+    Http::fake([
+        'https://oauth2.googleapis.com/token' => Http::response(['access_token' => 'test-token'], 200),
+        'https://searchconsole.googleapis.com/*' => Http::sequence()
+            ->push([
+                'rows' => [
+                    ['keys' => ['', ''], 'clicks' => 'not numeric'],
+                    ['keys' => ['valid query', ''], 'impressions' => '12'],
+                    ['query' => 'Fallback Query', 'url' => 'https://example.com/fallback', 'clicks' => '8', 'impressions' => '90', 'ctr' => '0.12', 'position' => '7.5'],
+                ],
+            ], 200)
+            ->push([
+                'rows' => [
+                    ['query' => 'Fallback Query', 'url' => 'https://example.com/fallback', 'clicks' => '3', 'impressions' => '30', 'ctr' => '0.1', 'position' => '9.5'],
+                ],
+            ], 200)
+            ->push([
+                'rows' => [[
+                    'clicks' => 1,
+                    'impressions' => 10,
+                    'ctr' => 0.1,
+                    'position' => 2.0,
+                ]],
+            ], 200),
+    ]);
+
+    $client = new GoogleSearchConsoleClient([
+        'enabled' => true,
+        'credentials_path' => $credentialsPath,
+        'property_url' => 'https://example.com/',
+    ]);
+
+    $queryRows = $client->queryMetricRows(siteId: 1, limit: 10);
+    $pageInsights = $client->pageInsights('https://example.com/fallback');
+
+    Http::assertSentCount(4);
+
+    unlink($credentialsPath);
+    Date::setTestNow();
+
+    expect($queryRows)->toHaveCount(1)
+        ->and($queryRows[0])->toMatchArray([
+            'query' => 'fallback query',
+            'url' => 'https://example.com/fallback',
+            'clicks' => 8,
+            'impressions' => 90,
+            'ctr' => 0.12,
+            'average_position' => 7.5,
+            'previous_clicks' => 3,
+        ])
+        ->and($pageInsights)->toHaveCount(4);
+});
+
+it('derives search console property urls from the site default domain when no property is configured', function (): void {
+    Date::setTestNow(Date::create(2024, 3, 30, 12, 0, 0));
+
+    $siteDomain = SiteDomain::factory()->create([
+        'scheme' => 'https',
+        'domain' => 'example.test',
+        'path' => null,
+        'default' => true,
+    ]);
+    $credentialsPath = createSeoSuiteSearchConsoleCredentialsFile();
+
+    Http::fake([
+        'https://oauth2.googleapis.com/token' => Http::response(['access_token' => 'test-token'], 200),
+        'https://searchconsole.googleapis.com/*' => Http::sequence()
+            ->push(['rows' => [['keys' => ['https://example.test/about'], 'clicks' => 4, 'impressions' => 40, 'ctr' => 0.1, 'position' => 6.2]]], 200)
+            ->push(['rows' => []], 200),
+    ]);
+
+    $client = new GoogleSearchConsoleClient([
+        'enabled' => true,
+        'credentials_path' => $credentialsPath,
+    ]);
+
+    $metricRows = $client->urlMetricRows((int) $siteDomain->site_id, 5);
+
+    Http::assertSent(fn (ClientRequest $request): bool => str_contains(rawurldecode($request->url()), 'https://example.test/'));
+
+    unlink($credentialsPath);
+    Date::setTestNow();
+
+    expect($metricRows)->toHaveCount(1)
+        ->and($metricRows[0]['url'])->toBe('https://example.test/about')
+        ->and($metricRows[0]['clicks'])->toBe(4);
 });

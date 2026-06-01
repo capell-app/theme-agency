@@ -6,6 +6,7 @@ return [
     'route_prefix' => 'actions',
     'api_route_prefix' => 'api/public-actions',
     'queue' => 'default',
+    'dispatch_retry_seconds' => 60,
     'webhook_timeout_seconds' => 10,
     'allow_insecure_webhook_urls' => false,
     'allow_private_webhook_urls' => false,

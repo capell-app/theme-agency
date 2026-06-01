@@ -674,8 +674,9 @@ it('syncs page profile quick-fill values from page meta', function (): void {
     $profiles = SyncAiDiscoveryPageProfilesAction::run($site, $language);
     $profile = $profiles->firstWhere('page_id', $page->getKey());
 
-    expect($profile)->not->toBeNull()
-        ->and($profile->include_in_ai_index)->toBeFalse()
+    throw_unless($profile instanceof AiDiscoveryPageProfile, RuntimeException::class, 'Expected page-level AI discovery profile.');
+
+    expect($profile->include_in_ai_index)->toBeFalse()
         ->and($profile->summary)->toBe('Editor summary')
         ->and($profile->section)->toBe('Products')
         ->and($profile->priority)->toBe(123)

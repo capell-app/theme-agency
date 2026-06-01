@@ -8,7 +8,9 @@ use Capell\Core\Models\Page;
 use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\Theme;
+use Capell\Frontend\Contracts\AdminAccessCheckerInterface;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Testing\TestResponse;
 
 use function Pest\Laravel\get;
@@ -98,6 +100,19 @@ function assertNoFrontendAuthoringSurface(TestResponse $response): void
         ->not->toContain('capell-frontend-authoring');
 }
 
+function postAllPackagesSameOriginBeacon(string $url): TestResponse
+{
+    $scheme = (string) parse_url($url, PHP_URL_SCHEME);
+    $host = (string) parse_url($url, PHP_URL_HOST);
+    $port = parse_url($url, PHP_URL_PORT);
+    $origin = $scheme . '://' . $host . (is_int($port) ? ':' . $port : '');
+
+    return postJson($origin . '/beacon', ['url' => $url], [
+        'Host' => $host . (is_int($port) ? ':' . $port : ''),
+        'X-Forwarded-Proto' => $scheme,
+    ]);
+}
+
 it('renders the frontend website for guests with all package providers booted', function (): void {
     $pageUrl = createAllPackagesFrontendPage();
 
@@ -130,10 +145,15 @@ it('returns admin authoring bootstrap only through the beacon after all packages
     $pageUrl = createAllPackagesFrontendPage();
 
     test()->actingAsAdmin();
+    app()->instance(AdminAccessCheckerInterface::class, new readonly class implements AdminAccessCheckerInterface
+    {
+        public function isAdmin(Authenticatable $user): bool
+        {
+            return true;
+        }
+    });
 
-    $response = postJson(route('capell-frontend.beacon'), [
-        'url' => $pageUrl->full_url,
-    ]);
+    $response = postAllPackagesSameOriginBeacon($pageUrl->full_url);
 
     $response->assertOk();
     $response->assertJsonPath('user.admin', true);

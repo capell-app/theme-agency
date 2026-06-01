@@ -3,74 +3,66 @@
     text-wrap: pretty;
 }
 
-.capell-hero-background {
-    background: var(--capell-hero-background-color);
+.hero-background {
+    background: var(--hero-background-color);
 }
 
-.capell-hero-background__base,
-.capell-hero-background__overlay {
+.hero-background__base,
+.hero-background__overlay {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
 }
 
-.capell-hero-background__base {
+.hero-background__base {
     background:
         radial-gradient(
             circle at 78% 12%,
-            color-mix(
-                in srgb,
-                var(--capell-hero-accent-color-alt) 26%,
-                transparent
-            ),
+            color-mix(in srgb, var(--hero-accent-color-alt) 26%, transparent),
             transparent 36%
         ),
         radial-gradient(
             circle at 10% 72%,
-            color-mix(
-                in srgb,
-                var(--capell-hero-accent-color) 18%,
-                transparent
-            ),
+            color-mix(in srgb, var(--hero-accent-color) 18%, transparent),
             transparent 42%
         ),
-        var(--capell-hero-background-color);
+        var(--hero-background-color);
 }
 
-.capell-hero-background__overlay {
-    opacity: var(--capell-hero-overlay-opacity);
+.hero-background__overlay {
+    opacity: var(--hero-overlay-opacity);
 }
 
-.capell-hero-background__ribbons,
-.capell-hero-background__grid path,
-.capell-hero-background__contours path {
+.hero-background__ribbons,
+.hero-background__grid path,
+.hero-background__contours path {
     fill: none;
-    stroke: var(--capell-hero-accent-color);
+    stroke: var(--hero-accent-color);
     stroke-linecap: round;
     stroke-width: 2;
 }
 
-.capell-hero-background__grid path {
+.hero-background__grid path {
     stroke-width: 1;
 }
 
-.capell-hero-background__contours path {
-    stroke: var(--capell-hero-accent-color-alt);
+.hero-background__contours path {
+    stroke: var(--hero-accent-color-alt);
 }
 
-.capell-hero-background--mesh .capell-hero-background__ribbons,
-.capell-hero-background--mesh .capell-hero-background__grid,
-.capell-hero-background--mesh .capell-hero-background__contours,
-.capell-hero-background--ribbons .capell-hero-background__mesh,
-.capell-hero-background--ribbons .capell-hero-background__grid,
-.capell-hero-background--ribbons .capell-hero-background__contours,
-.capell-hero-background--grid .capell-hero-background__mesh,
-.capell-hero-background--grid .capell-hero-background__ribbons,
-.capell-hero-background--grid .capell-hero-background__contours,
-.capell-hero-background--contours .capell-hero-background__mesh,
-.capell-hero-background--contours .capell-hero-background__ribbons,
-.capell-hero-background--contours .capell-hero-background__grid {
+.hero-background--mesh .hero-background__ribbons,
+.hero-background--mesh .hero-background__grid,
+.hero-background--mesh .hero-background__contours,
+.hero-background--ribbons .hero-background__mesh,
+.hero-background--ribbons .hero-background__grid,
+.hero-background--ribbons .hero-background__contours,
+.hero-background--grid .hero-background__mesh,
+.hero-background--grid .hero-background__ribbons,
+.hero-background--grid .hero-background__contours,
+.hero-background--contours .hero-background__mesh,
+.hero-background--contours .hero-background__ribbons,
+.hero-background--contours .hero-background__grid {
     display: none;
 }
 

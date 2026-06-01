@@ -9,12 +9,16 @@ use Capell\Comments\Data\CreateCommentData;
 use Capell\Comments\Enums\CommentPublicationPolicy;
 use Capell\Comments\Enums\CommentStatus;
 use Capell\Comments\Enums\CommentTokenType;
+use Capell\Comments\Events\CommentCreated;
 use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
 use Capell\Comments\Models\CommentToken;
 use Capell\Comments\Notifications\ConfirmCommentAuthorEmailNotification;
 use Capell\Comments\Settings\CommentSettings;
 use Capell\Tests\Fixtures\Models\User;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 
@@ -38,6 +42,27 @@ it('creates anonymous comments as pending email verification by default', functi
         ->and($comment->author->email)->toBe('ben@example.com');
 
     Notification::assertSentOnDemand(ConfirmCommentAuthorEmailNotification::class);
+});
+
+it('dispatches an event when a comment is created', function (): void {
+    Event::fake([CommentCreated::class]);
+    Notification::fake();
+
+    $page = $this->createCommentsPage();
+
+    $comment = CreateCommentAction::run(new CreateCommentData(
+        commentable: $page,
+        body: 'Hello world',
+        authorName: 'Ben',
+        authorEmail: 'ben@example.com',
+        ipAddress: '192.0.2.10',
+        userAgent: 'Comments test',
+    ));
+
+    Event::assertDispatched(
+        CommentCreated::class,
+        fn (CommentCreated $event): bool => $event->comment->is($comment),
+    );
 });
 
 it('auto publishes only verified trusted authors when configured', function (): void {
@@ -195,6 +220,118 @@ it('applies commentable-specific identity mode overrides during submission', fun
     ));
 })->throws(ValidationException::class);
 
+it('rejects invalid comment submissions before persisting moderation records', function (): void {
+    $unregisteredCommentable = new class extends Model
+    {
+        use HasFactory;
+    };
+
+    expectCommentValidation(function () use ($unregisteredCommentable): void {
+        bindCommentSettings();
+
+        CreateCommentAction::run(new CreateCommentData(
+            commentable: $unregisteredCommentable,
+            body: 'Invisible target',
+            authorName: 'Ben',
+            authorEmail: 'ben@example.com',
+        ));
+    }, 'commentable');
+
+    expectCommentValidation(function (): void {
+        bindCommentSettings(['enabled' => false]);
+
+        CreateCommentAction::run(new CreateCommentData(
+            commentable: $this->createCommentsPage(),
+            body: 'Disabled globally',
+            authorName: 'Ben',
+            authorEmail: 'ben@example.com',
+        ));
+    }, 'commentable');
+
+    expectCommentValidation(function (): void {
+        bindCommentSettings([
+            'publication_policy' => CommentPublicationPolicy::Disabled->value,
+        ]);
+
+        CreateCommentAction::run(new CreateCommentData(
+            commentable: $this->createCommentsPage(),
+            body: 'Publishing is disabled',
+            authorName: 'Ben',
+            authorEmail: 'ben@example.com',
+        ));
+    }, 'commentable');
+
+    expectCommentValidation(function (): void {
+        bindCommentSettings();
+
+        $page = $this->createCommentsPage();
+        CommentAuthor::factory()->blocked()->create([
+            'site_id' => $page->site_id,
+            'email' => 'blocked@example.com',
+        ]);
+
+        CreateCommentAction::run(new CreateCommentData(
+            commentable: $page,
+            body: 'Blocked author',
+            authorName: 'Blocked',
+            authorEmail: 'blocked@example.com',
+        ));
+    }, 'author');
+
+    expectCommentValidation(function (): void {
+        bindCommentSettings(['max_depth' => 0]);
+
+        $page = $this->createCommentsPage();
+        $parent = Comment::factory()->create([
+            'site_id' => $page->site_id,
+            'commentable_type' => $page->getMorphClass(),
+            'commentable_id' => $page->getKey(),
+            'depth' => 0,
+        ]);
+
+        CreateCommentAction::run(new CreateCommentData(
+            commentable: $page,
+            body: 'Too deep',
+            authorName: 'Ben',
+            authorEmail: 'ben@example.com',
+            parentPublicId: $parent->public_id,
+        ));
+    }, 'parent');
+
+    expectCommentValidation(function (): void {
+        bindCommentSettings();
+
+        CreateCommentAction::run(new CreateCommentData(
+            commentable: $this->createCommentsPage(),
+            body: '<p> </p>',
+            authorName: 'Ben',
+            authorEmail: 'ben@example.com',
+        ));
+    }, 'body');
+
+    expectCommentValidation(function (): void {
+        bindCommentSettings();
+
+        CreateCommentAction::run(new CreateCommentData(
+            commentable: $this->createCommentsPage(),
+            body: 'Missing name',
+            authorName: ' ',
+            authorEmail: 'ben@example.com',
+        ));
+    }, 'authorName');
+
+    expectCommentValidation(function (): void {
+        bindCommentSettings();
+
+        CreateCommentAction::run(new CreateCommentData(
+            commentable: $this->createCommentsPage(),
+            body: 'Bad email',
+            authorName: 'Ben',
+            authorEmail: 'not-an-email',
+        ));
+    }, 'authorEmail');
+});
+
 /**
  * @param  array<string, mixed>  $overrides
  */
@@ -216,6 +353,19 @@ function bindCommentSettings(array $overrides = []): void
     }
 
     app()->instance(CommentSettings::class, $settings);
+}
+
+function expectCommentValidation(Closure $callback, string $field): void
+{
+    try {
+        $callback();
+    } catch (ValidationException $validationException) {
+        expect($validationException->errors())->toHaveKey($field);
+
+        return;
+    }
+
+    throw new RuntimeException(sprintf('Expected comment validation to fail for [%s].', $field));
 }
 
 it('keeps authenticated comments pending email verification when the user email is unverified', function (): void {

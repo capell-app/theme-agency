@@ -42,7 +42,7 @@
     @if ($media->hasVideo())
         <video
             class="pointer-events-none absolute inset-0 h-full w-full object-cover object-center"
-            data-capell-hero-video
+            data-hero-video
             @if ($media->pauseWhenOutOfView) data-pause-out-of-view="true" @endif
             @if ($media->autoplay) autoplay @endif
             @if ($media->loop) loop @endif
@@ -70,7 +70,7 @@
                 const boot = () => {
                     const videos = Array.from(
                         document.querySelectorAll(
-                            '[data-capell-hero-video][data-pause-out-of-view="true"]',
+                            '[data-hero-video][data-pause-out-of-view="true"]',
                         ),
                     )
 
@@ -83,11 +83,11 @@
                             .matches === true
 
                     videos.forEach((video) => {
-                        if (video.dataset.capellHeroVideoReady === 'true') {
+                        if (video.dataset.heroVideoReady === 'true') {
                             return
                         }
 
-                        video.dataset.capellHeroVideoReady = 'true'
+                        video.dataset.heroVideoReady = 'true'
 
                         if (reduceMotion) {
                             video.pause()

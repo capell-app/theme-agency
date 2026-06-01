@@ -23,6 +23,7 @@ use Capell\AgentBridge\Tools\Site\InspectSiteStateTool;
 use Capell\AgentBridge\Tools\Site\ListSiteCapabilitiesTool;
 use Capell\AgentBridge\Tools\Site\RunSiteCapabilityTool;
 use Laravel\Mcp\Request;
+use Laravel\Mcp\ResponseFactory;
 
 it('lists boost capabilities visible through the site server', function (): void {
     $registry = new CapellAgentBridgeCapabilityRegistry;
@@ -37,10 +38,11 @@ it('lists boost capabilities visible through the site server', function (): void
     ));
 
     $response = (new ListBoostCapabilitiesTool)->handle($registry);
+    $structuredContent = agentBridgeStructuredContent($response);
 
-    expect($response->getStructuredContent())
+    expect($structuredContent)
         ->toHaveKey('confirmation')
-        ->and($response->getStructuredContent()['capabilities'][0]['key'])->toBe('capell.fake.preview');
+        ->and($structuredContent['capabilities'][0]['key'])->toBe('capell.fake.preview');
 });
 
 it('previews a boost capability through the registry', function (): void {
@@ -62,12 +64,16 @@ it('previews a boost capability through the registry', function (): void {
         ]),
         $registry,
     );
+    $structuredContent = agentBridgeStructuredContent($response);
+    $preview = $structuredContent['preview'] ?? null;
 
-    expect($response->getStructuredContent())
+    throw_unless(is_array($preview), RuntimeException::class, 'Expected boost capability preview payload.');
+
+    expect($structuredContent)
         ->toHaveKey('confirmation')
-        ->and($response->getStructuredContent()['mode'])->toBe('preview')
-        ->and($response->getStructuredContent()['capability'])->toBe('capell.fake.preview')
-        ->and($response->getStructuredContent()['preview']['message'])->toBe('Previewed fake capability.');
+        ->and($structuredContent['mode'])->toBe('preview')
+        ->and($structuredContent['capability'])->toBe('capell.fake.preview')
+        ->and($preview['message'])->toBe('Previewed fake capability.');
 });
 
 it('lists knowledge packages as structured content', function (): void {
@@ -75,7 +81,7 @@ it('lists knowledge packages as structured content', function (): void {
 
     $response = (new ListKnowledgePackagesTool)->handle(new KnowledgeRepository);
 
-    $packages = $response->getStructuredContent()['packages'];
+    $packages = agentBridgeStructuredContent($response)['packages'];
     $packageNames = is_array($packages) ? array_column($packages, 'name') : [];
 
     expect($packageNames)
@@ -98,7 +104,7 @@ it('reads allowed knowledge documents by repository path', function (): void {
 
 it('returns site state without leaking content bodies', function (): void {
     $response = (new InspectSiteStateTool)->handle();
-    $structuredContent = $response->getStructuredContent();
+    $structuredContent = agentBridgeStructuredContent($response);
 
     expect($structuredContent['app'])
         ->toHaveKeys(['name', 'environment', 'debug'])
@@ -132,7 +138,7 @@ it('lists site capabilities allowed by the authenticated client scopes', functio
         new AuthenticatedAgentBridgeClientData(tokenId: 1, name: 'Scoped client', scopes: ['capell.fake.allowed']),
     );
 
-    $capabilities = $response->getStructuredContent()['capabilities'];
+    $capabilities = agentBridgeStructuredContent($response)['capabilities'];
     $capabilityKeys = is_array($capabilities) ? array_column($capabilities, 'key') : [];
 
     expect($capabilityKeys)
@@ -172,27 +178,30 @@ it('runs and confirms site capability previews for authenticated clients', funct
         scopes: ['capell.fake.confirmed'],
     );
 
-    $preview = (new RunSiteCapabilityTool)->handle(
+    $preview = agentBridgeStructuredContent((new RunSiteCapabilityTool)->handle(
         new Request([
             'capability' => 'capell.fake.confirmed',
             'payload' => ['name' => 'Preview me'],
         ]),
         $client,
         $token,
-    )->getStructuredContent();
+    ));
 
-    $confirmed = (new ConfirmSiteCapabilityTool)->handle(
+    $confirmed = agentBridgeStructuredContent((new ConfirmSiteCapabilityTool)->handle(
         new Request([
             'confirmationToken' => $preview['confirmationToken'],
             'payload' => ['name' => 'Preview me'],
         ]),
         $client,
         $token,
-    )->getStructuredContent();
+    ));
+    $confirmedResult = $confirmed['result'] ?? null;
+
+    throw_unless(is_array($confirmedResult), RuntimeException::class, 'Expected confirmed capability result payload.');
 
     expect($preview['mode'])->toBe('preview')
         ->and($confirmed['mode'])->toBe('confirmed')
-        ->and($confirmed['result']['message'])->toBe('Executed fake capability.');
+        ->and($confirmedResult['message'])->toBe('Executed fake capability.');
 });
 
 it('directly executes read-only site capabilities without confirmation', function (): void {
@@ -224,7 +233,7 @@ it('directly executes read-only site capabilities without confirmation', functio
         'user_id' => $user->getKey(),
     ])->save();
 
-    $response = (new RunSiteCapabilityTool)->handle(
+    $response = agentBridgeStructuredContent((new RunSiteCapabilityTool)->handle(
         new Request([
             'capability' => 'capell.fake.readonly',
             'payload' => ['name' => 'Execute me'],
@@ -235,11 +244,14 @@ it('directly executes read-only site capabilities without confirmation', functio
             scopes: ['capell.fake.readonly'],
         ),
         $token,
-    )->getStructuredContent();
+    ));
+    $result = $response['result'] ?? null;
+
+    throw_unless(is_array($result), RuntimeException::class, 'Expected executed capability result payload.');
 
     expect($response['mode'])->toBe('executed')
         ->and($response['capability'])->toBe('capell.fake.readonly')
-        ->and($response['result']['message'])->toBe('Executed fake capability.');
+        ->and($result['message'])->toBe('Executed fake capability.');
 });
 
 it('hashes capability payloads deterministically regardless of key order', function (): void {
@@ -251,6 +263,18 @@ it('hashes capability payloads deterministically regardless of key order', funct
         'second' => ['nested' => true],
     ]));
 });
+
+/**
+ * @return array<string, mixed>
+ */
+function agentBridgeStructuredContent(ResponseFactory $response): array
+{
+    $structuredContent = $response->getStructuredContent();
+
+    throw_unless(is_array($structuredContent), RuntimeException::class, 'Expected MCP response structured content.');
+
+    return $structuredContent;
+}
 
 it('hashes nested capability payload objects deterministically while preserving list order', function (): void {
     expect(InvokeAgentBridgeCapabilityPreviewAction::payloadHash([

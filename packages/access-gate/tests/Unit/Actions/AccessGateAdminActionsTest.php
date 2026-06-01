@@ -145,10 +145,11 @@ it('updates access area status', function (): void {
         ->where('type', EventType::AreaStatusUpdated)
         ->where('user_id', 42)
         ->firstOrFail();
+    $payload = $event->payload ?? [];
 
     expect($updated->status)->toBe(AccessAreaStatus::Paused)
-        ->and($event->payload['previous_status'])->toBe(AccessAreaStatus::Active->value)
-        ->and($event->payload['status'])->toBe(AccessAreaStatus::Paused->value);
+        ->and($payload['previous_status'] ?? null)->toBe(AccessAreaStatus::Active->value)
+        ->and($payload['status'] ?? null)->toBe(AccessAreaStatus::Paused->value);
 });
 
 it('updates approval limits and records the actor', function (): void {

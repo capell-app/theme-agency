@@ -8,7 +8,13 @@
 
 @php
     $categories = $block->assets
-        ->map(fn ($wa) => $wa->asset->getMeta('category'))
+        ->map(function (object $blockAsset): ?string {
+            $blockAssetRelations = method_exists($blockAsset, 'getRelations') ? $blockAsset->getRelations() : [];
+            $asset = $blockAssetRelations['asset'] ?? null;
+            $category = $asset !== null ? $asset->getMeta('category') : null;
+
+            return is_string($category) && $category !== '' ? $category : null;
+        })
         ->filter()
         ->unique()
         ->values()
@@ -70,15 +76,24 @@
 
         <div class="faq-container mx-auto max-w-3xl space-y-3">
             @forelse ($block->assets as $blockAsset)
+                @php
+                    $blockAssetRelations = method_exists($blockAsset, 'getRelations') ? $blockAsset->getRelations() : [];
+                    $asset = $blockAssetRelations['asset'] ?? null;
+                    $assetRelations = $asset !== null && method_exists($asset, 'getRelations') ? $asset->getRelations() : [];
+                    $assetTranslation = $assetRelations['translation'] ?? null;
+                @endphp
+
+                @continue($asset === null)
+
                 <details
                     class="faq-item group rounded-xl border border-stone-200 bg-white"
-                    data-category="{{ $blockAsset->asset->getMeta('category', 'uncategorized') }}"
+                    data-category="{{ $asset->getMeta('category', 'uncategorized') }}"
                 >
                     <summary
                         class="flex cursor-pointer items-center justify-between p-5 text-base font-semibold text-gray-900 select-none"
                     >
                         <span>
-                            {{ $blockAsset->asset->translation?->title }}
+                            {{ $assetTranslation?->title }}
                         </span>
                         <span
                             class="ml-4 flex-shrink-0 text-xl text-stone-500 transition-transform group-open:rotate-45"
@@ -87,11 +102,11 @@
                         </span>
                     </summary>
 
-                    @if ($blockAsset->asset->translation?->content)
+                    @if ($assetTranslation?->content)
                         <div
                             class="border-t border-stone-100 px-5 pt-4 pb-5 leading-relaxed text-stone-600"
                         >
-                            {{ strip_tags($blockAsset->asset->translation->content) }}
+                            {{ strip_tags($assetTranslation->content) }}
                         </div>
                     @endif
                 </details>

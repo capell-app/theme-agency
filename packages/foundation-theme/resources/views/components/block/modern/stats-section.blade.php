@@ -47,8 +47,14 @@
         >
             @forelse ($block->assets as $blockAsset)
                 @php
-                    $icon = (string) $blockAsset->asset->getMeta('icon', '');
+                    $blockAssetRelations = method_exists($blockAsset, 'getRelations') ? $blockAsset->getRelations() : [];
+                    $asset = $blockAssetRelations['asset'] ?? null;
+                    $assetRelations = $asset !== null && method_exists($asset, 'getRelations') ? $asset->getRelations() : [];
+                    $assetTranslation = $assetRelations['translation'] ?? null;
+                    $icon = $asset !== null ? (string) $asset->getMeta('icon', '') : '';
                 @endphp
+
+                @continue($asset === null)
 
                 <div
                     class="min-w-full snap-start rounded-xl border border-stone-200 bg-white p-6 text-center md:min-w-0 md:p-8"
@@ -65,17 +71,17 @@
                         </div>
                     @endif
 
-                    @if ($blockAsset->asset->translation?->content)
+                    @if ($assetTranslation?->content)
                         <p
                             class="mb-1 text-3xl font-bold text-emerald-700 md:text-4xl"
                         >
-                            {{ strip_tags($blockAsset->asset->translation->content) }}
+                            {{ strip_tags($assetTranslation->content) }}
                         </p>
                     @endif
 
-                    @if ($blockAsset->asset->translation?->title)
+                    @if ($assetTranslation?->title)
                         <p class="text-sm font-medium text-gray-500">
-                            {{ $blockAsset->asset->translation->title }}
+                            {{ $assetTranslation->title }}
                         </p>
                     @endif
                 </div>

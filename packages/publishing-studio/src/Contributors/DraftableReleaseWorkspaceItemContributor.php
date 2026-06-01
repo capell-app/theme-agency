@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\PublishingStudio\Contributors;
 
-use Capell\PublishingStudio\Contracts\ReleaseWorkspaceItemContributor;
+use Capell\PublishingStudio\Contracts\CountableReleaseWorkspaceItemContributor;
 use Capell\PublishingStudio\Data\ReleaseWorkspaceItemData;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\WorkspaceRegistry;
@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-final class DraftableReleaseWorkspaceItemContributor implements ReleaseWorkspaceItemContributor
+final class DraftableReleaseWorkspaceItemContributor implements CountableReleaseWorkspaceItemContributor
 {
     /**
      * @return list<ReleaseWorkspaceItemData>

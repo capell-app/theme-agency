@@ -47,7 +47,7 @@ class AiResponseParser
      */
     public function normalize(array $data): array
     {
-        return array_map(function (mixed $item): array {
+        return array_values(array_map(function (mixed $item): array {
             if (is_string($item)) {
                 return [
                     'value' => $item,
@@ -73,7 +73,7 @@ class AiResponseParser
             }
 
             return ['value' => (string) $item, 'source' => 'unknown'];
-        }, $data);
+        }, $data));
     }
 
     protected function isJson(string $content): bool

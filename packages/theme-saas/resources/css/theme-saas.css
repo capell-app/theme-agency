@@ -84,6 +84,17 @@
         transform: translateY(0);
     }
 
+    :where(
+        .saas-shell a,
+        .saas-shell button,
+        .saas-shell input,
+        .saas-shell textarea,
+        .saas-shell select
+    ):focus-visible {
+        outline: 3px solid color-mix(in srgb, var(--saas-accent) 78%, white);
+        outline-offset: 3px;
+    }
+
     .saas-frame {
         border: 1px solid color-mix(in srgb, var(--saas-primary) 18%, #dbeafe);
         border-radius: 1rem;

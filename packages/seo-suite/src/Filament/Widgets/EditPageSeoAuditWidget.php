@@ -96,7 +96,7 @@ class EditPageSeoAuditWidget extends Widget
         ]);
 
         $site = $record->site;
-        $language = $record->translation->language ?? $site->language;
+        $language = $record->translation->language ?? $site?->language;
 
         if (! $site instanceof Site || ! $language instanceof Language) {
             return null;
@@ -164,6 +164,8 @@ class EditPageSeoAuditWidget extends Widget
     {
         $translationKey = 'capell-seo-suite::generic.seo_check_' . $checkKey->value . '_tooltip';
 
-        return Lang::has($translationKey) ? __($translationKey) : null;
+        $tooltip = Lang::has($translationKey) ? __($translationKey) : null;
+
+        return is_string($tooltip) ? $tooltip : null;
     }
 }

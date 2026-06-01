@@ -51,7 +51,10 @@
                         class="mt-5 grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]"
                         role="search"
                     >
-                        <label class="sr-only" for="saas-blog-search">
+                        <label
+                            class="sr-only"
+                            for="saas-blog-search"
+                        >
                             {{ __('capell-theme-saas::generic.search_articles') }}
                         </label>
                         <input

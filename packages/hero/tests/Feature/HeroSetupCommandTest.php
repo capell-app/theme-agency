@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Capell\Core\Enums\LayoutEnum;
 use Capell\Core\Models\Layout;
 use Capell\Core\Models\Page;
+use Capell\Core\Models\Translation;
 use Capell\Core\Support\Creator\LayoutCreator;
 use Capell\Hero\Actions\InstallHeroLayoutDefaultsAction;
 use Capell\LayoutBuilder\Models\Widget;
@@ -32,9 +33,10 @@ it('installs compact natural home hero defaults', function (): void {
 
     $homeLayout = Layout::query()->where('key', LayoutEnum::Home->value)->firstOrFail();
     $heroBlock = Widget::query()->where('key', 'hero')->firstOrFail();
+    $containers = $homeLayout->containers ?? [];
 
-    capell_expect(array_keys($homeLayout->containers))->toBe(['hero', 'main'])
-        ->and($homeLayout->containers['hero']['widgets'])->toBe([
+    capell_expect(array_keys($containers))->toBe(['hero', 'main'])
+        ->and($containers['hero']['widgets'] ?? null)->toBe([
             ['widget_key' => 'hero'],
         ])
         ->and($homeLayout->widgets)->toBe(['hero', 'page-content'])
@@ -48,10 +50,13 @@ it('installs compact natural home hero defaults', function (): void {
         ->where('layout_id', $homeLayout->id)
         ->with('translation')
         ->firstOrFail();
+    $translation = $homePage->translation;
 
-    capell_expect($homePage->translation->getMeta('hero_title'))->toBe('Start with a clean foundation.')
-        ->and($homePage->translation->getMeta('hero'))->toBe('<p>Shape this page around your content, navigation, and publishing workflow.</p>')
-        ->and($homePage->translation->content)->toBe('<p>Add the most important details for this page here. Keep it concise, useful, and easy to scan.</p>');
+    throw_unless($translation instanceof Translation, RuntimeException::class, 'Expected home page translation to be created.');
+
+    capell_expect($translation->getMeta('hero_title'))->toBe('Start with a clean foundation.')
+        ->and($translation->getMeta('hero'))->toBe('<p>Shape this page around your content, navigation, and publishing workflow.</p>')
+        ->and($translation->content)->toBe('<p>Add the most important details for this page here. Keep it concise, useful, and easy to scan.</p>');
 });
 
 it('does not duplicate hero defaults on repeated setup', function (): void {
@@ -68,8 +73,9 @@ it('does not duplicate hero defaults on repeated setup', function (): void {
     test()->artisan('capell:hero-setup')->assertSuccessful();
 
     $homeLayout = Layout::query()->where('key', LayoutEnum::Home->value)->firstOrFail();
+    $containers = $homeLayout->containers ?? [];
 
-    capell_expect(array_keys($homeLayout->containers))->toBe(['hero', 'main'])
+    capell_expect(array_keys($containers))->toBe(['hero', 'main'])
         ->and($homeLayout->widgets)->toBe(['hero', 'page-content'])
         ->and(Widget::query()->where('key', 'hero')->count())->toBe(1);
 });
@@ -87,8 +93,9 @@ it('installs hero defaults when home layout containers are null', function (): v
     test()->artisan('capell:hero-setup')->assertSuccessful();
 
     $homeLayout = Layout::query()->where('key', LayoutEnum::Home->value)->firstOrFail();
+    $containers = $homeLayout->containers ?? [];
 
-    expect(array_keys($homeLayout->containers))->toBe(['hero', 'main'])
+    capell_expect(array_keys($containers))->toBe(['hero', 'main'])
         ->and($homeLayout->widgets)->toBe(['hero', 'page-content']);
 });
 
@@ -135,11 +142,15 @@ it('force updates an existing hero container without replacing custom home copy'
 
     $homeLayout->refresh();
     $page->load('translation');
+    $containers = $homeLayout->containers ?? [];
+    $translation = $page->translation;
+
+    throw_unless($translation instanceof Translation, RuntimeException::class, 'Expected custom home page translation to be loaded.');
 
     expect($result)->toBe(['created' => 0, 'updated' => 1, 'skipped' => 0])
-        ->and($homeLayout->containers['hero']['widgets'])->toBe([['widget_key' => 'hero']])
-        ->and($homeLayout->containers['main']['widgets'])->toBe([['widget_key' => 'page-content']])
-        ->and($page->translation->getMeta('hero_title'))->toBe('Custom headline')
-        ->and($page->translation->getMeta('hero'))->toBe('<p>Custom hero copy.</p>')
-        ->and($page->translation->content)->toBe('<p>Custom body copy.</p>');
+        ->and($containers['hero']['widgets'] ?? null)->toBe([['widget_key' => 'hero']])
+        ->and($containers['main']['widgets'] ?? null)->toBe([['widget_key' => 'page-content']])
+        ->and($translation->getMeta('hero_title'))->toBe('Custom headline')
+        ->and($translation->getMeta('hero'))->toBe('<p>Custom hero copy.</p>')
+        ->and($translation->content)->toBe('<p>Custom body copy.</p>');
 });

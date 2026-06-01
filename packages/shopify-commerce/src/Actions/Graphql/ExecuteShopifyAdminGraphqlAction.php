@@ -28,6 +28,7 @@ final class ExecuteShopifyAdminGraphqlAction
             'Accept' => 'application/json',
         ])
             ->retry(2, 250, throw: false)
+            ->timeout($this->httpTimeout())
             ->post(sprintf('https://%s/admin/api/%s/graphql.json', $connection->shop_domain, $apiVersion), [
                 'query' => $query,
                 'variables' => $variables,
@@ -85,5 +86,10 @@ final class ExecuteShopifyAdminGraphqlAction
         }
 
         return (string) config('capell-shopify-commerce.default_api_version', '2026-04');
+    }
+
+    private function httpTimeout(): int
+    {
+        return max(1, (int) config('capell-shopify-commerce.http_timeout', 15));
     }
 }

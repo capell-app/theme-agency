@@ -43,7 +43,7 @@ class CreateRedirectFromBrokenLinkAction extends Action
         $brokenLink->loadMissing(['page.pageUrls', 'page.translations']);
 
         $page = $brokenLink->page;
-        $languageId = $page->pageUrls->first()->language_id
+        $languageId = $page?->pageUrls->first()->language_id
             ?? $page?->translations->first()?->language_id;
 
         return BuildRedirectCreateUrlAction::run(

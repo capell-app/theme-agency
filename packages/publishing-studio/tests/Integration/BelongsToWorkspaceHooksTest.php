@@ -75,6 +75,8 @@ it('creating: leaves new records on live when no workspace is active', function 
         ->withoutGlobalScopes()
         ->find($record->id);
 
+    $stored = publishingStudioTestInstance($stored, ShadowableDraftableFixture::class);
+
     expect($stored->workspace_id)->toBe(0);
 });
 
@@ -109,6 +111,8 @@ it('saving: dirty live row is copied on write and live row is untouched', functi
         ->withoutGlobalScopes()
         ->find($liveRow->id);
 
+    $storedLive = publishingStudioTestInstance($storedLive, ShadowableDraftableFixture::class);
+
     expect($storedLive->name)->toBe('original')
         ->and($storedLive->workspace_id)->toBe(0)
         ->and($storedLive->shadowed_by_workspace_id)->toBe($workspace->id);
@@ -118,8 +122,9 @@ it('saving: dirty live row is copied on write and live row is untouched', functi
         ->where('workspace_id', $workspace->id)
         ->first();
 
-    expect($clone)->not->toBeNull()
-        ->and($clone->name)->toBe('edited-in-memory')
+    $clone = publishingStudioTestInstance($clone, ShadowableDraftableFixture::class);
+
+    expect($clone->name)->toBe('edited-in-memory')
         ->and($clone->uuid)->toBe($liveRow->uuid);
 });
 
@@ -135,6 +140,8 @@ it('saving: live row saves normally when no workspace is active', function (): v
     $stored = ShadowableDraftableFixture::query()
         ->withoutGlobalScopes()
         ->find($liveRow->id);
+
+    $stored = publishingStudioTestInstance($stored, ShadowableDraftableFixture::class);
 
     expect($stored->name)->toBe('renamed')
         ->and($stored->workspace_id)->toBe(0);
@@ -165,6 +172,8 @@ it('saving: workspace-scoped row saves in place without cloning', function (): v
     $stored = ShadowableDraftableFixture::query()
         ->withoutGlobalScopes()
         ->find($workspaceRow->id);
+
+    $stored = publishingStudioTestInstance($stored, ShadowableDraftableFixture::class);
 
     expect($stored->name)->toBe('renamed-in-workspace');
 });
@@ -202,8 +211,9 @@ it('deleting: live row is turned into a workspace tombstone and not removed', fu
         ->withoutGlobalScopes()
         ->find($liveRow->id);
 
-    expect($storedLive)->not->toBeNull()
-        ->and($storedLive->deleted_at)->toBeNull()
+    $storedLive = publishingStudioTestInstance($storedLive, ShadowableDraftableFixture::class);
+
+    expect($storedLive->deleted_at)->toBeNull()
         ->and($storedLive->shadowed_by_workspace_id)->toBe($workspace->id);
 
     $tombstone = ShadowableDraftableFixture::query()
@@ -212,8 +222,9 @@ it('deleting: live row is turned into a workspace tombstone and not removed', fu
         ->where('workspace_id', $workspace->id)
         ->first();
 
-    expect($tombstone)->not->toBeNull()
-        ->and($tombstone->deleted_at)->not->toBeNull()
+    $tombstone = publishingStudioTestInstance($tombstone, ShadowableDraftableFixture::class);
+
+    expect($tombstone->deleted_at)->not->toBeNull()
         ->and($tombstone->uuid)->toBe($liveRow->uuid);
 });
 
@@ -228,6 +239,8 @@ it('deleting: live row is removed normally when no workspace is active', functio
         ->withoutGlobalScopes()
         ->withTrashed()
         ->find($liveRow->id);
+
+    $stored = publishingStudioTestInstance($stored, ShadowableDraftableFixture::class);
 
     expect($stored->deleted_at)->not->toBeNull();
 });
@@ -249,6 +262,8 @@ it('deleting: workspace-scoped row is removed normally even with a workspace act
         ->withoutGlobalScopes()
         ->withTrashed()
         ->find($workspaceRow->id);
+
+    $stored = publishingStudioTestInstance($stored, ShadowableDraftableFixture::class);
 
     expect($stored->deleted_at)->not->toBeNull();
 });

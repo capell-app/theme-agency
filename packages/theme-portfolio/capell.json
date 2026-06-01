@@ -8,9 +8,9 @@
     "version": "4.x-dev",
     "description": "Creator and consultant portfolio theme for work, case studies, services, media kits, and newsletters.",
     "product": {
-        "group": "Capell Foundation",
-        "tier": "free",
-        "bundle": "foundation"
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Portfolio",
     "surfaces": ["frontend"],
@@ -90,34 +90,29 @@
                 "caption": "Theme Portfolio extension preview"
             },
             {
-                "path": "docs/assets/marketplace/portfolio-homepage-marketplace.jpg",
-                "alt": "Theme Portfolio homepage screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Portfolio: Homepage. Homepage composition with hero, proof, repeated content, CTA, and footer."
+                "path": "docs/assets/marketplace/portfolio-case-study-layout.svg",
+                "alt": "Theme Portfolio Case Study Layout image",
+                "caption": "Theme Portfolio Case Study Layout"
             },
             {
-                "path": "docs/assets/marketplace/portfolio-directory-marketplace.jpg",
-                "alt": "Theme Portfolio directory screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Portfolio: Directory. List or directory route with repeated cards, scanning rhythm, and route-backed pagination layout."
+                "path": "docs/assets/marketplace/portfolio-contact-layout.svg",
+                "alt": "Theme Portfolio Contact Layout image",
+                "caption": "Theme Portfolio Contact Layout"
             },
             {
-                "path": "docs/assets/marketplace/portfolio-detail-marketplace.jpg",
-                "alt": "Theme Portfolio detail screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Portfolio: Detail. Detail page route with media, proof, supporting sections, and conversion path."
+                "path": "docs/assets/marketplace/portfolio-homepage-layout.svg",
+                "alt": "Theme Portfolio Homepage Layout image",
+                "caption": "Theme Portfolio Homepage Layout"
             },
             {
-                "path": "docs/assets/marketplace/portfolio-contact-marketplace.jpg",
-                "alt": "Theme Portfolio contact screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Portfolio: Contact. Contact or enquiry route with theme-specific routing cards and CTA treatment."
+                "path": "docs/assets/marketplace/hero-desktop.jpg",
+                "alt": "Theme Portfolio Hero Desktop image",
+                "caption": "Theme Portfolio Hero Desktop"
             },
             {
-                "path": "docs/assets/marketplace/portfolio-conversion-marketplace.jpg",
-                "alt": "Theme Portfolio conversion cta screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Portfolio: Conversion CTA. Conversion route focused on proof, action rhythm, and next-step clarity."
-            },
-            {
-                "path": "docs/assets/marketplace/portfolio-sections-marketplace.jpg",
-                "alt": "Theme Portfolio section suite screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Portfolio: Section Suite. Theme-specific section suite showing the premium components available to editors."
+                "path": "docs/assets/marketplace/hero-mobile.jpg",
+                "alt": "Theme Portfolio Hero Mobile image",
+                "caption": "Theme Portfolio Hero Mobile"
             }
         ],
         "categories": ["frontend", "themes"]

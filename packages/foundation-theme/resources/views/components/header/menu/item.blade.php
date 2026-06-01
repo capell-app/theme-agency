@@ -13,7 +13,7 @@
     $usesWireNavigate = $runtimeManifest?->usesWireNavigate ?? false;
 @endphp
 
-<li class="capell-foundation-theme-menu-item flex">
+<li class="site-menu-item flex">
     <a
         href="{{ $item->data['url'] ?? '' }}"
         @if ($usesWireNavigate) @wireNavigate @endif

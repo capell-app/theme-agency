@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Models\Site;
 use Capell\EmailStudio\Actions\DeliverEmailMessageAction;
 use Capell\EmailStudio\Actions\SendEmailAction;
 use Capell\EmailStudio\Actions\SuppressEmailAddressAction;
@@ -53,6 +54,10 @@ it('delivers queued recipients and rechecks suppressions before provider handoff
         ->and($deliveredMessage->sent_at)->not->toBeNull();
 
     $recipients = EmailRecipient::query()->where('email_message_id', $message->getKey())->orderBy('email')->get();
+    $firstRecipient = $recipients->get(0);
+    $secondRecipient = $recipients->get(1);
+
+    throw_if(! $firstRecipient instanceof EmailRecipient || ! $secondRecipient instanceof EmailRecipient, RuntimeException::class, 'Expected two email recipients to be available after delivery.');
 
     expect($recipients)->toHaveCount(2)
         ->and($recipients->pluck('status')->all())->toBe([
@@ -60,8 +65,8 @@ it('delivers queued recipients and rechecks suppressions before provider handoff
             EmailRecipientStatus::Sent,
         ])
         ->and($recipients->pluck('provider_message_id')->all())->toBe([
-            'fake-' . $message->getKey() . '-' . $recipients[0]->getKey(),
-            'fake-' . $message->getKey() . '-' . $recipients[1]->getKey(),
+            'fake-' . $message->getKey() . '-' . $firstRecipient->getKey(),
+            'fake-' . $message->getKey() . '-' . $secondRecipient->getKey(),
         ]);
 
     $suppressionMessage = SendEmailAction::run(new SendEmailData(
@@ -271,6 +276,8 @@ it('reclaims stale sending messages after a worker crash', function (): void {
 
 function createEmailStudioSendFixtures(): void
 {
+    Site::factory()->create(['id' => 12]);
+
     EmailProfile::factory()->create([
         'site_id' => 12,
         'site_scope_key' => 'site:12',

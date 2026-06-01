@@ -11,6 +11,7 @@ enum DiagnosticsPermission: string
     case ViewPermissionAuditPage = 'View:PermissionAuditPage';
     case ViewCommandPalettePage = 'View:CommandPalettePage';
     case ViewQueueHealthPage = 'View:QueueHealthPage';
+    case ManageQueueHealthPage = 'Manage:QueueHealthPage';
 
     /**
      * @return list<string>

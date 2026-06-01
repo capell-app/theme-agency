@@ -29,7 +29,7 @@ final class BuildRedirectOpportunityReportAction
         $pageQuery = $this->applyPageScope(Page::query(), $siteId, $languageId)
             ->select('id');
 
-        return BrokenLink::query()
+        return array_values(BrokenLink::query()
             ->where('http_status', '>=', 400)
             ->when($pageId !== null, fn (Builder $query): Builder => $query->where('page_id', $pageId))
             ->whereIn('page_id', $pageQuery)
@@ -47,7 +47,7 @@ final class BuildRedirectOpportunityReportAction
             ))
             ->sortByDesc(fn (RedirectOpportunityData $opportunity): int => $opportunity->hits)
             ->values()
-            ->all();
+            ->all());
     }
 
     /**
@@ -65,9 +65,15 @@ final class BuildRedirectOpportunityReportAction
      */
     private function applyPageScope(Builder $query, ?int $siteId, ?int $languageId): Builder
     {
-        return $query
-            ->when($siteId !== null, fn (Builder $query): Builder => $query->where('site_id', $siteId))
-            ->when($languageId !== null, fn (Builder $query): Builder => $this->applyPageLanguageScope($query, $languageId));
+        if ($siteId !== null) {
+            $query->where('site_id', $siteId);
+        }
+
+        if ($languageId !== null) {
+            $this->applyPageLanguageScope($query, $languageId);
+        }
+
+        return $query;
     }
 
     /**
@@ -97,8 +103,10 @@ final class BuildRedirectOpportunityReportAction
             ?->when($languageId !== null, fn (Collection $translations): Collection => $translations->where('language_id', $languageId))
             ->first();
 
-        $resolvedSiteId = $page?->site_id;
-        $resolvedLanguageId = $pageUrl->language_id ?? $translation->language_id;
+        $siteId = $page?->site_id;
+        $languageId = $pageUrl->language_id ?? $translation?->language_id;
+        $resolvedSiteId = is_int($siteId) || ctype_digit((string) $siteId) ? (int) $siteId : null;
+        $resolvedLanguageId = is_int($languageId) || ctype_digit((string) $languageId) ? (int) $languageId : null;
 
         return new RedirectOpportunityData(
             sourceUrl: $sourceUrl,

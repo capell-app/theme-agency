@@ -10,6 +10,7 @@ use Capell\AccessGate\Filament\Resources\ClaimTokens\Pages\ListClaimTokens;
 use Capell\AccessGate\Filament\Resources\Concerns\AccessGateFilamentOptions;
 use Capell\AccessGate\Models\ClaimToken;
 use Capell\AccessGate\Providers\AccessGateServiceProvider;
+use Capell\AccessGate\Support\AccessGateSiteScope;
 use Capell\Core\Facades\CapellCore;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -68,7 +69,7 @@ final class ClaimTokenResource extends Resource
             ->filters([
                 SelectFilter::make('access_area_id')
                     ->label(__('capell-access-gate::filament.fields.area'))
-                    ->relationship('area', 'key'),
+                    ->relationship('area', 'key', modifyQueryUsing: fn (Builder $query): Builder => AccessGateSiteScope::applyAreaOptionsScope($query)),
                 SelectFilter::make('status')
                     ->label(__('capell-access-gate::filament.fields.status'))
                     ->options(self::enumOptions(ClaimTokenStatus::class, 'capell-access-gate::filament.claim_token_status')),
@@ -80,6 +81,12 @@ final class ClaimTokenResource extends Resource
     public static function getModel(): string
     {
         return ClaimToken::class;
+    }
+
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return AccessGateSiteScope::applyAreaScope(parent::getEloquentQuery());
     }
 
     #[Override]

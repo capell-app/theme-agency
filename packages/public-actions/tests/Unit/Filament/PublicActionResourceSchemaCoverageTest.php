@@ -60,7 +60,12 @@ it('builds the integration token header action schema', function (): void {
         ListPublicActionIntegrationTokens::class,
     )();
 
+    $action = $actions[0] ?? null;
+
     expect($actions)->toHaveCount(1)
-        ->and($actions[0])->toBeInstanceOf(Action::class)
-        ->and($actions[0]->getName())->toBe('createToken');
+        ->and($action)->toBeInstanceOf(Action::class);
+
+    throw_unless($action instanceof Action, RuntimeException::class, 'Expected integration token header action to be a Filament action.');
+
+    expect($action->getName())->toBe('createToken');
 });

@@ -10,6 +10,24 @@ return [
     'message' => [
         'back' => 'Request a new link',
     ],
+    'portal' => [
+        'gated_resource' => 'Gated resource',
+        'grant_description' => 'Access is currently available.',
+        'grant_expires_description' => 'Access is available until :date.',
+        'grant_status' => [
+            'active' => 'Access active',
+            'expired' => 'Access expired',
+            'revoked' => 'Access revoked',
+        ],
+        'registration_description' => 'Access request is being reviewed.',
+        'registration_status' => [
+            'approved' => 'Access approved',
+            'expired' => 'Access expired',
+            'claimed' => 'Access claimed',
+            'pending' => 'Request pending',
+            'rejected' => 'Request rejected',
+        ],
+    ],
     'request' => [
         'email' => 'Email address',
         'heading' => 'Request access to :area',

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\CampaignStudio\Enums\ConversionGoalType;
+use Capell\CampaignStudio\Events\CampaignConverted;
 use Capell\CampaignStudio\Listeners\RecordFormSubmissionConversion;
 use Capell\CampaignStudio\Models\CampaignConversion;
 use Capell\CampaignStudio\Models\CampaignConversionGoal;
@@ -13,8 +14,11 @@ use Capell\Core\Models\PageUrl;
 use Capell\FormBuilder\Data\SubmissionMetaData;
 use Capell\FormBuilder\Events\FormSubmitted;
 use Capell\FormBuilder\Models\Form;
+use Illuminate\Support\Facades\Event;
 
 it('records form conversions with submission source and landing page attribution', function (): void {
+    Event::fake([CampaignConverted::class]);
+
     $campaignGroup = CampaignGroup::factory()->create([
         'utm_campaign' => 'spring-launch',
     ]);
@@ -68,17 +72,22 @@ it('records form conversions with submission source and landing page attribution
     ));
 
     $conversion = CampaignConversion::query()->firstOrFail();
+    $attribution = $conversion->attribution;
+
+    throw_if($attribution === null, RuntimeException::class, 'Expected campaign conversion attribution data.');
 
     expect(CampaignConversion::query()->count())->toBe(1)
         ->and($conversion->campaign_conversion_goal_id)->toBe($goal->getKey())
         ->and($conversion->campaign_landing_page_id)->toBe($landingPage->getKey())
         ->and($conversion->source_type)->toBe($submission->getMorphClass())
         ->and($conversion->source_id)->toBe($submission->getKey())
-        ->and($conversion->attribution->landingUrl)->toBe('https://capell.test/signup?utm_campaign=spring-launch&utm_source=newsletter&utm_medium=email')
-        ->and($conversion->attribution->referrerUrl)->toBe('https://example.test/')
-        ->and($conversion->attribution->utmCampaign)->toBe('spring-launch')
-        ->and($conversion->attribution->utmSource)->toBe('newsletter')
-        ->and($conversion->attribution->utmMedium)->toBe('email')
-        ->and($conversion->attribution->utmTerm)->toBe('launch')
-        ->and($conversion->attribution->utmContent)->toBe('hero');
+        ->and($attribution->landingUrl)->toBe('https://capell.test/signup?utm_campaign=spring-launch&utm_source=newsletter&utm_medium=email')
+        ->and($attribution->referrerUrl)->toBe('https://example.test/')
+        ->and($attribution->utmCampaign)->toBe('spring-launch')
+        ->and($attribution->utmSource)->toBe('newsletter')
+        ->and($attribution->utmMedium)->toBe('email')
+        ->and($attribution->utmTerm)->toBe('launch')
+        ->and($attribution->utmContent)->toBe('hero');
+
+    Event::assertDispatchedTimes(CampaignConverted::class, 1);
 });

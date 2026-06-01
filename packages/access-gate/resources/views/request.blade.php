@@ -5,8 +5,14 @@
 >
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="noindex, nofollow" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1"
+        />
+        <meta
+            name="robots"
+            content="noindex, nofollow"
+        />
         <title>
             {{ __('capell-access-gate::public.request.title', ['area' => $area->name]) }}
             
@@ -232,7 +238,10 @@
                         required
                     />
                     @error('email')
-                        <div id="access-gate-email-error" class="error">
+                        <div
+                            id="access-gate-email-error"
+                            class="error"
+                        >
                             {{ $message }}
                         </div>
                     @enderror
@@ -255,7 +264,10 @@
                             aria-invalid="{{ $errors->has($field->key()) ? 'true' : 'false' }}"
                         />
                         @error($field->key())
-                            <div id="{{ $errorId }}" class="error">
+                            <div
+                                id="{{ $errorId }}"
+                                class="error"
+                            >
                                 {{ $message }}
                             </div>
                         @enderror

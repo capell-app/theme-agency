@@ -7,6 +7,7 @@ use Capell\Core\Database\Factories\PageFactory;
 use Capell\Core\Database\Factories\SiteFactory;
 use Capell\Core\Models\Site;
 use Capell\SeoSuite\Actions\BuildSeoIntelligenceOpportunitiesAction;
+use Capell\SeoSuite\Actions\Dashboard\BuildSeoIntelligenceRowsAction;
 use Capell\SeoSuite\Actions\NormalizeTargetKeywordsAction;
 use Capell\SeoSuite\Actions\PersistSearchConsoleQueryMetricAction;
 use Capell\SeoSuite\Data\SeoOpportunityRowData;
@@ -100,6 +101,40 @@ it('classifies quick win, ctr, declining, and cannibalization opportunities', fu
         ->and($types)->toContain(SeoOpportunityTypeEnum::Cannibalization);
 });
 
+it('maps seo intelligence opportunities into dashboard rows', function (): void {
+    $site = Site::factory()->create();
+    test()->actingAs(createSeoIntelligenceGlobalUser());
+
+    PersistSearchConsoleQueryMetricAction::run(
+        siteId: (int) $site->getKey(),
+        query: 'capell cms',
+        url: 'https://example.com/about',
+        windowStart: now()->subDays(28),
+        windowEnd: now(),
+        clicks: 12,
+        impressions: 1000,
+        ctr: 0.0123,
+        averagePosition: 8.24,
+        previousClicks: 20,
+        previousImpressions: 900,
+        previousCtr: 0.02,
+        previousAveragePosition: 5.0,
+    );
+
+    $row = BuildSeoIntelligenceRowsAction::run(1)->first();
+
+    expect($row)->not->toBeNull()
+        ->and($row['id'])->toStartWith('seo-intelligence-0-')
+        ->and($row['type'])->toBe(SeoOpportunityTypeEnum::QuickWin->getLabel())
+        ->and($row['query'])->toBe('capell cms')
+        ->and($row['url'])->toBe('https://example.com/about')
+        ->and($row['priority'])->toBe(82)
+        ->and($row['impressions'])->toBe(1000)
+        ->and($row['clicks'])->toBe(12)
+        ->and($row['ctr'])->toBe(1.2)
+        ->and($row['average_position'])->toBe('8.2');
+});
+
 it('detects target keywords with no search console visibility', function (): void {
     $language = LanguageFactory::new()->create();
     $site = SiteFactory::new()
@@ -116,8 +151,9 @@ it('detects target keywords with no search console visibility', function (): voi
     $opportunity = BuildSeoIntelligenceOpportunitiesAction::run(10)
         ->first(fn (SeoOpportunityRowData $row): bool => $row->type === SeoOpportunityTypeEnum::MissingTargetVisibility);
 
-    expect($opportunity)->not()->toBeNull()
-        ->and($opportunity->query)->toBe('primary term');
+    throw_unless($opportunity instanceof SeoOpportunityRowData, RuntimeException::class, 'Expected missing target visibility opportunity.');
+
+    expect($opportunity->query)->toBe('primary term');
 });
 
 it('matches target keywords to the page url language', function (): void {

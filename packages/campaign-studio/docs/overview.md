@@ -13,6 +13,7 @@ CampaignStudio adds campaign groups, landing pages, CTA blocks, conversion goals
 - Page schema extender for campaign fields.
 - core layout builder block configurators for campaign hero, CTA, and lead form blocks.
 - Conversion recording actions for page views, CTA clicks, and form submissions.
+- Optional Experiments integration that syncs campaign landing-page variants and conversion goals into campaign-scoped experiment definitions.
 
 ## Developer Notes
 
@@ -23,6 +24,8 @@ Connects Capell pages, FormBuilder, Insights, and core layout builder APIs throu
 - Migrations create campaign groups, goals, landing pages, CTA blocks, and conversions.
 - Filament resources cover each owned model.
 - Listeners sync landing pages and form submission conversions.
+- `CampaignConverted` is dispatched when a conversion row is newly recorded, giving Automation Studio and other packages a stable conversion trigger without importing Campaign Studio internals.
+- `SyncCampaignExperimentAction` bridges to Experiments when that package is installed. It turns campaign landing pages into experiment variants, conversion goals into experiment goals, and the campaign UTM value into an audience rule.
 
 ## Operational Notes
 
@@ -32,6 +35,7 @@ Lets marketing and editorial teams connect landing pages to goals and see which 
 - Adds campaign dashboard blocks.
 - Adds config keys for conversion cookie, UTM keys, table names, and layout presets.
 - May use Insights events and FormBuilder submissions when those packages are installed.
+- May sync campaign-scoped experiments when `capell-app/experiments` is installed.
 - No explicit public route is registered by this package.
 
 ## Data And Retention
@@ -53,15 +57,15 @@ Lets marketing and editorial teams connect landing pages to goals and see which 
 
 ## Screenshots
 
-![Campaign groups index](../../../public/docs/screenshots/packages/campaign-studio/campaign-groups-index.png)
+![Campaign groups index](screenshots/campaign-groups-index.png)
 
-![Campaign landing pages index](../../../public/docs/screenshots/packages/campaign-studio/campaign-landing-pages-index.png)
+![Campaign landing pages index](screenshots/campaign-landing-pages-index.png)
 
-![Campaign conversion goal form](../../../public/docs/screenshots/packages/campaign-studio/campaign-conversion-goals-form.png)
+![Campaign conversion goal form](screenshots/campaign-conversion-goals-form.png)
 
-![Campaign CTA block form](../../../public/docs/screenshots/packages/campaign-studio/cta-block-form.png)
+![Campaign CTA block form](screenshots/cta-block-form.png)
 
-Campaign dashboard blocks screenshot target: `public/docs/screenshots/packages/campaign-studio/campaign-dashboard-blocks.png`. Keep this as text until the screenshot file is committed.
+Campaign dashboard blocks screenshot target: `packages/campaign-studio/docs/screenshots/campaign-dashboard-blocks.png`. Keep this as text until the screenshot file is committed.
 
 ## Pitfalls
 
@@ -84,7 +88,7 @@ Campaign dashboard blocks screenshot target: `public/docs/screenshots/packages/c
 - Bundle: growth
 - Contexts: `admin`, `frontend`
 - Requires: `capell-app/admin`, `capell-app/core`, `capell-app/form-builder`, `capell-app/frontend`, `capell-app/insights`, `capell-app/layout-builder`
-- Optional dependencies: `capell-app/seo-suite`
+- Optional dependencies: `capell-app/experiments`, `capell-app/seo-suite`
 
 ## Admin Surfaces
 
@@ -171,7 +175,7 @@ erDiagram
 
 ## Screenshot Automation
 
-Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `public/docs/screenshots/packages/campaign-studio`.
+Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `packages/campaign-studio/docs/screenshots`.
 
 - Campaign groups index.
 - Campaign landing pages index.

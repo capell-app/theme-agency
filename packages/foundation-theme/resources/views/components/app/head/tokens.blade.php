@@ -2,6 +2,8 @@
 
 use Capell\Core\Actions\ColorConverterAction;
 use Capell\Core\Enums\DefaultColorEnum;
+use Capell\Core\Models\Site;
+use Capell\Core\Models\Theme;
 use Capell\FoundationTheme\Settings\FoundationThemeSettings;
 use Capell\Frontend\Facades\Frontend;
 
@@ -15,27 +17,32 @@ try {
     $foundationSettings = null;
 }
 
-$brandColorMeta = $site->getMeta('brand_color');
-$linkColorMeta = $theme->getMeta('link_color');
-$linkColorActiveMeta = $theme->getMeta('link_color_active');
-$dividerColorMeta = $theme->getMeta('divider_color');
+$brandColorMeta = $site instanceof Site ? $site->getMeta('brand_color') : null;
+$linkColorMeta = $theme instanceof Theme ? $theme->getMeta('link_color') : null;
+$linkColorActiveMeta = $theme instanceof Theme ? $theme->getMeta('link_color_active') : null;
+$dividerColorMeta = $theme instanceof Theme ? $theme->getMeta('divider_color') : null;
 
 $resolveColorToken = static fn (mixed $value, string $fallback): string => is_string($value) && $value !== '' ? $value : $fallback;
+$convertColorToken = static function (string $value, string $fallback): string {
+    $converted = ColorConverterAction::run($value);
 
-$brandColor = ColorConverterAction::run($resolveColorToken($brandColorMeta, '#111827'));
-$linkColor = ColorConverterAction::run($resolveColorToken($linkColorMeta, '#1d4ed8'));
-$linkColorActive = ColorConverterAction::run($resolveColorToken(
+    return is_string($converted) ? $converted : $fallback;
+};
+
+$brandColor = $convertColorToken($resolveColorToken($brandColorMeta, '#111827'), '#111827');
+$linkColor = $convertColorToken($resolveColorToken($linkColorMeta, '#1d4ed8'), '#1d4ed8');
+$linkColorActive = $convertColorToken($resolveColorToken(
     $linkColorActiveMeta,
     $resolveColorToken($linkColorMeta, '#1e40af'),
-));
-$dividerColor = ColorConverterAction::run($resolveColorToken($dividerColorMeta, '#e5e7eb'));
-$resolveSettingColor = static function (string $property, string $fallback) use ($foundationSettings, $resolveColorToken): string {
+), '#1e40af');
+$dividerColor = $convertColorToken($resolveColorToken($dividerColorMeta, '#e5e7eb'), '#e5e7eb');
+$resolveSettingColor = static function (string $property, string $fallback) use ($foundationSettings, $resolveColorToken, $convertColorToken): string {
     $value = $foundationSettings instanceof FoundationThemeSettings ? $foundationSettings->{$property} : null;
 
     try {
-        return ColorConverterAction::run($resolveColorToken($value, $fallback));
+        return $convertColorToken($resolveColorToken($value, $fallback), $fallback);
     } catch (Throwable) {
-        return ColorConverterAction::run($fallback);
+        return $convertColorToken($fallback, $fallback);
     }
 };
 
@@ -66,7 +73,7 @@ $isSafeToken = static fn (string $name, string $value): bool => preg_match('/^[A
     && preg_match('/[\x00-\x1F\x7F;{}<>]/', $value) !== 1;
 
 $paletteColors = collect(DefaultColorEnum::getKeyValues())
-    ->merge($theme->colors)
+    ->merge($theme instanceof Theme && is_array($theme->colors) ? $theme->colors : [])
     ->map(function (mixed $value, string $name) use ($isSafeToken): ?array {
         if (! is_string($value) || ! $isSafeToken($name, $value)) {
             return null;

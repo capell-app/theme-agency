@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Capell\PublishingStudio\Actions;
 
 use Capell\PublishingStudio\Models\PreviewLink;
+use Capell\PublishingStudio\Models\Workspace;
 use Carbon\CarbonImmutable;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\Gate;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 /**
@@ -19,6 +22,12 @@ class RevokePreviewLinkAction
 
     public function handle(PreviewLink $link, Authenticatable $actor): PreviewLink
     {
+        $link->loadMissing('workspace');
+
+        throw_unless($link->workspace instanceof Workspace, AuthorizationException::class);
+
+        Gate::forUser($actor)->authorize('preview', $link->workspace);
+
         $link->revoked_at = CarbonImmutable::now();
         $link->save();
 

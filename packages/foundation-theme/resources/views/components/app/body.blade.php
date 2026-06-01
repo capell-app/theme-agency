@@ -16,7 +16,7 @@
 
 <body
     @class([
-        'capell-app-body',
+        'site-app-body',
         'layout-' . $layout->key,
         $layout->getMeta('body_class'),
         $theme->getMeta('body_class'),

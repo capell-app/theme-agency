@@ -57,4 +57,7 @@
         @endif
     </div>
 </nav>
-<span id="main-content" tabindex="-1"></span>
+<span
+    id="main-content"
+    tabindex="-1"
+></span>

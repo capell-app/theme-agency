@@ -57,7 +57,7 @@ final class PageSpeedAuditCommand extends Command
             return null;
         }
 
-        if (! ctype_digit((string) $value) || (int) $value < 1) {
+        if (is_array($value) || is_bool($value) || ! ctype_digit((string) $value) || (int) $value < 1) {
             throw new InvalidArgumentException((string) __('capell-seo-suite::generic.pagespeed_invalid_integer_option', ['option' => $key]));
         }
 
@@ -69,7 +69,13 @@ final class PageSpeedAuditCommand extends Command
      */
     private function strategies(): array
     {
-        $strategy = (string) $this->option('strategy');
+        $option = $this->option('strategy');
+
+        if (! is_scalar($option)) {
+            throw new InvalidArgumentException((string) __('capell-seo-suite::generic.pagespeed_invalid_strategy'));
+        }
+
+        $strategy = (string) $option;
 
         return match ($strategy) {
             'both' => PageSpeedStrategyEnum::cases(),

@@ -13,8 +13,11 @@ use Capell\Newsletter\Enums\SubscriberStatus;
 use Capell\Newsletter\Models\ImportBatch;
 use Capell\Newsletter\Models\Subscriber;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Lorisleiva\Actions\Concerns\AsAction;
+use Throwable;
 
 class ImportSubscribersAction
 {
@@ -33,6 +36,14 @@ class ImportSubscribersAction
         ?Model $actor = null,
         ?string $filename = null,
     ): ImportBatch {
+        $maxRows = (int) config('capell-newsletter.imports.max_rows', 10000);
+
+        if ($maxRows > 0 && count($rows) > $maxRows) {
+            throw ValidationException::withMessages([
+                'csv' => [__('capell-newsletter::messages.import_too_many_rows', ['max' => $maxRows])],
+            ]);
+        }
+
         $validRows = [];
         $invalidRows = [];
         $seenEmails = [];
@@ -79,7 +90,7 @@ class ImportSubscribersAction
         $batch = ImportBatch::query()->create([
             'site_id' => $siteId,
             'type' => ImportBatchType::Import,
-            'status' => $dryRun ? ImportBatchStatus::DryRun : ImportBatchStatus::Completed,
+            'status' => $dryRun ? ImportBatchStatus::DryRun : ImportBatchStatus::Processing,
             'filename' => $filename,
             'consent_basis' => $consentBasis,
             'dry_run_payload' => [
@@ -98,21 +109,44 @@ class ImportSubscribersAction
             return $batch;
         }
 
-        foreach ($validRows as $validRow) {
-            $subscriber = UpsertSubscriberAction::run(new SubscriberData(
-                siteId: $siteId,
-                email: (string) $validRow['email'],
-                status: SubscriberStatus::Subscribed,
-                firstName: is_string($validRow['first_name'] ?? null) ? $validRow['first_name'] : null,
-                lastName: is_string($validRow['last_name'] ?? null) ? $validRow['last_name'] : null,
-            ), new ConsentEvidenceData(
-                sourceType: 'csv_import',
-                sourceId: (string) $batch->getKey(),
-                consentText: $consentBasis,
-            ), ConsentEventType::Imported);
+        try {
+            /** @var list<int> $subscriberIds */
+            $subscriberIds = DB::transaction(function () use ($siteId, $validRows, $batch, $consentBasis, $tagIds): array {
+                $subscriberIds = [];
 
-            ApplyNewsletterTagsAction::run($subscriber, $tagIds);
-            QueueProviderSyncAction::run($subscriber);
+                foreach ($validRows as $validRow) {
+                    $subscriber = UpsertSubscriberAction::run(new SubscriberData(
+                        siteId: $siteId,
+                        email: (string) $validRow['email'],
+                        status: SubscriberStatus::Subscribed,
+                        firstName: is_string($validRow['first_name'] ?? null) ? $validRow['first_name'] : null,
+                        lastName: is_string($validRow['last_name'] ?? null) ? $validRow['last_name'] : null,
+                    ), new ConsentEvidenceData(
+                        sourceType: 'csv_import',
+                        sourceId: (string) $batch->getKey(),
+                        consentText: $consentBasis,
+                    ), ConsentEventType::Imported);
+
+                    ApplyNewsletterTagsAction::run($subscriber, $tagIds);
+                    $subscriberIds[] = (int) $subscriber->getKey();
+                }
+
+                return $subscriberIds;
+            });
+
+            foreach (Subscriber::query()->whereKey($subscriberIds)->cursor() as $subscriber) {
+                QueueProviderSyncAction::run($subscriber);
+            }
+
+            $batch->forceFill([
+                'status' => ImportBatchStatus::Completed,
+            ])->save();
+        } catch (Throwable $throwable) {
+            $batch->forceFill([
+                'status' => ImportBatchStatus::Failed,
+            ])->save();
+
+            throw $throwable;
         }
 
         return $batch->refresh();

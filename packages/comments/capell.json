@@ -63,7 +63,12 @@
     },
     "settings": ["Capell\\Comments\\Settings\\CommentSettings"],
     "permissions": [],
-    "capabilities": ["comments", "comments-admin", "comments-frontend"],
+    "capabilities": [
+        "comments",
+        "comments-admin",
+        "comments-frontend",
+        "comments-created-event"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
@@ -87,7 +92,15 @@
             "queueInvalidation": true
         }
     },
-    "healthChecks": [],
+    "healthChecks": [
+        {
+            "key": "comments.package-health",
+            "label": "Comments package surfaces, providers, and moderation health are discoverable by Diagnostics.",
+            "class": "Capell\\Comments\\Health\\CommentsHealthCheck",
+            "severity": "critical",
+            "surface": "admin"
+        }
+    ],
     "commercial": {
         "proposedLicense": "paid",
         "requestedCertification": "first-party",

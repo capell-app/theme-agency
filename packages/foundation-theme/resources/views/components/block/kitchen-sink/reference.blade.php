@@ -88,7 +88,10 @@
 
                         @break
                     @case('tabs')
-                        <div role="tablist" aria-label="Demo tab set">
+                        <div
+                            role="tablist"
+                            aria-label="Demo tab set"
+                        >
                             <button
                                 type="button"
                                 role="tab"
@@ -136,7 +139,10 @@
                             aria-roledescription="carousel"
                             aria-label="Demo carousel"
                         >
-                            <button type="button" aria-label="Previous slide">
+                            <button
+                                type="button"
+                                aria-label="Previous slide"
+                            >
                                 Previous
                             </button>
                             <article tabindex="0">
@@ -146,7 +152,10 @@
                                     carousel.
                                 </p>
                             </article>
-                            <button type="button" aria-label="Next slide">
+                            <button
+                                type="button"
+                                aria-label="Next slide"
+                            >
                                 Next
                             </button>
                         </section>
@@ -178,7 +187,10 @@
                         @break
                     @case('form-field-demo')
                     @case('full-form')
-                        <form action="#" method="post">
+                        <form
+                            action="#"
+                            method="post"
+                        >
                             <label for="{{ $key }}-email">Work email</label>
                             <input
                                 id="{{ $key }}-email"
@@ -189,7 +201,10 @@
                             <p id="{{ $key }}-email-help">
                                 Use a visible label and helper text.
                             </p>
-                            <p id="{{ $key }}-email-error" role="alert">
+                            <p
+                                id="{{ $key }}-email-error"
+                                role="alert"
+                            >
                                 Example validation message.
                             </p>
                             <button type="button">Submit demo form</button>

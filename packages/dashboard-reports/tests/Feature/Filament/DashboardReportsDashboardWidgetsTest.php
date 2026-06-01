@@ -84,8 +84,11 @@ it('builds content health data through the installed provider and widget data co
     $widgetData = (new ContentHealthWidget)->data();
 
     $providerIssues = collect($providerData->issues->toArray())->keyBy('id');
+    $firstWidgetIssue = $widgetData->issues->first();
+
+    throw_unless($firstWidgetIssue instanceof ContentHealthIssueData, RuntimeException::class, 'Expected content health widget to return a first issue.');
 
     expect($providerIssues)->toHaveKey('scheduled_pages')
-        ->and($widgetData->issues->first()->id)->toBe('custom_issue')
-        ->and($widgetData->issues->first()->count)->toBe(2);
+        ->and($firstWidgetIssue->id)->toBe('custom_issue')
+        ->and($firstWidgetIssue->count)->toBe(2);
 });

@@ -8,9 +8,9 @@
     "version": "4.x-dev",
     "description": "Course and school theme for education providers, training teams, and learning programmes.",
     "product": {
-        "group": "Capell Foundation",
-        "tier": "free",
-        "bundle": "foundation"
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Education",
     "surfaces": ["frontend"],
@@ -90,34 +90,29 @@
                 "caption": "Theme Education extension preview"
             },
             {
-                "path": "docs/assets/marketplace/education-homepage-marketplace.jpg",
-                "alt": "Theme Education homepage screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Education: Homepage. Homepage composition with hero, proof, repeated content, CTA, and footer."
+                "path": "docs/assets/marketplace/education-event-layout.svg",
+                "alt": "Theme Education Event Layout image",
+                "caption": "Theme Education Event Layout"
             },
             {
-                "path": "docs/assets/marketplace/education-directory-marketplace.jpg",
-                "alt": "Theme Education directory screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Education: Directory. List or directory route with repeated cards, scanning rhythm, and route-backed pagination layout."
+                "path": "docs/assets/marketplace/education-homepage-layout.svg",
+                "alt": "Theme Education Homepage Layout image",
+                "caption": "Theme Education Homepage Layout"
             },
             {
-                "path": "docs/assets/marketplace/education-detail-marketplace.jpg",
-                "alt": "Theme Education detail screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Education: Detail. Detail page route with media, proof, supporting sections, and conversion path."
+                "path": "docs/assets/marketplace/education-program-layout.svg",
+                "alt": "Theme Education Program Layout image",
+                "caption": "Theme Education Program Layout"
             },
             {
-                "path": "docs/assets/marketplace/education-contact-marketplace.jpg",
-                "alt": "Theme Education contact screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Education: Contact. Contact or enquiry route with theme-specific routing cards and CTA treatment."
+                "path": "docs/assets/marketplace/hero-desktop.jpg",
+                "alt": "Theme Education Hero Desktop image",
+                "caption": "Theme Education Hero Desktop"
             },
             {
-                "path": "docs/assets/marketplace/education-conversion-marketplace.jpg",
-                "alt": "Theme Education conversion cta screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Education: Conversion CTA. Conversion route focused on proof, action rhythm, and next-step clarity."
-            },
-            {
-                "path": "docs/assets/marketplace/education-sections-marketplace.jpg",
-                "alt": "Theme Education section suite screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Education: Section Suite. Theme-specific section suite showing the premium components available to editors."
+                "path": "docs/assets/marketplace/hero-mobile.jpg",
+                "alt": "Theme Education Hero Mobile image",
+                "caption": "Theme Education Hero Mobile"
             }
         ],
         "categories": ["frontend", "themes"]

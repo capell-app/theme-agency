@@ -11,8 +11,13 @@
 .superpowers/
 docs/superpowers/
 
+# Local agent tooling
+.ai/
+.agents/
+
 # Environment
 .env*
+!.env.deploy.example
 .env.testing
 .env.testing.local
 
@@ -38,6 +43,7 @@ database/database.sqlite-journal
 # Testing & Coverage
 .phpunit.cache
 .phpunit.result.cache
+test-results/
 /build
 /coverage
 coverage/
@@ -72,3 +78,14 @@ temp/
 *.tmp
 *.phar
 .superpowers/
+
+# Local review / planning artifacts
+/docs/internal/
+/docs/*plan*.md
+/docs/*review*.md
+/docs/*audit*.md
+/docs/*runbook*.md
+/docs/*playbook*.md
+/docs/*harness*.md
+/packages/*/docs/*implementation-plan*.md
+/packages/*/docs/*foundation-plan*.md

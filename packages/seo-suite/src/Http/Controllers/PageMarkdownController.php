@@ -167,13 +167,18 @@ class PageMarkdownController extends BaseController
             return $currentPage;
         }
 
-        $pageUrl = PageLoader::getPageUrl(
-            site: $site,
-            language: $language,
-            url: $canonicalPath,
-        );
+        $pageUrl = PageUrl::query()
+            ->where('site_id', $site->getKey())
+            ->where('language_id', $language->getKey())
+            ->where('url', $canonicalPath)
+            ->where('status', true)
+            ->first();
 
         if (! $pageUrl instanceof PageUrl) {
+            return null;
+        }
+
+        if (! is_string($pageUrl->pageable_type) || ! is_int($pageUrl->pageable_id)) {
             return null;
         }
 

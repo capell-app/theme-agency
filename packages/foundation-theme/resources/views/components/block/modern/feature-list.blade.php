@@ -50,9 +50,14 @@
             >
                 @forelse ($block->assets as $blockAsset)
                     @php
-                        $asset = $blockAsset->asset;
-                        $icon = (string) $asset->getMeta('icon', '');
+                        $blockAssetRelations = method_exists($blockAsset, 'getRelations') ? $blockAsset->getRelations() : [];
+                        $asset = $blockAssetRelations['asset'] ?? null;
+                        $assetRelations = $asset !== null && method_exists($asset, 'getRelations') ? $asset->getRelations() : [];
+                        $assetTranslation = $assetRelations['translation'] ?? null;
+                        $icon = $asset !== null ? (string) $asset->getMeta('icon', '') : '';
                     @endphp
+
+                    @continue($asset === null)
 
                     <article
                         @class([
@@ -70,17 +75,17 @@
                             </span>
                         @endif
 
-                        @if ($asset->translation?->title)
+                        @if ($assetTranslation?->title)
                             <h3 class="ap-feature-title ap-feature-item__title">
-                                {{ $asset->translation->title }}
+                                {{ $assetTranslation->title }}
                             </h3>
                         @endif
 
-                        @if ($asset->translation?->content)
+                        @if ($assetTranslation?->content)
                             <p
                                 class="ap-feature-description ap-feature-item__description"
                             >
-                                {{ strip_tags($asset->translation->content) }}
+                                {{ strip_tags($assetTranslation->content) }}
                             </p>
                         @endif
                     </article>

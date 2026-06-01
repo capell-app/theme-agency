@@ -15,6 +15,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Override;
@@ -43,7 +44,7 @@ final class CommandPalettePage extends Page
     #[Override]
     public static function getNavigationLabel(): string
     {
-        return 'Command Palette';
+        return (string) __('capell-diagnostics::package.command_palette');
     }
 
     #[Override]
@@ -77,7 +78,7 @@ final class CommandPalettePage extends Page
     #[Override]
     public function getTitle(): string
     {
-        return 'Command Palette';
+        return (string) __('capell-diagnostics::package.command_palette');
     }
 
     /**
@@ -88,8 +89,8 @@ final class CommandPalettePage extends Page
     {
         return collect($this->visibleCommands())
             ->filter(fn (CommandPaletteCommandData $command): bool => $this->matchesQuery($command))
-            ->groupBy(fn (CommandPaletteCommandData $command): string => $command->group ?? 'Commands')
-            ->map(fn ($commands) => $commands->values()->all())
+            ->groupBy(fn (CommandPaletteCommandData $command): string => $command->group ?? (string) __('capell-diagnostics::package.command_palette_group_commands'))
+            ->map(fn (Collection $commands): array => $commands->values()->all())
             ->all();
     }
 
@@ -159,8 +160,8 @@ final class CommandPalettePage extends Page
     {
         return match ($command->danger) {
             CommandPaletteDanger::Safe => null,
-            CommandPaletteDanger::Confirm => 'This operational command requires confirmation before it runs.',
-            CommandPaletteDanger::Dangerous => 'This command may make broad or destructive operational changes.',
+            CommandPaletteDanger::Confirm => (string) __('capell-diagnostics::package.command_palette_warning_confirm'),
+            CommandPaletteDanger::Dangerous => (string) __('capell-diagnostics::package.command_palette_warning_dangerous'),
         };
     }
 

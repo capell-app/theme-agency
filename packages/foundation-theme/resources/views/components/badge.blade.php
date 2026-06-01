@@ -39,7 +39,11 @@
 @endcapellBuffer
 
 @if ($url)
-    <a href="{{ $url }}" @class($classes) @wireNavigate>
+    <a
+        href="{{ $url }}"
+        @class($classes)
+        @wireNavigate
+    >
         {{ $content() }}
     </a>
 @else

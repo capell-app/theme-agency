@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
+use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
 use Capell\Core\ThemeStudio\Data\FeatureSectionData;
@@ -35,43 +37,45 @@ it('renders standard sections through Education views', function (): void {
     $registry = new ThemeRegistry;
     (new EducationThemeServiceProvider($this->app))->boot($registry);
 
-    $featureHtml = $registry
-        ->sectionRenderer('education', 'features')
-        ->render(new FeatureSectionData(
-            heading: 'Programme pathways',
-            summary: 'Course cards should feel specific to education.',
-            features: [
-                ['title' => 'Course discovery', 'description' => 'Find the right programme.', 'type' => 'Courses'],
-            ],
-        ));
+    $featureRenderer = $registry->sectionRenderer('education', 'features');
+    $listingRenderer = $registry->sectionRenderer('education', 'content-listing');
+    $ctaRenderer = $registry->sectionRenderer('education', 'cta');
+    $proofRenderer = $registry->sectionRenderer('education', 'proof');
 
-    $listingHtml = $registry
-        ->sectionRenderer('education', 'content-listing')
-        ->render(new ContentListingSectionData(
-            heading: 'Learning resources',
-            summary: 'Cards should support courses and resources.',
-            items: [
-                ['title' => 'Open day guide', 'summary' => 'Prepare for the next cohort.', 'type' => 'Guide'],
-            ],
-        ));
+    assert($featureRenderer instanceof SectionRenderer);
+    assert($listingRenderer instanceof SectionRenderer);
+    assert($ctaRenderer instanceof SectionRenderer);
+    assert($proofRenderer instanceof SectionRenderer);
 
-    $ctaHtml = $registry
-        ->sectionRenderer('education', 'cta')
-        ->render(new CtaSectionData(
-            heading: 'Open the next cohort',
-            summary: 'Move learners into enrolment.',
-            actions: [['label' => 'Apply now', 'url' => '#apply', 'style' => 'primary']],
-        ));
+    $featureHtml = $featureRenderer->render(new FeatureSectionData(
+        heading: 'Programme pathways',
+        summary: 'Course cards should feel specific to education.',
+        features: [
+            ['title' => 'Course discovery', 'description' => 'Find the right programme.', 'type' => 'Courses'],
+        ],
+    ));
 
-    $proofHtml = $registry
-        ->sectionRenderer('education', 'proof')
-        ->render(new ProofSectionData(
-            heading: 'Cohort outcomes',
-            summary: 'Proof should use education-specific cohort evidence.',
-            items: [
-                ['metric' => '92%', 'name' => 'Completion', 'summary' => 'Learners complete the pathway with mentor review.'],
-            ],
-        ));
+    $listingHtml = $listingRenderer->render(new ContentListingSectionData(
+        heading: 'Learning resources',
+        summary: 'Cards should support courses and resources.',
+        items: [
+            ['title' => 'Open day guide', 'summary' => 'Prepare for the next cohort.', 'type' => 'Guide'],
+        ],
+    ));
+
+    $ctaHtml = $ctaRenderer->render(new CtaSectionData(
+        heading: 'Open the next cohort',
+        summary: 'Move learners into enrolment.',
+        actions: [['label' => 'Apply now', 'url' => '#apply', 'style' => 'primary']],
+    ));
+
+    $proofHtml = $proofRenderer->render(new ProofSectionData(
+        heading: 'Cohort outcomes',
+        summary: 'Proof should use education-specific cohort evidence.',
+        items: [
+            ['metric' => '92%', 'name' => 'Completion', 'summary' => 'Learners complete the pathway with mentor review.'],
+        ],
+    ));
 
     expect($featureHtml)
         ->toContain('Programme pathways')
@@ -112,6 +116,7 @@ it('renders hydrated hero data through the Education hero view', function (): vo
     $renderer = $registry->sectionRenderer('education', 'hero');
 
     expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
 
     $html = $renderer->render(HeroSectionData::from([
         'heading' => 'Launch a cohort pathway',
@@ -132,3 +137,90 @@ it('renders hydrated hero data through the Education hero view', function (): vo
         ->toContain('Talk to admissions')
         ->not->toContain('capell-app/theme-education');
 });
+
+it('renders new premium education layouts through the registry', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(EducationThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new EducationThemeServiceProvider($this->app))->boot($registry);
+
+    $pathwayRenderer = $registry->sectionRenderer('education', 'pathway-comparison');
+    $outcomesRenderer = $registry->sectionRenderer('education', 'outcomes');
+    $admissionsRenderer = $registry->sectionRenderer('education', 'admissions-checklist');
+
+    assert($pathwayRenderer instanceof SectionRenderer);
+    assert($outcomesRenderer instanceof SectionRenderer);
+    assert($admissionsRenderer instanceof SectionRenderer);
+
+    $pathwayHtml = $pathwayRenderer->render(educationThemeSection('pathway-comparison', [
+        'heading' => 'Compare learning pathways',
+        'items' => [
+            ['title' => 'Evening cohort', 'summary' => 'Flexible study route for working learners.'],
+        ],
+    ]));
+
+    $outcomesHtml = $outcomesRenderer->render(educationThemeSection('outcomes', [
+        'heading' => 'Learner outcomes',
+        'items' => [
+            ['title' => 'Completion proof', 'summary' => 'Evidence that learners can finish and progress.'],
+        ],
+    ]));
+
+    $admissionsHtml = $admissionsRenderer->render(educationThemeSection('admissions-checklist', [
+        'heading' => 'Prepare your application',
+        'items' => [
+            ['title' => 'Portfolio review', 'summary' => 'Application guidance for practical programme fit.'],
+        ],
+    ]));
+
+    expect($pathwayHtml)
+        ->toContain('Compare learning pathways')
+        ->toContain('Evening cohort')
+        ->not->toContain('capell-app/theme-education');
+
+    expect($outcomesHtml)
+        ->toContain('Learner outcomes')
+        ->toContain('Completion proof')
+        ->not->toContain('capell-app/theme-education');
+
+    expect($admissionsHtml)
+        ->toContain('Prepare your application')
+        ->toContain('Portfolio review')
+        ->not->toContain('capell-app/theme-education');
+});
+
+/**
+ * @param  array<string, mixed>  $viewData
+ */
+function educationThemeSection(string $key, array $viewData): ThemeSection
+{
+    return new readonly class($key, $viewData) implements ThemeSection
+    {
+        /**
+         * @param  array<string, mixed>  $viewData
+         */
+        public function __construct(
+            private string $sectionKey,
+            private array $viewData,
+        ) {}
+
+        public function key(): string
+        {
+            return $this->sectionKey;
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return ['section' => (object) $this->viewData];
+        }
+    };
+}

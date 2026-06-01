@@ -13,6 +13,16 @@ final class EditPublicAction extends EditRecord
 {
     protected static string $resource = PublicActionResource::class;
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    #[Override]
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        return PublicActionResource::prepareFormDataForPersistence($data);
+    }
+
     #[Override]
     protected function getHeaderActions(): array
     {

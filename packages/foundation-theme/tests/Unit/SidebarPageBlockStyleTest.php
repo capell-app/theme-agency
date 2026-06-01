@@ -8,6 +8,7 @@ use Capell\Core\Models\Language;
 use Capell\Core\Models\Layout;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
+use Capell\Core\Models\Theme;
 use Capell\FoundationTheme\Actions\BuildAssetBannerItemsAction;
 use Capell\FoundationTheme\Actions\BuildBannerImageRenderDataAction;
 use Capell\FoundationTheme\Actions\ResolveLoadedBlockBackgroundImageAction;
@@ -27,6 +28,14 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Livewire\Blaze\Blaze;
 
+function sidebarPageBlockStyleView(mixed $view): View
+{
+    expect($view)->toBeInstanceOf(View::class);
+    assert($view instanceof View);
+
+    return $view;
+}
+
 test('sidebar page blocks expose stable styling and current page hooks', function (): void {
     $component = new class(container: [], containerKey: 'sidebar', blockIndex: 0, loop: (object) ['index' => 0], block: new Widget(['key' => 'pages', 'name' => 'Pages', 'meta' => ['view_file' => 'capell::components.no-results']])) extends AbstractPagesBlock
     {
@@ -38,10 +47,9 @@ test('sidebar page blocks expose stable styling and current page hooks', functio
         }
     };
 
-    $view = $component->render();
+    $view = sidebarPageBlockStyleView($component->render());
 
-    expect($view)->toBeInstanceOf(View::class)
-        ->and($view->getData())->toHaveKey('pages')
+    expect($view->getData())->toHaveKey('pages')
         ->and($view->getData()['pages'])->toHaveCount(1)
         ->and($view->getData()['containerKey'])->toBe('sidebar');
 });
@@ -253,7 +261,7 @@ test('public livewire blocks resolve the scoped layout block clone', function ()
 
     expect($component->assetIds)->toBe([(int) $secondOccurrenceAsset->getKey()]);
 
-    $renderData = $component->render()->getData();
+    $renderData = sidebarPageBlockStyleView($component->render())->getData();
 
     expect($renderData['container'])->toHaveKey('blocks')
         ->and($renderData['blockData']['meta']['show_page_title'])->toBeTrue()
@@ -290,7 +298,7 @@ test('public livewire blocks resolve the scoped layout block clone', function ()
         ],
         'block_index' => 1,
     ]));
-    $hydratedData = $hydratedComponent->render()->getData();
+    $hydratedData = sidebarPageBlockStyleView($hydratedComponent->render())->getData();
 
     expect($hydratedData['blockData']['tracking_key'])->toBe('kept-in-reference')
         ->and($hydratedData['blockData']['meta']['show_page_title'])->toBeTrue();
@@ -496,7 +504,7 @@ test('public livewire page content blocks render from encrypted context without 
         'block_index' => 0,
     ]));
 
-    $view = $component->render();
+    $view = sidebarPageBlockStyleView($component->render());
     $renderData = $view->getData();
     $renderedPage = $renderData['pageRecord'];
     $wasBlazeEnabled = Blaze::isEnabled();
@@ -517,6 +525,64 @@ test('public livewire page content blocks render from encrypted context without 
         ->and($html)->toContain('Hydrated page content')
         ->and(file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/block/page/content.blade.php'))
         ->not->toContain('Frontend::page()');
+});
+
+test('asset page block view does not query or lazy-load optional item parents', function (): void {
+    $language = Language::factory()->create();
+    $site = Site::factory()->create(['language_id' => $language->getKey()]);
+    $theme = Theme::factory()->make(['meta' => ['secondary_containers' => []]]);
+    $currentPage = Page::factory()->site($site)->create();
+    $parentPage = Page::factory()->site($site)->create();
+    $item = Page::factory()->site($site)->parent($parentPage)->create(['name' => 'Child Page']);
+
+    $currentPage->setRelation('translation', null);
+    $currentPage->setRelation('type', null);
+
+    $item->setRelation('translation', (object) [
+        'summary' => 'Loaded summary',
+        'title' => 'Loaded child title',
+    ]);
+    $item->setRelation('pageUrl', (object) ['full_url' => '/child-page']);
+
+    $block = new Widget(['key' => 'featured-pages', 'name' => 'Featured Pages', 'meta' => []]);
+    $block->setRelation('translation', null);
+
+    app()->instance(CapellFrontendContext::class, new CapellFrontendContext(new FrontendContext(
+        site: $site,
+        language: $language,
+        page: $currentPage,
+        layout: null,
+        theme: $theme,
+        params: [],
+        slug: null,
+    )));
+    Frontend::clearResolvedInstance(CapellFrontendContext::class);
+
+    $previous = EloquentModel::preventsLazyLoading();
+    EloquentModel::preventLazyLoading();
+    DB::enableQueryLog();
+
+    try {
+        view('capell-foundation-theme::components.block.asset.pages', [
+            'block' => $block,
+            'blockData' => ['meta' => []],
+            'container' => [],
+            'containerKey' => 'main',
+            'containerWidth' => null,
+            'index' => 0,
+            'loop' => (object) ['index' => 0],
+            'pages' => new Collection([$item]),
+            'withParent' => true,
+        ])->render();
+    } finally {
+        $queries = DB::getQueryLog();
+        DB::disableQueryLog();
+        EloquentModel::preventLazyLoading($previous);
+    }
+
+    expect(file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/block/asset/pages.blade.php'))
+        ->not->toContain('loadParent(')
+        ->and($queries)->toBe([]);
 });
 
 test('breadcrumbs render data does not lazy-load optional page and site relations', function (): void {

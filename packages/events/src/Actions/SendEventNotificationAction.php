@@ -22,7 +22,7 @@ class SendEventNotificationAction
     public function handle(EventRegistration $registration, EventNotificationTypeEnum $type): EventNotificationLog
     {
         /** @var EventNotificationLog $log */
-        $log = EventNotificationLog::query()->firstOrCreate([
+        $log = EventNotificationLog::query()->createOrFirst([
             'event_occurrence_id' => $registration->event_occurrence_id,
             'event_registration_id' => $registration->getKey(),
             'type' => $type,

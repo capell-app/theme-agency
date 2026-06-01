@@ -8,6 +8,7 @@ use Capell\Deployments\Actions\ConnectDeploymentAction;
 use Capell\Deployments\Actions\OAuth\ValidateOAuthStateAction;
 use Capell\Deployments\Enums\GitProviderType;
 use Capell\Deployments\Filament\Pages\DeploymentConnectionPage;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -17,7 +18,7 @@ final class GitLabCallbackController
 {
     public function __invoke(Request $request): RedirectResponse
     {
-        abort_unless(DeploymentConnectionPage::canAccess(), 403);
+        abort_unless(DeploymentConnectionPage::canManageConnections(), 403);
 
         if (ValidateOAuthStateAction::run(GitProviderType::GitLab, $request->query('state')) !== true) {
             return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_invalid_state')]);
@@ -28,13 +29,23 @@ final class GitLabCallbackController
             return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_missing_code')]);
         }
 
-        $tokenResponse = Http::post('https://gitlab.com/oauth/token', [
-            'client_id' => config('capell-deployments.oauth.gitlab.client_id'),
-            'client_secret' => config('capell-deployments.oauth.gitlab.client_secret'),
-            'code' => $code,
-            'grant_type' => 'authorization_code',
-            'redirect_uri' => route('capell-deployments.oauth.gitlab'),
-        ])->json();
+        try {
+            $tokenResponse = Http::timeout($this->httpTimeout())
+                ->post('https://gitlab.com/oauth/token', [
+                    'client_id' => config('capell-deployments.oauth.gitlab.client_id'),
+                    'client_secret' => config('capell-deployments.oauth.gitlab.client_secret'),
+                    'code' => $code,
+                    'grant_type' => 'authorization_code',
+                    'redirect_uri' => route('capell-deployments.oauth.gitlab'),
+                ])
+                ->json();
+        } catch (ConnectionException $connectionException) {
+            Log::warning('capell-deployments: GitLab OAuth token request failed', [
+                'error' => $connectionException->getMessage(),
+            ]);
+
+            return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_failed', ['provider' => 'GitLab'])]);
+        }
 
         $accessToken = $tokenResponse['access_token'] ?? null;
         $refreshToken = $tokenResponse['refresh_token'] ?? null;
@@ -44,9 +55,18 @@ final class GitLabCallbackController
             return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_failed', ['provider' => 'GitLab'])]);
         }
 
-        $userResponse = Http::withHeader('PRIVATE-TOKEN', $accessToken)
-            ->get('https://gitlab.com/api/v4/user')
-            ->json();
+        try {
+            $userResponse = Http::withHeader('PRIVATE-TOKEN', $accessToken)
+                ->timeout($this->httpTimeout())
+                ->get('https://gitlab.com/api/v4/user')
+                ->json();
+        } catch (ConnectionException $connectionException) {
+            Log::warning('capell-deployments: GitLab OAuth user request failed', [
+                'error' => $connectionException->getMessage(),
+            ]);
+
+            return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_user_failed', ['provider' => 'GitLab'])]);
+        }
 
         $username = $userResponse['username'] ?? null;
         if (! is_string($username) || $username === '') {
@@ -85,5 +105,10 @@ final class GitLabCallbackController
         }
 
         return $redacted;
+    }
+
+    private function httpTimeout(): int
+    {
+        return max(1, (int) config('capell-deployments.http_timeout', 10));
     }
 }

@@ -15,16 +15,28 @@ use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\EditRecord;
 use Override;
+use RuntimeException;
 
 final class EditAccessArea extends EditRecord
 {
     protected static string $resource = AccessAreaResource::class;
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    #[Override]
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        return AccessAreaResource::prepareFormDataForPersistence($data);
+    }
+
     #[Override]
     protected function getHeaderActions(): array
     {
         $record = $this->getRecord();
-        assert($record instanceof Area);
+
+        throw_unless($record instanceof Area, RuntimeException::class, 'Expected access area record.');
 
         return [
             Action::make('pause')

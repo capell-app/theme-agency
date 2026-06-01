@@ -1,38 +1,31 @@
-<?php
-use Capell\Frontend\Facades\Frontend;
-use Capell\Frontend\Support\Loader\SiteLoader;
+@props([
+    'relatedSites' => collect(),
+])
 
-$language = Frontend::language();
-$site = Frontend::site();
-
-$relatedSites = SiteLoader::related($site, $language);
-if ($relatedSites->isEmpty()) {
-    return;
-}
-?>
-
-<div {{ $attributes->class(['space-y-4']) }}>
-    <div
-        class="grid items-center gap-x-6 gap-y-4 sm:grid-cols-2 lg:grid-cols-4"
-    >
-        @foreach ($relatedSites as $relatedSite)
-            <a
-                class="flex items-center gap-x-2 gap-y-1 text-[var(--color-footer)] lg:grid"
-                href="{{ $relatedSite->siteDomain->full_url }}"
-                @wireNavigate
-            >
-                <span
-                    class="text-link text-lg font-bold"
-                    style="{{ $relatedSite->getThemeColor('primary') ? 'color:' . $relatedSite->getThemeColor('primary') : '' }}"
+@if ($relatedSites->isNotEmpty())
+    <div {{ $attributes->class(['space-y-4']) }}>
+        <div
+            class="grid items-center gap-x-6 gap-y-4 sm:grid-cols-2 lg:grid-cols-4"
+        >
+            @foreach ($relatedSites as $relatedSite)
+                <a
+                    class="flex items-center gap-x-2 gap-y-1 text-[var(--color-footer)] lg:grid"
+                    href="{{ $relatedSite['url'] }}"
+                    @wireNavigate
                 >
-                    {{ $relatedSite->translation->title }}
-                </span>
-                @if ($description = $relatedSite->translation->getMeta('description'))
-                    <span class="text-sm leading-tight">
-                        {{ $description }}
+                    <span
+                        class="text-link text-lg font-bold"
+                        style="{{ $relatedSite['primaryColor'] ? 'color:' . $relatedSite['primaryColor'] : '' }}"
+                    >
+                        {{ $relatedSite['title'] }}
                     </span>
-                @endif
-            </a>
-        @endforeach
+                    @if ($relatedSite['description'])
+                        <span class="text-sm leading-tight">
+                            {{ $relatedSite['description'] }}
+                        </span>
+                    @endif
+                </a>
+            @endforeach
+        </div>
     </div>
-</div>
+@endif

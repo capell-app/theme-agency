@@ -20,7 +20,7 @@ final class BuildPackagesInstalledAction
     /**
      * Maps a composer package name to its short handle, config-file name, and docs URL.
      *
-     * @var array<string, array{short: string, config: ?string, docs: ?string, display?: string, bundle?: string, health_checks?: int, install?: ?string, doctor?: ?string}>
+     * @var array<string, array{short: string, config: ?string, docs: ?string, display?: ?string, bundle?: ?string, health_checks?: int, install?: ?string, doctor?: ?string}>
      */
     private const array KNOWN_PACKAGES = [
         'capell-app/core' => [
@@ -156,7 +156,7 @@ final class BuildPackagesInstalledAction
     }
 
     /**
-     * @return array<string, array{short: string, config: ?string, docs: ?string, display?: string, bundle?: string, health_checks?: int, install?: ?string, doctor?: ?string}>
+     * @return array<string, array{short: string, config: ?string, docs: ?string, display?: ?string, bundle?: ?string, health_checks?: int, install?: ?string, doctor?: ?string}>
      */
     private function knownPackages(): array
     {
@@ -186,12 +186,13 @@ final class BuildPackagesInstalledAction
             ];
         }
 
+        /** @var array<string, array{short: string, config: string|null, docs: string|null, display?: string|null, bundle?: string|null, health_checks?: int, install?: string|null, doctor?: string|null}> $knownPackages */
         return $knownPackages;
     }
 
     /**
      * @param  array{name: string, version: string, install_path?: string}  $package
-     * @return array{short: string, config: ?string, docs: ?string, display?: string, bundle?: string, health_checks?: int, install?: ?string, doctor?: ?string}|null
+     * @return array{short: string, config: ?string, docs: ?string, display?: ?string, bundle?: ?string, health_checks?: int, install?: ?string, doctor?: ?string}|null
      */
     private function metadataFromInstalledPackage(array $package): ?array
     {
@@ -212,7 +213,7 @@ final class BuildPackagesInstalledAction
     }
 
     /**
-     * @return array{composer: string, values: array{short: string, config: ?string, docs: ?string, display?: string, bundle?: string, health_checks?: int, install?: ?string, doctor?: ?string}}|null
+     * @return array{composer: string, values: array{short: string, config: ?string, docs: ?string, display?: ?string, bundle?: ?string, health_checks?: int, install?: ?string, doctor?: ?string}}|null
      */
     private function metadataFromManifestPath(string $manifestPath, string $packagePath): ?array
     {

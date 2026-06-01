@@ -9,10 +9,12 @@ use Capell\Admin\Filament\Concerns\HasConfiguredTable;
 use Capell\PublishingStudio\Filament\Resources\PreviewLinks\Pages\ManagePreviewLinks;
 use Capell\PublishingStudio\Filament\Resources\PreviewLinks\Tables\PreviewLinksTable;
 use Capell\PublishingStudio\Models\PreviewLink;
+use Capell\PublishingStudio\Support\WorkspaceAccess;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Builder;
 use Override;
 
 class PreviewLinkResource extends Resource
@@ -33,6 +35,17 @@ class PreviewLinkResource extends Resource
     public static function canCreate(): bool
     {
         return false;
+    }
+
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with(['workspace', 'issuedBy'])
+            ->whereHas(
+                'workspace',
+                fn (Builder $query): Builder => WorkspaceAccess::scopeVisibleTo($query, auth()->user()),
+            );
     }
 
     #[Override]

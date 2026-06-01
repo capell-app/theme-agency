@@ -7,8 +7,7 @@ namespace Capell\AgentBridge\Actions\Pages;
 use Capell\AgentBridge\Contracts\CapellAgentBridgeCapabilityAction;
 use Capell\AgentBridge\Data\CapabilityInvocationData;
 use Capell\AgentBridge\Data\CapabilityResultData;
-use Capell\Core\Models\Page;
-use Illuminate\Database\Eloquent\Model;
+use Capell\AgentBridge\Support\AgentBridgePageAccess;
 use Illuminate\Support\Collection;
 
 final class InspectPagePublishingReadinessCapabilityAction implements CapellAgentBridgeCapabilityAction
@@ -21,11 +20,7 @@ final class InspectPagePublishingReadinessCapabilityAction implements CapellAgen
     public function execute(CapabilityInvocationData $invocation): CapabilityResultData
     {
         $payload = $this->validatedPayload($invocation->payload);
-        $pageClass = $this->pageClass();
-        $page = $pageClass::query()
-            ->with(['site', 'type', 'layout', 'pageUrls'])
-            ->whereKey($payload['page_id'])
-            ->firstOrFail();
+        $page = AgentBridgePageAccess::authorizedPage($invocation->user, (int) $payload['page_id'], ['site', 'type', 'layout', 'pageUrls']);
         $pageUrls = $page->getAttribute('pageUrls');
 
         $checks = [
@@ -58,11 +53,5 @@ final class InspectPagePublishingReadinessCapabilityAction implements CapellAgen
         ])->validate();
 
         return $payload;
-    }
-
-    /** @return class-string<Model> */
-    private function pageClass(): string
-    {
-        return Page::class;
     }
 }

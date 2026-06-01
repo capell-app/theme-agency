@@ -3,7 +3,7 @@
     "composerName": "capell-app/deployments",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/deployments",
+    "outputDirectory": "packages/deployments/docs/screenshots",
     "entries": [
         {
             "id": "deployment-connection-page",
@@ -14,7 +14,7 @@
             "target": "DeploymentConnectionPage",
             "required": true,
             "notes": "Capture as a user with View:DeploymentConnectionPage. The empty state only shows provider OAuth buttons; seed one active connection when the screenshot should include repository details.",
-            "screenshotPath": "public/docs/screenshots/packages/deployments/deployment-connection-page.png",
+            "screenshotPath": "packages/deployments/docs/screenshots/deployment-connection-page.png",
             "useCase": "An operator connects or reviews the Git provider repository used for package install pull requests."
         },
         {
@@ -26,7 +26,7 @@
             "target": "DeploymentConnectionWidget",
             "required": true,
             "notes": "Capture with one active DeploymentConnection when possible; otherwise the widget honestly shows the not-connected state.",
-            "screenshotPath": "public/docs/screenshots/packages/deployments/deployment-connection-widget.png",
+            "screenshotPath": "packages/deployments/docs/screenshots/deployment-connection-widget.png",
             "useCase": "An administrator checks from the dashboard whether package deployment publishing has an active repository connection."
         }
     ]

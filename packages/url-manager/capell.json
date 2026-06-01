@@ -1,0 +1,131 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/url-manager",
+    "slug": "url-manager",
+    "displayName": "URL Manager",
+    "kind": "package",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "URL Manager owns managed redirects, redirect hit counts, 404 opportunity tracking, import/export boundaries, and integration points for Core PageUrl changes and SEO Suite broken URL surfaces.",
+    "product": {
+        "group": "Capell Search & SEO",
+        "tier": "premium",
+        "bundle": "search-seo"
+    },
+    "namespace": "Capell\\UrlManager",
+    "surfaces": ["admin", "frontend"],
+    "dependencies": {
+        "requires": ["capell-app/admin", "capell-app/core"],
+        "supports": ["capell-app/seo-suite"],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": ["Capell\\UrlManager\\Providers\\UrlManagerServiceProvider"],
+        "admin": ["Capell\\UrlManager\\Providers\\UrlManagerServiceProvider"],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\UrlManager\\Manifest\\RedirectRulesPageContribution",
+            "pageClass": "Capell\\UrlManager\\Filament\\Pages\\RedirectRulesPage"
+        },
+        {
+            "type": "admin-page",
+            "class": "Capell\\UrlManager\\Manifest\\NotFoundOpportunitiesPageContribution",
+            "pageClass": "Capell\\UrlManager\\Filament\\Pages\\NotFoundOpportunitiesPage"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\UrlManager\\Manifest\\UrlManagerModelsContribution"
+        }
+    ],
+    "database": {
+        "migrations": true,
+        "settings": false,
+        "requiredTables": [
+            "url_manager_redirect_rules",
+            "url_manager_redirect_hits",
+            "url_manager_not_found_opportunities"
+        ]
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "settings": [],
+    "actions": {
+        "buildNotFoundRedirectSuggestions": "Capell\\UrlManager\\Actions\\BuildNotFoundRedirectSuggestionsAction",
+        "buildRedirectRulesCsv": "Capell\\UrlManager\\Actions\\BuildRedirectRulesCsvAction",
+        "buildRedirectRulesCsvTemplate": "Capell\\UrlManager\\Actions\\BuildRedirectRulesCsvTemplateAction",
+        "convertNotFoundOpportunityToRedirect": "Capell\\UrlManager\\Actions\\ConvertNotFoundOpportunityToRedirectAction",
+        "exportRedirectRules": "Capell\\UrlManager\\Actions\\ExportRedirectRulesAction",
+        "importRedirectRules": "Capell\\UrlManager\\Actions\\ImportRedirectRulesAction",
+        "importSeoSuiteBrokenLinks": "Capell\\UrlManager\\Actions\\ImportSeoSuiteBrokenLinksAction",
+        "previewRedirectRulesImport": "Capell\\UrlManager\\Actions\\PreviewRedirectRulesImportAction",
+        "recordChangedUrlRedirect": "Capell\\UrlManager\\Actions\\RecordChangedUrlRedirectAction",
+        "recordNotFoundOpportunity": "Capell\\UrlManager\\Actions\\RecordNotFoundOpportunityAction",
+        "recordRedirectHit": "Capell\\UrlManager\\Actions\\RecordRedirectHitAction",
+        "resolveRedirectRule": "Capell\\UrlManager\\Actions\\ResolveRedirectRuleAction",
+        "setNotFoundOpportunityStatus": "Capell\\UrlManager\\Actions\\SetNotFoundOpportunityStatusAction",
+        "setRedirectRuleStatus": "Capell\\UrlManager\\Actions\\SetRedirectRuleStatusAction",
+        "upsertRedirectRule": "Capell\\UrlManager\\Actions\\UpsertRedirectRuleAction"
+    },
+    "permissions": [
+        "View:RedirectRulesPage",
+        "Manage:RedirectRules",
+        "View:NotFoundOpportunitiesPage",
+        "Manage:NotFoundOpportunities"
+    ],
+    "capabilities": [
+        "managed-redirects",
+        "changed-url-redirect-detection",
+        "redirect-hit-counts",
+        "redirect-import-export",
+        "not-found-opportunities",
+        "not-found-redirect-suggestions",
+        "seo-suite-broken-url-import",
+        "frontend-redirect-resolver",
+        "url-manager-admin"
+    ],
+    "performance": {
+        "frontendRenderBudgetMs": 0,
+        "adminQueryBudget": 40,
+        "cacheTags": [],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": [],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "url-manager.package-health",
+            "label": "URL Manager redirect tables, actions, and provider metadata are discoverable.",
+            "class": "Capell\\UrlManager\\Health\\UrlManagerHealthCheck",
+            "severity": "critical",
+            "surface": "admin"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Manage redirects, preserve moved URLs, track redirect hits, and turn repeated 404s or SEO Suite broken URL findings into redirect opportunities.",
+        "screenshots": [],
+        "categories": ["seo", "admin", "redirects"],
+        "credits": []
+    },
+    "contributionTraceability": {
+        "deferredContributions": []
+    }
+}

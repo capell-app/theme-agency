@@ -28,7 +28,7 @@ final class BuildTopGA4ReportsPagesAction
             return [];
         }
 
-        return GA4ReportsPageMetric::query()
+        return array_values(GA4ReportsPageMetric::query()
             ->select([
                 'page_path',
                 DB::raw('MAX(page_title) as page_title'),
@@ -52,6 +52,6 @@ final class BuildTopGA4ReportsPagesAction
                 totalUsers: $metric->total_users,
                 conversions: $metric->conversions,
             ))
-            ->all();
+            ->all());
     }
 }

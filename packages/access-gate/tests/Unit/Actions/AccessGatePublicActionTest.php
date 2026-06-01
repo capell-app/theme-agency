@@ -90,8 +90,8 @@ it('passes registered access gate field values through to registration creation'
 
     $registration = Registration::query()->firstOrFail();
 
-    expect($registration->field_values['provider_username']['value'])->toBe('octocat')
-        ->and($registration->metadata['field_keys'])->toBe(['provider_username']);
+    expect($registration->field_values['provider_username']['value'] ?? null)->toBe('octocat')
+        ->and($registration->metadata['field_keys'] ?? null)->toBe(['provider_username']);
 });
 
 it('does not trust public action payload user ids', function (): void {

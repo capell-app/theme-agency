@@ -13,7 +13,6 @@ use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Portfolio\Console\Commands\DemoCommand;
-use Capell\ThemeStudio\Portfolio\Rendering\PackageAwareSectionRenderer;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -33,7 +32,7 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/portfolio.jpg',
             tags: ['Portfolio', 'Case studies', 'Personal brand'],
             bestFit: ['Creators', 'Consultants', 'Independent studios'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'work-grid', 'case-studies', 'services', 'testimonials', 'speaking-media-kit', 'newsletter', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'work-grid', 'case-studies', 'case-study-detail', 'process', 'services', 'testimonials', 'speaking-media-kit', 'availability', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'portfolio',
@@ -43,6 +42,9 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
                     values: [
                         'primaryColor' => '#7c2d12',
                         'accentColor' => '#f43f5e',
+                        'neutralColor' => '#0f172a',
+                        'surfaceColor' => '#f8fafc',
+                        'foregroundColor' => '#0f172a',
                         'headingFont' => 'sora',
                         'bodyFont' => 'inter',
                         'spacing' => 'balanced',
@@ -51,6 +53,9 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
                         'layoutPresentation' => 'structured',
                         'motionIntensity' => 'subtle',
                         'mediaTreatment' => 'framed',
+                        'radius' => 'md',
+                        'headingScale' => 'balanced',
+                        'cardDensity' => 'compact',
                     ],
                 ),
             ],
@@ -96,7 +101,7 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
                 sectionRenderers: [],
             ),
             sectionRenderers: collect(self::definition()->includedSections)
-                ->map(fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer|null => $this->sectionRenderer(
+                ->map(fn (string $sectionKey): ?ViewSectionRenderer => $this->sectionRenderer(
                     $sectionKey,
                     $this->optionalSectionIntegrations($contentSectionsAvailable, $mediaLibraryAvailable, $newsletterAvailable),
                 ))
@@ -109,7 +114,7 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
     /**
      * @param  array<string, array<string, bool>>  $optionalIntegrations
      */
-    private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ViewSectionRenderer|PackageAwareSectionRenderer|null
+    private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ?ViewSectionRenderer
     {
         if ($this->isFoundationSection($sectionKey)) {
             return null;
@@ -122,12 +127,12 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
         }
 
         if (array_key_exists($sectionKey, $optionalIntegrations)) {
-            return new PackageAwareSectionRenderer(
-                themeKey: self::THEME_KEY,
-                sectionKey: $sectionKey,
-                view: $view,
-                integrations: $optionalIntegrations[$sectionKey],
-                failLoudly: true,
+            return new ViewSectionRenderer(
+                self::THEME_KEY,
+                $sectionKey,
+                $view,
+                true,
+                $optionalIntegrations[$sectionKey],
             );
         }
 
@@ -152,6 +157,7 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
         return [
             'case-studies' => ['contentSectionsAvailable' => $contentSectionsAvailable],
             'work-grid' => ['mediaLibraryAvailable' => $mediaLibraryAvailable],
+            'availability' => ['newsletterAvailable' => $newsletterAvailable],
             'newsletter' => ['newsletterAvailable' => $newsletterAvailable],
         ];
     }

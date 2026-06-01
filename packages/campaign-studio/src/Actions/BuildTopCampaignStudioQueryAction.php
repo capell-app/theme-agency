@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\CampaignStudio\Actions;
 
+use Capell\Admin\Support\SiteScope;
 use Capell\CampaignStudio\Data\Dashboard\CampaignConversionSummaryData;
 use Capell\CampaignStudio\Models\CampaignGroup;
 use Carbon\CarbonImmutable;
@@ -24,7 +25,7 @@ final class BuildTopCampaignStudioQueryAction
      */
     public function handle(int $limit = 5, ?CarbonImmutable $startsAt = null, ?CarbonImmutable $endsAt = null): Collection
     {
-        return CampaignGroup::query()
+        return SiteScope::applyForCurrentActor(CampaignGroup::query())
             ->withCount([
                 'conversions' => fn (Builder $builder): Builder => $this->applyConversionWindow($builder, $startsAt, $endsAt),
             ])

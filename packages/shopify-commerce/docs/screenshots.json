@@ -1,0 +1,45 @@
+{
+    "package": "shopify-commerce",
+    "composerName": "capell-app/shopify-commerce",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/shopify-commerce/docs/screenshots",
+    "entries": [
+        {
+            "id": "shopify-connection-page",
+            "title": "Shopify connection page.",
+            "package": "shopify-commerce",
+            "surface": "admin",
+            "targetType": "admin-page",
+            "target": "ShopifyConnectionPage",
+            "required": true,
+            "notes": "Capture as an authorized admin with Shopify Commerce enabled. Use safe demo credentials/state; never expose real Shopify access tokens.",
+            "useCase": "An administrator connects or reviews the Shopify store connection for a Capell site.",
+            "screenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-connection-page.png"
+        },
+        {
+            "id": "shopify-catalog-sync-state",
+            "title": "Shopify catalog sync state.",
+            "package": "shopify-commerce",
+            "surface": "admin",
+            "targetType": "admin-page",
+            "target": "ShopifyConnectionPage",
+            "required": true,
+            "notes": "Capture after seeding a demo connection with sync status, product count, and last sync timestamps.",
+            "useCase": "An operator checks whether the local product catalog is connected and recently synced.",
+            "screenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-catalog-sync-state.png"
+        },
+        {
+            "id": "shopify-product-search",
+            "title": "Shopify product search.",
+            "package": "shopify-commerce",
+            "surface": "admin",
+            "targetType": "admin-page",
+            "target": "ShopifyConnectionPage",
+            "required": true,
+            "notes": "Capture local catalog search with seeded demo products. Product data should be fake or fixture data, not a real merchant catalog.",
+            "useCase": "An editor searches synced Shopify products from inside Capell Admin.",
+            "screenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-product-search.png"
+        }
+    ]
+}

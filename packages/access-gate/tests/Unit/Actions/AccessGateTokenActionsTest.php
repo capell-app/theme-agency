@@ -37,7 +37,11 @@ it('issues hashed claim tokens and consumes them once into browser tokens', func
     );
 
     expect($issuedBrowserToken)->not->toBeNull()
-        ->and(BrowserToken::query()->where('token_hash', hash('sha256', $issuedBrowserToken->plainTextToken))->exists())->toBeTrue()
+        ->and($issuedBrowserToken?->plainTextToken)->not->toBeNull();
+
+    throw_if($issuedBrowserToken === null, RuntimeException::class, 'Expected claim token consumption to issue a browser token.');
+
+    expect(BrowserToken::query()->where('token_hash', hash('sha256', $issuedBrowserToken->plainTextToken))->exists())->toBeTrue()
         ->and($issuedBrowserToken->token->metadata)->toBe(['ip_hash' => 'hash', 'user_agent' => 'Browser'])
         ->and($issuedClaimToken->token->refresh()->status)->toBe(ClaimTokenStatus::Claimed)
         ->and($approved->refresh()->status)->toBe(RegistrationStatus::Claimed)

@@ -28,6 +28,9 @@ use Capell\AgentBridge\Tests\Fixtures\User;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\Tests\Support\LegacyAdminBridgeFallbackHost;
 use Filament\Forms\Components\Toggle;
+use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Spatie\LaravelSettings\Migrations\SettingsMigrator;
@@ -250,6 +253,56 @@ it('scopes tokens confirmations and audit entries to the edited user', function 
         ->and(count(AgentBridgeConfirmationsRelationManager::scopedQueryForUser(CapellAgentBridgeConfirmation::query(), $editedUser)->pluck('id')->all()))->toBe(1)
         ->and(count(AgentBridgeAuditEntriesRelationManager::scopedQueryForUser(CapellAgentBridgeAuditEntry::query(), $editedUser)->pluck('id')->all()))->toBe(1);
 });
+
+it('builds user bridge relation manager tables with scoped queries', function (): void {
+    $editedUser = createAgentBridgeUser('relation-manager-edited@example.test');
+    $otherUser = createAgentBridgeUser('relation-manager-other@example.test');
+    $editedToken = createAgentBridgeTokenFor($editedUser, 'Edited token', 'edited-token');
+    createAgentBridgeTokenFor($otherUser, 'Other token', 'other-token');
+
+    $confirmation = new CapellAgentBridgeConfirmation;
+    $confirmation->forceFill([
+        'token' => str_repeat('a', 64),
+        'agent_bridge_token_id' => $editedToken->getKey(),
+        'capability_key' => 'capell.pages.update_draft',
+        'scope' => 'capell.pages.write',
+        'payload_hash' => str_repeat('b', 64),
+        'payload' => ['page' => 1],
+        'preview' => ['ok' => true],
+        'expires_at' => now()->addMinutes(10),
+    ]);
+    $confirmation->user()->associate($editedUser);
+    $confirmation->save();
+
+    $auditEntry = new CapellAgentBridgeAuditEntry;
+    $auditEntry->forceFill([
+        'agent_bridge_token_id' => $editedToken->getKey(),
+        'event' => 'capell_agent-bridge.pages.updated',
+    ]);
+    $auditEntry->user()->associate($editedUser);
+    $auditEntry->save();
+
+    expect(agentBridgeRelationManagerQuery(new AgentBridgeTokensRelationManager, $editedUser)->pluck('name')->all())
+        ->toBe(['Edited token'])
+        ->and(agentBridgeRelationManagerQuery(new AgentBridgeConfirmationsRelationManager, $editedUser)->pluck('capability_key')->all())
+        ->toBe(['capell.pages.update_draft'])
+        ->and(agentBridgeRelationManagerQuery(new AgentBridgeAuditEntriesRelationManager, $editedUser)->pluck('event')->all())
+        ->toBe(['capell_agent-bridge.pages.updated']);
+});
+
+/**
+ * @return Builder<Model>
+ */
+function agentBridgeRelationManagerQuery(RelationManager $relationManager, Model $ownerRecord): Builder
+{
+    $relationManager->ownerRecord = $ownerRecord;
+
+    $query = $relationManager->table(Table::make($relationManager))->getQuery();
+
+    throw_unless($query instanceof Builder, RuntimeException::class, 'Expected relation manager table to expose an Eloquent query.');
+
+    return $query;
+}
 
 it('summarizes token status without exposing token secrets', function (): void {
     $user = createAgentBridgeUser('safe@example.test');

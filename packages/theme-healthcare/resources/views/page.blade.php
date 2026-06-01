@@ -1,4 +1,7 @@
-<a href="#main-content" class="healthcare-skip-link">
+<a
+    href="#main-content"
+    class="healthcare-skip-link"
+>
     {{ __('capell-theme-healthcare::generic.skip_to_content') }}
 </a>
 

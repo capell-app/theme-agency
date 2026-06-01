@@ -14,9 +14,13 @@ use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use BladeUI\Icons\BladeIconsServiceProvider;
 use Capell\Address\Models\Address;
 use Capell\Address\Models\Country;
+use Capell\Admin\Facades\CapellAdmin;
+use Capell\Admin\Support\CapellAdminManager;
 use Capell\Blog\Models\Article;
 use Capell\ContentSections\Models\Section;
+use Capell\Core\Facades\CapellCore;
 use Capell\Core\Providers\CapellServiceProvider;
+use Capell\Core\Support\CapellCoreManager;
 use Capell\FoundationTheme\View\Components\Block\Page\Breadcrumbs;
 use Capell\FoundationTheme\View\Components\Block\Page\Children;
 use Capell\FoundationTheme\View\Components\Block\Page\Content;
@@ -30,6 +34,7 @@ use Capell\Tests\Fixtures\Policies\RolePolicy;
 use Capell\Tests\Support\Concerns\BuildsOrderedMigrationWorkspace;
 use Capell\Tests\Support\Concerns\RegistersPublishedConfigs;
 use Capell\Tests\Support\Concerns\TestingFrontendWithVite;
+use Capell\Tests\Support\PackageTestDatabaseGuard;
 use Capell\Tests\Support\RegisterLocalPackageManifestsServiceProvider;
 use CmsMulti\FilamentClearCache\FilamentClearCacheServiceProvider;
 use CodeWithDennis\FilamentSelectTree\FilamentSelectTreeServiceProvider;
@@ -96,11 +101,22 @@ abstract class AbstractTestCase extends TestCase
 
     protected function setUp(): void
     {
+        PackageTestDatabaseGuard::assertEnvironmentIsSafe();
+
+        CapellAdmin::clearResolvedInstance(CapellAdminManager::class);
+        CapellCore::clearResolvedInstance(CapellCoreManager::class);
+
         if (getenv('TEST_TOKEN')) {
             putenv('VIEW_COMPILED_PATH=storage/framework/views/phpunit-' . $this->getPackageServiceName() . '-parallel-' . getenv('TEST_TOKEN'));
         }
 
         parent::setUp();
+
+        $application = $this->app;
+
+        if ($application !== null) {
+            PackageTestDatabaseGuard::assertConfigurationIsSafe($application);
+        }
 
         $this->faker->addProvider(new Miscellaneous($this->faker));
 
@@ -158,14 +174,6 @@ abstract class AbstractTestCase extends TestCase
         Blade::component(Siblings::class, 'capell-layout-builder::widget.page.siblings');
         Livewire::component('capell-layout-builder::filament.layout-builder', LayoutBuilder::class);
 
-        if ($this->app->bound('livewire.factory')) {
-            resolve('livewire.factory')->resolveMissingComponent(
-                static fn (string $name): ?string => $name === 'capell-layout-builder::filament.layout-builder'
-                    ? LayoutBuilder::class
-                    : null,
-            );
-        }
-
         Http::preventStrayRequests();
 
         Relation::morphMap([
@@ -216,6 +224,10 @@ abstract class AbstractTestCase extends TestCase
      */
     protected function getEnvironmentSetUp(mixed $app): void
     {
+        Config::set('database.default', 'sqlite');
+        Config::set('database.connections.sqlite.database', ':memory:');
+        Config::set('database.connections.sqlite.url');
+
         $this->registerPackageConfigs($app);
 
         Gate::policy(Utils::getRoleModel(), RolePolicy::class);
@@ -385,7 +397,9 @@ abstract class AbstractTestCase extends TestCase
             return [];
         }
 
-        return glob($path . '/*.php');
+        $configs = glob($path . '/*.php');
+
+        return $configs === false ? [] : $configs;
     }
 
     /**

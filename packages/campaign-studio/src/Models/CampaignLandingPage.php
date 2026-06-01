@@ -14,10 +14,12 @@ use Override;
 
 /**
  * @property int $id
+ * @property int $campaign_group_id
  * @property int $page_id
  * @property string|null $headline
  * @property string|null $utm_term
  * @property string|null $utm_content
+ * @property bool $is_primary
  * @property int $conversions_count
  * @property-read CampaignGroup|null $campaignGroup
  */

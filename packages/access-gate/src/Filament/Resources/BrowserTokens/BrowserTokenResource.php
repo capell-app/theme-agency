@@ -11,6 +11,7 @@ use Capell\AccessGate\Filament\Resources\BrowserTokens\Pages\ListBrowserTokens;
 use Capell\AccessGate\Filament\Resources\Concerns\AccessGateFilamentOptions;
 use Capell\AccessGate\Models\BrowserToken;
 use Capell\AccessGate\Providers\AccessGateServiceProvider;
+use Capell\AccessGate\Support\AccessGateSiteScope;
 use Capell\Core\Facades\CapellCore;
 use Filament\Actions\Action;
 use Filament\Resources\Resource;
@@ -75,7 +76,7 @@ final class BrowserTokenResource extends Resource
             ->filters([
                 SelectFilter::make('access_area_id')
                     ->label(__('capell-access-gate::filament.fields.area'))
-                    ->relationship('area', 'key'),
+                    ->relationship('area', 'key', modifyQueryUsing: fn (Builder $query): Builder => AccessGateSiteScope::applyAreaOptionsScope($query)),
                 SelectFilter::make('status')
                     ->label(__('capell-access-gate::filament.fields.status'))
                     ->options(self::enumOptions(BrowserTokenStatus::class, 'capell-access-gate::filament.browser_token_status')),
@@ -96,6 +97,12 @@ final class BrowserTokenResource extends Resource
     public static function getModel(): string
     {
         return BrowserToken::class;
+    }
+
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return AccessGateSiteScope::applyAreaScope(parent::getEloquentQuery());
     }
 
     #[Override]

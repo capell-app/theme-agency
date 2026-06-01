@@ -1,0 +1,85 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'actions' => [
+        'mark_resolved' => 'Mark resolved',
+        'mark_waiting_on_customer' => 'Mark waiting on customer',
+    ],
+    'account_status' => [
+        'active' => 'Active',
+        'suspended' => 'Suspended',
+        'archived' => 'Archived',
+    ],
+    'fields' => [
+        'context' => 'Context',
+        'external_reference' => 'External reference',
+        'message' => 'Message',
+        'priority' => 'Priority',
+        'requester_email' => 'Requester email',
+        'resolved_at' => 'Resolved',
+        'source' => 'Source',
+        'status' => 'Status',
+        'subject' => 'Subject',
+        'submitted_at' => 'Submitted',
+    ],
+    'navigation' => [
+        'group' => 'Customer Portal',
+    ],
+    'resources' => [
+        'support_requests' => 'Support requests',
+    ],
+    'support_request_status' => [
+        'open' => 'Open',
+        'waiting_on_customer' => 'Waiting on customer',
+        'waiting_on_team' => 'Waiting on team',
+        'resolved' => 'Resolved',
+        'closed' => 'Closed',
+    ],
+    'support_request_priority' => [
+        'low' => 'Low',
+        'normal' => 'Normal',
+        'high' => 'High',
+        'urgent' => 'Urgent',
+    ],
+    'dashboard_item_priority' => [
+        'low' => 'Low',
+        'normal' => 'Normal',
+        'high' => 'High',
+    ],
+    'self_service_item_types' => [
+        'gated_resource' => 'Gated resource',
+        'payment' => 'Payment',
+        'document' => 'Document',
+        'event_registration' => 'Event registration',
+        'newsletter_preference' => 'Newsletter preference',
+        'support' => 'Support',
+    ],
+    'frontend' => [
+        'customer' => 'Customer',
+        'dashboard_items' => 'Your portal',
+        'event_reminders' => 'Event reminders',
+        'item_count' => ':count item|:count items',
+        'no_dashboard_items' => 'No portal items are available yet.',
+        'no_self_service_items' => 'No self-service items are available yet.',
+        'no_support_requests' => 'No support requests yet.',
+        'open_item' => 'Open',
+        'preference_email_updates' => 'Email updates',
+        'preference_event_reminders' => 'Event reminders',
+        'preference_product_updates' => 'Product updates',
+        'preferences' => 'Preferences',
+        'preferences_saved' => 'Your preferences have been saved.',
+        'recent_support' => 'Recent support requests',
+        'save_preferences' => 'Save preferences',
+        'self_service_items' => 'Self-service',
+        'signed_in_as' => 'Signed in as :name',
+        'submit_support' => 'Submit request',
+        'support' => 'Support',
+        'support_message' => 'Message',
+        'support_priority' => 'Priority',
+        'support_subject' => 'Subject',
+        'support_submitted' => 'Your support request has been submitted.',
+        'title' => 'Customer portal',
+    ],
+];

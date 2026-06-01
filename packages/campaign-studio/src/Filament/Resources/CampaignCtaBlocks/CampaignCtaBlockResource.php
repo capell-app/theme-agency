@@ -32,8 +32,10 @@ final class CampaignCtaBlockResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    /** @var class-string<CampaignCtaBlockForm> */
     private static string $formConfigurator = CampaignCtaBlockForm::class;
 
+    /** @var class-string<CampaignCtaBlocksTable> */
     private static string $tableConfigurator = CampaignCtaBlocksTable::class;
 
     /** @return class-string<CampaignCtaBlockForm> */
@@ -63,7 +65,8 @@ final class CampaignCtaBlockResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
-        return SiteScope::applyForCurrentActor(parent::getEloquentQuery());
+        return parent::getEloquentQuery()
+            ->whereHas('campaignGroup', fn (Builder $query): Builder => SiteScope::applyForCurrentActor($query));
     }
 
     /** @return class-string<CampaignCtaBlock> */

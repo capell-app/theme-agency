@@ -10,15 +10,20 @@ use Capell\EmailStudio\Data\ProviderSendResultData;
 use Capell\EmailStudio\Data\ProviderWebhookEventData;
 use Capell\EmailStudio\Enums\EmailRecipientStatus;
 use Capell\EmailStudio\Models\EmailMessage;
+use Capell\EmailStudio\Models\EmailProfile;
 use Illuminate\Contracts\Mail\Mailer as MailerContract;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Mail;
+use RuntimeException;
 
 class SmtpEmailProviderAdapter implements EmailProviderAdapter
 {
     public function send(EmailMessage $message): ProviderSendResultData
     {
         $message->loadMissing(['profile', 'recipients']);
+        $profile = $message->profile;
+
+        throw_unless($profile instanceof EmailProfile, RuntimeException::class, 'Email message profile must be loaded before SMTP delivery.');
 
         $deliverableRecipients = $message->recipients
             ->filter(function ($recipient): bool {
@@ -29,12 +34,12 @@ class SmtpEmailProviderAdapter implements EmailProviderAdapter
                 return $status === EmailRecipientStatus::Queued;
             });
 
-        $this->mailer($message)->send([], [], function (Message $mail) use ($message, $deliverableRecipients): void {
+        $this->mailer($message)->send([], [], function (Message $mail) use ($message, $profile, $deliverableRecipients): void {
             $mail->subject($message->subject);
-            $mail->from($message->profile->from_email, $message->profile->from_name);
+            $mail->from($profile->from_email, $profile->from_name);
 
-            if ($message->profile->reply_to_email !== null) {
-                $mail->replyTo($message->profile->reply_to_email, $message->profile->reply_to_name);
+            if ($profile->reply_to_email !== null) {
+                $mail->replyTo($profile->reply_to_email, $profile->reply_to_name);
             }
 
             foreach ($deliverableRecipients as $recipient) {

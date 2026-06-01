@@ -18,9 +18,13 @@ final class ResolveLoginAuditIpAddressAction
         }
 
         if (config('login-audit.behind_cdn') !== false) {
-            return (string) $request->server(config('login-audit.behind_cdn.http_header_field'));
+            $header = config('login-audit.behind_cdn.http_header_field');
+            $value = is_string($header) ? $request->server($header) : null;
+            $ipAddress = is_scalar($value) ? trim((string) $value) : '';
+
+            return filter_var($ipAddress, FILTER_VALIDATE_IP) !== false ? $ipAddress : $request->ip();
         }
 
-        return (string) $request->ip();
+        return $request->ip();
     }
 }

@@ -50,7 +50,7 @@ final class ShowPublicActionController
             return [];
         }
 
-        return collect($fields)
+        return array_values(collect($fields)
             ->filter(fn (mixed $field): bool => is_array($field) && is_string($field['key'] ?? null))
             ->map(function (array $field): array {
                 $key = $field['key'];
@@ -65,6 +65,6 @@ final class ShowPublicActionController
                 ];
             })
             ->values()
-            ->all();
+            ->all());
     }
 }

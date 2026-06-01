@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Diagnostics\Filament\Pages\Tables;
 
+use BadMethodCallException;
 use Capell\Admin\Filament\Contracts\TableConfigurator;
 use Capell\Diagnostics\Actions\DashboardReports\BuildQueueHealthQueryAction;
 use Capell\Diagnostics\Actions\DashboardReports\DeletePendingQueueJobAction;
@@ -12,6 +13,7 @@ use Capell\Diagnostics\Actions\DashboardReports\PruneQueueMonitorsAction;
 use Capell\Diagnostics\Actions\DashboardReports\RetryFailedJobAction;
 use Capell\Diagnostics\Actions\DashboardReports\RetrySelectedFailedJobsAction;
 use Capell\Diagnostics\Actions\DashboardReports\SummarizeFailedJobExceptionAction;
+use Capell\Diagnostics\Enums\DiagnosticsPermission;
 use Capell\Diagnostics\Filament\Pages\QueueHealthPage;
 use Capell\Diagnostics\Models\FailedJob;
 use Capell\Diagnostics\Models\PendingQueueJob;
@@ -29,7 +31,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Gate;
 use RuntimeException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class QueueHealthTable implements TableConfigurator
 {
@@ -148,7 +152,10 @@ class QueueHealthTable implements TableConfigurator
                 ->icon('heroicon-o-trash')
                 ->color('gray')
                 ->requiresConfirmation()
+                ->visible(fn (): bool => self::canManageQueueOperations())
                 ->action(function (): void {
+                    self::authorizeQueueOperation();
+
                     $count = PruneQueueMonitorsAction::run();
 
                     Notification::make('capell-diagnostics-queue-pruned')
@@ -176,8 +183,12 @@ class QueueHealthTable implements TableConfigurator
                 ->icon('heroicon-o-arrow-path')
                 ->color('warning')
                 ->requiresConfirmation()
-                ->visible(fn (Model $record): bool => $record instanceof FailedJob && (bool) config('capell-diagnostics.queue_monitor.retry_enabled', true))
+                ->visible(fn (Model $record): bool => $record instanceof FailedJob
+                    && self::canManageQueueOperations()
+                    && (bool) config('capell-diagnostics.queue_monitor.retry_enabled', true))
                 ->action(function (Model $record): void {
+                    self::authorizeQueueOperation();
+
                     try {
                         RetryFailedJobAction::run($record);
                     } catch (RuntimeException $runtimeException) {
@@ -199,8 +210,12 @@ class QueueHealthTable implements TableConfigurator
                 ->icon('heroicon-o-trash')
                 ->color('danger')
                 ->requiresConfirmation()
-                ->visible(fn (Model $record): bool => $record instanceof PendingQueueJob && (bool) config('capell-diagnostics.queue_monitor.delete_pending_enabled', true))
+                ->visible(fn (Model $record): bool => $record instanceof PendingQueueJob
+                    && self::canManageQueueOperations()
+                    && (bool) config('capell-diagnostics.queue_monitor.delete_pending_enabled', true))
                 ->action(function (Model $record): void {
+                    self::authorizeQueueOperation();
+
                     if (! $record instanceof PendingQueueJob) {
                         return;
                     }
@@ -230,8 +245,11 @@ class QueueHealthTable implements TableConfigurator
                 ->icon('heroicon-o-arrow-path')
                 ->color('warning')
                 ->requiresConfirmation()
-                ->visible(fn (): bool => ($page->activeTab ?? 'history') === 'failed')
+                ->visible(fn (): bool => ($page->activeTab ?? 'history') === 'failed'
+                    && self::canManageQueueOperations())
                 ->action(function (EloquentCollection $records): void {
+                    self::authorizeQueueOperation();
+
                     $failedJobs = $records->filter(fn (Model $record): bool => $record instanceof FailedJob);
 
                     try {
@@ -252,6 +270,43 @@ class QueueHealthTable implements TableConfigurator
                 })
                 ->deselectRecordsAfterCompletion(),
         ];
+    }
+
+    private static function canManageQueueOperations(): bool
+    {
+        $user = auth()->user();
+        if ($user === null) {
+            return false;
+        }
+
+        try {
+            $superAdminRole = config('capell.roles.super_admin', 'super_admin');
+
+            if (is_string($superAdminRole) && $superAdminRole !== '' && $user->hasRole($superAdminRole)) {
+                return true;
+            }
+        } catch (BadMethodCallException) {
+            // Role system not available; fall back to diagnostics permissions.
+        }
+
+        if (Gate::allows(DiagnosticsPermission::AccessDiagnostics->value)) {
+            return true;
+        }
+
+        if (Gate::allows(DiagnosticsPermission::ManageQueueHealthPage->value)) {
+            return true;
+        }
+
+        if ($user->can(DiagnosticsPermission::AccessDiagnostics->value) === true) {
+            return true;
+        }
+
+        return $user->can(DiagnosticsPermission::ManageQueueHealthPage->value) === true;
+    }
+
+    private static function authorizeQueueOperation(): void
+    {
+        throw_unless(self::canManageQueueOperations(), HttpException::class, 403);
     }
 
     /**

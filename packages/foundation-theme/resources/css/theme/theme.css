@@ -27,7 +27,7 @@
         text-rendering: optimizeLegibility;
     }
 
-    body.capell-app-body {
+    body.site-app-body {
         background: var(--foundation-page-bg);
         color: color-mix(in srgb, var(--color-brand) 82%, #111827);
     }
@@ -683,7 +683,7 @@
 
     .ap-hero__button:focus-visible,
     .ap-showcase-button:focus-visible,
-    .capell-foundation-theme-footer.scroll-top:focus-visible,
+    .site-scroll-top.scroll-top:focus-visible,
     .block-media-item:focus-visible,
     button:focus-visible {
         outline: 2px solid #2563eb;

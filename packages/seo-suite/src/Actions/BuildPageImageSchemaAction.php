@@ -55,7 +55,7 @@ final class BuildPageImageSchemaAction
             '@type' => 'ImageObject',
             'contentUrl' => $media->getAvailableUrl([MediaConversionEnum::Large->value]),
             'name' => $media->name,
-            'datePublished' => $media->created_at->toDateString(),
+            'datePublished' => $media->created_at?->toDateString(),
         ];
 
         $caption = $media->getCustomProperty('caption');

@@ -8,6 +8,7 @@ use Capell\Core\Models\PageUrl;
 use Capell\HtmlCache\Models\CachedModelUrl;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Schema;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class BuildAuthoringBannerContextAction
@@ -32,11 +33,13 @@ final class BuildAuthoringBannerContextAction
             $pageable->loadMissing('editor');
         }
 
-        $cachedUrl = CachedModelUrl::query()
-            ->select(['id', 'cached_at'])
-            ->where('url_hash', CachedModelUrl::hashUrl($pageUrl->full_url))
-            ->latest('cached_at')
-            ->first();
+        $cachedUrl = Schema::hasTable((new CachedModelUrl)->getTable())
+            ? CachedModelUrl::query()
+                ->select(['id', 'cached_at'])
+                ->where('url_hash', CachedModelUrl::hashUrl($pageUrl->full_url))
+                ->latest('cached_at')
+                ->first()
+            : null;
 
         return [
             'page' => $this->pageLabel($pageUrl, $pageable),

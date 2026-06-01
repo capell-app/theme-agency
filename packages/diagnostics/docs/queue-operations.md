@@ -69,13 +69,13 @@ Generated dummy-data screenshots are stored under:
 
 - `packages/diagnostics/docs/assets/screenshots/queue-health-page.png`
 - `packages/diagnostics/docs/assets/screenshots/queue-health-page-dark.png`
-- `public/docs/screenshots/packages/diagnostics/queue-health-page.png`
-- `public/docs/screenshots/packages/diagnostics/queue-health-page-dark.png`
-- `public/docs/screenshots/packages/diagnostics/diagnostics-dashboard.png`
-- `public/docs/screenshots/packages/diagnostics/system-health-page.png`
-- `public/docs/screenshots/packages/diagnostics/permission-audit-page.png`
-- `public/docs/screenshots/packages/diagnostics/command-palette-page.png`
-- `public/docs/screenshots/packages/diagnostics/health-widgets-on-the-admin-dashboard.png`
+- `packages/diagnostics/docs/screenshots/queue-health-page.png`
+- `packages/diagnostics/docs/screenshots/queue-health-page-dark.png`
+- `packages/diagnostics/docs/screenshots/diagnostics-dashboard.png`
+- `packages/diagnostics/docs/screenshots/system-health-page.png`
+- `packages/diagnostics/docs/screenshots/permission-audit-page.png`
+- `packages/diagnostics/docs/screenshots/command-palette-page.png`
+- `packages/diagnostics/docs/screenshots/health-widgets-on-the-admin-dashboard.png`
 
 The local fixture source is [assets/screenshots/diagnostics-dummy-screens.html](assets/screenshots/diagnostics-dummy-screens.html). It is documentation-only. It exists to keep package docs and marketplace screenshots deterministic when a real host app does not have representative queue history.
 

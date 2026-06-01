@@ -39,7 +39,7 @@ final class SuggestInternalLinksAction
             return [];
         }
 
-        return collect($this->candidates->forPage($page, $site, $language))
+        return array_values(collect($this->candidates->forPage($page, $site, $language))
             ->map(fn (array $candidate): array => [
                 ...$candidate,
                 'score' => $this->scoreCandidate($sourceTokens, $candidate),
@@ -63,7 +63,7 @@ final class SuggestInternalLinksAction
                 reason: 'Matches page topic: ' . $candidate['title'],
             ))
             ->values()
-            ->all();
+            ->all());
     }
 
     /**
@@ -120,12 +120,12 @@ final class SuggestInternalLinksAction
             return [];
         }
 
-        return collect($tokens)
+        return array_values(collect($tokens)
             ->map(fn (string $token): string => trim($token))
             ->filter(fn (string $token): bool => mb_strlen($token) >= 4)
             ->unique()
             ->values()
-            ->all();
+            ->all());
     }
 
     private function contentValue(mixed $content): ?string

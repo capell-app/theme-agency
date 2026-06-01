@@ -28,7 +28,7 @@ final class ResolvePageStructuredDataAction
         $page->loadMissing(['pageUrl', 'translation', 'translations.language']);
         $site->loadMissing(['siteDomain', 'translation']);
 
-        return collect([
+        return array_values(collect([
             $this->siteSchema($site, $language),
             ...$this->configuredSchemas($site->meta ?? [], $site),
             PageMetaSchemaAction::run($page, $site, $language),
@@ -39,7 +39,7 @@ final class ResolvePageStructuredDataAction
             ->filter(fn (array $schema): bool => $schema !== [])
             ->map(fn (array $schema): array => $this->withContext($this->normalizeUrls($schema, $site)))
             ->values()
-            ->all();
+            ->all());
     }
 
     /**
@@ -70,11 +70,11 @@ final class ResolvePageStructuredDataAction
             $schemas = [$schemas];
         }
 
-        return collect($schemas)
+        return array_values(collect($schemas)
             ->filter(fn (mixed $schema): bool => is_array($schema) && $schema !== [])
             ->map(fn (array $schema): array => $this->normalizeUrls($schema, $site))
             ->values()
-            ->all();
+            ->all());
     }
 
     /**
@@ -85,7 +85,7 @@ final class ResolvePageStructuredDataAction
         $breadcrumbs = BreadcrumbsSchemaAction::run($page, $site, $language);
 
         if ($breadcrumbs !== []) {
-            return $breadcrumbs;
+            return array_values($breadcrumbs);
         }
 
         $pageUrl = $page->pageUrl?->full_url;
@@ -97,7 +97,8 @@ final class ResolvePageStructuredDataAction
         $siteUrl = $site->siteDomain?->full_url;
         $siteName = $site->translation->title ?? $site->name;
 
-        return [[
+        /** @var list<array<string, mixed>> $schemas */
+        $schemas = [[
             '@context' => 'https://schema.org',
             '@type' => 'BreadcrumbList',
             'itemListElement' => array_values(array_filter([
@@ -115,6 +116,8 @@ final class ResolvePageStructuredDataAction
                 ],
             ])),
         ]];
+
+        return $schemas;
     }
 
     /**

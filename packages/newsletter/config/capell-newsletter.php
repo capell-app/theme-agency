@@ -19,6 +19,7 @@ return [
         'segments' => 'newsletter_segments',
         'segment_subscriber' => 'newsletter_segment_subscriber',
         'import_batches' => 'newsletter_import_batches',
+        'sends' => 'newsletter_sends',
     ],
     'double_opt_in' => [
         'enabled_by_default' => true,
@@ -30,6 +31,10 @@ return [
     'sync' => [
         'queue' => null,
         'retry_minutes' => [5, 30, 120],
+    ],
+    'imports' => [
+        'max_file_kb' => 2048,
+        'max_rows' => 10000,
     ],
     'webhooks' => [
         'signature_headers' => [

@@ -102,8 +102,9 @@ it('marks users for password changes when the backing column exists', function (
     ]);
 
     MarkUserForPasswordChangeAction::run($user);
+    $user->refresh();
 
-    expect((bool) $user->fresh()->getAttribute('must_change_password'))->toBeTrue();
+    expect((bool) $user->getAttribute('must_change_password'))->toBeTrue();
 });
 
 it('exposes password policy settings page labels and form schema', function (): void {

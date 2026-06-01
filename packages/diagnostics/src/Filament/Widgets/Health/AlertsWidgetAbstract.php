@@ -208,10 +208,10 @@ final class AlertsWidgetAbstract extends ResourceAlertsWidget
                 message: __('capell-admin::message.installer_present_warning'),
                 type: AlertTypeEnum::Info,
                 icon: 'heroicon-o-information-circle',
-                action: [
+                action: array_values(array_filter([
                     $this->getAction('viewInstaller'),
                     $this->getAction('deleteInstaller'),
-                ],
+                ])),
             ));
         }
 

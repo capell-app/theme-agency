@@ -55,7 +55,11 @@ class UpsertSubscriberAction
                 RecordConsentEventAction::run($subscriber, $eventType, $evidence, $status);
             }
 
-            return $subscriber->refresh();
+            $subscriber = $subscriber->refresh();
+
+            SyncNewsletterSubscriberContactAction::run($subscriber);
+
+            return $subscriber;
         });
     }
 

@@ -31,7 +31,7 @@ final class SearchShopifyProductsAction
         $limit = max(1, min(100, $limit));
         $connectionId = (int) $connection->getKey();
         $cacheVersion = InvalidateShopifyProductSearchCacheAction::version($connectionId);
-        $cacheKey = sprintf('capell-shopify-commerce.search.%d.%d.%s.%d', $connectionId, $cacheVersion, sha1(mb_strtolower($normalisedTerm)), $limit);
+        $cacheKey = sprintf('capell-shopify-commerce.search.%d.%d.%s.%d', $connectionId, $cacheVersion, hash('sha256', mb_strtolower($normalisedTerm)), $limit);
 
         return Cache::remember($cacheKey, now()->addMinutes($this->cacheTtlMinutes()), function () use ($connection, $normalisedTerm, $limit): EloquentCollection {
             $localProducts = $this->localResults($connection, $normalisedTerm, $limit);

@@ -146,3 +146,51 @@ it('renders the toolbar slide-over only after click and refreshes prompt text on
         ->set('data.goal', 'inspect updated draft state')
         ->assertSet('preparedPrompt', fn (string $prompt): bool => str_contains($prompt, 'inspect updated draft state'));
 });
+
+it('applies prompt starters through the toolbar component and rebuilds the prepared prompt', function (string $starter, string $area, string $operation, string $safety): void {
+    Livewire::test(PromptBuilderToolbarAction::class)
+        ->call('applyStarter', $starter)
+        ->assertSet('data.area', $area)
+        ->assertSet('data.operation', $operation)
+        ->assertSet('data.safety', $safety)
+        ->assertSet('preparedPrompt', fn (string $prompt): bool => str_contains($prompt, 'Area: ' . $area)
+            && str_contains($prompt, 'Operation: ' . $operation)
+            && str_contains($prompt, 'Safety mode: ' . $safety));
+})->with([
+    'disabled draft page' => ['create_disabled_draft_page', 'pages', 'create', 'preview_first'],
+    'update draft content' => ['update_draft_content', 'pages', 'update', 'preview_first'],
+    'clear cache' => ['clear_cache', 'cache', 'clear', 'prepare_confirmation'],
+    'recommend packages' => ['recommend_packages', 'packages', 'recommend', 'read_only'],
+    'fallback readiness' => ['unknown_starter', 'pages', 'inspect', 'read_only'],
+]);
+
+it('saves a prompt from the toolbar component for the authenticated admin', function (): void {
+    $user = User::query()->create([
+        'name' => 'Prompt Admin',
+        'email' => 'prompt-admin@example.com',
+        'password' => 'password',
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test(PromptBuilderToolbarAction::class)
+        ->set('templateName', 'Launch checklist')
+        ->set('templateDescription', 'Reusable launch review')
+        ->set('data.goal', 'inspect launch readiness')
+        ->set('data.area', 'pages')
+        ->set('data.operation', 'inspect')
+        ->set('data.safety', 'read_only')
+        ->set('data.target', 'Homepage')
+        ->call('savePrompt')
+        ->assertSet('selectedSavedPromptId', fn (?int $id): bool => $id !== null)
+        ->assertSet('preparedPrompt', fn (string $prompt): bool => str_contains($prompt, 'inspect launch readiness'));
+
+    $savedPrompt = CapellAgentBridgeSavedPrompt::query()->where('name', 'Launch checklist')->firstOrFail();
+
+    expect($savedPrompt->user_id)->toBe($user->getKey())
+        ->and($savedPrompt->description)->toBe('Reusable launch review')
+        ->and($savedPrompt->form_state)->toMatchArray([
+            'goal' => 'inspect launch readiness',
+            'target' => 'Homepage',
+        ]);
+});

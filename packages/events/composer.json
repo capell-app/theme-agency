@@ -27,6 +27,9 @@
         "rlanvin/php-rrule": "^2.6",
         "spatie/icalendar-generator": "^3.2"
     },
+    "suggest": {
+        "capell-app/site-discovery": "Contribute public event occurrence URLs to the canonical public URL registry."
+    },
     "autoload": {
         "psr-4": {
             "Capell\\Events\\": "src/",

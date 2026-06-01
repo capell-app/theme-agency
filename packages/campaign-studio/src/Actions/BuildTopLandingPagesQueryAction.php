@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\CampaignStudio\Actions;
 
+use Capell\Admin\Support\SiteScope;
 use Capell\CampaignStudio\Data\Dashboard\CampaignLandingPageSummaryData;
 use Capell\CampaignStudio\Models\CampaignLandingPage;
 use Carbon\CarbonImmutable;
@@ -22,6 +23,7 @@ final class BuildTopLandingPagesQueryAction
     {
         return CampaignLandingPage::query()
             ->with(['campaignGroup'])
+            ->whereHas('campaignGroup', fn (Builder $builder): Builder => SiteScope::applyForCurrentActor($builder))
             ->withCount([
                 'conversions' => fn (Builder $builder): Builder => $builder
                     ->when($startsAt instanceof CarbonImmutable, fn (Builder $builder): Builder => $builder->where('converted_at', '>=', $startsAt))

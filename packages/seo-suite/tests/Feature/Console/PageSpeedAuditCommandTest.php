@@ -10,6 +10,7 @@ use Capell\SeoSuite\Contracts\PageSpeedInsightsClientInterface;
 use Capell\SeoSuite\Data\PageSpeedAuditResultData;
 use Capell\SeoSuite\Enums\PageSpeedStrategyEnum;
 use Capell\SeoSuite\Models\PageSpeedAuditResult;
+use Capell\SeoSuite\Support\PageSpeed\NullPageSpeedInsightsClient;
 use Illuminate\Console\Command;
 
 it('runs a PageSpeed audit from the console command with strategy and limit options', function (): void {
@@ -51,6 +52,18 @@ it('rejects invalid PageSpeed command strategy and integer options', function ()
     $this->artisan('capell:seo-suite:pagespeed-audit', [
         '--limit' => 'many',
     ])->assertExitCode(Command::FAILURE);
+});
+
+it('returns an explicit failed audit result when PageSpeed is not configured', function (): void {
+    $client = new NullPageSpeedInsightsClient;
+
+    $result = $client->analyze('https://example.test', PageSpeedStrategyEnum::Desktop);
+
+    expect($client->isConfigured())->toBeFalse()
+        ->and($result->successful)->toBeFalse()
+        ->and($result->url)->toBe('https://example.test')
+        ->and($result->strategy)->toBe(PageSpeedStrategyEnum::Desktop)
+        ->and($result->errorMessage)->toBe(__('capell-seo-suite::generic.pagespeed_not_configured'));
 });
 
 function createPageSpeedCommandPage(string $url): void

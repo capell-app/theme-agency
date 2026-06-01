@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Rector\Caching\ValueObject\Storage\FileCacheStorage;
 use Rector\CodingStyle\Rector\PostInc\PostIncDecToPreIncDecRector;
 use Rector\Config\RectorConfig;
+use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
 use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
 use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
@@ -12,9 +13,18 @@ use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 use Rector\PHPUnit\CodeQuality\Rector\CallLike\DirectInstanceOverMockArgRector;
+use RectorLaravel\Rector\MethodCall\ReplaceServiceContainerCallArgRector;
 use RectorLaravel\Set\LaravelSetList;
 use RectorLaravel\Set\LaravelSetProvider;
 use Sinnbeck\DomAssertions\Rector\Rules\AssertElementToAssertContainsElementRule;
+
+$packagePaths = [];
+
+foreach (['config', 'database', 'publishes', 'resources', 'routes', 'src', 'tests'] as $packageDirectory) {
+    foreach (glob(__DIR__ . '/packages/*/' . $packageDirectory, GLOB_ONLYDIR) ?: [] as $path) {
+        $packagePaths[] = $path;
+    }
+}
 
 return RectorConfig::configure()
     ->withSetProviders(LaravelSetProvider::class)
@@ -34,11 +44,13 @@ return RectorConfig::configure()
         removeUnusedImports: true,
     )
     ->withCache(
-        cacheDirectory: '/tmp/rector',
+        cacheDirectory: '/tmp/rector/capell-packages-4',
         cacheClass: FileCacheStorage::class,
     )
     ->withPaths([
-        __DIR__ . '/packages',
+        __DIR__ . '/rector.php',
+        ...(glob(__DIR__ . '/packages/*/rector.php') ?: []),
+        ...$packagePaths,
         __DIR__ . '/tests',
     ])
     ->withParallel(
@@ -72,6 +84,16 @@ return RectorConfig::configure()
         ReadOnlyClassRector::class,
         ReadOnlyPropertyRector::class,
         DirectInstanceOverMockArgRector::class,
+        AddOverrideAttributeToOverriddenMethodsRector::class => [
+            __DIR__ . '/packages/blog/src/Data/ArticleBlockRenderData.php',
+            __DIR__ . '/packages/blog/src/Data/BlogResultItemData.php',
+        ],
+        RemoveExtraParametersRector::class => [
+            __DIR__ . '/packages/site-discovery/tests/Integration/Actions/GenerateSitemapActionTest.php',
+        ],
+        ReplaceServiceContainerCallArgRector::class => [
+            __DIR__ . '/tests/Support/Concerns/TestingFrontend.php',
+        ],
         NullToStrictStringFuncCallArgRector::class => [
             __DIR__ . '/packages/insights/routes/web.php',
             __DIR__ . '/packages/layout-builder/src/Livewire/Filament/Concerns/ManagesAssets.php',

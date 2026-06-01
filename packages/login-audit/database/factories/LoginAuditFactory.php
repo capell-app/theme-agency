@@ -6,6 +6,7 @@ namespace Capell\LoginAudit\Database\Factories;
 
 use Capell\LoginAudit\Models\LoginAudit;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @extends Factory<LoginAudit>
@@ -19,12 +20,13 @@ class LoginAuditFactory extends Factory
      */
     public function definition(): array
     {
-        /** @var class-string $userModel */
+        /** @var class-string<Model> $userModel */
         $userModel = config('auth.providers.users.model');
+        $userFactory = [$userModel, 'factory'];
 
         return [
             'authenticatable_type' => (new $userModel)->getMorphClass(),
-            'authenticatable_id' => $userModel::factory(),
+            'authenticatable_id' => is_callable($userFactory) ? $userFactory() : 1,
             'ip_address' => $this->faker->ipv4(),
             'user_agent' => $this->faker->userAgent(),
             'login_at' => $this->faker->dateTimeBetween('-1 month', 'now'),

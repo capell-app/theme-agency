@@ -8,7 +8,7 @@ const outputPath = path.join(root, 'docs/package-screenshot-manifest.json')
 const requirements = [
     'Install the package under test.',
     'Composer require any package-level composerRequires before seeding demo data.',
-    'Run package setup or demo commands listed in the package overview.',
+    'Run package install, setup, and demo commands from capell.json in that order when present.',
     'Authenticate as an admin user with the required role or permission.',
     'Resolve admin-surface targets through Filament resource/page URLs when possible.',
     'Resolve frontend-url targets through seeded demo routes or package route names.',
@@ -37,6 +37,15 @@ for (const packageName of packageNames) {
     }
 
     const packageManifest = JSON.parse(fs.readFileSync(screenshotsPath, 'utf8'))
+    const capellManifestPath = path.join(
+        packagesPath,
+        packageName,
+        'capell.json',
+    )
+    const capellManifest = fs.existsSync(capellManifestPath)
+        ? JSON.parse(fs.readFileSync(capellManifestPath, 'utf8'))
+        : {}
+    const commands = capellManifest.commands ?? {}
     const composerName = packageManifest.composerName ?? null
     const packageEntries = packageManifest.entries ?? []
     const packageBrowserTests = packageManifest.browserTests ?? []
@@ -44,6 +53,13 @@ for (const packageName of packageNames) {
     packages.push({
         package: packageManifest.package ?? packageName,
         composerName,
+        installCommand: commands.install ?? null,
+        setupCommand: commands.setup ?? null,
+        demoCommand: commands.demo ?? null,
+        demoParams: Array.isArray(commands.demoParams)
+            ? commands.demoParams
+            : [],
+        doctorCommand: commands.doctor ?? null,
         entryCount: packageEntries.length,
         browserTestCount: packageBrowserTests.length,
     })
@@ -69,7 +85,7 @@ for (const packageName of packageNames) {
 const manifest = {
     generatedFor: 'capell-docs-deployment',
     source: 'packages/*/docs/screenshots.json',
-    outputRoot: 'public/docs/screenshots/packages',
+    outputRoot: 'packages/*/docs/screenshots',
     requirements,
     packages,
     entries,

@@ -19,8 +19,15 @@ use Capell\CampaignStudio\Models\CampaignLandingPage;
 use Capell\Core\Models\Layout;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\PageUrl;
+use Capell\Core\Models\Site;
 use Capell\Insights\Models\InsightsVisit;
 use Carbon\CarbonImmutable;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Collection as SupportCollection;
 
 it('resolves active campaigns from utm campaign values before falling back to landing page urls', function (): void {
     $utmCampaign = CampaignGroup::factory()->create([
@@ -99,6 +106,75 @@ it('builds campaign overview stats from active campaigns, conversions, and campa
         'conversions' => 1,
         'conversion_rate' => 50.0,
     ]);
+});
+
+it('scopes campaign dashboard actions to the actor assigned sites', function (): void {
+    $startsAt = CarbonImmutable::parse('2026-04-01 00:00:00');
+    $endsAt = CarbonImmutable::parse('2026-04-30 23:59:59');
+    $assignedSite = Site::factory()->create();
+    $hiddenSite = Site::factory()->create();
+    $assignedCampaign = CampaignGroup::factory()->create([
+        'site_id' => $assignedSite->getKey(),
+        'name' => 'Assigned Campaign',
+        'utm_campaign' => 'assigned-campaign',
+    ]);
+    $hiddenCampaign = CampaignGroup::factory()->create([
+        'site_id' => $hiddenSite->getKey(),
+        'name' => 'Hidden Campaign',
+        'utm_campaign' => 'hidden-campaign',
+    ]);
+    $assignedGoal = CampaignConversionGoal::factory()->for($assignedCampaign, 'campaignGroup')->create([
+        'site_id' => $assignedSite->getKey(),
+    ]);
+    $hiddenGoal = CampaignConversionGoal::factory()->for($hiddenCampaign, 'campaignGroup')->create([
+        'site_id' => $hiddenSite->getKey(),
+    ]);
+    $assignedLandingPage = CampaignLandingPage::factory()->for($assignedCampaign, 'campaignGroup')->create([
+        'headline' => 'Assigned Landing',
+    ]);
+    CampaignLandingPage::factory()->for($hiddenCampaign, 'campaignGroup')->create([
+        'headline' => 'Hidden Landing',
+    ]);
+
+    CampaignConversion::factory()
+        ->for($assignedCampaign, 'campaignGroup')
+        ->for($assignedGoal, 'goal')
+        ->for($assignedLandingPage, 'landingPage')
+        ->create([
+            'site_id' => $assignedSite->getKey(),
+            'converted_at' => CarbonImmutable::parse('2026-04-12 12:00:00'),
+        ]);
+    CampaignConversion::factory()
+        ->for($hiddenCampaign, 'campaignGroup')
+        ->for($hiddenGoal, 'goal')
+        ->create([
+            'site_id' => $hiddenSite->getKey(),
+            'converted_at' => CarbonImmutable::parse('2026-04-12 12:00:00'),
+        ]);
+    InsightsVisit::factory()->create([
+        'utm_campaign' => 'assigned-campaign',
+        'last_seen_at' => CarbonImmutable::parse('2026-04-09 10:00:00'),
+    ]);
+    InsightsVisit::factory()->create([
+        'utm_campaign' => 'hidden-campaign',
+        'last_seen_at' => CarbonImmutable::parse('2026-04-09 10:00:00'),
+    ]);
+
+    auth()->setUser(campaignDashboardScopedUser(collect([(int) $assignedSite->getKey()])));
+
+    $stats = BuildCampaignOverviewStatsAction::run($startsAt, $endsAt);
+    $topCampaigns = BuildTopCampaignStudioQueryAction::run(limit: 5, startsAt: $startsAt, endsAt: $endsAt);
+    $topLandingPages = BuildTopLandingPagesQueryAction::run(limit: 5, startsAt: $startsAt, endsAt: $endsAt);
+
+    expect($stats)->toBe([
+        'active_campaign-studio' => 1,
+        'conversions' => 1,
+        'conversion_rate' => 100.0,
+    ])
+        ->and($topCampaigns)->toHaveCount(1)
+        ->and($topCampaigns[0]->campaignName)->toBe('Assigned Campaign')
+        ->and($topLandingPages)->toHaveCount(1)
+        ->and($topLandingPages[0]->landingPageName)->toBe('Assigned Landing');
 });
 
 it('ranks top campaigns by in-window conversions and calculates visit conversion rates', function (): void {
@@ -287,3 +363,37 @@ it('installs campaign layouts through the console command', function (): void {
 
     expect(Layout::query()->where('key', 'campaign-product-launch')->exists())->toBeTrue();
 });
+
+/**
+ * @param  SupportCollection<int, int>  $assignedSiteIds
+ */
+function campaignDashboardScopedUser(SupportCollection $assignedSiteIds): Authenticatable
+{
+    $user = new class extends Authenticatable implements FilamentUser
+    {
+        /** @use HasFactory<Factory<static>> */
+        use HasFactory;
+
+        /** @var SupportCollection<int, int> */
+        public SupportCollection $assignedSiteIds;
+
+        public function canAccessPanel(Panel $panel): bool
+        {
+            return true;
+        }
+
+        /** @return SupportCollection<int, int> */
+        public function getAssignedSiteIds(): SupportCollection
+        {
+            return $this->assignedSiteIds;
+        }
+
+        public function isGlobalAdmin(): bool
+        {
+            return false;
+        }
+    };
+    $user->assignedSiteIds = $assignedSiteIds;
+
+    return $user;
+}

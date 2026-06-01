@@ -7,7 +7,7 @@
         <div class="max-w-3xl">
             <input
                 class="block w-full rounded-md border-gray-300 text-sm shadow-sm dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100"
-                placeholder="Search commands, packages, cache, migrations, queues..."
+                placeholder="{{ __('capell-diagnostics::package.command_palette_search_placeholder') }}"
                 type="search"
                 wire:model.live="query"
             />
@@ -59,7 +59,7 @@
                     <div
                         class="rounded-lg border border-dashed border-gray-300 p-8 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400"
                     >
-                        No commands found.
+                        {{ __('capell-diagnostics::package.command_palette_empty') }}
                     </div>
                 @endforelse
             </section>
@@ -107,8 +107,7 @@
                                     wire:model="confirmed"
                                 />
                                 <span>
-                                    I understand this command will run on this
-                                    application.
+                                    {{ __('capell-diagnostics::package.command_palette_confirmation_label') }}
                                 </span>
                             </label>
                         @endif
@@ -161,7 +160,7 @@
                                 type="button"
                                 wire:click="clearSelection"
                             >
-                                Cancel
+                                {{ __('capell-diagnostics::package.command_palette_cancel') }}
                             </button>
                             <button
                                 class="bg-primary-600 hover:bg-primary-500 rounded-md px-3 py-2 text-sm font-medium text-white disabled:opacity-70"
@@ -169,14 +168,13 @@
                                 wire:loading.attr="disabled"
                                 wire:target="executeSelectedCommand"
                             >
-                                Run
+                                {{ __('capell-diagnostics::package.command_palette_run') }}
                             </button>
                         </div>
                     </form>
                 @else
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                        Select a command to review parameters, permission scope,
-                        and confirmation requirements.
+                        {{ __('capell-diagnostics::package.command_palette_select_prompt') }}
                     </p>
                 @endif
             </aside>

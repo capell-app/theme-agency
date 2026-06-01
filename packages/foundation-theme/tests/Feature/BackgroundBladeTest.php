@@ -5,7 +5,7 @@ declare(strict_types=1);
 test('background media component does not declare duplicate style attributes on a div', function (): void {
     $blade = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/media/background.blade.php');
 
-    expect($blade)->toBeString();
+    throw_unless(is_string($blade), RuntimeException::class, 'Expected background media Blade file to be readable.');
 
     preg_match_all('/<div\b[^>]*>/s', $blade, $divMatches);
 

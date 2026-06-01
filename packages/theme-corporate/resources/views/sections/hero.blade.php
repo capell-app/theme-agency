@@ -124,7 +124,10 @@
                                 </p>
                             </div>
 
-                            <div class="space-y-3" aria-hidden="true">
+                            <div
+                                class="space-y-3"
+                                aria-hidden="true"
+                            >
                                 <span
                                     class="block h-2 w-24 bg-[var(--theme-accent)]"
                                 ></span>
@@ -179,7 +182,10 @@
                                 >
                                     {{ __('capell-theme-corporate::generic.decision_log_label') }}
                                 </p>
-                                <div class="mt-4 space-y-2" aria-hidden="true">
+                                <div
+                                    class="mt-4 space-y-2"
+                                    aria-hidden="true"
+                                >
                                     <span
                                         class="block h-2 w-full bg-white/35"
                                     ></span>

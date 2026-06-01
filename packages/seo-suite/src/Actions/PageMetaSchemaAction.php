@@ -30,6 +30,8 @@ class PageMetaSchemaAction
 
         $entityType = SchemaEntityTypeEnum::fromSchemaType($configuratorType);
 
+        $translation = $page->translation;
+
         $return = [
             '@context' => 'https://schema.org',
             '@type' => $configuratorType,
@@ -41,11 +43,11 @@ class PageMetaSchemaAction
             'datePublished' => $page->visible_from?->toDateString(),
             'url' => $pageUrl,
             'creator' => data_get($page, 'creator.name'),
-            'name' => $page->translation->label,
-            'headline' => $page->translation->title,
+            'name' => $translation->label ?? $page->name,
+            'headline' => $translation?->title,
             'availableLanguage' => $page->translations->pluck('language.name')->all(),
-            'keywords' => $page->translation->meta_keywords,
-            'description' => $page->translation->meta_description,
+            'keywords' => $translation?->meta_keywords,
+            'description' => $translation?->meta_description,
         ];
 
         if (in_array($configuratorType, ['Article', 'BlogPosting', 'NewsArticle', 'TechArticle', 'Report'], true)) {

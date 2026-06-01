@@ -95,6 +95,25 @@ it('uses the configured proxy header when cdn mode is configured', function (): 
     expect(ResolveLoginAuditIpAddressAction::run($request))->toBe('203.0.113.10');
 });
 
+it('ignores invalid configured proxy header values', function (): void {
+    seedLoginAuditQueryAndResolverSetting('track_user_ip_addresses', true);
+
+    config()->set('login-audit.behind_cdn', [
+        'http_header_field' => 'HTTP_CF_CONNECTING_IP',
+    ]);
+
+    $request = Request::create(
+        uri: '/admin/login-audits',
+        method: Symfony\Component\HttpFoundation\Request::METHOD_GET,
+        server: [
+            'REMOTE_ADDR' => '198.51.100.10',
+            'HTTP_CF_CONNECTING_IP' => "203.0.113.10\nspoofed",
+        ],
+    );
+
+    expect(ResolveLoginAuditIpAddressAction::run($request))->toBe('198.51.100.10');
+});
+
 it('returns null ip addresses when tracking is disabled', function (): void {
     seedLoginAuditQueryAndResolverSetting('track_user_ip_addresses', false);
 

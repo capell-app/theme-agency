@@ -1,0 +1,155 @@
+<?php
+
+declare(strict_types=1);
+
+use Capell\KnowledgeBase\Actions\BuildAiReadableKnowledgeBaseOutputAction;
+use Capell\KnowledgeBase\Actions\BuildKnowledgeBaseSearchDocumentsAction;
+use Capell\KnowledgeBase\Actions\BuildPublicKnowledgeBaseArticleDataAction;
+use Capell\KnowledgeBase\Actions\BuildPublicKnowledgeBaseNavigationAction;
+use Capell\KnowledgeBase\Actions\CreateKnowledgeBaseArticleAction;
+use Capell\KnowledgeBase\Actions\CreateKnowledgeBaseArticleVersionAction;
+use Capell\KnowledgeBase\Actions\CreateKnowledgeBaseCollectionAction;
+use Capell\KnowledgeBase\Actions\PublishKnowledgeBaseArticleVersionAction;
+use Capell\KnowledgeBase\Actions\RecordKnowledgeBaseArticleFeedbackAction;
+use Capell\KnowledgeBase\Actions\RelateKnowledgeBaseArticlesAction;
+use Capell\KnowledgeBase\Data\CreateKnowledgeBaseArticleData;
+use Capell\KnowledgeBase\Data\CreateKnowledgeBaseArticleVersionData;
+use Capell\KnowledgeBase\Data\CreateKnowledgeBaseCollectionData;
+use Capell\KnowledgeBase\Data\RecordKnowledgeBaseArticleFeedbackData;
+use Capell\KnowledgeBase\Enums\KnowledgeBaseArticleStatus;
+use Capell\KnowledgeBase\Models\KnowledgeBaseArticleFeedback;
+use Capell\KnowledgeBase\Models\KnowledgeBaseArticleVersion;
+use Capell\KnowledgeBase\Tests\KnowledgeBaseTestCase;
+use Illuminate\Support\Collection;
+
+require_once dirname(__DIR__, 2) . '/KnowledgeBaseTestCase.php';
+
+uses(KnowledgeBaseTestCase::class);
+
+it('creates collections, versioned articles, and public-safe article data', function (): void {
+    $collection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Getting Started',
+        description: 'Install and configure the product.',
+    ));
+
+    $article = CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $collection,
+        title: 'Install Capell',
+        body: '<h2>Install</h2><p>Run the installer and configure the site.</p>',
+        summary: 'Install the product safely.',
+        status: KnowledgeBaseArticleStatus::Published,
+        searchWeight: 80,
+    ));
+
+    expect($article->status)->toBe(KnowledgeBaseArticleStatus::Published)
+        ->and($article->currentVersion)->toBeInstanceOf(KnowledgeBaseArticleVersion::class)
+        ->and($article->currentVersion->author_type)->toBeNull()
+        ->and($article->currentVersion->author_id)->toBeNull();
+
+    $publicArticle = BuildPublicKnowledgeBaseArticleDataAction::run($article);
+    $publicPayload = json_encode($publicArticle?->toArray(), JSON_THROW_ON_ERROR);
+
+    expect($publicArticle?->publicPath)->toBe('/docs/getting-started/install-capell')
+        ->and($publicPayload)->toContain('Install Capell')
+        ->and($publicPayload)->not->toContain('author')
+        ->and($publicPayload)->not->toContain('author_type')
+        ->and($publicPayload)->not->toContain('author_id')
+        ->and($publicPayload)->not->toContain('model_id')
+        ->and($publicPayload)->not->toContain('field_path')
+        ->and($publicPayload)->not->toContain('Filament')
+        ->and($publicPayload)->not->toContain('signed')
+        ->and($publicPayload)->not->toContain('capell-app/knowledge-base');
+});
+
+it('publishes new versions and keeps navigation, search, and ai output public only', function (): void {
+    $publicCollection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Public Docs',
+        sortOrder: 1,
+    ));
+    $privateCollection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Private Docs',
+        isPublic: false,
+    ));
+
+    $publicArticle = CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $publicCollection,
+        title: 'Public Article',
+        body: '<p>Old public body.</p>',
+        summary: 'Old public summary.',
+        status: KnowledgeBaseArticleStatus::Published,
+        searchWeight: 90,
+    ));
+    $hiddenArticle = CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $privateCollection,
+        title: 'Hidden Article',
+        body: '<p>Hidden body.</p>',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+
+    $version = CreateKnowledgeBaseArticleVersionAction::run(new CreateKnowledgeBaseArticleVersionData(
+        article: $publicArticle,
+        version: 'v2',
+        title: 'Public Article Updated',
+        body: '<h2>Updated</h2><p>Public body for visitors and AI.</p>',
+        summary: 'Updated public summary.',
+    ));
+
+    PublishKnowledgeBaseArticleVersionAction::run($version);
+
+    /** @var Collection<int, mixed> $navigation */
+    $navigation = BuildPublicKnowledgeBaseNavigationAction::run();
+    /** @var Collection<int, mixed> $searchDocuments */
+    $searchDocuments = BuildKnowledgeBaseSearchDocumentsAction::run();
+    /** @var Collection<int, mixed> $aiOutput */
+    $aiOutput = BuildAiReadableKnowledgeBaseOutputAction::run();
+
+    expect($navigation)->toHaveCount(1)
+        ->and($navigation->first()->articles)->toHaveCount(1)
+        ->and($navigation->first()->articles[0]['title'])->toBe('Public Article Updated')
+        ->and($searchDocuments)->toHaveCount(1)
+        ->and($searchDocuments->first()->weight)->toBe(90)
+        ->and($searchDocuments->first()->title)->toBe('Public Article Updated')
+        ->and($aiOutput)->toHaveCount(1)
+        ->and($aiOutput->first()->content)->toBe('Updated Public body for visitors and AI.')
+        ->and($aiOutput->first()->publicPath)->toBe('/docs/public-docs/public-article')
+        ->and($aiOutput->pluck('title')->all())->not->toContain($hiddenArticle->title);
+});
+
+it('records redacted feedback and related article links', function (): void {
+    $collection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Troubleshooting',
+    ));
+    $article = CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $collection,
+        title: 'Fix Cache',
+        body: '<p>Clear cache safely.</p>',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+    $relatedArticle = CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $collection,
+        title: 'Check Logs',
+        body: '<p>Read logs safely.</p>',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+
+    RelateKnowledgeBaseArticlesAction::run($article, $relatedArticle, sortOrder: 10);
+
+    $feedback = RecordKnowledgeBaseArticleFeedbackAction::run(new RecordKnowledgeBaseArticleFeedbackData(
+        article: $article,
+        helpful: false,
+        comment: 'Needs a log example.',
+        visitorIdentifier: '192.0.2.10',
+        userAgent: 'Example Browser',
+    ));
+
+    $publicArticle = BuildPublicKnowledgeBaseArticleDataAction::run($article->refresh());
+
+    expect($feedback)->toBeInstanceOf(KnowledgeBaseArticleFeedback::class)
+        ->and($feedback->visitor_hash)->not->toBe('192.0.2.10')
+        ->and($feedback->user_agent_hash)->not->toBe('Example Browser')
+        ->and($feedback->visitor_hash)->toHaveLength(64)
+        ->and($feedback->user_agent_hash)->toHaveLength(64)
+        ->and($publicArticle?->relatedArticles)->toHaveCount(1)
+        ->and($publicArticle?->relatedArticles[0]->title)->toBe('Check Logs')
+        ->and($publicArticle?->relatedArticles[0]->body)->toBe('');
+});

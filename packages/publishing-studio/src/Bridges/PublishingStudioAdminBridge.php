@@ -20,6 +20,7 @@ use Capell\PublishingStudio\Filament\Pages\StaleDraftsPage;
 use Capell\PublishingStudio\Filament\Resources\PreviewLinks\PreviewLinkResource;
 use Capell\PublishingStudio\Filament\Resources\PublishingStudio\WorkspaceResource;
 use Capell\PublishingStudio\Filament\Widgets\WorkspaceActivityWidgetAbstract;
+use Filament\Pages\Page;
 
 final class PublishingStudioAdminBridge implements AdminBridge
 {
@@ -43,6 +44,9 @@ final class PublishingStudioAdminBridge implements AdminBridge
         $this->extensionPage($context->packageName, StaleDraftsPage::class);
     }
 
+    /**
+     * @param  class-string<Page>  $page
+     */
     private function extensionPage(string $packageName, string $page): void
     {
         CapellAdmin::registerExtensionPage($packageName, $page);

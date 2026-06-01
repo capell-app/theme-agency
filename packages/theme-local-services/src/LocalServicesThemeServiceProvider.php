@@ -13,7 +13,6 @@ use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\LocalServices\Console\Commands\DemoCommand;
-use Capell\ThemeStudio\LocalServices\Rendering\PackageAwareSectionRenderer;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -33,7 +32,7 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/local-services.jpg',
             tags: ['Services', 'Local SEO', 'Lead generation'],
             bestFit: ['Service businesses', 'Local operators', 'Quote-led teams'],
-            includedSections: ['navigation', 'hero', 'features', 'services', 'service-areas', 'proof', 'content-listing', 'quote-form', 'case-studies', 'resources', 'contact', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'services', 'service-packages', 'service-areas', 'locality-proof', 'proof', 'content-listing', 'quote-form', 'quote-estimator', 'case-studies', 'resources', 'contact', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'local-services',
@@ -43,6 +42,9 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
                     values: [
                         'primaryColor' => '#0f766e',
                         'accentColor' => '#f97316',
+                        'neutralColor' => '#13231f',
+                        'surfaceColor' => '#f7fbf8',
+                        'foregroundColor' => '#13231f',
                         'headingFont' => 'sora',
                         'bodyFont' => 'inter',
                         'spacing' => 'balanced',
@@ -51,6 +53,9 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
                         'layoutPresentation' => 'structured',
                         'motionIntensity' => 'subtle',
                         'mediaTreatment' => 'framed',
+                        'radius' => 'md',
+                        'headingScale' => 'balanced',
+                        'cardDensity' => 'compact',
                     ],
                 ),
             ],
@@ -95,7 +100,7 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
                 sectionRenderers: [],
             ),
             sectionRenderers: collect(self::definition()->includedSections)
-                ->map(fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer|null => $this->sectionRenderer(
+                ->map(fn (string $sectionKey): ?ViewSectionRenderer => $this->sectionRenderer(
                     $sectionKey,
                     $this->optionalSectionIntegrations($blogAvailable, $formBuilderAvailable),
                 ))
@@ -108,7 +113,7 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
     /**
      * @param  array<string, array<string, bool>>  $optionalIntegrations
      */
-    private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ViewSectionRenderer|PackageAwareSectionRenderer|null
+    private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ?ViewSectionRenderer
     {
         if ($this->isFoundationSection($sectionKey)) {
             return null;
@@ -121,12 +126,12 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
         }
 
         if (array_key_exists($sectionKey, $optionalIntegrations)) {
-            return new PackageAwareSectionRenderer(
-                themeKey: self::THEME_KEY,
-                sectionKey: $sectionKey,
-                view: $view,
-                integrations: $optionalIntegrations[$sectionKey],
-                failLoudly: true,
+            return new ViewSectionRenderer(
+                self::THEME_KEY,
+                $sectionKey,
+                $view,
+                true,
+                $optionalIntegrations[$sectionKey],
             );
         }
 
@@ -150,6 +155,7 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
     {
         return [
             'quote-form' => ['formBuilderAvailable' => $formBuilderAvailable],
+            'quote-estimator' => ['formBuilderAvailable' => $formBuilderAvailable],
             'resources' => ['blogAvailable' => $blogAvailable],
         ];
     }

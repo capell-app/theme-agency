@@ -194,7 +194,10 @@
                                                 {{ $field }}
                                             </td>
                                             @if ($this->isLongText($change['before']) || $this->isLongText($change['after']))
-                                                <td colspan="2" class="py-2">
+                                                <td
+                                                    colspan="2"
+                                                    class="py-2"
+                                                >
                                                     {!! $this->renderHtmlDiff($change['before'], $change['after']) !!}
                                                 </td>
                                             @else

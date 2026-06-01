@@ -10,6 +10,7 @@ use Capell\Comments\Enums\CommentIdentityMode;
 use Capell\Comments\Enums\CommentPublicationPolicy;
 use Capell\Comments\Enums\CommentStatus;
 use Capell\Comments\Enums\CommentVerificationFlow;
+use Capell\Comments\Events\CommentCreated;
 use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
 use Capell\Comments\Support\CommentableRegistry;
@@ -113,7 +114,11 @@ class CreateCommentAction
                 InvalidateCommentableCacheAction::run($data->commentable);
             }
 
-            return $comment->fresh(['author', 'parent']) ?? $comment;
+            $freshComment = $comment->fresh(['author', 'parent']) ?? $comment;
+
+            event(new CommentCreated($freshComment));
+
+            return $freshComment;
         });
     }
 

@@ -63,10 +63,10 @@ final readonly class HeroBackgroundData
     public function cssVariables(): array
     {
         return [
-            '--capell-hero-background-color' => $this->backgroundColor,
-            '--capell-hero-overlay-opacity' => (string) $this->overlayOpacity,
-            '--capell-hero-accent-color' => $this->accentColor,
-            '--capell-hero-accent-color-alt' => $this->accentColorAlt,
+            '--hero-background-color' => $this->backgroundColor,
+            '--hero-overlay-opacity' => (string) $this->overlayOpacity,
+            '--hero-accent-color' => $this->accentColor,
+            '--hero-accent-color-alt' => $this->accentColorAlt,
         ];
     }
 }

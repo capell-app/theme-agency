@@ -5,12 +5,16 @@ declare(strict_types=1);
 use Capell\PublicActions\Data\PublicActionMetadataData;
 use Capell\PublicActions\Data\PublicActionPayloadData;
 use Capell\PublicActions\Data\PublicActionSubmissionData;
+use Capell\PublicActions\Models\PublicAction;
 use Capell\PublicActions\Models\PublicActionDestination;
 use Capell\PublicActions\Models\PublicActionSubmission;
+use Capell\PublicActions\Policies\PublicActionPolicy;
 use Capell\PublicActions\Support\PublicActionDestinationAdapterRegistry;
 use Capell\PublicActions\Support\PublicActionHandlerRegistry;
 use Capell\PublicActions\Tests\Fakes\FakePublicActionDestinationAdapter;
 use Capell\PublicActions\Tests\Fakes\FakePublicActionHandler;
+use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Collection;
 
 it('resolves registered public action handlers from objects and classes', function (): void {
     $registry = new PublicActionHandlerRegistry;
@@ -69,3 +73,80 @@ it('binds registries in the container', function (): void {
         ->and(resolve(PublicActionHandlerRegistry::class))->toBe(resolve(PublicActionHandlerRegistry::class))
         ->and(resolve(PublicActionDestinationAdapterRegistry::class))->toBe(resolve(PublicActionDestinationAdapterRegistry::class));
 });
+
+it('authorizes public action resources by permissions and assigned site scope', function (): void {
+    $policy = new PublicActionPolicy;
+    $assignedUser = new PublicActionPolicyTestUser(
+        permissions: ['View:PublicAction', 'Update:PublicAction', 'Delete:PublicAction'],
+        assignedSiteIds: [7],
+    );
+    $superAdmin = new PublicActionPolicyTestUser(superAdmin: true);
+    $unassignedUser = new PublicActionPolicyTestUser(
+        permissions: ['View:PublicAction', 'Update:PublicAction'],
+        assignedSiteIds: [9],
+    );
+
+    $siteAction = new PublicAction(['site_id' => 7]);
+    $otherSiteAction = new PublicAction(['site_id' => 11]);
+
+    expect($policy->viewAny($assignedUser))->toBeTrue()
+        ->and($policy->view($assignedUser, $siteAction))->toBeTrue()
+        ->and($policy->update($assignedUser, $siteAction))->toBeTrue()
+        ->and($policy->delete($assignedUser, $siteAction))->toBeTrue()
+        ->and($policy->view($unassignedUser, $siteAction))->toBeFalse()
+        ->and($policy->update($unassignedUser, $otherSiteAction))->toBeFalse()
+        ->and($policy->view($superAdmin, $otherSiteAction))->toBeTrue()
+        ->and($policy->forceDeleteAny($superAdmin))->toBeTrue();
+});
+
+it('resolves public action policy site scope from related action records', function (): void {
+    $policy = new PublicActionPolicy;
+    $user = new PublicActionPolicyTestUser(
+        permissions: ['View:PublicAction', 'Restore:PublicAction', 'ForceDelete:PublicAction'],
+        assignedSiteIds: [12],
+    );
+    $submission = new PublicActionSubmission;
+    $submission->setRelation('action', new PublicAction(['site_id' => '12']));
+    $destination = new PublicActionDestination;
+    $destination->setRelation('action', new PublicAction(['site_id' => 12]));
+    $dispatchAttempt = new PublicActionDestination;
+    $dispatchAttempt->setRelation('destination', $destination);
+
+    expect($policy->view($user, $submission))->toBeTrue()
+        ->and($policy->restore($user, $destination))->toBeTrue()
+        ->and($policy->forceDelete($user, $dispatchAttempt))->toBeTrue()
+        ->and($policy->create(new PublicActionPolicyTestUser))->toBeFalse();
+});
+
+final class PublicActionPolicyTestUser extends User
+{
+    /**
+     * @param  list<string>  $permissions
+     * @param  list<int>  $assignedSiteIds
+     */
+    public function __construct(
+        private readonly array $permissions = [],
+        private readonly array $assignedSiteIds = [],
+        private readonly bool $superAdmin = false,
+    ) {
+        parent::__construct();
+    }
+
+    public function checkPermissionTo(string $permission): bool
+    {
+        return in_array($permission, $this->permissions, true);
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->superAdmin && $role === config('capell.roles.super_admin', 'super_admin');
+    }
+
+    /**
+     * @return Collection<int, int>
+     */
+    public function getAssignedSiteIds(): Collection
+    {
+        return collect($this->assignedSiteIds);
+    }
+}

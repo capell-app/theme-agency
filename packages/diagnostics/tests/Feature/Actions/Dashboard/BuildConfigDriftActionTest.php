@@ -6,13 +6,14 @@ use Capell\Diagnostics\Actions\Dashboard\BuildConfigDriftAction;
 use Capell\Diagnostics\Data\Dashboard\ConfigDriftEntryData;
 use Composer\InstalledVersions;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 // ---------------------------------------------------------------------------
 // Helper: subclass that overrides configPairs() to point at temp files.
 // ---------------------------------------------------------------------------
 
 /**
- * @param  array<array-key, mixed>  $pairs
+ * @param  list<array{0: string, 1: string, 2: string}>  $pairs
  */
 function makeDriftAction(array $pairs): BuildConfigDriftAction
 {
@@ -34,11 +35,17 @@ function makeDriftAction(array $pairs): BuildConfigDriftAction
  */
 function writeTempConfig(array $config): string
 {
-    $path = tempnam(sys_get_temp_dir(), 'capell_cfg_');
-    assert($path !== false);
-    file_put_contents($path, '<?php return ' . var_export($config, true) . ';');
+    $path = temporaryConfigPath('capell_cfg_');
+    $written = file_put_contents($path, '<?php return ' . var_export($config, true) . ';');
+
+    throw_if($written === false, RuntimeException::class, sprintf('Unable to write temporary config file [%s].', $path));
 
     return $path;
+}
+
+function temporaryConfigPath(string $prefix): string
+{
+    return rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $prefix . Str::uuid()->toString() . '.php';
 }
 
 // ---------------------------------------------------------------------------
@@ -75,7 +82,7 @@ it('flags a missing key when host lacks a shipped key', function (): void {
 
         expect($result->totalDriftCount)->toBe(1);
 
-        $entry = $result->entries->toCollection()->first();
+        $entry = diagnosticsConfigDriftEntry($result->entries->toCollection()->first());
         expect($entry)->not->toBeNull()
             ->and($entry->kind)->toBe('missing')
             ->and($entry->keyPath)->toBe('foo.bar.baz')
@@ -99,7 +106,7 @@ it('flags a stale key when host has a key no longer in shipped', function (): vo
 
         expect($result->totalDriftCount)->toBe(1);
 
-        $entry = $result->entries->toCollection()->first();
+        $entry = diagnosticsConfigDriftEntry($result->entries->toCollection()->first());
         expect($entry)->not->toBeNull()
             ->and($entry->kind)->toBe('stale')
             ->and($entry->keyPath)->toBe('foo.bar.legacy')
@@ -166,8 +173,8 @@ it('detects drift across multiple packages', function (): void {
             ->and($result->packagesChecked)->toBe(2);
 
         $entries = $result->entries->toCollection();
-        $missingEntry = $entries->first(fn (ConfigDriftEntryData $entry): bool => $entry->kind === 'missing');
-        $staleEntry = $entries->first(fn (ConfigDriftEntryData $entry): bool => $entry->kind === 'stale');
+        $missingEntry = diagnosticsConfigDriftEntry($entries->first(fn (ConfigDriftEntryData $entry): bool => $entry->kind === 'missing'));
+        $staleEntry = diagnosticsConfigDriftEntry($entries->first(fn (ConfigDriftEntryData $entry): bool => $entry->kind === 'stale'));
 
         expect($missingEntry)->not->toBeNull()
             ->and($missingEntry->package)->toBe('core')
@@ -196,8 +203,7 @@ it('compares shipped config resolved from composer install paths', function (): 
     }
 
     $shippedPath = $installPath . '/config/capell.php';
-    $hostPath = tempnam(sys_get_temp_dir(), 'capell_host_cfg_');
-    assert($hostPath !== false);
+    $hostPath = temporaryConfigPath('capell_host_cfg_');
     File::copy($shippedPath, $hostPath);
 
     try {

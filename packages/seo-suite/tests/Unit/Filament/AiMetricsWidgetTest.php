@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\SeoSuite\Data\Dashboard\AiMetricsData;
+use Capell\SeoSuite\Data\Dashboard\FeatureUsageData;
 use Capell\SeoSuite\Filament\Widgets\AiMetricsWidgetAbstract;
 use Capell\SeoSuite\Models\AIGenerationHistory;
 use Capell\SeoSuite\Settings\AIOrchestratorSettings;
@@ -91,6 +92,8 @@ it('builds ai metrics widget data from history rows, settings, and rate limits',
         ->and($data->featureUsage)->toHaveCount(2);
 
     $topFeature = $data->featureUsage->first();
+
+    throw_unless($topFeature instanceof FeatureUsageData, RuntimeException::class, 'Expected top feature usage data.');
 
     expect($topFeature->feature)->toBe('GeneratePageTitleAction')
         ->and($topFeature->count)->toBe(2)

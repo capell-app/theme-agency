@@ -3,7 +3,7 @@
     "composerName": "capell-app/dashboard-reports",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/dashboard-reports",
+    "outputDirectory": "packages/dashboard-reports/docs/screenshots",
     "entries": [
         {
             "id": "publishing-trend-dashboard-widget",
@@ -14,7 +14,7 @@
             "target": "PublishingTrendChartWidget",
             "required": true,
             "notes": "Capture on the main admin dashboard with seeded published and scheduled page counts across the selected date window.",
-            "screenshotPath": "public/docs/screenshots/packages/dashboard-reports/publishing-trend-dashboard-widget.png",
+            "screenshotPath": "packages/dashboard-reports/docs/screenshots/publishing-trend-dashboard-widget.png",
             "useCase": "An administrator checks whether publishing and scheduling activity changed during the current reporting window."
         },
         {
@@ -26,7 +26,7 @@
             "target": "ContentHealthWidget",
             "required": true,
             "notes": "Capture on the main admin dashboard with at least one scheduled, expired, URL-less, or stale page so canView() keeps the widget visible.",
-            "screenshotPath": "public/docs/screenshots/packages/dashboard-reports/content-health-dashboard-widget.png",
+            "screenshotPath": "packages/dashboard-reports/docs/screenshots/content-health-dashboard-widget.png",
             "useCase": "An editor spots page health issues that need attention before the next publishing review."
         },
         {
@@ -38,7 +38,7 @@
             "target": "DashboardReportsDashboardSettingsContributor",
             "required": true,
             "notes": "Capture the shared dashboard settings screen after this package contributes the publishing trend and content health visibility keys.",
-            "screenshotPath": "public/docs/screenshots/packages/dashboard-reports/dashboard-report-settings.png",
+            "screenshotPath": "packages/dashboard-reports/docs/screenshots/dashboard-report-settings.png",
             "useCase": "A site owner confirms the Dashboard Reports widgets can be enabled or hidden through dashboard settings."
         }
     ]

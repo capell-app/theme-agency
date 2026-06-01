@@ -3,7 +3,7 @@
     "composerName": "capell-app/access-gate",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/access-gate",
+    "outputDirectory": "packages/access-gate/docs/screenshots",
     "entries": [
         {
             "id": "access-areas-admin-index",
@@ -15,7 +15,7 @@
             "required": true,
             "notes": "Requires package migrations plus at least one seeded access area with a known route key, status, registration policy, and token policy.",
             "useCase": "An administrator reviews which protected areas are active and how each area accepts or blocks access requests.",
-            "screenshotPath": "public/docs/screenshots/packages/access-gate/access-areas-admin-index.png"
+            "screenshotPath": "packages/access-gate/docs/screenshots/access-areas-admin-index.png"
         },
         {
             "id": "access-area-create-edit-form",
@@ -27,7 +27,7 @@
             "required": true,
             "notes": "Capture the key, status, schedule, registration policy, token policy, approval limit, allowlist, and metadata fields. The batch harness still needs install-flow verification for access-gate migrations.",
             "useCase": "An administrator configures a protected area before routing private content through the access-gate middleware.",
-            "screenshotPath": "public/docs/screenshots/packages/access-gate/access-area-create-edit-form.png"
+            "screenshotPath": "packages/access-gate/docs/screenshots/access-area-create-edit-form.png"
         },
         {
             "id": "registrations-admin-index",
@@ -39,7 +39,7 @@
             "required": true,
             "notes": "Requires seeded pending, approved, rejected, and expired registrations tied to an access area so table filters and row actions are visible.",
             "useCase": "An administrator triages access requests and uses approve, reject, resend claim, expire, or grant actions.",
-            "screenshotPath": "public/docs/screenshots/packages/access-gate/registrations-admin-index.png"
+            "screenshotPath": "packages/access-gate/docs/screenshots/registrations-admin-index.png"
         },
         {
             "id": "grants-admin-index",
@@ -51,7 +51,7 @@
             "required": true,
             "notes": "Requires seeded active, expired, and revoked grants across at least one subject type.",
             "useCase": "An administrator audits who currently has access and revokes grants that should no longer unlock protected content.",
-            "screenshotPath": "public/docs/screenshots/packages/access-gate/grants-admin-index.png"
+            "screenshotPath": "packages/access-gate/docs/screenshots/grants-admin-index.png"
         },
         {
             "id": "claim-tokens-admin-index",
@@ -63,7 +63,7 @@
             "required": true,
             "notes": "Requires seeded pending, consumed, and expired claim tokens linked to registrations or grants.",
             "useCase": "An administrator checks whether approval links were issued, claimed, or expired.",
-            "screenshotPath": "public/docs/screenshots/packages/access-gate/claim-tokens-admin-index.png"
+            "screenshotPath": "packages/access-gate/docs/screenshots/claim-tokens-admin-index.png"
         },
         {
             "id": "browser-tokens-admin-index",
@@ -75,7 +75,7 @@
             "required": true,
             "notes": "Requires seeded active, expired, and revoked browser tokens tied to grants.",
             "useCase": "An administrator reviews browser-bound access and revokes a token after device loss or policy change.",
-            "screenshotPath": "public/docs/screenshots/packages/access-gate/browser-tokens-admin-index.png"
+            "screenshotPath": "packages/access-gate/docs/screenshots/browser-tokens-admin-index.png"
         },
         {
             "id": "access-events-admin-index",
@@ -87,7 +87,7 @@
             "required": true,
             "notes": "Requires seeded request, approval, rejection, claim, grant, revoke, and middleware-denied events.",
             "useCase": "An administrator investigates the history of an access request or failed protected-page visit.",
-            "screenshotPath": "public/docs/screenshots/packages/access-gate/access-events-admin-index.png"
+            "screenshotPath": "packages/access-gate/docs/screenshots/access-events-admin-index.png"
         },
         {
             "id": "public-access-request-form",
@@ -99,7 +99,7 @@
             "required": true,
             "notes": "Capture anonymously against a seeded area that allows public registration. Verify the HTML contains no authoring markers, editor URLs, model IDs, or admin-only labels.",
             "useCase": "A visitor requests access to a protected area by submitting the configured public registration fields.",
-            "screenshotPath": "public/docs/screenshots/packages/access-gate/public-access-request-form.png"
+            "screenshotPath": "packages/access-gate/docs/screenshots/public-access-request-form.png"
         },
         {
             "id": "public-gated-message",
@@ -111,7 +111,7 @@
             "required": true,
             "notes": "Requires a seeded protected route using `access-gate:{area}` middleware and no active grant for the current visitor.",
             "useCase": "A visitor without an active grant sees the blocked state instead of the protected content.",
-            "screenshotPath": "public/docs/screenshots/packages/access-gate/public-gated-message.png"
+            "screenshotPath": "packages/access-gate/docs/screenshots/public-gated-message.png"
         },
         {
             "id": "public-request-cta",
@@ -123,7 +123,7 @@
             "required": true,
             "notes": "Capture direct access-gate submission in the base package. Capture the Public Actions variant only in a separate run with `capell-app/public-actions` installed.",
             "useCase": "A visitor follows an inline request CTA from a protected page or teaser block.",
-            "screenshotPath": "public/docs/screenshots/packages/access-gate/public-request-cta.png"
+            "screenshotPath": "packages/access-gate/docs/screenshots/public-request-cta.png"
         }
     ]
 }

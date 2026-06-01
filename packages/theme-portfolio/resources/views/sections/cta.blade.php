@@ -27,7 +27,10 @@
                 </div>
 
                 <div class="grid gap-5">
-                    <div class="grid gap-3 bg-[#070b1a] p-5" aria-hidden="true">
+                    <div
+                        class="grid gap-3 bg-[#070b1a] p-5"
+                        aria-hidden="true"
+                    >
                         <div class="grid grid-cols-3 gap-3">
                             <span
                                 class="bg-white/10 p-3 text-xs font-black text-white/70 uppercase"

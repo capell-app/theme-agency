@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Capell\Core\Database\Factories\LanguageFactory;
 use Capell\Core\Database\Factories\PageFactory;
 use Capell\Core\Database\Factories\SiteFactory;
+use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
 use Capell\SeoSuite\Actions\PageMetaSchemaAction;
@@ -126,6 +127,7 @@ it('generates schema with custom type from type meta', function (): void {
     ]);
     $site = SiteFactory::new()->recycle($language)->language($language)->hasSiteDomain()->create();
     $page = PageFactory::new()->site($site)->withTranslations($language)->create();
+    throw_unless($page->type instanceof Blueprint);
     $page->type->meta = ['schema' => ['type' => 'Article']];
     $page->type->save();
     $page->refresh();
@@ -188,6 +190,7 @@ it('builds keywords, summary, and description fallback', function (): void {
     expect($configurator)->toHaveKey('keywords', 'foo,bar');
 
     // Remove summary, fallback to meta description
+    throw_unless($page->translation !== null);
     $page->translation->meta = ['description' => 'desc'];
     // Do not save, just call schema builder
     $configurator = PageMetaSchemaAction::run($page, $site, $language);

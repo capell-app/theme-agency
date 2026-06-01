@@ -41,14 +41,14 @@ it('runs the full live -> draft -> publish cycle', function (): void {
         ->latest('id')
         ->first();
 
-    expect($workspace)->not->toBeNull();
+    $workspace = publishingStudioTestInstance($workspace, Workspace::class);
 
     $draft = Page::query()->withoutGlobalScopes()
         ->where('uuid', $page->uuid)
         ->where('workspace_id', $workspace->id)
         ->first();
 
-    expect($draft)->not->toBeNull();
+    $draft = publishingStudioTestInstance($draft, Page::class);
 
     // The Publisher only accepts Approved/Scheduled. A freshly saved draft
     // starts in Open — approve it here so publish can proceed. In the real UI
@@ -64,17 +64,20 @@ it('runs the full live -> draft -> publish cycle', function (): void {
     });
 
     // Step 3: the page should now be live, the workspace published
+    $freshWorkspace = publishingStudioTestInstance($workspace->fresh(), Workspace::class);
+
     expect(Page::query()->where('uuid', $page->uuid)->where('workspace_id', 0)->exists())->toBeTrue()
-        ->and($workspace->fresh()->status)->toBe(WorkspaceStatusEnum::Published);
+        ->and($freshWorkspace->status)->toBe(WorkspaceStatusEnum::Published);
 });
 
 it('disables publish while in review and enables after approval', function (): void {
     $live = Page::factory()->withTranslations()->create();
     $workspace = Workspace::factory()->create(['status' => WorkspaceStatusEnum::InReview]);
-    $draft = (new CopyOnWriteAction)->cloneForEdit(
-        $live->fresh()->fill(['name' => 'updated']),
+    $freshLive = publishingStudioTestInstance($live->fresh(), Page::class);
+    $draft = publishingStudioTestInstance((new CopyOnWriteAction)->cloneForEdit(
+        $freshLive->fill(['name' => 'updated']),
         $workspace,
-    );
+    ), Page::class);
 
     $workspace->runInContext(function () use ($draft): void {
         Livewire::test(EditPage::class, ['record' => $draft->getRouteKey()])
@@ -86,7 +89,9 @@ it('disables publish while in review and enables after approval', function (): v
     WorkspaceContext::set($workspace->fresh());
 
     try {
-        Livewire::test(EditPage::class, ['record' => $draft->fresh()->getRouteKey()])
+        $freshDraft = publishingStudioTestInstance($draft->fresh(), Page::class);
+
+        Livewire::test(EditPage::class, ['record' => $freshDraft->getRouteKey()])
             ->assertActionVisible('publish')
             ->assertActionEnabled('publish');
     } finally {

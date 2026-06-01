@@ -105,7 +105,10 @@
                     @endif
 
                     @if ($actions)
-                        <x-capell::actions class="mt-4" :$actions />
+                        <x-capell::actions
+                            class="mt-4"
+                            :$actions
+                        />
                     @endif
                 </div>
             </div>

@@ -25,7 +25,6 @@ use Capell\PublishingStudio\Models\WorkspaceReviewAssignment;
 use Capell\PublishingStudio\Support\WorkspaceSchema;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
@@ -380,7 +379,7 @@ final class BuildPublishingWorkflowCommandCenterAction
     }
 
     /**
-     * @return Builder<Model>|Builder<Workspace>|QueryBuilder<Page>
+     * @return Builder<Page>|Builder<Workspace>|QueryBuilder<Page>
      */
     private function visibleWorkspaceIdsQuery(?Authenticatable $user): Builder
     {

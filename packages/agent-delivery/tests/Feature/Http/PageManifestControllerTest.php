@@ -66,6 +66,23 @@ it('returns stable semantic chunks for a public page', function (): void {
         ->assertJsonPath('data.0.dependsOn.0', 'url:http://example.com/chunks/guides/ai-ready');
 });
 
+it('resolves path-only site domains when an exact host site also exists', function (): void {
+    createAgentDeliveryPage('/host-root', domain: 'example.com');
+
+    [$pageUrl, $page, $language, $site] = createAgentDeliveryPage('/article', [
+        'title' => 'Path Only Article',
+        'content' => '<p>Scoped copy</p>',
+    ], domain: null, siteDomainPath: '/docs');
+
+    getJson(agentDeliveryUrl('capell-agent-delivery.pages.manifest', ['url' => '/docs/article']))
+        ->assertOk()
+        ->assertHeader('X-Capell-Cache-Tags', sprintf('agent-delivery,site:%s,language:%s,page:%s', $site->getKey(), $language->getKey(), $page->getKey()))
+        ->assertJsonPath('data.canonicalUrl', 'http://example.com/docs/article')
+        ->assertJsonPath('data.url', $pageUrl->url)
+        ->assertJsonPath('data.alternates.en', 'http://example.com/docs/article')
+        ->assertJsonPath('data.title', 'Path Only Article');
+});
+
 it('does not serve unpublished or missing pages', function (): void {
     createAgentDeliveryPage('/published');
 
@@ -87,7 +104,7 @@ it('does not serve agent delivery when the package is not installed', function (
  * @param  array<string, mixed>  $translation
  * @return array{0: PageUrl, 1: Page, 2: Language, 3: Site}
  */
-function createAgentDeliveryPage(string $url, array $translation = [], string $domain = 'example.com', ?string $siteDomainPath = null): array
+function createAgentDeliveryPage(string $url, array $translation = [], ?string $domain = 'example.com', ?string $siteDomainPath = null): array
 {
     $language = Language::factory()->english()->create();
     $site = Site::factory()->default()->create(['language_id' => $language->id]);

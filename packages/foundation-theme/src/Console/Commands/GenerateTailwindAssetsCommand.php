@@ -21,7 +21,8 @@ class GenerateTailwindAssetsCommand extends Command
             $report = $registry->toReport();
 
             $this->line('Tailwind assets report:');
-            $this->line(json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            $encodedReport = json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            $this->line($encodedReport === false ? '{}' : $encodedReport);
 
             return self::SUCCESS;
         }

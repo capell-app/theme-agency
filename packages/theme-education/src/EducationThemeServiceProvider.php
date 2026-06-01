@@ -13,7 +13,6 @@ use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Education\Console\Commands\DemoCommand;
-use Capell\ThemeStudio\Education\Rendering\PackageAwareSectionRenderer;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -33,7 +32,7 @@ final class EducationThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/education.jpg',
             tags: ['Education', 'Courses', 'Enrolment'],
             bestFit: ['Schools', 'Course providers', 'Training teams'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'course-catalog', 'instructors', 'events', 'enrolment-cta', 'resources', 'faq', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'course-catalog', 'pathway-comparison', 'outcomes', 'instructors', 'events', 'admissions-checklist', 'enrolment-cta', 'resources', 'faq', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'education',
@@ -43,6 +42,9 @@ final class EducationThemeServiceProvider extends ServiceProvider
                     values: [
                         'primaryColor' => '#4338ca',
                         'accentColor' => '#14b8a6',
+                        'neutralColor' => '#111827',
+                        'surfaceColor' => '#f8fbff',
+                        'foregroundColor' => '#111827',
                         'headingFont' => 'sora',
                         'bodyFont' => 'inter',
                         'spacing' => 'balanced',
@@ -51,6 +53,9 @@ final class EducationThemeServiceProvider extends ServiceProvider
                         'layoutPresentation' => 'structured',
                         'motionIntensity' => 'subtle',
                         'mediaTreatment' => 'framed',
+                        'radius' => 'md',
+                        'headingScale' => 'balanced',
+                        'cardDensity' => 'compact',
                     ],
                 ),
             ],
@@ -96,7 +101,7 @@ final class EducationThemeServiceProvider extends ServiceProvider
                 sectionRenderers: [],
             ),
             sectionRenderers: collect(self::definition()->includedSections)
-                ->map(fn (string $sectionKey): ViewSectionRenderer|PackageAwareSectionRenderer|null => $this->sectionRenderer(
+                ->map(fn (string $sectionKey): ?ViewSectionRenderer => $this->sectionRenderer(
                     $sectionKey,
                     $this->optionalSectionIntegrations($eventsAvailable, $formBuilderAvailable, $blogAvailable),
                 ))
@@ -109,7 +114,7 @@ final class EducationThemeServiceProvider extends ServiceProvider
     /**
      * @param  array<string, array<string, bool>>  $optionalIntegrations
      */
-    private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ViewSectionRenderer|PackageAwareSectionRenderer|null
+    private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ?ViewSectionRenderer
     {
         if ($this->isFoundationSection($sectionKey)) {
             return null;
@@ -122,12 +127,12 @@ final class EducationThemeServiceProvider extends ServiceProvider
         }
 
         if (array_key_exists($sectionKey, $optionalIntegrations)) {
-            return new PackageAwareSectionRenderer(
-                themeKey: self::THEME_KEY,
-                sectionKey: $sectionKey,
-                view: $view,
-                integrations: $optionalIntegrations[$sectionKey],
-                failLoudly: true,
+            return new ViewSectionRenderer(
+                self::THEME_KEY,
+                $sectionKey,
+                $view,
+                true,
+                $optionalIntegrations[$sectionKey],
             );
         }
 
@@ -151,6 +156,7 @@ final class EducationThemeServiceProvider extends ServiceProvider
     {
         return [
             'events' => ['eventsAvailable' => $eventsAvailable],
+            'admissions-checklist' => ['formBuilderAvailable' => $formBuilderAvailable],
             'enrolment-cta' => ['formBuilderAvailable' => $formBuilderAvailable],
             'resources' => ['blogAvailable' => $blogAvailable],
         ];

@@ -3,7 +3,10 @@
         $panels = $this->panels();
     @endphp
 
-    <div class="space-y-6" data-publishing-workflow-command-center>
+    <div
+        class="space-y-6"
+        data-publishing-workflow-command-center
+    >
         @if ($panels === [])
             <section
                 class="rounded-lg border border-gray-200 bg-white p-6 text-sm shadow-sm dark:border-white/10 dark:bg-gray-900"

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\PublishingStudio\Approvals\RequiredReviewer;
 use Capell\PublishingStudio\Approvals\ReviewPolicyResolver;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Tests\Integration\Fixtures\WorkspaceDraftableFixture;
@@ -39,9 +40,10 @@ it('falls back to the default minimum reviewers when no content-type rule matche
     $workspace = Workspace::factory()->create();
 
     $required = (new ReviewPolicyResolver)->resolve($workspace);
+    $firstRequired = publishingStudioTestInstance($required->first(), RequiredReviewer::class);
 
     expect($required)->toHaveCount(2)
-        ->and($required->first()->requiredFor)->toBe('any');
+        ->and($firstRequired->requiredFor)->toBe('any');
 });
 
 it('emits role-scoped rules for each content type present in the workspace', function (): void {

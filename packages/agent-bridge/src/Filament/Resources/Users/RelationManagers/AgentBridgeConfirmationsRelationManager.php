@@ -51,6 +51,7 @@ final class AgentBridgeConfirmationsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->query(fn (): Builder => self::scopedQueryForUser(CapellAgentBridgeConfirmation::query(), $this->ownerRecord))
             ->columns([
                 TextColumn::make('capability_key')
                     ->label(__('capell-agent-bridge::admin.capability'))

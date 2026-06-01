@@ -99,6 +99,46 @@ it('replays duplicate submissions with the same idempotency key without creating
         ->and($submission->payload)->toBe(['email' => 'first@example.test']);
 });
 
+it('reuses an idempotent submission that was already inserted by another request', function (): void {
+    $action = PublicAction::factory()->create([
+        'key' => 'already-inserted-idempotent-action',
+        'handler_key' => 'test.handler',
+        'payload_schema' => [
+            'fields' => [
+                ['key' => 'email', 'type' => 'email', 'required' => true],
+            ],
+        ],
+    ]);
+
+    PublicActionSubmission::factory()
+        ->for($action, 'action')
+        ->create([
+            'idempotency_key' => 'request-456',
+            'payload' => ['email' => 'first@example.test'],
+            'metadata' => [
+                'result_success' => true,
+                'result_message' => 'already handled',
+            ],
+            'status' => PublicActionSubmissionStatus::Handled,
+        ]);
+
+    $this
+        ->withHeader('Idempotency-Key', 'request-456')
+        ->postJson('/actions/already-inserted-idempotent-action', [
+            'email' => 'second@example.test',
+        ])
+        ->assertOk()
+        ->assertJson([
+            'success' => true,
+            'message' => 'already handled',
+        ]);
+
+    $submission = PublicActionSubmission::query()->firstOrFail();
+
+    expect(PublicActionSubmission::query()->count())->toBe(1)
+        ->and($submission->payload)->toBe(['email' => 'first@example.test']);
+});
+
 it('rejects filled honeypot fields before creating a submission', function (): void {
     PublicAction::factory()->create([
         'key' => 'honeypot-action',
@@ -177,6 +217,27 @@ it('allows public payload redirects on the current host', function (): void {
             'redirect' => 'http://localhost/thanks',
         ])
         ->assertRedirect('http://localhost/thanks');
+});
+
+it('rejects non-http public payload redirects even when the host matches', function (): void {
+    PublicAction::factory()->create([
+        'key' => 'unsafe-scheme-redirect-action',
+        'handler_key' => 'test.handler',
+        'payload_schema' => [
+            'fields' => [
+                ['key' => 'email', 'type' => 'email', 'required' => true],
+                ['key' => 'redirect', 'type' => 'text'],
+            ],
+        ],
+    ]);
+
+    $this
+        ->from('/source-page')
+        ->post('/actions/unsafe-scheme-redirect-action', [
+            'email' => 'person@example.test',
+            'redirect' => 'javascript://localhost/thanks',
+        ])
+        ->assertRedirect('/source-page');
 });
 
 it('allows safe relative payload redirects', function (): void {

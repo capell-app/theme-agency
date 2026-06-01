@@ -14,7 +14,6 @@ use Capell\PublishingStudio\WorkspaceContext;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Livewire;
-use RuntimeException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -110,7 +109,9 @@ it('publishes the workspace and returns user to live record', function (): void 
         ->callAction('publish')
         ->assertNotified();
 
-    $workspace = Workspace::query()->find($workspaceId);
+    $workspace = Workspace::query()
+        ->whereKey($workspaceId)
+        ->first();
 
     expect($workspace?->status)->toBe(WorkspaceStatusEnum::Published);
 

@@ -19,6 +19,8 @@ use Override;
  * @property int $id
  * @property string $name
  * @property string $slug
+ * @property int|null $site_id
+ * @property CampaignStatus $status
  * @property string|null $utm_source
  * @property string|null $utm_medium
  * @property string|null $utm_campaign

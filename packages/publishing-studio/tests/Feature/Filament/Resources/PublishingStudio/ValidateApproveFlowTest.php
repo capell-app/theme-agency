@@ -157,8 +157,9 @@ it('runs the validate → approve → publish flow end to end via the Filament t
     expect($flippedName)->toBe('workspace-edited');
 
     $latestLive = Version::currentLive();
-    expect($latestLive)->not->toBeNull()
-        ->and($latestLive->source_workspace_id)->toBe($workspace->id);
+    $latestLive = publishingStudioTestInstance($latestLive, Version::class);
+
+    expect($latestLive->source_workspace_id)->toBe($workspace->id);
 
     Event::assertDispatched(
         WorkspaceStateChanged::class,

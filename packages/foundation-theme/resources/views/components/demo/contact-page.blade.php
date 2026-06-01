@@ -236,7 +236,10 @@
     }
 </style>
 
-<section id="contact" class="theme-demo-contact-page">
+<section
+    id="contact"
+    class="theme-demo-contact-page"
+>
     <div class="theme-demo-contact-shell">
         <a
             class="theme-demo-contact-home"
@@ -309,7 +312,10 @@
 
                 <div class="theme-demo-contact-field">
                     <label for="theme-demo-contact-topic">Topic</label>
-                    <select id="theme-demo-contact-topic" name="topic">
+                    <select
+                        id="theme-demo-contact-topic"
+                        name="topic"
+                    >
                         <option>Project scoping</option>
                         <option>Support</option>
                         <option>Migration planning</option>

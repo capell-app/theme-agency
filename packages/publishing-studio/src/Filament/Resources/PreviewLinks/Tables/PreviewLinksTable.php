@@ -14,6 +14,7 @@ use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class PreviewLinksTable implements TableConfigurator
 {
@@ -32,7 +33,13 @@ class PreviewLinksTable implements TableConfigurator
                     ->modalDescription(__('capell-admin::workspace.preview_link.actions.revoke_confirm'))
                     ->disabled(fn (PreviewLink $record): bool => $record->isRevoked() || $record->isExpired())
                     ->action(function (PreviewLink $record): void {
-                        (new RevokePreviewLinkAction)->handle($record, auth()->user());
+                        $actor = auth()->user();
+
+                        if (! $actor instanceof Authenticatable) {
+                            return;
+                        }
+
+                        (new RevokePreviewLinkAction)->handle($record, $actor);
 
                         Notification::make()
                             ->title(__('capell-admin::workspace.preview_link.notifications.revoked'))
@@ -49,7 +56,13 @@ class PreviewLinksTable implements TableConfigurator
                     ->modalDescription(__('capell-admin::workspace.preview_link.actions.extend_confirm'))
                     ->disabled(fn (PreviewLink $record): bool => $record->isRevoked())
                     ->action(function (PreviewLink $record): void {
-                        (new ExtendPreviewLinkAction)->handle($record, 1440, auth()->user());
+                        $actor = auth()->user();
+
+                        if (! $actor instanceof Authenticatable) {
+                            return;
+                        }
+
+                        (new ExtendPreviewLinkAction)->handle($record, 1440, $actor);
 
                         Notification::make()
                             ->title(__('capell-admin::workspace.preview_link.notifications.extended'))

@@ -17,7 +17,7 @@ class QueueProviderSyncAction
 {
     use AsAction;
 
-    public function handle(Subscriber $subscriber, string $operation = 'sync_subscriber'): void
+    public function handle(Subscriber $subscriber, string $operation = 'sync_subscriber', bool $dispatchJobs = true): void
     {
         ProviderAudience::query()
             ->whereHas('providerConnection', function (Builder $query) use ($subscriber): void {
@@ -26,7 +26,7 @@ class QueueProviderSyncAction
                     ->where('is_enabled', true);
             })
             ->with(['providerConnection'])
-            ->each(function (ProviderAudience $audience) use ($subscriber, $operation): void {
+            ->each(function (ProviderAudience $audience) use ($subscriber, $operation, $dispatchJobs): void {
                 $connection = $audience->providerConnection;
 
                 if (! $connection instanceof ProviderConnection) {
@@ -47,7 +47,9 @@ class QueueProviderSyncAction
                     'attempts' => 0,
                 ]);
 
-                dispatch(new SyncSubscriberToProviderJob($syncAttempt));
+                if ($dispatchJobs) {
+                    dispatch(new SyncSubscriberToProviderJob($syncAttempt->withoutRelations()));
+                }
             });
     }
 }

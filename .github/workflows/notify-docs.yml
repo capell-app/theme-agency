@@ -19,18 +19,6 @@ on:
       - '!packages/**/docs/internal/**'
       - '!packages/**/docs/specs/**'
       - '!packages/**/docs/superpowers/**'
-  pull_request:
-    paths:
-      - docs/**
-      - packages/**/docs/**
-      - packages/**/README.md
-      - packages/**/capell.json
-      - '!docs/internal/**'
-      - '!docs/specs/**'
-      - '!docs/superpowers/**'
-      - '!packages/**/docs/internal/**'
-      - '!packages/**/docs/specs/**'
-      - '!packages/**/docs/superpowers/**'
   release:
     types: [published]
   workflow_dispatch:
@@ -63,14 +51,7 @@ jobs:
             core.setOutput('json', JSON.stringify(payload));
             core.info(`Prepared docs-update payload: ${JSON.stringify(payload)}`);
 
-      - name: Validate pull request docs notification
-        if: github.event_name == 'pull_request'
-        run: |
-          echo 'Pull request dry run only. Payload:'
-          echo '${{ steps.payload.outputs.json }}'
-
       - name: Send repository_dispatch to capell-docs
-        if: github.event_name != 'pull_request'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           github-token: ${{ env.DOCS_DISPATCH_TOKEN }}

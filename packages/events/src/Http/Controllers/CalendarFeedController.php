@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Events\Http\Controllers;
 
+use Capell\Core\Models\Site;
 use Capell\Events\Actions\BuildCalendarFeedAction;
 use Capell\Frontend\Facades\Frontend;
 use Illuminate\Http\Request;
@@ -15,6 +16,9 @@ class CalendarFeedController extends BaseController
     public function __invoke(Request $request): Response
     {
         $site = Frontend::site();
+
+        abort_unless($site instanceof Site, 404);
+
         $feed = BuildCalendarFeedAction::run($site);
         $etag = hash('sha256', $feed);
 

@@ -7,6 +7,7 @@ namespace Capell\DocumentLifecycle\Tests;
 use Capell\Admin\Providers\AdminServiceProvider;
 use Capell\Admin\Providers\Filament\AdminPanelProvider;
 use Capell\Core\Facades\CapellCore;
+use Capell\CustomerPortal\Providers\CustomerPortalServiceProvider;
 use Capell\DocumentLifecycle\Providers\DocumentLifecycleServiceProvider;
 use Capell\PublishingStudio\Providers\PublishingStudioServiceProvider;
 use Capell\Tests\AbstractTestCase;
@@ -42,6 +43,7 @@ abstract class DocumentLifecycleTestCase extends AbstractTestCase
             ...parent::getPackageProviders($app),
             AdminServiceProvider::class,
             AdminPanelProvider::class,
+            CustomerPortalServiceProvider::class,
             PublishingStudioServiceProvider::class,
             DocumentLifecycleServiceProvider::class,
             LivewireServiceProvider::class,
@@ -57,6 +59,7 @@ abstract class DocumentLifecycleTestCase extends AbstractTestCase
         parent::getEnvironmentSetUp($app);
 
         CapellCore::forcePackageInstalled(AdminServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(CustomerPortalServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(PublishingStudioServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(DocumentLifecycleServiceProvider::$packageName);
     }

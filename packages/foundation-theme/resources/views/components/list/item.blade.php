@@ -31,7 +31,10 @@ use Capell\Navigation\Data\NavigationItemData;
         {{ $item->label }}
     </a>
     @if ($item->children->count() > 0)
-        <x-capell::list class="ml-2" gap="gap-y-0.5">
+        <x-capell::list
+            class="ml-2"
+            gap="gap-y-0.5"
+        >
             @foreach ($item->children as $child)
                 <x-dynamic-component
                     :component="! empty($child->data['component']) ? $child->data['component'] : 'capell::list.item'"

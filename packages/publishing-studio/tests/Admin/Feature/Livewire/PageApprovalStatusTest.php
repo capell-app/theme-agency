@@ -3,13 +3,22 @@
 declare(strict_types=1);
 
 use Capell\Core\Models\Page;
+use Capell\Core\Models\Site;
 use Capell\PublishingStudio\Actions\CopyOnWriteAction;
 use Capell\PublishingStudio\Enums\WorkspaceApprovalActionEnum;
 use Capell\PublishingStudio\Enums\WorkspaceStatusEnum;
 use Capell\PublishingStudio\Livewire\PageApprovalStatus;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Models\WorkspaceApproval;
+use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Livewire\Livewire;
+use Spatie\Permission\Models\Permission;
+
+uses(CreatesAdminUser::class);
+
+beforeEach(function (): void {
+    $this->actingAsAdmin();
+});
 
 it('renders nothing for a live page', function (): void {
     $page = Page::factory()->create()->fresh();
@@ -49,4 +58,22 @@ it('shows Changes requested title when latest approval action is ChangesRequeste
 
     Livewire::test(PageApprovalStatus::class, ['record' => $draft->fresh()])
         ->assertSee('Changes requested');
+});
+
+it('forbids tampered record keys outside the actor site scope', function (): void {
+    Permission::findOrCreate('View:Workspace');
+
+    $allowedSite = Site::factory()->create();
+    $blockedSite = Site::factory()->create();
+    $viewer = test()->createUserWithPermission('View:Workspace');
+    $viewer->assignedSiteIds = collect([(int) $allowedSite->getKey()]);
+
+    test()->actingAs($viewer);
+
+    $workspace = Workspace::factory()->create(['status' => WorkspaceStatusEnum::InReview]);
+    $live = Page::factory()->create(['site_id' => $blockedSite->getKey()]);
+    $draft = (new CopyOnWriteAction)->cloneForEdit($live->fresh()->fill(['name' => 'Blocked draft']), $workspace);
+
+    Livewire::test(PageApprovalStatus::class, ['recordKey' => $draft->getKey()])
+        ->assertForbidden();
 });

@@ -120,6 +120,7 @@ class PageSeoSettingsTabExtender implements PageSchemaExtender
                 CheckboxList::make('robots')
                     ->options($this->robotsOptions())
                     ->descriptions($this->robotsDescriptions())
+                    ->columnSpan(2)
                     ->default([])
                     ->mutateStateForValidationUsing(fn (mixed $state): array => $this->normalizeRobotsState($state))
                     ->dehydrateStateUsing(fn (mixed $state): array => $this->normalizeRobotsState($state))

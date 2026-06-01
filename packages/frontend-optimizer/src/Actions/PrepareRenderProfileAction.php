@@ -43,8 +43,8 @@ class PrepareRenderProfileAction
         $manifestPath = StoreRenderProfileManifestAction::run($profileData);
         $profile = PersistRenderProfileAction::run($profileData, $manifestPath);
 
-        if ($this->shouldDispatchGeneration($profile)) {
-            dispatch(new GenerateCriticalCssJob($profile->id, $url));
+        if ($this->shouldDispatchGeneration($profile) && $this->claimGeneration($profile)) {
+            dispatch(new GenerateCriticalCssJob((int) $profile->getKey(), $url));
         }
 
         return $profile;
@@ -64,6 +64,10 @@ class PrepareRenderProfileAction
             return false;
         }
 
+        if (in_array($profile->status, [OptimizationStatus::Queued->value, OptimizationStatus::Running->value], true)) {
+            return false;
+        }
+
         if (! is_string($profile->critical_css_path) || $profile->critical_css_path === '') {
             return true;
         }
@@ -73,5 +77,25 @@ class PrepareRenderProfileAction
         }
 
         return $profile->status === OptimizationStatus::Failed->value;
+    }
+
+    private function claimGeneration(FrontendRenderProfile $profile): bool
+    {
+        $claimed = FrontendRenderProfile::query()
+            ->whereKey($profile->getKey())
+            ->whereNotIn('status', [
+                OptimizationStatus::Queued->value,
+                OptimizationStatus::Running->value,
+            ])
+            ->update([
+                'status' => OptimizationStatus::Queued->value,
+                'updated_at' => now(),
+            ]) === 1;
+
+        if ($claimed) {
+            $profile->forceFill(['status' => OptimizationStatus::Queued->value]);
+        }
+
+        return $claimed;
     }
 }

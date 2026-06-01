@@ -6,7 +6,7 @@ This page is the consolidated implementation overview for the SEO Suite package.
 
 ## What This Package Adds
 
-SEO Suite adds metadata panels, AI Discovery outputs, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, and publish checks.
+SEO Suite adds metadata panels, AI Discovery outputs, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, generated-output diagnostics, and publish checks.
 
 - Page and site SEO schema extenders, including the page editor SEO settings tab, report-backed edit audit widget, and Pages-list audit overview widget.
 - SEO audit, AI Discovery, broken links, not-found URLs, and translation coverage pages.
@@ -14,6 +14,7 @@ SEO Suite adds metadata panels, AI Discovery outputs, structured data, broken li
 - AI Discovery generation for `llms.txt`, optional `llms-full.txt`, per-page Markdown views, `robots.txt` AI crawler rules, and page-readiness audit signals.
 - AI Discovery admin management for browsing pages, filling summaries, toggling page inclusion, previewing Markdown, and reviewing readiness issue counts.
 - Search Console sync and dashboard reports.
+- Generated-output diagnostics, route ownership checks, AI Discovery coverage, sitemap parity, public-output leak scanning, structured data reporting, and stale-output regeneration controls.
 
 ## Developer Notes
 
@@ -54,6 +55,18 @@ Gives editors and site operators practical checks before publishing and operatio
 - Requires Site Discovery for public page discovery and sitemap outputs.
 - Adds config for AI provider/model, image model, Search Console, publish gates, and prompts.
 
+## Diagnostics
+
+`capell:seo-suite-doctor` verifies route ownership, installed dependencies, generated document status codes, content types, cache headers, crawler policy, Site Discovery availability, and common web-server interception symptoms.
+
+The doctor and dashboard actions expose AI Discovery coverage, excluded reasons, missing summaries, stale snapshots, Markdown availability, noindex conflicts, public-output leak scanning, sitemap XML validity, unsafe sitemap URLs, structured data reports, stale Markdown regeneration controls, and crawler previews for sitemap XML, robots, `llms.txt`, `llms-full.txt`, page Markdown, and schema output.
+
+Structured data reporting also includes marketplace freshness warnings for Product/Offer prices and AggregateRating metadata, including missing or expired `priceValidUntil` values and stale or undated rating data.
+
+## Remaining Roadmap
+
+- Wire crawler-preview reports into the admin diagnostics UI.
+
 ## Data And Retention
 
 - broken_links stores page, target URL, HTTP status, and last check time.
@@ -83,15 +96,15 @@ SEO Suite contributes content graph edges from page SEO snapshots and broken-lin
 
 ## Screenshots
 
-![SEO audit page](../../../public/docs/screenshots/packages/seo-suite/seo-audit-page.png)
+![SEO audit page](screenshots/seo-audit-page.png)
 
-![Broken links diagnostics](../../../public/docs/screenshots/packages/seo-suite/broken-links-page.png)
+![Broken links diagnostics](screenshots/broken-links-page.png)
 
-![Translation coverage settings](../../../public/docs/screenshots/packages/seo-suite/translation-coverage-page.png)
+![Translation coverage settings](screenshots/translation-coverage-page.png)
 
-AI Discovery screenshot target: `public/docs/screenshots/packages/seo-suite/ai-discovery-page.png`. Keep this as text until the screenshot file is committed.
+AI Discovery screenshot target: `packages/seo-suite/docs/screenshots/ai-discovery-page.png`. Keep this as text until the screenshot file is committed.
 
-![Page SEO panel](../../../public/docs/screenshots/packages/seo-suite/page-seo-panel.png)
+![Page SEO panel](screenshots/page-seo-panel.png)
 
 The AI creator modal still needs a dedicated interaction capture once the demo profile can open the modal without external AI credentials.
 
@@ -208,7 +221,7 @@ erDiagram
 
 ## Screenshot Automation
 
-Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `public/docs/screenshots/packages/seo-suite`.
+Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `packages/seo-suite/docs/screenshots`.
 
 - Page SEO panel.
 - SEO audit page.

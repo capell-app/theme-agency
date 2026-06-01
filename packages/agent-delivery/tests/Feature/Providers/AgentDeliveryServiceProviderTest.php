@@ -25,7 +25,11 @@ it('loads host-configurable public middleware defaults', function (): void {
 });
 
 it('registers the documented rate limiter', function (): void {
-    $limits = RateLimiter::limiter('capell-agent-delivery')(Request::create('/api/capell/agent/v1/pages/manifest'));
+    $limiter = RateLimiter::limiter('capell-agent-delivery');
+
+    throw_unless($limiter instanceof Closure, RuntimeException::class, 'Expected agent delivery rate limiter to be registered.');
+
+    $limits = $limiter(Request::create('/api/capell/agent/v1/pages/manifest'));
 
     expect($limits->maxAttempts)->toBe(60);
 });

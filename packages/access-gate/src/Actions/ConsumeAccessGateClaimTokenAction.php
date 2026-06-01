@@ -8,6 +8,7 @@ use Capell\AccessGate\Data\IssuedAccessGateTokenData;
 use Capell\AccessGate\Enums\ClaimTokenStatus;
 use Capell\AccessGate\Enums\EventType;
 use Capell\AccessGate\Enums\RegistrationStatus;
+use Capell\AccessGate\Models\BrowserToken;
 use Capell\AccessGate\Models\ClaimToken;
 use Capell\AccessGate\Support\AccessGateDatabase;
 use LogicException;
@@ -71,12 +72,15 @@ final class ConsumeAccessGateClaimTokenAction
             }
 
             $issuedBrowserToken = $this->createBrowserToken->handle($grant, $metadata);
+            $browserToken = $issuedBrowserToken->token;
+
+            throw_unless($browserToken instanceof BrowserToken, LogicException::class, 'Access gate browser token creation returned an unexpected token type.');
 
             $this->recordEvent->handle(
                 type: EventType::ClaimTokenClaimed,
                 grant: $grant,
                 claimToken: $claimToken,
-                browserToken: $issuedBrowserToken->token,
+                browserToken: $browserToken,
             );
 
             return $issuedBrowserToken;

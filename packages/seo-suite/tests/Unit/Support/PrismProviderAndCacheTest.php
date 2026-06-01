@@ -7,7 +7,13 @@ use Capell\SeoSuite\Support\Cache\AIGenerationCache;
 use Capell\SeoSuite\Support\Cache\RateLimitCache;
 use Capell\SeoSuite\Support\PrismProvider;
 use Illuminate\Support\Facades\Cache;
+use Prism\Prism\Enums\FinishReason;
 use Prism\Prism\Enums\Provider;
+use Prism\Prism\Facades\Prism;
+use Prism\Prism\Text\Request as PrismTextRequest;
+use Prism\Prism\Text\Response as PrismTextResponse;
+use Prism\Prism\ValueObjects\Meta;
+use Prism\Prism\ValueObjects\Usage;
 
 it('stores ai generation values behind the configured cache driver and ttl', function (): void {
     Cache::flush();
@@ -58,6 +64,62 @@ it('maps provider aliases and exposes service metadata', function (): void {
     $provider = new PrismProvider(['max_retries' => 1, 'retry_delay_ms' => 0]);
 
     expect($provider->handles())->toBe('prism_provider')
+        ->and($provider->isAvailable())->toBeTrue();
+});
+
+it('sends normalized chat messages through prism and maps the response telemetry', function (): void {
+    Cache::flush();
+    app()->instance('prism', new \Prism\Prism\Prism);
+
+    $fake = Prism::fake([
+        new PrismTextResponse(
+            steps: collect(),
+            text: 'Generated title',
+            finishReason: FinishReason::Stop,
+            toolCalls: [],
+            toolResults: [],
+            usage: new Usage(promptTokens: 11, completionTokens: 7),
+            meta: new Meta(id: 'fake-response', model: 'gpt-test'),
+            messages: collect(),
+        ),
+    ]);
+
+    $provider = new PrismProvider([
+        'provider' => 'anthropic',
+        'model' => 'claude-test',
+        'max_retries' => 1,
+        'retry_delay_ms' => 0,
+    ]);
+
+    $response = $provider->chat([
+        'messages' => [
+            ['role' => 'system', 'content' => 'Use the brand voice.'],
+            ['role' => 'user', 'content' => 'Draft a page title.'],
+            ['role' => 'user', 'content' => 'Keep it short.'],
+        ],
+        'max_tokens' => 128,
+        'temperature' => 0.2,
+    ]);
+
+    $fake->assertCallCount(1);
+    $fake->assertRequest(function (array $requests): void {
+        $request = $requests[0] ?? null;
+
+        expect($request)->toBeInstanceOf(PrismTextRequest::class)
+            ->and($request->model())->toBe('claude-test')
+            ->and(collect($request->systemPrompts())->pluck('content')->all())->toBe(['Use the brand voice.'])
+            ->and($request->prompt())->toBe("Draft a page title.\n\nKeep it short.")
+            ->and($request->maxTokens())->toBe(128)
+            ->and($request->temperature())->toBe(0.2);
+    });
+
+    expect($response->content)->toBe('Generated title')
+        ->and($response->tokensUsed)->toBe(18)
+        ->and($response->model)->toBe('claude-test')
+        ->and($response->metadata)->toMatchArray([
+            'prompt_tokens' => 11,
+            'completion_tokens' => 7,
+        ])
         ->and($provider->isAvailable())->toBeTrue();
 });
 

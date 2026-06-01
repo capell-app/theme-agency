@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Models\Site;
 use Capell\EmailStudio\Actions\SendEmailAction;
 use Capell\EmailStudio\Data\EmailAddressData;
 use Capell\EmailStudio\Data\EmailHeaderData;
@@ -21,6 +22,8 @@ use Spatie\LaravelData\DataCollection;
 
 it('creates queued sends and rejects records scoped only to another site', function (): void {
     Queue::fake();
+    Site::factory()->create(['id' => 12]);
+    Site::factory()->create(['id' => 99]);
 
     EmailProfile::factory()->create([
         'site_id' => 12,

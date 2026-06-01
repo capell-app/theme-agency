@@ -2,7 +2,7 @@
 
 Status: **Available, schema-owning** · Kind: **package** · Tier: **premium** · Bundle: **newsletter** · Contexts: **admin, frontend** · Product group: **Capell Marketing**
 
-Newsletter manages audience capture, subscriber records, consent evidence, provider connections, provider sync attempts, segments, imports, and public subscription lifecycle routes.
+Newsletter manages audience capture, subscriber records, consent evidence, provider connections, provider sync attempts, segments, imports, campaign sends, preference center updates, UTM attribution, and public subscription lifecycle routes.
 
 ## Install
 
@@ -23,6 +23,7 @@ The package requires `capell-app/admin`, `capell-app/core`, `capell-app/form-bui
 - `SegmentResource`
 - `ImportBatchResource`
 - `SyncAttemptResource`
+- `NewsletterSendResource`
 - Newsletter overview stats for subscribed, pending, and failed/retry-scheduled sync attempts.
 - Newsletter settings schema.
 
@@ -30,9 +31,25 @@ The package requires `capell-app/admin`, `capell-app/core`, `capell-app/form-bui
 
 - `GET /newsletter/confirm/{token}` for subscription confirmation.
 - `GET /newsletter/unsubscribe/{token}` for unsubscribe requests.
+- `GET /newsletter/preferences/{token}` for public preference center display.
+- `POST /newsletter/preferences/{token}` for public preference center updates.
 - `POST /newsletter/providers/{providerConnection}/webhook` for provider webhooks.
 
 Public routes should expose only confirmation/unsubscribe/webhook outcomes and must not leak admin labels, provider secrets, subscriber internals, or form-builder mapping details.
+
+## Segments And Preferences
+
+- `EvaluateNewsletterSegmentAction` resolves static and dynamic subscriber segments for targeted sends and automation.
+- `CreatePreferenceCenterTokenAction`, `ResolvePreferenceCenterAction`, and `UpdatePreferenceCenterAction` own public preference center state.
+- `CreateUnsubscribeTokenAction` and `UnsubscribeSubscriberAction` own unsubscribe flows without requiring Campaign Studio or Form Builder to understand newsletter internals.
+- `ResolveUtmAttributionAction` normalizes campaign attribution for newsletter sends and conversion reporting.
+
+## Campaign Sends
+
+- `ScheduleNewsletterSendAction` creates scheduled campaign send records with segment/provider audience and UTM metadata.
+- `BuildDueNewsletterSendsAction` returns due scheduled sends in deterministic schedule order for workers or Automation Studio.
+- `UpdateNewsletterSendStatusAction` records lifecycle transitions for sending, sent, failed, and cancelled states with timestamps and delivery metadata.
+- Scheduled sends contribute to Publishing Studio's editorial calendar as `newsletter.send` events when Publishing Studio is installed.
 
 ## Screenshot Plan
 

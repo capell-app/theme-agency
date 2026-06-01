@@ -34,8 +34,10 @@ final class CampaignLandingPageResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'headline';
 
+    /** @var class-string<CampaignLandingPageForm> */
     private static string $formConfigurator = CampaignLandingPageForm::class;
 
+    /** @var class-string<CampaignLandingPagesTable> */
     private static string $tableConfigurator = CampaignLandingPagesTable::class;
 
     /** @return class-string<CampaignLandingPageForm> */

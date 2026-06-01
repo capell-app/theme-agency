@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Capell\PublicActions\Filament\Resources\IntegrationTokens\Pages;
 
 use Capell\Admin\Filament\Components\Forms\SiteSelect;
+use Capell\Admin\Support\SiteScope;
+use Capell\Core\Models\Site;
 use Capell\PublicActions\Actions\CreatePublicActionIntegrationTokenAction;
 use Capell\PublicActions\Enums\PublicActionIntegrationProvider;
 use Capell\PublicActions\Enums\PublicActionIntegrationTokenAbility;
@@ -15,7 +17,9 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 use Override;
 
 final class ListPublicActionIntegrationTokens extends ListRecords
@@ -28,6 +32,7 @@ final class ListPublicActionIntegrationTokens extends ListRecords
         return [
             Action::make('createToken')
                 ->label(__('capell-public-actions::filament.actions.create_token'))
+                ->authorize('create')
                 ->form([
                     TextInput::make('name')
                         ->label(__('capell-public-actions::filament.fields.name'))
@@ -42,7 +47,8 @@ final class ListPublicActionIntegrationTokens extends ListRecords
                         ->required(),
                     SiteSelect::make('site_id')
                         ->label(__('capell-public-actions::filament.fields.site'))
-                        ->preload(),
+                        ->preload()
+                        ->required(fn (): bool => ! $this->currentActorCanCreateGlobalToken()),
                     CheckboxList::make('abilities')
                         ->label(__('capell-public-actions::filament.fields.abilities'))
                         ->options([
@@ -56,15 +62,23 @@ final class ListPublicActionIntegrationTokens extends ListRecords
                         )),
                 ])
                 ->action(function (array $data): void {
+                    Gate::authorize('create', PublicActionIntegrationTokenResource::getModel());
+
+                    $siteId = filled($data['site_id'] ?? null) ? (int) $data['site_id'] : null;
+                    $site = $siteId !== null ? Site::query()->find($siteId) : null;
+
+                    abort_if($siteId !== null && (! $site instanceof Site || ! SiteScope::actorCanUseSite(auth()->user(), $site)), 403);
+
                     $created = CreatePublicActionIntegrationTokenAction::run(
                         name: (string) $data['name'],
                         provider: PublicActionIntegrationProvider::from((string) $data['provider']),
-                        siteId: filled($data['site_id'] ?? null) ? (int) $data['site_id'] : null,
+                        siteId: $siteId,
                         abilities: (new Collection($data['abilities'] ?? []))
                             ->filter(fn (mixed $ability): bool => is_string($ability))
                             ->map(fn (string $ability): PublicActionIntegrationTokenAbility => PublicActionIntegrationTokenAbility::from($ability))
                             ->values()
                             ->all(),
+                        actor: auth()->user(),
                     );
 
                     Notification::make()
@@ -75,5 +89,12 @@ final class ListPublicActionIntegrationTokens extends ListRecords
                         ->send();
                 }),
         ];
+    }
+
+    private function currentActorCanCreateGlobalToken(): bool
+    {
+        $actor = auth()->user();
+
+        return $actor instanceof Authenticatable && SiteScope::isGlobalActor($actor);
     }
 }

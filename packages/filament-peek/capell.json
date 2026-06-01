@@ -62,7 +62,15 @@
             "queueInvalidation": false
         }
     },
-    "healthChecks": [],
+    "healthChecks": [
+        {
+            "key": "filament-peek.package-health",
+            "label": "Filament Peek preview routes, actions, and service provider are discoverable.",
+            "class": "Capell\\FilamentPeek\\Health\\FilamentPeekHealthCheck",
+            "severity": "critical",
+            "surface": "admin"
+        }
+    ],
     "commercial": {
         "proposedLicense": "free",
         "requestedCertification": "first-party",

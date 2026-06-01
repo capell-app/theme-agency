@@ -149,7 +149,13 @@ final class AdminServiceProvider extends ServiceProvider
     private function registerSchedule(): self
     {
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
-            $schedule->command('ga4-reports:sync')->daily();
+            $overlapMinutes = config('capell-ga4-reports.sync_overlap_minutes', 120);
+
+            $schedule
+                ->command('ga4-reports:sync')
+                ->daily()
+                ->withoutOverlapping(is_numeric($overlapMinutes) ? max(1, (int) $overlapMinutes) : 120)
+                ->onOneServer();
         });
 
         return $this;

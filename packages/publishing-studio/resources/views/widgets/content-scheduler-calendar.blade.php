@@ -19,15 +19,18 @@
                         {{ $dateLabel }}
                     </div>
 
-                    <div class="space-y-2" aria-live="polite">
+                    <div
+                        class="space-y-2"
+                        aria-live="polite"
+                    >
                         @foreach ($events as $event)
                             @php
                                 $eventLabel = implode(' ', array_filter([
                                     $dateLabel,
-                                    $event->eventType->getLabel(),
-                                    $event->state?->getLabel(),
+                                    $event->eventTypeLabel ?? $event->eventType,
+                                    $event->state,
                                     $event->title,
-                                    $event->scheduledFor->format('H:i'),
+                                    $event->startsAt->format('H:i'),
                                     $event->timezone,
                                 ]));
                             @endphp
@@ -42,10 +45,10 @@
                                         <span
                                             class="mb-1 inline-flex rounded px-1.5 py-0.5 text-xs font-medium text-gray-700 ring-1 ring-gray-200 dark:text-gray-200 dark:ring-white/10"
                                         >
-                                            {{ $event->eventType->getLabel() }}
+                                            {{ $event->eventTypeLabel ?? $event->eventType }}
                                             @if ($event->state !== null)
                                                 ·
-                                                {{ $event->state->getLabel() }}
+                                                {{ $event->state }}
                                             @endif
                                         </span>
                                         <span
@@ -69,7 +72,7 @@
                                     <span
                                         class="shrink-0 text-gray-500 dark:text-gray-400"
                                     >
-                                        {{ $event->scheduledFor->format('H:i') }}
+                                        {{ $event->startsAt->format('H:i') }}
                                         <span class="sr-only">
                                             {{ $event->timezone }}
                                         </span>
@@ -85,10 +88,10 @@
                                         <span
                                             class="mb-1 inline-flex rounded px-1.5 py-0.5 text-xs font-medium text-gray-700 ring-1 ring-gray-200 dark:text-gray-200 dark:ring-white/10"
                                         >
-                                            {{ $event->eventType->getLabel() }}
+                                            {{ $event->eventTypeLabel ?? $event->eventType }}
                                             @if ($event->state !== null)
                                                 ·
-                                                {{ $event->state->getLabel() }}
+                                                {{ $event->state }}
                                             @endif
                                         </span>
                                         <span
@@ -112,7 +115,7 @@
                                     <span
                                         class="shrink-0 text-gray-500 dark:text-gray-400"
                                     >
-                                        {{ $event->scheduledFor->format('H:i') }}
+                                        {{ $event->startsAt->format('H:i') }}
                                         <span class="sr-only">
                                             {{ $event->timezone }}
                                         </span>

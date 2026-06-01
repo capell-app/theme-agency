@@ -30,7 +30,7 @@ function flattenSeoSuiteSchemaComponents(array $components): array
     foreach ($components as $component) {
         $flattenedComponents[] = $component;
 
-        if (method_exists($component, 'getDefaultChildComponents')) {
+        if (is_object($component) && method_exists($component, 'getDefaultChildComponents')) {
             /** @var array<int, mixed> $childComponents */
             $childComponents = $component->getDefaultChildComponents();
             $flattenedComponents = [
@@ -50,8 +50,8 @@ function flattenSeoSuiteSchemaComponents(array $components): array
 function seoSuiteComponentNames(array $components): array
 {
     return collect(flattenSeoSuiteSchemaComponents($components))
-        ->filter(fn (mixed $component): bool => method_exists($component, 'getName'))
-        ->map(fn (mixed $component): string => $component->getName())
+        ->filter(fn (mixed $component): bool => is_object($component) && method_exists($component, 'getName'))
+        ->map(fn (object $component): string => $component->getName())
         ->values()
         ->all();
 }

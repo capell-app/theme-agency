@@ -71,15 +71,14 @@ class SiteMetaSchemaAction
             if (isset($area_served['type']) && $area_served['type'] !== '') {
                 $item = [
                     '@type' => $area_served['type'],
-                    'name' => $area_served['name'],
+                    'name' => $area_served['name'] ?? $area_served['type'],
                 ];
-
                 if (isset($area_served['url']) && $area_served['url'] !== '') {
                     $item['@id'] = $area_served['url'];
                 }
 
                 $return[] = $item;
-            } else {
+            } elseif (isset($area_served['name']) && $area_served['name'] !== '') {
                 $return[] = $area_served['name'];
             }
         }
@@ -148,7 +147,7 @@ class SiteMetaSchemaAction
         }
 
         if ($contactPage instanceof Pageable) {
-            $return['url'] = $contactPage->pageUrl->full_url;
+            $return['url'] = $contactPage->pageUrl?->full_url;
         }
 
         if (! in_array($type, [null, '', '0'], true)) {
@@ -269,7 +268,7 @@ class SiteMetaSchemaAction
             '@type' => 'ImageObject',
             'url' => $media->getAvailableUrl([MediaConversionEnum::Large->value]),
             'name' => $media->name,
-            'datePublished' => $media->created_at->toDateString(),
+            'datePublished' => $media->created_at?->toDateString(),
         ];
 
         $caption = $media->getCustomProperty('caption');
@@ -330,7 +329,7 @@ class SiteMetaSchemaAction
             $item['translation'] = $description;
         }
 
-        if ($logo !== null) {
+        if ($logo instanceof Media) {
             $item['logo'] = $this->mediaItem($logo);
         }
 
@@ -356,6 +355,7 @@ class SiteMetaSchemaAction
 
         if ($media instanceof Collection && $media->isNotEmpty()) {
             $firstMedia = $media->first();
+
             $item['image'] = $this->mediaItem($firstMedia);
 
             $remaining = $media->slice(1);
@@ -396,7 +396,9 @@ class SiteMetaSchemaAction
         $return = [];
 
         foreach ($social_links as $social_link) {
-            $return[] = $social_link['url'];
+            if (isset($social_link['url']) && $social_link['url'] !== '') {
+                $return[] = $social_link['url'];
+            }
         }
 
         return $return;

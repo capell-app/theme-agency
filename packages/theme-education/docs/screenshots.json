@@ -3,7 +3,7 @@
     "composerName": "capell-app/theme-education",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "public/docs/screenshots/packages/theme-education",
+    "outputDirectory": "packages/theme-education/docs/screenshots",
     "entries": [
         {
             "id": "theme-admin-list-showing-education",
@@ -15,7 +15,7 @@
             "required": true,
             "notes": "Capture with Foundation Theme, Layout Builder, and capell-app/theme-education installed in the isolated demo harness.",
             "useCase": "An administrator confirms the Education theme is available before applying it to a course or school site.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-education/theme-admin-list-showing-education.png"
+            "screenshotPath": "packages/theme-education/docs/screenshots/theme-admin-list-showing-education.png"
         },
         {
             "id": "frontend-page-rendered-with-education-theme",
@@ -27,7 +27,7 @@
             "required": true,
             "notes": "Capture a seeded learning-pathway page with navigation, hero, course catalogue, instructors, events, enrolment CTA, resources, FAQ, proof, CTA, and footer.",
             "useCase": "A course provider sees how the theme connects discovery, trust, and enrolment in one public page.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-education/frontend-page-rendered-with-education-theme.png"
+            "screenshotPath": "packages/theme-education/docs/screenshots/frontend-page-rendered-with-education-theme.png"
         },
         {
             "id": "education-homepage-layout",
@@ -39,7 +39,7 @@
             "required": true,
             "notes": "Capture the pathway-led homepage with cohort proof, course cards, mentor signals, and enrolment actions.",
             "useCase": "A school, academy, or training provider reviews the first-viewport learning journey before activating the theme.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-education/education-homepage-layout.png"
+            "screenshotPath": "packages/theme-education/docs/screenshots/education-homepage-layout.png"
         },
         {
             "id": "education-course-catalogue-layout",
@@ -51,7 +51,7 @@
             "required": true,
             "notes": "Capture course catalogue cards with learning outcomes, format markers, cohort readiness, and clear comparison rhythm.",
             "useCase": "A learner compares course paths without the page feeling like a plain resource grid.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-education/education-course-catalogue-layout.png"
+            "screenshotPath": "packages/theme-education/docs/screenshots/education-course-catalogue-layout.png"
         },
         {
             "id": "education-instructors-layout",
@@ -63,7 +63,7 @@
             "required": true,
             "notes": "Capture instructor cards, teaching roles, mentor support copy, and learner-trust proof.",
             "useCase": "A learner or parent can see who teaches the programme and why the team is credible.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-education/education-instructors-layout.png"
+            "screenshotPath": "packages/theme-education/docs/screenshots/education-instructors-layout.png"
         },
         {
             "id": "education-events-layout",
@@ -75,7 +75,7 @@
             "required": true,
             "notes": "Capture event cards using the static fallback or capell-app/events integration when installed.",
             "useCase": "A school can promote open days, workshops, and cohort deadlines without custom Blade.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-education/education-events-layout.png"
+            "screenshotPath": "packages/theme-education/docs/screenshots/education-events-layout.png"
         },
         {
             "id": "education-enrolment-layout",
@@ -87,7 +87,7 @@
             "required": true,
             "notes": "Capture the enrolment path with steps, form-builder fallback state, and clear application actions.",
             "useCase": "A training provider checks that the theme turns course interest into a confident application route.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-education/education-enrolment-layout.png"
+            "screenshotPath": "packages/theme-education/docs/screenshots/education-enrolment-layout.png"
         },
         {
             "id": "education-resource-library-layout",
@@ -99,7 +99,7 @@
             "required": true,
             "notes": "Capture guide, worksheet, replay, and FAQ cards with the blog/resource integration fallback visible.",
             "useCase": "A course provider reviews how support material stays tied to learning pathways instead of becoming a plain blog.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-education/education-resource-library-layout.png"
+            "screenshotPath": "packages/theme-education/docs/screenshots/education-resource-library-layout.png"
         },
         {
             "id": "theme-preview-url-output",
@@ -111,7 +111,7 @@
             "required": true,
             "notes": "Capture a signed preview URL generated for the seeded Education theme, site, and page.",
             "useCase": "An administrator previews a course page with the Education theme applied before publishing the theme choice.",
-            "screenshotPath": "public/docs/screenshots/packages/theme-education/theme-preview-url-output.png"
+            "screenshotPath": "packages/theme-education/docs/screenshots/theme-preview-url-output.png"
         }
     ]
 }

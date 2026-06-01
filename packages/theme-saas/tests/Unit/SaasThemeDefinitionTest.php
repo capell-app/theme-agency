@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Contracts\ThemePageAdapter;
 use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
@@ -42,6 +43,9 @@ it('defines the saas premium renderer contract', function (): void {
             'content-listing',
             'comparison',
             'calculator',
+            'pricing',
+            'docs-onboarding',
+            'demo-request',
             'cta',
             'footer',
             'blog',
@@ -90,11 +94,104 @@ it('declares renderers for every included saas section', function (): void {
         'content-listing',
         'comparison',
         'calculator',
+        'pricing',
+        'docs-onboarding',
+        'demo-request',
         'cta',
         'footer',
         'blog',
     ]);
 });
+
+it('renders new premium saas layouts through the registry', function (): void {
+    View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(SaasThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new SaasThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $pricingRenderer = $registry->sectionRenderer('saas', 'pricing');
+    $docsRenderer = $registry->sectionRenderer('saas', 'docs-onboarding');
+    $demoRenderer = $registry->sectionRenderer('saas', 'demo-request');
+
+    assert($pricingRenderer instanceof SectionRenderer);
+    assert($docsRenderer instanceof SectionRenderer);
+    assert($demoRenderer instanceof SectionRenderer);
+
+    $pricingHtml = $pricingRenderer->render(saasThemeSection('pricing', [
+        'heading' => 'Choose a growth plan',
+        'items' => [
+            ['title' => 'Scale', 'summary' => 'Plan comparison for growing teams.'],
+        ],
+    ]));
+
+    $docsHtml = $docsRenderer->render(saasThemeSection('docs-onboarding', [
+        'heading' => 'Ship with guided docs',
+        'items' => [
+            ['title' => 'Activation checklist', 'summary' => 'Documentation route for product activation.'],
+        ],
+    ]));
+
+    $demoHtml = $demoRenderer->render(saasThemeSection('demo-request', [
+        'heading' => 'Route the right demo',
+        'items' => [
+            ['title' => 'Product-led qualification', 'summary' => 'Conversion path for sales conversations.'],
+        ],
+    ]));
+
+    expect($pricingHtml)
+        ->toContain('Choose a growth plan')
+        ->toContain('Scale')
+        ->not->toContain('capell-app/theme-saas');
+
+    expect($docsHtml)
+        ->toContain('Ship with guided docs')
+        ->toContain('Activation checklist')
+        ->not->toContain('capell-app/theme-saas');
+
+    expect($demoHtml)
+        ->toContain('Route the right demo')
+        ->toContain('Product-led qualification')
+        ->not->toContain('capell-app/theme-saas');
+});
+
+/**
+ * @param  array<string, mixed>  $viewData
+ */
+function saasThemeSection(string $key, array $viewData): ThemeSection
+{
+    return new readonly class($key, $viewData) implements ThemeSection
+    {
+        /**
+         * @param  array<string, mixed>  $viewData
+         */
+        public function __construct(
+            private string $sectionKey,
+            private array $viewData,
+        ) {}
+
+        public function key(): string
+        {
+            return $this->sectionKey;
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return ['section' => (object) $this->viewData];
+        }
+    };
+}
 
 it('registers premium landing page tailwind assets from the saas theme only when installed', function (): void {
     CapellCore::clearPackages();
@@ -362,6 +459,7 @@ it('passes Blog package availability through the registered section renderer', f
     $renderer = $registry->sectionRenderer('saas', 'blog');
 
     expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
 
     $html = $renderer->render(new class implements ThemeSection
     {

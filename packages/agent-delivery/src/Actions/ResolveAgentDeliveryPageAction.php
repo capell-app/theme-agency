@@ -74,7 +74,10 @@ final class ResolveAgentDeliveryPageAction
         $this->resolvedSiteDomain = $siteDomain;
         $this->resolvedUrlPath = is_string($urlPath) && $urlPath !== '' ? $urlPath : null;
 
-        return $siteDomain->site;
+        $site = $siteDomain->site;
+        $site->setRelation('siteDomains', collect([$siteDomain]));
+
+        return $site;
     }
 
     private function resolveLanguage(Site $site): ?Language
@@ -144,7 +147,7 @@ final class ResolveAgentDeliveryPageAction
                 'siteDomains' => fn (BuilderContract $query): BuilderContract => $this->candidateSiteDomainQuery($query, $host, $scheme, includeWildcardDomains: $includeWildcardDomains)
                     ->with('language'),
             ])
-            ->whereHas('siteDomains', fn (BuilderContract $query): BuilderContract => $this->candidateSiteDomainQuery($query, $host, $scheme, includeWildcardDomains: false))
+            ->whereHas('siteDomains', fn (BuilderContract $query): BuilderContract => $this->candidateSiteDomainQuery($query, $host, $scheme, includeWildcardDomains: $includeWildcardDomains))
             ->limit($this->candidateSiteLimit())
             ->get();
     }

@@ -54,6 +54,44 @@ it('syncs durable attempts through a provider adapter', function (): void {
         ->and(ProviderSubscriber::query()->where('subscriber_id', $subscriber->getKey())->exists())->toBeTrue();
 });
 
+it('does not execute a provider sync attempt more than once', function (): void {
+    $site = $this->createNewsletterSite();
+    $subscriber = Subscriber::factory()->create([
+        'site_id' => $site->getKey(),
+        'email' => 'duplicate-sync@example.com',
+    ]);
+    $connection = ProviderConnection::query()->create([
+        'site_id' => $site->getKey(),
+        'name' => 'Fake',
+        'provider' => ProviderType::Fake,
+        'auth_type' => AuthType::ApiKey,
+        'credentials' => ['api_key' => 'fake'],
+        'is_enabled' => true,
+    ]);
+    $audience = ProviderAudience::query()->create([
+        'provider_connection_id' => $connection->getKey(),
+        'name' => 'Default',
+        'remote_id' => 'fake-audience',
+        'is_default' => true,
+        'sync_subscribed_only' => true,
+    ]);
+    $syncAttempt = SyncAttempt::query()->create([
+        'subscriber_id' => $subscriber->getKey(),
+        'provider_connection_id' => $connection->getKey(),
+        'provider_audience_id' => $audience->getKey(),
+        'operation' => 'sync_subscriber',
+        'sync_status' => SyncStatus::Pending,
+        'attempts' => 0,
+    ]);
+
+    SyncSubscriberToProviderAction::run($syncAttempt);
+    SyncSubscriberToProviderAction::run($syncAttempt);
+
+    expect($syncAttempt->refresh()->sync_status)->toBe(SyncStatus::Succeeded)
+        ->and($syncAttempt->attempts)->toBe(1)
+        ->and(ProviderSubscriber::query()->where('subscriber_id', $subscriber->getKey())->count())->toBe(1);
+});
+
 it('normalizes provider webhooks into local subscriber state', function (): void {
     $site = $this->createNewsletterSite();
     $connection = ProviderConnection::query()->create([
@@ -171,4 +209,50 @@ it('requeues due provider sync attempts without touching future attempts', funct
         ->and($oldestDueAttempt->next_retry_at)->toBeNull()
         ->and($newerDueAttempt->refresh()->sync_status)->toBe(SyncStatus::RetryScheduled)
         ->and($futureAttempt->refresh()->sync_status)->toBe(SyncStatus::RetryScheduled);
+});
+
+it('does not requeue an attempt already claimed by another retry runner', function (): void {
+    $site = $this->createNewsletterSite();
+    $subscriber = Subscriber::factory()->create(['site_id' => $site->getKey()]);
+    $connection = ProviderConnection::query()->create([
+        'site_id' => $site->getKey(),
+        'name' => 'Fake',
+        'provider' => ProviderType::Fake,
+        'auth_type' => AuthType::ApiKey,
+        'credentials' => ['api_key' => 'fake'],
+        'is_enabled' => true,
+    ]);
+
+    $dueAttempt = SyncAttempt::query()->create([
+        'subscriber_id' => $subscriber->getKey(),
+        'provider_connection_id' => $connection->getKey(),
+        'operation' => 'sync_subscriber',
+        'sync_status' => SyncStatus::RetryScheduled,
+        'payload_hash' => 'claimed',
+        'attempts' => 1,
+        'next_retry_at' => now()->subMinute(),
+    ]);
+
+    $dispatcher = SyncAttempt::getEventDispatcher();
+
+    try {
+        SyncAttempt::retrieved(function (SyncAttempt $syncAttempt) use ($dueAttempt): void {
+            if ((int) $syncAttempt->getKey() !== (int) $dueAttempt->getKey()) {
+                return;
+            }
+
+            SyncAttempt::query()
+                ->whereKey($syncAttempt->getKey())
+                ->update([
+                    'sync_status' => SyncStatus::Pending,
+                    'next_retry_at' => null,
+                ]);
+        });
+
+        expect(RequeueDueProviderSyncAttemptsAction::run(dispatchJobs: false))->toBe(0)
+            ->and($dueAttempt->refresh()->sync_status)->toBe(SyncStatus::Pending)
+            ->and($dueAttempt->next_retry_at)->toBeNull();
+    } finally {
+        SyncAttempt::setEventDispatcher($dispatcher);
+    }
 });

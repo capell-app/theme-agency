@@ -8,13 +8,18 @@ use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
+use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Capell\DocumentLifecycle\Actions\PublishDocumentFromPublishingRevisionAction;
 use Capell\DocumentLifecycle\Enums\ResourceEnum;
 use Capell\DocumentLifecycle\Models\Document;
 use Capell\DocumentLifecycle\Models\DocumentAcceptance;
 use Capell\DocumentLifecycle\Models\DocumentPublication;
+use Capell\DocumentLifecycle\Policies\DocumentPolicy;
+use Capell\DocumentLifecycle\Support\CustomerPortal\DocumentLifecyclePortalSelfServiceItemProvider;
 use Capell\PublishingStudio\Models\PublishingRevision;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Gate;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -50,9 +55,11 @@ class DocumentLifecycleServiceProvider extends AbstractPackageServiceProvider
             }
 
             $this
+                ->registerPolicies()
                 ->registerModels()
                 ->registerMorphMap()
                 ->registerProtectedTables()
+                ->registerCustomerPortalIntegrations()
                 ->registerPublishingRevisionListener();
         });
     }
@@ -61,6 +68,13 @@ class DocumentLifecycleServiceProvider extends AbstractPackageServiceProvider
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(static::$packageName);
+    }
+
+    private function registerPolicies(): self
+    {
+        Gate::policy(Document::class, DocumentPolicy::class);
+
+        return $this;
     }
 
     private function registerAdminResources(): self
@@ -106,6 +120,25 @@ class DocumentLifecycleServiceProvider extends AbstractPackageServiceProvider
         CapellCore::registerProtectedTable('document_lifecycle_documents');
         CapellCore::registerProtectedTable('document_lifecycle_publications');
         CapellCore::registerProtectedTable('legal_acceptances');
+
+        return $this;
+    }
+
+    private function registerCustomerPortalIntegrations(): self
+    {
+        if (! class_exists(PortalSelfServiceItemRegistry::class)
+            || ! interface_exists(PortalSelfServiceItemProvider::class)) {
+            return $this;
+        }
+
+        /** @var object $registry */
+        $registry = $this->app->make(PortalSelfServiceItemRegistry::class);
+
+        if (! method_exists($registry, 'register')) {
+            return $this;
+        }
+
+        $registry->register('document-lifecycle.acceptances', DocumentLifecyclePortalSelfServiceItemProvider::class);
 
         return $this;
     }

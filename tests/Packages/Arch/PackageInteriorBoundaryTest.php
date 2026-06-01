@@ -9,7 +9,6 @@ it('keeps layout builder livewire internals behind declared adapters', function 
     $packagesPath = $rootPath . '/packages';
     $allowedFiles = [
         'packages/foundation-theme/src/Livewire/Assets/Table/AbstractAssets.php',
-        'packages/foundation-theme/resources/views/layout-builder/components/filament/layout-builder/widget.blade.php',
     ];
     $allowedLookup = array_fill_keys($allowedFiles, true);
     $violations = [];

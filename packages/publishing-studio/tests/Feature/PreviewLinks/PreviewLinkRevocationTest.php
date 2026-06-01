@@ -27,7 +27,9 @@ it('revoke action sets revoked_at on a fresh preview link', function (): void {
         ->callTableAction('revoke', $link)
         ->assertHasNoTableActionErrors();
 
-    expect(PreviewLink::query()->find($link->id)->revoked_at)->not->toBeNull();
+    $freshLink = publishingStudioTestInstance(PreviewLink::query()->find($link->id), PreviewLink::class);
+
+    expect($freshLink->revoked_at)->not->toBeNull();
 });
 
 it('revoke action is disabled for an already-revoked preview link', function (): void {

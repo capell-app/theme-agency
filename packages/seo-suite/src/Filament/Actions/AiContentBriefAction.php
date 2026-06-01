@@ -69,6 +69,8 @@ class AiContentBriefAction extends Action
                 ->send();
 
             $action->halt();
+
+            return;
         }
 
         try {

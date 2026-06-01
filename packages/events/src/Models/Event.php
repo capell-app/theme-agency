@@ -35,7 +35,6 @@ use Capell\Events\Enums\EventLocationModeEnum;
 use Capell\Events\Enums\EventVisibilityEnum;
 use Capell\PublishingStudio\BelongsToWorkspace;
 use Carbon\CarbonImmutable;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -130,10 +129,15 @@ class Event extends Model implements HasMedia, Pageable, Publishable, Translatab
 
     public static function getDefaultType(?string $group): ?Blueprint
     {
-        return Blueprint::query()
+        $query = Blueprint::query()
             ->pageType()
-            ->when($group !== null, fn (Builder $query): Builder => $query->adminResource($group))
-            ->where('key', 'event')
+            ->where('key', 'event');
+
+        if ($group !== null) {
+            $query->adminResource($group);
+        }
+
+        return $query
             ->ordered()
             ->first();
     }

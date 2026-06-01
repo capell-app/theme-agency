@@ -1,4 +1,101 @@
-.capell-theme-nonprofit {
-    --capell-theme-primary: #166534;
-    --capell-theme-accent: #eab308;
+.nonprofit-shell {
+    --site-theme-primary: #166534;
+    --site-theme-accent: #eab308;
+    --nonprofit-ink: var(--theme-foreground, #132016);
+    --nonprofit-muted: #60705d;
+    --nonprofit-primary: var(--theme-primary, #166534);
+    --nonprofit-accent: var(--theme-accent, #eab308);
+    --nonprofit-surface: var(--theme-surface, #f7fbf5);
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            var(--nonprofit-surface) 45%,
+            #fffdf3 100%
+        ),
+        linear-gradient(90deg, rgb(22 101 52 / 5%) 1px, transparent 1px),
+        linear-gradient(180deg, rgb(234 179 8 / 5%) 1px, transparent 1px);
+    background-size:
+        auto,
+        2.25rem 2.25rem,
+        2.25rem 2.25rem;
+    color: var(--nonprofit-ink);
+}
+
+.nonprofit-shell section {
+    padding-block: clamp(4rem, 7vw, 7rem);
+}
+
+:where(.nonprofit-shell h1, .nonprofit-shell h2, .nonprofit-shell h3) {
+    color: var(--nonprofit-ink);
+    letter-spacing: 0;
+}
+
+:where(.nonprofit-shell h1) {
+    max-width: 12ch;
+    font-size: clamp(3rem, 6vw, 5.75rem);
+    font-weight: 850;
+    line-height: 0.98;
+}
+
+:where(.nonprofit-shell h2) {
+    max-width: 16ch;
+    font-size: clamp(2.125rem, 4vw, 3.875rem);
+    font-weight: 820;
+    line-height: 1.04;
+}
+
+:where(.nonprofit-shell p) {
+    color: var(--nonprofit-muted);
+    line-height: 1.75;
+}
+
+:where(
+    .nonprofit-shell a,
+    .nonprofit-shell button,
+    .nonprofit-shell input,
+    .nonprofit-shell textarea,
+    .nonprofit-shell select
+):focus-visible {
+    outline: 3px solid rgb(234 179 8 / 82%);
+    outline-offset: 3px;
+}
+
+.nonprofit-skip-link {
+    background: #132016;
+    color: #ffffff;
+    font-weight: 800;
+    left: 1rem;
+    padding: 0.75rem 1rem;
+    position: fixed;
+    top: 1rem;
+    transform: translateY(-150%);
+    z-index: 50;
+}
+
+.nonprofit-skip-link:focus {
+    transform: translateY(0);
+}
+
+.nonprofit-shell :where(article) {
+    border-color: rgb(22 101 52 / 16%);
+    box-shadow: 0 20px 58px rgb(19 32 22 / 8%);
+}
+
+.nonprofit-shell :where(.theme-section-impact, .theme-section-donation-impact) {
+    position: relative;
+}
+
+.nonprofit-shell
+    :where(.theme-section-impact, .theme-section-donation-impact)::before {
+    background: linear-gradient(
+        90deg,
+        var(--nonprofit-primary),
+        var(--nonprofit-accent)
+    );
+    content: '';
+    height: 0.25rem;
+    inset: 0 0 auto;
+    position: absolute;
 }

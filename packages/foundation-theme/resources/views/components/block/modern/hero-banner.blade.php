@@ -104,7 +104,10 @@
                 @endif
             </div>
 
-            <div class="ap-hero__product" aria-hidden="true">
+            <div
+                class="ap-hero__product"
+                aria-hidden="true"
+            >
                 <div class="ap-hero__panel">
                     <div class="ap-hero__panel-header">
                         <span class="ap-hero__panel-title">

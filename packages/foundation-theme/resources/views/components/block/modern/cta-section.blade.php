@@ -60,7 +60,10 @@
                 @endif
             </div>
 
-            <div class="ap-showcase-cta__proof" aria-label="Capell demo proof">
+            <div
+                class="ap-showcase-cta__proof"
+                aria-label="Capell demo proof"
+            >
                 <div class="ap-showcase-cta__proof-row">
                     <span class="ap-showcase-cta__proof-mark">
                         @svg('heroicon-o-check', 'h-4 w-4')

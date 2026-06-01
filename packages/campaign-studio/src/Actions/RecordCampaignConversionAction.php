@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace Capell\CampaignStudio\Actions;
 
 use Capell\CampaignStudio\Data\ConversionAttributionData;
+use Capell\CampaignStudio\Events\CampaignConverted;
 use Capell\CampaignStudio\Models\CampaignConversion;
 use Capell\CampaignStudio\Models\CampaignConversionGoal;
+use Capell\CampaignStudio\Models\CampaignGroup;
 use Capell\CampaignStudio\Models\CampaignLandingPage;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
+use RuntimeException;
 
 final class RecordCampaignConversionAction
 {
@@ -30,6 +33,8 @@ final class RecordCampaignConversionAction
         }
 
         $campaignGroup = $goal->campaignGroup;
+        throw_unless($campaignGroup instanceof CampaignGroup, RuntimeException::class, 'Campaign conversion goal must belong to a campaign group.');
+
         $identity = [
             'campaign_conversion_goal_id' => $goal->getKey(),
             'insights_visit_id' => $visit?->getKey(),
@@ -50,6 +55,10 @@ final class RecordCampaignConversionAction
         $conversion = $this->hasIdentity($identity)
             ? CampaignConversion::query()->firstOrCreate($identity, $values)
             : CampaignConversion::query()->create([...$identity, ...$values]);
+
+        if ($conversion instanceof CampaignConversion && $conversion->wasRecentlyCreated) {
+            event(new CampaignConverted($conversion));
+        }
 
         return $conversion instanceof CampaignConversion ? $conversion : null;
     }

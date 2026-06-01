@@ -10,6 +10,7 @@ use Capell\PublishingStudio\Models\Workspace;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 
@@ -25,6 +26,8 @@ class GenerateWorkspacePreviewUrlAction
 {
     public function handle(Workspace $workspace, string $path = '/', ?int $ttlMinutes = null): string
     {
+        Gate::authorize('preview', $workspace);
+
         $ttl = $ttlMinutes ?? ResolveWorkspaceContext::COOKIE_TTL_MINUTES;
         $now = Date::now();
         $expiresAt = $now->addMinutes($ttl);

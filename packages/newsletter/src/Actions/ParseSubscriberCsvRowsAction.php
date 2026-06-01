@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Newsletter\Actions;
 
+use Illuminate\Validation\ValidationException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class ParseSubscriberCsvRowsAction
@@ -23,7 +24,7 @@ class ParseSubscriberCsvRowsAction
 
         $headerLine = array_shift($lines);
         $headers = str_getcsv($headerLine);
-        $headers = array_map(trim(...), $headers);
+        $headers = array_map(static fn (?string $header): string => trim((string) $header), $headers);
 
         $rows = [];
 
@@ -48,8 +49,26 @@ class ParseSubscriberCsvRowsAction
             }
 
             $rows[] = $row;
+
+            if ($this->exceedsMaxRows($rows)) {
+                throw ValidationException::withMessages([
+                    'csv' => [__('capell-newsletter::messages.import_too_many_rows', [
+                        'max' => (int) config('capell-newsletter.imports.max_rows', 10000),
+                    ])],
+                ]);
+            }
         }
 
         return $rows;
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $rows
+     */
+    private function exceedsMaxRows(array $rows): bool
+    {
+        $maxRows = (int) config('capell-newsletter.imports.max_rows', 10000);
+
+        return $maxRows > 0 && count($rows) > $maxRows;
     }
 }

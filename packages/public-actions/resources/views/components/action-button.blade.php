@@ -27,7 +27,10 @@
             @endif
         @endforeach
 
-        <button type="submit" {{ $attributes->merge(['class' => $class]) }}>
+        <button
+            type="submit"
+            {{ $attributes->merge(['class' => $class]) }}
+        >
             {{ $label }}
         </button>
     </form>

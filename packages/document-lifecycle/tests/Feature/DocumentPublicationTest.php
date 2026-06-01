@@ -137,7 +137,7 @@ it('creates document publications from publishing revision rows for registered d
         ->and($publication->published_revision_id)->toBe($revision->getKey())
         ->and($publication->version_label)->toBe('r1')
         ->and($publication->content_hash)->toBe(ComputeDocumentContentHashAction::run($revision->after_payload))
-        ->and($publication->metadata['publishing_revision_uuid'])->toBe($revision->uuid);
+        ->and(($publication->metadata ?? [])['publishing_revision_uuid'] ?? null)->toBe($revision->uuid);
 });
 
 it('moves a documentable pointer when a published revision replaces a uuid-matched live row', function (): void {

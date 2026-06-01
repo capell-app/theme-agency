@@ -16,6 +16,7 @@ final class ExchangeShopifyAuthorizationCodeAction
     public function handle(string $shopDomain, string $code): ShopifyTokenExchangeResponseData
     {
         $response = Http::asForm()
+            ->timeout($this->httpTimeout())
             ->post(sprintf('https://%s/admin/oauth/access_token', $shopDomain), [
                 'client_id' => config('capell-shopify-commerce.client_id'),
                 'client_secret' => config('capell-shopify-commerce.client_secret'),
@@ -38,5 +39,10 @@ final class ExchangeShopifyAuthorizationCodeAction
             accessToken: $accessToken,
             scopes: $scopes,
         );
+    }
+
+    private function httpTimeout(): int
+    {
+        return max(1, (int) config('capell-shopify-commerce.http_timeout', 15));
     }
 }

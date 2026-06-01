@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Events\Support\RenderHooks;
 
 use Capell\Events\Actions\BuildEventSchemaAction;
+use Capell\Events\Actions\ResolvePublicEventSchemaOccurrenceAction;
 use Capell\Events\Models\Event;
 use Capell\Events\Models\EventOccurrence;
 use Capell\Frontend\Data\RenderHookContext;
@@ -28,11 +29,7 @@ class RegisterEventSchemaHooks
                     return '';
                 }
 
-                $occurrence = EventOccurrence::query()
-                    ->where('event_id', $pageable->getKey())
-                    ->public()
-                    ->ordered()
-                    ->first();
+                $occurrence = ResolvePublicEventSchemaOccurrenceAction::run($pageable);
 
                 if (! $occurrence instanceof EventOccurrence) {
                     return '';

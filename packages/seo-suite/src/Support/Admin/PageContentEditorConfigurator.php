@@ -114,7 +114,7 @@ class PageContentEditorConfigurator
             keywords: $keywords,
             pageId: $record?->translatable_id,
             pageType: $record?->translatable_type,
-            languageId: $record?->language_id,
+            languageId: (int) ($record->language_id ?? 0),
         );
 
         $options = [

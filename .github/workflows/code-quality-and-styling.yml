@@ -1,15 +1,27 @@
-name: Code Quality & Styling
+name: PHP Quality
 
 on:
   pull_request:
+    branches:
+      - 4.x
     types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'packages/**/*.php'
+      - 'tests/**/*.php'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'rector.php'
+      - 'scripts/rector-changed.sh'
+      - 'phpstan*.neon'
+      - 'phpunit.xml'
+      - '.github/workflows/code-quality-and-styling.yml'
 
 permissions:
   contents: read
 
 jobs:
   quality:
-    name: Code Quality & Styling
+    name: PHP Quality
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
@@ -20,6 +32,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 0
 
       - name: Checkout Capell monorepo
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -28,22 +42,6 @@ jobs:
           ref: 4.x
           token: ${{ secrets.ACCESS_TOKEN }}
           path: capell-4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
-        with:
-          node-version: '18.18.0'
-
-      - name: Cache npm dependencies
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-npm-
-
-      - name: Install npm dependencies
-        run: npm install
 
       - name: Setup PHP
         uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2
@@ -98,9 +96,6 @@ jobs:
             capell-app/installer \
             capell-app/marketplace
 
-      - name: Run Prettier
-        run: npx prettier --write 'packages/**/*.{css,js,yml,blade.php}' '!packages/**/node_modules/**'
-
       - name: Run Pint (Code Style)
         run: composer lint
 
@@ -108,4 +103,4 @@ jobs:
         run: composer analyze
 
       - name: Run Rector (Code Refactoring)
-        run: composer rector
+        run: composer rector:changed -- --dry-run

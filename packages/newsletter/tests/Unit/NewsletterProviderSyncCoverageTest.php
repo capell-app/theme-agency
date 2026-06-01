@@ -9,6 +9,7 @@ use Capell\FormBuilder\Models\Submission;
 use Capell\Newsletter\Actions\QueueProviderSyncAction;
 use Capell\Newsletter\Actions\RequeueDueProviderSyncAttemptsAction;
 use Capell\Newsletter\Actions\SubscribeFromFormSubmissionAction;
+use Capell\Newsletter\Actions\SyncSubscriberToProviderAction;
 use Capell\Newsletter\Data\ProviderSubscriberData;
 use Capell\Newsletter\Enums\AuthType;
 use Capell\Newsletter\Enums\ProviderType;
@@ -18,12 +19,16 @@ use Capell\Newsletter\Enums\SyncStatus;
 use Capell\Newsletter\Models\FormMapping;
 use Capell\Newsletter\Models\ProviderAudience;
 use Capell\Newsletter\Models\ProviderConnection;
+use Capell\Newsletter\Models\ProviderSubscriber;
 use Capell\Newsletter\Models\Subscriber;
 use Capell\Newsletter\Models\SyncAttempt;
 use Capell\Newsletter\Notifications\ConfirmNewsletterSubscriptionNotification;
+use Capell\Newsletter\Providers\AdminServiceProvider;
 use Capell\Newsletter\Support\NewsletterSettingsResolver;
 use Capell\Newsletter\Support\Providers\FakeProviderAdapter;
 use Capell\Tags\Models\Tag;
+use Illuminate\Console\Scheduling\Event as ScheduledEvent;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 
@@ -37,6 +42,56 @@ it('skips provider sync queueing when site connections are disabled', function (
     (new QueueProviderSyncAction)->handle($subscriber, 'unsubscribe_subscriber');
 
     expect(SyncAttempt::query()->count())->toBe(0);
+});
+
+it('queues sync attempts for enabled audiences and completes a provider sync attempt', function (): void {
+    $site = $this->createNewsletterSite();
+    $otherSite = $this->createNewsletterSite('Other Newsletter Site');
+    $subscriber = Subscriber::factory()->create([
+        'site_id' => $site->getKey(),
+        'email' => 'queued@example.test',
+        'first_name' => 'Queued',
+        'last_name' => 'Reader',
+    ]);
+    $enabledConnection = createNewsletterProviderConnectionForCoverage((int) $site->getKey(), true, 'Enabled');
+    $firstAudience = createNewsletterProviderAudienceForCoverage($enabledConnection, 'first-audience');
+    $secondAudience = createNewsletterProviderAudienceForCoverage($enabledConnection, 'second-audience');
+    $disabledConnection = createNewsletterProviderConnectionForCoverage((int) $site->getKey(), false, 'Disabled');
+    createNewsletterProviderAudienceForCoverage($disabledConnection, 'disabled-audience');
+    $otherConnection = createNewsletterProviderConnectionForCoverage((int) $otherSite->getKey(), true, 'Other Site');
+    createNewsletterProviderAudienceForCoverage($otherConnection, 'other-audience');
+
+    (new QueueProviderSyncAction)->handle($subscriber, 'subscribe_subscriber', false);
+
+    $attempts = SyncAttempt::query()->orderBy('provider_audience_id')->get();
+    $firstAttempt = $attempts->first();
+
+    throw_unless($firstAttempt instanceof SyncAttempt, RuntimeException::class, 'Expected a provider sync attempt to be created.');
+
+    expect($attempts->count())->toBe(2);
+
+    expect($attempts->pluck('provider_audience_id')->all())->toBe([
+        $firstAudience->getKey(),
+        $secondAudience->getKey(),
+    ]);
+
+    expect($attempts->pluck('sync_status')->all())->toEqual([
+        SyncStatus::Pending,
+        SyncStatus::Pending,
+    ]);
+
+    SyncSubscriberToProviderAction::run($firstAttempt);
+
+    $completedAttempt = $firstAttempt->refresh();
+    $providerSubscriber = ProviderSubscriber::query()
+        ->where('subscriber_id', $subscriber->getKey())
+        ->where('provider_audience_id', $firstAudience->getKey())
+        ->firstOrFail();
+
+    expect($completedAttempt->sync_status)->toBe(SyncStatus::Succeeded)
+        ->and($completedAttempt->attempts)->toBe(1)
+        ->and($completedAttempt->error_message)->toBeNull()
+        ->and($providerSubscriber->remote_status)->toBe(SubscriberStatus::Subscribed->value);
 });
 
 it('requeues all due provider sync attempts when no positive limit is supplied', function (): void {
@@ -60,6 +115,21 @@ it('requeues all due provider sync attempts when no positive limit is supplied',
 it('reports zero requeued sync attempts from the retry command', function (): void {
     expect(Artisan::call('newsletter:sync-retry-due', ['--limit' => 'not-a-number']))->toBe(0)
         ->and(Artisan::output())->toContain('Requeued 0 newsletter provider sync attempts.');
+});
+
+it('guards the retry requeue schedule against overlapping multi server dispatch', function (): void {
+    $schedule = new Schedule;
+    app()->instance(Schedule::class, $schedule);
+
+    (new AdminServiceProvider(app()))->boot();
+
+    $event = collect($schedule->events())
+        ->first(fn (mixed $scheduledEvent): bool => str_contains((string) $scheduledEvent->command, 'newsletter:sync-retry-due'));
+
+    throw_unless($event instanceof ScheduledEvent, RuntimeException::class, 'Expected newsletter retry schedule to be registered.');
+
+    expect($event->withoutOverlapping)->toBeTrue()
+        ->and($event->onOneServer)->toBeTrue();
 });
 
 it('ignores unmapped and malformed form submission events', function (): void {
@@ -136,6 +206,8 @@ it('subscribes mapped submissions with consent and resolves tag mappings', funct
     ]);
 
     $subscriber = (new SubscribeFromFormSubmissionAction)->handle(new FormSubmitted($form, $submission));
+
+    throw_unless($subscriber instanceof Subscriber, RuntimeException::class, 'Expected form submission to create or resolve a subscriber.');
 
     expect($subscriber)->toBeInstanceOf(Subscriber::class)
         ->and($subscriber->status)->toBe(SubscriberStatus::Subscribed)

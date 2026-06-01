@@ -10,6 +10,7 @@ use Capell\AccessGate\Filament\Resources\Concerns\AccessGateFilamentOptions;
 use Capell\AccessGate\Filament\Resources\Events\Pages\ListAccessGateEvents;
 use Capell\AccessGate\Models\Event;
 use Capell\AccessGate\Providers\AccessGateServiceProvider;
+use Capell\AccessGate\Support\AccessGateSiteScope;
 use Capell\Core\Facades\CapellCore;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -68,7 +69,7 @@ final class AccessGateEventResource extends Resource
             ->filters([
                 SelectFilter::make('access_area_id')
                     ->label(__('capell-access-gate::filament.fields.area'))
-                    ->relationship('area', 'key'),
+                    ->relationship('area', 'key', modifyQueryUsing: fn (Builder $query): Builder => AccessGateSiteScope::applyAreaOptionsScope($query)),
                 SelectFilter::make('type')
                     ->label(__('capell-access-gate::filament.fields.type'))
                     ->options(self::enumOptions(EventType::class, 'capell-access-gate::filament.event_type')),
@@ -80,6 +81,12 @@ final class AccessGateEventResource extends Resource
     public static function getModel(): string
     {
         return Event::class;
+    }
+
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return AccessGateSiteScope::applyAreaScope(parent::getEloquentQuery());
     }
 
     #[Override]

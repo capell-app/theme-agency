@@ -67,11 +67,19 @@ class QueueHealthPage extends Page implements HasActions, HasTable
             return true;
         }
 
+        if (Gate::allows(DiagnosticsPermission::ManageQueueHealthPage->value)) {
+            return true;
+        }
+
         if (Gate::allows(DiagnosticsPermission::ViewDiagnostics->value)) {
             return true;
         }
 
         if ($user->can(DiagnosticsPermission::AccessDiagnostics->value) === true) {
+            return true;
+        }
+
+        if ($user->can(DiagnosticsPermission::ManageQueueHealthPage->value) === true) {
             return true;
         }
 

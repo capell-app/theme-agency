@@ -2,23 +2,32 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Models\Page;
+use Capell\Core\Models\Site;
 use Capell\PublishingStudio\Actions\GenerateWorkspacePreviewUrlAction;
 use Capell\PublishingStudio\Http\Middleware\ResolveWorkspaceContext;
 use Capell\PublishingStudio\Models\PreviewLink;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\WorkspaceContext;
+use Capell\Tests\Support\Concerns\CreatesAdminUser;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Session\ArraySessionHandler;
 use Illuminate\Session\Store;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Models\Permission;
 use Symfony\Component\HttpFoundation\Cookie;
+
+uses(CreatesAdminUser::class);
 
 beforeEach(function (): void {
     Route::get('/', fn (): string => 'ok')->name('capell-frontend.index');
     Route::get('{url}', fn (): string => 'ok')
         ->where('url', '.*')
         ->name('capell-frontend.page');
+
+    $this->actingAsAdmin();
 });
 
 it('builds a temporary signed URL containing the workspace uuid for the home page', function (): void {
@@ -91,8 +100,9 @@ it('issues and resolves a workspace cookie only when it has a valid session-boun
     $cookie = collect($response->headers->getCookies())
         ->first(fn (Cookie $cookie): bool => $cookie->getName() === ResolveWorkspaceContext::COOKIE_NAME);
 
-    expect($cookie)->not->toBeNull()
-        ->and($cookie->getValue())->not->toBe($workspace->uuid)
+    $cookie = publishingStudioTestInstance($cookie, Cookie::class);
+
+    expect($cookie->getValue())->not->toBe($workspace->uuid)
         ->and($cookie->getValue())->toStartWith('v1|' . $workspace->uuid . '|');
 
     $followUpRequest = Request::create('/');
@@ -127,4 +137,26 @@ it('persists a PreviewLink row and embeds its token in the signed URL', function
         ->toContain(ResolveWorkspaceContext::TOKEN_PARAM . '=' . $link->token)
         ->and($link->isUsable())->toBeTrue()
         ->and($link->expires_at)->not->toBeNull();
+});
+
+it('requires preview authorization before issuing a signed preview URL', function (): void {
+    Permission::findOrCreate('View:Workspace');
+
+    $allowedSite = Site::factory()->create();
+    $blockedSite = Site::factory()->create();
+    $viewer = test()->createUserWithPermission('View:Workspace');
+    $viewer->assignedSiteIds = collect([(int) $allowedSite->getKey()]);
+
+    test()->actingAs($viewer);
+
+    $workspace = Workspace::factory()->create();
+    Page::factory()->create([
+        'workspace_id' => $workspace->getKey(),
+        'site_id' => $blockedSite->getKey(),
+    ]);
+
+    expect(fn (): string => (new GenerateWorkspacePreviewUrlAction)->handle($workspace))
+        ->toThrow(AuthorizationException::class);
+
+    expect(PreviewLink::query()->where('workspace_id', $workspace->getKey())->exists())->toBeFalse();
 });

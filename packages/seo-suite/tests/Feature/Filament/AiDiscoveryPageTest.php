@@ -228,8 +228,11 @@ it('honors seo suite ai discovery default and audit settings', function (): void
     $siteProfile = ResolveAiDiscoveryProfileAction::run($site, $language);
     $issues = BuildAiReadinessAuditAction::run($page, $site, $language);
 
-    expect($siteProfile)->toBeInstanceOf(AiDiscoverySiteProfile::class)
-        ->and($siteProfile->llms_txt_enabled)->toBeFalse()
+    expect($siteProfile)->toBeInstanceOf(AiDiscoverySiteProfile::class);
+
+    throw_unless($siteProfile instanceof AiDiscoverySiteProfile, RuntimeException::class, 'Expected AI discovery profile to resolve to a site profile.');
+
+    expect($siteProfile->llms_txt_enabled)->toBeFalse()
         ->and($siteProfile->markdown_pages_enabled)->toBeFalse()
         ->and($issues)->toHaveCount(0);
 });

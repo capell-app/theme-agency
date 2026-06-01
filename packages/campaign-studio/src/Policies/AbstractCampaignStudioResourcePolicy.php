@@ -6,6 +6,7 @@ namespace Capell\CampaignStudio\Policies;
 
 use Capell\Admin\Policies\Concerns\ResolvesShieldPermission;
 use Capell\Admin\Support\SiteScope;
+use Capell\CampaignStudio\Models\CampaignGroup;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
 use Throwable;
@@ -86,19 +87,39 @@ abstract class AbstractCampaignStudioResourcePolicy
     {
         $siteId = $this->recordSiteId($record);
 
-        if ($siteId === null || SiteScope::isGlobalActor($user)) {
+        if (SiteScope::isGlobalActor($user)) {
             return true;
         }
 
-        return $user->getAssignedSiteIds()->contains($siteId);
+        if ($siteId === null) {
+            return false;
+        }
 
+        return $user->getAssignedSiteIds()->contains($siteId);
     }
 
     protected function recordSiteId(Model $record): ?int
     {
         $siteId = $record->getAttribute('site_id');
 
-        return is_numeric($siteId) ? (int) $siteId : null;
+        if (is_numeric($siteId)) {
+            return (int) $siteId;
+        }
+
+        if (! is_numeric($record->getAttribute('campaign_group_id'))) {
+            return null;
+        }
+
+        $record->loadMissing('campaignGroup');
+        $campaignGroup = $record->getRelation('campaignGroup');
+
+        if (! $campaignGroup instanceof CampaignGroup) {
+            return null;
+        }
+
+        $campaignGroupSiteId = $campaignGroup->getAttribute('site_id');
+
+        return is_numeric($campaignGroupSiteId) ? (int) $campaignGroupSiteId : null;
     }
 
     /**

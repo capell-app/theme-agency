@@ -9,6 +9,7 @@ use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
+use Capell\SeoSuite\Actions\BuildMarketplaceStructuredDataFreshnessWarningsAction;
 use Capell\SeoSuite\Actions\BuildPageSeoReportAction;
 use Capell\SeoSuite\Actions\BuildSchemaTemplateReportAction;
 use Capell\SeoSuite\Contracts\SchemaTemplate;
@@ -17,7 +18,7 @@ use Capell\SeoSuite\Enums\SeoIssueSeverityEnum;
 use Capell\SeoSuite\Support\SchemaTemplates\SchemaTemplateRegistry;
 
 /**
- * @param  array<array-key, mixed>  $requiredFields
+ * @param  list<string>  $requiredFields
  * @param  array<array-key, mixed>  $schema
  */
 function schemaTemplateReportTestTemplate(string $schemaType, array $schema, array $requiredFields): SchemaTemplate
@@ -102,6 +103,42 @@ it('passes when all required template fields are present', function (): void {
     expect($dashboardReports[0]->presentFields)->toBe(['@type', 'url'])
         ->and($dashboardReports[0]->missingFields)->toBe([])
         ->and($dashboardReports[0]->severity)->toBe(SeoIssueSeverityEnum::Passed);
+});
+
+it('adds marketplace freshness warnings to product schema reports', function (): void {
+    $language = LanguageFactory::new()->create(['name' => 'English', 'code' => 'en']);
+    $site = SiteFactory::new()->recycle($language)->language($language)->withTranslations($language)->create();
+    $productType = Blueprint::factory()->page()->create(['meta' => ['schema' => ['type' => 'Product']]]);
+    $page = PageFactory::new()->site($site)->type($productType)->withTranslations($language)->create();
+    $registry = new SchemaTemplateRegistry;
+    $registry->register(
+        SchemaTemplateTypeEnum::Product,
+        schemaTemplateReportTestTemplate('Product', [
+            'name' => 'Paid guide',
+            'offers' => [
+                '@type' => 'Offer',
+                'price' => '19.00',
+                'priceCurrency' => 'GBP',
+            ],
+        ], ['@type', 'name']),
+    );
+    app()->instance(SchemaTemplateRegistry::class, $registry);
+
+    $dashboardReports = BuildSchemaTemplateReportAction::run($page, $site, $language);
+
+    expect($dashboardReports)->toHaveCount(1)
+        ->and($dashboardReports[0]->templateType)->toBe(SchemaTemplateTypeEnum::Product)
+        ->and($dashboardReports[0]->missingFields)->toBe([])
+        ->and($dashboardReports[0]->warnings)->toBe(BuildMarketplaceStructuredDataFreshnessWarningsAction::run([
+            '@type' => 'Product',
+            'name' => 'Paid guide',
+            'offers' => [
+                '@type' => 'Offer',
+                'price' => '19.00',
+                'priceCurrency' => 'GBP',
+            ],
+        ]))
+        ->and($dashboardReports[0]->severity)->toBe(SeoIssueSeverityEnum::Warning);
 });
 
 it('includes schema dashboard-dashboard_reports in the page SEO report', function (): void {

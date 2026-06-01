@@ -92,7 +92,9 @@
                 </div>
             </div>
 
-            <div class="relative bg-[#052e16] p-5 text-white md:p-7 lg:-ml-6">
+            <div
+                class="relative overflow-hidden bg-[#052e16] p-5 text-white md:p-7 lg:-ml-6"
+            >
                 <div
                     class="absolute -top-12 -right-12 h-40 w-40 rounded-full border-[28px] border-[#facc15]"
                     aria-hidden="true"

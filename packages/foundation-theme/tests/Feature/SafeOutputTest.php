@@ -128,6 +128,10 @@ test('public blade keeps data loading out of templates', function (): void {
     $forbiddenPatterns = [
         'DB::',
         '::query(',
+        'NavigationLoader::',
+        'PageLoader::',
+        'SiteLoader::',
+        'Frontend::site()->siteDomain',
         'loadMissing(',
         'relationLoaded(',
         'getMedia(',
@@ -158,6 +162,62 @@ test('public blade keeps data loading out of templates', function (): void {
     );
 });
 
+test('theme public views and assets avoid package and theme implementation markers', function (): void {
+    $packagesRoot = dirname(__DIR__, 3);
+    $packagePaths = [
+        $packagesRoot . '/foundation-theme',
+        ...glob($packagesRoot . '/theme-*') ?: [],
+    ];
+    $directories = [];
+    $forbiddenMarkers = [
+        'data-theme-key',
+        'data-capell-theme',
+        'capell-theme capell-theme-',
+        'class="capell-theme',
+        '.capell-theme-',
+        '--capell-theme-',
+        'capell-foundation-theme-',
+        'capell-app-body',
+        'capell-app/theme-',
+        'capell-app/foundation-theme',
+        'model_id',
+        'field_path',
+    ];
+    $violations = [];
+
+    foreach ($packagePaths as $packagePath) {
+        foreach (['resources/views', 'resources/css', 'resources/js'] as $relativeDirectory) {
+            $directory = $packagePath . '/' . $relativeDirectory;
+
+            if (is_dir($directory)) {
+                $directories[] = $directory;
+            }
+        }
+    }
+
+    $files = (new Finder)
+        ->files()
+        ->in($directories)
+        ->name(['*.blade.php', '*.css', '*.js']);
+
+    foreach ($files as $file) {
+        $contents = $file->getContents();
+        $relativePath = str_replace($packagesRoot . '/', '', $file->getPathname());
+
+        foreach ($forbiddenMarkers as $marker) {
+            if (str_contains($contents, $marker)) {
+                $violations[] = $relativePath . ' contains ' . $marker;
+            }
+        }
+    }
+
+    expect($violations)->toBe(
+        [],
+        'Theme public output marker leaks found:' . PHP_EOL .
+        json_encode($violations, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
+    );
+});
+
 test('reviewed public blade blocks do not read asset and page relations directly', function (): void {
     $themePath = dirname(__DIR__, 2);
     $files = [
@@ -183,6 +243,10 @@ test('reviewed public blade blocks do not read asset and page relations directly
 
     foreach ($files as $file) {
         $contents = file_get_contents($themePath . '/' . $file);
+
+        if (! is_string($contents)) {
+            throw new RuntimeException(sprintf('Expected %s to be readable.', $file));
+        }
 
         foreach ($forbiddenPatterns as $pattern) {
             if (str_contains($contents, $pattern)) {
@@ -210,6 +274,15 @@ test('ap hero and gallery public output avoid reviewed accessibility and editor 
         ->and($hero)->not->toContain('ap-hero__slideshow-play')
         ->and($gallery)->not->toContain('No images configured')
         ->and($cardGrid)->not->toContain('No cards configured');
+});
+
+test('theme public blade avoids unstable identifier helpers', function (): void {
+    $themePath = dirname(__DIR__, 2);
+    $contentListing = file_get_contents($themePath . '/resources/views/theme/sections/content-listing.blade.php');
+
+    expect($contentListing)
+        ->not->toContain('md5(')
+        ->toContain("hash('xxh128'");
 });
 
 test('reviewed foundation chrome avoids accessibility regressions', function (): void {

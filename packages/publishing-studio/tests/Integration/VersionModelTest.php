@@ -10,14 +10,17 @@ use Illuminate\Support\Str;
 it('has a bootstrap live version available out of the box', function (): void {
     $currentLive = Version::currentLive();
 
-    expect($currentLive)->not->toBeNull()
-        ->and($currentLive->is_live)->toBeTrue()
+    $currentLive = publishingStudioTestInstance($currentLive, Version::class);
+
+    expect($currentLive->is_live)->toBeTrue()
         ->and($currentLive->number)->toBe(1)
         ->and(Version::liveId())->toBe($currentLive->id);
 });
 
 it('returns the live version id and model via the currentLive helper', function (): void {
     $live = Version::currentLive();
+
+    $live = publishingStudioTestInstance($live, Version::class);
 
     expect($live->id)->toBe(Version::liveId());
 });
@@ -57,8 +60,9 @@ it('tracks the source workspace relationship when published', function (): void 
         'published_at' => now(),
     ]);
 
-    expect($version->sourceWorkspace)->toBeInstanceOf(Workspace::class)
-        ->and($version->sourceWorkspace->id)->toBe($workspace->id);
+    $sourceWorkspace = publishingStudioTestInstance($version->sourceWorkspace, Workspace::class);
+
+    expect($sourceWorkspace->id)->toBe($workspace->id);
 });
 
 it('records polymorphic publishedBy when a user publishes the version', function (): void {
@@ -75,6 +79,7 @@ it('records polymorphic publishedBy when a user publishes the version', function
         'published_at' => now(),
     ]);
 
-    expect($version->publishedBy)->not->toBeNull()
-        ->and($version->publishedBy->getKey())->toBe($publisher->getKey());
+    $publishedBy = publishingStudioTestInstance($version->publishedBy, User::class);
+
+    expect($publishedBy->getKey())->toBe($publisher->getKey());
 });

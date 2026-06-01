@@ -51,6 +51,7 @@ final class AgentBridgeTokensRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->query(fn (): Builder => self::scopedQueryForUser(CapellAgentBridgeToken::query(), $this->ownerRecord))
             ->columns([
                 TextColumn::make('name')
                     ->label(__('capell-agent-bridge::admin.token_name'))

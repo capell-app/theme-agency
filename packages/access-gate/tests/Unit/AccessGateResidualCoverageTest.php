@@ -19,6 +19,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Collection as SupportCollection;
 
 it('covers access gate event relationships and casts', function (): void {
     $event = new AccessGateEvent([
@@ -53,6 +54,8 @@ it('builds access gate expiry and revocation notifications', function (): void {
 it('covers access gate policy abilities and defensive user branches', function (): void {
     $policy = new RegistrationPolicy;
     $record = new Registration;
+    $record->setRelation('area', new Area(['site_id' => 10]));
+
     $actor = accessGateResidualPolicyActor([
         'Create:Registration',
         'Delete:Registration',
@@ -90,21 +93,16 @@ it('builds access gate resource table declarations', function (): void {
  */
 function accessGateResidualPolicyActor(array $permissions = [], array $roles = []): User
 {
-    return new class($permissions, $roles) extends User
+    $user = new class extends User
     {
         /** @use HasFactory<Factory<static>> */
         use HasFactory;
 
-        /**
-         * @param  list<string>  $permissions
-         * @param  list<string>  $roles
-         */
-        public function __construct(
-            private readonly array $permissions = [],
-            private readonly array $roles = [],
-        ) {
-            parent::__construct();
-        }
+        /** @var list<string> */
+        public array $permissions = [];
+
+        /** @var list<string> */
+        public array $roles = [];
 
         public function checkPermissionTo(string $permission): bool
         {
@@ -115,7 +113,18 @@ function accessGateResidualPolicyActor(array $permissions = [], array $roles = [
         {
             return in_array($role, $this->roles, true);
         }
+
+        /** @return SupportCollection<int, int> */
+        public function getAssignedSiteIds(): SupportCollection
+        {
+            return collect([10]);
+        }
     };
+
+    $user->permissions = $permissions;
+    $user->roles = $roles;
+
+    return $user;
 }
 
 function accessGateResidualTable(): Table

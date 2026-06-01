@@ -1,5 +1,7 @@
 <x-filament-widgets::widget class="capell-cache-health">
-    <x-filament::section heading="Cache health">
+    <x-filament::section
+        :heading="__('capell-diagnostics::package.cache_health')"
+    >
         {{-- Site selector --}}
         @if (count($this->sites) > 1)
             <div class="mb-4">
@@ -17,7 +19,9 @@
         @endif
 
         @if ($this->data === null)
-            <p class="text-sm text-gray-400">No site selected.</p>
+            <p class="text-sm text-gray-400">
+                {{ __('capell-diagnostics::package.no_site_selected') }}
+            </p>
         @else
             @php
                 $data = $this->data;
@@ -60,7 +64,7 @@
                     <div
                         class="text-success-600 dark:text-success-500 mt-1 text-xs"
                     >
-                        Cached
+                        {{ __('capell-diagnostics::package.cached') }}
                     </div>
                 </div>
 
@@ -75,7 +79,7 @@
                     <div
                         class="text-warning-600 dark:text-warning-500 mt-1 text-xs"
                     >
-                        Stale
+                        {{ __('capell-diagnostics::package.stale') }}
                     </div>
                 </div>
 
@@ -90,7 +94,7 @@
                     <div
                         class="{{ $data->missingCount > 0 ? 'text-danger-600 dark:text-danger-500' : 'text-gray-400 dark:text-gray-500' }} mt-1 text-xs"
                     >
-                        Missing
+                        {{ __('capell-diagnostics::package.missing') }}
                     </div>
                 </div>
             </div>
@@ -98,9 +102,9 @@
             {{-- Last warmed timestamp --}}
             <div class="mb-4 text-xs text-gray-400 dark:text-gray-500">
                 @if ($data->lastWarmedAt)
-                    Last warmed: {{ $data->lastWarmedAt }}
+                    {{ __('capell-diagnostics::package.last_warmed', ['timestamp' => $data->lastWarmedAt]) }}
                 @else
-                        Not yet warmed.
+                    {{ __('capell-diagnostics::package.not_yet_warmed') }}
                 @endif
             </div>
 
@@ -111,10 +115,18 @@
                     wire:loading.attr="disabled"
                     class="bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white shadow-sm transition focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:opacity-60 dark:focus:ring-offset-gray-900"
                 >
-                    <span wire:loading.remove wire:target="warmCache">
-                        Warm cache
+                    <span
+                        wire:loading.remove
+                        wire:target="warmCache"
+                    >
+                        {{ __('capell-diagnostics::package.warm_cache') }}
                     </span>
-                    <span wire:loading wire:target="warmCache">Warming…</span>
+                    <span
+                        wire:loading
+                        wire:target="warmCache"
+                    >
+                        {{ __('capell-diagnostics::package.warming_cache') }}
+                    </span>
                 </button>
             </div>
         @endif

@@ -13,10 +13,14 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\AccessGate",
-    "surfaces": ["admin"],
+    "surfaces": ["admin", "frontend"],
     "dependencies": {
-        "requires": ["capell-app/core"],
-        "supports": ["capell-app/public-actions"],
+        "requires": ["capell-app/admin", "capell-app/core"],
+        "supports": [
+            "capell-app/customer-portal",
+            "capell-app/payments",
+            "capell-app/public-actions"
+        ],
         "conflicts": []
     },
     "providers": {
@@ -26,7 +30,38 @@
         "admin": [],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-resource",
+            "class": "Capell\\AccessGate\\Manifest\\AccessAreaResourceContribution",
+            "resourceClass": "Capell\\AccessGate\\Filament\\Resources\\AccessAreas\\AccessAreaResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\AccessGate\\Manifest\\RegistrationResourceContribution",
+            "resourceClass": "Capell\\AccessGate\\Filament\\Resources\\Registrations\\RegistrationResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\AccessGate\\Manifest\\GrantResourceContribution",
+            "resourceClass": "Capell\\AccessGate\\Filament\\Resources\\Grants\\GrantResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\AccessGate\\Manifest\\BrowserTokenResourceContribution",
+            "resourceClass": "Capell\\AccessGate\\Filament\\Resources\\BrowserTokens\\BrowserTokenResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\AccessGate\\Manifest\\ClaimTokenResourceContribution",
+            "resourceClass": "Capell\\AccessGate\\Filament\\Resources\\ClaimTokens\\ClaimTokenResource"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\AccessGate\\Manifest\\AccessGateEventResourceContribution",
+            "resourceClass": "Capell\\AccessGate\\Filament\\Resources\\Events\\AccessGateEventResource"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": false,
@@ -49,11 +84,26 @@
         "install": "Capell\\AccessGate\\Actions\\InstallAccessGatePackageAction"
     },
     "settings": [],
-    "permissions": [],
+    "permissions": [
+        "View:Area",
+        "Create:Area",
+        "Update:Area",
+        "Delete:Area",
+        "View:Registration",
+        "Update:Registration",
+        "View:Grant",
+        "Update:Grant",
+        "View:BrowserToken",
+        "Update:BrowserToken",
+        "View:ClaimToken",
+        "View:Event"
+    ],
     "capabilities": [
         "access-gating",
         "registration-approval",
-        "claim-token-management"
+        "claim-token-management",
+        "paid-gated-access-fulfillment",
+        "access-gate-customer-portal-gated-resource-feed"
     ],
     "performance": {
         "frontendRenderBudgetMs": 0,
@@ -94,11 +144,6 @@
         "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-resource",
-            "migration",
-            "model",
-            "route"
-        ]
+        "deferredContributions": ["paid-access-checkout-creation"]
     }
 }

@@ -36,7 +36,7 @@ class SaasThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/saas.jpg',
             tags: ['Product', 'Conversion', 'Growth'],
             bestFit: ['Software products', 'Startups', 'Subscription services'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'comparison', 'calculator', 'cta', 'footer', 'blog'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'comparison', 'calculator', 'pricing', 'docs-onboarding', 'demo-request', 'cta', 'footer', 'blog'],
             presets: [
                 new ThemePresetData(
                     key: 'saas',
@@ -118,6 +118,9 @@ class SaasThemeServiceProvider extends ServiceProvider
     private function sectionRenderers(): array
     {
         $blogAvailable = CapellCore::isPackageInstalled('capell-app/blog');
+        $contentSectionsAvailable = CapellCore::isPackageInstalled('capell-app/content-sections');
+        $documentLifecycleAvailable = CapellCore::isPackageInstalled('capell-app/document-lifecycle');
+        $formBuilderAvailable = CapellCore::isPackageInstalled('capell-app/form-builder');
 
         return [
             'navigation' => new ViewSectionRenderer(self::THEME_KEY, 'navigation', 'capell-theme-saas::sections.navigation', failLoudly: true),
@@ -127,6 +130,9 @@ class SaasThemeServiceProvider extends ServiceProvider
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-saas::sections.content-listing', failLoudly: true),
             'comparison' => new ViewSectionRenderer(self::THEME_KEY, 'comparison', 'capell-theme-saas::sections.comparison', failLoudly: true),
             'calculator' => new ViewSectionRenderer(self::THEME_KEY, 'calculator', 'capell-theme-saas::sections.calculator', failLoudly: true),
+            'pricing' => new ViewSectionRenderer(self::THEME_KEY, 'pricing', 'capell-theme-saas::sections.pricing', true, ['contentSectionsAvailable' => $contentSectionsAvailable]),
+            'docs-onboarding' => new ViewSectionRenderer(self::THEME_KEY, 'docs-onboarding', 'capell-theme-saas::sections.docs-onboarding', true, ['documentLifecycleAvailable' => $documentLifecycleAvailable]),
+            'demo-request' => new ViewSectionRenderer(self::THEME_KEY, 'demo-request', 'capell-theme-saas::sections.demo-request', true, ['formBuilderAvailable' => $formBuilderAvailable]),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-saas::sections.cta', failLoudly: true),
             'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-saas::sections.footer', failLoudly: true),
             'blog' => new BlogSectionRenderer(self::THEME_KEY, $blogAvailable, failLoudly: true),

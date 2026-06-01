@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Capell\Core\Models\Page;
 use Capell\SeoSuite\Filament\Pages\BrokenLinksPage;
 use Capell\SeoSuite\Models\BrokenLink;
+use Capell\Tests\Fixtures\Models\User;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 
 use function Pest\Livewire\livewire;
@@ -13,11 +14,20 @@ use Spatie\Permission\Models\Permission;
 
 uses(CreatesAdminUser::class);
 
+function brokenLinksAuthenticatedUser(): User
+{
+    $user = auth()->user();
+
+    throw_unless($user instanceof User, RuntimeException::class, 'Expected authenticated test user.');
+
+    return $user;
+}
+
 beforeEach(function (): void {
     Permission::query()->firstOrCreate(['name' => 'View:BrokenLinksPage', 'guard_name' => 'web']);
 
     test()->actingAsAdmin();
-    auth()->user()->givePermissionTo('View:BrokenLinksPage');
+    brokenLinksAuthenticatedUser()->givePermissionTo('View:BrokenLinksPage');
 });
 
 it('renders broken link rows with related page names', function (): void {

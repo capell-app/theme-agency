@@ -119,7 +119,10 @@
                                     </p>
                                 </div>
 
-                                <div class="space-y-3" aria-hidden="true">
+                                <div
+                                    class="space-y-3"
+                                    aria-hidden="true"
+                                >
                                     <span
                                         class="block h-2 w-28 bg-[#fb923c]"
                                     ></span>
@@ -227,7 +230,7 @@
                 <button
                     type="button"
                     class="theme-carousel-button border border-white/20 bg-white/10 px-4 py-2 text-xs font-black text-white uppercase"
-                    aria-label="Previous case studies"
+                    aria-label="{{ __('capell-theme-portfolio::generic.carousel_previous') }}"
                     data-carousel-prev
                 >
                     Prev
@@ -235,7 +238,7 @@
                 <button
                     type="button"
                     class="theme-carousel-button border border-white/20 bg-white/10 px-4 py-2 text-xs font-black text-white uppercase"
-                    aria-label="Next case studies"
+                    aria-label="{{ __('capell-theme-portfolio::generic.carousel_next') }}"
                     data-carousel-next
                 >
                     Next
@@ -244,42 +247,3 @@
         </div>
     </div>
 </section>
-
-<script>
-    document
-        .querySelectorAll('[data-carousel="portfolio-case-studies"]')
-        .forEach((carousel) => {
-            const track = carousel.querySelector('[data-carousel-track]')
-            const prev = carousel.querySelector('[data-carousel-prev]')
-            const next = carousel.querySelector('[data-carousel-next]')
-
-            if (!track || !prev || !next) {
-                return
-            }
-
-            const step = () =>
-                Math.max(320, Math.floor(track.clientWidth * 0.82))
-
-            const updateButtons = () => {
-                const canScroll = track.scrollWidth > track.clientWidth + 1
-                prev.disabled = !canScroll || track.scrollLeft <= 2
-                next.disabled =
-                    !canScroll ||
-                    track.scrollLeft >=
-                        track.scrollWidth - track.clientWidth - 2
-
-                prev.classList.toggle('opacity-40', prev.disabled)
-                next.classList.toggle('opacity-40', next.disabled)
-            }
-
-            prev.addEventListener('click', () =>
-                track.scrollBy({ left: -step(), behavior: 'smooth' }),
-            )
-            next.addEventListener('click', () =>
-                track.scrollBy({ left: step(), behavior: 'smooth' }),
-            )
-            track.addEventListener('scroll', updateButtons, { passive: true })
-            window.addEventListener('resize', updateButtons)
-            updateButtons()
-        })
-</script>

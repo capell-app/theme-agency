@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\PublicActions\Policies;
 
 use Capell\Admin\Policies\Concerns\ResolvesShieldPermission;
+use Capell\Admin\Support\SiteScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
 use Throwable;
@@ -22,7 +23,8 @@ abstract class AbstractPublicActionResourcePolicy
 
     public function view(User $user, Model $record): bool
     {
-        return $this->hasAnyPermission($user, ['view_any', 'view']);
+        return $this->hasAnyPermission($user, ['view_any', 'view'])
+            && $this->canUseRecordSite($user, $record);
     }
 
     public function create(User $user): bool
@@ -32,12 +34,14 @@ abstract class AbstractPublicActionResourcePolicy
 
     public function update(User $user, Model $record): bool
     {
-        return $this->hasPermission($user, 'update');
+        return $this->hasPermission($user, 'update')
+            && $this->canUseRecordSite($user, $record);
     }
 
     public function delete(User $user, Model $record): bool
     {
-        return $this->hasPermission($user, 'delete');
+        return $this->hasPermission($user, 'delete')
+            && $this->canUseRecordSite($user, $record);
     }
 
     public function deleteAny(User $user): bool
@@ -47,7 +51,8 @@ abstract class AbstractPublicActionResourcePolicy
 
     public function restore(User $user, Model $record): bool
     {
-        return $this->hasPermission($user, 'restore');
+        return $this->hasPermission($user, 'restore')
+            && $this->canUseRecordSite($user, $record);
     }
 
     public function restoreAny(User $user): bool
@@ -57,7 +62,8 @@ abstract class AbstractPublicActionResourcePolicy
 
     public function forceDelete(User $user, Model $record): bool
     {
-        return $this->hasPermission($user, 'force_delete');
+        return $this->hasPermission($user, 'force_delete')
+            && $this->canUseRecordSite($user, $record);
     }
 
     public function forceDeleteAny(User $user): bool
@@ -105,5 +111,48 @@ abstract class AbstractPublicActionResourcePolicy
         } catch (Throwable) {
             return false;
         }
+    }
+
+    private function canUseRecordSite(User $user, Model $record): bool
+    {
+        if (SiteScope::isGlobalActor($user)) {
+            return true;
+        }
+
+        $siteId = $this->recordSiteId($record);
+
+        return is_int($siteId)
+            && $user->getAssignedSiteIds()->contains($siteId);
+    }
+
+    private function recordSiteId(Model $record): ?int
+    {
+        $siteId = data_get($record, 'site_id');
+
+        if (is_int($siteId)) {
+            return $siteId;
+        }
+
+        if (is_numeric($siteId)) {
+            return (int) $siteId;
+        }
+
+        $actionSiteId = data_get($record, 'action.site_id');
+
+        if (is_int($actionSiteId) || is_numeric($actionSiteId)) {
+            return (int) $actionSiteId;
+        }
+
+        $submissionSiteId = data_get($record, 'submission.site_id');
+
+        if (is_int($submissionSiteId) || is_numeric($submissionSiteId)) {
+            return (int) $submissionSiteId;
+        }
+
+        $destinationActionSiteId = data_get($record, 'destination.action.site_id');
+
+        return is_int($destinationActionSiteId) || is_numeric($destinationActionSiteId)
+            ? (int) $destinationActionSiteId
+            : null;
     }
 }

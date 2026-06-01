@@ -13,6 +13,7 @@ use Capell\Frontend\Data\MainContentRenderHookData;
 use Capell\Frontend\Enums\RenderHookLocation;
 use Capell\Frontend\Support\Render\RenderHookRegistry;
 use Composer\InstalledVersions;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -92,7 +93,7 @@ class FrontendServiceProvider extends ServiceProvider
             RenderHookLocation::MainContent,
             static function (mixed $context): string {
                 $item = $context->item ?? null;
-                if (! $item instanceof MainContentRenderHookData || ! is_object($item->page)) {
+                if (! $item instanceof MainContentRenderHookData || ! $item->page instanceof Model) {
                     return '';
                 }
 
@@ -117,6 +118,10 @@ class FrontendServiceProvider extends ServiceProvider
         }
 
         $version = InstalledVersions::getVersion('livewire/livewire');
+
+        if (! is_string($version)) {
+            return true;
+        }
 
         return version_compare($version, '4.0.0', '<');
     }

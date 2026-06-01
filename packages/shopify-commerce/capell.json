@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Shopify Commerce adds site-scoped Shopify Admin API OAuth and catalog sync for Capell.",
+    "description": "Shopify Commerce adds site-scoped Shopify Admin API OAuth, catalog sync, and customer cache foundations for Capell.",
     "product": {
         "group": "Capell Commerce",
         "tier": "premium",
@@ -38,13 +38,15 @@
             "shopify_connections",
             "shopify_oauth_states",
             "shopify_products",
-            "shopify_product_variants"
+            "shopify_product_variants",
+            "shopify_customers"
         ],
         "protectedTables": [
             "shopify_connections",
             "shopify_oauth_states",
             "shopify_products",
-            "shopify_product_variants"
+            "shopify_product_variants",
+            "shopify_customers"
         ]
     },
     "commands": {
@@ -54,14 +56,17 @@
         "doctor": null
     },
     "actions": {
-        "install": "Capell\\ShopifyCommerce\\Actions\\InstallShopifyCommercePackageAction"
+        "install": "Capell\\ShopifyCommerce\\Actions\\InstallShopifyCommercePackageAction",
+        "upsertShopifyCustomer": "Capell\\ShopifyCommerce\\Actions\\Customers\\UpsertShopifyCustomerAction"
     },
     "settings": ["Capell\\ShopifyCommerce\\Settings\\ShopifyCommerceSettings"],
     "permissions": ["shopify-commerce.manage"],
     "capabilities": [
         "shopify-commerce",
         "shopify-commerce-admin",
-        "shopify-commerce-catalog-sync"
+        "shopify-commerce-catalog-sync",
+        "shopify-commerce-customer-cache",
+        "shopify-commerce-customer-synced-event"
     ],
     "performance": {
         "frontendRenderBudgetMs": 0,
@@ -78,6 +83,10 @@
                 },
                 {
                     "model": "Capell\\ShopifyCommerce\\Models\\ShopifyProductVariant",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\ShopifyCommerce\\Models\\ShopifyCustomer",
                     "events": ["created", "updated", "deleted"]
                 }
             ],
@@ -100,7 +109,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Site-scoped Shopify Admin API OAuth and catalog sync for Capell.",
+        "summary": "Site-scoped Shopify Admin API OAuth, catalog sync, and customer cache foundations for Capell.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",

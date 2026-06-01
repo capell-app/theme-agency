@@ -62,6 +62,31 @@ it('moves modern block interactions out of blade and into the frontend runtime',
         ->and($testimonials)->not->toContain('onclick=');
 });
 
+it('keeps public asset block blade on preloaded relations', function (): void {
+    $viewDirectory = dirname(__DIR__, 2) . '/resources/views/components/block';
+    $viewFiles = [
+        $viewDirectory . '/asset/pages.blade.php',
+        $viewDirectory . '/modern/faq-section.blade.php',
+        $viewDirectory . '/modern/feature-list.blade.php',
+        $viewDirectory . '/modern/pricing-table.blade.php',
+        $viewDirectory . '/modern/process-steps.blade.php',
+        $viewDirectory . '/modern/stats-section.blade.php',
+        $viewDirectory . '/modern/testimonials.blade.php',
+    ];
+
+    foreach ($viewFiles as $viewFile) {
+        $view = file_get_contents($viewFile);
+
+        throw_unless(is_string($view), RuntimeException::class, sprintf('Expected %s to be readable.', $viewFile));
+
+        expect($view)
+            ->not->toContain('loadParent(')
+            ->not->toContain('$blockAsset->asset->translation')
+            ->not->toContain('$blockAsset->asset->getMeta')
+            ->not->toContain('$asset->translation?->');
+    }
+});
+
 it('publishes the foundation frontend runtime build during setup', function (): void {
     $provider = file_get_contents(dirname(__DIR__, 2) . '/src/Providers/FoundationThemeServiceProvider.php');
     $action = file_get_contents(dirname(__DIR__, 2) . '/src/Actions/SetupFoundationThemePackageAction.php');
@@ -76,6 +101,8 @@ it('publishes the foundation frontend runtime build during setup', function (): 
 it('owns the default body content and layout component files', function (): void {
     $layout = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/layout/index.blade.php');
 
+    throw_unless(is_string($layout), RuntimeException::class, 'Expected foundation layout Blade file to be readable.');
+
     expect(file_exists(dirname(__DIR__, 2) . '/resources/views/components/app/body.blade.php'))->toBeTrue()
         ->and(file_exists(dirname(__DIR__, 2) . '/resources/views/components/content.blade.php'))->toBeTrue()
         ->and(file_exists(dirname(__DIR__, 2) . '/resources/views/components/layout/index.blade.php'))->toBeTrue()
@@ -86,8 +113,12 @@ it('owns the default body content and layout component files', function (): void
 it('keeps runtime asset registrations behind the installed package guard', function (): void {
     $provider = file_get_contents(dirname(__DIR__, 2) . '/src/Providers/FoundationThemeServiceProvider.php');
 
+    throw_unless(is_string($provider), RuntimeException::class, 'Expected foundation theme service provider to be readable.');
+
     $guardPosition = strpos($provider, 'if (! $this->isPackageInstalled())');
     $assetRegistrationPosition = strpos($provider, '$this->registerVendorCssJsAssets();');
+
+    throw_if(! is_int($guardPosition) || ! is_int($assetRegistrationPosition), RuntimeException::class, 'Expected foundation theme asset guard and registration calls to be present.');
 
     expect($guardPosition)->not->toBeFalse()
         ->and($assetRegistrationPosition)->not->toBeFalse()
@@ -96,6 +127,8 @@ it('keeps runtime asset registrations behind the installed package guard', funct
 
 it('registers foundation chrome components for admin selection', function (): void {
     $provider = file_get_contents(dirname(__DIR__, 2) . '/src/Providers/FoundationThemeServiceProvider.php');
+
+    throw_unless(is_string($provider), RuntimeException::class, 'Expected foundation theme service provider to be readable.');
 
     expect($provider)->toContain("registerHeader('capell::header.index'")
         ->and($provider)->toContain("registerFooter('capell::footer'");
@@ -110,7 +143,7 @@ it('does not rebuild tailwind assets for runtime theme color changes', function 
     expect($provider)->not->toContain('ThemeColorsUpdated')
         ->and($command)->not->toContain('--theme-key')
         ->and($generator)->toContain('DefaultColorEnum::getKeyValues()')
-        ->and($tokens)->toContain('->merge($theme->colors)');
+        ->and($tokens)->toContain('->merge($theme instanceof Theme && is_array($theme->colors) ? $theme->colors : [])');
 });
 
 it('delegates primary header navigation to the navigation render hook', function (): void {

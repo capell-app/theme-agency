@@ -8,11 +8,14 @@ use Capell\PublishingStudio\Enums\WorkspaceStatusEnum;
 use Capell\PublishingStudio\Filament\Resources\PublishingStudio\WorkspaceResource;
 use Capell\PublishingStudio\Http\Middleware\ResolveWorkspaceContext;
 use Capell\PublishingStudio\Models\Workspace;
+use Capell\PublishingStudio\Support\WorkspaceAccess;
 use Capell\PublishingStudio\Support\WorkspaceSchema;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -70,7 +73,13 @@ class WorkspaceSwitcher extends Component
             return null;
         }
 
-        return Workspace::query()->find((int) $workspaceId);
+        $workspace = Workspace::query()->find((int) $workspaceId);
+
+        if (! $workspace instanceof Workspace || Gate::denies('view', $workspace)) {
+            return null;
+        }
+
+        return $workspace;
     }
 
     /** @return Collection<int, Workspace> */
@@ -86,7 +95,7 @@ class WorkspaceSwitcher extends Component
             return $empty;
         }
 
-        return Workspace::query()
+        return WorkspaceAccess::scopeVisibleTo(Workspace::query(), $user)
             ->whereIn('status', [
                 WorkspaceStatusEnum::Open->value,
                 WorkspaceStatusEnum::InReview->value,
@@ -102,6 +111,10 @@ class WorkspaceSwitcher extends Component
         $user = Auth::user();
 
         if ($user === null || ! $this->hasPublishingStudioTable() || $user->cannot('create', Workspace::class)) {
+            return null;
+        }
+
+        if (! Route::has(WorkspaceResource::getRouteBaseName() . '.index')) {
             return null;
         }
 

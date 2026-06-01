@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\AccessGate\Http\Controllers;
 
 use Capell\AccessGate\Actions\ListAccessRequestMethodsAction;
+use Capell\AccessGate\Actions\ResolveAccessGateAreaForRequestAction;
 use Capell\AccessGate\Models\Area;
 use Capell\AccessGate\Models\Registration;
 use Capell\AccessGate\Support\RegistrationFieldRegistry;
@@ -20,7 +21,7 @@ final class ShowAccessRequestController
 
     public function __invoke(Request $request, string $area): Response
     {
-        $accessArea = Area::query()->where('key', $area)->firstOrFail();
+        $accessArea = ResolveAccessGateAreaForRequestAction::run($request, $area);
 
         $requestedUrl = $this->requestedUrl($request, $accessArea);
 
@@ -62,6 +63,10 @@ final class ShowAccessRequestController
             return null;
         }
 
+        if (! $this->hasHttpScheme($requestedUrl)) {
+            return null;
+        }
+
         if ($host === $request->getHost()) {
             return $requestedUrl;
         }
@@ -71,6 +76,13 @@ final class ShowAccessRequestController
             ->all();
 
         return in_array($host, $allowedHosts, true) ? $requestedUrl : null;
+    }
+
+    private function hasHttpScheme(string $url): bool
+    {
+        $scheme = parse_url($url, PHP_URL_SCHEME);
+
+        return is_string($scheme) && in_array(strtolower($scheme), ['http', 'https'], true);
     }
 
     private function noStore(Response $response): Response

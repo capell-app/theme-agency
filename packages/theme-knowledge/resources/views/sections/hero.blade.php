@@ -219,10 +219,10 @@
                                 <p
                                     class="text-xs font-black tracking-[0.16em] text-slate-400 uppercase"
                                 >
-                                    {{ __('capell-theme-knowledge::generic.hero_editor_label') }}
+                                    {{ __('capell-theme-knowledge::generic.hero_review_label') }}
                                 </p>
                                 <p class="mt-2 text-2xl font-black text-white">
-                                    {{ __('capell-theme-knowledge::generic.hero_editor_value') }}
+                                    {{ __('capell-theme-knowledge::generic.hero_review_value') }}
                                 </p>
                             </div>
                         </div>

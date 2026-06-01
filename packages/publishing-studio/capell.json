@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "PublishingStudio provides preview, compare, approve, schedule, publish, restore, and rollback workflows for Capell content.",
+    "description": "Publishing Studio provides preview, compare, approve, editorial calendar, schedule, publish, restore, and rollback workflows for Capell content.",
     "product": {
         "group": "Capell Publishing Pro",
         "tier": "premium",
@@ -22,7 +22,12 @@
             "capell-app/migration-assistant",
             "capell-app/navigation"
         ],
-        "supports": [],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/campaign-studio",
+            "capell-app/events",
+            "capell-app/newsletter"
+        ],
         "conflicts": []
     },
     "providers": {
@@ -43,6 +48,93 @@
             "pageClass": "Capell\\PublishingStudio\\Filament\\Pages\\PublishingWorkflowPage",
             "labelKey": "capell-publishing-studio::workflow.navigation.label",
             "permission": "View:PublishingWorkflowPage"
+        },
+        {
+            "type": "admin-page",
+            "class": "Capell\\PublishingStudio\\Manifest\\ActivityTrailPageContribution",
+            "pageClass": "Capell\\PublishingStudio\\Filament\\Pages\\ActivityTrailPage",
+            "labelKey": "capell-publishing-studio::workspace.activity.title",
+            "permission": "View:ActivityTrailPage"
+        },
+        {
+            "type": "admin-page",
+            "class": "Capell\\PublishingStudio\\Manifest\\ScheduledPublishingPageContribution",
+            "pageClass": "Capell\\PublishingStudio\\Filament\\Pages\\ScheduledPublishingPage",
+            "labelKey": "capell-publishing-studio::scheduler.navigation.label",
+            "permission": "View:ScheduledPublishingPage"
+        },
+        {
+            "type": "admin-page",
+            "class": "Capell\\PublishingStudio\\Manifest\\StaleDraftsPageContribution",
+            "pageClass": "Capell\\PublishingStudio\\Filament\\Pages\\StaleDraftsPage",
+            "labelKey": "capell-publishing-studio::workspace.stale_drafts.title",
+            "permission": "View:StaleDraftsPage"
+        },
+        {
+            "type": "admin-resource",
+            "class": "Capell\\PublishingStudio\\Manifest\\PublishingStudioAdminResourcesContribution",
+            "resourceClasses": [
+                "Capell\\PublishingStudio\\Filament\\Resources\\PreviewLinks\\PreviewLinkResource",
+                "Capell\\PublishingStudio\\Filament\\Resources\\PublishingStudio\\WorkspaceResource"
+            ]
+        },
+        {
+            "type": "dashboard-widget",
+            "class": "Capell\\PublishingStudio\\Manifest\\PublishingStudioDashboardWidgetsContribution",
+            "widgetClasses": [
+                "Capell\\PublishingStudio\\Filament\\Widgets\\ContentSchedulerCalendarWidget",
+                "Capell\\PublishingStudio\\Filament\\Widgets\\ContentSchedulerOverviewWidget",
+                "Capell\\PublishingStudio\\Filament\\Widgets\\WorkspaceActivityWidgetAbstract",
+                "Capell\\PublishingStudio\\Filament\\Widgets\\WorkspaceMergeHistoryWidgetAbstract"
+            ]
+        },
+        {
+            "type": "overview-stat",
+            "class": "Capell\\PublishingStudio\\Manifest\\ContentSchedulerOverviewStatsContribution",
+            "keys": [
+                "content_scheduler.publish",
+                "content_scheduler.unpublish",
+                "content_scheduler.embargo",
+                "content_scheduler.review_reminder"
+            ]
+        },
+        {
+            "type": "model",
+            "class": "Capell\\PublishingStudio\\Manifest\\PublishingStudioModelsContribution",
+            "modelClasses": [
+                "Capell\\PublishingStudio\\Models\\PreviewLink",
+                "Capell\\PublishingStudio\\Models\\PublishingRevision",
+                "Capell\\PublishingStudio\\Models\\SchedulerDelivery",
+                "Capell\\PublishingStudio\\Models\\SchedulerEvent",
+                "Capell\\PublishingStudio\\Models\\SchedulerIcalToken",
+                "Capell\\PublishingStudio\\Models\\Version",
+                "Capell\\PublishingStudio\\Models\\Workspace",
+                "Capell\\PublishingStudio\\Models\\WorkspaceApproval",
+                "Capell\\PublishingStudio\\Models\\WorkspaceFieldComment",
+                "Capell\\PublishingStudio\\Models\\WorkspaceReviewAssignment"
+            ]
+        },
+        {
+            "type": "route",
+            "class": "Capell\\PublishingStudio\\Manifest\\PublishingStudioRoutesContribution",
+            "routes": [
+                "capell-frontend.preview.exit",
+                "capell-publishing-studio.scheduler.ical"
+            ]
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\PublishingStudio\\Manifest\\ScheduledPublishingJobContribution",
+            "jobClass": "Capell\\PublishingStudio\\PublishScheduledPublishingStudioJob",
+            "name": "capell-publishing-studio-scheduled-publish",
+            "frequency": "everyMinute"
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\PublishingStudio\\Manifest\\PublishingStudioPruneScheduleContribution",
+            "command": "capell:publishing-studio:prune",
+            "name": "capell-publishing-studio-prune",
+            "frequencyConfig": "capell.publishing-studio.prune_schedule_cron"
         },
         {
             "type": "workflow-attention",
@@ -66,7 +158,19 @@
         "doctor": null
     },
     "actions": {
-        "install": "Capell\\PublishingStudio\\Actions\\InstallPublishingStudioPackageAction"
+        "buildContentSchedulerEvents": "Capell\\PublishingStudio\\Actions\\DashboardReports\\BuildContentSchedulerEventsAction",
+        "buildEditorialCalendarEvents": "Capell\\PublishingStudio\\Actions\\BuildEditorialCalendarEventsAction",
+        "buildSchedulerIcalFeed": "Capell\\PublishingStudio\\Actions\\BuildSchedulerIcalFeedAction",
+        "buildVisibleContentSchedulerEvents": "Capell\\PublishingStudio\\Actions\\DashboardReports\\BuildVisibleContentSchedulerEventsAction",
+        "buildVisibleEditorialCalendarEvents": "Capell\\PublishingStudio\\Actions\\DashboardReports\\BuildVisibleEditorialCalendarEventsAction",
+        "cancelSchedulerEvent": "Capell\\PublishingStudio\\Actions\\CancelSchedulerEventAction",
+        "createSchedulerIcalToken": "Capell\\PublishingStudio\\Actions\\CreateSchedulerIcalTokenAction",
+        "executeSchedulerEvent": "Capell\\PublishingStudio\\Actions\\ExecuteSchedulerEventAction",
+        "install": "Capell\\PublishingStudio\\Actions\\InstallPublishingStudioPackageAction",
+        "runDueSchedulerEvents": "Capell\\PublishingStudio\\Actions\\RunDueSchedulerEventsAction",
+        "setWorkspaceSchedulerMetadata": "Capell\\PublishingStudio\\Actions\\SetWorkspaceSchedulerMetadataAction",
+        "syncWorkspaceSchedulerEvents": "Capell\\PublishingStudio\\Actions\\SyncWorkspaceSchedulerEventsAction",
+        "validateWorkspaceSchedulerMetadata": "Capell\\PublishingStudio\\Actions\\ValidateWorkspaceSchedulerMetadataAction"
     },
     "settings": [],
     "permissions": [
@@ -85,6 +189,9 @@
         "approval-history",
         "content-compare",
         "dry-run-validation",
+        "editorial-calendar-aggregation",
+        "editorial-calendar-contributors",
+        "editorial-calendar-view",
         "editorial-timeline",
         "embargo-windows",
         "entity-restore",
@@ -133,7 +240,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "PublishingStudio provides preview, compare, approve, schedule, publish, restore, and rollback workflows for Capell content.",
+        "summary": "Publishing Studio provides preview, compare, approve, editorial calendar, schedule, publish, restore, and rollback workflows for Capell content.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
@@ -144,14 +251,6 @@
         "categories": ["admin", "console", "publishing-pro"]
     },
     "contributionTraceability": {
-        "deferredContributions": [
-            "admin-page",
-            "admin-resource",
-            "dashboard-widget",
-            "model",
-            "overview-stat",
-            "route",
-            "scheduled-job"
-        ]
+        "deferredContributions": []
     }
 }

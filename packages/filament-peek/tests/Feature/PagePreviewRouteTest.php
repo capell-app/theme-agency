@@ -120,8 +120,8 @@ it('overlays an existing unsaved featured image selection in the preview page co
 
     $response
         ->assertOk()
-        ->assertSee($unsavedImage->uuid)
-        ->assertDontSee($savedImage->uuid);
+        ->assertSee((string) $unsavedImage->uuid)
+        ->assertDontSee((string) $savedImage->uuid);
 });
 
 it('returns a private friendly response for missing preview snapshots', function (): void {

@@ -10,8 +10,10 @@ use Capell\AgentDelivery\Contracts\AgentDeliveryMetadataContributor;
 use Capell\AgentDelivery\Contracts\AgentDeliveryReferenceContributor;
 use Capell\AgentDelivery\Contracts\AgentDeliveryRelatedUrlContributor;
 use Capell\AgentDelivery\Support\AgentDeliveryRegistry;
+use Capell\AgentDelivery\Support\SiteDiscovery\AgentDeliveryGeneratedOutputCoverageSource;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\SiteDiscovery\Contracts\GeneratedOutputCoverageSource;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -55,6 +57,7 @@ final class AgentDeliveryServiceProvider extends AbstractPackageServiceProvider
         }
 
         $this->registerTaggedContributors();
+        $this->registerGeneratedOutputCoverage();
     }
 
     #[Override]
@@ -97,5 +100,15 @@ final class AgentDeliveryServiceProvider extends AbstractPackageServiceProvider
                 $registry->registerRelatedUrlContributor($contributor);
             }
         }
+    }
+
+    private function registerGeneratedOutputCoverage(): void
+    {
+        if (! interface_exists(GeneratedOutputCoverageSource::class)) {
+            return;
+        }
+
+        $this->app->singleton(AgentDeliveryGeneratedOutputCoverageSource::class);
+        $this->app->tag([AgentDeliveryGeneratedOutputCoverageSource::class], GeneratedOutputCoverageSource::TAG);
     }
 }

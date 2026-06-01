@@ -12,6 +12,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 
@@ -68,7 +69,7 @@ class CommentSettingsSchema implements HasSchema
     }
 
     /**
-     * @return array<int, object>
+     * @return array<int, Component>
      */
     private static function overrideSchema(string $scopeField): array
     {

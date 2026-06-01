@@ -45,17 +45,16 @@ it('returns blog page with all Article children recursively', function (): void 
         ->toBeInstanceOf(Collection::class)
         ->toHaveCount(1);
 
-    /** @var SitemapPageData $root */
-    $root = $result->first();
+    $root = capell_test_instance($result->first(), SitemapPageData::class);
 
-    /** @var SitemapPageData $firstChild */
-    $firstChild = $root->children->first();
+    $rootChildren = capell_test_instance($root->children, Collection::class);
+    $firstChild = capell_test_instance($rootChildren->first(), SitemapPageData::class);
 
     expect($root)
         ->toBeInstanceOf(SitemapPageData::class)
         ->pageId->toBe($blogPage->id)
         ->lastModified->toBeInstanceOf(CarbonImmutable::class)
-        ->and($root->children)
+        ->and($rootChildren)
         ->toBeInstanceOf(Collection::class)
         ->toHaveCount(2)
         ->pluck('pageId')

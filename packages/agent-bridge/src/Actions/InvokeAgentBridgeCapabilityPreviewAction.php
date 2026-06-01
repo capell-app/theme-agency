@@ -53,7 +53,13 @@ final class InvokeAgentBridgeCapabilityPreviewAction
             throw new AuthorizationException(sprintf('Agent Bridge scope [%s] is required.', $capability->scope));
         }
 
-        if ($capability->policyAbility !== null && $user !== null) {
+        if ($capability->policyAbility !== null) {
+            throw_if(
+                ! $user instanceof Authenticatable,
+                AuthorizationException::class,
+                sprintf('Agent Bridge policy ability [%s] requires an authenticated user.', $capability->policyAbility),
+            );
+
             Gate::forUser($user)->authorize($capability->policyAbility);
         }
 

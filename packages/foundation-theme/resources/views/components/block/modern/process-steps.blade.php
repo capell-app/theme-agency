@@ -47,8 +47,14 @@
                 <div class="{{ $responsiveGrid }} md:grid-cols-4 md:gap-6">
                     @forelse ($block->assets as $blockAsset)
                         @php
-                            $icon = (string) $blockAsset->asset->getMeta('icon', $loop->index + 1);
+                            $blockAssetRelations = method_exists($blockAsset, 'getRelations') ? $blockAsset->getRelations() : [];
+                            $asset = $blockAssetRelations['asset'] ?? null;
+                            $assetRelations = $asset !== null && method_exists($asset, 'getRelations') ? $asset->getRelations() : [];
+                            $assetTranslation = $assetRelations['translation'] ?? null;
+                            $icon = $asset !== null ? (string) $asset->getMeta('icon', $loop->index + 1) : (string) ($loop->index + 1);
                         @endphp
+
+                        @continue($asset === null)
 
                         <div
                             class="relative min-w-full snap-start rounded-lg border border-stone-200 bg-white p-5 text-center md:min-w-0 md:border-0 md:bg-transparent md:p-0"
@@ -72,17 +78,17 @@
                                 </div>
                             </div>
 
-                            @if ($blockAsset->asset->translation?->title)
+                            @if ($assetTranslation?->title)
                                 <h3
                                     class="mb-1 text-base font-bold text-gray-900"
                                 >
-                                    {{ $blockAsset->asset->translation->title }}
+                                    {{ $assetTranslation->title }}
                                 </h3>
                             @endif
 
-                            @if ($blockAsset->asset->translation?->content)
+                            @if ($assetTranslation?->content)
                                 <p class="text-sm text-gray-500">
-                                    {{ strip_tags($blockAsset->asset->translation->content) }}
+                                    {{ strip_tags($assetTranslation->content) }}
                                 </p>
                             @endif
                         </div>
@@ -97,8 +103,14 @@
             <div class="mx-auto max-w-3xl space-y-8">
                 @forelse ($block->assets as $blockAsset)
                     @php
-                        $icon = (string) $blockAsset->asset->getMeta('icon', $loop->index + 1);
+                        $blockAssetRelations = method_exists($blockAsset, 'getRelations') ? $blockAsset->getRelations() : [];
+                        $asset = $blockAssetRelations['asset'] ?? null;
+                        $assetRelations = $asset !== null && method_exists($asset, 'getRelations') ? $asset->getRelations() : [];
+                        $assetTranslation = $assetRelations['translation'] ?? null;
+                        $icon = $asset !== null ? (string) $asset->getMeta('icon', $loop->index + 1) : (string) ($loop->index + 1);
                     @endphp
+
+                    @continue($asset === null)
 
                     <div class="flex gap-6">
                         <div
@@ -117,17 +129,17 @@
                         </div>
 
                         <div class="flex-grow pt-2">
-                            @if ($blockAsset->asset->translation?->title)
+                            @if ($assetTranslation?->title)
                                 <h3
                                     class="mb-1 text-lg font-bold text-gray-900"
                                 >
-                                    {{ $blockAsset->asset->translation->title }}
+                                    {{ $assetTranslation->title }}
                                 </h3>
                             @endif
 
-                            @if ($blockAsset->asset->translation?->content)
+                            @if ($assetTranslation?->content)
                                 <p class="text-gray-500">
-                                    {{ strip_tags($blockAsset->asset->translation->content) }}
+                                    {{ strip_tags($assetTranslation->content) }}
                                 </p>
                             @endif
                         </div>

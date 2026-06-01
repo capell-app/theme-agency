@@ -20,8 +20,12 @@ final class GoogleSearchConsoleClient implements SearchConsoleClientInterface
 {
     private const string SCOPE = 'https://www.googleapis.com/auth/webmasters.readonly';
 
+    private ?string $accessToken = null;
+
+    private int $accessTokenExpiresAt = 0;
+
     /**
-     * @param  array{enabled?: bool, credentials_path?: string|null, property_url?: string|null}  $config
+     * @param  array{enabled?: bool, credentials_path?: string|null, property_url?: string|null, timeout?: int}  $config
      */
     public function __construct(
         private readonly array $config,
@@ -212,6 +216,7 @@ final class GoogleSearchConsoleClient implements SearchConsoleClientInterface
     {
         $response = Http::withToken($this->accessToken())
             ->acceptJson()
+            ->timeout($this->httpTimeout())
             ->post(
                 'https://searchconsole.googleapis.com/webmasters/v3/sites/' . rawurlencode($propertyUrl) . '/searchAnalytics/query',
                 $payload,
@@ -436,8 +441,13 @@ final class GoogleSearchConsoleClient implements SearchConsoleClientInterface
 
     private function accessToken(): string
     {
+        $now = Date::now()->getTimestamp();
+        if ($this->accessToken !== null && $this->accessTokenExpiresAt > $now + 60) {
+            return $this->accessToken;
+        }
+
         $credentials = $this->credentials();
-        $issuedAt = Date::now()->getTimestamp();
+        $issuedAt = $now;
         $expiresAt = $issuedAt + 3600;
         $assertion = $this->jwt([
             'iss' => $credentials['client_email'],
@@ -447,16 +457,26 @@ final class GoogleSearchConsoleClient implements SearchConsoleClientInterface
             'exp' => $expiresAt,
         ], $credentials['private_key']);
 
-        $response = Http::asForm()->post($credentials['token_uri'] ?? 'https://oauth2.googleapis.com/token', [
-            'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-            'assertion' => $assertion,
-        ]);
+        $response = Http::asForm()
+            ->timeout($this->httpTimeout())
+            ->post($credentials['token_uri'] ?? 'https://oauth2.googleapis.com/token', [
+                'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+                'assertion' => $assertion,
+            ]);
 
         if (! $response->successful()) {
             return '';
         }
 
-        return is_string($response->json('access_token')) ? $response->json('access_token') : '';
+        $accessToken = $response->json('access_token');
+        if (! is_string($accessToken) || $accessToken === '') {
+            return '';
+        }
+
+        $this->accessToken = $accessToken;
+        $this->accessTokenExpiresAt = $expiresAt;
+
+        return $accessToken;
     }
 
     /**
@@ -524,5 +544,10 @@ final class GoogleSearchConsoleClient implements SearchConsoleClientInterface
         }
 
         return rtrim($fullUrl, '/') . '/';
+    }
+
+    private function httpTimeout(): int
+    {
+        return max(1, (int) ($this->config['timeout'] ?? 20));
     }
 }

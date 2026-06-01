@@ -6,6 +6,7 @@ namespace Capell\Newsletter\Enums;
 
 use Capell\Newsletter\Filament\Resources\FormMappings\FormMappingResource;
 use Capell\Newsletter\Filament\Resources\ImportBatches\ImportBatchResource;
+use Capell\Newsletter\Filament\Resources\NewsletterSends\NewsletterSendResource;
 use Capell\Newsletter\Filament\Resources\NewsletterTags\NewsletterTagResource;
 use Capell\Newsletter\Filament\Resources\ProviderAudiences\ProviderAudienceResource;
 use Capell\Newsletter\Filament\Resources\ProviderConnections\ProviderConnectionResource;
@@ -23,6 +24,7 @@ enum ResourceEnum: string
     case FormMapping = FormMappingResource::class;
     case NewsletterTag = NewsletterTagResource::class;
     case Segment = SegmentResource::class;
+    case NewsletterSend = NewsletterSendResource::class;
     case ImportBatch = ImportBatchResource::class;
     case SyncAttempt = SyncAttemptResource::class;
 }

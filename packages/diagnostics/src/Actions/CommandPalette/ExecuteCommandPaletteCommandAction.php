@@ -140,7 +140,12 @@ final class ExecuteCommandPaletteCommandAction
 
         return new CommandPaletteResultData(
             successful: $this->lastExitCode === 0,
-            title: $this->lastExitCode === 0 ? $command->label . ' completed' : $command->label . ' failed',
+            title: (string) __(
+                $this->lastExitCode === 0
+                    ? 'capell-diagnostics::package.command_palette_completed'
+                    : 'capell-diagnostics::package.command_palette_failed',
+                ['label' => $command->label],
+            ),
             body: $output,
         );
     }

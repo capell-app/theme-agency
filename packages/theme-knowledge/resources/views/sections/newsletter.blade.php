@@ -1,3 +1,9 @@
+@php
+    use Capell\Core\Facades\CapellCore;
+
+    $newsletterAvailable ??= CapellCore::isPackageInstalled('capell-app/newsletter');
+@endphp
+
 <section
     class="theme-section theme-section-newsletter bg-[#111827] px-6 py-14 text-white"
 >

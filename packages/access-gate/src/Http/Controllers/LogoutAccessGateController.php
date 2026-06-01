@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\AccessGate\Http\Controllers;
 
+use Capell\AccessGate\Actions\ResolveAccessGateAreaForRequestAction;
 use Capell\AccessGate\Actions\RevokeAccessGateBrowserTokenAction;
-use Capell\AccessGate\Models\Area;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
@@ -18,7 +18,7 @@ final class LogoutAccessGateController
 
     public function __invoke(Request $request, string $area): RedirectResponse
     {
-        $accessArea = Area::query()->where('key', $area)->firstOrFail();
+        $accessArea = ResolveAccessGateAreaForRequestAction::run($request, $area);
         $cookieName = config('access-gate.cookies.browser_token.name', 'capell_access_gate_browser_token');
 
         $this->revokeBrowserToken->handle($accessArea, $request->cookies->get($cookieName));

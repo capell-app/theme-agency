@@ -11,6 +11,7 @@ use Capell\Core\Data\PublicPageFieldsData;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
+use Capell\Core\Models\SiteDomain;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsObject;
@@ -87,6 +88,7 @@ final class BuildAgentDeliveryPageAction
         }
 
         $page->loadMissing('pageUrls.language', 'pageUrls.siteDomain');
+        $resolvedSiteDomain = $this->pageUrl($page)?->siteDomain;
 
         /** @var iterable<int, PageUrl> $pageUrls */
         $pageUrls = $page->getRelation('pageUrls');
@@ -102,15 +104,12 @@ final class BuildAgentDeliveryPageAction
             }
 
             $locale = $pageUrl->language->locale ?? $pageUrl->language->code;
-            $alternates[$locale] = $pageUrl->full_url;
+            $alternates[$locale] = $this->fullUrl($pageUrl, $resolvedSiteDomain);
         }
 
         return $alternates;
     }
 
-    /**
-     * @return list<string>
-     */
     /**
      * @param  string|array<string, mixed>|null  $content
      * @return list<string>
@@ -232,6 +231,23 @@ final class BuildAgentDeliveryPageAction
     private function isPublicUrl(string $url): bool
     {
         return str_starts_with($url, 'https://') || str_starts_with($url, 'http://');
+    }
+
+    private function fullUrl(PageUrl $pageUrl, ?SiteDomain $resolvedSiteDomain): string
+    {
+        if ($resolvedSiteDomain instanceof SiteDomain) {
+            $siteDomain = $pageUrl->siteDomain;
+
+            if ($siteDomain instanceof SiteDomain && $siteDomain->getRawOriginal('domain') === null) {
+                $siteDomain->setAttribute('domain', $resolvedSiteDomain->domain);
+
+                if ($siteDomain->getRawOriginal('scheme') === null || $siteDomain->getRawOriginal('scheme') === false) {
+                    $siteDomain->setAttribute('scheme', $resolvedSiteDomain->scheme);
+                }
+            }
+        }
+
+        return $pageUrl->full_url;
     }
 
     /**

@@ -6,6 +6,7 @@ use Capell\AgentBridge\Support\KnowledgeRepository;
 use Capell\AgentBridge\Tools\Knowledge\RecommendPackagesTool;
 use Illuminate\Validation\ValidationException;
 use Laravel\Mcp\Request;
+use Laravel\Mcp\ResponseFactory;
 
 it('recommends matching packages from the knowledge repository', function (): void {
     app()->setBasePath(getcwd() ?: dirname(__DIR__, 4));
@@ -15,10 +16,9 @@ it('recommends matching packages from the knowledge repository', function (): vo
         new KnowledgeRepository,
     );
 
-    $structuredContent = $response->getStructuredContent();
+    $structuredContent = agentBridgeRecommendationStructuredContent($response);
 
     expect($structuredContent)
-        ->not->toBeNull()
         ->and($structuredContent['query'])->toBe('seo redirects')
         ->and($structuredContent['recommendations'])->not->toBeEmpty();
 
@@ -35,3 +35,15 @@ it('requires a package recommendation query', function (): void {
         new KnowledgeRepository,
     );
 })->throws(ValidationException::class);
+
+/**
+ * @return array<string, mixed>
+ */
+function agentBridgeRecommendationStructuredContent(ResponseFactory $response): array
+{
+    $structuredContent = $response->getStructuredContent();
+
+    throw_unless(is_array($structuredContent), RuntimeException::class, 'Expected MCP response structured content.');
+
+    return $structuredContent;
+}

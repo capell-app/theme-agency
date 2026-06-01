@@ -38,7 +38,10 @@
 <div {{ $attributes->except('class')->merge(['class' => $classList]) }}>
     @if ($icon)
         <div>
-            <x-capell::icon :$icon class="h-10 w-10" />
+            <x-capell::icon
+                :$icon
+                class="h-10 w-10"
+            />
         </div>
     @endif
 

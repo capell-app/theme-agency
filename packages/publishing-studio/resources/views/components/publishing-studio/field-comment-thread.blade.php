@@ -67,7 +67,10 @@
         </ol>
     @endif
 
-    <form wire:submit.prevent="postComment" class="space-y-2">
+    <form
+        wire:submit.prevent="postComment"
+        class="space-y-2"
+    >
         <textarea
             wire:model="newComment"
             rows="2"

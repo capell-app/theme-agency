@@ -25,7 +25,10 @@
                 </div>
 
                 <div class="saas-command-panel p-5 shadow-xl">
-                    <div class="grid gap-3" aria-hidden="true">
+                    <div
+                        class="grid gap-3"
+                        aria-hidden="true"
+                    >
                         <span
                             class="text-xs font-black tracking-[0.18em] text-cyan-200 uppercase"
                         >

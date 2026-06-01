@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
+use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
 use Capell\Core\ThemeStudio\Data\FeatureSectionData;
@@ -36,43 +38,46 @@ it('renders standard sections through Local Services views', function (): void {
     $registry = new ThemeRegistry;
     (new LocalServicesThemeServiceProvider($this->app))->boot($registry);
 
-    $featureHtml = $registry
-        ->sectionRenderer('local-services', 'features')
-        ->render(new FeatureSectionData(
-            heading: 'Quote-ready service routes',
-            summary: 'Feature cards should look like local jobs and estimate paths.',
-            features: [
-                ['title' => 'Rapid estimate triage', 'description' => 'Match the right team to each enquiry.', 'type' => 'Dispatch'],
-            ],
-        ));
+    $featureRenderer = $registry->sectionRenderer('local-services', 'features');
+    $proofRenderer = $registry->sectionRenderer('local-services', 'proof');
+    $listingRenderer = $registry->sectionRenderer('local-services', 'content-listing');
+    $ctaRenderer = $registry->sectionRenderer('local-services', 'cta');
 
-    $proofHtml = $registry
-        ->sectionRenderer('local-services', 'proof')
-        ->render(ProofSectionData::from([
-            'heading' => 'Local proof board',
-            'summary' => 'Proof should use service metrics.',
-            'items' => [
-                ['metric' => '24h', 'label' => 'Response', 'summary' => 'Most enquiries receive a fast first reply.'],
-            ],
-        ]));
+    assert($featureRenderer instanceof SectionRenderer);
+    assert($proofRenderer instanceof SectionRenderer);
+    assert($listingRenderer instanceof SectionRenderer);
+    assert($ctaRenderer instanceof SectionRenderer);
 
-    $listingHtml = $registry
-        ->sectionRenderer('local-services', 'content-listing')
-        ->render(new ContentListingSectionData(
-            heading: 'Service route cards',
-            summary: 'Listings should carry local area and availability cues.',
-            items: [
-                ['title' => 'Boiler repair', 'summary' => 'Urgent coverage across nearby districts.', 'type' => 'Repair'],
-            ],
-        ));
+    $featureHtml = $featureRenderer->render(new FeatureSectionData(
+        heading: 'Quote-ready service routes',
+        summary: 'Feature cards should look like local jobs and estimate paths.',
+        features: [
+            ['title' => 'Rapid estimate triage', 'description' => 'Match the right team to each enquiry.', 'type' => 'Dispatch'],
+        ],
+    ));
 
-    $ctaHtml = $registry
-        ->sectionRenderer('local-services', 'cta')
-        ->render(new CtaSectionData(
-            heading: 'Book the next service slot',
-            summary: 'Move visitors from scope to confirmed work.',
-            actions: [['label' => 'Request quote', 'url' => '#quote', 'style' => 'primary']],
-        ));
+    $proofHtml = $proofRenderer->render(ProofSectionData::from([
+        'heading' => 'Local proof board',
+        'summary' => 'Proof should use service metrics.',
+        'items' => [
+            ['metric' => '24h', 'label' => 'Response', 'summary' => 'Most enquiries receive a fast first reply.'],
+            ['metric' => '34', 'label' => 'Coverage'],
+        ],
+    ]));
+
+    $listingHtml = $listingRenderer->render(new ContentListingSectionData(
+        heading: 'Service route cards',
+        summary: 'Listings should carry local area and availability cues.',
+        items: [
+            ['title' => 'Boiler repair', 'summary' => 'Urgent coverage across nearby districts.', 'type' => 'Repair'],
+        ],
+    ));
+
+    $ctaHtml = $ctaRenderer->render(new CtaSectionData(
+        heading: 'Book the next service slot',
+        summary: 'Move visitors from scope to confirmed work.',
+        actions: [['label' => 'Request quote', 'url' => '#quote', 'style' => 'primary']],
+    ));
 
     expect($featureHtml)
         ->toContain('Quote-ready service routes')
@@ -112,6 +117,7 @@ it('renders hydrated hero data through the Local Services hero view', function (
     $renderer = $registry->sectionRenderer('local-services', 'hero');
 
     expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
 
     $html = $renderer->render(HeroSectionData::from([
         'heading' => 'Book a service team this week',
@@ -131,3 +137,90 @@ it('renders hydrated hero data through the Local Services hero view', function (
         ->toContain('Live route board')
         ->not->toContain('capell-app/theme-local-services');
 });
+
+it('renders new premium local services layouts through the registry', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(LocalServicesThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new LocalServicesThemeServiceProvider($this->app))->boot($registry);
+
+    $quoteEstimatorRenderer = $registry->sectionRenderer('local-services', 'quote-estimator');
+    $servicePackagesRenderer = $registry->sectionRenderer('local-services', 'service-packages');
+    $localityProofRenderer = $registry->sectionRenderer('local-services', 'locality-proof');
+
+    assert($quoteEstimatorRenderer instanceof SectionRenderer);
+    assert($servicePackagesRenderer instanceof SectionRenderer);
+    assert($localityProofRenderer instanceof SectionRenderer);
+
+    $quoteEstimatorHtml = $quoteEstimatorRenderer->render(localServicesThemeSection('quote-estimator', [
+        'heading' => 'Shape the quote',
+        'items' => [
+            ['title' => 'Property size', 'summary' => 'Estimate logic grouped around practical scoping.'],
+        ],
+    ]));
+
+    $servicePackagesHtml = $servicePackagesRenderer->render(localServicesThemeSection('service-packages', [
+        'heading' => 'Choose a service package',
+        'items' => [
+            ['title' => 'Maintenance plan', 'summary' => 'Recurring service bundle with clear value.'],
+        ],
+    ]));
+
+    $localityProofHtml = $localityProofRenderer->render(localServicesThemeSection('locality-proof', [
+        'heading' => 'Local response proof',
+        'items' => [
+            ['title' => 'Central district', 'summary' => 'Neighbourhood proof for fast local response.'],
+        ],
+    ]));
+
+    expect($quoteEstimatorHtml)
+        ->toContain('Shape the quote')
+        ->toContain('Property size')
+        ->not->toContain('capell-app/theme-local-services');
+
+    expect($servicePackagesHtml)
+        ->toContain('Choose a service package')
+        ->toContain('Maintenance plan')
+        ->not->toContain('capell-app/theme-local-services');
+
+    expect($localityProofHtml)
+        ->toContain('Local response proof')
+        ->toContain('Central district')
+        ->not->toContain('capell-app/theme-local-services');
+});
+
+/**
+ * @param  array<string, mixed>  $viewData
+ */
+function localServicesThemeSection(string $key, array $viewData): ThemeSection
+{
+    return new readonly class($key, $viewData) implements ThemeSection
+    {
+        /**
+         * @param  array<string, mixed>  $viewData
+         */
+        public function __construct(
+            private string $sectionKey,
+            private array $viewData,
+        ) {}
+
+        public function key(): string
+        {
+            return $this->sectionKey;
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return ['section' => (object) $this->viewData];
+        }
+    };
+}

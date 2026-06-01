@@ -27,6 +27,11 @@ final class ReleaseWorkspaceSummaryPanel extends Component
     public function mount(?Workspace $record = null, ?Workspace $workspace = null): void
     {
         $resolvedWorkspace = $record ?? $workspace;
+
+        if ($resolvedWorkspace instanceof Workspace) {
+            Gate::authorize('view', $resolvedWorkspace);
+        }
+
         $this->workspaceId = $resolvedWorkspace?->getKey();
     }
 

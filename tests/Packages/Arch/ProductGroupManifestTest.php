@@ -76,6 +76,7 @@ it('groups packages into the current product bundles', function (): void {
             'translation-manager/capell.json',
         ],
         'automation' => [
+            'automation-studio/capell.json',
             'public-actions/capell.json',
         ],
         'collaboration' => [
@@ -85,6 +86,7 @@ it('groups packages into the current product bundles', function (): void {
             'comments/capell.json',
         ],
         'commerce' => [
+            'payments/capell.json',
             'shopify-commerce/capell.json',
         ],
         'commercial' => [
@@ -95,7 +97,10 @@ it('groups packages into the current product bundles', function (): void {
         ],
         'content-product' => [
             'address/capell.json',
+            'contacts/capell.json',
+            'customer-portal/capell.json',
             'events/capell.json',
+            'knowledge-base/capell.json',
         ],
         'form-builder' => [
             'form-builder/capell.json',
@@ -114,18 +119,15 @@ it('groups packages into the current product bundles', function (): void {
             'layout-builder/capell.json',
             'media-library/capell.json',
             'navigation/capell.json',
+            'structured-content-library/capell.json',
             'tags/capell.json',
             'theme-agency/capell.json',
             'theme-corporate/capell.json',
-            'theme-education/capell.json',
-            'theme-knowledge/capell.json',
-            'theme-local-services/capell.json',
-            'theme-nonprofit/capell.json',
-            'theme-portfolio/capell.json',
             'welcome-tour/capell.json',
         ],
         'growth' => [
             'campaign-studio/capell.json',
+            'experiments/capell.json',
             'ga4-reports/capell.json',
             'insights/capell.json',
         ],
@@ -138,6 +140,7 @@ it('groups packages into the current product bundles', function (): void {
         'operations' => [
             'access-gate/capell.json',
             'agent-bridge/capell.json',
+            'bookings/capell.json',
             'dashboard-reports/capell.json',
             'deployments/capell.json',
             'diagnostics/capell.json',
@@ -145,6 +148,7 @@ it('groups packages into the current product bundles', function (): void {
             'login-audit/capell.json',
             'migration-assistant/capell.json',
             'password-policy/capell.json',
+            'privacy-center/capell.json',
             'wordpress-importer/capell.json',
         ],
         'publishing-pro' => [
@@ -156,10 +160,16 @@ it('groups packages into the current product bundles', function (): void {
             'search/capell.json',
             'seo-suite/capell.json',
             'site-discovery/capell.json',
+            'url-manager/capell.json',
         ],
         'themes' => [
             'theme-commerce/capell.json',
+            'theme-education/capell.json',
             'theme-healthcare/capell.json',
+            'theme-knowledge/capell.json',
+            'theme-local-services/capell.json',
+            'theme-nonprofit/capell.json',
+            'theme-portfolio/capell.json',
             'theme-saas/capell.json',
         ],
     ]);

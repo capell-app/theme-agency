@@ -52,6 +52,33 @@ it('resolves site profile defaults for a site and language', function (): void {
         ->and($profile->status)->toBe(AiDiscoveryStatusEnum::Enabled);
 });
 
+it('falls back to the default AI Discovery section when site translation meta is blank', function (): void {
+    $language = Language::query()->create([
+        'name' => 'English',
+        'locale' => 'en',
+        'code' => 'en',
+        'flag' => 'gb-eng',
+        'status' => true,
+        'default' => true,
+        'order' => 1,
+    ]);
+    $site = Site::factory()->language($language)->withTranslations($language, [
+        'meta' => [
+            'ai_discovery' => [
+                'default_section' => '',
+                'intro_markdown' => '',
+            ],
+        ],
+    ])->create();
+
+    $profile = ResolveAiDiscoveryProfileAction::run($site, $language);
+
+    throw_unless($profile instanceof AiDiscoverySiteProfile, RuntimeException::class, 'Expected site-level AI discovery profile.');
+
+    expect($profile->default_section)->toBe('Pages')
+        ->and($profile->intro_markdown)->toBeNull();
+});
+
 it('resolves a page profile using site profile defaults', function (): void {
     $language = Language::query()->create([
         'name' => 'English',
@@ -104,13 +131,15 @@ it('syncs public discoverable pages into ai discovery page profiles', function (
     ]);
 
     $profiles = SyncAiDiscoveryPageProfilesAction::run($site, $language);
+    $profile = $profiles->first();
+
+    throw_unless($profile instanceof AiDiscoveryPageProfile, RuntimeException::class, 'Expected page-level AI discovery profile.');
 
     expect($profiles)->toHaveCount(1)
-        ->and($profiles->first())->toBeInstanceOf(AiDiscoveryPageProfile::class)
-        ->and($profiles->first()->page_id)->toBe($publicPage->getKey())
-        ->and($profiles->first()->include_in_ai_index)->toBeFalse()
-        ->and($profiles->first()->section)->toBe('Knowledge Base')
-        ->and($profiles->first()->priority)->toBe(500)
+        ->and($profile->page_id)->toBe($publicPage->getKey())
+        ->and($profile->include_in_ai_index)->toBeFalse()
+        ->and($profile->section)->toBe('Knowledge Base')
+        ->and($profile->priority)->toBe(500)
         ->and(AiDiscoveryPageProfile::query()->where('page_id', $publicPage->getKey())->exists())->toBeTrue()
         ->and(AiDiscoveryPageProfile::query()->count())->toBe(1);
 });

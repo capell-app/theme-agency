@@ -6,7 +6,7 @@ This page is the consolidated implementation overview for the PublishingStudio p
 
 ## What This Package Adds
 
-PublishingStudio is Capell's premium editorial timeline package. It brings the publishing loop into one workflow: preview, compare, approve, schedule, publish, and rollback content changes while preserving a readable history of what happened and why.
+Publishing Studio is Capell's premium editorial timeline package. It brings the publishing loop into one workflow: preview, compare, approve, editorial calendar, schedule, publish, and rollback content changes while preserving a readable history of what happened and why.
 
 - Draft publishing-studio for safe copy-on-write editing.
 - Signed live preview links with expiry, revocation, access counts, and a frontend preview banner.
@@ -14,6 +14,7 @@ PublishingStudio is Capell's premium editorial timeline package. It brings the p
 - Release Workspaces for grouped editorial releases that move coordinated content and package-owned draftable changes live atomically.
 - Approval history for submit, approve, reject, and request-changes decisions.
 - Scheduled publishing with release windows, unpublish dates, embargo windows, review reminders, immediate publishing, version history, rollback, and entity restore.
+- Editorial calendar aggregation across core page schedules, Publishing Studio workspace schedules, Blog articles, Campaign Studio campaign dates, Newsletter sends, and Events occurrences through `EditorialCalendarEventContributor`.
 - Activity timeline, stale drafts, Migration Assistant import adapters, load-test fixtures, and prune commands for editorial and operational audit trails.
 
 ## Developer Notes
@@ -56,17 +57,17 @@ Gives editorial teams a Statamic-style content history feel while remaining a se
 
 ## Screenshots
 
-![Publishing workflow dashboard](../../../public/docs/screenshots/packages/publishing-studio/editorial-timeline-dashboard.png)
+![Publishing workflow dashboard](screenshots/editorial-timeline-dashboard.png)
 
-![Preview link management](../../../public/docs/screenshots/packages/publishing-studio/preview-link-management.png)
+![Preview link management](screenshots/preview-link-management.png)
 
-![Workspace compare readiness](../../../public/docs/screenshots/packages/publishing-studio/compare-readiness.png)
+![Workspace compare readiness](screenshots/compare-readiness.png)
 
-![Scheduled publishing](../../../public/docs/screenshots/packages/publishing-studio/scheduled-publishing.png)
+![Scheduled publishing](screenshots/scheduled-publishing.png)
 
-![Stale drafts](../../../public/docs/screenshots/packages/publishing-studio/stale-drafts.png)
+![Stale drafts](screenshots/stale-drafts.png)
 
-![Rollback restore from the pages table](../../../public/docs/screenshots/packages/publishing-studio/rollback-restore.png)
+![Rollback restore from the pages table](screenshots/rollback-restore.png)
 
 The live preview, preview banner, recovery import, and activity history screenshots need seeded workspace/import data before they should be published.
 
@@ -189,7 +190,7 @@ erDiagram
 
 ## Screenshot Automation
 
-Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `public/docs/screenshots/packages/publishing-studio`.
+Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `packages/publishing-studio/docs/screenshots`.
 
 - Editorial timeline dashboard.
 - Live preview, preview link management, and preview banner.

@@ -62,6 +62,7 @@ final class AgentBridgeAuditEntriesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->query(fn (): Builder => self::scopedQueryForUser(CapellAgentBridgeAuditEntry::query(), $this->ownerRecord))
             ->columns([
                 TextColumn::make('event')
                     ->label(__('capell-agent-bridge::admin.event'))

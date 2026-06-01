@@ -75,7 +75,7 @@ class MailchimpProviderAdapter implements NewsletterProviderAdapter
                 ->all(),
         ];
 
-        $subscriberHash = md5(mb_strtolower($subscriber->email));
+        $subscriberHash = hash('md5', mb_strtolower($subscriber->email));
         $response = Http::withBasicAuth('capell', $this->apiKey($connection))
             ->timeout((int) config('capell-newsletter.http.timeout', 15))
             ->retry(

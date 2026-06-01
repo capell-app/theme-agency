@@ -18,7 +18,7 @@ final class AccessGateMiddleware
 
     public function handle(Request $request, Closure $next, string ...$parameters): Response
     {
-        $areaKeys = $this->areaKeys($parameters);
+        $areaKeys = $this->areaKeys(array_values($parameters));
 
         abort_if($areaKeys === [], 403);
 
@@ -91,11 +91,11 @@ final class AccessGateMiddleware
             $parameters[0] = substr($parameters[0], 4);
         }
 
-        return collect($parameters)
+        return array_values(collect($parameters)
             ->flatMap(fn (string $parameter): array => explode(',', $parameter))
             ->map(fn (string $parameter): string => trim($parameter))
             ->filter(fn (string $parameter): bool => $parameter !== '')
             ->values()
-            ->all();
+            ->all());
     }
 }

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
@@ -37,6 +38,7 @@ it('renders standard feature data through the Portfolio feature view', function 
     $renderer = $registry->sectionRenderer('portfolio', 'features');
 
     expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
 
     $html = $renderer->render(new FeatureSectionData(
         heading: 'Studio capabilities',
@@ -65,6 +67,7 @@ it('renders hydrated hero data through the Portfolio hero view', function (): vo
     $renderer = $registry->sectionRenderer('portfolio', 'hero');
 
     expect($renderer)->not->toBeNull();
+    assert($renderer instanceof SectionRenderer);
 
     $html = $renderer->render(HeroSectionData::from([
         'heading' => 'Editorial portfolio system',
@@ -101,6 +104,11 @@ it('renders portfolio-owned standard sections instead of foundation fallbacks', 
         ->and($listing)->not->toBeNull()
         ->and($cta)->not->toBeNull()
         ->and($caseStudies)->not->toBeNull();
+
+    assert($proof instanceof SectionRenderer);
+    assert($listing instanceof SectionRenderer);
+    assert($cta instanceof SectionRenderer);
+    assert($caseStudies instanceof SectionRenderer);
 
     expect($proof->render(new ProofSectionData(
         heading: 'Measured outcomes',
@@ -180,3 +188,90 @@ it('renders portfolio-owned standard sections instead of foundation fallbacks', 
         ->toContain('+58%')
         ->not->toContain('capell-app/theme-portfolio');
 });
+
+it('renders new premium portfolio layouts through the registry', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(PortfolioThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new PortfolioThemeServiceProvider($this->app))->boot($registry);
+
+    $caseStudyDetailRenderer = $registry->sectionRenderer('portfolio', 'case-study-detail');
+    $processRenderer = $registry->sectionRenderer('portfolio', 'process');
+    $availabilityRenderer = $registry->sectionRenderer('portfolio', 'availability');
+
+    assert($caseStudyDetailRenderer instanceof SectionRenderer);
+    assert($processRenderer instanceof SectionRenderer);
+    assert($availabilityRenderer instanceof SectionRenderer);
+
+    $caseStudyDetailHtml = $caseStudyDetailRenderer->render(portfolioThemeSection('case-study-detail', [
+        'heading' => 'Inside the case study',
+        'items' => [
+            ['title' => 'Conversion lift', 'summary' => 'Detailed proof for the case-study narrative.'],
+        ],
+    ]));
+
+    $processHtml = $processRenderer->render(portfolioThemeSection('process', [
+        'heading' => 'How the engagement runs',
+        'items' => [
+            ['title' => 'Discovery sprint', 'summary' => 'A clear working rhythm for premium engagements.'],
+        ],
+    ]));
+
+    $availabilityHtml = $availabilityRenderer->render(portfolioThemeSection('availability', [
+        'heading' => 'Book the next slot',
+        'items' => [
+            ['title' => 'Advisory week', 'summary' => 'Availability framed around a real engagement window.'],
+        ],
+    ]));
+
+    expect($caseStudyDetailHtml)
+        ->toContain('Inside the case study')
+        ->toContain('Conversion lift')
+        ->not->toContain('capell-app/theme-portfolio');
+
+    expect($processHtml)
+        ->toContain('How the engagement runs')
+        ->toContain('Discovery sprint')
+        ->not->toContain('capell-app/theme-portfolio');
+
+    expect($availabilityHtml)
+        ->toContain('Book the next slot')
+        ->toContain('Advisory week')
+        ->not->toContain('capell-app/theme-portfolio');
+});
+
+/**
+ * @param  array<string, mixed>  $viewData
+ */
+function portfolioThemeSection(string $key, array $viewData): ThemeSection
+{
+    return new readonly class($key, $viewData) implements ThemeSection
+    {
+        /**
+         * @param  array<string, mixed>  $viewData
+         */
+        public function __construct(
+            private string $sectionKey,
+            private array $viewData,
+        ) {}
+
+        public function key(): string
+        {
+            return $this->sectionKey;
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return ['section' => (object) $this->viewData];
+        }
+    };
+}

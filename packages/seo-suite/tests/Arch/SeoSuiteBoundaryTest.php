@@ -8,9 +8,11 @@ use Capell\SiteDiscovery\Actions\DiscoverPublicPagesAction;
 use Capell\SiteDiscovery\Actions\DiscoverPublicUrlsAction;
 use Capell\SiteDiscovery\Contracts\DiscoverableUrlSource;
 use Capell\SiteDiscovery\Contracts\DiscoveryOutputSource;
+use Capell\SiteDiscovery\Contracts\GeneratedOutputCoverageSource;
 use Capell\SiteDiscovery\Data\DiscoverablePageData;
 use Capell\SiteDiscovery\Data\DiscoverableUrlData;
 use Capell\SiteDiscovery\Data\DiscoveryOutputData;
+use Capell\SiteDiscovery\Data\PublicUrlRegistryEntryData;
 use Capell\SiteDiscovery\Providers\SiteDiscoveryServiceProvider;
 use Capell\SiteDiscovery\Support\DiscoveryOutputRegistry;
 use Symfony\Component\Finder\Finder;
@@ -105,8 +107,10 @@ it('uses only site discovery public discovery APIs', function (): void {
         DiscoverPublicPagesAction::class,
         DiscoverPublicUrlsAction::class,
         DiscoveryOutputSource::class,
+        GeneratedOutputCoverageSource::class,
         DiscoverableUrlSource::class,
         DiscoveryOutputData::class,
+        PublicUrlRegistryEntryData::class,
         DiscoverablePageData::class,
         DiscoverableUrlData::class,
         SiteDiscoveryServiceProvider::class,

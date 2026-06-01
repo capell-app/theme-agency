@@ -8,9 +8,9 @@
     "version": "4.x-dev",
     "description": "Impact-led civic and charity theme for campaigns, donations, volunteering, and community stories.",
     "product": {
-        "group": "Capell Foundation",
-        "tier": "free",
-        "bundle": "foundation"
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Nonprofit",
     "surfaces": ["frontend"],
@@ -90,34 +90,29 @@
                 "caption": "Theme Nonprofit extension preview"
             },
             {
-                "path": "docs/assets/marketplace/nonprofit-homepage-marketplace.jpg",
-                "alt": "Theme Nonprofit homepage screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Nonprofit: Homepage. Homepage composition with hero, proof, repeated content, CTA, and footer."
+                "path": "docs/assets/marketplace/nonprofit-donation-layout.svg",
+                "alt": "Theme Nonprofit Donation Layout image",
+                "caption": "Theme Nonprofit Donation Layout"
             },
             {
-                "path": "docs/assets/marketplace/nonprofit-directory-marketplace.jpg",
-                "alt": "Theme Nonprofit directory screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Nonprofit: Directory. List or directory route with repeated cards, scanning rhythm, and route-backed pagination layout."
+                "path": "docs/assets/marketplace/nonprofit-homepage-layout.svg",
+                "alt": "Theme Nonprofit Homepage Layout image",
+                "caption": "Theme Nonprofit Homepage Layout"
             },
             {
-                "path": "docs/assets/marketplace/nonprofit-detail-marketplace.jpg",
-                "alt": "Theme Nonprofit detail screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Nonprofit: Detail. Detail page route with media, proof, supporting sections, and conversion path."
+                "path": "docs/assets/marketplace/nonprofit-impact-layout.svg",
+                "alt": "Theme Nonprofit Impact Layout image",
+                "caption": "Theme Nonprofit Impact Layout"
             },
             {
-                "path": "docs/assets/marketplace/nonprofit-contact-marketplace.jpg",
-                "alt": "Theme Nonprofit contact screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Nonprofit: Contact. Contact or enquiry route with theme-specific routing cards and CTA treatment."
+                "path": "docs/assets/marketplace/hero-desktop.jpg",
+                "alt": "Theme Nonprofit Hero Desktop image",
+                "caption": "Theme Nonprofit Hero Desktop"
             },
             {
-                "path": "docs/assets/marketplace/nonprofit-conversion-marketplace.jpg",
-                "alt": "Theme Nonprofit conversion cta screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Nonprofit: Conversion CTA. Conversion route focused on proof, action rhythm, and next-step clarity."
-            },
-            {
-                "path": "docs/assets/marketplace/nonprofit-sections-marketplace.jpg",
-                "alt": "Theme Nonprofit section suite screenshot from the route-backed Capell demo layout.",
-                "caption": "Theme Nonprofit: Section Suite. Theme-specific section suite showing the premium components available to editors."
+                "path": "docs/assets/marketplace/hero-mobile.jpg",
+                "alt": "Theme Nonprofit Hero Mobile image",
+                "caption": "Theme Nonprofit Hero Mobile"
             }
         ],
         "categories": ["frontend", "themes"]

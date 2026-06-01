@@ -8,6 +8,7 @@ use Capell\Core\Enums\MediaCollectionEnum;
 use Capell\Core\Models\Media;
 use Capell\FoundationTheme\Data\BannerImageRenderData;
 use Capell\LayoutBuilder\Models\Widget;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsObject;
 
@@ -60,19 +61,19 @@ final class BuildBannerImageRenderDataAction
 
         $assets = $block->getRelation('assets');
 
-        if (! method_exists($assets, 'first')) {
+        if (! $assets instanceof Collection) {
             return null;
         }
 
         $firstAsset = $assets->first();
 
-        if (! is_object($firstAsset) || ! method_exists($firstAsset, 'relationLoaded') || ! $firstAsset->relationLoaded('media')) {
+        if (! $firstAsset instanceof Model || ! $firstAsset->relationLoaded('media')) {
             return null;
         }
 
         $media = $firstAsset->getRelation('media');
 
-        return method_exists($media, 'first') ? $media->first() : null;
+        return $media instanceof Collection ? $media->first() : null;
     }
 
     private function imageRoundedClass(bool $rounded, bool $hasContent, bool $reverseOrder): string

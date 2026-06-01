@@ -25,9 +25,9 @@ it('groups entries as Setup / Editor / Admin', function (): void {
     $entries = (new DefaultDashboardSettingsContributor)->settingsKeys();
     $byKey = collect($entries)->keyBy('key');
 
-    expect($byKey['setup_health']['group'])->toBe('Setup');
-    expect($byKey['my_work_queue']['group'])->toBe('Editor');
-    expect($byKey['site_traffic']['group'])->toBe('Admin');
+    expect(publishingStudioTestArray($byKey->get('setup_health'))['group'] ?? null)->toBe('Setup');
+    expect(publishingStudioTestArray($byKey->get('my_work_queue'))['group'] ?? null)->toBe('Editor');
+    expect(publishingStudioTestArray($byKey->get('site_traffic'))['group'] ?? null)->toBe('Admin');
 });
 
 it('is discovered via the DashboardSettingsContributor tag', function (): void {

@@ -13,13 +13,17 @@ use Capell\PublishingStudio\Models\WorkspaceApproval;
 use Filament\Widgets\Widget;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Locked;
 use Override;
 
 class PageApprovalStatus extends Widget
 {
     public ?Pageable $record = null;
 
+    #[Locked]
     public ?int $recordKey = null;
 
     protected string $view = 'capell-admin::livewire.page-approval-status';
@@ -42,7 +46,12 @@ class PageApprovalStatus extends Widget
     #[Override]
     public function render(): View
     {
-        $workspace = $this->pageRecord()?->workspace;
+        $workspace = $this->workspaceForPage($this->pageRecord());
+
+        if ($workspace instanceof Workspace) {
+            Gate::authorize('view', $workspace);
+        }
+
         $approvals = $this->approvalsFor($workspace);
         $latestAction = $approvals->first()?->action;
 
@@ -121,10 +130,38 @@ class PageApprovalStatus extends Widget
         }
 
         $this->resolvedRecord = Page::query()
+            ->withoutGlobalScopes()
             ->with('workspace')
             ->find($this->recordKey);
 
         return $this->resolvedRecord;
+    }
+
+    private function workspaceForPage(?Pageable $page): ?Workspace
+    {
+        if (! $page instanceof Model) {
+            return null;
+        }
+
+        if ($page->relationLoaded('workspace')) {
+            $workspace = $page->getRelation('workspace');
+
+            if ($workspace instanceof Workspace) {
+                return $workspace;
+            }
+        }
+
+        $workspaceId = $page->getAttribute('workspace_id');
+
+        if (! is_int($workspaceId) && ! (is_string($workspaceId) && ctype_digit($workspaceId))) {
+            return null;
+        }
+
+        if ((int) $workspaceId <= 0) {
+            return null;
+        }
+
+        return Workspace::query()->find((int) $workspaceId);
     }
 
     private function initialRecordKey(): ?int

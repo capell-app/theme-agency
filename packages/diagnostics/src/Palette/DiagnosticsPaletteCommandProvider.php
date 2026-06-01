@@ -22,24 +22,24 @@ final class DiagnosticsPaletteCommandProvider implements CommandPaletteProvider
         $commands = array_filter([
             $this->navigationCommand(
                 id: 'diagnostics.open',
-                label: 'Open developer tools',
-                description: 'Open the Capell developer tools workspace.',
+                label: (string) __('capell-diagnostics::package.command_palette_open_developer_tools'),
+                description: (string) __('capell-diagnostics::package.command_palette_open_developer_tools_description'),
                 page: DiagnosticsPage::class,
                 keywords: ['developer', 'tools', 'registry', 'makers'],
                 sort: 10,
             ),
             $this->navigationCommand(
                 id: 'diagnostics.system-health',
-                label: 'Open system health',
-                description: 'Review setup, cache, package, registry, and migration health.',
+                label: (string) __('capell-diagnostics::package.command_palette_open_system_health'),
+                description: (string) __('capell-diagnostics::package.command_palette_open_system_health_description'),
                 page: SystemHealthPage::class,
                 keywords: ['health', 'cache', 'package', 'registry', 'migration'],
                 sort: 11,
             ),
             $this->navigationCommand(
                 id: 'diagnostics.queue-health',
-                label: 'View failed jobs',
-                description: 'Open the queue health report.',
+                label: (string) __('capell-diagnostics::package.command_palette_view_failed_jobs'),
+                description: (string) __('capell-diagnostics::package.command_palette_view_failed_jobs_description'),
                 page: QueueHealthPage::class,
                 keywords: ['queue', 'failed', 'jobs'],
                 sort: 12,
@@ -71,7 +71,7 @@ final class DiagnosticsPaletteCommandProvider implements CommandPaletteProvider
                 description: $description,
                 url: $page::getUrl(panel: 'admin'),
                 keywords: [$page, ...$keywords],
-                group: 'Developer tools',
+                group: (string) __('capell-diagnostics::package.command_palette_group_developer_tools'),
                 sort: $sort,
             );
         } catch (Throwable) {

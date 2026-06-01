@@ -106,7 +106,7 @@
                 scrollUp: {{ $theme->scroll_up_header ? 'true' : 'false' }},
             })" @endif
     @class([
-        'capell-foundation-theme-header',
+        'site-header',
         'capell-product-header transition-padding top-0 right-0 left-0 z-50 flex min-h-[var(--header-height)] w-full text-[var(--color-header)] transition-transform duration-300 ease-in-out lg:h-auto',
         'border-b border-[var(--border-header)]' => $headerBorderColor,
         'shadow-sm shadow-black/5 dark:shadow-black/20' => $headerShadow === 'subtle',

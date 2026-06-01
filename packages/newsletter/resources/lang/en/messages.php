@@ -8,7 +8,12 @@ return [
     'confirmation_subject' => 'Confirm your newsletter subscription',
     'confirmed' => 'Your newsletter subscription has been confirmed.',
     'duplicate_import_email' => 'This email appears more than once in the import file.',
+    'import_file_too_large' => 'The import file is larger than the allowed :max kilobytes.',
+    'import_too_many_rows' => 'The import file contains more than the allowed :max rows.',
     'invalid_token' => 'This newsletter link is invalid or has expired.',
     'missing_consent_basis' => 'A consent basis is required before importing subscribers.',
+    'preferences_saved' => 'Your newsletter preferences have been saved.',
+    'send_transition_final' => 'This newsletter send is already final.',
+    'send_transition_requires_sending' => 'A newsletter send must be sending before it can be marked sent.',
     'unsubscribed' => 'You have been unsubscribed.',
 ];

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Models\Page;
+use Capell\Core\Models\Site;
 use Capell\PublishingStudio\Livewire\FieldCommentThread;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Models\WorkspaceFieldComment;
@@ -40,8 +42,9 @@ it('posts a comment and appears in the thread', function (): void {
         ->where('field_path', 'title')
         ->first();
 
-    expect($comment)->not->toBeNull()
-        ->and($comment->body)->toBe('This title needs updating.')
+    $comment = publishingStudioTestInstance($comment, WorkspaceFieldComment::class);
+
+    expect($comment->body)->toBe('This title needs updating.')
         ->and($comment->author_type)->not->toBeNull();
 });
 
@@ -69,7 +72,9 @@ it('resolves a comment and sets resolved_at', function (): void {
     ])
         ->call('resolveComment', $comment->id);
 
-    expect($comment->fresh()->isResolved())->toBeTrue();
+    $freshComment = publishingStudioTestInstance($comment->fresh(), WorkspaceFieldComment::class);
+
+    expect($freshComment->isResolved())->toBeTrue();
 });
 
 it('reopens a resolved comment and clears resolved_at', function (): void {
@@ -97,7 +102,9 @@ it('reopens a resolved comment and clears resolved_at', function (): void {
     ])
         ->call('reopenComment', $comment->id);
 
-    expect($comment->fresh()->isResolved())->toBeFalse();
+    $freshComment = publishingStudioTestInstance($comment->fresh(), WorkspaceFieldComment::class);
+
+    expect($freshComment->isResolved())->toBeFalse();
 });
 
 it('returns unresolved comments before resolved ones in getComments', function (): void {
@@ -154,6 +161,28 @@ it('requires workspace view permission when mounted', function (): void {
     ])->assertForbidden();
 });
 
+it('forbids mounting comment threads for workspaces outside the actor site scope', function (): void {
+    $allowedSite = Site::factory()->create();
+    $blockedSite = Site::factory()->create();
+    $user = test()->createUserWithPermission(['View:Workspace', 'Update:Workspace']);
+    $user->assignedSiteIds = collect([(int) $allowedSite->getKey()]);
+
+    test()->actingAs($user);
+
+    $workspace = Workspace::factory()->create();
+    Page::factory()->create([
+        'workspace_id' => $workspace->getKey(),
+        'site_id' => $blockedSite->getKey(),
+    ]);
+
+    livewire(FieldCommentThread::class, [
+        'workspaceId' => $workspace->id,
+        'entityType' => 'page',
+        'entityUuid' => 'test-uuid-site-scope',
+        'fieldPath' => 'title',
+    ])->assertForbidden();
+});
+
 it('requires workspace update permission to post comments', function (): void {
     $user = test()->createUserWithPermission(['View:Workspace']);
     test()->actingAs($user);
@@ -192,5 +221,7 @@ it('does not resolve comments outside the mounted thread', function (): void {
         'fieldPath' => 'title',
     ])->call('resolveComment', $comment->id))->toThrow(ModelNotFoundException::class);
 
-    expect($comment->fresh()->isResolved())->toBeFalse();
+    $freshComment = publishingStudioTestInstance($comment->fresh(), WorkspaceFieldComment::class);
+
+    expect($freshComment->isResolved())->toBeFalse();
 });

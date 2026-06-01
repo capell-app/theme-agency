@@ -6,6 +6,7 @@ namespace Capell\DocumentLifecycle\Actions;
 
 use Capell\DocumentLifecycle\Models\Document;
 use Capell\DocumentLifecycle\Models\DocumentPublication;
+use Illuminate\Database\Eloquent\Builder;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class ResolveLatestDocumentPublicationAction
@@ -17,7 +18,7 @@ final class ResolveLatestDocumentPublicationAction
         return DocumentPublication::query()
             ->whereHas(
                 'document',
-                fn ($query) => $query->where('key', $documentKey),
+                fn (Builder $query): Builder => $query->where('key', $documentKey),
             )
             ->with('document')
             ->latest('published_at')

@@ -13,13 +13,16 @@ use Capell\PublishingStudio\Data\SchedulerEventData;
 use Capell\PublishingStudio\Enums\SchedulerEventStateEnum;
 use Capell\PublishingStudio\Enums\SchedulerEventTypeEnum;
 use Capell\PublishingStudio\Models\SchedulerEvent;
+use Capell\PublishingStudio\Models\Workspace;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\HtmlString;
 
 class ScheduledPublishingTable implements TableConfigurator
@@ -106,13 +109,17 @@ class ScheduledPublishingTable implements TableConfigurator
                     ->modalCancelActionLabel(__('capell-publishing-studio::scheduler.actions.close')),
                 Action::make('retry')
                     ->label(__('capell-publishing-studio::scheduler.actions.retry'))
-                    ->visible(fn (array $record): bool => ($record['state'] ?? null) === SchedulerEventStateEnum::Failed->value)
+                    ->visible(fn (array $record): bool => ($record['state'] ?? null) === SchedulerEventStateEnum::Failed->value
+                        && self::canPublishEvent($record))
+                    ->authorize(fn (array $record): bool => self::canPublishEvent($record))
                     ->action(function (array $record): void {
                         $event = self::eventFromRecord($record);
 
                         if (! $event instanceof SchedulerEvent) {
                             return;
                         }
+
+                        self::authorizePublishEvent($event);
 
                         $event->state = SchedulerEventStateEnum::Scheduled;
                         $event->claimed_at = null;
@@ -141,13 +148,17 @@ class ScheduledPublishingTable implements TableConfigurator
                     ->color('danger')
                     ->requiresConfirmation()
                     ->visible(fn (array $record): bool => ($record['state'] ?? null) === SchedulerEventStateEnum::Scheduled->value
-                        && str_starts_with((string) ($record['id'] ?? ''), 'scheduler-event-'))
+                        && str_starts_with((string) ($record['id'] ?? ''), 'scheduler-event-')
+                        && self::canPublishEvent($record))
+                    ->authorize(fn (array $record): bool => self::canPublishEvent($record))
                     ->action(function (array $record): void {
                         $event = self::eventFromRecord($record);
 
                         if (! $event instanceof SchedulerEvent) {
                             return;
                         }
+
+                        self::authorizePublishEvent($event);
 
                         CancelSchedulerEventAction::run($event, auth()->user());
 
@@ -283,6 +294,31 @@ class ScheduledPublishingTable implements TableConfigurator
         $event = SchedulerEvent::query()->find((int) str_replace('scheduler-event-', '', $id));
 
         return $event instanceof SchedulerEvent && self::canUseSite($event->site_id) ? $event : null;
+    }
+
+    /**
+     * @param  array<string, mixed>  $record
+     */
+    private static function canPublishEvent(array $record): bool
+    {
+        $event = self::eventFromRecord($record);
+
+        if (! $event instanceof SchedulerEvent) {
+            return false;
+        }
+
+        $workspace = $event->workspace;
+
+        return $workspace instanceof Workspace && Gate::allows('publish', $workspace);
+    }
+
+    private static function authorizePublishEvent(SchedulerEvent $event): void
+    {
+        $workspace = $event->workspace;
+
+        throw_unless($workspace instanceof Workspace, AuthorizationException::class);
+
+        Gate::authorize('publish', $workspace);
     }
 
     private static function canUseSite(?int $siteId): bool

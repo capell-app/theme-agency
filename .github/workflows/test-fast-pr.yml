@@ -24,7 +24,7 @@ concurrency:
 jobs:
   test-fast:
     if: github.event.pull_request.draft == false
-    name: Tests (fast PR suite)
+    name: Test - shard ${{ matrix.shard }}/3
     runs-on: ubuntu-latest
     env:
       COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.ACCESS_TOKEN }}"} }'
@@ -37,6 +37,19 @@ jobs:
             testbench: 9.*
             livewire: ^3.7
             db: sqlite
+            shard: 1
+          - php: 8.3
+            laravel: 11.*
+            testbench: 9.*
+            livewire: ^3.7
+            db: sqlite
+            shard: 2
+          - php: 8.3
+            laravel: 11.*
+            testbench: 9.*
+            livewire: ^3.7
+            db: sqlite
+            shard: 3
 
     steps:
       - name: Checkout code
@@ -125,11 +138,11 @@ jobs:
           composer remove --no-interaction --no-progress --ansi --dev --no-update mrpunyapal/peststan pestphp/pest-plugin-livewire calebdw/larastan-livewire
           composer require --no-interaction --no-progress --ansi --dev --no-update \
             soyhuce/phpstan-extension:^1.1 \
-            pestphp/pest:^3.0 \
-            pestphp/pest-plugin-arch:^3.0 \
-            pestphp/pest-plugin-laravel:^3.0 \
-            pestphp/pest-plugin-livewire:^3.0 \
-            pestphp/pest-plugin-type-coverage:^3.0 \
+            pestphp/pest:^4.4 \
+            pestphp/pest-plugin-arch:^4.0 \
+            pestphp/pest-plugin-laravel:^4.0 \
+            pestphp/pest-plugin-livewire:^4.0 \
+            pestphp/pest-plugin-type-coverage:^4.0 \
             phpstan/phpstan:^1.10.57 \
             phpstan/phpstan-mockery:^1.0 \
             phpstan/phpstan-strict-rules:^1.0 \
@@ -151,5 +164,5 @@ jobs:
           echo "DB_CONNECTION=sqlite" >> .env
           echo "DB_DATABASE=:memory:" >> .env
 
-      - name: Execute fast PR tests
-        run: composer run test:all:ci
+      - name: Run test:fast
+        run: PEST_SHARD=${{ matrix.shard }}/3 composer run test:fast:ci

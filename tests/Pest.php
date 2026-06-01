@@ -7,6 +7,7 @@ use Capell\Address\Tests\AddressTestCase;
 use Capell\AgentBridge\Tests\TestCase as AgentBridgeTestCase;
 use Capell\AIOrchestrator\Tests\AIOrchestratorTestCase;
 use Capell\Api\Tests\ApiTestCase;
+use Capell\AutomationStudio\Tests\AutomationStudioTestCase;
 use Capell\Blog\Tests\BlogTestCase;
 use Capell\CampaignStudio\Tests\CampaignStudioTestCase;
 use Capell\Comments\Tests\CommentsTestCase;
@@ -39,11 +40,10 @@ use Capell\ShopifyCommerce\Tests\TestCase as ShopifyCommerceTestCase;
 use Capell\Tags\Tests\TagsTestCase;
 use Capell\Tests\Packages\PackagesTestCase;
 use Capell\Tests\Packages\UninstalledPackagesTestCase;
+use Capell\UrlManager\Tests\UrlManagerTestCase;
 use Capell\WelcomeTour\Tests\WelcomeTourTestCase;
 use Capell\WordPressImporter\Tests\WordPressImporterTestCase;
-use Illuminate\Support\Collection;
 use Illuminate\Testing\PendingCommand;
-use Pest\Expectation;
 
 /**
  * @param  class-string  $testCase
@@ -92,28 +92,6 @@ function capell_artisan(string $command, array $parameters = []): PendingCommand
     return $pendingCommand;
 }
 
-/**
- * @return Collection<array-key, mixed>
- */
-function capell_test_collect(mixed $items = []): Collection
-{
-    if ($items instanceof Collection) {
-        return $items;
-    }
-
-    if (is_iterable($items)) {
-        return new Collection($items);
-    }
-
-    return new Collection;
-}
-
-/** @return Expectation<mixed> */
-function capell_expect(mixed $value): Expectation
-{
-    return expect($value);
-}
-
 groupCapellPackageTests('package');
 groupCapellPackageDirectoriesByName();
 groupCapellPackageSuiteTests('Arch');
@@ -128,6 +106,7 @@ extendCapellPackageTests(AccessGateTestCase::class, 'access-gate', 'access-gate'
 extendCapellPackageTests(AgentBridgeTestCase::class, 'agent-bridge', 'agent-bridge');
 extendCapellPackageTests(AIOrchestratorTestCase::class, 'ai-orchestrator', 'ai-orchestrator');
 extendCapellPackageTests(ApiTestCase::class, 'api', 'api');
+extendCapellPackageTests(AutomationStudioTestCase::class, 'automation-studio', 'automation-studio');
 extendCapellPackageTests(BlogTestCase::class, 'blog', 'blog');
 extendCapellPackageTests(BlockLibraryTestCase::class, 'block-library', 'block-library');
 extendCapellPackageTests(CampaignStudioTestCase::class, 'campaign-studio', 'campaign-studio');
@@ -162,6 +141,7 @@ extendCapellPackageTests(SearchTestCase::class, 'search', 'search');
 extendCapellPackageTests(SeoSuiteTestCase::class, 'seo-suite', 'seo-suite');
 extendCapellPackageTests(ShopifyCommerceTestCase::class, 'shopify-commerce', 'shopify-commerce');
 extendCapellPackageTests(TagsTestCase::class, 'tags', 'tags');
+extendCapellPackageTests(UrlManagerTestCase::class, 'url-manager', 'url-manager');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-agency', 'theme-agency');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-commerce', 'theme-commerce');
 extendCapellPackageTests(PackagesTestCase::class, 'theme-corporate', 'theme-corporate');

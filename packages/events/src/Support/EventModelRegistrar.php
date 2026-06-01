@@ -11,6 +11,7 @@ use Capell\Events\Models\EventNotificationLog;
 use Capell\Events\Models\EventOccurrence;
 use Capell\Events\Models\EventRegistration;
 use Capell\Events\Models\EventVenue;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Str;
 
@@ -37,11 +38,11 @@ class EventModelRegistrar
             ),
         );
 
-        Relation::morphMap(
-            collect(self::MODELS)
-                ->mapWithKeys(fn (string $modelClass): array => [Str::snake(class_basename($modelClass)) => $modelClass])
-                ->all(),
-            merge: true,
-        );
+        /** @var array<string, class-string<Model>> $morphMap */
+        $morphMap = collect(self::MODELS)
+            ->mapWithKeys(fn (string $modelClass): array => [Str::snake(class_basename($modelClass)) => $modelClass])
+            ->all();
+
+        Relation::morphMap($morphMap, merge: true);
     }
 }

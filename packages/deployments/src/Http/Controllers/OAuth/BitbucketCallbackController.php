@@ -8,6 +8,7 @@ use Capell\Deployments\Actions\ConnectDeploymentAction;
 use Capell\Deployments\Actions\OAuth\ValidateOAuthStateAction;
 use Capell\Deployments\Enums\GitProviderType;
 use Capell\Deployments\Filament\Pages\DeploymentConnectionPage;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -17,7 +18,7 @@ final class BitbucketCallbackController
 {
     public function __invoke(Request $request): RedirectResponse
     {
-        abort_unless(DeploymentConnectionPage::canAccess(), 403);
+        abort_unless(DeploymentConnectionPage::canManageConnections(), 403);
 
         if (ValidateOAuthStateAction::run(GitProviderType::Bitbucket, $request->query('state')) !== true) {
             return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_invalid_state')]);
@@ -31,14 +32,23 @@ final class BitbucketCallbackController
         $clientId = config('capell-deployments.oauth.bitbucket.client_id');
         $clientSecret = config('capell-deployments.oauth.bitbucket.client_secret');
 
-        $tokenResponse = Http::withBasicAuth((string) $clientId, (string) $clientSecret)
-            ->asForm()
-            ->post('https://bitbucket.org/site/oauth2/access_token', [
-                'grant_type' => 'authorization_code',
-                'code' => $code,
-                'redirect_uri' => route('capell-deployments.oauth.bitbucket'),
-            ])
-            ->json();
+        try {
+            $tokenResponse = Http::withBasicAuth((string) $clientId, (string) $clientSecret)
+                ->asForm()
+                ->timeout($this->httpTimeout())
+                ->post('https://bitbucket.org/site/oauth2/access_token', [
+                    'grant_type' => 'authorization_code',
+                    'code' => $code,
+                    'redirect_uri' => route('capell-deployments.oauth.bitbucket'),
+                ])
+                ->json();
+        } catch (ConnectionException $connectionException) {
+            Log::warning('capell-deployments: Bitbucket OAuth token request failed', [
+                'error' => $connectionException->getMessage(),
+            ]);
+
+            return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_failed', ['provider' => 'Bitbucket'])]);
+        }
 
         $accessToken = $tokenResponse['access_token'] ?? null;
         $refreshToken = $tokenResponse['refresh_token'] ?? null;
@@ -48,9 +58,18 @@ final class BitbucketCallbackController
             return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_failed', ['provider' => 'Bitbucket'])]);
         }
 
-        $userResponse = Http::withToken($accessToken)
-            ->get('https://api.bitbucket.org/2.0/user')
-            ->json();
+        try {
+            $userResponse = Http::withToken($accessToken)
+                ->timeout($this->httpTimeout())
+                ->get('https://api.bitbucket.org/2.0/user')
+                ->json();
+        } catch (ConnectionException $connectionException) {
+            Log::warning('capell-deployments: Bitbucket OAuth user request failed', [
+                'error' => $connectionException->getMessage(),
+            ]);
+
+            return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_user_failed', ['provider' => 'Bitbucket'])]);
+        }
 
         $username = $userResponse['username'] ?? null;
         if (! is_string($username) || $username === '') {
@@ -89,5 +108,10 @@ final class BitbucketCallbackController
         }
 
         return $redacted;
+    }
+
+    private function httpTimeout(): int
+    {
+        return max(1, (int) config('capell-deployments.http_timeout', 10));
     }
 }

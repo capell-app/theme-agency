@@ -55,9 +55,10 @@ it('rolls back to the previous live version and promotes it', function (): void 
     $secondVersion = publishWorkspaceWithFixture((string) Str::uuid(), 'second-release');
 
     $rollbackRecord = (new Rollback)->rollbackTo($firstVersion, reason: 'regression');
+    $freshSecondVersion = publishingStudioTestInstance($secondVersion->fresh(), Version::class);
 
     expect(Version::liveId())->toBe($firstVersion->id)
-        ->and($secondVersion->fresh()->is_live)->toBeFalse()
+        ->and($freshSecondVersion->is_live)->toBeFalse()
         ->and($rollbackRecord->is_live)->toBeFalse()
         ->and($rollbackRecord->rollback_of_version_id)->toBe($firstVersion->id)
         ->and($rollbackRecord->name)->toContain('Rollback')
@@ -172,8 +173,9 @@ it('records a rollback audit row pointing at the target version', function (): v
 
     $fromDb = Version::query()->whereKey($rollbackRecord->id)->first();
 
-    expect($fromDb)->not->toBeNull()
-        ->and($fromDb->rollback_of_version_id)->toBe($firstVersion->id)
+    $fromDb = publishingStudioTestInstance($fromDb, Version::class);
+
+    expect($fromDb->rollback_of_version_id)->toBe($firstVersion->id)
         ->and($fromDb->is_live)->toBeFalse()
         ->and($fromDb->published_at)->not->toBeNull();
 });
@@ -182,7 +184,8 @@ it('is transactional — a failing listener leaves the database untouched', func
     $firstVersion = publishWorkspaceWithFixture((string) Str::uuid(), 'first');
     $secondVersion = publishWorkspaceWithFixture((string) Str::uuid(), 'second');
 
-    $secondVersionLiveBefore = $secondVersion->fresh()->is_live;
+    $freshSecondVersion = publishingStudioTestInstance($secondVersion->fresh(), Version::class);
+    $secondVersionLiveBefore = $freshSecondVersion->is_live;
     $liveRowCountBefore = WorkspaceDraftableFixture::query()
         ->withoutGlobalScopes()
         ->where('workspace_id', 0)
@@ -207,7 +210,7 @@ it('is transactional — a failing listener leaves the database untouched', func
     }
 
     expect(Version::liveId())->toBe($secondVersion->id)
-        ->and($secondVersion->fresh()->is_live)->toBe($secondVersionLiveBefore)
+        ->and(publishingStudioTestInstance($secondVersion->fresh(), Version::class)->is_live)->toBe($secondVersionLiveBefore)
         ->and(WorkspaceDraftableFixture::query()
             ->withoutGlobalScopes()
             ->where('workspace_id', 0)

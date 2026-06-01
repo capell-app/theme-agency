@@ -76,6 +76,18 @@
         transform: translateY(0);
     }
 
+    :where(
+        .healthcare-shell a,
+        .healthcare-shell button,
+        .healthcare-shell input,
+        .healthcare-shell textarea,
+        .healthcare-shell select
+    ):focus-visible {
+        outline: 3px solid
+            color-mix(in srgb, var(--healthcare-accent) 78%, white);
+        outline-offset: 3px;
+    }
+
     .healthcare-frame {
         border: 1px solid
             color-mix(

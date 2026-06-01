@@ -39,6 +39,7 @@ class BuildCalendarFeedAction
     {
         $event = CalendarEvent::create($occurrence->event->translation->title ?? $occurrence->event->name)
             ->uniqueIdentifier(sprintf('event-%s-occurrence-%s@capell', $occurrence->event_id, $occurrence->occurrence_key))
+            ->createdAt($occurrence->starts_at->toDateTimeImmutable())
             ->startsAt($occurrence->starts_at->toDateTimeImmutable(), ! $occurrence->all_day);
 
         if ($occurrence->ends_at !== null) {

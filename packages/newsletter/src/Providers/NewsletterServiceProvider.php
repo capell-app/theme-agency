@@ -9,12 +9,15 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
+use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
+use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Capell\Newsletter\Enums\ProviderType;
 use Capell\Newsletter\Filament\Settings\NewsletterSettingsSchema;
 use Capell\Newsletter\Listeners\SubscribeFromFormSubmission;
 use Capell\Newsletter\Models\ConsentEvent;
 use Capell\Newsletter\Models\FormMapping;
 use Capell\Newsletter\Models\ImportBatch;
+use Capell\Newsletter\Models\NewsletterSend;
 use Capell\Newsletter\Models\ProviderAudience;
 use Capell\Newsletter\Models\ProviderConnection;
 use Capell\Newsletter\Models\ProviderInterestMapping;
@@ -24,6 +27,8 @@ use Capell\Newsletter\Models\Segment;
 use Capell\Newsletter\Models\Subscriber;
 use Capell\Newsletter\Models\SyncAttempt;
 use Capell\Newsletter\Settings\NewsletterSettings;
+use Capell\Newsletter\Support\CustomerPortal\NewsletterPortalSelfServiceItemProvider;
+use Capell\Newsletter\Support\EditorialCalendar\NewsletterEditorialCalendarEventContributor;
 use Capell\Newsletter\Support\NewsletterAudienceRegistry;
 use Capell\Newsletter\Support\Providers\CampaignMonitorProviderAdapter;
 use Capell\Newsletter\Support\Providers\FakeProviderAdapter;
@@ -31,6 +36,7 @@ use Capell\Newsletter\Support\Providers\KitProviderAdapter;
 use Capell\Newsletter\Support\Providers\MailchimpProviderAdapter;
 use Capell\Newsletter\Support\Providers\ProviderAdapterRegistry;
 use Capell\Newsletter\Support\SegmentAudienceProvider;
+use Capell\PublishingStudio\Contracts\EditorialCalendarEventContributor;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Event;
@@ -49,6 +55,7 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
             ->name(self::$name)
             ->hasConfigFile('capell-newsletter')
             ->hasTranslations()
+            ->hasViews()
             ->hasRoute('web')
             ->hasMigrations([
                 '2026_05_10_190861_02_create_newsletter_subscribers_table',
@@ -63,6 +70,7 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
                 '2026_05_10_190861_08_create_newsletter_segments_table',
                 '2026_05_10_190861_11_create_newsletter_import_batches_table',
                 '2026_05_10_190861_12_create_newsletter_processed_webhook_events_table',
+                '2026_05_31_120000_13_create_newsletter_sends_table',
             ]);
     }
 
@@ -86,6 +94,8 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
                 ->registerModels()
                 ->registerProtectedTables()
                 ->registerAudienceProviders()
+                ->registerEditorialCalendarContributors()
+                ->registerCustomerPortalIntegrations()
                 ->registerListeners();
         });
     }
@@ -152,6 +162,7 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
             SyncAttempt::class,
             Segment::class,
             ImportBatch::class,
+            NewsletterSend::class,
         ]);
 
         return $this;
@@ -184,6 +195,35 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
     {
         $this->app->make(NewsletterAudienceRegistry::class)
             ->register($this->app->make(SegmentAudienceProvider::class));
+
+        return $this;
+    }
+
+    private function registerEditorialCalendarContributors(): self
+    {
+        if (interface_exists(EditorialCalendarEventContributor::class)) {
+            $this->app->singleton(NewsletterEditorialCalendarEventContributor::class);
+            $this->app->tag([NewsletterEditorialCalendarEventContributor::class], EditorialCalendarEventContributor::TAG);
+        }
+
+        return $this;
+    }
+
+    private function registerCustomerPortalIntegrations(): self
+    {
+        if (! class_exists(PortalSelfServiceItemRegistry::class)
+            || ! interface_exists(PortalSelfServiceItemProvider::class)) {
+            return $this;
+        }
+
+        /** @var object $registry */
+        $registry = $this->app->make(PortalSelfServiceItemRegistry::class);
+
+        if (! method_exists($registry, 'register')) {
+            return $this;
+        }
+
+        $registry->register('newsletter.preferences', NewsletterPortalSelfServiceItemProvider::class);
 
         return $this;
     }

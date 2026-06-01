@@ -29,6 +29,10 @@
         "spatie/laravel-data": "^4.5",
         "spatie/laravel-package-tools": "^1.14.1"
     },
+    "suggest": {
+        "capell-app/experiments": "Creates campaign-scoped experiments from campaign landing-page variants and conversion goals.",
+        "capell-app/site-discovery": "Contribute campaign landing page URLs to the canonical public URL registry."
+    },
     "autoload": {
         "psr-4": {
             "Capell\\CampaignStudio\\": "src/",

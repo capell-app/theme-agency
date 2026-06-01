@@ -23,6 +23,13 @@ if ($composerAutoloader instanceof ClassLoader) {
     $composerAutoloader->addPsr4('Capell\\SeoSuite\\Tests\\', $packageRoot . '/tests');
 }
 
+function aiDiscoveryMigrationRow(mixed $row): stdClass
+{
+    throw_unless($row instanceof stdClass, RuntimeException::class, 'Expected AI discovery migration row.');
+
+    return $row;
+}
+
 function createAiDiscoveryMigrationLanguage(): Language
 {
     return Language::query()->create([
@@ -167,10 +174,10 @@ it('creates ai discovery records with expected database defaults', function (): 
         'updated_at' => now(),
     ]);
 
-    $siteProfile = DB::table('ai_discovery_site_profiles')->first();
-    $pageProfile = DB::table('ai_discovery_page_profiles')->first();
-    $crawlerRule = DB::table('ai_discovery_crawler_rules')->first();
-    $snapshot = DB::table('ai_discovery_snapshots')->first();
+    $siteProfile = aiDiscoveryMigrationRow(DB::table('ai_discovery_site_profiles')->first());
+    $pageProfile = aiDiscoveryMigrationRow(DB::table('ai_discovery_page_profiles')->first());
+    $crawlerRule = aiDiscoveryMigrationRow(DB::table('ai_discovery_crawler_rules')->first());
+    $snapshot = aiDiscoveryMigrationRow(DB::table('ai_discovery_snapshots')->first());
 
     expect((bool) $siteProfile->llms_txt_enabled)->toBeTrue()
         ->and((bool) $siteProfile->llms_full_txt_enabled)->toBeFalse()
@@ -260,12 +267,13 @@ it('publishes the complete seo suite schema and settings migrations during insta
 function aiDiscoveryMigrationIndexColumns(string $table, string $index): array
 {
     $indexes = collect(DB::select(sprintf("PRAGMA index_list('%s')", $table)));
-    $matchingIndex = $indexes->first(fn (object $row): bool => $row->name === $index);
+    $matchingIndex = $indexes->first(fn (object $row): bool => data_get($row, 'name') === $index);
 
     expect($matchingIndex)->not->toBeNull();
 
-    return collect(DB::select(sprintf("PRAGMA index_info('%s')", $index)))
+    return array_values(collect(DB::select(sprintf("PRAGMA index_info('%s')", $index)))
         ->pluck('name')
+        ->filter(fn (mixed $column): bool => is_string($column))
         ->values()
-        ->all();
+        ->all());
 }

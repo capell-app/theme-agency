@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Models\Page;
 use Capell\PublishingStudio\Actions\Dashboard\BuildWorkspaceActivityAction;
+use Capell\PublishingStudio\Data\Dashboard\WorkspaceMergeData;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Models\WorkspaceReviewAssignment;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
@@ -164,8 +165,9 @@ it('each merge data row includes actor name, page count, duration', function ():
 
     $merge = $result->recentMerges->toCollection()->first();
 
-    expect($merge)->not->toBeNull()
-        ->and($merge->actorName)->toBe('Alice Editor')
+    $merge = publishingStudioTestInstance($merge, WorkspaceMergeData::class);
+
+    expect($merge->actorName)->toBe('Alice Editor')
         ->and($merge->pageCount)->toBe(3)
         ->and($merge->durationOpenHours)->toBeGreaterThanOrEqual(4 * 24);
 });

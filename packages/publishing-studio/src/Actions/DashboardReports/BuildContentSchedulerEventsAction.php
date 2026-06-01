@@ -134,7 +134,7 @@ final class BuildContentSchedulerEventsAction
                     description: (string) __('capell-publishing-studio::scheduler.descriptions.page_' . $eventType->value),
                     recordUrl: $recordUrl,
                     state: SchedulerEventStateEnum::Scheduled,
-                    siteId: $page->site_id,
+                    siteId: is_numeric($page->site_id) ? (int) $page->site_id : null,
                     siteName: $page->site?->name,
                     timezone: config('app.timezone', 'UTC'),
                 );
@@ -159,11 +159,19 @@ final class BuildContentSchedulerEventsAction
             return collect();
         }
 
-        return SchedulerEvent::query()
+        $query = SchedulerEvent::query()
             ->with(['workspace', 'owner'])
-            ->whereBetween('scheduled_for', [$startsAt, $endsAt])
-            ->when($eventType instanceof SchedulerEventTypeEnum, fn (Builder $query): Builder => $query->where('event_type', $eventType->value))
-            ->when($state instanceof SchedulerEventStateEnum, fn (Builder $query): Builder => $query->where('state', $state->value))
+            ->whereBetween('scheduled_for', [$startsAt, $endsAt]);
+
+        if ($eventType instanceof SchedulerEventTypeEnum) {
+            $query->where('event_type', $eventType->value);
+        }
+
+        if ($state instanceof SchedulerEventStateEnum) {
+            $query->where('state', $state->value);
+        }
+
+        return $query
             ->when($siteIds !== null, fn (Builder $query): Builder => $query->whereIn('site_id', $siteIds))
             ->when($ownerId !== null, fn (Builder $query): Builder => $query->where('owner_id', $ownerId))
             ->when($ownerType !== null, fn (Builder $query): Builder => $query->where('owner_type', $ownerType))
@@ -263,7 +271,7 @@ final class BuildContentSchedulerEventsAction
             description: (string) __('capell-publishing-studio::scheduler.descriptions.workspace_' . $event->event_type->value),
             recordUrl: $recordUrl,
             state: $event->state,
-            siteId: $event->site_id,
+            siteId: is_numeric($event->site_id) ? (int) $event->site_id : null,
             ownerId: $event->owner_id,
             ownerName: $event->owner->name ?? null,
             timezone: $event->display_timezone,

@@ -1,4 +1,7 @@
-<a href="#main-content" class="retail-skip-link">
+<a
+    href="#main-content"
+    class="retail-skip-link"
+>
     {{ __('capell-theme-commerce::generic.skip_to_content') }}
 </a>
 

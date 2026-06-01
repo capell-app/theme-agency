@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Models\Site;
 use Capell\EmailStudio\Actions\CheckEmailSuppressionAction;
 use Capell\EmailStudio\Actions\SuppressEmailAddressAction;
 use Capell\EmailStudio\Enums\SuppressionReason;
 use Capell\EmailStudio\Models\EmailSuppression;
 
 it('checks active suppressions by normalized email hash and site scope', function (): void {
+    Site::factory()->create(['id' => 12]);
+
     SuppressEmailAddressAction::run(
         email: 'Blocked@Example.com',
         reason: SuppressionReason::Manual,

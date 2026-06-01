@@ -7,15 +7,15 @@ namespace Capell\AgentBridge\Actions\Pages;
 use Capell\AgentBridge\Contracts\CapellAgentBridgeCapabilityAction;
 use Capell\AgentBridge\Data\CapabilityInvocationData;
 use Capell\AgentBridge\Data\CapabilityResultData;
-use Capell\Core\Models\Page;
+use Capell\AgentBridge\Support\AgentBridgePageAccess;
 use Carbon\CarbonInterface;
-use Illuminate\Database\Eloquent\Model;
 
 final class DisablePageCapabilityAction implements CapellAgentBridgeCapabilityAction
 {
     public function preview(CapabilityInvocationData $invocation): CapabilityResultData
     {
         $payload = $this->validatedPayload($invocation->payload);
+        AgentBridgePageAccess::authorizedPage($invocation->user, (int) $payload['page_id']);
 
         return new CapabilityResultData(
             ok: true,
@@ -30,10 +30,7 @@ final class DisablePageCapabilityAction implements CapellAgentBridgeCapabilityAc
     public function execute(CapabilityInvocationData $invocation): CapabilityResultData
     {
         $payload = $this->validatedPayload($invocation->payload);
-        $pageClass = $this->pageClass();
-        $page = $pageClass::query()
-            ->whereKey($payload['page_id'])
-            ->firstOrFail();
+        $page = AgentBridgePageAccess::authorizedPage($invocation->user, (int) $payload['page_id']);
         $page->forceFill(['visible_until' => now()])->save();
         $visibleUntil = $page->getAttribute('visible_until');
 
@@ -58,11 +55,5 @@ final class DisablePageCapabilityAction implements CapellAgentBridgeCapabilityAc
         ])->validate();
 
         return $payload;
-    }
-
-    /** @return class-string<Model> */
-    private function pageClass(): string
-    {
-        return Page::class;
     }
 }

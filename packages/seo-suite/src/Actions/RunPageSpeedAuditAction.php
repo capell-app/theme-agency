@@ -166,7 +166,7 @@ final class RunPageSpeedAuditAction
      */
     private function worstResults(Collection $results, PageSpeedStrategyEnum $strategy): array
     {
-        return $results
+        return array_values($results
             ->filter(fn (PageSpeedAuditResult $result): bool => $result->status === 'succeeded'
                 && $result->strategy === $strategy
                 && $result->performance_score !== null)
@@ -174,7 +174,7 @@ final class RunPageSpeedAuditAction
             ->take(5)
             ->map(fn (PageSpeedAuditResult $result): PageSpeedAuditDigestFindingData => $this->finding($result))
             ->values()
-            ->all();
+            ->all());
     }
 
     /**
@@ -183,7 +183,7 @@ final class RunPageSpeedAuditAction
      */
     private function belowThresholdResults(Collection $results): array
     {
-        return $results
+        return array_values($results
             ->filter(fn (PageSpeedAuditResult $result): bool => $result->status === 'succeeded'
                 && $result->performance_score !== null
                 && $result->performance_score < 50)
@@ -191,7 +191,7 @@ final class RunPageSpeedAuditAction
             ->take(10)
             ->map(fn (PageSpeedAuditResult $result): PageSpeedAuditDigestFindingData => $this->finding($result))
             ->values()
-            ->all();
+            ->all());
     }
 
     /**
@@ -200,7 +200,7 @@ final class RunPageSpeedAuditAction
      */
     private function biggestDrops(Collection $results): array
     {
-        return $results
+        return array_values($results
             ->filter(fn (PageSpeedAuditResult $result): bool => $result->status === 'succeeded'
                 && $result->performance_score !== null)
             ->map(function (PageSpeedAuditResult $result): ?PageSpeedAuditDigestFindingData {
@@ -232,7 +232,7 @@ final class RunPageSpeedAuditAction
             ->sortByDesc(fn (PageSpeedAuditDigestFindingData $finding): int => $finding->drop ?? 0)
             ->take(5)
             ->values()
-            ->all();
+            ->all());
     }
 
     private function finding(PageSpeedAuditResult $result, ?int $previousScore = null, ?int $drop = null): PageSpeedAuditDigestFindingData

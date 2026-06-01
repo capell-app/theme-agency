@@ -141,7 +141,7 @@ class NotFoundUrlsPage extends Page implements HasActions, HasTable
             return '';
         }
 
-        return $record->url;
+        return (string) $record->url;
     }
 
     #[Override]

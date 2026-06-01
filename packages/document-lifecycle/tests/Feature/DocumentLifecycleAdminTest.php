@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Date;
 use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
 
+use Spatie\Permission\Models\Permission;
+
 uses(CreatesAdminUser::class);
 
 it('exposes controlled documents in the admin surface', function (): void {
@@ -77,4 +79,39 @@ it('shows controlled document publication and acceptance audit trails', function
         ->assertSuccessful()
         ->assertCanSeeTableRecords([$acceptance])
         ->assertTableColumnStateSet('context', 'registration', $acceptance);
+});
+
+it('denies controlled document resources to panel users without document permissions', function (): void {
+    test()->actingAsUser();
+
+    $document = Document::query()->create([
+        'key' => 'terms',
+        'title' => 'Terms of Service',
+        'status' => DocumentStatusEnum::Active,
+    ]);
+
+    get(DocumentResource::getUrl())->assertForbidden();
+    get(DocumentResource::getUrl('edit', ['record' => $document]))->assertForbidden();
+});
+
+it('allows permitted users to list and edit controlled documents', function (): void {
+    Permission::findOrCreate('ViewAny:Document', 'web');
+    Permission::findOrCreate('View:Document', 'web');
+    Permission::findOrCreate('Update:Document', 'web');
+
+    test()->actingAs(test()->createUserWithPermission([
+        'ViewAny:Document',
+        'View:Document',
+        'Update:Document',
+    ]));
+
+    $document = Document::query()->create([
+        'key' => 'terms',
+        'title' => 'Terms of Service',
+        'status' => DocumentStatusEnum::Active,
+    ]);
+
+    expect(DocumentResource::canAccess())->toBeTrue()
+        ->and(DocumentResource::canViewAny())->toBeTrue()
+        ->and(DocumentResource::canEdit($document))->toBeTrue();
 });

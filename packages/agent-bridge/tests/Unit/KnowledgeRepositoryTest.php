@@ -11,6 +11,8 @@ it('discovers package manifests with capability metadata', function (): void {
 
     $seoSuite = $packages->firstWhere('name', 'capell-app/seo-suite');
 
+    throw_unless(is_array($seoSuite), RuntimeException::class, 'Expected SEO Suite package manifest to be discovered.');
+
     expect($seoSuite)
         ->not->toBeNull()
         ->and($seoSuite['productGroup'])->toBe('Capell Search & SEO')
@@ -32,6 +34,8 @@ it('discovers and reads configured public markdown documents', function (): void
     $documents = collect($repository->documents());
 
     $overview = $documents->firstWhere('path', 'packages/agent-bridge/docs/overview.md');
+
+    throw_unless(is_array($overview), RuntimeException::class, 'Expected Agent Bridge overview document to be discovered.');
 
     expect($overview)
         ->not->toBeNull()

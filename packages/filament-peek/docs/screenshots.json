@@ -1,0 +1,45 @@
+{
+    "package": "filament-peek",
+    "composerName": "capell-app/filament-peek",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/filament-peek/docs/screenshots",
+    "entries": [
+        {
+            "id": "page-edit-preview-actions",
+            "title": "Page edit preview actions.",
+            "package": "filament-peek",
+            "surface": "admin",
+            "targetType": "admin-surface",
+            "target": "PageResource",
+            "required": true,
+            "notes": "Capture the Page edit header with the Preview group showing the separate `Changes` and `Live page` actions.",
+            "useCase": "An editor chooses between a temporary unsaved preview and the saved public page.",
+            "screenshotPath": "packages/filament-peek/docs/screenshots/page-edit-preview-actions.png"
+        },
+        {
+            "id": "signed-unsaved-page-preview",
+            "title": "Signed unsaved page preview.",
+            "package": "filament-peek",
+            "surface": "frontend",
+            "targetType": "frontend-route",
+            "target": "capell-filament-peek.preview",
+            "required": true,
+            "notes": "Capture a valid signed preview URL generated from an unsaved Page edit snapshot. Do not commit real signed URLs or snapshot tokens.",
+            "useCase": "An editor reviews temporary Page changes before saving them.",
+            "screenshotPath": "packages/filament-peek/docs/screenshots/signed-unsaved-page-preview.png"
+        },
+        {
+            "id": "expired-preview-error",
+            "title": "Expired preview error.",
+            "package": "filament-peek",
+            "surface": "frontend",
+            "targetType": "frontend-route",
+            "target": "capell-filament-peek.preview",
+            "required": true,
+            "notes": "Capture the safe error state for an expired or missing preview snapshot without exposing cache keys or internal exception details.",
+            "useCase": "An editor understands that an old temporary preview link has expired.",
+            "screenshotPath": "packages/filament-peek/docs/screenshots/expired-preview-error.png"
+        }
+    ]
+}

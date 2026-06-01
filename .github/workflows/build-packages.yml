@@ -5,7 +5,12 @@ permissions:
 
 on:
   pull_request:
+    branches:
+      - 4.x
     types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'packages/frontend-optimizer/**'
+      - '.github/workflows/build-packages.yml'
 
 jobs:
   build-packages:
@@ -13,7 +18,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        package: [layout-builder]
+        package: [frontend-optimizer]
     env:
       ROLLUP_SKIP_NATIVE: 'true'
     steps:

@@ -17,13 +17,14 @@ class RequeueDueProviderSyncAttemptsAction
     {
         $remaining = is_int($limit) && $limit > 0 ? $limit : null;
         $count = 0;
+        $now = now();
 
         while ($remaining === null || $remaining > 0) {
             $batchLimit = $remaining === null ? 500 : min(500, $remaining);
             $syncAttempts = SyncAttempt::query()
                 ->where('sync_status', SyncStatus::RetryScheduled)
                 ->whereNotNull('next_retry_at')
-                ->where('next_retry_at', '<=', now())
+                ->where('next_retry_at', '<=', $now)
                 ->oldest('next_retry_at')
                 ->limit($batchLimit)
                 ->get();
@@ -32,14 +33,23 @@ class RequeueDueProviderSyncAttemptsAction
                 break;
             }
 
-            $syncAttempts->each(function (SyncAttempt $syncAttempt) use (&$count, &$remaining, $dispatchJobs): void {
-                $syncAttempt->forceFill([
-                    'sync_status' => SyncStatus::Pending,
-                    'next_retry_at' => null,
-                ])->save();
+            $syncAttempts->each(function (SyncAttempt $syncAttempt) use (&$count, &$remaining, $dispatchJobs, $now): void {
+                $updated = SyncAttempt::query()
+                    ->whereKey($syncAttempt->getKey())
+                    ->where('sync_status', SyncStatus::RetryScheduled)
+                    ->whereNotNull('next_retry_at')
+                    ->where('next_retry_at', '<=', $now)
+                    ->update([
+                        'sync_status' => SyncStatus::Pending,
+                        'next_retry_at' => null,
+                    ]);
+
+                if ($updated !== 1) {
+                    return;
+                }
 
                 if ($dispatchJobs) {
-                    dispatch(new SyncSubscriberToProviderJob($syncAttempt));
+                    dispatch(new SyncSubscriberToProviderJob($syncAttempt->refresh()->withoutRelations()));
                 }
 
                 $count++;

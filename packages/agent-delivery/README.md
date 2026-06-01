@@ -10,6 +10,22 @@ Agent Delivery exposes already-public Capell page content as structured manifest
 - Service provider: `packages/agent-delivery/src/Providers/AgentDeliveryServiceProvider.php`
 - Capell dependencies: `capell-app/core`
 
+## Why It Helps Your Capell Workflow
+
+- Site owners can make public Capell pages easier for search assistants and
+  agent tools to understand without exposing private admin state.
+- Developers get a stable manifest and chunk contract instead of writing
+  package-specific JSON endpoints for every public content type.
+- Operators can keep the surface anonymous and read-only, separate from the
+  authenticated Agent Bridge workflow.
+
+## Best Used With
+
+- [Site Discovery](../site-discovery/README.md)
+- [SEO Suite](../seo-suite/README.md)
+- [Agent Bridge](../agent-bridge/README.md) when a build also needs
+  authenticated agent actions.
+
 ## What It Adds
 
 - `GET /api/capell/agent/v1/pages/manifest?url=/path` returns canonical URL, locale, alternates, title, headings, summary, plain-text body, public metadata, references, and timestamps.
@@ -38,3 +54,12 @@ Contributors must only return already-public content. Do not include draft state
 
 - [Overview](docs/overview.md)
 - [Contract](docs/contract.md)
+- [Screenshot manifest](docs/screenshots.json)
+
+## Testing
+
+Run package tests from the repository root:
+
+```bash
+vendor/bin/pest packages/agent-delivery/tests --configuration=phpunit.xml
+```

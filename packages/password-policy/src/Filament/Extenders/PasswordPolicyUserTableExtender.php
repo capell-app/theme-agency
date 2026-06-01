@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\PasswordPolicy\Filament\Extenders;
 
 use Capell\Admin\Contracts\Extenders\UserTableExtender;
+use Capell\Admin\Filament\Resources\Users\UserResource;
 use Capell\Core\Support\Database\RuntimeSchemaState;
 use Capell\PasswordPolicy\Actions\MarkUserForPasswordChangeAction;
 use Capell\PasswordPolicy\Support\PasswordPolicySettingsResolver;
@@ -15,9 +16,11 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\TernaryFilter;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 
 class PasswordPolicyUserTableExtender implements UserTableExtender
 {
@@ -68,6 +71,7 @@ class PasswordPolicyUserTableExtender implements UserTableExtender
             Action::make('require_password_change')
                 ->label(__('capell-password-policy::users.require_password_change'))
                 ->icon(Heroicon::OutlinedKey)
+                ->visible(fn (Model $record): bool => $this->canMarkUser($record))
                 ->action(fn (Model $record): null => $this->markUser($record)),
         ];
     }
@@ -104,8 +108,23 @@ class PasswordPolicyUserTableExtender implements UserTableExtender
         return $this->hasPasswordPolicyColumns() && $settings->forceChangeEnabled;
     }
 
+    private function canMarkUser(Model $record): bool
+    {
+        if (! $this->canRequirePasswordChange() || ! UserResource::can('edit', $record)) {
+            return false;
+        }
+
+        if (Gate::getPolicyFor($record::class) === null) {
+            return true;
+        }
+
+        return Gate::allows('update', $record);
+    }
+
     private function markUser(Model $record): null
     {
+        throw_unless($this->canMarkUser($record), AuthorizationException::class);
+
         MarkUserForPasswordChangeAction::run($record);
 
         return null;

@@ -14,26 +14,36 @@ final class PersistGA4ReportsPageMetricAction
 
     public function handle(GA4ReportsPageMetricData $metric): GA4ReportsPageMetric
     {
-        $pageMetric = GA4ReportsPageMetric::query()
-            ->where('property_id', $metric->propertyId)
-            ->whereDate('metric_date', $metric->metricDate->toDateString())
-            ->where('page_path', $metric->pagePath)
-            ->first() ?? new GA4ReportsPageMetric([
+        GA4ReportsPageMetric::query()->upsert(
+            [[
                 'property_id' => $metric->propertyId,
                 'metric_date' => $metric->metricDate->toDateString(),
                 'page_path' => $metric->pagePath,
-            ]);
+                'page_title' => $metric->pageTitle,
+                'total_users' => $metric->totalUsers,
+                'sessions' => $metric->sessions,
+                'screen_page_views' => $metric->screenPageViews,
+                'event_count' => $metric->eventCount,
+                'conversions' => $metric->conversions,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]],
+            ['property_id', 'metric_date', 'page_path'],
+            [
+                'page_title',
+                'total_users',
+                'sessions',
+                'screen_page_views',
+                'event_count',
+                'conversions',
+                'updated_at',
+            ],
+        );
 
-        $pageMetric->fill([
-            'page_title' => $metric->pageTitle,
-            'total_users' => $metric->totalUsers,
-            'sessions' => $metric->sessions,
-            'screen_page_views' => $metric->screenPageViews,
-            'event_count' => $metric->eventCount,
-            'conversions' => $metric->conversions,
-        ]);
-        $pageMetric->save();
-
-        return $pageMetric;
+        return GA4ReportsPageMetric::query()
+            ->where('property_id', $metric->propertyId)
+            ->whereDate('metric_date', $metric->metricDate->toDateString())
+            ->where('page_path', $metric->pagePath)
+            ->firstOrFail();
     }
 }

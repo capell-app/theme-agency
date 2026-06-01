@@ -13,6 +13,7 @@ use Capell\FoundationTheme\Data\PageContentRenderData;
 use Capell\Frontend\Facades\Frontend;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use RuntimeException;
 
 final class Main extends Component
 {
@@ -42,7 +43,11 @@ final class Main extends Component
         public mixed $pageSlot = null,
     ) {
         $this->theme = is_array($theme) ? $theme : [];
-        $this->themeModel = Frontend::theme();
+        $themeModel = Frontend::theme();
+
+        throw_unless($themeModel instanceof Theme, RuntimeException::class, 'Foundation layout main rendering requires a frontend theme.');
+
+        $this->themeModel = $themeModel;
         $this->previousPage = $this->layoutNeighborLinks?->previousPage;
         $this->nextPage = $this->layoutNeighborLinks?->nextPage;
         $this->finalCta = $this->page->getMeta('final_cta');

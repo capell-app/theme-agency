@@ -45,13 +45,15 @@ it('saves a live record into a workspace draft without mutating live', function 
 
     $result = SaveRecordDraftAction::run($live, ['name' => 'Draft name'], $user);
 
+    $freshLive = publishingStudioTestInstance($live->fresh(), WorkspaceDraftableFixture::class);
+
     expect($result->workspace)->toBeInstanceOf(Workspace::class)
         ->and($result->record)->toBeInstanceOf(WorkspaceDraftableFixture::class)
         ->and($result->record->getAttribute('workspace_id'))->toBe($result->workspace->id)
         ->and($result->record->getAttribute('uuid'))->toBe($uuid)
         ->and($result->record->getAttribute('name'))->toBe('Draft name')
-        ->and($live->fresh()->getAttribute('name'))->toBe('Live name')
-        ->and($live->fresh()->getAttribute('shadowed_by_workspace_id'))->toBe($result->workspace->id);
+        ->and($freshLive->getAttribute('name'))->toBe('Live name')
+        ->and($freshLive->getAttribute('shadowed_by_workspace_id'))->toBe($result->workspace->id);
 });
 
 it('keeps revision history empty until the draft workspace is published', function (): void {

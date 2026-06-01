@@ -75,6 +75,17 @@
         transform: translateY(0);
     }
 
+    :where(
+        .retail-shell a,
+        .retail-shell button,
+        .retail-shell input,
+        .retail-shell textarea,
+        .retail-shell select
+    ):focus-visible {
+        outline: 3px solid color-mix(in srgb, var(--retail-accent) 78%, white);
+        outline-offset: 3px;
+    }
+
     .retail-frame {
         border: 1px solid color-mix(in srgb, var(--retail-primary) 18%, #eadfce);
         border-radius: 0.75rem;

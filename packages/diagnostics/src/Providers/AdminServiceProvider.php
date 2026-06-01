@@ -39,6 +39,14 @@ final class AdminServiceProvider extends ServiceProvider
             CapellArtisanPaletteCommandProvider::class,
             DiagnosticsPaletteCommandProvider::class,
         ], 'capell.diagnostics.command-palette-provider');
+
+        if (! $this->isPackageInstalled()) {
+            return;
+        }
+
+        $this
+            ->registerPages()
+            ->registerDashboardWidgets();
     }
 
     public function boot(): void
@@ -48,9 +56,9 @@ final class AdminServiceProvider extends ServiceProvider
         }
 
         $this
-            ->ensurePermissions()
             ->registerPages()
-            ->registerDashboardWidgets();
+            ->registerDashboardWidgets()
+            ->ensurePermissions();
     }
 
     private function isPackageInstalled(): bool
