@@ -14829,16 +14829,16 @@
         },
         {
             "name": "capell-app/pest-plugin-blade-coverage",
-            "version": "v0.1.1",
+            "version": "v0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/capell-app/pest-plugin-blade-coverage.git",
-                "reference": "fb762ee5783f420fe4ae59d1049b078d39561a6c"
+                "reference": "f3d0fb77b7b5660881c940dfadb0838402b1b02c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/capell-app/pest-plugin-blade-coverage/zipball/fb762ee5783f420fe4ae59d1049b078d39561a6c",
-                "reference": "fb762ee5783f420fe4ae59d1049b078d39561a6c",
+                "url": "https://api.github.com/repos/capell-app/pest-plugin-blade-coverage/zipball/f3d0fb77b7b5660881c940dfadb0838402b1b02c",
+                "reference": "f3d0fb77b7b5660881c940dfadb0838402b1b02c",
                 "shasum": ""
             },
             "require": {
@@ -14888,10 +14888,10 @@
             ],
             "description": "Pest plugin for ratcheted Laravel Blade view coverage checks.",
             "support": {
-                "source": "https://github.com/capell-app/pest-plugin-blade-coverage/tree/v0.1.1",
+                "source": "https://github.com/capell-app/pest-plugin-blade-coverage/tree/v0.1.2",
                 "issues": "https://github.com/capell-app/pest-plugin-blade-coverage/issues"
             },
-            "time": "2026-06-01T17:09:10+00:00"
+            "time": "2026-06-01T17:30:32+00:00"
         },
         {
             "name": "composer/class-map-generator",
