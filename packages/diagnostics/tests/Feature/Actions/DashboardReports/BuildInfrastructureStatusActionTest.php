@@ -58,3 +58,49 @@ it('errors when cache stores or queue connections are missing', function (): voi
     expect($statuses->get('cache')?->status)->toBe('error')
         ->and($statuses->get('queue')?->status)->toBe('error');
 });
+
+it('errors when infrastructure defaults are blank or referenced mailers are missing', function (): void {
+    config()->set('cache.default', '');
+    config()->set('queue.default', null);
+    config()->set('mail.default', 'missing');
+    config()->set('mail.mailers.missing');
+    config()->set('filesystems.default', '');
+
+    $statuses = collect(BuildInfrastructureStatusAction::run())->keyBy('key');
+
+    expect($statuses->get('cache')?->detail)->toBe(__('capell-diagnostics::package.infrastructure_cache_missing_default'))
+        ->and($statuses->get('queue')?->detail)->toBe(__('capell-diagnostics::package.infrastructure_queue_missing_default'))
+        ->and($statuses->get('mail')?->detail)->toBe(__('capell-diagnostics::package.infrastructure_mail_missing_mailer', ['mailer' => 'missing']))
+        ->and($statuses->get('storage')?->detail)->toBe(__('capell-diagnostics::package.infrastructure_storage_missing_default'));
+});
+
+it('reports non-local storage as configured and local disks with missing roots as errors', function (): void {
+    config()->set('cache.default', 'redis');
+    config()->set('cache.stores.redis', ['driver' => 'redis']);
+    config()->set('queue.default', 'redis');
+    config()->set('queue.connections.redis', ['driver' => 'redis']);
+    config()->set('mail.default', 'smtp');
+    config()->set('mail.mailers.smtp', ['transport' => 'smtp']);
+    config()->set('filesystems.default', 's3');
+    config()->set('filesystems.disks.s3', ['driver' => 's3']);
+
+    $nonLocalStatuses = collect(BuildInfrastructureStatusAction::run())->keyBy('key');
+
+    config()->set('filesystems.default', 'broken-local');
+    config()->set('filesystems.disks.broken-local', [
+        'driver' => 'local',
+        'root' => storage_path('framework/testing/missing-diagnostics-root'),
+    ]);
+
+    $missingRootStatuses = collect(BuildInfrastructureStatusAction::run())->keyBy('key');
+
+    expect($nonLocalStatuses->get('storage')?->status)->toBe('ok')
+        ->and($nonLocalStatuses->get('storage')?->detail)->toBe(__('capell-diagnostics::package.infrastructure_storage_configured', [
+            'disk' => 's3',
+            'driver' => 's3',
+        ]))
+        ->and($missingRootStatuses->get('storage')?->status)->toBe('error')
+        ->and($missingRootStatuses->get('storage')?->detail)->toBe(__('capell-diagnostics::package.infrastructure_storage_missing_root', [
+            'disk' => 'broken-local',
+        ]));
+});

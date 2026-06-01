@@ -55,7 +55,10 @@ final class AdminServiceProvider extends ServiceProvider
             return;
         }
 
-        $this->ensurePermissions();
+        $this
+            ->registerPages()
+            ->registerDashboardWidgets()
+            ->ensurePermissions();
     }
 
     private function isPackageInstalled(): bool

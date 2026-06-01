@@ -14,6 +14,10 @@
     $layout ??= Frontend::layout();
     $site ??= Frontend::site();
     $isSystemPageLayout ??= data_get($layout->admin ?? [], 'system_page_layout') === true;
+    $siteLogoBladeView = $site?->getMeta('logo_blade_view', 'brand.capell-logo') ?? 'brand.capell-logo';
+    $siteLogoBladeView = is_string($siteLogoBladeView) && view()->exists($siteLogoBladeView)
+        ? $siteLogoBladeView
+        : null;
     $isThemeDemoContactPage = data_get($page?->meta ?? [], 'theme_demo.surface') === 'contact'
         && view()->exists('capell-foundation-theme::components.demo.contact-page');
     $layoutNeighborLinks ??= null;
@@ -65,7 +69,9 @@
                     text-decoration: none;
                 "
             >
-                @if ($site->logo)
+                @if ($siteLogoBladeView)
+                    @include($siteLogoBladeView, ['class' => 'h-10 w-auto'])
+                @elseif ($site->logo)
                     <x-capell::logo :media="$site->logo" />
                 @else
                     <span>{{ $site->translation->title ?? $site->name }}</span>

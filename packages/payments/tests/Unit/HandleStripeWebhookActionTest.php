@@ -11,6 +11,7 @@ use Capell\Payments\Enums\PaymentIntentStatus;
 use Capell\Payments\Enums\PaymentRefundStatus;
 use Capell\Payments\Enums\PaymentWebhookEventStatus;
 use Capell\Payments\Enums\SubscriptionStatus;
+use Capell\Payments\Exceptions\PaymentGatewayConfigurationException;
 use Capell\Payments\Exceptions\StripeWebhookSignatureException;
 use Capell\Payments\Models\CheckoutSession;
 use Capell\Payments\Models\PaymentDispute;
@@ -210,6 +211,65 @@ it('records refund webhooks', function (): void {
         ->and($refund->provider_charge_id)->toBe('ch_test_123');
 });
 
+it('records refunds from charge refunded webhook payloads and backfills charge details', function (): void {
+    $payload = stripeWebhookPayload([
+        'id' => 'evt_charge_refunded',
+        'type' => 'charge.refunded',
+        'data' => [
+            'object' => [
+                'id' => 'ch_test_refunded',
+                'object' => 'charge',
+                'payment_intent' => 'pi_test_refunded',
+                'refunds' => [
+                    'data' => [
+                        [
+                            'id' => 're_charge_one',
+                            'status' => 'pending',
+                            'amount' => '500',
+                            'currency' => 'gbp',
+                        ],
+                        [
+                            'id' => 're_charge_two',
+                            'status' => 'failed',
+                            'amount' => 700,
+                            'currency' => 'gbp',
+                            'charge' => 'ch_override',
+                            'payment_intent' => 'pi_override',
+                        ],
+                        'not-a-refund-object',
+                    ],
+                ],
+            ],
+        ],
+    ]);
+
+    $event = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
+    $refunds = PaymentRefund::query()->orderBy('provider_refund_id')->get();
+
+    expect($event->status)->toBe(PaymentWebhookEventStatus::Processed)
+        ->and($refunds)->toHaveCount(2);
+
+    $firstRefund = $refunds->get(0);
+    $secondRefund = $refunds->get(1);
+
+    expect($firstRefund)->toBeInstanceOf(PaymentRefund::class)
+        ->and($secondRefund)->toBeInstanceOf(PaymentRefund::class);
+
+    if (! $firstRefund instanceof PaymentRefund || ! $secondRefund instanceof PaymentRefund) {
+        return;
+    }
+
+    expect($firstRefund->provider_refund_id)->toBe('re_charge_one')
+        ->and($firstRefund->status)->toBe(PaymentRefundStatus::Pending)
+        ->and($firstRefund->amount)->toBe(500)
+        ->and($firstRefund->provider_charge_id)->toBe('ch_test_refunded')
+        ->and($firstRefund->provider_payment_intent_id)->toBe('pi_test_refunded')
+        ->and($secondRefund->provider_refund_id)->toBe('re_charge_two')
+        ->and($secondRefund->status)->toBe(PaymentRefundStatus::Failed)
+        ->and($secondRefund->provider_charge_id)->toBe('ch_override')
+        ->and($secondRefund->provider_payment_intent_id)->toBe('pi_override');
+});
+
 it('records dispute webhooks', function (): void {
     $payload = stripeWebhookPayload([
         'id' => 'evt_dispute_created',
@@ -245,6 +305,38 @@ it('records dispute webhooks', function (): void {
         ->and($dispute->is_charge_refundable)->toBeTrue()
         ->and($dispute->evidence_due_at)->not->toBeNull();
 });
+
+it('marks unsupported stripe webhook event types as ignored without mutating payment records', function (): void {
+    $payload = stripeWebhookPayload([
+        'id' => 'evt_customer_created',
+        'type' => 'customer.created',
+        'data' => [
+            'object' => [
+                'id' => 'cus_ignored',
+                'object' => 'customer',
+            ],
+        ],
+    ]);
+
+    $event = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
+
+    expect($event->status)->toBe(PaymentWebhookEventStatus::Ignored)
+        ->and($event->processed_at)->not->toBeNull()
+        ->and(PaymentIntent::query()->count())->toBe(0)
+        ->and(CheckoutSession::query()->count())->toBe(0)
+        ->and(PaymentRefund::query()->count())->toBe(0);
+});
+
+it('requires a configured stripe webhook secret before verifying payloads', function (): void {
+    config()->set('capell-payments.stripe.webhook_secret', null);
+
+    $payload = stripeWebhookPayload([
+        'id' => 'evt_missing_secret',
+        'type' => 'payment_intent.succeeded',
+    ]);
+
+    HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
+})->throws(PaymentGatewayConfigurationException::class);
 
 it('accepts the package stripe webhook route without csrf', function (): void {
     $payload = stripeWebhookPayload([

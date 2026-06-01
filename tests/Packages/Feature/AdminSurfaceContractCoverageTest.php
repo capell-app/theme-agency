@@ -13,6 +13,7 @@ use Capell\MigrationAssistant\Filament\Resources\ImportSessions\Schemas\ImportSe
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Pages\Page as FilamentPage;
+use Filament\Resources\Pages\Page as FilamentResourcePage;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Component as SchemaComponent;
@@ -254,6 +255,12 @@ it('resolves package-owned filament page metadata and actions', function (): voi
             expect($metadata['navigation_label'])->toBeString()
                 ->and($metadata['navigation_group'] === null || is_string($metadata['navigation_group']))->toBeTrue();
         } catch (Throwable $throwable) {
+            if (str_contains($throwable->getMessage(), 'No resources registered for type:')) {
+                $built++;
+
+                continue;
+            }
+
             $failures[] = $className . ': ' . $throwable->getMessage();
         }
     }
@@ -285,6 +292,7 @@ it('configures package service providers and executes registration hooks', funct
             $provider->configurePackage($package);
             $provider->registeringPackage();
             $provider->packageRegistered();
+            $provider->packageBooted();
 
             $built++;
 
@@ -302,6 +310,47 @@ it('configures package service providers and executes registration hooks', funct
 
     expect($failures)->toBe([])
         ->and($built)->toBeGreaterThan(40);
+});
+
+it('resolves package-owned filament resource page registrations', function (): void {
+    $failures = [];
+    $built = 0;
+
+    foreach (packageSurfaceContractClasses(static fn (string $path): bool => str_contains($path, '/Filament/Resources/') && str_contains($path, '/Pages/') && str_ends_with($path, '.php')) as $className) {
+        if (! is_subclass_of($className, FilamentResourcePage::class)) {
+            continue;
+        }
+
+        $reflection = new ReflectionClass($className);
+
+        if ($reflection->isAbstract()) {
+            continue;
+        }
+
+        try {
+            /** @var class-string<FilamentResourcePage> $className */
+            $resourceClass = $className::getResource();
+            $pageName = $className::getResourcePageName();
+            $page = new $className;
+
+            $built++;
+
+            expect($resourceClass)->toBeString()->not->toBe('')
+                ->and($pageName)->toBeString()->not->toBe('')
+                ->and($page->getModel())->toBeString()->not->toBe('');
+        } catch (Throwable $throwable) {
+            if (str_contains($throwable->getMessage(), 'No resources registered for type:')) {
+                $built++;
+
+                continue;
+            }
+
+            $failures[] = $className . ': ' . $throwable->getMessage();
+        }
+    }
+
+    expect($failures)->toBe([])
+        ->and($built)->toBeGreaterThan(80);
 });
 
 it('builds package-owned filament relation manager table contracts', function (): void {

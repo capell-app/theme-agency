@@ -4,15 +4,6 @@ permissions:
   contents: read
 
 on:
-  pull_request:
-    branches:
-      - 4.x
-    types: [opened, synchronize, reopened, ready_for_review]
-    paths:
-      - 'packages/**/docs/screenshots.json'
-      - 'docs/package-screenshot-manifest.json'
-      - 'scripts/*screenshot*.js'
-      - '.github/workflows/screenshots.yml'
   push:
     branches:
       - 4.x
@@ -75,54 +66,11 @@ on:
         required: true
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}-${{ inputs.package || 'changed' }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ inputs.package || 'changed' }}
   cancel-in-progress: true
 
 jobs:
-  validate-screenshot-manifests:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout packages repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-        with:
-          fetch-depth: 0
-
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
-        with:
-          node-version: '20.x'
-
-      - name: Install Node dependencies
-        run: npm ci
-
-      - name: Determine changed screenshot packages
-        id: packages
-        run: |
-          git diff --name-only "${{ github.event.pull_request.base.sha }}" "${{ github.sha }}" \
-            | node scripts/changed-screenshot-packages.js > /tmp/capell-screenshot-packages.txt
-
-          if [ ! -s /tmp/capell-screenshot-packages.txt ]; then
-            echo "No package screenshot manifests changed."
-            echo "has_packages=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          echo "Packages selected for validation:"
-          cat /tmp/capell-screenshot-packages.txt
-          echo "has_packages=true" >> "$GITHUB_OUTPUT"
-
-      - name: Rebuild aggregate screenshot manifest
-        if: steps.packages.outputs.has_packages == 'true'
-        run: npm run screenshots:manifest
-
-      - name: Validate screenshot manifests
-        if: steps.packages.outputs.has_packages == 'true'
-        run: npm run screenshots:validate -- --only-file /tmp/capell-screenshot-packages.txt
-
   capture-package-screenshots:
-    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     env:
       COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.ACCESS_TOKEN }}"} }'

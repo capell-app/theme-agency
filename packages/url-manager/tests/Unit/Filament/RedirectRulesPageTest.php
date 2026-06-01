@@ -21,10 +21,12 @@ use Capell\UrlManager\Actions\SetRedirectRuleStatusAction;
 use Capell\UrlManager\Actions\UpdateRedirectRuleAction;
 use Capell\UrlManager\Actions\UpsertRedirectRuleAction;
 use Capell\UrlManager\Data\RedirectRuleData;
+use Capell\UrlManager\Enums\RedirectMatchType;
 use Capell\UrlManager\Enums\RedirectRuleStatus;
 use Capell\UrlManager\Enums\UrlManagerPermission;
 use Capell\UrlManager\Filament\Pages\NotFoundOpportunitiesPage;
 use Capell\UrlManager\Filament\Pages\RedirectRulesPage;
+use Capell\UrlManager\Filament\Pages\Tables\RedirectRulesTable;
 use Capell\UrlManager\Models\RedirectRule;
 use Capell\UrlManager\Providers\UrlManagerServiceProvider;
 use Capell\UrlManager\Support\Redirects\UrlManagerRedirectResolver;
@@ -196,6 +198,46 @@ it('configures the redirect rules table with import export and lifecycle actions
         ->toBe('hit_count')
         ->and($table->getDefaultSortDirection())
         ->toBe('desc');
+});
+
+it('normalizes redirect rule form state into typed data for table actions', function (): void {
+    $method = new ReflectionMethod(RedirectRulesTable::class, 'redirectRuleDataFromFormData');
+    $method->setAccessible(true);
+
+    $data = $method->invoke(null, [
+        'source_url' => '/old',
+        'target_url' => '/new',
+        'site_id' => '12',
+        'language_id' => '',
+        'status_code' => '308',
+        'match_type' => RedirectMatchType::Prefix->value,
+        'status' => RedirectRuleStatus::Inactive->value,
+        'preserve_query' => false,
+        'notes' => '  keep the query decision documented  ',
+    ]);
+
+    $defaulted = $method->invoke(null, [
+        'source_url' => '/fallback',
+        'target_url' => '/target',
+        'status_code' => 'not-a-number',
+        'notes' => '   ',
+    ]);
+
+    expect($data)->toBeInstanceOf(RedirectRuleData::class)
+        ->and($data->sourceUrl)->toBe('/old')
+        ->and($data->siteId)->toBe(12)
+        ->and($data->languageId)->toBeNull()
+        ->and($data->statusCode)->toBe(308)
+        ->and($data->matchType)->toBe(RedirectMatchType::Prefix)
+        ->and($data->status)->toBe(RedirectRuleStatus::Inactive)
+        ->and($data->preserveQuery)->toBeFalse()
+        ->and($data->notes)->toBe('  keep the query decision documented  ')
+        ->and($defaulted)->toBeInstanceOf(RedirectRuleData::class)
+        ->and($defaulted->statusCode)->toBe(301)
+        ->and($defaulted->matchType)->toBe(RedirectMatchType::Exact)
+        ->and($defaulted->status)->toBe(RedirectRuleStatus::Active)
+        ->and($defaulted->preserveQuery)->toBeTrue()
+        ->and($defaulted->notes)->toBeNull();
 });
 
 it('configures the not found opportunities table with conversion and triage actions', function (): void {
