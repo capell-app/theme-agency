@@ -177,7 +177,7 @@
         "awcodes/filament-curator": "^4.0|^5.0",
         "barryvdh/laravel-ide-helper": "*",
         "calebdw/larastan-livewire": "^2.4",
-        "capell-app/pest-plugin-blade-coverage": "dev-main",
+        "capell-app/pest-plugin-blade-coverage": "^0.1.1",
         "driftingly/rector-laravel": "^2.0",
         "larastan/larastan": "^3.0",
         "laravel/pail": "^1.2.3",
