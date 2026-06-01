@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.0.17 - 2026-06-01
+
+### What's Changed
+
+* feat: site discovery URL registry updates by @howdu in https://github.com/capell-app/capell-packages/pull/86
+
+**Full Changelog**: https://github.com/capell-app/capell-packages/compare/v2.0.16...v2.0.17
+
 ## v2.0.14 - 2026-05-20
 
 ### Fixes
