@@ -1,11 +1,12 @@
 # Deployments — Improvement & Growth Plan
+
 > Package: capell-app/deployments · Kind: package · Tier: premium · Product group: Capell Operations · Bundle: operations · Status: Draft
 
 ## 1. Snapshot
 
 Deployments stores per-repository Git provider connections (GitHub / GitLab / Bitbucket) and publishes Composer requirement changes back to the connected repository as either a direct commit or a pull request (optionally auto-merged). It exposes two admin surfaces (`DeploymentConnectionPage`, `DeploymentConnectionWidget`), three OAuth callback routes (`routes/oauth.php`), a single model/table (`DeploymentConnection` / `deployment_connections`), and the `PublishesComposerChanges` contract intended to be consumed by other packages' install flows. Domain logic lives in five Actions (`ConnectDeploymentAction`, `PublishComposerRequirementAction`, `PrepareComposerRequirementCommitAction`, plus two OAuth-state Actions) delegating to three `GitProviderContract` implementations behind `GitProviderFactory`. Dependencies are light: `capell-app/admin`, `capell-app/core`, `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`.
 
-Current marketplace summary (verbatim): *"Deployments owns repository deployment connections and Composer requirement publishing for Capell CMS."* Manifest declares **1** screenshot (`docs/assets/marketplace/extension-card.jpg`), but the package actually ships **2** functional screenshots under `docs/screenshots/` (`deployment-connection-page.png`, `-dark.png`) plus a `screenshots.json` describing a widget shot that doesn't exist — a manifest/asset mismatch.
+Current marketplace summary (verbatim): _"Deployments owns repository deployment connections and Composer requirement publishing for Capell CMS."_ Manifest declares **1** screenshot (`docs/assets/marketplace/extension-card.jpg`), but the package actually ships **2** functional screenshots under `docs/screenshots/` (`deployment-connection-page.png`, `-dark.png`) plus a `screenshots.json` describing a widget shot that doesn't exist — a manifest/asset mismatch.
 
 ## 2. Improvements (existing functionality)
 
@@ -38,8 +39,8 @@ Manifest `capabilities`: `["deployments", "deployments-admin", "deployments-cons
 - **Dead contract surface** — `getPullRequest()`, `closePullRequest()`, and `getDeployStatus()` are declared on `GitProviderContract`, implemented in all three providers, and unit-tested, but have **no production caller**. They inflate the maintenance/test surface (3 methods × 3 providers) for behaviour nothing uses — `src/Contracts/GitProviderContract.php`. Either build the rollback/status features that use them (Section 3) or trim them.
 - **Health check is a stub** — `DeploymentsHealthCheck` (15 lines) only returns `compatibleCapellApiVersion()` and performs no real check, yet `capell.json` advertises it as `severity: critical` with the label "surfaces, providers, and install health are discoverable by Diagnostics." It verifies nothing about connections, OAuth config, or token validity. Compare to neighbouring `diagnostics/src/Health/DiagnosticsHealthCheck.php` — `src/Health/DeploymentsHealthCheck.php`.
 - **Manifest mismatches** — (a) `surfaces`/`capabilities` claim `console` with no code (Section 3); (b) `marketplace.screenshots` lists 1 image while `docs/screenshots/` ships 2 and `docs/screenshots.json` references a 3rd (widget) that isn't registered; (c) `database.settings:false` and `settings:[]` are correct (no settings), but the package reads several `CAPELL_*` env vars (`config/capell-deployments.php`) that aren't surfaced as configurable settings anywhere — `capell.json`.
-- **Multiple-active-connection ambiguity** — both the bound publisher and `DeploymentConnectionWidget::getConnection()` assume a single active connection (`->first()` / `->firstOrFail()`), but the schema's unique key is `(provider, repo_owner, repo_name)` and `getConnections()` returns *all* active rows. Behaviour is undefined with >1 active connection — `src/Providers/DeploymentsServiceProvider.php`, `src/Filament/Widgets/DeploymentConnectionWidget.php`.
-- **Action idempotency / safety** — `PublishComposerRequirementAction` opens a *new* branch (`capell/add-extension-<slug>-<random>`) and PR on every call; publishing the same requirement twice yields duplicate PRs with no dedupe against an existing open PR for the same package. For `DirectCommit` it pushes straight to `default_branch` with no dry-run/confirmation — `src/Actions/PublishComposerRequirementAction.php`.
+- **Multiple-active-connection ambiguity** — both the bound publisher and `DeploymentConnectionWidget::getConnection()` assume a single active connection (`->first()` / `->firstOrFail()`), but the schema's unique key is `(provider, repo_owner, repo_name)` and `getConnections()` returns _all_ active rows. Behaviour is undefined with >1 active connection — `src/Providers/DeploymentsServiceProvider.php`, `src/Filament/Widgets/DeploymentConnectionWidget.php`.
+- **Action idempotency / safety** — `PublishComposerRequirementAction` opens a _new_ branch (`capell/add-extension-<slug>-<random>`) and PR on every call; publishing the same requirement twice yields duplicate PRs with no dedupe against an existing open PR for the same package. For `DirectCommit` it pushes straight to `default_branch` with no dry-run/confirmation — `src/Actions/PublishComposerRequirementAction.php`.
 - **Secret handling — mostly good, two notes** — tokens are excluded from `$fillable` and stored via `EncryptedString` cast with `forceFill` (well-documented in the model and `ConnectDeploymentAction`); OAuth token responses are redacted before logging (`redactTokenResponse`). However: (1) the cast is named `*_encrypted` but the model decrypts on access, so `$connection->access_token_encrypted` returns plaintext and is passed straight into `->withToken(...)` — the column name is misleading and invites accidental logging of the attribute; (2) there is no encryption-key-rotation/re-encrypt path. — `src/Casts/EncryptedString.php`, `src/Models/DeploymentConnection.php`, `src/Services/GitProvider/GitHubProvider.php`.
 - **Test gaps** — coverage is good for Data/enums/casts/OAuth-state/providers (`BitbucketProviderTest`, `GitLabProviderTest`, `GitHubProviderTest` faked-HTTP), and the page (`DeploymentConnectionPageTest` covers view-gating + disconnect authorization). Gaps: `DeploymentConnectionWidgetTest` only asserts `class_exists` (no auth/render assertion — exactly where the leak in Section 2 hides); no test for OAuth-config-missing UI behaviour; no test asserting non-admin cannot see repo identity via the widget (Capell public/non-admin safety convention); no test for the bound-publisher connection selection; no idempotency test for double-publish. — `tests/Feature/Filament/DeploymentConnectionWidgetTest.php`.
 - **Performance budget** — `capell.json` sets `adminQueryBudget: 40` and `frontendRenderBudgetMs: 0` (correct — no frontend surface). The page issues `DeploymentConnection::where('is_active',true)->get()` up to three times per render (`getConnections()` called in `@foreach` and again in `count(...)` in the blade), plus `Schema::hasTable` each call. Memoise `getConnections()` to stay well within budget — `resources/views/filament/pages/deployment-connection.blade.php`, `src/Filament/Pages/DeploymentConnectionPage.php`.
@@ -47,17 +48,19 @@ Manifest `capabilities`: `["deployments", "deployments-admin", "deployments-cons
 
 ## 5. Marketplace & Selling
 
-**Current `summary`:** *"Deployments owns repository deployment connections and Composer requirement publishing for Capell CMS."* — Reads like an internal ownership/architecture note ("owns"), not a buyer benefit. It describes plumbing, not outcomes, and the `composer.json` `description` ("Repository deployment connections and Composer publishing for Capell CMS.") is the same internal framing. Neither mentions GitHub/GitLab/Bitbucket, pull requests, or "install extensions without SSH/CLI" — the actual reason an operator would buy this.
+**Current `summary`:** _"Deployments owns repository deployment connections and Composer requirement publishing for Capell CMS."_ — Reads like an internal ownership/architecture note ("owns"), not a buyer benefit. It describes plumbing, not outcomes, and the `composer.json` `description` ("Repository deployment connections and Composer publishing for Capell CMS.") is the same internal framing. Neither mentions GitHub/GitLab/Bitbucket, pull requests, or "install extensions without SSH/CLI" — the actual reason an operator would buy this.
 
 **Improved 1-sentence summary:**
+
 > Install and update Capell extensions straight from the admin panel — connect GitHub, GitLab, or Bitbucket once and let Deployments open the `composer.json` pull request for you.
 
 **Improved 3–4 sentence description:**
+
 > Deployments turns extension installation into a no-terminal workflow. Connect a repository over OAuth (GitHub, GitLab, or Bitbucket), and Capell publishes Composer requirement changes back to it as a pull request — auto-merged, queued for manual review, or committed directly, per your policy. Encrypted-at-rest tokens and per-record admin permissions keep credentials and repository details locked to authorised operators. It's the operations layer that lets non-developer site owners add capabilities to a Capell instance safely.
 
-**Screenshot / media gaps:** Manifest advertises 1 marketing image but ships 2 real screenshots (light + dark) — promote both into `marketplace.screenshots`. `docs/screenshots.json` promises a `deployment-connection-widget` shot that can't be captured because the widget is unregistered (Section 2/4) — fix the registration first or drop the entry. There is no screenshot of an *active connection with a published PR* (the empty state only shows connect buttons), and no GIF/flow of the OAuth → PR journey, which is the actual selling moment.
+**Screenshot / media gaps:** Manifest advertises 1 marketing image but ships 2 real screenshots (light + dark) — promote both into `marketplace.screenshots`. `docs/screenshots.json` promises a `deployment-connection-widget` shot that can't be captured because the widget is unregistered (Section 2/4) — fix the registration first or drop the entry. There is no screenshot of an _active connection with a published PR_ (the empty state only shows connect buttons), and no GIF/flow of the OAuth → PR journey, which is the actual selling moment.
 
-**Pricing / tier / bundle positioning:** `tier: premium`, `bundle: operations`. Premium is defensible *only if* the differentiators ship — today the live feature set (store a token, render a connection, open a PR with no history/rollback/health gate) is closer to a mid-tier utility. Strengthen with deploy history + rollback + health-gated auto-merge (Section 3) to earn "premium." It pairs naturally inside the Operations bundle alongside **Diagnostics** (publish health surfaced as a real check) and **Migration Assistant** (both are in this package's `docs/Read Next`).
+**Pricing / tier / bundle positioning:** `tier: premium`, `bundle: operations`. Premium is defensible _only if_ the differentiators ship — today the live feature set (store a token, render a connection, open a PR with no history/rollback/health gate) is closer to a mid-tier utility. Strengthen with deploy history + rollback + health-gated auto-merge (Section 3) to earn "premium." It pairs naturally inside the Operations bundle alongside **Diagnostics** (publish health surfaced as a real check) and **Migration Assistant** (both are in this package's `docs/Read Next`).
 
 **Cross-sell:** Depends on `capell-app/admin` + `capell-app/core` only. Natural cross-sell to the (presumed) marketplace/extension-install package that should consume `PublishesComposerChanges`, and into the **diagnostics** and **migration-assistant** Extension Suites — e.g. Diagnostics reads a real `DeploymentsHealthCheck`, Migration Assistant triggers a publish when a migration requires a new package.
 
@@ -67,21 +70,21 @@ Manifest `capabilities`: `["deployments", "deployments-admin", "deployments-cons
 
 ## 6. Prioritized Roadmap
 
-| Item | Bucket | Effort | Impact | Section ref |
-| --- | --- | --- | --- | --- |
-| Gate `DeploymentConnectionWidget` with `canView()` (stop repo-identity leak) | Now | S | High | §2, §4 |
-| Register the widget or delete it + its `screenshots.json` entry | Now | S | Med | §2, §4 |
-| Resolve manifest mismatches: drop unbacked `console` surface/capability, fix screenshot count | Now | S | High | §4 |
-| Confirm/wire a real consumer of `PublishesComposerChanges` (or document the external owner) | Now | M | High | §4 |
-| Fix `repo_name => 'app'` placeholder; add repo selection to the page | Now | M | High | §2 |
-| Implement a real `DeploymentsHealthCheck` (connection + OAuth-config + token validity) | Next | M | High | §4 |
-| OAuth token refresh (`RefreshProviderTokenAction`, persist expiry/refresh token) | Next | M | High | §3, §2 |
-| Surface OAuth-misconfiguration in the page UI + test it | Next | S | Med | §2, §4 |
-| Make bound publisher connection-aware; handle >1 active connection | Next | M | Med | §2, §4 |
-| Expose `InstallPolicy` choice in the UI (unlock `PullRequestManual`) | Next | S | Med | §3 |
-| Publish-history table + "recent publishes/status" panel (consume `getDeployStatus`) | Next | L | High | §3, §4 |
-| Idempotency: dedupe open PRs for the same package; dry-run for `DirectCommit` | Next | M | Med | §4 |
-| Rollback / cancel-pending-install (consume `closePullRequest`) | Later | M | Med | §3, §4 |
-| Health-gated auto-merge + deploy hooks + success/failure events | Later | M | High | §3 |
-| Provider webhook ingestion for async deploy/PR status | Later | L | Med | §3 |
-| Rewrite marketplace summary/description; add active-connection + OAuth-flow media | Now | S | High | §5 |
+| Item                                                                                          | Bucket | Effort | Impact | Section ref |
+| --------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Gate `DeploymentConnectionWidget` with `canView()` (stop repo-identity leak)                  | Now    | S      | High   | §2, §4      |
+| Register the widget or delete it + its `screenshots.json` entry                               | Now    | S      | Med    | §2, §4      |
+| Resolve manifest mismatches: drop unbacked `console` surface/capability, fix screenshot count | Now    | S      | High   | §4          |
+| Confirm/wire a real consumer of `PublishesComposerChanges` (or document the external owner)   | Now    | M      | High   | §4          |
+| Fix `repo_name => 'app'` placeholder; add repo selection to the page                          | Now    | M      | High   | §2          |
+| Implement a real `DeploymentsHealthCheck` (connection + OAuth-config + token validity)        | Next   | M      | High   | §4          |
+| OAuth token refresh (`RefreshProviderTokenAction`, persist expiry/refresh token)              | Next   | M      | High   | §3, §2      |
+| Surface OAuth-misconfiguration in the page UI + test it                                       | Next   | S      | Med    | §2, §4      |
+| Make bound publisher connection-aware; handle >1 active connection                            | Next   | M      | Med    | §2, §4      |
+| Expose `InstallPolicy` choice in the UI (unlock `PullRequestManual`)                          | Next   | S      | Med    | §3          |
+| Publish-history table + "recent publishes/status" panel (consume `getDeployStatus`)           | Next   | L      | High   | §3, §4      |
+| Idempotency: dedupe open PRs for the same package; dry-run for `DirectCommit`                 | Next   | M      | Med    | §4          |
+| Rollback / cancel-pending-install (consume `closePullRequest`)                                | Later  | M      | Med    | §3, §4      |
+| Health-gated auto-merge + deploy hooks + success/failure events                               | Later  | M      | High   | §3          |
+| Provider webhook ingestion for async deploy/PR status                                         | Later  | L      | Med    | §3          |
+| Rewrite marketplace summary/description; add active-connection + OAuth-flow media             | Now    | S      | High   | §5          |

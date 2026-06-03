@@ -1,6 +1,6 @@
 {
     "name": "capell-app/deployments",
-    "description": "Repository deployment connections and Composer publishing for Capell CMS.",
+    "description": "Install and update Capell extensions from the admin panel — connect GitHub, GitLab, or Bitbucket and let Deployments open the composer.json pull request for you.",
     "type": "library",
     "license": "proprietary",
     "autoload": {

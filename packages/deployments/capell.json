@@ -6,14 +6,14 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Deployments owns repository deployment connections and Composer requirement publishing for Capell CMS.",
+    "description": "Deployments turns extension installation into a no-terminal workflow. Connect a repository over OAuth (GitHub, GitLab, or Bitbucket), and Capell publishes Composer requirement changes back to it as a pull request — auto-merged, queued for manual review, or committed directly, per your policy. Encrypted-at-rest tokens and per-record admin permissions keep credentials and repository details locked to authorised operators. It's the operations layer that lets non-developer site owners add capabilities to a Capell instance safely.",
     "product": {
         "group": "Capell Operations",
         "tier": "premium",
         "bundle": "operations"
     },
     "namespace": "Capell\\Deployments",
-    "surfaces": ["admin", "console"],
+    "surfaces": ["admin"],
     "dependencies": {
         "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [],
@@ -45,7 +45,7 @@
         "View:DeploymentConnectionPage",
         "Manage:DeploymentConnectionPage"
     ],
-    "capabilities": ["deployments", "deployments-admin", "deployments-console"],
+    "capabilities": ["deployments", "deployments-admin"],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
@@ -74,15 +74,25 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Deployments owns repository deployment connections and Composer requirement publishing for Capell CMS.",
+        "summary": "Install and update Capell extensions straight from the admin panel — connect GitHub, GitLab, or Bitbucket once and let Deployments open the composer.json pull request for you.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Deployments extension preview image",
                 "caption": "Deployments extension preview"
+            },
+            {
+                "path": "docs/screenshots/deployment-connection-page.png",
+                "alt": "Deployment connection page showing connected Git provider repository",
+                "caption": "Connect and review the Git provider repository used for extension install pull requests"
+            },
+            {
+                "path": "docs/screenshots/deployment-connection-page-dark.png",
+                "alt": "Deployment connection page in dark mode",
+                "caption": "Deployment connection page in dark mode"
             }
         ],
-        "categories": ["admin", "console", "operations"]
+        "categories": ["admin", "operations"]
     },
     "contributionTraceability": {
         "deferredContributions": ["admin-page", "route"]
