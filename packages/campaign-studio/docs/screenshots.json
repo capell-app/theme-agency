@@ -51,7 +51,7 @@
             "required": true,
             "notes": "Requires a seeded campaign group and target URL or target page. Capture title, body, button/action, style, and tracking fields.",
             "useCase": "A marketer creates a reusable campaign CTA widget with conversion tracking metadata.",
-            "screenshotPath": "packages/campaign-studio/docs/screenshots/cta-widget-form.png"
+            "screenshotPath": "packages/campaign-studio/docs/screenshots/cta-block-form.png"
         },
         {
             "id": "campaign-dashboard-widgets",
