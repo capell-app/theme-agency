@@ -59,6 +59,8 @@ it('includes scheduling columns on access areas', function (): void {
 it('includes resolver indexes for download access state lookups', function (): void {
     expect(Schema::hasIndex('access_gate_registrations', 'ag_regs_area_email_norm_requested_idx'))->toBeTrue()
         ->and(Schema::hasIndex('access_gate_registrations', 'ag_regs_area_user_requested_idx'))->toBeTrue()
+        ->and(Schema::hasIndex('access_gate_registrations', 'ag_regs_area_position_idx'))->toBeTrue()
+        ->and(Schema::hasIndex('access_gate_registrations', 'ag_regs_area_approved_idx'))->toBeTrue()
         ->and(Schema::hasIndex('access_gate_grants', 'ag_grants_area_reg_status_idx'))->toBeTrue()
         ->and(Schema::hasIndex('access_gate_grants', 'ag_grants_area_email_status_idx'))->toBeTrue()
         ->and(Schema::hasIndex('access_gate_grants', 'ag_grants_area_user_status_idx'))->toBeTrue();

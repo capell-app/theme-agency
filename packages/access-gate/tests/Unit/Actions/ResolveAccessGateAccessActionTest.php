@@ -36,6 +36,52 @@ it('allows requests that match an access area public allowlist before requiring 
         ->and($result->browserToken)->toBeNull();
 });
 
+it('treats bare public allowlist strings as path patterns only', function (): void {
+    Area::factory()->create([
+        'key' => 'preview',
+        'identity_mode' => IdentityMode::Authenticated,
+        'public_allowlist' => [
+            'example.test',
+            'https://example.test/preview/public-page',
+            'preview/public*',
+        ],
+    ]);
+
+    $hostOnlyResult = ResolveAccessGateAccessAction::run(
+        Request::create('https://example.test/preview/private-page'),
+        ['preview'],
+    );
+    $pathResult = ResolveAccessGateAccessAction::run(
+        Request::create('https://example.test/preview/public-page'),
+        ['preview'],
+    );
+
+    expect($hostOnlyResult->allowed)->toBeFalse()
+        ->and($pathResult->allowed)->toBeTrue();
+});
+
+it('allows exact public allowlist urls through array entries', function (): void {
+    Area::factory()->create([
+        'key' => 'preview',
+        'identity_mode' => IdentityMode::Authenticated,
+        'public_allowlist' => [
+            ['url' => 'https://example.test/preview/public-page?download=1'],
+        ],
+    ]);
+
+    $matchingResult = ResolveAccessGateAccessAction::run(
+        Request::create('https://example.test/preview/public-page?download=1'),
+        ['preview'],
+    );
+    $mismatchedResult = ResolveAccessGateAccessAction::run(
+        Request::create('https://example.test/preview/public-page?download=2'),
+        ['preview'],
+    );
+
+    expect($matchingResult->allowed)->toBeTrue()
+        ->and($mismatchedResult->allowed)->toBeFalse();
+});
+
 it('resolves active authenticated grants by user id and email and rejects expired grants', function (): void {
     $area = Area::factory()->create([
         'key' => 'members',

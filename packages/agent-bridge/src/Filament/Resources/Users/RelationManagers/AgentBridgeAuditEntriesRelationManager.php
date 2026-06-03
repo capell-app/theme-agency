@@ -9,6 +9,7 @@ use Capell\AgentBridge\Models\CapellAgentBridgeAuditEntry;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -75,6 +76,24 @@ final class AgentBridgeAuditEntriesRelationManager extends RelationManager
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
+            ])
+            ->filters([
+                SelectFilter::make('event')
+                    ->label(__('capell-agent-bridge::admin.event'))
+                    ->options(fn (): array => self::scopedQueryForUser(CapellAgentBridgeAuditEntry::query(), $this->ownerRecord)
+                        ->whereNotNull('event')
+                        ->distinct()
+                        ->orderBy('event')
+                        ->pluck('event', 'event')
+                        ->all()),
+                SelectFilter::make('capability_key')
+                    ->label(__('capell-agent-bridge::admin.capability'))
+                    ->options(fn (): array => self::scopedQueryForUser(CapellAgentBridgeAuditEntry::query(), $this->ownerRecord)
+                        ->whereNotNull('capability_key')
+                        ->distinct()
+                        ->orderBy('capability_key')
+                        ->pluck('capability_key', 'capability_key')
+                        ->all()),
             ])
             ->defaultSort('created_at', 'desc');
     }

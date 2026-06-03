@@ -53,6 +53,7 @@ final class BuildAgentDeliveryPageAction
             publishedAt: $this->dateAttribute($page, 'visible_from'),
             lastUpdatedAt: $this->dateAttribute($page, 'updated_at'),
             relatedUrls: $this->registry->relatedUrls($page, $site, $language),
+            schema: $this->schema($fields, $language, $body, $page),
         );
     }
 
@@ -87,11 +88,10 @@ final class BuildAgentDeliveryPageAction
             return [];
         }
 
-        $page->loadMissing('pageUrls.language', 'pageUrls.siteDomain');
         $resolvedSiteDomain = $this->pageUrl($page)?->siteDomain;
 
         /** @var iterable<int, PageUrl> $pageUrls */
-        $pageUrls = $page->getRelation('pageUrls');
+        $pageUrls = $page->relationLoaded('pageUrls') ? $page->getRelation('pageUrls') : [];
         $alternates = [];
 
         foreach ($pageUrls as $pageUrl) {
@@ -132,6 +132,10 @@ final class BuildAgentDeliveryPageAction
                     $headings[] = $text;
                 }
             }
+        } elseif (is_array($content)) {
+            foreach ($this->structuredHeadings($content) as $heading) {
+                $headings[] = $heading;
+            }
         }
 
         return array_values(array_unique($headings));
@@ -149,7 +153,27 @@ final class BuildAgentDeliveryPageAction
             return null;
         }
 
-        return Str::limit($body, 240, '');
+        return Str::words($body, 40, '');
+    }
+
+    /**
+     * @param  array<string, mixed>  $content
+     * @return list<string>
+     */
+    private function structuredHeadings(array $content): array
+    {
+        $headings = data_get($content, 'agent_delivery.headings', []);
+
+        if (! is_array($headings)) {
+            return [];
+        }
+
+        return array_values(array_filter(
+            array_map(
+                static fn (mixed $heading): ?string => is_string($heading) && trim($heading) !== '' ? trim($heading) : null,
+                $headings,
+            ),
+        ));
     }
 
     /**
@@ -226,6 +250,25 @@ final class BuildAgentDeliveryPageAction
         $value = $page->getAttribute($attribute);
 
         return is_object($value) && method_exists($value, 'toIso8601String') ? $value->toIso8601String() : null;
+    }
+
+    /**
+     * @param  Pageable<Model>  $page
+     * @return array<string, mixed>
+     */
+    private function schema(PublicPageFieldsData $fields, Language $language, ?string $body, Pageable $page): array
+    {
+        return array_filter([
+            '@context' => 'https://schema.org',
+            '@type' => 'WebPage',
+            'url' => $this->canonicalUrl($page, $fields),
+            'name' => $fields->title,
+            'headline' => $fields->title,
+            'description' => $this->summary($fields, $body),
+            'inLanguage' => $language->locale ?? $language->code,
+            'datePublished' => $this->dateAttribute($page, 'visible_from'),
+            'dateModified' => $this->dateAttribute($page, 'updated_at'),
+        ], static fn (mixed $value): bool => $value !== null && $value !== '');
     }
 
     private function isPublicUrl(string $url): bool

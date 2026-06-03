@@ -12,7 +12,7 @@ use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static array{token: CapellAgentBridgeToken, plainTextToken: string} run(Authenticatable $user, string $name, array<int, string> $scopes, ?DateTimeInterface $expiresAt = null)
+ * @method static array{token: CapellAgentBridgeToken, plainTextToken: string} run(Authenticatable $user, string $name, array<int, string> $scopes, ?DateTimeInterface $expiresAt = null, ?string $createdFromIp = null)
  */
 final class CreateAgentBridgeTokenAction
 {
@@ -22,7 +22,7 @@ final class CreateAgentBridgeTokenAction
      * @param  array<int, string>  $scopes
      * @return array{token: CapellAgentBridgeToken, plainTextToken: string}
      */
-    public function handle(Authenticatable $user, string $name, array $scopes, ?DateTimeInterface $expiresAt = null): array
+    public function handle(Authenticatable $user, string $name, array $scopes, ?DateTimeInterface $expiresAt = null, ?string $createdFromIp = null): array
     {
         throw_unless($user instanceof Model, InvalidArgumentException::class, 'Capell Agent Bridge tokens must be linked to an Eloquent user model.');
 
@@ -32,6 +32,8 @@ final class CreateAgentBridgeTokenAction
             'name' => $name,
             'token_hash' => CapellAgentBridgeToken::hashPlainTextToken($plainTextToken),
             'scopes' => array_values($scopes),
+            'is_enabled' => true,
+            'created_from_ip' => $createdFromIp,
             'expires_at' => $expiresAt,
         ]);
 

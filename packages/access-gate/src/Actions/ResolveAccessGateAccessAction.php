@@ -45,8 +45,6 @@ final class ResolveAccessGateAccessAction
         $baseAreasQuery = Area::query()
             ->whereIn('key', $areaKeys);
 
-        (clone $baseAreasQuery)->exists();
-
         $areas = $baseAreasQuery
             ->when($siteScopeEnabled, function (Builder $query) use ($siteId): void {
                 $query->where(function (Builder $query) use ($siteId): void {
@@ -236,23 +234,20 @@ final class ResolveAccessGateAccessAction
     private function allowlistEntryMatches(Request $request, mixed $entry): bool
     {
         if (is_string($entry)) {
-            if ($entry === $request->getHost()) {
-                return true;
-            }
-
-            if ($entry === $request->fullUrl()) {
-                return true;
-            }
-
-            return $request->is(ltrim($entry, '/'));
+            return $entry !== '' && $request->is(ltrim($entry, '/'));
         }
 
         if (! is_array($entry)) {
             return false;
         }
 
+        $url = $entry['url'] ?? null;
         $host = $entry['host'] ?? null;
         $path = $entry['path'] ?? null;
+
+        if (is_string($url)) {
+            return $url === $request->fullUrl();
+        }
 
         if (is_string($host) && $host !== $request->getHost()) {
             return false;

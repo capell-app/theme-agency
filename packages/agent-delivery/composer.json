@@ -1,6 +1,6 @@
 {
     "name": "capell-app/agent-delivery",
-    "description": "Public-safe structured delivery endpoints for Capell content consumed by agents and machine readers.",
+    "description": "Serve your published Capell pages to AI agents and answer engines as clean, public-safe JSON manifests and RAG-ready semantic chunks — no scraping, no admin leakage.",
     "type": "library",
     "license": "proprietary",
     "require": {

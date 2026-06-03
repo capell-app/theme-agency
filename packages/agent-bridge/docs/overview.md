@@ -6,9 +6,9 @@ This page is the consolidated implementation overview for the Agent Bridge packa
 
 ## What This Package Adds
 
-Agent Bridge exposes Capell knowledge and site capabilities through Laravel Agent Bridge servers with token authentication, confirmations, previews, and audit records.
+Agent Bridge connects AI agents and MCP clients to Capell through scoped tokens, read-only package knowledge, preview-then-confirm site operations, and audited execution records.
 
-- Capell knowledge and site Agent Bridge servers.
+- Capell knowledge and site MCP servers.
 - Token, confirmation, and audit models.
 - Capability registry and capability actions.
 - Prompt builder Filament page.
@@ -30,7 +30,7 @@ Provides a typed capability contract so Agent Bridge tools can preview, confirm,
 
 ## Operational Notes
 
-Lets trusted ai-orchestrator clients inspect Capell and request controlled site operations with reviewable confirmation records.
+Lets trusted agent clients inspect Capell and request controlled site operations with per-token scoping, per-site authorization, confirmation records, and audit history.
 
 - Adds Agent Bridge token, confirmation, and audit tables.
 - Adds configurable Agent Bridge routes.
@@ -104,7 +104,7 @@ Lets trusted ai-orchestrator clients inspect Capell and request controlled site 
 - Migration: 2026_05_10_190840_02_create_capell_agent-bridge_confirmations_table.php
 - Migration: 2026_05_10_190840_03_create_capell_agent-bridge_audit_entries_table.php
 - Migration: 2026_05_27_000001_create_capell_agent-bridge_saved_prompts_table.php
-- Compatibility migration: 2026_05_28_000001_rename_agent_bridge_tables_to_canonical_names.php
+- Fresh installs create canonical underscore table names directly.
 
 ## ERD Excerpt
 

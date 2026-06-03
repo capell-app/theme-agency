@@ -7,6 +7,7 @@ namespace Capell\AgentBridge\Servers;
 use Capell\AgentBridge\Tools\Site\ConfirmSiteCapabilityTool;
 use Capell\AgentBridge\Tools\Site\InspectSiteStateTool;
 use Capell\AgentBridge\Tools\Site\ListSiteCapabilitiesTool;
+use Capell\AgentBridge\Tools\Site\QuerySiteAuditEntriesTool;
 use Capell\AgentBridge\Tools\Site\RunSiteCapabilityTool;
 use Laravel\Mcp\Server;
 use Laravel\Mcp\Server\Attributes\Instructions;
@@ -21,6 +22,7 @@ final class CapellSiteServer extends Server
     protected array $tools = [
         ListSiteCapabilitiesTool::class,
         InspectSiteStateTool::class,
+        QuerySiteAuditEntriesTool::class,
         RunSiteCapabilityTool::class,
         ConfirmSiteCapabilityTool::class,
     ];

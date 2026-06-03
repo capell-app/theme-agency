@@ -8,7 +8,9 @@ use Capell\AccessGate\Actions\CreateRegistrationAction;
 use Capell\AccessGate\Actions\ResolveAccessGateAreaForRequestAction;
 use Capell\AccessGate\Enums\IdentityMode;
 use Capell\AccessGate\Models\Area;
+use Capell\AccessGate\Support\AccessGateResponseHeaders;
 use Capell\AccessGate\Support\RegistrationFieldRegistry;
+use Capell\AccessGate\Support\RequestedUrlGuard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -18,6 +20,7 @@ final class StoreAccessRequestController
     public function __construct(
         private readonly CreateRegistrationAction $createRegistration,
         private readonly RegistrationFieldRegistry $fields,
+        private readonly RequestedUrlGuard $requestedUrls,
     ) {}
 
     public function __invoke(Request $request, string $area): RedirectResponse
@@ -38,21 +41,12 @@ final class StoreAccessRequestController
             ],
         ]);
 
-        return $this->noStore(
+        return AccessGateResponseHeaders::noStore(
             to_route('capell-access-gate.request', ['area' => $accessArea->key])
                 ->with('access_gate_request_submitted', $accessArea->key)
                 ->with('access_gate_registration_id', $registration->getKey())
                 ->with('access_gate_status', __('capell-access-gate::public.request_submitted')),
         );
-    }
-
-    private function noStore(RedirectResponse $response): RedirectResponse
-    {
-        $response->headers->set('Cache-Control', 'no-store, private');
-        $response->headers->set('Pragma', 'no-cache');
-        $response->headers->set('Expires', '0');
-
-        return $response;
     }
 
     /**
@@ -66,7 +60,7 @@ final class StoreAccessRequestController
             'email' => $area->identity_mode === IdentityMode::Authenticated && $authenticatedEmail !== null
                 ? $authenticatedEmail
                 : $request->input('email'),
-            'requested_url' => $this->requestedUrl($request, $area),
+            'requested_url' => $this->requestedUrls->allowed($request, $area, $request->input('requested_url')),
         ];
 
         if ($area->identity_mode === IdentityMode::Authenticated && $request->user() !== null) {
@@ -85,41 +79,5 @@ final class StoreAccessRequestController
         $email = data_get($request->user(), 'email');
 
         return is_string($email) && $email !== '' ? $email : null;
-    }
-
-    private function requestedUrl(Request $request, Area $area): ?string
-    {
-        $requestedUrl = $request->input('requested_url');
-
-        if (! is_string($requestedUrl) || $requestedUrl === '') {
-            return null;
-        }
-
-        $host = parse_url($requestedUrl, PHP_URL_HOST);
-
-        if (! is_string($host) || $host === '') {
-            return null;
-        }
-
-        if (! $this->hasHttpScheme($requestedUrl)) {
-            return null;
-        }
-
-        if ($host === $request->getHost()) {
-            return $requestedUrl;
-        }
-
-        $allowedHosts = collect($area->claim_url_hosts ?? [])
-            ->filter(fn (mixed $allowedHost): bool => $allowedHost !== '')
-            ->all();
-
-        return in_array($host, $allowedHosts, true) ? $requestedUrl : null;
-    }
-
-    private function hasHttpScheme(string $url): bool
-    {
-        $scheme = parse_url($url, PHP_URL_SCHEME);
-
-        return is_string($scheme) && in_array(strtolower($scheme), ['http', 'https'], true);
     }
 }

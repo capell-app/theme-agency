@@ -1,6 +1,6 @@
 {
     "name": "capell-app/access-gate",
-    "description": "Access gating foundations for Capell CMS.",
+    "description": "Gate any Capell page, download, or member area behind login, email approval, guest links, schedules, or paid checkout.",
     "type": "library",
     "license": "proprietary",
     "autoload": {
@@ -36,6 +36,8 @@
         "pestphp/pest-plugin-laravel": "^3.0|^4.0"
     },
     "suggest": {
+        "capell-app/diagnostics": "Surfaces Access Gate health checks in the Capell Diagnostics dashboard.",
+        "capell-app/html-cache": "Ensures gated pages are never written to the public HTML cache.",
         "capell-app/payments": "Approves paid gated-access registrations after completed checkout sessions.",
         "capell-app/public-actions": "Enables targeted Access Gate request buttons and automation dispatch."
     },
@@ -55,7 +57,15 @@
         "capell",
         "cms",
         "laravel",
-        "access-control"
+        "access-control",
+        "content-gating",
+        "paywall",
+        "member-area",
+        "gated-content",
+        "access-request",
+        "registration-approval",
+        "guest-link",
+        "browser-token"
     ],
     "authors": [
         {

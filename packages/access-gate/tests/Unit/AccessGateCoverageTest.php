@@ -21,6 +21,7 @@ use Capell\AccessGate\Models\Grant;
 use Capell\AccessGate\Models\Registration;
 use Capell\AccessGate\Policies\AccessAreaPolicy;
 use Capell\AccessGate\Providers\AccessGateServiceProvider;
+use Capell\AccessGate\Support\AccessGateDiagnosticsService;
 use Capell\AccessGate\Support\AccessRequestMethodRegistry;
 use Capell\AccessGate\Support\RegistrationFieldRegistry;
 use Capell\AccessGate\Tests\Fixtures\Autoload\PublicRequestProviderField;
@@ -204,8 +205,8 @@ it('wires provider registries middleware priority policies and rate limits for a
         ->and(resolve(FrontendRuleConditionRegistry::class)->get('access_gate_area_status'))->toBeInstanceOf(AccessGateAreaStatusCondition::class)
         ->and($router->getMiddleware())->toHaveKey('access-gate')
         ->and($router->middlewarePriority)->toContain(EncryptCookies::class, 'access-gate', stdClass::class)
-        ->and(accessGateProviderInvoke($provider, 'pageCacheAliases'))->toBe(['frontend.cache', stdClass::class])
-        ->and(accessGateProviderInvoke($provider, 'pageCacheMiddlewarePriorityNames', $router))->toContain('frontend.cache', stdClass::class)
+        ->and(resolve(AccessGateDiagnosticsService::class)->pageCacheAliases())->toBe(['frontend.cache', stdClass::class])
+        ->and(resolve(AccessGateDiagnosticsService::class)->pageCacheMiddlewarePriorityNames($router))->toContain('frontend.cache', stdClass::class)
         ->and(accessGateProviderInvoke($provider, 'middlewarePriorityList', [null, 'web', AccessGateServiceProvider::class]))->toBe(['web', AccessGateServiceProvider::class])
         ->and(accessGateProviderInvoke($provider, 'protectedTables'))->toContain('access_gate_areas', 'access_gate_events')
         ->and(CapellCore::getProtectedTables())->toContain('access_gate_areas', 'access_gate_events')

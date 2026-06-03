@@ -6,6 +6,7 @@ namespace Capell\AccessGate\Http\Controllers;
 
 use Capell\AccessGate\Actions\ResolveAccessGateAreaForRequestAction;
 use Capell\AccessGate\Actions\RevokeAccessGateBrowserTokenAction;
+use Capell\AccessGate\Support\AccessGateResponseHeaders;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
@@ -23,7 +24,7 @@ final class LogoutAccessGateController
 
         $this->revokeBrowserToken->handle($accessArea, $request->cookies->get($cookieName));
 
-        return $this->noStore(
+        return AccessGateResponseHeaders::noStore(
             to_route('capell-access-gate.request', ['area' => $accessArea->key])
                 ->withCookie(Cookie::forget(
                     $cookieName,
@@ -31,14 +32,5 @@ final class LogoutAccessGateController
                     config('access-gate.cookies.browser_token.domain'),
                 )),
         );
-    }
-
-    private function noStore(RedirectResponse $response): RedirectResponse
-    {
-        $response->headers->set('Cache-Control', 'no-store, private');
-        $response->headers->set('Pragma', 'no-cache');
-        $response->headers->set('Expires', '0');
-
-        return $response;
     }
 }

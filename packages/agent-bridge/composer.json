@@ -1,6 +1,6 @@
 {
     "name": "capell-app/agent-bridge",
-    "description": "Agent Bridge servers and capability adapters for Capell CMS.",
+    "description": "Scoped MCP access for AI agents to read Capell knowledge, preview site operations, confirm execution, and audit every run.",
     "type": "library",
     "license": "proprietary",
     "autoload": {
@@ -55,7 +55,14 @@
         "capell",
         "cms",
         "laravel",
-        "agents"
+        "agents",
+        "mcp",
+        "laravel-mcp",
+        "model-context-protocol",
+        "preview-confirm",
+        "audit-log",
+        "cms-automation",
+        "scoped-access"
     ],
     "authors": [
         {

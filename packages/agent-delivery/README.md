@@ -21,20 +21,45 @@ Agent Delivery exposes already-public Capell page content as structured manifest
 
 ## Best Used With
 
-- [Site Discovery](../site-discovery/README.md)
-- [SEO Suite](../seo-suite/README.md)
-- [Agent Bridge](../agent-bridge/README.md) when a build also needs
-  authenticated agent actions.
+- [Site Discovery](../site-discovery/README.md) — public URL registry and
+  generated-output coverage reporting.
+- [SEO Suite](../seo-suite/README.md) — AI Discovery (`llms.txt`,
+  `/llms-full.txt`, page Markdown at `/{url}.md`, `Accept: text/markdown`
+  negotiation, robots AI-crawler rules, and editor inclusion controls).
+- [Agent Bridge](../agent-bridge/README.md) — authenticated agent actions
+  (the write/trusted counterpart to Agent Delivery's read-only surface).
+
+## Boundary with SEO Suite AI Discovery
+
+Agent Delivery and SEO Suite's AI Discovery serve complementary audiences:
+
+| Concern | Agent Delivery | SEO Suite AI Discovery |
+|---------|---------------|----------------------|
+| Format | Structured JSON manifests and semantic chunks | Markdown, `llms.txt`, content negotiation |
+| Audience | RAG pipelines, answer engines, structured consumers | LLM crawlers, human-readable AI indexes |
+| Endpoint style | `?url=` query parameter | Path-based (`.md` suffix, `/llms.txt`) |
+| Coverage source | `AgentDeliveryGeneratedOutputCoverageSource` | `AiDiscoveryGeneratedOutputCoverageSource` |
+
+Install **Agent Delivery** when agents need structured JSON with typed fields,
+ordered chunks, and contributor-extensible metadata. Install **SEO Suite** when
+you need `llms.txt`, Markdown views, and editor-level AI inclusion controls.
+Install both for full coverage: SEO Suite provides the human/Markdown side,
+Agent Delivery provides the machine/JSON side, and Site Discovery unifies the
+coverage report.
 
 ## What It Adds
 
-- `GET /api/capell/agent/v1/pages/manifest?url=/path` returns canonical URL, locale, alternates, title, headings, summary, plain-text body, public metadata, references, and timestamps.
-- `GET /api/capell/agent/v1/pages/chunks?url=/path` returns stable chunk records suitable for long-form agent consumption.
+- `GET /api/capell/agent/v1/pages` lists public, agent-readable page URLs for the resolved site and locale.
+- `GET /api/capell/agent/v1/pages/manifest?url=/path` returns canonical URL, locale, alternates, title, headings, summary, plain-text body, public metadata, schema.org data, references, and timestamps.
+- `GET /api/capell/agent/v1/pages/chunks?url=/path` returns heading-aware chunk records suitable for long-form agent consumption.
 - Focused contributor contracts let packages contribute public-safe metadata, chunks, references, and related URLs without putting package-specific logic into themes or public Blade.
+- All endpoints support `?locale=` overrides and deterministic `ETag`/`Cache-Control` responses.
 
 ## Public Safety
 
 Agent Delivery resolves pages through Core public URL resolution. Drafts, disabled URLs, unpublished pages, admin state, prompts, signed URLs, authoring markers, model permissions, and package internals are not part of the output contract.
+
+Set page or translation metadata `agent_delivery.enabled` to `false`, `agent_delivery.exclude` to `true`, or include a `noai` robots directive to hide a public page from Agent Delivery without changing normal public rendering.
 
 The package is deliberately separate from `agent-bridge`: Agent Delivery is anonymous, read-only, and public-safe. Agent Bridge remains the authenticated surface for trusted agent actions.
 

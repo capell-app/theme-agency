@@ -17,6 +17,50 @@ use Illuminate\Database\Eloquent\Model;
 
 final class AgentDeliveryRegistry
 {
+    /**
+     * Keys that must never appear in public contributor metadata output.
+     *
+     * @var list<string>
+     */
+    private const array BLOCKED_METADATA_KEYS = [
+        'model_id',
+        'internal_model_id',
+        'model_class',
+        'model_type',
+        'field_path',
+        'admin_url',
+        'admin_path',
+        'edit_url',
+        'filament_url',
+        'signed_url',
+        'secret_prompt',
+        'prompt',
+        'system_prompt',
+        'api_key',
+        'api_secret',
+        'token',
+        'password',
+        'internal_id',
+        'permission',
+        'permissions',
+    ];
+
+    /** @var list<string> */
+    private const array BLOCKED_VALUE_FRAGMENTS = [
+        '/admin',
+        '/filament',
+        'signed-editor-url',
+        'signed_url',
+        'secret prompt',
+        'system prompt',
+        'api key',
+        'api_key',
+        'api secret',
+        'api_secret',
+        'bearer ',
+        'sk-',
+    ];
+
     /** @var list<AgentDeliveryContributor> */
     private array $contributors = [];
 
@@ -83,7 +127,7 @@ final class AgentDeliveryRegistry
             $metadata = array_replace_recursive($metadata, $contributor->metadata($page, $site, $language));
         }
 
-        return $metadata;
+        return $this->sanitiseMetadata($metadata);
     }
 
     /**
@@ -153,6 +197,56 @@ final class AgentDeliveryRegistry
         }
 
         return array_values(array_unique($urls));
+    }
+
+    /**
+     * Recursively strip blocked keys from contributor metadata to prevent
+     * accidental leakage of internal identifiers, admin URLs, prompts, or secrets.
+     *
+     * @param  array<string, mixed>  $metadata
+     * @return array<string, mixed>
+     */
+    private function sanitiseMetadata(array $metadata): array
+    {
+        $blocked = array_flip(self::BLOCKED_METADATA_KEYS);
+        $sanitised = [];
+
+        foreach ($metadata as $key => $value) {
+            if (isset($blocked[$key])) {
+                continue;
+            }
+
+            $value = is_array($value)
+                ? $this->sanitiseMetadata($value)
+                : $this->sanitiseMetadataValue($value);
+
+            if ($value !== null) {
+                $sanitised[$key] = $value;
+            }
+        }
+
+        return $sanitised;
+    }
+
+    private function sanitiseMetadataValue(mixed $value): mixed
+    {
+        if (! is_scalar($value) && $value !== null) {
+            return null;
+        }
+
+        if (! is_string($value)) {
+            return $value;
+        }
+
+        $normalized = strtolower($value);
+
+        foreach (self::BLOCKED_VALUE_FRAGMENTS as $fragment) {
+            if (str_contains($normalized, $fragment)) {
+                return null;
+            }
+        }
+
+        return $value;
     }
 
     private function isPublicUrl(mixed $url): bool

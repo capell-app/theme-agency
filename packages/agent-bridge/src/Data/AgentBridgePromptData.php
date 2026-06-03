@@ -10,7 +10,7 @@ final readonly class AgentBridgePromptData
 {
     public function __construct(
         public string $goal,
-        public string $area = 'other',
+        public string $area = 'pages',
         public string $operation = 'inspect',
         public string $safety = 'preview_first',
         public string $target = '',
@@ -23,7 +23,7 @@ final readonly class AgentBridgePromptData
     {
         return new self(
             goal: trim((string) Arr::get($state, 'goal', '')),
-            area: (string) Arr::get($state, 'area', 'other'),
+            area: (string) Arr::get($state, 'area', 'pages'),
             operation: (string) Arr::get($state, 'operation', 'inspect'),
             safety: (string) Arr::get($state, 'safety', 'preview_first'),
             target: trim((string) Arr::get($state, 'target', '')),

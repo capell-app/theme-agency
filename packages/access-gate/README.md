@@ -1,12 +1,12 @@
 # Access Gate
 
-Access gating foundations for Capell CMS.
+Gate any Capell page, download, or member area behind login, email approval, guest links, schedules, or paid checkout — with full request, grant, and audit management in the admin.
 
 ## At A Glance
 
 - Package: `capell-app/access-gate`
 - Namespace: `Capell\AccessGate\`
-- Surfaces: Filament admin, console, HTTP, database
+- Surfaces: admin, frontend, console
 - Service providers: `packages/access-gate/src/Providers/AccessGateServiceProvider.php`
 - Capell dependencies: `capell-app/core`
 - Third-party dependencies: `laravel/framework`, `lorisleiva/laravel-actions`
@@ -66,7 +66,7 @@ Access gating foundations for Capell CMS.
 ## Data And Persistence
 
 - Models: `AccessGateModel`, `Area`, `BrowserToken`, `ClaimToken`, `Event`, `Grant`, `Registration`.
-- Migrations: `2026_05_10_190838_01_create_access_gate_areas_table.php`, `2026_05_10_190838_02_create_access_gate_registrations_table.php`, `2026_05_10_190838_03_create_access_gate_grants_table.php`, `2026_05_10_190838_04_create_access_gate_claim_tokens_table.php`, `2026_05_10_190838_05_create_access_gate_browser_tokens_table.php`, `2026_05_10_190838_06_create_access_gate_events_table.php`, `2026_05_10_190838_07_add_site_id_to_access_gate_areas_table.php`, `2026_05_12_120000_08_add_schedule_to_access_gate_areas_table.php`, `2026_05_12_120001_09_add_download_resolver_indexes_to_access_gate_tables.php`.
+- Migrations: `2026_05_10_190838_01_create_access_gate_areas_table.php`, `2026_05_10_190838_02_create_access_gate_registrations_table.php`, `2026_05_10_190838_03_create_access_gate_grants_table.php`, `2026_05_10_190838_04_create_access_gate_claim_tokens_table.php`, `2026_05_10_190838_05_create_access_gate_browser_tokens_table.php`, `2026_05_10_190838_06_create_access_gate_events_table.php`.
 - Config: `packages/access-gate/config/access-gate.php`.
 - Data objects live in `src/Data/`; use them for payloads, form state, and view models.
 

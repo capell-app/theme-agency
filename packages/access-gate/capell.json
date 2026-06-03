@@ -6,18 +6,20 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Access gating foundations for Capell CMS.",
+    "description": "Gate any Capell page, download, or member area behind login, email approval, guest links, schedules, or paid checkout \u2014 with full request, grant, and audit management in the admin.",
     "product": {
         "group": "Capell Operations",
         "tier": "premium",
         "bundle": "operations"
     },
     "namespace": "Capell\\AccessGate",
-    "surfaces": ["admin", "frontend"],
+    "surfaces": ["admin", "frontend", "console"],
     "dependencies": {
         "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
             "capell-app/customer-portal",
+            "capell-app/diagnostics",
+            "capell-app/html-cache",
             "capell-app/payments",
             "capell-app/public-actions"
         ],
@@ -75,8 +77,8 @@
         ]
     },
     "commands": {
-        "install": null,
-        "setup": null,
+        "install": "capell:access-gate-install",
+        "setup": "capell:access-gate-setup",
         "demo": null,
         "doctor": "capell:access-gate-doctor"
     },
@@ -133,12 +135,62 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Access gating foundations for Capell CMS.",
+        "summary": "Gate any Capell page, download, or member area behind login, email approval, guest links, schedules, or paid checkout \u2014 with full request, grant, and audit management in the admin.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Access Gate extension preview image",
                 "caption": "Access Gate extension preview"
+            },
+            {
+                "path": "docs/screenshots/access-areas-admin-index.png",
+                "alt": "Access Gate access areas admin index showing protected area status and policies.",
+                "caption": "Access areas admin index for reviewing protected areas, route keys, registration policy, and token policy."
+            },
+            {
+                "path": "docs/screenshots/access-area-create-edit-form.png",
+                "alt": "Access Gate access area form showing schedule, request, token, allowlist, and metadata settings.",
+                "caption": "Access area create and edit form for configuring schedules, request behaviour, claim hosts, limits, and allowlists."
+            },
+            {
+                "path": "docs/screenshots/registrations-admin-index.png",
+                "alt": "Access Gate registrations admin index showing pending and approved access requests.",
+                "caption": "Registrations admin index for triaging access requests with approve, reject, resend claim, expire, and grant actions."
+            },
+            {
+                "path": "docs/screenshots/grants-admin-index.png",
+                "alt": "Access Gate grants admin index showing active, expired, and revoked grants.",
+                "caption": "Grants admin index for auditing active, expired, and revoked grants before they unlock protected content."
+            },
+            {
+                "path": "docs/screenshots/claim-tokens-admin-index.png",
+                "alt": "Access Gate claim tokens admin index showing issued, consumed, and expired approval links.",
+                "caption": "Claim tokens admin index for support review of approval links, claim status, expiry, and related registrations."
+            },
+            {
+                "path": "docs/screenshots/browser-tokens-admin-index.png",
+                "alt": "Access Gate browser tokens admin index showing browser-bound access tokens and revoke state.",
+                "caption": "Browser tokens admin index for reviewing device-bound access and revoking tokens after device loss or policy change."
+            },
+            {
+                "path": "docs/screenshots/access-events-admin-index.png",
+                "alt": "Access Gate access events admin index showing request, approval, claim, grant, revoke, and denied visit history.",
+                "caption": "Access events admin index for investigating the history of requests, approvals, claims, grants, revokes, and denied visits."
+            },
+            {
+                "path": "docs/screenshots/public-access-request-form.png",
+                "alt": "Access Gate public access request form for an anonymous visitor requesting a protected area.",
+                "caption": "Public access request form that lets visitors request access without exposing admin-only state or authoring metadata."
+            },
+            {
+                "path": "docs/screenshots/public-gated-message.png",
+                "alt": "Access Gate public message shown when an access link is expired or unavailable.",
+                "caption": "Public access message for expired or unavailable links, keeping protected content and cached private HTML out of the response."
+            },
+            {
+                "path": "docs/screenshots/public-request-cta.png",
+                "alt": "Access Gate public request CTA component linking a visitor into the access request flow.",
+                "caption": "Public request CTA component for routing visitors from protected pages or teaser content into the correct request flow."
             }
         ],
         "categories": ["admin", "operations"]

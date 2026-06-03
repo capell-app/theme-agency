@@ -10,11 +10,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (Schema::hasTable('capell_agent-bridge_saved_prompts')) {
+        if (Schema::hasTable('capell_agent_bridge_saved_prompts')) {
             return;
         }
 
-        Schema::create('capell_agent-bridge_saved_prompts', function (Blueprint $table): void {
+        Schema::create('capell_agent_bridge_saved_prompts', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
@@ -29,6 +29,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('capell_agent-bridge_saved_prompts');
+        Schema::dropIfExists('capell_agent_bridge_saved_prompts');
     }
 };

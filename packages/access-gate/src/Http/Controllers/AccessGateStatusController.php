@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\AccessGate\Http\Controllers;
 
 use Capell\AccessGate\Actions\ResolveAccessGateAccessAction;
+use Capell\AccessGate\Support\AccessGateResponseHeaders;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -22,10 +23,6 @@ final class AccessGateStatusController
             'allowed' => $result->allowed,
         ]);
 
-        $response->headers->set('Cache-Control', 'no-store, private');
-        $response->headers->set('Pragma', 'no-cache');
-        $response->headers->set('Expires', '0');
-
-        return $response;
+        return AccessGateResponseHeaders::noStore($response);
     }
 }

@@ -11,6 +11,7 @@ use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Testing\TestResponse;
 
 use function Pest\Laravel\getJson;
 
@@ -37,6 +38,8 @@ it('returns a public-safe page manifest for an already public page', function ()
         ->assertOk()
         ->assertHeader('X-Capell-Agent-Delivery-Version', 'v1')
         ->assertHeader('X-Capell-Cache-Tags', sprintf('agent-delivery,site:%s,language:%s,page:%s', $site->getKey(), $language->getKey(), $page->getKey()))
+        ->assertHeader('Cache-Control', 'max-age=300, public')
+        ->assertHeader('ETag')
         ->assertJsonPath('data.canonicalUrl', 'http://example.com/guides/ai-ready')
         ->assertJsonPath('data.url', '/guides/ai-ready')
         ->assertJsonPath('data.language', 'en')
@@ -46,6 +49,9 @@ it('returns a public-safe page manifest for an already public page', function ()
         ->assertJsonPath('data.summary', 'A concise discovery summary.')
         ->assertJsonPath('data.body', 'Discovery Readable public copy')
         ->assertJsonPath('data.metadata.description', 'A concise discovery summary.')
+        ->assertJsonPath('data.schema.@context', 'https://schema.org')
+        ->assertJsonPath('data.schema.@type', 'WebPage')
+        ->assertJsonPath('data.schema.name', 'AI Ready Websites')
         ->assertJsonPath('data.references.0.url', 'https://source.example/reference')
         ->assertJsonMissingPath('data.metadata.admin_prompt')
         ->assertJsonMissingPath('data.references.1');
@@ -59,11 +65,38 @@ it('returns stable semantic chunks for a public page', function (): void {
 
     getJson(agentDeliveryUrl('capell-agent-delivery.pages.chunks', ['url' => '/chunks/guides/ai-ready']))
         ->assertOk()
-        ->assertJsonPath('data.0.id', 'ai-ready-websites')
-        ->assertJsonPath('data.0.heading', 'AI Ready Websites')
-        ->assertJsonPath('data.0.sourceUrl', 'http://example.com/chunks/guides/ai-ready')
+        ->assertJsonPath('data.0.id', 'discovery')
+        ->assertJsonPath('data.0.heading', 'Discovery')
+        ->assertJsonPath('data.0.sourceUrl', 'http://example.com/chunks/guides/ai-ready#discovery')
         ->assertJsonPath('data.0.body', 'Discovery Readable public copy')
         ->assertJsonPath('data.0.dependsOn.0', 'url:http://example.com/chunks/guides/ai-ready');
+});
+
+it('returns a 304 response when manifest etag matches', function (): void {
+    [$pageUrl] = createAgentDeliveryPage('/etag-page');
+
+    $response = getJson(agentDeliveryUrl('capell-agent-delivery.pages.manifest', ['url' => $pageUrl->url]))
+        ->assertOk()
+        ->assertHeader('ETag');
+
+    getJson(agentDeliveryUrl('capell-agent-delivery.pages.manifest', ['url' => $pageUrl->url]), [
+        'If-None-Match' => manifestResponseHeader($response, 'ETag'),
+    ])
+        ->assertStatus(304)
+        ->assertHeader('ETag', manifestResponseHeader($response, 'ETag'));
+});
+
+it('does not serve pages opted out of agent delivery', function (): void {
+    [$pageUrl] = createAgentDeliveryPage('/private-agent-page', [
+        'meta' => [
+            'description' => 'Private to agents.',
+            'agent_delivery' => ['enabled' => false],
+        ],
+    ]);
+
+    getJson(agentDeliveryUrl('capell-agent-delivery.pages.manifest', ['url' => $pageUrl->url]))
+        ->assertNotFound()
+        ->assertExactJson(['message' => 'Page not found']);
 });
 
 it('resolves path-only site domains when an exact host site also exists', function (): void {
@@ -88,7 +121,9 @@ it('does not serve unpublished or missing pages', function (): void {
 
     getJson(agentDeliveryUrl('capell-agent-delivery.pages.manifest', ['url' => '/missing']))
         ->assertNotFound()
-        ->assertExactJson(['message' => 'Page not found']);
+        ->assertExactJson(['message' => 'Page not found'])
+        ->assertHeader('X-Capell-Agent-Delivery-Version', 'v1')
+        ->assertHeaderMissing('X-Capell-Cache-Tags');
 });
 
 it('does not serve agent delivery when the package is not installed', function (): void {
@@ -97,7 +132,9 @@ it('does not serve agent delivery when the package is not installed', function (
 
     getJson(agentDeliveryUrl('capell-agent-delivery.pages.manifest', ['url' => '/published']))
         ->assertNotFound()
-        ->assertExactJson(['message' => 'Page not found']);
+        ->assertExactJson(['message' => 'Page not found'])
+        ->assertHeader('X-Capell-Agent-Delivery-Version', 'v1')
+        ->assertHeaderMissing('X-Capell-Cache-Tags');
 });
 
 /**
@@ -144,4 +181,11 @@ function agentDeliveryUrl(string $routeName, array $parameters = [], string $hos
     URL::forceRootUrl('http://' . $host);
 
     return route($routeName, $parameters);
+}
+
+function manifestResponseHeader(TestResponse $response, string $header): string
+{
+    $value = $response->baseResponse->headers->get($header);
+
+    return is_string($value) ? $value : '';
 }

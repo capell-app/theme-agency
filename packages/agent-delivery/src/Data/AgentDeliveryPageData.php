@@ -14,6 +14,7 @@ final class AgentDeliveryPageData extends Data
      * @param  array<string, mixed>  $metadata
      * @param  list<array<string, string>>  $references
      * @param  list<string>  $relatedUrls
+     * @param  array<string, mixed>  $schema
      */
     public function __construct(
         public readonly string $canonicalUrl,
@@ -29,5 +30,6 @@ final class AgentDeliveryPageData extends Data
         public readonly ?string $publishedAt,
         public readonly ?string $lastUpdatedAt,
         public readonly array $relatedUrls,
+        public readonly array $schema,
     ) {}
 }

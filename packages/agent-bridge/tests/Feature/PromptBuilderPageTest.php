@@ -5,14 +5,13 @@ declare(strict_types=1);
 use Capell\AgentBridge\Actions\BuildAgentBridgePromptAction;
 use Capell\AgentBridge\Actions\SaveAgentBridgePromptAction;
 use Capell\AgentBridge\Data\AgentBridgePromptData;
+use Capell\AgentBridge\Filament\Pages\CapellAgentBridgePromptBuilderPage;
 use Capell\AgentBridge\Livewire\PromptBuilderToolbarAction;
 use Capell\AgentBridge\Models\CapellAgentBridgeSavedPrompt;
 use Capell\AgentBridge\Tests\Fixtures\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Blade;
 use Livewire\Livewire;
-use Sinnbeck\DomAssertions\Asserts\AssertElement;
-use Sinnbeck\DomAssertions\Asserts\BaseAssert;
 
 it('builds an agent bridge prompt from the submitted intent', function (): void {
     $prompt = BuildAgentBridgePromptAction::run(AgentBridgePromptData::fromArray([
@@ -51,6 +50,29 @@ it('uses safe defaults when optional prompt context is omitted', function (): vo
         ->toContain('Not provided.')
         ->toContain('Use Capell package boundaries, policies, and preview-first workflow.')
         ->toContain('Explain what changed or why no change is needed.');
+});
+
+it('limits prompt builder options to backed Agent Bridge operations', function (): void {
+    expect(CapellAgentBridgePromptBuilderPage::areaOptions())->toHaveKeys([
+        'pages',
+        'cache',
+        'packages',
+    ])
+        ->not->toHaveKeys([
+            'seo',
+            'redirects',
+            'navigation',
+            'other',
+        ])
+        ->and(CapellAgentBridgePromptBuilderPage::operationOptions())->toHaveKeys([
+            'inspect',
+            'create',
+            'update',
+            'disable',
+            'clear',
+            'recommend',
+        ])
+        ->not->toHaveKey('regenerate');
 });
 
 it('saves loads lists and deletes prompts scoped to the authenticated admin user', function (): void {
@@ -141,10 +163,10 @@ it('registers the toolbar Livewire component used by the global search render ho
 it('renders the toolbar slide-over only after click and refreshes prompt text on edits', function (): void {
     Livewire::test(PromptBuilderToolbarAction::class)
         ->assertSet('isOpen', false)
-        ->assertElementExists(fn (AssertElement $body): BaseAssert => $body->doesntContain('#agent-bridge-prompt-builder-title'))
+        ->assertDontSeeHtml('id="agent-bridge-prompt-builder-title"')
         ->call('openBuilder')
         ->assertSet('isOpen', true)
-        ->assertElementExists('#agent-bridge-prompt-builder-title')
+        ->assertSeeHtml('id="agent-bridge-prompt-builder-title"')
         ->set('data.goal', 'inspect updated draft state')
         ->assertSet('preparedPrompt', fn (string $prompt): bool => str_contains($prompt, 'inspect updated draft state'));
 });

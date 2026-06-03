@@ -7,10 +7,12 @@ namespace Capell\AgentDelivery\Actions;
 use Capell\AgentDelivery\Data\ResolvedAgentDeliveryPageData;
 use Capell\Core\Actions\LoadSiteDomainFromUrlAction;
 use Capell\Core\Actions\ResolvePublicPageByUrlAction;
+use Capell\Core\Contracts\Pageable;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
 use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsObject;
@@ -34,7 +36,7 @@ final class ResolveAgentDeliveryPageAction
             return new ResolvedAgentDeliveryPageData(null, null, null, null);
         }
 
-        $language = $this->resolveLanguage($site);
+        $language = $this->resolveLanguage($site, $request);
 
         if (! $language instanceof Language) {
             return new ResolvedAgentDeliveryPageData(null, $site, null, null);
@@ -49,6 +51,12 @@ final class ResolveAgentDeliveryPageAction
         if (! $resolution->found() || $resolution->page === null) {
             return new ResolvedAgentDeliveryPageData(null, $site, $language, null);
         }
+
+        if ($this->isOptedOut($resolution->page, $resolution->fields->meta)) {
+            return new ResolvedAgentDeliveryPageData(null, $site, $language, null);
+        }
+
+        $this->hydrateAlternateUrls($resolution->page);
 
         $delivery = BuildAgentDeliveryPageAction::run(
             page: $resolution->page,
@@ -80,8 +88,21 @@ final class ResolveAgentDeliveryPageAction
         return $site;
     }
 
-    private function resolveLanguage(Site $site): ?Language
+    private function resolveLanguage(Site $site, Request $request): ?Language
     {
+        $requestedLocale = $this->queryString($request, 'locale', '');
+
+        if ($requestedLocale !== '') {
+            $language = Language::query()
+                ->where('locale', $requestedLocale)
+                ->orWhere('code', $requestedLocale)
+                ->first();
+
+            if ($language instanceof Language) {
+                return $language;
+            }
+        }
+
         $domainLanguage = $this->resolvedSiteDomain?->language;
 
         if ($domainLanguage instanceof Language) {
@@ -185,5 +206,55 @@ final class ResolveAgentDeliveryPageAction
                     ->orWhere('scheme', false)
                     ->orWhere('scheme', $scheme);
             });
+    }
+
+    /**
+     * @param  Pageable<Model>  $page
+     * @param  array<string, mixed>  $translationMeta
+     */
+    private function isOptedOut(Pageable $page, array $translationMeta): bool
+    {
+        $pageMeta = $page instanceof Model ? (array) $page->getAttribute('meta') : [];
+
+        return $this->metaOptsOut($pageMeta) || $this->metaOptsOut($translationMeta);
+    }
+
+    /**
+     * @param  array<string, mixed>  $meta
+     */
+    private function metaOptsOut(array $meta): bool
+    {
+        $agentDelivery = $meta['agent_delivery'] ?? null;
+
+        if (is_array($agentDelivery) && (($agentDelivery['enabled'] ?? null) === false || ($agentDelivery['exclude'] ?? null) === true)) {
+            return true;
+        }
+
+        $robots = $meta['robots'] ?? [];
+
+        if (is_string($robots)) {
+            $robots = array_map('trim', explode(',', $robots));
+        }
+
+        if (! is_array($robots)) {
+            return false;
+        }
+
+        return collect($robots)
+            ->filter(fn (mixed $value, mixed $key): bool => is_string($key) ? $value === true : is_string($value))
+            ->map(fn (mixed $value, mixed $key): string => strtolower(is_string($key) ? $key : (string) $value))
+            ->contains('noai');
+    }
+
+    /**
+     * @param  Pageable<Model>  $page
+     */
+    private function hydrateAlternateUrls(Pageable $page): void
+    {
+        if (! $page instanceof Model) {
+            return;
+        }
+
+        $page->loadMissing('pageUrls.language', 'pageUrls.siteDomain');
     }
 }

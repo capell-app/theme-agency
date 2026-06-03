@@ -1,6 +1,6 @@
 # Agent Bridge
 
-Agent Bridge exposes Capell knowledge and site capabilities through Laravel Agent Bridge servers with token authentication, confirmations, previews, and audit records.
+Agent Bridge connects AI agents and MCP clients to Capell through scoped tokens, read-only package knowledge, preview-then-confirm site operations, and audited execution records.
 
 ## At A Glance
 
@@ -25,9 +25,9 @@ Agent Bridge exposes Capell knowledge and site capabilities through Laravel Agen
 
 ## What It Adds
 
-Agent Bridge exposes Capell knowledge and site capabilities through Laravel Agent Bridge servers with token authentication, confirmations, previews, and audit records.
+Agent Bridge connects AI agents and MCP clients to Capell through standard Laravel MCP servers: a read-only knowledge server for packages and docs, and an authenticated site server for inspecting and operating a Capell installation.
 
-- Capell knowledge and site Agent Bridge servers.
+- Capell knowledge and site MCP servers.
 - Token, confirmation, and audit models.
 - Capability registry and capability actions.
 - Prompt builder Filament page.
@@ -37,7 +37,7 @@ Agent Bridge exposes Capell knowledge and site capabilities through Laravel Agen
 
 **For developers:** Provides a typed capability contract so Agent Bridge tools can preview, confirm, run, and audit changes instead of directly mutating site state.
 
-**For teams:** Lets trusted ai-orchestrator clients inspect Capell and request controlled site operations with reviewable confirmation records.
+**For teams:** Lets trusted agent clients inspect Capell and request controlled site operations with per-token scoping, per-site authorization, confirmation records, and audit history.
 
 ## Built With
 
@@ -119,7 +119,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Confirmation TTL defaults to 10 minutes.
 
 - Models: `CapellAgentBridgeAuditEntry`, `CapellAgentBridgeConfirmation`, `CapellAgentBridgeToken`.
-- Migrations create legacy hyphenated table names on fresh installs, then `2026_05_28_000001_rename_agent_bridge_tables_to_canonical_names.php` renames them to canonical underscore names for runtime use.
+- Migrations create canonical underscore table names directly on fresh installs.
 - Config: `packages/agent-bridge/config/capell-agent-bridge.php`.
 - Data objects live in `src/Data/`; use them for payloads, form state, and view models.
 

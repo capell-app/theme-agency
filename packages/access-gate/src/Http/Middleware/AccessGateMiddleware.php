@@ -6,6 +6,7 @@ namespace Capell\AccessGate\Http\Middleware;
 
 use Capell\AccessGate\Actions\ResolveAccessGateAccessAction;
 use Capell\AccessGate\Models\Area;
+use Capell\AccessGate\Support\AccessGateResponseHeaders;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,9 +36,7 @@ final class AccessGateMiddleware
         $response = $next($request);
 
         if ($result->area instanceof Area) {
-            $response->headers->set('Cache-Control', 'no-store, private');
-            $response->headers->set('Pragma', 'no-cache');
-            $response->headers->set('Expires', '0');
+            AccessGateResponseHeaders::noStore($response);
         }
 
         return $response;
@@ -53,24 +52,15 @@ final class AccessGateMiddleware
     private function deny(Request $request, string $areaKey): Response
     {
         if ($request->expectsJson()) {
-            return $this->noStore(response()->json([
+            return AccessGateResponseHeaders::noStore(response()->json([
                 'message' => __('capell-access-gate::public.request_submitted'),
             ], 403));
         }
 
-        return $this->noStore(to_route('capell-access-gate.request', [
+        return AccessGateResponseHeaders::noStore(to_route('capell-access-gate.request', [
             'area' => $areaKey,
             'redirect' => $request->fullUrl(),
         ]));
-    }
-
-    private function noStore(Response $response): Response
-    {
-        $response->headers->set('Cache-Control', 'no-store, private');
-        $response->headers->set('Pragma', 'no-cache');
-        $response->headers->set('Expires', '0');
-
-        return $response;
     }
 
     /**

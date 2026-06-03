@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Capell\AccessGate\Console\Commands\AccessGateDoctorCommand;
 use Capell\AccessGate\Enums\AccessAreaStatus;
 use Capell\AccessGate\Http\Middleware\AccessGateMiddleware;
 use Capell\AccessGate\Models\Area;
+use Capell\AccessGate\Support\AccessGateDiagnosticsService;
 use Capell\AccessGate\Tests\Support\FakePageCacheMiddleware;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\Core\Facades\CapellCore;
@@ -38,41 +38,35 @@ it('passes doctor checks when middleware priority forces the gate before fronten
 });
 
 it('reports doctor diagnostics for middleware ordering and site scoping edge cases', function (): void {
-    $command = new AccessGateDoctorCommand;
+    $diagnostics = resolve(AccessGateDiagnosticsService::class);
     $router = resolve(Router::class);
-    $checkMiddleware = new ReflectionMethod(AccessGateDoctorCommand::class, 'checkMiddleware');
-    $checkClaimHosts = new ReflectionMethod(AccessGateDoctorCommand::class, 'checkClaimHosts');
-    $checkSiteScopedAreas = new ReflectionMethod(AccessGateDoctorCommand::class, 'checkSiteScopedAreas');
-    $firstMiddlewarePosition = new ReflectionMethod(AccessGateDoctorCommand::class, 'firstMiddlewarePosition');
-    $pageCacheAliases = new ReflectionMethod(AccessGateDoctorCommand::class, 'pageCacheAliases');
-    $pageCacheMiddlewarePriorityNames = new ReflectionMethod(AccessGateDoctorCommand::class, 'pageCacheMiddlewarePriorityNames');
 
     $router->aliasMiddleware('frontend.cache', FakePageCacheMiddleware::class);
     $router->pushMiddlewareToGroup('web', 'frontend.cache');
     $router->middlewarePriority = [AccessGateMiddleware::class, 'access-gate', FakePageCacheMiddleware::class];
 
-    $priorityOk = $checkMiddleware->invoke($command, $router);
+    $priorityOk = $diagnostics->checkMiddleware($router);
     $priorityOk = accessGateDoctorResult($priorityOk);
 
     $router->middlewarePriority = [FakePageCacheMiddleware::class, AccessGateMiddleware::class];
-    $pageCacheBeforeGate = $checkMiddleware->invoke($command, $router);
+    $pageCacheBeforeGate = $diagnostics->checkMiddleware($router);
     $pageCacheBeforeGate = accessGateDoctorResult($pageCacheBeforeGate);
 
     $router->middlewarePriority = [];
     $router->middlewareGroup('web', ['frontend.cache']);
 
-    $routeLevelRequired = $checkMiddleware->invoke($command, $router);
+    $routeLevelRequired = $diagnostics->checkMiddleware($router);
     $routeLevelRequired = accessGateDoctorResult($routeLevelRequired);
 
     config()->set('access-gate.middleware.page_cache_aliases', ['frontend.cache', '', FakePageCacheMiddleware::class, 123]);
-    $aliases = $pageCacheAliases->invoke($command);
-    $priorityNames = $pageCacheMiddlewarePriorityNames->invoke($command, $router);
+    $aliases = $diagnostics->pageCacheAliases();
+    $priorityNames = $diagnostics->pageCacheMiddlewarePriorityNames($router);
 
     config()->set('access-gate.middleware.page_cache_aliases', 'broken');
 
     config()->set('app.url', 'not-a-url');
 
-    $missingAppUrl = $checkClaimHosts->invoke($command);
+    $missingAppUrl = $diagnostics->checkClaimHosts();
     $missingAppUrl = accessGateDoctorResult($missingAppUrl);
 
     config()->set('app.url', 'https://app.test');
@@ -80,14 +74,14 @@ it('reports doctor diagnostics for middleware ordering and site scoping edge cas
         'key' => 'preview',
         'claim_url_hosts' => ['preview.test'],
     ]);
-    $missingClaimHost = $checkClaimHosts->invoke($command);
+    $missingClaimHost = $diagnostics->checkClaimHosts();
     $missingClaimHost = accessGateDoctorResult($missingClaimHost);
 
-    $noSitesTable = $checkSiteScopedAreas->invoke($command);
+    $noSitesTable = $diagnostics->checkSiteScopedAreas();
     $noSitesTable = accessGateDoctorResult($noSitesTable);
 
     defineAccessGateSiteTablesForDoctorTest();
-    $noSites = $checkSiteScopedAreas->invoke($command);
+    $noSites = $diagnostics->checkSiteScopedAreas();
     $noSites = accessGateDoctorResult($noSites);
 
     DB::table('sites')->insert([
@@ -97,7 +91,7 @@ it('reports doctor diagnostics for middleware ordering and site scoping edge cas
         'updated_at' => now(),
     ]);
     Area::query()->where('key', 'preview')->update(['site_id' => 1]);
-    $siteScopedOk = $checkSiteScopedAreas->invoke($command);
+    $siteScopedOk = $diagnostics->checkSiteScopedAreas();
     $siteScopedOk = accessGateDoctorResult($siteScopedOk);
 
     expect($priorityOk->passed)->toBeTrue()
@@ -105,8 +99,8 @@ it('reports doctor diagnostics for middleware ordering and site scoping edge cas
         ->and($routeLevelRequired->passed)->toBeFalse()
         ->and($aliases)->toBe(['frontend.cache', FakePageCacheMiddleware::class])
         ->and($priorityNames)->toContain('frontend.cache', FakePageCacheMiddleware::class)
-        ->and($pageCacheAliases->invoke($command))->toBe([])
-        ->and($firstMiddlewarePosition->invoke($command, [null, 'auth:web', 'access-gate:preview'], ['auth', 'access-gate']))->toBe(1)
+        ->and($diagnostics->pageCacheAliases())->toBe([])
+        ->and($diagnostics->firstMiddlewarePosition([null, 'auth:web', 'access-gate:preview'], ['auth', 'access-gate']))->toBe(1)
         ->and($missingAppUrl->passed)->toBeTrue()
         ->and($missingClaimHost->message)->toContain('preview')
         ->and($noSitesTable->passed)->toBeTrue()

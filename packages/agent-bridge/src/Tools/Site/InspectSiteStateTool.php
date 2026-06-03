@@ -30,12 +30,17 @@ final class InspectSiteStateTool extends Tool
 {
     public function handle(): ResponseFactory
     {
+        $app = [
+            'name' => config('app.name'),
+        ];
+
+        if ((bool) config('capell-agent-bridge.inspect_app_runtime', false)) {
+            $app['environment'] = app()->environment();
+            $app['debug'] = (bool) config('app.debug');
+        }
+
         return Response::structured([
-            'app' => [
-                'name' => config('app.name'),
-                'environment' => app()->environment(),
-                'debug' => (bool) config('app.debug'),
-            ],
+            'app' => $app,
             'packages' => $this->installedCapellPackages(),
             'counts' => $this->modelCounts(),
         ]);

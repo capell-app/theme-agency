@@ -14,6 +14,8 @@ Use the narrowest contract that matches the data you own:
 
 Tag implementations in the service container with the contract `TAG` constant.
 
+Specialised metadata contributors and aggregate contributors are merged in explicit registration order; when keys collide, the later registered contributor wins. Keep keys namespaced enough to avoid accidental overwrites.
+
 ## Public Safety Rules
 
 Contributors must only return content already safe for anonymous public visitors.
@@ -24,6 +26,8 @@ Do not return:
 - Drafts, unpublished translations, scheduled content not yet public, or private page state.
 - Model IDs, package internals, field paths, editor selectors, prompt text, or AI provider metadata.
 - Hidden authoring markers or data that would make public cached HTML unsafe.
+
+Agent Delivery recursively strips common unsafe metadata keys and values before public output, but contributors should still treat public safety as their responsibility rather than relying on sanitisation.
 
 ## Chunk Stability
 

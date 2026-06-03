@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Public-safe structured page manifests and semantic chunks for agents, search assistants, and machine readers.",
+    "description": "Serve your published Capell pages to AI agents and answer engines as clean, public-safe JSON manifests and RAG-ready semantic chunks — no scraping, no admin leakage.",
     "product": {
         "group": "Capell Publishing Pro",
         "tier": "premium",
@@ -73,7 +73,7 @@
     "healthChecks": [
         {
             "key": "agent-delivery.package-health",
-            "label": "Agent Delivery package surfaces, providers, and public manifest health are discoverable by Diagnostics.",
+            "label": "Agent Delivery package API compatibility is discoverable by Diagnostics.",
             "class": "Capell\\AgentDelivery\\Health\\AgentDeliveryHealthCheck",
             "severity": "critical",
             "surface": "admin"
@@ -86,8 +86,19 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Public-safe structured page manifests and semantic chunks for agents and machine readers.",
-        "screenshots": [],
+        "summary": "Serve your published Capell pages to AI agents and answer engines as clean, public-safe JSON manifests and RAG-ready semantic chunks — no scraping, no admin leakage.",
+        "screenshots": [
+            {
+                "path": "packages/agent-delivery/docs/screenshots/page-manifest-json-response.png",
+                "alt": "Public page manifest JSON response returned by Agent Delivery.",
+                "caption": "A compact JSON manifest for a published Capell page showing canonical URL, title, headings, summary, body, references, and timestamps."
+            },
+            {
+                "path": "packages/agent-delivery/docs/screenshots/page-chunks-json-response.png",
+                "alt": "Public page semantic chunks JSON response returned by Agent Delivery.",
+                "caption": "Ordered semantic chunks for a published Capell page, ready for RAG pipelines and answer engine consumption."
+            }
+        ],
         "categories": ["frontend", "publishing-pro", "ai"]
     },
     "contributionTraceability": {

@@ -8,7 +8,9 @@ use Capell\AccessGate\Actions\ListAccessRequestMethodsAction;
 use Capell\AccessGate\Actions\ResolveAccessGateAreaForRequestAction;
 use Capell\AccessGate\Models\Area;
 use Capell\AccessGate\Models\Registration;
+use Capell\AccessGate\Support\AccessGateResponseHeaders;
 use Capell\AccessGate\Support\RegistrationFieldRegistry;
+use Capell\AccessGate\Support\RequestedUrlGuard;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -17,15 +19,16 @@ final class ShowAccessRequestController
     public function __construct(
         private readonly RegistrationFieldRegistry $fields,
         private readonly ListAccessRequestMethodsAction $listAccessRequestMethods,
+        private readonly RequestedUrlGuard $requestedUrls,
     ) {}
 
     public function __invoke(Request $request, string $area): Response
     {
         $accessArea = ResolveAccessGateAreaForRequestAction::run($request, $area);
 
-        $requestedUrl = $this->requestedUrl($request, $accessArea);
+        $requestedUrl = $this->requestedUrls->allowed($request, $accessArea, $request->query('redirect'));
 
-        return $this->noStore(response()->view($accessArea->gate_view ?? 'capell-access-gate::request', [
+        return AccessGateResponseHeaders::noStore(response()->view($accessArea->gate_view ?? 'capell-access-gate::request', [
             'area' => $accessArea,
             'fields' => $this->fields->all(),
             'requestMethods' => $this->listAccessRequestMethods->handle($accessArea, $requestedUrl),
@@ -47,50 +50,5 @@ final class ShowAccessRequestController
             ->whereKey((int) $registrationId)
             ->where('access_area_id', $area->getKey())
             ->first();
-    }
-
-    private function requestedUrl(Request $request, Area $area): ?string
-    {
-        $requestedUrl = $request->query('redirect');
-
-        if (! is_string($requestedUrl) || $requestedUrl === '') {
-            return null;
-        }
-
-        $host = parse_url($requestedUrl, PHP_URL_HOST);
-
-        if (! is_string($host) || $host === '') {
-            return null;
-        }
-
-        if (! $this->hasHttpScheme($requestedUrl)) {
-            return null;
-        }
-
-        if ($host === $request->getHost()) {
-            return $requestedUrl;
-        }
-
-        $allowedHosts = collect($area->claim_url_hosts ?? [])
-            ->filter(fn (mixed $allowedHost): bool => $allowedHost !== '')
-            ->all();
-
-        return in_array($host, $allowedHosts, true) ? $requestedUrl : null;
-    }
-
-    private function hasHttpScheme(string $url): bool
-    {
-        $scheme = parse_url($url, PHP_URL_SCHEME);
-
-        return is_string($scheme) && in_array(strtolower($scheme), ['http', 'https'], true);
-    }
-
-    private function noStore(Response $response): Response
-    {
-        $response->headers->set('Cache-Control', 'no-store, private');
-        $response->headers->set('Pragma', 'no-cache');
-        $response->headers->set('Expires', '0');
-
-        return $response;
     }
 }

@@ -15,6 +15,8 @@ final class CapabilityData extends Data
      * @param  class-string<CapellAgentBridgeCapabilityAction>  $actionClass
      * @param  class-string<Data>|null  $inputDataClass
      * @param  class-string<Data>|null  $outputDataClass
+     * @param  array<string, mixed>|null  $inputSchema
+     * @param  array<string, mixed>|null  $outputSchema
      */
     public function __construct(
         public readonly string $key,
@@ -28,6 +30,8 @@ final class CapabilityData extends Data
         public readonly ?string $policyAbility = null,
         public readonly ?string $inputDataClass = null,
         public readonly ?string $outputDataClass = null,
+        public readonly ?array $inputSchema = null,
+        public readonly ?array $outputSchema = null,
         public readonly bool $supportsPreview = true,
         public readonly bool $requiresConfirmation = true,
         public readonly ?string $auditEvent = null,
@@ -50,6 +54,8 @@ final class CapabilityData extends Data
      *     policyAbility: string|null,
      *     inputDataClass: string|null,
      *     outputDataClass: string|null,
+     *     inputSchema: array<string, mixed>|null,
+     *     outputSchema: array<string, mixed>|null,
      *     supportsPreview: bool,
      *     requiresConfirmation: bool,
      *     auditEvent: string|null
@@ -68,6 +74,8 @@ final class CapabilityData extends Data
             'policyAbility' => $this->policyAbility,
             'inputDataClass' => $this->inputDataClass,
             'outputDataClass' => $this->outputDataClass,
+            'inputSchema' => $this->inputSchema,
+            'outputSchema' => $this->outputSchema,
             'supportsPreview' => $this->supportsPreview,
             'requiresConfirmation' => $this->requiresConfirmation,
             'auditEvent' => $this->auditEvent,

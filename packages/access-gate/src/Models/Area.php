@@ -32,7 +32,7 @@ use Override;
  * @property int|null $grant_duration_days
  * @property RegistrationPolicy $registration_policy
  * @property TokenPolicy $token_policy
- * @property array<int, string>|null $public_allowlist
+ * @property array<int, string|array{url?: string, host?: string, path?: string}>|null $public_allowlist
  * @property array<int, string>|null $claim_url_hosts
  * @property string|null $gate_view
  * @property array<array-key, mixed>|null $metadata

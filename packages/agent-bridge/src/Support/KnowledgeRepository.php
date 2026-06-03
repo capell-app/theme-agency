@@ -26,10 +26,12 @@ final class KnowledgeRepository
 
             $packages[] = [
                 'name' => $decoded['name'] ?? basename(dirname((string) $packageFile)),
+                'description' => $decoded['description'] ?? null,
                 'productGroup' => $product['group'] ?? null,
                 'tier' => $product['tier'] ?? null,
                 'bundle' => $product['bundle'] ?? null,
                 'contexts' => $decoded['surfaces'] ?? $decoded['contexts'] ?? [],
+                'capabilities' => $decoded['capabilities'] ?? [],
                 'requires' => $decoded['dependencies']['requires'] ?? $decoded['requires'] ?? [],
                 'path' => dirname((string) $packageFile),
             ];
@@ -65,9 +67,24 @@ final class KnowledgeRepository
         $normalized = trim(str_replace('\\', '/', $relativePath), '/');
 
         foreach ($this->documents() as $document) {
-            if (($document['path'] ?? null) === $normalized) {
-                return File::get(base_path($normalized));
+            if (($document['path'] ?? null) !== $normalized) {
+                continue;
             }
+
+            $absolutePath = base_path($normalized);
+            $resolvedPath = realpath($absolutePath);
+
+            if ($resolvedPath === false) {
+                return null;
+            }
+
+            $basePath = realpath(base_path());
+
+            if ($basePath === false || ! str_starts_with($resolvedPath, $basePath . '/')) {
+                return null;
+            }
+
+            return File::get($resolvedPath);
         }
 
         return null;

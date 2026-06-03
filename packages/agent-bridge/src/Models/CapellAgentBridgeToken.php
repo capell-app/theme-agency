@@ -18,6 +18,10 @@ use Override;
  * @property string $name
  * @property string $token_hash
  * @property array<int, string> $scopes
+ * @property bool $is_enabled
+ * @property CarbonImmutable|null $revoked_at
+ * @property CarbonImmutable|null $rotated_at
+ * @property string|null $created_from_ip
  * @property CarbonImmutable|null $last_used_at
  * @property CarbonImmutable|null $expires_at
  * @property Authenticatable|null $user
@@ -31,10 +35,17 @@ final class CapellAgentBridgeToken extends Model
         'name',
         'token_hash',
         'scopes',
+        'is_enabled',
+        'created_from_ip',
         'expires_at',
     ];
 
     protected $table = 'capell_agent_bridge_tokens';
+
+    /** @var array<string, mixed> */
+    protected $attributes = [
+        'is_enabled' => true,
+    ];
 
     public static function hashPlainTextToken(string $plainTextToken): string
     {
@@ -54,6 +65,10 @@ final class CapellAgentBridgeToken extends Model
 
         if ($token instanceof self) {
             return $token;
+        }
+
+        if (! (bool) config('capell-agent-bridge.accept_legacy_token_hashes', true)) {
+            return null;
         }
 
         $legacyToken = self::query()
@@ -83,6 +98,16 @@ final class CapellAgentBridgeToken extends Model
         return $this->expires_at instanceof CarbonImmutable && $this->expires_at->isPast();
     }
 
+    public function isRevoked(): bool
+    {
+        return $this->revoked_at instanceof CarbonImmutable;
+    }
+
+    public function isUsable(): bool
+    {
+        return $this->is_enabled && ! $this->isRevoked() && ! $this->isExpired();
+    }
+
     /** @return MorphTo<Model, $this> */
     public function user(): MorphTo
     {
@@ -95,6 +120,9 @@ final class CapellAgentBridgeToken extends Model
     {
         return [
             'scopes' => 'array',
+            'is_enabled' => 'boolean',
+            'revoked_at' => 'immutable_datetime',
+            'rotated_at' => 'immutable_datetime',
             'last_used_at' => 'immutable_datetime',
             'expires_at' => 'immutable_datetime',
         ];

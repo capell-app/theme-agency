@@ -8,6 +8,8 @@ use Capell\AccessGate\Actions\ConsumeAccessGateClaimTokenAction;
 use Capell\AccessGate\Data\IssuedAccessGateTokenData;
 use Capell\AccessGate\Models\Area;
 use Capell\AccessGate\Models\BrowserToken;
+use Capell\AccessGate\Support\AccessGateResponseHeaders;
+use Capell\AccessGate\Support\RequestedUrlGuard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -17,6 +19,7 @@ final class ClaimAccessGateTokenController
 {
     public function __construct(
         private readonly ConsumeAccessGateClaimTokenAction $consumeClaimToken,
+        private readonly RequestedUrlGuard $requestedUrls,
     ) {}
 
     public function __invoke(Request $request, string $token): RedirectResponse|Response
@@ -27,7 +30,7 @@ final class ClaimAccessGateTokenController
         ]);
 
         if (! $issuedBrowserToken instanceof IssuedAccessGateTokenData || ! $issuedBrowserToken->token instanceof BrowserToken) {
-            return $this->noStore(response()->view('capell-access-gate::message', [
+            return AccessGateResponseHeaders::noStore(response()->view('capell-access-gate::message', [
                 'title' => __('capell-access-gate::public.claim_failed.title'),
                 'message' => __('capell-access-gate::public.claim_failed.message'),
             ], 422));
@@ -36,43 +39,13 @@ final class ClaimAccessGateTokenController
         $browserToken = $issuedBrowserToken->token->loadMissing('grant.registration', 'area');
         $area = $browserToken->area;
         $redirectUrl = $area instanceof Area
-            ? $this->safeRedirectUrl($request, $area, $browserToken->grant?->registration?->requested_url)
+            ? $this->requestedUrls->redirectUrl($request, $area, $browserToken->grant?->registration?->requested_url)
             : url('/');
 
-        return $this->noStore(
+        return AccessGateResponseHeaders::noStore(
             redirect($redirectUrl)
                 ->withCookie($this->browserCookie($request, $issuedBrowserToken->plainTextToken)),
         );
-    }
-
-    private function safeRedirectUrl(Request $request, Area $area, ?string $requestedUrl): string
-    {
-        if ($requestedUrl === null || $requestedUrl === '') {
-            return url('/');
-        }
-
-        $requestedHost = parse_url($requestedUrl, PHP_URL_HOST);
-        $requestedScheme = parse_url($requestedUrl, PHP_URL_SCHEME);
-        $allowedHosts = collect($area->claim_url_hosts ?? [])
-            ->filter(fn (string $host): bool => $host !== '')
-            ->unique()
-            ->values();
-        $requestHost = $request->getHost();
-
-        if ($requestHost !== '') {
-            $allowedHosts->push($requestHost);
-        }
-
-        if (
-            ! is_string($requestedScheme)
-            || ! in_array(strtolower($requestedScheme), ['http', 'https'], true)
-            || ! is_string($requestedHost)
-            || $allowedHosts->doesntContain($requestedHost)
-        ) {
-            return url('/');
-        }
-
-        return $requestedUrl;
     }
 
     private function browserCookie(Request $request, string $plainTextToken): \Symfony\Component\HttpFoundation\Cookie
@@ -90,14 +63,5 @@ final class ClaimAccessGateTokenController
             false,
             config('access-gate.cookies.browser_token.same_site', 'lax'),
         );
-    }
-
-    private function noStore(RedirectResponse|Response $response): RedirectResponse|Response
-    {
-        $response->headers->set('Cache-Control', 'no-store, private');
-        $response->headers->set('Pragma', 'no-cache');
-        $response->headers->set('Expires', '0');
-
-        return $response;
     }
 }

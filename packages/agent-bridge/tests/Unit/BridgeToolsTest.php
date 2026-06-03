@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 use Capell\AgentBridge\Actions\InvokeAgentBridgeCapabilityPreviewAction;
 use Capell\AgentBridge\Data\AuthenticatedAgentBridgeClientData;
+use Capell\AgentBridge\Data\Capabilities\CreateDraftPageCapabilityInputData;
 use Capell\AgentBridge\Data\CapabilityData;
+use Capell\AgentBridge\Data\CapabilityResultData;
 use Capell\AgentBridge\Enums\CapabilityRiskEnum;
 use Capell\AgentBridge\Enums\CapabilityServerEnum;
 use Capell\AgentBridge\Facades\CapellAgentBridge;
+use Capell\AgentBridge\Models\CapellAgentBridgeAuditEntry;
 use Capell\AgentBridge\Models\CapellAgentBridgeToken;
 use Capell\AgentBridge\Resources\CapellAgentBridgeOverviewResource;
+use Capell\AgentBridge\Support\CapabilitySchemas;
 use Capell\AgentBridge\Support\CapellAgentBridgeCapabilityRegistry;
 use Capell\AgentBridge\Support\KnowledgeRepository;
 use Capell\AgentBridge\Tests\Fixtures\FakeCapabilityAction;
@@ -21,6 +25,7 @@ use Capell\AgentBridge\Tools\Knowledge\ReadKnowledgeDocumentTool;
 use Capell\AgentBridge\Tools\Site\ConfirmSiteCapabilityTool;
 use Capell\AgentBridge\Tools\Site\InspectSiteStateTool;
 use Capell\AgentBridge\Tools\Site\ListSiteCapabilitiesTool;
+use Capell\AgentBridge\Tools\Site\QuerySiteAuditEntriesTool;
 use Capell\AgentBridge\Tools\Site\RunSiteCapabilityTool;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\ResponseFactory;
@@ -107,9 +112,20 @@ it('returns site state without leaking content bodies', function (): void {
     $structuredContent = agentBridgeStructuredContent($response);
 
     expect($structuredContent['app'])
-        ->toHaveKeys(['name', 'environment', 'debug'])
+        ->toHaveKey('name')
+        ->not->toHaveKeys(['environment', 'debug'])
         ->and($structuredContent['counts'])
         ->toHaveKeys(['sites', 'languages', 'pages', 'pageUrls', 'blueprints', 'redirects', 'navigations']);
+});
+
+it('can opt into runtime state for trusted inspect calls', function (): void {
+    config()->set('capell-agent-bridge.inspect_app_runtime', true);
+
+    $response = (new InspectSiteStateTool)->handle();
+    $structuredContent = agentBridgeStructuredContent($response);
+
+    expect($structuredContent['app'])
+        ->toHaveKeys(['name', 'environment', 'debug']);
 });
 
 it('lists site capabilities allowed by the authenticated client scopes', function (): void {
@@ -143,6 +159,76 @@ it('lists site capabilities allowed by the authenticated client scopes', functio
 
     expect($capabilityKeys)
         ->toBe(['capell.fake.allowed']);
+});
+
+it('lists built-in capability schemas for agent discovery', function (): void {
+    $registry = new CapellAgentBridgeCapabilityRegistry;
+    $registry->register(new CapabilityData(
+        key: 'capell.pages.create_draft',
+        name: 'Create draft page',
+        description: 'Create a draft-like unpublished page record for an existing site, type, and layout.',
+        scope: 'capell.pages.write',
+        server: CapabilityServerEnum::Site,
+        risk: CapabilityRiskEnum::High,
+        actionClass: FakeCapabilityAction::class,
+        inputDataClass: CreateDraftPageCapabilityInputData::class,
+        outputDataClass: CapabilityResultData::class,
+        inputSchema: CapabilitySchemas::createDraftPageInput(),
+        outputSchema: CapabilitySchemas::capabilityResultOutput(),
+    ));
+
+    $response = (new ListSiteCapabilitiesTool)->handle(
+        $registry,
+        new AuthenticatedAgentBridgeClientData(tokenId: 1, name: 'Schema client', scopes: ['capell.pages.write']),
+    );
+
+    $capabilities = agentBridgeStructuredContent($response)['capabilities'];
+    $createDraft = collect($capabilities)->firstWhere('key', 'capell.pages.create_draft');
+
+    expect($createDraft)
+        ->toBeArray()
+        ->and($createDraft['inputDataClass'])->toBe(CreateDraftPageCapabilityInputData::class)
+        ->and($createDraft['outputDataClass'])->toBe(CapabilityResultData::class)
+        ->and($createDraft['inputSchema']['required'])->toContain('name', 'site_id', 'blueprint_id', 'layout_id');
+});
+
+it('queries audit entries for the authenticated token', function (): void {
+    $user = User::query()->create([
+        'name' => 'Audit Tool User',
+        'email' => 'audit-tool-user@example.com',
+        'password' => 'secret',
+    ]);
+
+    $token = new CapellAgentBridgeToken;
+    $token->forceFill([
+        'name' => 'Audit client',
+        'token_hash' => CapellAgentBridgeToken::hashPlainTextToken('audit-token'),
+        'scopes' => ['*'],
+        'user_type' => $user->getMorphClass(),
+        'user_id' => $user->getKey(),
+    ])->save();
+
+    $entry = new CapellAgentBridgeAuditEntry([
+        'agent_bridge_token_id' => $token->getKey(),
+        'event' => 'capell_agent-bridge.test',
+        'capability_key' => 'capell.fake.audit',
+        'scope' => 'capell.fake.audit',
+        'payload' => ['name' => 'Audit me'],
+        'result' => ['ok' => true],
+    ]);
+    $entry->user()->associate($user);
+    $entry->save();
+
+    $response = (new QuerySiteAuditEntriesTool)->handle(
+        new Request(['capability' => 'capell.fake.audit', 'limit' => 5]),
+        $token,
+    );
+
+    $entries = agentBridgeStructuredContent($response)['entries'];
+
+    expect($entries)->toHaveCount(1)
+        ->and($entries[0]['event'])->toBe('capell_agent-bridge.test')
+        ->and($entries[0]['payload'])->toBe(['name' => 'Audit me']);
 });
 
 it('runs and confirms site capability previews for authenticated clients', function (): void {

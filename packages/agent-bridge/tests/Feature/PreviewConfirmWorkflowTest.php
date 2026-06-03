@@ -114,6 +114,44 @@ it('rejects confirmation when the payload changes after preview', function (): v
     );
 })->throws(AuthorizationException::class, 'The Agent Bridge confirmation payload has changed.');
 
+it('rejects confirmation replay across users', function (): void {
+    registerFakeCapability();
+
+    $user = User::query()->create([
+        'name' => 'Original User',
+        'email' => 'original-confirm@example.com',
+        'password' => 'secret',
+    ]);
+    $otherUser = User::query()->create([
+        'name' => 'Other User',
+        'email' => 'other-confirm@example.com',
+        'password' => 'secret',
+    ]);
+
+    $created = CreateAgentBridgeTokenAction::run($user, 'Original client', ['capell.fake.write']);
+    $client = new AuthenticatedAgentBridgeClientData(
+        tokenId: (int) $created['token']->getKey(),
+        name: 'Original client',
+        scopes: ['capell.fake.write'],
+    );
+
+    $preview = InvokeAgentBridgeCapabilityPreviewAction::run(
+        capabilityKey: 'capell.fake.write',
+        payload: ['name' => 'Original'],
+        client: $client,
+        token: $created['token'],
+        user: $user,
+    );
+
+    ConfirmAgentBridgeCapabilityAction::run(
+        confirmationToken: $preview['confirmationToken'],
+        payload: ['name' => 'Original'],
+        client: $client,
+        token: $created['token'],
+        user: $otherUser,
+    );
+})->throws(AuthorizationException::class, 'The Agent Bridge confirmation token does not belong to this user.');
+
 it('rejects policy protected capability previews when no authenticated user is available', function (): void {
     registerFakeCapability(policyAbility: 'preview fake capability');
 

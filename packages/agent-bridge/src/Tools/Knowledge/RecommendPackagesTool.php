@@ -41,9 +41,11 @@ final class RecommendPackagesTool extends Tool
             ->map(function (array $package) use ($query): array {
                 $haystack = strtolower(implode(' ', array_filter([
                     $package['name'] ?? '',
+                    $package['description'] ?? '',
                     $package['productGroup'] ?? '',
                     $package['bundle'] ?? '',
                     implode(' ', $package['contexts'] ?? []),
+                    implode(' ', $package['capabilities'] ?? []),
                 ], static fn (string $value): bool => $value !== '')));
 
                 $score = 0;

@@ -28,6 +28,7 @@ use Capell\AccessGate\Policies\BrowserTokenPolicy;
 use Capell\AccessGate\Policies\ClaimTokenPolicy;
 use Capell\AccessGate\Policies\GrantPolicy;
 use Capell\AccessGate\Policies\RegistrationPolicy;
+use Capell\AccessGate\Support\AccessGateDiagnosticsService;
 use Capell\AccessGate\Support\AccessRequestMethodRegistry;
 use Capell\AccessGate\Support\CustomerPortal\AccessGatePortalSelfServiceItemProvider;
 use Capell\AccessGate\Support\Payments\AccessGatePaymentFulfillmentHandler;
@@ -259,11 +260,13 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
 
     private function applyMiddlewarePriority(Router $router): void
     {
+        $diagnostics = $this->app->make(AccessGateDiagnosticsService::class);
+
         $priority = [
             EncryptCookies::class,
             AccessGateMiddleware::class,
             'access-gate',
-            ...$this->pageCacheMiddlewarePriorityNames($router),
+            ...$diagnostics->pageCacheMiddlewarePriorityNames($router),
         ];
 
         $orderedPriority = collect($priority)
@@ -385,39 +388,6 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
             'access_gate_browser_tokens',
             'access_gate_events',
         ];
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function pageCacheAliases(): array
-    {
-        $aliases = config('access-gate.middleware.page_cache_aliases', []);
-
-        if (! is_array($aliases)) {
-            return [];
-        }
-
-        return array_values(collect($aliases)
-            ->filter(fn (mixed $alias): bool => is_string($alias) && $alias !== '')
-            ->values()
-            ->all());
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function pageCacheMiddlewarePriorityNames(Router $router): array
-    {
-        $registeredMiddleware = $router->getMiddleware();
-
-        return array_values(collect($this->pageCacheAliases())
-            ->flatMap(fn (string $alias): array => array_values(array_filter([
-                $alias,
-                $registeredMiddleware[$alias] ?? null,
-            ], is_string(...))))
-            ->values()
-            ->all());
     }
 
     /**

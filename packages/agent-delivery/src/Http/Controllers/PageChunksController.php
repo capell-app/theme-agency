@@ -7,22 +7,14 @@ namespace Capell\AgentDelivery\Http\Controllers;
 use Capell\AgentDelivery\Actions\BuildAgentDeliveryChunksAction;
 use Capell\AgentDelivery\Actions\ResolveAgentDeliveryPageAction;
 use Capell\AgentDelivery\Data\AgentDeliveryChunkData;
-use Capell\AgentDelivery\Data\ResolvedAgentDeliveryPageData;
-use Capell\AgentDelivery\Providers\AgentDeliveryServiceProvider;
-use Capell\Core\Contracts\Pageable;
-use Capell\Core\Facades\CapellCore;
-use Capell\Core\Models\Language;
-use Capell\Core\Models\Site;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-final class PageChunksController
+final class PageChunksController extends AbstractAgentDeliveryController
 {
-    private const string API_VERSION = 'v1';
-
     public function __invoke(Request $request): JsonResponse
     {
-        if (! CapellCore::isPackageInstalled(AgentDeliveryServiceProvider::$packageName)) {
+        if ($this->isNotInstalled()) {
             return $this->notFound();
         }
 
@@ -34,50 +26,16 @@ final class PageChunksController
 
         $chunks = BuildAgentDeliveryChunksAction::run($resolved->page, $resolved->site, $resolved->language, $resolved->delivery);
 
-        return $this->json([
+        return $this->cacheableJson($request, [
             'data' => array_map(
                 static fn (AgentDeliveryChunkData $chunk): array => $chunk->toArray(),
                 $chunks,
             ),
-        ], cacheTags: $this->cacheTags($resolved));
-    }
-
-    private function notFound(): JsonResponse
-    {
-        return $this->json(['message' => 'Page not found'], 404);
-    }
-
-    /**
-     * @param  array<string, mixed>  $payload
-     * @param  list<string>  $cacheTags
-     */
-    private function json(array $payload, int $status = 200, array $cacheTags = ['agent-delivery']): JsonResponse
-    {
-        return response()
-            ->json($payload, $status)
-            ->header('X-Capell-Agent-Delivery-Version', self::API_VERSION)
-            ->header('X-Capell-Cache-Tags', implode(',', $cacheTags));
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function cacheTags(ResolvedAgentDeliveryPageData $resolved): array
-    {
-        $tags = ['agent-delivery'];
-
-        if ($resolved->site instanceof Site) {
-            $tags[] = 'site:' . $resolved->site->getKey();
-        }
-
-        if ($resolved->language instanceof Language) {
-            $tags[] = 'language:' . $resolved->language->getKey();
-        }
-
-        if ($resolved->page instanceof Pageable) {
-            $tags[] = 'page:' . $resolved->page->getKey();
-        }
-
-        return $tags;
+            'meta' => [
+                'count' => count($chunks),
+                'canonicalUrl' => $resolved->delivery->canonicalUrl,
+                'generatedAt' => $resolved->delivery->lastUpdatedAt ?? now()->toIso8601String(),
+            ],
+        ], cacheTags: $this->cacheTags($resolved), lastModifiedAt: $resolved->delivery->lastUpdatedAt);
     }
 }

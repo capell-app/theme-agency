@@ -10,14 +10,14 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (Schema::hasTable('capell_agent-bridge_confirmations')) {
+        if (Schema::hasTable('capell_agent_bridge_confirmations')) {
             return;
         }
 
-        Schema::create('capell_agent-bridge_confirmations', function (Blueprint $table): void {
+        Schema::create('capell_agent_bridge_confirmations', function (Blueprint $table): void {
             $table->id();
             $table->string('token', 64)->unique();
-            $table->foreignId('agent_bridge_token_id')->constrained('capell_agent-bridge_tokens')->cascadeOnDelete();
+            $table->foreignId('agent_bridge_token_id')->constrained('capell_agent_bridge_tokens')->cascadeOnDelete();
             $table->morphs('user');
             $table->string('capability_key');
             $table->string('scope');
@@ -32,6 +32,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('capell_agent-bridge_confirmations');
+        Schema::dropIfExists('capell_agent_bridge_confirmations');
     }
 };
