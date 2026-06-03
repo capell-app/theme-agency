@@ -1,0 +1,111 @@
+# Newsletter — Improvement & Growth Plan
+
+> Package: capell-app/newsletter · Kind: package · Tier: premium · Product group: Capell Marketing · Bundle: newsletter · Status: Draft
+
+## 1. Snapshot
+
+Newsletter is a schema-owning premium package (13 migrations, 12 models, 23 Actions, 12 Data objects, 5 public HTTP controllers, 10 Filament resources + 1 dashboard widget). It captures subscribers from Form Builder submissions, records consent evidence, runs double opt-in via hashed public tokens, syncs to ESPs through a pluggable adapter registry (Mailchimp, Kit, Campaign Monitor, Fake), supports static/dynamic segments, CSV import/export, UTM attribution, a public preference center, and schedules `NewsletterSend` campaign records. Core domain logic correctly lives in `src/Actions`; public controllers (`src/Http/Controllers`) delegate to Actions and the public Blade (`resources/views/preference-center.blade.php`) renders only a typed `PreferenceCenterData` view model — no DB queries, no admin leakage. Provider credentials/`webhook_secret` are `encrypted` casts (`src/Models/ProviderConnection.php`). Tests: 82 across 17 Pest files (Integration Actions + Unit + 1 Filament Feature).
+
+Current marketplace summary (verbatim from `capell.json`): _"Newsletter adds subscriber capture, segmentation, preference center, campaign sends, automation hooks, UTM attribution, unsubscribe routes, and audience workflows for Capell sites."_ Screenshots declared: **1** (`docs/assets/marketplace/extension-card.jpg`) — yet `docs/README.md` lays out a **13-shot screenshot plan**. Major media mismatch (1 of 13 captured).
+
+## 2. Improvements (existing functionality)
+
+- **Implement the four advertised health checks (currently a stub)** — `capell.json` declares `newsletter.form-subscription` (critical), `newsletter.provider-sync-retry` (critical), `newsletter.provider-webhooks` (critical), `newsletter.segments` (warning), all pointing at `Capell\Newsletter\Health\NewsletterHealthCheck`. That class implements only `compatibleCapellApiVersion()` and returns no probe results — every check is hollow. Add real probes (form listener wired? due sync attempts draining? webhook idempotency table present? segment evaluation returns a Builder?). — manifest oversells a critical capability — `src/Health/NewsletterHealthCheck.php` — **M**
+
+- **Harden the Form Builder event binding** — the listener is wired by building the event class name from a string and guarding with `class_exists`: `Event::listen($formSubmittedEvent, SubscribeFromFormSubmission::class)`. If Form Builder renames/moves `FormSubmitted`, subscription silently stops with no error. Reference the class directly (it is a hard `requires` dependency) or assert its existence in a health check/test. — silent failure of the headline capability — `src/Providers/NewsletterServiceProvider.php:233-236` — **S**
+
+- **Restrict or gate the `Fake` provider adapter in production** — `ProviderType::Fake` is a selectable enum case (it has a label and is registered in the container at `NewsletterServiceProvider`), and `FakeProviderAdapter::verifyWebhook()` returns `true` unconditionally. A Fake `ProviderConnection` therefore exposes an unauthenticated public webhook that writes subscriber + consent rows. Hide `Fake` from the admin `provider` select (or block its webhook route) outside testing. — unauthenticated state mutation — `src/Support/Providers/FakeProviderAdapter.php`, `src/Enums/ProviderType.php` — **S**
+
+- **Set token expiry for unsubscribe and preference-center tokens** — `CreateUnsubscribeTokenAction` and `CreatePreferenceCenterTokenAction` create `PublicToken`s with `'expires_at' => null`, so `isUsable()` treats them as valid forever. Confirm tokens correctly expire (72h). Long-lived unsubscribe/preference links are a standing risk if a URL leaks. Add a configurable expiry (reuse `token_expiry_hours` or a new key). — non-expiring public credentials — `src/Actions/CreateUnsubscribeTokenAction.php`, `src/Actions/CreatePreferenceCenterTokenAction.php`, `src/Models/PublicToken.php` — **S**
+
+- **Make public tokens single-use where appropriate** — confirm/unsubscribe Actions lock the row (`lockForUpdate`) and check `isUsable()`, but I did not observe `used_at` being stamped after a successful confirm/unsubscribe in the token flow; `isUsable()` keys off `used_at`. Verify the token is burned post-use so a confirm link can't be replayed. — replayable tokens — `src/Actions/ConfirmSubscriberAction.php`, `src/Actions/UnsubscribeSubscriberAction.php` — **S**
+
+- **Surface sync-retry exhaustion** — `sync.retry_minutes` is `[5, 30, 120]` (3 attempts) and `RequeueDueProviderSyncAttemptsCommand` runs every 5 min, but there is no terminal/dead-letter state or admin signal when a `SyncAttempt` exhausts retries. The overview widget shows failures, but a permanently-failing attempt should move to a distinct state and ideally raise the (to-be-built) `provider-sync-retry` health check. — silent sync data loss — `config/capell-newsletter.php`, `src/Actions/RequeueDueProviderSyncAttemptsAction.php` — **M**
+
+- **Add provider-side rate-limit / 429 handling to adapters** — adapters use `Http::retry(retry_times, retry_delay_ms)` with a flat delay; Mailchimp/Kit/Campaign Monitor return `429` with `Retry-After`. Honour backoff to avoid hammering ESPs during bulk sync/import. — deliverability + API-ban risk — `src/Support/Providers/MailchimpProviderAdapter.php` (and Kit/CampaignMonitor siblings) — **M**
+
+- **Localise the preference-center page and harden CSV import limits** — only `resources/lang/en` exists; the one public HTML surface is English-only. Separately, `imports.max_rows = 10000` / `max_file_kb = 2048` are enforced but a 10k-row synchronous import in `ImportSubscribersAction` should be chunked/queued. — i18n gap + import timeout risk — `resources/lang/`, `src/Actions/ImportSubscribersAction.php` — **M**
+
+## 3. Missing Features (gaps)
+
+Tie-back to `capabilities[]` in `capell.json`.
+
+- **No actual send/delivery engine (table-stakes for "campaign sends").** `capabilities` advertise `newsletter-campaign-sends` and `newsletter-send-lifecycle`, but `ScheduleNewsletterSendAction` / `BuildDueNewsletterSendsAction` / `UpdateNewsletterSendStatusAction` have **zero production callers** — the only consumer is the editorial-calendar contributor. `NewsletterSend` is a scheduling/lifecycle _record_ with no worker that renders an email, expands the audience, and dispatches mail. The package's only outbound mail is the double-opt-in notification (`RequestDoubleOptInAction`). Either ship a sender (queue worker that drives `BuildDueNewsletterSendsAction` → ESP campaign API / Laravel mail) or explicitly reposition "sends" as scheduling-only and document that delivery is delegated to Campaign/Email Studio. **This is the single biggest capability-vs-reality gap.**
+
+- **No campaign analytics** (`newsletter-utm-attribution` exists for capture; nothing for outcomes). No open/click/bounce/unsubscribe-rate reporting per send or per segment. Newsletter-category norm — buyers expect at least delivered/opened/clicked. Differentiator if tied to UTM attribution already captured.
+
+- **Bounce/complaint suppression is modelled but not closed-loop.** Subscriber has `bounced_at` / `complained_at` / `suppressed_at` columns and webhooks map `cleaned→Bounced`, `abuse→Complained`, but there's no enforced global suppression list preventing re-subscribe/sync of a hard-bounced or complained address. GDPR/deliverability table-stakes.
+
+- **No preference center beyond segment opt-in/out.** The public center only toggles segment membership; no frequency control, no one-click "unsubscribe from all", no profile fields (name) editing. Table-stakes for a "preference center" capability.
+
+- **No List-Unsubscribe header support / RFC 8058 one-click.** Required by Gmail/Yahoo bulk-sender rules. Even without an in-house sender, the package should expose a mailto/HTTP one-click unsubscribe surface for the ESP to reference. Deliverability-critical.
+
+- **No GDPR data-subject export/erasure Action.** Consent is recorded (`ConsentEvent`) but there's no subscriber-level "export my data" / "forget me" Action despite `privateDocsRequested` and a consent-evidence model. Differentiator for EU buyers; pairs with the Contacts suite.
+
+- **No webhook coverage for Kit/Campaign Monitor parity beyond Mailchimp**, and no scheduled re-sync/audience drift reconciliation (provider is source of truth for unsubscribes that arrive outside webhooks). Provider-sync robustness gap.
+
+- **Automation hooks are thin.** `newsletter-automation-hooks` is advertised but there are no documented domain events (e.g. `SubscriberConfirmed`, `SubscriberUnsubscribed`) other packages can subscribe to. Emitting events would make the cross-sell to Campaign/Automation Studio real rather than aspirational.
+
+## 4. Issues / Risks
+
+- **Stub health checks (critical).** Four manifest health checks resolve to a no-op class — `src/Health/NewsletterHealthCheck.php`. Marketplace certification and `capell:doctor`-style tooling will report green for capabilities that are never probed. (See §2.)
+
+- **Fake adapter accepts unsigned webhooks in production.** `FakeProviderAdapter::verifyWebhook()` → `true`; `ProviderType::Fake` is admin-selectable. `src/Support/Providers/FakeProviderAdapter.php`. (See §2.)
+
+- **Non-expiring unsubscribe/preference tokens.** `expires_at => null` in both create Actions. `src/Actions/CreateUnsubscribeTokenAction.php`, `CreatePreferenceCenterTokenAction.php`. (See §2.)
+
+- **Webhook idempotency degrades silently if table missing.** `HandleProviderWebhookAction::alreadyProcessed()/markProcessed()` short-circuit with `Schema::hasTable('newsletter_processed_webhook_events')` checks; if the migration hasn't run, duplicate webhooks are reprocessed with no warning. `src/Actions/HandleProviderWebhookAction.php`. **S**
+
+- **Mailchimp signature fallback to a query-string shared secret.** When no signature header is present, `verifyWebhook` falls back to `hash_equals($secret, $request->query('secret'))` — a secret in the URL lands in access logs/referers. Acceptable as documented Mailchimp legacy behaviour, but should be opt-in, not default. `src/Support/Providers/MailchimpProviderAdapter.php`. **S**
+
+- **Performance budget is asserted, not enforced.** `capell.json` sets `frontendRenderBudgetMs: 20` and `adminQueryBudget: 40`. No test measures the preference-center render or asserts the admin resource query budget. `cacheSafety.cacheable: false` is correct (per-subscriber output). No regression guard exists. **M**
+
+- **Test gaps.** 82 tests, but: no test for the Form Builder event binding actually firing the listener (the string-built `class_exists` path is untested); no test that confirm/unsubscribe tokens are burned (`used_at`) and reject replay; no test that the Fake webhook path is blocked in production config; no public-output-safety assertion test for the preference-center HTML (anonymous response must not leak admin labels/IDs — currently relied on by convention only); no health-check tests (because the checks are empty). `tests/`.
+
+- **PII at rest.** `newsletter_subscribers` stores `email`/`first_name`/`last_name`/`profile` as `longText` (plaintext) with a separate `email_hash` for lookup. Consider whether raw email should be encrypted given consent-grade PII handling claims; at minimum document the retention posture. `database/migrations/...02_create_newsletter_subscribers_table.php`. **M**
+
+- **i18n.** Public preference center + all strings are `en` only. `resources/lang/en`. (See §2.)
+
+## 5. Marketplace & Selling
+
+**Current `capell.json` summary** is a comma-stuffed feature list (8 items in one sentence) — it tells _what's inside_ but not _who it's for_ or _why_, and it promises "campaign sends" the package can't actually deliver (§3). **Current composer `description`** ("Newsletter audience management for Capell CMS") is the opposite problem: too narrow, omits the ESP sync and preference center that are the real value. The two descriptions also disagree on scope.
+
+**Improved 1-sentence summary:**
+
+> Capture, confirm, and segment newsletter subscribers on every Capell site — with double opt-in, a public preference center, GDPR-grade consent evidence, and one-click sync to Mailchimp, Kit, and Campaign Monitor.
+
+**Improved 3–4 sentence description:**
+
+> Newsletter turns any Capell form into a consent-compliant audience pipeline: submissions create subscribers, double opt-in is handled through expiring signed links, and every consent change is logged as evidence you can defend. Build static or rule-based segments, let subscribers manage their own preferences from a tokenised public page, and import/export lists by CSV. Connections to Mailchimp, Kit, and Campaign Monitor keep your ESP in sync with durable, auto-retrying jobs and idempotent inbound webhooks. UTM attribution captures where each subscriber came from, and scheduled sends feed Publishing Studio's editorial calendar.
+> _(Note: keep the description honest about delivery — see §3; if no in-house sender ships, say "schedules sends for your ESP/Campaign Studio to deliver.")_
+
+**Screenshot/media gaps:** only 1 of the 13 planned shots exists. Capture at minimum: subscribers index, double opt-in confirmation page, public preference center, provider connection form, segments builder, sync-attempts (retry) view, and the overview stats widget. The preference center and confirmation pages are the strongest "trust" visuals for a paid marketing add-on.
+
+**Pricing / tier / bundle:** `tier: premium`, `bundle: newsletter`, `proposedLicense: paid`, `first-party`, `priority` support — appropriate _if_ the send or analytics gap is closed; as a capture-and-sync tool only, it sits closer to mid-tier. Strengthen the moat (suppression list, analytics, one-click unsubscribe, GDPR export) to justify premium.
+
+**Cross-sell (via `dependencies.supports` + Extension Suites):** ships adapters/feeds for `capell-app/contacts` (`SyncNewsletterSubscriberContactAction`) and `capell-app/customer-portal` (preferences feed) — lead with these as bundle hooks. Natural upsell path: **email-studio** (own the actual send/delivery the package currently lacks), **contacts** (unified profile + the contacts source adapter already present), **campaign-studio** (segments → campaigns + the editorial-calendar contributor already wired). Position Newsletter as the _capture & consent_ layer of the Capell Marketing suite.
+
+**Differentiators / value props / target buyer:** consent-evidence trail + double opt-in + provider-agnostic sync in one CMS-native package is the differentiator vs. bolt-on ESP embeds. Target buyer: agency/site owner who wants compliant list growth from existing Capell forms without gluing a third-party signup widget onto the front end.
+
+**8–12 keywords/tags:** `newsletter`, `email-marketing`, `subscribers`, `double-opt-in`, `gdpr-consent`, `mailchimp`, `kit-convertkit`, `campaign-monitor`, `segmentation`, `preference-center`, `unsubscribe`, `audience-sync`.
+
+## 6. Prioritized Roadmap
+
+| Item                                                                           | Bucket | Effort | Impact | Section ref |
+| ------------------------------------------------------------------------------ | ------ | ------ | ------ | ----------- |
+| Implement real logic for the 4 advertised health checks                        | Now    | M      | High   | §2, §4      |
+| Hide/block `Fake` provider adapter in production (unsigned webhook)            | Now    | S      | High   | §2, §4      |
+| Add expiry + single-use burn (`used_at`) to unsubscribe/preference tokens      | Now    | S      | High   | §2, §4      |
+| Reference `FormSubmitted` directly + test the listener actually fires          | Now    | S      | High   | §2, §4      |
+| Honest marketplace summary + composer description (align the two)              | Now    | S      | Med    | §5          |
+| Capture the remaining 12 marketplace screenshots                               | Now    | S      | Med    | §1, §5      |
+| Decide & ship send strategy: in-house sender vs. reposition as scheduling-only | Next   | L      | High   | §3          |
+| Global suppression list for bounced/complained (block re-sync/re-subscribe)    | Next   | M      | High   | §3, §4      |
+| List-Unsubscribe / RFC 8058 one-click unsubscribe surface                      | Next   | M      | High   | §3          |
+| Public-output-safety test for preference-center HTML (anon/non-admin)          | Next   | S      | Med    | §4          |
+| Sync-retry exhaustion: terminal state + admin/health signal                    | Next   | M      | Med    | §2, §4      |
+| Emit domain events (Confirmed/Unsubscribed) for automation hooks               | Next   | M      | Med    | §3          |
+| Campaign analytics (delivered/open/click/unsub per send & segment)             | Later  | L      | High   | §3          |
+| GDPR subject export/erasure Action                                             | Later  | M      | Med    | §3, §4      |
+| ESP 429/Retry-After backoff in adapters                                        | Later  | M      | Med    | §2          |
+| Localise preference center + chunk/queue large CSV imports                     | Later  | M      | Low    | §2, §4      |

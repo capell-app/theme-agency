@@ -58,7 +58,6 @@ parameters:
         - packages/seo-suite/resources/lang
         - packages/tags/resources/lang
         - packages/toolbar/resources/lang
-        - packages/theme-studio-admin/resources/lang
     viewDirectories:
         - packages/access-gate/resources/views
         - packages/address/resources/views
@@ -94,7 +93,6 @@ parameters:
         - packages/theme-agency/resources/views
         - packages/theme-corporate/resources/views
         - packages/theme-saas/resources/views
-        - packages/theme-studio-admin/resources/views
         - packages/translation-manager/resources/views
     type_coverage:
         constant_type: 100

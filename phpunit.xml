@@ -58,7 +58,6 @@
             <directory suffix=".php">./packages/*/config</directory>
             <!-- Service providers and middleware are integration-level; excluded from unit coverage -->
             <directory suffix=".php">./packages/theme-*/src/*ServiceProvider.php</directory>
-            <directory suffix=".php">./packages/theme-studio-core/src/Http/Middleware</directory>
         </exclude>
     </source>
     <php>
