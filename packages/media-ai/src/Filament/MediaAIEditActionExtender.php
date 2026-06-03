@@ -31,7 +31,8 @@ final class MediaAIEditActionExtender implements MediaEditActionExtender
                         ->label(__('capell-media-ai::media-ai.operation'))
                         ->options(__('capell-media-ai::media-ai.operations'))
                         ->default('improve')
-                        ->required(),
+                        ->required()
+                        ->in(ImageDoctorRequest::OPERATIONS),
                     Textarea::make('instructions')
                         ->label(__('capell-media-ai::media-ai.instructions'))
                         ->placeholder(__('capell-media-ai::media-ai.instructions_placeholder'))

@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Media AI adds optional AI-assisted media actions for Capell.",
+    "description": "Media AI adds an AI \"Doctor image\" action to every image in the Capell Admin media library, letting editors remove backgrounds, erase objects, restore, and upscale without leaving the CMS. It's provider-agnostic by design: bind any image model through the `ImageDoctor` contract (pairs naturally with AI Orchestrator for failover), or leave it unconfigured and the action stays safely hidden behind a null implementation. On the roadmap, batch alt-text and caption generation feed Media Library's media-health workflow for accessibility and SEO at scale. Record-level media permissions are enforced on every request, and the package adds no public frontend output.",
     "product": {
         "group": "Capell Media",
         "tier": "premium",
@@ -83,12 +83,22 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Media AI adds optional AI-assisted media actions for Capell.",
+        "summary": "AI image actions inside Capell's media library — remove backgrounds, clean up and upscale photos, and (roadmap) auto-generate accessible, multilingual alt text — with a safe no-op fallback until you connect a provider.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Media AI extension preview image",
                 "caption": "Media AI extension preview"
+            },
+            {
+                "path": "docs/images/screenshots/media-ai-doctor-image.png",
+                "alt": "Doctor image action on a media record in the Capell Admin media library",
+                "caption": "The Doctor image action on an image record in the media library"
+            },
+            {
+                "path": "docs/images/screenshots/media-ai-doctor-image-dark.png",
+                "alt": "Doctor image action on a media record in dark mode",
+                "caption": "The Doctor image action shown in dark mode"
             }
         ],
         "categories": ["admin", "console", "media"]

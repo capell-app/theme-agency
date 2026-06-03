@@ -21,7 +21,7 @@ Status: `Optional` · Surface: `Admin` · Depends on: `capell-app/admin`, `capel
 4. Add short instructions.
 5. Submit the action.
 
-When an `ImageDoctor` implementation returns a replacement media record, the notification links the editor to the generated image. If the implementation only returns a warning, the original media record remains unchanged.
+When the action runs, the editor sees a Filament notification carrying the `ImageDoctorResult` message — a success notification when the request succeeds, or a warning when it does not. The result object currently carries only `successful` and an optional `message`; the original media record is never mutated by this package.
 
 ## Integration Contract
 
@@ -33,7 +33,7 @@ use Capell\MediaAI\Contracts\ImageDoctor;
 $this->app->bind(ImageDoctor::class, AIOrchestratorImageDoctor::class);
 ```
 
-The implementation receives the current media record and an `ImageDoctorRequest`. It returns an `ImageDoctorResult` with a success message, optional replacement media, and optional warning.
+The implementation receives the current media record and an `ImageDoctorRequest` (a validated `operation` plus free-text `instructions`). It returns an `ImageDoctorResult` reporting `successful` and an optional human-readable `message`. The `message` is rendered verbatim in the editor notification, so providers must return a translated, credential-free string.
 
 ## Boundaries
 
