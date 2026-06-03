@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Frontend Authoring owns the admin beacon, in-page edit manifest, signed edit routes, and cache-aware field saves.",
+    "description": "In-page (frontend) editing for Capell: an admin-only beacon adds inline edit controls to live pages without leaking any editor markup or signed URLs into public or cached output.",
     "product": {
         "group": "Capell Foundation",
         "tier": "free",
@@ -81,12 +81,22 @@
         "privateDocsRequested": false
     },
     "marketplace": {
-        "summary": "Frontend Authoring owns the admin beacon, in-page edit manifest, signed edit routes, and cache-aware field saves.",
+        "summary": "Edit page titles, descriptions and content straight from the live site — admins get inline edit controls after the page loads, while visitors and caches only ever see ordinary HTML.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Frontend Authoring extension preview image",
                 "caption": "Frontend Authoring extension preview"
+            },
+            {
+                "path": "docs/images/screenshots/frontend-page-with-authoring-enabled.png",
+                "alt": "Admin hovering an editable region on a live page to reveal the inline edit control",
+                "caption": "Inline edit controls appear for admins after the page loads"
+            },
+            {
+                "path": "docs/images/screenshots/capell-app-frontend-authoring-mobile.png",
+                "alt": "Inline authoring overlay working on a mobile viewport",
+                "caption": "Authoring controls stay usable on mobile"
             }
         ],
         "categories": ["console", "foundation", "frontend"]

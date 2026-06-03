@@ -5,3 +5,13 @@ All notable changes to `capell-app/frontend-authoring` will be documented in thi
 ## Unreleased
 
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
+
+## 2026-06-03
+
+- Replaced the stub `FrontendAuthoringHealthCheck` with real probes (beacon route registration, registry/signer resolvability, configuration readability, and signing-secret availability) so the `critical` diagnostics severity reflects actual surface health.
+- Documented the signed-payload editor flow: HMAC-signed region payloads (`EditableRegionSigner`) drive the `auth`+`signed` edit route and are re-validated against the live manifest on load and save.
+- Documented beacon origin hardening: the beacon short-circuits to a bare CSRF token for anonymous users, non-admins, cross-origin requests, and posted-URL/origin mismatches before any database work.
+- Documented the optional approval-workspace save flow used when inline edits are routed through publishing for review.
+- Sharpened marketplace and composer copy to outcome-led messaging and promoted real desktop and mobile authoring captures into the marketplace screenshots.
+- Added a focused `EditableRegionSigner` unit test covering tampered and malformed payload rejection.
+- Removed a stray duplicate screenshot asset nested under `packages/frontend-authoring/` inside the package.

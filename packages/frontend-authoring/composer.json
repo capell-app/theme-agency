@@ -1,6 +1,6 @@
 {
     "name": "capell-app/frontend-authoring",
-    "description": "Frontend authoring bridge and in-page editing for Capell frontend",
+    "description": "In-page (frontend) editing for Capell: an admin-only beacon adds inline edit controls to live pages without leaking any editor markup or signed URLs into public or cached output.",
     "type": "library",
     "license": "proprietary",
     "require": {

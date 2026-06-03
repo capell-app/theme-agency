@@ -11,5 +11,5 @@ it('registers authoring package metadata for install workflows', function (): vo
     expect($package->name)->toBe('capell-app/frontend-authoring')
         ->and($package->serviceProviderClass)->toBe(FrontendAuthoringServiceProvider::class)
         ->and($package->path)->toBe(realpath(__DIR__ . '/../../../'))
-        ->and($package->getDescription())->toBe('Frontend Authoring owns the admin beacon, in-page edit manifest, signed edit routes, and cache-aware field saves.');
+        ->and($package->getDescription())->toBe('In-page (frontend) editing for Capell: an admin-only beacon adds inline edit controls to live pages without leaking any editor markup or signed URLs into public or cached output.');
 });
