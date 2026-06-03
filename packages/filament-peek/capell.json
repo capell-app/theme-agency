@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Filament Peek adds private, unsaved page preview snapshots to Capell Admin.",
+    "description": "Preview unsaved page and Layout Builder edits exactly as they'll render on your live theme — through a private, expiring, signed link, with nothing written to your content until you save.",
     "product": {
         "group": "Capell Foundation",
         "tier": "free",
@@ -78,12 +78,37 @@
         "privateDocsRequested": false
     },
     "marketplace": {
-        "summary": "Filament Peek adds private page previews for unsaved Capell editor changes.",
+        "summary": "Preview unsaved page and Layout Builder edits exactly as they'll render on your live theme — through a private, expiring, signed link, with nothing written to your content until you save.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Filament Peek extension preview image",
                 "caption": "Filament Peek extension preview"
+            },
+            {
+                "path": "docs/assets/marketplace/hero-desktop.jpg",
+                "alt": "Filament Peek unsaved page preview on desktop",
+                "caption": "Preview unsaved edits rendered through your live theme on desktop"
+            },
+            {
+                "path": "docs/assets/marketplace/hero-mobile.jpg",
+                "alt": "Filament Peek unsaved page preview on mobile",
+                "caption": "Review in-flight changes before publishing on mobile"
+            },
+            {
+                "path": "docs/screenshots/page-or-workspace-edit-screen-with-preview-action.png",
+                "alt": "Page edit header showing the Changes preview action",
+                "caption": "Launch a private preview of unsaved changes from the Page edit header"
+            },
+            {
+                "path": "docs/screenshots/peek-iframe-preview-panel.png",
+                "alt": "Filament Peek iframe preview panel",
+                "caption": "Unsaved edits render in the preview panel without touching saved content"
+            },
+            {
+                "path": "docs/screenshots/workspace-draft-review-screen-with-preview-action.png",
+                "alt": "Workspace draft review screen with a preview action",
+                "caption": "Review workspace drafts before they go live"
             }
         ],
         "categories": ["admin", "editorial"]

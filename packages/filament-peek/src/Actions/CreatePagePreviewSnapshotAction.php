@@ -38,7 +38,6 @@ final class CreatePagePreviewSnapshotAction
             pageId: (int) $page->getKey(),
             formState: $formState,
             workspaceId: $this->currentWorkspaceId(),
-            path: $page->pageUrl?->url,
             layoutBuilderState: resolve(StoreLayoutBuilderPreviewStateAction::class)->resolve($page, $user),
         );
 

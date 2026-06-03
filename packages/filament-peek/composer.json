@@ -1,6 +1,6 @@
 {
     "name": "capell-app/filament-peek",
-    "description": "Filament Peek page previews for Capell Admin.",
+    "description": "Private, expiring previews of unsaved Page and Layout Builder changes for Capell Admin, rendered through the live frontend pipeline without persisting draft state.",
     "type": "library",
     "license": "proprietary",
     "autoload": {

@@ -17,7 +17,6 @@ final class PagePreviewSnapshotData extends Data
         public int $pageId,
         public array $formState,
         public ?int $workspaceId = null,
-        public ?string $path = null,
         public ?LayoutBuilderPreviewStateData $layoutBuilderState = null,
     ) {}
 }

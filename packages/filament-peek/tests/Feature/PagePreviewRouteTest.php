@@ -51,6 +51,37 @@ it('rejects expired signed preview URLs before loading snapshot data', function 
     $this->get($url)->assertForbidden();
 });
 
+it('rejects a validly-signed preview URL for an unauthenticated request', function (): void {
+    $user = $this->createUserWithRole('super_admin');
+    $this->actingAs($user);
+
+    $page = Page::factory()->create();
+    $snapshot = CreatePagePreviewSnapshotAction::run($page, ['name' => 'Preview'])['snapshot'];
+    $url = URL::signedRoute('capell-filament-peek.preview', ['token' => $snapshot->token]);
+
+    auth('web')->logout();
+
+    $this->get($url)
+        ->assertForbidden()
+        ->assertHeader('Cache-Control', 'no-store, private');
+});
+
+it('rejects a validly-signed preview URL for a non-admin user who does not own the snapshot', function (): void {
+    $owner = $this->createUserWithRole('super_admin');
+    $this->actingAs($owner);
+
+    $page = Page::factory()->create();
+    $snapshot = CreatePagePreviewSnapshotAction::run($page, ['name' => 'Preview'])['snapshot'];
+    $url = URL::signedRoute('capell-filament-peek.preview', ['token' => $snapshot->token]);
+
+    $nonAdmin = $this->createUser(['email' => 'non-admin@example.test']);
+    $this->actingAs($nonAdmin);
+
+    $this->get($url)
+        ->assertForbidden()
+        ->assertHeader('Cache-Control', 'no-store, private');
+});
+
 it('renders unsaved page fields through a private signed preview without saving them', function (): void {
     $user = $this->createUserWithRole('super_admin');
     $this->actingAs($user);

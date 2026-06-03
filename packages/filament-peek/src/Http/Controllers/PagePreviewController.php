@@ -67,7 +67,7 @@ final class PagePreviewController extends Controller
 
     private function makePrivate(Response $response): void
     {
-        $response->headers->set('Cache-Control', 'private, no-store');
+        $response->headers->set('Cache-Control', 'no-store, private');
         $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
     }
 
