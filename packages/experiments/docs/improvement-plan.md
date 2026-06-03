@@ -1,9 +1,10 @@
 # Experiments — Improvement & Growth Plan
+
 > Package: capell-app/experiments · Kind: package · Tier: premium · Product group: Capell Growth · Bundle: growth · Status: Draft
 
 ## 1. Snapshot
 
-Experiments is a server-side A/B testing engine for Capell built entirely from Laravel Actions over six tables (`experiments`, `experiment_variants`, `experiment_goals`, `experiment_audience_rules`, `experiment_allocations`, `experiment_goal_events`). Domain logic lives in `src/Actions`: `CreateExperimentAction` (aggregate writer), `AllocateVariantAction` (deterministic SHA-256 weighted bucketing + sticky allocation row), `ResolveExperimentVariantForContextAction` (candidate query → allocate → `ResolvedExperimentVariantData` with cache-vary metadata), `EvaluateAudienceRulesAction` (path/query/utm/referrer/attribute/segment operators), `RecordGoalEventAction`, `BuildWinnerReportAction`, and `DeclareExperimentWinnerAction`. Surface delivery is admin-only: four Filament resources (Experiment/Variant/Goal/AudienceRule) contributed via `ExperimentsServiceProvider::registerAdminResources()`; depends on `capell-app/admin`, `capell-app/core`, Filament, `spatie/laravel-data`, `lorisleiva/laravel-actions`. Current marketplace summary verbatim: *"Run A/B tests with audience rules, sticky variant allocation, goal tracking, and winner reports."* — **screenshots: 0** (empty `marketplace.screenshots` array, manifest claims none; mismatch with a premium tier listing that needs visuals).
+Experiments is a server-side A/B testing engine for Capell built entirely from Laravel Actions over six tables (`experiments`, `experiment_variants`, `experiment_goals`, `experiment_audience_rules`, `experiment_allocations`, `experiment_goal_events`). Domain logic lives in `src/Actions`: `CreateExperimentAction` (aggregate writer), `AllocateVariantAction` (deterministic SHA-256 weighted bucketing + sticky allocation row), `ResolveExperimentVariantForContextAction` (candidate query → allocate → `ResolvedExperimentVariantData` with cache-vary metadata), `EvaluateAudienceRulesAction` (path/query/utm/referrer/attribute/segment operators), `RecordGoalEventAction`, `BuildWinnerReportAction`, and `DeclareExperimentWinnerAction`. Surface delivery is admin-only: four Filament resources (Experiment/Variant/Goal/AudienceRule) contributed via `ExperimentsServiceProvider::registerAdminResources()`; depends on `capell-app/admin`, `capell-app/core`, Filament, `spatie/laravel-data`, `lorisleiva/laravel-actions`. Current marketplace summary verbatim: _"Run A/B tests with audience rules, sticky variant allocation, goal tracking, and winner reports."_ — **screenshots: 0** (empty `marketplace.screenshots` array, manifest claims none; mismatch with a premium tier listing that needs visuals).
 
 ## 2. Improvements (existing functionality)
 
@@ -23,14 +24,14 @@ Mapped against `capabilities[]` and A/B-testing norms:
 - **Scheduled → Active automation** — `ExperimentStatus::Scheduled` exists and `starts_at`/`ends_at` are honoured inside `canAllocate`, but nothing transitions a scheduled experiment to active or ends an expired one; there is no command/scheduler. Add `capell:experiments-tick` (Action + scheduled command) to flip statuses and optionally auto-declare on `ends_at`. (Table-stakes.)
 - **Targeting depth** — `ExperimentContextData` exposes `path/query/utm/referrer/attributes/segments` but no `ipAddress`/`userAgent`, so no geo (core ships `torann/geoip`) or device/bot targeting, and no percentage-of-segment holdouts. (Differentiator.)
 - **Mutually-exclusive experiments / exclusion groups** — A visitor can be allocated into every overlapping active experiment independently; there is no exclusion-group concept to prevent interaction effects. (Differentiator.)
-- **Results dashboard** — Reporting exists only as a `WinnerReportData` value object; there is no Filament page/widget visualising allocations, conversion rates, lift, or significance over time. Operators currently can't *see* results in-product. (Table-stakes for a premium tier.)
+- **Results dashboard** — Reporting exists only as a `WinnerReportData` value object; there is no Filament page/widget visualising allocations, conversion rates, lift, or significance over time. Operators currently can't _see_ results in-product. (Table-stakes for a premium tier.)
 - **Multi-goal / revenue reporting** — `value_amount` is captured per goal event but `BuildWinnerReportAction` only counts events; no revenue-per-variant or multi-goal funnel rollup despite the `experiment_goal_events_rollup_index`. (Differentiator.)
 
 ## 4. Issues / Risks
 
 - **Static HTML cache vs per-visitor variants (the central A/B risk) — untested.** Capell's frontend cache middleware (`frontend.cache`) serves a static HTML file on hit, which would freeze the first visitor's variant for everyone. The package's answer is `ResolvedExperimentVariantData::cacheVariationKey` / `cacheVaryBy` (`src/Actions/ResolveExperimentVariantForContextAction.php`) plus `manifest.performance.cacheSafety.cacheable:false, variesBy:["site","visitor"]`. But: (a) nothing in this package consumes that metadata to actually vary or bypass the cache, and (b) there is no test proving a cached page does not leak one visitor's variant to another. Add a frontend integration that registers the vary key with `capell-app/html-cache`, and an anonymous-safety test asserting two visitors on a cached route get independent, sticky variants. Until then the headline feature is unproven on the exact path it must survive.
 - **Advertised `frontend` surface is dead code in production.** `multi_grep` across the monorepo (excluding this package) for `ResolveExperimentVariantForContextAction`, `AllocateVariantAction`, `RecordGoalEventAction`, `ResolvedExperimentVariantData`, `Capell\Experiments` returned **0 matches**. Every runtime allocation/resolution/goal path is exercised only by `tests/Feature/ExperimentFoundationTest.php`. The capabilities `request-context-variant-resolution`, `personalization-payloads`, `cache-variation-metadata` are real code but have no caller — flag as not-yet-integrated, not shippable value.
-- **Stub health check contradicts its own manifest label.** `ExperimentsHealthCheck` (`src/Health/ExperimentsHealthCheck.php`) implements only `compatibleCapellApiVersion(): '^4.0'` — 3 lines, no checks. The manifest entry is `severity:"critical", surface:"frontend"` with label *"models, migrations, and allocation surfaces are discoverable"*. It asserts none of that. A critical health check that always passes is worse than none. Implement actual probes (tables exist, models morph-registered, ≥1 admin resource contributed).
+- **Stub health check contradicts its own manifest label.** `ExperimentsHealthCheck` (`src/Health/ExperimentsHealthCheck.php`) implements only `compatibleCapellApiVersion(): '^4.0'` — 3 lines, no checks. The manifest entry is `severity:"critical", surface:"frontend"` with label _"models, migrations, and allocation surfaces are discoverable"_. It asserts none of that. A critical health check that always passes is worse than none. Implement actual probes (tables exist, models morph-registered, ≥1 admin resource contributed).
 - **Assignment determinism is sound but salt-collisions across experiments share the visitor's bucket position.** `stableNumber` namespaces by experiment id (`traffic:%d:%s`, `variant:%d:%s`) so cross-experiment correlation is avoided — good. However `traffic_percentage` gating uses `traffic:` hash while variant choice uses `variant:` hash; a visitor just inside the traffic threshold is fine, but there's no test pinning bucket stability across deploys/PHP versions (relies on `hash('sha256')` + `hexdec(substr(...,0,8))`). Add a golden-vector test. `src/Actions/AllocateVariantAction.php`.
 - **Test gaps.** Only two feature files (`ExperimentFoundationTest`, `ExperimentAdminSurfaceTest`). Missing: anonymous/non-admin public-output safety (Capell core requirement — none, because there's no public output yet), cache-vary safety, statistical-significance behaviour, scheduled→active transition, audience optional-rule OR semantics edge cases, traffic-percentage exclusion, no Architecture suite asserting Actions use `AsAction`/`AsFake`.
 - **Performance budget unverified.** Manifest sets `frontendRenderBudgetMs:20` / `adminQueryBudget:40` but the candidate-scan loop (§2) and per-experiment allocation lookups have no benchmark or query-count assertion. Cite `manifest.performance`.
@@ -38,10 +39,10 @@ Mapped against `capabilities[]` and A/B-testing norms:
 
 ## 5. Marketplace & Selling
 
-**Current `summary`:** *"Run A/B tests with audience rules, sticky variant allocation, goal tracking, and winner reports."* — accurate but lists internals (operators won't buy on "sticky variant allocation") and over-claims "winner reports" given there's no significance. **Composer `description`:** *"First-party experiments, A/B testing, variant allocation, personalization rules, and winner reporting for Capell."* — diverges from the manifest description (manifest says "audience rules", composer says "personalization rules"); align the wording.
+**Current `summary`:** _"Run A/B tests with audience rules, sticky variant allocation, goal tracking, and winner reports."_ — accurate but lists internals (operators won't buy on "sticky variant allocation") and over-claims "winner reports" given there's no significance. **Composer `description`:** _"First-party experiments, A/B testing, variant allocation, personalization rules, and winner reporting for Capell."_ — diverges from the manifest description (manifest says "audience rules", composer says "personalization rules"); align the wording.
 
 - **Improved 1-sentence summary:** "Run statistically-sound A/B tests on any Capell page or campaign — audience targeting, sticky bucketing, and goal-tracked winner reports, all server-side and cache-safe."
-- **Improved 3–4 sentence description:** "Experiments brings native A/B and multivariate testing to Capell without third-party scripts or client-side flicker. Define experiments against pages or campaigns, target by path, UTM, referrer, query, or custom segments, and let deterministic sticky bucketing keep every visitor on the same variant across requests. Goals capture conversions and revenue, and winner reports surface lift with confidence so you ship the variant that actually won. Server-side allocation integrates with Capell's HTML cache and CDN so tests stay fast and fully cacheable."  *(Note: the cache-safe / significance claims are aspirational until §3/§4 items land — do not list until shipped.)*
+- **Improved 3–4 sentence description:** "Experiments brings native A/B and multivariate testing to Capell without third-party scripts or client-side flicker. Define experiments against pages or campaigns, target by path, UTM, referrer, query, or custom segments, and let deterministic sticky bucketing keep every visitor on the same variant across requests. Goals capture conversions and revenue, and winner reports surface lift with confidence so you ship the variant that actually won. Server-side allocation integrates with Capell's HTML cache and CDN so tests stay fast and fully cacheable." _(Note: the cache-safe / significance claims are aspirational until §3/§4 items land — do not list until shipped.)_
 - **Media gaps:** zero screenshots. Need at minimum: experiment list, experiment edit form (variants + weights), audience-rule builder, and a results/winner view (which doesn't exist yet — see §3 dashboard). Add a short GIF of allocation→conversion→winner.
 - **Pricing/tier/bundle:** Premium tier in the `growth` bundle is correct positioning, but the bundle value is currently thin (admin CRUD only). Significance + results dashboard + a working frontend integration are prerequisites to justify a paid tier.
 - **Cross-sell (declared `supports`):** `capell-app/insights` (feed allocations/goals into analytics), `capell-app/campaign-studio` (`subject_type=campaign` experiments), `capell-app/html-cache` + `capell-app/frontend-optimizer` (consume `cacheVaryBy`), `capell-app/form-builder` (form-submission goals). Build at least the Insights and html-cache integrations to turn `supports` from manifest text into real Extension-Suite value.
@@ -50,21 +51,21 @@ Mapped against `capabilities[]` and A/B-testing norms:
 
 ## 6. Prioritized Roadmap
 
-| Item | Bucket | Effort | Impact | Section ref |
-|------|--------|--------|--------|-------------|
-| Build cache-safe frontend integration (vary key → html-cache) + anonymous-safety test | Now | L | High | §3, §4 |
-| Add statistical significance + sample-size floor to winner reporting/declaration | Now | M | High | §3 |
-| Implement real `ExperimentsHealthCheck` probes (or downgrade severity) | Now | S | High | §4 |
-| Filter `candidateQuery` by `subject_class` | Now | S | High | §2 |
-| Honour or delete `allocation_strategy` | Now | M | Med | §2 |
-| Goal-event idempotency guard + unique key | Next | M | High | §2, §3 |
-| Scheduled→Active / auto-end command + scheduler | Next | M | Med | §3 |
-| Results dashboard (Filament page/widget) | Next | L | High | §3, §5 |
-| Bounded candidate scan + query-count benchmark vs budget | Next | M | Med | §2, §4 |
-| Add README + CHANGELOG + integration docs | Next | S | Med | §2, §5 |
-| Capture screenshots / GIF for marketplace listing | Next | S | Med | §5 |
-| Insights + Campaign Studio cross-sell integrations | Later | L | Med | §5 |
-| Geo/device targeting via `ipAddress`/`userAgent` + geoip | Later | M | Med | §3 |
-| Mutually-exclusive experiment groups | Later | L | Med | §3 |
-| Revenue/multi-goal rollup reporting | Later | M | Med | §3 |
-| Golden-vector determinism test + Architecture suite | Later | S | Med | §4 |
+| Item                                                                                  | Bucket | Effort | Impact | Section ref |
+| ------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Build cache-safe frontend integration (vary key → html-cache) + anonymous-safety test | Now    | L      | High   | §3, §4      |
+| Add statistical significance + sample-size floor to winner reporting/declaration      | Now    | M      | High   | §3          |
+| Implement real `ExperimentsHealthCheck` probes (or downgrade severity)                | Now    | S      | High   | §4          |
+| Filter `candidateQuery` by `subject_class`                                            | Now    | S      | High   | §2          |
+| Honour or delete `allocation_strategy`                                                | Now    | M      | Med    | §2          |
+| Goal-event idempotency guard + unique key                                             | Next   | M      | High   | §2, §3      |
+| Scheduled→Active / auto-end command + scheduler                                       | Next   | M      | Med    | §3          |
+| Results dashboard (Filament page/widget)                                              | Next   | L      | High   | §3, §5      |
+| Bounded candidate scan + query-count benchmark vs budget                              | Next   | M      | Med    | §2, §4      |
+| Add README + CHANGELOG + integration docs                                             | Next   | S      | Med    | §2, §5      |
+| Capture screenshots / GIF for marketplace listing                                     | Next   | S      | Med    | §5          |
+| Insights + Campaign Studio cross-sell integrations                                    | Later  | L      | Med    | §5          |
+| Geo/device targeting via `ipAddress`/`userAgent` + geoip                              | Later  | M      | Med    | §3          |
+| Mutually-exclusive experiment groups                                                  | Later  | L      | Med    | §3          |
+| Revenue/multi-goal rollup reporting                                                   | Later  | M      | Med    | §3          |
+| Golden-vector determinism test + Architecture suite                                   | Later  | S      | Med    | §4          |

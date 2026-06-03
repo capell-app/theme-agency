@@ -53,6 +53,12 @@ final class ResolveExperimentVariantForContextAction
             ->when($context->subjectType !== null, function (Builder $query) use ($context): void {
                 $query->where('subject_type', $context->subjectType);
             })
+            ->when($context->subjectClass !== null, function (Builder $query) use ($context): void {
+                $query->where(function (Builder $query) use ($context): void {
+                    $query->whereNull('subject_class')
+                        ->orWhere('subject_class', $context->subjectClass);
+                });
+            })
             ->when($context->subjectId !== null, function (Builder $query) use ($context): void {
                 $query->where(function (Builder $query) use ($context): void {
                     $query->whereNull('subject_id')

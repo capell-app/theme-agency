@@ -20,6 +20,7 @@ final class ExperimentContextData extends Data
     public function __construct(
         public ?int $siteId = null,
         public ?string $subjectType = null,
+        public ?string $subjectClass = null,
         public ?int $subjectId = null,
         public ?string $source = null,
         public ?string $externalId = null,

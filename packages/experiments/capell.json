@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Experiments provides A/B testing, variant allocation, audience rules, goal tracking, and winner reporting for Capell.",
+    "description": "Run server-side A/B tests on any Capell page or campaign. Target visitors by path, UTM, referrer, query, or custom segments, keep every visitor on the same variant with deterministic sticky bucketing, and track goal conversions to surface a winning variant — all without third-party scripts or client-side flicker.",
     "product": {
         "group": "Capell Growth",
         "tier": "premium",
@@ -148,7 +148,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Run A/B tests with audience rules, sticky variant allocation, goal tracking, and winner reports.",
+        "summary": "Run server-side A/B tests on any Capell page or campaign — audience targeting, sticky bucketing, and goal-tracked winner reports, with no third-party scripts or client-side flicker.",
         "screenshots": [],
         "categories": ["growth", "analytics", "frontend"]
     },

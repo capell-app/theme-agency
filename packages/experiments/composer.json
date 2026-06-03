@@ -1,6 +1,6 @@
 {
     "name": "capell-app/experiments",
-    "description": "First-party experiments, A/B testing, variant allocation, personalization rules, and winner reporting for Capell.",
+    "description": "First-party experiments, A/B testing, variant allocation, audience rules, goal tracking, and winner reporting for Capell.",
     "keywords": [
         "capell",
         "experiments",
