@@ -1,6 +1,6 @@
 {
     "name": "capell-app/publishing-studio",
-    "description": "Editorial workflow package for Capell revisions, scheduling, approvals, and controlled publishing",
+    "description": "Publishing Studio turns Capell into a review-first CMS: edit any content in an isolated draft workspace, get sign-off, schedule it, and publish atomically — with one-click rollback when something breaks.",
     "keywords": [
         "capell",
         "publishing-studio",

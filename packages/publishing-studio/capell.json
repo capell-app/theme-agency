@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Publishing Studio provides preview, compare, approve, editorial calendar, schedule, publish, restore, and rollback workflows for Capell content.",
+    "description": "Publishing Studio is Capell's premium editorial workflow. Every change happens in a copy-on-write workspace that stays invisible to visitors until it's approved and published as a single atomic, versioned release — so the live site is never half-edited. Built-in publish-readiness checks (accessibility, SEO meta, alt text, internal links, URL collisions, stale-draft and release-window guards) stop risky publishes before they ship, while signed, revocable preview links let stakeholders review the exact pending state. When a publish goes wrong, roll back to any prior version or restore individual entities in seconds.",
     "product": {
         "group": "Capell Publishing Pro",
         "tier": "premium",
@@ -240,12 +240,52 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Publishing Studio provides preview, compare, approve, editorial calendar, schedule, publish, restore, and rollback workflows for Capell content.",
+        "summary": "Publishing Studio turns Capell into a review-first CMS: edit any content in an isolated draft workspace, get sign-off, schedule it, and publish atomically — with one-click rollback when something breaks.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Publishing Studio extension preview image",
                 "caption": "Publishing Studio extension preview"
+            },
+            {
+                "path": "docs/assets/marketplace/hero-desktop.jpg",
+                "alt": "Publishing Studio editorial workflow on desktop",
+                "caption": "The Publishing Studio editorial workflow"
+            },
+            {
+                "path": "docs/assets/marketplace/hero-mobile.jpg",
+                "alt": "Publishing Studio editorial workflow on mobile",
+                "caption": "Publishing Studio on mobile"
+            },
+            {
+                "path": "docs/images/screenshots/10-workflow-dashboard.png",
+                "alt": "Editorial timeline dashboard with active drafts and review status",
+                "caption": "Editorial timeline dashboard"
+            },
+            {
+                "path": "docs/images/screenshots/11-workspaces-editor-submit.png",
+                "alt": "Editor managing draft changes in an isolated workspace",
+                "caption": "Editing in an isolated draft workspace"
+            },
+            {
+                "path": "docs/images/screenshots/12-review-approval.png",
+                "alt": "Reviewer approving, rejecting, or requesting changes before publish",
+                "caption": "Review and approval before publish"
+            },
+            {
+                "path": "docs/images/screenshots/13-preview-links.png",
+                "alt": "Signed preview links with expiry, revocation, and access tracking",
+                "caption": "Signed, revocable preview link management"
+            },
+            {
+                "path": "docs/images/screenshots/14-scheduled-publishing.png",
+                "alt": "Scheduled publishing with embargo-aware release windows",
+                "caption": "Scheduled and embargo-aware publishing"
+            },
+            {
+                "path": "docs/images/screenshots/15-stale-drafts.png",
+                "alt": "Stale draft detection with review nudges and cleanup actions",
+                "caption": "Stale draft management"
             }
         ],
         "categories": ["admin", "console", "publishing-pro"]
