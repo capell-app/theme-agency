@@ -6,7 +6,7 @@
     "kind": "plugin",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Events adds listings, recurring events, venues, RSVPs, calendar feeds, and Event schema.",
+    "description": "Events turns Capell into a full event platform: editors create one event with an RRULE recurrence and the package materializes every occurrence, each with its own page, venue, schedule, and capacity. Visitors RSVP with automatic waitlisting and confirmation/reminder emails, while a public `.ics` feed lets them subscribe in Apple/Google/Outlook calendars. Every occurrence emits schema.org `Event` JSON-LD for rich results, and an admin calendar plus dashboard widget keep the programme visible. Built on `php-rrule` and `spatie/icalendar-generator`, with first-class hooks into Publishing Studio, Site Discovery, and the Customer Portal.",
     "product": {
         "group": "Capell Content",
         "tier": "premium",
@@ -118,7 +118,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Events adds listings, recurring events, venues, RSVPs, calendar feeds, and Event schema.",
+        "summary": "Publish recurring events with venues, capacity-managed RSVPs, subscribable iCal feeds, and Google-ready Event schema — all inside your Capell admin.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
