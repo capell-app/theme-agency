@@ -45,30 +45,30 @@ Public Blade receives hydrated render data and renders presentation. It must not
 
 When a theme feature is configurable, choose the narrowest durable owner.
 
-| Need                                                                                                | Put it in                                                         | Why                                                                           |
-| --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| Site-wide visual tokens such as colours, type, button shape, logo treatment, and default card style | Theme settings or theme preset database edits                     | These vary by site and should override package defaults without code changes. |
-| Page type structure, required fields, SEO defaults, or page-level editorial controls                | Page blueprint/schema                                             | These describe the page contract, not one renderer.                           |
-| Reusable content module fields and allowed variants                                                 | Widget blueprint or Layout Builder block definition               | Editors reuse these across pages and themes.                                  |
-| One instance of copy, media, CTA links, selected variant, spacing, or background                    | Page content, widget content, or Layout Builder block assets/meta | Instance-level content belongs in the database.                               |
-| Placement outside the main content loop, such as header, footer, announcement, or utility areas     | Layout Builder area registration plus container `meta.area`       | Placement remains editable without inventing hidden static containers.        |
-| Renderer-only markup, responsive layout, utility classes, and domain presentation                   | Blade views and section renderer classes                          | Presentation belongs in code so content survives theme changes.               |
-| Build-time asset sources, Tailwind sources, or package asset manifests                              | Package config and asset pipeline                                 | These are developer/runtime concerns, not editor content.                     |
+| Need                                                                                                | Put it in                                                          | Why                                                                           |
+| --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| Site-wide visual tokens such as colours, type, button shape, logo treatment, and default card style | Theme settings or theme preset database edits                      | These vary by site and should override package defaults without code changes. |
+| Page type structure, required fields, SEO defaults, or page-level editorial controls                | Page blueprint/schema                                              | These describe the page contract, not one renderer.                           |
+| Reusable content module fields and allowed variants                                                 | Widget blueprint or Layout Builder widget definition               | Editors reuse these across pages and themes.                                  |
+| One instance of copy, media, CTA links, selected variant, spacing, or background                    | Page content, widget content, or Layout Builder widget assets/meta | Instance-level content belongs in the database.                               |
+| Placement outside the main content loop, such as header, footer, announcement, or utility areas     | Layout Builder area registration plus container `meta.area`        | Placement remains editable without inventing hidden static containers.        |
+| Renderer-only markup, responsive layout, utility classes, and domain presentation                   | Blade views and section renderer classes                           | Presentation belongs in code so content survives theme changes.               |
+| Build-time asset sources, Tailwind sources, or package asset manifests                              | Package config and asset pipeline                                  | These are developer/runtime concerns, not editor content.                     |
 
-If the value changes per site, page, widget, block, language, or editor decision, it belongs in persisted Capell data. If it is only the HTML/CSS shape used to display that data, it belongs in the theme package.
+If the value changes per site, page, widget, widget, language, or editor decision, it belongs in persisted Capell data. If it is only the HTML/CSS shape used to display that data, it belongs in the theme package.
 
 ## Layout Builder And Page Assets
 
-Layout Builder is the composition layer for themes. It owns layout containers, blocks, block assets, public layout graphs, reusable presets, layout areas, and the Filament editor. Themes should consume its public graph and render hydrated block data.
+Layout Builder is the composition layer for themes. It owns layout containers, widgets, widget assets, public layout graphs, reusable presets, layout areas, and the Filament editor. Themes should consume its public graph and render hydrated widget data.
 
 Use Layout Builder when:
 
-- Editors need to arrange sections or blocks.
+- Editors need to arrange sections or widgets.
 - A page needs per-instance media, CTA, copy, variant, spacing, or background controls.
 - A theme area needs editable content outside the main page loop.
 - A preset should duplicate structure and presentation settings without duplicating client content.
 
-Use page assets and block assets for content that belongs to a rendered instance. Keep portable editorial content in the database and keep design wrappers in Blade. Demo creators should seed minimal editable copy and attach configured blocks, not save full designed HTML.
+Use page assets and widget assets for content that belongs to a rendered instance. Keep portable editorial content in the database and keep design wrappers in Blade. Demo creators should seed minimal editable copy and attach configured widgets, not save full designed HTML.
 
 Public renderers should use `BuildPublicLayoutGraphAction` or existing renderer components. Do not query from public views.
 
@@ -84,7 +84,7 @@ Start with Foundation unless there is a strong reason not to.
 6. Add the standard section set first: `navigation`, `hero`, `features`, `proof`, `content-listing`, `search`, `pagination`, `form`, `cta`, and `footer`.
 7. Ship the required page set: homepage, landing page, plain-text about page with imagery, list page with pagination, search page, contact form page, and at least one resource/detail page.
 8. Add premium/domain sections only when the theme has a real domain need and a safe fallback for missing optional packages.
-9. Add demo content through an Action. Store content and block configuration in Capell data; keep presentation in views.
+9. Add demo content through an Action. Store content and widget configuration in Capell data; keep presentation in views.
 10. Add focused tests for the definition, manifest requirements, renderer registration, optional package fallback, public-output safety, required page coverage, and screenshot metadata.
 
 Theme keys are content identifiers. Renaming one is a migration, not a cosmetic package rename.
@@ -98,7 +98,7 @@ Each theme needs at least five screenshots. Store the manifest in `packages/<the
 - `path`: image path relative to the package root.
 - `title`: concise screen name, such as `Homepage`, `Search`, or `Contact form`.
 - `description`: what the screen contains and what visitor problem it solves.
-- `layout`: how the page is normally assembled with Layout Builder sections, containers, blocks, and optional package data.
+- `layout`: how the page is normally assembled with Layout Builder sections, containers, widgets, and optional package data.
 - `editable`: which parts editors can change in Capell CMS without a Blade change.
 - `useful`: why this screen matters for the theme's target buyer.
 - `distinctive`: what makes the screen different from the same page type in the other themes.
@@ -130,7 +130,7 @@ Make each theme visually different through layout rhythm, section order, media t
 Use this order when a change should affect every theme:
 
 1. Put shared runtime behaviour in Foundation or the core Theme Studio runtime.
-2. Put shared Layout Builder behaviour in Layout Builder Actions, payload contributors, layout areas, or block presentation projection.
+2. Put shared Layout Builder behaviour in Layout Builder Actions, payload contributors, layout areas, or widget presentation projection.
 3. Keep child themes limited to theme-specific page wrappers, section views, presets, and custom renderers.
 4. Update every child theme only when the public contract changes or each theme needs distinct markup.
 5. Add cross-theme tests or visual fixtures for the shared contract, then targeted package tests for each affected renderer.

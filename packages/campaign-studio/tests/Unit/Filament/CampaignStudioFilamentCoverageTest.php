@@ -6,14 +6,14 @@ use Capell\Admin\Testing\Filament\ReadsRawSchemaComponents;
 use Capell\CampaignStudio\Filament\Extenders\Page\CampaignPageSchemaExtender;
 use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\CampaignConversionGoalResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\Schemas\CampaignConversionGoalForm;
-use Capell\CampaignStudio\Filament\Resources\CampaignCtaBlocks\CampaignCtaBlockResource;
-use Capell\CampaignStudio\Filament\Resources\CampaignCtaBlocks\Schemas\CampaignCtaBlockForm;
+use Capell\CampaignStudio\Filament\Resources\CampaignCtaWidgets\CampaignCtaWidgetResource;
+use Capell\CampaignStudio\Filament\Resources\CampaignCtaWidgets\Schemas\CampaignCtaWidgetForm;
 use Capell\CampaignStudio\Filament\Resources\CampaignGroups\CampaignGroupResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignGroups\Schemas\CampaignGroupForm;
 use Capell\CampaignStudio\Filament\Resources\CampaignLandingPages\CampaignLandingPageResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignLandingPages\Schemas\CampaignLandingPageForm;
 use Capell\CampaignStudio\Models\CampaignConversionGoal;
-use Capell\CampaignStudio\Models\CampaignCtaBlock;
+use Capell\CampaignStudio\Models\CampaignCtaWidget;
 use Capell\CampaignStudio\Models\CampaignGroup;
 use Capell\CampaignStudio\Models\CampaignLandingPage;
 use Filament\Forms\Components\Repeater;
@@ -37,7 +37,7 @@ it('builds campaign studio resource form schemas', function (): void {
         ->and(campaignStudioFormComponents(CampaignLandingPageForm::class))
         ->toHaveCount(7);
 
-    $ctaComponents = campaignStudioFormComponents(CampaignCtaBlockForm::class);
+    $ctaComponents = campaignStudioFormComponents(CampaignCtaWidgetForm::class);
 
     expect($ctaComponents)
         ->toHaveCount(4)
@@ -66,10 +66,10 @@ it('declares campaign studio resource models navigation labels and pages', funct
         ->and(CampaignGroupResource::getNavigationLabel())->toBe('Campaign groups')
         ->and(CampaignGroupResource::getPluralModelLabel())->toBe('Campaign groups')
         ->and(CampaignGroupResource::getPages())->toHaveKeys(['index', 'create', 'edit'])
-        ->and(CampaignCtaBlockResource::getModel())->toBe(CampaignCtaBlock::class)
-        ->and(CampaignCtaBlockResource::getNavigationLabel())->toBe('CTA blocks')
-        ->and(CampaignCtaBlockResource::shouldRegisterNavigation())->toBeFalse()
-        ->and(CampaignCtaBlockResource::getPages())->toHaveKeys(['index', 'create', 'edit'])
+        ->and(CampaignCtaWidgetResource::getModel())->toBe(CampaignCtaWidget::class)
+        ->and(CampaignCtaWidgetResource::getNavigationLabel())->toBe('CTA widgets')
+        ->and(CampaignCtaWidgetResource::shouldRegisterNavigation())->toBeFalse()
+        ->and(CampaignCtaWidgetResource::getPages())->toHaveKeys(['index', 'create', 'edit'])
         ->and(CampaignLandingPageResource::getModel())->toBe(CampaignLandingPage::class)
         ->and(CampaignLandingPageResource::getNavigationLabel())->toBe('Landing pages')
         ->and(CampaignLandingPageResource::getPages())->toHaveKeys(['index', 'create', 'edit'])

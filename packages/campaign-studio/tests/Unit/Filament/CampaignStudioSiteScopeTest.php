@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\CampaignConversionGoalResource;
-use Capell\CampaignStudio\Filament\Resources\CampaignCtaBlocks\CampaignCtaBlockResource;
+use Capell\CampaignStudio\Filament\Resources\CampaignCtaWidgets\CampaignCtaWidgetResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignGroups\CampaignGroupResource;
 use Capell\CampaignStudio\Models\CampaignConversionGoal;
-use Capell\CampaignStudio\Models\CampaignCtaBlock;
+use Capell\CampaignStudio\Models\CampaignCtaWidget;
 use Capell\CampaignStudio\Models\CampaignGroup;
 use Capell\CampaignStudio\Policies\CampaignConversionGoalPolicy;
-use Capell\CampaignStudio\Policies\CampaignCtaBlockPolicy;
+use Capell\CampaignStudio\Policies\CampaignCtaWidgetPolicy;
 use Capell\CampaignStudio\Policies\CampaignGroupPolicy;
 use Capell\Core\Models\Site;
 use Filament\Models\Contracts\FilamentUser;
@@ -105,11 +105,11 @@ test('campaign CTA and goal resources scope by their campaign group site', funct
     $otherSite = Site::factory()->create();
     $assignedGroup = CampaignGroup::factory()->create(['site_id' => $assignedSite->getKey()]);
     $otherGroup = CampaignGroup::factory()->create(['site_id' => $otherSite->getKey()]);
-    $assignedCtaBlock = CampaignCtaBlock::factory()->create([
+    $assignedCtaWidget = CampaignCtaWidget::factory()->create([
         'campaign_group_id' => $assignedGroup->getKey(),
         'site_id' => null,
     ]);
-    CampaignCtaBlock::factory()->create([
+    CampaignCtaWidget::factory()->create([
         'campaign_group_id' => $otherGroup->getKey(),
         'site_id' => null,
     ]);
@@ -124,8 +124,8 @@ test('campaign CTA and goal resources scope by their campaign group site', funct
 
     auth()->setUser(campaignStudioScopedUser(collect([$assignedSite->getKey()])));
 
-    expect(CampaignCtaBlockResource::getEloquentQuery()->pluck('id')->all())
-        ->toEqualCanonicalizing([$assignedCtaBlock->getKey()])
+    expect(CampaignCtaWidgetResource::getEloquentQuery()->pluck('id')->all())
+        ->toEqualCanonicalizing([$assignedCtaWidget->getKey()])
         ->and(CampaignConversionGoalResource::getEloquentQuery()->pluck('id')->all())
         ->toEqualCanonicalizing([$assignedGoal->getKey()]);
 });
@@ -135,15 +135,15 @@ test('campaign CTA and goal policies deny group-owned records outside actor site
     $otherSite = Site::factory()->create();
     $assignedGroup = CampaignGroup::factory()->create(['site_id' => $assignedSite->getKey()]);
     $otherGroup = CampaignGroup::factory()->create(['site_id' => $otherSite->getKey()]);
-    $assignedCtaBlock = CampaignCtaBlock::factory()->create([
+    $assignedCtaWidget = CampaignCtaWidget::factory()->create([
         'campaign_group_id' => $assignedGroup->getKey(),
         'site_id' => null,
     ]);
-    $otherCtaBlock = CampaignCtaBlock::factory()->create([
+    $otherCtaWidget = CampaignCtaWidget::factory()->create([
         'campaign_group_id' => $otherGroup->getKey(),
         'site_id' => null,
     ]);
-    $globalGroupCtaBlock = CampaignCtaBlock::factory()->create([
+    $globalGroupCtaWidget = CampaignCtaWidget::factory()->create([
         'campaign_group_id' => CampaignGroup::factory()->create(['site_id' => null])->getKey(),
         'site_id' => null,
     ]);
@@ -161,12 +161,12 @@ test('campaign CTA and goal policies deny group-owned records outside actor site
     ]);
     $user = campaignStudioScopedUser(
         collect([$assignedSite->getKey()]),
-        ['Update:CampaignCtaBlock', 'Update:CampaignConversionGoal'],
+        ['Update:CampaignCtaWidget', 'Update:CampaignConversionGoal'],
     );
 
-    expect((new CampaignCtaBlockPolicy)->update($user, $assignedCtaBlock))->toBeTrue()
-        ->and((new CampaignCtaBlockPolicy)->update($user, $otherCtaBlock))->toBeFalse()
-        ->and((new CampaignCtaBlockPolicy)->update($user, $globalGroupCtaBlock))->toBeFalse()
+    expect((new CampaignCtaWidgetPolicy)->update($user, $assignedCtaWidget))->toBeTrue()
+        ->and((new CampaignCtaWidgetPolicy)->update($user, $otherCtaWidget))->toBeFalse()
+        ->and((new CampaignCtaWidgetPolicy)->update($user, $globalGroupCtaWidget))->toBeFalse()
         ->and((new CampaignConversionGoalPolicy)->update($user, $assignedGoal))->toBeTrue()
         ->and((new CampaignConversionGoalPolicy)->update($user, $otherGoal))->toBeFalse()
         ->and((new CampaignConversionGoalPolicy)->update($user, $globalGroupGoal))->toBeFalse();

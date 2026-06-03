@@ -25,11 +25,11 @@ final class LeadGenerationPreset extends CampaignLayoutPreset
         ];
     }
 
-    public function blocks(): array
+    public function widgets(): array
     {
         return [
             ['container' => 'hero', 'type' => 'campaign-hero'],
-            ['container' => 'proof', 'type' => 'campaign-cta-block'],
+            ['container' => 'proof', 'type' => 'campaign-cta-widget'],
             ['container' => 'form', 'type' => 'campaign-lead-form'],
         ];
     }

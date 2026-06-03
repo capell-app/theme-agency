@@ -8,9 +8,9 @@ use Capell\Core\Enums\ContentStructure;
 use Capell\Core\Models\Page;
 use Capell\FoundationTheme\Data\AssetBannerItemData;
 use Capell\FoundationTheme\Data\BannerImageRenderData;
-use Capell\FoundationTheme\Data\BlockAssetRenderData;
 use Capell\FoundationTheme\Data\LayoutNeighborLinksData;
 use Capell\FoundationTheme\Data\PageContentRenderData;
+use Capell\FoundationTheme\Data\WidgetAssetRenderData;
 use Capell\FoundationTheme\Enums\FoundationThemeAssetEnum;
 use Capell\FoundationTheme\Health\FoundationThemeHealthCheck;
 use Capell\FoundationTheme\Support\View\FoundationThemeViewName;
@@ -38,7 +38,7 @@ it('carries foundation theme render data objects', function (): void {
         url: '/card',
         linkText: 'Read more',
     );
-    $asset = new BlockAssetRenderData(
+    $asset = new WidgetAssetRenderData(
         asset: 'asset-model',
         image: 'asset.jpg',
         linkedPage: null,
@@ -87,7 +87,7 @@ it('defines foundation theme metadata and canonical view names', function (): vo
     expect(FoundationThemeHealthCheck::compatibleCapellApiVersion())->toBe('^4.0')
         ->and(FoundationThemeAssetEnum::Page->getAsset())->toBe(AssetEnum::Page)
         ->and(FoundationThemeAssetEnum::Page->getComponent())->toBe(AssetComponentEnum::Page->value)
-        ->and(FoundationThemeViewName::canonical('capell-layout-builder::components.widget.hero'))->toBe('capell-foundation-theme::components.block.hero')
+        ->and(FoundationThemeViewName::canonical('capell-layout-builder::components.widget.hero'))->toBe('capell-foundation-theme::components.widget.hero')
         ->and(FoundationThemeViewName::canonical('capell-layout-builder::layout.main'))->toBe('capell-foundation-theme::components.layout.main')
         ->and(FoundationThemeViewName::canonical('components.actions.buttons'))->toBe('capell-foundation-theme::components.actions.buttons')
         ->and(FoundationThemeViewName::canonical('custom-package::view'))->toBe('custom-package::view');

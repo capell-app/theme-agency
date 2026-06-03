@@ -80,15 +80,15 @@ final class RenderPagePreviewSnapshotAction
         abort_unless($layout instanceof Layout, 404);
 
         $this->registerThemeViews($theme);
-        $previewBlocksRegistered = $this->registerLayoutBuilderPreviewBlocks($previewPage, $language, $snapshot);
+        $previewWidgetsRegistered = $this->registerLayoutBuilderPreviewWidgets($previewPage, $language, $snapshot);
 
         $context = $this->seedFrontendContext($site, $language, $previewPage, $layout, $theme);
 
         try {
             $response = $this->render($context, $previewPage, $site, $language, $layout, $theme);
         } finally {
-            if ($previewBlocksRegistered && class_exists(CapellLayoutManager::class)) {
-                CapellLayoutManager::clearContainerBlocks();
+            if ($previewWidgetsRegistered && class_exists(CapellLayoutManager::class)) {
+                CapellLayoutManager::clearContainerWidgets();
             }
         }
 
@@ -352,16 +352,16 @@ final class RenderPagePreviewSnapshotAction
         return $renderer->render($renderContext);
     }
 
-    private function registerLayoutBuilderPreviewBlocks(
+    private function registerLayoutBuilderPreviewWidgets(
         Page $page,
         Language $language,
         PagePreviewSnapshotData $snapshot,
     ): bool {
-        if (! $snapshot->layoutBuilderState instanceof LayoutBuilderPreviewStateData || ! class_exists(RegisterLayoutBuilderPreviewBlocksAction::class)) {
+        if (! $snapshot->layoutBuilderState instanceof LayoutBuilderPreviewStateData || ! class_exists(RegisterLayoutBuilderPreviewWidgetsAction::class)) {
             return false;
         }
 
-        return RegisterLayoutBuilderPreviewBlocksAction::run($page, $language, $snapshot->layoutBuilderState);
+        return RegisterLayoutBuilderPreviewWidgetsAction::run($page, $language, $snapshot->layoutBuilderState);
     }
 
     /**

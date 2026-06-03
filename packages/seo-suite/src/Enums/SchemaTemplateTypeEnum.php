@@ -20,7 +20,17 @@ enum SchemaTemplateTypeEnum: string implements HasLabel
 
     public function getLabel(): string
     {
-        return __('capell-seo-suite::generic.schema_template_type_' . str($this->name)->snake()->value());
+        return match ($this->name) {
+            self::Article->name => __('capell-seo-suite::generic.schema_template_type_article'),
+            self::WebPage->name => __('capell-seo-suite::generic.schema_template_type_web_page'),
+            self::FAQ->name => __('capell-seo-suite::generic.schema_template_type_f_a_q'),
+            self::HowTo->name => __('capell-seo-suite::generic.schema_template_type_how_to'),
+            self::Event->name => __('capell-seo-suite::generic.schema_template_type_event'),
+            self::LocalBusiness->name => __('capell-seo-suite::generic.schema_template_type_local_business'),
+            self::Product->name => __('capell-seo-suite::generic.schema_template_type_product'),
+            self::Video->name => __('capell-seo-suite::generic.schema_template_type_video'),
+            self::Organization->name => __('capell-seo-suite::generic.schema_template_type_organization'),
+        };
     }
 
     /**

@@ -1271,7 +1271,7 @@ function themeDemoPortfolioSectionsScreenshotEntry(): array
             themeDemoPortfolioGenericSection('newsletter', 'Audience and newsletter path'),
             ProofSectionData::from([
                 'heading' => 'Evidence-led portfolio proof',
-                'summary' => 'Proof blocks should feel like measurable creator outcomes instead of generic metric cards.',
+                'summary' => 'Proof widgets should feel like measurable creator outcomes instead of generic metric cards.',
                 'items' => themeDemoScreenshotProofItems('portfolio'),
             ]),
             FeatureSectionData::from([
@@ -1641,7 +1641,7 @@ function themeDemoKnowledgeSectionsScreenshotEntry(): array
             ]),
             FeatureSectionData::from([
                 'heading' => 'Research pathway cards',
-                'summary' => 'Feature cards should look like curated library entries and not generic marketing blocks.',
+                'summary' => 'Feature cards should look like curated library entries and not generic marketing widgets.',
                 'features' => themeDemoScreenshotFeatures('knowledge-sections', 6, 'knowledge'),
             ]),
             ProofSectionData::from([
@@ -2655,7 +2655,7 @@ function themeDemoScreenshotThemeCopy(string $themeKey): array
             'proof' => [
                 ['metric' => '+42%', 'name' => 'Outcome lift', 'summary' => 'Case-study proof stays attached to work.'],
                 ['metric' => '120+', 'name' => 'Assets', 'summary' => 'Project evidence can be visually dense.'],
-                ['metric' => '5h', 'name' => 'Proof deck', 'summary' => 'Short proof blocks support a premium studio flow.'],
+                ['metric' => '5h', 'name' => 'Proof deck', 'summary' => 'Short proof widgets support a premium studio flow.'],
                 ['metric' => '1x', 'name' => 'Case path', 'summary' => 'Visitors move from work to enquiry cleanly.'],
             ],
             'contactRoutes' => [
@@ -2670,7 +2670,7 @@ function themeDemoScreenshotThemeCopy(string $themeKey): array
             'feature' => 'product signal',
             'proof' => [
                 ['metric' => '12', 'name' => 'Workflows', 'summary' => 'Feature density stays product-led.'],
-                ['metric' => '35', 'name' => 'Teams', 'summary' => 'Proof blocks support trial confidence.'],
+                ['metric' => '35', 'name' => 'Teams', 'summary' => 'Proof widgets support trial confidence.'],
                 ['metric' => '100%', 'name' => 'Setup path', 'summary' => 'Activation and support stay connected.'],
                 ['metric' => '1x', 'name' => 'Demo route', 'summary' => 'Conversion remains obvious after detail content.'],
             ],
@@ -2683,7 +2683,7 @@ function themeDemoScreenshotThemeCopy(string $themeKey): array
     ][$themeKey] ?? [
         'singular' => 'foundation entry',
         'plural' => 'foundation entries',
-        'feature' => 'foundation block',
+        'feature' => 'foundation widget',
         'proof' => themeDemoScreenshotProofItems(),
         'contactRoutes' => [
             ['title' => 'Project scoping', 'description' => 'Route new builds and content-model planning to the right team.', 'icon' => 'Scope'],
@@ -2738,7 +2738,7 @@ function themeDemoScreenshotThemeCopy(string $themeKey): array
         'systemCtaHeading' => ucfirst($singular) . ' recovery action',
         'systemCtaSummary' => 'System pages need the same readable CTA treatment as marketing pages.',
         'ctaProofHeading' => ucfirst($singular) . ' conversion evidence',
-        'ctaProofSummary' => 'Conversion-only pages check proof blocks and action rhythm.',
+        'ctaProofSummary' => 'Conversion-only pages check proof widgets and action rhythm.',
         'ctaHeading' => 'Move visitors through ' . $plural,
         'ctaSummary' => 'CTA pages should feel like a domain-specific next step, not another generic content page.',
     ];
@@ -2774,7 +2774,7 @@ function themeDemoScreenshotMediaUrls(array $renderData): array
 function themeDemoScreenshotFeatures(string $surface, int $count = 6, ?string $themeKey = null): array
 {
     $copy = $themeKey === null ? null : themeDemoScreenshotThemeCopy($themeKey);
-    $feature = is_array($copy) ? $copy['feature'] : 'foundation block';
+    $feature = is_array($copy) ? $copy['feature'] : 'foundation widget';
     $surfaceLabel = themeDemoScreenshotSurfaceLabel($surface);
 
     return collect(range(1, $count))

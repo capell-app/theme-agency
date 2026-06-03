@@ -39,7 +39,7 @@ final class HeroBackgroundSchema
     /**
      * @return array<int, mixed>
      */
-    public static function block(): array
+    public static function widget(): array
     {
         return [
             self::fieldset([
@@ -48,7 +48,7 @@ final class HeroBackgroundSchema
                     HeroBackgroundData::ModeCustom => __('capell-hero::form.hero_background.mode_options.custom'),
                     HeroBackgroundData::ModeOff => __('capell-hero::form.hero_background.mode_options.off'),
                 ], HeroBackgroundData::ModeInherit)
-                    ->helperText(__('capell-hero::form.hero_background.block_helper')),
+                    ->helperText(__('capell-hero::form.hero_background.widget_helper')),
             ]),
             self::mediaSettingsFieldset(HeroMediaData::ModeInherit),
             self::mediaUploadsFieldset(),

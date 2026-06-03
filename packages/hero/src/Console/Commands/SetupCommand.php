@@ -11,7 +11,7 @@ final class SetupCommand extends Command
 {
     protected $signature = 'capell:hero-setup {--force : Rebuild Hero-managed home layout defaults}';
 
-    protected $description = 'Install Hero block and home layout defaults.';
+    protected $description = 'Install Hero widget and home layout defaults.';
 
     public function handle(): int
     {

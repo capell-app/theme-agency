@@ -20,11 +20,9 @@ use Capell\Newsletter\Policies\SegmentPolicy;
 use Capell\Newsletter\Policies\SubscriberPolicy;
 use Capell\Newsletter\Policies\SyncAttemptPolicy;
 use Capell\Newsletter\Support\NewsletterAdminAccess;
+use Capell\Newsletter\Tests\Fixtures\NewsletterPolicyTestUser;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 
 it('registers explicit policies for newsletter-owned admin models', function (): void {
@@ -146,40 +144,4 @@ function newsletterPolicySyncAttempt(): SyncAttempt
     $attempt->setRelation('providerConnection', newsletterPolicyProviderConnection());
 
     return $attempt;
-}
-
-final class NewsletterPolicyTestUser extends User
-{
-    use HasFactory;
-
-    /**
-     * @param  list<int>  $assignedSiteIds
-     */
-    public function __construct(
-        private readonly bool $global = false,
-        private readonly array $assignedSiteIds = [],
-        private readonly bool $permissionResult = true,
-    ) {
-        parent::__construct();
-    }
-
-    public function isGlobalAdmin(): bool
-    {
-        return $this->global;
-    }
-
-    /**
-     * @return Collection<int, int>
-     */
-    public function getAssignedSiteIds(): Collection
-    {
-        return collect($this->assignedSiteIds);
-    }
-
-    public function checkPermissionTo(mixed $permission, ?string $guardName = null): bool
-    {
-        unset($permission, $guardName);
-
-        return $this->permissionResult;
-    }
 }

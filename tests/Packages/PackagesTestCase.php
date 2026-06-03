@@ -10,11 +10,11 @@ use Capell\Admin\Enums\ResourceEnum as AdminResourceEnum;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Providers\AdminServiceProvider;
 use Capell\Admin\Providers\Filament\AdminPanelProvider;
+use Capell\BlockLibrary\Providers\BlockLibraryServiceProvider;
 use Capell\Blog\Enums\ResourceEnum as BlogResourceEnum;
 use Capell\Blog\Providers\BlogServiceProvider;
 use Capell\Blog\Providers\FrontendServiceProvider as BlogFrontendServiceProvider;
 use Capell\CampaignStudio\Providers\CampaignStudioServiceProvider;
-use Capell\ContentBlocks\Providers\ContentBlocksServiceProvider;
 use Capell\ContentSections\Providers\ContentSectionsServiceProvider;
 use Capell\Core\Actions\RegisterBlazeOptimizedViewsAction;
 use Capell\Core\Facades\CapellCore;
@@ -48,6 +48,8 @@ use Capell\SeoSuite\Filament\Pages\NotFoundUrlsPage;
 use Capell\SeoSuite\Filament\Pages\SeoAuditPage;
 use Capell\SeoSuite\Filament\Pages\TranslationCoveragePage;
 use Capell\SeoSuite\Providers\SeoSuiteServiceProvider;
+use Capell\SiteDiscovery\Filament\Pages\PublicUrlRegistryPage;
+use Capell\SiteDiscovery\Providers\SiteDiscoveryServiceProvider;
 use Capell\Tags\Models\Tag;
 use Capell\Tags\Providers\TagsServiceProvider;
 use Capell\Tests\AbstractTestCase;
@@ -106,7 +108,7 @@ class PackagesTestCase extends AbstractTestCase
             LoginAuditServiceProvider::class,
             MigrationAssistantServiceProvider::class,
             ContentSectionsServiceProvider::class,
-            ContentBlocksServiceProvider::class,
+            BlockLibraryServiceProvider::class,
             LayoutBuilderServiceProvider::class,
             NavigationServiceProvider::class,
             BlogServiceProvider::class,
@@ -116,6 +118,7 @@ class PackagesTestCase extends AbstractTestCase
             DemoKitServiceProvider::class,
             DiagnosticsServiceProvider::class,
             DiagnosticsAdminServiceProvider::class,
+            SiteDiscoveryServiceProvider::class,
             SeoSuiteServiceProvider::class,
             SearchServiceProvider::class,
             TagsServiceProvider::class,
@@ -143,6 +146,7 @@ class PackagesTestCase extends AbstractTestCase
         $this->forcePackagesInstalled();
         $this->registerBlogResourcesForBlaze();
         $this->registerMigrationAssistantResourcesForFilament();
+        $this->registerSiteDiscoveryPagesForFilament();
         $this->registerSeoSuitePagesForFilament();
         $this->registerDiagnosticsPagesForFilament();
 
@@ -201,6 +205,11 @@ class PackagesTestCase extends AbstractTestCase
         }
     }
 
+    private function registerSiteDiscoveryPagesForFilament(): void
+    {
+        CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(PublicUrlRegistryPage::class));
+    }
+
     private function registerDiagnosticsPagesForFilament(): void
     {
         foreach ([DiagnosticsPage::class, MediaHealthPage::class, PermissionAuditPage::class, QueueHealthPage::class, SystemHealthPage::class] as $page) {
@@ -218,11 +227,12 @@ class PackagesTestCase extends AbstractTestCase
         CapellCore::forcePackageInstalled(InsightsServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(MigrationAssistantServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(BlogServiceProvider::$packageName);
-        CapellCore::forcePackageInstalled(ContentBlocksServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(BlockLibraryServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(CampaignStudioServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(CapellFormBuilderServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(DemoKitServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(DiagnosticsServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(SiteDiscoveryServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(AddressServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(LoginAuditServiceProvider::$packageName);
         CapellCore::forcePackageInstalled('capell-app/media-library');

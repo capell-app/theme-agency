@@ -13,26 +13,27 @@ use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
 use Capell\Core\Models\Theme;
-use Capell\FoundationTheme\Actions\BlockIsSlotAction;
 use Capell\FoundationTheme\Actions\BuildLayoutNeighborLinksDataAction;
 use Capell\FoundationTheme\Actions\MarkPrimaryHeadingRenderedAction;
-use Capell\FoundationTheme\Actions\ResolveLoadedBlockBackgroundImageAction;
-use Capell\FoundationTheme\Livewire\Assets\Table\PageAssets;
-use Capell\FoundationTheme\Livewire\Block\Pages as LivewirePages;
+use Capell\FoundationTheme\Actions\ResolveLoadedWidgetBackgroundImageAction;
+use Capell\FoundationTheme\Actions\WidgetIsSlotAction;
+use Capell\FoundationTheme\Livewire\Widget\Pages as LivewirePages;
 use Capell\FoundationTheme\Support\Blade\BladeDirectives;
 use Capell\FoundationTheme\Support\Media\CapellUrlGenerator;
-use Capell\FoundationTheme\View\Components\Block\Navigation;
-use Capell\FoundationTheme\View\Components\Block\Page\Breadcrumbs;
-use Capell\FoundationTheme\View\Components\Block\Page\Children;
-use Capell\FoundationTheme\View\Components\Block\Page\Content;
-use Capell\FoundationTheme\View\Components\Block\Page\Siblings;
+use Capell\FoundationTheme\Tests\Fixtures\FoundationThemeFinalPageAssetsHarness;
+use Capell\FoundationTheme\Tests\Fixtures\FoundationThemeFinalPathGenerator;
+use Capell\FoundationTheme\View\Components\Widget\Navigation;
+use Capell\FoundationTheme\View\Components\Widget\Page\Breadcrumbs;
+use Capell\FoundationTheme\View\Components\Widget\Page\Children;
+use Capell\FoundationTheme\View\Components\Widget\Page\Content;
+use Capell\FoundationTheme\View\Components\Widget\Page\Siblings;
 use Capell\Frontend\Contracts\FrontendContextReader;
 use Capell\Frontend\Facades\Frontend;
 use Capell\Frontend\Support\CapellFrontendContext;
 use Capell\Frontend\Support\State\FrontendState;
 use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Models\WidgetAsset;
-use Capell\LayoutBuilder\Support\Livewire\OpaqueBlockReference;
+use Capell\LayoutBuilder\Support\Livewire\OpaqueWidgetReference;
 use Capell\Navigation\Enums\NavigationItemType;
 use Capell\Navigation\Models\Navigation as NavigationModel;
 use Carbon\CarbonImmutable;
@@ -47,7 +48,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
-use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
 
 function foundationThemeFinalView(mixed $view): View
 {
@@ -91,7 +91,7 @@ it('builds enabled layout neighbor links from adjacent published pages', functio
         ->and($neighbors->nextPage)->toBeInstanceOf(Page::class);
 });
 
-it('mounts successful child and sibling page blocks with hydrated frontend context', function (): void {
+it('mounts successful child and sibling page widgets with hydrated frontend context', function (): void {
     [$language, $site, $type] = foundationThemeFinalPageSurface();
     $theme = Theme::factory()->defaultMeta()->create();
     $layout = Layout::factory()->site($site)->create(['admin' => []]);
@@ -122,7 +122,7 @@ it('mounts successful child and sibling page blocks with hydrated frontend conte
         ->withTranslations($language, ['title' => 'Sibling child'], slug: 'sibling-child')
         ->create();
 
-    $block = Widget::factory()->create([
+    $widget = Widget::factory()->create([
         'key' => 'page-list',
         'meta' => [
             'with_children_count' => true,
@@ -133,30 +133,30 @@ it('mounts successful child and sibling page blocks with hydrated frontend conte
 
     foundationThemeFinalFrontendState($language, $site, $theme, $layout, $parentPage->load('type', 'layout'));
 
-    $children = new Children([], 'main', 0, new stdClass, $block);
+    $children = new Children([], 'main', 0, new stdClass, $widget);
 
     foundationThemeFinalFrontendState($language, $site, $theme, $layout, $currentChild->load('type', 'layout'));
 
-    $siblings = new Siblings([], 'main', 0, new stdClass, $block);
+    $siblings = new Siblings([], 'main', 0, new stdClass, $widget);
     $childrenPages = $children->pages ?? collect();
     $siblingPages = $siblings->pages ?? collect();
 
     expect($children->pages)->not->toBeNull()
         ->and($childrenPages->pluck('id')->all())->toContain($currentChild->id, $siblingChild->id)
-        ->and(foundationThemeFinalView($children->render())->name())->toBe('capell-foundation-theme::components.block.asset.pages')
+        ->and(foundationThemeFinalView($children->render())->name())->toBe('capell-foundation-theme::components.widget.asset.pages')
         ->and($siblings->pages)->not->toBeNull()
         ->and($siblingPages->pluck('id')->all())->toContain($siblingChild->id)
         ->and($siblingPages->pluck('id')->all())->not->toContain($currentChild->id);
 });
 
-it('mounts the livewire pages block around selected page assets', function (): void {
+it('mounts the livewire pages widget around selected page assets', function (): void {
     [$language, $site, $type] = foundationThemeFinalPageSurface();
     $theme = Theme::factory()->defaultMeta()->create();
     $layout = Layout::factory()->site($site)->create([
         'containers' => [
             'main' => [
-                'blocks' => [
-                    ['block_key' => 'selected-pages'],
+                'widgets' => [
+                    ['widget_key' => 'selected-pages'],
                 ],
             ],
         ],
@@ -179,7 +179,7 @@ it('mounts the livewire pages block around selected page assets', function (): v
         ->site($site)
         ->language($language)
         ->create(['url' => '/selected-livewire-page']);
-    $block = Widget::factory()->create([
+    $widget = Widget::factory()->create([
         'key' => 'selected-pages',
         'meta' => [
             'limit' => 3,
@@ -190,22 +190,22 @@ it('mounts the livewire pages block around selected page assets', function (): v
     ]);
 
     WidgetAsset::factory()
-        ->block($block)
+        ->widget($widget)
         ->asset($selectedPage)
         ->create(['order' => 1]);
 
     foundationThemeFinalFrontendState($language, $site, $theme, $layout, $page->load('type', 'layout'));
 
     $component = new LivewirePages;
-    $component->mount(OpaqueBlockReference::encode([
+    $component->mount(OpaqueWidgetReference::encode([
         'container_key' => 'main',
-        'block_key' => 'selected-pages',
+        'widget_key' => 'selected-pages',
         'language_id' => $language->getKey(),
         'layout_id' => $layout->getKey(),
         'page_id' => $page->getKey(),
         'page_type' => $page->getMorphClass(),
         'site_id' => $site->getKey(),
-        'block_index' => 0,
+        'widget_index' => 0,
         'occurrence' => 1,
     ]));
 
@@ -216,7 +216,7 @@ it('mounts the livewire pages block around selected page assets', function (): v
     $html = $component->render();
 
     expect($html)->toContain('<div class="contents">')
-        ->and($component->block()->assets)->toHaveCount(1)
+        ->and($component->widget()->assets)->toHaveCount(1)
         ->and($componentPages->pluck('id')->all())->toContain($selectedPage->id);
 });
 
@@ -364,39 +364,39 @@ it('renders navigation and breadcrumbs with frontend context data', function ():
             ],
         ])
         ->create(['key' => 'docs']);
-    $navigationBlock = Widget::factory()->create([
-        'key' => 'navigation-block',
+    $navigationWidget = Widget::factory()->create([
+        'key' => 'navigation-widget',
         'meta' => ['navigation_id' => $navigation->getKey()],
     ]);
-    $breadcrumbsBlock = Widget::factory()->create(['key' => 'breadcrumbs-block']);
+    $breadcrumbsWidget = Widget::factory()->create(['key' => 'breadcrumbs-widget']);
 
     foundationThemeFinalFrontendState($language, $site, $theme, $layout, $page->load('type', 'layout', 'translation'));
 
-    $navigationComponent = new Navigation([], 'main', 0, new stdClass, $navigationBlock);
-    $navigationByKeyBlock = Widget::factory()->create([
-        'key' => 'navigation-key-block',
+    $navigationComponent = new Navigation([], 'main', 0, new stdClass, $navigationWidget);
+    $navigationByKeyWidget = Widget::factory()->create([
+        'key' => 'navigation-key-widget',
         'meta' => ['navigation' => 'docs'],
     ]);
-    $navigationByKeyComponent = new Navigation([], 'main', 1, new stdClass, $navigationByKeyBlock);
+    $navigationByKeyComponent = new Navigation([], 'main', 1, new stdClass, $navigationByKeyWidget);
     $emptyNavigation = NavigationModel::factory()
         ->site($site)
         ->language($language)
         ->items([])
         ->create(['key' => 'empty-docs']);
-    $emptyNavigationBlock = Widget::factory()->create([
-        'key' => 'navigation-empty-block',
+    $emptyNavigationWidget = Widget::factory()->create([
+        'key' => 'navigation-empty-widget',
         'meta' => ['navigation_id' => $emptyNavigation->getKey()],
     ]);
-    $emptyNavigationComponent = new Navigation([], 'main', 2, new stdClass, $emptyNavigationBlock);
-    $breadcrumbs = new Breadcrumbs([], 'main', 1, new stdClass, $breadcrumbsBlock);
+    $emptyNavigationComponent = new Navigation([], 'main', 2, new stdClass, $emptyNavigationWidget);
+    $breadcrumbs = new Breadcrumbs([], 'main', 1, new stdClass, $breadcrumbsWidget);
 
     expect($navigationComponent->items)->not->toBeNull()
         ->and($navigationComponent->items)->toHaveCount(1)
         ->and($navigationComponent->menu?->getKey())->toBe($navigation->getKey())
-        ->and(foundationThemeFinalView($navigationComponent->render())->name())->toBe('capell-foundation-theme::components.block.navigation.index')
+        ->and(foundationThemeFinalView($navigationComponent->render())->name())->toBe('capell-foundation-theme::components.widget.navigation.index')
         ->and($navigationByKeyComponent->menu?->getKey())->toBe($navigation->getKey())
         ->and($emptyNavigationComponent->render())->toBe('')
-        ->and(foundationThemeFinalView($breadcrumbs->render())->name())->toBe('capell-foundation-theme::components.block.page.breadcrumbs');
+        ->and(foundationThemeFinalView($breadcrumbs->render())->name())->toBe('capell-foundation-theme::components.widget.page.breadcrumbs');
 });
 
 it('covers content neighbor links and small frontend context helper branches', function (): void {
@@ -428,7 +428,7 @@ it('covers content neighbor links and small frontend context helper branches', f
         ->state(['order' => 3])
         ->withTranslations($language, ['title' => 'Next'], slug: 'content-next')
         ->create();
-    $block = Widget::factory()->create(['key' => 'content-neighbors']);
+    $widget = Widget::factory()->create(['key' => 'content-neighbors']);
     $slotType = new class
     {
         public function getMeta(string $key): ?string
@@ -436,25 +436,25 @@ it('covers content neighbor links and small frontend context helper branches', f
             return $key === 'type' ? 'slot' : null;
         }
     };
-    $slotBlock = new Widget;
-    $slotBlock->setRelation('type', $slotType);
+    $slotWidget = new Widget;
+    $slotWidget->setRelation('type', $slotType);
 
     $media = new Media;
     $media->collection_name = 'background_image';
 
-    $backgroundBlock = new Widget;
-    $backgroundBlock->setRelation('media', new Collection([$media]));
+    $backgroundWidget = new Widget;
+    $backgroundWidget->setRelation('media', new Collection([$media]));
 
     foundationThemeFinalFrontendState($language, $site, $theme, $layout, $page->load('type', 'layout'));
 
     MarkPrimaryHeadingRenderedAction::run();
 
-    $content = new Content([], 'main', 0, new stdClass, $block);
+    $content = new Content([], 'main', 0, new stdClass, $widget);
 
     expect($content->previousPage)->toBeInstanceOf(Page::class)
         ->and($content->nextPage)->toBeInstanceOf(Page::class)
-        ->and(BlockIsSlotAction::run($slotBlock))->toBeTrue()
-        ->and(ResolveLoadedBlockBackgroundImageAction::run($backgroundBlock))->toBe($media)
+        ->and(WidgetIsSlotAction::run($slotWidget))->toBeTrue()
+        ->and(ResolveLoadedWidgetBackgroundImageAction::run($backgroundWidget))->toBe($media)
         ->and(Frontend::getFrontendData('has_primary_heading'))->toBeTrue();
 });
 
@@ -493,38 +493,4 @@ function foundationThemeFinalFrontendState(Language $language, Site $site, Theme
         ->withTheme($theme)
         ->withLayout($layout)
         ->withPage($page);
-}
-
-final class FoundationThemeFinalPageAssetsHarness extends PageAssets
-{
-    /**
-     * @return Builder<Page>
-     */
-    public function exposeTableQuery(): Builder
-    {
-        return $this->getTableQuery();
-    }
-
-    public function exposeShouldPersistTableFiltersInSession(): bool
-    {
-        return $this->shouldPersistTableFiltersInSession();
-    }
-}
-
-final class FoundationThemeFinalPathGenerator implements PathGenerator
-{
-    public function getPath(Spatie\MediaLibrary\MediaCollections\Models\Media $media): string
-    {
-        return 'media/';
-    }
-
-    public function getPathForConversions(Spatie\MediaLibrary\MediaCollections\Models\Media $media): string
-    {
-        return 'media/conversions/';
-    }
-
-    public function getPathForResponsiveImages(Spatie\MediaLibrary\MediaCollections\Models\Media $media): string
-    {
-        return 'media/responsive';
-    }
 }

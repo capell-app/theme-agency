@@ -17,6 +17,8 @@ use Capell\Admin\Providers\Filament\AdminPanelProvider;
 use Capell\Blog\Providers\BlogServiceProvider;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Media;
+use Capell\Diagnostics\Providers\AdminServiceProvider as DiagnosticsAdminServiceProvider;
+use Capell\Diagnostics\Providers\DiagnosticsServiceProvider;
 use Capell\Frontend\Contracts\SettingsMigrationProviderInterface;
 use Capell\Frontend\Providers\FrontendServiceProvider;
 use Capell\HtmlCache\Providers\HtmlCacheServiceProvider;
@@ -144,6 +146,8 @@ class PublishingStudioTestCase extends AbstractTestCase
             WidgetsServiceProvider::class,
             NotificationsServiceProvider::class,
             AdminServiceProvider::class,
+            DiagnosticsServiceProvider::class,
+            DiagnosticsAdminServiceProvider::class,
             MigrationAssistantServiceProvider::class,
             HtmlCacheServiceProvider::class,
             FrontendServiceProvider::class,
@@ -163,6 +167,7 @@ class PublishingStudioTestCase extends AbstractTestCase
         parent::getEnvironmentSetUp($app);
 
         CapellCore::forcePackageInstalled(AdminServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(DiagnosticsServiceProvider::$packageName);
         $migrationAssistantPackagePath = realpath(__DIR__ . '/../../../vendor/capell-app/migration-assistant');
 
         if ($migrationAssistantPackagePath === false) {

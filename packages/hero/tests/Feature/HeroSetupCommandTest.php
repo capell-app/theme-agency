@@ -32,7 +32,7 @@ it('installs compact natural home hero defaults', function (): void {
     test()->artisan('capell:hero-setup')->assertSuccessful();
 
     $homeLayout = Layout::query()->where('key', LayoutEnum::Home->value)->firstOrFail();
-    $heroBlock = Widget::query()->where('key', 'hero')->firstOrFail();
+    $heroWidget = Widget::query()->where('key', 'hero')->firstOrFail();
     $containers = $homeLayout->containers ?? [];
 
     capell_expect(array_keys($containers))->toBe(['hero', 'main'])
@@ -40,11 +40,11 @@ it('installs compact natural home hero defaults', function (): void {
             ['widget_key' => 'hero'],
         ])
         ->and($homeLayout->widgets)->toBe(['hero', 'page-content'])
-        ->and($heroBlock->getMeta('height'))->toBe('small')
-        ->and($heroBlock->getMeta('color'))->toBe('light')
-        ->and($heroBlock->getMeta('content_align'))->toBe('center')
-        ->and($heroBlock->getMeta('content_width'))->toBe('balanced')
-        ->and($heroBlock->getMeta('media_position'))->toBe('right');
+        ->and($heroWidget->getMeta('height'))->toBe('small')
+        ->and($heroWidget->getMeta('color'))->toBe('light')
+        ->and($heroWidget->getMeta('content_align'))->toBe('center')
+        ->and($heroWidget->getMeta('content_width'))->toBe('balanced')
+        ->and($heroWidget->getMeta('media_position'))->toBe('right');
 
     $homePage = Page::query()
         ->where('layout_id', $homeLayout->id)

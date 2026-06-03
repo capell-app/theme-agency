@@ -11,6 +11,9 @@ parameters:
     paths:
         - packages
         - tests
+    excludePaths:
+        analyse:
+            - packages/*/vendor
     configDirectories:
         - config
         - packages/*/config

@@ -2,7 +2,7 @@ import AlpineFloatingUI from '@awcodes/alpine-floating-ui'
 import Tooltip from '@ryangjchandler/alpine-tooltip'
 
 import './utilities/lightbox'
-import './blocks/block/carousel'
+import './widgets/widget/carousel'
 
 const inactiveFaqTabClasses = [
     'border',
@@ -38,26 +38,26 @@ const filterFaqCategory = (button) => {
 }
 
 const updatePricingPlan = (plan, billing) => {
-    const priceBlock = plan.querySelector('.plan-price')
-    const periodBlock = plan.querySelector('.billing-period')
+    const priceWidget = plan.querySelector('.plan-price')
+    const periodWidget = plan.querySelector('.billing-period')
     const price =
         billing === 'annual'
             ? plan.dataset.priceAnnual
             : plan.dataset.priceMonthly
 
-    if (!priceBlock || !price) {
+    if (!priceWidget || !price) {
         return
     }
 
-    priceBlock.textContent = priceBlock.textContent.replace(
+    priceWidget.textContent = priceWidget.textContent.replace(
         billing === 'annual'
             ? plan.dataset.priceMonthly
             : plan.dataset.priceAnnual,
         price,
     )
 
-    if (periodBlock && price !== 'Custom') {
-        periodBlock.textContent = billing === 'annual' ? '/year' : '/month'
+    if (periodWidget && price !== 'Custom') {
+        periodWidget.textContent = billing === 'annual' ? '/year' : '/month'
     }
 }
 

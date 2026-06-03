@@ -61,7 +61,7 @@ it('errors when cache stores or queue connections are missing', function (): voi
 
 it('errors when infrastructure defaults are blank or referenced mailers are missing', function (): void {
     config()->set('cache.default', '');
-    config()->set('queue.default', null);
+    config()->set('queue.default');
     config()->set('mail.default', 'missing');
     config()->set('mail.mailers.missing');
     config()->set('filesystems.default', '');

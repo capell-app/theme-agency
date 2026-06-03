@@ -20,7 +20,7 @@ The `$type` value comes from the widget's `meta['component_type']` field. If not
 
 ## Stable frontend component keys
 
-Asset-backed widgets should store stable frontend component keys instead of package Blade namespaces. For example, store `section.block` or `section.team-member` in widget asset configuration, not `capell-layout-builder::section.block`.
+Asset-backed widgets should store stable frontend component keys instead of package Blade namespaces. For example, store `section.widget` or `section.team-member` in widget asset configuration, not `capell-layout-builder::section.widget`.
 
 The frontend component registry resolves that stable key to the active Blade implementation at render time. Content Sections registers neutral defaults, and the core layout builder APIs or a theme package can override the same keys with richer templates:
 
@@ -31,11 +31,11 @@ $this->callAfterResolving(
     FrontendComponentRegistryInterface::class,
     fn (FrontendComponentRegistryInterface $registry): FrontendComponentRegistryInterface => $registry
         ->register(
-            key: 'section.block',
-            component: 'capell-example-theme::section.block',
+            key: 'section.widget',
+            component: 'capell-example-theme::section.widget',
             aliases: [
-                'capell-content-sections::section.block',
-                'capell-layout-builder::section.block',
+                'capell-content-sections::section.widget',
+                'capell-layout-builder::section.widget',
             ],
             props: [
                 'asset',

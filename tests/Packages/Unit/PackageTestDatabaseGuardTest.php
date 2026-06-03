@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Capell\Tests\Support\PackageTestDatabaseGuard;
 
-it('blocks package tests from using Capell Ruby application databases', function (?string $database, ?string $url): void {
+it('widgets package tests from using Capell Ruby application databases', function (?string $database, ?string $url): void {
     expect(function () use ($database, $url): void {
         PackageTestDatabaseGuard::assertSafe('mysql', $database, $url, 'test');
     })

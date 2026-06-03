@@ -11,6 +11,8 @@ use Capell\AgentBridge\Tests\Fixtures\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Blade;
 use Livewire\Livewire;
+use Sinnbeck\DomAssertions\Asserts\AssertElement;
+use Sinnbeck\DomAssertions\Asserts\BaseAssert;
 
 it('builds an agent bridge prompt from the submitted intent', function (): void {
     $prompt = BuildAgentBridgePromptAction::run(AgentBridgePromptData::fromArray([
@@ -139,10 +141,10 @@ it('registers the toolbar Livewire component used by the global search render ho
 it('renders the toolbar slide-over only after click and refreshes prompt text on edits', function (): void {
     Livewire::test(PromptBuilderToolbarAction::class)
         ->assertSet('isOpen', false)
-        ->assertDontSee('agent-bridge-prompt-builder-title', false)
+        ->assertElementExists(fn (AssertElement $body): BaseAssert => $body->doesntContain('#agent-bridge-prompt-builder-title'))
         ->call('openBuilder')
         ->assertSet('isOpen', true)
-        ->assertSee('agent-bridge-prompt-builder-title', false)
+        ->assertElementExists('#agent-bridge-prompt-builder-title')
         ->set('data.goal', 'inspect updated draft state')
         ->assertSet('preparedPrompt', fn (string $prompt): bool => str_contains($prompt, 'inspect updated draft state'));
 });

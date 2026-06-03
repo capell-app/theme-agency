@@ -34,7 +34,7 @@ final class FooterSocialLinksTest extends AbstractTestCase
                 ],
             ],
         )
-            ->assertSee('https://facebook.com');
+            ->assertElementExists('a[href="https://facebook.com"]');
     }
 
     protected function getPackageServiceName(): string

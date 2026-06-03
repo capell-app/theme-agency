@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
+use Capell\Tests\Packages\Fixtures\ThemeDemoCommandRecorder;
 use Capell\ThemeStudio\Education\Actions\InstallEducationThemeDemoAction;
 use Capell\ThemeStudio\Education\Console\Commands\DemoCommand;
 use Capell\ThemeStudio\Knowledge\Actions\InstallKnowledgeThemeDemoAction;
@@ -51,11 +52,3 @@ it('passes theme demo command options into the package demo install action', fun
     'local services' => [Capell\ThemeStudio\LocalServices\Console\Commands\DemoCommand::class, InstallLocalServicesThemeDemoAction::class],
     'nonprofit' => [Capell\ThemeStudio\Nonprofit\Console\Commands\DemoCommand::class, InstallNonprofitThemeDemoAction::class],
 ]);
-
-final class ThemeDemoCommandRecorder
-{
-    /**
-     * @var list<ThemeDemoInstallData>
-     */
-    public array $records = [];
-}

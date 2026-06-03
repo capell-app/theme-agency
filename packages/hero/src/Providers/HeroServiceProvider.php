@@ -9,12 +9,12 @@ use Capell\Core\Enums\PackageTypeEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Hero\Console\Commands\SetupCommand;
-use Capell\Hero\Filament\Extenders\HeroBackgroundBlockAssetSchemaExtender;
-use Capell\Hero\Filament\Extenders\HeroBackgroundBlockSchemaExtender;
 use Capell\Hero\Filament\Extenders\HeroBackgroundThemeSchemaExtender;
-use Capell\Hero\View\Components\Block\Hero;
-use Capell\LayoutBuilder\Contracts\Extenders\BlockAssetSchemaExtender;
-use Capell\LayoutBuilder\Contracts\Extenders\BlockSchemaExtender;
+use Capell\Hero\Filament\Extenders\HeroBackgroundWidgetAssetSchemaExtender;
+use Capell\Hero\Filament\Extenders\HeroBackgroundWidgetSchemaExtender;
+use Capell\Hero\View\Components\Widget\Hero;
+use Capell\LayoutBuilder\Contracts\Extenders\WidgetAssetSchemaExtender;
+use Capell\LayoutBuilder\Contracts\Extenders\WidgetSchemaExtender;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Support\Facades\Blade;
 use Override;
@@ -66,7 +66,7 @@ final class HeroServiceProvider extends AbstractPackageServiceProvider
     private function registerBladeComponents(): void
     {
         Blade::anonymousComponentPath(__DIR__ . '/../../resources/views/components', 'capell-hero');
-        Blade::component(Hero::class, 'capell::block.hero');
+        Blade::component(Hero::class, 'capell::widget.hero');
     }
 
     private function registerTailwindSources(): void
@@ -83,7 +83,7 @@ final class HeroServiceProvider extends AbstractPackageServiceProvider
     private function registerSchemaExtenders(): void
     {
         $this->app->tag(HeroBackgroundThemeSchemaExtender::class, HeroBackgroundThemeSchemaExtender::TAG);
-        $this->app->tag(HeroBackgroundBlockSchemaExtender::class, BlockSchemaExtender::TAG);
-        $this->app->tag(HeroBackgroundBlockAssetSchemaExtender::class, BlockAssetSchemaExtender::TAG);
+        $this->app->tag(HeroBackgroundWidgetSchemaExtender::class, WidgetSchemaExtender::TAG);
+        $this->app->tag(HeroBackgroundWidgetAssetSchemaExtender::class, WidgetAssetSchemaExtender::TAG);
     }
 }

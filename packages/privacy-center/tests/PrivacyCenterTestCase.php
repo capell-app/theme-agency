@@ -7,9 +7,6 @@ namespace Capell\PrivacyCenter\Tests;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\CapellCoreManager;
 use Capell\PrivacyCenter\Providers\PrivacyCenterServiceProvider;
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
@@ -72,15 +69,4 @@ class PrivacyCenterTestCase extends OrchestraTestCase
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
     }
-}
-
-final class PrivacyCenterTestSubject extends Model
-{
-    /** @use HasFactory<Factory<self>> */
-    use HasFactory;
-
-    protected $table = 'privacy_center_test_subjects';
-
-    /** @var array<string> */
-    protected $guarded = [];
 }

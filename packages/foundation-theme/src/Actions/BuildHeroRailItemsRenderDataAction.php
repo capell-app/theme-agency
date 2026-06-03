@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Capell\FoundationTheme\Actions;
 
 use Capell\Core\Contracts\Pageable;
-use Capell\FoundationTheme\Data\BlockAssetRenderData;
+use Capell\FoundationTheme\Data\WidgetAssetRenderData;
 use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Models\WidgetAsset;
 use Illuminate\Database\Eloquent\Model;
@@ -17,24 +17,24 @@ final class BuildHeroRailItemsRenderDataAction
     use AsObject;
 
     /**
-     * @return Collection<int, BlockAssetRenderData>
+     * @return Collection<int, WidgetAssetRenderData>
      */
-    public function handle(Widget $block, ?Pageable $page, string $source, int $limit = 4): Collection
+    public function handle(Widget $widget, ?Pageable $page, string $source, int $limit = 4): Collection
     {
-        $blockAssets = $this->loadedAssets($block);
+        $widgetAssets = $this->loadedAssets($widget);
         $pageAssets = in_array($source, ['page', 'mixed'], true)
             ? $this->loadedPageHeroAssets($page)
             : collect();
 
         $assets = match ($source) {
             'page' => $pageAssets,
-            'mixed' => $pageAssets->merge($blockAssets),
-            default => $blockAssets,
+            'mixed' => $pageAssets->merge($widgetAssets),
+            default => $widgetAssets,
         };
 
         return $assets
             ->filter(static fn (mixed $asset): bool => $asset instanceof WidgetAsset)
-            ->map(static fn (WidgetAsset $asset): BlockAssetRenderData => BuildBlockAssetRenderDataAction::run($asset))
+            ->map(static fn (WidgetAsset $asset): WidgetAssetRenderData => BuildWidgetAssetRenderDataAction::run($asset))
             ->take(max(0, $limit))
             ->values();
     }
@@ -68,7 +68,7 @@ final class BuildHeroRailItemsRenderDataAction
                     return false;
                 }
 
-                $renderData = BuildBlockAssetRenderDataAction::run($attachment);
+                $renderData = BuildWidgetAssetRenderDataAction::run($attachment);
                 $role = $renderData->role;
 
                 return is_string($role) && str_starts_with($role, 'hero');

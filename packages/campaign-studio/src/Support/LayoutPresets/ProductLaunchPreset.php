@@ -25,11 +25,11 @@ final class ProductLaunchPreset extends CampaignLayoutPreset
         ];
     }
 
-    public function blocks(): array
+    public function widgets(): array
     {
         return [
             ['container' => 'hero', 'type' => 'campaign-hero'],
-            ['container' => 'features', 'type' => 'campaign-cta-block'],
+            ['container' => 'features', 'type' => 'campaign-cta-widget'],
             ['container' => 'conversion', 'type' => 'campaign-lead-form'],
         ];
     }

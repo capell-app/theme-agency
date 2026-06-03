@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Campaign Studio adds campaign groups, landing-page variants, audience targeting, experiments, CTA blocks, conversion goals, UTM attribution, funnel reporting, and conversion reporting to Capell.",
+    "description": "Campaign Studio adds campaign groups, landing-page variants, audience targeting, experiments, CTA widgets, conversion goals, UTM attribution, funnel reporting, and conversion reporting to Capell.",
     "product": {
         "group": "Capell Growth",
         "tier": "premium",
@@ -44,17 +44,17 @@
             "resourceClasses": [
                 "Capell\\CampaignStudio\\Filament\\Resources\\CampaignGroups\\CampaignGroupResource",
                 "Capell\\CampaignStudio\\Filament\\Resources\\CampaignLandingPages\\CampaignLandingPageResource",
-                "Capell\\CampaignStudio\\Filament\\Resources\\CampaignCtaBlocks\\CampaignCtaBlockResource",
+                "Capell\\CampaignStudio\\Filament\\Resources\\CampaignCtaWidgets\\CampaignCtaWidgetResource",
                 "Capell\\CampaignStudio\\Filament\\Resources\\CampaignConversionGoals\\CampaignConversionGoalResource"
             ]
         },
         {
             "type": "configurator",
-            "class": "Capell\\CampaignStudio\\Manifest\\CampaignBlockConfiguratorsContribution",
+            "class": "Capell\\CampaignStudio\\Manifest\\CampaignWidgetConfiguratorsContribution",
             "configuratorClasses": [
-                "Capell\\CampaignStudio\\Filament\\Configurators\\Blocks\\CampaignCtaBlockBlockConfigurator",
-                "Capell\\CampaignStudio\\Filament\\Configurators\\Blocks\\CampaignHeroBlockConfigurator",
-                "Capell\\CampaignStudio\\Filament\\Configurators\\Blocks\\CampaignLeadFormBlockConfigurator"
+                "Capell\\CampaignStudio\\Filament\\Configurators\\Widgets\\CampaignCtaWidgetWidgetConfigurator",
+                "Capell\\CampaignStudio\\Filament\\Configurators\\Widgets\\CampaignHeroWidgetConfigurator",
+                "Capell\\CampaignStudio\\Filament\\Configurators\\Widgets\\CampaignLeadFormWidgetConfigurator"
             ]
         },
         {
@@ -80,7 +80,7 @@
             "modelClasses": [
                 "Capell\\CampaignStudio\\Models\\CampaignGroup",
                 "Capell\\CampaignStudio\\Models\\CampaignLandingPage",
-                "Capell\\CampaignStudio\\Models\\CampaignCtaBlock",
+                "Capell\\CampaignStudio\\Models\\CampaignCtaWidget",
                 "Capell\\CampaignStudio\\Models\\CampaignConversionGoal",
                 "Capell\\CampaignStudio\\Models\\CampaignConversion"
             ]
@@ -92,9 +92,9 @@
         },
         {
             "type": "frontend-component",
-            "class": "Capell\\CampaignStudio\\Manifest\\CampaignBlockComponentsContribution",
+            "class": "Capell\\CampaignStudio\\Manifest\\CampaignWidgetComponentsContribution",
             "componentClasses": [
-                "Capell\\CampaignStudio\\View\\Components\\Block\\CampaignCtaBlock"
+                "Capell\\CampaignStudio\\View\\Components\\Widget\\CampaignCtaWidget"
             ]
         }
     ],
@@ -104,7 +104,7 @@
         "requiredTables": [
             "campaign_groups",
             "campaign_landing_pages",
-            "campaign_cta_blocks",
+            "campaign_cta_widgets",
             "campaign_conversion_goals",
             "campaign_conversions"
         ]
@@ -174,7 +174,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Campaign Studio adds campaign groups, landing-page variants, audience targeting, experiments, CTA blocks, conversion goals, UTM attribution, funnel reporting, and conversion reporting to Capell.",
+        "summary": "Campaign Studio adds campaign groups, landing-page variants, audience targeting, experiments, CTA widgets, conversion goals, UTM attribution, funnel reporting, and conversion reporting to Capell.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",

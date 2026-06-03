@@ -13,7 +13,7 @@
                 <li>
                     <a
                         href="{{ $page->pageUrl->full_url }}"
-                        class="focus:text-primary hover:text-primary block text-sm leading-tight font-medium text-[var(--color-footer-link)]"
+                        class="focus:text-primary hover:text-primary widget text-sm leading-tight font-medium text-[var(--color-footer-link)]"
                         wire:navigate
                     >
                         {{ $page->getTranslation('label') ?? $page->getTranslation('title') ?? $page->name }}

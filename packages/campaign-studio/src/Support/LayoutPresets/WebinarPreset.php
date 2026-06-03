@@ -25,11 +25,11 @@ final class WebinarPreset extends CampaignLayoutPreset
         ];
     }
 
-    public function blocks(): array
+    public function widgets(): array
     {
         return [
             ['container' => 'hero', 'type' => 'campaign-hero'],
-            ['container' => 'details', 'type' => 'campaign-cta-block'],
+            ['container' => 'details', 'type' => 'campaign-cta-widget'],
             ['container' => 'registration', 'type' => 'campaign-lead-form'],
         ];
     }

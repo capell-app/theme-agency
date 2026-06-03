@@ -496,11 +496,11 @@ it('protects the edit region route with authentication admin access and signed u
     allowEditableRegionEdits();
 
     get($signedUrl)->assertOk()
-        ->assertSee('<html lang="en" class="fi">', false)
+        ->assertElementExists('html.fi[lang="en"]')
         ->assertSee('capell-authoring-editor-shell')
         ->assertSee("[x-cloak='']", false)
         ->assertSee('capell-authoring:editor-loaded')
-        ->assertSee('wire:snapshot', false)
+        ->assertElementExists('[wire\:snapshot]')
         ->assertSee('Page title');
 
     $encodedPayload = $signer->encode(editableRegionPayload($translation));

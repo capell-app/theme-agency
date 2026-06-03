@@ -72,6 +72,11 @@ namespace Illuminate\Testing {
      * @method $this sortTable(mixed ...$arguments)
      */
     class TestResponse {}
+
+    /**
+     * @method $this assertElementExists(mixed $selector = 'body', callable|null $callback = null)
+     */
+    class TestView {}
 }
 
 namespace Pest\PendingCalls {

@@ -6,16 +6,16 @@
     "outputDirectory": "packages/hero/docs/screenshots",
     "entries": [
         {
-            "id": "hero-home-block",
-            "title": "Hero home block rendered on a public page.",
+            "id": "hero-home-widget",
+            "title": "Hero home widget rendered on a public page.",
             "package": "hero",
             "surface": "frontend",
             "targetType": "frontend-url",
             "target": null,
             "required": true,
-            "notes": "Requires seeded layout content or the capell:hero-setup command plus a frontend theme that renders the hero block.",
-            "useCase": "A visitor sees the seeded hero block rendered through Layout Builder and the active frontend theme.",
-            "screenshotPath": "packages/hero/docs/screenshots/hero-home-block.png"
+            "notes": "Requires seeded layout content or the capell:hero-setup command plus a frontend theme that renders the hero widget.",
+            "useCase": "A visitor sees the seeded hero widget rendered through Layout Builder and the active frontend theme.",
+            "screenshotPath": "packages/hero/docs/screenshots/hero-home-widget.png"
         },
         {
             "id": "hero-slide-variant",

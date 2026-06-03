@@ -16,13 +16,13 @@ use Capell\Blog\Filament\Resources\Articles\ArticleResource;
 use Capell\Blog\Models\Article;
 use Capell\Blog\Providers\BlogServiceProvider;
 use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\CampaignConversionGoalResource;
-use Capell\CampaignStudio\Filament\Resources\CampaignCtaBlocks\CampaignCtaBlockResource;
+use Capell\CampaignStudio\Filament\Resources\CampaignCtaWidgets\CampaignCtaWidgetResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignGroups\CampaignGroupResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignLandingPages\CampaignLandingPageResource;
 use Capell\CampaignStudio\Filament\Widgets\CampaignOverviewStatsWidget;
 use Capell\CampaignStudio\Models\CampaignConversion;
 use Capell\CampaignStudio\Models\CampaignConversionGoal;
-use Capell\CampaignStudio\Models\CampaignCtaBlock;
+use Capell\CampaignStudio\Models\CampaignCtaWidget;
 use Capell\CampaignStudio\Models\CampaignGroup;
 use Capell\CampaignStudio\Models\CampaignLandingPage;
 use Capell\CampaignStudio\Providers\CampaignStudioServiceProvider;
@@ -142,7 +142,7 @@ it('registers package metadata but skips runtime models, tables, settings, and a
         Article::class,
         CampaignConversion::class,
         CampaignConversionGoal::class,
-        CampaignCtaBlock::class,
+        CampaignCtaWidget::class,
         CampaignGroup::class,
         CampaignLandingPage::class,
         Form::class,
@@ -189,7 +189,7 @@ it('does not expose admin resources, pages, widgets, or routes for uninstalled p
         CountryResource::class,
         ArticleResource::class,
         CampaignConversionGoalResource::class,
-        CampaignCtaBlockResource::class,
+        CampaignCtaWidgetResource::class,
         CampaignGroupResource::class,
         CampaignLandingPageResource::class,
         'Capell\\FormBuilder\\Filament\\Resources\\FormBuilder\\FormResource',

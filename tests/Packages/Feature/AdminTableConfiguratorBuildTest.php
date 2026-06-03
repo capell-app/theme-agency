@@ -7,7 +7,7 @@ use Capell\Address\Filament\Resources\Countries\Tables\CountriesTable;
 use Capell\Admin\Filament\Contracts\TableConfigurator;
 use Capell\Blog\Filament\Resources\Articles\Tables\ArticlePagesTable;
 use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\Tables\CampaignConversionGoalsTable;
-use Capell\CampaignStudio\Filament\Resources\CampaignCtaBlocks\Tables\CampaignCtaBlocksTable;
+use Capell\CampaignStudio\Filament\Resources\CampaignCtaWidgets\Tables\CampaignCtaWidgetsTable;
 use Capell\CampaignStudio\Filament\Resources\CampaignGroups\Tables\CampaignGroupsTable;
 use Capell\CampaignStudio\Filament\Resources\CampaignLandingPages\Tables\CampaignLandingPagesTable;
 use Capell\Comments\Filament\Resources\CommentAuthors\CommentAuthorResource;
@@ -94,7 +94,7 @@ it('builds package admin table configurators with the expected editor-facing con
     ],
     'layout widgets table' => [
         WidgetsTable::class,
-        ['id', 'name', 'type.name', 'key', 'block_assets_count'],
+        ['id', 'name', 'type.name', 'key', 'widget_assets_count'],
         ['blueprint_id', 'layout_id', 'filter', 'status'],
         ['edit'],
         ['delete', 'forceDelete', 'restore'],
@@ -180,7 +180,7 @@ it('builds the remaining package table configurators used by package admin pages
     expect($table->getColumns())->not->toBeEmpty();
 })->with([
     'campaign conversion goals' => [CampaignConversionGoalsTable::class],
-    'campaign cta blocks' => [CampaignCtaBlocksTable::class],
+    'campaign cta widgets' => [CampaignCtaWidgetsTable::class],
     'content section selection' => [SectionSelectionTable::class],
     'diagnostics permission audit' => [PermissionAuditTable::class],
     'diagnostics queue health' => [QueueHealthTable::class],
@@ -243,9 +243,9 @@ it('builds the html cache map table and searches by canonical url hash', functio
         ->and($query->pluck('id')->all())->toBe([$matchingRecord->getKey()]);
 });
 
-it('builds the layout builder layouts table with block inventory filters and info actions', function (): void {
-    $hero = Widget::factory()->create(['key' => 'layout-table-hero', 'name' => 'Hero block']);
-    $cards = Widget::factory()->create(['key' => 'layout-table-cards', 'name' => 'Cards block']);
+it('builds the layout builder layouts table with widget inventory filters and info actions', function (): void {
+    $hero = Widget::factory()->create(['key' => 'layout-table-hero', 'name' => 'Hero widget']);
+    $cards = Widget::factory()->create(['key' => 'layout-table-cards', 'name' => 'Cards widget']);
     $layout = Layout::factory()->create([
         'containers' => [
             'main' => [
@@ -260,14 +260,14 @@ it('builds the layout builder layouts table with block inventory filters and inf
         'containers' => [
             'main' => [
                 'widgets' => [
-                    ['widget_key' => 'other-block'],
+                    ['widget_key' => 'other-widget'],
                 ],
             ],
         ],
     ]);
 
     $table = LayoutBuilderLayoutsTable::configure(packageAdminTableForCoverage());
-    $widgetBlocksForLayout = new ReflectionMethod(LayoutBuilderLayoutsTable::class, 'widgetBlocksForLayout');
+    $widgetWidgetsForLayout = new ReflectionMethod(LayoutBuilderLayoutsTable::class, 'widgetWidgetsForLayout');
     $whereContainsWidgetKey = new ReflectionMethod(LayoutBuilderLayoutsTable::class, 'whereContainsWidgetKey');
 
     $matchingQuery = Layout::query();
@@ -276,7 +276,7 @@ it('builds the layout builder layouts table with block inventory filters and inf
     expect($table->getColumns())->not->toBeEmpty()
         ->and(array_keys($table->getFilters()))->toContain('widget_key')
         ->and(packageAdminTableActionNames($table->getActions()))->toContain('info')
-        ->and($widgetBlocksForLayout->invoke(null, $layout)->pluck('name')->all())->toBe(['Hero block', 'Cards block'])
+        ->and($widgetWidgetsForLayout->invoke(null, $layout)->pluck('name')->all())->toBe(['Hero widget', 'Cards widget'])
         ->and($matchingQuery->pluck('id')->all())->toBe([$layout->getKey()]);
 });
 

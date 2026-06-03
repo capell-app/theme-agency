@@ -40,7 +40,7 @@ Use [Package Documentation Standard](package-documentation-standard.md) when cre
 | Agent Delivery       | [`packages/agent-delivery/README.md`](../packages/agent-delivery/README.md), [`docs`](../packages/agent-delivery/docs/overview.md)                   |
 | AI Orchestrator      | [`packages/ai-orchestrator/README.md`](../packages/ai-orchestrator/README.md), [`docs`](../packages/ai-orchestrator/docs/overview.md)                |
 | API                  | [`packages/api/README.md`](../packages/api/README.md), [`docs`](../packages/api/docs/overview.md)                                                    |
-| Block Library        | [`packages/block-library/README.md`](../packages/block-library/README.md), [`docs`](../packages/block-library/docs/overview.md)                      |
+| Widget Library       | [`packages/widget-library/README.md`](../packages/widget-library/README.md), [`docs`](../packages/widget-library/docs/overview.md)                   |
 | Blog                 | [`packages/blog/README.md`](../packages/blog/README.md), [`docs`](../packages/blog/docs/overview.md)                                                 |
 | Campaign Studio      | [`packages/campaign-studio/README.md`](../packages/campaign-studio/README.md), [`docs`](../packages/campaign-studio/docs/overview.md)                |
 | Comments             | [`packages/comments/README.md`](../packages/comments/README.md), [`docs`](../packages/comments/docs/overview.md)                                     |

@@ -8,11 +8,11 @@ use Capell\CampaignStudio\Actions\ResolveCampaignLandingPageVariantAction;
 use Capell\CampaignStudio\Actions\SyncCampaignExperimentAction;
 use Capell\CampaignStudio\Filament\Resources\CampaignGroups\CampaignGroupResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignLandingPages\CampaignLandingPageResource;
-use Capell\CampaignStudio\Manifest\CampaignBlockConfiguratorsContribution;
 use Capell\CampaignStudio\Manifest\CampaignOverviewStatsContribution;
 use Capell\CampaignStudio\Manifest\CampaignStudioAdminResourcesContribution;
 use Capell\CampaignStudio\Manifest\CampaignStudioDashboardWidgetsContribution;
 use Capell\CampaignStudio\Manifest\CampaignStudioModelsContribution;
+use Capell\CampaignStudio\Manifest\CampaignWidgetConfiguratorsContribution;
 
 function campaignStudioManifest(): array
 {
@@ -36,7 +36,7 @@ it('declares implemented campaign studio contribution surfaces', function (): vo
         ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([])
         ->and($contributions->pluck('class')->all())->toContain(
             CampaignStudioAdminResourcesContribution::class,
-            CampaignBlockConfiguratorsContribution::class,
+            CampaignWidgetConfiguratorsContribution::class,
             CampaignStudioDashboardWidgetsContribution::class,
             CampaignOverviewStatsContribution::class,
             CampaignStudioModelsContribution::class,

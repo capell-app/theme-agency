@@ -16,13 +16,13 @@ final class BuildBannerImageRenderDataAction
 {
     use AsObject;
 
-    public function handle(Widget $block, mixed $content, mixed $title, bool $rounded, mixed $reverseOrder): BannerImageRenderData
+    public function handle(Widget $widget, mixed $content, mixed $title, bool $rounded, mixed $reverseOrder): BannerImageRenderData
     {
-        $backgroundImage = $this->firstLoadedBlockMedia($block, MediaCollectionEnum::BackgroundImage->value)
-            ?? $this->firstLoadedBlockMedia($block, MediaCollectionEnum::Image->value)
-            ?? $this->firstAssetMedia($block);
+        $backgroundImage = $this->firstLoadedWidgetMedia($widget, MediaCollectionEnum::BackgroundImage->value)
+            ?? $this->firstLoadedWidgetMedia($widget, MediaCollectionEnum::Image->value)
+            ?? $this->firstAssetMedia($widget);
 
-        $meta = is_array($block->meta) ? $block->meta : [];
+        $meta = is_array($widget->meta) ? $widget->meta : [];
         $actions = $meta['actions'] ?? null;
         $hasContent = filled($content) || filled($title) || filled($actions);
 
@@ -34,13 +34,13 @@ final class BuildBannerImageRenderDataAction
         );
     }
 
-    private function firstLoadedBlockMedia(Widget $block, string $collectionName): ?Media
+    private function firstLoadedWidgetMedia(Widget $widget, string $collectionName): ?Media
     {
-        if (! $block->relationLoaded('media')) {
+        if (! $widget->relationLoaded('media')) {
             return null;
         }
 
-        $media = $block->getRelation('media');
+        $media = $widget->getRelation('media');
 
         if (! $media instanceof Collection) {
             return null;
@@ -53,13 +53,13 @@ final class BuildBannerImageRenderDataAction
         return $match instanceof Media ? $match : null;
     }
 
-    private function firstAssetMedia(Widget $block): mixed
+    private function firstAssetMedia(Widget $widget): mixed
     {
-        if (! $block->relationLoaded('assets')) {
+        if (! $widget->relationLoaded('assets')) {
             return null;
         }
 
-        $assets = $block->getRelation('assets');
+        $assets = $widget->getRelation('assets');
 
         if (! $assets instanceof Collection) {
             return null;

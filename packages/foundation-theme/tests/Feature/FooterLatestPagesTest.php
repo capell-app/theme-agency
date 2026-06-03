@@ -32,7 +32,7 @@ it('renders latest pages from the provided page collection', function (): void {
         ['pages' => new Collection([$page])],
     )
         ->assertSee('Latest Pages')
-        ->assertSee('https://example.test/resources', false)
+        ->assertElementExists('a[href="https://example.test/resources"]')
         ->assertSee('Resources');
 });
 

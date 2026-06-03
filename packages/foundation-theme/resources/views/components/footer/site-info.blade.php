@@ -20,7 +20,7 @@
             @if ($site->logoInverted)
                 <x-capell::logo
                     :media="$site->logoInverted"
-                    :class="'footer-logo object-top-left max-h-[32vh] object-contain' . ($site->logo ? ' hidden dark:block' : '')"
+                    :class="'footer-logo object-top-left max-h-[32vh] object-contain' . ($site->logo ? ' hidden dark:widget' : '')"
                 />
             @endif
 

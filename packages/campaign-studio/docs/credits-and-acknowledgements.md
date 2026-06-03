@@ -2,12 +2,12 @@
 
 Campaign Studio is part of the Capell package set. This page names the main frameworks, packages, authors, and services this package leans on, with a short note about what they make possible here. It is intentionally shorter than the repository-wide credits page and closer to the package itself.
 
-Package role: Campaign landing pages, CTA blocks, UTM attribution, conversion goals, and campaign insights.
+Package role: Campaign landing pages, CTA widgets, UTM attribution, conversion goals, and campaign insights.
 
 ## Shared Foundations
 
 - [Laravel](https://laravel.com), created by [Taylor Otwell](https://github.com/taylorotwell), gives this package routing, service providers, Eloquent, validation, queues, events, auth, caching, and the normal Laravel testing surface.
-- [Filament](https://filamentphp.com) and the [Filament project](https://github.com/filamentphp/filament) give this package admin resources, pages, blocks, forms, tables, actions, and panel integration.
+- [Filament](https://filamentphp.com) and the [Filament project](https://github.com/filamentphp/filament) give this package admin resources, pages, widgets, forms, tables, actions, and panel integration.
 - [Blade](https://laravel.com/docs/blade) keeps package views close to Laravel, easy to override, and friendly to theme packages.
 - [Tailwind CSS](https://tailwindcss.com), by [Tailwind Labs](https://tailwindcss.com), gives package themes and frontend views a shared styling language.
 - [Vite](https://vite.dev), by [Evan You](https://github.com/yyx990803) and the Vite team, keeps package asset builds fast and predictable.
@@ -31,7 +31,7 @@ Package role: Campaign landing pages, CTA blocks, UTM attribution, conversion go
 
 ## What We Especially Appreciate
 
-The useful feature is attribution staying close to the landing page. UTM data, CTA blocks, conversion goals, and insights can be fixed or extended together without turning every marketing page into custom code.
+The useful feature is attribution staying close to the landing page. UTM data, CTA widgets, conversion goals, and insights can be fixed or extended together without turning every marketing page into custom code.
 
 ## Keeping This Page Current
 

@@ -5,7 +5,7 @@ description: Use when editing Capell CampaignStudio landing pages, CTAs, goals, 
 
 # Capell CampaignStudio
 
-Campaign groups, landing pages, CTA blocks, conversion goals, UTM attribution, and reporting.
+Campaign groups, landing pages, CTA widgets, conversion goals, UTM attribution, and reporting.
 
 ## Look
 

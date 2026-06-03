@@ -8,6 +8,7 @@ use Capell\AutomationStudio\Data\AutomationTriggerEventData;
 use Capell\AutomationStudio\Enums\AutomationActionType;
 use Capell\AutomationStudio\Enums\AutomationTriggerType;
 use Capell\AutomationStudio\Support\Handlers\SubscribeUserAutomationActionHandler;
+use Capell\AutomationStudio\Tests\Fixtures\SubscribeUserAutomationActionProbe;
 use Capell\Newsletter\Actions\ApplyNewsletterTagsAction;
 use Capell\Newsletter\Actions\UpsertSubscriberAction;
 use Capell\Newsletter\Data\ConsentEvidenceData;
@@ -209,17 +210,3 @@ it('uses action settings over event payload for subscriber identity fields', fun
         ->and($subscription->subscriberData?->email)->toBe('settings@example.test')
         ->and($subscription->subscriberData?->sourceFormId)->toBe(9);
 });
-
-final class SubscribeUserAutomationActionProbe
-{
-    public ?SubscriberData $subscriberData = null;
-
-    public ?ConsentEvidenceData $evidenceData = null;
-
-    public ?ConsentEventType $eventType = null;
-
-    /** @var array<int, int|string> */
-    public array $tagIds = [];
-
-    public bool $replaceTags = false;
-}

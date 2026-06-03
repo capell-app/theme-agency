@@ -7,7 +7,7 @@
     "authors": [
         {
             "name": "Howdu",
-            "email": "cms.multi2@gmail.com",
+            "email": "capell.app26@gmail.com",
             "role": "Developer"
         }
     ],
@@ -19,7 +19,7 @@
             "@patch:pest-shards"
         ],
         "patch:pest-shards": "@php scripts/patch-pest-shards.php",
-        "rector": "@rector:changed",
+        "rector": "@php vendor/bin/rector",
         "rector:changed": "bash ./scripts/rector-changed.sh",
         "rector:all": "XDEBUG_MODE=off \"$PHP_BINARY\" vendor/bin/rector --no-progress-bar",
         "lint": "@php vendor/bin/pint --parallel packages tests",
@@ -39,7 +39,7 @@
             "@php -r \"echo PHP_EOL . 'Checking Composer lock file...' . PHP_EOL;\"",
             "@check:composer-lock",
             "@php -r \"echo PHP_EOL . 'Running Rector...' . PHP_EOL;\"",
-            "@rector:all",
+            "@rector",
             "@php -r \"echo PHP_EOL . 'Running Pint...' . PHP_EOL;\"",
             "@lint",
             "@php -r \"echo PHP_EOL . 'Running Prettier...' . PHP_EOL;\"",
@@ -49,7 +49,9 @@
             "@php -r \"echo PHP_EOL . 'Running PHPStan...' . PHP_EOL;\"",
             "@analyze",
             "@php -r \"echo PHP_EOL . 'Running Pest...' . PHP_EOL;\"",
-            "@test"
+            "@test",
+            "@php -r \"echo PHP_EOL . 'Running Pest coverage...' . PHP_EOL;\"",
+            "@coverage"
         ],
         "test:unit": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --compact --configuration=phpunit.xml",
         "test:group": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --compact --group=${PEST_GROUP:-unit} --configuration=phpunit.xml",
@@ -60,10 +62,17 @@
         "test:all": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --compact --stop-on-error --stop-on-failure --configuration=phpunit.xml",
         "test:all:ci": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --compact --configuration=phpunit.xml",
         "test:shards": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --compact --update-shards --configuration=phpunit.xml",
-        "coverage:blade": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --blade-coverage --parallel --colors=always --configuration=phpunit.xml",
+        "test:types": "@php vendor/bin/pest --configuration=phpunit.xml --type-coverage",
         "test": [
             "@clear",
-            "@test:unit"
+            "@prepare",
+            "@test:all"
+        ],
+        "coverage:blade": "@php -d memory_limit=-1 -d max_execution_time=0 vendor/bin/pest --blade-coverage --parallel --colors=always --configuration=phpunit.xml",
+        "coverage": "@php -d memory_limit=-1 -d pcov.enabled=1 -d pcov.directory=packages vendor/bin/pest --coverage --min=90 --colors=always --configuration=phpunit.xml",
+        "coverage-report": [
+            "rm -rf .cache/phpunit/code-coverage",
+            "@php -d memory_limit=-1 -d pcov.enabled=1 -d pcov.directory=packages vendor/bin/pest --coverage --coverage-html=coverage --colors=always --configuration=phpunit.xml"
         ],
         "clear": [
             "CACHE_STORE=array \"$PHP_BINARY\" vendor/bin/testbench package:purge-skeleton --ansi",
@@ -79,11 +88,6 @@
         ]
     },
     "repositories": [
-        {
-            "name": "pest-plugin-blade-coverage",
-            "type": "vcs",
-            "url": "https://github.com/capell-app/pest-plugin-blade-coverage"
-        },
         {
             "type": "vcs",
             "url": "https://github.com/capell-app/admin"
@@ -217,8 +221,8 @@
             "Capell\\Comments\\": "packages/comments/src",
             "Capell\\Comments\\Database\\Factories\\": "packages/comments/database/factories",
             "Capell\\Contacts\\": "packages/contacts/src",
-            "Capell\\ContentBlocks\\": "packages/block-library/src",
-            "Capell\\ContentBlocks\\Database\\Factories\\": "packages/block-library/database/factories",
+            "Capell\\BlockLibrary\\": "packages/block-library/src",
+            "Capell\\BlockLibrary\\Database\\Factories\\": "packages/block-library/database/factories",
             "Capell\\ContentSections\\": "packages/content-sections/src",
             "Capell\\ContentSections\\Database\\Factories\\": "packages/content-sections/database/factories",
             "Capell\\CustomerPortal\\": "packages/customer-portal/src",
@@ -321,7 +325,7 @@
             "Capell\\CampaignStudio\\Tests\\": "packages/campaign-studio/tests",
             "Capell\\Comments\\Tests\\": "packages/comments/tests",
             "Capell\\Contacts\\Tests\\": "packages/contacts/tests",
-            "Capell\\ContentBlocks\\Tests\\": "packages/block-library/tests",
+            "Capell\\BlockLibrary\\Tests\\": "packages/block-library/tests",
             "Capell\\ContentSections\\Tests\\": "packages/content-sections/tests",
             "Capell\\CustomerPortal\\Tests\\": "packages/customer-portal/tests",
             "Capell\\DashboardReports\\Tests\\": "packages/dashboard-reports/tests",

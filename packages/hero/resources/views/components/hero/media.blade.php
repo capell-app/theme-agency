@@ -17,7 +17,7 @@
         ];
     @endphp
 
-    <picture class="pointer-events-none absolute inset-0 block">
+    <picture class="widget pointer-events-none absolute inset-0">
         @foreach ($imageSources as $source)
             @php($image = $media->images[$source['viewport']] ?? null)
             @if ($image)

@@ -10,6 +10,8 @@ use Capell\Admin\Providers\Filament\AdminPanelProvider;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Media;
 use Capell\CustomerPortal\Providers\CustomerPortalServiceProvider;
+use Capell\Diagnostics\Providers\AdminServiceProvider as DiagnosticsAdminServiceProvider;
+use Capell\Diagnostics\Providers\DiagnosticsServiceProvider;
 use Capell\Events\Providers\EventsServiceProvider;
 use Capell\FoundationTheme\Providers\FoundationThemeServiceProvider;
 use Capell\Frontend\Contracts\SettingsMigrationProviderInterface;
@@ -60,6 +62,8 @@ class EventsTestCase extends AbstractTestCase
         return [
             ...parent::getPackageProviders($app),
             AdminServiceProvider::class,
+            DiagnosticsServiceProvider::class,
+            DiagnosticsAdminServiceProvider::class,
             CustomerPortalServiceProvider::class,
             FrontendServiceProvider::class,
             NavigationServiceProvider::class,
@@ -80,6 +84,7 @@ class EventsTestCase extends AbstractTestCase
         parent::getEnvironmentSetUp($app);
 
         CapellCore::forcePackageInstalled(AdminServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(DiagnosticsServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(CustomerPortalServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(FrontendServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(NavigationServiceProvider::$packageName);

@@ -29,19 +29,19 @@ it('bundles layout builder javascript into the foundation frontend runtime', fun
     $provider = file_get_contents(dirname(__DIR__, 2) . '/src/Providers/FoundationThemeServiceProvider.php');
     $entrypoint = file_get_contents(dirname(__DIR__, 2) . '/resources/js/capell-frontend.js');
 
-    expect($entrypoint)->toContain('./blocks/block/carousel')
+    expect($entrypoint)->toContain('./widgets/widget/carousel')
         ->and($provider)->toContain("path: 'vendor/capell-foundation-theme'")
         ->and($provider)->toContain('foundation-theme-runtime')
         ->and($provider)->toContain('VendorAssetConditionRegistry')
         ->and($provider)->not->toContain('LAYOUT_BUILDER_ASSETS_CONDITION');
 });
 
-it('moves modern block interactions out of blade and into the frontend runtime', function (): void {
+it('moves modern widget interactions out of blade and into the frontend runtime', function (): void {
     $entrypoint = file_get_contents(dirname(__DIR__, 2) . '/resources/js/capell-frontend.js');
-    $faq = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/block/modern/faq-section.blade.php');
-    $pricing = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/block/modern/pricing-table.blade.php');
-    $testimonials = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/block/modern/testimonials.blade.php');
-    $blocksCss = file_get_contents(dirname(__DIR__, 2) . '/resources/css/blocks/foundation-blocks.css');
+    $faq = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/widget/modern/faq-section.blade.php');
+    $pricing = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/widget/modern/pricing-table.blade.php');
+    $testimonials = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/widget/modern/testimonials.blade.php');
+    $widgetsCss = file_get_contents(dirname(__DIR__, 2) . '/resources/css/widgets/foundation-widgets.css');
 
     expect($entrypoint)
         ->toContain('data-faq-category-tab')
@@ -52,7 +52,7 @@ it('moves modern block interactions out of blade and into the frontend runtime',
         ->toContain('data-pathway-panel')
         ->toContain('data-theme-spotlight')
         ->toContain('data-spotlight-tab')
-        ->and($blocksCss)->toContain('@keyframes faqFadeIn')
+        ->and($widgetsCss)->toContain('@keyframes faqFadeIn')
         ->and($faq)->not->toContain('<style')
         ->and($faq)->not->toContain('<script')
         ->and($faq)->not->toContain('onclick=')
@@ -62,8 +62,8 @@ it('moves modern block interactions out of blade and into the frontend runtime',
         ->and($testimonials)->not->toContain('onclick=');
 });
 
-it('keeps public asset block blade on preloaded relations', function (): void {
-    $viewDirectory = dirname(__DIR__, 2) . '/resources/views/components/block';
+it('keeps public asset widget blade on preloaded relations', function (): void {
+    $viewDirectory = dirname(__DIR__, 2) . '/resources/views/components/widget';
     $viewFiles = [
         $viewDirectory . '/asset/pages.blade.php',
         $viewDirectory . '/modern/faq-section.blade.php',
@@ -81,8 +81,8 @@ it('keeps public asset block blade on preloaded relations', function (): void {
 
         expect($view)
             ->not->toContain('loadParent(')
-            ->not->toContain('$blockAsset->asset->translation')
-            ->not->toContain('$blockAsset->asset->getMeta')
+            ->not->toContain('$widgetAsset->asset->translation')
+            ->not->toContain('$widgetAsset->asset->getMeta')
             ->not->toContain('$asset->translation?->');
     }
 });
@@ -173,30 +173,30 @@ it('delegates main layout container rendering to the shared frontend hook', func
         ->and($main)->toContain('$mainContentHookOutput !==')
         ->and($main)->toContain('<x-capell::content')
         ->and($main)->not->toContain('Capell\\LayoutBuilder')
-        ->and($main)->not->toContain('LayoutBlockData')
+        ->and($main)->not->toContain('LayoutWidgetData')
         ->and($main)->not->toContain('CapellLayoutManager')
         ->and($main)->not->toContain('x-capell::layout.container');
 });
 
-it('owns the product showcase styling for modern homepage blocks', function (): void {
-    $hero = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/block/modern/hero-banner.blade.php');
-    $cardGrid = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/block/modern/card-grid.blade.php');
-    $featureList = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/block/modern/feature-list.blade.php');
-    $cta = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/block/modern/cta-section.blade.php');
-    $gallery = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/block/modern/image-gallery.blade.php');
+it('owns the product showcase styling for modern homepage widgets', function (): void {
+    $hero = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/widget/modern/hero-banner.blade.php');
+    $cardGrid = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/widget/modern/card-grid.blade.php');
+    $featureList = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/widget/modern/feature-list.blade.php');
+    $cta = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/widget/modern/cta-section.blade.php');
+    $gallery = file_get_contents(dirname(__DIR__, 2) . '/resources/views/components/widget/modern/image-gallery.blade.php');
 
     expect($hero)->toContain('hero_panel_title')
         ->and($hero)->toContain('hero_empty_title')
         ->and($cardGrid)->toContain('ap-card__link')
         ->and($featureList)->toContain('ap-feature-item__icon')
-        ->and($cta)->toContain('Homepage content is block, media, and layout driven.')
+        ->and($cta)->toContain('Homepage content is widget, media, and layout driven.')
         ->and($gallery)->toContain('ap-gallery-caption');
 });
 
 it('does not own premium demo kit homepage section styling', function (): void {
     $themeCss = file_get_contents(dirname(__DIR__, 2) . '/resources/css/theme/theme.css');
 
-    expect($themeCss)->not->toContain('capell-block-homepage-section');
+    expect($themeCss)->not->toContain('capell-widget-homepage-section');
 });
 
 it('delegates shared interactive listing variants from child themes to foundation', function (): void {

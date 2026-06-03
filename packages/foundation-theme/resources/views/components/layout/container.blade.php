@@ -4,11 +4,11 @@
     use Capell\FoundationTheme\Actions\ResolveLoadedLayoutContainerBackgroundImageAction;
     use Capell\Frontend\Actions\GetLayoutContainerWidthAction;
     use Capell\Frontend\Facades\Frontend;
-    use Capell\LayoutBuilder\Enums\BlockComponentEnum;
     use Capell\LayoutBuilder\Enums\ContainerAlignmentEnum;
     use Capell\LayoutBuilder\Enums\ResponsiveVisibilityEnum;
+    use Capell\LayoutBuilder\Enums\WidgetComponentEnum;
     use Capell\LayoutBuilder\Support\CapellLayoutManager;
-    use Capell\LayoutBuilder\Support\LayoutBlockData;
+    use Capell\LayoutBuilder\Support\LayoutWidgetData;
 @endphp
 
 @props([
@@ -99,11 +99,11 @@
         'self-end justify-self-end' => $alignment === ContainerAlignmentEnum::End,
         'w-full self-stretch justify-self-stretch' => $alignment === ContainerAlignmentEnum::Stretch,
         'hidden' => $hideOnMobile && $hideOnTablet && $hideOnDesktop,
-        'hidden lg:block' => $hideOnMobile && $hideOnTablet && ! $hideOnDesktop,
-        'hidden md:block lg:hidden' => $hideOnMobile && ! $hideOnTablet && $hideOnDesktop,
-        'hidden md:block' => $hideOnMobile && ! $hideOnTablet && ! $hideOnDesktop,
+        'lg:widget hidden' => $hideOnMobile && $hideOnTablet && ! $hideOnDesktop,
+        'md:widget hidden lg:hidden' => $hideOnMobile && ! $hideOnTablet && $hideOnDesktop,
+        'md:widget hidden' => $hideOnMobile && ! $hideOnTablet && ! $hideOnDesktop,
         'md:hidden' => ! $hideOnMobile && $hideOnTablet && $hideOnDesktop,
-        'md:hidden lg:block' => ! $hideOnMobile && $hideOnTablet && ! $hideOnDesktop,
+        'lg:widget md:hidden' => ! $hideOnMobile && $hideOnTablet && ! $hideOnDesktop,
         'lg:hidden' => ! $hideOnMobile && ! $hideOnTablet && $hideOnDesktop,
         'space-y-4' => $spacing === 'sm',
         'space-y-2' => $spacing === 'md',
@@ -133,46 +133,46 @@
         'mb-20' => in_array('b-xl', $margin, true),
     ])
 >
-    @foreach (LayoutBlockData::normalizeMany($container['blocks'] ?? []) as $blockIndex => $blockData)
+    @foreach (LayoutWidgetData::normalizeMany($container ?? []) as $widgetIndex => $widgetData)
         {{-- format-ignore-start --}}
                                     @php
-                                        $blockKey = LayoutBlockData::key($blockData);
-                                        if ($blockKey === null) {
+                                        $widgetKey = LayoutWidgetData::key($widgetData);
+                                        if ($widgetKey === null) {
                                             continue;
                                         }
 
-                                        $block = CapellLayoutManager::getStoredContainerBlock(
+                                        $widget = CapellLayoutManager::getStoredContainerWidget(
                                             $containerKey,
-                                            $blockKey,
-                                            LayoutBlockData::occurrence($blockData),
+                                            $widgetKey,
+                                            LayoutWidgetData::occurrence($widgetData),
                                         );
 
-                                        if (! $block) {
+                                        if (! $widget) {
                                             continue;
                                         }
 
-                                        $component = $block->getComponent();
+                                        $component = $widget->getComponent();
                                         if (! $component) {
                                             continue;
                                         }
 
                                         $componentKey = (string) $component;
                                         if (! $showHero && in_array($componentKey, [
-                                            BlockComponentEnum::Hero->value,
-                                            BlockComponentEnum::BannerImage->value,
-                                            BlockComponentEnum::ApHeroBanner->value,
+                                            WidgetComponentEnum::Hero->value,
+                                            WidgetComponentEnum::BannerImage->value,
+                                            WidgetComponentEnum::ApHeroBanner->value,
                                         ], true)) {
                                             continue;
                                         }
 
-                                        $type = $block->getMetaComponentType();
+                                        $type = $widget->getMetaComponentType();
                                         $currentColspan = $previousColspan + $colspan;
                                         if ($columnStart) {
                                             $currentColspan += $columnStart - 1;
                                         }
                                     @endphp
                                     {{-- format-ignore-end --}}
-        <x-capell::layout.block
+        <x-capell::layout.widget
             :$component
             :container-colspan="$colspan"
             :$container
@@ -182,9 +182,9 @@
             :$loop
             :$layout
             :$type
-            :$block
-            :$blockIndex
-            :$blockData
+            :$widget
+            :$widgetIndex
+            :$widgetData
             :page-slot="$pageSlot"
         />
     @endforeach

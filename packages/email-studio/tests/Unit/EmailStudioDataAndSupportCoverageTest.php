@@ -35,10 +35,7 @@ use Capell\EmailStudio\Support\EmailVariableRenderer;
 use Capell\EmailStudio\Support\Providers\FakeEmailProviderAdapter;
 use Capell\EmailStudio\Support\Providers\PostmarkEmailProviderAdapter;
 use Capell\EmailStudio\Support\Providers\SmtpEmailProviderAdapter;
-use Illuminate\Contracts\Mail\Mailer as MailerContract;
-use Illuminate\Mail\Message;
-use Illuminate\Mail\PendingMail;
-use Illuminate\Mail\SentMessage;
+use Capell\EmailStudio\Tests\Fixtures\CapturingEmailStudioMailer;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use Spatie\LaravelData\DataCollection;
@@ -297,43 +294,3 @@ it('casts email studio model state and links event tracking records', function (
         ->and($event->message->is($message))->toBeTrue()
         ->and($token->refresh()->recipient->is($recipient))->toBeTrue();
 });
-
-final class CapturingEmailStudioMailer implements MailerContract
-{
-    public ?SymfonyEmail $message = null;
-
-    public function to(mixed $users): PendingMail
-    {
-        throw new BadMethodCallException('The coverage mailer only supports send().');
-    }
-
-    public function bcc(mixed $users): PendingMail
-    {
-        throw new BadMethodCallException('The coverage mailer only supports send().');
-    }
-
-    public function raw(mixed $text, mixed $callback): ?SentMessage
-    {
-        throw new BadMethodCallException('The coverage mailer only supports send().');
-    }
-
-    public function send(mixed $view, array $data = [], mixed $callback = null): ?SentMessage
-    {
-        unset($view, $data);
-
-        $message = new SymfonyEmail;
-
-        if ($callback instanceof Closure) {
-            $callback(new Message($message));
-        }
-
-        $this->message = $message;
-
-        return null;
-    }
-
-    public function sendNow(mixed $mailable, array $data = [], mixed $callback = null): ?SentMessage
-    {
-        return $this->send($mailable, $data, $callback);
-    }
-}

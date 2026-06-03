@@ -36,7 +36,7 @@ Each package README follows the same shape:
 | Package                                                 | Composer package              | Purpose                                                                                            |
 | ------------------------------------------------------- | ----------------------------- | -------------------------------------------------------------------------------------------------- |
 | [address](packages/address/README.md)                   | `capell-app/address`          | Country, region, and address data for Capell forms and admin records.                              |
-| [block-library](packages/block-library/README.md)       | `capell-app/content-blocks`   | Shared typed content block primitives used by layout and content packages.                         |
+| [block-library](packages/block-library/README.md)       | `capell-app/block-library`    | Shared typed content block primitives used by layout and content packages.                         |
 | [blog](packages/blog/README.md)                         | `capell-app/blog`             | Article publishing, archive pages, tag pages, article elements, and sitemap contributions.         |
 | [content-sections](packages/content-sections/README.md) | `capell-app/content-sections` | Reusable content section records and Livewire rendering.                                           |
 | [events](packages/events/README.md)                     | `capell-app/events`           | Event records, venues, occurrences, registrations, calendar pages, and iCalendar feeds.            |
@@ -159,6 +159,8 @@ composer preflight
 
 Do not run `php artisan` in this repository. Testbench provides the Laravel context for package tests.
 
+Named test doubles must be real PSR-4 fixture classes, not classes declared inside Pest files. See [Writing Tests](docs/writing-tests.md).
+
 ## Docker Harness
 
 Use Docker when you need a clean shell for agent, CI, or local verification. This is a CLI package-development harness, not the `capell-app.test` application runtime.
@@ -166,18 +168,28 @@ Use Docker when you need a clean shell for agent, CI, or local verification. Thi
 Start the services:
 
 ```bash
-docker compose up -d
+./capell up
 ```
 
 Run common checks inside the PHP 8.4 container:
 
 ```bash
-docker compose exec app composer install
-docker compose exec app composer test
-docker compose exec app composer analyze
-docker compose exec app npm install
-docker compose exec app npm run eslint
+./capell composer install
+./capell test
+./capell analyze
+./capell npm install
+./capell npm run eslint
 ```
+
+Use `./capell run <command>` for one-off app container commands without starting dependent services, or `./capell compose <args>` when you need direct Docker Compose access.
+
+Store private Composer auth once in the mounted Composer config:
+
+```bash
+./capell composer config --global github-oauth.github.com <github-token>
+```
+
+Composer stores that token in your host `~/.config/composer/auth.json`, mounted into the container at `/home/capell/.config/composer/auth.json`.
 
 The harness provides MariaDB, Redis, Mailpit, Composer, Node 22, and the PHP extensions used by the package test suite. It mounts the sibling Capell package directory at `/home/capell/packages/capell` so local path repositories continue to work when `capell-4` and `capell-packages-4` live beside each other.
 

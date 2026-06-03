@@ -8,8 +8,8 @@ use Capell\Core\Enums\ContainerWidthEnum;
 use Capell\Core\Enums\LayoutEnum;
 use Capell\Core\Models\Layout;
 use Capell\Core\Support\Creator\LayoutCreator;
-use Capell\LayoutBuilder\Actions\ApplyLayoutSidebarBlockContributionsAction;
-use Capell\LayoutBuilder\Support\Creator\BlockCreator;
+use Capell\LayoutBuilder\Actions\ApplyLayoutSidebarWidgetContributionsAction;
+use Capell\LayoutBuilder\Support\Creator\WidgetCreator;
 use Capell\LayoutBuilder\Support\LayoutModelRegistrar;
 use Lorisleiva\Actions\Concerns\AsObject;
 
@@ -27,24 +27,30 @@ final class InstallFoundationThemeLayoutDefaultsAction
     {
         LayoutModelRegistrar::register();
 
+        $existingLayoutKeys = Layout::query()
+            ->whereIn('key', array_keys($this->layoutDefaults()))
+            ->pluck('key')
+            ->all();
+
         $layoutCreator = resolve(LayoutCreator::class);
         $layoutCreator->createHomeLayout();
         $layoutCreator->createDefaultLayout();
 
-        $blockCreator = resolve(BlockCreator::class);
-        $blockCreator->breadcrumbBlock();
-        $blockCreator->childrenBlock();
-        $blockCreator->latestPagesBlock();
-        $blockCreator->pageContentBlock();
-        $blockCreator->siblingsBlock();
+        $widgetCreator = resolve(WidgetCreator::class);
+        $widgetCreator->breadcrumbWidget();
+        $widgetCreator->childrenWidget();
+        $widgetCreator->latestPagesWidget();
+        $widgetCreator->pageContentWidget();
+        $widgetCreator->siblingsWidget();
 
         $result = ['created' => 0, 'updated' => 0, 'skipped' => 0];
 
         foreach ($this->layoutDefaults() as $layoutKey => $containers) {
             $layout = $this->resolveLayout($layoutKey);
             $hadContainers = $layout->containers !== [];
+            $existedBeforeInstall = in_array($layoutKey, $existingLayoutKeys, true);
 
-            if ($hadContainers && ! $force) {
+            if ($hadContainers && $existedBeforeInstall && ! $force) {
                 $result['skipped']++;
 
                 continue;
@@ -54,9 +60,9 @@ final class InstallFoundationThemeLayoutDefaultsAction
                 'containers' => $containers,
             ]);
 
-            ApplyLayoutSidebarBlockContributionsAction::run($layout);
+            ApplyLayoutSidebarWidgetContributionsAction::run($layout);
 
-            $result[$hadContainers ? 'updated' : 'created']++;
+            $result[$existedBeforeInstall ? 'updated' : 'created']++;
         }
 
         return $result;
@@ -93,10 +99,10 @@ final class InstallFoundationThemeLayoutDefaultsAction
     }
 
     /**
-     * @param  array<int, array<string, string>>  $blocks
+     * @param  array<int, array<string, string>>  $widgets
      * @return array<string, mixed>
      */
-    private function sidebarContainer(array $blocks): array
+    private function sidebarContainer(array $widgets): array
     {
         return [
             'meta' => [
@@ -107,21 +113,21 @@ final class InstallFoundationThemeLayoutDefaultsAction
                 'padding' => ['md'],
                 'html_class' => 'sidebar-sticky space-y-8',
             ],
-            'widgets' => $blocks,
+            'widgets' => $widgets,
         ];
     }
 
     /**
-     * @param  array<int, array<string, string>>  $blocks
+     * @param  array<int, array<string, string>>  $widgets
      * @return array<string, mixed>
      */
-    private function mainContainer(array $blocks, int $colspan = 9): array
+    private function mainContainer(array $widgets, int $colspan = 9): array
     {
         return [
             'meta' => [
                 'colspan' => $colspan,
             ],
-            'widgets' => $blocks,
+            'widgets' => $widgets,
         ];
     }
 }

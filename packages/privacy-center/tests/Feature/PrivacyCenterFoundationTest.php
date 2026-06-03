@@ -26,8 +26,8 @@ use Capell\PrivacyCenter\Models\ConsentRecord;
 use Capell\PrivacyCenter\Models\PolicyAcceptance;
 use Capell\PrivacyCenter\Models\PrivacyRequest;
 use Capell\PrivacyCenter\Models\RetentionRule;
+use Capell\PrivacyCenter\Tests\Fixtures\PrivacyCenterTestSubject;
 use Capell\PrivacyCenter\Tests\PrivacyCenterTestCase;
-use Capell\PrivacyCenter\Tests\PrivacyCenterTestSubject;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Schema;
 

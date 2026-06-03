@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Capell\Admin\Filament\Resources\Redirects\RedirectResource;
 use Capell\Blog\Filament\Resources\Articles\ArticleResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\CampaignConversionGoalResource;
-use Capell\CampaignStudio\Filament\Resources\CampaignCtaBlocks\CampaignCtaBlockResource;
+use Capell\CampaignStudio\Filament\Resources\CampaignCtaWidgets\CampaignCtaWidgetResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignGroups\CampaignGroupResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignLandingPages\CampaignLandingPageResource;
 use Capell\Core\Facades\CapellCore;
@@ -38,7 +38,7 @@ it('registers every installed package in the Capell package registry', function 
         'capell-app/migration-assistant',
         'capell-app/blog',
         'capell-app/campaign-studio',
-        'capell-app/content-blocks',
+        'capell-app/block-library',
         'capell-app/content-sections',
         'capell-app/core',
         'capell-app/diagnostics',
@@ -51,6 +51,7 @@ it('registers every installed package in the Capell package registry', function 
         'capell-app/navigation',
         'capell-app/seo-suite',
         'capell-app/search',
+        'capell-app/site-discovery',
         'capell-app/tags',
         'capell-app/publishing-studio',
     ];
@@ -71,7 +72,7 @@ it('registers installed package admin surfaces before the Filament navigation is
     $expectedResources = [
         ArticleResource::class,
         CampaignConversionGoalResource::class,
-        CampaignCtaBlockResource::class,
+        CampaignCtaWidgetResource::class,
         CampaignGroupResource::class,
         CampaignLandingPageResource::class,
         ImportSessionResource::class,

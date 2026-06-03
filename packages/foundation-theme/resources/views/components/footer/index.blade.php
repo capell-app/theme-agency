@@ -1,6 +1,16 @@
 @php
     use Capell\Core\Actions\ColorConverterAction;
+    use Capell\FoundationTheme\View\Components\Footer\Index as FooterComponent;
     use Capell\Frontend\Actions\RenderHtmlContentAction;
+    use Capell\Frontend\Facades\Frontend;
+
+    if (! isset($footerDividerColor)) {
+        foreach (get_object_vars(new FooterComponent) as $footerVariable => $footerValue) {
+            ${$footerVariable} = $footerValue;
+        }
+    }
+
+    $theme ??= Frontend::theme();
 @endphp
 
 <style>

@@ -6,8 +6,8 @@ use Capell\FoundationTheme\Support\ResponsiveAssetLayoutOptions;
 use Capell\LayoutBuilder\Enums\ResponsiveLayoutPattern;
 use Capell\LayoutBuilder\Models\Widget;
 
-it('resolves configurable grid and carousel layout options from block meta', function (): void {
-    $block = new Widget([
+it('resolves configurable grid and carousel layout options from widget meta', function (): void {
+    $widget = new Widget([
         'meta' => [
             'responsive_layout_pattern' => ResponsiveLayoutPattern::DesktopGridMobileCarousel->value,
             'responsive_grid_sm_columns' => 2,
@@ -21,7 +21,7 @@ it('resolves configurable grid and carousel layout options from block meta', fun
         ],
     ]);
 
-    $options = ResponsiveAssetLayoutOptions::fromBlock($block, 9);
+    $options = ResponsiveAssetLayoutOptions::fromWidget($widget, 9);
 
     expect($options->pattern)->toBe(ResponsiveLayoutPattern::DesktopGridMobileCarousel)
         ->and($options->smColumns)->toBe(2)

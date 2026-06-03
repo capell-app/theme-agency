@@ -6,7 +6,7 @@ use Capell\CampaignStudio\Actions\InstallCampaignLayoutsAction;
 use Capell\Core\Models\Layout;
 use Capell\LayoutBuilder\Models\Widget;
 
-it('installs campaign layouts with layout-builder compatible block references', function (): void {
+it('installs campaign layouts with layout-builder compatible widget references', function (): void {
     $result = InstallCampaignLayoutsAction::run();
 
     $layout = Layout::query()->where('key', 'campaign-lead-generation')->firstOrFail();
@@ -21,7 +21,7 @@ it('installs campaign layouts with layout-builder compatible block references', 
         ])
         ->and($widgets)->toContain('campaign-lead-generation-campaign-hero')
         ->and(Widget::query()->where('key', 'campaign-lead-generation-campaign-hero')->exists())->toBeTrue()
-        ->and(Widget::query()->where('key', 'campaign-lead-generation-campaign-cta-block')->exists())->toBeTrue()
+        ->and(Widget::query()->where('key', 'campaign-lead-generation-campaign-cta-widget')->exists())->toBeTrue()
         ->and(Widget::query()->where('key', 'campaign-lead-generation-campaign-lead-form')->exists())->toBeTrue();
 });
 

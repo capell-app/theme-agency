@@ -82,5 +82,5 @@ it('auto-hides when every check is green', function (): void {
 
 it('shows red icon for critical missing items', function (): void {
     livewire(SetupHealthWidget::class)
-        ->assertSeeHtml('text-red-500');
+        ->assertElementExists('.text-red-500');
 });

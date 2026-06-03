@@ -14,7 +14,7 @@ return [
     'tables' => [
         'groups' => 'campaign_groups',
         'landing_pages' => 'campaign_landing_pages',
-        'cta_blocks' => 'campaign_cta_blocks',
+        'cta_widgets' => 'campaign_cta_widgets',
         'conversion_goals' => 'campaign_conversion_goals',
         'conversions' => 'campaign_conversions',
     ],

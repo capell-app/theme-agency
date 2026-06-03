@@ -6,7 +6,7 @@ namespace Capell\Diagnostics\Actions\Dashboard;
 
 use Capell\Admin\Contracts\Extenders\PageSchemaExtender;
 use Capell\Admin\Support\AdminSurfaceLookup;
-use Capell\ContentBlocks\Support\BlockRegistry;
+use Capell\BlockLibrary\Support\BlockRegistry;
 use Capell\Core\Data\PageTypeData;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\PackageRegistry\CapellPackageRegistry;
@@ -34,10 +34,10 @@ final class BuildRegistryHealthAction
             $this->buildSettingsSchemasSection(),
         ];
 
-        $contentBlocksSection = $this->buildContentBlocksSection();
+        $blockLibrarySection = $this->buildBlockLibrarySection();
 
-        if ($contentBlocksSection instanceof RegistrySectionData) {
-            $sections[] = $contentBlocksSection;
+        if ($blockLibrarySection instanceof RegistrySectionData) {
+            $sections[] = $blockLibrarySection;
         }
 
         return new RegistryHealthData(
@@ -132,7 +132,7 @@ final class BuildRegistryHealthAction
         );
     }
 
-    private function buildContentBlocksSection(): ?RegistrySectionData
+    private function buildBlockLibrarySection(): ?RegistrySectionData
     {
         if (! class_exists(self::BLOCK_REGISTRY_CLASS) || ! app()->bound(self::BLOCK_REGISTRY_CLASS)) {
             return null;
@@ -162,7 +162,7 @@ final class BuildRegistryHealthAction
         }
 
         return new RegistrySectionData(
-            name: 'Content blocks',
+            name: 'Block library',
             count: $definitionCount,
             entries: RegistryEntryData::collect($entries, DataCollection::class),
         );

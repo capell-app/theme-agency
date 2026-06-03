@@ -1,6 +1,6 @@
 # Hero
 
-Hero renders and seeds the default home-page hero block used by Capell frontend themes.
+Hero renders and seeds the default home-page hero widget used by Capell frontend themes.
 
 ## At A Glance
 
@@ -13,7 +13,7 @@ Hero renders and seeds the default home-page hero block used by Capell frontend 
 
 ## Why It Helps Your Capell Workflow
 
-- Provides a default Capell home hero block, rendering, and setup path so new sites start with a useful first-screen component.
+- Provides a default Capell home hero widget, rendering, and setup path so new sites start with a useful first-screen component.
 - Helps designers and editors begin from a package-owned hero instead of hard-coding a one-off homepage header.
 - Keeps the default hero small and replaceable while Layout Builder and themes own broader composition.
 
@@ -25,8 +25,8 @@ Hero renders and seeds the default home-page hero block used by Capell frontend 
 
 ## What It Adds
 
-- Hero renders and seeds the default home-page hero block used by Capell frontend themes.
-- Blade component: `capell::block.hero`.
+- Hero renders and seeds the default home-page hero widget used by Capell frontend themes.
+- Blade component: `capell::widget.hero`.
 - Package setup or maintenance commands.
 
 ## Technical Shape
