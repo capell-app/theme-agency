@@ -1,0 +1,72 @@
+<?php
+
+declare(strict_types=1);
+
+use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
+use Capell\Frontend\Contracts\FrontendAssetManifestRenderer;
+use Capell\Frontend\Support\Assets\DefaultFrontendAssetManifestRenderer;
+use Capell\FrontendOptimizer\Health\FrontendOptimizerHealthCheck;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Storage;
+
+beforeEach(function (): void {
+    Storage::fake('local');
+    Config::set('queue.default', 'database');
+});
+
+it('reports a compatible capell api version', function (): void {
+    expect(FrontendOptimizerHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
+});
+
+it('runs real diagnostics returning check results', function (): void {
+    $results = FrontendOptimizerHealthCheck::runDiagnostics();
+
+    expect($results)->toHaveCount(3)
+        ->and($results->every(static fn (mixed $result): bool => $result instanceof DoctorCheckResultData))->toBeTrue();
+});
+
+it('passes when the renderer is bound, the disk is writable, and the queue is asynchronous', function (): void {
+    $results = FrontendOptimizerHealthCheck::runDiagnostics();
+
+    expect(FrontendOptimizerHealthCheck::passed())->toBeTrue()
+        ->and($results->every(static fn (DoctorCheckResultData $result): bool => $result->passed))->toBeTrue();
+});
+
+it('fails the renderer binding check when the default renderer is bound', function (): void {
+    app()->instance(FrontendAssetManifestRenderer::class, app(DefaultFrontendAssetManifestRenderer::class));
+
+    $check = new FrontendOptimizerHealthCheck;
+
+    expect($check->optimizerRendererIsBound())->toBeFalse()
+        ->and($check->rendererBindingCheck()->passed)->toBeFalse()
+        ->and(FrontendOptimizerHealthCheck::passed())->toBeFalse();
+});
+
+it('passes the storage disk check when the local disk is writable', function (): void {
+    $check = new FrontendOptimizerHealthCheck;
+
+    expect($check->storageDiskIsWritable())->toBeTrue()
+        ->and($check->storageDiskWritableCheck()->passed)->toBeTrue();
+});
+
+it('fails the generation queue check when generation is enabled on the sync queue', function (): void {
+    Config::set('queue.default', 'sync');
+    Config::set('queue.connections.sync.driver', 'sync');
+
+    $check = new FrontendOptimizerHealthCheck;
+
+    expect($check->generationRunsOnSyncQueue())->toBeTrue()
+        ->and($check->generationQueueDriverCheck()->passed)->toBeFalse()
+        ->and(FrontendOptimizerHealthCheck::passed())->toBeFalse();
+});
+
+it('passes the generation queue check when automatic generation is disabled even on the sync queue', function (): void {
+    Config::set('queue.default', 'sync');
+    Config::set('queue.connections.sync.driver', 'sync');
+    Config::set('capell-frontend-optimizer.enabled', false);
+
+    $check = new FrontendOptimizerHealthCheck;
+
+    expect($check->generationRunsOnSyncQueue())->toBeFalse()
+        ->and($check->generationQueueDriverCheck()->passed)->toBeTrue();
+});

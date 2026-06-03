@@ -1,6 +1,6 @@
 {
     "name": "capell-app/frontend-optimizer",
-    "description": "Profile-based CSS and JavaScript delivery for public Capell pages.",
+    "description": "Faster first paint for public Capell pages: automatic above-the-fold critical CSS extracted from your real rendered pages, plus smart deferring of non-critical CSS and JavaScript.",
     "type": "library",
     "license": "proprietary",
     "require": {
