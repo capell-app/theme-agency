@@ -1,0 +1,79 @@
+# Public Actions — Improvement & Growth Plan
+> Package: capell-app/public-actions · Kind: package · Tier: premium · Product group: Capell Automation · Bundle: automation · Status: Draft
+
+## 1. Snapshot
+
+Public Actions is a framework package that lets Capell sites accept untrusted public submissions, run a registered server-side **handler** against the validated payload, and fan the resulting submission out to configured outbound **destinations** (HTTP webhooks for Zapier, Pipedream, n8n, Make, or generic). It exposes four surfaces: a public web form (`GET/POST /actions/{action}`), an authenticated Zapier-style JSON API (`/api/public-actions/zapier/*`), five Filament admin resources (actions, destinations, submissions, dispatch attempts, integration tokens), and a queue job for durable dispatch. Key Actions are `SubmitPublicActionAction` (the orchestrator: resolve → spam-check → validate → idempotency → persist → handler → dispatch), `DispatchPublicActionDestinationAction`, and the integration-token lifecycle actions; persistence is five tables (`public_actions`, `public_action_destinations`, `public_action_submissions`, `public_action_dispatch_attempts`, `public_action_integration_tokens`). Runtime deps are `capell-app/{admin,core,frontend}` plus `lorisleiva/laravel-actions`; it *supports* `access-gate` and `form-builder`. Current marketplace summary (verbatim): *"Public Actions lets Capell sites run configured server-side actions and outbound automation from safe public submissions."* Marketplace screenshot count: **1** (`docs/assets/marketplace/extension-card.jpg`) — but `docs/screenshots.json` defines **6** planned admin captures, none of which exist as files yet (mismatch).
+
+## 2. Improvements (existing functionality)
+
+- **Implement the advertised health checks** — `capell.json` declares 4 health checks (2 `critical`, 2 `warning`) all pointing at `Capell\PublicActions\Health\PublicActionsHealthCheck`, but that class only implements `compatibleCapellApiVersion()` and runs **zero** check logic. The advertised `webhook-dispatch`, `webhook-security`, `provider-presets`, and `form-builder-integration` checks do not exist. — Makes the manifest false and leaves operators with no runtime signal. — `src/Health/PublicActionsHealthCheck.php` — M
+- **Harden the webhook SSRF guard against DNS rebinding (TOCTOU)** — `HttpWebhookPublicActionAdapter::endpointUrl()` resolves the host via `dns_get_record()` and blocks private addresses, then `Http::send()` resolves the host *again* independently. An attacker-controlled DNS name can return a public IP on the first lookup and a private/link-local IP on the second. — `src/Support/Providers/HttpWebhookPublicActionAdapter.php:156-219` — M
+- **Pin the resolved IP and disable redirect-following on dispatch** — The same adapter does not constrain HTTP redirects, so a public endpoint can `302` to `http://169.254.169.254/` (cloud metadata) or an internal host and the re-check never runs. Add `->withoutRedirecting()` (or a max-redirect guard that re-validates each hop) and dispatch against the validated IP with an explicit `Host` header. — `src/Support/Providers/HttpWebhookPublicActionAdapter.php:42-73` — M
+- **Make destination dispatch transactional / fan-out atomic** — `SubmitPublicActionAction::handle()` saves the submission, runs the handler, then loops `dispatch(new DispatchPublicActionDestinationJob(...))`. If the request dies mid-loop, some destinations are queued and some are silently dropped with no record. Persist a `pending` dispatch-attempt row (or a fan-out marker) inside the same transaction, then queue from an `after-commit` hook so attempts are recoverable. — `src/Actions/SubmitPublicActionAction.php:109,452-467` — M
+- **Add a configurable dispatch backoff curve** — `DispatchPublicActionDestinationJob` releases with a flat `dispatch_retry_seconds` (default 60) for all 3 tries. A misbehaving provider gets hammered at a constant rate. Use Laravel's `backoff()` array (e.g. `[60, 300, 900]`) and add jitter. — `src/Jobs/DispatchPublicActionDestinationJob.php` — S
+- **Stop hashing the body twice per dispatch** — `dispatch()` computes `hash('sha256', json_encode($body))` for `request_hash`, then `headers()` calls `json_encode($body)` *again* for the HMAC signature, and `sendOptions()` re-encodes for the request. Encode once, reuse the canonical string for hash + signature + send. — `src/Support/Providers/HttpWebhookPublicActionAdapter.php:25-47,107-134` — S
+- **Tighten the unschemed-payload escape hatch** — When an action has no `payload_schema`, submissions are accepted up to a 16KB byte cap and only a `Log::warning` is emitted. This is a permanent silent-acceptance path on a public endpoint. Add a config flag (default deny) so operators must explicitly opt into schemaless actions, and surface the warning as a health-check/admin badge. — `src/Actions/SubmitPublicActionAction.php` (`UNSCHEMED_PAYLOAD_BYTE_LIMIT`) — S
+- **Fill in `docs/overview.md`** — The file contains only section headings; the indexed body is empty. — Buyers and integrators land on a hollow overview. — `docs/overview.md` — S
+
+## 3. Missing Features (gaps)
+
+- **Inbound webhook signature verification** — The package *signs* outbound payloads (`X-Capell-Signature`, HMAC-SHA256) but offers no way to verify a *signed* inbound submission. For a `submit-actions` capability that brands itself on "safe public submissions," HMAC/Bearer-verified inbound posts (skip-honeypot trusted lane) is the obvious next tier. Ties to `submit-actions`, `automation-webhooks`. **Differentiator.**
+- **Captcha breadth beyond Turnstile** — Spam protection ships honeypot + Cloudflare Turnstile only. hCaptcha and reCAPTCHA v3 are table-stakes for a paid public-form product. The `PublicActionSpamProtectionAdapter` contract already makes this a small add. Ties to `public-form`. **Table-stakes.**
+- **Rate-limit identity beyond IP+email** — `public-actions-submit` keys on `action|email|ip`; the Zapier API keys purely on `ip`. There is no per-token quota, no per-action override, and no shared-NAT mitigation. Add per-token and per-action configurable limits. Ties to public-endpoint norms (rate limiting). **Table-stakes.**
+- **Idempotency on the Zapier submit path** — `SubmitPublicActionAction` honours an `Idempotency-Key` header, but verify the Zapier controller forwards it; Zapier *replays*, so idempotency here is high-value. Ties to `zapier-integration`. **Differentiator.**
+- **Dead-letter + manual replay for failed dispatches** — Attempts are recorded with `failed`/`retryable` status, but there is no admin "replay this dispatch" action and no dead-letter surface once `tries` is exhausted. Operators currently have a read-only audit with no recovery lever. Ties to `automation-webhooks`. **Differentiator.**
+- **`cache-blocking` capability has no implementation** — The manifest advertises `cache-blocking` and `cacheSafety.cacheable:false`, and the controllers do send `no-store` headers, but there is **no** `CacheInvalidationRegistry::registerDependency()` or render-hook integration anywhere in `src/`. Either wire real cache-dependency blocking for pages embedding action buttons, or drop the capability. Ties to `cache-blocking`. **Table-stakes (truth-in-manifest).**
+- **First-class Form Builder binding UI** — `form-builder` integration works only via a hand-edited `config('capell-public-actions.form_builder.mappings')` array consumed by `SubmitPublicActionFromFormSubmission`. There is no admin UI to bind a form to an action. Ties to the `supports: form-builder` declaration. **Differentiator.**
+- **Outbound destination adapters beyond raw HTTP** — Only `http_webhook` exists; every preset (zapier/pipedream/n8n/make/generic) maps to it. Slack/Discord/email-relay/SQS adapters would justify the "outbound automation" positioning. Ties to `automation-webhooks`. **Differentiator.**
+- **Submission retention / PII purge** — Public submissions store arbitrary payloads + metadata (IP, UA, referer) indefinitely with no TTL or redaction policy. A premium public-intake product needs a retention command. Ties to public-endpoint norms (audit, privacy). **Table-stakes.**
+
+## 4. Issues / Risks
+
+- **Manifest lies about health (critical):** 4 declared health checks, 0 implemented. `src/Health/PublicActionsHealthCheck.php`. No test covers any health key.
+- **DNS-rebinding SSRF window (high):** validate-then-send re-resolves DNS; no IP pinning, no redirect guard. `src/Support/Providers/HttpWebhookPublicActionAdapter.php:156-219`. The existing test `it('blocks private webhook endpoint hosts')` only covers the *first-resolution* case, not rebinding or redirect-to-internal.
+- **Silent partial fan-out (medium):** mid-loop failure in `dispatchDestinations()` drops un-queued destinations with no durable record. `src/Actions/SubmitPublicActionAction.php:452-467`.
+- **Permanent schemaless-accept path (medium):** unschemed submissions accepted up to 16KB with only a log line; no opt-in gate. `src/Actions/SubmitPublicActionAction.php`.
+- **Test gaps (medium):** strong coverage exists for submit/idempotency/redaction/retry/honeypot/turnstile/redirect-safety/Zapier auth/policies/migrations — but **no** test for the health check, **no** DNS-rebinding/redirect-follow SSRF test, and **no** assertion that `cache-blocking` actually blocks anything. `tests/`.
+- **Performance budget unverified (low):** `capell.json` sets `frontendRenderBudgetMs:20` / `adminQueryBudget:40`. `ShowPublicActionController` reads only hydrated `payload_schema` (no N+1, safe), but no test asserts the budget; `dispatchAttempts`/submission admin lists over high-volume tables are the real query-budget risk and are unbenchmarked.
+- **i18n (low):** public/admin strings are translated (`generic.php`, `filament.php`), but webhook/SSRF `InvalidArgumentException` messages are hard-coded English. Acceptable (operator-facing, logged) but worth noting.
+- **Public-output safety (good):** verified clean. `ShowPublicActionController` passes only `{key,label,type,required}`; the Blade form leaks no model IDs, handler classes, selectors, or signed URLs; both controllers set `no-store, private`. Destination `secret`/`endpoint_url`/`headers` are `encrypted` at rest; tokens are stored hashed; webhook error/response summaries are redacted. This is the package's strongest area.
+- **Tech debt (low):** double/triple `json_encode` per dispatch; flat retry delay; empty `docs/overview.md`; `CHANGELOG.md` has only an "Unreleased" stub.
+
+## 5. Marketplace & Selling
+
+**Critique.** The marketplace `summary` and the composer `description` ("Reusable public submit actions, outbound automation dispatch, and integration endpoints for Capell CMS.") are accurate but generic and abstract — "configured server-side actions" means nothing to a buyer. Neither leads with the concrete, sellable hooks: Zapier/n8n/Make/Pipedream out of the box, signed webhooks, encrypted secrets, idempotent submissions, durable retry with full audit. The screenshot story is the biggest gap: **1 real asset vs 6 planned** in `screenshots.json`, and `capell.json.marketplace.screenshots` lists only the generic extension card — none of the admin surfaces (destinations with redacted secrets, dispatch-attempt audit, submissions, token issuance) are shown, so a buyer cannot see the product.
+
+**Improved 1-sentence summary:** Turn any public form or API request into a signed, retried, fully-audited webhook to Zapier, Make, n8n, Pipedream, or your own endpoint — without exposing a single admin route.
+
+**Improved 3–4 sentence description:** Public Actions gives Capell a safe boundary for untrusted public input: submissions are validated against a per-action schema, screened for spam (honeypot + Turnstile), de-duplicated by idempotency key, and persisted before anything fires. Successful submissions fan out to configured destinations over signed HTTP webhooks (HMAC-SHA256) with SSRF protection, encrypted secrets, durable retry, and a complete per-attempt dispatch audit. Native presets cover Zapier, Make, n8n, Pipedream, and generic endpoints, and a registry lets other packages plug in their own handlers, destination adapters, and spam guards. An authenticated Zapier-style JSON API exposes discoverable actions and submissions for no-code automation builders.
+
+**Screenshot/media gaps:** ship the 6 captures already specced in `screenshots.json` (admin index, action form, destinations-with-redacted-secret, submissions, dispatch attempts, token issuance) plus one architecture diagram (form → validate → handler → fan-out → retry/audit). Replace or supplement the single `extension-card.jpg`.
+
+**Pricing/tier/bundle positioning.** Correctly `premium` in the `automation` bundle. In practice this is **infrastructure / a dependency** as much as a standalone seller — `form-builder`, `access-gate`, and future intake packages will all submit *through* it. Position it as the shared automation backbone of the Automation bundle (bundle pull-through), and cross-sell: Form Builder (no-code form → action binding), Access Gate (gated submissions), Email Studio (notify-on-submission). Extension Suites angle: publish the `PublicActionHandler` / `PublicActionDestinationAdapter` / `PublicActionSpamProtectionAdapter` contracts as the SDK other suites build on.
+
+**Differentiators / value props / target buyer.** Differentiators: SSRF-guarded + signed + encrypted webhooks, idempotency, and a durable dispatch-attempt audit — most "form-to-webhook" plugins have none of these. Target buyer: agencies/site owners wiring CMS submissions into existing automation stacks (Zapier/Make/n8n) who need it to be safe and auditable, and package developers who want a vetted public-input boundary instead of rolling their own controllers.
+
+**Keywords/tags:** webhooks, zapier, n8n, make, pipedream, automation, public-forms, server-side-actions, hmac-signed-webhooks, idempotency, ssrf-protection, integration-api, spam-protection, outbound-dispatch.
+
+## 6. Prioritized Roadmap
+
+| Item | Bucket | Effort | Impact | Section ref |
+|------|--------|--------|--------|-------------|
+| Implement the 4 advertised health checks (truth-in-manifest) | Now | M | High | 2, 4 |
+| Close DNS-rebinding TOCTOU + disable/guard webhook redirects | Now | M | High | 2, 4 |
+| Add SSRF rebinding + redirect-follow tests; add health-check test | Now | M | High | 4 |
+| Ship the 6 specced marketplace screenshots + sharpen summary/description | Now | S | High | 5 |
+| Resolve `cache-blocking` (wire real dependency blocking or drop capability) | Now | S | Med | 3, 4 |
+| Make destination fan-out durable/atomic (after-commit + pending rows) | Next | M | High | 2, 4 |
+| Gate schemaless submissions behind explicit opt-in config | Next | S | Med | 2, 4 |
+| Add manual dispatch replay + dead-letter admin surface | Next | M | High | 3 |
+| Configurable exponential backoff + jitter on dispatch job | Next | S | Med | 2 |
+| Encode payload once per dispatch (hash/sign/send reuse) | Next | S | Low | 2 |
+| Per-token + per-action rate-limit overrides | Next | M | Med | 3 |
+| Submission retention / PII purge command | Next | M | Med | 3 |
+| hCaptcha + reCAPTCHA v3 spam adapters | Later | M | Med | 3 |
+| Form Builder → action binding admin UI | Later | M | High | 3 |
+| Non-HTTP destination adapters (Slack, email-relay, SQS) | Later | L | High | 3 |
+| Inbound signed-webhook verification (trusted submission lane) | Later | M | High | 3 |
+| Fill `docs/overview.md` + real `CHANGELOG` entries | Later | S | Low | 2, 4 |
