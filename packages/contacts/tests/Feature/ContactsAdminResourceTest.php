@@ -20,11 +20,28 @@ use Capell\Contacts\Policies\ContactPolicy;
 use Capell\Contacts\Policies\LeadPolicy;
 use Capell\Contacts\Policies\OrganisationPolicy;
 use Capell\Contacts\Tests\ContactsTestCase;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Table;
 use Illuminate\Foundation\Auth\User;
 
 require_once __DIR__ . '/../autoload.php';
 
 uses(ContactsTestCase::class);
+
+function contactsResourceTestTable(): Table
+{
+    $livewire = Mockery::mock(HasTable::class);
+    $livewire->shouldReceive('makeFilamentTranslatableContentDriver')->andReturn(null);
+
+    return Table::make($livewire);
+}
+
+it('does not mark encrypted contact columns as searchable', function (): void {
+    $columns = ContactResource::table(contactsResourceTestTable())->getColumns();
+
+    expect($columns['display_name']->isSearchable())->toBeFalse()
+        ->and($columns['email']->isSearchable())->toBeFalse();
+});
 
 it('declares read only admin resources for crm records', function (): void {
     expect(ResourceEnum::Contact->value)->toBe(ContactResource::class)

@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Contacts provides central contact, organisation, lead, activity, source identity, and package adapter records for Capell CRM integrations.",
+    "description": "Contacts gives your Capell site a single, GDPR-aware customer record that fills itself. Every form submission, newsletter signup, event registration, comment, campaign conversion, and Shopify customer is matched to one encrypted contact by email, phone, or source identity, and enriched with a timeline of leads and activity. Admins get read-through CRM resources and an at-a-glance dashboard, while privacy export and anonymization actions support subject-access and erasure requests out of the box. Built as the shared data spine for the Capell content suite, it powers smarter segmentation across Newsletter, Campaign Studio, and Form Builder.",
     "product": {
         "group": "Capell Content",
         "tier": "premium",
@@ -114,7 +114,6 @@
         "contacts-shopify-commerce-source-adapter",
         "contacts-activity",
         "contacts-dashboard-widget",
-        "contacts-deduplication-rules",
         "contacts-privacy-export",
         "contacts-privacy-anonymization",
         "contacts-tags"
@@ -147,7 +146,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Contacts provides the shared CRM data foundation for contact, organisation, lead, activity, source identity, and first-party package adapter workflows.",
+        "summary": "The unified CRM layer for Capell — automatically captures contacts, organisations, leads, and activity from your forms, newsletter, events, comments, and Shopify store into one privacy-safe, encrypted record.",
         "screenshots": [],
         "categories": ["admin", "crm", "contacts"]
     },

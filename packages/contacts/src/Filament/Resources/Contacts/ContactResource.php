@@ -26,8 +26,10 @@ final class ContactResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
-            TextColumn::make('display_name')->label(__('capell-contacts::generic.fields.display_name'))->searchable(),
-            TextColumn::make('email')->label(__('capell-contacts::generic.fields.email'))->searchable(),
+            // display_name and email are encrypted at rest, so SQL LIKE search can never match the ciphertext.
+            // They are intentionally not searchable until a hash-based or plaintext search column exists.
+            TextColumn::make('display_name')->label(__('capell-contacts::generic.fields.display_name')),
+            TextColumn::make('email')->label(__('capell-contacts::generic.fields.email')),
             TextColumn::make('phone')->label(__('capell-contacts::generic.fields.phone')),
             TextColumn::make('status')->label(__('capell-contacts::generic.fields.status'))->badge()->sortable(),
             TextColumn::make('last_seen_at')->label(__('capell-contacts::generic.fields.last_seen_at'))->dateTime()->sortable(),

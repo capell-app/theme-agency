@@ -80,10 +80,10 @@ it('declares the contacts package manifest contract', function (): void {
             'contacts-newsletter-source-adapter',
             'contacts-shopify-commerce-source-adapter',
             'contacts-dashboard-widget',
-            'contacts-deduplication-rules',
             'contacts-privacy-export',
             'contacts-privacy-anonymization',
         )
+        ->and($manifest['capabilities'])->not->toContain('contacts-deduplication-rules')
         ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([])
         ->and($manifest['performance']['cacheSafety']['sensitiveOutput'])->toBeTrue();
 });
