@@ -34,6 +34,7 @@
                 alt=""
                 class="h-full w-full object-cover object-center"
                 loading="eager"
+                fetchpriority="high"
                 decoding="async"
             />
         @endif

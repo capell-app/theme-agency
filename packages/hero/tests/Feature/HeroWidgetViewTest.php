@@ -338,3 +338,77 @@ it('renders responsive hero media without exposing editor metadata', function ()
         ->not->toContain('theme_id')
         ->not->toContain('collection_name');
 });
+
+it('marks the hero media poster as high fetch priority without exposing editor metadata', function (): void {
+    $language = Language::factory()->english()->create();
+    $theme = Theme::factory()->create([
+        'meta' => [
+            'hero_media' => [
+                'mode' => 'custom',
+                'autoplay' => false,
+                'loop' => false,
+                'muted' => true,
+                'pause_when_out_of_view' => true,
+                'preload' => 'metadata',
+            ],
+        ],
+    ]);
+    $site = Site::factory()
+        ->language($language)
+        ->theme($theme)
+        ->withTranslations($language, ['title' => 'Capell'])
+        ->create();
+
+    $page = Page::factory()
+        ->site($site)
+        ->withTranslations($language, [
+            'title' => 'Hero Media Poster',
+            'content' => '<p>Body content.</p>',
+            'meta' => [
+                'hero' => '<p>Hero copy.</p>',
+                'slug' => 'hero-media-poster',
+            ],
+        ])
+        ->create();
+
+    $theme->setRelation('media', new EloquentCollection([
+        Media::factory()
+            ->model($theme)
+            ->state([
+                'collection_name' => HeroMediaData::CollectionDesktopImage,
+                'file_name' => 'hero-poster.jpg',
+                'mime_type' => 'image/jpeg',
+            ])
+            ->create(),
+    ]));
+
+    $page->load('translation');
+    $site->load('translation');
+    $site->setRelation('theme', $theme);
+
+    $widget = Widget::factory()->create([
+        'key' => 'hero',
+        'meta' => [
+            'component' => WidgetComponentEnum::Hero->value,
+            'color' => 'light',
+        ],
+    ]);
+    $widget->setRelation('assets', new EloquentCollection);
+    $widget->setRelation('media', new EloquentCollection);
+
+    resolve(FrontendState::class)
+        ->withLanguage($language)
+        ->withSite($site)
+        ->withTheme($theme)
+        ->withPage($page);
+
+    $html = renderHeroWidgetHtml($widget);
+
+    expect($html)
+        ->toContain('hero-poster.jpg')
+        ->toContain('fetchpriority="high"')
+        ->not->toContain('capell-hero')
+        ->not->toContain('hero_media')
+        ->not->toContain('theme_id')
+        ->not->toContain('collection_name');
+});

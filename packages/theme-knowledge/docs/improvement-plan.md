@@ -1,4 +1,5 @@
 # Theme Knowledge — Improvement & Growth Plan
+
 > Package: capell-app/theme-knowledge · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Draft
 
 ## 1. Snapshot
@@ -60,9 +61,11 @@ Prioritized. Real templates only.
 **Critique.** The `capell.json` `summary` ("Research and archive theme screenshots from route-backed demo layouts.") is an internal QA note and tells a buyer nothing. The composer/`capell.json` `description` ("Editorial and resource-library theme for knowledge bases, publishers, and content-led teams.") is decent and on-vertical, but over-indexes on "editorial/publisher" while under-promising the docs/KB capabilities a buyer in this vertical expects (and which the theme does not yet ship — see §3). The visual story is weak for a premium theme: 3 of 6 marketplace images are 3 KB placeholder SVGs, there is no real rendered-page screenshot in `docs/screenshots/`, and no dark-mode shot.
 
 **Improved 1-sentence summary:**
+
 > A premium knowledge-base and documentation theme for Capell — sidebar-navigated articles, in-page table of contents, prominent search, and clean code blocks out of the box.
 
 **Improved 3–4 sentence description:**
+
 > Theme Knowledge turns a Capell site into a polished documentation and help centre. It pairs a category sidebar, sticky table of contents, and breadcrumb trails with a prominent search experience and readable long-form typography, so visitors find answers fast. Resource libraries, author bios, topic hubs, and newsletter capture round out a full knowledge-marketing surface, with optional Blog, Search, and Newsletter integrations lighting up automatically when those packages are installed. Built on the Capell foundation theme with a configurable colour palette and accessible focus states. (Note: the sidebar/TOC/breadcrumb/code-block/functional-search claims require the §3 work before this copy is truthful.)
 
 **Screenshot/media gaps.** Run `docs/screenshots.json` to generate the 9 declared renders and commit them to `docs/screenshots/` (currently empty); replace the 3 placeholder SVG mockups with real rendered layouts; add a dark-mode variant (parity with `theme-agency`); add a doc-article layout screenshot once §3 lands so `knowledge-docs-layout.svg` is backed by a real layout.
@@ -73,21 +76,21 @@ Prioritized. Real templates only.
 
 ## 6. Prioritized Roadmap
 
-| Item | Bucket | Effort | Impact | Section ref |
-| --- | --- | --- | --- | --- |
-| Add doc/article layout (sidebar + TOC + breadcrumbs) backing `knowledge-docs-layout.svg` | Now | L | High | §3 |
-| Make `search-listing` a real, prominent search form (cross-sell `capell-app/search`) | Now | M | High | §3, §2.6 |
-| Remove `CapellCore::isPackageInstalled` from `newsletter`/`search-listing` Blade; rely on renderer flags | Now | S | Med | §4 |
-| Fix untranslated/hardcoded copy in `authors` (and data-drive it) | Now | M | Med | §2.2, §4 |
-| Data-drive `topic-hubs` instead of fixed 4 labels | Now | M | Med | §2.1 |
-| Rewrite marketplace `summary`; tighten `description` | Now | S | High | §5 |
-| Generate + commit the 9 `docs/screenshots.json` renders; replace placeholder SVGs | Now | M | High | §4, §5 |
-| Add code-block / `pre`/`code` prose styling | Next | M | High | §3 |
-| Implement real `ThemeKnowledgeHealthCheck` logic (views/renderer resolve) | Next | S | Med | §4 |
-| Add dark mode (tokens + `dark:` variants) and a dark screenshot | Next | L | High | §2.3, §5 |
-| Tokenize hardcoded hex to preset `--site-theme-*` variables | Next | L | Med | §2.4 |
-| Constrained prose measure + heading-scale readability pass | Next | M | Med | §2.7 |
-| `prefers-reduced-motion` guard on animated grid `::before` | Next | S | Low | §2.5 |
-| Article feedback ("Was this helpful?") partial | Later | M | Med | §3 |
-| Versioning / "last updated" / version switcher | Later | L | Med | §3 |
-| Extend `PublicOutputSafetyTest`: ban in-Blade `CapellCore::`, untranslated literals; assert render budget | Later | M | Med | §4 |
+| Item                                                                                                      | Bucket | Effort | Impact | Section ref |
+| --------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Add doc/article layout (sidebar + TOC + breadcrumbs) backing `knowledge-docs-layout.svg`                  | Now    | L      | High   | §3          |
+| Make `search-listing` a real, prominent search form (cross-sell `capell-app/search`)                      | Now    | M      | High   | §3, §2.6    |
+| Remove `CapellCore::isPackageInstalled` from `newsletter`/`search-listing` Blade; rely on renderer flags  | Now    | S      | Med    | §4          |
+| Fix untranslated/hardcoded copy in `authors` (and data-drive it)                                          | Now    | M      | Med    | §2.2, §4    |
+| Data-drive `topic-hubs` instead of fixed 4 labels                                                         | Now    | M      | Med    | §2.1        |
+| Rewrite marketplace `summary`; tighten `description`                                                      | Now    | S      | High   | §5          |
+| Generate + commit the 9 `docs/screenshots.json` renders; replace placeholder SVGs                         | Now    | M      | High   | §4, §5      |
+| Add code-block / `pre`/`code` prose styling                                                               | Next   | M      | High   | §3          |
+| Implement real `ThemeKnowledgeHealthCheck` logic (views/renderer resolve)                                 | Next   | S      | Med    | §4          |
+| Add dark mode (tokens + `dark:` variants) and a dark screenshot                                           | Next   | L      | High   | §2.3, §5    |
+| Tokenize hardcoded hex to preset `--site-theme-*` variables                                               | Next   | L      | Med    | §2.4        |
+| Constrained prose measure + heading-scale readability pass                                                | Next   | M      | Med    | §2.7        |
+| `prefers-reduced-motion` guard on animated grid `::before`                                                | Next   | S      | Low    | §2.5        |
+| Article feedback ("Was this helpful?") partial                                                            | Later  | M      | Med    | §3          |
+| Versioning / "last updated" / version switcher                                                            | Later  | L      | Med    | §3          |
+| Extend `PublicOutputSafetyTest`: ban in-Blade `CapellCore::`, untranslated literals; assert render budget | Later  | M      | Med    | §4          |

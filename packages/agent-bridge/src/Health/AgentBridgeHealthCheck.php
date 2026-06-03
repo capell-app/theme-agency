@@ -95,7 +95,7 @@ final class AgentBridgeHealthCheck implements ChecksExtensionHealth
     private static function checkCapabilityRegistry(): DoctorCheckResultData
     {
         try {
-            $registry = app(CapellAgentBridgeCapabilityRegistry::class);
+            $registry = resolve(CapellAgentBridgeCapabilityRegistry::class);
             $capabilityCount = $registry->all()->count();
         } catch (Throwable $throwable) {
             return new DoctorCheckResultData(
@@ -125,7 +125,7 @@ final class AgentBridgeHealthCheck implements ChecksExtensionHealth
     private static function checkSettings(): DoctorCheckResultData
     {
         try {
-            $settings = app(AgentBridgeSettings::class);
+            $settings = resolve(AgentBridgeSettings::class);
             $bridgeEnabled = $settings->enable_user_resource_bridge;
         } catch (Throwable $throwable) {
             return new DoctorCheckResultData(

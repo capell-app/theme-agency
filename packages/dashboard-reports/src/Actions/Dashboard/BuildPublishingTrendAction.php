@@ -99,7 +99,7 @@ final class BuildPublishingTrendAction
 
         foreach ($buckets as $index => $bucket) {
             $upperOperator = $bucket['includeRangeEnd'] ? '<=' : '<';
-            $selects[] = "SUM(CASE WHEN {$wrappedColumn} >= ? AND {$wrappedColumn} {$upperOperator} ? THEN 1 ELSE 0 END) AS bucket_{$index}";
+            $selects[] = sprintf('SUM(CASE WHEN %s >= ? AND %s %s ? THEN 1 ELSE 0 END) AS bucket_%d', $wrappedColumn, $wrappedColumn, $upperOperator, $index);
             $bindings[] = $bucket['start']->format($dateFormat);
             $bindings[] = $bucket['end']->format($dateFormat);
         }
@@ -112,11 +112,11 @@ final class BuildPublishingTrendAction
         $counts = [];
 
         foreach (array_keys($buckets) as $index) {
-            $value = $row?->getAttribute("bucket_{$index}");
+            $value = $row?->getAttribute('bucket_' . $index);
             $counts[$index] = $value === null ? 0 : (int) $value;
         }
 
-        return $counts;
+        return array_values($counts);
     }
 
     /** @return array{CarbonImmutable, CarbonImmutable} */

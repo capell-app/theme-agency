@@ -6,6 +6,7 @@ use Capell\AutomationStudio\Actions\QueueAutomationTriggerAction;
 use Capell\AutomationStudio\Enums\AutomationTriggerType;
 use Capell\AutomationStudio\Jobs\DispatchQueuedAutomationTriggerJob;
 use Capell\AutomationStudio\Listeners\DispatchAutomationFromCampaignConversion;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Queue;
@@ -14,6 +15,7 @@ it('queues campaign conversion events with conversion payload metadata', functio
     Queue::fake();
     $conversion = new class extends Model
     {
+        /** @use HasFactory<Factory<static>> */
         use HasFactory;
 
         protected $table = 'campaign_conversions';

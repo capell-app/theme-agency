@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Hero provides the default Capell home hero widget, rendering, and layout setup.",
+    "description": "A polished, responsive home hero for every Capell theme — autoplay video or decorative overlay backgrounds, multi-slide carousel, and theme-level styling that pages inherit automatically.",
     "product": {
         "group": "Capell Foundation",
         "tier": "free",
@@ -73,7 +73,7 @@
         "privateDocsRequested": false
     },
     "marketplace": {
-        "summary": "Hero provides the default Capell home hero widget, rendering, and layout setup.",
+        "summary": "A polished, responsive home hero for every Capell theme — autoplay video or decorative overlay backgrounds, multi-slide carousel, and theme-level styling that pages inherit automatically.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",

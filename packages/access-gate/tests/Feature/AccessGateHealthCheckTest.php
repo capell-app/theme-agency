@@ -15,8 +15,8 @@ it('runs all diagnostics checks and returns doctor check results', function (): 
     $checks = AccessGateHealthCheck::runDiagnostics();
 
     expect($checks)->toHaveCount(5)
-        ->and($checks->every(fn (DoctorCheckResultData $check): bool => is_string($check->label) && $check->label !== ''))->toBeTrue()
-        ->and($checks->every(fn (DoctorCheckResultData $check): bool => is_string($check->message) && $check->message !== ''))->toBeTrue();
+        ->and($checks->every(fn (DoctorCheckResultData $check): bool => $check->label !== ''))->toBeTrue()
+        ->and($checks->every(fn (DoctorCheckResultData $check): bool => $check->message !== ''))->toBeTrue();
 });
 
 it('reports passed when all checks succeed', function (): void {

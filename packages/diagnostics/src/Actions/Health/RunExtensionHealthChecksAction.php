@@ -37,7 +37,6 @@ final class RunExtensionHealthChecksAction
     private const string DIAGNOSTICS_METHOD = 'runDiagnostics';
 
     public function __construct(
-        private readonly ?string $customInstalledJsonPath = null,
         private readonly ?string $customLocalPackagesPath = null,
     ) {}
 

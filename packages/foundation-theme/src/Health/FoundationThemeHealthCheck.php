@@ -119,10 +119,10 @@ final class FoundationThemeHealthCheck implements ChecksExtensionHealth
      */
     public function missingRequiredPackages(): array
     {
-        return collect(self::REQUIRED_PACKAGES)
+        return array_values(collect(self::REQUIRED_PACKAGES)
             ->reject(static fn (string $packageName): bool => CapellCore::isPackageInstalled($packageName))
             ->values()
-            ->all();
+            ->all());
     }
 
     public function publishedAssetManifestExists(): bool

@@ -43,9 +43,7 @@ it('lists agent-delivery pages for the resolved site and language', function ():
 
     $data = $response->json('data');
 
-    if (! is_array($data)) {
-        throw new RuntimeException('Expected page index data to be an array.');
-    }
+    throw_unless(is_array($data), RuntimeException::class, 'Expected page index data to be an array.');
 
     $canonicalUrls = collect(array_values($data))->pluck('canonicalUrl');
 

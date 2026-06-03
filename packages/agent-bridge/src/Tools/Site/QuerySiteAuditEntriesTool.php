@@ -15,6 +15,7 @@ use Laravel\Mcp\Server\Attributes\Name;
 use Laravel\Mcp\Server\Attributes\Title;
 use Laravel\Mcp\Server\Tool;
 use Laravel\Mcp\Server\Tools\Annotations\IsReadOnly;
+use Override;
 
 #[Name('capell-site-query-audit')]
 #[Title('Query Agent Bridge Audit')]
@@ -22,6 +23,7 @@ use Laravel\Mcp\Server\Tools\Annotations\IsReadOnly;
 #[IsReadOnly]
 final class QuerySiteAuditEntriesTool extends Tool
 {
+    #[Override]
     public function schema(JsonSchema $schema): array
     {
         return [

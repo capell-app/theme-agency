@@ -138,16 +138,19 @@ final class FrontendAuthoringHealthCheck implements ChecksExtensionHealth
      */
     public function unresolvableBindings(): array
     {
-        return array_values(collect(self::REQUIRED_BINDINGS)
-            ->reject(function (string $binding): bool {
-                try {
-                    return resolve($binding) instanceof $binding;
-                } catch (Throwable) {
-                    return false;
+        $bindings = [];
+
+        foreach (self::REQUIRED_BINDINGS as $binding) {
+            try {
+                if (! resolve($binding) instanceof $binding) {
+                    $bindings[] = $binding;
                 }
-            })
-            ->values()
-            ->all());
+            } catch (Throwable) {
+                $bindings[] = $binding;
+            }
+        }
+
+        return $bindings;
     }
 
     public function isConfigurationReadable(): bool

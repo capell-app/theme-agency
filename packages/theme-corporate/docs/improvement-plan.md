@@ -1,9 +1,10 @@
 # Theme Corporate — Improvement & Growth Plan
+
 > Package: capell-app/theme-corporate · Kind: theme · Tier: free · Product group: Capell Foundation · Bundle: foundation · Status: Draft
 
 ## 1. Snapshot
 
-`CorporateThemeServiceProvider` registers theme key `corporate` with `ThemeRegistry::register()` in `boot()`, wiring a `BladeThemeRenderer` (layout view `capell-theme-corporate::page`) and seven `ViewSectionRenderer`s — `navigation`, `hero`, `features`, `proof`, `content-listing`, `cta`, `footer` — each with `failLoudly: true` (`src/CorporateThemeServiceProvider.php`). All seven section Blade files plus the page wrapper (`resources/views/page.blade.php`) and Livewire page view exist; nothing is dead. `definition()` ships **six** presets (`boardroom`, `civic`, `advisory`, `integrity`, `enterprise-trust`, `public-ledger`) and points `assets` + `previewImage` at host-published `vendor/capell/themes/*` files. The demo command `capell:theme-corporate-demo` delegates to `InstallCorporateThemeDemoAction` → `ThemeDemoPageInstaller::run($data, 'corporate', 'Corporate')`, seeding ≥7 pages idempotently with Unsplash media (verified by `tests/Feature/Commands/DemoCommandTest.php`). The theme overrides every standard section with its own restrained "boardroom" Blade, but **inherits** `content-listing` `gallery`/`pathways`/`spotlight` variants by `@include('capell-foundation-theme::theme.sections.content-listing')`. Current marketplace summary verbatim: *"Business and governance theme screenshots from route-backed demo layouts."* Screenshots: manifest declares **6** marketplace assets (5 SVG + `extension-card.jpg`); `docs/screenshots.json` declares **12** PNG capture entries; committed reality is **9** PNGs under `docs/screenshots/` (4 light/dark pairs + admin), **9** SVGs + **3** JPGs under `docs/assets/marketplace/` — so declared, referenced, and committed sets all disagree (see §4).
+`CorporateThemeServiceProvider` registers theme key `corporate` with `ThemeRegistry::register()` in `boot()`, wiring a `BladeThemeRenderer` (layout view `capell-theme-corporate::page`) and seven `ViewSectionRenderer`s — `navigation`, `hero`, `features`, `proof`, `content-listing`, `cta`, `footer` — each with `failLoudly: true` (`src/CorporateThemeServiceProvider.php`). All seven section Blade files plus the page wrapper (`resources/views/page.blade.php`) and Livewire page view exist; nothing is dead. `definition()` ships **six** presets (`boardroom`, `civic`, `advisory`, `integrity`, `enterprise-trust`, `public-ledger`) and points `assets` + `previewImage` at host-published `vendor/capell/themes/*` files. The demo command `capell:theme-corporate-demo` delegates to `InstallCorporateThemeDemoAction` → `ThemeDemoPageInstaller::run($data, 'corporate', 'Corporate')`, seeding ≥7 pages idempotently with Unsplash media (verified by `tests/Feature/Commands/DemoCommandTest.php`). The theme overrides every standard section with its own restrained "boardroom" Blade, but **inherits** `content-listing` `gallery`/`pathways`/`spotlight` variants by `@include('capell-foundation-theme::theme.sections.content-listing')`. Current marketplace summary verbatim: _"Business and governance theme screenshots from route-backed demo layouts."_ Screenshots: manifest declares **6** marketplace assets (5 SVG + `extension-card.jpg`); `docs/screenshots.json` declares **12** PNG capture entries; committed reality is **9** PNGs under `docs/screenshots/` (4 light/dark pairs + admin), **9** SVGs + **3** JPGs under `docs/assets/marketplace/` — so declared, referenced, and committed sets all disagree (see §4).
 
 ## 2. Improvements (existing functionality)
 
@@ -19,20 +20,20 @@
 
 Manifest `capabilities[]` is only `["theme-corporate", "theme-corporate-frontend"]` — i.e. a renderer, nothing more. Against what a corporate/B2B/public-sector site actually needs:
 
-- **Services / capabilities grid** — partially covered by the generic `features` section, but there is no dedicated services-detail layout. The demo seeds a "services" page (`/corporate-services-layout`) but it reuses standard sections. *Table-stakes.*
-- **Leadership / team ("about us")** — covered only by the inherited `content-listing` `people` variant. No org/leadership-specific treatment. *Table-stakes.*
-- **Case studies / proof of work** — the `proof` section renders metrics + quotes (testimonials), not full case studies with outcomes. *Differentiator for corporate.*
-- **Investor / press relations** — demo references `/corporate-investor-event-layout` and `generic.php` has board/governance vocab, but there is no financial-report, press-release, or regulatory-disclosure pattern. *Differentiator; aligns with the "governance" positioning.*
-- **Careers / open roles** — absent. A jobs-listing variant would distinguish the vertical. *Differentiator.*
-- **Multi-location / contact** — demo references `/corporate-locations-layout` and `/corporate-contact-layout`, but there is no map/office-grid or structured contact section in this package (contact form comes from the demo installer's foundation blocks, not theme views). *Table-stakes for "multi-location".*
-- **Stats / credibility band** — the hero fakes this with placeholder labels (§2.1); there is no real stats section component. *Table-stakes.*
+- **Services / capabilities grid** — partially covered by the generic `features` section, but there is no dedicated services-detail layout. The demo seeds a "services" page (`/corporate-services-layout`) but it reuses standard sections. _Table-stakes._
+- **Leadership / team ("about us")** — covered only by the inherited `content-listing` `people` variant. No org/leadership-specific treatment. _Table-stakes._
+- **Case studies / proof of work** — the `proof` section renders metrics + quotes (testimonials), not full case studies with outcomes. _Differentiator for corporate._
+- **Investor / press relations** — demo references `/corporate-investor-event-layout` and `generic.php` has board/governance vocab, but there is no financial-report, press-release, or regulatory-disclosure pattern. _Differentiator; aligns with the "governance" positioning._
+- **Careers / open roles** — absent. A jobs-listing variant would distinguish the vertical. _Differentiator._
+- **Multi-location / contact** — demo references `/corporate-locations-layout` and `/corporate-contact-layout`, but there is no map/office-grid or structured contact section in this package (contact form comes from the demo installer's foundation blocks, not theme views). _Table-stakes for "multi-location"._
+- **Stats / credibility band** — the hero fakes this with placeholder labels (§2.1); there is no real stats section component. _Table-stakes._
 
-Versus siblings (`theme-agency`, `theme-saas`, `theme-commerce`, `theme-healthcare`, `theme-education`, `theme-knowledge`, `theme-local-services`, `theme-nonprofit`, `theme-portfolio`): Corporate exposes the **same seven standard section keys** as the foundation contract with no corporate-specific section keys of its own. Its differentiation is purely visual styling + preset palette, not capability. The package's own `docs/overview.md` admits this: *"Treat it as a polished basic/business preset … if it remains only a standard section stack, fold the best restrained defaults into Foundation."* That is the central strategic risk — without at least one corporate-only section (case study, locations, or investor), this theme has no defensible reason to be a separately-sold package.
+Versus siblings (`theme-agency`, `theme-saas`, `theme-commerce`, `theme-healthcare`, `theme-education`, `theme-knowledge`, `theme-local-services`, `theme-nonprofit`, `theme-portfolio`): Corporate exposes the **same seven standard section keys** as the foundation contract with no corporate-specific section keys of its own. Its differentiation is purely visual styling + preset palette, not capability. The package's own `docs/overview.md` admits this: _"Treat it as a polished basic/business preset … if it remains only a standard section stack, fold the best restrained defaults into Foundation."_ That is the central strategic risk — without at least one corporate-only section (case study, locations, or investor), this theme has no defensible reason to be a separately-sold package.
 
 ## 4. Issues / Risks
 
 1. **Health check is a stub but declared `severity: critical`** — `ThemeCorporateHealthCheck` implements only `compatibleCapellApiVersion(): '^4.0'` with no actual probe (no view-exists, no registry-registered, no asset check). `capell.json` lists it as a critical frontend health check, so Diagnostics will report "healthy" regardless of real state. `ThemeManagementPageContribution` is similarly contentless. — `src/Health/ThemeCorporateHealthCheck.php`, `src/Manifest/ThemeManagementPageContribution.php`
-2. **Manifest is internally contradictory on commercial tier** — `product.tier: "free"`, `bundle: "foundation"`, `group: "Capell Foundation"`, and the unit test literally asserts *"defines the corporate free renderer contract"* — yet `commercial` says `proposedLicense: "paid"`, `requestedCertification: "first-party"`, `supportPolicy: "priority"`, `privateDocsRequested: true`. A free foundation theme should not request paid licensing/priority support. Pick one model. — `capell.json` (`product` vs `commercial`)
+2. **Manifest is internally contradictory on commercial tier** — `product.tier: "free"`, `bundle: "foundation"`, `group: "Capell Foundation"`, and the unit test literally asserts _"defines the corporate free renderer contract"_ — yet `commercial` says `proposedLicense: "paid"`, `requestedCertification: "first-party"`, `supportPolicy: "priority"`, `privateDocsRequested: true`. A free foundation theme should not request paid licensing/priority support. Pick one model. — `capell.json` (`product` vs `commercial`)
 3. **Screenshot manifests disagree three ways** — `capell.json marketplace.screenshots` references 5 SVGs + `extension-card.jpg`; `docs/screenshots.json` declares 12 PNG capture targets; only 9 PNGs are committed under `docs/screenshots/` and several declared ones are **missing** (e.g. `corporate-homepage-layout.png`, `corporate-services-layout.png`, `corporate-locations-layout.png`, `corporate-search-layout.png`). Conversely `hero-desktop.jpg`/`hero-mobile.jpg` are committed but referenced nowhere. The marketplace card will point at SVG line-art while real rendered PNGs exist and aren't used. — `capell.json`, `docs/screenshots.json`, `docs/assets/marketplace/`, `docs/screenshots/`
 4. **Documentation drift on preset count** — `README.md` / Common Pitfalls and `docs/overview.md` describe only three presets (`boardroom`, `civic`, `advisory`); `definition()` ships six (adds `integrity`, `enterprise-trust`, `public-ledger`). The unit test correctly expects six, so the docs are stale, not the code. — `README.md`, `docs/overview.md`
 5. **`extends` value differs between layers** — `ThemeDefinitionData(extends: 'default')` (theme-key inheritance) vs manifest `"extends": "capell-app/foundation-theme"` (package inheritance). Likely both intentional at their own layer, but the divergence is undocumented and easy to misread as a bug. Confirm and add a code comment. — `src/CorporateThemeServiceProvider.php` (line ~154), `capell.json`
@@ -43,12 +44,14 @@ Versus siblings (`theme-agency`, `theme-saas`, `theme-commerce`, `theme-healthca
 
 ## 5. Marketplace & Selling
 
-**Current `summary` (verbatim):** *"Business and governance theme screenshots from route-backed demo layouts."* — This describes the *screenshots*, not the product. It reads like an internal capture note, leads with "screenshots", and sells nothing. **Current composer `description`:** *"Theme Corporate registers the corporate theme key and restrained renderer views for B2B, public sector, and professional-service sites."* — Accurate but engineering-facing ("registers the … theme key"); a buyer doesn't care about key registration.
+**Current `summary` (verbatim):** _"Business and governance theme screenshots from route-backed demo layouts."_ — This describes the _screenshots_, not the product. It reads like an internal capture note, leads with "screenshots", and sells nothing. **Current composer `description`:** _"Theme Corporate registers the corporate theme key and restrained renderer views for B2B, public sector, and professional-service sites."_ — Accurate but engineering-facing ("registers the … theme key"); a buyer doesn't care about key registration.
 
 **Improved 1-sentence summary:**
+
 > A restrained, trust-led website theme for B2B, professional-services, and public-sector organisations — formal hierarchy, board-grade proof blocks, and six palette presets out of the box.
 
 **Improved 3–4 sentence description:**
+
 > Theme Corporate gives established businesses, advisory firms, and public bodies a polished, credibility-first site without a design project. Six curated presets — Boardroom, Civic, Advisory, Integrity, Enterprise Trust, and Public Ledger — span deep-navy formal through accessible civic and editorial advisory looks, each tuned for clarity and contrast. Structured proof carousels, capability bands, and a measured content hierarchy are built to read as authoritative on desktop and mobile alike, with full dark-mode support. Drop it on any Capell site, run the one-command demo, and pick a preset.
 
 **Media gaps:** Resolve the three-way screenshot mismatch (§4.3) before listing. The marketplace card currently points at SVG line-art mockups while genuine rendered PNG captures sit unused; swap to the real renders, add the missing declared captures (services, locations, governance, investor pages), and either reference or delete `hero-desktop.jpg`/`hero-mobile.jpg`. A premium theme is sold on visuals — shipping schematic SVGs instead of the actual rendered site undersells it badly.
@@ -59,20 +62,20 @@ Versus siblings (`theme-agency`, `theme-saas`, `theme-commerce`, `theme-healthca
 
 ## 6. Prioritized Roadmap
 
-| Item | Bucket | Effort | Impact | Section ref |
-|------|--------|--------|--------|-------------|
-| Reconcile manifest `tier` free vs `commercial` paid/priority | Now | S | High | §4.2 |
-| Fix three-way screenshot mismatch; ship real PNG renders on the card | Now | M | High | §4.3, §5 |
-| Replace placeholder hero stat labels with real/translated content | Now | M | High | §2.1, §4.9 |
-| Rewrite marketplace `summary` + composer `description` | Now | S | High | §5 |
-| Implement a real health-check probe (views + registry registered) | Now | S | Med | §4.1 |
-| Translate remaining hard-coded `aria-label`/`Question` strings | Now | S | Med | §2.3, §4.8 |
-| Sync README/overview preset list to the six shipped presets | Now | S | Med | §4.4 |
-| Extract proof carousel/lightbox JS into a bundled, idempotent asset | Next | M | Med | §2.2 |
-| Drive shell surface + card style/radius from preset tokens | Next | L | High | §2.4, §2.5 |
-| Align dark-mode strategy (class vs `prefers-color-scheme`) | Next | S | Med | §2.6 |
-| Add variant-matrix + section render tests (content-listing etc.) | Next | M | Med | §4.7 |
-| Add a corporate-only section: multi-location/contact OR case study | Next | L | High | §3 |
-| Add investor/press + careers patterns | Later | L | Med | §3 |
-| WCAG audit (carousel announce, nav `aria-expanded`) before "priority support" claim | Later | M | Med | §4.8 |
-| Document/justify `cacheable: false` under the 20 ms budget, or enable caching | Later | M | Low | §4.6 |
+| Item                                                                                | Bucket | Effort | Impact | Section ref |
+| ----------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Reconcile manifest `tier` free vs `commercial` paid/priority                        | Now    | S      | High   | §4.2        |
+| Fix three-way screenshot mismatch; ship real PNG renders on the card                | Now    | M      | High   | §4.3, §5    |
+| Replace placeholder hero stat labels with real/translated content                   | Now    | M      | High   | §2.1, §4.9  |
+| Rewrite marketplace `summary` + composer `description`                              | Now    | S      | High   | §5          |
+| Implement a real health-check probe (views + registry registered)                   | Now    | S      | Med    | §4.1        |
+| Translate remaining hard-coded `aria-label`/`Question` strings                      | Now    | S      | Med    | §2.3, §4.8  |
+| Sync README/overview preset list to the six shipped presets                         | Now    | S      | Med    | §4.4        |
+| Extract proof carousel/lightbox JS into a bundled, idempotent asset                 | Next   | M      | Med    | §2.2        |
+| Drive shell surface + card style/radius from preset tokens                          | Next   | L      | High   | §2.4, §2.5  |
+| Align dark-mode strategy (class vs `prefers-color-scheme`)                          | Next   | S      | Med    | §2.6        |
+| Add variant-matrix + section render tests (content-listing etc.)                    | Next   | M      | Med    | §4.7        |
+| Add a corporate-only section: multi-location/contact OR case study                  | Next   | L      | High   | §3          |
+| Add investor/press + careers patterns                                               | Later  | L      | Med    | §3          |
+| WCAG audit (carousel announce, nav `aria-expanded`) before "priority support" claim | Later  | M      | Med    | §4.8        |
+| Document/justify `cacheable: false` under the 20 ms budget, or enable caching       | Later  | M      | Low    | §4.6        |

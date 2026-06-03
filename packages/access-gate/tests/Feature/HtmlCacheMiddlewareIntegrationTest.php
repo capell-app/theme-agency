@@ -13,10 +13,10 @@ it('real HtmlCacheMiddleware returns private no-store when access_gate.protected
 
     $middleware = resolve(HtmlCacheMiddleware::class);
 
-    $request = Request::create('/gated-page', 'GET');
+    $request = Request::create('/gated-page', Symfony\Component\HttpFoundation\Request::METHOD_GET);
     $request->attributes->set('access_gate.protected', true);
 
-    $response = $middleware->handle($request, fn (Request $passedRequest): Response => new Response('secret gated content', 200, ['Content-Type' => 'text/html']));
+    $response = $middleware->handle($request, fn (Request $passedRequest): Response => new Response('secret gated content', Response::HTTP_OK, ['Content-Type' => 'text/html']));
 
     expect($response->headers->get('Cache-Control'))->toContain('no-store')
         ->and($response->headers->get('Cache-Control'))->toContain('private')
@@ -30,10 +30,10 @@ it('real HtmlCacheMiddleware does not write gated content to disk cache', functi
 
     $middleware = resolve(HtmlCacheMiddleware::class);
 
-    $request = Request::create('/gated-page-disk-check', 'GET');
+    $request = Request::create('/gated-page-disk-check', Symfony\Component\HttpFoundation\Request::METHOD_GET);
     $request->attributes->set('access_gate.protected', true);
 
-    $response = $middleware->handle($request, fn (Request $passedRequest): Response => new Response('private gated content', 200, ['Content-Type' => 'text/html']));
+    $response = $middleware->handle($request, fn (Request $passedRequest): Response => new Response('private gated content', Response::HTTP_OK, ['Content-Type' => 'text/html']));
 
     expect($response->headers->get('Cache-Control'))->toContain('no-store')
         ->and($request->attributes->get(HtmlCacheMiddleware::CACHE_WRITE_SUCCEEDED_ATTRIBUTE))->toBeNull();
@@ -44,9 +44,13 @@ it('real HtmlCacheMiddleware recognises the access_gate.protected attribute name
         $this->markTestSkipped('HtmlCacheMiddleware is not available in this environment.');
     }
 
-    $source = (string) file_get_contents(
-        (new ReflectionClass(HtmlCacheMiddleware::class))->getFileName(),
-    );
+    $sourceFile = (new ReflectionClass(HtmlCacheMiddleware::class))->getFileName();
+
+    if (! is_string($sourceFile)) {
+        throw new RuntimeException('Unable to resolve HtmlCacheMiddleware source file.');
+    }
+
+    $source = (string) file_get_contents($sourceFile);
 
     expect($source)->toContain('access_gate.protected');
 });

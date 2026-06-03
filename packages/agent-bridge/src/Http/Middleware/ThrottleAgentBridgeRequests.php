@@ -20,7 +20,7 @@ final class ThrottleAgentBridgeRequests
     public function handle(Request $request, Closure $next): Response
     {
         $token = app()->bound(CapellAgentBridgeToken::class)
-            ? app(CapellAgentBridgeToken::class)
+            ? resolve(CapellAgentBridgeToken::class)
             : null;
 
         if (! $token instanceof CapellAgentBridgeToken) {

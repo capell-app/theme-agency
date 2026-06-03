@@ -30,10 +30,14 @@ final class ClaimAccessGateTokenController
         ]);
 
         if (! $issuedBrowserToken instanceof IssuedAccessGateTokenData || ! $issuedBrowserToken->token instanceof BrowserToken) {
-            return AccessGateResponseHeaders::noStore(response()->view('capell-access-gate::message', [
+            $response = response()->view('capell-access-gate::message', [
                 'title' => __('capell-access-gate::public.claim_failed.title'),
                 'message' => __('capell-access-gate::public.claim_failed.message'),
-            ], 422));
+            ], 422);
+
+            AccessGateResponseHeaders::noStore($response);
+
+            return $response;
         }
 
         $browserToken = $issuedBrowserToken->token->loadMissing('grant.registration', 'area');
@@ -42,10 +46,12 @@ final class ClaimAccessGateTokenController
             ? $this->requestedUrls->redirectUrl($request, $area, $browserToken->grant?->registration?->requested_url)
             : url('/');
 
-        return AccessGateResponseHeaders::noStore(
-            redirect($redirectUrl)
-                ->withCookie($this->browserCookie($request, $issuedBrowserToken->plainTextToken)),
-        );
+        $response = redirect($redirectUrl)
+            ->withCookie($this->browserCookie($request, $issuedBrowserToken->plainTextToken));
+
+        AccessGateResponseHeaders::noStore($response);
+
+        return $response;
     }
 
     private function browserCookie(Request $request, string $plainTextToken): \Symfony\Component\HttpFoundation\Cookie

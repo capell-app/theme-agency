@@ -23,6 +23,8 @@ final class AccessGateStatusController
             'allowed' => $result->allowed,
         ]);
 
-        return AccessGateResponseHeaders::noStore($response);
+        AccessGateResponseHeaders::noStore($response);
+
+        return $response;
     }
 }

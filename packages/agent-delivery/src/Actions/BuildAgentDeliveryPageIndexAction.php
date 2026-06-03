@@ -82,16 +82,14 @@ final class BuildAgentDeliveryPageIndexAction
         $meta = (array) $page->getAttribute('meta');
         $agentDelivery = $meta['agent_delivery'] ?? null;
 
-        if (is_array($agentDelivery)) {
-            if (($agentDelivery['enabled'] ?? null) === false || ($agentDelivery['exclude'] ?? null) === true) {
-                return true;
-            }
+        if (is_array($agentDelivery) && (($agentDelivery['enabled'] ?? null) === false || ($agentDelivery['exclude'] ?? null) === true)) {
+            return true;
         }
 
         $robots = $meta['robots'] ?? [];
 
         if (is_string($robots)) {
-            $robots = array_map('trim', explode(',', $robots));
+            $robots = array_map(trim(...), explode(',', $robots));
         }
 
         if (is_array($robots)) {

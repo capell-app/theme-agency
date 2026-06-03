@@ -28,14 +28,18 @@ final class ShowAccessRequestController
 
         $requestedUrl = $this->requestedUrls->allowed($request, $accessArea, $request->query('redirect'));
 
-        return AccessGateResponseHeaders::noStore(response()->view($accessArea->gate_view ?? 'capell-access-gate::request', [
+        $response = response()->view($accessArea->gate_view ?? 'capell-access-gate::request', [
             'area' => $accessArea,
             'fields' => $this->fields->all(),
             'requestMethods' => $this->listAccessRequestMethods->handle($accessArea, $requestedUrl),
             'emailRequestEnabled' => config('access-gate.registration.methods.email.enabled', true),
             'requestedUrl' => $requestedUrl,
             'submittedRegistration' => $this->submittedRegistration($request, $accessArea),
-        ]));
+        ]);
+
+        AccessGateResponseHeaders::noStore($response);
+
+        return $response;
     }
 
     private function submittedRegistration(Request $request, Area $area): ?Registration

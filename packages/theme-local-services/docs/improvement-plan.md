@@ -1,4 +1,5 @@
 # Theme Local Services — Improvement & Growth Plan
+
 > Package: capell-app/theme-local-services · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Draft
 
 ## 1. Snapshot
@@ -44,12 +45,14 @@
 
 ## 5. Marketplace & Selling
 
-Current `summary`: *"Local service and booking-path theme screenshots from route-backed demo layouts."* — This describes the screenshot manifest, not the product. It reads like an internal QA note, leads with "screenshots", and never states what the buyer gets. Composer `description` (mirrors manifest): *"Quote-led service business theme for local operators, trades, clinics, and consultancies."* — this is good and should be the basis for the summary too.
+Current `summary`: _"Local service and booking-path theme screenshots from route-backed demo layouts."_ — This describes the screenshot manifest, not the product. It reads like an internal QA note, leads with "screenshots", and never states what the buyer gets. Composer `description` (mirrors manifest): _"Quote-led service business theme for local operators, trades, clinics, and consultancies."_ — this is good and should be the basis for the summary too.
 
 **Improved 1-sentence summary:**
+
 > A conversion-first Capell theme for local trades, clinics, and service businesses — built around quote requests, service-area coverage, and click-to-call trust.
 
 **Improved 3–4 sentence description:**
+
 > Theme Local Services turns visitors into booked jobs. It ships hero, services, service-area, locality-proof, quote-estimator, case-study, and contact sections tuned for plumbers, electricians, salons, cleaners, and clinics, with a teal/amber palette and a quote desk front-and-centre. Optional Form Builder and Blog integrations upgrade the enquiry form and resources feed when those packages are installed, and the theme inherits foundation navigation, footer, and SEO. Drop in your services and coverage areas and launch a credible local-business site in minutes.
 
 **Media gaps:** Replace the 3 SVG placeholder diagrams with real desktop+mobile screenshots; fulfil or delete the 9-entry `docs/screenshots.json` capture plan; add a hero light/dark pair and at least one quote-form + one service-area capture (both are key selling sections currently unshot). Premium tier demands real, retina screenshots — not diagrams.
@@ -60,21 +63,21 @@ Current `summary`: *"Local service and booking-path theme screenshots from route
 
 ## 6. Prioritized Roadmap
 
-| Item | Bucket | Effort | Impact | Section ref |
-| --- | --- | --- | --- | --- |
-| Reconcile `extends` (`default` vs `foundation-theme`) across manifest/provider/test | Now | S | High | §4 |
-| Replace decorative quote-form with a real fallback `<form>` | Now | M | High | §2.1 |
-| Add click-to-call / address / map to contact section | Now | M | High | §3 |
-| Fix dead `href="#"` service-area links + drive districts from data | Now | S | High | §2.2 |
-| Flesh out `ThemeLocalServicesHealthCheck` (verify provider/views/surfaces) | Now | S | Med | §4 |
-| Fix surfaces mismatch (manifest vs README) | Now | S | Low | §4 |
-| Add LocalBusiness + Service + FAQPage JSON-LD (render-data driven) | Next | M | High | §3 |
-| Add reviews/testimonials section + lang keys | Next | M | High | §3 |
-| Add opening-hours section ("open now") | Next | M | Med | §3 |
-| Move remaining literal English to `generic.php` lang file | Next | S | Med | §2.6 |
-| Hero image LCP/CLS + required alt | Next | S | Med | §2.5 |
-| Resolve `tw:` prefix convention question across all views | Next | L | Med | §2.4 |
-| Replace SVG placeholders with real screenshots; fulfil/prune screenshots.json | Next | M | High | §4, §5 |
-| Add anonymous render test per section + 0-query/20ms budget guard | Next | M | Med | §4 |
-| Add trust/accreditation badge strip + before/after gallery sections | Later | M | Med | §3 |
-| Real Form Builder / Bookings embed in quote-form (cross-sell) + dark-mode system | Later | L | High | §3, §2.3 |
+| Item                                                                                | Bucket | Effort | Impact | Section ref |
+| ----------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Reconcile `extends` (`default` vs `foundation-theme`) across manifest/provider/test | Now    | S      | High   | §4          |
+| Replace decorative quote-form with a real fallback `<form>`                         | Now    | M      | High   | §2.1        |
+| Add click-to-call / address / map to contact section                                | Now    | M      | High   | §3          |
+| Fix dead `href="#"` service-area links + drive districts from data                  | Now    | S      | High   | §2.2        |
+| Flesh out `ThemeLocalServicesHealthCheck` (verify provider/views/surfaces)          | Now    | S      | Med    | §4          |
+| Fix surfaces mismatch (manifest vs README)                                          | Now    | S      | Low    | §4          |
+| Add LocalBusiness + Service + FAQPage JSON-LD (render-data driven)                  | Next   | M      | High   | §3          |
+| Add reviews/testimonials section + lang keys                                        | Next   | M      | High   | §3          |
+| Add opening-hours section ("open now")                                              | Next   | M      | Med    | §3          |
+| Move remaining literal English to `generic.php` lang file                           | Next   | S      | Med    | §2.6        |
+| Hero image LCP/CLS + required alt                                                   | Next   | S      | Med    | §2.5        |
+| Resolve `tw:` prefix convention question across all views                           | Next   | L      | Med    | §2.4        |
+| Replace SVG placeholders with real screenshots; fulfil/prune screenshots.json       | Next   | M      | High   | §4, §5      |
+| Add anonymous render test per section + 0-query/20ms budget guard                   | Next   | M      | Med    | §4          |
+| Add trust/accreditation badge strip + before/after gallery sections                 | Later  | M      | Med    | §3          |
+| Real Form Builder / Bookings embed in quote-form (cross-sell) + dark-mode system    | Later  | L      | High   | §3, §2.3    |

@@ -1,9 +1,10 @@
 # Theme Commerce — Improvement & Growth Plan
+
 > Package: capell-app/theme-commerce · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Draft
 
 ## 1. Snapshot
 
-Theme Commerce ("Editorial Commerce") registers theme key `commerce`, extends `default` (manifest says `capell-app/foundation-theme`), and ships a Blade renderer (`CommerceThemeServiceProvider` → `BladeThemeRenderer` with `page.blade.php` wrapper). It registers **16 section renderers** (`src/CommerceThemeServiceProvider.php` `sectionRenderers()`): navigation, hero, features→product-grid, content-listing→collections, product-finder, collections, product-grid, comparison, catalog, lookbook, promotion, buying-guide, proof, blog-teaser, cta, footer — backed by 17 Blade views under `resources/views`. Demo command `capell:theme-commerce-demo` delegates to `InstallCommerceThemeDemoAction` → Foundation `ThemeDemoPageInstaller` (seeds ≥7 pages). It is a **styling theme, not a commerce integration**: it renders content/section data only and never queries products itself. Integration with `shopify-commerce` is one boolean (`$shopifyAvailable`) toggling copy in `catalog.blade.php`; `blog` availability does the same in `blog-teaser.blade.php`. Marketplace summary verbatim: *"Retail buying-path theme screenshots from route-backed demo layouts."* Screenshots: `capell.json` declares **6** media items (1 jpg + 5 placeholder SVGs); `docs/screenshots.json` declares **13** capture entries; **0** real `.png` screenshots are committed and `docs/screenshots/` does not exist — every shipped marketplace image is a placeholder SVG or stock jpg.
+Theme Commerce ("Editorial Commerce") registers theme key `commerce`, extends `default` (manifest says `capell-app/foundation-theme`), and ships a Blade renderer (`CommerceThemeServiceProvider` → `BladeThemeRenderer` with `page.blade.php` wrapper). It registers **16 section renderers** (`src/CommerceThemeServiceProvider.php` `sectionRenderers()`): navigation, hero, features→product-grid, content-listing→collections, product-finder, collections, product-grid, comparison, catalog, lookbook, promotion, buying-guide, proof, blog-teaser, cta, footer — backed by 17 Blade views under `resources/views`. Demo command `capell:theme-commerce-demo` delegates to `InstallCommerceThemeDemoAction` → Foundation `ThemeDemoPageInstaller` (seeds ≥7 pages). It is a **styling theme, not a commerce integration**: it renders content/section data only and never queries products itself. Integration with `shopify-commerce` is one boolean (`$shopifyAvailable`) toggling copy in `catalog.blade.php`; `blog` availability does the same in `blog-teaser.blade.php`. Marketplace summary verbatim: _"Retail buying-path theme screenshots from route-backed demo layouts."_ Screenshots: `capell.json` declares **6** media items (1 jpg + 5 placeholder SVGs); `docs/screenshots.json` declares **13** capture entries; **0** real `.png` screenshots are committed and `docs/screenshots/` does not exist — every shipped marketplace image is a placeholder SVG or stock jpg.
 
 ## 2. Improvements (existing functionality)
 
@@ -45,12 +46,14 @@ Manifest `capabilities[]` is only `["theme-commerce","theme-commerce-frontend"]`
 
 ## 5. Marketplace & Selling
 
-**Current `summary` critique:** *"Retail buying-path theme screenshots from route-backed demo layouts."* — describes the screenshot tooling, not the product; reads like an internal QA note, names no benefit, no buyer. **composer `description` critique:** *"Editorial commerce theme for Capell"* — generic and flat; no audience, no differentiator, no outcome.
+**Current `summary` critique:** _"Retail buying-path theme screenshots from route-backed demo layouts."_ — describes the screenshot tooling, not the product; reads like an internal QA note, names no benefit, no buyer. **composer `description` critique:** _"Editorial commerce theme for Capell"_ — generic and flat; no audience, no differentiator, no outcome.
 
 **Improved 1-sentence summary:**
+
 > A premium, conversion-focused retail theme for Capell — image-led catalog, product discovery, social proof, and buying-guide layouts that turn browsing into baskets.
 
 **Improved 3–4 sentence description:**
+
 > Editorial Commerce is a premium Capell theme built for retail and e-commerce storefronts that need to feel like a buying journey, not a styled brochure. It ships an image-led hero, product finder, collection and product grids, comparison and proof sections, buying-guide editorial, and conversion CTAs — all driven by hydrated render data with zero database access in public Blade. Pair it with Capell Shopify Commerce to light up connected-catalog merchandising panels, and with Blog for buying-guide content that supports purchase decisions. Warm editorial direction (deep ink, forest-green merchandising, coral action accents) and a token-driven design system keep every store on-brand while staying fast and accessible.
 
 **Screenshot/media gaps (must fix before sale):** ship the **13** real PNGs promised by `docs/screenshots.json` (currently 0), and reconcile `capell.json`'s 6 declared media to match. Replace placeholder SVG "layout" cards with rendered captures (homepage, collection, product, lookbook, buying-guide). Add `hero-desktop`/`hero-mobile` real frames (the jpgs exist but aren't wired into `capell.json` marketplace list). Do **not** advertise search/event/newsletter/campaign layouts until the sections exist (Section 3).
@@ -63,20 +66,20 @@ Manifest `capabilities[]` is only `["theme-commerce","theme-commerce-frontend"]`
 
 ## 6. Prioritized Roadmap
 
-| Item | Bucket | Effort | Impact | Section ref |
-|---|---|---|---|---|
-| Implement real `ThemeCommerceHealthCheck` (or downgrade severity) | Now | S | High | 4 |
-| Capture & commit the 13 real PNG screenshots; reconcile `capell.json` 6 vs `screenshots.json` 13 | Now | M | High | 4, 5 |
-| Translate hard-coded hero/catalog English strings | Now | S | Med | 2 |
-| Rewrite `summary` + composer `description` (verbatim copy in §5) | Now | S | High | 5 |
-| Declare `campaign-studio` + `media-library` in `capell.json` supports | Now | S | Med | 4 |
-| Resolve `extends` (`foundation-theme` vs `default`) + cacheSafety contradiction | Now | S | Med | 4 |
-| Replace 106 hard-coded hex utilities with theme tokens | Next | L | High | 2 |
-| Build product-detail (PDP) section + view | Next | L | High | 3 |
-| Add cart/mini-basket + promo/countdown + reviews/ratings components | Next | L | High | 3 |
-| Add per-section render tests (hero, nav, comparison, proof, cta, footer) + render-budget test | Next | M | Med | 4 |
-| Make hero trust badges data-driven | Next | M | Med | 2 |
-| Add dark mode variants/tokens | Later | L | Med | 2 |
-| Build search/event/newsletter/campaign sections to match advertised SVGs (or remove SVGs) | Later | L | Med | 3 |
-| Deepen `shopify-commerce` integration (price/variant/stock via hydrated data) | Later | L | High | 3 |
-| Real multi-column comparison grid + carousel keyboard a11y | Later | M | Med | 2, 4 |
+| Item                                                                                             | Bucket | Effort | Impact | Section ref |
+| ------------------------------------------------------------------------------------------------ | ------ | ------ | ------ | ----------- |
+| Implement real `ThemeCommerceHealthCheck` (or downgrade severity)                                | Now    | S      | High   | 4           |
+| Capture & commit the 13 real PNG screenshots; reconcile `capell.json` 6 vs `screenshots.json` 13 | Now    | M      | High   | 4, 5        |
+| Translate hard-coded hero/catalog English strings                                                | Now    | S      | Med    | 2           |
+| Rewrite `summary` + composer `description` (verbatim copy in §5)                                 | Now    | S      | High   | 5           |
+| Declare `campaign-studio` + `media-library` in `capell.json` supports                            | Now    | S      | Med    | 4           |
+| Resolve `extends` (`foundation-theme` vs `default`) + cacheSafety contradiction                  | Now    | S      | Med    | 4           |
+| Replace 106 hard-coded hex utilities with theme tokens                                           | Next   | L      | High   | 2           |
+| Build product-detail (PDP) section + view                                                        | Next   | L      | High   | 3           |
+| Add cart/mini-basket + promo/countdown + reviews/ratings components                              | Next   | L      | High   | 3           |
+| Add per-section render tests (hero, nav, comparison, proof, cta, footer) + render-budget test    | Next   | M      | Med    | 4           |
+| Make hero trust badges data-driven                                                               | Next   | M      | Med    | 2           |
+| Add dark mode variants/tokens                                                                    | Later  | L      | Med    | 2           |
+| Build search/event/newsletter/campaign sections to match advertised SVGs (or remove SVGs)        | Later  | L      | Med    | 3           |
+| Deepen `shopify-commerce` integration (price/variant/stock via hydrated data)                    | Later  | L      | High   | 3           |
+| Real multi-column comparison grid + carousel keyboard a11y                                       | Later  | M      | Med    | 2, 4        |

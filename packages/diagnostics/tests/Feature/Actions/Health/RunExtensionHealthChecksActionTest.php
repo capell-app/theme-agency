@@ -31,10 +31,32 @@ function runFixtureHealthChecks(array $healthChecks): ExtensionHealthReportData
     ], JSON_THROW_ON_ERROR));
 
     try {
-        return (new RunExtensionHealthChecksAction(null, $packagesPath))->handle();
+        return (new RunExtensionHealthChecksAction($packagesPath))->handle();
     } finally {
         File::deleteDirectory($packagesPath);
     }
+}
+
+function firstFixtureHealthCheck(ExtensionHealthReportData $report): HealthCheckResultData
+{
+    $check = $report->checks->toCollection()->first();
+
+    if (! $check instanceof HealthCheckResultData) {
+        throw new RuntimeException('Expected the fixture report to contain a health check result.');
+    }
+
+    return $check;
+}
+
+function fixtureHealthCheckByKey(ExtensionHealthReportData $report, string $key): HealthCheckResultData
+{
+    $check = $report->checks->toCollection()->keyBy('key')->get($key);
+
+    if (! $check instanceof HealthCheckResultData) {
+        throw new RuntimeException(sprintf('Expected fixture health check [%s] to exist.', $key));
+    }
+
+    return $check;
 }
 
 it('reports an implemented passing health check as passing', function (): void {
@@ -42,7 +64,7 @@ it('reports an implemented passing health check as passing', function (): void {
         ['key' => 'fixture.passing', 'label' => 'Passing', 'class' => PassingFixtureHealthCheck::class, 'severity' => 'warning'],
     ]);
 
-    $check = $report->checks->toCollection()->first();
+    $check = firstFixtureHealthCheck($report);
 
     expect($report->declaredCount)->toBe(1)
         ->and($report->implementedCount)->toBe(1)
@@ -59,7 +81,7 @@ it('reports an implemented failing health check as failing', function (): void {
         ['key' => 'fixture.failing', 'label' => 'Failing', 'class' => FailingFixtureHealthCheck::class, 'severity' => 'critical'],
     ]);
 
-    $check = $report->checks->toCollection()->first();
+    $check = firstFixtureHealthCheck($report);
 
     expect($report->executedCount)->toBe(1)
         ->and($report->failedCount)->toBe(1)
@@ -76,10 +98,11 @@ it('surfaces the declared severity of each check', function (): void {
         ['key' => 'fixture.passing', 'label' => 'Passing', 'class' => PassingFixtureHealthCheck::class, 'severity' => 'warning'],
     ]);
 
-    $bySeverity = $report->checks->toCollection()->keyBy('key');
+    $failingCheck = fixtureHealthCheckByKey($report, 'fixture.failing');
+    $passingCheck = fixtureHealthCheckByKey($report, 'fixture.passing');
 
-    expect($bySeverity->get('fixture.failing')->severity)->toBe('critical')
-        ->and($bySeverity->get('fixture.passing')->severity)->toBe('warning');
+    expect($failingCheck->severity)->toBe('critical')
+        ->and($passingCheck->severity)->toBe('warning');
 });
 
 it('classifies a contract-only class as a stub and does not execute it', function (): void {
@@ -87,7 +110,7 @@ it('classifies a contract-only class as a stub and does not execute it', functio
         ['key' => 'fixture.stub', 'label' => 'Stub', 'class' => StubFixtureHealthCheck::class, 'severity' => 'warning'],
     ]);
 
-    $check = $report->checks->toCollection()->first();
+    $check = firstFixtureHealthCheck($report);
 
     expect($report->stubCount)->toBe(1)
         ->and($report->implementedCount)->toBe(0)
@@ -101,7 +124,7 @@ it('classifies a missing or non-contract class as broken', function (): void {
         ['key' => 'fixture.broken', 'label' => 'Broken', 'class' => 'Capell\\Diagnostics\\Does\\Not\\Exist', 'severity' => 'critical'],
     ]);
 
-    $check = $report->checks->toCollection()->first();
+    $check = firstFixtureHealthCheck($report);
 
     expect($report->brokenCount)->toBe(1)
         ->and($report->executedCount)->toBe(0)
@@ -114,7 +137,7 @@ it('degrades gracefully when an implemented check throws', function (): void {
         ['key' => 'fixture.throws', 'label' => 'Throws', 'class' => ThrowingFixtureHealthCheck::class, 'severity' => 'warning'],
     ]);
 
-    $check = $report->checks->toCollection()->first();
+    $check = firstFixtureHealthCheck($report);
 
     expect($report->failedCount)->toBe(1)
         ->and($check->implementationStatus)->toBe(HealthCheckImplementationStatus::Implemented)

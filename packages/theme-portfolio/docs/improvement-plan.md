@@ -1,4 +1,5 @@
 # Theme Portfolio — Improvement & Growth Plan
+
 > Package: capell-app/theme-portfolio · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Draft
 
 ## 1. Snapshot
@@ -23,6 +24,7 @@ Theme key `portfolio` is registered in `src/PortfolioThemeServiceProvider.php` v
 Manifest `capabilities[]` = `["theme-portfolio", "theme-portfolio-frontend"]` (frontend rendering only — no editor/authoring capability declared).
 
 Table-stakes for a portfolio vertical, mapped to current state:
+
 - **Work/project showcase grid** — present (work-grid, content-listing) but work-grid renders only title/type/summary text cards with placeholder bars, no real project imagery binding beyond the optional hero image. Gap: a genuinely media-led grid.
 - **Case-study detail** — present (case-study-detail + case-studies) — strongest area; keep as the differentiator.
 - **About / bio** — **missing.** No about, founder, or studio-story section. Core to a personal/creator portfolio.
@@ -45,7 +47,7 @@ Differentiator vs table-stakes: case-study depth (outcome ledger, scope/role/tim
 - **Stub management contribution** — `src/Manifest/ThemeManagementPageContribution.php` is a bare contract shell (`compatibleCapellApiVersion()` only); confirm `ThemeExtensionPage` needs nothing more, or it is dead surface area — `src/Manifest/ThemeManagementPageContribution.php`.
 - **Inert newsletter form** — `action="#"` submits to the current URL; a visitor entering an email gets a no-op page reload and no capture. Risk: looks broken on a "premium" theme — `resources/views/sections/newsletter.blade.php:17`.
 - **Public Blade DB-query safety: good** — `page.blade.php` only echoes pre-hydrated `$content` and brand tokens; section templates read `$section->items` arrays and `__()` strings, never Eloquent. `tests/Unit/PublicOutputSafetyTest.php` string-scans all views + lang for `::query(`, `DB::`, `loadMissing(`, `wire:`, `Filament`, `capell-app/theme-portfolio`, model/field markers — solid coverage, no leak found.
-- **WCAG gaps** — placeholder visual bars use `aria-hidden="true"` (good), and a skip link + `:focus-visible` outline exist (good). But: empty `alt=""` on the hero image when an author *does* supply `mediaUrl` (`hero.blade.php:93` uses `$imageAlt` which can be blank); `content-listing` work images hardcode `alt=""` (`:40`) even for real media; carousel buttons are visually `hidden` by default with no keyboard/visible affordance described. Decorative-vs-informative alt handling needs review — `resources/views/sections/hero.blade.php`, `resources/views/sections/content-listing.blade.php`.
+- **WCAG gaps** — placeholder visual bars use `aria-hidden="true"` (good), and a skip link + `:focus-visible` outline exist (good). But: empty `alt=""` on the hero image when an author _does_ supply `mediaUrl` (`hero.blade.php:93` uses `$imageAlt` which can be blank); `content-listing` work images hardcode `alt=""` (`:40`) even for real media; carousel buttons are visually `hidden` by default with no keyboard/visible affordance described. Decorative-vs-informative alt handling needs review — `resources/views/sections/hero.blade.php`, `resources/views/sections/content-listing.blade.php`.
 - **LCP / image risk (image-heavy theme)** — no `loading`/`fetchpriority`/`width`/`height`/`srcset` on any `<img>` (hero, content-listing); demo seeds remote `images.unsplash.com` URLs. On a portfolio (image-led by definition) this risks poor LCP and layout shift. Add intrinsic dimensions and lazy/eager hints — `resources/views/sections/{hero,content-listing}.blade.php`.
 - **Cache safety** — `capell.json.performance.cacheSafety.cacheable = false`, `variesBy: ["site","locale"]`, `sensitiveOutput: false`. Consistent with locale-dependent `__()` output and no per-user data. The inline `style="…tokens…"` in `page.blade.php` is brand-derived (site-scoped), matching `variesBy`. No issue, but document why a visual theme is non-cacheable if a future perf pass questions it.
 - **Performance budget** — manifest sets `frontendRenderBudgetMs: 20`, `adminQueryBudget: 0`. No render benchmark test exists to enforce the 20ms budget; the many nested grids/carousels per section make this worth a guardrail test — `capell.json`, `tests/`.
@@ -53,15 +55,17 @@ Differentiator vs table-stakes: case-study depth (outcome ledger, scope/role/tim
 
 ## 5. Marketplace & Selling
 
-**Current `summary` critique:** "Premium studio and case-study theme screenshots from route-backed demo layouts." This describes the *screenshot process*, not the product — "screenshots from route-backed demo layouts" is internal tooling language that means nothing to a buyer. It buries the value (work/case-study storytelling) behind build-pipeline jargon.
+**Current `summary` critique:** "Premium studio and case-study theme screenshots from route-backed demo layouts." This describes the _screenshot process_, not the product — "screenshots from route-backed demo layouts" is internal tooling language that means nothing to a buyer. It buries the value (work/case-study storytelling) behind build-pipeline jargon.
 
 **Current composer `description` critique:** "Creator and consultant portfolio theme for work, case studies, services, media kits, and newsletters." — accurate and clear; far better than the marketplace summary. It reads as a feature list rather than a benefit, but it is honest and on-vertical. Reuse its substance for the summary.
 
 **Improved 1-sentence summary:**
+
 > A premium portfolio theme for creators and consultants — turn selected work into outcome-driven case studies, sell your services and media kit, and grow your audience from one polished site.
 
 **Improved 3–4 sentence description:**
-> Theme Portfolio gives independent creators, consultants, and studios a credibility-first website built around proof, not just pretty pictures. Lead with a work-led hero, walk visitors through outcome-rich case studies (scope, role, timeline, measurable results), and present your services, process, and media kit as things people can actually buy. Connect Media Library for real project imagery, Content Sections for deep case studies, and Newsletter for audience capture — every section degrades gracefully when an integration is not installed. Where an agency theme sells a team and campaigns, Theme Portfolio sells *you*: your work, your authority, and your availability.
+
+> Theme Portfolio gives independent creators, consultants, and studios a credibility-first website built around proof, not just pretty pictures. Lead with a work-led hero, walk visitors through outcome-rich case studies (scope, role, timeline, measurable results), and present your services, process, and media kit as things people can actually buy. Connect Media Library for real project imagery, Content Sections for deep case studies, and Newsletter for audience capture — every section degrades gracefully when an integration is not installed. Where an agency theme sells a team and campaigns, Theme Portfolio sells _you_: your work, your authority, and your availability.
 
 **Screenshot / media gaps:** the live capture set is the biggest gap — `docs/screenshots.json` declares 9 required screenshots (admin theme list, frontend render, homepage, work-grid, case-study, services, media-kit, newsletter, signed preview) and **none are committed** to `docs/screenshots/`. The 6 marketplace images that exist are 3 hand-made SVG mockups + 3 JPGs (extension-card, hero-desktop, hero-mobile); there is no real rendered screenshot of the actual theme. Premium themes sell on visuals — running the deployment screenshot runner to produce the 9 declared PNGs (and a dark-mode pair, see §2.7) is the single highest-leverage marketing fix. Also: `previewImage: '/vendor/capell/themes/portfolio.jpg'` points at an app-published asset not shipped in this package — verify it exists in the install pipeline.
 
@@ -71,21 +75,21 @@ Differentiator vs table-stakes: case-study depth (outcome ledger, scope/role/tim
 
 ## 6. Prioritized Roadmap
 
-| Item | Bucket | Effort | Impact | Section ref |
-|------|--------|--------|--------|-------------|
-| Generate the 9 declared `screenshots.json` captures (+ dark pair) | Now | M | High | §5 |
-| Rewrite marketplace `summary` + description for the creator vertical | Now | S | High | §5 |
-| Fix inert newsletter form (`action="#"`) → real capture when Newsletter installed | Now | M | High | §2.4, §4 |
-| Reconcile product-group drift (overview.md vs capell.json) + document dual `extends` | Now | S | Med | §4 |
-| Make testimonials + speaking/media-kit data-driven | Now | M | High | §2.1, §2.2 |
-| Translate hardcoded copy (services, newsletter, stats) + add missing lang keys | Now | M | Med | §2.3, §2.4, §2.5 |
-| Add About/Bio section (creator lane differentiator vs agency) | Next | M | High | §3 |
-| Implement real health-check probes or lower declared `critical` severity | Next | S | Med | §4 |
-| Add image LCP hints (dimensions, lazy/eager, srcset) + fix alt handling | Next | M | Med | §4 |
-| Unify empty-state strategy across sections | Next | M | Med | §2.6 |
-| Add render tests for footer/nav/services/testimonials/speaking/newsletter | Next | M | Med | §4 |
-| Ship a dark preset + dark CSS | Next | L | High | §2.7, §5 |
-| Add reduced-motion guards for carousels + hover transforms | Next | S | Med | §2.8 |
-| Add gallery/lightbox + resume/CV + client-logo sections | Later | L | Med | §3 |
-| Promote raw hex to design tokens for full theme-editor propagation | Later | M | Med | §2.9 |
-| Add a frontend render-budget guardrail test (20ms) | Later | M | Low | §4 |
+| Item                                                                                 | Bucket | Effort | Impact | Section ref      |
+| ------------------------------------------------------------------------------------ | ------ | ------ | ------ | ---------------- |
+| Generate the 9 declared `screenshots.json` captures (+ dark pair)                    | Now    | M      | High   | §5               |
+| Rewrite marketplace `summary` + description for the creator vertical                 | Now    | S      | High   | §5               |
+| Fix inert newsletter form (`action="#"`) → real capture when Newsletter installed    | Now    | M      | High   | §2.4, §4         |
+| Reconcile product-group drift (overview.md vs capell.json) + document dual `extends` | Now    | S      | Med    | §4               |
+| Make testimonials + speaking/media-kit data-driven                                   | Now    | M      | High   | §2.1, §2.2       |
+| Translate hardcoded copy (services, newsletter, stats) + add missing lang keys       | Now    | M      | Med    | §2.3, §2.4, §2.5 |
+| Add About/Bio section (creator lane differentiator vs agency)                        | Next   | M      | High   | §3               |
+| Implement real health-check probes or lower declared `critical` severity             | Next   | S      | Med    | §4               |
+| Add image LCP hints (dimensions, lazy/eager, srcset) + fix alt handling              | Next   | M      | Med    | §4               |
+| Unify empty-state strategy across sections                                           | Next   | M      | Med    | §2.6             |
+| Add render tests for footer/nav/services/testimonials/speaking/newsletter            | Next   | M      | Med    | §4               |
+| Ship a dark preset + dark CSS                                                        | Next   | L      | High   | §2.7, §5         |
+| Add reduced-motion guards for carousels + hover transforms                           | Next   | S      | Med    | §2.8             |
+| Add gallery/lightbox + resume/CV + client-logo sections                              | Later  | L      | Med    | §3               |
+| Promote raw hex to design tokens for full theme-editor propagation                   | Later  | M      | Med    | §2.9             |
+| Add a frontend render-budget guardrail test (20ms)                                   | Later  | M      | Low    | §4               |

@@ -6,6 +6,7 @@ use Capell\AutomationStudio\Actions\QueueAutomationTriggerAction;
 use Capell\AutomationStudio\Enums\AutomationTriggerType;
 use Capell\AutomationStudio\Jobs\DispatchQueuedAutomationTriggerJob;
 use Capell\AutomationStudio\Listeners\DispatchAutomationFromAccessApproval;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Queue;
@@ -15,6 +16,7 @@ it('queues access approval events with registration payload metadata', function 
 
     $registration = new class extends Model
     {
+        /** @use HasFactory<Factory<static>> */
         use HasFactory;
 
         /** @var list<string> */

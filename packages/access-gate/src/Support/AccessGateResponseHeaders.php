@@ -8,12 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class AccessGateResponseHeaders
 {
-    /**
-     * @template TResponse of Response
-     *
-     * @param  TResponse  $response
-     * @return TResponse
-     */
     public static function noStore(Response $response): Response
     {
         $response->headers->set('Cache-Control', 'no-store, private');

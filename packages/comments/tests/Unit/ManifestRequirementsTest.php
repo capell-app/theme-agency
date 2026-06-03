@@ -23,7 +23,13 @@ it('declares comments as optional for supported companion packages', function ()
 it('declares every registered dashboard widget in the manifest contributes list', function (): void {
     $manifest = json_decode(File::get(__DIR__ . '/../../capell.json'), true, flags: JSON_THROW_ON_ERROR);
 
-    $contributedWidgetClasses = collect($manifest['contributes'])
+    $contributions = $manifest['contributes'] ?? [];
+
+    if (! is_array($contributions)) {
+        throw new RuntimeException('Comments contributions must be an array.');
+    }
+
+    $contributedWidgetClasses = collect($contributions)
         ->where('type', 'dashboard-widget')
         ->pluck('class')
         ->all();

@@ -8,7 +8,6 @@ use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\Deployments\Enums\GitProviderType;
 use Capell\Deployments\Models\DeploymentConnection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 
@@ -80,7 +79,6 @@ final class DeploymentsHealthCheck implements ChecksExtensionHealth
 
     public function hasConnectionTable(): bool
     {
-        /** @var Model $connection */
         $connection = new DeploymentConnection;
 
         return Schema::hasTable($connection->getTable());
@@ -91,11 +89,11 @@ final class DeploymentsHealthCheck implements ChecksExtensionHealth
      */
     public function configuredProviderNames(): array
     {
-        return collect(GitProviderType::cases())
+        return array_values(collect(GitProviderType::cases())
             ->filter(fn (GitProviderType $provider): bool => $this->hasConfiguredClientId($provider))
             ->map(static fn (GitProviderType $provider): string => $provider->getLabel())
             ->values()
-            ->all();
+            ->all());
     }
 
     public function hasConfiguredClientId(GitProviderType $provider): bool

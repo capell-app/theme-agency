@@ -74,8 +74,8 @@ final class CustomerPortalHealthCheck implements ChecksExtensionHealth
     private static function checkModelsResolvable(): DoctorCheckResultData
     {
         try {
-            $portalAccountResolvable = new PortalAccount instanceof PortalAccount;
-            $portalSupportRequestResolvable = new PortalSupportRequest instanceof PortalSupportRequest;
+            new PortalAccount;
+            new PortalSupportRequest;
         } catch (Throwable $throwable) {
             return new DoctorCheckResultData(
                 label: 'Customer Portal models',
@@ -85,15 +85,10 @@ final class CustomerPortalHealthCheck implements ChecksExtensionHealth
             );
         }
 
-        $passed = $portalAccountResolvable && $portalSupportRequestResolvable;
-
         return new DoctorCheckResultData(
             label: 'Customer Portal models',
-            passed: $passed,
-            message: $passed
-                ? 'PortalAccount and PortalSupportRequest models are resolvable.'
-                : 'PortalAccount or PortalSupportRequest model could not be resolved.',
-            remediation: $passed ? null : 'Ensure CustomerPortalServiceProvider is booted and the package is installed.',
+            passed: true,
+            message: 'PortalAccount and PortalSupportRequest models are resolvable.',
         );
     }
 }

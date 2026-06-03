@@ -182,7 +182,12 @@ it('lists built-in capability schemas for agent discovery', function (): void {
         new AuthenticatedAgentBridgeClientData(tokenId: 1, name: 'Schema client', scopes: ['capell.pages.write']),
     );
 
-    $capabilities = agentBridgeStructuredContent($response)['capabilities'];
+    $capabilities = agentBridgeStructuredContent($response)['capabilities'] ?? [];
+
+    if (! is_array($capabilities)) {
+        throw new RuntimeException('Agent Bridge capabilities response must be an array.');
+    }
+
     $createDraft = collect($capabilities)->firstWhere('key', 'capell.pages.create_draft');
 
     expect($createDraft)

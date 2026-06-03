@@ -9,6 +9,8 @@ use Capell\CustomerPortal\Filament\Resources\PortalSupportRequests\PortalSupport
 use Capell\CustomerPortal\Models\PortalAccount;
 use Capell\CustomerPortal\Models\PortalSupportRequest;
 use Capell\CustomerPortal\Tests\CustomerPortalTestCase;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Collection;
 
@@ -21,6 +23,9 @@ function portalSupportRequestScopedAdmin(Collection $assignedSiteIds, bool $isGl
 {
     $admin = new class extends Authenticatable
     {
+        /** @use HasFactory<Factory<static>> */
+        use HasFactory;
+
         /** @var Collection<int, int> */
         public Collection $assignedSiteIds;
 

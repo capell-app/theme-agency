@@ -34,7 +34,13 @@ describe('agent-bridge capell.json manifest', function (): void {
 
     it('declares every generated screenshot for marketplace display', function () use ($manifest, $packagePath): void {
         $manifestData = $manifest();
-        $screenshotPaths = collect($manifestData['marketplace']['screenshots'] ?? [])
+        $screenshots = $manifestData['marketplace']['screenshots'] ?? [];
+
+        if (! is_array($screenshots)) {
+            throw new RuntimeException('Agent Bridge marketplace screenshots must be an array.');
+        }
+
+        $screenshotPaths = collect($screenshots)
             ->pluck('path')
             ->values()
             ->all();

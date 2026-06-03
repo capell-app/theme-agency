@@ -2,7 +2,7 @@
 
 GA4 Reports is part of the Capell package set. This page names the main frameworks, packages, authors, and services this package leans on, with a short note about what they make possible here. It is intentionally shorter than the repository-wide credits page and closer to the package itself.
 
-Package role: GA4 Reports 4 dashboard reporting for Capell.
+Package role: GA4 Reports dashboard reporting for Capell.
 
 ## Shared Foundations
 

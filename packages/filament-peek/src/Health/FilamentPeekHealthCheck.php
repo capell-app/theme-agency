@@ -141,16 +141,19 @@ final class FilamentPeekHealthCheck implements ChecksExtensionHealth
      */
     public function unresolvableActions(): array
     {
-        return collect(self::REQUIRED_ACTIONS)
-            ->reject(function (string $actionClass): bool {
-                try {
-                    return resolve($actionClass) instanceof $actionClass;
-                } catch (Throwable) {
-                    return false;
+        $actions = [];
+
+        foreach (self::REQUIRED_ACTIONS as $actionClass) {
+            try {
+                if (! resolve($actionClass) instanceof $actionClass) {
+                    $actions[] = $actionClass;
                 }
-            })
-            ->values()
-            ->all();
+            } catch (Throwable) {
+                $actions[] = $actionClass;
+            }
+        }
+
+        return $actions;
     }
 
     public function cacheStoreReachable(): bool

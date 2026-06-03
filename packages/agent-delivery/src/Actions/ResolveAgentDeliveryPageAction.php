@@ -215,8 +215,11 @@ final class ResolveAgentDeliveryPageAction
     private function isOptedOut(Pageable $page, array $translationMeta): bool
     {
         $pageMeta = $page instanceof Model ? (array) $page->getAttribute('meta') : [];
+        if ($this->metaOptsOut($pageMeta)) {
+            return true;
+        }
 
-        return $this->metaOptsOut($pageMeta) || $this->metaOptsOut($translationMeta);
+        return $this->metaOptsOut($translationMeta);
     }
 
     /**
@@ -233,7 +236,7 @@ final class ResolveAgentDeliveryPageAction
         $robots = $meta['robots'] ?? [];
 
         if (is_string($robots)) {
-            $robots = array_map('trim', explode(',', $robots));
+            $robots = array_map(trim(...), explode(',', $robots));
         }
 
         if (! is_array($robots)) {

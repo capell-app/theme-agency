@@ -5,23 +5,22 @@ declare(strict_types=1);
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Support\CapellAdminManager;
 use Capell\AgentDelivery\Support\SiteDiscovery\AgentDeliveryGeneratedOutputCoverageSource;
-use Capell\AutomationStudio\Actions\DispatchAutomationTriggerAction;
 use Capell\AutomationStudio\Actions\LoadPersistedAutomationRulesAction;
 use Capell\AutomationStudio\Actions\PersistAutomationTriggerResultsAction;
+use Capell\AutomationStudio\Actions\QueueAutomationTriggerAction;
 use Capell\AutomationStudio\Actions\RecordAutomationRunAction;
 use Capell\AutomationStudio\Data\AutomationActionResultData;
 use Capell\AutomationStudio\Data\AutomationRuleActionData;
-use Capell\AutomationStudio\Data\AutomationRuleData;
 use Capell\AutomationStudio\Data\AutomationTriggerEventData;
 use Capell\AutomationStudio\Enums\AutomationActionType;
 use Capell\AutomationStudio\Enums\AutomationRuleStatus;
 use Capell\AutomationStudio\Enums\AutomationRunStatus;
 use Capell\AutomationStudio\Enums\AutomationTriggerType;
+use Capell\AutomationStudio\Jobs\DispatchQueuedAutomationTriggerJob;
 use Capell\AutomationStudio\Listeners\DispatchAutomationFromAccessApproval;
 use Capell\AutomationStudio\Listeners\DispatchAutomationFromWorkspaceStateChanged;
 use Capell\AutomationStudio\Models\AutomationRule;
 use Capell\AutomationStudio\Models\AutomationRun;
-use Capell\AutomationStudio\Support\AutomationActionRegistry;
 use Capell\AutomationStudio\Support\AutomationRuleRegistry;
 use Capell\AutomationStudio\Support\Handlers\DispatchPublicActionAutomationActionHandler;
 use Capell\Core\Facades\CapellCore;
@@ -71,7 +70,6 @@ use Capell\SiteDiscovery\Data\PublicUrlRegistryEntryData;
 use Capell\SiteDiscovery\Enums\PublicUrlIndexability;
 use Capell\SiteDiscovery\Filament\Extenders\Site\SitemapSiteHeaderActionExtender;
 use Capell\SiteDiscovery\Filament\Extenders\Site\SitemapSiteRecordActionExtender;
-use Capell\Tests\Packages\Fixtures\CoverageGapCapturingAutomationHandler;
 use Capell\Tests\Packages\Fixtures\CoverageGapDemoKitOptionsCommand;
 use Capell\Tests\Packages\Fixtures\CoverageGapPortalPreferencesProvider;
 use Capell\Tests\Packages\Fixtures\CoverageGapPortalProfileProvider;
@@ -82,6 +80,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Schema;
 
 beforeEach(function (): void {
@@ -741,18 +740,7 @@ it('parses demo kit site and language command options without prompting', functi
 });
 
 it('dispatches access approval automation payloads from registration events', function (): void {
-    $handler = new CoverageGapCapturingAutomationHandler;
-    $rules = new AutomationRuleRegistry;
-    $actions = new AutomationActionRegistry;
-    $rules->register(new AutomationRuleData(
-        key: 'access-approved',
-        name: 'Access approved',
-        triggerType: AutomationTriggerType::AccessApproved,
-        actions: [
-            new AutomationRuleActionData('send-email', AutomationActionType::SendEmail),
-        ],
-    ));
-    $actions->registerHandler(AutomationActionType::SendEmail, $handler);
+    Queue::fake();
 
     $registration = new class extends Model
     {
@@ -767,36 +755,28 @@ it('dispatches access approval automation payloads from registration events', fu
     $registration->exists = true;
 
     (new DispatchAutomationFromAccessApproval(
-        new DispatchAutomationTriggerAction($rules, $actions),
+        new QueueAutomationTriggerAction,
     ))->handle((object) ['registration' => $registration]);
 
-    expect($handler->events)->toHaveCount(1)
-        ->and($handler->events[0]->triggerType)->toBe(AutomationTriggerType::AccessApproved)
-        ->and($handler->events[0]->sourceType)->toBe('access-gate.registration')
-        ->and($handler->events[0]->sourceId)->toBe('88')
-        ->and($handler->events[0]->payload)->toMatchArray([
-            'registration_id' => 88,
-            'email' => 'approved@example.test',
-            'area_id' => 12,
-        ]);
+    Queue::assertPushed(DispatchQueuedAutomationTriggerJob::class, function (DispatchQueuedAutomationTriggerJob $job): bool {
+        expect($job->event->triggerType)->toBe(AutomationTriggerType::AccessApproved)
+            ->and($job->event->sourceType)->toBe('access-gate.registration')
+            ->and($job->event->sourceId)->toBe('88')
+            ->and($job->event->payload)->toMatchArray([
+                'registration_id' => 88,
+                'email' => 'approved@example.test',
+                'area_id' => 12,
+            ]);
+
+        return true;
+    });
 });
 
 it('dispatches workspace publication automation only for published transitions', function (): void {
-    $handler = new CoverageGapCapturingAutomationHandler;
-    $rules = new AutomationRuleRegistry;
-    $actions = new AutomationActionRegistry;
-    $rules->register(new AutomationRuleData(
-        key: 'workspace-published',
-        name: 'Workspace published',
-        triggerType: AutomationTriggerType::PagePublished,
-        actions: [
-            new AutomationRuleActionData('send-email', AutomationActionType::SendEmail),
-        ],
-    ));
-    $actions->registerHandler(AutomationActionType::SendEmail, $handler);
+    Queue::fake();
 
     $listener = new DispatchAutomationFromWorkspaceStateChanged(
-        new DispatchAutomationTriggerAction($rules, $actions),
+        new QueueAutomationTriggerAction,
     );
 
     $workspace = new class extends Model
@@ -818,15 +798,20 @@ it('dispatches workspace publication automation only for published transitions',
         'newStatus' => 'published',
     ]);
 
-    expect($handler->events)->toHaveCount(1)
-        ->and($handler->events[0]->triggerType)->toBe(AutomationTriggerType::PagePublished)
-        ->and($handler->events[0]->sourceType)->toBe('publishing-studio.workspace')
-        ->and($handler->events[0]->sourceId)->toBe('44')
-        ->and($handler->events[0]->payload)->toBe([
-            'workspace_id' => 44,
-            'transition' => 'published',
-            'status' => 'published',
-        ]);
+    Queue::assertPushed(DispatchQueuedAutomationTriggerJob::class, function (DispatchQueuedAutomationTriggerJob $job): bool {
+        expect($job->event->triggerType)->toBe(AutomationTriggerType::PagePublished)
+            ->and($job->event->sourceType)->toBe('publishing-studio.workspace')
+            ->and($job->event->sourceId)->toBe('44')
+            ->and($job->event->payload)->toBe([
+                'workspace_id' => 44,
+                'transition' => 'published',
+                'status' => 'published',
+            ]);
+
+        return true;
+    });
+
+    Queue::assertPushed(DispatchQueuedAutomationTriggerJob::class, 1);
 });
 
 /**

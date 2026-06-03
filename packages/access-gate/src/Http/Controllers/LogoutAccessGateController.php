@@ -24,13 +24,15 @@ final class LogoutAccessGateController
 
         $this->revokeBrowserToken->handle($accessArea, $request->cookies->get($cookieName));
 
-        return AccessGateResponseHeaders::noStore(
-            to_route('capell-access-gate.request', ['area' => $accessArea->key])
-                ->withCookie(Cookie::forget(
-                    $cookieName,
-                    config('access-gate.cookies.browser_token.path', '/'),
-                    config('access-gate.cookies.browser_token.domain'),
-                )),
-        );
+        $response = to_route('capell-access-gate.request', ['area' => $accessArea->key])
+            ->withCookie(Cookie::forget(
+                $cookieName,
+                config('access-gate.cookies.browser_token.path', '/'),
+                config('access-gate.cookies.browser_token.domain'),
+            ));
+
+        AccessGateResponseHeaders::noStore($response);
+
+        return $response;
     }
 }

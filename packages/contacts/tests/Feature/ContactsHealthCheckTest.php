@@ -41,8 +41,8 @@ it('fails the storage table check when a contacts table is missing', function ()
 });
 
 it('fails the hash secret check when no secret is configured', function (): void {
-    Config::set('capell-contacts.hash_secret', null);
-    Config::set('app.key', null);
+    Config::set('capell-contacts.hash_secret');
+    Config::set('app.key');
 
     $check = new ContactsHealthCheck;
 

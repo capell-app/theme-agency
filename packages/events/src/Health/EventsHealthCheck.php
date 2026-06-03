@@ -151,11 +151,11 @@ final class EventsHealthCheck implements ChecksExtensionHealth
      */
     public function unregisteredMorphAliases(): array
     {
-        return collect(self::MODELS)
+        return array_values(collect(self::MODELS)
             ->mapWithKeys(static fn (string $modelClass): array => [Str::snake(class_basename($modelClass)) => $modelClass])
             ->reject(static fn (string $modelClass, string $morphAlias): bool => Relation::getMorphedModel($morphAlias) === $modelClass)
             ->keys()
             ->values()
-            ->all();
+            ->all());
     }
 }

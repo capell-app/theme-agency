@@ -49,10 +49,10 @@ final class RequestedUrlGuard
      */
     private function allowedHosts(Area $area): array
     {
-        return collect($area->claim_url_hosts ?? [])
+        return array_values(collect($area->claim_url_hosts ?? [])
             ->filter(fn (mixed $host): bool => is_string($host) && $host !== '')
             ->unique()
             ->values()
-            ->all();
+            ->all());
     }
 }

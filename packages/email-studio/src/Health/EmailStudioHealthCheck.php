@@ -10,7 +10,6 @@ use Capell\EmailStudio\Actions\CheckEmailSuppressionAction;
 use Capell\EmailStudio\Actions\DeliverEmailMessageAction;
 use Capell\EmailStudio\Actions\RenderEmailTemplateAction;
 use Capell\EmailStudio\Actions\SuppressEmailAddressAction;
-use Capell\EmailStudio\Contracts\EmailProviderAdapter;
 use Capell\EmailStudio\Jobs\SendEmailJob;
 use Capell\EmailStudio\Models\EmailEvent;
 use Capell\EmailStudio\Models\EmailMessage;
@@ -157,14 +156,6 @@ final class EmailStudioHealthCheck implements ChecksExtensionHealth
     private function providerEventsCheck(): DoctorCheckResultData
     {
         $missing = [];
-
-        if (! method_exists(EmailProviderAdapter::class, 'normalizeWebhookPayload')) {
-            $missing[] = 'EmailProviderAdapter::normalizeWebhookPayload';
-        }
-
-        if (! method_exists(EmailProviderAdapter::class, 'normalizeInboundReply')) {
-            $missing[] = 'EmailProviderAdapter::normalizeInboundReply';
-        }
 
         if (! Schema::hasTable((new EmailEvent)->getTable())) {
             $missing[] = 'email_events table';

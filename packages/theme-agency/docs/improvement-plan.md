@@ -1,9 +1,10 @@
 # Theme Agency — Improvement & Growth Plan
+
 > Package: capell-app/theme-agency · Kind: theme · Tier: free · Product group: Capell Foundation · Bundle: foundation · Status: Draft
 
 ## 1. Snapshot
 
-`AgencyThemeServiceProvider` registers theme key `agency` (`extends: 'default'` in code, `extends: "capell-app/foundation-theme"` in `capell.json`), wiring a `BladeThemeRenderer` with layout view `capell-theme-agency::page` and seven `ViewSectionRenderer`s (`navigation`, `hero`, `features`, `proof`, `content-listing`, `cta`, `footer`), each `failLoudly: true`. It ships its own Blade for all seven sections plus a page wrapper, and a 69-line `resources/css/theme-agency.css`; it overrides every Foundation section it lists but inherits content-listing's `gallery`/`pathways`/`spotlight` variants by delegating back to `capell-foundation-theme::theme.sections.content-listing`. The demo command `capell:theme-agency-demo` delegates to `InstallAgencyThemeDemoAction` → `ThemeDemoPageInstaller::run($data, 'agency', 'Agency')`, seeding ≥7 pages idempotently (proven in `DemoCommandTest`). Three presets exist in code (`signal`, `gallery`, `atelier`) but the definition test asserts `presets->toHaveCount(6)` — a contradiction that means either the test or the provider is wrong. Current marketplace summary verbatim: *"Creative campaign and studio theme screenshots from route-backed demo layouts."* Screenshots: `capell.json` `marketplace.screenshots` declares 6 paths; `docs/screenshots.json` declares 12 capture entries; only **6 PNGs are committed** in `docs/screenshots/`, of which just **2** match declared paths — and the marketplace gallery points at SVG line-art placeholders, not real theme captures.
+`AgencyThemeServiceProvider` registers theme key `agency` (`extends: 'default'` in code, `extends: "capell-app/foundation-theme"` in `capell.json`), wiring a `BladeThemeRenderer` with layout view `capell-theme-agency::page` and seven `ViewSectionRenderer`s (`navigation`, `hero`, `features`, `proof`, `content-listing`, `cta`, `footer`), each `failLoudly: true`. It ships its own Blade for all seven sections plus a page wrapper, and a 69-line `resources/css/theme-agency.css`; it overrides every Foundation section it lists but inherits content-listing's `gallery`/`pathways`/`spotlight` variants by delegating back to `capell-foundation-theme::theme.sections.content-listing`. The demo command `capell:theme-agency-demo` delegates to `InstallAgencyThemeDemoAction` → `ThemeDemoPageInstaller::run($data, 'agency', 'Agency')`, seeding ≥7 pages idempotently (proven in `DemoCommandTest`). Three presets exist in code (`signal`, `gallery`, `atelier`) but the definition test asserts `presets->toHaveCount(6)` — a contradiction that means either the test or the provider is wrong. Current marketplace summary verbatim: _"Creative campaign and studio theme screenshots from route-backed demo layouts."_ Screenshots: `capell.json` `marketplace.screenshots` declares 6 paths; `docs/screenshots.json` declares 12 capture entries; only **6 PNGs are committed** in `docs/screenshots/`, of which just **2** match declared paths — and the marketplace gallery points at SVG line-art placeholders, not real theme captures.
 
 ## 2. Improvements (existing functionality)
 
@@ -11,7 +12,7 @@
 
 2. **Stop hardcoding hex colors in the section Blade** — `hero.blade.php` and `cta.blade.php` bake `via-fuchsia-500` and `to-orange-900` into gradients alongside the `var(--theme-primary)`/`var(--theme-accent)` tokens, so two of three colors in the marquee gradient never change between presets. Replace literal Tailwind color stops with token-driven CSS custom properties so presets fully recolor. `resources/views/sections/hero.blade.php`, `resources/views/sections/cta.blade.php` — **M**
 
-3. **Fix the contrast trap in the proof/content-listing CSS override** — `theme-agency.css` forces `.theme-content-listing a h3 { color: #09090b }` and card body `#52525b` on a white card, while the page wrapper class is `text-zinc-950` on a `bg-zinc-950` shell. Any section that does *not* paint its own light panel inherits near-black text on a near-black shell. Audit every section for an explicit panel background; the CSS comment-free override is brittle. `resources/css/theme-agency.css` — **S**
+3. **Fix the contrast trap in the proof/content-listing CSS override** — `theme-agency.css` forces `.theme-content-listing a h3 { color: #09090b }` and card body `#52525b` on a white card, while the page wrapper class is `text-zinc-950` on a `bg-zinc-950` shell. Any section that does _not_ paint its own light panel inherits near-black text on a near-black shell. Audit every section for an explicit panel background; the CSS comment-free override is brittle. `resources/css/theme-agency.css` — **S**
 
 4. **Give the navigation a real disclosure pattern** — mobile menu uses `<details>/<summary>` with `marker:hidden`; there is no `aria-expanded`, no focus trap, and the desktop/mobile links are duplicated in markup. It works without JS (good) but reads as a stopgap for a flagship theme. Consider an Alpine disclosure consistent with Foundation Theme's bundled `@ryangjchandler/alpine-tooltip`/floating-ui stack, keeping a no-JS fallback. `resources/views/sections/navigation.blade.php` — **M**
 
@@ -23,7 +24,7 @@
 
 ## 3. Missing Features (gaps)
 
-`capabilities` is only `["theme-agency", "theme-agency-frontend"]` and the theme overrides exactly the seven baseline Foundation sections. For a creative/agency vertical the screenshot plan *describes* nine layout pages (homepage, services, portfolio, case-study, insights, event-landing, lead-form, campaign, search) but these are **page compositions of the same seven renderers plus other packages** (`capell-app/blog`, `capell-app/form-builder`, `capell-app/search`, `capell-app/content-sections`) — there are no agency-specific section renderers behind them. Concrete gaps:
+`capabilities` is only `["theme-agency", "theme-agency-frontend"]` and the theme overrides exactly the seven baseline Foundation sections. For a creative/agency vertical the screenshot plan _describes_ nine layout pages (homepage, services, portfolio, case-study, insights, event-landing, lead-form, campaign, search) but these are **page compositions of the same seven renderers plus other packages** (`capell-app/blog`, `capell-app/form-builder`, `capell-app/search`, `capell-app/content-sections`) — there are no agency-specific section renderers behind them. Concrete gaps:
 
 - **Portfolio / project-grid renderer** — an agency lives on work. Today "portfolio" is `content-listing` reusing the foundation `gallery` variant. A dedicated filterable project-grid section (channel/discipline filters, aspect-ratio-preserving media, hover reveal) is table-stakes and is the single biggest differentiator vs Foundation. **Differentiator.**
 - **Case-study / long-form project renderer** — no dedicated section for hero metric + challenge/approach/result + result stats + gallery. This is the agency portfolio money-shot. **Differentiator.**
@@ -33,7 +34,7 @@
 - **Pricing / engagement section** — optional but common for productized agencies; absent. **Differentiator (optional).**
 - **Light-mode preset** — all three presets render dark; an editorial/atelier light variant is a genuine product gap (see §2.1). **Differentiator.**
 
-Versus siblings (10 themes exist: foundation-theme, theme-commerce, theme-corporate, theme-education, theme-healthcare, theme-knowledge, theme-local-services, theme-nonprofit, theme-portfolio, theme-saas): `theme-portfolio` and `theme-saas` both ship richer CSS (101 and 198+90 lines respectively vs Agency's 69) and `theme-portfolio` directly overlaps the creative buyer. Agency must out-render portfolio on *campaign motion + case studies* or the two cannibalize.
+Versus siblings (10 themes exist: foundation-theme, theme-commerce, theme-corporate, theme-education, theme-healthcare, theme-knowledge, theme-local-services, theme-nonprofit, theme-portfolio, theme-saas): `theme-portfolio` and `theme-saas` both ship richer CSS (101 and 198+90 lines respectively vs Agency's 69) and `theme-portfolio` directly overlaps the creative buyer. Agency must out-render portfolio on _campaign motion + case studies_ or the two cannibalize.
 
 ## 4. Issues / Risks
 
@@ -49,36 +50,38 @@ Versus siblings (10 themes exist: foundation-theme, theme-commerce, theme-corpor
 
 ## 5. Marketplace & Selling
 
-**Current summary** (`capell.json`): *"Creative campaign and studio theme screenshots from route-backed demo layouts."* — This describes the screenshot pipeline, not the product. A buyer doesn't care that captures come from "route-backed demo layouts"; that's internal tooling language. **Current composer `description`**: *"Expressive agency theme for Capell"* — accurate but generic and interchangeable with every other theme's one-liner. The `capell.json` `description` is better (*"registers the agency theme key and expressive renderer views for studio, portfolio, and brand-led sites"*) but still leads with "registers the agency theme key," which is plumbing.
+**Current summary** (`capell.json`): _"Creative campaign and studio theme screenshots from route-backed demo layouts."_ — This describes the screenshot pipeline, not the product. A buyer doesn't care that captures come from "route-backed demo layouts"; that's internal tooling language. **Current composer `description`**: _"Expressive agency theme for Capell"_ — accurate but generic and interchangeable with every other theme's one-liner. The `capell.json` `description` is better (_"registers the agency theme key and expressive renderer views for studio, portfolio, and brand-led sites"_) but still leads with "registers the agency theme key," which is plumbing.
 
 **Improved 1-sentence summary:**
+
 > A bold, motion-led theme for creative studios and marketing agencies — campaign hero, case-study proof, and a filterable work showcase, with three presets from high-contrast Signal to editorial Atelier.
 
 **Improved 3–4 sentence description:**
+
 > Theme Agency turns a Capell site into a confident creative portfolio. It ships an expressive page system — full-bleed launch hero, animated proof wall, project showcase, and a conversion-focused brief CTA — built to make studio and agency work look like the work, not a template. Three presets (Signal, Gallery, Atelier) re-skin every section from energetic high-contrast to refined editorial neutrals, all driven by Theme Studio tokens with zero code. Built on Foundation Theme contracts, it stays fast, cache-aware, and safe for public output, so it drops into the standard Capell theme workflow.
 
 **Screenshot / media gaps (commercial blocker):** themes sell on visuals and this package is effectively shipping with **2 valid captures**. Required before listing: replace the 9 SVG wireframe placeholders with real high-resolution captures of each declared layout (homepage, services, portfolio, case-study, insights, event-landing, lead-form, campaign, search), one capture **per preset** for at least the homepage and a case study (so buyers see Signal/Gallery/Atelier differ), plus mobile captures (`hero-mobile.jpg` exists as a placeholder — make it real), and an animated capture of the proof carousel. Reconcile `screenshots.json` (12) ↔ `capell.json` `marketplace.screenshots` (6) ↔ committed files so counts match. Decide whether the `-dark` PNGs are part of the story; if so, declare them.
 
-**Differentiation vs the other 9 themes:** position Agency as the *campaign-and-case-study* theme — the one with motion, a real project showcase, and presets that swing from loud to editorial. Keep a hard line against `theme-portfolio` (which owns the quiet, grid-first creative buyer) by leaning into campaign rhythm, big type, and conversion CTAs; against `theme-saas`/`theme-corporate` by being deliberately expressive rather than restrained. **Target buyer:** boutique creative/branding/marketing agencies and studios (1–30 people) who want a launch-ready, premium-looking site without bespoke front-end build.
+**Differentiation vs the other 9 themes:** position Agency as the _campaign-and-case-study_ theme — the one with motion, a real project showcase, and presets that swing from loud to editorial. Keep a hard line against `theme-portfolio` (which owns the quiet, grid-first creative buyer) by leaning into campaign rhythm, big type, and conversion CTAs; against `theme-saas`/`theme-corporate` by being deliberately expressive rather than restrained. **Target buyer:** boutique creative/branding/marketing agencies and studios (1–30 people) who want a launch-ready, premium-looking site without bespoke front-end build.
 
 **Keywords/tags:** agency theme, creative studio, portfolio, case study, marketing agency, branding, expressive, motion, campaign landing, dark theme, editorial, Capell theme.
 
 ## 6. Prioritized Roadmap
 
-| Item | Bucket | Effort | Impact | Section ref |
-|------|--------|--------|--------|-------------|
-| Reconcile tier/bundle/group across `capell.json` + `docs/overview.md`; set paid classification | Now | S | High | §4 |
-| Produce real screenshots for all 12 declared captures; sync `screenshots.json` ↔ `capell.json` ↔ files | Now | M | High | §4, §5 |
-| Resolve preset-count contradiction (3 in code vs 6 in test); make canonical | Now | S | Med | §4 |
-| Fix `definition()` assets path + missing preset preview JPEGs | Now | S | Med | §2.6, §4 |
-| Drive page-shell surface/ink from preset tokens (true light/dark per preset) | Now | M | High | §2.1, §3 |
-| Rewrite marketplace `summary` + composer `description` | Now | S | High | §5 |
-| Remove hardcoded hex/gradient color stops from hero + CTA | Next | M | High | §2.2 |
-| Contrast/WCAG audit across all three presets | Next | M | Med | §4, §2.3 |
-| Add dedicated project-showcase (portfolio) renderer | Next | L | High | §3 |
-| Add case-study section renderer | Next | L | High | §3 |
-| Add hero image LCP hints (`fetchpriority`, dims, `loading`) | Next | S | Med | §4 |
-| Implement real `ThemeAgencyHealthCheck` probes (or downgrade severity) | Next | M | Med | §4 |
-| Add team + services + client-logo renderers | Later | L | Med | §3 |
-| Ship a light-mode preset and `prefers-reduced-motion` handling | Later | M | Med | §2.1, §2.5 |
-| Extract hero decorative canvas to a partial; data-drive hero stats | Later | S | Low | §2.7, §4 |
+| Item                                                                                                   | Bucket | Effort | Impact | Section ref |
+| ------------------------------------------------------------------------------------------------------ | ------ | ------ | ------ | ----------- |
+| Reconcile tier/bundle/group across `capell.json` + `docs/overview.md`; set paid classification         | Now    | S      | High   | §4          |
+| Produce real screenshots for all 12 declared captures; sync `screenshots.json` ↔ `capell.json` ↔ files | Now    | M      | High   | §4, §5      |
+| Resolve preset-count contradiction (3 in code vs 6 in test); make canonical                            | Now    | S      | Med    | §4          |
+| Fix `definition()` assets path + missing preset preview JPEGs                                          | Now    | S      | Med    | §2.6, §4    |
+| Drive page-shell surface/ink from preset tokens (true light/dark per preset)                           | Now    | M      | High   | §2.1, §3    |
+| Rewrite marketplace `summary` + composer `description`                                                 | Now    | S      | High   | §5          |
+| Remove hardcoded hex/gradient color stops from hero + CTA                                              | Next   | M      | High   | §2.2        |
+| Contrast/WCAG audit across all three presets                                                           | Next   | M      | Med    | §4, §2.3    |
+| Add dedicated project-showcase (portfolio) renderer                                                    | Next   | L      | High   | §3          |
+| Add case-study section renderer                                                                        | Next   | L      | High   | §3          |
+| Add hero image LCP hints (`fetchpriority`, dims, `loading`)                                            | Next   | S      | Med    | §4          |
+| Implement real `ThemeAgencyHealthCheck` probes (or downgrade severity)                                 | Next   | M      | Med    | §4          |
+| Add team + services + client-logo renderers                                                            | Later  | L      | Med    | §3          |
+| Ship a light-mode preset and `prefers-reduced-motion` handling                                         | Later  | M      | Med    | §2.1, §2.5  |
+| Extract hero decorative canvas to a partial; data-drive hero stats                                     | Later  | S      | Low    | §2.7, §4    |

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\AccessGate\Events\RegistrationApproved;
 use Capell\AutomationStudio\Actions\RegisterAutomationStudioDefaultsAction;
 use Capell\AutomationStudio\Contracts\AutomationActionHandler;
 use Capell\AutomationStudio\Data\AutomationActionDefinitionData;
@@ -19,7 +20,9 @@ use Capell\AutomationStudio\Support\Handlers\QueueAgentCapabilityAutomationActio
 use Capell\AutomationStudio\Support\Handlers\SendEmailAutomationActionHandler;
 use Capell\AutomationStudio\Support\Handlers\SubscribeUserAutomationActionHandler;
 use Capell\AutomationStudio\Support\Handlers\TagContactAutomationActionHandler;
+use Capell\CampaignStudio\Events\CampaignConverted;
 use Capell\FormBuilder\Events\FormSubmitted;
+use Capell\PublishingStudio\Events\WorkspaceStateChanged;
 
 it('registers trigger and action definitions', function (): void {
     $triggers = new AutomationTriggerRegistry;
@@ -70,10 +73,10 @@ it('registers native automation handlers by default', function (): void {
     (new RegisterAutomationStudioDefaultsAction($triggers, $actions))->handle();
 
     expect($actions->definition(AutomationActionType::SendEmail)?->handler)->toBe(SendEmailAutomationActionHandler::class)
-        ->and($triggers->get(AutomationTriggerType::FormSubmitted)?->eventClass)->toBe('Capell\\FormBuilder\\Events\\FormSubmitted')
-        ->and($triggers->get(AutomationTriggerType::AccessApproved)?->eventClass)->toBe('Capell\\AccessGate\\Events\\RegistrationApproved')
-        ->and($triggers->get(AutomationTriggerType::PagePublished)?->eventClass)->toBe('Capell\\PublishingStudio\\Events\\WorkspaceStateChanged')
-        ->and($triggers->get(AutomationTriggerType::CampaignConverted)?->eventClass)->toBe('Capell\\CampaignStudio\\Events\\CampaignConverted')
+        ->and($triggers->get(AutomationTriggerType::FormSubmitted)?->eventClass)->toBe(FormSubmitted::class)
+        ->and($triggers->get(AutomationTriggerType::AccessApproved)?->eventClass)->toBe(RegistrationApproved::class)
+        ->and($triggers->get(AutomationTriggerType::PagePublished)?->eventClass)->toBe(WorkspaceStateChanged::class)
+        ->and($triggers->get(AutomationTriggerType::CampaignConverted)?->eventClass)->toBe(CampaignConverted::class)
         ->and($actions->definition(AutomationActionType::QueueAgentCapability)?->handler)->toBe(QueueAgentCapabilityAutomationActionHandler::class)
         ->and($actions->definition(AutomationActionType::TagContact)?->handler)->toBe(TagContactAutomationActionHandler::class)
         ->and($actions->definition(AutomationActionType::CreateNote)?->handler)->toBe(CreateContactNoteAutomationActionHandler::class)

@@ -13,6 +13,7 @@ use Capell\AgentBridge\Models\CapellAgentBridgeAuditEntry;
 use Capell\AgentBridge\Models\CapellAgentBridgeToken;
 use Capell\AgentBridge\Tests\Fixtures\User;
 use Carbon\CarbonImmutable;
+use Illuminate\Testing\PendingCommand;
 
 it('creates rotates and revokes tokens through lifecycle actions', function (): void {
     $user = User::query()->create([
@@ -80,8 +81,13 @@ it('queries and prunes audit entries with retention boundaries', function (): vo
 });
 
 it('registers the audit pruning command', function (): void {
-    $this->artisan('capell:agent-bridge-prune-audit', ['--days' => 30])
-        ->assertSuccessful();
+    $command = $this->artisan('capell:agent-bridge-prune-audit', ['--days' => 30]);
+
+    if (! $command instanceof PendingCommand) {
+        throw new RuntimeException('Agent Bridge audit pruning command did not return a pending command.');
+    }
+
+    $command->assertSuccessful();
 });
 
 function createLifecycleAuditEntry(User $user, CapellAgentBridgeToken $token, string $event, CarbonImmutable $createdAt): CapellAgentBridgeAuditEntry

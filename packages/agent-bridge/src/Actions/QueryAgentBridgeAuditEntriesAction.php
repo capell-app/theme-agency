@@ -44,16 +44,26 @@ final class QueryAgentBridgeAuditEntriesAction
             ->latest('created_at')
             ->limit(min(max($limit, 1), 100))
             ->get()
-            ->map(static fn (object $entry): array => [
-                'id' => (int) $entry->id,
-                'event' => $entry->event,
-                'capability' => $entry->capability_key,
-                'scope' => $entry->scope,
-                'tokenId' => $entry->agent_bridge_token_id,
-                'payload' => self::jsonObject($entry->payload ?? null),
-                'result' => self::jsonObject($entry->result ?? null),
-                'createdAt' => $entry->created_at,
-            ]);
+            ->map(static fn (object $entry): array => self::auditEntryData($entry));
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private static function auditEntryData(object $entry): array
+    {
+        $attributes = get_object_vars($entry);
+
+        return [
+            'id' => (int) ($attributes['id'] ?? 0),
+            'event' => $attributes['event'] ?? null,
+            'capability' => $attributes['capability_key'] ?? null,
+            'scope' => $attributes['scope'] ?? null,
+            'tokenId' => $attributes['agent_bridge_token_id'] ?? null,
+            'payload' => self::jsonObject($attributes['payload'] ?? null),
+            'result' => self::jsonObject($attributes['result'] ?? null),
+            'createdAt' => $attributes['created_at'] ?? null,
+        ];
     }
 
     /**

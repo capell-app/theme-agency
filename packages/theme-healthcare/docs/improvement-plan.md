@@ -1,4 +1,5 @@
 # Theme Healthcare — Improvement & Growth Plan
+
 > Package: capell-app/theme-healthcare · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Draft
 
 ## 1. Snapshot
@@ -32,7 +33,7 @@ Prioritized. Effort: S = <0.5d, M = ~1–2d, L = >2d.
 `capabilities[]` currently declares only `theme-healthcare` and `theme-healthcare-frontend` — generic placeholders that say nothing about healthcare capability. Against what a real clinic/medical site needs:
 
 - **Real appointment-booking integration (table-stakes, differentiator if done well)** — The theme's whole pitch is "appointment-led" yet booking is decorative (see §2.2). The strongest cross-sell is a dedicated **bookings/scheduling** package: a sibling `AppointmentRequest` Filament resource + booking services/locations/staff models already appear elsewhere in this monorepo. A `booking` section that renders a live availability/enquiry widget (hydrated, no DB in Blade) when that package is installed would be the marquee feature and the clearest reason to pick this theme over a generic one. — differentiator.
-- **Practitioner/clinician profile detail rendering** — `clinicians` only renders a card carousel (image, type, title, summary, link). There is no clinician *detail* surface despite `screenshots.json` declaring a `/theme-healthcare-detail` "clinician detail" capture. A dedicated clinician/profile section or page renderer (credentials, specialties, languages, accepting-new-patients badge) is table-stakes for healthcare. — table-stakes.
+- **Practitioner/clinician profile detail rendering** — `clinicians` only renders a card carousel (image, type, title, summary, link). There is no clinician _detail_ surface despite `screenshots.json` declaring a `/theme-healthcare-detail` "clinician detail" capture. A dedicated clinician/profile section or page renderer (credentials, specialties, languages, accepting-new-patients badge) is table-stakes for healthcare. — table-stakes.
 - **Locations with hours, address, phone, and map** — Both `locations` and `contact` sections accept items but the templates only render `type`/`title`/`summary` (locations) and the contact card truncates before showing structured fields. The test seeds `address` and `phone` on contact items but the visible markup discards them. Clinics need opening hours, full address, click-to-call, and ideally an embedded map. — table-stakes.
 - **Conditions / treatments / specialties taxonomy** — `service-finder` renders flat filter chips with no linking; `services` renders generic cards. Healthcare buyers expect a conditions A–Z or treatments directory with cross-links to services and clinicians. — differentiator.
 - **Insurance / patient information surface** — `insurance-trust` exists but renders the same generic `type/title/summary` card grid. A real "recognised insurers / self-pay / what to expect / patient rights" block (logos, fee transparency, GDPR/medical-records note) is a healthcare-specific expectation. — differentiator.
@@ -65,14 +66,16 @@ Versus siblings: most of the 9 other themes share the same generic section skele
 
 ## 5. Marketplace & Selling
 
-**Current `marketplace.summary`** (verbatim): *"Clinic and care-route theme screenshots from route-backed demo layouts."* — This describes the *screenshots*, not the product. It reads like an internal capture note, leads with "screenshots," and gives a buyer no reason to care. Weak.
+**Current `marketplace.summary`** (verbatim): _"Clinic and care-route theme screenshots from route-backed demo layouts."_ — This describes the _screenshots_, not the product. It reads like an internal capture note, leads with "screenshots," and gives a buyer no reason to care. Weak.
 
-**Current composer `description`**: *"Editorial healthcare theme for Capell"* — generic, and "Editorial" conflicts with the appointment-led/clinical positioning everywhere else (the `capell.json` description and the provider both say "appointment-led clinics"). The README is even titled "Editorial Healthcare Theme." Inconsistent brand language across `composer.json`, `capell.json`, provider `definition()`, and README.
+**Current composer `description`**: _"Editorial healthcare theme for Capell"_ — generic, and "Editorial" conflicts with the appointment-led/clinical positioning everywhere else (the `capell.json` description and the provider both say "appointment-led clinics"). The README is even titled "Editorial Healthcare Theme." Inconsistent brand language across `composer.json`, `capell.json`, provider `definition()`, and README.
 
 **Improved 1-sentence summary:**
+
 > A premium, appointment-led theme for private clinics and healthcare groups — service discovery, clinician profiles, care pathways, locations, and a booking-ready enquiry panel, all WCAG-minded and brand-tunable in Theme Studio.
 
 **Improved 3–4 sentence description:**
+
 > Theme Healthcare turns Capell into a conversion-focused clinical website. It ships nineteen care-oriented sections — an appointment hero, service finder, clinician carousel, care-pathway guidance, insurance/trust signals, locations, events, and a booking panel — that route patients toward the right enquiry with calm, clinical styling. The booking, events, and resource sections light up automatically when Capell Bookings/Form Builder, Events, and Blog are installed, with no theme reconfiguration. Built on Foundation Theme with accessible focus states and a skip link, it activates from the Themes screen and seeds a full demo via `capell:theme-healthcare-demo`.
 
 (Note: the description should only claim "booking-ready" and the Bookings cross-sell once §2.2 ships; until then, soften to "contact-led enquiry panel.")
@@ -87,22 +90,22 @@ Versus siblings: most of the 9 other themes share the same generic section skele
 
 ## 6. Prioritized Roadmap
 
-| Item | Bucket | Effort | Impact | Section ref |
-|------|--------|--------|--------|-------------|
-| Fix `extends: 'default'` → foundation theme key; add a test asserting it | Now | S | High | §4.1, §4.9 |
-| Add image perf attributes (hero `fetchpriority`+dims; rest `loading=lazy`) | Now | S | High | §2.1, §4.5 |
-| Render a real `id="main-content"` target so the skip link works | Now | S | High | §4.5 |
-| Translate events carousel "Previous"/"Next" button text | Now | S | Med | §2.3, §4.5 |
-| Commit the 8 real PNG screenshots + replace SVG placeholders | Now | M | High | §4.3, §5 |
-| Rewrite marketplace summary + composer description; expand keywords/tags | Now | S | High | §5 |
-| Make booking panel a live form / strong CTA (Form Builder + Bookings) | Next | M | High | §2.2, §3 |
-| Wire hardcoded hex to brand tokens so presets recolour the page | Next | L | High | §2.6, §4.6 |
-| Add empty-state fallbacks to item-driven sections | Next | M | Med | §2.5 |
-| Flesh out the critical health check (assert views/renderer/command) | Next | S | Med | §4.2 |
-| Extract / unify the inline events `<script>` onto carousel markers | Next | M | Med | §2.4, §4.4 |
-| Render locations with hours/address/click-to-call/map | Next | M | High | §3 |
-| WCAG AA contrast audit of muted greys + heavy weights | Next | M | High | §4.5 |
-| Add dark-mode support (CSS vars + `prefers-color-scheme`) | Later | L | Med | §2.7 |
-| Add clinician detail + conditions/treatments directory surfaces | Later | L | High | §3 |
-| Add emergency/urgent-care escalation banner component | Later | S | Med | §3 |
-| Assert the 20ms render budget + accessibility in tests | Later | M | Med | §4.7, §4.9 |
+| Item                                                                       | Bucket | Effort | Impact | Section ref |
+| -------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Fix `extends: 'default'` → foundation theme key; add a test asserting it   | Now    | S      | High   | §4.1, §4.9  |
+| Add image perf attributes (hero `fetchpriority`+dims; rest `loading=lazy`) | Now    | S      | High   | §2.1, §4.5  |
+| Render a real `id="main-content"` target so the skip link works            | Now    | S      | High   | §4.5        |
+| Translate events carousel "Previous"/"Next" button text                    | Now    | S      | Med    | §2.3, §4.5  |
+| Commit the 8 real PNG screenshots + replace SVG placeholders               | Now    | M      | High   | §4.3, §5    |
+| Rewrite marketplace summary + composer description; expand keywords/tags   | Now    | S      | High   | §5          |
+| Make booking panel a live form / strong CTA (Form Builder + Bookings)      | Next   | M      | High   | §2.2, §3    |
+| Wire hardcoded hex to brand tokens so presets recolour the page            | Next   | L      | High   | §2.6, §4.6  |
+| Add empty-state fallbacks to item-driven sections                          | Next   | M      | Med    | §2.5        |
+| Flesh out the critical health check (assert views/renderer/command)        | Next   | S      | Med    | §4.2        |
+| Extract / unify the inline events `<script>` onto carousel markers         | Next   | M      | Med    | §2.4, §4.4  |
+| Render locations with hours/address/click-to-call/map                      | Next   | M      | High   | §3          |
+| WCAG AA contrast audit of muted greys + heavy weights                      | Next   | M      | High   | §4.5        |
+| Add dark-mode support (CSS vars + `prefers-color-scheme`)                  | Later  | L      | Med    | §2.7        |
+| Add clinician detail + conditions/treatments directory surfaces            | Later  | L      | High   | §3          |
+| Add emergency/urgent-care escalation banner component                      | Later  | S      | Med    | §3          |
+| Assert the 20ms render budget + accessibility in tests                     | Later  | M      | Med    | §4.7, §4.9  |

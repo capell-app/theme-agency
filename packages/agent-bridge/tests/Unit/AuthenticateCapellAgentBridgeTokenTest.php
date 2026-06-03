@@ -153,6 +153,10 @@ it('skips last_used_at update when recently used within throttle window', functi
 
     $token->refresh();
 
+    if ($token->last_used_at === null) {
+        throw new RuntimeException('Expected token last_used_at to remain populated.');
+    }
+
     expect($token->last_used_at->format('Y-m-d H:i:s'))->toBe($recentTimestamp->format('Y-m-d H:i:s'));
 });
 
@@ -183,6 +187,10 @@ it('updates last_used_at when outside the throttle window', function (): void {
     );
 
     $token->refresh();
+
+    if ($token->last_used_at === null) {
+        throw new RuntimeException('Expected token last_used_at to be populated.');
+    }
 
     expect($token->last_used_at->format('Y-m-d H:i:s'))->not->toBe($staleTimestamp->format('Y-m-d H:i:s'));
 });

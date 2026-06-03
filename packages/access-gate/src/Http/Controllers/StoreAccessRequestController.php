@@ -41,12 +41,14 @@ final class StoreAccessRequestController
             ],
         ]);
 
-        return AccessGateResponseHeaders::noStore(
-            to_route('capell-access-gate.request', ['area' => $accessArea->key])
-                ->with('access_gate_request_submitted', $accessArea->key)
-                ->with('access_gate_registration_id', $registration->getKey())
-                ->with('access_gate_status', __('capell-access-gate::public.request_submitted')),
-        );
+        $response = to_route('capell-access-gate.request', ['area' => $accessArea->key])
+            ->with('access_gate_request_submitted', $accessArea->key)
+            ->with('access_gate_registration_id', $registration->getKey())
+            ->with('access_gate_status', __('capell-access-gate::public.request_submitted'));
+
+        AccessGateResponseHeaders::noStore($response);
+
+        return $response;
     }
 
     /**

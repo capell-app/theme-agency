@@ -105,7 +105,7 @@ final class FrontendOptimizerHealthCheck implements ChecksExtensionHealth
     public function optimizerRendererIsBound(): bool
     {
         try {
-            return resolve(FrontendAssetManifestRenderer::class) instanceof CapellFrontendAssetManifestRenderer;
+            return app()->getAlias(FrontendAssetManifestRenderer::class) === CapellFrontendAssetManifestRenderer::class;
         } catch (Throwable) {
             return false;
         }

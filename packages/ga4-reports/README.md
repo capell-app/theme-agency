@@ -1,6 +1,6 @@
 # GA4 Reports
 
-GA4 Reports 4 dashboard reporting for Capell.
+Pull Google Analytics 4 traffic, top-page, and conversion snapshots into your Capell admin on a daily schedule — no per-pageview API calls, no leaving the CMS.
 
 ## At A Glance
 
@@ -25,7 +25,7 @@ GA4 Reports 4 dashboard reporting for Capell.
 
 ## What It Adds
 
-GA4 Reports 4 dashboard reporting for Capell.
+GA4 Reports brings Google Analytics 4 into the Capell admin as cached daily snapshots, so owners see traffic trends, top pages, sessions, and conversions beside the content they manage.
 
 - GA4 settings, sync runs, daily metrics, and page metrics.
 - Actions for overview, trend, top-page, and sync workflows.

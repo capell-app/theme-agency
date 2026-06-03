@@ -1,6 +1,6 @@
 {
     "name": "capell-app/knowledge-base",
-    "description": "Knowledge base collections, versioned articles, feedback, and public docs discovery for Capell",
+    "description": "Self-hosted help centre for Capell: public doc collections, reader feedback, and a theme-agnostic /docs site backed by typed public and AI-readable payloads",
     "keywords": [
         "capell",
         "knowledge-base",
@@ -20,7 +20,8 @@
         "laravel/framework": "^11.45.3|^12.41.1|^13.0",
         "lorisleiva/laravel-actions": "^2.8",
         "spatie/laravel-data": "^4.5",
-        "spatie/laravel-package-tools": "^1.14.1"
+        "spatie/laravel-package-tools": "^1.14.1",
+        "symfony/html-sanitizer": "^7.0 || ^8.0"
     },
     "require-dev": {
         "orchestra/testbench": "^9.15|^10.8|^11.0",

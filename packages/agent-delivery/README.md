@@ -33,12 +33,12 @@ Agent Delivery exposes already-public Capell page content as structured manifest
 
 Agent Delivery and SEO Suite's AI Discovery serve complementary audiences:
 
-| Concern | Agent Delivery | SEO Suite AI Discovery |
-|---------|---------------|----------------------|
-| Format | Structured JSON manifests and semantic chunks | Markdown, `llms.txt`, content negotiation |
-| Audience | RAG pipelines, answer engines, structured consumers | LLM crawlers, human-readable AI indexes |
-| Endpoint style | `?url=` query parameter | Path-based (`.md` suffix, `/llms.txt`) |
-| Coverage source | `AgentDeliveryGeneratedOutputCoverageSource` | `AiDiscoveryGeneratedOutputCoverageSource` |
+| Concern         | Agent Delivery                                      | SEO Suite AI Discovery                     |
+| --------------- | --------------------------------------------------- | ------------------------------------------ |
+| Format          | Structured JSON manifests and semantic chunks       | Markdown, `llms.txt`, content negotiation  |
+| Audience        | RAG pipelines, answer engines, structured consumers | LLM crawlers, human-readable AI indexes    |
+| Endpoint style  | `?url=` query parameter                             | Path-based (`.md` suffix, `/llms.txt`)     |
+| Coverage source | `AgentDeliveryGeneratedOutputCoverageSource`        | `AiDiscoveryGeneratedOutputCoverageSource` |
 
 Install **Agent Delivery** when agents need structured JSON with typed fields,
 ordered chunks, and contributor-extensible metadata. Install **SEO Suite** when

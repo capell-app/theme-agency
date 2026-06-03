@@ -1,11 +1,12 @@
 # URL Manager — Improvement & Growth Plan
+
 > Package: capell-app/url-manager · Kind: package · Tier: premium · Product group: Capell Search & SEO · Bundle: search-seo · Status: Draft
 
 ## 1. Snapshot
 
 URL Manager is an action-driven redirect engine for Capell. It surfaces two admin Filament pages (`RedirectRulesPage`, `NotFoundOpportunitiesPage`) and decorates Core's `RedirectResolver` binding on the public request path via `UrlManagerRedirectResolver`. Core domain logic lives in `src/Actions` — `ResolveRedirectRuleAction` (exact/prefix/regex matching + hit recording), `UpsertRedirectRuleAction`, `RecordNotFoundOpportunityAction`, `ConvertNotFoundOpportunityToRedirectAction`, the CSV import/export family, `BuildNotFoundRedirectSuggestionsAction`, and `ImportSeoSuiteBrokenLinksAction`. Three models/tables back it: `url_manager_redirect_rules`, `url_manager_redirect_hits`, `url_manager_not_found_opportunities`. Deps: `capell-app/core`, `capell-app/admin`, `lorisleiva/laravel-actions`, `spatie/laravel-data`; soft-supports `capell-app/seo-suite`.
 
-Current marketplace summary (verbatim): *"Manage redirects, preserve moved URLs, track redirect hits, and turn repeated 404s or SEO Suite broken URL findings into redirect opportunities."* Manifest declares `marketplace.screenshots: []` — **mismatch**: `docs/screenshots/` actually contains 8 PNGs (4 workflows × light/dark), so the marketplace media is present on disk but unreferenced in the manifest.
+Current marketplace summary (verbatim): _"Manage redirects, preserve moved URLs, track redirect hits, and turn repeated 404s or SEO Suite broken URL findings into redirect opportunities."_ Manifest declares `marketplace.screenshots: []` — **mismatch**: `docs/screenshots/` actually contains 8 PNGs (4 workflows × light/dark), so the marketplace media is present on disk but unreferenced in the manifest.
 
 ## 2. Improvements (existing functionality)
 
@@ -45,15 +46,15 @@ Mapped to `capabilities[]` in `capell.json`:
 
 ## 5. Marketplace & Selling
 
-**Critique.** The manifest `summary` is accurate but reads as a feature list, not a value statement, and buries the strongest hook (recovering lost SEO traffic). The composer `description` — *"Managed redirects and URL opportunity tracking for Capell"* — is generic and omits the 404→redirect and SEO Suite integration that differentiate it. `marketplace.screenshots` is empty despite 8 screenshots existing on disk — a pure config miss that loses the visual sell.
+**Critique.** The manifest `summary` is accurate but reads as a feature list, not a value statement, and buries the strongest hook (recovering lost SEO traffic). The composer `description` — _"Managed redirects and URL opportunity tracking for Capell"_ — is generic and omits the 404→redirect and SEO Suite integration that differentiate it. `marketplace.screenshots` is empty despite 8 screenshots existing on disk — a pure config miss that loses the visual sell.
 
-**Improved 1-sentence summary:** *Stop losing traffic to broken links — manage redirects, auto-preserve moved page URLs, and turn repeated 404s into recovered SEO.*
+**Improved 1-sentence summary:** _Stop losing traffic to broken links — manage redirects, auto-preserve moved page URLs, and turn repeated 404s into recovered SEO._
 
-**Improved 3–4 sentence description:** *URL Manager keeps your site's link equity intact when pages move or get renamed. It auto-creates redirects when a page URL changes, resolves exact, prefix, and regex rules on the live request, and tracks hit counts so you can see which redirects matter. Repeated 404s and SEO Suite broken-link findings surface as one-click redirect opportunities, with CSV import/export for bulk migrations. Built for editors and SEO teams who need redirect hygiene without touching server config.*
+**Improved 3–4 sentence description:** _URL Manager keeps your site's link equity intact when pages move or get renamed. It auto-creates redirects when a page URL changes, resolves exact, prefix, and regex rules on the live request, and tracks hit counts so you can see which redirects matter. Repeated 404s and SEO Suite broken-link findings surface as one-click redirect opportunities, with CSV import/export for bulk migrations. Built for editors and SEO teams who need redirect hygiene without touching server config._
 
 **Screenshot/media gaps:** populate `marketplace.screenshots` with the existing `docs/screenshots/*` set (create/edit form, import workflow, export workflow, health snapshot). Add two missing shots: the 404 Opportunities table with a convert action, and a redirect-hit analytics view (once §2 analytics lands).
 
-**Pricing / tier / bundle positioning:** `premium` tier inside the `search-seo` bundle is right. Cross-sell is the lever: it `supports` `seo-suite` and consumes its `BrokenLink` rows, so position as the *remediation* half of an SEO loop (SEO Suite finds, URL Manager fixes). Strong fit with the **migration-assistant** and **wordpress-importer** Extension Suites — bulk redirect import is exactly what platform migrations need; surface `ImportRedirectRulesAction` as their redirect-mapping target. Bundle it as the default redirect layer whenever migration-assistant is purchased.
+**Pricing / tier / bundle positioning:** `premium` tier inside the `search-seo` bundle is right. Cross-sell is the lever: it `supports` `seo-suite` and consumes its `BrokenLink` rows, so position as the _remediation_ half of an SEO loop (SEO Suite finds, URL Manager fixes). Strong fit with the **migration-assistant** and **wordpress-importer** Extension Suites — bulk redirect import is exactly what platform migrations need; surface `ImportRedirectRulesAction` as their redirect-mapping target. Bundle it as the default redirect layer whenever migration-assistant is purchased.
 
 **Differentiators / value props / target buyer:** differentiator is the closed loop — automatic slug-change capture + 404 mining + SEO Suite import feeding suggested redirects, all inside the CMS. Target buyer: SEO managers and content teams on multi-site Capell installs who run frequent content reorganisations and migrations.
 
@@ -61,21 +62,21 @@ Mapped to `capabilities[]` in `capell.json`:
 
 ## 6. Prioritized Roadmap
 
-| Item | Bucket | Effort | Impact | Section ref |
-|------|--------|--------|--------|-------------|
-| Implement real `UrlManagerHealthCheck` (tables/actions/provider discoverable) | Now | S | High | §4 |
-| Populate `marketplace.screenshots` from existing `docs/screenshots/*` | Now | S | High | §5 |
-| Strip query from match key; lowercase normalisation | Now | M | High | §2 |
-| Open-redirect host allowlist for absolute targets | Now | M | High | §3, §4 |
-| Defer hot-path hit recording (queue / terminating) | Now | M | High | §2, §4 |
-| Validate & bound regex patterns at write time (ReDoS) | Next | M | High | §4 |
-| Redirect loop & chain detection on save | Next | M | High | §3 |
-| Wire 404 capture into Core handler / documented hook | Next | M | High | §3 |
-| Verify/confirm Core invokes the bound `RedirectResolver` | Next | S | High | §3, §4 |
-| Add `priority` ordering column + resolver/form support | Next | M | Med | §2, §3 |
-| Replace `get()->first()` prefix/regex scans with SQL | Next | M | Med | §2, §4 |
-| Tests: resolver fallback, preserve_query, open-redirect, loops, SEO import | Next | M | High | §4 |
-| Add `config/` for status codes, host allowlist, regex/retention | Later | S | Med | §4 |
-| Prefix-cascade auto-redirects on page-subtree moves | Later | M | Med | §3 |
-| Canonical URL management surface | Later | L | Med | §3 |
-| Translate Action exception messages | Later | S | Low | §4 |
+| Item                                                                          | Bucket | Effort | Impact | Section ref |
+| ----------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Implement real `UrlManagerHealthCheck` (tables/actions/provider discoverable) | Now    | S      | High   | §4          |
+| Populate `marketplace.screenshots` from existing `docs/screenshots/*`         | Now    | S      | High   | §5          |
+| Strip query from match key; lowercase normalisation                           | Now    | M      | High   | §2          |
+| Open-redirect host allowlist for absolute targets                             | Now    | M      | High   | §3, §4      |
+| Defer hot-path hit recording (queue / terminating)                            | Now    | M      | High   | §2, §4      |
+| Validate & bound regex patterns at write time (ReDoS)                         | Next   | M      | High   | §4          |
+| Redirect loop & chain detection on save                                       | Next   | M      | High   | §3          |
+| Wire 404 capture into Core handler / documented hook                          | Next   | M      | High   | §3          |
+| Verify/confirm Core invokes the bound `RedirectResolver`                      | Next   | S      | High   | §3, §4      |
+| Add `priority` ordering column + resolver/form support                        | Next   | M      | Med    | §2, §3      |
+| Replace `get()->first()` prefix/regex scans with SQL                          | Next   | M      | Med    | §2, §4      |
+| Tests: resolver fallback, preserve_query, open-redirect, loops, SEO import    | Next   | M      | High   | §4          |
+| Add `config/` for status codes, host allowlist, regex/retention               | Later  | S      | Med    | §4          |
+| Prefix-cascade auto-redirects on page-subtree moves                           | Later  | M      | Med    | §3          |
+| Canonical URL management surface                                              | Later  | L      | Med    | §3          |
+| Translate Action exception messages                                           | Later  | S      | Low    | §4          |

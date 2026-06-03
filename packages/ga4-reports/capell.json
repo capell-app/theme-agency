@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "GA4 Reports provides dashboard reporting for Capell.",
+    "description": "GA4 Reports brings Google Analytics 4 into the Capell admin as cached daily snapshots, so owners see traffic trends, top pages, sessions, and conversions beside the content they manage. A scheduled sync authenticates with a Google service account, stores a configurable window locally, and powers dashboard widgets and overview stats that never call GA4 at render time. Setup status, sync history, and a swappable data-client contract keep the integration transparent and testable. Built for marketing and growth teams who want analytics signal in the CMS without standing up a separate reporting tool.",
     "product": {
         "group": "Capell Growth",
         "tier": "premium",
@@ -69,7 +69,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "GA4 Reports provides dashboard reporting for Capell.",
+        "summary": "Pull Google Analytics 4 traffic, top-page, and conversion snapshots into your Capell admin on a daily schedule — no per-pageview API calls, no leaving the CMS.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",

@@ -108,7 +108,7 @@ final class PortalSupportRequestResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
-        return SiteScope::applyForCurrentActor(parent::getEloquentQuery(), 'site_id');
+        return SiteScope::applyForCurrentActor(PortalSupportRequest::query(), 'site_id');
     }
 
     #[Override]

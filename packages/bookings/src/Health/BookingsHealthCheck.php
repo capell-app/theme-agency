@@ -62,10 +62,10 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
      */
     public function missingTables(): array
     {
-        return collect(array_keys(self::MODELS_BY_TABLE))
+        return array_values(collect(array_keys(self::MODELS_BY_TABLE))
             ->reject(static fn (string $table): bool => Schema::hasTable($table))
             ->values()
-            ->all();
+            ->all());
     }
 
     /**
@@ -73,11 +73,11 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
      */
     public function missingMorphAliases(): array
     {
-        return collect(self::MODELS_BY_TABLE)
+        return array_values(collect(self::MODELS_BY_TABLE)
             ->reject(static fn (string $modelClass): bool => Relation::getMorphedModel(Str::snake(class_basename($modelClass))) === $modelClass)
             ->map(static fn (string $modelClass): string => Str::snake(class_basename($modelClass)))
             ->values()
-            ->all();
+            ->all());
     }
 
     /**
@@ -85,9 +85,14 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
      */
     public function unresolvableActions(): array
     {
-        return collect(self::ACTIONS)
-            ->reject(static fn (string $actionClass): bool => app()->make($actionClass) instanceof $actionClass)
-            ->values()
-            ->all();
+        $actions = [];
+
+        foreach (self::ACTIONS as $actionClass) {
+            if (! app()->make($actionClass) instanceof $actionClass) {
+                $actions[] = $actionClass;
+            }
+        }
+
+        return $actions;
     }
 }

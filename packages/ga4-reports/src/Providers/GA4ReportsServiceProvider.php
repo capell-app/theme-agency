@@ -17,6 +17,7 @@ use Capell\GA4Reports\Models\GA4ReportsSyncRun;
 use Capell\GA4Reports\Settings\GA4ReportsSettings;
 use Capell\GA4Reports\Settings\GA4ReportsSettingsMigrationProvider;
 use Capell\GA4Reports\Support\Insights\GA4ReportsDataClient;
+use Capell\GA4Reports\Support\Insights\NullGA4ReportsDataClient;
 use Filament\Support\Icons\Heroicon;
 use Override;
 use Spatie\LaravelPackageTools\Package;
@@ -126,13 +127,17 @@ final class GA4ReportsServiceProvider extends AbstractPackageServiceProvider
     {
         $this->app->singleton(GA4ReportsDataClientInterface::class, function (): GA4ReportsDataClientInterface {
             $resolvedConfig = ResolveGA4ReportsConfigAction::run();
-            $config = [
+
+            if (! $resolvedConfig->enabled || $resolvedConfig->propertyId === '' || $resolvedConfig->credentialsPath === '') {
+                return new NullGA4ReportsDataClient;
+            }
+
+            return new GA4ReportsDataClient([
                 'enabled' => $resolvedConfig->enabled,
                 'property_id' => $resolvedConfig->propertyId,
                 'credentials_path' => $resolvedConfig->credentialsPath,
-            ];
-
-            return new GA4ReportsDataClient($config);
+                'http_timeout' => config('capell-ga4-reports.http_timeout', 20),
+            ]);
         });
 
         return $this;

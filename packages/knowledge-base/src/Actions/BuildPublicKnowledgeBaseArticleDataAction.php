@@ -44,7 +44,7 @@ final class BuildPublicKnowledgeBaseArticleDataAction
             collectionSlug: $collection->slug,
             publicPath: KnowledgeBasePublicPath::forArticle($article),
             summary: $currentVersion->summary,
-            body: $currentVersion->body,
+            body: SanitizeKnowledgeBaseArticleHtmlAction::run($currentVersion->body),
             version: $currentVersion->version,
             lastModified: $currentVersion->published_at ?? $article->published_at,
             relatedArticles: $this->relatedArticles($article),

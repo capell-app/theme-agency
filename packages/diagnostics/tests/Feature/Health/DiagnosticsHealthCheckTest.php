@@ -9,7 +9,7 @@ it('exposes runnable diagnostics rather than only the contract method', function
     $results = DiagnosticsHealthCheck::runDiagnostics();
 
     expect($results)->not->toBeEmpty()
-        ->and($results->every(fn (DoctorCheckResultData $result): bool => $result instanceof DoctorCheckResultData))->toBeTrue();
+        ->and($results->every(fn (DoctorCheckResultData $result): bool => $result->label !== ''))->toBeTrue();
 });
 
 it('asserts its declared system-health-widget capability', function (): void {

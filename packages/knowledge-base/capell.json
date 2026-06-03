@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Knowledge Base provides versioned docs articles, collections, feedback, related article links, public navigation data, search weighting, and AI-readable docs output.",
+    "description": "Knowledge Base turns your Capell install into a structured help centre. Authors group articles into public collections, and readers browse a fast, cacheable /docs site and tell you whether each article helped. Public navigation, article, and AI-readable payloads are emitted as typed data objects, so any theme can render them and assistants can consume them without leaking authoring internals. Article HTML is sanitised at the public render boundary, and reader feedback is captured with hashed visitor identifiers.",
     "product": {
         "group": "Capell Content",
         "tier": "premium",
@@ -150,7 +150,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Versioned docs content, public knowledge navigation, feedback capture, related articles, and AI-readable documentation output.",
+        "summary": "A self-hosted help centre for Capell: organise docs into public collections, capture reader feedback, and serve a fast, theme-agnostic /docs site backed by typed public and AI-readable payloads.",
         "screenshots": [],
         "categories": ["content", "frontend", "search-seo"]
     },

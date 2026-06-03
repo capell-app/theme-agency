@@ -11,7 +11,7 @@ final class SyncGA4ReportsCommand extends Command
 {
     protected $signature = 'ga4-reports:sync';
 
-    protected $description = 'Sync GA4 Reports 4 metrics into local dashboard snapshots.';
+    protected $description = 'Sync GA4 Reports metrics into local dashboard snapshots.';
 
     public function handle(): int
     {

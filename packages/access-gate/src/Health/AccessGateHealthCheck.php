@@ -22,16 +22,16 @@ final class AccessGateHealthCheck implements ChecksExtensionHealth
      */
     public static function runDiagnostics(): Collection
     {
-        $service = app(AccessGateDiagnosticsService::class);
-        $router = app(Router::class);
+        $service = resolve(AccessGateDiagnosticsService::class);
+        $router = resolve(Router::class);
 
         return $service->runAllChecks($router);
     }
 
     public static function passed(): bool
     {
-        $service = app(AccessGateDiagnosticsService::class);
-        $router = app(Router::class);
+        $service = resolve(AccessGateDiagnosticsService::class);
+        $router = resolve(Router::class);
 
         return $service->allChecksPassed($router);
     }

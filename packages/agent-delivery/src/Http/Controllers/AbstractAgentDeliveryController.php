@@ -122,7 +122,7 @@ abstract class AbstractAgentDeliveryController
             return false;
         }
 
-        $candidates = array_map('trim', explode(',', $header));
+        $candidates = array_map(trim(...), explode(',', $header));
 
         return in_array($etag, $candidates, true) || in_array('W/' . $etag, $candidates, true);
     }

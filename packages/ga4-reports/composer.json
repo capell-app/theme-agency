@@ -1,6 +1,6 @@
 {
     "name": "capell-app/ga4-reports",
-    "description": "GA4 Reports 4 dashboard reporting for Capell.",
+    "description": "Pull Google Analytics 4 traffic, top-page, and conversion snapshots into your Capell admin on a daily schedule — no per-pageview API calls, no leaving the CMS.",
     "keywords": [
         "capell",
         "ga4-reports",

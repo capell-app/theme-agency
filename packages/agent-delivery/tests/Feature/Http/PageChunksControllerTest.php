@@ -83,7 +83,7 @@ it('returns contributor chunks in stable sort order', function (): void {
     ]);
 
     /** @var AgentDeliveryRegistry $registry */
-    $registry = app(AgentDeliveryRegistry::class);
+    $registry = resolve(AgentDeliveryRegistry::class);
     $registry->registerChunkContributor(new class implements AgentDeliveryChunkContributor
     {
         /**

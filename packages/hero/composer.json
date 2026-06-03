@@ -1,6 +1,6 @@
 {
     "name": "capell-app/hero",
-    "description": "Hero widget rendering and default home hero setup for Capell.",
+    "description": "Foundation hero section for Capell: responsive video/image backgrounds, decorative overlays, carousel slides, and inheritable theme styling, rendered safely for anonymous visitors.",
     "keywords": [
         "capell",
         "hero",
