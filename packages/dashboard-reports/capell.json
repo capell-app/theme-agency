@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Dashboard Reports provides generic CMS reporting widgets for Capell dashboards.",
+    "description": "Dashboard Reports surfaces editorial health and publishing momentum directly on the Capell admin dashboard, so owners and editors see what needs attention the moment they log in. The Content Health widget flags scheduled, expired, stale, and URL-less pages with one-click deep-links into the page list, while the Publishing Trend chart tracks published-vs-scheduled activity across any date window. All counts respect each user's site access, and report visibility is toggleable per dashboard. Built on testable Actions and typed Data objects so teams can extend the reporting layer instead of bolting on a bespoke analytics package.",
     "product": {
         "group": "Capell Operations",
         "tier": "premium",
@@ -71,7 +71,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Dashboard Reports provides generic CMS reporting widgets for Capell dashboards.",
+        "summary": "At-a-glance content-health and publishing-activity widgets for the Capell admin dashboard — spot scheduled, expired, stale, and URL-less pages without opening a single resource.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",

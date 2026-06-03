@@ -10,35 +10,113 @@ use Capell\DashboardReports\Data\Dashboard\PublishingTrendData;
 use Capell\DashboardReports\Data\Dashboard\PublishingTrendPointData;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Expression;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 final class BuildPublishingTrendAction
 {
     use AsObject;
 
+    private const int BUCKET_COUNT = 7;
+
     public function handle(string $period = 'last_30_days'): PublishingTrendData
     {
         [$rangeStart, $rangeEnd] = $this->resolveDateRange($period);
-        $bucketSeconds = max(1, (int) ($rangeStart->diffInSeconds($rangeEnd) / 7));
+        $buckets = $this->buildBuckets($rangeStart, $rangeEnd);
+
+        $page = new Page;
+        $grammar = $page->getConnection()->getQueryGrammar();
+        $publishedColumnExpression = 'COALESCE('
+            . $grammar->wrap($page->qualifyColumn('visible_from')) . ', '
+            . $grammar->wrap($page->qualifyColumn('created_at')) . ')';
+
+        $publishedCounts = $this->bucketedCounts(
+            $this->basePageQuery()->publishedDate(),
+            $publishedColumnExpression,
+            $buckets,
+            useRawColumn: true,
+        );
+
+        $scheduledCounts = $this->bucketedCounts(
+            $this->basePageQuery()->pending(),
+            $page->qualifyColumn('visible_from'),
+            $buckets,
+            useRawColumn: false,
+        );
+
         $points = [];
 
-        for ($bucket = 0; $bucket < 7; $bucket++) {
-            $bucketStart = $rangeStart->addSeconds($bucket * $bucketSeconds);
-            $bucketEnd = $rangeStart->addSeconds(($bucket + 1) * $bucketSeconds);
-            $includeRangeEnd = $bucket === 6;
-
+        foreach ($buckets as $index => $bucket) {
             $points[] = new PublishingTrendPointData(
-                label: $bucketStart->format('M j'),
-                publishedCount: $this->publishedWithin($bucketStart, $bucketEnd, $includeRangeEnd),
-                scheduledCount: $this->scheduledWithin($bucketStart, $bucketEnd, $includeRangeEnd),
+                label: $bucket['start']->format('M j'),
+                publishedCount: $publishedCounts[$index] ?? 0,
+                scheduledCount: $scheduledCounts[$index] ?? 0,
             );
         }
 
         return new PublishingTrendData(
             points: $points,
-            totalPublished: collect($points)->sum(fn (PublishingTrendPointData $point): int => $point->publishedCount),
+            totalPublished: array_sum($publishedCounts),
             totalScheduled: $this->basePageQuery()->pending()->count(),
         );
+    }
+
+    /**
+     * @return list<array{start: CarbonImmutable, end: CarbonImmutable, includeRangeEnd: bool}>
+     */
+    private function buildBuckets(CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd): array
+    {
+        $bucketSeconds = max(1, (int) ($rangeStart->diffInSeconds($rangeEnd) / self::BUCKET_COUNT));
+        $buckets = [];
+
+        for ($bucket = 0; $bucket < self::BUCKET_COUNT; $bucket++) {
+            $buckets[] = [
+                'start' => $rangeStart->addSeconds($bucket * $bucketSeconds),
+                'end' => $rangeStart->addSeconds(($bucket + 1) * $bucketSeconds),
+                'includeRangeEnd' => $bucket === self::BUCKET_COUNT - 1,
+            ];
+        }
+
+        return $buckets;
+    }
+
+    /**
+     * Resolve all bucket counts for a series in a single grouped aggregate query using
+     * conditional sums, replacing the per-bucket COUNT round-trips.
+     *
+     * @param  Builder<Page>  $query
+     * @param  list<array{start: CarbonImmutable, end: CarbonImmutable, includeRangeEnd: bool}>  $buckets
+     * @return list<int>
+     */
+    private function bucketedCounts(Builder $query, string $column, array $buckets, bool $useRawColumn): array
+    {
+        $grammar = $query->getQuery()->getGrammar();
+        $wrappedColumn = $useRawColumn ? $column : $grammar->wrap($column);
+        $dateFormat = $grammar->getDateFormat();
+
+        $selects = [];
+        $bindings = [];
+
+        foreach ($buckets as $index => $bucket) {
+            $upperOperator = $bucket['includeRangeEnd'] ? '<=' : '<';
+            $selects[] = "SUM(CASE WHEN {$wrappedColumn} >= ? AND {$wrappedColumn} {$upperOperator} ? THEN 1 ELSE 0 END) AS bucket_{$index}";
+            $bindings[] = $bucket['start']->format($dateFormat);
+            $bindings[] = $bucket['end']->format($dateFormat);
+        }
+
+        $row = $query
+            ->select(new Expression(implode(', ', $selects)))
+            ->addBinding($bindings, 'select')
+            ->first();
+
+        $counts = [];
+
+        foreach (array_keys($buckets) as $index) {
+            $value = $row?->getAttribute("bucket_{$index}");
+            $counts[$index] = $value === null ? 0 : (int) $value;
+        }
+
+        return $counts;
     }
 
     /** @return array{CarbonImmutable, CarbonImmutable} */
@@ -53,66 +131,6 @@ final class BuildPublishingTrendAction
             'this_year' => [$now->startOfYear(), $now->endOfYear()],
             default => [$now->subDays(30)->startOfDay(), $now->endOfDay()],
         };
-    }
-
-    private function publishedWithin(CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd, bool $includeRangeEnd): int
-    {
-        return $this->basePageQuery()
-            ->publishedDate()
-            ->where(fn (Builder $query): Builder => $this->publishedMarkerWithin($query, $rangeStart, $rangeEnd, $includeRangeEnd))
-            ->count();
-    }
-
-    private function scheduledWithin(CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd, bool $includeRangeEnd): int
-    {
-        return $this->basePageQuery()
-            ->pending()
-            ->where(fn (Builder $query): Builder => $this->timestampWithin(
-                $query,
-                (new Page)->qualifyColumn('visible_from'),
-                $rangeStart,
-                $rangeEnd,
-                $includeRangeEnd,
-            ))
-            ->count();
-    }
-
-    /**
-     * @param  Builder<Page>  $query
-     * @return Builder<Page>
-     */
-    private function publishedMarkerWithin(Builder $query, CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd, bool $includeRangeEnd): Builder
-    {
-        return $query
-            ->where(fn (Builder $query): Builder => $this->timestampWithin(
-                $query,
-                $query->getModel()->qualifyColumn('visible_from'),
-                $rangeStart,
-                $rangeEnd,
-                $includeRangeEnd,
-            ))
-            ->orWhere(function (Builder $fallbackQuery) use ($rangeStart, $rangeEnd, $includeRangeEnd): void {
-                $fallbackQuery
-                    ->whereNull($fallbackQuery->getModel()->qualifyColumn('visible_from'))
-                    ->where(fn (Builder $query): Builder => $this->timestampWithin(
-                        $query,
-                        $fallbackQuery->getModel()->qualifyColumn('created_at'),
-                        $rangeStart,
-                        $rangeEnd,
-                        $includeRangeEnd,
-                    ));
-            });
-    }
-
-    /**
-     * @param  Builder<Page>  $query
-     * @return Builder<Page>
-     */
-    private function timestampWithin(Builder $query, string $column, CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd, bool $includeRangeEnd): Builder
-    {
-        return $query
-            ->where($column, '>=', $rangeStart)
-            ->where($column, $includeRangeEnd ? '<=' : '<', $rangeEnd);
     }
 
     /**

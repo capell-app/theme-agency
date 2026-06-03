@@ -33,12 +33,9 @@ it('does not replace another package content health provider', function (): void
     {
         public function build(): ContentHealthData
         {
-            return ContentHealthData::from([
-                'missingMetaDescriptionCount' => 0,
-                'duplicateTitleCount' => 0,
-                'staleContentCount' => 0,
-                'emptyContentCount' => 0,
-            ]);
+            return new ContentHealthData(
+                issues: ContentHealthIssueData::collect([], DataCollection::class),
+            );
         }
     };
 
@@ -56,6 +53,38 @@ it('uses dashboard-dashboard_reports-owned translations and views for dashboard-
 
     expect((new PublishingTrendChartWidget)->getHeading())->toBe(__('capell-dashboard-reports::dashboard.widget_publishing_trend'))
         ->and($contentHealthView)->toBe('capell-dashboard-reports::widgets.content-health');
+});
+
+it('builds content health data once per request across canView and data', function (): void {
+    $countingContentHealthDataProvider = new class implements ContentHealthDataProvider
+    {
+        public int $buildCount = 0;
+
+        public function build(): ContentHealthData
+        {
+            $this->buildCount++;
+
+            return new ContentHealthData(
+                issues: ContentHealthIssueData::collect([
+                    new ContentHealthIssueData(
+                        id: 'scheduled_pages',
+                        label: 'Scheduled pages',
+                        count: 1,
+                        filterUrl: null,
+                    ),
+                ], DataCollection::class),
+            );
+        }
+    };
+
+    app()->instance(ContentHealthDataProvider::class, $countingContentHealthDataProvider);
+
+    // Two distinct resolutions within one request (mirroring canView() then data())
+    // must share the request memo and build the provider data only once.
+    (new ContentHealthWidget)->data();
+    (new ContentHealthWidget)->data();
+
+    expect($countingContentHealthDataProvider->buildCount)->toBe(1);
 });
 
 it('builds content health data through the installed provider and widget data contract', function (): void {

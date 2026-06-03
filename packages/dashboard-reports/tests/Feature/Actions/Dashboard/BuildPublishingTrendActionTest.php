@@ -7,6 +7,7 @@ use Capell\DashboardReports\Actions\Dashboard\BuildPublishingTrendAction;
 use Capell\DashboardReports\Data\Dashboard\PublishingTrendPointData;
 use Capell\DashboardReports\Tests\DashboardReportsTestCase;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\DB;
 
 uses(DashboardReportsTestCase::class);
 
@@ -43,6 +44,28 @@ it('counts pages on publishing trend bucket boundaries once', function (): void 
 
     expect($data->totalPublished)->toBe(1)
         ->and($publishedCount)->toBe(1);
+});
+
+it('resolves the publishing trend in a bounded number of grouped queries', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-05-03 12:00:00'));
+
+    Page::factory()->published(CarbonImmutable::parse('2026-05-01 09:00:00'))->create();
+    Page::factory()->pending()->create();
+
+    DB::enableQueryLog();
+
+    BuildPublishingTrendAction::run('this_week');
+
+    $selectQueries = array_filter(
+        DB::getQueryLog(),
+        fn (array $entry): bool => str_starts_with(strtolower(ltrim((string) $entry['query'])), 'select'),
+    );
+
+    DB::disableQueryLog();
+
+    // Two grouped bucket aggregates (published + scheduled) plus the totalScheduled count,
+    // instead of the previous 15 per-bucket COUNT round-trips.
+    expect(count($selectQueries))->toBeLessThanOrEqual(3);
 });
 
 it('counts scheduled pages on publishing trend bucket boundaries once', function (): void {

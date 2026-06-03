@@ -1,6 +1,6 @@
 {
     "name": "capell-app/dashboard-reports",
-    "description": "Generic CMS reporting widgets for Capell dashboards.",
+    "description": "At-a-glance content-health and publishing-activity widgets for the Capell admin dashboard — spot scheduled, expired, stale, and URL-less pages without opening a single resource.",
     "type": "library",
     "license": "proprietary",
     "require": {
