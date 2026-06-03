@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Customer Portal provides the package-local domain foundation for authenticated customer self-service.",
+    "description": "Customer Portal turns a Capell site into an authenticated self-service experience. A single dashboard aggregates billing, documents, event registrations, gated resources and newsletter preferences contributed by your other Capell packages — no custom glue code, just install and they appear. Customers raise and track support requests; staff triage them from the admin panel with full status workflow and audit-safe, encrypted records. Built on Capell's Action and provider-registry architecture, it stays cache-safe and never leaks admin internals into public output.",
     "product": {
         "group": "Capell Content",
         "tier": "premium",
@@ -117,7 +117,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Customer Portal gives Capell sites a safe authenticated self-service foundation.",
+        "summary": "A unified, logged-in customer hub for Capell sites — payments, documents, event registrations, gated content and support requests in one secure dashboard.",
         "screenshots": [],
         "categories": ["admin", "frontend", "crm", "self-service"]
     },

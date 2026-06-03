@@ -1,6 +1,6 @@
 {
     "name": "capell-app/customer-portal",
-    "description": "Authenticated customer self-service foundation for Capell CMS.",
+    "description": "A unified, logged-in customer hub for Capell sites — payments, documents, event registrations, gated content and support requests in one secure dashboard.",
     "type": "library",
     "license": "proprietary",
     "homepage": "https://github.com/capell-app/customer-portal",

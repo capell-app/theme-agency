@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\CustomerPortal\Filament\Resources\PortalSupportRequests;
 
 use BackedEnum;
+use Capell\Admin\Support\SiteScope;
 use Capell\Core\Facades\CapellCore;
 use Capell\CustomerPortal\Actions\UpdateSupportRequestStatusAction;
 use Capell\CustomerPortal\Enums\SupportRequestPriority;
@@ -23,6 +24,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Override;
 
 final class PortalSupportRequestResource extends Resource
@@ -94,6 +96,19 @@ final class PortalSupportRequestResource extends Resource
     public static function getModel(): string
     {
         return PortalSupportRequest::class;
+    }
+
+    /**
+     * Restrict triage to support requests belonging to the current actor's
+     * assigned sites so one site's admin can never read another site's
+     * decrypted support requests on a multi-site install.
+     *
+     * @return Builder<PortalSupportRequest>
+     */
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        return SiteScope::applyForCurrentActor(parent::getEloquentQuery(), 'site_id');
     }
 
     #[Override]
