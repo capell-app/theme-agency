@@ -47,6 +47,11 @@ final class BuildCampaignOverviewStatsAction
 
         return SiteScope::applyForCurrentActor(CampaignGroup::query(), $groupsTableName . '.site_id')
             ->join($visitsTableName, $groupsTableName . '.utm_campaign', '=', $visitsTableName . '.utm_campaign')
+            // Guard against campaign groups with a null/blank utm_campaign joining to
+            // visits that also have a null/blank utm_campaign, which would otherwise
+            // attribute unrelated visits and skew the headline conversion rate.
+            ->whereNotNull($groupsTableName . '.utm_campaign')
+            ->where($groupsTableName . '.utm_campaign', '!=', '')
             ->when($startsAt instanceof CarbonImmutable, fn (Builder $builder): Builder => $builder->where($visitsTableName . '.last_seen_at', '>=', $startsAt))
             ->when($endsAt instanceof CarbonImmutable, fn (Builder $builder): Builder => $builder->where($visitsTableName . '.last_seen_at', '<=', $endsAt))
             ->count($visitsTableName . '.id');

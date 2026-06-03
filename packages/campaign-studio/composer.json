@@ -1,6 +1,6 @@
 {
     "name": "capell-app/campaign-studio",
-    "description": "Campaign landing pages, CTA widgets, UTM attribution, conversion goals, and campaign insights.",
+    "description": "Launch, target, and measure marketing campaigns inside Capell — build landing-page variants, drop in CTA and lead-capture widgets, and track UTM-attributed conversions and funnels without bolting on a separate analytics tool.",
     "keywords": [
         "capell",
         "campaign-studio",

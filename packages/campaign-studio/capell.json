@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Campaign Studio adds campaign groups, landing-page variants, audience targeting, experiments, CTA widgets, conversion goals, UTM attribution, funnel reporting, and conversion reporting to Capell.",
+    "description": "Launch, target, and measure marketing campaigns inside Capell — build landing-page variants, drop in CTA and lead-capture widgets, and track UTM-attributed conversions and funnels without bolting on a separate analytics tool.",
     "product": {
         "group": "Capell Growth",
         "tier": "premium",
@@ -174,12 +174,42 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Campaign Studio adds campaign groups, landing-page variants, audience targeting, experiments, CTA widgets, conversion goals, UTM attribution, funnel reporting, and conversion reporting to Capell.",
+        "summary": "Launch, target, and measure marketing campaigns inside Capell — build landing-page variants, drop in CTA and lead-capture widgets, and track UTM-attributed conversions and funnels without bolting on a separate analytics tool.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Campaign Studio extension preview image",
                 "caption": "Campaign Studio extension preview"
+            },
+            {
+                "path": "docs/screenshots/campaign-groups-index.png",
+                "alt": "Campaign groups listing in the Capell admin",
+                "caption": "Organise landing pages, CTAs, and goals under a campaign group"
+            },
+            {
+                "path": "docs/screenshots/campaign-landing-pages-index.png",
+                "alt": "Campaign landing-page variants listing in the Capell admin",
+                "caption": "Manage UTM-targeted landing-page variants for each campaign"
+            },
+            {
+                "path": "docs/screenshots/campaign-conversion-goals-form.png",
+                "alt": "Campaign conversion-goal configuration form",
+                "caption": "Define conversion goals and the value each one is worth"
+            },
+            {
+                "path": "docs/screenshots/cta-block-form.png",
+                "alt": "Campaign CTA widget configuration form",
+                "caption": "Build CTA widgets with UTM-decorated action buttons"
+            },
+            {
+                "path": "docs/screenshots/campaign-dashboard-widgets.png",
+                "alt": "Campaign Studio dashboard reporting widgets",
+                "caption": "Track top campaigns and landing pages from the dashboard"
+            },
+            {
+                "path": "docs/screenshots/frontend-landing-page-with-campaign-widgets.png",
+                "alt": "Published campaign landing page rendered on the storefront",
+                "caption": "Campaign widgets render natively inside published pages"
             }
         ],
         "categories": ["admin", "frontend", "growth"]

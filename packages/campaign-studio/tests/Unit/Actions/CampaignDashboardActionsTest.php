@@ -108,6 +108,37 @@ it('builds campaign overview stats from active campaigns, conversions, and campa
     ]);
 });
 
+it('excludes campaigns with a blank utm_campaign from the overview visit count', function (): void {
+    $startsAt = CarbonImmutable::parse('2026-04-01 00:00:00');
+    $endsAt = CarbonImmutable::parse('2026-04-30 23:59:59');
+    $campaign = CampaignGroup::factory()->create([
+        'utm_campaign' => null,
+    ]);
+    $goal = CampaignConversionGoal::factory()
+        ->for($campaign, 'campaignGroup')
+        ->create();
+
+    CampaignConversion::factory()
+        ->for($campaign, 'campaignGroup')
+        ->for($goal, 'goal')
+        ->create(['converted_at' => CarbonImmutable::parse('2026-04-15 12:00:00')]);
+
+    // Unrelated visit with a null utm_campaign: it must not join to the campaign
+    // group with a null utm_campaign and inflate the visit denominator.
+    InsightsVisit::factory()->create([
+        'utm_campaign' => null,
+        'last_seen_at' => CarbonImmutable::parse('2026-04-10 09:00:00'),
+    ]);
+
+    $stats = BuildCampaignOverviewStatsAction::run($startsAt, $endsAt);
+
+    expect($stats)->toBe([
+        'active_campaign-studio' => 1,
+        'conversions' => 1,
+        'conversion_rate' => 0.0,
+    ]);
+});
+
 it('scopes campaign dashboard actions to the actor assigned sites', function (): void {
     $startsAt = CarbonImmutable::parse('2026-04-01 00:00:00');
     $endsAt = CarbonImmutable::parse('2026-04-30 23:59:59');

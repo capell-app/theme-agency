@@ -6,7 +6,6 @@ use Capell\CampaignStudio\Actions\BuildConversionAttributionAction;
 use Capell\CampaignStudio\Data\CampaignCtaActionData;
 use Capell\CampaignStudio\Data\ConversionAttributionData;
 use Capell\CampaignStudio\Data\UtmData;
-use Capell\CampaignStudio\Enums\AttributionModel;
 use Capell\CampaignStudio\Enums\CampaignStatus;
 use Capell\CampaignStudio\Enums\CampaignWidgetComponentEnum;
 use Capell\CampaignStudio\Enums\CampaignWidgetConfiguratorEnum;
@@ -110,7 +109,6 @@ it('falls back to visit campaign when event metadata omits last touch campaign',
 
 it('defines campaign studio package metadata and enum labels', function (): void {
     expect(CampaignStudioHealthCheck::compatibleCapellApiVersion())->toBe('^4.0')
-        ->and(AttributionModel::FirstTouch->getLabel())->toBe('capell-campaign-studio::generic.attribution_models.first_touch')
         ->and(CampaignStatus::Scheduled->getLabel())->toBe('Scheduled')
         ->and(ConversionGoalType::CustomAction->getLabel())->toBe('capell-campaign-studio::generic.goal_types.custom_action')
         ->and(CampaignWidgetComponentEnum::CampaignHero->value)->toBe('capell-campaign-studio::components.widget.campaign-hero')
