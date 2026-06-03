@@ -1,12 +1,23 @@
 {
     "name": "capell-app/newsletter",
-    "description": "Newsletter audience management for Capell CMS",
+    "description": "Capture, confirm, and segment newsletter subscribers for Capell CMS with double opt-in, consent evidence, a preference center, and Mailchimp/Kit/Campaign Monitor sync.",
     "keywords": [
         "capell",
-        "newsletter",
         "laravel",
         "filamentphp",
-        "cms"
+        "cms",
+        "newsletter",
+        "email-marketing",
+        "subscribers",
+        "double-opt-in",
+        "gdpr-consent",
+        "mailchimp",
+        "kit-convertkit",
+        "campaign-monitor",
+        "segmentation",
+        "preference-center",
+        "unsubscribe",
+        "audience-sync"
     ],
     "homepage": "https://github.com/capell-app/newsletter",
     "license": "proprietary",

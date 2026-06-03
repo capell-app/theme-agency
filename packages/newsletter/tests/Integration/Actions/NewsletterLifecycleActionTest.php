@@ -75,6 +75,48 @@ it('creates a pending subscriber from a mapped form submission and requests doub
     Notification::assertSentOnDemand(ConfirmNewsletterSubscriptionNotification::class);
 });
 
+it('creates a subscriber when a FormSubmitted event is dispatched through the registered listener', function (): void {
+    Notification::fake();
+
+    $site = $this->createNewsletterSite();
+    $form = Form::query()->create([
+        'site_id' => $site->getKey(),
+        'name' => 'Newsletter signup',
+        'handle' => 'newsletter',
+        'schema' => [],
+        'settings' => [],
+        'is_active' => true,
+    ]);
+    FormMapping::query()->create([
+        'site_id' => $site->getKey(),
+        'form_id' => $form->getKey(),
+        'name' => 'Newsletter signup',
+        'email_field' => 'email',
+        'consent_field' => 'consent',
+        'requires_double_opt_in' => true,
+        'confirmation_mode' => 'capell_owned',
+        'is_active' => true,
+    ]);
+    $submission = Submission::query()->create([
+        'form_id' => $form->getKey(),
+        'site_id' => $site->getKey(),
+        'payload' => new SubmissionPayloadData([
+            'email' => 'listener@example.com',
+            'consent' => true,
+        ]),
+        'meta' => new SubmissionMetaData(ipAddress: '127.0.0.1', userAgent: 'Pest'),
+        'status' => 'new',
+        'submitted_at' => now(),
+    ]);
+
+    FormSubmitted::dispatch($form, $submission);
+
+    $subscriber = Subscriber::query()->where('site_id', $site->getKey())->first();
+
+    expect($subscriber)->toBeInstanceOf(Subscriber::class)
+        ->and($subscriber->email_hash)->toBe(hash('sha256', 'listener@example.com'));
+});
+
 it('keeps the same email isolated per site', function (): void {
     $firstSite = $this->createNewsletterSite('First Site');
     $secondSite = $this->createNewsletterSite('Second Site');

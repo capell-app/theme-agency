@@ -11,6 +11,7 @@ use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
 use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
+use Capell\FormBuilder\Events\FormSubmitted;
 use Capell\Newsletter\Enums\ProviderType;
 use Capell\Newsletter\Filament\Settings\NewsletterSettingsSchema;
 use Capell\Newsletter\Listeners\SubscribeFromFormSubmission;
@@ -230,11 +231,7 @@ class NewsletterServiceProvider extends AbstractPackageServiceProvider
 
     private function registerListeners(): self
     {
-        $formSubmittedEvent = implode('\\', ['Capell', 'FormBuilder', 'Events', 'FormSubmitted']);
-
-        if (class_exists($formSubmittedEvent)) {
-            Event::listen($formSubmittedEvent, SubscribeFromFormSubmission::class);
-        }
+        Event::listen(FormSubmitted::class, SubscribeFromFormSubmission::class);
 
         return $this;
     }

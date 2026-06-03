@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Newsletter adds subscriber capture, segmentation, preference center, campaign sends, automation hooks, UTM attribution, unsubscribe routes, and audience workflows for Capell sites.",
+    "description": "Capture, confirm, and segment newsletter subscribers on every Capell site — with double opt-in, a public preference center, GDPR-grade consent evidence, and one-click sync to Mailchimp, Kit, and Campaign Monitor.",
     "product": {
         "group": "Capell Marketing",
         "tier": "premium",
@@ -216,7 +216,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Newsletter adds subscriber capture, segmentation, preference center, campaign sends, automation hooks, UTM attribution, unsubscribe routes, and audience workflows for Capell sites.",
+        "summary": "Capture, confirm, and segment newsletter subscribers on every Capell site — with double opt-in, a public preference center, GDPR-grade consent evidence, and one-click sync to Mailchimp, Kit, and Campaign Monitor.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
