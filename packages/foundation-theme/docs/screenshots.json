@@ -49,7 +49,7 @@
             "targetType": "frontend-url",
             "target": null,
             "required": true,
-            "notes": "Capture a public page with a seeded header-area block to prove Foundation Theme renders the registered Layout Builder header area.",
+            "notes": "Capture a public page with a seeded header-area widget to prove Foundation Theme renders the registered Layout Builder header area.",
             "useCase": "A maintainer verifies the registered Layout Builder header area renders through Foundation Theme.",
             "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-theme-header-area.png"
         },
@@ -61,7 +61,7 @@
             "targetType": "frontend-url",
             "target": "/foundation-homepage-layout",
             "required": true,
-            "notes": "Capture Foundation Theme homepage layout with hero, feature grid, content blocks, cta, footer. No additional package note required.",
+            "notes": "Capture Foundation Theme homepage layout with hero, feature grid, content widgets, cta, footer. No additional package note required.",
             "useCase": "A buyer reviews how Foundation Theme handles the homepage layout page layout before installing the theme.",
             "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-homepage-layout.png"
         },

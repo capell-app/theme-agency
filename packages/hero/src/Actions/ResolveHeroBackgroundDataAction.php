@@ -11,17 +11,17 @@ use Capell\LayoutBuilder\Models\WidgetAsset;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 /**
- * @method static HeroBackgroundData run(?Theme $theme = null, ?Widget $block = null, ?WidgetAsset $asset = null)
+ * @method static HeroBackgroundData run(?Theme $theme = null, ?Widget $widget = null, ?WidgetAsset $asset = null)
  */
 final class ResolveHeroBackgroundDataAction
 {
     use AsObject;
 
-    public function handle(?Theme $theme = null, ?Widget $block = null, ?WidgetAsset $asset = null): HeroBackgroundData
+    public function handle(?Theme $theme = null, ?Widget $widget = null, ?WidgetAsset $asset = null): HeroBackgroundData
     {
         $background = HeroBackgroundData::defaults();
 
-        foreach ($this->layers($theme, $block, $asset) as $layer) {
+        foreach ($this->layers($theme, $widget, $asset) as $layer) {
             $mode = $this->stringValue($layer['mode'] ?? null);
 
             if ($mode === HeroBackgroundData::ModeOff) {
@@ -43,11 +43,11 @@ final class ResolveHeroBackgroundDataAction
     /**
      * @return list<array<string, mixed>>
      */
-    private function layers(?Theme $theme, ?Widget $block, ?WidgetAsset $asset): array
+    private function layers(?Theme $theme, ?Widget $widget, ?WidgetAsset $asset): array
     {
         return array_values(array_filter([
             $this->settings($theme?->getMeta('hero_background', [])),
-            $this->settings($block?->getMeta('hero_background', [])),
+            $this->settings($widget?->getMeta('hero_background', [])),
             $this->settings($asset?->getMeta('hero_background', [])),
         ]));
     }

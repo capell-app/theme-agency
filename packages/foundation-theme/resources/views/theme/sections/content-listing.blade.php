@@ -93,11 +93,11 @@
                             >
                                 {{ $item['type'] ?? str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
                             </span>
-                            <span class="block text-lg font-semibold">
+                            <span class="widget text-lg font-semibold">
                                 {{ $item['title'] }}
                             </span>
                             @if (! empty($item['summary']))
-                                <span class="mt-2 block text-sm leading-6">
+                                <span class="widget mt-2 text-sm leading-6">
                                     {{ $item['summary'] }}
                                 </span>
                             @endif
@@ -231,13 +231,13 @@
                                             {{ $item['type'] ?? $item['publishedDate'] ?? '' }}
                                         </span>
                                         <span
-                                            class="mt-3 block text-lg font-semibold text-slate-950"
+                                            class="widget mt-3 text-lg font-semibold text-slate-950"
                                         >
                                             {{ $item['title'] }}
                                         </span>
                                         @if (! empty($item['summary']))
                                             <span
-                                                class="mt-2 block text-sm leading-6 text-slate-600"
+                                                class="widget mt-2 text-sm leading-6 text-slate-600"
                                             >
                                                 {{ $item['summary'] }}
                                             </span>
@@ -320,7 +320,7 @@
                                     {{ $item['type'] ?? str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
                                 </span>
                                 <span
-                                    class="block text-lg font-semibold text-slate-950"
+                                    class="widget text-lg font-semibold text-slate-950"
                                 >
                                     {{ $item['title'] }}
                                 </span>
@@ -358,7 +358,7 @@
                 @foreach ($section->items as $item)
                     <a
                         href="{{ $item['url'] ?? '#' }}"
-                        class="group block overflow-hidden rounded-[var(--theme-radius-value)] border border-slate-200 bg-white transition hover:border-slate-950"
+                        class="group widget overflow-hidden rounded-[var(--theme-radius-value)] border border-slate-200 bg-white transition hover:border-slate-950"
                     >
                         @if (! empty($item['image']))
                             <img
@@ -368,18 +368,18 @@
                             />
                         @endif
 
-                        <span class="block p-5">
+                        <span class="widget p-5">
                             <span class="text-xs font-medium text-slate-500">
                                 {{ $item['type'] ?? $item['publishedDate'] ?? '' }}
                             </span>
                             <span
-                                class="mt-2 block text-base font-semibold text-slate-950"
+                                class="widget mt-2 text-base font-semibold text-slate-950"
                             >
                                 {{ $item['title'] }}
                             </span>
                             @if (! empty($item['summary']))
                                 <span
-                                    class="mt-2 block text-sm leading-6 text-slate-600"
+                                    class="widget mt-2 text-sm leading-6 text-slate-600"
                                 >
                                     {{ $item['summary'] }}
                                 </span>

@@ -17,16 +17,16 @@ use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
 use Capell\Core\Models\Theme;
 use Capell\Core\Support\Tailwind\TailwindAssetsRegistry;
-use Capell\FoundationTheme\Actions\BlockIsSlotAction;
 use Capell\FoundationTheme\Actions\BuildBannerImageRenderDataAction;
 use Capell\FoundationTheme\Actions\BuildLayoutNeighborLinksDataAction;
 use Capell\FoundationTheme\Actions\MarkPrimaryHeadingRenderedAction;
 use Capell\FoundationTheme\Actions\ResolveLoadedLayoutContainerBackgroundImageAction;
+use Capell\FoundationTheme\Actions\WidgetIsSlotAction;
 use Capell\FoundationTheme\Console\Commands\GenerateTailwindAssetsCommand;
 use Capell\FoundationTheme\Filament\Settings\FoundationThemeSettingsSchema;
 use Capell\FoundationTheme\Listeners\RunTailwindAssetsOnPackageChange;
 use Capell\FoundationTheme\Livewire\Assets\Table\PageAssets;
-use Capell\FoundationTheme\Livewire\Block\Pages as LivewirePages;
+use Capell\FoundationTheme\Livewire\Widget\Pages as LivewirePages;
 use Capell\FoundationTheme\Providers\AdminServiceProvider;
 use Capell\FoundationTheme\Providers\FoundationThemeServiceProvider;
 use Capell\FoundationTheme\Settings\FoundationThemeSettings;
@@ -36,22 +36,22 @@ use Capell\FoundationTheme\Support\Interceptors\Themes\FoundationThemeIntercepto
 use Capell\FoundationTheme\Support\Media\CapellUrlGenerator;
 use Capell\FoundationTheme\Support\Tailwind\TailwindAssetsGenerator;
 use Capell\FoundationTheme\View\Components\Actions as ActionsComponent;
-use Capell\FoundationTheme\View\Components\Block\Asset;
-use Capell\FoundationTheme\View\Components\Block\Asset\Accordion;
-use Capell\FoundationTheme\View\Components\Block\Asset\Carousel;
-use Capell\FoundationTheme\View\Components\Block\Navigation;
-use Capell\FoundationTheme\View\Components\Block\Page\Children;
-use Capell\FoundationTheme\View\Components\Block\Page\Content;
-use Capell\FoundationTheme\View\Components\Block\Page\Latest;
-use Capell\FoundationTheme\View\Components\Block\Page\Pages;
-use Capell\FoundationTheme\View\Components\Block\Page\Siblings;
 use Capell\FoundationTheme\View\Components\Footer\Index as FooterIndex;
 use Capell\FoundationTheme\View\Components\Footer\LatestPages;
 use Capell\FoundationTheme\View\Components\Layout\Index;
 use Capell\FoundationTheme\View\Components\Layout\Main;
+use Capell\FoundationTheme\View\Components\Widget\Asset;
+use Capell\FoundationTheme\View\Components\Widget\Asset\Accordion;
+use Capell\FoundationTheme\View\Components\Widget\Asset\Carousel;
+use Capell\FoundationTheme\View\Components\Widget\Navigation;
+use Capell\FoundationTheme\View\Components\Widget\Page\Children;
+use Capell\FoundationTheme\View\Components\Widget\Page\Content;
+use Capell\FoundationTheme\View\Components\Widget\Page\Latest;
+use Capell\FoundationTheme\View\Components\Widget\Page\Pages;
+use Capell\FoundationTheme\View\Components\Widget\Page\Siblings;
 use Capell\Frontend\Support\State\FrontendState;
 use Capell\LayoutBuilder\Models\Widget;
-use Capell\LayoutBuilder\Support\Livewire\OpaqueBlockReference;
+use Capell\LayoutBuilder\Support\Livewire\OpaqueWidgetReference;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
@@ -204,12 +204,12 @@ it('runs foundation tailwind command report generate and package-change listener
     $listener->handleUninstalled(new PackageUninstalled($package));
 });
 
-it('builds banner image render data for empty and rounded blocks', function (): void {
-    $block = new Widget;
-    $block->meta = ['actions' => [['label' => 'Start']]];
+it('builds banner image render data for empty and rounded widgets', function (): void {
+    $widget = new Widget;
+    $widget->meta = ['actions' => [['label' => 'Start']]];
 
     $data = BuildBannerImageRenderDataAction::run(
-        block: $block,
+        widget: $widget,
         content: '',
         title: '',
         rounded: true,
@@ -306,30 +306,30 @@ it('fills foundation theme defaults without overwriting existing theme meta', fu
 });
 
 it('covers small foundation layout helper actions', function (): void {
-    $slotBlock = new Widget;
-    $slotBlock->meta = ['type' => 'slot', 'name' => 'Sidebar'];
+    $slotWidget = new Widget;
+    $slotWidget->meta = ['type' => 'slot', 'name' => 'Sidebar'];
 
-    $plainBlock = new Widget;
-    $plainBlock->meta = [];
+    $plainWidget = new Widget;
+    $plainWidget->meta = [];
 
     MarkPrimaryHeadingRenderedAction::run();
 
-    capell_expect(BlockIsSlotAction::run($slotBlock))->toBeTrue()
-        ->and(BlockIsSlotAction::run($plainBlock))->toBeFalse();
+    capell_expect(WidgetIsSlotAction::run($slotWidget))->toBeTrue()
+        ->and(WidgetIsSlotAction::run($plainWidget))->toBeFalse();
 });
 
-it('skips empty asset blocks without touching frontend context', function (string $componentClass): void {
-    config(['capell-layout-builder.block.skip_render_empty' => true]);
+it('skips empty asset widgets without touching frontend context', function (string $componentClass): void {
+    config(['capell-layout-builder.widget.skip_render_empty' => true]);
 
-    $block = new Widget;
-    $block->setRelation('assets', collect());
+    $widget = new Widget;
+    $widget->setRelation('assets', collect());
 
     $component = new $componentClass(
         container: [],
         containerKey: 'main',
-        blockIndex: 0,
+        widgetIndex: 0,
         loop: new stdClass,
-        block: $block,
+        widget: $widget,
     );
     /** @var Asset|Carousel|Accordion $component */
     capell_expect($component->render())->toBe('');
@@ -425,7 +425,7 @@ it('rewrites media urls to the active frontend root or configured site base', fu
     capell_expect($generator->getUrl())->toContain('https://active.example.test');
 });
 
-it('skips empty navigation and page listing blocks without public markup', function (string $componentClass): void {
+it('skips empty navigation and page listing widgets without public markup', function (string $componentClass): void {
     [$language, $site, $theme, $layout, $page] = foundationThemeCoverageFrontendContext();
     $hiddenType = new Blueprint;
     $hiddenType->meta = ['hidden' => true];
@@ -440,18 +440,18 @@ it('skips empty navigation and page listing blocks without public markup', funct
         ->withLayout($layout)
         ->withPage($page);
 
-    $block = Widget::factory()->create([
-        'key' => 'coverage-block',
+    $widget = Widget::factory()->create([
+        'key' => 'coverage-widget',
         'meta' => [],
     ]);
-    $block->setRelation('assets', new EloquentCollection);
+    $widget->setRelation('assets', new EloquentCollection);
 
     $component = new $componentClass(
         container: [],
         containerKey: 'main',
-        blockIndex: 0,
+        widgetIndex: 0,
         loop: new stdClass,
-        block: $block,
+        widget: $widget,
     );
     /** @var Navigation|Children|Siblings|Latest|Pages $component */
     capell_expect($component->render())->toBe('');
@@ -476,18 +476,18 @@ it('renders page content and layout components from frontend context', function 
         ->withLayout($layout)
         ->withPage($page);
 
-    $block = Widget::factory()->create([
-        'key' => 'content-block',
+    $widget = Widget::factory()->create([
+        'key' => 'content-widget',
         'meta' => [],
     ]);
-    $block->setRelation('assets', new EloquentCollection);
+    $widget->setRelation('assets', new EloquentCollection);
 
     $content = new Content(
         container: [],
         containerKey: 'main',
-        blockIndex: 0,
+        widgetIndex: 0,
         loop: new stdClass,
-        block: $block,
+        widget: $widget,
     );
     $index = new Index;
     $main = new Main(
@@ -498,7 +498,7 @@ it('renders page content and layout components from frontend context', function 
 
     capell_expect($content->previousPage)->toBeNull()
         ->and($content->nextPage)->toBeNull()
-        ->and(foundationThemeCoverageView($content->render())->name())->toBe('capell-foundation-theme::components.block.page.content')
+        ->and(foundationThemeCoverageView($content->render())->name())->toBe('capell-foundation-theme::components.widget.page.content')
         ->and(foundationThemeCoverageView($index->render())->name())->toBe('capell::components.layout.index')
         ->and($index->isSystemPageLayout)->toBeFalse()
         ->and(foundationThemeCoverageView($main->render())->name())->toBe('capell::components.layout.main')
@@ -595,10 +595,10 @@ it('builds page asset table queries with scoped exclusions', function (): void {
         ]);
 });
 
-it('hydrates livewire page blocks from opaque references and skips empty selections', function (): void {
+it('hydrates livewire page widgets from opaque references and skips empty selections', function (): void {
     [$language, $site, $theme, $layout, $page] = foundationThemeCoverageFrontendContext();
 
-    $block = Widget::factory()->create([
+    $widget = Widget::factory()->create([
         'key' => 'livewire-pages',
         'meta' => [
             'pagination' => true,
@@ -607,9 +607,9 @@ it('hydrates livewire page blocks from opaque references and skips empty selecti
     ]);
     $layout->containers = [
         'main' => [
-            'blocks' => [
+            'widgets' => [
                 [
-                    'block_key' => $block->key,
+                    'widget_key' => $widget->key,
                     'occurrence' => 1,
                 ],
             ],
@@ -625,21 +625,21 @@ it('hydrates livewire page blocks from opaque references and skips empty selecti
         ->withPage($page);
 
     $component = new LivewirePages;
-    $component->mount(OpaqueBlockReference::encode([
+    $component->mount(OpaqueWidgetReference::encode([
         'container_key' => 'main',
-        'block_key' => $block->key,
+        'widget_key' => $widget->key,
         'language_id' => $language->getKey(),
         'layout_id' => $layout->getKey(),
         'occurrence' => 1,
         'page_id' => $page->getKey(),
         'page_type' => $page->getMorphClass(),
         'site_id' => $site->getKey(),
-        'block_index' => 0,
+        'widget_index' => 0,
     ]));
 
     capell_expect($component->render())->toBe('<div style="display: none"></div>')
-        ->and(LivewirePages::getViewName())->toBe('capell-foundation-theme::components.block.asset.pages')
-        ->and(LivewirePages::getBlockByKey($block->key)?->is($block))->toBeTrue();
+        ->and(LivewirePages::getViewName())->toBe('capell-foundation-theme::components.widget.asset.pages')
+        ->and(LivewirePages::getWidgetByKey($widget->key)?->is($widget))->toBeTrue();
 });
 
 /**

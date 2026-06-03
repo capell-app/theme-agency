@@ -328,7 +328,7 @@ it('marks unsupported stripe webhook event types as ignored without mutating pay
 });
 
 it('requires a configured stripe webhook secret before verifying payloads', function (): void {
-    config()->set('capell-payments.stripe.webhook_secret', null);
+    config()->set('capell-payments.stripe.webhook_secret');
 
     $payload = stripeWebhookPayload([
         'id' => 'evt_missing_secret',

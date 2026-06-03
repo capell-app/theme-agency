@@ -5,25 +5,20 @@ declare(strict_types=1);
 use Capell\Admin\Filament\Contracts\TableConfigurator;
 use Capell\Blog\Filament\Configurators\Articles\ArticlePageConfigurator;
 use Capell\Core\Models\Page;
-use Capell\LayoutBuilder\Filament\Configurators\Blocks\PageWidgetAssetForm;
-use Capell\LayoutBuilder\Filament\Configurators\Blocks\RegisteredAssetWidgetAssetForm;
 use Capell\LayoutBuilder\Filament\Configurators\Layouts\DefaultLayoutContainerConfigurator;
+use Capell\LayoutBuilder\Filament\Configurators\Widgets\PageWidgetAssetForm;
+use Capell\LayoutBuilder\Filament\Configurators\Widgets\RegisteredAssetWidgetAssetForm;
 use Capell\LayoutBuilder\Filament\Resources\Widgets\Schemas\WidgetAssetForm;
 use Capell\MigrationAssistant\Filament\Resources\ImportSessions\Schemas\ImportSessionInfolist;
-use Filament\Actions\Action;
-use Filament\Actions\ActionGroup;
+use Capell\Tests\Packages\Fixtures\PackageSurfaceContractSchemaHarness;
 use Filament\Pages\Page as FilamentPage;
 use Filament\Resources\Pages\Page as FilamentResourcePage;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Component as SchemaComponent;
-use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
-use Filament\Support\Contracts\TranslatableContentDriver;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\File;
-use Livewire\Component;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -176,13 +171,20 @@ it('builds package-owned filament page table contracts', function (): void {
     $built = 0;
 
     foreach (packageSurfaceContractClasses(static fn (string $path): bool => str_contains($path, '/Filament/Pages/') && str_ends_with($path, '.php')) as $className) {
-        if (! is_subclass_of($className, FilamentPage::class) || ! is_subclass_of($className, HasTable::class)) {
+        if (! is_subclass_of($className, FilamentPage::class)) {
+            continue;
+        }
+
+        if (! is_subclass_of($className, HasTable::class)) {
             continue;
         }
 
         $reflection = new ReflectionClass($className);
+        if ($reflection->isAbstract()) {
+            continue;
+        }
 
-        if ($reflection->isAbstract() || ! $reflection->hasMethod('table')) {
+        if (! $reflection->hasMethod('table')) {
             continue;
         }
 
@@ -193,9 +195,7 @@ it('builds package-owned filament page table contracts', function (): void {
             $table = $method->invoke($target, packageSurfaceContractTable());
             $built++;
 
-            if (! $table instanceof Table) {
-                throw new RuntimeException('Page table method did not return a Filament table.');
-            }
+            throw_unless($table instanceof Table, RuntimeException::class, 'Page table method did not return a Filament table.');
 
             expect($table)->toBeInstanceOf(Table::class)
                 ->and($table->getColumns() !== [] || $table->getRecordActions() !== [] || $table->getToolbarActions() !== [])->toBeTrue();
@@ -285,7 +285,6 @@ it('configures package service providers and executes registration hooks', funct
         }
 
         try {
-            /** @var PackageServiceProvider $provider */
             $provider = new $className(app());
             $package = (new Package)->setBasePath(dirname((string) $reflection->getFileName()));
 
@@ -523,37 +522,4 @@ function packageSurfaceContractTable(): Table
 function packageSurfaceContractSchema(string $operation): Schema
 {
     return Schema::make(new PackageSurfaceContractSchemaHarness)->operation($operation);
-}
-
-final class PackageSurfaceContractSchemaHarness extends Component implements HasSchemas
-{
-    public function makeFilamentTranslatableContentDriver(): ?TranslatableContentDriver
-    {
-        return null;
-    }
-
-    public function getOldSchemaState(string $statePath): mixed
-    {
-        return null;
-    }
-
-    /**
-     * @param  array<SchemaComponent>  $skipComponentsChildContainersWhileSearching
-     */
-    public function getSchemaComponent(string $key, bool $withHidden = false, array $skipComponentsChildContainersWhileSearching = []): SchemaComponent|Action|ActionGroup|null
-    {
-        return null;
-    }
-
-    public function getSchema(string $name): ?Schema
-    {
-        return null;
-    }
-
-    public function currentlyValidatingSchema(?Schema $schema): void {}
-
-    public function getDefaultTestingSchemaName(): ?string
-    {
-        return null;
-    }
 }

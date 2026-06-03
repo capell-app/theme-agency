@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Capell\CampaignStudio\Actions;
 
-use Capell\CampaignStudio\Enums\CampaignBlockComponentEnum;
-use Capell\CampaignStudio\Filament\Configurators\Blocks\CampaignCtaBlockBlockConfigurator;
-use Capell\CampaignStudio\Filament\Configurators\Blocks\CampaignHeroBlockConfigurator;
-use Capell\CampaignStudio\Filament\Configurators\Blocks\CampaignLeadFormBlockConfigurator;
+use Capell\CampaignStudio\Enums\CampaignWidgetComponentEnum;
+use Capell\CampaignStudio\Filament\Configurators\Widgets\CampaignCtaWidgetWidgetConfigurator;
+use Capell\CampaignStudio\Filament\Configurators\Widgets\CampaignHeroWidgetConfigurator;
+use Capell\CampaignStudio\Filament\Configurators\Widgets\CampaignLeadFormWidgetConfigurator;
 use Capell\CampaignStudio\Support\LayoutPresets\CampaignLayoutPreset;
 use Capell\CampaignStudio\Support\LayoutPresets\LeadGenerationPreset;
 use Capell\CampaignStudio\Support\LayoutPresets\ProductLaunchPreset;
@@ -15,7 +15,7 @@ use Capell\CampaignStudio\Support\LayoutPresets\WebinarPreset;
 use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Layout;
 use Capell\LayoutBuilder\Enums\LayoutTypeEnum;
-use Capell\LayoutBuilder\Filament\Configurators\Types\BlockTypeConfigurator;
+use Capell\LayoutBuilder\Filament\Configurators\Types\WidgetTypeConfigurator;
 use Capell\LayoutBuilder\Models\Widget;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -24,25 +24,25 @@ final class InstallCampaignLayoutsAction
     use AsAction;
 
     /**
-     * @var array<string, array{name: string, component: CampaignBlockComponentEnum, configurator: class-string, icon: string}>
+     * @var array<string, array{name: string, component: CampaignWidgetComponentEnum, configurator: class-string, icon: string}>
      */
     private const array WIDGET_DEFINITIONS = [
         'campaign-hero' => [
             'name' => 'Campaign hero',
-            'component' => CampaignBlockComponentEnum::CampaignHero,
-            'configurator' => CampaignHeroBlockConfigurator::class,
+            'component' => CampaignWidgetComponentEnum::CampaignHero,
+            'configurator' => CampaignHeroWidgetConfigurator::class,
             'icon' => 'heroicon-o-megaphone',
         ],
-        'campaign-cta-block' => [
-            'name' => 'Campaign CTA block',
-            'component' => CampaignBlockComponentEnum::CampaignCtaBlock,
-            'configurator' => CampaignCtaBlockBlockConfigurator::class,
+        'campaign-cta-widget' => [
+            'name' => 'Campaign CTA widget',
+            'component' => CampaignWidgetComponentEnum::CampaignCtaWidget,
+            'configurator' => CampaignCtaWidgetWidgetConfigurator::class,
             'icon' => 'heroicon-o-cursor-arrow-rays',
         ],
         'campaign-lead-form' => [
             'name' => 'Campaign lead form',
-            'component' => CampaignBlockComponentEnum::CampaignLeadForm,
-            'configurator' => CampaignLeadFormBlockConfigurator::class,
+            'component' => CampaignWidgetComponentEnum::CampaignLeadForm,
+            'configurator' => CampaignLeadFormWidgetConfigurator::class,
             'icon' => 'heroicon-o-clipboard-document-list',
         ],
     ];
@@ -63,14 +63,14 @@ final class InstallCampaignLayoutsAction
                 continue;
             }
 
-            $blocks = $this->blocksForPreset($preset);
+            $widgets = $this->widgetsForPreset($preset);
 
             Layout::query()->updateOrCreate(
                 ['key' => $preset->key()],
                 [
                     'name' => $preset->name(),
                     'group' => 'CampaignStudio',
-                    'containers' => $this->containersForPreset($preset, $blocks),
+                    'containers' => $this->containersForPreset($preset, $widgets),
                     'status' => true,
                 ],
             );
@@ -96,26 +96,26 @@ final class InstallCampaignLayoutsAction
     /**
      * @return array<string, Widget>
      */
-    private function blocksForPreset(CampaignLayoutPreset $preset): array
+    private function widgetsForPreset(CampaignLayoutPreset $preset): array
     {
-        $blocks = [];
-        $type = $this->campaignBlockType();
+        $widgets = [];
+        $type = $this->campaignWidgetType();
 
-        foreach ($preset->blocks() as $blockDefinition) {
-            $blockType = $blockDefinition['type'] ?? null;
-            if (! is_string($blockType)) {
+        foreach ($preset->widgets() as $widgetDefinition) {
+            $widgetType = $widgetDefinition['type'] ?? null;
+            if (! is_string($widgetType)) {
                 continue;
             }
 
-            if (! isset(self::WIDGET_DEFINITIONS[$blockType])) {
+            if (! isset(self::WIDGET_DEFINITIONS[$widgetType])) {
                 continue;
             }
 
-            $definition = self::WIDGET_DEFINITIONS[$blockType];
-            $blockKey = $preset->key() . '-' . $blockType;
+            $definition = self::WIDGET_DEFINITIONS[$widgetType];
+            $widgetKey = $preset->key() . '-' . $widgetType;
 
-            $blocks[$blockType] = Widget::query()->updateOrCreate(
-                ['key' => $blockKey],
+            $widgets[$widgetType] = Widget::query()->updateOrCreate(
+                ['key' => $widgetKey],
                 [
                     'name' => $preset->name() . ' - ' . $definition['name'],
                     'blueprint_id' => $type->getKey(),
@@ -131,14 +131,14 @@ final class InstallCampaignLayoutsAction
             );
         }
 
-        return $blocks;
+        return $widgets;
     }
 
     /**
-     * @param  array<string, Widget>  $blocks
+     * @param  array<string, Widget>  $widgets
      * @return array<string, array{widgets: array<int, array{widget_key: string, occurrence: int}>, meta: array<string, mixed>}>
      */
-    private function containersForPreset(CampaignLayoutPreset $preset, array $blocks): array
+    private function containersForPreset(CampaignLayoutPreset $preset, array $widgets): array
     {
         $containers = [];
 
@@ -160,9 +160,9 @@ final class InstallCampaignLayoutsAction
             ];
         }
 
-        foreach ($preset->blocks() as $blockDefinition) {
-            $containerKey = $blockDefinition['container'] ?? null;
-            $blockType = $blockDefinition['type'] ?? null;
+        foreach ($preset->widgets() as $widgetDefinition) {
+            $containerKey = $widgetDefinition['container'] ?? null;
+            $widgetType = $widgetDefinition['type'] ?? null;
             if (! is_string($containerKey)) {
                 continue;
             }
@@ -171,16 +171,16 @@ final class InstallCampaignLayoutsAction
                 continue;
             }
 
-            if (! is_string($blockType)) {
+            if (! is_string($widgetType)) {
                 continue;
             }
 
-            if (! isset($blocks[$blockType])) {
+            if (! isset($widgets[$widgetType])) {
                 continue;
             }
 
             $containers[$containerKey]['widgets'][] = [
-                'widget_key' => $blocks[$blockType]->key,
+                'widget_key' => $widgets[$widgetType]->key,
                 'occurrence' => 1,
             ];
         }
@@ -188,7 +188,7 @@ final class InstallCampaignLayoutsAction
         return $containers;
     }
 
-    private function campaignBlockType(): Blueprint
+    private function campaignWidgetType(): Blueprint
     {
         return Blueprint::query()->firstOrCreate(
             [
@@ -199,11 +199,11 @@ final class InstallCampaignLayoutsAction
                 'name' => __('capell-campaign-studio::generic.campaign'),
                 'group' => 'campaign-studio',
                 'admin' => [
-                    'type_configurator' => BlockTypeConfigurator::getKey(),
+                    'type_configurator' => WidgetTypeConfigurator::getKey(),
                     'icon' => 'heroicon-o-megaphone',
                 ],
                 'meta' => [
-                    'component' => CampaignBlockComponentEnum::CampaignHero,
+                    'component' => CampaignWidgetComponentEnum::CampaignHero,
                 ],
             ],
         );

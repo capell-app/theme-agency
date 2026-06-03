@@ -6,17 +6,17 @@ namespace Capell\CampaignStudio\Providers;
 
 use Capell\Admin\Contracts\Extenders\PageSchemaExtender;
 use Capell\CampaignStudio\Console\Commands\InstallCampaignLayoutsCommand;
-use Capell\CampaignStudio\Enums\CampaignBlockComponentEnum;
+use Capell\CampaignStudio\Enums\CampaignWidgetComponentEnum;
 use Capell\CampaignStudio\Filament\Extenders\Page\CampaignPageSchemaExtender;
 use Capell\CampaignStudio\Listeners\RecordFormSubmissionConversion;
 use Capell\CampaignStudio\Listeners\SyncCampaignLandingPageFromPage;
 use Capell\CampaignStudio\Models\CampaignConversion;
 use Capell\CampaignStudio\Models\CampaignConversionGoal;
-use Capell\CampaignStudio\Models\CampaignCtaBlock;
+use Capell\CampaignStudio\Models\CampaignCtaWidget;
 use Capell\CampaignStudio\Models\CampaignGroup;
 use Capell\CampaignStudio\Models\CampaignLandingPage;
 use Capell\CampaignStudio\Policies\CampaignConversionGoalPolicy;
-use Capell\CampaignStudio\Policies\CampaignCtaBlockPolicy;
+use Capell\CampaignStudio\Policies\CampaignCtaWidgetPolicy;
 use Capell\CampaignStudio\Policies\CampaignGroupPolicy;
 use Capell\CampaignStudio\Policies\CampaignLandingPagePolicy;
 use Capell\CampaignStudio\Support\EditorialCalendar\CampaignStudioEditorialCalendarEventContributor;
@@ -50,7 +50,7 @@ final class CampaignStudioServiceProvider extends AbstractPackageServiceProvider
             ->hasMigrations([
                 '2026_05_10_190843_01_create_campaign_groups_table',
                 '2026_05_10_190843_03_create_campaign_landing_pages_table',
-                '2026_05_10_190843_04_create_campaign_cta_blocks_table',
+                '2026_05_10_190843_04_create_campaign_cta_widgets_table',
                 '2026_05_10_190843_02_create_campaign_conversion_goals_table',
                 '2026_05_10_190843_05_create_campaign_conversions_table',
             ]);
@@ -103,7 +103,7 @@ final class CampaignStudioServiceProvider extends AbstractPackageServiceProvider
         CapellCore::registerModels([
             CampaignGroup::class,
             CampaignLandingPage::class,
-            CampaignCtaBlock::class,
+            CampaignCtaWidget::class,
             CampaignConversionGoal::class,
             CampaignConversion::class,
         ]);
@@ -115,7 +115,7 @@ final class CampaignStudioServiceProvider extends AbstractPackageServiceProvider
     {
         Gate::policy(CampaignGroup::class, CampaignGroupPolicy::class);
         Gate::policy(CampaignLandingPage::class, CampaignLandingPagePolicy::class);
-        Gate::policy(CampaignCtaBlock::class, CampaignCtaBlockPolicy::class);
+        Gate::policy(CampaignCtaWidget::class, CampaignCtaWidgetPolicy::class);
         Gate::policy(CampaignConversionGoal::class, CampaignConversionGoalPolicy::class);
 
         return $this;
@@ -125,7 +125,7 @@ final class CampaignStudioServiceProvider extends AbstractPackageServiceProvider
     {
         Blade::componentNamespace('Capell\\CampaignStudio\\View\\Components', 'capell-campaign-studio');
 
-        CapellCore::registerComponents('Block', CampaignBlockComponentEnum::cases());
+        CapellCore::registerComponents('Widget', CampaignWidgetComponentEnum::cases());
 
         return $this;
     }

@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use Capell\AgentBridge\Filament\Settings\AgentBridgeSettingsSchema;
-use Capell\Blog\Filament\Configurators\Blocks\ArticleBlockConfigurator;
-use Capell\Blog\Filament\Configurators\Blocks\RelatedBlockConfigurator;
-use Capell\CampaignStudio\Filament\Configurators\Blocks\CampaignCtaBlockBlockConfigurator;
-use Capell\CampaignStudio\Filament\Configurators\Blocks\CampaignHeroBlockConfigurator;
-use Capell\CampaignStudio\Filament\Configurators\Blocks\CampaignLeadFormBlockConfigurator;
+use Capell\Blog\Filament\Configurators\Widgets\ArticleWidgetConfigurator;
+use Capell\Blog\Filament\Configurators\Widgets\RelatedWidgetConfigurator;
+use Capell\CampaignStudio\Filament\Configurators\Widgets\CampaignCtaWidgetWidgetConfigurator;
+use Capell\CampaignStudio\Filament\Configurators\Widgets\CampaignHeroWidgetConfigurator;
+use Capell\CampaignStudio\Filament\Configurators\Widgets\CampaignLeadFormWidgetConfigurator;
 use Capell\Comments\Filament\Settings\CommentSettingsSchema;
 use Capell\ContentSections\Filament\Components\Forms\ActionsRepeater;
 use Capell\ContentSections\Filament\Components\Forms\AssetsRepeater;
@@ -28,26 +28,21 @@ use Capell\ContentSections\Filament\Configurators\Sections\TimelineSectionConfig
 use Capell\FoundationTheme\Filament\Settings\FoundationThemeSettingsSchema;
 use Capell\FrontendOptimizer\Filament\Settings\FrontendOptimizerSettingsSchema;
 use Capell\GA4Reports\Filament\Settings\GA4ReportsSettingsSchema;
-use Capell\LayoutBuilder\Filament\Configurators\Blocks\ModernCardGridConfigurator;
-use Capell\LayoutBuilder\Filament\Configurators\Blocks\ModernFeatureListConfigurator;
-use Capell\LayoutBuilder\Filament\Configurators\Blocks\ModernHeroBannerConfigurator;
-use Capell\LayoutBuilder\Filament\Configurators\Blocks\ModernPricingTableConfigurator;
-use Capell\LayoutBuilder\Filament\Configurators\Blocks\ModernProcessStepsConfigurator;
-use Capell\LayoutBuilder\Filament\Configurators\Blocks\ModernTestimonialsConfigurator;
+use Capell\LayoutBuilder\Filament\Configurators\Widgets\ModernCardGridConfigurator;
+use Capell\LayoutBuilder\Filament\Configurators\Widgets\ModernFeatureListConfigurator;
+use Capell\LayoutBuilder\Filament\Configurators\Widgets\ModernHeroBannerConfigurator;
+use Capell\LayoutBuilder\Filament\Configurators\Widgets\ModernPricingTableConfigurator;
+use Capell\LayoutBuilder\Filament\Configurators\Widgets\ModernProcessStepsConfigurator;
+use Capell\LayoutBuilder\Filament\Configurators\Widgets\ModernTestimonialsConfigurator;
 use Capell\LoginAudit\Filament\Settings\LoginAuditSettingsSchema;
 use Capell\Newsletter\Filament\Settings\NewsletterSettingsSchema;
 use Capell\PasswordPolicy\Filament\Settings\PasswordPolicySettingsSchema;
 use Capell\PublishingStudio\Filament\Settings\PublishingStudioSettingsSchema;
 use Capell\ShopifyCommerce\Filament\Settings\ShopifyCommerceSettingsSchema;
+use Capell\Tests\Packages\Fixtures\PackageAdminSurfaceSchemaLivewireHarness;
 use Capell\WelcomeTour\Filament\Settings\WelcomeTourSettingsSchema;
-use Filament\Actions\Action;
-use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\Repeater;
-use Filament\Schemas\Components\Component as SchemaComponent;
-use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
-use Filament\Support\Contracts\TranslatableContentDriver;
-use Livewire\Component;
 
 /**
  * @return list<mixed>
@@ -134,28 +129,28 @@ it('builds package-owned admin configurator schemas for representative workflows
         ->not->toBeEmpty()
         ->and(count($flattenedComponents))->toBeGreaterThanOrEqual(count($expectedNames));
 })->with([
-    'blog article block' => [
-        ArticleBlockConfigurator::class,
+    'blog article widget' => [
+        ArticleWidgetConfigurator::class,
         ['create', 'edit', 'editOption'],
         ['meta.with_date', 'meta.with_next_prev', 'meta.with_author'],
     ],
-    'blog related block' => [
-        RelatedBlockConfigurator::class,
+    'blog related widget' => [
+        RelatedWidgetConfigurator::class,
         ['createOption', 'edit'],
         ['exclude_parent', 'exclude_types', 'limit', 'pagination', 'cache_frequency'],
     ],
-    'campaign cta block' => [
-        CampaignCtaBlockBlockConfigurator::class,
+    'campaign cta widget' => [
+        CampaignCtaWidgetWidgetConfigurator::class,
         ['edit'],
-        ['meta.cta_block_id'],
+        ['meta.cta_widget_id'],
     ],
-    'campaign hero block' => [
-        CampaignHeroBlockConfigurator::class,
+    'campaign hero widget' => [
+        CampaignHeroWidgetConfigurator::class,
         ['edit'],
         ['campaign_hero'],
     ],
-    'campaign lead form block' => [
-        CampaignLeadFormBlockConfigurator::class,
+    'campaign lead form widget' => [
+        CampaignLeadFormWidgetConfigurator::class,
         ['edit'],
         ['campaign_form'],
     ],
@@ -287,7 +282,7 @@ it('builds package settings schemas with their persisted control names', functio
     ],
 ]);
 
-it('builds modern layout block configurator schemas and defaults', function (string $className, array $expectedNames, array $expectedDefaultKeys): void {
+it('builds modern layout widget configurator schemas and defaults', function (string $className, array $expectedNames, array $expectedDefaultKeys): void {
     $components = packageAdminSurfaceStaticFormSchema($className);
     $defaults = packageAdminSurfaceStaticDefaults($className);
 
@@ -426,37 +421,4 @@ function packageAdminSurfacePreparedComponents(array $components): array
 function packageAdminSurfaceSchema(string $operation): Schema
 {
     return Schema::make(new PackageAdminSurfaceSchemaLivewireHarness)->operation($operation);
-}
-
-final class PackageAdminSurfaceSchemaLivewireHarness extends Component implements HasSchemas
-{
-    public function makeFilamentTranslatableContentDriver(): ?TranslatableContentDriver
-    {
-        return null;
-    }
-
-    public function getOldSchemaState(string $statePath): mixed
-    {
-        return null;
-    }
-
-    /**
-     * @param  array<SchemaComponent>  $skipComponentsChildContainersWhileSearching
-     */
-    public function getSchemaComponent(string $key, bool $withHidden = false, array $skipComponentsChildContainersWhileSearching = []): SchemaComponent|Action|ActionGroup|null
-    {
-        return null;
-    }
-
-    public function getSchema(string $name): ?Schema
-    {
-        return null;
-    }
-
-    public function currentlyValidatingSchema(?Schema $schema): void {}
-
-    public function getDefaultTestingSchemaName(): ?string
-    {
-        return null;
-    }
 }

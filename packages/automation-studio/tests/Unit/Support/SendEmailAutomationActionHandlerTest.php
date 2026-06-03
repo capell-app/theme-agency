@@ -8,6 +8,7 @@ use Capell\AutomationStudio\Data\AutomationTriggerEventData;
 use Capell\AutomationStudio\Enums\AutomationActionType;
 use Capell\AutomationStudio\Enums\AutomationTriggerType;
 use Capell\AutomationStudio\Support\Handlers\SendEmailAutomationActionHandler;
+use Capell\AutomationStudio\Tests\Fixtures\SendEmailAutomationActionProbe;
 use Capell\EmailStudio\Actions\SendEmailAction;
 use Capell\EmailStudio\Data\SendEmailData;
 use Capell\EmailStudio\Models\EmailMessage;
@@ -185,8 +186,3 @@ it('falls back to event email and site scope when optional email settings are om
         ->and($sentEmail->data?->headers->items())->toBe([])
         ->and($sentEmail->data?->variables)->toMatchArray(['email' => 'subscriber@example.test', 'site_id' => 12]);
 });
-
-final class SendEmailAutomationActionProbe
-{
-    public ?SendEmailData $data = null;
-}

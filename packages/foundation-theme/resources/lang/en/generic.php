@@ -10,7 +10,7 @@ return [
     'footer_navigation' => 'Footer navigation',
     'foundation_theme' => 'Foundation theme',
     'gallery' => 'Gallery',
-    'hero_empty_copy' => 'Pages, sections, blocks, media',
+    'hero_empty_copy' => 'Pages, sections, widgets, media',
     'hero_empty_status' => 'Typed',
     'hero_empty_title' => 'Content model',
     'hero_item_status_ready' => 'Ready',

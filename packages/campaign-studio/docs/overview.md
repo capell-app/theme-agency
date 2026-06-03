@@ -6,12 +6,12 @@ This page is the consolidated implementation overview for the CampaignStudio pac
 
 ## What This Package Adds
 
-CampaignStudio adds campaign groups, landing pages, CTA blocks, conversion goals, UTM attribution, and conversion reporting to Capell.
+CampaignStudio adds campaign groups, landing pages, CTA widgets, conversion goals, UTM attribution, and conversion reporting to Capell.
 
-- Campaign Filament resources for groups, landing pages, goals, and CTA blocks.
-- Campaign dashboard blocks.
+- Campaign Filament resources for groups, landing pages, goals, and CTA widgets.
+- Campaign dashboard widgets.
 - Page schema extender for campaign fields.
-- core layout builder block configurators for campaign hero, CTA, and lead form blocks.
+- core layout builder widget configurators for campaign hero, CTA, and lead form widgets.
 - Conversion recording actions for page views, CTA clicks, and form submissions.
 - Optional Experiments integration that syncs campaign landing-page variants and conversion goals into campaign-scoped experiment definitions.
 
@@ -21,7 +21,7 @@ Connects Capell pages, FormBuilder, Insights, and core layout builder APIs throu
 
 - CampaignStudioServiceProvider, AdminServiceProvider, and FrontendServiceProvider register package surfaces.
 - Config file: capell-campaign-studio.php.
-- Migrations create campaign groups, goals, landing pages, CTA blocks, and conversions.
+- Migrations create campaign groups, goals, landing pages, CTA widgets, and conversions.
 - Filament resources cover each owned model.
 - Listeners sync landing pages and form submission conversions.
 - `CampaignConverted` is dispatched when a conversion row is newly recorded, giving Automation Studio and other packages a stable conversion trigger without importing Campaign Studio internals.
@@ -32,7 +32,7 @@ Connects Capell pages, FormBuilder, Insights, and core layout builder APIs throu
 Lets marketing and editorial teams connect landing pages to goals and see which campaign-studio convert.
 
 - Adds campaign admin navigation and database tables.
-- Adds campaign dashboard blocks.
+- Adds campaign dashboard widgets.
 - Adds config keys for conversion cookie, UTM keys, table names, and layout presets.
 - May use Insights events and FormBuilder submissions when those packages are installed.
 - May sync campaign-scoped experiments when `capell-app/experiments` is installed.
@@ -43,7 +43,7 @@ Lets marketing and editorial teams connect landing pages to goals and see which 
 - campaign_groups belong to sites.
 - campaign_landing_pages belong to groups and target pages.
 - campaign_conversion_goals define measurable outcomes.
-- campaign_cta_blocks store CTA content.
+- campaign_cta_widgets store CTA content.
 - campaign_conversions connect goals, landing pages, insights visits/events, and attribution JSON.
 
 ## Screenshot Plan
@@ -51,9 +51,9 @@ Lets marketing and editorial teams connect landing pages to goals and see which 
 - Campaign groups index.
 - Campaign landing pages index.
 - Campaign conversion goals form.
-- CTA block form.
-- Campaign dashboard blocks.
-- Frontend landing page with campaign blocks.
+- CTA widget form.
+- Campaign dashboard widgets.
+- Frontend landing page with campaign widgets.
 
 ## Screenshots
 
@@ -63,9 +63,9 @@ Lets marketing and editorial teams connect landing pages to goals and see which 
 
 ![Campaign conversion goal form](screenshots/campaign-conversion-goals-form.png)
 
-![Campaign CTA block form](screenshots/cta-block-form.png)
+![Campaign CTA widget form](screenshots/cta-widget-form.png)
 
-Campaign dashboard blocks screenshot target: `packages/campaign-studio/docs/screenshots/campaign-dashboard-blocks.png`. Keep this as text until the screenshot file is committed.
+Campaign dashboard widgets screenshot target: `packages/campaign-studio/docs/screenshots/campaign-dashboard-widgets.png`. Keep this as text until the screenshot file is committed.
 
 ## Pitfalls
 
@@ -96,10 +96,10 @@ Campaign dashboard blocks screenshot target: `packages/campaign-studio/docs/scre
 - CreateCampaignConversionGoal (packages/campaign-studio/src/Filament/Resources/CampaignConversionGoals/Pages/CreateCampaignConversionGoal.php)
 - EditCampaignConversionGoal (packages/campaign-studio/src/Filament/Resources/CampaignConversionGoals/Pages/EditCampaignConversionGoal.php)
 - ListCampaignConversionGoals (packages/campaign-studio/src/Filament/Resources/CampaignConversionGoals/Pages/ListCampaignConversionGoals.php)
-- CampaignCtaBlockResource (packages/campaign-studio/src/Filament/Resources/CampaignCtaBlocks/CampaignCtaBlockResource.php)
-- CreateCampaignCtaBlock (packages/campaign-studio/src/Filament/Resources/CampaignCtaBlocks/Pages/CreateCampaignCtaBlock.php)
-- EditCampaignCtaBlock (packages/campaign-studio/src/Filament/Resources/CampaignCtaBlocks/Pages/EditCampaignCtaBlock.php)
-- ListCampaignCtaBlocks (packages/campaign-studio/src/Filament/Resources/CampaignCtaBlocks/Pages/ListCampaignCtaBlocks.php)
+- CampaignCtaWidgetResource (packages/campaign-studio/src/Filament/Resources/CampaignCtaWidgets/CampaignCtaWidgetResource.php)
+- CreateCampaignCtaWidget (packages/campaign-studio/src/Filament/Resources/CampaignCtaWidgets/Pages/CreateCampaignCtaWidget.php)
+- EditCampaignCtaWidget (packages/campaign-studio/src/Filament/Resources/CampaignCtaWidgets/Pages/EditCampaignCtaWidget.php)
+- ListCampaignCtaWidgets (packages/campaign-studio/src/Filament/Resources/CampaignCtaWidgets/Pages/ListCampaignCtaWidgets.php)
 - CampaignGroupResource (packages/campaign-studio/src/Filament/Resources/CampaignGroups/CampaignGroupResource.php)
 - CreateCampaignGroup (packages/campaign-studio/src/Filament/Resources/CampaignGroups/Pages/CreateCampaignGroup.php)
 - EditCampaignGroup (packages/campaign-studio/src/Filament/Resources/CampaignGroups/Pages/EditCampaignGroup.php)
@@ -119,16 +119,16 @@ Campaign dashboard blocks screenshot target: `packages/campaign-studio/docs/scre
 
 ## Permissions And Gates
 
-- Gate: CampaignOverviewStatsBlock: `admin`, `super_admin`
-- Gate: TopCampaignStudioBlock: `admin`, `super_admin`
-- Gate: TopLandingPagesBlock: `admin`, `super_admin`
+- Gate: CampaignOverviewStatsWidget: `admin`, `super_admin`
+- Gate: TopCampaignStudioWidget: `admin`, `super_admin`
+- Gate: TopLandingPagesWidget: `admin`, `super_admin`
 
 ## Migrations
 
 - Migration: 2026_04_20_000001_create_campaign_groups_table.php
 - Migration: 2026_04_20_000002_create_campaign_conversion_goals_table.php
 - Migration: 2026_04_20_000003_create_campaign_landing_pages_table.php
-- Migration: 2026_04_20_000004_create_campaign_cta_blocks_table.php
+- Migration: 2026_04_20_000004_create_campaign_cta_widgets_table.php
 - Migration: 2026_04_20_000005_create_campaign_conversions_table.php
 
 ## ERD Excerpt
@@ -180,6 +180,6 @@ Deployment should read [screenshots.json](screenshots.json), install the package
 - Campaign groups index.
 - Campaign landing pages index.
 - Campaign conversion goals form.
-- CTA block form.
-- Campaign dashboard blocks.
-- Frontend landing page with campaign blocks.
+- CTA widget form.
+- Campaign dashboard widgets.
+- Frontend landing page with campaign widgets.

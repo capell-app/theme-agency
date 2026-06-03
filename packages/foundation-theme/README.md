@@ -26,12 +26,12 @@ Capell default theme - ships the standard Tailwind asset pipeline, Blade directi
 ## What It Adds
 
 - Capell default theme - ships the standard Tailwind asset pipeline, Blade directives, URL generator, and SVG media component.
-- Livewire components: `AbstractAssets`, `AbstractBlock`, `PageAssets`, `Pages`.
+- Livewire components: `AbstractAssets`, `AbstractWidget`, `PageAssets`, `Pages`.
 - Package setup or maintenance commands.
-- A `header` Layout Builder area so editors can place normal layout blocks inside the Foundation header chrome.
-- Seven `kitchen-sink-*` reference blocks for the Demo Kit kitchen sink page: rich text, structured text, data display, forms, interactions, embeds, and utility states.
+- A `header` Layout Builder area so editors can place normal layout widgets inside the Foundation header chrome.
+- Seven `kitchen-sink-*` reference widgets for the Demo Kit kitchen sink page: rich text, structured text, data display, forms, interactions, embeds, and utility states.
 
-The kitchen sink blocks are CMS authoring/reference fixtures for inspecting semantic HTML, page-scoped assets, and accessibility contracts. They should not be used as production landing page templates.
+The kitchen sink widgets are CMS authoring/reference fixtures for inspecting semantic HTML, page-scoped assets, and accessibility contracts. They should not be used as production landing page templates.
 
 ## Why It Matters
 
@@ -69,11 +69,11 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Config file: capell-foundation-theme.php.
 - Settings migration creates default theme settings.
 - Registers the `capell` Blade namespace and anonymous `capell::...` components.
-- Registers core layout builder frontend rendering views and block components.
+- Registers core layout builder frontend rendering views and widget components.
 - Registers the `header` Layout Builder area and renders it from `capell::header.index`.
 - Runtime theme data layers parent defaults, child defaults, and database edits in that order.
 - GenerateTailwindAssetsCommand writes one frontend Tailwind directive file; runtime theme colours are emitted as CSS variables by the theme head tokens.
-- core layout builder JavaScript is registered as a conditional vendor build asset and only loads when the resolved frontend layout contains blocks.
+- core layout builder JavaScript is registered as a conditional vendor build asset and only loads when the resolved frontend layout contains widgets.
 - BladeDirectives and CapellUrlGenerator support rendering.
 - The beacon client is generic. It must not ship authoring controls or authoring metadata in theme HTML; `capell-app/frontend-authoring` owns the admin-only response that decorates the page.
 
@@ -83,7 +83,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 | --------- | ----------------------------------------- | ----------------------------------------------------------------- |
 | Actions   | `packages/foundation-theme/src/Actions`   | Domain operations. Test these directly where possible.            |
 | Enums     | `packages/foundation-theme/src/Enums`     | Persisted states and Filament option values.                      |
-| Filament  | `packages/foundation-theme/src/Filament`  | Admin resources, pages, blocks, and settings UI.                  |
+| Filament  | `packages/foundation-theme/src/Filament`  | Admin resources, pages, widgets, and settings UI.                 |
 | Livewire  | `packages/foundation-theme/src/Livewire`  | Interactive frontend or admin components.                         |
 | Providers | `packages/foundation-theme/src/Providers` | Registration, extension hooks, routes, migrations, and resources. |
 | Resources | `packages/foundation-theme/resources`     | Views, translations, assets, and package resources.               |
@@ -97,7 +97,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Runtime Surface
 
-- Livewire: `AbstractAssets`, `AbstractBlock`, `PageAssets`, `Pages`.
+- Livewire: `AbstractAssets`, `AbstractWidget`, `PageAssets`, `Pages`.
 
 ## Commands
 
@@ -119,7 +119,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Layout Builder Areas
 
-Foundation Theme exposes the first non-main Layout Builder area: `header`. Editors still work with ordinary containers and blocks in the Layout Builder, but containers assigned to the header area render in the site header instead of the main page-content loop.
+Foundation Theme exposes the first non-main Layout Builder area: `header`. Editors still work with ordinary containers and widgets in the Layout Builder, but containers assigned to the header area render in the site header instead of the main page-content loop.
 
 The service provider registers the area with `Capell\LayoutBuilder\Support\LayoutAreas\LayoutAreaRegistry`:
 

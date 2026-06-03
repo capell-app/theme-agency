@@ -25,6 +25,9 @@ use Illuminate\Support\Collection as SupportCollection;
 use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
 
+use Sinnbeck\DomAssertions\Asserts\AssertElement;
+use Sinnbeck\DomAssertions\Asserts\BaseAssert;
+
 function notFoundUrlsAuthenticatedUser(): User
 {
     $user = auth()->user();
@@ -315,7 +318,7 @@ test('does not render unsafe logged not found urls as links', function (): void 
     livewire(NotFoundUrlsPage::class)
         ->assertSuccessful()
         ->assertSee('javascript:alert(1)')
-        ->assertDontSeeHtml('href="javascript:alert(1)"');
+        ->assertElementExists(fn (AssertElement $body): BaseAssert => $body->doesntContain('a[href="javascript:alert(1)"]'));
 });
 
 test('can bulk delete selected not found urls', function (): void {

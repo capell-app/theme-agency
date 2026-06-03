@@ -9,7 +9,7 @@ $theme = Frontend::theme();
 ?>
 
 @props([
-    'linkClass' => 'dropdown-item hover:text-primary focus:text-primary block w-full bg-transparent px-4 py-3 text-left text-base text-sm leading-none font-medium whitespace-nowrap',
+    'linkClass' => 'dropdown-item hover:text-primary focus:text-primary widget w-full bg-transparent px-4 py-3 text-left text-base text-sm leading-none font-medium whitespace-nowrap',
     'name' => 'languages',
     'dropdownLabelClass' => '',
     'darkMode' => false,

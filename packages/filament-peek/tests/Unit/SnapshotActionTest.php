@@ -40,7 +40,7 @@ it('caches the latest layout builder preview state per user and page', function 
         page: $page,
         layout: $layout,
         containers: [
-            'main' => ['blocks' => [['block_key' => 'hero', 'occurrence' => 1]]],
+            'main' => ['widgets' => [['widget_key' => 'hero', 'occurrence' => 1]]],
         ],
     );
 
@@ -50,7 +50,7 @@ it('caches the latest layout builder preview state per user and page', function 
 
     expect($state)->not->toBeNull()
         ->and($state->layoutId)->toBe($layout->id)
-        ->and($state->containers['main']['blocks'][0]['block_key'])->toBe('hero')
+        ->and($state->containers['main']['widgets'][0]['widget_key'])->toBe('hero')
         ->and($state->signature)->toBeString();
 
     Cache::store('array')->flush();
@@ -67,7 +67,7 @@ it('clears stale layout builder preview state after saved layout changes reset t
         page: $page,
         layout: $layout,
         containers: [
-            'main' => ['blocks' => [['block_key' => 'hero', 'occurrence' => 1]]],
+            'main' => ['widgets' => [['widget_key' => 'hero', 'occurrence' => 1]]],
         ],
         assets: [
             'main' => [

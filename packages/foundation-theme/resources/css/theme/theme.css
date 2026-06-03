@@ -124,7 +124,7 @@
         p,
         ul,
         ol {
-            margin-block: 0.5rem;
+            margin-widget: 0.5rem;
         }
 
         h1,
@@ -226,7 +226,7 @@
         display: inline-flex;
         flex: 0 0 auto;
         min-width: 0;
-        padding-block: 0.75rem;
+        padding-widget: 0.75rem;
     }
 
     .capell-product-header__brand-link {
@@ -389,7 +389,7 @@
         top: calc(var(--header-height, 4.75rem) + 1.25rem);
     }
 
-    .sidebar-sticky .block-pages {
+    .sidebar-sticky .widget-pages {
         background: rgb(255 255 255 / 88%);
         border: 1px solid rgb(226 232 240);
         border-radius: 0.5rem;
@@ -398,7 +398,7 @@
         padding: 0.65rem;
     }
 
-    .sidebar-sticky .block-pages .block-content {
+    .sidebar-sticky .widget-pages .widget-content {
         border-bottom: 1px solid rgb(226 232 240);
         color: rgb(71 85 105);
         font-size: 0.75rem;
@@ -408,15 +408,15 @@
         padding: 0.35rem 0.5rem 0.75rem;
     }
 
-    .sidebar-sticky .block-pages article {
+    .sidebar-sticky .widget-pages article {
         margin: 0;
     }
 
-    .sidebar-sticky .block-pages article + article {
+    .sidebar-sticky .widget-pages article + article {
         border-top: 1px solid rgb(241 245 249);
     }
 
-    .sidebar-sticky .block-pages a {
+    .sidebar-sticky .widget-pages a {
         align-items: center;
         border-radius: 0.375rem;
         color: rgb(30 41 59);
@@ -435,7 +435,7 @@
             transform 160ms ease;
     }
 
-    .sidebar-sticky .block-pages a::after {
+    .sidebar-sticky .widget-pages a::after {
         color: rgb(148 163 184);
         content: '›';
         flex: 0 0 auto;
@@ -446,50 +446,50 @@
             transform 160ms ease;
     }
 
-    .sidebar-sticky .block-pages a:hover,
-    .sidebar-sticky .block-pages a:focus-visible,
-    .sidebar-sticky .block-pages .is-current a,
-    .sidebar-sticky .block-pages a[aria-current='page'] {
+    .sidebar-sticky .widget-pages a:hover,
+    .sidebar-sticky .widget-pages a:focus-visible,
+    .sidebar-sticky .widget-pages .is-current a,
+    .sidebar-sticky .widget-pages a[aria-current='page'] {
         background: rgb(37 99 235 / 8%);
         color: #1d4ed8;
         outline: none;
     }
 
-    .sidebar-sticky .block-pages a:focus-visible {
+    .sidebar-sticky .widget-pages a:focus-visible {
         box-shadow: 0 0 0 3px rgb(37 99 235 / 16%);
     }
 
-    .sidebar-sticky .block-pages a:hover::after,
-    .sidebar-sticky .block-pages a:focus-visible::after,
-    .sidebar-sticky .block-pages .is-current a::after,
-    .sidebar-sticky .block-pages a[aria-current='page']::after {
+    .sidebar-sticky .widget-pages a:hover::after,
+    .sidebar-sticky .widget-pages a:focus-visible::after,
+    .sidebar-sticky .widget-pages .is-current a::after,
+    .sidebar-sticky .widget-pages a[aria-current='page']::after {
         color: #1d4ed8;
         transform: translateX(2px);
     }
 
-    .dark .sidebar-sticky .block-pages {
+    .dark .sidebar-sticky .widget-pages {
         background: rgb(15 23 42 / 80%);
         border-color: rgb(51 65 85);
         box-shadow: 0 18px 42px rgb(0 0 0 / 20%);
     }
 
-    .dark .sidebar-sticky .block-pages .block-content {
+    .dark .sidebar-sticky .widget-pages .widget-content {
         border-bottom-color: rgb(51 65 85);
         color: rgb(203 213 225);
     }
 
-    .dark .sidebar-sticky .block-pages article + article {
+    .dark .sidebar-sticky .widget-pages article + article {
         border-top-color: rgb(30 41 59);
     }
 
-    .dark .sidebar-sticky .block-pages a {
+    .dark .sidebar-sticky .widget-pages a {
         color: rgb(226 232 240);
     }
 
-    .dark .sidebar-sticky .block-pages a:hover,
-    .dark .sidebar-sticky .block-pages a:focus-visible,
-    .dark .sidebar-sticky .block-pages .is-current a,
-    .dark .sidebar-sticky .block-pages a[aria-current='page'] {
+    .dark .sidebar-sticky .widget-pages a:hover,
+    .dark .sidebar-sticky .widget-pages a:focus-visible,
+    .dark .sidebar-sticky .widget-pages .is-current a,
+    .dark .sidebar-sticky .widget-pages a[aria-current='page'] {
         background: rgb(96 165 250 / 14%);
         color: rgb(147 197 253);
     }
@@ -620,7 +620,7 @@
         gap: clamp(1.5rem, 4vw, 3.25rem);
         grid-template-columns: minmax(0, 1fr);
         min-height: inherit;
-        padding-block: clamp(2.75rem, 5.5vw, 4.75rem);
+        padding-widget: clamp(2.75rem, 5.5vw, 4.75rem);
         position: relative;
         z-index: 1;
     }
@@ -684,7 +684,7 @@
     .ap-hero__button:focus-visible,
     .ap-showcase-button:focus-visible,
     .site-scroll-top.scroll-top:focus-visible,
-    .block-media-item:focus-visible,
+    .widget-media-item:focus-visible,
     button:focus-visible {
         outline: 2px solid #2563eb;
         outline-offset: 3px;
@@ -812,11 +812,11 @@
     .ap-showcase-feature-list,
     .ap-showcase-gallery,
     .ap-showcase-cta {
-        padding-block: var(--foundation-section-spacing);
+        padding-widget: var(--foundation-section-spacing);
     }
 
     .ap-showcase-gallery {
-        padding-block: var(--foundation-section-spacing);
+        padding-widget: var(--foundation-section-spacing);
     }
 
     .ap-showcase-gallery .capell-showcase__section-head {
@@ -907,23 +907,23 @@
         overflow-wrap: anywhere;
     }
 
-    .block-ap-stats-section section,
-    .block-ap-process-steps section,
-    .block-ap-alternating-content section,
-    .block-ap-testimonials section,
-    .block-ap-pricing-table section,
-    .block-ap-team-members section,
-    .block-ap-faq-section section {
-        padding-block: var(--foundation-section-spacing);
+    .widget-ap-stats-section section,
+    .widget-ap-process-steps section,
+    .widget-ap-alternating-content section,
+    .widget-ap-testimonials section,
+    .widget-ap-pricing-table section,
+    .widget-ap-team-members section,
+    .widget-ap-faq-section section {
+        padding-widget: var(--foundation-section-spacing);
     }
 
-    .block-ap-stats-section h2,
-    .block-ap-process-steps h2,
-    .block-ap-alternating-content h2,
-    .block-ap-testimonials h2,
-    .block-ap-pricing-table h2,
-    .block-ap-team-members h2,
-    .block-ap-faq-section h2,
+    .widget-ap-stats-section h2,
+    .widget-ap-process-steps h2,
+    .widget-ap-alternating-content h2,
+    .widget-ap-testimonials h2,
+    .widget-ap-pricing-table h2,
+    .widget-ap-team-members h2,
+    .widget-ap-faq-section h2,
     .capell-showcase__heading {
         font-size: clamp(2rem, 3.8vw, 3.5rem);
         letter-spacing: 0;
@@ -931,13 +931,13 @@
         overflow-wrap: anywhere;
     }
 
-    .block-ap-stats-section p,
-    .block-ap-process-steps p,
-    .block-ap-alternating-content p,
-    .block-ap-testimonials p,
-    .block-ap-pricing-table p,
-    .block-ap-team-members p,
-    .block-ap-faq-section p,
+    .widget-ap-stats-section p,
+    .widget-ap-process-steps p,
+    .widget-ap-alternating-content p,
+    .widget-ap-testimonials p,
+    .widget-ap-pricing-table p,
+    .widget-ap-team-members p,
+    .widget-ap-faq-section p,
     .capell-showcase__copy {
         overflow-wrap: anywhere;
     }

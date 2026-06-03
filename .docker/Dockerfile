@@ -20,6 +20,9 @@ RUN apt-get update \
     && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" > /etc/apt/sources.list.d/nodesource.list \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
+        libasound2 libatk-bridge2.0-0 libatk1.0-0 libatspi2.0-0 libcairo2 \
+        libcups2 libdbus-1-3 libgbm1 libnspr4 libnss3 libpango-1.0-0 \
+        libxcomposite1 libxdamage1 libxfixes3 libxkbcommon0 libxrandr2 \
         nodejs php8.4 php8.4-bcmath php8.4-cli php8.4-curl php8.4-gd \
         php8.4-igbinary php8.4-imagick php8.4-intl php8.4-mbstring php8.4-memcached \
         php8.4-msgpack php8.4-mysql php8.4-opcache php8.4-pcov php8.4-readline \

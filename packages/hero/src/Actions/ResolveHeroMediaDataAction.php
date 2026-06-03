@@ -13,13 +13,13 @@ use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsObject;
 
 /**
- * @method static HeroMediaData run(?Theme $theme = null, ?Widget $block = null, ?WidgetAsset $asset = null)
+ * @method static HeroMediaData run(?Theme $theme = null, ?Widget $widget = null, ?WidgetAsset $asset = null)
  */
 final class ResolveHeroMediaDataAction
 {
     use AsObject;
 
-    public function handle(?Theme $theme = null, ?Widget $block = null, ?WidgetAsset $asset = null): HeroMediaData
+    public function handle(?Theme $theme = null, ?Widget $widget = null, ?WidgetAsset $asset = null): HeroMediaData
     {
         $settings = [
             'enabled' => false,
@@ -33,7 +33,7 @@ final class ResolveHeroMediaDataAction
         $videos = [];
         $images = [];
 
-        foreach ($this->layers($theme, $block, $asset) as $layer) {
+        foreach ($this->layers($theme, $widget, $asset) as $layer) {
             $mode = $this->stringValue($layer['settings']['mode'] ?? null);
 
             if ($mode === HeroMediaData::ModeOff) {
@@ -64,9 +64,9 @@ final class ResolveHeroMediaDataAction
     /**
      * @return list<array{model: Theme|Widget|WidgetAsset, settings: array<string, mixed>}>
      */
-    private function layers(?Theme $theme, ?Widget $block, ?WidgetAsset $asset): array
+    private function layers(?Theme $theme, ?Widget $widget, ?WidgetAsset $asset): array
     {
-        return array_values(collect([$theme, $block, $asset])
+        return array_values(collect([$theme, $widget, $asset])
             ->filter(fn (Theme|Widget|WidgetAsset|null $model): bool => $model !== null)
             ->map(function (Theme|Widget|WidgetAsset $model): ?array {
                 $settings = $model->getMeta('hero_media', []);

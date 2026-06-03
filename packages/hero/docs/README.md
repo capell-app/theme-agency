@@ -1,6 +1,6 @@
 # Hero Docs
 
-Hero provides the default Capell home hero block, rendering, and layout setup.
+Hero provides the default Capell home hero widget, rendering, and layout setup.
 
 Start at the [package README](../README.md) when deciding whether to install this package. Use the docs below for setup, extension, debugging, and verification details.
 

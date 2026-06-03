@@ -14,6 +14,7 @@ use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use BladeUI\Icons\BladeIconsServiceProvider;
 use Capell\Address\Models\Address;
 use Capell\Address\Models\Country;
+use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Support\CapellAdminManager;
 use Capell\Blog\Models\Article;
@@ -21,14 +22,21 @@ use Capell\ContentSections\Models\Section;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Providers\CapellServiceProvider;
 use Capell\Core\Support\CapellCoreManager;
-use Capell\FoundationTheme\View\Components\Block\Page\Breadcrumbs;
-use Capell\FoundationTheme\View\Components\Block\Page\Children;
-use Capell\FoundationTheme\View\Components\Block\Page\Content;
-use Capell\FoundationTheme\View\Components\Block\Page\Latest;
-use Capell\FoundationTheme\View\Components\Block\Page\Siblings;
+use Capell\Diagnostics\Filament\Pages\DiagnosticsPage;
+use Capell\Diagnostics\Filament\Pages\PermissionAuditPage;
+use Capell\Diagnostics\Filament\Pages\QueueHealthPage;
+use Capell\Diagnostics\Filament\Pages\SystemHealthPage;
+use Capell\Diagnostics\Providers\AdminServiceProvider as DiagnosticsAdminServiceProvider;
+use Capell\Diagnostics\Providers\DiagnosticsServiceProvider;
+use Capell\FoundationTheme\View\Components\Widget\Page\Breadcrumbs;
+use Capell\FoundationTheme\View\Components\Widget\Page\Children;
+use Capell\FoundationTheme\View\Components\Widget\Page\Content;
+use Capell\FoundationTheme\View\Components\Widget\Page\Latest;
+use Capell\FoundationTheme\View\Components\Widget\Page\Siblings;
 use Capell\LayoutBuilder\Livewire\Filament\LayoutBuilder;
 use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Models\WidgetAsset;
+use Capell\MediaLibrary\Filament\Pages\MediaHealthPage;
 use Capell\Tests\Fixtures\Models\User;
 use Capell\Tests\Fixtures\Policies\RolePolicy;
 use Capell\Tests\Support\Concerns\BuildsOrderedMigrationWorkspace;
@@ -139,38 +147,38 @@ abstract class AbstractTestCase extends TestCase
         Blade::componentNamespace('Capell\\FoundationTheme\\View\\Components', 'capell-foundation-theme');
         Blade::componentNamespace('Capell\\FoundationTheme\\View\\Components', 'capell-layout-builder');
         Blade::component(Breadcrumbs::class, 'capell::element.page.breadcrumbs');
-        Blade::component(Breadcrumbs::class, 'capell::block.page.breadcrumbs');
         Blade::component(Breadcrumbs::class, 'capell::widget.page.breadcrumbs');
-        Blade::component('capell-foundation-theme::components.block.page.breadcrumbs', 'capell-layout-builder-widget-page-breadcrumbs');
+        Blade::component(Breadcrumbs::class, 'capell::widget.page.breadcrumbs');
+        Blade::component('capell-foundation-theme::components.widget.page.breadcrumbs', 'capell-layout-builder-widget-page-breadcrumbs');
         Blade::component(Content::class, 'capell-element-page-content');
-        Blade::component(Content::class, 'capell-block-page-content');
+        Blade::component(Content::class, 'capell-widget-page-content');
         Blade::component(Content::class, 'capell-layout-builder-widget-page-content');
-        Blade::component('capell-foundation-theme::components.block.slot', 'capell-layout-builder-widget-slot');
-        Blade::component('capell-foundation-theme::components.block.slot', 'capell::widget.slot');
-        Blade::component('capell-foundation-theme::components.block.wrapper', 'capell-layout-builder::widget.wrapper');
+        Blade::component('capell-foundation-theme::components.widget.slot', 'capell-layout-builder-widget-slot');
+        Blade::component('capell-foundation-theme::components.widget.slot', 'capell::widget.slot');
+        Blade::component('capell-foundation-theme::components.widget.wrapper', 'capell-layout-builder::widget.wrapper');
         Blade::component(Children::class, 'capell::element.page.children');
-        Blade::component(Children::class, 'capell::block.page.children');
+        Blade::component(Children::class, 'capell::widget.page.children');
         Blade::component(Children::class, 'capell::widget.page.children');
         Blade::component(Content::class, 'capell::element.page.content');
-        Blade::component(Content::class, 'capell::block.page.content');
+        Blade::component(Content::class, 'capell::widget.page.content');
         Blade::component(Content::class, 'capell::widget.page.content');
         Blade::component(Latest::class, 'capell::element.page.latest');
-        Blade::component(Latest::class, 'capell::block.page.latest');
+        Blade::component(Latest::class, 'capell::widget.page.latest');
         Blade::component(Latest::class, 'capell::widget.page.latest');
         Blade::component(Siblings::class, 'capell::element.page.siblings');
-        Blade::component(Siblings::class, 'capell::block.page.siblings');
+        Blade::component(Siblings::class, 'capell::widget.page.siblings');
         Blade::component(Siblings::class, 'capell::widget.page.siblings');
         Blade::component(Children::class, 'capell-layout-builder::element.page.children');
-        Blade::component(Children::class, 'capell-layout-builder::block.page.children');
+        Blade::component(Children::class, 'capell-layout-builder::widget.page.children');
         Blade::component(Children::class, 'capell-layout-builder::widget.page.children');
         Blade::component(Content::class, 'capell-layout-builder::element.page.content');
-        Blade::component(Content::class, 'capell-layout-builder::block.page.content');
+        Blade::component(Content::class, 'capell-layout-builder::widget.page.content');
         Blade::component(Content::class, 'capell-layout-builder::widget.page.content');
         Blade::component(Latest::class, 'capell-layout-builder::element.page.latest');
-        Blade::component(Latest::class, 'capell-layout-builder::block.page.latest');
+        Blade::component(Latest::class, 'capell-layout-builder::widget.page.latest');
         Blade::component(Latest::class, 'capell-layout-builder::widget.page.latest');
         Blade::component(Siblings::class, 'capell-layout-builder::element.page.siblings');
-        Blade::component(Siblings::class, 'capell-layout-builder::block.page.siblings');
+        Blade::component(Siblings::class, 'capell-layout-builder::widget.page.siblings');
         Blade::component(Siblings::class, 'capell-layout-builder::widget.page.siblings');
         Livewire::component('capell-layout-builder::filament.layout-builder', LayoutBuilder::class);
 
@@ -182,8 +190,8 @@ abstract class AbstractTestCase extends TestCase
             'country' => Country::class,
             'section' => Section::class,
             'user' => User::class,
-            'block' => Widget::class,
-            'block_asset' => WidgetAsset::class,
+            'widget' => Widget::class,
+            'widget_asset' => WidgetAsset::class,
         ]);
 
         Model::shouldBeStrict();
@@ -229,6 +237,8 @@ abstract class AbstractTestCase extends TestCase
         Config::set('database.connections.sqlite.url');
 
         $this->registerPackageConfigs($app);
+        $this->registerDiagnosticsPagesForFilament();
+        CapellCore::forcePackageInstalled(DiagnosticsServiceProvider::$packageName);
 
         Gate::policy(Utils::getRoleModel(), RolePolicy::class);
     }
@@ -287,6 +297,8 @@ abstract class AbstractTestCase extends TestCase
             SchemasServiceProvider::class,
             CapellServiceProvider::class,
             LaravelSettingsServiceProvider::class,
+            DiagnosticsServiceProvider::class,
+            DiagnosticsAdminServiceProvider::class,
             TablesServiceProvider::class,
             TagsServiceProvider::class,
             MediaLibraryServiceProvider::class,
@@ -422,6 +434,13 @@ abstract class AbstractTestCase extends TestCase
             }
 
             $migration->up();
+        }
+    }
+
+    private function registerDiagnosticsPagesForFilament(): void
+    {
+        foreach ([DiagnosticsPage::class, MediaHealthPage::class, PermissionAuditPage::class, QueueHealthPage::class, SystemHealthPage::class] as $page) {
+            CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page($page));
         }
     }
 

@@ -4,10 +4,6 @@ permissions:
   contents: read
 
 on:
-  push:
-    branches:
-      - main
-      - 4.x
   release:
     types: [published]
   workflow_dispatch:

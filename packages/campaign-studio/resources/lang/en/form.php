@@ -11,7 +11,7 @@ return [
     'body' => 'Body',
     'budget_amount' => 'Budget amount',
     'campaign_group' => 'Campaign group',
-    'cta_block' => 'CTA block',
+    'cta_widget' => 'CTA widget',
     'default_utm' => 'Default UTM',
     'ends_at' => 'Ends at',
     'eyebrow' => 'Eyebrow',

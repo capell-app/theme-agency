@@ -10,6 +10,7 @@ use Capell\AutomationStudio\Data\AutomationTriggerEventData;
 use Capell\AutomationStudio\Enums\AutomationActionType;
 use Capell\AutomationStudio\Enums\AutomationTriggerType;
 use Capell\AutomationStudio\Support\Handlers\QueueAgentCapabilityAutomationActionHandler;
+use Capell\AutomationStudio\Tests\Fixtures\QueueAgentCapabilityInvocationProbe;
 
 it('provides a native agent bridge capability handler', function (): void {
     expect(new QueueAgentCapabilityAutomationActionHandler)->toBeInstanceOf(AutomationActionHandler::class);
@@ -35,9 +36,9 @@ it('reports missing agent bridge capability keys before invoking agent bridge', 
 it('queues agent bridge capabilities with merged payload and scoped automation clients', function (): void {
     $invocation = new QueueAgentCapabilityInvocationProbe;
 
-    app()->instance(InvokeAgentBridgeCapabilityPreviewAction::class, new class($invocation)
+    app()->instance(InvokeAgentBridgeCapabilityPreviewAction::class, new readonly class($invocation)
     {
-        public function __construct(private readonly QueueAgentCapabilityInvocationProbe $invocation) {}
+        public function __construct(private QueueAgentCapabilityInvocationProbe $invocation) {}
 
         /**
          * @param  array<string, mixed>  $payload
@@ -146,13 +147,3 @@ it('returns agent bridge invocation failures as automation action failures', fun
         ->and($result->message)->toBe('Agent Bridge rejected the capability.')
         ->and($result->context['error_type'])->toBe(RuntimeException::class);
 });
-
-final class QueueAgentCapabilityInvocationProbe
-{
-    public ?string $capabilityKey = null;
-
-    /** @var array<string, mixed> */
-    public array $payload = [];
-
-    public ?AuthenticatedAgentBridgeClientData $client = null;
-}

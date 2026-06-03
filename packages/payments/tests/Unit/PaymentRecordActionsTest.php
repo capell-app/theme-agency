@@ -191,11 +191,11 @@ it('records provider payment objects idempotently through their natural keys', f
 
 it('records checkout sessions with source context and links them to provider customers', function (): void {
     $sourceData = new CreateCheckoutSessionData(
-        mode: CheckoutMode::Payment,
-        purpose: PaymentPurpose::PaidDownload,
         successUrl: 'https://example.test/success',
         cancelUrl: 'https://example.test/cancel',
         lineItems: [],
+        purpose: PaymentPurpose::PaidDownload,
+        mode: CheckoutMode::Payment,
         siteId: 22,
         billableType: 'user',
         billableId: '42',

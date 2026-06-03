@@ -12,14 +12,13 @@ use Capell\Comments\Filament\Widgets\LatestCommentsWidget;
 use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
 use Capell\Comments\Models\CommentModerationEvent;
+use Capell\Comments\Tests\Fixtures\CommentAdminUrlCommentable;
 use Capell\Tests\Fixtures\Models\User;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Notification;
 use Spatie\Permission\Models\Role;
@@ -247,16 +246,4 @@ function commentAdminActionNames(array $actions): array
         ->map(fn (Action $action): string => $action->getName() ?? '')
         ->values()
         ->all();
-}
-
-final class CommentAdminUrlCommentable extends Model
-{
-    use HasFactory;
-
-    protected $guarded = [];
-
-    public function getUrl(): string
-    {
-        return (string) $this->getAttribute('url');
-    }
 }

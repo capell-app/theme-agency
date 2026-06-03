@@ -8,19 +8,19 @@ return [
         'secondary' => 'Secondary',
     ],
     'campaign' => 'Campaign',
-    'campaign_block_components' => [
-        'campaign_cta_block' => 'Campaign CTA block',
-        'campaign_hero' => 'Campaign hero block',
-        'campaign_lead_form' => 'Campaign lead form block',
+    'campaign_widget_components' => [
+        'campaign_cta_widget' => 'Campaign CTA widget',
+        'campaign_hero' => 'Campaign hero widget',
+        'campaign_lead_form' => 'Campaign lead form widget',
     ],
-    'campaign_block_configurators' => [
-        'campaign_cta_block' => 'Campaign CTA block settings',
-        'campaign_hero' => 'Campaign hero block settings',
+    'campaign_widget_configurators' => [
+        'campaign_cta_widget' => 'Campaign CTA widget settings',
+        'campaign_hero' => 'Campaign hero widget settings',
         'campaign_lead_form' => 'Campaign lead form settings',
     ],
     'campaign_groups' => 'Campaign groups',
     'conversions' => 'Conversions',
-    'cta_block' => 'CTA block',
+    'cta_widget' => 'CTA widget',
     'cta_form_sections' => [
         'actions' => 'Actions',
         'default_utm' => 'Default UTM',

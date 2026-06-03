@@ -585,7 +585,7 @@ HTML;
             'pathwaysSummary' => 'Accordion-style pathways give buyers and editors clear ways to imagine the theme beyond one homepage.',
             'pathways' => $this->defaultPathwayItems($themeName),
             'proofHeading' => 'Proof that the theme can carry real pages',
-            'proofSummary' => 'Evidence blocks pair outcomes with media so previews feel closer to launchable sites.',
+            'proofSummary' => 'Evidence widgets pair outcomes with media so previews feel closer to launchable sites.',
             'proof' => $this->defaultProofItems($themeName),
             'ctaHeading' => 'Turn this preview into a real site',
             'ctaSummary' => 'CTA copy is stored as data, not presentation markup.',
@@ -595,7 +595,7 @@ HTML;
             'agency' => [
                 'summary' => 'A high-contrast agency homepage with campaign proof, project cards, and decisive conversion paths.',
                 'heroHeading' => 'Win sharper briefs with a bolder agency site',
-                'heroSummary' => 'Lead with portfolio-grade media, crisp positioning, and reusable proof blocks that can survive real client edits.',
+                'heroSummary' => 'Lead with portfolio-grade media, crisp positioning, and reusable proof widgets that can survive real client edits.',
                 'featuresHeading' => 'Built for teams selling creative judgment',
                 'featuresSummary' => 'The page gives agencies enough visual rhythm for brand work without trapping content inside a one-off template.',
                 'features' => [

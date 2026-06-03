@@ -44,27 +44,27 @@ final readonly class HeroAssetSlideData
         public ?Collection $images,
     ) {}
 
-    public static function fromBlockAsset(
-        WidgetAsset $blockAsset,
-        Widget $block,
+    public static function fromWidgetAsset(
+        WidgetAsset $widgetAsset,
+        Widget $widget,
         string $fallbackColor,
         ?Page $page = null,
         ?Site $site = null,
     ): self {
-        $asset = self::loadedRelation($blockAsset, 'asset');
+        $asset = self::loadedRelation($widgetAsset, 'asset');
 
-        throw_unless($asset instanceof Model, RuntimeException::class, 'Hero block asset must resolve to an Eloquent model.');
+        throw_unless($asset instanceof Model, RuntimeException::class, 'Hero widget asset must resolve to an Eloquent model.');
 
         $color = method_exists($asset, 'getMeta') ? $asset->getMeta('color', $fallbackColor) : $fallbackColor;
         $linkedPage = $asset instanceof Page ? $asset : self::loadedRelation($asset, 'linkedPage');
-        $backgroundImage = self::resolveBackgroundImage($blockAsset);
-        $images = self::resolveImages($blockAsset);
+        $backgroundImage = self::resolveBackgroundImage($widgetAsset);
+        $images = self::resolveImages($widgetAsset);
         $translation = self::loadedRelation($asset, 'translation');
-        $backgroundAttachment = method_exists($asset, 'getMeta') ? $asset->getMeta('background_attachment', $block->getMeta('background_attachment', 'scroll')) : null;
-        $backgroundColor = method_exists($asset, 'getMeta') ? $asset->getMeta('background_color', $block->getMeta('background_color')) : null;
-        $backgroundPosition = method_exists($asset, 'getMeta') ? $asset->getMeta('background_position', $block->getMeta('background_position', 'center')) : null;
-        $backgroundRepeat = method_exists($asset, 'getMeta') ? $asset->getMeta('background_repeat', $block->getMeta('background_repeat', 'no-repeat')) : null;
-        $backgroundSize = method_exists($asset, 'getMeta') ? $asset->getMeta('background_size', $block->getMeta('background_size', 'cover')) : null;
+        $backgroundAttachment = method_exists($asset, 'getMeta') ? $asset->getMeta('background_attachment', $widget->getMeta('background_attachment', 'scroll')) : null;
+        $backgroundColor = method_exists($asset, 'getMeta') ? $asset->getMeta('background_color', $widget->getMeta('background_color')) : null;
+        $backgroundPosition = method_exists($asset, 'getMeta') ? $asset->getMeta('background_position', $widget->getMeta('background_position', 'center')) : null;
+        $backgroundRepeat = method_exists($asset, 'getMeta') ? $asset->getMeta('background_repeat', $widget->getMeta('background_repeat', 'no-repeat')) : null;
+        $backgroundSize = method_exists($asset, 'getMeta') ? $asset->getMeta('background_size', $widget->getMeta('background_size', 'cover')) : null;
         $linkText = method_exists($asset, 'getMeta') ? $asset->getMeta('link_text') : null;
         $content = is_string(data_get($translation, 'content')) ? data_get($translation, 'content') : null;
 
@@ -92,19 +92,19 @@ final readonly class HeroAssetSlideData
         );
     }
 
-    private static function resolveBackgroundImage(WidgetAsset $blockAsset): ?Media
+    private static function resolveBackgroundImage(WidgetAsset $widgetAsset): ?Media
     {
-        $asset = self::loadedRelation($blockAsset, 'asset');
+        $asset = self::loadedRelation($widgetAsset, 'asset');
 
         if ($asset instanceof Media) {
             return $asset;
         }
 
         $collection = MediaCollectionEnum::BackgroundImage->value;
-        $blockAssetMedia = self::loadedRelation($blockAsset, 'media');
+        $widgetAssetMedia = self::loadedRelation($widgetAsset, 'media');
         $assetMedia = $asset instanceof Model ? self::loadedRelation($asset, 'media') : null;
 
-        $media = $blockAssetMedia instanceof Collection ? $blockAssetMedia->firstWhere('collection_name', $collection) : null;
+        $media = $widgetAssetMedia instanceof Collection ? $widgetAssetMedia->firstWhere('collection_name', $collection) : null;
 
         if (! $media instanceof Media && $assetMedia instanceof Collection) {
             $media = $assetMedia->firstWhere('collection_name', $collection);
@@ -116,19 +116,19 @@ final readonly class HeroAssetSlideData
     /**
      * @return Collection<int, Media>|null
      */
-    private static function resolveImages(WidgetAsset $blockAsset): ?Collection
+    private static function resolveImages(WidgetAsset $widgetAsset): ?Collection
     {
-        $asset = self::loadedRelation($blockAsset, 'asset');
+        $asset = self::loadedRelation($widgetAsset, 'asset');
 
         if ($asset instanceof Media) {
             return null;
         }
 
         $collection = MediaCollectionEnum::Image->value;
-        $blockAssetMedia = self::loadedRelation($blockAsset, 'media');
+        $widgetAssetMedia = self::loadedRelation($widgetAsset, 'media');
         $assetMedia = $asset instanceof Model ? self::loadedRelation($asset, 'media') : null;
 
-        $images = $blockAssetMedia instanceof Collection ? $blockAssetMedia->where('collection_name', $collection) : null;
+        $images = $widgetAssetMedia instanceof Collection ? $widgetAssetMedia->where('collection_name', $collection) : null;
 
         if (! $images?->isNotEmpty() && $assetMedia instanceof Collection) {
             $images = $assetMedia->where('collection_name', $collection);

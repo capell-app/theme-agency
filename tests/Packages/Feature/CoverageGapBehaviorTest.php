@@ -9,7 +9,6 @@ use Capell\AutomationStudio\Actions\DispatchAutomationTriggerAction;
 use Capell\AutomationStudio\Actions\LoadPersistedAutomationRulesAction;
 use Capell\AutomationStudio\Actions\PersistAutomationTriggerResultsAction;
 use Capell\AutomationStudio\Actions\RecordAutomationRunAction;
-use Capell\AutomationStudio\Contracts\AutomationActionHandler;
 use Capell\AutomationStudio\Data\AutomationActionResultData;
 use Capell\AutomationStudio\Data\AutomationRuleActionData;
 use Capell\AutomationStudio\Data\AutomationRuleData;
@@ -40,8 +39,6 @@ use Capell\CustomerPortal\Models\PortalAccount;
 use Capell\CustomerPortal\Support\PortalPreferencesProviderRegistry;
 use Capell\CustomerPortal\Support\PortalProfileProviderRegistry;
 use Capell\DemoKit\Actions\BuildDemoPageContentViewDataAction;
-use Capell\DemoKit\Console\Commands\Concerns\HasLanguagesOption;
-use Capell\DemoKit\Console\Commands\Concerns\HasSitesOption;
 use Capell\HtmlCache\Models\CachedModelUrl;
 use Capell\HtmlCache\Support\SiteDiscovery\HtmlCacheGeneratedOutputCoverageSource;
 use Capell\LayoutBuilder\Models\Widget;
@@ -67,9 +64,6 @@ use Capell\PrivacyCenter\Enums\ResourceEnum as PrivacyResourceEnum;
 use Capell\PrivacyCenter\Providers\AdminServiceProvider as PrivacyCenterAdminServiceProvider;
 use Capell\PrivacyCenter\Providers\PrivacyCenterServiceProvider;
 use Capell\PublicActions\Actions\SubmitPublicActionAction;
-use Capell\PublicActions\Contracts\PublicActionHandler;
-use Capell\PublicActions\Data\PublicActionResultData;
-use Capell\PublicActions\Data\PublicActionSubmissionData;
 use Capell\PublicActions\Models\PublicAction;
 use Capell\PublicActions\Support\PublicActionHandlerRegistry;
 use Capell\Search\Support\SiteDiscovery\SearchGeneratedOutputCoverageSource;
@@ -77,8 +71,14 @@ use Capell\SiteDiscovery\Data\PublicUrlRegistryEntryData;
 use Capell\SiteDiscovery\Enums\PublicUrlIndexability;
 use Capell\SiteDiscovery\Filament\Extenders\Site\SitemapSiteHeaderActionExtender;
 use Capell\SiteDiscovery\Filament\Extenders\Site\SitemapSiteRecordActionExtender;
-use Illuminate\Console\Command;
+use Capell\Tests\Packages\Fixtures\CoverageGapCapturingAutomationHandler;
+use Capell\Tests\Packages\Fixtures\CoverageGapDemoKitOptionsCommand;
+use Capell\Tests\Packages\Fixtures\CoverageGapPortalPreferencesProvider;
+use Capell\Tests\Packages\Fixtures\CoverageGapPortalProfileProvider;
+use Capell\Tests\Packages\Fixtures\CoverageGapPublicActionHandler;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Gate;
@@ -335,12 +335,18 @@ it('builds demo page content view data from page metadata translations type stru
     ]);
     $page->exists = true;
     $page->setRelation('translation', new Translation(['content' => '<p>Portable content.</p>']));
-    $pageType = new class extends Model {};
+
+    $pageType = new class extends Model
+    {
+        /** @use HasFactory<Factory<static>> */
+        use HasFactory;
+    };
     $pageType->setRawAttributes(['content_structure' => 'article']);
+
     $page->setRelation('type', $pageType);
 
-    $block = new Widget;
-    $block->setRelation('assets', new EloquentCollection([
+    $widget = new Widget;
+    $widget->setRelation('assets', new EloquentCollection([
         coverageGapDemoWidgetAsset($page, 'main', 2, 20, [
             'demo_kit_seed' => true,
             'variant' => 'metrics',
@@ -361,7 +367,7 @@ it('builds demo page content view data from page metadata translations type stru
         ]),
     ]));
 
-    $data = BuildDemoPageContentViewDataAction::run($page, $block, 'main', ['occurrence' => 2]);
+    $data = BuildDemoPageContentViewDataAction::run($page, $widget, 'main', ['occurrence' => 2]);
 
     expect($data->pageName)->toBe('Platform Architecture')
         ->and($data->pageSlug)->toBe('platform-architecture')
@@ -401,8 +407,8 @@ it('normalizes special demo page names and suppresses blog asset sections', func
     ]);
     $blog->exists = true;
 
-    $block = new Widget;
-    $block->setRelation('assets', new EloquentCollection([
+    $widget = new Widget;
+    $widget->setRelation('assets', new EloquentCollection([
         coverageGapDemoWidgetAsset($blog, 'main', 1, 10, [
             'demo_kit_seed' => true,
             'variant' => 'cards',
@@ -410,7 +416,7 @@ it('normalizes special demo page names and suppresses blog asset sections', func
         ]),
     ]));
 
-    $blogData = BuildDemoPageContentViewDataAction::run($blog, $block, 'main', []);
+    $blogData = BuildDemoPageContentViewDataAction::run($blog, $widget, 'main', []);
 
     expect($faq->pageName)->toBe('FAQ')
         ->and($faq->pageSlug)->toBe('faq')
@@ -566,6 +572,7 @@ it('dispatches configured automation public actions with event source context', 
     app()->forgetInstance(PublicActionHandlerRegistry::class);
     app()->forgetInstance(SubmitPublicActionAction::class);
     app()->singleton(PublicActionHandlerRegistry::class);
+
     resolve(PublicActionHandlerRegistry::class)->register('coverage-gap.public-action', new CoverageGapPublicActionHandler);
 
     PublicAction::factory()->create([
@@ -693,8 +700,8 @@ it('resolves customer portal profile and preference providers from instances and
         ->and($profileRegistry->providers())->toHaveCount(2)
         ->and($profileRegistry->providers()[0])->toBe($profileInstance)
         ->and($profileRegistry->providers()[1])->toBeInstanceOf(CoverageGapPortalProfileProvider::class)
-        ->and(fn () => $preferenceRegistry->register('', $preferencesInstance))->toThrow(InvalidArgumentException::class)
-        ->and(fn () => $profileRegistry->register('', $profileInstance))->toThrow(InvalidArgumentException::class);
+        ->and(fn (): PortalPreferencesProviderRegistry => $preferenceRegistry->register('', $preferencesInstance))->toThrow(InvalidArgumentException::class)
+        ->and(fn (): PortalProfileProviderRegistry => $profileRegistry->register('', $profileInstance))->toThrow(InvalidArgumentException::class);
 });
 
 it('rejects customer portal provider classes that do not implement the provider contracts', function (): void {
@@ -704,8 +711,8 @@ it('rejects customer portal provider classes that do not implement the provider 
     (new ReflectionMethod($preferenceRegistry, 'register'))->invoke($preferenceRegistry, 'broken', stdClass::class);
     (new ReflectionMethod($profileRegistry, 'register'))->invoke($profileRegistry, 'broken', stdClass::class);
 
-    expect(fn () => $preferenceRegistry->providers())->toThrow(InvalidArgumentException::class)
-        ->and(fn () => $profileRegistry->providers())->toThrow(InvalidArgumentException::class);
+    expect(fn (): array => $preferenceRegistry->providers())->toThrow(InvalidArgumentException::class)
+        ->and(fn (): array => $profileRegistry->providers())->toThrow(InvalidArgumentException::class);
 });
 
 it('builds sitemap site actions that preserve the selected site id', function (): void {
@@ -747,7 +754,11 @@ it('dispatches access approval automation payloads from registration events', fu
     ));
     $actions->registerHandler(AutomationActionType::SendEmail, $handler);
 
-    $registration = new class extends Model {};
+    $registration = new class extends Model
+    {
+        /** @use HasFactory<Factory<static>> */
+        use HasFactory;
+    };
     $registration->forceFill([
         'id' => 88,
         'email' => 'approved@example.test',
@@ -788,7 +799,11 @@ it('dispatches workspace publication automation only for published transitions',
         new DispatchAutomationTriggerAction($rules, $actions),
     );
 
-    $workspace = new class extends Model {};
+    $workspace = new class extends Model
+    {
+        /** @use HasFactory<Factory<static>> */
+        use HasFactory;
+    };
     $workspace->forceFill(['id' => 44]);
     $workspace->exists = true;
 
@@ -884,92 +899,4 @@ function coverageGapDemoWidgetAsset(Page $page, string $container, int $occurren
     ]);
 
     return $asset;
-}
-
-final class CoverageGapDemoKitOptionsCommand extends Command
-{
-    use HasLanguagesOption;
-    use HasSitesOption;
-
-    protected $signature = 'coverage-gap:demo-kit-options';
-
-    /** @param array<string, mixed> $options */
-    public function __construct(private readonly array $options)
-    {
-        parent::__construct();
-    }
-
-    /**
-     * @param  string|null  $key
-     * @return ($key is null ? array<string, mixed> : mixed)
-     */
-    public function option($key = null)
-    {
-        return $key === null ? $this->options : ($this->options[$key] ?? null);
-    }
-
-    /** @return array<int, string> */
-    public function demoSites(): array
-    {
-        return $this->getDemoSites();
-    }
-
-    /** @return array<int, string> */
-    public function demoLanguages(): array
-    {
-        return $this->getDemoLanguages();
-    }
-}
-
-final class CoverageGapPortalPreferencesProvider implements PortalPreferencesProvider
-{
-    public function preferencesFor(PortalAccount $portalAccount): PortalPreferencesData
-    {
-        return new PortalPreferencesData(['timezone' => 'Europe/London']);
-    }
-}
-
-final class CoverageGapPortalProfileProvider implements PortalProfileProvider
-{
-    public function profileFor(PortalAccount $portalAccount): PortalProfileData
-    {
-        return new PortalProfileData(
-            accountId: 1,
-            siteId: 1,
-            email: 'container@example.test',
-            displayName: 'Container',
-            status: PortalAccountStatus::Active,
-        );
-    }
-}
-
-final class CoverageGapCapturingAutomationHandler implements AutomationActionHandler
-{
-    /** @var list<AutomationTriggerEventData> */
-    public array $events = [];
-
-    /** @var list<AutomationRuleActionData> */
-    public array $actions = [];
-
-    public function handle(AutomationTriggerEventData $event, AutomationRuleActionData $action): AutomationActionResultData
-    {
-        $this->events[] = $event;
-        $this->actions[] = $action;
-
-        return new AutomationActionResultData(true, 'captured');
-    }
-}
-
-final class CoverageGapPublicActionHandler implements PublicActionHandler
-{
-    public function handle(PublicActionSubmissionData $submission): PublicActionResultData
-    {
-        $payload = $submission->payload->values;
-
-        return new PublicActionResultData(
-            success: true,
-            message: sprintf('%s:%s', $payload['email'] ?? '', $payload['plan'] ?? ''),
-            redirectUrl: 'https://example.test/thanks',
-        );
-    }
 }

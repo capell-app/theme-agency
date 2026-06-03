@@ -14,6 +14,7 @@ use Capell\Core\ThemeStudio\Exceptions\ThemeNotFoundException;
 use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Tests\Fixtures\ThemeRegistryTestStringSectionRenderer;
 
 it('registers theme definitions renderers and section renderers by theme key', function (): void {
     $registry = new ThemeRegistry;
@@ -209,28 +210,4 @@ function themeRegistryTestRegisterTheme(
         new BladeThemeRenderer($themeKey, 'missing-layout', $rendererMap),
         $sectionRenderers,
     );
-}
-
-final class ThemeRegistryTestStringSectionRenderer implements SectionRenderer
-{
-    public function __construct(
-        private readonly string $themeKey,
-        private readonly string $sectionKey,
-        private readonly string $html,
-    ) {}
-
-    public function themeKey(): string
-    {
-        return $this->themeKey;
-    }
-
-    public function sectionKey(): string
-    {
-        return $this->sectionKey;
-    }
-
-    public function render(ThemeSection $section): string
-    {
-        return '<section data-theme="' . $this->themeKey . '" data-section="' . $section->key() . '">' . $this->html . '</section>';
-    }
 }

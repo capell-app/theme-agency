@@ -42,20 +42,20 @@
             "screenshotPath": "packages/campaign-studio/docs/screenshots/campaign-conversion-goals-form.png"
         },
         {
-            "id": "cta-block-form",
-            "title": "CTA block form.",
+            "id": "cta-widget-form",
+            "title": "CTA widget form.",
             "package": "campaign-studio",
             "surface": "admin",
             "targetType": "admin-surface",
-            "target": "CampaignCtaBlockResource.create",
+            "target": "CampaignCtaWidgetResource.create",
             "required": true,
             "notes": "Requires a seeded campaign group and target URL or target page. Capture title, body, button/action, style, and tracking fields.",
-            "useCase": "A marketer creates a reusable campaign CTA block with conversion tracking metadata.",
-            "screenshotPath": "packages/campaign-studio/docs/screenshots/cta-block-form.png"
+            "useCase": "A marketer creates a reusable campaign CTA widget with conversion tracking metadata.",
+            "screenshotPath": "packages/campaign-studio/docs/screenshots/cta-widget-form.png"
         },
         {
-            "id": "campaign-dashboard-blocks",
-            "title": "Campaign dashboard blocks.",
+            "id": "campaign-dashboard-widgets",
+            "title": "Campaign dashboard widgets.",
             "package": "campaign-studio",
             "surface": "admin",
             "targetType": "admin-surface",
@@ -63,19 +63,19 @@
             "required": true,
             "notes": "Requires the host dashboard to register Campaign Studio widgets and seeded visits, events, landing pages, goals, and conversions.",
             "useCase": "A marketer reviews campaign performance, top campaign groups, and top landing pages from the admin dashboard.",
-            "screenshotPath": "packages/campaign-studio/docs/screenshots/campaign-dashboard-blocks.png"
+            "screenshotPath": "packages/campaign-studio/docs/screenshots/campaign-dashboard-widgets.png"
         },
         {
-            "id": "frontend-landing-page-with-campaign-blocks",
-            "title": "Frontend landing page with campaign blocks.",
+            "id": "frontend-landing-page-with-campaign-widgets",
+            "title": "Frontend landing page with campaign widgets.",
             "package": "campaign-studio",
             "surface": "frontend",
             "targetType": "frontend-url",
             "target": null,
             "required": true,
-            "notes": "Requires a seeded public page using campaign hero, CTA, or lead-form blocks plus Form Builder and Layout Builder. Verify public HTML does not expose admin-only campaign metadata.",
+            "notes": "Requires a seeded public page using campaign hero, CTA, or lead-form widgets plus Form Builder and Layout Builder. Verify public HTML does not expose admin-only campaign metadata.",
             "useCase": "A visitor lands on a campaign page with tracked hero, CTA, and lead-capture content.",
-            "screenshotPath": "packages/campaign-studio/docs/screenshots/frontend-landing-page-with-campaign-blocks.png"
+            "screenshotPath": "packages/campaign-studio/docs/screenshots/frontend-landing-page-with-campaign-widgets.png"
         }
     ]
 }

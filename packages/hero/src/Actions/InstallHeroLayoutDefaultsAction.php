@@ -10,8 +10,8 @@ use Capell\Core\Models\Layout;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Translation;
 use Capell\Core\Support\Creator\LayoutCreator;
-use Capell\LayoutBuilder\Actions\CreateHeroBlockAction;
-use Capell\LayoutBuilder\Support\Creator\BlockCreator;
+use Capell\LayoutBuilder\Actions\CreateHeroWidgetAction;
+use Capell\LayoutBuilder\Support\Creator\WidgetCreator;
 use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsObject;
 
@@ -28,9 +28,9 @@ final class InstallHeroLayoutDefaultsAction
     public function handle(bool $force = false): array
     {
         resolve(LayoutCreator::class)->setup();
-        resolve(BlockCreator::class)->pageContentBlock();
+        resolve(WidgetCreator::class)->pageContentWidget();
 
-        $heroBlock = CreateHeroBlockAction::run(height: 'small', meta: [
+        $heroWidget = CreateHeroWidgetAction::run(height: 'small', meta: [
             'color' => 'light',
             'content_align' => 'center',
             'content_width' => 'balanced',
@@ -58,7 +58,7 @@ final class InstallHeroLayoutDefaultsAction
                         'container' => ContainerWidthEnum::Full,
                     ],
                     'widgets' => [
-                        ['widget_key' => $heroBlock->key],
+                        ['widget_key' => $heroWidget->key],
                     ],
                 ],
                 ...$this->mainContainer($containers),

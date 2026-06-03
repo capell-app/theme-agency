@@ -63,13 +63,13 @@ test('default theme treats navigation as optional', function (): void {
         ->and($footer)->not->toContain('NavigationAvailability::check()');
 });
 
-test('public layout output does not include debug block comments', function (): void {
+test('public layout output does not include debug widget comments', function (): void {
     $themePath = dirname(__DIR__, 2);
 
     $container = file_get_contents($themePath . '/resources/views/components/layout/container.blade.php');
 
     expect($container)
-        ->not->toContain('<!-- {$block->key} Block')
+        ->not->toContain('<!-- {$widget->key} Widget')
         ->not->toContain("config('app.debug')");
 });
 
@@ -218,16 +218,16 @@ test('theme public views and assets avoid package and theme implementation marke
     );
 });
 
-test('reviewed public blade blocks do not read asset and page relations directly', function (): void {
+test('reviewed public blade widgets do not read asset and page relations directly', function (): void {
     $themePath = dirname(__DIR__, 2);
     $files = [
-        'resources/views/components/block/modern/hero-banner.blade.php',
-        'resources/views/components/block/modern/image-gallery.blade.php',
-        'resources/views/components/block/modern/card-grid.blade.php',
-        'resources/views/components/block/asset/accordion.blade.php',
-        'resources/views/components/block/asset/carousel.blade.php',
-        'resources/views/components/block/asset/feature-item.blade.php',
-        'resources/views/components/block/asset/media.blade.php',
+        'resources/views/components/widget/modern/hero-banner.blade.php',
+        'resources/views/components/widget/modern/image-gallery.blade.php',
+        'resources/views/components/widget/modern/card-grid.blade.php',
+        'resources/views/components/widget/asset/accordion.blade.php',
+        'resources/views/components/widget/asset/carousel.blade.php',
+        'resources/views/components/widget/asset/feature-item.blade.php',
+        'resources/views/components/widget/asset/media.blade.php',
     ];
     $forbiddenPatterns = [
         '$page?->assets',
@@ -235,8 +235,8 @@ test('reviewed public blade blocks do not read asset and page relations directly
         '$heroItem->asset',
         '$asset->asset->media',
         '$asset->asset->translation',
-        '$blockAsset->asset->translation',
-        '$blockAsset->asset->getMeta(',
+        '$widgetAsset->asset->translation',
+        '$widgetAsset->asset->getMeta(',
         '$linkedPage->pageUrl',
     ];
     $violations = [];
@@ -264,10 +264,10 @@ test('reviewed public blade blocks do not read asset and page relations directly
 
 test('ap hero and gallery public output avoid reviewed accessibility and editor copy regressions', function (): void {
     $themePath = dirname(__DIR__, 2);
-    $hero = file_get_contents($themePath . '/resources/views/components/block/modern/hero-banner.blade.php');
-    $gallery = file_get_contents($themePath . '/resources/views/components/block/modern/image-gallery.blade.php');
-    $cardGrid = file_get_contents($themePath . '/resources/views/components/block/modern/card-grid.blade.php');
-    $pageContent = file_get_contents($themePath . '/resources/views/components/block/page/content.blade.php');
+    $hero = file_get_contents($themePath . '/resources/views/components/widget/modern/hero-banner.blade.php');
+    $gallery = file_get_contents($themePath . '/resources/views/components/widget/modern/image-gallery.blade.php');
+    $cardGrid = file_get_contents($themePath . '/resources/views/components/widget/modern/card-grid.blade.php');
+    $pageContent = file_get_contents($themePath . '/resources/views/components/widget/page/content.blade.php');
 
     expect($hero)->toContain('MarkPrimaryHeadingRenderedAction::run()')
         ->and($pageContent)->toContain("\$headingTag = (\$hasPrimaryHeading ? 'h2' : 'h1');")

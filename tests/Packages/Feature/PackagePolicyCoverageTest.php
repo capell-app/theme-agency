@@ -17,10 +17,8 @@ use Capell\Events\Policies\EventPolicy;
 use Capell\Events\Policies\EventVenuePolicy;
 use Capell\Tags\Models\Tag;
 use Capell\Tags\Policies\TagPolicy;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Capell\Tests\Packages\Fixtures\PackagePolicyCoverageUser;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User;
-use Illuminate\Support\Collection;
 
 it('enforces permissions and site scope for package content policies', function (object $policy, Model $record): void {
     $record->forceFill(['site_id' => 10]);
@@ -75,40 +73,4 @@ function packagePolicyCoverageCall(object $policy, string $method, mixed ...$arg
     throw_unless(is_bool($result), RuntimeException::class, sprintf('Expected %s::%s() to return bool.', $policy::class, $method));
 
     return $result;
-}
-
-final class PackagePolicyCoverageUser extends User
-{
-    use HasFactory;
-
-    /**
-     * @param  list<int>  $assignedSiteIds
-     */
-    public function __construct(
-        private readonly bool $global = false,
-        private readonly array $assignedSiteIds = [],
-        private readonly bool $permissionResult = true,
-    ) {
-        parent::__construct();
-    }
-
-    public function isGlobalAdmin(): bool
-    {
-        return $this->global;
-    }
-
-    /**
-     * @return Collection<int, int>
-     */
-    public function getAssignedSiteIds(): Collection
-    {
-        return collect($this->assignedSiteIds);
-    }
-
-    public function checkPermissionTo(mixed $permission, ?string $guardName = null): bool
-    {
-        unset($permission, $guardName);
-
-        return $this->permissionResult;
-    }
 }

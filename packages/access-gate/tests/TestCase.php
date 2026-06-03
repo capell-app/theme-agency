@@ -9,6 +9,7 @@ use Capell\AccessGate\Tests\Support\FakePageCacheMiddleware;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use Sinnbeck\DomAssertions\DomAssertionsServiceProvider;
 
 abstract class TestCase extends OrchestraTestCase
 {
@@ -21,6 +22,7 @@ abstract class TestCase extends OrchestraTestCase
     {
         return [
             AccessGateServiceProvider::class,
+            DomAssertionsServiceProvider::class,
         ];
     }
 

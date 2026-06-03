@@ -1,6 +1,6 @@
 # Campaign Studio Docs
 
-Campaign Studio adds campaign groups, landing-page variants, audience targeting, experiments, CTA blocks, conversion goals, UTM attribution, funnel reporting, and conversion reporting to Capell.
+Campaign Studio adds campaign groups, landing-page variants, audience targeting, experiments, CTA widgets, conversion goals, UTM attribution, funnel reporting, and conversion reporting to Capell.
 
 Start at the [package README](../README.md) when deciding whether to install this package. Use the docs below for setup, extension, debugging, and verification details.
 

@@ -11,6 +11,8 @@ use Capell\AccessGate\Enums\IdentityMode;
 use Capell\AccessGate\Models\Area;
 use Capell\AccessGate\Models\BrowserToken;
 use Capell\AccessGate\Models\Grant;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 
@@ -58,12 +60,18 @@ it('resolves active authenticated grants by user id and email and rejects expire
 
     $userRequest = accessGateRequestWithUser('https://example.test/members', new class extends User
     {
+        /** @use HasFactory<Factory<static>> */
+        use HasFactory;
+
         public int $id = 42;
 
         public string $email = 'ignored@example.test';
     });
     $emailRequest = accessGateRequestWithUser('https://example.test/members', new class extends User
     {
+        /** @use HasFactory<Factory<static>> */
+        use HasFactory;
+
         public string $email = 'reader@example.test';
 
         public function getAuthIdentifier(): mixed
@@ -73,6 +81,9 @@ it('resolves active authenticated grants by user id and email and rejects expire
     });
     $expiredRequest = accessGateRequestWithUser('https://example.test/members', new class extends User
     {
+        /** @use HasFactory<Factory<static>> */
+        use HasFactory;
+
         public string $email = 'expired@example.test';
 
         public function getAuthIdentifier(): mixed
@@ -166,6 +177,9 @@ it('denies missing areas and areas with only inactive grants', function (): void
     $revokedGrantResult = ResolveAccessGateAccessAction::run(
         accessGateRequestWithUser('https://example.test/private', new class extends User
         {
+            /** @use HasFactory<Factory<static>> */
+            use HasFactory;
+
             public string $email = 'reader@example.test';
 
             public function getAuthIdentifier(): mixed

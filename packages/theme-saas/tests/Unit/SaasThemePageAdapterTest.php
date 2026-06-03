@@ -3,11 +3,8 @@
 declare(strict_types=1);
 
 use Capell\Core\Contracts\Pageable;
-use Capell\Core\Models\Language;
-use Capell\Core\Models\Layout;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
-use Capell\Core\Models\Theme;
 use Capell\Core\Models\Translation;
 use Capell\Core\ThemeStudio\Contracts\ThemeRuntimeSettings;
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
@@ -16,9 +13,9 @@ use Capell\Core\ThemeStudio\Data\CtaSectionData;
 use Capell\Core\ThemeStudio\Data\FeatureSectionData;
 use Capell\Core\ThemeStudio\Data\HeroSectionData;
 use Capell\Core\ThemeStudio\Data\ProofSectionData;
-use Capell\Frontend\Contracts\FrontendContextReader;
 use Capell\Frontend\Facades\Frontend;
 use Capell\Frontend\Support\CapellFrontendContext;
+use Capell\ThemeStudio\Saas\Tests\Fixtures\SaasThemeAdapterContextReader;
 use Capell\ThemeStudio\Saas\ThemeStudio\Adapters\SaasThemePageAdapter;
 
 beforeEach(function (): void {
@@ -180,66 +177,4 @@ function saasThemeAdapterSite(array $attributes): Site
     $site->forceFill($attributes);
 
     return $site;
-}
-
-final class SaasThemeAdapterContextReader implements FrontendContextReader
-{
-    public function __construct(
-        private readonly ?Pageable $page,
-        private readonly ?Site $site,
-    ) {}
-
-    public function site(): ?Site
-    {
-        return $this->site;
-    }
-
-    public function language(): ?Language
-    {
-        return null;
-    }
-
-    public function page(): ?Pageable
-    {
-        return $this->page;
-    }
-
-    public function layout(): ?Layout
-    {
-        return null;
-    }
-
-    public function theme(): ?Theme
-    {
-        return null;
-    }
-
-    public function params(): array
-    {
-        return [];
-    }
-
-    public function slug(): ?string
-    {
-        return null;
-    }
-
-    public function isError(): bool
-    {
-        return false;
-    }
-
-    public function setFrontendData(string $key, mixed $value): FrontendContextReader
-    {
-        unset($key, $value);
-
-        return $this;
-    }
-
-    public function getFrontendData(?string $key = null): mixed
-    {
-        unset($key);
-
-        return [];
-    }
 }

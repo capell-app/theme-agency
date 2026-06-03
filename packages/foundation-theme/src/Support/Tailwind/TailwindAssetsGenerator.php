@@ -196,7 +196,7 @@ class TailwindAssetsGenerator
         $lines = $lines->merge($registry->imports()->map(fn (string $import): string => sprintf('@import "%s";', $import)));
 
         if ($registry->hasThemeColors()) {
-            $lines->push($this->renderThemeBlock($registry->themeColors()));
+            $lines->push($this->renderThemeWidget($registry->themeColors()));
         }
 
         $lines = $lines->merge($registry->plugins()->map(fn (string $plugin): string => sprintf('@plugin "%s";', $plugin)));
@@ -206,7 +206,7 @@ class TailwindAssetsGenerator
     }
 
     /** @param Collection<string, string> $colors */
-    private function renderThemeBlock(Collection $colors): string
+    private function renderThemeWidget(Collection $colors): string
     {
         $inner = $colors
             ->filter(function (string $value, string $name): bool {

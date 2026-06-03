@@ -74,7 +74,7 @@
         "privateDocsRequested": false
     },
     "marketplace": {
-        "summary": "Default Capell page foundations, layout areas, content blocks, media, forms, and package-aware frontend states.",
+        "summary": "Default Capell page foundations, layout areas, content widgets, media, forms, and package-aware frontend states.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
@@ -83,8 +83,8 @@
             },
             {
                 "path": "docs/assets/marketplace/foundation-homepage-layout.svg",
-                "alt": "Foundation Theme homepage layout screenshot showing hero, feature grid, content blocks, cta, footer.",
-                "caption": "Foundation Theme: Homepage layout. Hero, feature grid, content blocks, CTA, footer."
+                "alt": "Foundation Theme homepage layout screenshot showing hero, feature grid, content widgets, cta, footer.",
+                "caption": "Foundation Theme: Homepage layout. Hero, feature grid, content widgets, CTA, footer."
             },
             {
                 "path": "docs/assets/marketplace/foundation-standard-page-layout.svg",

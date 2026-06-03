@@ -7,9 +7,9 @@ use Capell\CampaignStudio\Data\CampaignCtaActionData;
 use Capell\CampaignStudio\Data\ConversionAttributionData;
 use Capell\CampaignStudio\Data\UtmData;
 use Capell\CampaignStudio\Enums\AttributionModel;
-use Capell\CampaignStudio\Enums\CampaignBlockComponentEnum;
-use Capell\CampaignStudio\Enums\CampaignBlockConfiguratorEnum;
 use Capell\CampaignStudio\Enums\CampaignStatus;
+use Capell\CampaignStudio\Enums\CampaignWidgetComponentEnum;
+use Capell\CampaignStudio\Enums\CampaignWidgetConfiguratorEnum;
 use Capell\CampaignStudio\Enums\ConversionGoalType;
 use Capell\CampaignStudio\Health\CampaignStudioHealthCheck;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -113,8 +113,8 @@ it('defines campaign studio package metadata and enum labels', function (): void
         ->and(AttributionModel::FirstTouch->getLabel())->toBe('capell-campaign-studio::generic.attribution_models.first_touch')
         ->and(CampaignStatus::Scheduled->getLabel())->toBe('Scheduled')
         ->and(ConversionGoalType::CustomAction->getLabel())->toBe('capell-campaign-studio::generic.goal_types.custom_action')
-        ->and(CampaignBlockComponentEnum::CampaignHero->value)->toBe('capell-campaign-studio::components.block.campaign-hero')
-        ->and(CampaignBlockConfiguratorEnum::CampaignLeadForm->value)->toContain('CampaignLeadFormBlockConfigurator');
+        ->and(CampaignWidgetComponentEnum::CampaignHero->value)->toBe('capell-campaign-studio::components.widget.campaign-hero')
+        ->and(CampaignWidgetConfiguratorEnum::CampaignLeadForm->value)->toContain('CampaignLeadFormWidgetConfigurator');
 });
 
 /**

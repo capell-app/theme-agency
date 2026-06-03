@@ -106,7 +106,7 @@ it('groups packages into the current product bundles', function (): void {
             'form-builder/capell.json',
         ],
         'foundation' => [
-            'block-library/capell.json',
+            'widget-library/capell.json',
             'blog/capell.json',
             'content-sections/capell.json',
             'demo-kit/capell.json',

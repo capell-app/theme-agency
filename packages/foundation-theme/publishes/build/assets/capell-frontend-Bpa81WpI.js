@@ -1389,7 +1389,7 @@ function Xe(e) {
             l = c.querySelector(`[x-ref="panel"]`)
         n(s, l)
         function u() {
-            return l.style.display == `block`
+            return l.style.display == `widget`
         }
         function d() {
             ;((l.style.display = `none`),
@@ -1398,7 +1398,7 @@ function Xe(e) {
                 Le(e, l, m))
         }
         function f() {
-            ;((l.style.display = `block`),
+            ;((l.style.display = `widget`),
                 s.setAttribute(`aria-expanded`, `true`),
                 a.trap && l.setAttribute(`x-trap`, `true`),
                 m())
@@ -1486,7 +1486,7 @@ function Xe(e) {
                     (e._x_doShow ||= () => {
                         e.style.setProperty(
                             `display`,
-                            `block`,
+                            `widget`,
                             t.includes(`important`) ? `important` : void 0,
                         )
                     }))
@@ -5642,7 +5642,7 @@ function en({ swiper: e, on: t, emit: n }) {
                             }) => {
                                 ;(r && r !== e.el) ||
                                     ((i = n ? n.width : (t[0] || t).inlineSize),
-                                    (a = n ? n.height : (t[0] || t).blockSize))
+                                    (a = n ? n.height : (t[0] || t).widgetSize))
                             },
                         ),
                             (i !== n || a !== r) && o())

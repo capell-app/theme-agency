@@ -74,11 +74,11 @@ class CampaignGroup extends Model
     }
 
     /**
-     * @return HasMany<CampaignCtaBlock, $this>
+     * @return HasMany<CampaignCtaWidget, $this>
      */
-    public function ctaBlocks(): HasMany
+    public function ctaWidgets(): HasMany
     {
-        return $this->hasMany(CampaignCtaBlock::class);
+        return $this->hasMany(CampaignCtaWidget::class);
     }
 
     /**

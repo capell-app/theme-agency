@@ -168,7 +168,7 @@ it('guards url manager pages behind view or manage permissions', function (): vo
 });
 
 it('configures the redirect rules table with import export and lifecycle actions', function (): void {
-    $table = RedirectRulesPage::table(Table::make(app(RedirectRulesPage::class)));
+    $table = RedirectRulesPage::table(Table::make(resolve(RedirectRulesPage::class)));
 
     expect(array_keys($table->getColumns()))
         ->toBe([
@@ -202,7 +202,6 @@ it('configures the redirect rules table with import export and lifecycle actions
 
 it('normalizes redirect rule form state into typed data for table actions', function (): void {
     $method = new ReflectionMethod(RedirectRulesTable::class, 'redirectRuleDataFromFormData');
-    $method->setAccessible(true);
 
     $data = $method->invoke(null, [
         'source_url' => '/old',
@@ -241,7 +240,7 @@ it('normalizes redirect rule form state into typed data for table actions', func
 });
 
 it('configures the not found opportunities table with conversion and triage actions', function (): void {
-    $table = NotFoundOpportunitiesPage::table(Table::make(app(NotFoundOpportunitiesPage::class)));
+    $table = NotFoundOpportunitiesPage::table(Table::make(resolve(NotFoundOpportunitiesPage::class)));
 
     expect(array_keys($table->getColumns()))
         ->toBe([

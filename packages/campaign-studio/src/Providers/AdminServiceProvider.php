@@ -10,10 +10,10 @@ use Capell\Admin\Enums\DashboardEnum;
 use Capell\Admin\Enums\MarketingStudioSectionEnum;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\CampaignStudio\Actions\BuildCampaignOverviewStatsAction;
-use Capell\CampaignStudio\Enums\CampaignBlockConfiguratorEnum;
+use Capell\CampaignStudio\Enums\CampaignWidgetConfiguratorEnum;
 use Capell\CampaignStudio\Enums\ResourceEnum;
 use Capell\CampaignStudio\Filament\Resources\CampaignConversionGoals\CampaignConversionGoalResource;
-use Capell\CampaignStudio\Filament\Resources\CampaignCtaBlocks\CampaignCtaBlockResource;
+use Capell\CampaignStudio\Filament\Resources\CampaignCtaWidgets\CampaignCtaWidgetResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignGroups\CampaignGroupResource;
 use Capell\CampaignStudio\Filament\Resources\CampaignLandingPages\CampaignLandingPageResource;
 use Capell\CampaignStudio\Filament\Widgets\TopCampaignStudioWidget;
@@ -77,7 +77,7 @@ final class AdminServiceProvider extends ServiceProvider
             return $this;
         }
 
-        foreach (CampaignBlockConfiguratorEnum::cases() as $configurator) {
+        foreach (CampaignWidgetConfiguratorEnum::cases() as $configurator) {
             $configuratorClass = $configurator->value;
 
             if (! class_exists($configuratorClass)) {
@@ -125,8 +125,8 @@ final class AdminServiceProvider extends ServiceProvider
 
         CapellAdmin::registerMarketingStudioAction(new MarketingStudioActionData(
             key: 'campaign-studio.ctas',
-            label: fn (): string => __('capell-campaign-studio::navigation.cta_blocks'),
-            url: fn (): string => CampaignCtaBlockResource::getUrl(),
+            label: fn (): string => __('capell-campaign-studio::navigation.cta_widgets'),
+            url: fn (): string => CampaignCtaWidgetResource::getUrl(),
             section: MarketingStudioSectionEnum::Advanced,
             icon: 'heroicon-o-cursor-arrow-rays',
             sort: 30,
@@ -148,31 +148,31 @@ final class AdminServiceProvider extends ServiceProvider
     {
         CapellAdmin::registerOverviewStat(
             key: 'campaign_overview',
-            label: fn (): string => __('capell-campaign-studio::blocks.active_campaign-studio'),
+            label: fn (): string => __('capell-campaign-studio::widgets.active_campaign-studio'),
             value: fn (): int => $this->campaignOverview()['active_campaign-studio'],
             group: fn (): string => __('capell-admin::navigation.group_marketing'),
             sort: 150,
-            settingsLabel: fn (): string => __('capell-campaign-studio::blocks.campaign_overview'),
+            settingsLabel: fn (): string => __('capell-campaign-studio::widgets.campaign_overview'),
         );
 
         CapellAdmin::registerOverviewStat(
             key: 'campaign_overview.conversions',
-            label: fn (): string => __('capell-campaign-studio::blocks.conversions'),
+            label: fn (): string => __('capell-campaign-studio::widgets.conversions'),
             value: fn (): int => $this->campaignOverview()['conversions'],
             group: fn (): string => __('capell-admin::navigation.group_marketing'),
             sort: 151,
             settingsKey: 'campaign_overview',
-            settingsLabel: fn (): string => __('capell-campaign-studio::blocks.campaign_overview'),
+            settingsLabel: fn (): string => __('capell-campaign-studio::widgets.campaign_overview'),
         );
 
         CapellAdmin::registerOverviewStat(
             key: 'campaign_overview.conversion_rate',
-            label: fn (): string => __('capell-campaign-studio::blocks.conversion_rate'),
+            label: fn (): string => __('capell-campaign-studio::widgets.conversion_rate'),
             value: fn (): string => $this->campaignOverview()['conversion_rate'] . '%',
             group: fn (): string => __('capell-admin::navigation.group_marketing'),
             sort: 152,
             settingsKey: 'campaign_overview',
-            settingsLabel: fn (): string => __('capell-campaign-studio::blocks.campaign_overview'),
+            settingsLabel: fn (): string => __('capell-campaign-studio::widgets.campaign_overview'),
         );
 
         return $this;
