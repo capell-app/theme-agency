@@ -38,6 +38,8 @@ class UserActivityMiddleware
             return;
         }
 
+        $now = CarbonImmutable::now();
+
         /** @var MorphMany<LoginAudit, User&Model> $builder */
         $builder = $user->authentications();
 
@@ -48,10 +50,12 @@ class UserActivityMiddleware
                 fn (Builder $query): Builder => $query->where('ip_address', $ipAddress),
             )
             ->where('user_agent', $userAgent)
+            ->where('login_at', '<', $now)
+            ->latest('id')
             ->first();
 
         if ($log !== null) {
-            $log->last_seen_at = CarbonImmutable::now();
+            $log->last_seen_at = $now;
             $log->save();
         }
     }

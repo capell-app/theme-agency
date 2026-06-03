@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Login Audit records login, failed login, logout, and admin/user activity metadata for Capell users.",
+    "description": "Login Audit gives Capell operators a complete, immutable record of who accessed the admin and storefront, when, from which IP and device, and whether each attempt succeeded. A dedicated Filament resource, dashboard widget, and per-user access summary make it easy to spot unusual activity and respond to incidents, while configurable retention keeps the log lean and aligned with your data-protection policy. IP capture can be disabled or resolved through your CDN (Cloudflare and similar), and the audit log is read-only by design so records can't be quietly altered. Built on the battle-tested Laravel authentication-log foundation and wired into Capell's settings, permissions, and Diagnostics.",
     "product": {
         "group": "Capell Operations",
         "tier": "premium",
@@ -70,12 +70,52 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Login Audit records login, failed login, logout, and admin/user activity metadata for Capell users.",
+        "summary": "Tamper-proof access logging for Capell — track every login, failed attempt, logout, device, and session, with retention controls and an admin audit trail built for security and compliance reviews.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Login Audit extension preview image",
                 "caption": "Login Audit extension preview"
+            },
+            {
+                "path": "docs/screenshots/login-audits-admin-index.png",
+                "alt": "Login Audit admin index listing successful and failed authentication events",
+                "caption": "Review successful and failed authentication events in the admin index"
+            },
+            {
+                "path": "docs/screenshots/login-audits-admin-index-dark.png",
+                "alt": "Login Audit admin index in dark mode",
+                "caption": "The authentication log admin index in dark mode"
+            },
+            {
+                "path": "docs/screenshots/login-audit-table-filters.png",
+                "alt": "Login Audit table filters for access status and login date range",
+                "caption": "Filter events by access status, login date range, or cleared-by-user state"
+            },
+            {
+                "path": "docs/screenshots/login-audit-table-filters-dark.png",
+                "alt": "Login Audit table filters in dark mode",
+                "caption": "Table filters for the access log in dark mode"
+            },
+            {
+                "path": "docs/screenshots/dashboard-widget.png",
+                "alt": "Login Audit dashboard widget showing recent access activity",
+                "caption": "Surface recent access activity on the admin dashboard"
+            },
+            {
+                "path": "docs/screenshots/dashboard-widget-dark.png",
+                "alt": "Login Audit dashboard widget in dark mode",
+                "caption": "The access log dashboard widget in dark mode"
+            },
+            {
+                "path": "docs/screenshots/login-audit-settings-screen.png",
+                "alt": "Login Audit settings for retention, IP tracking, and visibility",
+                "caption": "Configure retention, IP tracking, and visibility from Capell settings"
+            },
+            {
+                "path": "docs/screenshots/login-audit-settings-screen-dark.png",
+                "alt": "Login Audit settings screen in dark mode",
+                "caption": "The access log settings screen in dark mode"
             }
         ],
         "categories": ["admin", "operations"]

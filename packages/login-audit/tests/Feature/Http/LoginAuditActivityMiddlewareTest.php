@@ -185,6 +185,58 @@ it('updates user middleware activity without overwriting unrelated audit state',
         ->and(loginAuditActivityTimestamp($wrongAgentAudit->refresh()->last_seen_at))->toBe($wrongAgentAuditLastSeenAt);
 });
 
+it('stamps the most recent matching user session and ignores older and future rows', function (): void {
+    $trackedAt = CarbonImmutable::parse('2026-05-07 10:00:00');
+    $this->travelTo($trackedAt);
+
+    $user = User::factory()->create();
+    $ipAddress = '203.0.113.45';
+    $userAgent = 'Capell Frontend Browser/1.0';
+
+    $olderAudit = LoginAudit::factory()->create([
+        'authenticatable_type' => $user->getMorphClass(),
+        'authenticatable_id' => $user->getKey(),
+        'ip_address' => $ipAddress,
+        'user_agent' => $userAgent,
+        'login_at' => $trackedAt->subHours(5),
+    ]);
+
+    $latestAudit = LoginAudit::factory()->create([
+        'authenticatable_type' => $user->getMorphClass(),
+        'authenticatable_id' => $user->getKey(),
+        'ip_address' => $ipAddress,
+        'user_agent' => $userAgent,
+        'login_at' => $trackedAt->subHour(),
+    ]);
+
+    $futureAudit = LoginAudit::factory()->create([
+        'authenticatable_type' => $user->getMorphClass(),
+        'authenticatable_id' => $user->getKey(),
+        'ip_address' => $ipAddress,
+        'user_agent' => $userAgent,
+        'login_at' => $trackedAt->addMinute(),
+    ]);
+
+    $olderAuditLastSeenAt = loginAuditActivityTimestamp($olderAudit->refresh()->last_seen_at);
+    $futureAuditLastSeenAt = loginAuditActivityTimestamp($futureAudit->refresh()->last_seen_at);
+
+    $request = loginAuditActivityRequest(
+        path: '/account/profile',
+        user: $user,
+        ipAddress: $ipAddress,
+        userAgent: $userAgent,
+    );
+
+    (new UserActivityMiddleware)->handle(
+        $request,
+        fn (Request $handledRequest): Response => new Response('next:' . $handledRequest->path()),
+    );
+
+    expect(loginAuditActivityTimestamp($latestAudit->refresh()->last_seen_at))->toBe($trackedAt->toDateTimeString())
+        ->and(loginAuditActivityTimestamp($olderAudit->refresh()->last_seen_at))->toBe($olderAuditLastSeenAt)
+        ->and(loginAuditActivityTimestamp($futureAudit->refresh()->last_seen_at))->toBe($futureAuditLastSeenAt);
+});
+
 it('skips user activity for guest requests', function (): void {
     $trackedAt = CarbonImmutable::parse('2026-05-07 10:00:00');
     $this->travelTo($trackedAt);

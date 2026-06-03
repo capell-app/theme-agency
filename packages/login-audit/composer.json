@@ -1,6 +1,6 @@
 {
     "name": "capell-app/login-audit",
-    "description": "Authentication log for Capell",
+    "description": "Tamper-proof access logging for Capell — track every login, failed attempt, logout, device, and session, with retention controls and an admin audit trail built for security and compliance reviews.",
     "keywords": [
         "capell",
         "login-audit",

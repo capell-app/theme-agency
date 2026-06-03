@@ -30,6 +30,10 @@ class AdminServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
+        // tapp/filament-authentication-log reads the misspelled "AutenticationLogResource"
+        // config key in ListAuthenticationLogs::getResource(), so that override is the
+        // load-bearing one. The correctly-spelled key is set defensively in case the
+        // vendor fixes the typo in a future release.
         Config::set(
             'filament-authentication-log.resources.AuthenticationLogResource',
             LoginAuditResource::class,
