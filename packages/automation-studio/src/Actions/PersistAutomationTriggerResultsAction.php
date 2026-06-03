@@ -21,7 +21,7 @@ final class PersistAutomationTriggerResultsAction
     public function handle(
         AutomationTriggerEventData $event,
         array $results,
-        string $idempotencyKey,
+        ?string $idempotencyKey = null,
         ?int $siteId = null,
         int $attemptNumber = 1,
         ?int $maxAttempts = null,
@@ -36,7 +36,7 @@ final class PersistAutomationTriggerResultsAction
                 action: $action,
                 result: $result,
                 siteId: $siteId,
-                idempotencyKey: $this->resultIdempotencyKey($idempotencyKey, $result),
+                idempotencyKey: $idempotencyKey === null ? null : $this->resultIdempotencyKey($idempotencyKey, $result),
                 attemptNumber: $attemptNumber,
                 maxAttempts: $maxAttempts,
             );

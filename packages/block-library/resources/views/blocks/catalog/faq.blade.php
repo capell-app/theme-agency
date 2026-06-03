@@ -7,6 +7,7 @@
 
 <section
     {{ $attributes->merge(['class' => 'section section-faq']) }}
+    x-data="{ openQuestion: {{ $firstOpen ? '0' : 'null' }} }"
 >
     @if ($title || $summary)
         <header class="mb-6">
@@ -22,20 +23,28 @@
 
     <div class="space-y-3">
         @foreach ($questions as $question)
-            <details
-                class="rounded-lg border border-slate-200 bg-white p-5"
-                @if ($loop->first && $firstOpen) open @endif
-            >
-                <summary class="cursor-pointer font-semibold">
+            <article class="rounded-lg border border-slate-200 bg-white p-5">
+                <button
+                    type="button"
+                    class="w-full cursor-pointer text-left font-semibold"
+                    :aria-expanded="openQuestion === {{ $loop->index }} ? 'true' : 'false'"
+                    aria-controls="faq-panel-{{ $loop->index }}"
+                    @click="openQuestion = openQuestion === {{ $loop->index }} ? null : {{ $loop->index }}"
+                >
                     {{ $question['question'] ?? '' }}
-                </summary>
+                </button>
 
                 @if (filled($question['answer'] ?? null))
-                    <div class="prose mt-3 max-w-none text-slate-700">
+                    <div
+                        id="faq-panel-{{ $loop->index }}"
+                        class="prose mt-3 max-w-none text-slate-700"
+                        x-show="openQuestion === {{ $loop->index }}"
+                        x-cloak
+                    >
                         {!! $question['answer'] !!}
                     </div>
                 @endif
-            </details>
+            </article>
         @endforeach
     </div>
 </section>

@@ -6,6 +6,7 @@ namespace Capell\AutomationStudio\Models;
 
 use Capell\AutomationStudio\Data\AutomationRuleActionData;
 use Capell\AutomationStudio\Data\AutomationRuleData;
+use Capell\AutomationStudio\Enums\AutomationActionType;
 use Capell\AutomationStudio\Enums\AutomationRuleStatus;
 use Capell\AutomationStudio\Enums\AutomationTriggerType;
 use Capell\Core\Models\Site;
@@ -61,7 +62,7 @@ class AutomationRule extends Model
             name: $this->name,
             triggerType: $this->trigger_type,
             actions: collect($this->actions)
-                ->map(fn (array $action): AutomationRuleActionData => AutomationRuleActionData::from($action))
+                ->map(fn (array $action): AutomationRuleActionData => $this->actionDataFromArray($action))
                 ->values()
                 ->all(),
             status: $this->status,
@@ -82,5 +83,20 @@ class AutomationRule extends Model
             'actions' => 'encrypted:array',
             'settings' => 'encrypted:array',
         ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $action
+     */
+    private function actionDataFromArray(array $action): AutomationRuleActionData
+    {
+        $type = $action['type'] ?? null;
+        $settings = $action['settings'] ?? [];
+
+        return new AutomationRuleActionData(
+            key: (string) ($action['key'] ?? ''),
+            type: $type instanceof AutomationActionType ? $type : AutomationActionType::from((string) $type),
+            settings: is_array($settings) ? $settings : [],
+        );
     }
 }

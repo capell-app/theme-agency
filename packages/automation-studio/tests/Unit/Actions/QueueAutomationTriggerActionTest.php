@@ -6,6 +6,7 @@ use Capell\AutomationStudio\Actions\QueueAutomationTriggerAction;
 use Capell\AutomationStudio\Data\AutomationTriggerEventData;
 use Capell\AutomationStudio\Enums\AutomationTriggerType;
 use Capell\AutomationStudio\Jobs\DispatchQueuedAutomationTriggerJob;
+use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -35,11 +36,21 @@ it('derives stable idempotency keys for the same trigger payload', function (): 
         sourceType: 'access-gate.registration',
         sourceId: '99',
         payload: ['email' => 'person@example.test'],
+        occurredAt: CarbonImmutable::parse('2026-06-03 10:00:00'),
+    );
+    $sameDeliveryWithDifferentPayloadAndTimestamp = new AutomationTriggerEventData(
+        triggerType: AutomationTriggerType::AccessApproved,
+        sourceType: 'access-gate.registration',
+        sourceId: '99',
+        payload: ['email' => 'changed@example.test'],
+        occurredAt: CarbonImmutable::parse('2026-06-03 10:05:00'),
     );
     $action = new QueueAutomationTriggerAction;
     $method = new ReflectionMethod($action, 'idempotencyKey');
 
     expect($method->invoke($action, $event, 10))
         ->toBe($method->invoke($action, $event, 10))
-        ->not->toBe($method->invoke($action, $event, 11));
+        ->toBe($method->invoke($action, $sameDeliveryWithDifferentPayloadAndTimestamp, 10))
+        ->not->toBe($method->invoke($action, $event, 11))
+        ->not->toBe($method->invoke($action, $event, 10, 'registration:100'));
 });

@@ -7,6 +7,7 @@
 
 <section
     {{ $attributes->merge(['class' => 'section section-accordion']) }}
+    x-data="{ openPanel: {{ $firstOpen ? '0' : 'null' }} }"
 >
     @if ($title || $summary)
         <header class="mb-6">
@@ -24,27 +25,35 @@
         class="divide-y divide-slate-200 rounded-lg border border-slate-200 bg-white"
     >
         @foreach ($items as $item)
-            <details
-                class="group p-5"
-                @if ($loop->first && $firstOpen) open @endif
-            >
-                <summary
-                    class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold"
+            <article class="p-5">
+                <button
+                    type="button"
+                    class="flex w-full cursor-pointer items-center justify-between gap-4 text-left font-semibold"
+                    :aria-expanded="openPanel === {{ $loop->index }} ? 'true' : 'false'"
+                    aria-controls="accordion-panel-{{ $loop->index }}"
+                    @click="openPanel = openPanel === {{ $loop->index }} ? null : {{ $loop->index }}"
                 >
                     <span>{{ $item['heading'] ?? '' }}</span>
                     <span
-                        class="text-xl leading-none transition group-open:rotate-45"
+                        class="text-xl leading-none transition"
+                        :class="{ 'rotate-45': openPanel === {{ $loop->index }} }"
+                        aria-hidden="true"
                     >
                         +
                     </span>
-                </summary>
+                </button>
 
                 @if (filled($item['content'] ?? null))
-                    <div class="prose mt-4 max-w-none text-slate-700">
+                    <div
+                        id="accordion-panel-{{ $loop->index }}"
+                        class="prose mt-4 max-w-none text-slate-700"
+                        x-show="openPanel === {{ $loop->index }}"
+                        x-cloak
+                    >
                         {!! $item['content'] !!}
                     </div>
                 @endif
-            </details>
+            </article>
         @endforeach
     </div>
 </section>

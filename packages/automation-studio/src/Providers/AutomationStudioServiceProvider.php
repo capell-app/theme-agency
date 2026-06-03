@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Capell\AutomationStudio\Providers;
 
-use Capell\AccessGate\Events\RegistrationApproved;
 use Capell\AutomationStudio\Actions\RegisterAutomationStudioDefaultsAction;
 use Capell\AutomationStudio\Listeners\DispatchAutomationFromAccessApproval;
 use Capell\AutomationStudio\Listeners\DispatchAutomationFromCampaignConversion;
@@ -15,10 +14,8 @@ use Capell\AutomationStudio\Models\AutomationRun;
 use Capell\AutomationStudio\Support\AutomationActionRegistry;
 use Capell\AutomationStudio\Support\AutomationRuleRegistry;
 use Capell\AutomationStudio\Support\AutomationTriggerRegistry;
-use Capell\CampaignStudio\Events\CampaignConverted;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
-use Capell\PublishingStudio\Events\WorkspaceStateChanged;
 use Illuminate\Support\Facades\Event;
 use Override;
 use Spatie\LaravelPackageTools\Package;
@@ -73,9 +70,9 @@ final class AutomationStudioServiceProvider extends AbstractPackageServiceProvid
     private function registerPackageEventListeners(): void
     {
         $this->listenIfClassExists(implode('\\', ['Capell', 'FormBuilder', 'Events', 'FormSubmitted']), DispatchAutomationFromFormSubmission::class);
-        $this->listenIfClassExists(RegistrationApproved::class, DispatchAutomationFromAccessApproval::class);
-        $this->listenIfClassExists(WorkspaceStateChanged::class, DispatchAutomationFromWorkspaceStateChanged::class);
-        $this->listenIfClassExists(CampaignConverted::class, DispatchAutomationFromCampaignConversion::class);
+        $this->listenIfClassExists(implode('\\', ['Capell', 'AccessGate', 'Events', 'RegistrationApproved']), DispatchAutomationFromAccessApproval::class);
+        $this->listenIfClassExists(implode('\\', ['Capell', 'PublishingStudio', 'Events', 'WorkspaceStateChanged']), DispatchAutomationFromWorkspaceStateChanged::class);
+        $this->listenIfClassExists(implode('\\', ['Capell', 'CampaignStudio', 'Events', 'CampaignConverted']), DispatchAutomationFromCampaignConversion::class);
     }
 
     private function registerModels(): self

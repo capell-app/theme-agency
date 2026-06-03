@@ -13,6 +13,7 @@ return [
         'webhook' => 'Webhook',
     ],
     'dispatcher' => [
+        'handler_failed' => 'Automation Studio action :action failed. Check the application logs for details.',
         'handler_missing' => 'No Automation Studio handler is registered for :action.',
         'public_action_key_required' => 'A Public Action key is required.',
         'public_actions_unavailable' => 'Public Actions is not available.',

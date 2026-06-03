@@ -6,7 +6,6 @@ namespace Capell\AutomationStudio\Jobs;
 
 use Capell\AutomationStudio\Actions\DispatchAutomationTriggerAction;
 use Capell\AutomationStudio\Actions\LoadPersistedAutomationRulesAction;
-use Capell\AutomationStudio\Actions\PersistAutomationTriggerResultsAction;
 use Capell\AutomationStudio\Data\AutomationTriggerEventData;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -35,15 +34,11 @@ final class DispatchQueuedAutomationTriggerJob implements ShouldBeUnique, Should
     public function handle(
         LoadPersistedAutomationRulesAction $loadRules,
         DispatchAutomationTriggerAction $dispatchAutomationTrigger,
-        PersistAutomationTriggerResultsAction $persistResults,
     ): void {
         $loadRules->handle($this->siteId);
 
-        $results = $dispatchAutomationTrigger->handle($this->event);
-
-        $persistResults->handle(
+        $dispatchAutomationTrigger->handle(
             event: $this->event,
-            results: $results,
             idempotencyKey: $this->idempotencyKey,
             siteId: $this->siteId,
             attemptNumber: $this->attempts(),

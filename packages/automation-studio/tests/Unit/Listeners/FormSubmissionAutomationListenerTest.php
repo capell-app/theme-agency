@@ -2,55 +2,17 @@
 
 declare(strict_types=1);
 
-use Capell\AutomationStudio\Actions\DispatchAutomationTriggerAction;
-use Capell\AutomationStudio\Contracts\AutomationActionHandler;
-use Capell\AutomationStudio\Data\AutomationActionResultData;
-use Capell\AutomationStudio\Data\AutomationRuleActionData;
-use Capell\AutomationStudio\Data\AutomationRuleData;
-use Capell\AutomationStudio\Data\AutomationTriggerEventData;
-use Capell\AutomationStudio\Enums\AutomationActionType;
+use Capell\AutomationStudio\Actions\QueueAutomationTriggerAction;
 use Capell\AutomationStudio\Enums\AutomationTriggerType;
+use Capell\AutomationStudio\Jobs\DispatchQueuedAutomationTriggerJob;
 use Capell\AutomationStudio\Listeners\DispatchAutomationFromFormSubmission;
-use Capell\AutomationStudio\Support\AutomationActionRegistry;
-use Capell\AutomationStudio\Support\AutomationRuleRegistry;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Queue;
 
-it('normalizes form submission events into automation trigger payloads', function (): void {
-    $actions = new AutomationActionRegistry;
-    $rules = new AutomationRuleRegistry;
-    $handler = new class implements AutomationActionHandler
-    {
-        /** @var list<array<string, mixed>> */
-        public array $handledPayloads = [];
-
-        public function handle(AutomationTriggerEventData $event, AutomationRuleActionData $action): AutomationActionResultData
-        {
-            $this->handledPayloads[] = $event->payload;
-
-            return new AutomationActionResultData(success: true);
-        }
-    };
-
-    $actions->registerHandler(
-        AutomationActionType::SendEmail,
-        $handler,
-    );
-
-    $rules->register(new AutomationRuleData(
-        key: 'contact-form',
-        name: 'Contact form',
-        triggerType: AutomationTriggerType::FormSubmitted,
-        actions: [
-            new AutomationRuleActionData(
-                key: 'email-contact',
-                type: AutomationActionType::SendEmail,
-            ),
-        ],
-        conditions: ['form_handle' => 'contact'],
-    ));
-
+it('queues form submission events with normalized automation trigger payloads', function (): void {
+    Queue::fake();
     $form = new class extends Model
     {
         /** @use HasFactory<Factory<self>> */
@@ -59,18 +21,65 @@ it('normalizes form submission events into automation trigger payloads', functio
         /** @var list<string> */
         protected $guarded = [];
     };
-    $form->forceFill(['id' => 12, 'handle' => 'contact']);
+    $form->forceFill(['id' => 12, 'handle' => 'contact', 'site_id' => 3]);
     $form->exists = true;
 
-    (new DispatchAutomationFromFormSubmission(new DispatchAutomationTriggerAction($rules, $actions)))->handle((object) [
+    $submission = new class extends Model
+    {
+        /** @use HasFactory<Factory<self>> */
+        use HasFactory;
+
+        /** @var list<string> */
+        protected $guarded = [];
+    };
+    $submission->forceFill(['id' => 55, 'site_id' => 3]);
+    $submission->exists = true;
+
+    (new DispatchAutomationFromFormSubmission(new QueueAutomationTriggerAction))->handle((object) [
         'form' => $form,
+        'submission' => $submission,
         'payload' => ['email' => 'person@example.test'],
     ]);
 
-    expect($handler->handledPayloads)->toHaveCount(1)
-        ->and($handler->handledPayloads[0])->toMatchArray([
-            'email' => 'person@example.test',
-            'form_id' => 12,
-            'form_handle' => 'contact',
+    Queue::assertPushed(DispatchQueuedAutomationTriggerJob::class, function (DispatchQueuedAutomationTriggerJob $job): bool {
+        expect($job->event->triggerType)->toBe(AutomationTriggerType::FormSubmitted)
+            ->and($job->event->sourceType)->toBe('form-builder.form')
+            ->and($job->event->sourceId)->toBe('contact')
+            ->and($job->siteId)->toBe(3)
+            ->and($job->event->payload)->toMatchArray([
+                'email' => 'person@example.test',
+                'form_id' => 12,
+                'form_handle' => 'contact',
+                'submission_id' => 55,
+            ]);
+
+        return true;
+    });
+});
+
+it('falls back to stored submission payloads when the event has no payload', function (): void {
+    Queue::fake();
+    $submission = new class extends Model
+    {
+        /** @use HasFactory<Factory<self>> */
+        use HasFactory;
+
+        /** @var list<string> */
+        protected $guarded = [];
+    };
+    $submission->forceFill(['id' => 56, 'payload' => ['email' => 'stored@example.test']]);
+    $submission->exists = true;
+
+    (new DispatchAutomationFromFormSubmission(new QueueAutomationTriggerAction))->handle((object) [
+        'submission' => $submission,
+    ]);
+
+    Queue::assertPushed(DispatchQueuedAutomationTriggerJob::class, function (DispatchQueuedAutomationTriggerJob $job): bool {
+        expect($job->event->payload)->toMatchArray([
+            'email' => 'stored@example.test',
+            'submission_id' => 56,
         ]);
+
+        return true;
+    });
 });

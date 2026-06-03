@@ -44,7 +44,7 @@
                         href="{{ $feature['url'] }}"
                         class="mt-4 inline-flex font-semibold text-slate-950 hover:underline"
                     >
-                        {{ __('capell-content-sections::button.read_more') }}
+                        {{ __('capell-block-library::blocks.buttons.read_more') }}
                     </a>
                 @endif
             </article>

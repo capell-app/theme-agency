@@ -13,9 +13,13 @@ final class QueueAutomationTriggerAction
 {
     use AsAction;
 
-    public function handle(AutomationTriggerEventData $event, ?int $siteId = null, ?string $idempotencyKey = null): string
-    {
-        $resolvedIdempotencyKey = $idempotencyKey ?? $this->idempotencyKey($event, $siteId);
+    public function handle(
+        AutomationTriggerEventData $event,
+        ?int $siteId = null,
+        ?string $idempotencyKey = null,
+        ?string $deduplicationKey = null,
+    ): string {
+        $resolvedIdempotencyKey = $idempotencyKey ?? $this->idempotencyKey($event, $siteId, $deduplicationKey);
 
         Queue::push(new DispatchQueuedAutomationTriggerJob(
             event: $event,
@@ -26,15 +30,14 @@ final class QueueAutomationTriggerAction
         return $resolvedIdempotencyKey;
     }
 
-    private function idempotencyKey(AutomationTriggerEventData $event, ?int $siteId): string
+    private function idempotencyKey(AutomationTriggerEventData $event, ?int $siteId, ?string $deduplicationKey = null): string
     {
         return hash('sha256', json_encode([
             'site_id' => $siteId,
             'trigger_type' => $event->triggerType->value,
             'source_type' => $event->sourceType,
             'source_id' => $event->sourceId,
-            'payload' => $event->payload,
-            'occurred_at' => $event->occurredAt?->toIso8601String(),
+            'deduplication_key' => $deduplicationKey,
         ], JSON_THROW_ON_ERROR));
     }
 }

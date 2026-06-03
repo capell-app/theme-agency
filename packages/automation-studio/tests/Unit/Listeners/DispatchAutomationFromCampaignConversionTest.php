@@ -2,55 +2,16 @@
 
 declare(strict_types=1);
 
-use Capell\AutomationStudio\Actions\DispatchAutomationTriggerAction;
-use Capell\AutomationStudio\Contracts\AutomationActionHandler;
-use Capell\AutomationStudio\Data\AutomationActionResultData;
-use Capell\AutomationStudio\Data\AutomationRuleActionData;
-use Capell\AutomationStudio\Data\AutomationRuleData;
-use Capell\AutomationStudio\Data\AutomationTriggerEventData;
-use Capell\AutomationStudio\Enums\AutomationActionType;
+use Capell\AutomationStudio\Actions\QueueAutomationTriggerAction;
 use Capell\AutomationStudio\Enums\AutomationTriggerType;
+use Capell\AutomationStudio\Jobs\DispatchQueuedAutomationTriggerJob;
 use Capell\AutomationStudio\Listeners\DispatchAutomationFromCampaignConversion;
-use Capell\AutomationStudio\Support\AutomationActionRegistry;
-use Capell\AutomationStudio\Support\AutomationRuleRegistry;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Queue;
 
-it('dispatches campaign conversion events with conversion payload metadata', function (): void {
-    $actions = new AutomationActionRegistry;
-    $rules = new AutomationRuleRegistry;
-    $handledPayload = new ArrayObject;
-
-    $actions->registerHandler(AutomationActionType::SendEmail, new readonly class($handledPayload) implements AutomationActionHandler
-    {
-        /**
-         * @param  ArrayObject<string, mixed>  $handledPayload
-         */
-        public function __construct(private ArrayObject $handledPayload) {}
-
-        public function handle(AutomationTriggerEventData $event, AutomationRuleActionData $action): AutomationActionResultData
-        {
-            $this->handledPayload->exchangeArray($event->payload);
-
-            return new AutomationActionResultData(
-                success: true,
-                context: $event->payload,
-            );
-        }
-    });
-
-    $rules->register(new AutomationRuleData(
-        key: 'campaign-converted',
-        name: 'Campaign converted',
-        triggerType: AutomationTriggerType::CampaignConverted,
-        actions: [
-            new AutomationRuleActionData(
-                key: 'notify',
-                type: AutomationActionType::SendEmail,
-            ),
-        ],
-    ));
-
+it('queues campaign conversion events with conversion payload metadata', function (): void {
+    Queue::fake();
     $conversion = new class extends Model
     {
         use HasFactory;
@@ -68,18 +29,23 @@ it('dispatches campaign conversion events with conversion payload metadata', fun
     ]);
     $conversion->exists = true;
 
-    $results = (new DispatchAutomationFromCampaignConversion(
-        new DispatchAutomationTriggerAction($rules, $actions),
-    ))->handle((object) ['conversion' => $conversion]);
+    (new DispatchAutomationFromCampaignConversion(new QueueAutomationTriggerAction))->handle((object) ['conversion' => $conversion]);
 
-    expect($results)->toBeNull()
-        ->and($handledPayload->getArrayCopy())->toMatchArray([
-            'conversion_id' => 12,
-            'campaign_group_id' => 3,
-            'campaign_conversion_goal_id' => 4,
-            'campaign_landing_page_id' => 5,
-            'site_id' => 6,
-            'source_type' => 'form_submission',
-            'source_id' => 7,
-        ]);
+    Queue::assertPushed(DispatchQueuedAutomationTriggerJob::class, function (DispatchQueuedAutomationTriggerJob $job): bool {
+        expect($job->event->triggerType)->toBe(AutomationTriggerType::CampaignConverted)
+            ->and($job->event->sourceType)->toBe('campaign-studio.conversion')
+            ->and($job->event->sourceId)->toBe('12')
+            ->and($job->siteId)->toBe(6)
+            ->and($job->event->payload)->toMatchArray([
+                'conversion_id' => 12,
+                'campaign_group_id' => 3,
+                'campaign_conversion_goal_id' => 4,
+                'campaign_landing_page_id' => 5,
+                'site_id' => 6,
+                'source_type' => 'form_submission',
+                'source_id' => 7,
+            ]);
+
+        return true;
+    });
 });

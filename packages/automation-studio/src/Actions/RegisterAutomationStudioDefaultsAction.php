@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Capell\AutomationStudio\Actions;
 
-use Capell\AccessGate\Events\RegistrationApproved;
 use Capell\AutomationStudio\Data\AutomationActionDefinitionData;
 use Capell\AutomationStudio\Data\AutomationTriggerDefinitionData;
 use Capell\AutomationStudio\Enums\AutomationActionType;
@@ -18,8 +17,6 @@ use Capell\AutomationStudio\Support\Handlers\QueueAgentCapabilityAutomationActio
 use Capell\AutomationStudio\Support\Handlers\SendEmailAutomationActionHandler;
 use Capell\AutomationStudio\Support\Handlers\SubscribeUserAutomationActionHandler;
 use Capell\AutomationStudio\Support\Handlers\TagContactAutomationActionHandler;
-use Capell\CampaignStudio\Events\CampaignConverted;
-use Capell\PublishingStudio\Events\WorkspaceStateChanged;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
@@ -49,19 +46,19 @@ final class RegisterAutomationStudioDefaultsAction
         $this->triggers->register(new AutomationTriggerDefinitionData(
             type: AutomationTriggerType::AccessApproved,
             label: $this->triggerLabel(AutomationTriggerType::AccessApproved),
-            eventClass: RegistrationApproved::class,
+            eventClass: implode('\\', ['Capell', 'AccessGate', 'Events', 'RegistrationApproved']),
         ));
 
         $this->triggers->register(new AutomationTriggerDefinitionData(
             type: AutomationTriggerType::PagePublished,
             label: $this->triggerLabel(AutomationTriggerType::PagePublished),
-            eventClass: WorkspaceStateChanged::class,
+            eventClass: implode('\\', ['Capell', 'PublishingStudio', 'Events', 'WorkspaceStateChanged']),
         ));
 
         $this->triggers->register(new AutomationTriggerDefinitionData(
             type: AutomationTriggerType::CampaignConverted,
             label: $this->triggerLabel(AutomationTriggerType::CampaignConverted),
-            eventClass: CampaignConverted::class,
+            eventClass: implode('\\', ['Capell', 'CampaignStudio', 'Events', 'CampaignConverted']),
         ));
     }
 

@@ -7,6 +7,7 @@
 
 <section
     {{ $attributes->merge(['class' => 'section section-tabs']) }}
+    x-data="{ activeTab: 0 }"
 >
     @if ($title || $summary)
         <header class="mb-6">
@@ -26,20 +27,30 @@
             role="tablist"
         >
             @foreach ($tabs as $tab)
-                <a
-                    class="rounded px-4 py-2 font-semibold text-slate-600 first:bg-slate-950 first:text-white"
-                    href="#{{ $group }}-{{ $loop->index }}"
+                <button
+                    type="button"
+                    class="rounded px-4 py-2 font-semibold text-slate-600"
+                    :class="{ 'bg-slate-950 text-white': activeTab === {{ $loop->index }} }"
+                    id="{{ $group }}-tab-{{ $loop->index }}"
+                    role="tab"
+                    :aria-selected="activeTab === {{ $loop->index }} ? 'true' : 'false'"
+                    aria-controls="{{ $group }}-panel-{{ $loop->index }}"
+                    @click="activeTab = {{ $loop->index }}"
                 >
                     {{ $tab['label'] ?? '' }}
-                </a>
+                </button>
             @endforeach
         </div>
 
         <div class="mt-4 space-y-3">
             @foreach ($tabs as $tab)
                 <article
-                    id="{{ $group }}-{{ $loop->index }}"
+                    id="{{ $group }}-panel-{{ $loop->index }}"
                     class="rounded bg-slate-50 p-5"
+                    role="tabpanel"
+                    aria-labelledby="{{ $group }}-tab-{{ $loop->index }}"
+                    x-show="activeTab === {{ $loop->index }}"
+                    x-cloak
                 >
                     <h3 class="mb-2 font-semibold">
                         {{ $tab['label'] ?? '' }}

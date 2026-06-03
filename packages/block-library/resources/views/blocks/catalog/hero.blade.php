@@ -29,7 +29,7 @@
             href="{{ $url }}"
             class="mt-8 inline-flex rounded bg-white px-5 py-3 font-semibold text-slate-950"
         >
-            {{ __('capell-content-sections::button.read_more') }}
+            {{ __('capell-block-library::blocks.buttons.read_more') }}
         </a>
     @endif
 </section>
