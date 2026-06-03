@@ -9,13 +9,14 @@ use Capell\Admin\Filament\Concerns\GatedByRoleAndSettings;
 use Capell\Admin\Support\SiteScope;
 use Capell\Comments\Filament\Resources\Comments\CommentResource;
 use Capell\Comments\Models\Comment;
+use Capell\Core\Contracts\Extensions\RegistersExtensionWidget;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
 use Illuminate\Database\Eloquent\Builder;
 use Override;
 
-class LatestCommentsWidget extends TableWidget implements CapellWidgetContract
+class LatestCommentsWidget extends TableWidget implements CapellWidgetContract, RegistersExtensionWidget
 {
     use GatedByRoleAndSettings;
 
@@ -28,6 +29,11 @@ class LatestCommentsWidget extends TableWidget implements CapellWidgetContract
 
     /** @var int|string|array<string, int|null> */
     protected int|string|array $columnSpan = 'full';
+
+    public static function compatibleCapellApiVersion(): string
+    {
+        return '^4.0';
+    }
 
     #[Override]
     public function table(Table $table): Table

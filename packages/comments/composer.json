@@ -1,6 +1,6 @@
 {
     "name": "capell-app/comments",
-    "description": "Configurable moderated comments for Capell pages and content.",
+    "description": "Add moderated, threaded discussion to any Capell page or article — with cache-safe public rendering, encrypted author records, and per-site moderation controls, no custom code required.",
     "type": "library",
     "license": "proprietary",
     "homepage": "https://github.com/capell-app/comments",
