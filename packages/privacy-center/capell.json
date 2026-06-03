@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Privacy Center provides package-owned consent, policy acceptance, privacy request, retention rule, export, and delete workflow foundations.",
+    "description": "Privacy Center gives every Capell site a single, queryable system of record for privacy obligations: granular cookie-category consent, versioned policy acceptances, retention rules, and access/export/delete subject requests. Consent and subject data are recorded through stable Actions that other Capell packages can call. Hashed request evidence (IP, user-agent) and consent records give you defensible proof, while retention rules keep data minimised. Admin operators get resources and an at-a-glance compliance dashboard; nothing sensitive ever leaks to public output.",
     "product": {
         "group": "Capell Operations",
         "tier": "premium",
@@ -162,7 +162,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Privacy Center provides the compliance workflow foundation for consent, retention, privacy requests, exports, deletion, and policy acceptance.",
+        "summary": "The compliance backbone for Capell — one auditable ledger for cookie consent, policy acceptances, retention rules, and GDPR/CCPA subject requests, with Actions your other packages plug straight into.",
         "screenshots": [],
         "categories": ["admin", "compliance", "operations"]
     },

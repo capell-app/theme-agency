@@ -1,6 +1,6 @@
 {
     "name": "capell-app/privacy-center",
-    "description": "Privacy, consent, retention, and subject request foundation for Capell CMS.",
+    "description": "The compliance backbone for Capell CMS: cookie consent, policy acceptances, retention rules, and GDPR/CCPA subject requests in one auditable ledger.",
     "type": "library",
     "license": "proprietary",
     "homepage": "https://github.com/capell-app/privacy-center",
