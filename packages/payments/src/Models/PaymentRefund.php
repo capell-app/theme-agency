@@ -59,6 +59,7 @@ final class PaymentRefund extends Model
         return [
             'provider' => PaymentProvider::class,
             'status' => PaymentRefundStatus::class,
+            'amount' => 'integer',
             'metadata' => 'array',
             'provider_payload' => 'encrypted:array',
         ];

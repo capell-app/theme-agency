@@ -68,6 +68,7 @@ final class PaymentIntent extends Model
         return [
             'provider' => PaymentProvider::class,
             'status' => PaymentIntentStatus::class,
+            'amount' => 'integer',
             'metadata' => 'array',
             'provider_payload' => 'encrypted:array',
         ];

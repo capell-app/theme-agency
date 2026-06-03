@@ -62,6 +62,7 @@ final class PaymentDispute extends Model
         return [
             'provider' => PaymentProvider::class,
             'status' => PaymentDisputeStatus::class,
+            'amount' => 'integer',
             'is_charge_refundable' => 'boolean',
             'evidence_due_at' => 'datetime',
             'provider_payload' => 'encrypted:array',

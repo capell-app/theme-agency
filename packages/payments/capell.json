@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Payments adds a provider-neutral payment record layer and native Stripe Checkout foundation for Capell.",
+    "description": "Payments gives Capell a first-party way to charge customers without depending on an external store. It ships native Stripe Checkout for one-off purchases, recurring subscriptions, donations, paid file downloads, and paid gated access, plus signed webhook intake that keeps payments, subscriptions, refunds, and disputes in sync automatically. Every record is stored behind a provider-neutral model layer, so admins get read-only audit resources, customers get a self-service billing portal, and Form Builder fields can collect payment inline. Designed for revenue-generating sites that want checkout, fulfilment, and reconciliation handled inside the CMS.",
     "product": {
         "group": "Capell Commerce",
         "tier": "premium",
@@ -169,7 +169,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Provider-neutral payment records with native Stripe Checkout, subscriptions, form payments, paid downloads, and paid gated access fulfillment.",
+        "summary": "Take one-off payments, donations, subscriptions, paid downloads, and gated access on any Capell site through Stripe Checkout — with a provider-neutral record layer built to add more gateways later.",
         "screenshots": [],
         "categories": ["commerce", "integrations"]
     },

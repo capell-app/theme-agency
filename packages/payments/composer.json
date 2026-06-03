@@ -1,6 +1,6 @@
 {
     "name": "capell-app/payments",
-    "description": "Payments and Stripe checkout foundation for Capell CMS.",
+    "description": "Take one-off payments, donations, subscriptions, paid downloads, and gated access on any Capell site through Stripe Checkout, with a provider-neutral record layer built to add more gateways later.",
     "type": "library",
     "license": "proprietary",
     "autoload": {

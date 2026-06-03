@@ -103,6 +103,8 @@ final class CheckoutSession extends Model
             'mode' => CheckoutMode::class,
             'purpose' => PaymentPurpose::class,
             'status' => CheckoutSessionStatus::class,
+            'amount_subtotal' => 'integer',
+            'amount_total' => 'integer',
             'metadata' => 'array',
             'provider_payload' => 'encrypted:array',
             'expires_at' => 'datetime',
