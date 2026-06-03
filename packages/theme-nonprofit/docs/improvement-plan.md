@@ -1,0 +1,92 @@
+# Theme Nonprofit — Improvement & Growth Plan
+> Package: capell-app/theme-nonprofit · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Draft
+
+## 1. Snapshot
+
+`theme-nonprofit` registers theme key `nonprofit` via `NonprofitThemeServiceProvider::definition()` (a `ThemeDefinitionData` with `runtime: FrontendRuntime::Blade`), wiring a `BladeThemeRenderer` to layout view `capell-theme-nonprofit::page` plus one preset (`nonprofit`). It declares 16 `includedSections` (`navigation, hero, features, proof, content-listing, impact, donation-impact, campaigns, volunteer-donate, volunteer-shifts, annual-report-proof, events, stories, contact, cta, footer`); `navigation` and `footer` are delegated back to Foundation Theme (`isFoundationSection()`), and four sections receive optional-package flags (Campaign Studio → `campaigns`/`donation-impact`, Form Builder → `volunteer-donate`/`volunteer-shifts`, Events → `volunteer-shifts`/`events`, Blog → `stories`). The demo command `capell:theme-nonprofit-demo {--url=} {--languages=} {--sites=} {--force}` delegates to `InstallNonprofitThemeDemoAction` → `ThemeDemoPageInstaller::run(..., 'nonprofit', 'Nonprofit')` (Foundation-owned installer; this package contributes no per-layout demo builder of its own). Current marketplace summary verbatim: *"Cause, campaign, and supporter-path theme screenshots from route-backed demo layouts."* Screenshots: 6 entries declared in `docs/screenshots.json` (1 admin + 5 frontend routes) and 6 marketplace assets referenced in `capell.json`, but only **3 committed binary images** (`docs/assets/marketplace/{extension-card,hero-desktop,hero-mobile}.jpg`); the 3 layout images are `.svg` placeholders and **0** `docs/screenshots/*.png` captures exist.
+
+## 2. Improvements (existing functionality)
+
+Prioritized. Real templates only.
+
+1. **Brand tokens are emitted but ignored by every section** — `S→M`. `page.blade.php` writes the preset palette into CSS custom properties via `$brand->tokens()`, and `theme-nonprofit.css` defines `--nonprofit-primary/-accent/-surface` from `--theme-*`. Yet every section hard-codes literal hex (`bg-[#fff7e6]`, `text-[#b45309]`, `bg-[#052e16]`, `border-[#facc15]`, `bg-[#12351f]`). Re-theming via preset values does nothing visible. Migrate section colours to the token vars (e.g. `bg-[var(--nonprofit-surface)]`, `text-[var(--nonprofit-primary)]`). Files: `resources/views/sections/hero.blade.php`, `campaigns.blade.php`, `donation-impact.blade.php`, `volunteer-donate.blade.php`, `volunteer-shifts.blade.php`, `stories.blade.php`, `annual-report-proof.blade.php`, `contact.blade.php`, `cta.blade.php`, `events.blade.php`, `impact.blade.php`.
+2. **No `tw:` prefix on any utility class** — `M`. The frontend-tailwind guideline mandates a `tw:` prefix to avoid Bootstrap collisions on store frontends. Every class in every section is bare (`mx-auto`, `grid`, `font-black`, …). Confirm whether Capell theme output is exempt (it may compile its own isolated Tailwind via the registered `tailwindImport`/`tailwindSource` vendor assets); if not exempt, this is a systemic prefix bug across all 16 views. Files: all of `resources/views/sections/*.blade.php` + `page.blade.php`. Resolve the exemption question before mass-editing.
+3. **`campaigns`, `stories`, `contact` use fixed inline card arrays, not section data** — `M`. `campaigns.blade.php` hard-loops `[['label'=>'Campaigns','title'=>'Awareness',...], ...]` and `stories.blade.php` loops `['Volunteer','Donor','Community']` with the *same* `story_card_title`/`story_card_summary` repeated three times. These read as static filler, not editable content, and never consume `$section->items`. Make them iterate `$section->items` with the inline arrays as fallback (the pattern `donation-impact`/`volunteer-shifts`/`annual-report-proof` already use via `@forelse ($items …)`). Files: `resources/views/sections/campaigns.blade.php`, `stories.blade.php`, `contact.blade.php`.
+4. **Hero progress bar width is hard-coded `w-[84%]`** — `S`. The "Winter support fund" appeal bar is fixed at 84% with the value text `hero_campaign_value => '84%'` duplicated separately, so the bar and the number can drift and neither reflects real data. Drive width from a single value (inline style or a passed metric). File: `resources/views/sections/hero.blade.php`.
+5. **`navigation`/`footer` section views are dead code** — `S`. `navigation.blade.php` and `footer.blade.php` exist and render an `<h2>`, but `isFoundationSection()` makes the provider return `null` for both, so Foundation Theme renders nav/footer instead and these files are never used by the renderer. Either delete them (reduce confusion) or document why they ship. Files: `resources/views/sections/navigation.blade.php`, `footer.blade.php`, cross-ref `src/NonprofitThemeServiceProvider.php`.
+6. **`features.blade.php` reads `$section->features ?? $section->items`** — `S`. Inconsistent with the rest of the suite which standardises on `items`. Confirm the core `FeatureSectionData` shape (the definition test imports `FeatureSectionData`) and pick one accessor. File: `resources/views/sections/features.blade.php`.
+7. **Responsive type is heavy on mobile** — `S`. CSS sets `h1` to `clamp(3rem, 6vw, 5.75rem)` and hero `<h2>` to `text-5xl` with no `sm:` step-down; `font-weight: 850/820` plus `max-width: 12ch` produces very large, cramped headings on small screens. Add mobile-first size steps. Files: `resources/css/theme-nonprofit.css`, `resources/views/sections/hero.blade.php`.
+
+## 3. Missing Features (gaps)
+
+`capabilities[]` is only `["theme-nonprofit", "theme-nonprofit-frontend"]` — pure presentation, no functional capability, which is correct for a theme but means every interactive nonprofit need is a *cross-sell*, and the theme must visibly invite those installs.
+
+Table-stakes a nonprofit site needs vs current state:
+
+- **Donation CTA/flow** — present only as visual: hero buttons link to `#donate`, `donation-impact` shows metric cards. No real giving path. The `payments` sibling exposes a `donations` capability + Stripe Checkout, yet `optionalSectionIntegrations()` has **no Payments hook** at all. Differentiator: add a `donate` section that detects `capell-app/payments` and renders a live donation/recurring-gift CTA (mirrors the existing `campaignStudioAvailable` pattern). High impact.
+- **Volunteer signup** — `volunteer-donate`/`volunteer-shifts` detect `form-builder`/`events` but only swap a sentence of copy (`volunteer_connected` vs `volunteer_static`); no embedded form, no shift list bound to data. Wire the connected branch to a real Form Builder embed slot.
+- **Campaigns/causes** — `campaigns` is three static cards even when Campaign Studio is installed; the connected branch only changes a label. Render actual appeal cards (progress, target, urgency) when Campaign Studio is present.
+- **Impact stats** — `impact` + `donation-impact` exist (good); they are the strongest sections. Keep as differentiator, but feed real numbers.
+- **Events** — `events` section flips one line of copy on `eventsAvailable`; no event list/calendar rendering. Bind to the `events` sibling.
+- **Stories/testimonials** — `stories` exists but renders 3 identical placeholder cards; should pull from Blog when `blogAvailable`.
+- **Transparency / annual reports** — `annual-report-proof` covers this (a genuine nonprofit differentiator vs generic themes). Strong; make items data-driven.
+- **Newsletter signup** — **entirely absent.** No newsletter section despite a `newsletter` sibling package existing. Clear gap for a supporter-retention vertical; add a `newsletter` section with optional `capell-app/newsletter` detection.
+- **Gift Aid / regular-giving messaging, donor wall, fundraising thermometer** — none. The hero progress bar is the only "thermometer" and it is static; a real fundraising-thermometer section tied to Campaign Studio/Payments would be a strong vertical differentiator.
+
+Summary: the theme ships the *shape* of supporter journeys but no live integration beyond copy-swaps. Biggest cross-sell wins (in order): **Payments (donations)**, **Newsletter (supporter capture)**, deeper **Campaign Studio** and **Events** binding.
+
+## 4. Issues / Risks
+
+- **Manifest `extends` contradicts the runtime definition** — `capell.json` → `"extends": "capell-app/foundation-theme"`, but `NonprofitThemeServiceProvider::definition()` sets `extends: 'default'`, and `NonprofitThemeDefinitionTest` asserts `->extends->toBe('default')`. Two different "extends" values describe the same theme. Reconcile so manifest and `ThemeDefinitionData` agree (or document that the manifest value is the package dependency and the definition value is the theme-inheritance key). File: `capell.json`, `src/NonprofitThemeServiceProvider.php`.
+- **Hard-coded untranslated copy in `events.blade.php`** — `Campaigns Calendar` is a literal string while every sibling label uses `__('capell-theme-nonprofit::generic.*')`. Breaks i18n (the theme advertises `cy`/Welsh demo locales) and is invisible to `PublicOutputSafetyTest`'s translation sweep. File: `resources/views/sections/events.blade.php`.
+- **Screenshot/media debt (marketplace-blocking for a premium theme)** — 6 screenshots declared in `docs/screenshots.json` (admin list + `/theme-nonprofit-demo`, `/nonprofit-homepage-layout`, `/nonprofit-campaigns-layout`, `/nonprofit-impact-layout`, …) and 6 assets referenced in `capell.json marketplace.screenshots`, but only 3 real `.jpg` files are committed and 3 referenced layout assets are `.svg` placeholders; **no** `docs/screenshots/*.png` exist. A "sold on visuals" premium tier cannot ship like this. Also: the demo routes named in `screenshots.json` (`/nonprofit-homepage-layout`, `/nonprofit-campaigns-layout`, `/nonprofit-impact-layout`) imply per-layout demo pages, but the demo action just calls the shared `ThemeDemoPageInstaller` — verify those routes actually exist post-demo or the capture run will 404. Files: `docs/screenshots.json`, `capell.json`, `docs/assets/marketplace/*`.
+- **No dark mode** — `theme-nonprofit.css` defines a single light palette; no `prefers-color-scheme` or `.dark` variants, and no `dark:` utilities in any section. The brief flags dark mode as an audit dimension; absent entirely. File: `resources/css/theme-nonprofit.css`.
+- **WCAG concerns (high stakes for a public charity/civic theme)** —
+  - Contrast: `text-emerald-100`/`text-emerald-50` body text on the emerald-950 `events`/`cta`/`annual-report-proof` backgrounds, and `text-[#fde047]` (light yellow) on `#12351f` cards, need a contrast-ratio check; several are borderline for AA. Files: `events.blade.php`, `cta.blade.php`, `annual-report-proof.blade.php`, `hero.blade.php`.
+  - Heading hierarchy: every section starts at `<h2>` with an eyebrow `<p>` above it and **no `<h1>`** in the theme's own markup. If Foundation doesn't inject an `<h1>`, the page has no top-level heading. The skip link targets `#main-content` but no element in `page.blade.php` carries `id="main-content"` — the skip link is broken. Files: `page.blade.php`, all sections.
+  - Decorative gradient bars (`::before` on impact sections) and the hero progress bar have no ARIA; the progress bar should be `role="progressbar"` with value attributes once data-driven.
+- **`<img>` LCP/alt risks** — `hero.blade.php` renders `$imageUrl` with `$imageAlt` defaulting to `''` (empty alt = decorative, but a hero image usually isn't) and no `width`/`height`/`loading`/`fetchpriority`. Demo content uses remote `https://images.unsplash.com/` URLs (asserted in `DemoCommandTest`), so the LCP image is third-party with no dimensions — poor LCP/CLS. File: `resources/views/sections/hero.blade.php`.
+- **Performance budget is tight and unverified** — `capell.json` sets `frontendRenderBudgetMs: 20` and `adminQueryBudget: 0`. No test asserts render time, and `cacheSafety.cacheable: false` (varies by `site`,`locale`) means every request re-renders 14 section views server-side. There is no render-budget guard test. File: `capell.json`.
+- **Optional-package detection duplicated in Blade** — `campaigns.blade.php` re-runs `CapellCore::isPackageInstalled('capell-app/campaign-studio')` inside an `@php` block as a fallback, even though the provider already injects `campaignStudioAvailable`. This is a public-Blade package-introspection call the safety net doesn't catch and contradicts the Maintenance Note "keep optional package checks inside the provider/renderer layer, not public Blade." File: `resources/views/sections/campaigns.blade.php`.
+- **Test gaps** — strong on definition/manifest/demo/public-safety, but: (a) no per-section render test asserting each Blade compiles and emits expected structure with empty/partial `$section` data; (b) no accessibility/contrast or skip-link-target test; (c) `PackageAwareRendererTest` only covers `campaigns` — the other 5 optional sections (`donation-impact`, `volunteer-donate`, `volunteer-shifts`, `events`, `stories`) have no connected/static branch test; (d) no render-budget assertion. Files: `tests/Unit/`, `tests/Feature/`.
+- **Version/PHP drift** — `composer.json` requires `php: ^8.3`; project standard is PHP 8.4. `capell.json` is `manifest-version: 3` (confirm parity with sibling themes). `CHANGELOG.md` is effectively empty. Files: `composer.json`, `capell.json`, `CHANGELOG.md`.
+
+## 5. Marketplace & Selling
+
+**Current `summary` (verbatim):** *"Cause, campaign, and supporter-path theme screenshots from route-backed demo layouts."* — This describes the *screenshot set*, not the product. It reads like an internal capture note ("screenshots from route-backed demo layouts"), buries the value, and a buyer learns nothing about what the theme does for their charity.
+
+**Current composer `description`:** *"Impact-led civic and charity theme for campaigns, donations, volunteering, and community stories."* — Strong, benefit-led, vertical-specific. Reuse this voice for the marketplace summary; the two are badly out of sync (composer good, marketplace bad).
+
+**Improved 1-sentence summary:**
+> A premium charity, NGO, and civic theme that moves visitors from your mission to a clear support action — donate, volunteer, or follow — with impact proof, live campaign progress, and transparent annual-report sections built in.
+
+**Improved 3–4 sentence description:**
+> Theme Nonprofit gives charities, NGOs, and civic organisations a calm, trust-building front end engineered around the supporter journey: a campaign-led hero, impact evidence, donation and volunteer paths, events, community stories, and transparency/annual-report sections. It ships as a Capell theme with accessible defaults (skip link, focus-visible outlines, semantic sections) and a route-backed demo you can install in one command to preview a complete cause site. Sections light up automatically when you add Capell Payments (donations), Campaign Studio (live appeals), Events, Blog, and Form Builder — no template surgery required. Premium, first-party, and priority-supported for teams who need a public site that converts interest into sustained giving.
+
+**Media gaps:** declared 6 / committed 3 real images (+3 SVG placeholders), 0 PNG captures. Before listing: replace the 3 layout SVG placeholders with real rendered captures, generate all 6 `docs/screenshots/*.png` from the demo routes, and add (currently missing) shots that *show* the connected states — a live donation CTA, a populated campaigns grid, a real impact-metric block, and a dark-mode view once built. Mobile hero capture exists; add a mobile full-page scroll capture too.
+
+**Differentiation / target buyer:** vs the other Capell themes (`theme-healthcare` is the closest sibling in structure), Nonprofit's unique sections are `donation-impact`, `campaigns`, `volunteer-donate/shifts`, and especially `annual-report-proof` (transparency proof is a real nonprofit differentiator most generic themes lack). Target buyer: small-to-mid charities, foundations, NGOs, advocacy/campaign groups, and civic/community organisations who want a donation- and trust-oriented site without bespoke design. Lead the listing on **trust + a clear support path**, not on section count.
+
+**Keywords/tags (8–12):** `nonprofit theme`, `charity website`, `NGO`, `donation`, `fundraising`, `campaigns`, `volunteer`, `civic`, `impact reporting`, `annual report`, `community`, `Capell theme`.
+
+## 6. Prioritized Roadmap
+
+| Item | Bucket | Effort | Impact | Section ref |
+|---|---|---|---|---|
+| Fix broken skip link (`page.blade.php` has no `#main-content` target) + add `<h1>`/heading-order review | Now | S | High | §4 WCAG |
+| Translate hard-coded `Campaigns Calendar` in `events.blade.php` | Now | S | Med | §4 |
+| Reconcile `extends` mismatch (`capell.json` vs definition/test) | Now | S | Med | §4 |
+| Generate the 6 declared `docs/screenshots/*.png`; replace 3 SVG placeholders with real captures; verify demo routes resolve | Now | M | High | §1, §4, §5 |
+| Rewrite marketplace `summary` to the benefit-led sentence | Now | S | High | §5 |
+| Bump `composer.json` PHP to `^8.4`; populate `CHANGELOG.md` | Now | S | Low | §4 |
+| Drive section colours from brand tokens instead of literal hex | Next | M | High | §2.1 |
+| Make `campaigns`/`stories`/`contact` iterate `$section->items` (kill duplicate placeholder cards) | Next | M | High | §2.3 |
+| Add WCAG contrast pass on dark/emerald section text + amber-on-dark | Next | M | High | §4 WCAG |
+| Hero image: real alt, `width`/`height`/`loading`/`fetchpriority`; data-driven progress bar with `role="progressbar"` | Next | S | Med | §2.4, §4 |
+| Add **Payments (donations)** optional integration + a real `donate`/giving section | Next | M | High | §3 |
+| Move Campaign Studio check out of `campaigns.blade.php` into provider only | Next | S | Med | §4 |
+| Per-section render tests (empty/partial data) + connected/static branch tests for all 6 optional sections | Next | M | Med | §4 tests |
+| Add **Newsletter** supporter-capture section with `capell-app/newsletter` detection | Later | M | Med | §3 |
+| Add dark-mode palette + `dark:` variants; render-budget guard test (20ms) | Later | M | Med | §4 |
+| Deepen Campaign Studio / Events connected branches into real appeal cards + event lists (fundraising thermometer) | Later | L | High | §3 |
+| Resolve/justify `tw:` prefix exemption; apply prefix if not exempt | Later | M | Med | §2.2 |
