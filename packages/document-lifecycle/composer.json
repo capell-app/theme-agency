@@ -1,6 +1,6 @@
 {
     "name": "capell-app/document-lifecycle",
-    "description": "Controlled document registry, publication metadata, hashes, and acceptance evidence for Capell",
+    "description": "Tamper-evident proof of which document version was published and who accepted it — controlled documents, immutable hashed versions, and a court-ready acceptance ledger for Capell.",
     "keywords": [
         "capell",
         "document-lifecycle",

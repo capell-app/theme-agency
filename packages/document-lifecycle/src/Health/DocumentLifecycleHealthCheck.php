@@ -5,11 +5,18 @@ declare(strict_types=1);
 namespace Capell\DocumentLifecycle\Health;
 
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
+use Capell\DocumentLifecycle\Actions\BuildDocumentLifecycleHealthReportAction;
+use Capell\DocumentLifecycle\Data\DocumentLifecycleHealthReportData;
 
 final class DocumentLifecycleHealthCheck implements ChecksExtensionHealth
 {
     public static function compatibleCapellApiVersion(): string
     {
         return '^4.0';
+    }
+
+    public static function report(): DocumentLifecycleHealthReportData
+    {
+        return BuildDocumentLifecycleHealthReportAction::run();
     }
 }

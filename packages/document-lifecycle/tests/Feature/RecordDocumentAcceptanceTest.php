@@ -43,6 +43,20 @@ it('records acceptance against the latest published document metadata', function
         ->and($acceptance->user_agent_hash)->toHaveLength(64);
 });
 
+it('hashes explicitly provided ip and user agent independently of the request', function (): void {
+    $acceptance = RecordDocumentAcceptanceAction::run(
+        documentKey: 'terms',
+        context: 'console',
+        ipAddress: '203.0.113.5',
+        userAgent: 'queue-worker/1.0',
+    );
+
+    expect($acceptance->ip_hash)
+        ->toBe(hash('sha256', config('app.key') . ':203.0.113.5'))
+        ->and($acceptance->user_agent_hash)
+        ->toBe(hash('sha256', config('app.key') . ':queue-worker/1.0'));
+});
+
 it('falls back to configured legal versions before a document has been migrated', function (): void {
     config()->set('legal.terms_version', '2026-05-07');
     config()->set('legal.documents', ['privacy' => '2026-05-08']);

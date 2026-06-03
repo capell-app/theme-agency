@@ -70,10 +70,19 @@ return new class extends Migration
             return;
         }
 
-        Schema::table('legal_acceptances', function (Blueprint $table): void {
-            $table->dropIndex('legal_acceptances_doc_publication_lookup');
-            $table->dropIndex('legal_acceptances_acceptor_subject_lookup');
+        if (Schema::hasIndex('legal_acceptances', ['document_key', 'document_publication_id'])) {
+            Schema::table('legal_acceptances', function (Blueprint $table): void {
+                $table->dropIndex('legal_acceptances_doc_publication_lookup');
+            });
+        }
 
+        if (Schema::hasIndex('legal_acceptances', ['acceptor_type', 'acceptor_id', 'subject_type', 'subject_id'])) {
+            Schema::table('legal_acceptances', function (Blueprint $table): void {
+                $table->dropIndex('legal_acceptances_acceptor_subject_lookup');
+            });
+        }
+
+        Schema::table('legal_acceptances', function (Blueprint $table): void {
             if (Schema::hasColumn('legal_acceptances', 'document_publication_id')) {
                 $table->dropConstrainedForeignId('document_publication_id');
             }

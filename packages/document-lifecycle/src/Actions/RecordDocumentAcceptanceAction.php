@@ -25,8 +25,12 @@ final class RecordDocumentAcceptanceAction
         ?CarbonInterface $acceptedAt = null,
         ?string $context = null,
         array $metadata = [],
+        ?string $ipAddress = null,
+        ?string $userAgent = null,
     ): DocumentAcceptance {
         $acceptedAt ??= now();
+        $ipAddress ??= request()->ip();
+        $userAgent ??= request()->userAgent();
         $publication = ResolveLatestDocumentPublicationAction::run($documentKey);
         $documentVersion = $publication instanceof DocumentPublication
             ? $publication->version_label
@@ -46,8 +50,8 @@ final class RecordDocumentAcceptanceAction
             'legal_document_versions' => config('legal.documents'),
             'accepted_at' => $acceptedAt,
             'context' => $context,
-            'ip_hash' => $this->hashNullable(request()->ip()),
-            'user_agent_hash' => $this->hashNullable(request()->userAgent()),
+            'ip_hash' => $this->hashNullable($ipAddress),
+            'user_agent_hash' => $this->hashNullable($userAgent),
             'metadata' => $metadata === [] ? null : $metadata,
         ]);
     }
