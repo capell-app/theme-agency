@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Diagnostics adds operational diagnostics for cache, configuration drift, migrations, packages, registries, queues, mail, storage, public-output safety, permissions, package ownership, setup health, and Tailwind build status.",
+    "description": "A single operations cockpit for Capell that surfaces system health, queue activity, config drift, permission audits, and per-package install health — with a guarded command palette for trusted capell:* operations.",
     "product": {
         "group": "Capell Operations",
         "tier": "premium",
@@ -179,7 +179,8 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Diagnostics adds operational diagnostics for cache, configuration drift, migrations, packages, registries, queues, mail, storage, public-output safety, permissions, package ownership, setup health, Tailwind build status, and Queue Operations powered by croustibat/filament-jobs-monitor telemetry.",
+        "summary": "A single operations cockpit for Capell that surfaces system health, queue activity, config drift, permission audits, and per-package install health — with a guarded command palette for trusted capell:* operations.",
+        "description": "Diagnostics gives Capell operators one place to answer 'is everything healthy?' It rolls up cache, queue, mail, and storage status, config drift, migration state, registry and setup health, and Tailwind build status into dashboard widgets, and adds dedicated pages for Queue Operations (failed/pending jobs and history), permission auditing, and package-ownership inspection. A secure, audited command palette lets developers discover and run trusted capell:* Artisan operations with per-command authorization and confirmation gating. Built for super-admins and developers who need fast, read-only visibility into a running Capell deployment without SSH.",
         "credits": [
             {
                 "name": "croustibat/filament-jobs-monitor",
@@ -192,6 +193,36 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Diagnostics extension preview image",
                 "caption": "Diagnostics extension preview"
+            },
+            {
+                "path": "docs/screenshots/diagnostics-dashboard.png",
+                "alt": "Diagnostics dashboard overview",
+                "caption": "Dashboard overview rolling up cache, migration, registry, and setup health."
+            },
+            {
+                "path": "docs/screenshots/health-widgets-on-the-admin-dashboard.png",
+                "alt": "Health widgets on the admin dashboard",
+                "caption": "Health widgets surfaced directly on the admin dashboard."
+            },
+            {
+                "path": "docs/screenshots/system-health-page.png",
+                "alt": "System health page",
+                "caption": "System health page with cache, queue, mail, and storage status."
+            },
+            {
+                "path": "docs/screenshots/queue-health-page.png",
+                "alt": "Queue health page",
+                "caption": "Queue Operations page showing failed and pending jobs with history."
+            },
+            {
+                "path": "docs/screenshots/permission-audit-page.png",
+                "alt": "Permission audit page",
+                "caption": "Permission audit page for reviewing roles and abilities."
+            },
+            {
+                "path": "docs/screenshots/command-palette-page.png",
+                "alt": "Command palette page",
+                "caption": "Guarded command palette for running trusted capell:* operations."
             }
         ],
         "categories": ["admin", "console", "operations"]

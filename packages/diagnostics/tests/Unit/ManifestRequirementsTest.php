@@ -53,8 +53,8 @@ describe('diagnostics capell.json manifest', function (): void {
             flags: JSON_THROW_ON_ERROR,
         );
 
-        expect($manifest['description'])->toContain('public-output safety')
-            ->and($manifest['marketplace']['summary'])->toContain('package ownership')
+        expect($manifest['description'])->toContain('per-package install health')
+            ->and($manifest['marketplace']['summary'])->toContain('per-package install health')
             ->and($manifest['contributes'])->toContain([
                 'type' => 'admin-page',
                 'class' => DiagnosticsPageContribution::class,

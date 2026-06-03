@@ -1,6 +1,6 @@
 {
     "name": "capell-app/diagnostics",
-    "description": "Developer and operational diagnostics for Capell CMS.",
+    "description": "A single operations cockpit for Capell that surfaces system health, queue activity, config drift, permission audits, and per-package install health, with a guarded command palette for trusted capell:* operations.",
     "type": "library",
     "license": "proprietary",
     "autoload": {
@@ -34,7 +34,15 @@
         "capell",
         "cms",
         "laravel",
-        "diagnostics"
+        "filament",
+        "diagnostics",
+        "system-health",
+        "health-check",
+        "queue-monitor",
+        "config-drift",
+        "permission-audit",
+        "command-palette",
+        "observability"
     ],
     "authors": [
         {
