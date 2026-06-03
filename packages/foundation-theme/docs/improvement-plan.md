@@ -1,9 +1,10 @@
 # Foundation Theme — Improvement & Growth Plan
+
 > Package: capell-app/foundation-theme · Kind: theme · Tier: free · Product group: Capell Foundation · Bundle: foundation · Status: Draft
 
 ## 1. Snapshot
 
-Foundation Theme is the base theme every vertical theme builds on. It registers a single Theme Studio definition (`themeKey: "default"`, Blade runtime) with seven view section renderers (`navigation`, `hero`, `features`, `proof`, `content-listing`, `cta`, `footer`) via `BladeThemeRenderer` against `capell-foundation-theme::theme.page`, and contributes the shared `capell::` Blade namespace, anonymous component path, Layout Builder widget views, the `header` Layout Builder area, an SVG media sanitiser, a `CapellUrlGenerator`, Blade directives (`@buildAssets`, `@capellBuffer`), and the `TailwindAssetsGenerator` that aggregates `@import`/`@plugin`/`@source`/`@theme` into one frontend CSS entrypoint (`src/Providers/FoundationThemeServiceProvider.php`). Design tokens are split between a Spatie settings class (`FoundationThemeSettings` — 18 colour/spacing/radius fields) emitted as CSS custom properties at runtime by `resources/views/components/app/head/tokens.blade.php`, and a `default-colors` palette from core's `DefaultColorEnum`. Surfaces are `["admin", "frontend"]`; capabilities are `["frontend-assets", "cache-blocking"]`. Marketplace summary (verbatim): *"Default Capell page foundations, layout areas, content widgets, media, forms, and package-aware frontend states."* The manifest declares 9 marketplace screenshots (8 hand-drawn `.svg` layout mockups + 1 `.jpg` card); `docs/screenshots.json` declares 12 capture entries; only 6 real `.png` screenshots are committed (3 use cases × light/dark) — a three-way mismatch.
+Foundation Theme is the base theme every vertical theme builds on. It registers a single Theme Studio definition (`themeKey: "default"`, Blade runtime) with seven view section renderers (`navigation`, `hero`, `features`, `proof`, `content-listing`, `cta`, `footer`) via `BladeThemeRenderer` against `capell-foundation-theme::theme.page`, and contributes the shared `capell::` Blade namespace, anonymous component path, Layout Builder widget views, the `header` Layout Builder area, an SVG media sanitiser, a `CapellUrlGenerator`, Blade directives (`@buildAssets`, `@capellBuffer`), and the `TailwindAssetsGenerator` that aggregates `@import`/`@plugin`/`@source`/`@theme` into one frontend CSS entrypoint (`src/Providers/FoundationThemeServiceProvider.php`). Design tokens are split between a Spatie settings class (`FoundationThemeSettings` — 18 colour/spacing/radius fields) emitted as CSS custom properties at runtime by `resources/views/components/app/head/tokens.blade.php`, and a `default-colors` palette from core's `DefaultColorEnum`. Surfaces are `["admin", "frontend"]`; capabilities are `["frontend-assets", "cache-blocking"]`. Marketplace summary (verbatim): _"Default Capell page foundations, layout areas, content widgets, media, forms, and package-aware frontend states."_ The manifest declares 9 marketplace screenshots (8 hand-drawn `.svg` layout mockups + 1 `.jpg` card); `docs/screenshots.json` declares 12 capture entries; only 6 real `.png` screenshots are committed (3 use cases × light/dark) — a three-way mismatch.
 
 ## 2. Improvements (existing functionality)
 
@@ -21,7 +22,7 @@ Foundation Theme is the base theme every vertical theme builds on. It registers 
 
 7. **Make `isNodeModuleImport()` declarative instead of heuristic** — **What:** `TailwindAssetsGenerator::isNodeModuleImport()` hard-codes `tippy.js` and `tailwindcss` as "known packages" and otherwise falls back to a regex guess. New vendor CSS imports (e.g. another `swiper/*`-style package) rely on the regex catching them correctly. Drive node-module detection off the `VendorAssetData` origin (it already knows `packageName`) rather than string-sniffing the import value. — `src/Support/Tailwind/TailwindAssetsGenerator.php:261` — **M**
 
-8. **Reconcile the README "At A Glance" surfaces with the manifest** — **What:** README says *"Surfaces: Livewire, console"* and *"Runtime Surface — Livewire"*, but `capell.json` declares `surfaces: ["admin", "frontend"]`. The README also lists only 3 screenshots under "Screens And Workflow" while the manifest declares 9 and `screenshots.json` 12. Align all three. — `README.md`, `docs/overview.md` — **S**
+8. **Reconcile the README "At A Glance" surfaces with the manifest** — **What:** README says _"Surfaces: Livewire, console"_ and _"Runtime Surface — Livewire"_, but `capell.json` declares `surfaces: ["admin", "frontend"]`. The README also lists only 3 screenshots under "Screens And Workflow" while the manifest declares 9 and `screenshots.json` 12. Align all three. — `README.md`, `docs/overview.md` — **S**
 
 ## 3. Missing Features (gaps)
 
@@ -53,7 +54,7 @@ Tied to `capabilities: ["frontend-assets", "cache-blocking"]` and theme-foundati
 
 - **`AdminServiceProvider` is a no-op** with an `#[Override]` on an empty `register()`. Tech debt / misleading README. (See §2.3.)
 
-- **WCAG: base shell lacks landmarks/skip-link.** `app.blade.php`/`components/app/body.blade.php` provide only `lang`. Foundation-level a11y omissions propagate to every theme. (See §3.) Note: widget-level a11y *is* tested (`LightboxAccessibilityTest`, language-flag dimensions and `alt=""` in `SafeOutputTest`) — the gap is the page shell, not the widgets.
+- **WCAG: base shell lacks landmarks/skip-link.** `app.blade.php`/`components/app/body.blade.php` provide only `lang`. Foundation-level a11y omissions propagate to every theme. (See §3.) Note: widget-level a11y _is_ tested (`LightboxAccessibilityTest`, language-flag dimensions and `alt=""` in `SafeOutputTest`) — the gap is the page shell, not the widgets.
 
 - **Performance budget present but unverified.** `capell.json` `performance.frontendRenderBudgetMs: 20`, `adminQueryBudget: 40`. No test asserts the head-token prologue (a per-request `resolve(FoundationThemeSettings::class)` + ~18 closure evaluations + two regex-validated palette passes) stays within 20ms, and no admin query-count test backs the 40 budget. Add a render-budget/query-count assertion, especially given §2.6.
 
@@ -65,15 +66,15 @@ Tied to `capabilities: ["frontend-assets", "cache-blocking"]` and theme-foundati
 
 ## 5. Marketplace & Positioning
 
-**Current manifest `summary`:** *"Default Capell page foundations, layout areas, content widgets, media, forms, and package-aware frontend states."* — Reads as an undifferentiated feature list ("foundations… states") and buries the single most important fact: this is the **base every other theme extends**. "Forms" and "package-aware frontend states" over-promise relative to what this package actually owns (it renders layouts whose data comes from other packages).
+**Current manifest `summary`:** _"Default Capell page foundations, layout areas, content widgets, media, forms, and package-aware frontend states."_ — Reads as an undifferentiated feature list ("foundations… states") and buries the single most important fact: this is the **base every other theme extends**. "Forms" and "package-aware frontend states" over-promise relative to what this package actually owns (it renders layouts whose data comes from other packages).
 
-**Improved `summary`:** *"The base theme every Capell site and child theme builds on: shared Blade layouts, a runtime design-token system (colours, spacing, radius), the Tailwind asset pipeline, an SVG sanitiser, and the section/area contracts that vertical themes override."*
+**Improved `summary`:** _"The base theme every Capell site and child theme builds on: shared Blade layouts, a runtime design-token system (colours, spacing, radius), the Tailwind asset pipeline, an SVG sanitiser, and the section/area contracts that vertical themes override."_
 
-**Current composer `description`:** *"Capell default theme — ships the standard Tailwind asset pipeline, Blade directives, URL generator, and SVG media component."* — Accurate but narrow; omits the design-token system and the child-theme foundation role that are the real value.
+**Current composer `description`:** _"Capell default theme — ships the standard Tailwind asset pipeline, Blade directives, URL generator, and SVG media component."_ — Accurate but narrow; omits the design-token system and the child-theme foundation role that are the real value.
 
-**Improved composer `description`:** *"Capell's foundation theme — base Blade layouts, runtime design tokens, the Tailwind asset pipeline, Blade directives, media/SVG handling, and the override contracts that all vertical Capell themes extend."*
+**Improved composer `description`:** _"Capell's foundation theme — base Blade layouts, runtime design tokens, the Tailwind asset pipeline, Blade directives, media/SVG handling, and the override contracts that all vertical Capell themes extend."_
 
-**Quality gates the whole line:** Because every theme inherits `capell::` views, the §4 issues are line-wide liabilities: a stub health check means *no* installed theme self-reports brokenness; the public-Blade guard holes apply to chrome rendered under every theme; the missing RTL/dark-token layer means no child theme can offer them without re-implementing the base. Conversely, fixing the token consolidation (§2.5/2.6) and publishing a documented override surface (§3) is the single highest-leverage investment in the catalogue — it raises the floor under every paid theme.
+**Quality gates the whole line:** Because every theme inherits `capell::` views, the §4 issues are line-wide liabilities: a stub health check means _no_ installed theme self-reports brokenness; the public-Blade guard holes apply to chrome rendered under every theme; the missing RTL/dark-token layer means no child theme can offer them without re-implementing the base. Conversely, fixing the token consolidation (§2.5/2.6) and publishing a documented override surface (§3) is the single highest-leverage investment in the catalogue — it raises the floor under every paid theme.
 
 **Design-system/token consistency:** Today the source of truth for colour tokens is split (build-time `@theme` vs runtime head partial) with two divergent safe-lists; settings cover colour/spacing/radius but not typography. A single typed token contract (§2.5) plus a published token vocabulary is the differentiator that lets the marketplace advertise "consistent design system across all themes."
 
@@ -83,21 +84,21 @@ Tied to `capabilities: ["frontend-assets", "cache-blocking"]` and theme-foundati
 
 ## 6. Prioritized Roadmap
 
-| Item | Bucket | Effort | Impact | Section ref |
-| --- | --- | --- | --- | --- |
-| Replace stub health check with real probes | Now | M | High | §2.1, §4 |
-| Route all `<style>` token values through the CSS safe-list | Now | S | High | §4 |
-| Add `getMeta(`/`->translation->` to public-Blade guard | Now | S | High | §2.4, §4 |
-| Delete no-op `AdminServiceProvider` + fix README surfaces | Now | S | Med | §2.3, §2.8 |
-| Decide demo subsystem: wire a `:demo` command or delete ~1,200 LOC | Now | M | High | §2.2, §4 |
-| Reconcile screenshot counts (9/12/6) + label SVG mockups | Now | S | Med | §1, §5 |
-| Consolidate the two token sources into one typed Action | Next | M | High | §2.5, §5 |
-| Move head-token prologue into a hydrated Data object | Next | M | Med | §2.6 |
-| Publish documented child-theme override surface + arch test | Next | M | High | §3, §5 |
-| Add base-shell a11y primitives (skip-link, landmarks, aria-live) | Next | M | High | §3, §4 |
-| Ship a full dark token layer or drop dark screenshots | Next | M | Med | §3 |
-| Add render-budget + admin query-count assertions vs manifest | Next | S | Med | §4 |
-| Add RTL: `dir` emission + logical-property conventions | Later | L | Med | §3 |
-| Add typography-scale tokens + back `headingScale` setting | Later | M | Med | §3 |
-| Make `isNodeModuleImport()` origin-driven, not heuristic | Later | M | Low | §2.7 |
-| Rewrite marketplace `summary` + composer `description` | Later | S | Med | §5 |
+| Item                                                               | Bucket | Effort | Impact | Section ref |
+| ------------------------------------------------------------------ | ------ | ------ | ------ | ----------- |
+| Replace stub health check with real probes                         | Now    | M      | High   | §2.1, §4    |
+| Route all `<style>` token values through the CSS safe-list         | Now    | S      | High   | §4          |
+| Add `getMeta(`/`->translation->` to public-Blade guard             | Now    | S      | High   | §2.4, §4    |
+| Delete no-op `AdminServiceProvider` + fix README surfaces          | Now    | S      | Med    | §2.3, §2.8  |
+| Decide demo subsystem: wire a `:demo` command or delete ~1,200 LOC | Now    | M      | High   | §2.2, §4    |
+| Reconcile screenshot counts (9/12/6) + label SVG mockups           | Now    | S      | Med    | §1, §5      |
+| Consolidate the two token sources into one typed Action            | Next   | M      | High   | §2.5, §5    |
+| Move head-token prologue into a hydrated Data object               | Next   | M      | Med    | §2.6        |
+| Publish documented child-theme override surface + arch test        | Next   | M      | High   | §3, §5      |
+| Add base-shell a11y primitives (skip-link, landmarks, aria-live)   | Next   | M      | High   | §3, §4      |
+| Ship a full dark token layer or drop dark screenshots              | Next   | M      | Med    | §3          |
+| Add render-budget + admin query-count assertions vs manifest       | Next   | S      | Med    | §4          |
+| Add RTL: `dir` emission + logical-property conventions             | Later  | L      | Med    | §3          |
+| Add typography-scale tokens + back `headingScale` setting          | Later  | M      | Med    | §3          |
+| Make `isNodeModuleImport()` origin-driven, not heuristic           | Later  | M      | Low    | §2.7        |
+| Rewrite marketplace `summary` + composer `description`             | Later  | S      | Med    | §5          |

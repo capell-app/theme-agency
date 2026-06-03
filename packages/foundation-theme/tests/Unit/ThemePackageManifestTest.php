@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
+use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\FoundationTheme\Providers\FoundationThemeServiceProvider;
 
 it('declares foundation as the default theme package', function (): void {
@@ -32,6 +34,30 @@ it('defines the Foundation Theme Studio parent contract', function (): void {
         ->and($definition->presets)->toHaveCount(1)
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->assets)->toHaveKey('css');
+});
+
+it('registers a Theme Studio definition that matches the manifest', function (): void {
+    $manifest = themePackageManifest('foundation-theme');
+
+    $registry = new ThemeRegistry;
+    $registry->register(
+        FoundationThemeServiceProvider::definition(),
+        new BladeThemeRenderer(
+            themeKey: FoundationThemeServiceProvider::THEME_KEY,
+            layoutView: 'capell-foundation-theme::theme.page',
+            sectionRenderers: [],
+        ),
+        [],
+    );
+
+    expect($registry->has($manifest['themeKey']))->toBeTrue();
+
+    $registered = $registry->definition($manifest['themeKey']);
+
+    expect($registered->key)->toBe($manifest['themeKey'])
+        ->and($registered->key)->toBe(FoundationThemeServiceProvider::THEME_KEY)
+        ->and($registered->package)->toBe($manifest['name'])
+        ->and($registered->extends)->toBe($manifest['extends']);
 });
 
 it('declares standalone theme packages extending foundation', function (string $packageDirectory, string $composerName, string $themeKey): void {

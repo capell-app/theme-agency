@@ -1,6 +1,6 @@
 {
     "name": "capell-app/foundation-theme",
-    "description": "Capell default theme — ships the standard Tailwind asset pipeline, Blade directives, URL generator, and SVG media component.",
+    "description": "Capell's foundation theme — base Blade layouts, runtime design tokens, the Tailwind asset pipeline, Blade directives, media/SVG handling, and the override contracts that all vertical Capell themes extend.",
     "type": "library",
     "license": "proprietary",
     "require": {
