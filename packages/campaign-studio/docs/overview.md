@@ -63,7 +63,7 @@ Lets marketing and editorial teams connect landing pages to goals and see which 
 
 ![Campaign conversion goal form](screenshots/campaign-conversion-goals-form.png)
 
-![Campaign CTA widget form](screenshots/cta-widget-form.png)
+![Campaign CTA widget form](screenshots/cta-block-form.png)
 
 Campaign dashboard widgets screenshot target: `packages/campaign-studio/docs/screenshots/campaign-dashboard-widgets.png`. Keep this as text until the screenshot file is committed.
 
