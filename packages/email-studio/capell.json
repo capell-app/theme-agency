@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Email Studio gives Capell a transactional email centre for reusable templates, delivery profiles, send audit trails, suppressions, replies, and provider events.",
+    "description": "Email Studio gives every Capell site a reliable transactional-email core. Define reusable, locale- and site-scoped templates that render through a deliberately safe placeholder engine (HTML-escaped, missing-variable-strict in production), then send through delivery profiles backed by pluggable provider adapters (SMTP today, with a clean contract for Postmark and others). Every send is rendered to an immutable snapshot, screened against site and global suppression lists, and delivered via a queue job that records per-recipient outcomes for support and audit. Roadmap slices add provider webhook ingestion, open/click tracking, one-click unsubscribe, and an in-panel template and send-log studio.",
     "product": {
         "group": "Capell Communications",
         "tier": "premium",
@@ -106,7 +106,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Email Studio gives Capell a transactional email centre for reusable templates, delivery profiles, send audit trails, suppressions, replies, and provider events.",
+        "summary": "Email Studio is Capell's transactional-email engine: site-scoped reusable templates with safe {{ variable }} rendering, pluggable delivery profiles and provider adapters, suppression enforcement, and a queued, auditable per-recipient send pipeline.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",

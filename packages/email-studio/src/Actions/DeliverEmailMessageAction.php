@@ -129,7 +129,7 @@ class DeliverEmailMessageAction
     private function markNewSuppressions(EmailMessage $message): void
     {
         foreach ($message->recipients()->where('status', EmailRecipientStatus::Queued->value)->get() as $recipient) {
-            if ((new CheckEmailSuppressionAction)->handle($recipient->email, $message->site_scope_key) === false) {
+            if (resolve(CheckEmailSuppressionAction::class)->handle($recipient->email, $message->site_scope_key) === false) {
                 continue;
             }
 
