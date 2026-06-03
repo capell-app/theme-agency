@@ -32,4 +32,14 @@ return new class extends SettingsMigration
             $this->migrator->add('password_policy.password_history_count', 5);
         }
     }
+
+    public function down(): void
+    {
+        $this->migrator->deleteIfExists('password_policy.password_expiry_enabled');
+        $this->migrator->deleteIfExists('password_policy.password_expiry_days');
+        $this->migrator->deleteIfExists('password_policy.force_change_enabled');
+        $this->migrator->deleteIfExists('password_policy.compromised_password_checks_enabled');
+        $this->migrator->deleteIfExists('password_policy.password_history_enabled');
+        $this->migrator->deleteIfExists('password_policy.password_history_count');
+    }
 };

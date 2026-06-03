@@ -1,6 +1,6 @@
 {
     "name": "capell-app/password-policy",
-    "description": "Password expiry, forced password changes, and password safety policy for Capell CMS.",
+    "description": "Enforce admin password expiry, forced resets, reuse history, and breach (HIBP) checks across your Capell panels — configured from one settings screen, no code.",
     "type": "library",
     "license": "proprietary",
     "autoload": {

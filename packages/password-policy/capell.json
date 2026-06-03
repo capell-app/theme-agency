@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Password Policy provides opt-in password rules and enforcement for Capell CMS.",
+    "description": "Enforce admin password expiry, forced resets, reuse history, and breach (HIBP) checks across your Capell panels — configured from one settings screen, no code.",
     "product": {
         "group": "Capell Operations",
         "tier": "premium",
@@ -77,7 +77,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Password Policy provides opt-in password rules and enforcement for Capell CMS.",
+        "summary": "Enforce admin password expiry, forced resets, reuse history, and breach (HIBP) checks across your Capell panels — configured from one settings screen, no code.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
