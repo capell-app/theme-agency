@@ -1,6 +1,6 @@
 {
     "name": "capell-app/public-actions",
-    "description": "Reusable public submit actions, outbound automation dispatch, and integration endpoints for Capell CMS.",
+    "description": "Turn public form and API submissions into signed, retried, fully-audited webhooks to Zapier, Make, n8n, Pipedream, or your own endpoint for Capell CMS.",
     "type": "library",
     "license": "proprietary",
     "autoload": {
