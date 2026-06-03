@@ -16,6 +16,7 @@ use Capell\Bookings\Actions\QueueAppointmentReminderAction;
 use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
 use Capell\Bookings\Enums\BookingAvailabilityStatusEnum;
 use Capell\Bookings\Enums\BookingLocationTypeEnum;
+use Capell\Bookings\Health\BookingsHealthCheck;
 use Capell\Bookings\Manifest\AppointmentRequestResourceContribution;
 use Capell\Bookings\Manifest\BookingAvailabilityExceptionResourceContribution;
 use Capell\Bookings\Manifest\BookingAvailabilityWindowResourceContribution;
@@ -23,6 +24,7 @@ use Capell\Bookings\Manifest\BookingLocationResourceContribution;
 use Capell\Bookings\Manifest\BookingServiceResourceContribution;
 use Capell\Bookings\Manifest\BookingsFrontendRoutesContribution;
 use Capell\Bookings\Manifest\BookingsModelsContribution;
+use Capell\Bookings\Manifest\BookingsReminderScheduleContribution;
 use Capell\Bookings\Manifest\BookingStaffMemberResourceContribution;
 use Capell\Bookings\Models\AppointmentAuditLog;
 use Capell\Bookings\Models\AppointmentRequest;
@@ -31,7 +33,9 @@ use Capell\Bookings\Models\BookingAvailabilityWindow;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
+use Capell\Bookings\Support\BookingsModelRegistrar;
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
+use Capell\Core\Contracts\Extensions\RunsScheduledExtensionJob;
 use Illuminate\Support\Facades\File;
 
 it('keeps package manifest requirements aligned with composer requirements', function (): void {
@@ -97,6 +101,10 @@ it('declares implemented bookings contributions and feature capabilities', funct
             'type' => 'route',
             'class' => BookingsFrontendRoutesContribution::class,
         ])
+        ->and($contributions->contains(fn (array $contribution): bool => ($contribution['type'] ?? null) === 'scheduled-job'
+            && ($contribution['class'] ?? null) === BookingsReminderScheduleContribution::class
+            && ($contribution['command'] ?? null) === 'capell:bookings:send-due-reminders'))->toBeTrue()
+        ->and(class_implements(BookingsReminderScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class)
         ->and(class_implements(BookingsFrontendRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
         ->and($manifest['capabilities'])->toContain(
             'bookings-availability',
@@ -115,6 +123,18 @@ it('declares implemented bookings contributions and feature capabilities', funct
             'buildStaffCalendarFeed' => BuildStaffCalendarFeedAction::class,
         ])
         ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
+});
+
+it('checks bookings tables morph aliases and actions are discoverable', function (): void {
+    BookingsModelRegistrar::register();
+
+    $healthCheck = new BookingsHealthCheck;
+
+    expect(BookingsHealthCheck::compatibleCapellApiVersion())->toBe('^4.0')
+        ->and($healthCheck->missingTables())->toBe([])
+        ->and($healthCheck->missingMorphAliases())->toBe([])
+        ->and($healthCheck->unresolvableActions())->toBe([])
+        ->and($healthCheck->passes())->toBeTrue();
 });
 
 it('casts enums and exposes core relationships', function (): void {

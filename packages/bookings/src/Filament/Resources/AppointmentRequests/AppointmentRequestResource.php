@@ -5,18 +5,24 @@ declare(strict_types=1);
 namespace Capell\Bookings\Filament\Resources\AppointmentRequests;
 
 use BackedEnum;
+use Capell\Bookings\Actions\CancelAppointmentRequestAction;
+use Capell\Bookings\Actions\ConfirmAppointmentRequestAction;
 use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
 use Capell\Bookings\Filament\Resources\AppointmentRequests\Pages\EditAppointmentRequest;
 use Capell\Bookings\Filament\Resources\AppointmentRequests\Pages\ListAppointmentRequests;
+use Capell\Bookings\Filament\Resources\AppointmentRequests\RelationManagers\AppointmentAuditLogsRelationManager;
 use Capell\Bookings\Models\AppointmentRequest;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
 use Capell\Core\Support\Database\RuntimeSchemaState;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -65,6 +71,9 @@ final class AppointmentRequestResource extends Resource
             TextColumn::make('requested_starts_at')->label(__('capell-bookings::admin.fields.requested_starts_at'))->dateTime()->sortable(),
             TextColumn::make('status')->label(__('capell-bookings::admin.fields.status'))->badge()->sortable(),
             TextColumn::make('source')->label(__('capell-bookings::admin.fields.source'))->toggleable(isToggledHiddenByDefault: true),
+        ])->recordActions([
+            self::confirmRecordAction(),
+            self::cancelRecordAction(),
         ]);
     }
 
@@ -92,6 +101,72 @@ final class AppointmentRequestResource extends Resource
         return [
             'index' => ListAppointmentRequests::route('/'),
             'edit' => EditAppointmentRequest::route('/{record}/edit'),
+        ];
+    }
+
+    #[Override]
+    public static function getRelations(): array
+    {
+        return [
+            AppointmentAuditLogsRelationManager::class,
+        ];
+    }
+
+    public static function confirmRecordAction(): Action
+    {
+        return Action::make('confirm')
+            ->label(__('capell-bookings::admin.actions.confirm'))
+            ->icon('heroicon-o-check-circle')
+            ->color('success')
+            ->authorize('update')
+            ->visible(fn (AppointmentRequest $record): bool => $record->status->canConfirm())
+            ->requiresConfirmation()
+            ->action(function (AppointmentRequest $record): void {
+                ConfirmAppointmentRequestAction::run($record);
+
+                Notification::make('booking-appointment-confirmed')
+                    ->title(__('capell-bookings::admin.messages.appointment_confirmed'))
+                    ->success()
+                    ->send();
+            });
+    }
+
+    public static function cancelRecordAction(): Action
+    {
+        return Action::make('cancel')
+            ->label(__('capell-bookings::admin.actions.cancel'))
+            ->icon('heroicon-o-x-circle')
+            ->color('danger')
+            ->authorize('update')
+            ->visible(fn (AppointmentRequest $record): bool => $record->status->canCancel())
+            ->form([
+                Textarea::make('reason')
+                    ->label(__('capell-bookings::admin.fields.reason'))
+                    ->rows(3)
+                    ->maxLength(2000),
+            ])
+            ->requiresConfirmation()
+            ->action(function (AppointmentRequest $record, array $data): void {
+                CancelAppointmentRequestAction::run(
+                    appointmentRequest: $record,
+                    reason: is_string($data['reason'] ?? null) && $data['reason'] !== '' ? $data['reason'] : null,
+                );
+
+                Notification::make('booking-appointment-cancelled')
+                    ->title(__('capell-bookings::admin.messages.appointment_cancelled'))
+                    ->success()
+                    ->send();
+            });
+    }
+
+    /**
+     * @return array<Action|ActionGroup>
+     */
+    public static function appointmentWorkflowActions(): array
+    {
+        return [
+            self::confirmRecordAction(),
+            self::cancelRecordAction(),
         ];
     }
 

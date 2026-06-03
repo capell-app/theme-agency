@@ -231,12 +231,19 @@
 
                         <label>
                             {{ __('capell-bookings::generic.frontend.timezone') }}
-                            <input
-                                type="text"
+                            <select
                                 name="timezone"
-                                value="{{ old('timezone', 'Europe/London') }}"
                                 required
-                            />
+                            >
+                                @foreach (DateTimeZone::listIdentifiers() as $timezoneIdentifier)
+                                    <option
+                                        value="{{ $timezoneIdentifier }}"
+                                        @selected(old('timezone', 'Europe/London') === $timezoneIdentifier)
+                                    >
+                                        {{ $timezoneIdentifier }}
+                                    </option>
+                                @endforeach
+                            </select>
                             @error('timezone')
                                 <span class="error">{{ $message }}</span>
                             @enderror

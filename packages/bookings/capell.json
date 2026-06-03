@@ -70,6 +70,13 @@
         {
             "type": "route",
             "class": "Capell\\Bookings\\Manifest\\BookingsFrontendRoutesContribution"
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\Bookings\\Manifest\\BookingsReminderScheduleContribution",
+            "name": "capell-bookings-send-due-reminders",
+            "command": "capell:bookings:send-due-reminders",
+            "frequency": "everyFiveMinutes"
         }
     ],
     "database": {

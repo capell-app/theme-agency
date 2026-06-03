@@ -7,9 +7,11 @@ namespace Capell\Bookings\Http\Controllers;
 use Capell\Bookings\Actions\CreateAppointmentRequestAction;
 use Capell\Bookings\Data\AppointmentRequestData;
 use Carbon\CarbonImmutable;
+use DateTimeZone;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 final class StoreBookingRequestController
 {
@@ -20,7 +22,7 @@ final class StoreBookingRequestController
             'staff_member_id' => ['nullable', 'integer', 'min:1'],
             'location_id' => ['nullable', 'integer', 'min:1'],
             'requested_starts_at' => ['required', 'date'],
-            'timezone' => ['required', 'string', 'max:64'],
+            'timezone' => ['required', 'string', 'max:64', Rule::in(DateTimeZone::listIdentifiers())],
             'customer_name' => ['required', 'string', 'max:255'],
             'customer_email' => ['required', 'email', 'max:255'],
             'customer_phone' => ['nullable', 'string', 'max:255'],

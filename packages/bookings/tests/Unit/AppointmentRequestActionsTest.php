@@ -26,6 +26,8 @@ use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 
+use function Pest\Laravel\artisan;
+
 afterEach(function (): void {
     CarbonImmutable::setTestNow();
 });
@@ -437,6 +439,63 @@ it('queues reminders for confirmed appointments only', function (): void {
         ->where('appointment_request_id', $appointmentRequest->getKey())
         ->where('event', AppointmentAuditEventEnum::ReminderQueued->value)
         ->exists())->toBeTrue();
+
+    Notification::assertSentOnDemand(AppointmentWorkflowNotification::class);
+});
+
+it('queues due confirmed appointment reminders once from the console command', function (): void {
+    Notification::fake();
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-06-01 08:00:00', 'UTC'));
+
+    $dueStartsAt = CarbonImmutable::parse('2026-06-01 09:00:00', 'UTC');
+    $dueAppointmentRequest = AppointmentRequest::factory()->create([
+        'status' => AppointmentRequestStatusEnum::Confirmed,
+        'confirmed_at' => CarbonImmutable::now(),
+        'requested_starts_at' => $dueStartsAt,
+        'requested_ends_at' => $dueStartsAt->addMinutes(45),
+    ]);
+    $alreadyQueuedAppointmentRequest = AppointmentRequest::factory()->create([
+        'status' => AppointmentRequestStatusEnum::Confirmed,
+        'confirmed_at' => CarbonImmutable::now(),
+        'requested_starts_at' => $dueStartsAt->addMinutes(15),
+        'requested_ends_at' => $dueStartsAt->addMinutes(60),
+    ]);
+    $futureAppointmentRequest = AppointmentRequest::factory()->create([
+        'status' => AppointmentRequestStatusEnum::Confirmed,
+        'confirmed_at' => CarbonImmutable::now(),
+        'requested_starts_at' => $dueStartsAt->addHours(4),
+        'requested_ends_at' => $dueStartsAt->addHours(4)->addMinutes(45),
+    ]);
+
+    AppointmentAuditLog::query()->create([
+        'appointment_request_id' => $alreadyQueuedAppointmentRequest->getKey(),
+        'event' => AppointmentAuditEventEnum::ReminderQueued,
+        'status_from' => AppointmentRequestStatusEnum::Confirmed,
+        'status_to' => AppointmentRequestStatusEnum::Confirmed,
+        'occurred_at' => CarbonImmutable::now(),
+    ]);
+
+    $command = artisan('capell:bookings:send-due-reminders', ['--lead-minutes' => 90]);
+
+    throw_if(is_int($command), RuntimeException::class, 'Expected pending artisan command.');
+
+    $command
+        ->assertSuccessful()
+        ->expectsOutputToContain('Queued 1 booking appointment reminder.')
+        ->run();
+
+    expect(AppointmentAuditLog::query()
+        ->where('appointment_request_id', $dueAppointmentRequest->getKey())
+        ->where('event', AppointmentAuditEventEnum::ReminderQueued->value)
+        ->exists())->toBeTrue()
+        ->and(AppointmentAuditLog::query()
+            ->where('appointment_request_id', $alreadyQueuedAppointmentRequest->getKey())
+            ->where('event', AppointmentAuditEventEnum::ReminderQueued->value)
+            ->count())->toBe(1)
+        ->and(AppointmentAuditLog::query()
+            ->where('appointment_request_id', $futureAppointmentRequest->getKey())
+            ->where('event', AppointmentAuditEventEnum::ReminderQueued->value)
+            ->exists())->toBeFalse();
 
     Notification::assertSentOnDemand(AppointmentWorkflowNotification::class);
 });

@@ -29,6 +29,8 @@ it('renders a public booking request form without exposing admin internals', fun
         ->assertSee('Consultation')
         ->assertSee('Avery Morgan')
         ->assertSee('Main office')
+        ->assertSee('<select', false)
+        ->assertSee('Europe/London')
         ->assertDontSee('capell-app/bookings', false)
         ->assertDontSee('Filament', false)
         ->assertDontSee('BookingServiceResource', false)
@@ -81,6 +83,23 @@ it('stores public appointment requests through the booking action', function ():
         ->and($appointmentRequest->customer_email)->toBe('morgan@example.test')
         ->and($appointmentRequest->source)->toBe('bookings-public')
         ->and($appointmentRequest->payload)->toBe(['submitted_from' => 'public-booking-request']);
+});
+
+it('rejects public appointment requests with invalid timezone identifiers', function (): void {
+    $service = BookingService::factory()->create([
+        'duration_minutes' => 45,
+        'lead_time_minutes' => 0,
+    ]);
+
+    $response = $this->post(route('capell-bookings.request.store'), [
+        'service_id' => $service->getKey(),
+        'requested_starts_at' => CarbonImmutable::now('Europe/London')->addDay()->format('Y-m-d\TH:i'),
+        'timezone' => 'Europe/NotARealZone',
+        'customer_name' => 'Morgan Customer',
+        'customer_email' => 'morgan@example.test',
+    ]);
+
+    $response->assertSessionHasErrors('timezone');
 });
 
 it('serves opaque staff calendar feeds for confirmed appointments only', function (): void {

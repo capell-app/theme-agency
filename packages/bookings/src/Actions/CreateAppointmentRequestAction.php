@@ -205,6 +205,7 @@ class CreateAppointmentRequestAction
                     $query->orWhere('location_id', $appointmentRequestData->locationId);
                 }
             })
+            ->lockForUpdate()
             ->get();
 
         if ($availabilityExceptions->isEmpty()) {
@@ -257,6 +258,7 @@ class CreateAppointmentRequestAction
                     $query->orWhere('location_id', $appointmentRequestData->locationId);
                 }
             })
+            ->lockForUpdate()
             ->get();
 
         if ($availabilityWindows->isEmpty()) {
@@ -327,6 +329,7 @@ class CreateAppointmentRequestAction
                 $query->whereNull('location_id')
                     ->orWhere('location_id', $appointmentRequestData->locationId);
             })
+            ->lockForUpdate()
             ->count();
 
         if ($blockingAppointmentCount < $availabilityCapacity) {

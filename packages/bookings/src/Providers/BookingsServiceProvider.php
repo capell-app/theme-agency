@@ -6,10 +6,12 @@ namespace Capell\Bookings\Providers;
 
 use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Facades\CapellAdmin;
+use Capell\Bookings\Console\SendDueAppointmentRemindersCommand;
 use Capell\Bookings\Enums\ResourceEnum;
 use Capell\Bookings\Support\BookingsModelRegistrar;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Illuminate\Console\Scheduling\Schedule;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -38,6 +40,7 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
             ->hasTranslations()
             ->hasViews(self::$name)
             ->hasRoute('web')
+            ->hasCommand(SendDueAppointmentRemindersCommand::class)
             ->hasMigrations([
                 '2026_05_31_130000_01_create_booking_services_table',
                 '2026_05_31_130000_02_create_booking_staff_members_table',
@@ -59,7 +62,8 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
             BookingsModelRegistrar::register();
             $this
                 ->registerProtectedTables()
-                ->registerAdminResources();
+                ->registerAdminResources()
+                ->registerReminderSchedule();
         });
     }
 
@@ -90,6 +94,18 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
                 group: $resource->name,
             ));
         }
+
+        return $this;
+    }
+
+    private function registerReminderSchedule(): self
+    {
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
+            $schedule->command('capell:bookings:send-due-reminders')
+                ->everyFiveMinutes()
+                ->withoutOverlapping()
+                ->onOneServer();
+        });
 
         return $this;
     }
