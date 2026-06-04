@@ -55,12 +55,15 @@ it('flags redirects invalid sitemap xml unsafe sitemap urls and generated output
     ]);
 
     $checks = BuildSeoSuiteDoctorReportAction::run(baseUrl: 'https://bad.test');
+    $unsafeSitemapCheck = $checks->firstWhere('message', 'Sitemap endpoint /sitemap.xml unsafe URL scan');
 
     expect($checks->firstWhere('message', 'Crawler endpoint /robots.txt returned HTTP 302')->detail)->toContain('redirect to https://bad.test/robots')
         ->and($checks->firstWhere('message', 'Crawler endpoint /llms.txt cache header')->status)->toBe('warn')
         ->and($checks->firstWhere('message', 'Generated output /llms.txt public leak scan')->detail)->toContain('/admin')
         ->and($checks->firstWhere('message', 'Sitemap endpoint /sitemap-xml XML validity')->status)->toBe('warn')
-        ->and($checks->firstWhere('message', 'Sitemap endpoint /sitemap.xml unsafe URL scan')->status)->toBe('warn');
+        ->and($unsafeSitemapCheck?->status)->toBe('warn')
+        ->and($unsafeSitemapCheck?->detail)->toContain('signature=[redacted]')
+        ->and($unsafeSitemapCheck?->detail)->not->toContain('signature=abc');
 });
 
 it('reports excluded ai discovery pages without reasons', function (): void {

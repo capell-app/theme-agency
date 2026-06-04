@@ -21,6 +21,7 @@ use Capell\SeoSuite\Models\AiDiscoverySnapshot;
 use Capell\SeoSuite\Providers\SeoSuiteServiceProvider;
 use Capell\SeoSuite\Settings\AIOrchestratorSettings;
 use Capell\SeoSuite\Settings\SeoSuiteSettings;
+use Capell\SeoSuite\Support\PublicOutputLeakScanner;
 use Capell\SiteDiscovery\Actions\DiscoverPublicPagesAction;
 use Capell\SiteDiscovery\Data\DiscoverablePageData;
 use Capell\SiteDiscovery\Providers\SiteDiscoveryServiceProvider;
@@ -484,35 +485,7 @@ final class BuildSeoSuiteDoctorReportAction
      */
     private function leakMatches(string $content): array
     {
-        $patterns = [
-            '/admin' => ['/admin'],
-            '/filament' => ['/filament'],
-            'signed URL parameter' => ['signature='],
-            'signed expiry parameter' => ['expires='],
-            'Livewire directive' => ['wire:'],
-            'Livewire internals' => ['livewire'],
-            'field path' => ['field_path', 'field-path', 'fieldPath'],
-            'model ID' => ['model_id', 'model-id', 'modelId'],
-            'page ID' => ['page_id', 'page-id', 'pageId'],
-            'editor metadata' => ['editor-only', 'capell-editor', 'data-editor'],
-            'draft marker' => ['draft=true', 'status=draft', '/draft'],
-            'unpublished marker' => ['unpublished=true', 'status=unpublished', '/unpublished'],
-        ];
-
-        $lowerContent = mb_strtolower($content);
-        $matches = [];
-
-        foreach ($patterns as $label => $needles) {
-            $hasMatch = collect($needles)->contains(
-                fn (string $needle): bool => str_contains($lowerContent, mb_strtolower($needle)),
-            );
-
-            if ($hasMatch) {
-                $matches[] = $label;
-            }
-        }
-
-        return array_values(array_unique($matches));
+        return (new PublicOutputLeakScanner)->labels($content);
     }
 
     /**
@@ -621,7 +594,7 @@ final class BuildSeoSuiteDoctorReportAction
                 continue;
             }
 
-            $locs[] = $url;
+            $locs[] = (new PublicOutputLeakScanner)->redact($url);
         }
 
         return $locs;

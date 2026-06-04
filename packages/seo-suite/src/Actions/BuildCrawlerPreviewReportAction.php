@@ -10,6 +10,7 @@ use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
 use Capell\SeoSuite\Data\AiDiscoveryRenderContextData;
 use Capell\SeoSuite\Data\CrawlerPreviewData;
+use Capell\SeoSuite\Support\PublicOutputLeakScanner;
 use Capell\SiteDiscovery\Actions\DiscoverPublicUrlsAction;
 use Capell\SiteDiscovery\Data\DiscoverableUrlData;
 use Carbon\CarbonInterface;
@@ -136,40 +137,7 @@ final class BuildCrawlerPreviewReportAction
      */
     private function leakWarnings(string $content): array
     {
-        $patterns = [
-            '/admin',
-            '/filament',
-            'signature=',
-            'expires=',
-            'wire:',
-            'livewire',
-            'field_path',
-            'field-path',
-            'fieldPath',
-            'model_id',
-            'model-id',
-            'modelId',
-            'page_id',
-            'page-id',
-            'pageId',
-            'editor-only',
-            'capell-editor',
-            'data-editor',
-            'draft=true',
-            'status=draft',
-            '/draft',
-            'unpublished=true',
-            'status=unpublished',
-            '/unpublished',
-        ];
-        $lowerContent = mb_strtolower($content);
-        $matches = [];
-
-        foreach ($patterns as $pattern) {
-            if (str_contains($lowerContent, mb_strtolower($pattern))) {
-                $matches[] = $pattern;
-            }
-        }
+        $matches = (new PublicOutputLeakScanner)->labels($content);
 
         if ($matches === []) {
             return [];

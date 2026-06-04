@@ -101,7 +101,7 @@ it('flags empty crawler outputs and public leak markers', function (): void {
     AiDiscoveryPageProfile::query()
         ->where('page_id', $page->getKey())
         ->update([
-            'markdown_override' => "[Admin](/admin)\n",
+            'markdown_override' => "[Admin](/admin)\n<div data-model-id=\"123\" data-field-path=\"content.title\"></div>\n",
         ]);
 
     $previews = collect(BuildCrawlerPreviewReportAction::run($site, $language, $page));
@@ -109,5 +109,7 @@ it('flags empty crawler outputs and public leak markers', function (): void {
     expect($previews->firstWhere('key', 'llms_txt')?->status)->toBe('warn')
         ->and($previews->firstWhere('key', 'llms_txt')?->warnings)->toContain(__('capell-seo-suite::generic.crawler_preview_empty_output'))
         ->and($previews->firstWhere('key', 'page_markdown')?->status)->toBe('warn')
-        ->and($previews->firstWhere('key', 'page_markdown')?->warnings[0])->toContain('/admin');
+        ->and($previews->firstWhere('key', 'page_markdown')?->warnings[0])->toContain('/admin')
+        ->and($previews->firstWhere('key', 'page_markdown')?->warnings[0])->toContain('model ID')
+        ->and($previews->firstWhere('key', 'page_markdown')?->warnings[0])->toContain('field path');
 });

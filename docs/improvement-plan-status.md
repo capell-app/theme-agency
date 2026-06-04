@@ -8,7 +8,7 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 293 |
+| Now    | 292 |
 | Next   | 316 |
 | Later  | 202 |
 
@@ -65,7 +65,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | public-actions | 5 | 7 | 5 | Slice committed | `aee93d196` landed webhook safety fixes; durable fanout/replay/retention rows remain. |
 | publishing-studio | 5 | 6 | 5 | Slice committed | `c6a886556` landed health/screenshots; continue with publishing workflow rows. |
 | search | 7 | 6 | 4 | Slice committed | `73eed65c8` landed Wave 7 readiness; continue with hot-path and analytics rows. |
-| seo-suite | 7 | 6 | 3 | Slice committed | `e548d68ac` landed readiness fixes; continue with redaction and AI discovery rows. |
+| seo-suite | 6 | 6 | 3 | Slice committed | Current follow-up extracts shared public-output leak scanning, expands doctor/crawler-preview leak detection, and redacts signed sitemap diagnostics. Continue with anonymous/non-admin AI Discovery endpoint safety tests, dormant SEO check wiring, health probes, and completion review. |
 | shopify-commerce | 6 | 7 | 4 | Slice committed | Current follow-up scrubs persisted sync errors; sync loop, customer producer, and webhook reachability remain high value. |
 | site-discovery | 6 | 5 | 4 | Slice committed | `c76a0cc14` merged URL registry work; continue with remaining discovery/SEO rows. |
 | structured-content-library | 7 | 5 | 4 | Slice committed | `73eed65c8` landed Wave 7 readiness; current follow-up hardens public payload sanitization, publish timestamps, and import slug dedup. |
