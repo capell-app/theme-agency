@@ -8,7 +8,7 @@ use Capell\Core\Models\Language;
 use Capell\Core\Models\Layout;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
-use Capell\FilamentPeek\Actions\CreatePagePreviewSnapshotAction;
+use Capell\FilamentPeek\Actions\FindPagePreviewSnapshotAction;
 use Capell\FilamentPeek\Data\PagePreviewSnapshotData;
 use Filament\Facades\Filament;
 use Illuminate\Support\Str;
@@ -59,7 +59,7 @@ it('creates the unsaved preview snapshot when the header action is clicked', fun
         ->and($iframeUrl)->toContain('/capell-filament-peek/preview/');
 
     $token = Str::between((string) $iframeUrl, '/capell-filament-peek/preview/', '?');
-    $snapshot = resolve(CreatePagePreviewSnapshotAction::class)->find($token);
+    $snapshot = FindPagePreviewSnapshotAction::run($token);
 
     throw_unless($snapshot instanceof PagePreviewSnapshotData, RuntimeException::class, 'Expected page preview snapshot to be stored.');
 

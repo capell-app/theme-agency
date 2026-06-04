@@ -54,7 +54,8 @@ non-persistent.
 | -------------------- | ------------------------------------------------------------------------------------ |
 | Config               | `config/capell-filament-peek.php`                                                    |
 | Routes               | `routes/web.php`                                                                     |
-| Preview action       | `src/Actions/CreatePagePreviewSnapshotAction.php`                                    |
+| Preview create       | `src/Actions/CreatePagePreviewSnapshotAction.php`                                    |
+| Preview lookup       | `src/Actions/FindPagePreviewSnapshotAction.php`                                      |
 | Render action        | `src/Actions/RenderPagePreviewSnapshotAction.php`                                    |
 | Layout Builder state | `src/Actions/StoreLayoutBuilderPreviewStateAction.php`                               |
 | Preview data         | `src/Data/PagePreviewSnapshotData.php`, `src/Data/LayoutBuilderPreviewStateData.php` |
@@ -88,5 +89,7 @@ vendor/bin/pest packages/filament-peek/tests --configuration=phpunit.xml
 
 - Keep preview URLs signed and short-lived.
 - Keep preview snapshots out of persistent publishing state.
+- Keep snapshot creation and snapshot lookup separate so render paths do not
+  depend on write actions.
 - Keep the `Live page` action separate from the unsaved `Changes` preview so
   editors understand what is already public and what is temporary.

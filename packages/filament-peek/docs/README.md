@@ -15,6 +15,7 @@ without saving or publishing the page.
 | ----------------------------- | --------------------------------------------------------------------------------------------------- |
 | Register the preview action   | `src/Providers/FilamentPeekServiceProvider.php`                                                     |
 | Create preview snapshots      | `src/Actions/CreatePagePreviewSnapshotAction.php`                                                   |
+| Read cached preview snapshots | `src/Actions/FindPagePreviewSnapshotAction.php`                                                     |
 | Store Layout Builder state    | `src/Actions/StoreLayoutBuilderPreviewStateAction.php`                                              |
 | Render signed preview URLs    | `src/Actions/RenderPagePreviewSnapshotAction.php`, `src/Http/Controllers/PagePreviewController.php` |
 | Tune cache and route settings | `config/capell-filament-peek.php`                                                                   |

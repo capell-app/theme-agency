@@ -4,6 +4,11 @@ All notable changes to `capell-app/filament-peek` will be documented in this fil
 
 ## Unreleased
 
+### 2026-06-04
+
+- Split cached preview snapshot lookup into `FindPagePreviewSnapshotAction`, so the signed preview controller no longer depends on the snapshot creation action for reads.
+- Added a shared preview context concern for the current admin user, cache store, TTL, and cache-key contracts used by Page and Layout Builder preview snapshots.
+
 ### 2026-06-03
 
 - Replaced the stub `FilamentPeekHealthCheck` with real diagnostics: it now verifies the signed `capell-filament-peek.preview` route is registered, that the snapshot create and render actions resolve from the container, that the upstream `pboivin/filament-peek` plugin is installed, and that the configured preview cache store is reachable. Output reports only check labels and the store name, never tokens, cache keys, or snapshot contents.

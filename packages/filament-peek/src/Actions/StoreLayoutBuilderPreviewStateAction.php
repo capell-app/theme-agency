@@ -6,18 +6,17 @@ namespace Capell\FilamentPeek\Actions;
 
 use Capell\Core\Contracts\Pageable;
 use Capell\Core\Models\Layout;
+use Capell\FilamentPeek\Concerns\ResolvesPreviewContext;
 use Capell\FilamentPeek\Data\LayoutBuilderPreviewStateData;
-use Capell\FilamentPeek\Providers\FilamentPeekServiceProvider;
-use Filament\Facades\Filament;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class StoreLayoutBuilderPreviewStateAction
 {
     use AsAction;
+    use ResolvesPreviewContext;
 
     /**
      * @param  array<string, mixed>|null  $containers
@@ -33,15 +32,15 @@ final class StoreLayoutBuilderPreviewStateAction
             return;
         }
 
-        $user = $this->currentUser();
+        $user = $this->currentPreviewUser();
 
         if (! $user instanceof Authenticatable) {
             return;
         }
 
         $signature = $this->signature((int) $layout->getKey(), $containers ?? [], $assets);
-        $cache = Cache::store($this->cacheStore());
-        $cacheKey = $this->cacheKey($page, $user);
+        $cache = Cache::store($this->previewCacheStore());
+        $cacheKey = $this->layoutBuilderPreviewCacheKey($page, $user);
         $existingPayload = $cache->get($cacheKey);
 
         if (is_array($existingPayload) && ($existingPayload['signature'] ?? null) === $signature) {
@@ -58,7 +57,7 @@ final class StoreLayoutBuilderPreviewStateAction
         $cache->put(
             $cacheKey,
             $state->toArray(),
-            now()->addMinutes($this->ttlMinutes()),
+            now()->addMinutes($this->previewTtlMinutes()),
         );
     }
 
@@ -68,13 +67,13 @@ final class StoreLayoutBuilderPreviewStateAction
             return;
         }
 
-        $user ??= $this->currentUser();
+        $user ??= $this->currentPreviewUser();
 
         if (! $user instanceof Authenticatable) {
             return;
         }
 
-        Cache::store($this->cacheStore())->forget($this->cacheKey($page, $user));
+        Cache::store($this->previewCacheStore())->forget($this->layoutBuilderPreviewCacheKey($page, $user));
     }
 
     public function resolve(Pageable $page, Authenticatable $user): ?LayoutBuilderPreviewStateData
@@ -83,49 +82,13 @@ final class StoreLayoutBuilderPreviewStateAction
             return null;
         }
 
-        $payload = Cache::store($this->cacheStore())->get($this->cacheKey($page, $user));
+        $payload = Cache::store($this->previewCacheStore())->get($this->layoutBuilderPreviewCacheKey($page, $user));
 
         if (! is_array($payload)) {
             return null;
         }
 
         return LayoutBuilderPreviewStateData::from($payload);
-    }
-
-    private function currentUser(): ?Authenticatable
-    {
-        $filamentUser = Filament::auth()->user();
-
-        if ($filamentUser instanceof Authenticatable) {
-            return $filamentUser;
-        }
-
-        $user = Auth::user();
-
-        return $user instanceof Authenticatable ? $user : null;
-    }
-
-    private function cacheKey(Model $page, Authenticatable $user): string
-    {
-        return implode(':', [
-            FilamentPeekServiceProvider::$name,
-            'layout-builder',
-            $user->getAuthIdentifier(),
-            $page->getMorphClass(),
-            $page->getKey(),
-        ]);
-    }
-
-    private function ttlMinutes(): int
-    {
-        return max(1, (int) config('capell-filament-peek.preview.ttl_minutes', 15));
-    }
-
-    private function cacheStore(): ?string
-    {
-        $store = config('capell-filament-peek.preview.cache_store');
-
-        return is_string($store) && $store !== '' ? $store : null;
     }
 
     /**

@@ -31,6 +31,8 @@ preview data into permanent content.
 - `FilamentPeekServiceProvider` registers the package config, views, routes, and
   preview behavior.
 - `CreatePagePreviewSnapshotAction` creates the short-lived snapshot payload.
+- `FindPagePreviewSnapshotAction` reads cached snapshots for signed render
+  requests without coupling the controller to the write action.
 - `StoreLayoutBuilderPreviewStateAction` records the latest Layout Builder state
   for an admin preview.
 - `RenderPagePreviewSnapshotAction` applies the snapshot to frontend rendering.

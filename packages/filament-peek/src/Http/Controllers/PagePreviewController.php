@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\FilamentPeek\Http\Controllers;
 
-use Capell\FilamentPeek\Actions\CreatePagePreviewSnapshotAction;
+use Capell\FilamentPeek\Actions\FindPagePreviewSnapshotAction;
 use Capell\FilamentPeek\Actions\RenderPagePreviewSnapshotAction;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +17,7 @@ final class PagePreviewController extends Controller
 {
     public function __invoke(string $token): Response
     {
-        $snapshot = resolve(CreatePagePreviewSnapshotAction::class)->find($token);
+        $snapshot = FindPagePreviewSnapshotAction::run($token);
 
         if ($snapshot === null) {
             return $this->errorResponse(

@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Capell\Core\Models\Layout;
 use Capell\Core\Models\Page;
 use Capell\FilamentPeek\Actions\CreatePagePreviewSnapshotAction;
+use Capell\FilamentPeek\Actions\FindPagePreviewSnapshotAction;
 use Capell\FilamentPeek\Actions\StoreLayoutBuilderPreviewStateAction;
 use Capell\FilamentPeek\Data\LayoutBuilderPreviewStateData;
 use Illuminate\Support\Facades\Cache;
@@ -22,11 +23,11 @@ it('stores private expiring page preview snapshots for the current user', functi
     expect($result['url'])->toContain('/capell-filament-peek/preview/')
         ->and($result['snapshot']->userId)->toBe($user->getAuthIdentifier())
         ->and($result['snapshot']->formState['name'])->toBe('Unsaved page name')
-        ->and(resolve(CreatePagePreviewSnapshotAction::class)->find($result['snapshot']->token))->not->toBeNull();
+        ->and(FindPagePreviewSnapshotAction::run($result['snapshot']->token))->not->toBeNull();
 });
 
 it('returns null for missing preview snapshot tokens', function (): void {
-    expect(resolve(CreatePagePreviewSnapshotAction::class)->find('missing-token'))->toBeNull();
+    expect(FindPagePreviewSnapshotAction::run('missing-token'))->toBeNull();
 });
 
 it('caches the latest layout builder preview state per user and page', function (): void {
