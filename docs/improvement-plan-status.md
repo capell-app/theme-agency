@@ -8,7 +8,7 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 294 |
+| Now    | 293 |
 | Next   | 316 |
 | Later  | 202 |
 
@@ -56,7 +56,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | media-ai | 6 | 6 | 3 | Slice committed | `f4b35bc06` landed health/allow-list fixes; production image-doctor/provider story remains. |
 | media-library | 7 | 4 | 3 | Slice committed | Current follow-up keeps private Curator media off Glide/public conversion URLs, uses temporary disk URLs when supported, returns no URL when private disks cannot sign, and suppresses responsive srcsets for private media. Continue with cleanup UI, duplicate detection, config/owner FK depth, and completion review. |
 | migration-assistant | 7 | 5 | 3 | Slice committed | `3f14f3f77` landed readiness fixes; continue with end-to-end import rows. |
-| navigation | 7 | 5 | 4 | Slice committed | `8b7c1f8df` replaced JSON reverse lookup; resolver/render-boundary rows remain. |
+| navigation | 6 | 5 | 4 | Slice committed | Current follow-up deepens translated `NavigationHealthCheck` diagnostics with main-menu coverage and orphaned page-reference integrity checks. Continue with resolver/render-boundary rows, manifest metadata, screenshots, marketplace copy, and completion review. |
 | newsletter | 6 | 6 | 4 | Slice committed | `d934f6d59` landed token hardening; delivery engine and campaign rows remain. |
 | notes | 6 | 7 | 3 | Slice committed | `0a153655b` landed health/body validation; reminders and inbox workflow remain. |
 | password-policy | 7 | 6 | 4 | Slice committed | `71c4e91e2` fixed expiry safety; continue with policy UX/report rows. |
