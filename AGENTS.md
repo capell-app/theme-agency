@@ -90,6 +90,7 @@ Any model in draft/publish must implement `Capell\Core\Contracts\Draftable` and 
 
 ## Composer local overlay
 
+- Always run Composer commands through the local overlay in this repo: `COMPOSER=composer.local.json composer ...`. Do not run plain `composer ...` unless Ben explicitly asks for the public package manifest.
 - Common issue: if a package test case class is not found, check `composer.local.json` as well as `composer.json`. The local overlay often needs matching `autoload` and `autoload-dev` PSR-4 entries for package namespaces, then regenerate with `COMPOSER=composer.local.json composer dump-autoload --no-scripts`.
 - For local development, `composer.local.json` is often the faster daily-driver overlay because it path-links sibling Capell packages and may use fail-fast test settings.
 
@@ -97,14 +98,23 @@ Any model in draft/publish must implement `Capell\Core\Contracts\Draftable` and 
 
 | Command                                    | Purpose                                                                             |
 | ------------------------------------------ | ----------------------------------------------------------------------------------- |
-| `composer test`                            | Pest tests (parallel)                                                               |
-| `composer preflight`                       | Changed-file formatting plus full PHPStan via `../capell-4/scripts/lint-changed.sh` |
-| `composer preflight:all`                   | Rector + full Pint + PHPStan + tests                                                |
-| `composer lint`                            | Pint only                                                                           |
-| `composer analyze`                         | PHPStan only                                                                        |
-| `composer prepare`                         | Seed demo workbench                                                                 |
-| `composer serve`                           | Build + serve localhost:8000                                                        |
+| `COMPOSER=composer.local.json composer test`          | Pest tests (parallel)                                                               |
+| `COMPOSER=composer.local.json composer preflight`     | Changed-file formatting plus full PHPStan via `../capell-4/scripts/lint-changed.sh` |
+| `COMPOSER=composer.local.json composer preflight:all` | Rector + full Pint + PHPStan + tests                                                |
+| `COMPOSER=composer.local.json composer lint`          | Pint only                                                                           |
+| `COMPOSER=composer.local.json composer analyze`       | PHPStan only                                                                        |
+| `COMPOSER=composer.local.json composer prepare`       | Seed demo workbench                                                                 |
+| `COMPOSER=composer.local.json composer serve`         | Build + serve localhost:8000                                                        |
 | `vendor/bin/pest packages/{package}/tests` | Single package tests                                                                |
+
+## Package Workbench Browser QA
+
+- `COMPOSER=composer.local.json composer serve` in this repo starts an Orchestra Testbench package workbench, not a full installed Capell app.
+- Do not assume `http://127.0.0.1:8000/admin` exists here. In this packages repo it commonly returns 404 because the Filament admin panel page routes are not registered for the generic workbench surface.
+- Before browser-testing admin UI from this repo, run `COMPOSER=composer.local.json composer build` and then verify available routes with `vendor/bin/testbench route:list --no-ansi`. Only open `/admin` if the route list actually contains the Filament admin panel routes.
+- If the route list only shows support routes such as `admin/api/page-tree`, `admin/avatar/{initials}.svg`, `admin/theme-preview/{theme}/{site}/{page}`, `filament-peek/preview`, and the catch-all frontend route, there is no usable admin page surface in this workbench. Do not keep probing URLs.
+- `_workbench/login/{userId}` also requires a migrated and seeded workbench database. If it fails with `no such table: users` or `_workbench/user` returns `[]`, browser login is not available from the current workbench state.
+- For package UI changes, prefer focused Livewire/Pest coverage against the package test case first. Use the sibling full Capell app (`../capell-4`) or the Docker harness when real browser QA of the Filament admin panel is required.
 
 ## Docker Harness
 
@@ -118,7 +128,7 @@ Any model in draft/publish must implement `Capell\Core\Contracts\Draftable` and 
 ## Agent Speed
 
 - Keep task branches focused. This repo can accumulate very large dirty trees across many packages, and that slows agents because they must preserve unrelated user work.
-- Prefer package-level or file-level Pest runs during implementation; reserve `composer test`, `composer analyze`, and `composer preflight:all` for final verification.
+- Prefer package-level or file-level Pest runs during implementation; reserve `COMPOSER=composer.local.json composer test`, `COMPOSER=composer.local.json composer analyze`, and `COMPOSER=composer.local.json composer preflight:all` for final verification.
 - Avoid broad repo exploration when the target package or failing command is known. Start from the package, test, or class named in the request.
 - Exclude heavy local paths from Spotlight/antivirus/indexing where practical: `vendor`, `node_modules`, `.git`, `storage`, `coverage`, `.phpunit.cache`, and framework/build caches.
 
