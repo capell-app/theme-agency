@@ -17,6 +17,10 @@ return [
         'connect_timeout' => 5,
     ],
 
+    'webhooks' => [
+        'queue' => Env::get('CAPELL_PAYMENTS_WEBHOOK_QUEUE', 'payments'),
+    ],
+
     'tables' => [
         'customers' => 'payment_customers',
         'checkout_sessions' => 'payment_checkout_sessions',

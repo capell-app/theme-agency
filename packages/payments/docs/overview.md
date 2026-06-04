@@ -14,7 +14,7 @@ Payments gives Capell a general payment layer beyond Shopify Commerce. It stores
 - Form Builder submissions can resolve payment fields into signed Checkout URLs. Custom success and cancel URLs must use the app host or a host listed in `capell-payments.form_builder.allowed_return_hosts`; unsafe external return URLs are rejected before Stripe Checkout is created.
 - Access Gate registrations can be approved by the paid gated-access fulfillment handler.
 - Customer Portal can show billing, subscriptions, completed payments, and paid downloads.
-- Stripe webhooks keep checkout, intent, subscription, refund, and dispute records synchronized. Stored webhook events are locked before processing so duplicate deliveries cannot run fulfillment concurrently.
+- Stripe webhooks keep checkout, intent, subscription, refund, and dispute records synchronized. Intake verifies the signature and stores a `received` event before queueing `ProcessStripeWebhookEventJob`; the job locks the stored event row before processing so duplicate deliveries cannot run fulfillment concurrently. Use `CAPELL_PAYMENTS_WEBHOOK_QUEUE` or `capell-payments.webhooks.queue` to route webhook work to a dedicated queue; it defaults to `payments`.
 - Paid download fulfillment is replay-safe: redelivered checkout-complete webhooks reuse the existing entitlement without extending the original expiry window.
 
 ## Traceability

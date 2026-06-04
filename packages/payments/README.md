@@ -19,4 +19,4 @@ Public routes are signed or webhook-only and must not expose Filament, package i
 
 Form Builder checkout return URLs are host allow-listed. The app host is accepted by default; add extra trusted hosts through `capell-payments.form_builder.allowed_return_hosts`.
 
-Stripe webhook events are locked before processing, and paid-download redeliveries do not extend existing entitlement expiry windows.
+Stripe webhook requests verify the signature, persist a `received` webhook event, and queue `ProcessStripeWebhookEventJob` after commit so Stripe can receive a fast 2xx response. Processing locks the stored event row before mutating payment records or running fulfillment, and paid-download redeliveries do not extend existing entitlement expiry windows. Route this work with `CAPELL_PAYMENTS_WEBHOOK_QUEUE` or `capell-payments.webhooks.queue`; the default queue name is `payments`.

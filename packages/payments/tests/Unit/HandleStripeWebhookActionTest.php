@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\Payments\Actions\HandleStripeWebhookAction;
+use Capell\Payments\Actions\ProcessStripeWebhookEventAction;
 use Capell\Payments\Actions\VerifyStripeWebhookSignatureAction;
 use Capell\Payments\Contracts\PaymentFulfillmentHandler;
 use Capell\Payments\Enums\CheckoutSessionStatus;
@@ -13,6 +14,7 @@ use Capell\Payments\Enums\PaymentWebhookEventStatus;
 use Capell\Payments\Enums\SubscriptionStatus;
 use Capell\Payments\Exceptions\PaymentGatewayConfigurationException;
 use Capell\Payments\Exceptions\StripeWebhookSignatureException;
+use Capell\Payments\Jobs\ProcessStripeWebhookEventJob;
 use Capell\Payments\Models\CheckoutSession;
 use Capell\Payments\Models\PaymentDispute;
 use Capell\Payments\Models\PaymentIntent;
@@ -22,6 +24,7 @@ use Capell\Payments\Models\Subscription;
 use Capell\Payments\Tests\Fakes\FakePaymentFulfillmentHandler;
 use Capell\Payments\Tests\TestCase;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Queue;
 
 uses(TestCase::class);
 
@@ -66,9 +69,10 @@ it('rejects invalid stripe webhook signatures', function (): void {
     );
 })->throws(StripeWebhookSignatureException::class);
 
-it('records checkout session webhooks idempotently before updating the session record', function (): void {
+it('records checkout session webhooks idempotently before queued processing updates the session record', function (): void {
     app()->bind(FakePaymentFulfillmentHandler::class);
     app()->tag([FakePaymentFulfillmentHandler::class], PaymentFulfillmentHandler::TAG);
+    Queue::fake();
 
     $payload = stripeWebhookPayload([
         'id' => 'evt_checkout_completed',
@@ -101,11 +105,17 @@ it('records checkout session webhooks idempotently before updating the session r
     ]);
 
     $firstEvent = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
+    $processedFirstEvent = ProcessStripeWebhookEventAction::run((int) $firstEvent->getKey());
     $secondEvent = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
+    $processedSecondEvent = ProcessStripeWebhookEventAction::run((int) $secondEvent->getKey());
 
     expect($firstEvent->is($secondEvent))->toBeTrue()
         ->and(PaymentWebhookEvent::query()->count())->toBe(1)
-        ->and($firstEvent->status)->toBe(PaymentWebhookEventStatus::Processed);
+        ->and($firstEvent->status)->toBe(PaymentWebhookEventStatus::Received)
+        ->and($processedFirstEvent->status)->toBe(PaymentWebhookEventStatus::Processed)
+        ->and($processedSecondEvent->status)->toBe(PaymentWebhookEventStatus::Processed);
+
+    Queue::assertPushed(ProcessStripeWebhookEventJob::class, 1);
 
     $checkoutSession = CheckoutSession::query()->firstOrFail();
 
@@ -137,7 +147,7 @@ it('records payment intent webhooks', function (): void {
         ],
     ]);
 
-    $event = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
+    $event = processStripeWebhookPayload($payload);
 
     $paymentIntent = PaymentIntent::query()->firstOrFail();
 
@@ -167,7 +177,7 @@ it('records subscription webhooks', function (): void {
         ],
     ]);
 
-    $event = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
+    $event = processStripeWebhookPayload($payload);
 
     $subscription = Subscription::query()->firstOrFail();
 
@@ -199,7 +209,7 @@ it('records refund webhooks', function (): void {
         ],
     ]);
 
-    $event = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
+    $event = processStripeWebhookPayload($payload);
 
     $refund = PaymentRefund::query()->firstOrFail();
 
@@ -243,7 +253,7 @@ it('records refunds from charge refunded webhook payloads and backfills charge d
         ],
     ]);
 
-    $event = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
+    $event = processStripeWebhookPayload($payload);
     $refunds = PaymentRefund::query()->orderBy('provider_refund_id')->get();
 
     expect($event->status)->toBe(PaymentWebhookEventStatus::Processed)
@@ -292,7 +302,7 @@ it('records dispute webhooks', function (): void {
         ],
     ]);
 
-    $event = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
+    $event = processStripeWebhookPayload($payload);
 
     $dispute = PaymentDispute::query()->firstOrFail();
 
@@ -318,7 +328,7 @@ it('marks unsupported stripe webhook event types as ignored without mutating pay
         ],
     ]);
 
-    $event = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
+    $event = processStripeWebhookPayload($payload);
 
     expect($event->status)->toBe(PaymentWebhookEventStatus::Ignored)
         ->and($event->processed_at)->not->toBeNull()
@@ -339,6 +349,8 @@ it('requires a configured stripe webhook secret before verifying payloads', func
 })->throws(PaymentGatewayConfigurationException::class);
 
 it('accepts the package stripe webhook route without csrf', function (): void {
+    Queue::fake();
+
     $payload = stripeWebhookPayload([
         'id' => 'evt_route_test',
         'type' => 'payment_intent.succeeded',
@@ -362,8 +374,41 @@ it('accepts the package stripe webhook route without csrf', function (): void {
         ->assertJson([
             'ok' => true,
             'event_id' => 'evt_route_test',
-            'status' => 'processed',
+            'status' => 'received',
         ]);
+
+    expect(PaymentIntent::query()->count())->toBe(0);
+
+    Queue::assertPushed(ProcessStripeWebhookEventJob::class, fn (ProcessStripeWebhookEventJob $job): bool => PaymentWebhookEvent::query()
+        ->whereKey($job->webhookEventId)
+        ->where('provider_event_id', 'evt_route_test')
+        ->exists());
+});
+
+it('queues stripe webhook processing after verified intake', function (): void {
+    Queue::fake();
+
+    $payload = stripeWebhookPayload([
+        'id' => 'evt_queued_intake',
+        'type' => 'payment_intent.succeeded',
+        'data' => [
+            'object' => [
+                'id' => 'pi_queued_intake',
+                'object' => 'payment_intent',
+                'status' => 'succeeded',
+                'amount' => 1200,
+                'currency' => 'gbp',
+            ],
+        ],
+    ]);
+
+    $event = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
+
+    expect($event->status)->toBe(PaymentWebhookEventStatus::Received)
+        ->and(PaymentIntent::query()->count())->toBe(0);
+
+    Queue::assertPushed(ProcessStripeWebhookEventJob::class, fn (ProcessStripeWebhookEventJob $job): bool => $job->webhookEventId === (int) $event->getKey()
+            && $job->queue === 'payments');
 });
 
 /**
@@ -392,4 +437,13 @@ function stripeSignatureHeader(string $payload, string $secret = 'whsec_test_sec
     $signature = hash_hmac('sha256', $timestamp . '.' . $payload, $secret);
 
     return sprintf('t=%d,v1=%s', $timestamp, $signature);
+}
+
+function processStripeWebhookPayload(string $payload): PaymentWebhookEvent
+{
+    Queue::fake();
+
+    $event = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
+
+    return ProcessStripeWebhookEventAction::run((int) $event->getKey());
 }
