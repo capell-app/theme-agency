@@ -14,7 +14,7 @@ it('reports a compatible capell api version', function (): void {
 it('runs real diagnostics returning check results', function (): void {
     $results = LoginAuditHealthCheck::runDiagnostics();
 
-    expect($results)->toHaveCount(3)
+    expect($results)->toHaveCount(4)
         ->and($results->every(static fn (mixed $result): bool => $result instanceof DoctorCheckResultData))->toBeTrue();
 });
 
@@ -44,6 +44,16 @@ it('fails the event listeners check when a listener is unconfigured', function (
 
     expect($check->missingListenerKeys())->toContain('login')
         ->and($check->eventListenersCheck()->passed)->toBeFalse()
+        ->and(LoginAuditHealthCheck::passed())->toBeFalse();
+});
+
+it('fails the capture configuration check when vendor capture is not mapped to login audit', function (): void {
+    config()->set('authentication-log.listeners', []);
+
+    $check = new LoginAuditHealthCheck;
+
+    expect($check->hasCaptureConfiguration())->toBeFalse()
+        ->and($check->captureConfigurationCheck()->passed)->toBeFalse()
         ->and(LoginAuditHealthCheck::passed())->toBeFalse();
 });
 

@@ -16,6 +16,12 @@ final class LoginAuditSettings extends Settings implements SettingsContract
 
     public bool $track_user_ip_addresses = true;
 
+    public bool $track_admin_activity = true;
+
+    public int $activity_update_grace_seconds = 60;
+
+    public ?string $last_purged_at = null;
+
     public bool $enable_user_resource_bridge = true;
 
     public static function group(): string

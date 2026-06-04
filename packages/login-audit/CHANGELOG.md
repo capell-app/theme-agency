@@ -4,6 +4,11 @@ All notable changes to `capell-app/login-audit` will be documented in this file.
 
 ## Unreleased
 
+- Added daily authentication-log purging with retention synced into the vendor purge command and a last-purged settings timestamp recorded after successful scheduled runs.
+- Added admin activity tracking controls and a last-seen write throttle to reduce per-request write volume.
+- Added a Login Audit capture configuration health check that verifies vendor authentication-log capture targets the package table and listener map.
+- Added real Laravel auth event coverage for successful and failed authentication logs.
+
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
 
 ## 2026-06-03

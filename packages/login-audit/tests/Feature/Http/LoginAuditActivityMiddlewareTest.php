@@ -5,10 +5,12 @@ declare(strict_types=1);
 use Capell\LoginAudit\Http\Middleware\AdminActivityMiddleware;
 use Capell\LoginAudit\Http\Middleware\UserActivityMiddleware;
 use Capell\LoginAudit\Models\LoginAudit;
+use Capell\LoginAudit\Settings\LoginAuditSettings;
 use Capell\Tests\Fixtures\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Spatie\LaravelSettings\Migrations\SettingsMigrator;
 
 function loginAuditActivityRequest(string $path, User $user, string $ipAddress, string $userAgent): Request
 {
@@ -95,6 +97,73 @@ it('updates matching admin activity for the authenticated actor ip path and user
         ->and(loginAuditActivityTimestamp($wrongIpAudit->refresh()->last_seen_at))->toBe($wrongIpAuditLastSeenAt)
         ->and(loginAuditActivityTimestamp($wrongActorAudit->refresh()->last_seen_at))->toBe($wrongActorAuditLastSeenAt)
         ->and(loginAuditActivityTimestamp($futureLoginAudit->refresh()->last_seen_at))->toBe($futureLoginAuditLastSeenAt);
+});
+
+it('throttles repeated admin activity writes for the same session', function (): void {
+    $trackedAt = CarbonImmutable::parse('2026-05-07 10:00:00');
+    $this->travelTo($trackedAt);
+
+    seedLoginAuditActivitySetting('track_admin_activity', true);
+    seedLoginAuditActivitySetting('activity_update_grace_seconds', 60);
+
+    $adminUser = User::factory()->create();
+    $audit = LoginAudit::factory()->create([
+        'authenticatable_type' => $adminUser->getMorphClass(),
+        'authenticatable_id' => $adminUser->getKey(),
+        'ip_address' => '198.51.100.23',
+        'user_agent' => 'Capell Admin Browser/1.0',
+        'login_at' => $trackedAt->subHour(),
+    ]);
+    $audit->forceFill(['last_seen_at' => $trackedAt->subSeconds(30)])->save();
+
+    $this->actingAs($adminUser);
+
+    $request = loginAuditActivityRequest(
+        path: '/admin/login-audits',
+        user: $adminUser,
+        ipAddress: '198.51.100.23',
+        userAgent: 'Capell Admin Browser/1.0',
+    );
+
+    (new AdminActivityMiddleware)->handle(
+        $request,
+        fn (Request $handledRequest): Response => new Response('next:' . $handledRequest->path()),
+    );
+
+    expect(loginAuditActivityTimestamp($audit->refresh()->last_seen_at))->toBe($trackedAt->subSeconds(30)->toDateTimeString());
+});
+
+it('skips admin activity writes when admin tracking is disabled', function (): void {
+    $trackedAt = CarbonImmutable::parse('2026-05-07 10:00:00');
+    $this->travelTo($trackedAt);
+
+    seedLoginAuditActivitySetting('track_admin_activity', false);
+
+    $adminUser = User::factory()->create();
+    $audit = LoginAudit::factory()->create([
+        'authenticatable_type' => $adminUser->getMorphClass(),
+        'authenticatable_id' => $adminUser->getKey(),
+        'ip_address' => '198.51.100.23',
+        'user_agent' => 'Capell Admin Browser/1.0',
+        'login_at' => $trackedAt->subHour(),
+    ]);
+    $lastSeenAt = loginAuditActivityTimestamp($audit->refresh()->last_seen_at);
+
+    $this->actingAs($adminUser);
+
+    $request = loginAuditActivityRequest(
+        path: '/admin/login-audits',
+        user: $adminUser,
+        ipAddress: '198.51.100.23',
+        userAgent: 'Capell Admin Browser/1.0',
+    );
+
+    (new AdminActivityMiddleware)->handle(
+        $request,
+        fn (Request $handledRequest): Response => new Response('next:' . $handledRequest->path()),
+    );
+
+    expect(loginAuditActivityTimestamp($audit->refresh()->last_seen_at))->toBe($lastSeenAt);
 });
 
 it('skips admin activity for unauthenticated requests', function (): void {
@@ -268,3 +337,18 @@ it('skips user activity for guest requests', function (): void {
     expect($response->getContent())->toBe('next:account/profile')
         ->and(loginAuditActivityTimestamp($audit->refresh()->last_seen_at))->toBe($lastSeenAt);
 });
+
+function seedLoginAuditActivitySetting(string $settingName, mixed $value): void
+{
+    /** @var SettingsMigrator $settingsMigrator */
+    $settingsMigrator = resolve(SettingsMigrator::class);
+    $settingKey = 'login_audit.' . $settingName;
+
+    if ($settingsMigrator->exists($settingKey)) {
+        $settingsMigrator->update($settingKey, fn (): mixed => $value);
+    } else {
+        $settingsMigrator->add($settingKey, $value);
+    }
+
+    app()->forgetInstance(LoginAuditSettings::class);
+}

@@ -8,8 +8,8 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 302 |
-| Next   | 319 |
+| Now    | 295 |
+| Next   | 318 |
 | Later  | 202 |
 
 The work is not complete until every package plan has been reviewed against current code, required features are implemented or intentionally deferred, new behavior is documented, and focused verification passes for each changed package.
@@ -52,7 +52,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | insights | 6 | 6 | 4 | Slice committed | `5afe307aa` landed privacy hardening; continue with analytics/product gaps. |
 | knowledge-base | 6 | 7 | 3 | Slice committed | Current follow-up throttles/dedupes anonymous feedback and updates shipped-feature docs; policies and edit/versioning gaps remain high priority. |
 | layout-builder | 7 | 5 | 4 | Slice committed | Current follow-up removes dead cache enum, reconciles screenshot manifests, and documents remaining render-budget risk. |
-| login-audit | 7 | 6 | 2 | Slice committed | `043626303` landed health/session fixes; continue with hot-path and retention rows. |
+| login-audit | 0 | 5 | 2 | Slice committed | Current follow-up adds real auth-event capture coverage, syncs vendor retention purge execution, records purge success timestamps, adds translated capture-configuration health diagnostics, and moves admin/user last-seen writes behind shared throttled Actions. Continue with remaining Next/Later operational rows and completion review. |
 | media-ai | 6 | 6 | 3 | Slice committed | `f4b35bc06` landed health/allow-list fixes; production image-doctor/provider story remains. |
 | media-library | 7 | 5 | 3 | Slice committed | `16207ad15` landed upload/health fixes; cleanup UI, duplicate detection, and private URL rows remain. |
 | migration-assistant | 7 | 5 | 3 | Slice committed | `3f14f3f77` landed readiness fixes; continue with end-to-end import rows. |

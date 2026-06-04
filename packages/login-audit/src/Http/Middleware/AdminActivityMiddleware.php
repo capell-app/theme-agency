@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Capell\LoginAudit\Http\Middleware;
 
-use Capell\LoginAudit\Actions\ResolveLoginAuditIpAddressAction;
-use Capell\LoginAudit\Models\LoginAudit;
-use Carbon\CarbonImmutable;
+use Capell\LoginAudit\Actions\ShouldTrackAdminActivityAction;
+use Capell\LoginAudit\Actions\UpdateLastSeenForActorAction;
 use Closure;
 use Filament\Facades\Filament;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Foundation\Auth\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class AdminActivityMiddleware
@@ -26,35 +24,16 @@ class AdminActivityMiddleware
 
     private function updateUserActivity(Request $request): void
     {
-        /** @var User|null $user */
-        $user = Filament::auth()->user();
-
-        if ($user === null) {
+        if (! ShouldTrackAdminActivityAction::run()) {
             return;
         }
 
-        $ipAddress = resolve(ResolveLoginAuditIpAddressAction::class)->handle($request);
+        $user = Filament::auth()->user();
 
-        $userAgent = (string) $request->userAgent();
-
-        $now = CarbonImmutable::now();
-
-        $log = LoginAudit::query()
-            ->where('authenticatable_type', $user->getMorphClass())
-            ->where('authenticatable_id', method_exists($user, 'getKey') ? $user->getKey() : null)
-            ->when(
-                $ipAddress === null,
-                fn (Builder $query): Builder => $query->whereNull('ip_address'),
-                fn (Builder $query): Builder => $query->where('ip_address', $ipAddress),
-            )
-            ->where('user_agent', $userAgent)
-            ->where('login_at', '<', $now)
-            ->latest('id')
-            ->first();
-
-        if ($log !== null) {
-            $log->last_seen_at = $now;
-            $log->save();
+        if (! $user instanceof Model) {
+            return;
         }
+
+        UpdateLastSeenForActorAction::run($user, $request);
     }
 }

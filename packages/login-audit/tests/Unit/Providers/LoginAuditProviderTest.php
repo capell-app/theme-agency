@@ -25,6 +25,7 @@ use Capell\LoginAudit\Providers\AdminServiceProvider;
 use Capell\LoginAudit\Providers\LoginAuditServiceProvider;
 use Capell\LoginAudit\Settings\LoginAuditSettings;
 use Capell\Tests\Support\LegacyAdminBridgeFallbackHost;
+use Illuminate\Console\Scheduling\Schedule;
 
 function invokeLoginAuditProviderMethod(object $provider, string $method): void
 {
@@ -106,6 +107,37 @@ it('registers admin surfaces when login-audit is installed', function (): void {
         ->toContain(LoginAuditResource::class)
         ->and(CapellAdmin::getDashboardWidgets(DashboardEnum::SystemHealth))
         ->toContain(LoginAuditsWidget::class);
+});
+
+it('registers daily login audit purge against the vendor command', function (): void {
+    $schedule = new Schedule;
+    app()->instance(Schedule::class, $schedule);
+
+    $provider = new AdminServiceProvider(app());
+    $method = new ReflectionMethod(AdminServiceProvider::class, 'registerSchedule');
+    $method->invoke($provider);
+
+    $event = collect($schedule->events())
+        ->first(fn (mixed $scheduledEvent): bool => str_contains((string) $scheduledEvent->command, 'authentication-log:purge'));
+
+    expect($event)->not->toBeNull()
+        ->and($event?->expression)->toBe('0 0 * * *')
+        ->and($event?->withoutOverlapping)->toBeTrue()
+        ->and($event?->onOneServer)->toBeTrue();
+});
+
+it('maps login audit configuration into vendor authentication log capture configuration', function (): void {
+    config()->set('authentication-log.table_name', 'authentication_log');
+    config()->set('authentication-log.listeners', []);
+    config()->set('authentication-log.events', []);
+
+    $provider = new LoginAuditServiceProvider(app());
+    $method = new ReflectionMethod(LoginAuditServiceProvider::class, 'registerModels');
+    $method->invoke($provider);
+
+    expect(config('authentication-log.table_name'))->toBe(config('login-audit.table_name', 'login_audit'))
+        ->and(config('authentication-log.listeners'))->toBe(config('login-audit.listeners'))
+        ->and(config('authentication-log.events'))->toBe(config('login-audit.events'));
 });
 
 it('registers the current login-audit admin bridge surface', function (): void {

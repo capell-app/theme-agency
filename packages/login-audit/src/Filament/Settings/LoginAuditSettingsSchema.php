@@ -7,6 +7,7 @@ namespace Capell\LoginAudit\Filament\Settings;
 use Capell\Admin\Filament\Contracts\HasSchema;
 use Capell\Admin\Filament\Support\HelperText;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
@@ -37,10 +38,24 @@ final class LoginAuditSettingsSchema implements HasSchema
                         'capell-login-audit::settings.track_user_ip_addresses_helper',
                     ),
                     HelperText::apply(
+                        Toggle::make('track_admin_activity')
+                            ->label(__('capell-login-audit::settings.track_admin_activity')),
+                        'capell-login-audit::settings.track_admin_activity_helper',
+                    ),
+                    TextInput::make('activity_update_grace_seconds')
+                        ->label(__('capell-login-audit::settings.activity_update_grace_seconds'))
+                        ->helperText(__('capell-login-audit::settings.activity_update_grace_seconds_helper'))
+                        ->integer()
+                        ->minValue(0)
+                        ->suffix(__('capell-login-audit::settings.seconds')),
+                    HelperText::apply(
                         Toggle::make('enable_user_resource_bridge')
                             ->label(__('capell-login-audit::settings.enable_user_resource_bridge')),
                         'capell-login-audit::settings.enable_user_resource_bridge_helper',
                     ),
+                    Placeholder::make('last_purged_at')
+                        ->label(__('capell-login-audit::settings.last_purged_at'))
+                        ->content(fn (?string $state): string => $state ?: (string) __('capell-login-audit::settings.never_purged')),
                 ]),
         ];
     }

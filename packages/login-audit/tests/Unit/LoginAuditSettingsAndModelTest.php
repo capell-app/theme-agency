@@ -32,13 +32,18 @@ it('clamps retention days to at least one day', function (): void {
     seedLoginAuditSettingsAndModelSetting('show_login_audits', true);
     seedLoginAuditSettingsAndModelSetting('retention_days', 0);
     seedLoginAuditSettingsAndModelSetting('track_user_ip_addresses', true);
+    seedLoginAuditSettingsAndModelSetting('track_admin_activity', true);
+    seedLoginAuditSettingsAndModelSetting('activity_update_grace_seconds', 60);
+    seedLoginAuditSettingsAndModelSetting('last_purged_at', null);
     seedLoginAuditSettingsAndModelSetting('enable_user_resource_bridge', true);
 
     Config::set('login-audit.purge', 365);
+    Config::set('authentication-log.purge', 365);
 
     ApplyLoginAuditSettingsAction::run();
 
-    expect(config('login-audit.purge'))->toBe(1);
+    expect(config('login-audit.purge'))->toBe(1)
+        ->and(config('authentication-log.purge'))->toBe(1);
 });
 
 it('declares settings metadata health compatibility and immutable audit date casts', function (): void {
@@ -50,6 +55,8 @@ it('declares settings metadata health compatibility and immutable audit date cas
 
     expect(LoginAuditSettings::group())->toBe('login_audit')
         ->and(LoginAuditSettings::schema())->toBe(LoginAuditSettingsSchema::class)
+        ->and(resolve(LoginAuditSettings::class)->track_admin_activity)->toBeTrue()
+        ->and(resolve(LoginAuditSettings::class)->activity_update_grace_seconds)->toBe(60)
         ->and(LoginAuditHealthCheck::compatibleCapellApiVersion())->toBe('^4.0')
         ->and($audit->login_at)->toBeInstanceOf(DateTimeImmutable::class)
         ->and($audit->logout_at)->toBeInstanceOf(DateTimeImmutable::class)
@@ -65,11 +72,13 @@ it('builds the login audit settings schema controls', function (): void {
     $childComponents = rawLoginAuditSettingsChildComponents($components[0]);
 
     expect($childComponents)
-        ->toHaveCount(4)
+        ->toHaveCount(7)
         ->and($childComponents[0])->toBeInstanceOf(Toggle::class)
         ->and($childComponents[1])->toBeInstanceOf(TextInput::class)
         ->and($childComponents[2])->toBeInstanceOf(Checkbox::class)
-        ->and($childComponents[3])->toBeInstanceOf(Toggle::class);
+        ->and($childComponents[3])->toBeInstanceOf(Toggle::class)
+        ->and($childComponents[4])->toBeInstanceOf(TextInput::class)
+        ->and($childComponents[5])->toBeInstanceOf(Toggle::class);
 });
 
 function seedLoginAuditSettingsAndModelSetting(string $settingName, mixed $value): void

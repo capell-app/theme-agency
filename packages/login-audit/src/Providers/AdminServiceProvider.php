@@ -13,6 +13,7 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Support\Bridges\AdminBridgeRegistrar;
 use Capell\Core\Facades\CapellCore;
 use Capell\LoginAudit\Actions\ApplyLoginAuditSettingsAction;
+use Capell\LoginAudit\Actions\RecordLoginAuditPurgeAction;
 use Capell\LoginAudit\Bridges\LoginAuditAdminBridge;
 use Capell\LoginAudit\Extenders\LoginAuditUserSchemaExtender;
 use Capell\LoginAudit\Filament\Extenders\LoginAuditAdminPanelExtender;
@@ -87,11 +88,16 @@ class AdminServiceProvider extends ServiceProvider
             ApplyLoginAuditSettingsAction::run();
 
             $schedule
-                ->command('login-audit:purge')
+                ->command('authentication-log:purge')
                 ->before(function (): void {
                     ApplyLoginAuditSettingsAction::run();
                 })
-                ->monthly();
+                ->onSuccess(function (): void {
+                    RecordLoginAuditPurgeAction::run();
+                })
+                ->withoutOverlapping()
+                ->onOneServer()
+                ->daily();
         });
     }
 

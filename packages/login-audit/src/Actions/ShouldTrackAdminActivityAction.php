@@ -5,27 +5,22 @@ declare(strict_types=1);
 namespace Capell\LoginAudit\Actions;
 
 use Capell\LoginAudit\Settings\LoginAuditSettings;
-use Illuminate\Support\Facades\Config;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
-final class ApplyLoginAuditSettingsAction
+final class ShouldTrackAdminActivityAction
 {
     use AsAction;
 
-    public function handle(): void
+    public function handle(): bool
     {
         try {
             /** @var LoginAuditSettings $settings */
             $settings = resolve(LoginAuditSettings::class);
-            $retentionDays = $settings->retention_days;
+
+            return $settings->track_admin_activity;
         } catch (Throwable) {
-            return;
+            return true;
         }
-
-        $purgeDays = max(1, $retentionDays);
-
-        Config::set('login-audit.purge', $purgeDays);
-        Config::set('authentication-log.purge', $purgeDays);
     }
 }

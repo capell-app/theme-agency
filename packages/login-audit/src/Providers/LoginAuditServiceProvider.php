@@ -41,6 +41,7 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
 
     public function registeringPackage(): void
     {
+        $this->syncVendorAuthenticationLogConfiguration();
         $this->app->register(AdminServiceProvider::class);
     }
 
@@ -78,8 +79,7 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
     private function registerModels(): self
     {
         Config::set('login-audit.login_audit_model', LoginAudit::class);
-        Config::set('authentication-log.table_name', config('login-audit.table_name', 'login_audit'));
-        Config::set('authentication-log.db_connection', config('login-audit.db_connection'));
+        $this->syncVendorAuthenticationLogConfiguration();
 
         CapellCore::registerModels([LoginAudit::class]);
 
@@ -122,5 +122,16 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
         Route::aliasMiddleware('frontend.activity', UserActivityMiddleware::class);
 
         return $this;
+    }
+
+    private function syncVendorAuthenticationLogConfiguration(): void
+    {
+        Config::set('authentication-log.table_name', config('login-audit.table_name', 'login_audit'));
+        Config::set('authentication-log.db_connection', config('login-audit.db_connection'));
+        Config::set('authentication-log.events', config('login-audit.events', []));
+        Config::set('authentication-log.listeners', config('login-audit.listeners', []));
+        Config::set('authentication-log.notifications', config('login-audit.notifications', []));
+        Config::set('authentication-log.purge', config('login-audit.purge', 365));
+        Config::set('authentication-log.behind_cdn', config('login-audit.behind_cdn', false));
     }
 }

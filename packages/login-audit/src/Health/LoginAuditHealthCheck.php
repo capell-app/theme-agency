@@ -41,6 +41,7 @@ final class LoginAuditHealthCheck implements ChecksExtensionHealth
         return collect([
             $check->storageTableCheck(),
             $check->eventListenersCheck(),
+            $check->captureConfigurationCheck(),
             $check->activityMiddlewareAliasCheck(),
         ]);
     }
@@ -111,6 +112,26 @@ final class LoginAuditHealthCheck implements ChecksExtensionHealth
         );
     }
 
+    /**
+     * Asserts vendor capture writes to the package table and uses the package
+     * listener map at runtime.
+     */
+    public function captureConfigurationCheck(): DoctorCheckResultData
+    {
+        $ready = $this->hasCaptureConfiguration();
+
+        return new DoctorCheckResultData(
+            label: (string) __('capell-login-audit::package.health.capture_configuration.label'),
+            passed: $ready,
+            message: $ready
+                ? (string) __('capell-login-audit::package.health.capture_configuration.ready')
+                : (string) __('capell-login-audit::package.health.capture_configuration.not_ready'),
+            remediation: $ready
+                ? null
+                : (string) __('capell-login-audit::package.health.capture_configuration.remediation'),
+        );
+    }
+
     public function hasStorageTable(): bool
     {
         return Schema::hasTable($this->tableName());
@@ -142,6 +163,13 @@ final class LoginAuditHealthCheck implements ChecksExtensionHealth
         $registeredAlias = Route::getMiddleware()['frontend.activity'] ?? null;
 
         return $registeredAlias === UserActivityMiddleware::class;
+    }
+
+    public function hasCaptureConfiguration(): bool
+    {
+        return config('authentication-log.table_name') === $this->tableName()
+            && config('authentication-log.listeners') === config('login-audit.listeners')
+            && config('authentication-log.events') === config('login-audit.events');
     }
 
     private function tableName(): string

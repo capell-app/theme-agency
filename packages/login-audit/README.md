@@ -13,7 +13,7 @@ Login Audit records Capell user access history. It wraps Rappasoft's authenticat
 
 ## Why It Helps Your Capell Workflow
 
-- Records login, failed login, logout, and admin/user metadata so operators can investigate account activity from Capell.
+- Records login, failed login, logout, and throttled admin/user activity metadata so operators can investigate account activity from Capell.
 - Helps owners spot authentication patterns without adding a bespoke security report to each project.
 - Pairs with password policy and diagnostics to make account safety visible as an operational workflow.
 
@@ -29,8 +29,8 @@ Login Audit records login, failed login, logout, and last-activity metadata for 
 
 - Filament resource for authentication logs.
 - Dashboard widget for recent access activity.
-- Settings schema for retention, IP tracking, resource visibility, and user-resource bridge fields.
-- Persistent admin middleware and frontend middleware alias for activity tracking.
+- Settings schema for retention, IP tracking, admin activity tracking, resource visibility, and user-resource bridge fields.
+- Persistent admin middleware and frontend middleware alias for throttled activity tracking.
 - User edit sidebar summary and relation manager when the bridge is enabled.
 
 ## Why It Matters
@@ -72,7 +72,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 ## Technical Shape
 
 - `LoginAuditServiceProvider` registers config, translations, migrations, settings, protected table metadata, the `frontend.activity` middleware alias, and the `LoginAudit` model override.
-- `AdminServiceProvider` registers the admin bridge, Filament resource, dashboard widget, settings contributor, persistent admin middleware, and monthly `login-audit:purge` schedule.
+- `AdminServiceProvider` registers the admin bridge, Filament resource, dashboard widget, settings contributor, persistent admin middleware, and daily `authentication-log:purge` schedule.
 - `LoginAuditResource` extends `Tapp\FilamentAuthenticationLog\Resources\AuthenticationLogResource` and replaces the table with `LoginAuditsTable`.
 - `AdminActivityMiddleware` and `UserActivityMiddleware` update matching audit rows without changing unrelated vendor audit state.
 
@@ -101,8 +101,9 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 - login_audit stores authenticatable type/id, IP address, user agent, login time, and logout time.
 - Records belong polymorphically to authenticatable users.
-- Config purge value defaults to 365 days.
+- Config purge value defaults to 365 days and is overridden by the Login Audit retention setting before the daily purge runs.
 - `ApplyLoginAuditSettingsAction` applies retention and IP tracking settings before the scheduled purge runs.
+- `last_purged_at` records the last successful scheduled purge callback for operator visibility.
 - `ResolveLoginAuditIpAddressAction` reads the configured CDN header when `login-audit.behind_cdn` is enabled; otherwise it uses the request IP.
 
 - Models: `LoginAudit`.

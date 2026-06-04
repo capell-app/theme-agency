@@ -5,27 +5,24 @@ declare(strict_types=1);
 namespace Capell\LoginAudit\Actions;
 
 use Capell\LoginAudit\Settings\LoginAuditSettings;
-use Illuminate\Support\Facades\Config;
+use Carbon\CarbonImmutable;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
-final class ApplyLoginAuditSettingsAction
+final class RecordLoginAuditPurgeAction
 {
     use AsAction;
 
-    public function handle(): void
+    public function handle(?CarbonImmutable $purgedAt = null): void
     {
         try {
             /** @var LoginAuditSettings $settings */
             $settings = resolve(LoginAuditSettings::class);
-            $retentionDays = $settings->retention_days;
         } catch (Throwable) {
             return;
         }
 
-        $purgeDays = max(1, $retentionDays);
-
-        Config::set('login-audit.purge', $purgeDays);
-        Config::set('authentication-log.purge', $purgeDays);
+        $settings->last_purged_at = ($purgedAt ?? CarbonImmutable::now())->toIso8601String();
+        $settings->save();
     }
 }

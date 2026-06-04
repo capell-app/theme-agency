@@ -19,7 +19,7 @@ Login Audit records login, failed login, logout, and last-activity metadata for 
 The package uses `rappasoft/laravel-authentication-log` for event capture and storage, then layers Capell-specific settings, Actions, resources, widgets, bridge fields, and IP retention policy on top.
 
 - `LoginAuditServiceProvider` registers config, translations, migrations, settings, protected table metadata, the `frontend.activity` middleware alias, and the `LoginAudit` model override.
-- `AdminServiceProvider` registers the admin bridge, Filament resource, dashboard widget, settings contributor, persistent admin middleware, and monthly `login-audit:purge` schedule.
+- `AdminServiceProvider` registers the admin bridge, Filament resource, dashboard widget, settings contributor, persistent admin middleware, and daily `authentication-log:purge` schedule.
 - `LoginAuditResource` extends `Tapp\FilamentAuthenticationLog\Resources\AuthenticationLogResource` and replaces the table with `LoginAuditsTable`.
 - `AdminActivityMiddleware` and `UserActivityMiddleware` update matching audit rows without changing unrelated vendor audit state.
 
@@ -37,7 +37,7 @@ Helps site operators review access activity and spot account behaviour that need
 
 - login_audit stores authenticatable type/id, IP address, user agent, login time, and logout time.
 - Records belong polymorphically to authenticatable users.
-- Config purge value defaults to 365 days.
+- Config purge value defaults to 365 days and is synced from the Login Audit retention setting before the daily purge runs.
 
 ## Screenshot Plan
 
