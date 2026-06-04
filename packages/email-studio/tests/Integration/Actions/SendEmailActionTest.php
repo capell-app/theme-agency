@@ -163,3 +163,12 @@ it('creates queued sends and rejects records scoped only to another site', funct
 
     expect(EmailMessage::query()->count())->toBe($messageCountBeforeRejectedSend);
 });
+
+it('uses a bounded retry policy for queued delivery jobs', function (): void {
+    $job = new SendEmailJob(123);
+
+    expect($job->tries)->toBe(4)
+        ->and($job->timeout)->toBe(60)
+        ->and($job->backoff())->toBe([60, 300, 900])
+        ->and($job->retryUntil())->toBeInstanceOf(DateTimeInterface::class);
+});

@@ -17,6 +17,8 @@ use Capell\EmailStudio\Enums\EmailMessageStatus;
 use Capell\EmailStudio\Enums\EmailProviderType;
 use Capell\EmailStudio\Enums\EmailRecipientStatus;
 use Capell\EmailStudio\Enums\SuppressionReason;
+use Capell\EmailStudio\Exceptions\RetryableEmailDeliveryException;
+use Capell\EmailStudio\Jobs\SendEmailJob;
 use Capell\EmailStudio\Models\EmailMessage;
 use Capell\EmailStudio\Models\EmailProfile;
 use Capell\EmailStudio\Models\EmailRecipient;
@@ -187,13 +189,52 @@ it('delivers queued recipients and rechecks suppressions before provider handoff
         queue: true,
     ));
 
-    $exceptionDeliveryMessage = DeliverEmailMessageAction::run($exceptionFailureMessage);
+    expect(fn (): EmailMessage => DeliverEmailMessageAction::run($exceptionFailureMessage))
+        ->toThrow(RetryableEmailDeliveryException::class, 'Transport exploded.');
+
+    $retryableMessage = $exceptionFailureMessage->fresh(['recipients']);
     $exceptionRecipient = EmailRecipient::query()->where('email', 'exception@example.com')->sole();
 
-    expect($exceptionDeliveryMessage->status)->toBe(EmailMessageStatus::Failed)
-        ->and($exceptionDeliveryMessage->failure_reason)->toBe('Transport exploded.')
-        ->and($exceptionRecipient->status)->toBe(EmailRecipientStatus::Failed)
-        ->and($exceptionRecipient->failure_reason)->toBe('Transport exploded.');
+    throw_if(! $retryableMessage instanceof EmailMessage, RuntimeException::class, 'Expected retryable email message to exist.');
+
+    expect($retryableMessage->status)->toBe(EmailMessageStatus::Queued)
+        ->and($retryableMessage->failure_reason)->toBe('Transport exploded.')
+        ->and($exceptionRecipient->status)->toBe(EmailRecipientStatus::Queued)
+        ->and($exceptionRecipient->failure_reason)->toBeNull();
+
+    (new SendEmailJob((int) $exceptionFailureMessage->getKey()))->failed(new RuntimeException('Transport exploded.'));
+
+    $terminalFailureMessage = $exceptionFailureMessage->fresh(['recipients']);
+    $terminalFailureRecipient = EmailRecipient::query()->where('email', 'exception@example.com')->sole();
+
+    throw_if(! $terminalFailureMessage instanceof EmailMessage, RuntimeException::class, 'Expected terminal failure email message to exist.');
+
+    expect($terminalFailureMessage->status)->toBe(EmailMessageStatus::Failed)
+        ->and($terminalFailureMessage->failed_at)->not->toBeNull()
+        ->and($terminalFailureMessage->failure_reason)->toBe('Transport exploded.')
+        ->and($terminalFailureRecipient->status)->toBe(EmailRecipientStatus::Failed)
+        ->and($terminalFailureRecipient->failure_reason)->toBe('Transport exploded.');
+
+    $immediateFailureMessage = SendEmailAction::run(new SendEmailData(
+        templateKey: 'forms.confirmation',
+        to: new DataCollection(EmailAddressData::class, [new EmailAddressData('immediate-exception@example.com')]),
+        cc: new DataCollection(EmailAddressData::class, []),
+        bcc: new DataCollection(EmailAddressData::class, []),
+        siteId: 12,
+        siteScopeKey: 'site:12',
+        emailProfileId: null,
+        variables: ['name' => 'Ben'],
+        headers: new DataCollection(EmailHeaderData::class, []),
+        triggeredByType: null,
+        triggeredById: null,
+        queue: false,
+    ));
+    $immediateFailureRecipient = EmailRecipient::query()->where('email', 'immediate-exception@example.com')->sole();
+
+    expect($immediateFailureMessage->status)->toBe(EmailMessageStatus::Failed)
+        ->and($immediateFailureMessage->failure_reason)->toBe('Transport exploded.')
+        ->and($immediateFailureRecipient->status)->toBe(EmailRecipientStatus::Failed)
+        ->and($immediateFailureRecipient->failure_reason)->toBe('Transport exploded.');
 });
 
 it('does not send a message that another worker recently claimed', function (): void {

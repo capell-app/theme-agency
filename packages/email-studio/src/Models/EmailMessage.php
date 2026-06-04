@@ -6,6 +6,7 @@ namespace Capell\EmailStudio\Models;
 
 use Capell\EmailStudio\Database\Factories\EmailMessageFactory;
 use Capell\EmailStudio\Enums\EmailMessageStatus;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,10 +14,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
 /**
+ * @property EmailMessageStatus $status
  * @property string $site_scope_key
  * @property string $subject
  * @property string|null $rendered_html
  * @property string|null $rendered_text
+ * @property CarbonImmutable|null $queued_at
+ * @property CarbonImmutable|null $sent_at
+ * @property CarbonImmutable|null $failed_at
+ * @property string|null $failure_reason
  */
 class EmailMessage extends Model
 {

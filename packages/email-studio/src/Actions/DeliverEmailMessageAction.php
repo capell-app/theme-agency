@@ -6,13 +6,13 @@ namespace Capell\EmailStudio\Actions;
 
 use Capell\EmailStudio\Enums\EmailMessageStatus;
 use Capell\EmailStudio\Enums\EmailRecipientStatus;
+use Capell\EmailStudio\Exceptions\RetryableEmailDeliveryException;
 use Capell\EmailStudio\Models\EmailMessage;
 use Capell\EmailStudio\Models\EmailProfile;
 use Capell\EmailStudio\Support\EmailProviderRegistry;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
-use RuntimeException;
 use Throwable;
 
 class DeliverEmailMessageAction
@@ -33,33 +33,31 @@ class DeliverEmailMessageAction
         $this->markNewSuppressions($emailMessage);
 
         if (! $emailMessage->recipients()->where('status', EmailRecipientStatus::Queued->value)->exists()) {
-            $emailMessage->update([
-                'status' => EmailMessageStatus::Failed,
-                'failed_at' => now()->toImmutable(),
-                'failure_reason' => 'All recipients are suppressed.',
-            ]);
+            return MarkEmailMessageDeliveryFailedAction::run($emailMessage, 'All recipients are suppressed.') ?? $emailMessage;
+        }
 
-            return $emailMessage->fresh(['profile', 'recipients']) ?? $emailMessage;
+        $profile = $emailMessage->profile;
+
+        if (! $profile instanceof EmailProfile) {
+            return MarkEmailMessageDeliveryFailedAction::run($emailMessage, 'Email message profile must be loaded before delivery.') ?? $emailMessage;
         }
 
         try {
-            $profile = $emailMessage->profile;
-
-            throw_unless($profile instanceof EmailProfile, RuntimeException::class, 'Email message profile must be loaded before delivery.');
-
             $providerResult = resolve(EmailProviderRegistry::class)
                 ->adapter($profile->provider)
                 ->send($emailMessage->fresh(['profile', 'recipients']) ?? $emailMessage);
         } catch (Throwable $throwable) {
-            $this->markProviderFailure($emailMessage, $throwable->getMessage());
+            if ($emailMessage->queued_at === null) {
+                return MarkEmailMessageDeliveryFailedAction::run($emailMessage, $throwable->getMessage()) ?? $emailMessage;
+            }
 
-            return $emailMessage->fresh(['profile', 'recipients']) ?? $emailMessage;
+            $this->releaseForRetry($emailMessage, $throwable->getMessage());
+
+            throw RetryableEmailDeliveryException::provider($throwable);
         }
 
         if (! $providerResult->successful) {
-            $this->markProviderFailure($emailMessage, $providerResult->failureReason);
-
-            return $emailMessage->fresh(['profile', 'recipients']) ?? $emailMessage;
+            return MarkEmailMessageDeliveryFailedAction::run($emailMessage, $providerResult->failureReason) ?? $emailMessage;
         }
 
         foreach ($emailMessage->recipients()->where('status', EmailRecipientStatus::Queued->value)->get() as $recipient) {
@@ -108,21 +106,12 @@ class DeliverEmailMessageAction
             ->update(['status' => EmailMessageStatus::Sending]) === 1);
     }
 
-    private function markProviderFailure(EmailMessage $message, ?string $failureReason): void
+    private function releaseForRetry(EmailMessage $message, ?string $failureReason): void
     {
-        $resolvedFailureReason = $failureReason ?? 'Provider failed to send the message.';
-
-        foreach ($message->recipients()->where('status', EmailRecipientStatus::Queued->value)->get() as $recipient) {
-            $recipient->update([
-                'status' => EmailRecipientStatus::Failed,
-                'failure_reason' => $resolvedFailureReason,
-            ]);
-        }
-
         $message->update([
-            'status' => EmailMessageStatus::Failed,
-            'failed_at' => now()->toImmutable(),
-            'failure_reason' => $resolvedFailureReason,
+            'status' => EmailMessageStatus::Queued,
+            'failed_at' => null,
+            'failure_reason' => $failureReason ?? 'Provider failed to send the message.',
         ]);
     }
 
