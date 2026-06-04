@@ -151,7 +151,7 @@ final class SyncCampaignExperimentActionTest extends CampaignStudioExperimentsTe
         $benefitVariant = $experiment->variants()->where('key', 'benefit')->firstOrFail();
         $goal = $experiment->goals()->where('key', 'book-demo')->firstOrFail();
 
-        for ($allocationIndex = 1; $allocationIndex <= 10; $allocationIndex++) {
+        for ($allocationIndex = 1; $allocationIndex <= 100; $allocationIndex++) {
             ExperimentAllocation::query()->create([
                 'experiment_id' => $experiment->getKey(),
                 'experiment_variant_id' => $controlVariant->getKey(),
@@ -168,7 +168,7 @@ final class SyncCampaignExperimentActionTest extends CampaignStudioExperimentsTe
             ]);
         }
 
-        for ($conversionIndex = 1; $conversionIndex <= 2; $conversionIndex++) {
+        for ($conversionIndex = 1; $conversionIndex <= 20; $conversionIndex++) {
             ExperimentGoalEvent::query()->create([
                 'experiment_id' => $experiment->getKey(),
                 'experiment_variant_id' => $controlVariant->getKey(),
@@ -178,7 +178,7 @@ final class SyncCampaignExperimentActionTest extends CampaignStudioExperimentsTe
             ]);
         }
 
-        for ($conversionIndex = 1; $conversionIndex <= 4; $conversionIndex++) {
+        for ($conversionIndex = 1; $conversionIndex <= 40; $conversionIndex++) {
             ExperimentGoalEvent::query()->create([
                 'experiment_id' => $experiment->getKey(),
                 'experiment_variant_id' => $benefitVariant->getKey(),
@@ -192,14 +192,14 @@ final class SyncCampaignExperimentActionTest extends CampaignStudioExperimentsTe
 
         $this->assertNotNull($results);
         $this->assertSame($experiment->getKey(), $results->experimentId);
-        $this->assertSame(20, $results->totalAllocations);
-        $this->assertSame(6, $results->totalConversions);
+        $this->assertSame(200, $results->totalAllocations);
+        $this->assertSame(60, $results->totalConversions);
         $this->assertSame('benefit', $results->winningVariantKey);
         $this->assertCount(2, $results->variants);
-        $this->assertSame(20.0, $results->variants[0]->conversionRate);
+        $this->assertEqualsWithDelta(20.0, $results->variants[0]->conversionRate, PHP_FLOAT_EPSILON);
         $this->assertNull($results->variants[0]->liftPercent);
-        $this->assertSame(40.0, $results->variants[1]->conversionRate);
-        $this->assertSame(100.0, $results->variants[1]->liftPercent);
+        $this->assertEqualsWithDelta(40.0, $results->variants[1]->conversionRate, PHP_FLOAT_EPSILON);
+        $this->assertEqualsWithDelta(100.0, $results->variants[1]->liftPercent, PHP_FLOAT_EPSILON);
         $this->assertTrue($results->variants[1]->isWinner);
     }
 

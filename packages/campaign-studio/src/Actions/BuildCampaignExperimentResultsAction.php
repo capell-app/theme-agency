@@ -40,15 +40,16 @@ final class BuildCampaignExperimentResultsAction
         /** @var Collection<int, ExperimentVariant> $variants */
         $variants = $experiment->variants()->get()->keyBy('id');
         $controlRate = $this->controlConversionRate($report->variants, $variants);
+        $winningVariantId = $report->winningVariantId;
 
         return new CampaignExperimentResultsData(
             experimentId: $report->experimentId,
             goalId: $report->goalId,
             totalAllocations: $report->totalAllocations,
             totalConversions: $report->totalConversions,
-            winningVariantKey: $report->winningVariantKey,
+            winningVariantKey: $this->winningVariantKey($report->variants, $winningVariantId),
             variants: array_values(array_map(
-                fn (WinnerVariantReportData $variantReport): CampaignExperimentVariantResultData => $this->variantResult($variantReport, $variants, $controlRate),
+                fn (WinnerVariantReportData $variantReport): CampaignExperimentVariantResultData => $this->variantResult($variantReport, $variants, $controlRate, $winningVariantId),
                 $report->variants,
             )),
         );
@@ -80,7 +81,7 @@ final class BuildCampaignExperimentResultsAction
     /**
      * @param  Collection<int, ExperimentVariant>  $variants
      */
-    private function variantResult(WinnerVariantReportData $variantReport, Collection $variants, ?float $controlRate): CampaignExperimentVariantResultData
+    private function variantResult(WinnerVariantReportData $variantReport, Collection $variants, ?float $controlRate, ?int $winningVariantId): CampaignExperimentVariantResultData
     {
         $variant = $variants->get($variantReport->variantId);
         $isControl = $variant instanceof ExperimentVariant && $variant->is_control;
@@ -93,8 +94,26 @@ final class BuildCampaignExperimentResultsAction
             conversions: $variantReport->conversions,
             conversionRate: round($variantReport->conversionRate * 100, 2),
             liftPercent: $this->liftPercent($variantReport->conversionRate, $controlRate, $isControl),
-            isWinner: $variantReport->isWinner,
+            isWinner: $winningVariantId !== null && $variantReport->variantId === $winningVariantId,
         );
+    }
+
+    /**
+     * @param  list<WinnerVariantReportData>  $variantReports
+     */
+    private function winningVariantKey(array $variantReports, ?int $winningVariantId): ?string
+    {
+        if ($winningVariantId === null) {
+            return null;
+        }
+
+        foreach ($variantReports as $variantReport) {
+            if ($variantReport->variantId === $winningVariantId) {
+                return $variantReport->variantKey;
+            }
+        }
+
+        return null;
     }
 
     private function liftPercent(float $conversionRate, ?float $controlRate, bool $isControl): ?float
