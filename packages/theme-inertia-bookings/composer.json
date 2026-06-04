@@ -1,0 +1,42 @@
+{
+    "name": "capell-app/theme-inertia-bookings",
+    "description": "Premium booking-business showcase theme for Capell Inertia.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.3",
+        "capell-app/bookings": "^4.0 || 4.x-dev",
+        "capell-app/core": "^4.0 || 4.x-dev",
+        "capell-app/frontend": "^4.0 || 4.x-dev",
+        "capell-app/inertia": "^4.0 || 4.x-dev",
+        "spatie/laravel-package-tools": "^1.14.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Capell\\ThemeStudio\\InertiaBookings\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Capell\\ThemeStudio\\InertiaBookings\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Capell\\ThemeStudio\\InertiaBookings\\Providers\\InertiaBookingsThemeServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "prefer-stable": true,
+    "homepage": "https://github.com/capell-app/theme-inertia-bookings",
+    "keywords": [
+        "capell",
+        "inertia",
+        "bookings",
+        "theme"
+    ]
+}

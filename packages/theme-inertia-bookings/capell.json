@@ -1,0 +1,99 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-inertia-bookings",
+    "slug": "theme-inertia-bookings",
+    "displayName": "Theme Inertia Bookings",
+    "kind": "theme",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Premium Inertia booking-business theme for services, clinics, consultants, classes, and appointments.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\InertiaBookings",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": [
+            "capell-app/core",
+            "capell-app/frontend",
+            "capell-app/inertia",
+            "capell-app/bookings"
+        ],
+        "supports": [
+            "capell-app/inertia-vue-adapter",
+            "capell-app/inertia-react-adapter",
+            "capell-app/layout-builder"
+        ],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\InertiaBookings\\Providers\\InertiaBookingsThemeServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "admin-page",
+            "class": "Capell\\ThemeStudio\\InertiaBookings\\Manifest\\ThemeManagementPageContribution",
+            "pageClass": "Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage",
+            "pageParameters": {
+                "themeKey": "inertia-bookings"
+            },
+            "labelKey": "capell-marketplace::marketplace.theme_extension.management_entry_label"
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-inertia-bookings", "inertia-bookings-frontend"],
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-inertia-bookings"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-inertia-bookings.package-health",
+            "label": "Theme Inertia Bookings runtime and renderer bindings are installed.",
+            "class": "Capell\\ThemeStudio\\InertiaBookings\\Health\\ThemeInertiaBookingsHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Premium Inertia booking-business theme for services, clinics, consultants, classes, and appointments.",
+        "description": "Theme Inertia Bookings renders Capell marketing pages through Inertia and links into the real Bookings appointment request flow with lazy slot loading.",
+        "screenshots": [],
+        "categories": ["frontend", "themes", "bookings"]
+    },
+    "themeKey": "inertia-bookings"
+}
