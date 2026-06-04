@@ -17,10 +17,9 @@ final class ContentHealthWidget extends Widget implements CapellWidgetContract
     use GatedByRoleAndSettings;
 
     /**
-     * Container key under which the per-request content health build is memoised so a
-     * single dashboard render does not rebuild the data once for canView() and again
-     * for data(). The container forgets scoped instances between requests, keeping the
-     * memo site/actor-scoped to the current request.
+     * Container key under which the content health build is memoised for the current
+     * request so a single dashboard render does not rebuild data once for canView()
+     * and again for data().
      */
     private const string REQUEST_MEMO_KEY = 'capell-dashboard-reports.content-health.request-memo';
 
@@ -50,16 +49,13 @@ final class ContentHealthWidget extends Widget implements CapellWidgetContract
 
     private static function resolveContentHealthData(): ContentHealthData
     {
-        if (app()->bound(self::REQUEST_MEMO_KEY)) {
-            /** @var ContentHealthData $memoised */
-            $memoised = app()->make(self::REQUEST_MEMO_KEY);
+        app()->scopedIf(
+            self::REQUEST_MEMO_KEY,
+            static fn (): ContentHealthData => resolve(ContentHealthDataProvider::class)->build(),
+        );
 
-            return $memoised;
-        }
-
-        $data = resolve(ContentHealthDataProvider::class)->build();
-
-        app()->instance(self::REQUEST_MEMO_KEY, $data);
+        /** @var ContentHealthData $data */
+        $data = app()->make(self::REQUEST_MEMO_KEY);
 
         return $data;
     }

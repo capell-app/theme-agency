@@ -63,7 +63,7 @@ Manifest `capabilities` are only `["dashboard-reports", "dashboard-reports-admin
 
 | Item                                                                                | Bucket | Effort | Impact | Section ref |
 | ----------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Eliminate double `build()` in ContentHealthWidget                                   | Now    | S      | High   | §2, §4      |
+| Shipped 2026-06-04: Eliminate double `build()` in ContentHealthWidget              | Done   | S      | High   | §2, §4      |
 | Replace 14-query trend loop with grouped aggregates                                 | Now    | M      | High   | §2, §4      |
 | Implement a real Diagnostics health check (providers/widgets/settings bound)        | Now    | M      | High   | §4          |
 | Fix per-issue filtered deep-links (not unfiltered index)                            | Now    | M      | Med    | §2, §3      |
