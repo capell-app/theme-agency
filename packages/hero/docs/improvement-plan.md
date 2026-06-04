@@ -10,6 +10,7 @@ Hero ships the single default home-page hero widget (`capell::widget.hero`) plus
 
 - **2026-06-03:** Rewrote marketplace/composer copy, added a real `HeroHealthCheck`, and set `fetchpriority="high"` on the hero media poster image.
 - **2026-06-04:** Declared `capell-app/admin` as a hard dependency, added the `admin` surface, populated Hero feature capabilities, removed the empty provider branch, and updated docs/tests for the admin schema extenders.
+- **2026-06-04:** Added responsive width/density descriptors and `sizes="100vw"` hints to hero media image/poster sources for LCP.
 
 ## 2. Improvements (existing functionality)
 
@@ -89,7 +90,7 @@ Both are flat and describe plumbing ("setup", "rendering"), not the visitor-faci
 | ---------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
 | Declare `capell-app/admin` dependency (or guard admin registration)                | Done   | S      | High   | §4.1        |
 | Add `"admin"` to `surfaces` + fix overview "no Filament" claim                     | Done   | S      | High   | §4.2        |
-| Add responsive width/density descriptors to hero media sources (LCP)               | Now    | S      | Medium | §4.6        |
+| Add responsive width/density descriptors to hero media sources (LCP)               | Done   | S      | Medium | §4.6        |
 | Reconcile screenshot count (1 vs 2) + build the 2 declared captures                | Now    | S      | Medium | §1, §5      |
 | Rewrite marketplace `summary` + composer `description`                             | Done   | S      | Medium | §5          |
 | Populate `capabilities[]` (video, overlay, carousel, inheritance)                  | Done   | S      | Medium | §3, §5      |

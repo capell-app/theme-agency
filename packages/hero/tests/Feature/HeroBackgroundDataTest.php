@@ -209,6 +209,56 @@ it('reports hero media presence and prefers desktop posters', function (): void 
         ->and(HeroMediaData::disabled()->poster())->toBeNull();
 });
 
+it('builds responsive hero media source descriptors from prepared media', function (): void {
+    $theme = Theme::factory()->create();
+
+    $desktopImage = Media::factory()
+        ->model($theme)
+        ->state([
+            'file_name' => 'hero-desktop.jpg',
+            'mime_type' => 'image/jpeg',
+            'custom_properties' => ['width' => 1920],
+        ])
+        ->create();
+    $mobileImage = Media::factory()
+        ->model($theme)
+        ->state([
+            'file_name' => 'hero-mobile.jpg',
+            'mime_type' => 'image/jpeg',
+        ])
+        ->create();
+    $desktopVideo = Media::factory()
+        ->model($theme)
+        ->fileType('mp4')
+        ->state(['file_name' => 'hero-desktop.mp4'])
+        ->create();
+
+    $media = new HeroMediaData(
+        enabled: true,
+        autoplay: true,
+        loop: true,
+        muted: true,
+        pauseWhenOutOfView: true,
+        preload: HeroMediaData::PreloadMetadata,
+        videos: ['desktop' => $desktopVideo],
+        images: ['desktop' => $desktopImage, 'mobile' => $mobileImage],
+    );
+
+    expect($media->imageSources())
+        ->toHaveCount(2)
+        ->and($media->imageSources()[0]['media'])->toBe('(max-width: 639px)')
+        ->and($media->imageSources()[0]['srcset'])->toContain('hero-mobile.jpg 1x')
+        ->and($media->imageSources()[0]['sizes'])->toBe('100vw')
+        ->and($media->imageSources()[1]['media'])->toBe('(min-width: 1024px)')
+        ->and($media->imageSources()[1]['srcset'])->toContain('hero-desktop.jpg 1920w')
+        ->and($media->posterSrcset())->toContain('hero-desktop.jpg 1920w')
+        ->and($media->videoSources())->toHaveCount(1)
+        ->and($media->videoSources()[0]['viewport'])->toBe('desktop')
+        ->and($media->videoSources()[0]['media'])->toBe('(min-width: 1024px)')
+        ->and($media->videoSources()[0]['src'])->toContain('hero-desktop.mp4')
+        ->and($media->videoSources()[0]['type'])->toBe('video/mp4');
+});
+
 function mediaFor(Theme|Widget|WidgetAsset $model, string $collection, string $fileName, string $mimeType): Media
 {
     return Media::factory()
