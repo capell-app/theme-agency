@@ -47,6 +47,7 @@ to registered Capell content.
   support for public threads.
 - Request-local commentable memoization during Livewire actions so submit
   refreshes do not re-query the same page.
+- Locale-pinned public timestamp labels based on the commentable page language.
 - Public comment form bot-trap controls: a hidden honeypot field and
   configurable minimum form age.
 - Automatic spam scoring for configured link-count and blocked-term rules,
@@ -68,7 +69,7 @@ to registered Capell content.
 - Public thread reads return nothing when comments are disabled, publication is
   disabled, or the commentable model is not publicly visible.
 - Public DTOs include public IDs, sanitized body text, author display names,
-  timestamps, depth, reply counts, and children.
+  timestamps, locale-pinned timestamp labels, depth, reply counts, and children.
 - Public DTOs do not expose moderation status, model IDs, commentable IDs,
   author email, visitor hashes, tokens, or admin URLs.
 - The thread endpoint is designed for dynamic frontend loading rather than

@@ -18,6 +18,7 @@ class PublicCommentData extends Data implements Wireable
         public string $body,
         public string $authorName,
         public CarbonImmutable $submittedAt,
+        public string $submittedAtForHumans,
         public int $depth,
         public int $replyCount,
         public bool $hasMoreReplies = false,
@@ -36,11 +37,14 @@ class PublicCommentData extends Data implements Wireable
             ))
             : [];
 
+        $submittedAt = CarbonImmutable::parse(is_string($value['submittedAt'] ?? null) ? $value['submittedAt'] : 'now');
+
         return new self(
             publicId: is_string($value['publicId'] ?? null) ? $value['publicId'] : '',
             body: is_string($value['body'] ?? null) ? $value['body'] : '',
             authorName: is_string($value['authorName'] ?? null) ? $value['authorName'] : '',
-            submittedAt: CarbonImmutable::parse(is_string($value['submittedAt'] ?? null) ? $value['submittedAt'] : 'now'),
+            submittedAt: $submittedAt,
+            submittedAtForHumans: is_string($value['submittedAtForHumans'] ?? null) ? $value['submittedAtForHumans'] : $submittedAt->diffForHumans(),
             depth: is_numeric($value['depth'] ?? null) ? (int) $value['depth'] : 0,
             replyCount: is_numeric($value['replyCount'] ?? null) ? (int) $value['replyCount'] : 0,
             hasMoreReplies: (bool) ($value['hasMoreReplies'] ?? false),
@@ -54,6 +58,7 @@ class PublicCommentData extends Data implements Wireable
      *     body: string,
      *     authorName: string,
      *     submittedAt: string,
+     *     submittedAtForHumans: string,
      *     depth: int,
      *     replyCount: int,
      *     hasMoreReplies: bool,
@@ -67,6 +72,7 @@ class PublicCommentData extends Data implements Wireable
             'body' => $this->body,
             'authorName' => $this->authorName,
             'submittedAt' => $this->submittedAt->toIso8601String(),
+            'submittedAtForHumans' => $this->submittedAtForHumans,
             'depth' => $this->depth,
             'replyCount' => $this->replyCount,
             'hasMoreReplies' => $this->hasMoreReplies,

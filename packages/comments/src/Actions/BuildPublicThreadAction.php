@@ -12,6 +12,7 @@ use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
 use Capell\Comments\Support\CommentableRegistry;
 use Capell\Comments\Support\CommentSettingsResolver;
+use Capell\Core\Models\Language;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -50,6 +51,7 @@ class BuildPublicThreadAction
         $resolvedReplyLimit = max(0, $replyLimit ?? $this->settings->replyPageSize($siteId, $commentableType->key));
         $maxDepth = $this->settings->maxDepth($siteId, $commentableType->key);
         $languageId = $this->optionalAttribute($commentable, 'language_id');
+        $languageId = is_numeric($languageId) ? (int) $languageId : null;
 
         /** @var EloquentCollection<int, Comment> $roots */
         $roots = Comment::query()
@@ -58,8 +60,8 @@ class BuildPublicThreadAction
             ->where('commentable_id', $commentable->getKey())
             ->where('status', CommentStatus::Approved)
             ->when(
-                is_numeric($languageId),
-                fn (Builder $query): Builder => $query->where('language_id', (int) $languageId),
+                $languageId !== null,
+                fn (Builder $query): Builder => $query->where('language_id', $languageId),
             )
             ->whereNull('parent_id')
             ->oldest('submitted_at')
@@ -71,10 +73,13 @@ class BuildPublicThreadAction
             return [];
         }
 
+        $locale = $this->localeForLanguageId($languageId);
+
         return array_values($roots
             ->map(fn (Comment $comment): PublicCommentData => $this->toData(
                 comment: $comment,
-                languageId: is_numeric($languageId) ? (int) $languageId : null,
+                languageId: $languageId,
+                locale: $locale,
                 replyLimit: $resolvedReplyLimit,
                 maxDepth: $maxDepth,
                 replyLimitsByPublicId: $replyLimitsByPublicId,
@@ -102,6 +107,7 @@ class BuildPublicThreadAction
     private function toData(
         Comment $comment,
         ?int $languageId,
+        string $locale,
         int $replyLimit,
         int $maxDepth,
         array $replyLimitsByPublicId,
@@ -132,6 +138,7 @@ class BuildPublicThreadAction
             body: $comment->body,
             authorName: (string) $author->name,
             submittedAt: $submittedAt,
+            submittedAtForHumans: $submittedAt->settings(['locale' => $locale])->diffForHumans(),
             depth: (int) $comment->depth,
             replyCount: $replyCount,
             hasMoreReplies: $replyCount > $children->count(),
@@ -139,6 +146,7 @@ class BuildPublicThreadAction
                 ->map(fn (Comment $child): PublicCommentData => $this->toData(
                     comment: $child,
                     languageId: $languageId,
+                    locale: $locale,
                     replyLimit: $replyLimit,
                     maxDepth: $maxDepth,
                     replyLimitsByPublicId: $replyLimitsByPublicId,
@@ -165,5 +173,35 @@ class BuildPublicThreadAction
             )
             ->oldest('submitted_at')
             ->oldest('id');
+    }
+
+    private function localeForLanguageId(?int $languageId): string
+    {
+        $fallback = $this->normaliseLocale(config('app.locale'), 'en');
+
+        if ($languageId === null) {
+            return $fallback;
+        }
+
+        $language = Language::query()
+            ->select(['id', 'locale', 'code'])
+            ->find($languageId);
+
+        if (! $language instanceof Language) {
+            return $fallback;
+        }
+
+        return $this->normaliseLocale($language->locale, $this->normaliseLocale($language->code, $fallback));
+    }
+
+    private function normaliseLocale(mixed $locale, string $fallback): string
+    {
+        if (! is_string($locale)) {
+            return $fallback;
+        }
+
+        $locale = trim($locale);
+
+        return $locale === '' ? $fallback : $locale;
     }
 }

@@ -183,6 +183,52 @@ it('scopes public comments to the commentable language when present', function (
         ->and($comments[0]->body)->toBe('English comment');
 });
 
+it('formats public comment timestamps using the commentable language locale', function (): void {
+    config()->set('app.locale', 'en');
+
+    $language = Language::factory()->french()->create();
+    $site = $this->createCommentsSite();
+    $site->forceFill(['language_id' => $language->getKey()])->save();
+    $page = $this->createCommentsPage($site);
+    $page->setAttribute('language_id', $language->getKey());
+
+    $submittedAt = now()->subDays(2)->toImmutable();
+
+    Comment::factory()->create([
+        'site_id' => $page->site_id,
+        'language_id' => $language->getKey(),
+        'commentable_type' => $page->getMorphClass(),
+        'commentable_id' => $page->getKey(),
+        'submitted_at' => $submittedAt,
+        'body' => 'French timestamp',
+    ]);
+
+    $comments = BuildPublicThreadAction::run($page);
+
+    expect($comments)->toHaveCount(1)
+        ->and($comments[0]->submittedAtForHumans)->toBe($submittedAt->settings(['locale' => 'fr'])->diffForHumans())
+        ->and($comments[0]->submittedAtForHumans)->not->toBe($submittedAt->settings(['locale' => 'en'])->diffForHumans());
+});
+
+it('serializes localized public timestamp labels through livewire', function (): void {
+    $submittedAt = now()->subHour()->toImmutable();
+    $comment = new PublicCommentData(
+        publicId: 'public-comment',
+        body: 'Visible',
+        authorName: 'Ben',
+        submittedAt: $submittedAt,
+        depth: 0,
+        replyCount: 0,
+        children: [],
+        submittedAtForHumans: 'il y a 1 heure',
+    );
+
+    $rehydrated = PublicCommentData::fromLivewire($comment->toLivewire());
+
+    expect($rehydrated->submittedAtForHumans)->toBe('il y a 1 heure')
+        ->and($rehydrated->submittedAt->toIso8601String())->toBe($submittedAt->toIso8601String());
+});
+
 it('does not expose approved comments when comments are disabled for public reads', function (): void {
     $page = $this->createCommentsPage();
 
@@ -258,6 +304,7 @@ it('escapes public comment output and hides pending comments when rendered', fun
         depth: 0,
         replyCount: 0,
         children: [],
+        submittedAtForHumans: '2 minutes ago',
     );
 
     $html = Blade::render(

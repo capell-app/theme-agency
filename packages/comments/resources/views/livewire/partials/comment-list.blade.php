@@ -7,7 +7,7 @@
                     <time
                         datetime="{{ $comment->submittedAt->toAtomString() }}"
                     >
-                        {{ $comment->submittedAt->diffForHumans() }}
+                        {{ $comment->submittedAtForHumans }}
                     </time>
                 </header>
                 <p>{{ $comment->body }}</p>

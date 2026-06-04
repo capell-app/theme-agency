@@ -20,6 +20,7 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 - **2026-06-04:** Implemented settings-aware reply pagination with per-parent "load more replies" support, bounded child hydration, recursive public rendering, and Livewire-safe public comment DTO serialization.
 - **2026-06-04:** Hardened public body sanitization by stripping invisible Unicode format controls and ASCII control bytes, and broadened spam link detection to count scheme, `www.`, and bare-domain links without counting email domains.
 - **2026-06-04:** Memoized the resolved public commentable model within each Livewire request, avoiding duplicate page lookups during submit/refresh flows without serializing Eloquent models into Livewire state.
+- **2026-06-04:** Locale-pinned public timestamp labels to the resolved commentable language so `diffForHumans()` output follows page `language_id` instead of the ambient app locale, with Livewire serialization coverage.
 
 ## 2. Improvements (existing functionality)
 
@@ -71,9 +72,9 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **PII / retention.** Author `name`/`email` are `encrypted` at rest ✔ and `email_hash` is HMAC ✔ (`src/Models/CommentAuthor.php:50-58,123`). Gaps: (1) `email_hash_secret`/`visitor_hash_secret` default to `null` from env and silently fall back to `app.key` (`config/capell-comments.php:22-23`, `src/Support/VisitorHasher.php:15`, `CommentAuthor::emailHash`) — rotating `app.key` orphans all hashes; document and warn. (2) No retention/erasure policy or command for visitor IP/UA hashes or author records (GDPR right-to-erasure). (3) `internal_notes` and `moderation_note` are plaintext.
 
-- **Test gaps.** Coverage now includes health diagnostics, spam scoring, sanitizer hardening, moderator notification wiring/status-gating, `auto_inject` anonymous-leakage, reply pagination, public-output Architecture guards, Livewire commentable memoization, public submit throttling, and bot-trap rejection at action and Livewire levels. Still not covered: performance budgets.
+- **Test gaps.** Coverage now includes health diagnostics, spam scoring, sanitizer hardening, moderator notification wiring/status-gating, `auto_inject` anonymous-leakage, reply pagination, public-output Architecture guards, Livewire commentable memoization, locale-pinned public timestamps, public submit throttling, and bot-trap rejection at action and Livewire levels. Still not covered: performance budgets.
 
-- **i18n.** Strings are translated via `capell-comments::` namespaces ✔. `diffForHumans()` in the public Blade (`thread.blade.php:24,47`) is not locale-pinned to the site language and may render in the app locale rather than the page's `language_id`.
+- **i18n shipped.** Strings are translated via `capell-comments::` namespaces ✔. Public timestamp labels are now produced by `BuildPublicThreadAction` with the commentable language locale, serialized through `PublicCommentData`, and rendered as preformatted labels in Blade so Livewire hydration does not fall back to the ambient app locale.
 
 - **Manifest/README mismatches (low sev).** README "Best Used With" lists `html-cache` but `capell.json`/`composer.json` `supports` lists only `blog` + `email-studio`. Marketplace `screenshots[]` (1) ≠ `screenshots.json` required runtime captures (4).
 
@@ -106,9 +107,9 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 | Wire the 4 `screenshots.json` captures into marketplace + new summary/description                         | Now    | S      | Med    | §5          |
 | Shipped 2026-06-04: implement reply pagination using `reply_page_size`; cap subtree query                 | Next   | M      | High   | §2, §3      |
 | Benchmark + assert `frontendRenderBudgetMs`/`adminQueryBudget`                                            | Next   | M      | Med    | §4          |
-| Shipped 2026-06-04: harden sanitizer (bidi/zero-width strip; broaden link detection)                     | Next   | S      | Med    | §4          |
-| Shipped 2026-06-04: memoize resolved commentable in Livewire component                                   | Next   | S      | Low    | §2          |
-| Locale-pin public timestamps to page `language_id`                                                        | Next   | S      | Low    | §4          |
+| Shipped 2026-06-04: harden sanitizer (bidi/zero-width strip; broaden link detection)                      | Next   | S      | Med    | §4          |
+| Shipped 2026-06-04: memoize resolved commentable in Livewire component                                    | Next   | S      | Low    | §2          |
+| Shipped 2026-06-04: locale-pin public timestamps to page `language_id`                                    | Next   | S      | Low    | §4          |
 | Pluggable external spam provider (Akismet/Turnstile) contract                                             | Later  | M      | Med    | §3          |
 | Reactions/voting + author-reply notifications (Engagement Suite up-sell)                                  | Later  | L      | Med    | §3, §5      |
 | PII retention/erasure command + secret-rotation docs for hashes                                           | Later  | M      | Med    | §4          |

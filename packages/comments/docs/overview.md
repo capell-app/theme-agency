@@ -24,6 +24,7 @@ editors keep approval and author-management work inside Capell Admin.
 - Settings-aware reply pagination with per-parent "load more replies" support.
 - Request-local Livewire commentable memoization during public submit and
   refresh workflows.
+- Locale-pinned public timestamp labels based on the commentable page language.
 - Queued moderator notifications for configured moderator email addresses.
 - Diagnostics checks for storage tables, settings registration, thread route
   registration, and Livewire component registration.
@@ -47,7 +48,7 @@ not reveal internal moderation data.
 - `FrontendServiceProvider` registers the public Livewire thread component.
 - `RenderCommentThreadController` serves the dynamic thread endpoint.
 - `BuildPublicThreadAction` hydrates approved public thread DTOs with bounded
-  root and reply pagination.
+  root and reply pagination plus locale-pinned timestamp labels.
 - `CommentThreadComponent` memoizes the decrypted commentable model for the
   current Livewire request only.
 - `VerifyCommentAuthorEmailController` handles author verification links.
@@ -103,5 +104,5 @@ The current focused tests cover settings registration, settings resolution,
 manifest requirements, health diagnostics, email verification, spam scoring,
 moderator notification wiring, public thread rendering, component submission,
 sanitization hardening, auto-inject shell safety, reply pagination, package
-architecture boundaries, commentable memoization, throttling, and bot-trap
-rejection.
+architecture boundaries, commentable memoization, locale-pinned public
+timestamps, throttling, and bot-trap rejection.
