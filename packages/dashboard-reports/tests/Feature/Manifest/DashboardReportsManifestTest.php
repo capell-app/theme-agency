@@ -44,7 +44,11 @@ it('declares committed marketplace gallery assets for every required screenshot 
     $requiredMarketplaceAssetPaths = [];
 
     foreach ($contractEntries as $contractEntry) {
-        if (! is_array($contractEntry) || ($contractEntry['required'] ?? false) !== true) {
+        if (! is_array($contractEntry)) {
+            continue;
+        }
+
+        if (($contractEntry['required'] ?? false) !== true) {
             continue;
         }
 

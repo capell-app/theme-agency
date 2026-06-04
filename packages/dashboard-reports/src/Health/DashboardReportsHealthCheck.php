@@ -182,7 +182,7 @@ final class DashboardReportsHealthCheck implements ChecksExtensionHealth
      */
     private function translation(string $key, array $replace = []): string
     {
-        $translation = app(Translator::class)->get($key, $replace);
+        $translation = resolve(Translator::class)->get($key, $replace);
 
         return is_string($translation) ? $translation : $key;
     }
