@@ -24,7 +24,7 @@ final class PortalAccountFactory extends Factory
         $email = $this->faker->unique()->safeEmail();
 
         return [
-            'site_id' => fn (): int => $this->createSiteId(),
+            'site_id' => $this->createSiteId(...),
             'owner_type' => null,
             'owner_id' => null,
             'email' => $email,

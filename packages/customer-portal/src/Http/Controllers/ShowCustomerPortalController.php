@@ -109,7 +109,11 @@ final class ShowCustomerPortalController
         ];
 
         foreach ($profileData->profile as $key => $value) {
-            if (! is_string($key) || $this->shouldHideProfileField($key)) {
+            if (! is_string($key)) {
+                continue;
+            }
+
+            if ($this->shouldHideProfileField($key)) {
                 continue;
             }
 

@@ -80,9 +80,7 @@ final class PortalSupportRequestFactory extends Factory
     {
         $portalAccountId = $attributes['portal_account_id'] ?? null;
 
-        if (! is_int($portalAccountId)) {
-            throw new RuntimeException('Portal support request factories require an integer portal_account_id.');
-        }
+        throw_unless(is_int($portalAccountId), RuntimeException::class, 'Portal support request factories require an integer portal_account_id.');
 
         return PortalAccount::query()->findOrFail($portalAccountId);
     }

@@ -28,7 +28,11 @@ final class ResolvePortalPreferenceOptionsAction
         $options = [];
 
         foreach ($configuredOptions as $key => $optionConfig) {
-            if (! is_string($key) || $key === '') {
+            if (! is_string($key)) {
+                continue;
+            }
+
+            if ($key === '') {
                 continue;
             }
 
@@ -37,8 +41,11 @@ final class ResolvePortalPreferenceOptionsAction
             }
 
             $label = $optionConfig['label'] ?? null;
+            if (! is_string($label)) {
+                continue;
+            }
 
-            if (! is_string($label) || trim($label) === '') {
+            if (trim($label) === '') {
                 continue;
             }
 
