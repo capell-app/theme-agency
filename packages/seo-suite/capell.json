@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery outputs, crawler policy controls, and generated-output diagnostics.",
+    "description": "Ship search-ready pages by default: live SEO scoring, schema.org structured data, broken-link and redirect management, Google Search Console insights, and first-class AI-discovery output (`llms.txt`, page Markdown, AI-crawler controls) — all inside the Capell page editor.",
     "product": {
         "group": "Capell Search & SEO",
         "tier": "premium",
@@ -180,12 +180,78 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "SEO Suite adds metadata panels, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, AI Discovery outputs, crawler policy controls, and generated-output diagnostics.",
+        "summary": "Ship search-ready pages by default: live SEO scoring, schema.org structured data, broken-link and redirect management, Google Search Console insights, and first-class AI-discovery output (`llms.txt`, page Markdown, AI-crawler controls) — all inside the Capell page editor.",
+        "description": "SEO Suite turns Capell into a search-and-AI optimisation platform. Editors get an in-context SEO panel that scores every page, previews Google and social results, and suggests internal links and metadata with optional AI assistance, while operators get broken-link tracking, redirect opportunities, Search Console dashboards, and PageSpeed audits. It is the only Capell package built for the AI-search era: generate and govern `llms.txt`, `llms-full.txt`, and per-page Markdown, and control exactly which AI crawlers (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot) may train on or surface your content. A built-in doctor verifies route ownership, content types, cache headers, sitemap parity, and public-output safety so generated SEO output never leaks admin internals.",
         "screenshots": [
             {
-                "path": "docs/assets/marketplace/extension-card.jpg",
-                "alt": "SEO Suite extension preview image",
-                "caption": "SEO Suite extension preview"
+                "path": "docs/screenshots/page-seo-panel.png",
+                "alt": "SEO Suite page SEO panel in light mode",
+                "caption": "Page SEO panel"
+            },
+            {
+                "path": "docs/screenshots/page-seo-panel-dark.png",
+                "alt": "SEO Suite page SEO panel in dark mode",
+                "caption": "Page SEO panel dark mode"
+            },
+            {
+                "path": "docs/screenshots/seo-audit-page.png",
+                "alt": "SEO Suite audit page in light mode",
+                "caption": "SEO audit dashboard"
+            },
+            {
+                "path": "docs/screenshots/seo-audit-page-dark.png",
+                "alt": "SEO Suite audit page in dark mode",
+                "caption": "SEO audit dashboard dark mode"
+            },
+            {
+                "path": "docs/screenshots/search-console-insights-panel.png",
+                "alt": "SEO Suite Search Console insights panel in light mode",
+                "caption": "Search Console insights"
+            },
+            {
+                "path": "docs/screenshots/search-console-insights-panel-dark.png",
+                "alt": "SEO Suite Search Console insights panel in dark mode",
+                "caption": "Search Console insights dark mode"
+            },
+            {
+                "path": "docs/screenshots/broken-links-page.png",
+                "alt": "SEO Suite broken links page in light mode",
+                "caption": "Broken links dashboard"
+            },
+            {
+                "path": "docs/screenshots/broken-links-page-dark.png",
+                "alt": "SEO Suite broken links page in dark mode",
+                "caption": "Broken links dashboard dark mode"
+            },
+            {
+                "path": "docs/screenshots/ai-creator-action-modal.png",
+                "alt": "SEO Suite AI Creator action modal in light mode",
+                "caption": "AI Creator action"
+            },
+            {
+                "path": "docs/screenshots/ai-creator-action-modal-dark.png",
+                "alt": "SEO Suite AI Creator action modal in dark mode",
+                "caption": "AI Creator action dark mode"
+            },
+            {
+                "path": "docs/screenshots/sitemap-page.png",
+                "alt": "SEO Suite sitemap page in light mode",
+                "caption": "Sitemap coverage"
+            },
+            {
+                "path": "docs/screenshots/sitemap-page-dark.png",
+                "alt": "SEO Suite sitemap page in dark mode",
+                "caption": "Sitemap coverage dark mode"
+            },
+            {
+                "path": "docs/screenshots/translation-coverage-page.png",
+                "alt": "SEO Suite translation coverage page in light mode",
+                "caption": "Translation coverage"
+            },
+            {
+                "path": "docs/screenshots/translation-coverage-page-dark.png",
+                "alt": "SEO Suite translation coverage page in dark mode",
+                "caption": "Translation coverage dark mode"
             }
         ],
         "categories": ["admin", "console", "frontend", "search-seo"]

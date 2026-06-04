@@ -1,6 +1,6 @@
 {
     "name": "capell-app/shopify-commerce",
-    "description": "Shopify Admin API connection and catalog sync foundation for Capell CMS.",
+    "description": "Connect any Shopify store to Capell in minutes and keep its product catalog and customer data in sync — securely, per site, with no storefront lock-in.",
     "type": "library",
     "license": "proprietary",
     "autoload": {

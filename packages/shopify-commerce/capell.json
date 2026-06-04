@@ -109,7 +109,8 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Site-scoped Shopify Admin API OAuth, catalog sync, and customer cache foundations for Capell.",
+        "summary": "Connect any Shopify store to Capell in minutes and keep its product catalog and customer data in sync — securely, per site, with no storefront lock-in.",
+        "description": "Shopify Commerce links your Shopify store to Capell with a guided, per-site OAuth connection — your Admin API token is encrypted at rest and never touches content code. It syncs your product catalog (products, variants, options, images, pricing) into fast local tables you can search and reference directly from the admin, and caches customer records for CRM and contact workflows. Designed to coexist with your existing storefront and checkout, it owns the integration layer so your team doesn't have to maintain Shopify API glue. Multi-store ready, permission-gated, and observable through Capell Diagnostics.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
