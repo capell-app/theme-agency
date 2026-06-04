@@ -6,14 +6,15 @@ Hero renders and seeds the default home-page hero widget used by Capell frontend
 
 - Package: `capell-app/hero`
 - Namespace: `Capell\Hero\`
-- Surfaces: frontend Blade components, console
+- Surfaces: admin schema extenders, frontend Blade components, console
 - Service providers: `packages/hero/src/Providers/HeroServiceProvider.php`
-- Capell dependencies: `capell-app/core`, `capell-app/frontend`, `capell-app/layout-builder`
+- Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/frontend`, `capell-app/layout-builder`
 - Third-party dependencies: `lorisleiva/laravel-actions`, `spatie/laravel-package-tools`
 
 ## Why It Helps Your Capell Workflow
 
 - Provides a default Capell home hero widget, rendering, and setup path so new sites start with a useful first-screen component.
+- Adds theme, widget, and widget-asset controls for inheritable hero backgrounds and media.
 - Helps designers and editors begin from a package-owned hero instead of hard-coding a one-off homepage header.
 - Keeps the default hero small and replaceable while Layout Builder and themes own broader composition.
 
@@ -27,11 +28,13 @@ Hero renders and seeds the default home-page hero widget used by Capell frontend
 
 - Hero renders and seeds the default home-page hero widget used by Capell frontend themes.
 - Blade component: `capell::widget.hero`.
+- Admin extenders: theme hero settings, widget hero settings, and widget-asset hero settings.
 - Package setup or maintenance commands.
 
 ## Technical Shape
 
 - HeroServiceProvider registers the hero view components and setup/demo commands.
+- Filament schema extenders register hero background/media controls into host admin forms.
 - Hero data objects shape the payload used by the default homepage hero view.
 - The package is intentionally small because themes consume it as a shared visual primitive.
 
@@ -60,8 +63,9 @@ Hero renders and seeds the default home-page hero widget used by Capell frontend
 ## Install Impact
 
 - Adds default hero rendering support for frontend themes.
+- Adds admin form extenders for inheritable hero background and media controls.
 - Adds setup/demo commands for home hero content.
-- Adds no Filament admin screen, public route, settings screen, or package-owned table.
+- Adds no standalone Filament admin screen, public route, settings screen, or package-owned table.
 
 ## Install And Setup
 

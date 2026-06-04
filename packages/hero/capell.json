@@ -13,9 +13,10 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\Hero",
-    "surfaces": ["frontend", "console"],
+    "surfaces": ["admin", "frontend", "console"],
     "dependencies": {
         "requires": [
+            "capell-app/admin",
             "capell-app/core",
             "capell-app/frontend",
             "capell-app/layout-builder"
@@ -44,7 +45,13 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [],
+    "capabilities": [
+        "hero-widget",
+        "hero-video-background",
+        "hero-overlay-backgrounds",
+        "hero-carousel",
+        "hero-theme-inheritance"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
@@ -81,6 +88,6 @@
                 "caption": "Hero extension preview"
             }
         ],
-        "categories": ["console", "foundation", "frontend"]
+        "categories": ["admin", "console", "foundation", "frontend"]
     }
 }

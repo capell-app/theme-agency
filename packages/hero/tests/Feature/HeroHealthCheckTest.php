@@ -37,3 +37,28 @@ it('fails the view namespace check when the hero views cannot be resolved', func
         ->and($check->viewNamespaceCheck()->remediation)->not->toBeNull()
         ->and(HeroHealthCheck::passed())->toBeFalse();
 });
+
+it('declares the admin dependency and surface required by hero schema extenders', function (): void {
+    /** @var array{require: array<string, string>} $composer */
+    $composer = json_decode((string) file_get_contents(__DIR__ . '/../../composer.json'), true, 512, JSON_THROW_ON_ERROR);
+
+    /** @var array{surfaces: list<string>, dependencies: array{requires: list<string>}} $manifest */
+    $manifest = json_decode((string) file_get_contents(__DIR__ . '/../../capell.json'), true, 512, JSON_THROW_ON_ERROR);
+
+    expect($composer['require'])->toHaveKey('capell-app/admin')
+        ->and($manifest['dependencies']['requires'])->toContain('capell-app/admin')
+        ->and($manifest['surfaces'])->toContain('admin');
+});
+
+it('declares the hero feature capabilities exposed by the public renderer', function (): void {
+    /** @var array{capabilities: list<string>} $manifest */
+    $manifest = json_decode((string) file_get_contents(__DIR__ . '/../../capell.json'), true, 512, JSON_THROW_ON_ERROR);
+
+    expect($manifest['capabilities'])->toContain(
+        'hero-widget',
+        'hero-video-background',
+        'hero-overlay-backgrounds',
+        'hero-carousel',
+        'hero-theme-inheritance',
+    );
+});

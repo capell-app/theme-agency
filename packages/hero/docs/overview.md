@@ -8,17 +8,18 @@ Hero provides the shared default home-page hero widget used by Capell frontend t
 - Anonymous `capell-hero::...` component namespace for hero partials.
 - Tailwind import and view-source registration for hero assets.
 - `capell:hero-setup` setup command.
+- Filament schema extenders for theme, widget, and widget-asset hero background/media settings.
 - No package-owned tables, routes, settings, or Filament resources.
 
 ## Install Impact
 
-- Requires `capell-app/core`, `capell-app/frontend`, and `capell-app/layout-builder`.
+- Requires `capell-app/admin`, `capell-app/core`, `capell-app/frontend`, and `capell-app/layout-builder`.
 - Adds no migrations.
 - Adds frontend rendering only when a layout/theme uses the Hero widget component or after the setup command creates default layout content.
 
 ## Admin Surfaces
 
-None directly. Editors interact with Hero through Layout Builder content after the setup command or host demo data creates the widget. Hero itself registers no `src/Filament` classes.
+Hero does not add a standalone admin page or resource. It does register Filament schema extenders that add hero background and media controls to theme settings, widget display settings, and widget-asset forms.
 
 ## Frontend Surfaces
 

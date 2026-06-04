@@ -44,9 +44,6 @@ final class HeroServiceProvider extends AbstractPackageServiceProvider
         $this->registerViews();
         $this->registerBladeComponents();
         $this->registerSchemaExtenders();
-
-        if (! $this->isPackageInstalled()) {
-        }
     }
 
     #[Override]

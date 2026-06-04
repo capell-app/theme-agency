@@ -47,7 +47,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | frontend-authoring | 7 | 6 | 3 | Slice committed | `f329dd1e2` landed health/signer tests; continue with gate and publishing integration rows. |
 | frontend-optimizer | 7 | 7 | 4 | Slice committed | `acc89aa2d` landed health/copy fixes; continue with cache invalidation and hot-path rows. |
 | ga4-reports | 6 | 7 | 5 | Slice committed | Current follow-up adds GA4 token/Data API retry-backoff, Retry-After handling, and explicit quota-exhaustion messaging; continue with cache/read-budget, screenshots, operator sync actions, and command convention rows. |
-| hero | 6 | 6 | 4 | Needs audit | No recent package slice identified; audit against plan before implementation. |
+| hero | 6 | 6 | 4 | Slice committed | Current follow-up aligns admin dependency/surface metadata, declares hero capabilities, removes provider dead code, and updates docs/tests; continue with screenshots, cache safety, render-budget, CTA, and accessibility rows. |
 | html-cache | 7 | 6 | 4 | Slice committed | `b260cd847` fixed invalidation/header issues; CDN purge/SWR/telemetry remain. |
 | insights | 6 | 6 | 4 | Slice committed | `5afe307aa` landed privacy hardening; continue with analytics/product gaps. |
 | knowledge-base | 6 | 7 | 3 | Slice committed | Current follow-up throttles/dedupes anonymous feedback and updates shipped-feature docs; policies and edit/versioning gaps remain high priority. |
@@ -89,8 +89,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 
 Highest-value remaining work should start with packages that are both high-risk and still marked `Needs audit`:
 
-1. `hero` plan audit and implementation slice.
-2. `tags` taxonomy/status/workspace drift.
-3. Theme-line systemic pass: `extends` alignment, token-driven colors, screenshots, WCAG/dark mode.
+1. `tags` taxonomy/status/workspace drift.
+2. Theme-line systemic pass: `extends` alignment, token-driven colors, screenshots, WCAG/dark mode.
 
 After each package slice lands, update this tracker with the commit and any rows that remain high-risk.
