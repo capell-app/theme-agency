@@ -64,7 +64,12 @@
             "cacheable": false,
             "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
-            "invalidationSources": [],
+            "invalidationSources": [
+                {
+                    "model": "Capell\\FrontendOptimizer\\Models\\FrontendRenderProfile",
+                    "events": ["updated"]
+                }
+            ],
             "queueInvalidation": true
         }
     },

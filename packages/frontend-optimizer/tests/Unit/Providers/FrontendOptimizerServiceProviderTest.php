@@ -5,8 +5,11 @@ declare(strict_types=1);
 use Capell\Admin\Support\Extensions\ExtensionManagementSurfaceRegistry;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\Frontend\Contracts\FrontendAssetManifestRenderer;
+use Capell\Frontend\Data\CacheInvalidationRule;
+use Capell\Frontend\Support\Cache\CacheInvalidationRegistry;
 use Capell\FrontendOptimizer\Contracts\CriticalCssGenerator;
 use Capell\FrontendOptimizer\Filament\Settings\FrontendOptimizerSettingsSchema;
+use Capell\FrontendOptimizer\Models\FrontendRenderProfile;
 use Capell\FrontendOptimizer\Providers\FrontendOptimizerServiceProvider;
 use Capell\FrontendOptimizer\Settings\FrontendOptimizerSettings;
 use Capell\FrontendOptimizer\Support\CapellFrontendAssetManifestRenderer;
@@ -46,4 +49,12 @@ it('registers frontend optimizer settings and extension settings surface', funct
         ->surfacesForPackage(FrontendOptimizerServiceProvider::$packageName);
 
     expect($surfaces[0]->settingsGroup ?? null)->toBe(FrontendOptimizerSettings::group());
+});
+
+it('registers render profiles as frontend cache invalidation dependencies', function (): void {
+    $plan = resolve(CacheInvalidationRegistry::class)->planForModel(FrontendRenderProfile::class);
+
+    expect(collect($plan->rules)->contains(
+        fn (CacheInvalidationRule $rule): bool => $rule->kind === CacheInvalidationRule::KIND_FLUSH_FRONTEND_TAG,
+    ))->toBeTrue();
 });

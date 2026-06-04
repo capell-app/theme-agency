@@ -49,7 +49,7 @@ The screenshot runner contract is defined in [screenshots.json](screenshots.json
 - Playwright-backed critical CSS generation depends on the host runtime and browser availability.
 - Asset profile keys vary by render context; demo data should state the site, locale, layout, and theme used for capture.
 - Critical CSS generation should use a representative public URL for the profile; using an unusual page for a shared layout can produce a less useful above-the-fold subset.
-- Critical CSS generation completion is not currently wired to HTML Cache invalidation from this package. The available HTML Cache APIs are package internals, and importing them here would create cross-package coupling; a shared event or frontend cache invalidation extension point is needed before cached first renders can be refreshed safely after CSS generation.
+- Critical CSS generation completion invalidates through the frontend cache registry without importing HTML Cache internals. The invalidation is intentionally broad today because render profiles do not record exact cached URL coverage.
 
 ## Related Guides
 

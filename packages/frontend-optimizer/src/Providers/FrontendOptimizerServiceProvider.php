@@ -13,11 +13,13 @@ use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\Frontend\Contracts\FrontendAssetManifestRenderer;
 use Capell\Frontend\Events\FrontendContextResolved;
+use Capell\Frontend\Support\Cache\CacheInvalidationRegistry;
 use Capell\FrontendOptimizer\Actions\RenderProfileAssetsAction;
 use Capell\FrontendOptimizer\Contracts\CriticalCssGenerator;
 use Capell\FrontendOptimizer\Filament\Configurators\Types\FrontendOptimizerPageTypeConfigurator;
 use Capell\FrontendOptimizer\Filament\Settings\FrontendOptimizerSettingsSchema;
 use Capell\FrontendOptimizer\Listeners\CaptureCriticalCssPageTypeOptOut;
+use Capell\FrontendOptimizer\Models\FrontendRenderProfile;
 use Capell\FrontendOptimizer\Settings\FrontendOptimizerSettings;
 use Capell\FrontendOptimizer\Support\CapellFrontendAssetManifestRenderer;
 use Capell\FrontendOptimizer\Support\CriticalCssSettings;
@@ -69,6 +71,7 @@ final class FrontendOptimizerServiceProvider extends AbstractPackageServiceProvi
             $this->app->singleton(FrontendAssetManifestRenderer::class, CapellFrontendAssetManifestRenderer::class);
             $this->registerSettings();
             $this->registerAdminSurface();
+            $this->registerCacheInvalidationDependencies();
         });
     }
 
@@ -100,5 +103,15 @@ final class FrontendOptimizerServiceProvider extends AbstractPackageServiceProvi
             group: ConfiguratorTypeEnum::Blueprint->value,
             name: FrontendOptimizerPageTypeConfigurator::getKey(),
         ));
+    }
+
+    private function registerCacheInvalidationDependencies(): void
+    {
+        if (! $this->app->bound(CacheInvalidationRegistry::class)) {
+            return;
+        }
+
+        $registry = $this->app->make(CacheInvalidationRegistry::class);
+        $registry->registerDependency(FrontendRenderProfile::class, 'frontend-optimizer-*');
     }
 }

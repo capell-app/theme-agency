@@ -71,9 +71,9 @@ When generated critical CSS is inlined, the renderer also prepends a tiny stabil
 
 ## HTML Cache Invalidation
 
-Critical CSS generation updates the render profile after the public page has already rendered at least once. If HTML Cache stores that first response, the cached page can keep the fallback stylesheet output until the page is invalidated by another change.
+Critical CSS generation updates the render profile after the public page has already rendered at least once. If HTML Cache stores that first response, the cached page must be invalidated so it can pick up the generated inline CSS.
 
-Frontend Optimizer does not currently import `capell-app/html-cache` internals to clear cached HTML on generation completion. A shared event or frontend cache invalidation extension point is needed so `GenerateCriticalCssAction` can notify cache packages without creating direct package coupling.
+Frontend Optimizer registers `FrontendRenderProfile` as a frontend cache invalidation dependency and calls the package-neutral `CacheInvalidationRegistry` after successful critical CSS generation. Because profiles do not yet store exact cached URL coverage, generation completion currently flushes the frontend cache tag rather than targeting individual pages. The package does not import `capell-app/html-cache` internals.
 
 ## Page Type Opt-Out
 

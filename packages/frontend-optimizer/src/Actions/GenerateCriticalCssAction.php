@@ -15,7 +15,10 @@ class GenerateCriticalCssAction
 {
     use AsAction;
 
-    public function __construct(private readonly CriticalCssGenerator $generator) {}
+    public function __construct(
+        private readonly CriticalCssGenerator $generator,
+        private readonly InvalidateGeneratedCriticalCssCacheAction $invalidateGeneratedCriticalCssCache,
+    ) {}
 
     public function handle(FrontendRenderProfile $profile, string $url): string
     {
@@ -36,6 +39,7 @@ class GenerateCriticalCssAction
             ])->save();
 
             $this->finishRun($run, OptimizationStatus::Generated);
+            $this->invalidateGeneratedCriticalCssCache->handle($profile);
 
             return $criticalCssPath;
         } catch (Throwable $throwable) {

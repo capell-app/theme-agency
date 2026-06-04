@@ -57,6 +57,21 @@ it('keeps marketplace screenshots limited to committed marketplace assets while 
     }
 });
 
+it('declares render profile cache invalidation metadata for generated critical css', function (): void {
+    $cacheSafety = frontendOptimizerPackageManifest()['performance']['cacheSafety'] ?? null;
+
+    throw_unless(is_array($cacheSafety), RuntimeException::class, 'Expected cache safety metadata array.');
+
+    $invalidationSources = $cacheSafety['invalidationSources'] ?? null;
+
+    throw_unless(is_array($invalidationSources), RuntimeException::class, 'Expected invalidation source metadata array.');
+
+    expect($invalidationSources)->toContain([
+        'model' => 'Capell\\FrontendOptimizer\\Models\\FrontendRenderProfile',
+        'events' => ['updated'],
+    ]);
+});
+
 /**
  * @return array<string, mixed>
  */

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\FrontendOptimizer\Actions\GenerateCriticalCssAction;
+use Capell\FrontendOptimizer\Actions\InvalidateGeneratedCriticalCssCacheAction;
 use Capell\FrontendOptimizer\Contracts\CriticalCssGenerator;
 use Capell\FrontendOptimizer\Enums\OptimizationScope;
 use Capell\FrontendOptimizer\Enums\OptimizationStatus;
@@ -30,7 +31,18 @@ it('records critical css generation runs for successful and failed profile updat
         }
     };
 
-    $path = (new GenerateCriticalCssAction($generator))->handle($profile, 'https://example.test/landing');
+    $cacheInvalidator = new class extends InvalidateGeneratedCriticalCssCacheAction
+    {
+        /** @var list<string> */
+        public array $invalidatedProfileHashes = [];
+
+        public function handle(FrontendRenderProfile $profile): void
+        {
+            $this->invalidatedProfileHashes[] = $profile->hash;
+        }
+    };
+
+    $path = (new GenerateCriticalCssAction($generator, $cacheInvalidator))->handle($profile, 'https://example.test/landing');
 
     $profile->refresh();
     $run = $profile->runs()->firstOrFail();
@@ -42,7 +54,8 @@ it('records critical css generation runs for successful and failed profile updat
         ->and($run->status)->toBe(OptimizationStatus::Generated->value)
         ->and($run->message)->toBeNull()
         ->and($run->started_at)->not->toBeNull()
-        ->and($run->finished_at)->not->toBeNull();
+        ->and($run->finished_at)->not->toBeNull()
+        ->and($cacheInvalidator->invalidatedProfileHashes)->toBe(['profile-success']);
 
     $failedProfile = FrontendRenderProfile::query()->create([
         'hash' => 'profile-failure',
@@ -61,7 +74,7 @@ it('records critical css generation runs for successful and failed profile updat
         }
     };
 
-    expect(fn (): string => (new GenerateCriticalCssAction($failingGenerator))->handle($failedProfile, 'https://example.test/broken'))
+    expect(fn (): string => (new GenerateCriticalCssAction($failingGenerator, $cacheInvalidator))->handle($failedProfile, 'https://example.test/broken'))
         ->toThrow(RuntimeException::class, 'Renderer failed');
 
     $failedProfile->refresh();
@@ -70,7 +83,8 @@ it('records critical css generation runs for successful and failed profile updat
     expect($failedProfile->status)->toBe(OptimizationStatus::Failed->value)
         ->and($failedRun->status)->toBe(OptimizationStatus::Failed->value)
         ->and($failedRun->message)->toBe('Renderer failed')
-        ->and($failedRun->finished_at)->not->toBeNull();
+        ->and($failedRun->finished_at)->not->toBeNull()
+        ->and($cacheInvalidator->invalidatedProfileHashes)->toBe(['profile-success']);
 });
 
 it('does not rerun a critical css job for a profile that already has generated css', function (): void {
@@ -97,7 +111,7 @@ it('does not rerun a critical css job for a profile that already has generated c
     };
 
     (new GenerateCriticalCssJob((int) $profile->getKey(), 'https://example.test/generated'))
-        ->handle(new GenerateCriticalCssAction($generator));
+        ->handle(new GenerateCriticalCssAction($generator, new InvalidateGeneratedCriticalCssCacheAction));
 
     expect($profile->runs()->count())->toBe(0);
 });

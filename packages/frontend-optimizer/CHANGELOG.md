@@ -9,7 +9,7 @@ All notable changes to `capell-app/frontend-optimizer` will be documented in thi
 - Added a real public head-render safety test covering anonymous and signed-in non-admin visitors through the optimizer-bound frontend asset manifest renderer.
 - Removed the unused `debug_query_support` setting from active settings, admin UI, translations, and docs.
 - Clarified that marketplace screenshots only list committed `docs/assets/marketplace` assets while required runner captures remain pending in `docs/screenshots.json`.
-- Documented the current HTML Cache invalidation blocker for critical-CSS generation completion.
+- Wired successful critical-CSS generation to the frontend cache invalidation registry without importing HTML Cache internals.
 
 ## 2026-06-03
 

@@ -127,6 +127,8 @@ Render stored assets from Blade after the manifest has been persisted:
 
 Critical CSS runtime settings are stored under the `frontend_optimizer` settings group. They include `enable_critical_css`, `automatic_generation`, `profile_scope`, `viewports`, `fold_multiplier`, `extra_fold_pixels`, `playwright_wait_strategy`, `playwright_timeout`, and `max_inline_css_bytes`.
 
+Successful critical CSS generation updates the render profile and asks the frontend cache invalidation registry to clear affected cached output. Without exact profile-to-URL coverage, the current dependency flushes the frontend cache tag so cached first renders can be refreshed after CSS generation.
+
 ## Verification
 
 ```bash
