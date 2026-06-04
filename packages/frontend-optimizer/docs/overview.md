@@ -7,7 +7,6 @@ Use it when a site needs deterministic asset delivery per layout, widget set, si
 ## What It Adds
 
 - `@frontendOptimizerAssets(...)` for rendering the resolved asset profile.
-- Layout and widget asset registries for package-owned frontend assets.
 - Critical CSS generation through `CriticalCssGenerator`, backed by Playwright by default.
 - Extension settings for viewports, fold depth, generation behavior, and inline-size limits.
 - A page type opt-out for pages that should not run above-the-fold CSS generation.

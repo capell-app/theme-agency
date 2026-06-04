@@ -87,7 +87,7 @@ Differentiator vs table-stakes: minify/bundle, font/image optimization, and prel
 | Add anonymous/non-admin public-output safety integration test through real head render             | Done   | M      | High   | §4 (test gaps) |
 | Wire critical-CSS generation completion → html-cache invalidation source                           | Done   | M      | High   | §4             |
 | Resolve screenshot mismatch (generate the 2 required + CWV before/after) and update manifest       | Now    | S      | High   | §5             |
-| Remove or wire dead registries (`LayoutAssetRegistry`/`WidgetAssetRegistry`) + fix docs headline   | Now    | S      | Med    | §4             |
+| Remove or wire dead registries (`LayoutAssetRegistry`/`WidgetAssetRegistry`) + fix docs headline   | Done   | S      | Med    | §4             |
 | Rewrite marketplace summary + composer description (benefit-led)                                   | Done   | S      | High   | §5             |
 | Delete/implement dead `debug_query_support` setting                                                | Done   | S      | Med    | §2.3           |
 | Delete or wire orphaned `ResolveOptimizationScopeAction`; reconcile unreachable scopes             | Next   | S      | Med    | §2.2, §3       |
