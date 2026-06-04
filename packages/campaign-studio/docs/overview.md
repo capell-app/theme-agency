@@ -15,6 +15,7 @@ CampaignStudio adds campaign groups, landing pages, CTA widgets, conversion goal
 - Campaign hero widget CTAs can append configured UTM metadata through the shared campaign URL builder.
 - Conversion recording actions for page views, CTA clicks, and form submissions.
 - Public post-load conversion capture for page-view and CTA-click goals through the Campaign Studio beacon.
+- UTM landing-page variant resolution only considers linked pages that are currently public-visible under Capell's page publish-date rules.
 - Optional Experiments integration that syncs campaign landing-page variants and conversion goals into campaign-scoped experiment definitions.
 
 ## Developer Notes
@@ -46,6 +47,10 @@ Lets marketing and editorial teams connect landing pages to goals and see which 
 Campaign Studio injects a small public tracker at the frontend `BodyEnd` render hook. The tracker posts to `POST /capell/campaigns/conversions`, reads the existing Insights visit id from local storage or cookie when available, records page-view conversions for campaign landing pages, and records CTA-click conversions from elements with `data-campaign-goal`. CTA-click goals are resolved inside the campaign landing page matched from the submitted URL; unresolved URLs are ignored rather than attributed to another campaign with the same goal key.
 
 The tracker is post-load and contains no admin/editor state, signed editor URLs, model ids, or field paths. Because Campaign Studio can render UTM-aware landing-page variants, its frontend contribution is recorded as non-cacheable with UTM variance metadata; HTML cache should not store those rendered pages, while static HTML that already exists can still load the tracker and record conversions after the response is served.
+
+## Landing Page Variant Resolution
+
+`ResolveCampaignLandingPageVariantAction` matches `utm_content` before `utm_term`, then falls back to the primary landing page and finally the first available landing page. Each candidate must have a linked Capell page passing the same `publishedDate()` scope used by the public frontend loader, so scheduled or expired pages are skipped and cannot be selected as campaign variants.
 
 ## Data And Retention
 
@@ -85,6 +90,7 @@ The tracker is post-load and contains no admin/editor state, signed editor URLs,
 - Configure campaign hero UTM fields when hero CTAs should carry campaign attribution.
 - Create conversion goals before reporting on landing page success.
 - Keep the Insights tracker enabled when visitor-level deduplication is required for CTA/page-view conversions.
+- Publish linked Capell pages before expecting Campaign Studio to serve them as UTM-targeted variants.
 - Treat UTM-targeted campaign variant pages as dynamic frontend output; do not rely on static HTML cache to personalize variant selection.
 
 ## Verification

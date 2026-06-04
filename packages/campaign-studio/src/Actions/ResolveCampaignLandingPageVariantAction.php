@@ -10,6 +10,7 @@ use Capell\CampaignStudio\Enums\LandingPageVariantMatchType;
 use Capell\CampaignStudio\Models\CampaignGroup;
 use Capell\CampaignStudio\Models\CampaignLandingPage;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class ResolveCampaignLandingPageVariantAction
@@ -50,8 +51,7 @@ final class ResolveCampaignLandingPageVariantAction
             }
         }
 
-        $primaryLandingPage = $campaignGroup
-            ->landingPages()
+        $primaryLandingPage = $this->publishedLandingPages($campaignGroup)
             ->where('is_primary', true)
             ->orderBy('id')
             ->first();
@@ -63,8 +63,7 @@ final class ResolveCampaignLandingPageVariantAction
             );
         }
 
-        $firstLandingPage = $campaignGroup
-            ->landingPages()
+        $firstLandingPage = $this->publishedLandingPages($campaignGroup)
             ->orderBy('id')
             ->first();
 
@@ -80,13 +79,24 @@ final class ResolveCampaignLandingPageVariantAction
 
     private function matchingLandingPage(CampaignGroup $campaignGroup, string $column, string $value): ?CampaignLandingPage
     {
-        return $campaignGroup
-            ->landingPages()
+        return $this->publishedLandingPages($campaignGroup)
             ->where(function (Builder $builder) use ($column, $value): void {
                 $builder->where($column, $value);
             })
             ->orderByDesc('is_primary')
             ->orderBy('id')
             ->first();
+    }
+
+    /**
+     * @return HasMany<CampaignLandingPage, CampaignGroup>
+     */
+    private function publishedLandingPages(CampaignGroup $campaignGroup): HasMany
+    {
+        return $campaignGroup
+            ->landingPages()
+            ->whereHas('page', function (Builder $builder): void {
+                $builder->publishedDate();
+            });
     }
 }

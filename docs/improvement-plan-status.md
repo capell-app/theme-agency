@@ -9,7 +9,7 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 | Bucket | Rows |
 | ------ | ---: |
 | Now    | 292 |
-| Next   | 315 |
+| Next   | 314 |
 | Later  | 202 |
 
 The work is not complete until every package plan has been reviewed against current code, required features are implemented or intentionally deferred, new behavior is documented, and focused verification passes for each changed package.
@@ -28,7 +28,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 
 | Package | Now | Next | Later | Current status | Evidence / next action |
 | ------- | --: | ---: | ----: | -------------- | ---------------------- |
-| campaign-studio | 3 | 5 | 5 | Slice committed | Current follow-up adds same-origin CTA/page-view conversion beacon capture, URL-scoped CTA goal attribution, post-load tracker injection, full-page public no-leak coverage, and non-cacheable UTM-varying frontend contribution metadata. Continue with published-page variant filtering, conversion-rate join hardening, scheduling automation, A/B result readout, revenue/ROAS, audience targeting, attribution-window config, experiment decoupling, and completion review. |
+| campaign-studio | 3 | 4 | 5 | Slice committed | Current follow-up filters campaign landing-page variant resolution to linked pages passing Capell's public publish-date scope, after the prior slice added same-origin CTA/page-view conversion beacon capture, URL-scoped CTA goal attribution, post-load tracker injection, full-page public no-leak coverage, and non-cacheable UTM-varying frontend contribution metadata. Continue with conversion-rate join hardening, scheduling automation, A/B result readout, revenue/ROAS, audience targeting, attribution-window config, experiment decoupling, and completion review. |
 | comments | 1 | 0 | 0 | Slice committed | Latest Comments slice adds public Like reactions, aggregate public reaction counts, approved-reply author notifications, and tokenized reply-notification opt-out handling; continue with marketplace screenshot capture/wiring. |
 | contacts | 0 | 7 | 2 | Slice committed | Current follow-ups expose audited privacy export/anonymization and queue/isolate all source-adapter listeners. Contacts has no Now rows left, but still needs Next/Later CRM depth work and a full package completion review before it can be marked Complete. |
 | content-sections | 5 | 6 | 4 | Slice committed | `54b758fe1` landed readiness fixes; continue with remaining render safety/content rows. |

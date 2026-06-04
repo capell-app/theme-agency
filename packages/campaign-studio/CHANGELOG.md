@@ -14,6 +14,7 @@ All notable changes to `capell-app/campaign-studio` will be documented in this f
 - Added UTM fields to the campaign hero widget configurator so hero CTAs can use the same attribution metadata as campaign CTA widgets.
 - Routed campaign hero primary and secondary button URLs through `BuildCampaignUrlAction`, preserving existing query strings/fragments while appending missing UTM parameters.
 - Added render coverage proving campaign hero buttons emit decorated URLs without leaking numeric campaign identifiers.
+- Filtered campaign landing-page variant resolution to linked pages that pass Capell's public `publishedDate()` scope, preventing scheduled or expired pages from being selected as targeted, primary, or fallback variants.
 
 ### 2026-06-03
 

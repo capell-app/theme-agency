@@ -8,6 +8,18 @@ use Capell\CampaignStudio\Data\AudienceTargetData;
 use Capell\CampaignStudio\Enums\LandingPageVariantMatchType;
 use Capell\CampaignStudio\Models\CampaignGroup;
 use Capell\CampaignStudio\Models\CampaignLandingPage;
+use Capell\Core\Models\Page;
+use Carbon\CarbonImmutable;
+
+function campaignStudioPublishedPageId(): int
+{
+    return (int) Page::factory()
+        ->create([
+            'visible_from' => CarbonImmutable::now()->subDay(),
+            'visible_until' => null,
+        ])
+        ->getKey();
+}
 
 it('normalizes audience targeting data from campaign urls', function (): void {
     $audienceTarget = AudienceTargetData::fromUrl(
@@ -54,6 +66,7 @@ it('resolves utm content targeted variants before utm term and primary fallbacks
     CampaignLandingPage::factory()
         ->for($campaignGroup, 'campaignGroup')
         ->create([
+            'page_id' => campaignStudioPublishedPageId(),
             'utm_content' => null,
             'utm_term' => null,
             'is_primary' => true,
@@ -61,6 +74,7 @@ it('resolves utm content targeted variants before utm term and primary fallbacks
     CampaignLandingPage::factory()
         ->for($campaignGroup, 'campaignGroup')
         ->create([
+            'page_id' => campaignStudioPublishedPageId(),
             'utm_content' => null,
             'utm_term' => 'enterprise',
             'is_primary' => false,
@@ -68,6 +82,7 @@ it('resolves utm content targeted variants before utm term and primary fallbacks
     $contentLandingPage = CampaignLandingPage::factory()
         ->for($campaignGroup, 'campaignGroup')
         ->create([
+            'page_id' => campaignStudioPublishedPageId(),
             'utm_content' => 'hero-b',
             'utm_term' => 'enterprise',
             'is_primary' => false,
@@ -89,6 +104,7 @@ it('resolves utm term targeted variants when content has no matching landing pag
     $termLandingPage = CampaignLandingPage::factory()
         ->for($campaignGroup, 'campaignGroup')
         ->create([
+            'page_id' => campaignStudioPublishedPageId(),
             'utm_content' => null,
             'utm_term' => 'enterprise',
             'is_primary' => false,
@@ -110,6 +126,7 @@ it('falls back to primary then first available landing pages for unqualified aud
     $firstLandingPage = CampaignLandingPage::factory()
         ->for($campaignGroup, 'campaignGroup')
         ->create([
+            'page_id' => campaignStudioPublishedPageId(),
             'utm_content' => null,
             'utm_term' => null,
             'is_primary' => false,
@@ -117,6 +134,7 @@ it('falls back to primary then first available landing pages for unqualified aud
     $primaryLandingPage = CampaignLandingPage::factory()
         ->for($campaignGroup, 'campaignGroup')
         ->create([
+            'page_id' => campaignStudioPublishedPageId(),
             'utm_content' => null,
             'utm_term' => null,
             'is_primary' => true,
@@ -134,6 +152,84 @@ it('falls back to primary then first available landing pages for unqualified aud
         ->and($firstAvailableSelection)->not->toBeNull()
         ->and($firstAvailableSelection->variant->landingPageId)->toBe($firstLandingPage->getKey())
         ->and($firstAvailableSelection->matchType)->toBe(LandingPageVariantMatchType::FirstAvailable);
+});
+
+it('skips targeted variants when their linked pages are not published', function (): void {
+    $campaignGroup = CampaignGroup::factory()->create();
+    CampaignLandingPage::factory()
+        ->for($campaignGroup, 'campaignGroup')
+        ->create([
+            'page_id' => (int) Page::factory()
+                ->create([
+                    'visible_from' => CarbonImmutable::now()->subDays(3),
+                    'visible_until' => CarbonImmutable::now()->subDay(),
+                ])
+                ->getKey(),
+            'utm_content' => 'hero-b',
+            'utm_term' => null,
+            'is_primary' => true,
+        ]);
+    $publishedLandingPage = CampaignLandingPage::factory()
+        ->for($campaignGroup, 'campaignGroup')
+        ->create([
+            'page_id' => campaignStudioPublishedPageId(),
+            'utm_content' => 'hero-b',
+            'utm_term' => null,
+            'is_primary' => false,
+        ]);
+
+    $selection = ResolveCampaignLandingPageVariantAction::run(
+        $campaignGroup,
+        new AudienceTargetData(utmContent: 'hero-b'),
+    );
+
+    expect($selection)->not->toBeNull()
+        ->and($selection->variant->landingPageId)->toBe($publishedLandingPage->getKey())
+        ->and($selection->matchType)->toBe(LandingPageVariantMatchType::UtmContent);
+});
+
+it('skips unpublished primary and fallback variants for unqualified audiences', function (): void {
+    $campaignGroup = CampaignGroup::factory()->create();
+    CampaignLandingPage::factory()
+        ->for($campaignGroup, 'campaignGroup')
+        ->create([
+            'page_id' => (int) Page::factory()
+                ->create([
+                    'visible_from' => CarbonImmutable::now()->subDays(3),
+                    'visible_until' => CarbonImmutable::now()->subDay(),
+                ])
+                ->getKey(),
+            'utm_content' => null,
+            'utm_term' => null,
+            'is_primary' => true,
+        ]);
+    CampaignLandingPage::factory()
+        ->for($campaignGroup, 'campaignGroup')
+        ->create([
+            'page_id' => (int) Page::factory()
+                ->create([
+                    'visible_from' => CarbonImmutable::now()->addDay(),
+                    'visible_until' => null,
+                ])
+                ->getKey(),
+            'utm_content' => null,
+            'utm_term' => null,
+            'is_primary' => false,
+        ]);
+    $publishedLandingPage = CampaignLandingPage::factory()
+        ->for($campaignGroup, 'campaignGroup')
+        ->create([
+            'page_id' => campaignStudioPublishedPageId(),
+            'utm_content' => null,
+            'utm_term' => null,
+            'is_primary' => false,
+        ]);
+
+    $selection = ResolveCampaignLandingPageVariantAction::run($campaignGroup, new AudienceTargetData);
+
+    expect($selection)->not->toBeNull()
+        ->and($selection->variant->landingPageId)->toBe($publishedLandingPage->getKey())
+        ->and($selection->matchType)->toBe(LandingPageVariantMatchType::FirstAvailable);
 });
 
 it('returns null when a campaign has no landing page variants', function (): void {
