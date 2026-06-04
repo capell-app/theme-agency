@@ -10,7 +10,7 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 | ------ | ---: |
 | Now    | 344 |
 | Next   | 331 |
-| Later  | 205 |
+| Later  | 204 |
 
 The work is not complete until every package plan has been reviewed against current code, required features are implemented or intentionally deferred, new behavior is documented, and focused verification passes for each changed package.
 
@@ -29,7 +29,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | Package | Now | Next | Later | Current status | Evidence / next action |
 | ------- | --: | ---: | ----: | -------------- | ---------------------- |
 | campaign-studio | 6 | 5 | 5 | Slice committed | Latest Campaign Studio slice adds campaign hero UTM fields, decorates hero CTA URLs through `BuildCampaignUrlAction`, updates screenshots/docs, and adds public render coverage; continue with CTA/page-view capture, full-page public safety tests, cache/personalisation strategy, variant publish filtering, scheduling, and experiment result readout. |
-| comments | 1 | 0 | 3 | Slice committed | Latest Comments slice enforces public/admin performance budgets and batches sibling reply counts to avoid empty-grandchild query fanout; continue with marketplace screenshots and retention/erasure work. |
+| comments | 1 | 0 | 2 | Slice committed | Latest Comments slice adds privacy retention/erasure tooling plus hash-secret rotation docs; continue with marketplace screenshots, external spam-provider contract, and engagement up-sell rows. |
 | contacts | 6 | 7 | 2 | Slice committed | `132778050` fixed stats scoping; continue with privacy/export/merge gaps. |
 | content-sections | 5 | 6 | 4 | Slice committed | `54b758fe1` landed readiness fixes; continue with remaining render safety/content rows. |
 | customer-portal | 6 | 7 | 3 | Slice committed | `6de22b6d4` landed a now-bucket slice; continue with cross-account and profile gaps. |

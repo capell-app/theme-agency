@@ -33,4 +33,7 @@ return [
     'notifications' => [
         'moderators' => [],
     ],
+    'retention' => [
+        'days' => 180,
+    ],
 ];

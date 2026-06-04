@@ -27,6 +27,8 @@ editors keep approval and author-management work inside Capell Admin.
   refresh workflows.
 - Locale-pinned public timestamp labels based on the commentable page language.
 - Queued moderator notifications for configured moderator email addresses.
+- Privacy retention tooling for old visitor hashes, moderation notes, tokens,
+  and author email erasure.
 - Diagnostics checks for storage tables, settings registration, thread route
   registration, and Livewire component registration.
 
@@ -60,6 +62,8 @@ not reveal internal moderation data.
   for spam scoring.
 - `NotifyModeratorsOfNewComment` listens for `CommentCreated` and notifies
   configured moderators when comments need review.
+- `ApplyCommentPrivacyRetentionAction` prunes old private identifiers and
+  anonymizes author records by email while preserving public comment history.
 - `CommentsHealthCheck` reports real Diagnostics results for package storage,
   settings, route, and component wiring.
 
@@ -79,6 +83,8 @@ thread DTOs.
 ## Commands And Routes
 
 - Install command: `capell-comments:install`
+- Retention command: `capell-comments:privacy-retention {--days=} {--email=}
+  {--site-id=} {--dry-run} {--json}`
 - Public thread route name: `capell-comments.thread`
 - Verification route names: `capell-comments.verify`,
   `capell-comments.verify.store`
@@ -107,4 +113,5 @@ manifest requirements, health diagnostics, email verification, spam scoring,
 moderator notification wiring, public thread rendering, component submission,
 sanitization hardening, auto-inject shell safety, reply pagination, package
 architecture boundaries, commentable memoization, locale-pinned public
-timestamps, performance budgets, throttling, and bot-trap rejection.
+timestamps, performance budgets, privacy retention, throttling, and bot-trap
+rejection.

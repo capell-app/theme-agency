@@ -61,10 +61,12 @@
         "install": "capell-comments:install",
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "retention": "capell-comments:privacy-retention"
     },
     "actions": {
-        "install": "Capell\\Comments\\Actions\\InstallCommentsPackageAction"
+        "install": "Capell\\Comments\\Actions\\InstallCommentsPackageAction",
+        "applyPrivacyRetention": "Capell\\Comments\\Actions\\ApplyCommentPrivacyRetentionAction"
     },
     "settings": ["Capell\\Comments\\Settings\\CommentSettings"],
     "permissions": [],
@@ -72,7 +74,8 @@
         "comments",
         "comments-admin",
         "comments-frontend",
-        "comments-created-event"
+        "comments-created-event",
+        "comments-privacy-retention"
     ],
     "performance": {
         "frontendRenderBudgetMs": 20,

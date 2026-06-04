@@ -8,6 +8,7 @@ use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Comments\Actions\RegisterDefaultCommentablesAction;
 use Capell\Comments\Console\Commands\InstallCommentsCommand;
+use Capell\Comments\Console\Commands\PruneCommentPrivacyDataCommand;
 use Capell\Comments\Events\CommentCreated;
 use Capell\Comments\Filament\Settings\CommentSettingsSchema;
 use Capell\Comments\Listeners\NotifyModeratorsOfNewComment;
@@ -61,6 +62,7 @@ class CommentsServiceProvider extends AbstractPackageServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 InstallCommentsCommand::class,
+                PruneCommentPrivacyDataCommand::class,
             ]);
         }
     }

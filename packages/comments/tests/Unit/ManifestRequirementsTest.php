@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use Capell\Comments\Actions\ApplyCommentPrivacyRetentionAction;
 use Capell\Comments\Console\Commands\InstallCommentsCommand;
+use Capell\Comments\Console\Commands\PruneCommentPrivacyDataCommand;
 use Capell\Comments\Filament\Widgets\CommentStatsWidget;
 use Capell\Comments\Filament\Widgets\LatestCommentsWidget;
 use Capell\Comments\Providers\CommentsServiceProvider;
@@ -17,7 +19,11 @@ it('declares comments as optional for supported companion packages', function ()
         ->and($manifest['dependencies']['supports'])->toContain('capell-app/blog')
         ->and($manifest['providers']['runtime'])->toContain(CommentsServiceProvider::class)
         ->and($manifest['commands']['install'])->toBe('capell-comments:install')
-        ->and(class_exists(InstallCommentsCommand::class))->toBeTrue();
+        ->and($manifest['commands']['retention'])->toBe('capell-comments:privacy-retention')
+        ->and($manifest['actions']['applyPrivacyRetention'])->toBe(ApplyCommentPrivacyRetentionAction::class)
+        ->and($manifest['capabilities'])->toContain('comments-privacy-retention')
+        ->and(class_exists(InstallCommentsCommand::class))->toBeTrue()
+        ->and(class_exists(PruneCommentPrivacyDataCommand::class))->toBeTrue();
 });
 
 it('declares every registered dashboard widget in the manifest contributes list', function (): void {

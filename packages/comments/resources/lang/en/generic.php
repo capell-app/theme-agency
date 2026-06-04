@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 return [
     'article' => 'Article',
+    'anonymized_author' => 'Anonymized commenter',
     'authenticated_author' => 'Authenticated user',
     'comment' => 'Comment',
     'comments' => 'Comments',

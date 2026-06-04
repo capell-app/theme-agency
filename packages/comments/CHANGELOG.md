@@ -6,6 +6,7 @@ All notable changes to `capell-app/comments` will be documented in this file.
 
 ### 2026-06-04
 
+- Added `capell-comments:privacy-retention` and `ApplyCommentPrivacyRetentionAction` for pruning old visitor hashes, moderation notes, expired tokens, and anonymizing matching author PII by email.
 - Added performance-budget coverage for public thread hydration/rendering and admin comment widgets, and batched sibling reply counts to avoid empty-grandchild query fanout.
 - Locale-pinned public timestamp labels to the resolved commentable language and serialized those labels through the Livewire-safe public comment DTO.
 - Memoized the resolved public commentable model for each Livewire request so submit refreshes do not re-query the same page.

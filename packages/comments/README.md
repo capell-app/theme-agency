@@ -58,6 +58,8 @@ to registered Capell content.
   bare-domain links.
 - Queued moderator notifications for valid configured moderator email
   addresses when new comments are waiting on approval or email verification.
+- Privacy retention tooling that prunes old visitor hashes, moderation notes,
+  and tokens, and anonymizes a matching author by email when needed.
 - Diagnostics-ready `CommentsHealthCheck` coverage for storage tables, settings
   registration, the public thread route, and the public thread Livewire
   component.
@@ -87,6 +89,7 @@ to registered Capell content.
 | Config        | `config/capell-comments.php`                                                                                                                        |
 | Routes        | `routes/web.php`                                                                                                                                    |
 | Install       | `src/Console/Commands/InstallCommentsCommand.php`, `src/Actions/InstallCommentsPackageAction.php`                                                   |
+| Retention     | `src/Console/Commands/PruneCommentPrivacyDataCommand.php`, `src/Actions/ApplyCommentPrivacyRetentionAction.php`                                     |
 | Public thread | `src/Livewire/CommentThreadComponent.php`, `src/Http/Controllers/RenderCommentThreadController.php`                                                 |
 | Verification  | `src/Actions/RequestCommentEmailVerificationAction.php`, `src/Actions/VerifyCommentAuthorEmailAction.php`                                           |
 | Moderation    | `src/Actions/TransitionCommentStatusAction.php`, `src/Listeners/NotifyModeratorsOfNewComment.php`, `src/Filament/Pages/CommentModerationInbox.php`  |
@@ -107,6 +110,7 @@ to registered Capell content.
 
 - [Docs index](docs/README.md)
 - [Overview](docs/overview.md)
+- [Privacy and retention](docs/privacy-and-retention.md)
 - [Screenshot manifest](docs/screenshots.json)
 - [Package documentation standard](../../docs/package-documentation-standard.md)
 
@@ -141,6 +145,8 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
   attacker-controlled fields such as author email must not reset that bucket.
 - Keep moderator notifications status-gated to comments that need review; spam
   and already-public comments should not trigger moderator email.
+- Keep privacy retention preserving public bodies/thread structure while
+  clearing author PII, visitor hashes, tokens, and private moderation notes.
 - Keep public Blade and frontend runtime classes covered by the package Arch
   tests so public output stays free of database access, admin dependencies, and
   authoring markers.

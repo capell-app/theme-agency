@@ -22,6 +22,7 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 - **2026-06-04:** Memoized the resolved public commentable model within each Livewire request, avoiding duplicate page lookups during submit/refresh flows without serializing Eloquent models into Livewire state.
 - **2026-06-04:** Locale-pinned public timestamp labels to the resolved commentable language so `diffForHumans()` output follows page `language_id` instead of the ambient app locale, with Livewire serialization coverage.
 - **2026-06-04:** Added enforceable performance-budget coverage for public thread hydration/rendering and admin comment widgets, and batched sibling reply counts to avoid empty-grandchild query fanout.
+- **2026-06-04:** Added privacy retention and erasure tooling for old visitor hashes, moderation notes, tokens, and author PII, plus hash-secret rotation documentation.
 
 ## 2. Improvements (existing functionality)
 
@@ -73,9 +74,9 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **Public-output safety coverage shipped.** `BuildPublicThreadAction::toData()` correctly emits only public id, sanitized body, display name, timestamp, depth, reply count, children — no status, model id, email, hashes, tokens, or admin URL (matches the README Public Safety contract). The thread endpoint sets `Cache-Control: no-store, private` (`src/Http/Controllers/RenderCommentThreadController.php:20`). `AutoInjectRenderHookTest` now exercises the real `RenderHookRegistry` auto-inject path and proves the cached shell omits comment bodies, author PII, model identifiers, moderation state, Livewire snapshots, and admin URLs. `CommentsBoundaryTest` adds package Arch coverage plus public Blade guards against database access and authoring markers.
 
-- **PII / retention.** Author `name`/`email` are `encrypted` at rest ✔ and `email_hash` is HMAC ✔ (`src/Models/CommentAuthor.php:50-58,123`). Gaps: (1) `email_hash_secret`/`visitor_hash_secret` default to `null` from env and silently fall back to `app.key` (`config/capell-comments.php:22-23`, `src/Support/VisitorHasher.php:15`, `CommentAuthor::emailHash`) — rotating `app.key` orphans all hashes; document and warn. (2) No retention/erasure policy or command for visitor IP/UA hashes or author records (GDPR right-to-erasure). (3) `internal_notes` and `moderation_note` are plaintext.
+- **PII / retention shipped.** Author `name`/`email` are encrypted at rest and `email_hash` is HMAC. `capell-comments:privacy-retention` now deletes old/consumed tokens, clears stale visitor hashes and moderation notes, and can anonymize matching author records by email while preserving public comment bodies and thread structure. `docs/privacy-and-retention.md` documents package hash secrets, `app.key` fallback risk, rotation expectations, dry-run usage, and subject erasure behavior. Residual risk: plaintext `internal_notes` / `moderation_note` remain private admin fields until retention or erasure clears them; they are not encrypted separately.
 
-- **Test gaps.** Coverage now includes health diagnostics, spam scoring, sanitizer hardening, moderator notification wiring/status-gating, `auto_inject` anonymous-leakage, reply pagination, performance budgets, public-output Architecture guards, Livewire commentable memoization, locale-pinned public timestamps, public submit throttling, and bot-trap rejection at action and Livewire levels.
+- **Test gaps.** Coverage now includes health diagnostics, spam scoring, sanitizer hardening, moderator notification wiring/status-gating, `auto_inject` anonymous-leakage, reply pagination, performance budgets, privacy retention/erasure, public-output Architecture guards, Livewire commentable memoization, locale-pinned public timestamps, public submit throttling, and bot-trap rejection at action and Livewire levels.
 
 - **i18n shipped.** Strings are translated via `capell-comments::` namespaces ✔. Public timestamp labels are now produced by `BuildPublicThreadAction` with the commentable language locale, serialized through `PublicCommentData`, and rendered as preformatted labels in Blade so Livewire hydration does not fall back to the ambient app locale.
 
@@ -115,4 +116,4 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 | Shipped 2026-06-04: locale-pin public timestamps to page `language_id`                                    | Next   | S      | Low    | §4          |
 | Pluggable external spam provider (Akismet/Turnstile) contract                                             | Later  | M      | Med    | §3          |
 | Reactions/voting + author-reply notifications (Engagement Suite up-sell)                                  | Later  | L      | Med    | §3, §5      |
-| PII retention/erasure command + secret-rotation docs for hashes                                           | Later  | M      | Med    | §4          |
+| Shipped 2026-06-04: PII retention/erasure command + secret-rotation docs for hashes                       | Later  | M      | Med    | §4          |

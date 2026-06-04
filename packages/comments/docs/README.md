@@ -6,6 +6,7 @@ keeping moderation, verification, and author records in the admin workflow.
 ## Read Next
 
 - [Overview](overview.md)
+- [Privacy and retention](privacy-and-retention.md)
 - [Package README](../README.md)
 - [Package documentation standard](../../../docs/package-documentation-standard.md)
 
@@ -18,6 +19,7 @@ keeping moderation, verification, and author records in the admin workflow.
 | Render a public thread       | `src/Livewire/CommentThreadComponent.php`, `src/Actions/ResolvePublicCommentableThreadAction.php` |
 | Create and verify comments   | `src/Actions/CreateCommentAction.php`, `src/Actions/VerifyCommentAuthorEmailAction.php`           |
 | Moderate comments            | `src/Filament/Pages/CommentModerationInbox.php`, `src/Actions/TransitionCommentStatusAction.php`  |
+| Prune privacy data           | `src/Actions/ApplyCommentPrivacyRetentionAction.php`, `src/Console/Commands/PruneCommentPrivacyDataCommand.php` |
 | Tune settings                | `config/capell-comments.php`, `src/Settings/CommentSettings.php`                                  |
 
 ## Public Safety Checklist
