@@ -11,3 +11,4 @@ All notable changes to `capell-app/contacts` will be documented in this file.
 - Truth-in-advertising: dropped the unimplemented `contacts-deduplication-rules` capability from `capell.json`. Only first-match identity lookup is shipped; there is no merge or rules engine.
 - Rewrote the marketplace summary and package descriptions (`capell.json` and `composer.json`) to be buyer-facing and to describe shipped behaviour (identity matching by email, phone, or source) rather than overclaiming deduplication.
 - Added test coverage for the health-check diagnostics and the encrypted-column search safety.
+- Added explicit site scoping to `BuildContactsOverviewStatsAction` so CRM overview totals can be generated for one site without leaking cross-site aggregate counts. Calling the action without a site id remains supported for global package dashboards.

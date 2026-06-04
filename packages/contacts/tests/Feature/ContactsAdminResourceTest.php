@@ -109,3 +109,79 @@ it('builds contacts overview widget stats from crm records', function (): void {
         'activities' => 1,
     ])->and(class_implements(ContactsOverviewStatsWidget::class))->toContain(CapellWidgetContract::class);
 });
+
+it('can scope contacts overview widget stats to a site', function (): void {
+    $primarySiteId = $this->createContactsSite();
+    $secondarySiteId = $this->createContactsSite();
+
+    $primaryContact = Contact::query()->create([
+        'site_id' => $primarySiteId,
+        'email' => 'primary@example.test',
+        'display_name' => 'Primary Example',
+    ]);
+    $secondaryContact = Contact::query()->create([
+        'site_id' => $secondarySiteId,
+        'email' => 'secondary@example.test',
+        'display_name' => 'Secondary Example',
+    ]);
+
+    Organisation::query()->create([
+        'site_id' => $primarySiteId,
+        'name' => 'Primary Ltd',
+    ]);
+    Organisation::query()->create([
+        'site_id' => $secondarySiteId,
+        'name' => 'Secondary Ltd',
+    ]);
+
+    Lead::query()->create([
+        'site_id' => $primarySiteId,
+        'contact_id' => $primaryContact->getKey(),
+        'title' => 'Primary lead',
+        'status' => 'open',
+    ]);
+    Lead::query()->create([
+        'site_id' => $secondarySiteId,
+        'contact_id' => $secondaryContact->getKey(),
+        'title' => 'Secondary qualified lead',
+        'status' => 'qualified',
+    ]);
+    Lead::query()->create([
+        'site_id' => $secondarySiteId,
+        'contact_id' => $secondaryContact->getKey(),
+        'title' => 'Secondary closed lead',
+        'status' => 'lost',
+    ]);
+
+    ContactActivity::query()->create([
+        'site_id' => $primarySiteId,
+        'contact_id' => $primaryContact->getKey(),
+        'type' => ContactActivityType::Note,
+        'summary' => 'Primary note',
+        'occurred_at' => now(),
+    ]);
+    ContactActivity::query()->create([
+        'site_id' => $secondarySiteId,
+        'contact_id' => $secondaryContact->getKey(),
+        'type' => ContactActivityType::Note,
+        'summary' => 'Secondary email',
+        'occurred_at' => now(),
+    ]);
+
+    expect(BuildContactsOverviewStatsAction::run($primarySiteId))->toBe([
+        'contacts' => 1,
+        'organisations' => 1,
+        'open_leads' => 1,
+        'activities' => 1,
+    ])->and(BuildContactsOverviewStatsAction::run($secondarySiteId))->toBe([
+        'contacts' => 1,
+        'organisations' => 1,
+        'open_leads' => 1,
+        'activities' => 1,
+    ])->and(BuildContactsOverviewStatsAction::run())->toBe([
+        'contacts' => 2,
+        'organisations' => 2,
+        'open_leads' => 2,
+        'activities' => 2,
+    ]);
+});

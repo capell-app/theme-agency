@@ -13,7 +13,7 @@ Contacts provides the shared CRM record layer for Capell package integrations, i
 - Event listeners for Form Builder submissions, Access Gate approvals, Event RSVPs, Comments, Campaign Studio conversions, and Shopify customer syncs when those packages are installed.
 - Newsletter calls the shared sync action directly from subscriber lifecycle actions so subscribers are represented in the same central CRM record layer.
 - Contact tagging and activity recording actions.
-- Dashboard overview stats for contacts, organisations, open leads, and activities.
+- Dashboard overview stats for contacts, organisations, open leads, and activities. Callers can pass a site id to `BuildContactsOverviewStatsAction` for site-scoped totals; omitting the site id intentionally returns global package totals.
 - Privacy export and anonymization actions for contact subject request workflows.
 
 ## Source Sync Boundary
