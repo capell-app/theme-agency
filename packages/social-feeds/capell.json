@@ -32,7 +32,26 @@
         "admin": [],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "frontend-component",
+            "class": "Capell\\SocialFeeds\\Manifest\\SocialFeedWidgetContribution",
+            "blockKey": "social-feed",
+            "definitionProviderClass": "Capell\\SocialFeeds\\Blocks\\SocialFeedBlockDefinitionProvider",
+            "rendererClass": "Capell\\SocialFeeds\\Blocks\\SocialFeedBlockRenderer",
+            "surface": "frontend"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\SocialFeeds\\Manifest\\SocialFeedConnectionModelContribution",
+            "modelClass": "Capell\\SocialFeeds\\Models\\SocialFeedConnection"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\SocialFeeds\\Manifest\\SocialFeedItemModelContribution",
+            "modelClass": "Capell\\SocialFeeds\\Models\\SocialFeedItem"
+        }
+    ],
     "database": {
         "migrations": true,
         "settings": false,
@@ -104,14 +123,34 @@
     },
     "marketplace": {
         "summary": "Place branded, cached social feeds anywhere in Capell with RSS, TikTok, YouTube, Bluesky, and custom provider support.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.svg",
+                "alt": "Social Feeds extension card showing cached social posts in a branded carousel.",
+                "caption": "Premium social feed widget preview"
+            },
+            {
+                "path": "docs/assets/marketplace/social-feed-carousel-widget.svg",
+                "alt": "Social Feeds carousel widget with provider badges captions and media cards.",
+                "caption": "Carousel widget with rich display controls"
+            },
+            {
+                "path": "docs/assets/marketplace/social-feed-rss-sync.svg",
+                "alt": "RSS sync pipeline showing provider fetch cached feed items and public rendering.",
+                "caption": "Cached RSS sync and public-safe rendering"
+            },
+            {
+                "path": "docs/assets/marketplace/social-feed-provider-registry.svg",
+                "alt": "Provider registry diagram showing RSS TikTok YouTube Bluesky and custom providers.",
+                "caption": "Extendable provider registry"
+            }
+        ],
         "categories": ["admin", "frontend", "growth"]
     },
     "contributionTraceability": {
         "deferredContributions": [
             "admin-resource",
             "frontend-component",
-            "model",
             "settings"
         ]
     }

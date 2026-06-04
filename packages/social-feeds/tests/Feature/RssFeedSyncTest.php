@@ -80,3 +80,48 @@ it('keeps existing cached items when a provider request fails', function (): voi
         ->and($connection->refresh()->status)->toBe(SocialFeedConnectionStatus::Connected)
         ->and(SocialFeedItem::query()->where('external_id', 'existing')->exists())->toBeTrue();
 });
+
+it('syncs configured social providers through feed url credentials', function (): void {
+    Http::fake([
+        'https://youtube.test/channel.xml' => Http::response(<<<'XML'
+            <?xml version="1.0" encoding="UTF-8" ?>
+            <feed xmlns="http://www.w3.org/2005/Atom">
+                <entry>
+                    <id>video-1</id>
+                    <title>Launch walkthrough</title>
+                    <link href="https://youtube.test/watch/video-1" />
+                    <published>2026-06-03T09:00:00Z</published>
+                    <author><name>Capell TV</name></author>
+                </entry>
+            </feed>
+            XML, 200, ['Content-Type' => 'application/atom+xml']),
+    ]);
+
+    $connection = SocialFeedConnection::query()->create([
+        'provider' => 'youtube',
+        'name' => 'Capell TV',
+        'status' => SocialFeedConnectionStatus::Connected,
+        'credentials' => ['feed_url' => 'https://youtube.test/channel.xml'],
+    ]);
+
+    $synced = SyncSocialFeedConnectionAction::run($connection, 10);
+
+    expect($synced)->toBe(1)
+        ->and($connection->refresh()->last_sync_error)->toBeNull()
+        ->and(SocialFeedItem::query()->where('provider', 'youtube')->where('external_id', 'video-1')->exists())->toBeTrue();
+});
+
+it('marks configured social providers as errored when feed url is missing', function (): void {
+    $connection = SocialFeedConnection::query()->create([
+        'provider' => 'bluesky',
+        'name' => 'Capell Social',
+        'status' => SocialFeedConnectionStatus::Connected,
+        'credentials' => [],
+    ]);
+
+    $synced = SyncSocialFeedConnectionAction::run($connection, 10);
+
+    expect($synced)->toBe(0)
+        ->and($connection->refresh()->status)->toBe(SocialFeedConnectionStatus::Error)
+        ->and($connection->last_sync_error)->toContain('requires a feed_url credential');
+});

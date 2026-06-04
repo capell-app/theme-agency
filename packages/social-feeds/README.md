@@ -6,7 +6,7 @@ Social Feeds is Capell's premium social-feed widget package. It renders cached s
 
 - Extendable `SocialFeedProvider` bridge with tagged provider registration.
 - Built-in provider keys for RSS / Atom, TikTok, YouTube, Bluesky, Instagram, Facebook, LinkedIn, and X.
-- Working RSS / Atom sync provider for the first executable integration path.
+- Working RSS / Atom sync provider plus feed URL-backed sync for configured social providers while native API bridges are completed.
 - Cached `social_feed_items` table used by public rendering.
 - `social-feed` Block Library block with provider, connection, limit, page size, columns, caption, author, date, media, autoplay, transition, aspect-ratio, and empty-state controls.
 - Public Blade rendering that consumes hydrated DTOs only.
@@ -20,6 +20,10 @@ $this->app->tag([MySocialFeedProviderProvider::class], \Capell\SocialFeeds\Contr
 ```
 
 The provider-provider receives `SocialFeedProviderRegistry` and may register one or more `SocialFeedProvider` implementations.
+
+## Provider Status
+
+RSS / Atom is the native v1 provider. TikTok, YouTube, Bluesky, Instagram, Facebook, LinkedIn, and X are first-class provider keys that can sync from a configured `feed_url`; missing feed URLs fail the sync with a clear connection error instead of pretending the provider synced successfully.
 
 ## Verification
 

@@ -8,6 +8,8 @@ use Capell\SocialFeeds\Contracts\SocialFeedProvider;
 use Capell\SocialFeeds\Data\SocialFeedPostData;
 use Capell\SocialFeeds\Enums\SocialAuthStrategy;
 use Capell\SocialFeeds\Models\SocialFeedConnection;
+use Illuminate\Support\Arr;
+use InvalidArgumentException;
 
 abstract class AbstractConfiguredProvider implements SocialFeedProvider
 {
@@ -42,6 +44,12 @@ abstract class AbstractConfiguredProvider implements SocialFeedProvider
      */
     public function fetch(SocialFeedConnection $connection, int $limit): array
     {
-        return [];
+        $feedUrl = Arr::get($connection->credentials ?? [], 'feed_url');
+
+        if (! is_string($feedUrl) || $feedUrl === '') {
+            throw new InvalidArgumentException(sprintf('Social feed provider [%s] requires a feed_url credential until its native API bridge is configured.', $this->key()));
+        }
+
+        return (new RssFeedProvider)->fetch($connection, $limit);
     }
 }

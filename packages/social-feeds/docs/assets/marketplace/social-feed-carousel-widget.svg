@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Social Feeds carousel widget</title>
+  <desc id="desc">A carousel-style social feed widget with configurable post cards, provider labels, captions, and pagination controls.</desc>
+  <rect width="1200" height="675" fill="#f8fafc"/>
+  <text x="80" y="86" fill="#0f172a" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="700">Carousel widget</text>
+  <text x="80" y="126" fill="#475569" font-family="Inter, Arial, sans-serif" font-size="22">Limit, columns, captions, dates, media ratio, autoplay, and transitions.</text>
+  <g transform="translate(80 174)">
+    <rect width="300" height="390" rx="20" fill="#ffffff" stroke="#d7dee8"/>
+    <rect x="24" y="24" width="252" height="180" rx="16" fill="#dbeafe"/>
+    <text x="24" y="250" fill="#2563eb" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">YouTube</text>
+    <text x="24" y="286" fill="#0f172a" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">Launch recap</text>
+    <text x="24" y="322" fill="#475569" font-family="Inter, Arial, sans-serif" font-size="18">Video post rendered from cache.</text>
+  </g>
+  <g transform="translate(450 174)">
+    <rect width="300" height="390" rx="20" fill="#ffffff" stroke="#d7dee8"/>
+    <rect x="24" y="24" width="252" height="180" rx="16" fill="#dcfce7"/>
+    <text x="24" y="250" fill="#16a34a" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">RSS</text>
+    <text x="24" y="286" fill="#0f172a" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">Editorial update</text>
+    <text x="24" y="322" fill="#475569" font-family="Inter, Arial, sans-serif" font-size="18">Public-safe headline and link.</text>
+  </g>
+  <g transform="translate(820 174)">
+    <rect width="300" height="390" rx="20" fill="#ffffff" stroke="#d7dee8"/>
+    <rect x="24" y="24" width="252" height="180" rx="16" fill="#ffedd5"/>
+    <text x="24" y="250" fill="#ea580c" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">Bluesky</text>
+    <text x="24" y="286" fill="#0f172a" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">Community note</text>
+    <text x="24" y="322" fill="#475569" font-family="Inter, Arial, sans-serif" font-size="18">Short social post with author.</text>
+  </g>
+  <circle cx="558" cy="614" r="8" fill="#0f172a"/>
+  <circle cx="584" cy="614" r="8" fill="#94a3b8"/>
+  <circle cx="610" cy="614" r="8" fill="#94a3b8"/>
+</svg>
