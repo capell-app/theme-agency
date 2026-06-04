@@ -5,6 +5,10 @@ All notable changes to `capell-app/document-lifecycle` will be documented in thi
 ## Unreleased
 
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
+- Added real factories for documents, document publications, and document acceptances so tests, demos, and screenshot seeders can use `Model::factory()` without broken autoload promises.
+- Reconciled the manifest frontend surface by declaring only admin and console surfaces; the Customer Portal feed remains an authenticated supported integration, not package-owned public frontend output.
+- Clarified that the marketplace manifest only lists committed marketplace assets while the admin screenshot contract remains pending capture through `docs/screenshots.json`.
+- Added translated Filament labels and badge colours to `DocumentStatusEnum` and tightened `DocumentAcceptance` mass assignment to explicit fillable fields.
 
 ## 2026-06-03
 

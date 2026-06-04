@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 require_once dirname(__DIR__) . '/DocumentLifecycleTestCase.php';
@@ -34,4 +35,33 @@ it('does not throw when rolling back twice (indexes already dropped)', function 
     documentLifecycleRollbackLegalAcceptancesMigration($migration);
 
     expect(fn (): null => documentLifecycleRollbackLegalAcceptancesMigration($migration))->not->toThrow(Throwable::class);
+});
+
+it('extends and rolls back a pre-existing legal acceptances table without requiring package-only indexes', function (): void {
+    Schema::dropIfExists('legal_acceptances');
+
+    Schema::create('legal_acceptances', function (Blueprint $table): void {
+        $table->id();
+        $table->nullableMorphs('acceptor');
+        $table->nullableMorphs('subject');
+        $table->string('document_key')->index();
+        $table->string('document_version');
+        $table->timestamp('accepted_at')->nullable();
+        $table->timestamps();
+    });
+
+    $migration = documentLifecycleExtendLegalAcceptancesMigration();
+    (new ReflectionMethod($migration, 'up'))->invoke($migration);
+
+    expect(Schema::hasColumn('legal_acceptances', 'document_publication_id'))->toBeTrue()
+        ->and(Schema::hasColumn('legal_acceptances', 'document_hash'))->toBeTrue()
+        ->and(Schema::hasIndex('legal_acceptances', ['document_key', 'document_publication_id']))->toBeTrue();
+
+    documentLifecycleRollbackLegalAcceptancesMigration($migration);
+
+    expect(Schema::hasTable('legal_acceptances'))->toBeTrue()
+        ->and(Schema::hasColumn('legal_acceptances', 'document_publication_id'))->toBeFalse()
+        ->and(Schema::hasColumn('legal_acceptances', 'document_hash'))->toBeFalse()
+        ->and(Schema::hasColumn('legal_acceptances', 'acceptor_type'))->toBeTrue()
+        ->and(Schema::hasColumn('legal_acceptances', 'subject_type'))->toBeTrue();
 });

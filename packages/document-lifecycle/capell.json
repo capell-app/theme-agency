@@ -13,7 +13,7 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\DocumentLifecycle",
-    "surfaces": ["admin", "console", "frontend"],
+    "surfaces": ["admin", "console"],
     "dependencies": {
         "requires": [
             "capell-app/admin",

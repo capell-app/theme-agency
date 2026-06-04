@@ -77,7 +77,7 @@ it('declares customer portal document feed metadata in the document lifecycle ma
         flags: JSON_THROW_ON_ERROR,
     );
 
-    expect($manifest['surfaces'])->toContain('frontend')
+    expect($manifest['surfaces'])->not->toContain('frontend')
         ->and($manifest['dependencies']['supports'] ?? [])->toContain('capell-app/customer-portal')
         ->and($manifest['capabilities'])->toContain('document-lifecycle-customer-portal-document-feed');
 });

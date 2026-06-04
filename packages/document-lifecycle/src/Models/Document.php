@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\DocumentLifecycle\Models;
 
+use Capell\DocumentLifecycle\Database\Factories\DocumentFactory;
 use Capell\DocumentLifecycle\Enums\DocumentStatusEnum;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -70,6 +71,14 @@ class Document extends Model
             ->latest('published_at')
             ->latest('id')
             ->first();
+    }
+
+    /**
+     * @return DocumentFactory
+     */
+    protected static function newFactory(): Factory
+    {
+        return DocumentFactory::new();
     }
 
     #[Override]

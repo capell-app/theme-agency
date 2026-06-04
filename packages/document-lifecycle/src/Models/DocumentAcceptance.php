@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\DocumentLifecycle\Models;
 
+use Capell\DocumentLifecycle\Database\Factories\DocumentAcceptanceFactory;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -40,8 +41,24 @@ class DocumentAcceptance extends Model
 
     protected $table = 'legal_acceptances';
 
-    /** @var array<string> */
-    protected $guarded = [];
+    protected $fillable = [
+        'acceptor_type',
+        'acceptor_id',
+        'subject_type',
+        'subject_id',
+        'document_key',
+        'document_version',
+        'document_publication_id',
+        'document_hash',
+        'legal_bundle_version',
+        'legal_bundle_hash',
+        'legal_document_versions',
+        'accepted_at',
+        'context',
+        'ip_hash',
+        'user_agent_hash',
+        'metadata',
+    ];
 
     /**
      * @return MorphTo<Model, $this>
@@ -65,6 +82,14 @@ class DocumentAcceptance extends Model
     public function publication(): BelongsTo
     {
         return $this->belongsTo(DocumentPublication::class, 'document_publication_id');
+    }
+
+    /**
+     * @return DocumentAcceptanceFactory
+     */
+    protected static function newFactory(): Factory
+    {
+        return DocumentAcceptanceFactory::new();
     }
 
     #[Override]

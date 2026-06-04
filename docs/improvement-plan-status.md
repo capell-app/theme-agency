@@ -8,8 +8,8 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 326 |
-| Next   | 323 |
+| Now    | 320 |
+| Next   | 322 |
 | Later  | 202 |
 
 The work is not complete until every package plan has been reviewed against current code, required features are implemented or intentionally deferred, new behavior is documented, and focused verification passes for each changed package.
@@ -37,7 +37,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | demo-kit | 5 | 6 | 4 | Slice committed | `aa2d02c4c` fixed seed fanout; continue with demo coverage and safety rows. |
 | deployments | 0 | 4 | 3 | Slice committed | Current follow-up gates/registers the dashboard widget, requires real repository coordinates before OAuth, surfaces OAuth client misconfiguration, documents the `PublishesComposerChanges` consumer boundary, and fails loudly when the default publisher sees multiple active connections. Continue with OAuth token refresh, install policy UI, publish history/status, idempotent PR dedupe, rollback/cancel, health-gated deploy hooks/events, and provider webhooks. |
 | diagnostics | 5 | 6 | 4 | Slice committed | `86ebebd0a` improved readiness; platform health-check execution remains high priority. |
-| document-lifecycle | 7 | 5 | 4 | Slice committed | `32dfee056` landed health/acceptance/migration fixes; continue with admin lifecycle and export rows. |
+| document-lifecycle | 1 | 4 | 4 | Slice committed | Current follow-up adds package factories, removes the unbacked public frontend surface, keeps marketplace screenshots limited to committed assets while leaving admin screenshot capture open, adds enum-backed Filament status labels/colours, tightens acceptance mass assignment, and covers legacy rollback. Continue with real screenshot captures, admin lifecycle actions, exports, re-acceptance, retention/expiry, signed evidence, content diffs, and completion review. |
 | email-studio | 6 | 5 | 4 | Slice committed | `8cacf75e1` landed health/copy fixes; continue with retry/backoff and delivery gaps. |
 | events | 7 | 6 | 4 | Slice committed | Current follow-up wires registration confirm/cancel admin actions, waitlist promotion reachability, and manifest permissions; continue with mail queueing, screenshots, portal cancellation, and doctor command rows. |
 | experiments | 5 | 6 | 5 | Slice committed | `cf3798724` landed health/subject fixes; continue with frontend allocation and significance rows. |

@@ -33,7 +33,9 @@ Document Lifecycle tracks controlled documents across publication and acceptance
 
 ## Frontend Surfaces
 
-This package does not register public frontend routes or Blade views in the current implementation. Public projects should call package actions from their own consent, legal, or account flows when recording acceptances.
+This package does not register public frontend routes or Blade views in the current implementation, and the package manifest intentionally declares only `admin` and `console` surfaces. Public projects should call package actions from their own consent, legal, or account flows when recording acceptances.
+
+The Customer Portal integration is an authenticated self-service feed for a portal account's own acceptance history. It is not anonymous frontend output and should not be treated as a package-owned public rendering surface.
 
 ## Screenshot Coverage
 
@@ -43,6 +45,8 @@ The screenshot contract is stored in [screenshots.json](screenshots.json). The f
 - controlled document edit form;
 - publications relation manager;
 - acceptances relation manager.
+
+Those admin captures are still pending. The marketplace manifest only lists committed marketplace assets from `docs/assets/marketplace/`; it must not point at future runner output under `docs/screenshots/` until those files are captured, reviewed, and committed as marketplace assets.
 
 ## Install And Verify
 

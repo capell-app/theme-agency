@@ -46,7 +46,7 @@ final class DocumentResource extends Resource
                     ->maxLength(255),
                 Select::make('status')
                     ->label(__('capell-document-lifecycle::navigation.fields.status'))
-                    ->options(self::statusOptions())
+                    ->options(DocumentStatusEnum::class)
                     ->required(),
                 KeyValue::make('metadata')
                     ->label(__('capell-document-lifecycle::navigation.fields.metadata'))
@@ -71,6 +71,7 @@ final class DocumentResource extends Resource
                 TextColumn::make('status')
                     ->label(__('capell-document-lifecycle::navigation.fields.status'))
                     ->badge()
+                    ->color(fn (DocumentStatusEnum $state): string => $state->getColor())
                     ->sortable(),
                 TextColumn::make('publications_count')
                     ->label(__('capell-document-lifecycle::navigation.fields.publications'))
@@ -134,16 +135,6 @@ final class DocumentResource extends Resource
         return [
             PublicationsRelationManager::class,
             AcceptancesRelationManager::class,
-        ];
-    }
-
-    /** @return array<string, string> */
-    private static function statusOptions(): array
-    {
-        return [
-            DocumentStatusEnum::Draft->value => __('capell-document-lifecycle::navigation.status.draft'),
-            DocumentStatusEnum::Active->value => __('capell-document-lifecycle::navigation.status.active'),
-            DocumentStatusEnum::Archived->value => __('capell-document-lifecycle::navigation.status.archived'),
         ];
     }
 }

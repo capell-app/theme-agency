@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\DocumentLifecycle\Models;
 
+use Capell\DocumentLifecycle\Database\Factories\DocumentPublicationFactory;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -58,6 +59,14 @@ class DocumentPublication extends Model
     public function publishedActor(): MorphTo
     {
         return $this->morphTo(__FUNCTION__, 'published_actor_type', 'published_actor_id');
+    }
+
+    /**
+     * @return DocumentPublicationFactory
+     */
+    protected static function newFactory(): Factory
+    {
+        return DocumentPublicationFactory::new();
     }
 
     #[Override]
