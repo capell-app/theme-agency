@@ -72,7 +72,7 @@ This is a **foundation/bundled** package (`tier: free`, `bundle: foundation`, `p
 
 | Item                                                                                              | Bucket | Effort   | Impact | Section ref |
 | ------------------------------------------------------------------------------------------------- | ------ | -------- | ------ | ----------- |
-| Implement real probes in `FrontendAuthoringHealthCheck` (severity is `critical`)                  | Now    | S        | High   | §2, §4      |
+| Shipped 2026-06-04: implement real probes in `FrontendAuthoringHealthCheck`; evidence: route, service-binding, config, app-key probes plus healthy/broken `critical` manifest tests | Done | S | High | §2, §4 |
 | Shipped 2026-06-04: define/deny-by-default the `frontend-authoring.edit` ability                  | Done   | S/M      | High   | §2, §3, §4  |
 | Shipped 2026-06-04: guard publishing-studio approval branch behind `isPackageInstalled` + stop swallowing errors | Done | M | High | §2, §4 |
 | Promote real desktop+mobile captures into `marketplace.screenshots[]`; delete orphan nested asset | Now    | S        | Med    | §4, §5      |
