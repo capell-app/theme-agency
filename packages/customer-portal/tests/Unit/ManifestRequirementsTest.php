@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
+use Capell\CustomerPortal\Actions\ResolvePortalProfileAction;
 use Capell\CustomerPortal\Filament\Resources\PortalSupportRequests\PortalSupportRequestResource;
 use Capell\CustomerPortal\Manifest\CustomerPortalFrontendRoutesContribution;
 use Capell\CustomerPortal\Manifest\CustomerPortalModelsContribution;
@@ -39,6 +40,7 @@ it('declares a cache-safe package-local foundation manifest', function (): void 
         ->and($manifest['providers']['runtime'])->toBe([
             CustomerPortalServiceProvider::class,
         ])
+        ->and($manifest['actions']['resolvePortalProfile'])->toBe(ResolvePortalProfileAction::class)
         ->and($manifest['capabilities'])->toContain(
             'customer-portal-authenticated-routes',
             'customer-portal-dashboard-ui',

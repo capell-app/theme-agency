@@ -61,21 +61,21 @@ Tied to `capabilities[]` and customer-portal table stakes:
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                             | Bucket | Effort | Impact | Section ref |
-| -------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Scope `PortalSupportRequestResource` per site (`getEloquentQuery`)               | Shipped | S     | High   | §2, §4      |
-| Add tenant-isolation test (account A cannot see B's data)                        | Shipped | S     | High   | §4          |
-| Implement real health-check probe (tables + models)                              | Shipped | S     | High   | §2, §4      |
-| Resolve `portal-profile`: add resolve Action + render, or remove dead registries | Now    | M      | High   | §3, §4      |
-| Add factories (+ optional seeder) for both models                                | Shipped | S     | Med    | §3          |
-| Add unauthenticated/throttle/suspended negative-path tests                       | Shipped | S     | Med    | §4          |
-| Enforce `PortalAccountStatus` (block suspended/archived)                         | Shipped | S     | Med    | §3          |
-| Emit events + notifications on submit / status change                            | Next   | M      | High   | §3          |
-| Set real `frontendRenderBudgetMs` + frontend query budget                        | Next   | S      | Med    | §4          |
-| Capture marketplace screenshots (4 surfaces) + rewrite summary/description       | Next   | S      | High   | §5          |
-| Schema-drive preferences (single source for view + validation)                   | Next   | M      | Med    | §2, §3      |
-| Cap / paginate dashboard + self-service provider fan-out                         | Next   | M      | Med    | §2          |
-| Add README + CHANGELOG                                                           | Next   | S      | Med    | §4          |
-| Two-way support threading (replies + attachments)                                | Later  | L      | High   | §3          |
-| First-party billing & downloads/entitlement surfaces (suite cross-sell)          | Later  | L      | High   | §3, §5      |
-| Provide auth/SSO surface (or formally position as BYO-auth)                      | Later  | L      | High   | §3          |
+| Item                                                                             | Bucket  | Effort | Impact | Section ref |
+| -------------------------------------------------------------------------------- | ------- | ------ | ------ | ----------- |
+| Scope `PortalSupportRequestResource` per site (`getEloquentQuery`)               | Shipped | S      | High   | §2, §4      |
+| Add tenant-isolation test (account A cannot see B's data)                        | Shipped | S      | High   | §4          |
+| Implement real health-check probe (tables + models)                              | Shipped | S      | High   | §2, §4      |
+| Resolve `portal-profile`: add resolve Action + render, or remove dead registries | Shipped | M      | High   | §3, §4      |
+| Add factories (+ optional seeder) for both models                                | Shipped | S      | Med    | §3          |
+| Add unauthenticated/throttle/suspended negative-path tests                       | Shipped | S      | Med    | §4          |
+| Enforce `PortalAccountStatus` (block suspended/archived)                         | Shipped | S      | Med    | §3          |
+| Emit events + notifications on submit / status change                            | Next    | M      | High   | §3          |
+| Set real `frontendRenderBudgetMs` + frontend query budget                        | Next    | S      | Med    | §4          |
+| Capture marketplace screenshots (4 surfaces) + rewrite summary/description       | Next    | S      | High   | §5          |
+| Schema-drive preferences (single source for view + validation)                   | Next    | M      | Med    | §2, §3      |
+| Cap / paginate dashboard + self-service provider fan-out                         | Next    | M      | Med    | §2          |
+| Add README + CHANGELOG                                                           | Next    | S      | Med    | §4          |
+| Two-way support threading (replies + attachments)                                | Later   | L      | High   | §3          |
+| First-party billing & downloads/entitlement surfaces (suite cross-sell)          | Later   | L      | High   | §3, §5      |
+| Provide auth/SSO surface (or formally position as BYO-auth)                      | Later   | L      | High   | §3          |

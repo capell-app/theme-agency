@@ -173,6 +173,26 @@
 
             <section>
                 <h2>
+                    {{ __('capell-customer-portal::generic.frontend.profile') }}
+                </h2>
+                @if ($profileFields === [])
+                    <p class="muted">
+                        {{ __('capell-customer-portal::generic.frontend.no_profile_fields') }}
+                    </p>
+                @else
+                    <dl class="grid">
+                        @foreach ($profileFields as $field)
+                            <div class="item">
+                                <dt class="muted">{{ $field['label'] }}</dt>
+                                <dd>{{ $field['value'] }}</dd>
+                            </div>
+                        @endforeach
+                    </dl>
+                @endif
+            </section>
+
+            <section>
+                <h2>
                     {{ __('capell-customer-portal::generic.frontend.dashboard_items') }}
                 </h2>
                 @if ($dashboardItems === [])

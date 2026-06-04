@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 use Capell\CustomerPortal\Contracts\PortalDashboardItemProvider;
+use Capell\CustomerPortal\Contracts\PortalProfileProvider;
 use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
 use Capell\CustomerPortal\Data\PortalDashboardItemData;
+use Capell\CustomerPortal\Data\PortalProfileData;
 use Capell\CustomerPortal\Data\PortalSelfServiceItemData;
 use Capell\CustomerPortal\Enums\PortalAccountStatus;
 use Capell\CustomerPortal\Enums\PortalDashboardItemPriority;
@@ -14,6 +16,7 @@ use Capell\CustomerPortal\Enums\SupportRequestStatus;
 use Capell\CustomerPortal\Models\PortalAccount;
 use Capell\CustomerPortal\Models\PortalSupportRequest;
 use Capell\CustomerPortal\Support\PortalDashboardItemRegistry;
+use Capell\CustomerPortal\Support\PortalProfileProviderRegistry;
 use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Capell\CustomerPortal\Tests\CustomerPortalTestCase;
 use Illuminate\Foundation\Auth\User;
@@ -112,6 +115,42 @@ it('renders an authenticated dashboard without exposing package internals', func
 
     expect(PortalAccount::query()->count())->toBe(1)
         ->and(PortalAccount::query()->first()?->email)->toBe('morgan@example.test');
+});
+
+it('renders registered profile provider data without exposing internal profile fields', function (): void {
+    $this->createCustomerPortalSite();
+
+    resolve(PortalProfileProviderRegistry::class)->register('test-provider', new class implements PortalProfileProvider
+    {
+        public function profileFor(PortalAccount $portalAccount): PortalProfileData
+        {
+            return new PortalProfileData(
+                accountId: 999,
+                siteId: 999,
+                email: $portalAccount->email,
+                displayName: 'Morgan Profile',
+                status: $portalAccount->status,
+                profile: [
+                    'membership_tier' => 'Gold',
+                    'site_id' => 999,
+                    'api_token' => 'secret-token',
+                ],
+            );
+        }
+    });
+
+    $response = $this->actingAs(customerPortalUser())
+        ->get(route('capell-customer-portal.dashboard'));
+
+    $response
+        ->assertOk()
+        ->assertSee('Profile')
+        ->assertSee('Morgan Profile')
+        ->assertSee('Membership Tier')
+        ->assertSee('Gold')
+        ->assertDontSee('site_id', false)
+        ->assertDontSee('api_token', false)
+        ->assertDontSee('secret-token', false);
 });
 
 it('updates authenticated portal preferences from the frontend', function (): void {

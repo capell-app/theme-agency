@@ -4,17 +4,21 @@ declare(strict_types=1);
 
 use Capell\CustomerPortal\Actions\FindOrCreatePortalAccountAction;
 use Capell\CustomerPortal\Actions\ResolvePortalDashboardItemsAction;
+use Capell\CustomerPortal\Actions\ResolvePortalProfileAction;
 use Capell\CustomerPortal\Actions\ResolvePortalSelfServiceItemsAction;
 use Capell\CustomerPortal\Actions\SubmitSupportRequestAction;
 use Capell\CustomerPortal\Actions\UpdatePortalPreferencesAction;
 use Capell\CustomerPortal\Actions\UpdateSupportRequestStatusAction;
 use Capell\CustomerPortal\Contracts\PortalDashboardItemProvider;
+use Capell\CustomerPortal\Contracts\PortalProfileProvider;
 use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
 use Capell\CustomerPortal\Data\PortalAccountIdentityData;
 use Capell\CustomerPortal\Data\PortalDashboardItemData;
 use Capell\CustomerPortal\Data\PortalPreferencesData;
+use Capell\CustomerPortal\Data\PortalProfileData;
 use Capell\CustomerPortal\Data\PortalSelfServiceItemData;
 use Capell\CustomerPortal\Data\SupportRequestData;
+use Capell\CustomerPortal\Enums\PortalAccountStatus;
 use Capell\CustomerPortal\Enums\PortalDashboardItemPriority;
 use Capell\CustomerPortal\Enums\PortalSelfServiceItemType;
 use Capell\CustomerPortal\Enums\SupportRequestPriority;
@@ -22,6 +26,7 @@ use Capell\CustomerPortal\Enums\SupportRequestStatus;
 use Capell\CustomerPortal\Models\PortalAccount;
 use Capell\CustomerPortal\Models\PortalSupportRequest;
 use Capell\CustomerPortal\Support\PortalDashboardItemRegistry;
+use Capell\CustomerPortal\Support\PortalProfileProviderRegistry;
 use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Capell\CustomerPortal\Tests\CustomerPortalTestCase;
 use Illuminate\Support\Facades\Schema;
@@ -199,6 +204,48 @@ it('resolves dashboard items from registered providers in priority order', funct
     expect($dashboardItems)->toHaveCount(2)
         ->and($dashboardItems[0]->key)->toBe('payments')
         ->and($dashboardItems[1]->key)->toBe('documents');
+});
+
+it('resolves portal profile data from account storage and registered providers', function (): void {
+    $portalAccount = PortalAccount::factory()->create([
+        'email' => 'profile@example.test',
+        'display_name' => 'Stored Profile',
+        'profile' => [
+            'company' => 'Stored Company',
+            'account_id' => 123,
+        ],
+    ]);
+
+    resolve(PortalProfileProviderRegistry::class)->register('test-provider', new class implements PortalProfileProvider
+    {
+        public function profileFor(PortalAccount $portalAccount): PortalProfileData
+        {
+            return new PortalProfileData(
+                accountId: 999,
+                siteId: 999,
+                email: null,
+                displayName: 'Provider Profile',
+                status: PortalAccountStatus::Suspended,
+                profile: [
+                    'membership_tier' => 'Gold',
+                    'company' => 'Provider Company',
+                ],
+            );
+        }
+    });
+
+    $profileData = ResolvePortalProfileAction::run($portalAccount);
+
+    expect($profileData->accountId)->toBe($portalAccount->getKey())
+        ->and($profileData->siteId)->toBe($portalAccount->site_id)
+        ->and($profileData->email)->toBe('profile@example.test')
+        ->and($profileData->displayName)->toBe('Provider Profile')
+        ->and($profileData->status)->toBe(PortalAccountStatus::Active)
+        ->and($profileData->profile)->toBe([
+            'company' => 'Provider Company',
+            'account_id' => 123,
+            'membership_tier' => 'Gold',
+        ]);
 });
 
 it('resolves typed self-service items from registered providers in recency order', function (): void {

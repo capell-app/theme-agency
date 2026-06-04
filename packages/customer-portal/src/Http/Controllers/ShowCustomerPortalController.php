@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Capell\CustomerPortal\Http\Controllers;
 
+use BackedEnum;
 use Capell\CustomerPortal\Actions\ResolvePortalDashboardItemsAction;
+use Capell\CustomerPortal\Actions\ResolvePortalProfileAction;
 use Capell\CustomerPortal\Actions\ResolvePortalSelfServiceItemsAction;
 use Capell\CustomerPortal\Data\PortalDashboardItemData;
+use Capell\CustomerPortal\Data\PortalProfileData;
 use Capell\CustomerPortal\Data\PortalSelfServiceItemData;
 use Capell\CustomerPortal\Enums\SupportRequestPriority;
 use Capell\CustomerPortal\Enums\SupportRequestStatus;
@@ -14,6 +17,9 @@ use Capell\CustomerPortal\Http\Controllers\Concerns\ResolvesPortalAccount;
 use Capell\CustomerPortal\Models\PortalSupportRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
+use Stringable;
+use UnitEnum;
 
 final class ShowCustomerPortalController
 {
@@ -22,6 +28,7 @@ final class ShowCustomerPortalController
     public function __invoke(Request $request): Response
     {
         $portalAccount = $this->portalAccount($request);
+        $profileData = ResolvePortalProfileAction::run($portalAccount);
         $dashboardItems = ResolvePortalDashboardItemsAction::run($portalAccount);
         $selfServiceItems = ResolvePortalSelfServiceItemsAction::run($portalAccount);
         $supportRequests = $portalAccount
@@ -38,8 +45,9 @@ final class ShowCustomerPortalController
             ->all();
 
         return $this->noStore(response()->view('capell-customer-portal::dashboard', [
-            'displayName' => $portalAccount->display_name ?? $portalAccount->email,
-            'email' => $portalAccount->email,
+            'displayName' => $profileData->displayName ?? $profileData->email,
+            'email' => $profileData->email,
+            'profileFields' => $this->profileFields($profileData),
             'preferences' => $portalAccount->preferences ?? [],
             'dashboardItems' => array_map(
                 static fn (PortalDashboardItemData $item): array => [
@@ -68,6 +76,91 @@ final class ShowCustomerPortalController
                 SupportRequestStatus::cases(),
             ),
         ]));
+    }
+
+    /**
+     * @return list<array{label: string, value: string}>
+     */
+    private function profileFields(PortalProfileData $profileData): array
+    {
+        $fields = [
+            [
+                'label' => __('capell-customer-portal::generic.frontend.profile_name'),
+                'value' => $profileData->displayName,
+            ],
+            [
+                'label' => __('capell-customer-portal::generic.frontend.profile_email'),
+                'value' => $profileData->email,
+            ],
+            [
+                'label' => __('capell-customer-portal::generic.frontend.profile_status'),
+                'value' => $profileData->status->getLabel(),
+            ],
+        ];
+
+        foreach ($profileData->profile as $key => $value) {
+            if (! is_string($key) || $this->shouldHideProfileField($key)) {
+                continue;
+            }
+
+            $displayValue = $this->formatProfileValue($value);
+
+            if ($displayValue === null) {
+                continue;
+            }
+
+            $fields[] = [
+                'label' => Str::headline($key),
+                'value' => $displayValue,
+            ];
+        }
+
+        return array_values(array_filter(
+            $fields,
+            static fn (array $field): bool => is_string($field['value']) && trim($field['value']) !== '',
+        ));
+    }
+
+    private function shouldHideProfileField(string $key): bool
+    {
+        $normalizedKey = Str::of($key)->lower()->replace('-', '_')->toString();
+
+        return in_array($normalizedKey, [
+            'id',
+            'account_id',
+            'site_id',
+            'owner_id',
+            'email_hash',
+        ], true)
+            || str_contains($normalizedKey, 'password')
+            || str_contains($normalizedKey, 'secret')
+            || str_contains($normalizedKey, 'token')
+            || str_contains($normalizedKey, 'hash');
+    }
+
+    private function formatProfileValue(mixed $value): ?string
+    {
+        if ($value instanceof UnitEnum) {
+            return $value instanceof BackedEnum ? (string) $value->value : $value->name;
+        }
+
+        if ($value instanceof Stringable) {
+            return (string) $value;
+        }
+
+        if (is_bool($value)) {
+            return $value
+                ? __('capell-customer-portal::generic.frontend.yes')
+                : __('capell-customer-portal::generic.frontend.no');
+        }
+
+        if (is_int($value) || is_float($value) || is_string($value)) {
+            $displayValue = trim((string) $value);
+
+            return $displayValue === '' ? null : $displayValue;
+        }
+
+        return null;
     }
 
     /**

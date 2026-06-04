@@ -67,6 +67,7 @@
     "actions": {
         "findOrCreatePortalAccount": "Capell\\CustomerPortal\\Actions\\FindOrCreatePortalAccountAction",
         "resolvePortalDashboardItems": "Capell\\CustomerPortal\\Actions\\ResolvePortalDashboardItemsAction",
+        "resolvePortalProfile": "Capell\\CustomerPortal\\Actions\\ResolvePortalProfileAction",
         "resolvePortalSelfServiceItems": "Capell\\CustomerPortal\\Actions\\ResolvePortalSelfServiceItemsAction",
         "submitSupportRequest": "Capell\\CustomerPortal\\Actions\\SubmitSupportRequestAction",
         "updatePortalPreferences": "Capell\\CustomerPortal\\Actions\\UpdatePortalPreferencesAction"
