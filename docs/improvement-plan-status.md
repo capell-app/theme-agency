@@ -8,7 +8,7 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 314 |
+| Now    | 311 |
 | Next   | 321 |
 | Later  | 202 |
 
@@ -28,7 +28,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 
 | Package | Now | Next | Later | Current status | Evidence / next action |
 | ------- | --: | ---: | ----: | -------------- | ---------------------- |
-| campaign-studio | 6 | 5 | 5 | Slice committed | Latest Campaign Studio slice adds campaign hero UTM fields, decorates hero CTA URLs through `BuildCampaignUrlAction`, updates screenshots/docs, and adds public render coverage; continue with CTA/page-view capture, full-page public safety tests, cache/personalisation strategy, variant publish filtering, scheduling, and experiment result readout. |
+| campaign-studio | 3 | 5 | 5 | Slice committed | Current follow-up adds same-origin CTA/page-view conversion beacon capture, URL-scoped CTA goal attribution, post-load tracker injection, full-page public no-leak coverage, and non-cacheable UTM-varying frontend contribution metadata. Continue with published-page variant filtering, conversion-rate join hardening, scheduling automation, A/B result readout, revenue/ROAS, audience targeting, attribution-window config, experiment decoupling, and completion review. |
 | comments | 1 | 0 | 0 | Slice committed | Latest Comments slice adds public Like reactions, aggregate public reaction counts, approved-reply author notifications, and tokenized reply-notification opt-out handling; continue with marketplace screenshot capture/wiring. |
 | contacts | 0 | 7 | 2 | Slice committed | Current follow-ups expose audited privacy export/anonymization and queue/isolate all source-adapter listeners. Contacts has no Now rows left, but still needs Next/Later CRM depth work and a full package completion review before it can be marked Complete. |
 | content-sections | 5 | 6 | 4 | Slice committed | `54b758fe1` landed readiness fixes; continue with remaining render safety/content rows. |

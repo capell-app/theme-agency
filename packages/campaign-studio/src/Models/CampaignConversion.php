@@ -16,7 +16,9 @@ use Override;
 
 /**
  * @property int $campaign_conversion_goal_id
- * @property int $campaign_landing_page_id
+ * @property int|null $campaign_landing_page_id
+ * @property int|null $insights_visit_id
+ * @property int|null $insights_event_id
  * @property string|null $source_type
  * @property int|null $source_id
  * @property ConversionAttributionData|null $attribution

@@ -16,6 +16,7 @@ use Override;
 
 /**
  * @property int $id
+ * @property int $campaign_group_id
  * @property int|null $site_id
  * @property string $name
  * @property ConversionGoalType $type

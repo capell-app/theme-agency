@@ -6,7 +6,7 @@ Campaign Studio adds campaign groups, landing-page variants, audience targeting,
 
 - Package: `capell-app/campaign-studio`
 - Namespace: `Capell\CampaignStudio\`
-- Surfaces: Filament admin, console, database
+- Surfaces: Filament admin, frontend route/render hook, console, database
 - Service providers: `packages/campaign-studio/src/Providers/AdminServiceProvider.php`, `packages/campaign-studio/src/Providers/CampaignStudioServiceProvider.php`, `packages/campaign-studio/src/Providers/FrontendServiceProvider.php`
 - Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/form-builder`, `capell-app/frontend`, `capell-app/insights`
 - Third-party dependencies: `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`
@@ -35,6 +35,7 @@ Campaign Studio adds campaign groups, landing-page variants, audience targeting,
 - Campaign hero widget CTAs can append configured UTM metadata through the shared campaign URL builder.
 - Campaign conversion funnel reporting from conversion goals and recorded conversions.
 - Conversion recording actions for page views, CTA clicks, and form submissions.
+- Public post-load conversion capture for page-view and CTA-click goals through the Campaign Studio beacon.
 
 ## Why It Matters
 
@@ -86,6 +87,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Config file: capell-campaign-studio.php.
 - Migrations create campaign groups, goals, landing pages, CTA widgets, and conversions.
 - Filament resources cover each owned model.
+- Frontend routes and render hooks add the campaign conversion beacon and public tracker script.
 - Listeners sync landing pages, editorial calendar events, Site Discovery URLs, and form submission conversions.
 
 ## Code Map
@@ -113,6 +115,12 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 - `capell:campaign-studio-install-layouts {--force : Update existing campaign layouts}` (packages/campaign-studio/src/Console/Commands/InstallCampaignLayoutsCommand.php)
 
+## Frontend Conversion Capture
+
+Campaign Studio injects a small public tracker at the frontend `BodyEnd` render hook. The tracker posts to `POST /capell/campaigns/conversions`, reads the existing Insights visit id from local storage or cookie when available, records page-view conversions for campaign landing pages, and records CTA-click conversions from elements with `data-campaign-goal`. CTA-click goals are resolved inside the campaign landing page matched from the submitted URL; unresolved URLs are ignored rather than attributed to another campaign with the same goal key.
+
+The tracker is post-load and contains no admin/editor state, signed editor URLs, model ids, or field paths. Because Campaign Studio can render UTM-aware landing-page variants, its frontend contribution is recorded as non-cacheable with UTM variance metadata; HTML cache should not store those rendered pages, while static HTML that already exists can still load the tracker and record conversions after the response is served.
+
 ## Data And Persistence
 
 - campaign_groups belong to sites.
@@ -135,9 +143,9 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 - Adds campaign admin navigation and database tables.
 - Adds campaign dashboard widgets.
-- Adds config keys for conversion cookie, UTM keys, table names, and layout presets.
+- Adds config keys for conversion cookie, UTM keys, table names, tracker route prefix, and layout presets.
 - May use Insights events and FormBuilder submissions when those packages are installed.
-- No explicit public route is registered by this package.
+- Registers `POST /capell/campaigns/conversions` for same-origin page-view and CTA-click conversion capture.
 
 ## Install And Setup
 
@@ -174,6 +182,8 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Check UTM keys before launch.
 - Configure campaign hero UTM fields when hero CTAs should carry campaign attribution.
 - Create conversion goals before reporting on landing page success.
+- Keep the Insights tracker enabled when visitor-level deduplication is required for CTA/page-view conversions.
+- Treat UTM-targeted campaign variant pages as dynamic frontend output; do not rely on static HTML cache to personalize variant selection.
 
 ## Docs
 

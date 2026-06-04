@@ -124,6 +124,8 @@
         "buildConversionAttribution": "Capell\\CampaignStudio\\Actions\\BuildConversionAttributionAction",
         "buildTopCampaignStudioQuery": "Capell\\CampaignStudio\\Actions\\BuildTopCampaignStudioQueryAction",
         "buildTopLandingPagesQuery": "Capell\\CampaignStudio\\Actions\\BuildTopLandingPagesQueryAction",
+        "captureCampaignConversion": "Capell\\CampaignStudio\\Actions\\CaptureCampaignConversionAction",
+        "getCampaignStudioTrackerScript": "Capell\\CampaignStudio\\Actions\\GetCampaignStudioTrackerScriptAction",
         "recordCampaignConversion": "Capell\\CampaignStudio\\Actions\\RecordCampaignConversionAction",
         "recordCtaClickConversion": "Capell\\CampaignStudio\\Actions\\RecordCtaClickConversionAction",
         "recordFormSubmissionConversion": "Capell\\CampaignStudio\\Actions\\RecordFormSubmissionConversionAction",
@@ -152,7 +154,13 @@
         "cacheTags": ["campaign-studio"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale",
+                "utm_campaign",
+                "utm_content",
+                "utm_term"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true

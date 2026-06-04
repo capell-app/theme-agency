@@ -48,4 +48,7 @@ return [
         'paused' => 'Paused',
         'scheduled' => 'Scheduled',
     ],
+    'validation' => [
+        'url_path_max' => 'The :attribute path must not be greater than :max characters.',
+    ],
 ];

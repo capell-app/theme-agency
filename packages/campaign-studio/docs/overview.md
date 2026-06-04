@@ -14,6 +14,7 @@ CampaignStudio adds campaign groups, landing pages, CTA widgets, conversion goal
 - core layout builder widget configurators for campaign hero, CTA, and lead form widgets.
 - Campaign hero widget CTAs can append configured UTM metadata through the shared campaign URL builder.
 - Conversion recording actions for page views, CTA clicks, and form submissions.
+- Public post-load conversion capture for page-view and CTA-click goals through the Campaign Studio beacon.
 - Optional Experiments integration that syncs campaign landing-page variants and conversion goals into campaign-scoped experiment definitions.
 
 ## Developer Notes
@@ -24,6 +25,7 @@ Connects Capell pages, FormBuilder, Insights, and core layout builder APIs throu
 - Config file: capell-campaign-studio.php.
 - Migrations create campaign groups, goals, landing pages, CTA widgets, and conversions.
 - Filament resources cover each owned model.
+- Frontend routes and render hooks add the campaign conversion beacon and public tracker script.
 - Listeners sync landing pages and form submission conversions.
 - `CampaignConverted` is dispatched when a conversion row is newly recorded, giving Automation Studio and other packages a stable conversion trigger without importing Campaign Studio internals.
 - `SyncCampaignExperimentAction` bridges to Experiments when that package is installed. It turns campaign landing pages into experiment variants, conversion goals into experiment goals, and the campaign UTM value into an audience rule.
@@ -34,10 +36,16 @@ Lets marketing and editorial teams connect landing pages to goals and see which 
 
 - Adds campaign admin navigation and database tables.
 - Adds campaign dashboard widgets.
-- Adds config keys for conversion cookie, UTM keys, table names, and layout presets.
+- Adds config keys for conversion cookie, UTM keys, table names, tracker route prefix, and layout presets.
 - May use Insights events and FormBuilder submissions when those packages are installed.
 - May sync campaign-scoped experiments when `capell-app/experiments` is installed.
-- No explicit public route is registered by this package.
+- Registers `POST /capell/campaigns/conversions` for same-origin page-view and CTA-click conversion capture.
+
+## Frontend Conversion Capture
+
+Campaign Studio injects a small public tracker at the frontend `BodyEnd` render hook. The tracker posts to `POST /capell/campaigns/conversions`, reads the existing Insights visit id from local storage or cookie when available, records page-view conversions for campaign landing pages, and records CTA-click conversions from elements with `data-campaign-goal`. CTA-click goals are resolved inside the campaign landing page matched from the submitted URL; unresolved URLs are ignored rather than attributed to another campaign with the same goal key.
+
+The tracker is post-load and contains no admin/editor state, signed editor URLs, model ids, or field paths. Because Campaign Studio can render UTM-aware landing-page variants, its frontend contribution is recorded as non-cacheable with UTM variance metadata; HTML cache should not store those rendered pages, while static HTML that already exists can still load the tracker and record conversions after the response is served.
 
 ## Data And Retention
 
@@ -76,6 +84,8 @@ Lets marketing and editorial teams connect landing pages to goals and see which 
 - Check UTM keys before launch.
 - Configure campaign hero UTM fields when hero CTAs should carry campaign attribution.
 - Create conversion goals before reporting on landing page success.
+- Keep the Insights tracker enabled when visitor-level deduplication is required for CTA/page-view conversions.
+- Treat UTM-targeted campaign variant pages as dynamic frontend output; do not rely on static HTML cache to personalize variant selection.
 
 ## Verification
 
@@ -120,6 +130,7 @@ Lets marketing and editorial teams connect landing pages to goals and see which 
 ## Routes And Config
 
 - Config: packages/campaign-studio/config/capell-campaign-studio.php
+- Route: `POST /capell/campaigns/conversions`
 
 ## Permissions And Gates
 

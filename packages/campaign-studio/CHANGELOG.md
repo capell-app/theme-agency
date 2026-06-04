@@ -6,6 +6,11 @@ All notable changes to `capell-app/campaign-studio` will be documented in this f
 
 ### 2026-06-04
 
+- Added the public campaign conversion beacon at `/capell/campaigns/conversions` and a post-load tracker that records page-view and CTA-click conversions from public campaign pages.
+- Added `CaptureCampaignConversionAction` and `CampaignConversionCaptureData` so beacon requests resolve Insights visits, landing pages, CTA widgets, and conversion goals through a typed package boundary.
+- Scoped CTA-click beacon goal resolution to the campaign landing page resolved from the submitted URL, avoiding cross-campaign misattribution when campaigns reuse the same goal key.
+- Registered the Campaign Studio tracker through the frontend render-hook registry and marked it as non-cacheable frontend output with UTM variance metadata, aligning the package with the static HTML cache contract.
+- Added feature coverage for beacon route registration, page-view capture, CTA-click capture, invalid-origin rejection, full-page public output safety, and cache contribution recording.
 - Added UTM fields to the campaign hero widget configurator so hero CTAs can use the same attribution metadata as campaign CTA widgets.
 - Routed campaign hero primary and secondary button URLs through `BuildCampaignUrlAction`, preserving existing query strings/fragments while appending missing UTM parameters.
 - Added render coverage proving campaign hero buttons emit decorated URLs without leaking numeric campaign identifiers.

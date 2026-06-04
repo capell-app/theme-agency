@@ -7,6 +7,7 @@ namespace Capell\CampaignStudio\Actions;
 use Capell\CampaignStudio\Enums\ConversionGoalType;
 use Capell\CampaignStudio\Models\CampaignConversion;
 use Capell\CampaignStudio\Models\CampaignConversionGoal;
+use Capell\CampaignStudio\Models\CampaignLandingPage;
 use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -14,8 +15,13 @@ final class RecordCtaClickConversionAction
 {
     use AsAction;
 
-    public function handle(string $goalKey, ?Model $visit = null, ?Model $event = null): ?CampaignConversion
-    {
+    public function handle(
+        string $goalKey,
+        ?Model $visit = null,
+        ?Model $event = null,
+        ?CampaignLandingPage $landingPage = null,
+        ?Model $source = null,
+    ): ?CampaignConversion {
         $goal = CampaignConversionGoal::query()
             ->where('key', $goalKey)
             ->where('type', ConversionGoalType::CtaClick)
@@ -26,6 +32,6 @@ final class RecordCtaClickConversionAction
             return null;
         }
 
-        return RecordCampaignConversionAction::run($goal, $visit, $event);
+        return RecordCampaignConversionAction::run($goal, $visit, $event, $landingPage, $source);
     }
 }

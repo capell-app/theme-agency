@@ -18,6 +18,9 @@ return [
         'conversion_goals' => 'campaign_conversion_goals',
         'conversions' => 'campaign_conversions',
     ],
+    'tracking' => [
+        'route_prefix' => 'capell/campaigns',
+    ],
     'layout_presets' => [
         'enabled' => true,
     ],
