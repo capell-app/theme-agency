@@ -34,4 +34,4 @@ Install flows should resolve `Capell\Deployments\Contracts\PublishesComposerChan
 
 ## Screenshot Coverage
 
-The screenshot contract is stored in [screenshots.json](screenshots.json). Final capture should include the connection page and registered dashboard widget after demo connection data is prepared.
+The screenshot contract is stored in [screenshots.json](screenshots.json). Current committed capture coverage includes the deployment connection page in light and dark mode after demo connection data is prepared.

@@ -18,16 +18,16 @@
             "useCase": "An operator connects or reviews the Git provider repository used for package install pull requests."
         },
         {
-            "id": "deployment-connection-widget",
-            "title": "Deployment connection widget.",
+            "id": "deployment-connection-page-dark",
+            "title": "Deployment connection page in dark mode.",
             "package": "deployments",
             "surface": "admin",
-            "targetType": "admin-widget",
-            "target": "DeploymentConnectionWidget",
+            "targetType": "admin-surface",
+            "target": "DeploymentConnectionPage",
             "required": true,
-            "notes": "Capture with one active DeploymentConnection when possible; otherwise the widget honestly shows the not-connected state.",
-            "screenshotPath": "packages/deployments/docs/screenshots/deployment-connection-widget.png",
-            "useCase": "An administrator checks from the dashboard whether package deployment publishing has an active repository connection."
+            "notes": "Capture the deployment connection page with the admin panel in dark mode and one active DeploymentConnection when possible.",
+            "screenshotPath": "packages/deployments/docs/screenshots/deployment-connection-page-dark.png",
+            "useCase": "An operator reviews the configured Git provider repository in dark mode."
         }
     ]
 }
