@@ -7,7 +7,6 @@ namespace Capell\RecordSwitcher\Providers;
 use Capell\Admin\Contracts\Extenders\EditRecordHeadingExtender;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\RecordSwitcher\Filament\RecordSwitcherHeadingExtender;
-use Capell\RecordSwitcher\Livewire\RecordSwitcher;
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
@@ -31,7 +30,7 @@ class RecordSwitcherServiceProvider extends AbstractPackageServiceProvider
     {
         $this->app->tag([RecordSwitcherHeadingExtender::class], EditRecordHeadingExtender::TAG);
 
-        Livewire::component('capell-record-switcher::record-switcher', RecordSwitcher::class);
+        Livewire::addNamespace('capell-record-switcher', classNamespace: 'Capell\\RecordSwitcher\\Livewire');
 
         FilamentAsset::register([
             Css::make('record-switcher', __DIR__ . '/../../resources/css/components/record-switcher.css'),

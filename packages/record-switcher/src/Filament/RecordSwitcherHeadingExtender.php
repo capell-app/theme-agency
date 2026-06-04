@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Capell\RecordSwitcher\Filament;
 
 use Capell\Admin\Contracts\Extenders\EditRecordHeadingExtender;
-use Capell\RecordSwitcher\Livewire\RecordSwitcher as RecordSwitcherComponent;
+use Capell\RecordSwitcher\Livewire\RecordSwitcher;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
-use Livewire\Livewire;
 
 final class RecordSwitcherHeadingExtender implements EditRecordHeadingExtender
 {
@@ -24,11 +23,9 @@ final class RecordSwitcherHeadingExtender implements EditRecordHeadingExtender
         $record = $page->getRecord();
         $label = $page->getRecordTitle();
 
-        Livewire::component('capell-record-switcher::record-switcher', RecordSwitcherComponent::class);
-
         return new HtmlString(Blade::render(
             <<<'BLADE'
-            @livewire('capell-record-switcher::record-switcher', [
+            @livewire($componentClass, [
                 'pageClass' => $pageClass,
                 'resourceClass' => $resourceClass,
                 'recordKey' => $recordKey,
@@ -36,6 +33,7 @@ final class RecordSwitcherHeadingExtender implements EditRecordHeadingExtender
             ], key($componentKey))
             BLADE,
             [
+                'componentClass' => RecordSwitcher::class,
                 'componentKey' => sprintf('record-switcher-%s-%s', str_replace('\\', '-', $page::class), $record->getRouteKey()),
                 'label' => $label instanceof Htmlable ? $label->toHtml() : $label,
                 'pageClass' => $page::class,
