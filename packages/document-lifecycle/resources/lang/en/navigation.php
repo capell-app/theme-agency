@@ -11,6 +11,8 @@ return [
         'title' => 'Title',
         'status' => 'Status',
         'metadata' => 'Metadata',
+        'content' => 'Content',
+        'metadata_note' => 'Admin note',
         'publications' => 'Publications',
         'version' => 'Version',
         'hash' => 'Hash',
@@ -27,10 +29,14 @@ return [
     ],
     'actions' => [
         'register_document' => 'Register document',
+        'publish_version' => 'Publish version',
+        'record_acceptance' => 'Record acceptance',
         'archive_document' => 'Archive document',
         'restore_document' => 'Restore document',
     ],
     'messages' => [
+        'version_published' => 'Document version published.',
+        'acceptance_recorded' => 'Document acceptance recorded.',
         'document_archived' => 'Document archived.',
         'document_restored' => 'Document restored.',
     ],

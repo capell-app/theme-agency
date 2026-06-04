@@ -17,7 +17,7 @@ Document Lifecycle tracks controlled documents across publication and acceptance
 
 - `DocumentResource` in the admin Websites navigation group.
 - Register/edit access to controlled document records.
-- Archive and restore actions for moving controlled documents through the admin lifecycle without bypassing package Actions.
+- Publish, archive, restore, and manual admin acceptance actions for moving controlled documents through the admin lifecycle without bypassing package Actions.
 - Publication and acceptance relation managers on each document.
 - Actions for registering documents, publishing versioned content, resolving the latest publication, and recording acceptances.
 - Publishing Studio revision listener that creates document publications when a matching registered document is published.
@@ -27,13 +27,13 @@ Document Lifecycle tracks controlled documents across publication and acceptance
 
 | Surface                       | Purpose                                                                                 |
 | ----------------------------- | --------------------------------------------------------------------------------------- |
-| `DocumentResource` index      | Lists controlled documents with key, title, status, publication count, update time, and archive/restore row actions. |
+| `DocumentResource` index      | Lists controlled documents with key, title, status, publication count, update time, and publish/version, record-acceptance, archive, and restore row actions. |
 | `CreateDocument`              | Registers a controlled document through `RegisterDocumentAction`, including key slugging and initial status.          |
 | `EditDocument`                | Edits title, status, and metadata for a controlled document.                                                   |
 | `PublicationsRelationManager` | Shows version labels, content hashes, publishing revision IDs, and publish times.       |
 | `AcceptancesRelationManager`  | Shows accepted versions, hashes, contexts, acceptors, and acceptance times.             |
 
-Archived documents can be restored from the index. Restore returns documents with publications to `active`, and documents without publications to `draft`; publishing a new version still goes through `PublishDocumentAction` or the Publishing Studio auto-publish listener.
+Archived documents can be restored from the index. Restore returns documents with publications to `active`, and documents without publications to `draft`. Manual admin publishes call `PublishDocumentAction` with pasted content, an optional version label, the authenticated admin as publishing actor, and an optional admin note. Manual admin acceptances call `RecordDocumentAcceptanceAction` for the authenticated admin against the latest publication; documents without publications do not show the acceptance action.
 
 ## Frontend Surfaces
 

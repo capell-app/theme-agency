@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\DocumentLifecycle\Actions\ComputeDocumentContentHashAction;
 use Capell\DocumentLifecycle\Enums\DocumentStatusEnum;
 use Capell\DocumentLifecycle\Filament\Resources\Documents\DocumentResource;
 use Capell\DocumentLifecycle\Filament\Resources\Documents\Pages\CreateDocument;
@@ -15,6 +16,7 @@ use Capell\DocumentLifecycle\Models\DocumentPublication;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 
 use function Pest\Laravel\assertDatabaseHas;
@@ -179,6 +181,87 @@ it('archives and restores controlled documents from table actions', function ():
         ->assertNotified(__('capell-document-lifecycle::navigation.messages.document_restored'));
 
     expect($document->refresh()->status)->toBe(DocumentStatusEnum::Active);
+});
+
+it('publishes controlled document versions from table actions', function (): void {
+    test()->actingAsAdmin();
+
+    $admin = auth()->user();
+
+    if (! $admin instanceof Model) {
+        throw new RuntimeException('Expected an authenticated admin model.');
+    }
+
+    $document = Document::factory()->draft()->create([
+        'key' => 'terms',
+        'title' => 'Terms of Service',
+    ]);
+
+    livewire(ListDocuments::class)
+        ->assertSuccessful()
+        ->assertActionVisible(TestAction::make('publish_version')->table($document))
+        ->callAction(TestAction::make('publish_version')->table($document), data: [
+            'version_label' => '2026-06-04',
+            'content' => 'Terms updated for June 2026.',
+            'metadata_note' => 'Approved by legal.',
+        ])
+        ->assertHasNoActionErrors()
+        ->assertNotified(__('capell-document-lifecycle::navigation.messages.version_published'));
+
+    $publication = $document->refresh()->publications()->firstOrFail();
+
+    expect($document->status)->toBe(DocumentStatusEnum::Active)
+        ->and($publication->version_label)->toBe('2026-06-04')
+        ->and($publication->content_hash)->toBe(ComputeDocumentContentHashAction::run('Terms updated for June 2026.'))
+        ->and($publication->published_actor_type)->toBe($admin->getMorphClass())
+        ->and($publication->published_actor_id)->toBe($admin->getKey())
+        ->and($publication->metadata)->toBe(['admin_note' => 'Approved by legal.']);
+});
+
+it('records admin acceptances from table actions', function (): void {
+    test()->actingAsAdmin();
+
+    $admin = auth()->user();
+
+    if (! $admin instanceof Model) {
+        throw new RuntimeException('Expected an authenticated admin model.');
+    }
+
+    $document = Document::factory()->active()->create([
+        'key' => 'terms',
+        'title' => 'Terms of Service',
+    ]);
+    $emptyDocument = Document::factory()->active()->create([
+        'key' => 'privacy',
+        'title' => 'Privacy Policy',
+    ]);
+    $publication = DocumentPublication::factory()->document($document)->create([
+        'version_label' => '2026-06-04',
+        'content_hash' => str_repeat('b', 64),
+    ]);
+
+    livewire(ListDocuments::class)
+        ->assertSuccessful()
+        ->assertActionVisible(TestAction::make('record_acceptance')->table($document))
+        ->assertActionHidden(TestAction::make('record_acceptance')->table($emptyDocument))
+        ->callAction(TestAction::make('record_acceptance')->table($document), data: [
+            'context' => 'admin-review',
+            'metadata_note' => 'Accepted while reviewing controlled document setup.',
+        ])
+        ->assertHasNoActionErrors()
+        ->assertNotified(__('capell-document-lifecycle::navigation.messages.acceptance_recorded'));
+
+    $acceptance = DocumentAcceptance::query()
+        ->where('document_key', 'terms')
+        ->firstOrFail();
+
+    expect($acceptance->document_version)->toBe('2026-06-04')
+        ->and($acceptance->document_publication_id)->toBe($publication->getKey())
+        ->and($acceptance->document_hash)->toBe(str_repeat('b', 64))
+        ->and($acceptance->acceptor_type)->toBe($admin->getMorphClass())
+        ->and($acceptance->acceptor_id)->toBe($admin->getKey())
+        ->and($acceptance->context)->toBe('admin-review')
+        ->and($acceptance->metadata)->toBe(['admin_note' => 'Accepted while reviewing controlled document setup.']);
 });
 
 it('restores archived documents without publications to draft', function (): void {

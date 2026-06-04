@@ -9,6 +9,7 @@ All notable changes to `capell-app/document-lifecycle` will be documented in thi
 - Reconciled the manifest frontend surface by declaring only admin and console surfaces; the Customer Portal feed remains an authenticated supported integration, not package-owned public frontend output.
 - Clarified that the marketplace manifest only lists committed marketplace assets while the admin screenshot contract remains pending capture through `docs/screenshots.json`.
 - Added translated Filament labels and badge colours to `DocumentStatusEnum` and tightened `DocumentAcceptance` mass assignment to explicit fillable fields.
+- Added Action-backed admin row actions for publishing controlled document versions and recording manual authenticated-admin acceptances.
 
 ## 2026-06-03
 

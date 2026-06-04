@@ -24,6 +24,7 @@ use Override;
  * @property array<array-key, mixed>|null $metadata
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
+ * @property-read int|null $publications_count
  */
 class Document extends Model
 {

@@ -7,6 +7,8 @@ namespace Capell\DocumentLifecycle\Filament\Resources\Documents;
 use BackedEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\DocumentLifecycle\Actions\ArchiveDocumentAction;
+use Capell\DocumentLifecycle\Actions\PublishDocumentAction;
+use Capell\DocumentLifecycle\Actions\RecordDocumentAcceptanceAction;
 use Capell\DocumentLifecycle\Actions\RestoreDocumentAction;
 use Capell\DocumentLifecycle\Enums\DocumentStatusEnum;
 use Capell\DocumentLifecycle\Filament\Resources\Documents\Pages\CreateDocument;
@@ -20,6 +22,7 @@ use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -28,6 +31,8 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Override;
 
@@ -92,6 +97,8 @@ final class DocumentResource extends Resource
             ])
             ->recordActions([
                 EditAction::make(),
+                self::publishVersionRecordAction(),
+                self::recordAcceptanceRecordAction(),
                 Action::make('archive')
                     ->label(__('capell-document-lifecycle::navigation.actions.archive_document'))
                     ->icon('heroicon-o-archive-box')
@@ -185,5 +192,113 @@ final class DocumentResource extends Resource
             PublicationsRelationManager::class,
             AcceptancesRelationManager::class,
         ];
+    }
+
+    private static function publishVersionRecordAction(): Action
+    {
+        return Action::make('publish_version')
+            ->label(__('capell-document-lifecycle::navigation.actions.publish_version'))
+            ->icon('heroicon-o-cloud-arrow-up')
+            ->color('success')
+            ->visible(fn (Document $record): bool => $record->status !== DocumentStatusEnum::Archived
+                && Gate::allows('update', $record))
+            ->schema([
+                TextInput::make('version_label')
+                    ->label(__('capell-document-lifecycle::navigation.fields.version'))
+                    ->maxLength(255),
+                Textarea::make('content')
+                    ->label(__('capell-document-lifecycle::navigation.fields.content'))
+                    ->required()
+                    ->rows(8)
+                    ->columnSpanFull(),
+                Textarea::make('metadata_note')
+                    ->label(__('capell-document-lifecycle::navigation.fields.metadata_note'))
+                    ->rows(3)
+                    ->columnSpanFull(),
+            ])
+            ->action(function (Document $record, array $data): void {
+                Gate::authorize('update', $record);
+
+                PublishDocumentAction::run(
+                    document: $record,
+                    content: (string) $data['content'],
+                    versionLabel: self::nullableString($data['version_label'] ?? null),
+                    publishedActor: self::authenticatedModel(),
+                    metadata: self::metadataFromNote($data['metadata_note'] ?? null),
+                );
+
+                Notification::make('document-lifecycle-version-published')
+                    ->title(__('capell-document-lifecycle::navigation.messages.version_published'))
+                    ->icon('heroicon-o-check-circle')
+                    ->iconColor('success')
+                    ->send();
+            });
+    }
+
+    private static function recordAcceptanceRecordAction(): Action
+    {
+        return Action::make('record_acceptance')
+            ->label(__('capell-document-lifecycle::navigation.actions.record_acceptance'))
+            ->icon('heroicon-o-check-badge')
+            ->color('gray')
+            ->requiresConfirmation()
+            ->visible(fn (Document $record): bool => ((int) ($record->publications_count ?? $record->publications()->count())) > 0
+                && Gate::allows('update', $record))
+            ->schema([
+                TextInput::make('context')
+                    ->label(__('capell-document-lifecycle::navigation.fields.context'))
+                    ->default('admin')
+                    ->maxLength(255),
+                Textarea::make('metadata_note')
+                    ->label(__('capell-document-lifecycle::navigation.fields.metadata_note'))
+                    ->rows(3)
+                    ->columnSpanFull(),
+            ])
+            ->action(function (Document $record, array $data): void {
+                Gate::authorize('update', $record);
+
+                RecordDocumentAcceptanceAction::run(
+                    documentKey: $record->key,
+                    acceptor: self::authenticatedModel(),
+                    context: self::nullableString($data['context'] ?? null),
+                    metadata: self::metadataFromNote($data['metadata_note'] ?? null),
+                    ipAddress: request()->ip(),
+                    userAgent: request()->userAgent(),
+                );
+
+                Notification::make('document-lifecycle-acceptance-recorded')
+                    ->title(__('capell-document-lifecycle::navigation.messages.acceptance_recorded'))
+                    ->icon('heroicon-o-check-circle')
+                    ->iconColor('success')
+                    ->send();
+            });
+    }
+
+    private static function authenticatedModel(): ?Model
+    {
+        $user = Auth::user();
+
+        return $user instanceof Model ? $user : null;
+    }
+
+    private static function nullableString(mixed $value): ?string
+    {
+        if (! is_string($value)) {
+            return null;
+        }
+
+        $value = trim($value);
+
+        return $value === '' ? null : $value;
+    }
+
+    /**
+     * @return array{admin_note: string}|array{}
+     */
+    private static function metadataFromNote(mixed $note): array
+    {
+        $note = self::nullableString($note);
+
+        return $note === null ? [] : ['admin_note' => $note];
     }
 }
