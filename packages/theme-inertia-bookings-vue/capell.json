@@ -1,0 +1,82 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-inertia-bookings-vue",
+    "slug": "theme-inertia-bookings-vue",
+    "displayName": "Theme Inertia Bookings Vue",
+    "kind": "plugin",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Vue component pack for Theme Inertia Bookings.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\InertiaBookingsVue",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": [
+            "capell-app/theme-inertia-bookings",
+            "capell-app/inertia-vue-adapter"
+        ],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\ThemeStudio\\InertiaBookingsVue\\Providers\\InertiaBookingsVueServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-inertia-bookings-vue"],
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-inertia-bookings-vue"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-inertia-bookings-vue.package-health",
+            "label": "Theme Inertia Bookings Vue components are present.",
+            "class": "Capell\\ThemeStudio\\InertiaBookingsVue\\Health\\InertiaBookingsVueHealthCheck",
+            "severity": "important",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Vue components for Theme Inertia Bookings.",
+        "description": "Provides Vue source components that implement the shared Capell/Page and Capell/Bookings/Request server contract.",
+        "screenshots": [],
+        "categories": ["frontend", "themes"]
+    }
+}
