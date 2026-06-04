@@ -14,7 +14,7 @@ Contacts provides the shared CRM record layer for Capell package integrations, i
 - Newsletter calls the shared sync action directly from subscriber lifecycle actions so subscribers are represented in the same central CRM record layer.
 - Contact tagging and activity recording actions.
 - Dashboard overview stats for contacts, organisations, open leads, and activities. Callers can pass a site id to `BuildContactsOverviewStatsAction` for site-scoped totals; omitting the site id intentionally returns global package totals.
-- Privacy export and anonymization actions for contact subject request workflows.
+- Privacy export and anonymization workflows through domain actions, Contact admin row actions, and the `capell-contacts:privacy` command.
 
 ## Source Sync Boundary
 
@@ -30,6 +30,17 @@ The action:
 - applies normalized tags;
 - optionally creates a lead;
 - optionally records an activity linked to the source model.
+
+## Privacy Workflows
+
+Operators can run subject-access and erasure workflows from the Contact admin table or from the host application's console:
+
+```bash
+php artisan capell-contacts:privacy 123 --export --json
+php artisan capell-contacts:privacy --email=person@example.test --site-id=1 --anonymize
+```
+
+`AuditContactPrivacyExportAction` returns the decrypted subject-access export and records a non-PII `privacy_export` activity with section counts and requester metadata. `AnonymizeContactWithAuditAction` runs the existing anonymizer, clears sensitive contact, lead, and activity fields, then records a non-PII `privacy_anonymization` activity so operators have an audit trail without retaining erased personal data.
 
 ## Testing
 

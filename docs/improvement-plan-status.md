@@ -8,7 +8,7 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 344 |
+| Now    | 339 |
 | Next   | 331 |
 | Later  | 202 |
 
@@ -30,7 +30,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | ------- | --: | ---: | ----: | -------------- | ---------------------- |
 | campaign-studio | 6 | 5 | 5 | Slice committed | Latest Campaign Studio slice adds campaign hero UTM fields, decorates hero CTA URLs through `BuildCampaignUrlAction`, updates screenshots/docs, and adds public render coverage; continue with CTA/page-view capture, full-page public safety tests, cache/personalisation strategy, variant publish filtering, scheduling, and experiment result readout. |
 | comments | 1 | 0 | 0 | Slice committed | Latest Comments slice adds public Like reactions, aggregate public reaction counts, approved-reply author notifications, and tokenized reply-notification opt-out handling; continue with marketplace screenshot capture/wiring. |
-| contacts | 6 | 7 | 2 | Slice committed | `132778050` fixed stats scoping; continue with privacy/export/merge gaps. |
+| contacts | 1 | 7 | 2 | Slice committed | Current follow-up exposes audited privacy export/anonymization through Contact admin actions and `capell-contacts:privacy`; reconciled already-shipped search, health, stats scoping, and dedup-claim rows. Queue source-adapter listeners remains the only Contacts Now row. |
 | content-sections | 5 | 6 | 4 | Slice committed | `54b758fe1` landed readiness fixes; continue with remaining render safety/content rows. |
 | customer-portal | 6 | 7 | 3 | Slice committed | `6de22b6d4` landed a now-bucket slice; continue with cross-account and profile gaps. |
 | dashboard-reports | 7 | 5 | 3 | Slice committed | `5779a66d6` landed a now-bucket slice; continue with budget/reporting gaps. |

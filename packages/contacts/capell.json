@@ -76,11 +76,14 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "privacy": "capell-contacts:privacy"
     },
     "settings": [],
     "actions": {
         "anonymizeContact": "Capell\\Contacts\\Actions\\AnonymizeContactAction",
+        "anonymizeContactWithAudit": "Capell\\Contacts\\Actions\\AnonymizeContactWithAuditAction",
+        "auditContactPrivacyExport": "Capell\\Contacts\\Actions\\AuditContactPrivacyExportAction",
         "buildContactPrivacyExport": "Capell\\Contacts\\Actions\\BuildContactPrivacyExportAction",
         "buildContactsOverviewStats": "Capell\\Contacts\\Actions\\BuildContactsOverviewStatsAction",
         "findOrCreateContact": "Capell\\Contacts\\Actions\\FindOrCreateContactAction",
@@ -95,6 +98,8 @@
         "tagContact": "Capell\\Contacts\\Actions\\TagContactAction"
     },
     "permissions": [
+        "ExportPrivacy:Contact",
+        "AnonymizePrivacy:Contact",
         "View:Contact",
         "View:Organisation",
         "View:Lead",

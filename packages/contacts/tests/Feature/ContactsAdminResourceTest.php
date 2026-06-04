@@ -20,6 +20,7 @@ use Capell\Contacts\Policies\ContactPolicy;
 use Capell\Contacts\Policies\LeadPolicy;
 use Capell\Contacts\Policies\OrganisationPolicy;
 use Capell\Contacts\Tests\ContactsTestCase;
+use Filament\Actions\ActionGroup;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Foundation\Auth\User;
@@ -41,6 +42,16 @@ it('does not mark encrypted contact columns as searchable', function (): void {
 
     expect($columns['display_name']->isSearchable())->toBeFalse()
         ->and($columns['email']->isSearchable())->toBeFalse();
+});
+
+it('exposes operator privacy actions for contact records', function (): void {
+    $actions = ContactResource::table(contactsResourceTestTable())->getActions();
+    $user = new User;
+    $contact = new Contact;
+
+    expect(contactsResourceTestActionNames($actions))->toContain('privacy_export', 'privacy_anonymize')
+        ->and((new ContactPolicy)->exportPrivacy($user, $contact))->toBeTrue()
+        ->and((new ContactPolicy)->anonymizePrivacy($user, $contact))->toBeTrue();
 });
 
 it('declares read only admin resources for crm records', function (): void {
@@ -185,3 +196,31 @@ it('can scope contacts overview widget stats to a site', function (): void {
         'activities' => 2,
     ]);
 });
+
+/**
+ * @param  array<array-key, mixed>  $actions
+ * @return list<string>
+ */
+function contactsResourceTestActionNames(array $actions): array
+{
+    return array_values(collect($actions)
+        ->flatMap(fn (mixed $action): array => contactsResourceTestFlattenActionNames($action))
+        ->values()
+        ->all());
+}
+
+/**
+ * @return list<string>
+ */
+function contactsResourceTestFlattenActionNames(mixed $action): array
+{
+    if ($action instanceof ActionGroup) {
+        return contactsResourceTestActionNames($action->getActions());
+    }
+
+    if (is_object($action) && method_exists($action, 'getName')) {
+        return [(string) $action->getName()];
+    }
+
+    return [];
+}

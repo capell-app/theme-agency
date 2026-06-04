@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Capell\Contacts\Actions\AnonymizeContactAction;
+use Capell\Contacts\Actions\AnonymizeContactWithAuditAction;
+use Capell\Contacts\Actions\AuditContactPrivacyExportAction;
 use Capell\Contacts\Actions\BuildContactPrivacyExportAction;
 use Capell\Contacts\Actions\BuildContactsOverviewStatsAction;
 use Capell\Contacts\Actions\SyncContactSourceRecordAction;
@@ -44,6 +46,8 @@ it('declares the contacts package manifest contract', function (): void {
             'contact_activities',
         ])
         ->and($manifest['permissions'])->toContain(
+            'ExportPrivacy:Contact',
+            'AnonymizePrivacy:Contact',
             'View:Contact',
             'View:Organisation',
             'View:Lead',
@@ -64,11 +68,14 @@ it('declares the contacts package manifest contract', function (): void {
             && ($contribution['widgetClass'] ?? null) === ContactsOverviewStatsWidget::class))->toBeTrue()
         ->and(class_implements(ContactsOverviewWidgetContribution::class))->toContain(RegistersExtensionWidget::class)
         ->and($manifest['actions']['anonymizeContact'])->toBe(AnonymizeContactAction::class)
+        ->and($manifest['actions']['anonymizeContactWithAudit'])->toBe(AnonymizeContactWithAuditAction::class)
+        ->and($manifest['actions']['auditContactPrivacyExport'])->toBe(AuditContactPrivacyExportAction::class)
         ->and($manifest['actions']['buildContactPrivacyExport'])->toBe(BuildContactPrivacyExportAction::class)
         ->and($manifest['actions']['buildContactsOverviewStats'])->toBe(BuildContactsOverviewStatsAction::class)
         ->and($manifest['actions']['syncContactSourceRecord'])->toBe(SyncContactSourceRecordAction::class)
         ->and($manifest['actions']['syncFormSubmissionContact'])->toBe(SyncFormSubmissionContactAction::class)
         ->and($manifest['actions']['syncShopifyCustomerContact'])->toBe(SyncShopifyCustomerContactAction::class)
+        ->and($manifest['commands']['privacy'])->toBe('capell-contacts:privacy')
         ->and($manifest['capabilities'])->toContain(
             'contacts-access-gate-source-adapter',
             'contacts-campaign-studio-source-adapter',

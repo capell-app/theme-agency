@@ -4,6 +4,13 @@ All notable changes to `capell-app/contacts` will be documented in this file.
 
 ## Unreleased
 
+### 2026-06-04
+
+- Exposed contact privacy workflows to operators through the `capell-contacts:privacy` command and Contact admin row actions.
+- Added audited privacy workflow actions: `AuditContactPrivacyExportAction` records export events without storing exported PII, and `AnonymizeContactWithAuditAction` records a non-PII erasure audit after anonymization clears sensitive contact, lead, and activity data.
+- Added explicit Contact policy methods and manifest permissions for privacy export and anonymization workflows.
+- Added tests covering admin privacy action registration, manifest wiring, audited privacy activity rows, and console export/anonymization reachability.
+
 ### 2026-06-03
 
 - Implemented real `ContactsHealthCheck` diagnostics: the previously stubbed critical check now asserts that the contacts storage tables exist, the CRM models are registered in the morph map, and an identity hash secret is configured. Added `runDiagnostics()` and `passed()` following the shared Capell health-check convention.

@@ -15,6 +15,8 @@ use Capell\Comments\Events\CommentCreated;
 use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
 use Capell\Contacts\Actions\AnonymizeContactAction;
+use Capell\Contacts\Actions\AnonymizeContactWithAuditAction;
+use Capell\Contacts\Actions\AuditContactPrivacyExportAction;
 use Capell\Contacts\Actions\BuildContactPrivacyExportAction;
 use Capell\Contacts\Actions\FindOrCreateContactAction;
 use Capell\Contacts\Actions\RecordContactActivityAction;
@@ -53,6 +55,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
@@ -767,4 +770,80 @@ it('exports and anonymizes contact privacy data', function (): void {
         ->and($lead->context)->toBeNull()
         ->and($contact->activities()->first()?->summary)->toBeNull()
         ->and($contact->activities()->first()?->payload)->toBeNull();
+});
+
+it('audits contact privacy export and anonymization workflows', function (): void {
+    $siteId = $this->createContactsSite();
+    $contact = FindOrCreateContactAction::run(new ContactIdentityData(
+        siteId: $siteId,
+        email: 'audit@example.test',
+        displayName: 'Audit Subject',
+        profile: ['tags' => ['subject-access']],
+    ));
+
+    RecordContactActivityAction::run(
+        contact: $contact,
+        activityData: new ContactActivityData(
+            type: ContactActivityType::Note,
+            summary: 'Contains sensitive free text',
+            payload: ['message' => 'Sensitive payload'],
+            occurredAt: Date::now(),
+        ),
+    );
+
+    $export = AuditContactPrivacyExportAction::run($contact, 'operator@example.test');
+    $exportAudit = $contact->activities()->latest('id')->first();
+
+    expect($export['contact']['email'])->toBe('audit@example.test')
+        ->and($exportAudit?->type)->toBe(ContactActivityType::PrivacyExport)
+        ->and($exportAudit?->summary)->toBe('Contact privacy export generated')
+        ->and($exportAudit?->payload)->toMatchArray([
+            'requested_by' => 'operator@example.test',
+            'sections' => [
+                'organisations' => 0,
+                'leads' => 0,
+                'activities' => 1,
+            ],
+        ]);
+
+    $anonymizedContact = AnonymizeContactWithAuditAction::run($contact, 'operator@example.test');
+    $anonymizationAudit = $anonymizedContact->activities()->latest('id')->first();
+
+    expect($anonymizedContact->email)->toBeNull()
+        ->and($anonymizedContact->profile)->toBeNull()
+        ->and($anonymizationAudit?->type)->toBe(ContactActivityType::PrivacyAnonymization)
+        ->and($anonymizationAudit?->summary)->toBe('Contact privacy anonymization completed')
+        ->and($anonymizationAudit?->payload)->toBe(['requested_by' => 'operator@example.test'])
+        ->and($anonymizedContact->activities()->where('type', ContactActivityType::Note)->first()?->summary)->toBeNull()
+        ->and($anonymizedContact->activities()->where('type', ContactActivityType::PrivacyExport)->first()?->summary)->toBeNull();
+});
+
+it('runs contact privacy workflows from the console command', function (): void {
+    $siteId = $this->createContactsSite();
+    $contact = FindOrCreateContactAction::run(new ContactIdentityData(
+        siteId: $siteId,
+        email: 'command@example.test',
+        displayName: 'Command Subject',
+    ));
+
+    $exportExitCode = Artisan::call('capell-contacts:privacy', [
+        '--email' => 'command@example.test',
+        '--site-id' => (string) $siteId,
+        '--export' => true,
+        '--json' => true,
+    ]);
+
+    expect($exportExitCode)->toBe(0)
+        ->and(Artisan::output())->toContain('"email": "command@example.test"');
+
+    expect($contact->activities()->latest('id')->first()?->type)->toBe(ContactActivityType::PrivacyExport);
+
+    $anonymizeExitCode = Artisan::call('capell-contacts:privacy', [
+        'contact' => (string) $contact->getKey(),
+        '--anonymize' => true,
+    ]);
+
+    expect($anonymizeExitCode)->toBe(0)
+        ->and($contact->refresh()->email)->toBeNull()
+        ->and($contact->activities()->latest('id')->first()?->type)->toBe(ContactActivityType::PrivacyAnonymization);
 });

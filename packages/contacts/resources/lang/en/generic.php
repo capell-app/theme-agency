@@ -20,6 +20,10 @@ return [
         'value_amount' => 'Value',
         'website' => 'Website',
     ],
+    'actions' => [
+        'privacy_anonymize' => 'Anonymize contact',
+        'privacy_export' => 'Export privacy data',
+    ],
     'resources' => [
         'activities' => 'Activities',
         'contact' => 'Contact',
@@ -79,6 +83,22 @@ return [
         'event_registration' => 'Event registration',
         'shopify_customer' => 'Shopify customer',
         'campaign_conversion' => 'Campaign conversion',
+        'privacy_export' => 'Privacy export',
+        'privacy_anonymization' => 'Privacy anonymization',
+    ],
+    'privacy' => [
+        'anonymization_activity_summary' => 'Contact privacy anonymization completed',
+        'anonymized_contact' => 'Anonymized contact :contact.',
+        'anonymized_notification' => 'Contact anonymized.',
+        'command_contact_not_found' => 'No matching contact was found.',
+        'command_positive_integer' => 'The :option option must be a positive integer.',
+        'command_requires_contact' => 'Provide a contact ID or --email with --site-id.',
+        'command_requires_operation' => 'Choose --export, --anonymize, or both.',
+        'command_requires_site' => 'The --site-id option is required when resolving by email.',
+        'command_single_lookup' => 'Use either a contact ID or --email, not both.',
+        'command_valid_contact' => 'The contact argument must be a positive integer ID.',
+        'command_valid_email' => 'The --email option must be a valid email address.',
+        'export_activity_summary' => 'Contact privacy export generated',
     ],
     'widgets' => [
         'activities' => 'Activities',

@@ -7,6 +7,7 @@ namespace Capell\Contacts\Providers;
 use Capell\AccessGate\Events\RegistrationApproved;
 use Capell\CampaignStudio\Events\CampaignConverted;
 use Capell\Comments\Events\CommentCreated;
+use Capell\Contacts\Console\Commands\ContactPrivacyCommand;
 use Capell\Contacts\Listeners\SyncContactFromAccessGateRegistration;
 use Capell\Contacts\Listeners\SyncContactFromCampaignConversion;
 use Capell\Contacts\Listeners\SyncContactFromComment;
@@ -51,6 +52,12 @@ final class ContactsServiceProvider extends AbstractPackageServiceProvider
     public function packageRegistered(): void
     {
         $this->app->register(AdminServiceProvider::class);
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                ContactPrivacyCommand::class,
+            ]);
+        }
 
         $this->app->booted(function (): void {
             if (! $this->isPackageInstalled()) {

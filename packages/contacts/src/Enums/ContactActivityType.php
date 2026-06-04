@@ -16,6 +16,8 @@ enum ContactActivityType: string implements HasLabel
     case EventRegistration = 'event_registration';
     case ShopifyCustomer = 'shopify_customer';
     case CampaignConversion = 'campaign_conversion';
+    case PrivacyExport = 'privacy_export';
+    case PrivacyAnonymization = 'privacy_anonymization';
 
     public function getLabel(): string
     {
