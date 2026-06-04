@@ -54,7 +54,8 @@
             "comment_authors",
             "comments",
             "comment_tokens",
-            "comment_moderation_events"
+            "comment_moderation_events",
+            "comment_reactions"
         ]
     },
     "commands": {
@@ -67,7 +68,10 @@
     "actions": {
         "install": "Capell\\Comments\\Actions\\InstallCommentsPackageAction",
         "applyPrivacyRetention": "Capell\\Comments\\Actions\\ApplyCommentPrivacyRetentionAction",
-        "scoreSpam": "Capell\\Comments\\Actions\\ScoreCommentSpamAction"
+        "scoreSpam": "Capell\\Comments\\Actions\\ScoreCommentSpamAction",
+        "toggleReaction": "Capell\\Comments\\Actions\\ToggleCommentReactionAction",
+        "requestReplyNotification": "Capell\\Comments\\Actions\\RequestCommentReplyNotificationAction",
+        "disableReplyNotifications": "Capell\\Comments\\Actions\\DisableCommentAuthorReplyNotificationsAction"
     },
     "settings": ["Capell\\Comments\\Settings\\CommentSettings"],
     "permissions": [],
@@ -77,7 +81,9 @@
         "comments-frontend",
         "comments-created-event",
         "comments-privacy-retention",
-        "comments-spam-provider-contract"
+        "comments-spam-provider-contract",
+        "comments-reactions",
+        "comments-reply-notifications"
     ],
     "performance": {
         "frontendRenderBudgetMs": 20,
@@ -97,6 +103,10 @@
                         "restored",
                         "forceDeleted"
                     ]
+                },
+                {
+                    "model": "Capell\\Comments\\Models\\CommentReaction",
+                    "events": ["created", "deleted"]
                 }
             ],
             "queueInvalidation": true

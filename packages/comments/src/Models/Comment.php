@@ -22,6 +22,7 @@ use Override;
 /**
  * @property string $public_id
  * @property int $site_id
+ * @property int $comment_author_id
  * @property string $commentable_type
  * @property int $commentable_id
  * @property int|null $parent_id
@@ -137,6 +138,14 @@ class Comment extends Model
     public function moderationEvents(): HasMany
     {
         return $this->hasMany(CommentModerationEvent::class);
+    }
+
+    /**
+     * @return HasMany<CommentReaction, $this>
+     */
+    public function reactions(): HasMany
+    {
+        return $this->hasMany(CommentReaction::class);
     }
 
     #[Override]

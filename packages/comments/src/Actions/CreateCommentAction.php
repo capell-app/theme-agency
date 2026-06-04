@@ -143,6 +143,10 @@ class CreateCommentAction
 
             event(new CommentCreated($freshComment));
 
+            if ($freshComment->status === CommentStatus::Approved) {
+                RequestCommentReplyNotificationAction::run($freshComment);
+            }
+
             return $freshComment;
         });
     }

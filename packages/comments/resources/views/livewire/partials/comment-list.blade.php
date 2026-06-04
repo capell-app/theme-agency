@@ -17,6 +17,14 @@
                 >
                     {{ __('capell-comments::generic.reply') }}
                 </button>
+                <button
+                    type="button"
+                    wire:click="toggleReaction('{{ $comment->publicId }}')"
+                    aria-label="{{ trans_choice('capell-comments::generic.reaction_count', $comment->reactionCount, ['count' => $comment->reactionCount]) }}"
+                >
+                    {{ __('capell-comments::generic.like') }}
+                    <span>{{ $comment->reactionCount }}</span>
+                </button>
 
                 @if ($comment->children !== [])
                     @include('capell-comments::livewire.partials.comment-list', [

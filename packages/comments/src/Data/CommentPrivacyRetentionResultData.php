@@ -21,6 +21,8 @@ final class CommentPrivacyRetentionResultData extends Data
         public readonly int $deletedExpiredTokens,
         public readonly int $matchedStaleCommentIdentifiers,
         public readonly int $prunedStaleCommentIdentifiers,
+        public readonly int $matchedStaleReactionIdentifiers,
+        public readonly int $prunedStaleReactionIdentifiers,
     ) {}
 
     public function matchedRecords(): int
@@ -29,7 +31,8 @@ final class CommentPrivacyRetentionResultData extends Data
             + $this->matchedAuthorComments
             + $this->matchedAuthorTokens
             + $this->matchedExpiredTokens
-            + $this->matchedStaleCommentIdentifiers;
+            + $this->matchedStaleCommentIdentifiers
+            + $this->matchedStaleReactionIdentifiers;
     }
 
     public function affectedRecords(): int
@@ -38,6 +41,7 @@ final class CommentPrivacyRetentionResultData extends Data
             + $this->anonymizedAuthorComments
             + $this->deletedAuthorTokens
             + $this->deletedExpiredTokens
-            + $this->prunedStaleCommentIdentifiers;
+            + $this->prunedStaleCommentIdentifiers
+            + $this->prunedStaleReactionIdentifiers;
     }
 }

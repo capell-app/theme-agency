@@ -23,6 +23,7 @@ use Override;
  * @property Carbon|null $email_verified_at
  * @property Carbon|null $trusted_at
  * @property Carbon|null $blocked_at
+ * @property Carbon|null $reply_notifications_disabled_at
  */
 class CommentAuthor extends Model
 {
@@ -42,6 +43,7 @@ class CommentAuthor extends Model
         'email_verified_at',
         'trusted_at',
         'blocked_at',
+        'reply_notifications_disabled_at',
         'internal_notes',
     ];
 
@@ -71,6 +73,15 @@ class CommentAuthor extends Model
     public function isBlocked(): bool
     {
         return $this->blocked_at !== null;
+    }
+
+    public function acceptsReplyNotifications(): bool
+    {
+        return $this->email !== null
+            && $this->email !== ''
+            && $this->email_verified_at !== null
+            && $this->reply_notifications_disabled_at === null
+            && ! $this->isBlocked();
     }
 
     /**
@@ -125,6 +136,7 @@ class CommentAuthor extends Model
             'email_verified_at' => 'datetime',
             'trusted_at' => 'datetime',
             'blocked_at' => 'datetime',
+            'reply_notifications_disabled_at' => 'datetime',
         ];
     }
 }

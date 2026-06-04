@@ -67,6 +67,10 @@ class TransitionCommentStatusAction
                 InvalidateCommentableCacheAction::run($refreshedComment->commentable);
             }
 
+            if (! $previousStatus->isPubliclyVisible() && $status === CommentStatus::Approved) {
+                RequestCommentReplyNotificationAction::run($refreshedComment);
+            }
+
             return $refreshedComment;
         });
     }

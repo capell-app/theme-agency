@@ -21,6 +21,7 @@ class PublicCommentData extends Data implements Wireable
         public string $submittedAtForHumans,
         public int $depth,
         public int $replyCount,
+        public int $reactionCount = 0,
         public bool $hasMoreReplies = false,
         public array $children = [],
     ) {}
@@ -47,6 +48,7 @@ class PublicCommentData extends Data implements Wireable
             submittedAtForHumans: is_string($value['submittedAtForHumans'] ?? null) ? $value['submittedAtForHumans'] : $submittedAt->diffForHumans(),
             depth: is_numeric($value['depth'] ?? null) ? (int) $value['depth'] : 0,
             replyCount: is_numeric($value['replyCount'] ?? null) ? (int) $value['replyCount'] : 0,
+            reactionCount: is_numeric($value['reactionCount'] ?? null) ? (int) $value['reactionCount'] : 0,
             hasMoreReplies: (bool) ($value['hasMoreReplies'] ?? false),
             children: $children,
         );
@@ -61,6 +63,7 @@ class PublicCommentData extends Data implements Wireable
      *     submittedAtForHumans: string,
      *     depth: int,
      *     replyCount: int,
+     *     reactionCount: int,
      *     hasMoreReplies: bool,
      *     children: list<array<string, mixed>>
      * }
@@ -75,6 +78,7 @@ class PublicCommentData extends Data implements Wireable
             'submittedAtForHumans' => $this->submittedAtForHumans,
             'depth' => $this->depth,
             'replyCount' => $this->replyCount,
+            'reactionCount' => $this->reactionCount,
             'hasMoreReplies' => $this->hasMoreReplies,
             'children' => array_map(
                 static fn (PublicCommentData $child): array => $child->toLivewire(),

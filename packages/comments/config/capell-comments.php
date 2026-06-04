@@ -36,6 +36,7 @@ return [
     ],
     'notifications' => [
         'moderators' => [],
+        'reply_authors' => true,
     ],
     'retention' => [
         'days' => 180,

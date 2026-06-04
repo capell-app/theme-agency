@@ -7,13 +7,16 @@ namespace Capell\Comments\Actions;
 use Capell\Comments\Data\CommentableTypeData;
 use Capell\Comments\Data\PublicCommentData;
 use Capell\Comments\Enums\CommentPublicationPolicy;
+use Capell\Comments\Enums\CommentReactionType;
 use Capell\Comments\Enums\CommentStatus;
 use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
+use Capell\Comments\Models\CommentReaction;
 use Capell\Comments\Support\CommentableRegistry;
 use Capell\Comments\Support\CommentSettingsResolver;
 use Capell\Core\Models\Language;
 use Carbon\CarbonImmutable;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
@@ -56,6 +59,7 @@ class BuildPublicThreadAction
         /** @var EloquentCollection<int, Comment> $roots */
         $roots = Comment::query()
             ->with(['author'])
+            ->withCount($this->reactionCountRelation())
             ->where('commentable_type', $commentable->getMorphClass())
             ->where('commentable_id', $commentable->getKey())
             ->where('status', CommentStatus::Approved)
@@ -169,6 +173,7 @@ class BuildPublicThreadAction
             submittedAtForHumans: $submittedAt->settings(['locale' => $locale])->diffForHumans(),
             depth: (int) $comment->depth,
             replyCount: $replyCount,
+            reactionCount: $this->reactionCount($comment),
             hasMoreReplies: $replyCount > $children->count(),
             children: $children->isEmpty()
                 ? []
@@ -181,6 +186,23 @@ class BuildPublicThreadAction
                     replyLimitsByPublicId: $replyLimitsByPublicId,
                 ),
         );
+    }
+
+    /**
+     * @return array<string, Closure(Builder<CommentReaction>): Builder<CommentReaction>>
+     */
+    private function reactionCountRelation(): array
+    {
+        return [
+            'reactions as reaction_count' => static fn (Builder $query): Builder => $query->where('type', CommentReactionType::Like),
+        ];
+    }
+
+    private function reactionCount(Comment $comment): int
+    {
+        $reactionCount = $comment->getAttribute('reaction_count');
+
+        return is_numeric($reactionCount) ? (int) $reactionCount : 0;
     }
 
     /**
@@ -234,6 +256,7 @@ class BuildPublicThreadAction
     {
         return Comment::query()
             ->with(['author'])
+            ->withCount($this->reactionCountRelation())
             ->where('commentable_type', $comment->commentable_type)
             ->where('commentable_id', $comment->commentable_id)
             ->where('status', CommentStatus::Approved)

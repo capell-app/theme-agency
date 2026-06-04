@@ -3,7 +3,10 @@
 declare(strict_types=1);
 
 use Capell\Comments\Actions\ApplyCommentPrivacyRetentionAction;
+use Capell\Comments\Actions\DisableCommentAuthorReplyNotificationsAction;
+use Capell\Comments\Actions\RequestCommentReplyNotificationAction;
 use Capell\Comments\Actions\ScoreCommentSpamAction;
+use Capell\Comments\Actions\ToggleCommentReactionAction;
 use Capell\Comments\Console\Commands\InstallCommentsCommand;
 use Capell\Comments\Console\Commands\PruneCommentPrivacyDataCommand;
 use Capell\Comments\Contracts\CommentSpamProvider;
@@ -26,8 +29,14 @@ it('declares comments as optional for supported companion packages', function ()
         ->and($manifest['commands']['retention'])->toBe('capell-comments:privacy-retention')
         ->and($manifest['actions']['applyPrivacyRetention'])->toBe(ApplyCommentPrivacyRetentionAction::class)
         ->and($manifest['actions']['scoreSpam'])->toBe(ScoreCommentSpamAction::class)
+        ->and($manifest['actions']['toggleReaction'])->toBe(ToggleCommentReactionAction::class)
+        ->and($manifest['actions']['requestReplyNotification'])->toBe(RequestCommentReplyNotificationAction::class)
+        ->and($manifest['actions']['disableReplyNotifications'])->toBe(DisableCommentAuthorReplyNotificationsAction::class)
         ->and($manifest['capabilities'])->toContain('comments-privacy-retention')
         ->and($manifest['capabilities'])->toContain('comments-spam-provider-contract')
+        ->and($manifest['capabilities'])->toContain('comments-reactions')
+        ->and($manifest['capabilities'])->toContain('comments-reply-notifications')
+        ->and($manifest['database']['requiredTables'])->toContain('comment_reactions')
         ->and(app(CommentSpamProvider::class))->toBeInstanceOf(ConfiguredCommentSpamProvider::class)
         ->and(config('capell-comments.spam.providers'))->toContain(LocalCommentSpamProvider::class)
         ->and(class_exists(InstallCommentsCommand::class))->toBeTrue()

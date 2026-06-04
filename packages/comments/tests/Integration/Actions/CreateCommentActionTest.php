@@ -15,6 +15,7 @@ use Capell\Comments\Events\CommentCreated;
 use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
 use Capell\Comments\Models\CommentToken;
+use Capell\Comments\Notifications\CommentReplyNotification;
 use Capell\Comments\Notifications\ConfirmCommentAuthorEmailNotification;
 use Capell\Comments\Settings\CommentSettings;
 use Capell\Comments\Support\Spam\LocalCommentSpamProvider;
@@ -90,6 +91,47 @@ it('auto publishes only verified trusted authors when configured', function (): 
     ));
 
     expect($comment->status)->toBe(CommentStatus::Approved);
+});
+
+it('notifies a parent author when a trusted author reply is auto-approved', function (): void {
+    Notification::fake();
+    bindCommentSettings([
+        'publication_policy' => CommentPublicationPolicy::AutoPublish->value,
+        'require_email_verification' => false,
+    ]);
+
+    $page = $this->createCommentsPage();
+    $parentAuthor = CommentAuthor::factory()->create([
+        'site_id' => $page->site_id,
+        'email' => 'parent@example.com',
+    ]);
+    $parent = Comment::factory()->create([
+        'site_id' => $page->site_id,
+        'language_id' => $page->language_id,
+        'comment_author_id' => $parentAuthor->getKey(),
+        'commentable_type' => $page->getMorphClass(),
+        'commentable_id' => $page->getKey(),
+    ]);
+    $user = User::factory()->create(['email' => 'reply@example.com', 'email_verified_at' => now(), 'name' => 'Reply User']);
+    CommentAuthor::factory()->trusted()->create([
+        'site_id' => $page->site_id,
+        'user_type' => $user->getMorphClass(),
+        'user_id' => $user->getKey(),
+        'email' => $user->email,
+        'name' => $user->name,
+    ]);
+
+    $reply = CreateCommentAction::run(new CreateCommentData(
+        commentable: $page,
+        body: 'Approved reply',
+        user: $user,
+        parentPublicId: $parent->public_id,
+    ));
+
+    expect($reply->status)->toBe(CommentStatus::Approved)
+        ->and(CommentToken::query()->where('comment_id', $reply->getKey())->where('type', CommentTokenType::ReplyNotificationOptOut)->exists())->toBeTrue();
+
+    Notification::assertSentOnDemand(CommentReplyNotification::class);
 });
 
 it('does not let anonymous commenters inherit trusted author verification', function (): void {
@@ -543,9 +585,16 @@ it('does not approve comments before required email verification', function (): 
 })->throws(ValidationException::class);
 
 it('does not approve a reply until its parent is approved', function (): void {
+    Notification::fake();
+
     $page = $this->createCommentsPage();
+    $parentAuthor = CommentAuthor::factory()->create([
+        'site_id' => $page->site_id,
+        'email' => 'parent-transition@example.com',
+    ]);
     $parent = Comment::factory()->pendingApproval()->create([
         'site_id' => $page->site_id,
+        'comment_author_id' => $parentAuthor->getKey(),
         'commentable_type' => $page->getMorphClass(),
         'commentable_id' => $page->getKey(),
     ]);
@@ -562,7 +611,10 @@ it('does not approve a reply until its parent is approved', function (): void {
 
     $approvedReply = TransitionCommentStatusAction::run($reply, CommentStatus::Approved);
 
-    expect($approvedReply->status)->toBe(CommentStatus::Approved);
+    expect($approvedReply->status)->toBe(CommentStatus::Approved)
+        ->and(CommentToken::query()->where('comment_id', $reply->getKey())->where('type', CommentTokenType::ReplyNotificationOptOut)->exists())->toBeTrue();
+
+    Notification::assertSentOnDemand(CommentReplyNotification::class);
 });
 
 it('rejects replies to unavailable parents', function (): void {

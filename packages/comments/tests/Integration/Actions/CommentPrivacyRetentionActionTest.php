@@ -6,6 +6,7 @@ use Capell\Comments\Actions\ApplyCommentPrivacyRetentionAction;
 use Capell\Comments\Enums\CommentTokenType;
 use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
+use Capell\Comments\Models\CommentReaction;
 use Capell\Comments\Models\CommentToken;
 
 it('anonymizes a matching author while preserving public comment content', function (): void {
@@ -99,13 +100,35 @@ it('prunes expired tokens and stale visitor identifiers by retention window', fu
         'token_hash' => hash('sha256', 'active-token'),
         'expires_at' => now()->addDay(),
     ]);
+    $oldReaction = CommentReaction::query()->create([
+        'site_id' => $page->site_id,
+        'comment_id' => $oldComment->getKey(),
+        'visitor_ip_hash' => 'old-reaction-ip',
+        'visitor_user_agent_hash' => 'old-reaction-ua',
+    ]);
+    $recentReaction = CommentReaction::query()->create([
+        'site_id' => $page->site_id,
+        'comment_id' => $recentComment->getKey(),
+        'visitor_ip_hash' => 'recent-reaction-ip',
+        'visitor_user_agent_hash' => 'recent-reaction-ua',
+    ]);
+    $oldReaction->forceFill([
+        'created_at' => now()->subDays(45),
+        'updated_at' => now()->subDays(45),
+    ])->save();
+    $recentReaction->forceFill([
+        'created_at' => now()->subDays(5),
+        'updated_at' => now()->subDays(5),
+    ])->save();
 
     $result = ApplyCommentPrivacyRetentionAction::run(retentionDays: 30);
 
     expect($result->matchedExpiredTokens)->toBe(1)
         ->and($result->deletedExpiredTokens)->toBe(1)
         ->and($result->matchedStaleCommentIdentifiers)->toBe(1)
-        ->and($result->prunedStaleCommentIdentifiers)->toBe(1);
+        ->and($result->prunedStaleCommentIdentifiers)->toBe(1)
+        ->and($result->matchedStaleReactionIdentifiers)->toBe(1)
+        ->and($result->prunedStaleReactionIdentifiers)->toBe(1);
 
     expect($oldComment->refresh())
         ->visitor_ip_hash->toBeNull()
@@ -115,7 +138,15 @@ it('prunes expired tokens and stale visitor identifiers by retention window', fu
     expect($recentComment->refresh())
         ->visitor_ip_hash->toBe('recent-ip')
         ->visitor_user_agent_hash->toBe('recent-ua')
-        ->moderation_note->toBe('Recent note')
+        ->moderation_note->toBe('Recent note');
+
+    $oldReaction->refresh();
+    $recentReaction->refresh();
+
+    expect($oldReaction->visitor_ip_hash)->toBeNull()
+        ->and($oldReaction->visitor_user_agent_hash)->toBeNull()
+        ->and($recentReaction->visitor_ip_hash)->toBe('recent-reaction-ip')
+        ->and($recentReaction->visitor_user_agent_hash)->toBe('recent-reaction-ua')
         ->and(CommentToken::query()->whereKey($expiredToken->getKey())->exists())->toBeFalse()
         ->and(CommentToken::query()->whereKey($activeToken->getKey())->exists())->toBeTrue();
 });

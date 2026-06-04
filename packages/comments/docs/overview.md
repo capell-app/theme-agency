@@ -29,6 +29,9 @@ editors keep approval and author-management work inside Capell Admin.
   refresh workflows.
 - Locale-pinned public timestamp labels based on the commentable page language.
 - Queued moderator notifications for configured moderator email addresses.
+- Public Like reactions with aggregate counts on approved public comments.
+- Approved-reply notifications for verified parent authors, plus tokenized
+  reply-notification opt-out handling.
 - Privacy retention tooling for old visitor hashes, moderation notes, tokens,
   and author email erasure.
 - Diagnostics checks for storage tables, settings registration, thread route
@@ -67,6 +70,11 @@ not reveal internal moderation data.
   for spam scoring.
 - `NotifyModeratorsOfNewComment` listens for `CommentCreated` and notifies
   configured moderators when comments need review.
+- `ToggleCommentReactionAction` toggles Like reactions for approved comments
+  using authenticated user IDs or hashed visitor request data.
+- `RequestCommentReplyNotificationAction` sends approved-reply notifications
+  to verified parent authors, while `DisableCommentAuthorReplyNotificationsAction`
+  handles tokenized opt-outs.
 - `ApplyCommentPrivacyRetentionAction` prunes old private identifiers and
   anonymizes author records by email while preserving public comment history.
 - `CommentsHealthCheck` reports real Diagnostics results for package storage,
@@ -80,6 +88,7 @@ The package owns:
 - `comments`
 - `comment_tokens`
 - `comment_moderation_events`
+- `comment_reactions`
 
 Settings are stored through `CommentSettings`. Email and visitor identifiers are
 handled through hash helpers and token records rather than exposed in public
@@ -89,8 +98,10 @@ thread DTOs.
 
 - Install command: `capell-comments:install`
 - Retention command: `capell-comments:privacy-retention {--days=} {--email=}
-  {--site-id=} {--dry-run} {--json}`
+{--site-id=} {--dry-run} {--json}`
 - Public thread route name: `capell-comments.thread`
+- Reply notification opt-out route name:
+  `capell-comments.reply-notifications.disable`
 - Verification route names: `capell-comments.verify`,
   `capell-comments.verify.store`
 - Default route prefix: `capell/comments`
@@ -117,6 +128,7 @@ The current focused tests cover settings registration, settings resolution,
 manifest requirements, health diagnostics, email verification, local and
 external-provider spam scoring, moderator notification wiring, public thread
 rendering, component submission, sanitization hardening, auto-inject shell
-safety, reply pagination, package architecture boundaries, commentable
-memoization, locale-pinned public timestamps, performance budgets, privacy
-retention, throttling, and bot-trap rejection.
+safety, reply pagination, reaction toggling, approved-reply notifications,
+package architecture boundaries, commentable memoization, locale-pinned public
+timestamps, performance budgets, privacy retention, throttling, and bot-trap
+rejection.

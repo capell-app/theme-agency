@@ -16,6 +16,7 @@ use Capell\Comments\Listeners\NotifyModeratorsOfNewComment;
 use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
 use Capell\Comments\Models\CommentModerationEvent;
+use Capell\Comments\Models\CommentReaction;
 use Capell\Comments\Models\CommentToken;
 use Capell\Comments\Policies\CommentAuthorPolicy;
 use Capell\Comments\Policies\CommentPolicy;
@@ -52,6 +53,8 @@ class CommentsServiceProvider extends AbstractPackageServiceProvider
                 '2026_05_24_000002_create_comments_table',
                 '2026_05_24_000003_create_comment_tokens_table',
                 '2026_05_24_000004_create_comment_moderation_events_table',
+                '2026_05_24_000006_add_reply_notification_opt_out_to_comment_authors_table',
+                '2026_05_24_000007_create_comment_reactions_table',
             ]);
     }
 
@@ -116,6 +119,7 @@ class CommentsServiceProvider extends AbstractPackageServiceProvider
             CommentAuthor::class,
             CommentToken::class,
             CommentModerationEvent::class,
+            CommentReaction::class,
         ]);
 
         return $this;
@@ -146,7 +150,7 @@ class CommentsServiceProvider extends AbstractPackageServiceProvider
 
     private function registerProtectedTables(): self
     {
-        foreach (['comment_authors', 'comments', 'comment_tokens', 'comment_moderation_events'] as $table) {
+        foreach (['comment_authors', 'comments', 'comment_tokens', 'comment_moderation_events', 'comment_reactions'] as $table) {
             CapellCore::registerProtectedTable(static fn (): string => $table);
         }
 

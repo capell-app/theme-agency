@@ -6,6 +6,7 @@ namespace Capell\Comments\Livewire;
 
 use Capell\Comments\Actions\CreateCommentAction;
 use Capell\Comments\Actions\ResolvePublicCommentableThreadAction;
+use Capell\Comments\Actions\ToggleCommentReactionAction;
 use Capell\Comments\Data\CommentableTypeData;
 use Capell\Comments\Data\CreateCommentData;
 use Capell\Comments\Data\PublicCommentData;
@@ -127,6 +128,24 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
         $pageSize = max(1, $this->replyPageSize);
         $currentLimit = max(0, $this->replyLimits[$publicId] ?? $pageSize);
         $this->replyLimits[$publicId] = $currentLimit + $pageSize;
+        $this->refreshComments();
+    }
+
+    public function toggleReaction(string $publicId): void
+    {
+        $commentable = $this->resolveCommentable();
+        if (! $commentable instanceof Model || $publicId === '') {
+            return;
+        }
+
+        ToggleCommentReactionAction::run(
+            commentable: $commentable,
+            commentPublicId: $publicId,
+            user: auth()->user() instanceof Model ? auth()->user() : null,
+            ipAddress: request()->ip(),
+            userAgent: request()->userAgent(),
+        );
+
         $this->refreshComments();
     }
 

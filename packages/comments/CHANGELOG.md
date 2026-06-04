@@ -6,6 +6,7 @@ All notable changes to `capell-app/comments` will be documented in this file.
 
 ### 2026-06-04
 
+- Added public Like reactions, aggregate reaction counts in public comment DTOs, approved-reply author notifications, and tokenized reply-notification opt-out handling.
 - Added the `CommentSpamProvider` contract, configured provider chain, default `LocalCommentSpamProvider`, and create-flow context data for external Akismet/Turnstile-style spam adapters.
 - Added `capell-comments:privacy-retention` and `ApplyCommentPrivacyRetentionAction` for pruning old visitor hashes, moderation notes, expired tokens, and anonymizing matching author PII by email.
 - Added performance-budget coverage for public thread hydration/rendering and admin comment widgets, and batched sibling reply counts to avoid empty-grandchild query fanout.

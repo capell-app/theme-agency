@@ -8,4 +8,5 @@ enum CommentTokenType: string
 {
     case VerifyEmail = 'verify_email';
     case NotificationPreference = 'notification_preference';
+    case ReplyNotificationOptOut = 'reply_notification_opt_out';
 }

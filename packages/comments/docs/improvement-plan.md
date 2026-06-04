@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Comments adds moderated, threaded, dynamically-loaded discussion to registered Capell content (pages and, when Blog is installed, articles). It exposes two surfaces: an **admin** moderation experience (`CommentModerationInbox` page, `CommentResource` + `CommentAuthorResource`, `CommentStatsWidget`, `LatestCommentsWidget`) and a **frontend** Livewire component (`CommentThreadComponent`) loaded post-page via a no-store endpoint (`RenderCommentThreadController` → route `capell-comments.thread`). Key Actions are `CreateCommentAction`, `BuildPublicThreadAction` / `ResolvePublicCommentableThreadAction`, `TransitionCommentStatusAction`, `RequestCommentEmailVerificationAction` / `VerifyCommentAuthorEmailAction`, and `RegisterDefaultCommentablesAction`. Models/tables: `comments`, `comment_authors`, `comment_tokens`, `comment_moderation_events` (all registered as protected tables, all soft-delete on `comments`). Deps: `capell-app/{core,admin,frontend}`, Filament, Livewire, `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-settings`. Author `name`/`email` are `encrypted` casts; email is also stored as an HMAC `email_hash` for lookup.
+Comments adds moderated, threaded, dynamically-loaded discussion to registered Capell content (pages and, when Blog is installed, articles). It exposes two surfaces: an **admin** moderation experience (`CommentModerationInbox` page, `CommentResource` + `CommentAuthorResource`, `CommentStatsWidget`, `LatestCommentsWidget`) and a **frontend** Livewire component (`CommentThreadComponent`) loaded post-page via a no-store endpoint (`RenderCommentThreadController` → route `capell-comments.thread`). Key Actions are `CreateCommentAction`, `BuildPublicThreadAction` / `ResolvePublicCommentableThreadAction`, `TransitionCommentStatusAction`, `ToggleCommentReactionAction`, `RequestCommentEmailVerificationAction` / `VerifyCommentAuthorEmailAction`, `RequestCommentReplyNotificationAction`, and `RegisterDefaultCommentablesAction`. Models/tables: `comments`, `comment_authors`, `comment_tokens`, `comment_moderation_events`, `comment_reactions` (all registered as protected tables, all soft-delete on `comments`). Deps: `capell-app/{core,admin,frontend}`, Filament, Livewire, `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-settings`. Author `name`/`email` are `encrypted` casts; email is also stored as an HMAC `email_hash` for lookup.
 
 Current marketplace `summary` (verbatim): _"Comments adds moderated, configurable, cache-safe threaded discussion surfaces to Capell content."_ Screenshots declared in the manifest: **1** (`docs/assets/marketplace/extension-card.jpg`). Note the mismatch: `docs/screenshots.json` defines **4** required runtime screenshots (moderation inbox, comments resource, authors resource, public thread) that the marketplace `screenshots[]` array does not reference — the marketplace block ships only the generic extension card.
 
@@ -24,6 +24,7 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 - **2026-06-04:** Added enforceable performance-budget coverage for public thread hydration/rendering and admin comment widgets, and batched sibling reply counts to avoid empty-grandchild query fanout.
 - **2026-06-04:** Added privacy retention and erasure tooling for old visitor hashes, moderation notes, tokens, and author PII, plus hash-secret rotation documentation.
 - **2026-06-04:** Added the pluggable `CommentSpamProvider` contract, default local provider, configured provider chain, and spam-check context data for Akismet/Turnstile-style adapters.
+- **2026-06-04:** Added public Like reactions with aggregate public counts, plus approved-reply notifications with tokenized parent-author opt-out handling.
 
 ## 2. Improvements (existing functionality)
 
@@ -53,9 +54,9 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **Moderator digests / richer templates.** Instant configured-address moderator notifications are shipped. A daily moderation digest, role-based moderator discovery, and Email Studio-backed templates remain natural premium differentiators and the `supports: capell-app/email-studio` dependency is the intended vehicle.
 
-- **Reactions / voting (differentiator).** No upvote/like/reaction model. A `comment_reactions` table + aggregate counts on `PublicCommentData` would differentiate against bundled-CMS comment add-ons and is a common engagement lever for the "Capell Engagement" group.
+- **Shipped 2026-06-04: Reactions / voting (differentiator).** `comment_reactions` stores Like reactions keyed by authenticated user or hashed visitor request data. `ToggleCommentReactionAction` only accepts approved comments on the current commentable, and `PublicCommentData` exposes aggregate `reactionCount` without leaking actor identities.
 
-- **Author reply notifications (differentiator).** When a reply is approved under a parent, the parent's verified author is never notified. Tokens infrastructure (`comment_tokens`) already supports one-click unsubscribe. Drives re-engagement.
+- **Shipped 2026-06-04: Author reply notifications (differentiator).** `RequestCommentReplyNotificationAction` runs when a reply becomes approved via trusted-author auto-publish or moderation transition, sends a queued parent-author email only for verified non-blocked authors, and creates a `ReplyNotificationOptOut` token consumed by `DisableCommentAuthorReplyNotificationsAction`.
 
 - **Edit / delete window for authors (table-stakes-ish).** Authenticated/verified authors cannot edit or soft-delete their own comments from the frontend; only admins transition status. A short author edit window is expected by most comment systems.
 
@@ -116,5 +117,5 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 | Shipped 2026-06-04: memoize resolved commentable in Livewire component                                    | Next   | S      | Low    | §2          |
 | Shipped 2026-06-04: locale-pin public timestamps to page `language_id`                                    | Next   | S      | Low    | §4          |
 | Shipped 2026-06-04: pluggable external spam provider (Akismet/Turnstile) contract                         | Later  | M      | Med    | §3          |
-| Reactions/voting + author-reply notifications (Engagement Suite up-sell)                                  | Later  | L      | Med    | §3, §5      |
+| Shipped 2026-06-04: reactions/voting + author-reply notifications (Engagement Suite up-sell)              | Later  | L      | Med    | §3, §5      |
 | Shipped 2026-06-04: PII retention/erasure command + secret-rotation docs for hashes                       | Later  | M      | Med    | §4          |

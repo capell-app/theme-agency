@@ -24,6 +24,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable()->index();
             $table->timestamp('trusted_at')->nullable()->index();
             $table->timestamp('blocked_at')->nullable()->index();
+            $table->timestamp('reply_notifications_disabled_at')->nullable()->index();
             $table->text('internal_notes')->nullable();
             $table->timestamps();
 

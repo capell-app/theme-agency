@@ -10,6 +10,9 @@ visitor hashes, moderation notes, tokens, model IDs, or admin URLs.
 - `comment_authors.email_hash` is an HMAC lookup key.
 - `comments.visitor_ip_hash` and `comments.visitor_user_agent_hash` are HMAC
   request fingerprints used for moderation and abuse analysis.
+- `comment_reactions.visitor_ip_hash` and
+  `comment_reactions.visitor_user_agent_hash` are HMAC request fingerprints
+  used to toggle anonymous Like reactions without exposing actor identity.
 - `comment_tokens.token_hash` stores verification tokens as one-way hashes.
 - `comment_authors.internal_notes` and `comments.moderation_note` are private
   admin-only fields and may contain operational context.
@@ -63,6 +66,7 @@ The retention pass:
 
 - Deletes expired or consumed comment tokens older than the retention cutoff.
 - Clears old comment visitor IP hashes, user-agent hashes, and moderation notes.
+- Clears old anonymous reaction visitor IP and user-agent hashes.
 - Leaves public comment bodies, public IDs, status, thread shape, and submitted
   timestamps intact.
 

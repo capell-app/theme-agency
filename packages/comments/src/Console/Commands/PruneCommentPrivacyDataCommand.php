@@ -116,6 +116,8 @@ final class PruneCommentPrivacyDataCommand extends Command
             'deleted_expired_tokens' => $result->deletedExpiredTokens,
             'matched_stale_comment_identifiers' => $result->matchedStaleCommentIdentifiers,
             'pruned_stale_comment_identifiers' => $result->prunedStaleCommentIdentifiers,
+            'matched_stale_reaction_identifiers' => $result->matchedStaleReactionIdentifiers,
+            'pruned_stale_reaction_identifiers' => $result->prunedStaleReactionIdentifiers,
         ];
     }
 }

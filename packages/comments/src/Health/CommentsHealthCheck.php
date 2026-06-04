@@ -9,6 +9,7 @@ use Capell\Comments\Livewire\CommentThreadComponent;
 use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
 use Capell\Comments\Models\CommentModerationEvent;
+use Capell\Comments\Models\CommentReaction;
 use Capell\Comments\Models\CommentToken;
 use Capell\Comments\Settings\CommentSettings;
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
@@ -33,6 +34,7 @@ final class CommentsHealthCheck implements ChecksExtensionHealth
         Comment::class,
         CommentToken::class,
         CommentModerationEvent::class,
+        CommentReaction::class,
     ];
 
     public static function compatibleCapellApiVersion(): string
@@ -69,7 +71,7 @@ final class CommentsHealthCheck implements ChecksExtensionHealth
             label: 'Comments storage tables',
             passed: $missingTables === [],
             message: $missingTables === []
-                ? 'The comment author, comment, token, and moderation event tables are present.'
+                ? 'The comment author, comment, token, moderation event, and reaction tables are present.'
                 : 'Missing tables: ' . implode(', ', $missingTables) . '.',
             remediation: $missingTables === []
                 ? null

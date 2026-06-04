@@ -7,6 +7,7 @@ namespace Capell\Comments\Actions;
 use Capell\Comments\Data\CommentPrivacyRetentionResultData;
 use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
+use Capell\Comments\Models\CommentReaction;
 use Capell\Comments\Models\CommentToken;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,6 +31,9 @@ final class ApplyCommentPrivacyRetentionAction
             $staleIdentifiersQuery = $this->staleCommentIdentifiersQuery($cutoff);
             $matchedStaleCommentIdentifiers = (clone $staleIdentifiersQuery)->count();
             $prunedStaleCommentIdentifiers = $dryRun ? 0 : $staleIdentifiersQuery->update($this->commentIdentifierErasureAttributes());
+            $staleReactionIdentifiersQuery = $this->staleReactionIdentifiersQuery($cutoff);
+            $matchedStaleReactionIdentifiers = (clone $staleReactionIdentifiersQuery)->count();
+            $prunedStaleReactionIdentifiers = $dryRun ? 0 : $staleReactionIdentifiersQuery->update($this->reactionIdentifierErasureAttributes());
 
             return new CommentPrivacyRetentionResultData(
                 retentionDays: $resolvedRetentionDays,
@@ -44,6 +48,8 @@ final class ApplyCommentPrivacyRetentionAction
                 deletedExpiredTokens: $deletedExpiredTokens,
                 matchedStaleCommentIdentifiers: $matchedStaleCommentIdentifiers,
                 prunedStaleCommentIdentifiers: $prunedStaleCommentIdentifiers,
+                matchedStaleReactionIdentifiers: $matchedStaleReactionIdentifiers,
+                prunedStaleReactionIdentifiers: $prunedStaleReactionIdentifiers,
             );
         });
     }
@@ -171,6 +177,20 @@ final class ApplyCommentPrivacyRetentionAction
     }
 
     /**
+     * @return Builder<CommentReaction>
+     */
+    private function staleReactionIdentifiersQuery(CarbonImmutable $cutoff): Builder
+    {
+        return CommentReaction::query()
+            ->where('created_at', '<=', $cutoff)
+            ->where(function (Builder $query): void {
+                $query
+                    ->whereNotNull('visitor_ip_hash')
+                    ->orWhereNotNull('visitor_user_agent_hash');
+            });
+    }
+
+    /**
      * @return array{visitor_ip_hash: null, visitor_user_agent_hash: null, moderation_note: null}
      */
     private function commentIdentifierErasureAttributes(): array
@@ -179,6 +199,17 @@ final class ApplyCommentPrivacyRetentionAction
             'visitor_ip_hash' => null,
             'visitor_user_agent_hash' => null,
             'moderation_note' => null,
+        ];
+    }
+
+    /**
+     * @return array{visitor_ip_hash: null, visitor_user_agent_hash: null}
+     */
+    private function reactionIdentifierErasureAttributes(): array
+    {
+        return [
+            'visitor_ip_hash' => null,
+            'visitor_user_agent_hash' => null,
         ];
     }
 }

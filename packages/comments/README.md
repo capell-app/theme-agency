@@ -16,7 +16,7 @@ to registered Capell content.
   `Capell\Comments\Providers\FrontendServiceProvider`
 - Install command: `capell-comments:install`
 - Required tables: `comment_authors`, `comments`, `comment_tokens`,
-  `comment_moderation_events`
+  `comment_moderation_events`, `comment_reactions`
 
 ## Why It Helps Your Capell Workflow
 
@@ -61,6 +61,10 @@ to registered Capell content.
   heuristics.
 - Queued moderator notifications for valid configured moderator email
   addresses when new comments are waiting on approval or email verification.
+- Public Like reactions with aggregate counts on approved comments, without
+  exposing visitor or user reaction identity in public output.
+- Approved-reply notifications for verified parent authors, including a
+  tokenized opt-out link.
 - Privacy retention tooling that prunes old visitor hashes, moderation notes,
   and tokens, and anonymizes a matching author by email when needed.
 - Diagnostics-ready `CommentsHealthCheck` coverage for storage tables, settings
@@ -76,7 +80,8 @@ to registered Capell content.
 - Public thread reads return nothing when comments are disabled, publication is
   disabled, or the commentable model is not publicly visible.
 - Public DTOs include public IDs, sanitized body text, author display names,
-  timestamps, locale-pinned timestamp labels, depth, reply counts, and children.
+  timestamps, locale-pinned timestamp labels, depth, reply counts, reaction
+  counts, and children.
 - Public DTOs do not expose moderation status, model IDs, commentable IDs,
   author email, visitor hashes, tokens, or admin URLs.
 - The thread endpoint is designed for dynamic frontend loading rather than
@@ -87,20 +92,21 @@ to registered Capell content.
 
 ## Runtime Surface
 
-| Area          | Path                                                                                                                                                |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Config        | `config/capell-comments.php`                                                                                                                        |
-| Routes        | `routes/web.php`                                                                                                                                    |
-| Install       | `src/Console/Commands/InstallCommentsCommand.php`, `src/Actions/InstallCommentsPackageAction.php`                                                   |
-| Retention     | `src/Console/Commands/PruneCommentPrivacyDataCommand.php`, `src/Actions/ApplyCommentPrivacyRetentionAction.php`                                     |
-| Public thread | `src/Livewire/CommentThreadComponent.php`, `src/Http/Controllers/RenderCommentThreadController.php`                                                 |
-| Verification  | `src/Actions/RequestCommentEmailVerificationAction.php`, `src/Actions/VerifyCommentAuthorEmailAction.php`                                           |
-| Moderation    | `src/Actions/TransitionCommentStatusAction.php`, `src/Listeners/NotifyModeratorsOfNewComment.php`, `src/Filament/Pages/CommentModerationInbox.php`  |
-| Notifications | `src/Notifications/ConfirmCommentAuthorEmailNotification.php`, `src/Notifications/ModerateCommentNotification.php`                                  |
-| Settings      | `src/Settings/CommentSettings.php`, `src/Filament/Settings/CommentSettingsSchema.php`                                                               |
-| Data objects  | `src/Data/PublicCommentData.php`, `src/Data/PublicCommentableThreadData.php`, `src/Data/CreateCommentData.php`, `src/Data/CommentSpamCheckData.php`, `src/Data/CommentSpamScoreData.php` |
-| Models        | `src/Models/Comment.php`, `src/Models/CommentAuthor.php`, `src/Models/CommentToken.php`                                                             |
-| Spam scoring  | `src/Contracts/CommentSpamProvider.php`, `src/Support/Spam/LocalCommentSpamProvider.php`, `src/Support/Spam/ConfiguredCommentSpamProvider.php`       |
+| Area          | Path                                                                                                                                                                                                                               |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Config        | `config/capell-comments.php`                                                                                                                                                                                                       |
+| Routes        | `routes/web.php`                                                                                                                                                                                                                   |
+| Install       | `src/Console/Commands/InstallCommentsCommand.php`, `src/Actions/InstallCommentsPackageAction.php`                                                                                                                                  |
+| Retention     | `src/Console/Commands/PruneCommentPrivacyDataCommand.php`, `src/Actions/ApplyCommentPrivacyRetentionAction.php`                                                                                                                    |
+| Public thread | `src/Livewire/CommentThreadComponent.php`, `src/Http/Controllers/RenderCommentThreadController.php`                                                                                                                                |
+| Verification  | `src/Actions/RequestCommentEmailVerificationAction.php`, `src/Actions/VerifyCommentAuthorEmailAction.php`                                                                                                                          |
+| Moderation    | `src/Actions/TransitionCommentStatusAction.php`, `src/Listeners/NotifyModeratorsOfNewComment.php`, `src/Filament/Pages/CommentModerationInbox.php`                                                                                 |
+| Notifications | `src/Notifications/ConfirmCommentAuthorEmailNotification.php`, `src/Notifications/ModerateCommentNotification.php`, `src/Notifications/CommentReplyNotification.php`                                                               |
+| Settings      | `src/Settings/CommentSettings.php`, `src/Filament/Settings/CommentSettingsSchema.php`                                                                                                                                              |
+| Data objects  | `src/Data/PublicCommentData.php`, `src/Data/PublicCommentableThreadData.php`, `src/Data/CreateCommentData.php`, `src/Data/CommentReactionResultData.php`, `src/Data/CommentSpamCheckData.php`, `src/Data/CommentSpamScoreData.php` |
+| Models        | `src/Models/Comment.php`, `src/Models/CommentAuthor.php`, `src/Models/CommentToken.php`, `src/Models/CommentReaction.php`                                                                                                          |
+| Engagement    | `src/Actions/ToggleCommentReactionAction.php`, `src/Actions/RequestCommentReplyNotificationAction.php`, `src/Actions/DisableCommentAuthorReplyNotificationsAction.php`                                                             |
+| Spam scoring  | `src/Contracts/CommentSpamProvider.php`, `src/Support/Spam/LocalCommentSpamProvider.php`, `src/Support/Spam/ConfiguredCommentSpamProvider.php`                                                                                     |
 
 ## Install Impact
 
@@ -115,6 +121,7 @@ to registered Capell content.
 - [Docs index](docs/README.md)
 - [Overview](docs/overview.md)
 - [Privacy and retention](docs/privacy-and-retention.md)
+- [Reactions and reply notifications](docs/reactions-and-reply-notifications.md)
 - [Spam providers](docs/spam-providers.md)
 - [Screenshot manifest](docs/screenshots.json)
 - [Package documentation standard](../../docs/package-documentation-standard.md)
