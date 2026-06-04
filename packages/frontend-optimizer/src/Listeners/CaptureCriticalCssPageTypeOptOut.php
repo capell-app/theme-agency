@@ -18,6 +18,10 @@ final class CaptureCriticalCssPageTypeOptOut
             return;
         }
 
+        if (! method_exists($page, 'blueprint')) {
+            return;
+        }
+
         $page->loadMissing('blueprint');
 
         $blueprint = $page->getRelation('blueprint');

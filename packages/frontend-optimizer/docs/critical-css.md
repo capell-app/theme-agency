@@ -85,6 +85,8 @@ meta.frontend_optimizer.disable_critical_css
 
 When this value is `true`, pages using that page type do not queue generation and do not inline generated critical CSS. The normal profile asset output still renders.
 
+The opt-out flag is captured when the frontend context is resolved. If the page model already has its `blueprint` relation hydrated, the listener reuses that relation; otherwise it loads the relation once and stores the boolean under `frontend_optimizer.disable_critical_css` in the frontend context for later render-profile checks.
+
 ## Settings
 
 The extension settings page is backed by `FrontendOptimizerSettings` and `FrontendOptimizerSettingsSchema`.

@@ -9,7 +9,7 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 | Bucket | Rows |
 | ------ | ---: |
 | Now    | 292 |
-| Next   | 316 |
+| Next   | 315 |
 | Later  | 202 |
 
 The work is not complete until every package plan has been reviewed against current code, required features are implemented or intentionally deferred, new behavior is documented, and focused verification passes for each changed package.
@@ -45,7 +45,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | form-builder | 5 | 6 | 4 | Slice committed | `f59eca815` landed health/spam safety fixes; admin UI and file/payment fields remain high value. |
 | foundation-theme | 6 | 6 | 4 | Slice committed | `978ed62e8` landed health/manifest consistency; continue with WCAG, dark mode, and token rows. |
 | frontend-authoring | 7 | 6 | 3 | Slice committed | `f329dd1e2` landed health/signer tests; continue with gate and publishing integration rows. |
-| frontend-optimizer | 3 | 7 | 4 | Slice committed | Current follow-up deepens translated renderer/storage/generator/queue health checks, adds public head-render safety coverage for anonymous and non-admin visitors, removes the unused debug query setting, limits marketplace screenshots to committed assets, and documents the HTML Cache invalidation blocker. Continue with screenshot capture, cache invalidation extension points, listener/job/settings coverage, and completion review. |
+| frontend-optimizer | 3 | 6 | 4 | Slice committed | Current follow-up adds listener/settings coverage for critical-CSS opt-out capture and settings normalization, plus a guard so frontend context listeners only resolve blueprints on compatible page models. Continue with screenshot capture, cache invalidation extension points, hot-path safety, and completion review. |
 | ga4-reports | 6 | 7 | 5 | Slice committed | Current follow-up adds GA4 token/Data API retry-backoff, Retry-After handling, and explicit quota-exhaustion messaging; continue with cache/read-budget, screenshots, operator sync actions, and command convention rows. |
 | hero | 6 | 6 | 4 | Slice committed | Current follow-up aligns admin dependency/surface metadata, declares hero capabilities, removes provider dead code, and updates docs/tests; continue with screenshots, cache safety, render-budget, CTA, and accessibility rows. |
 | html-cache | 7 | 5 | 4 | Slice committed | Current follow-up adds config-driven path/cookie bypass rules that prevent configured public or personalized requests from reading or writing shared HTML cache entries, including direct `PageCache` writes and eligibility diagnostics. CDN purge, SWR, telemetry, screenshot reconciliation, and completion review remain. |
