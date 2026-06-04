@@ -91,6 +91,7 @@ Any model in draft/publish must implement `Capell\Core\Contracts\Draftable` and 
 ## Composer local overlay
 
 - Always run Composer commands through the local overlay in this repo: `COMPOSER=composer.local.json composer ...`. Do not run plain `composer ...` unless Ben explicitly asks for the public package manifest.
+- When changing `composer.json`, update `composer.local.json` in the same change, and vice versa. Keep dependencies, scripts, autoload, autoload-dev, repositories, and package metadata aligned unless there is a deliberate local-only overlay difference.
 - Common issue: if a package test case class is not found, check `composer.local.json` as well as `composer.json`. The local overlay often needs matching `autoload` and `autoload-dev` PSR-4 entries for package namespaces, then regenerate with `COMPOSER=composer.local.json composer dump-autoload --no-scripts`.
 - For local development, `composer.local.json` is often the faster daily-driver overlay because it path-links sibling Capell packages and may use fail-fast test settings.
 
