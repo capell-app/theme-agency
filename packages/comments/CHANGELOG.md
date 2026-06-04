@@ -6,6 +6,8 @@ All notable changes to `capell-app/comments` will be documented in this file.
 
 ### 2026-06-04
 
+- Hardened public comment sanitization by stripping invisible Unicode format controls and ASCII control bytes before storage.
+- Broadened spam link detection to count scheme, `www.`, and bare-domain links while avoiding email-domain false positives.
 - Added settings-aware reply pagination for public comment threads, including per-parent "load more replies" support and bounded child hydration.
 - Made public comment DTOs Livewire-serializable so approved nested threads can survive Livewire request cycles safely.
 - Added auto-inject regression coverage proving cached comment shells do not expose comment bodies, author PII, model identifiers, moderation state, Livewire snapshots, or admin URLs.

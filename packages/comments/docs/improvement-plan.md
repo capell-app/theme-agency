@@ -18,6 +18,7 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 - **2026-06-04:** Wired queued moderator notifications for configured moderator email addresses when new comments enter pending approval or pending email verification, with listener registration and status-gating tests.
 - **2026-06-04:** Added auto-inject anonymous-leakage coverage for the real render-hook path plus package Arch tests for strict equality, public-runtime admin/authoring isolation, and public Blade database/authoring-marker guards.
 - **2026-06-04:** Implemented settings-aware reply pagination with per-parent "load more replies" support, bounded child hydration, recursive public rendering, and Livewire-safe public comment DTO serialization.
+- **2026-06-04:** Hardened public body sanitization by stripping invisible Unicode format controls and ASCII control bytes, and broadened spam link detection to count scheme, `www.`, and bare-domain links without counting email domains.
 
 ## 2. Improvements (existing functionality)
 
@@ -57,19 +58,19 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **Health check coverage shipped.** `src/Health/CommentsHealthCheck.php` now exposes real Diagnostics results for the critical package-health declaration in `capell.json`. Residual risk: these checks cover package wiring, not spam scoring, notifications, or public render budgets.
 
-- **Local spam scoring shipped.** `spam.max_links`, `spam.blocked_terms`, the `spam_reasons` column, and `linkCount()` are now enforced during `CreateCommentAction`. Residual risk: the heuristic remains intentionally local and simple; external spam providers, CAPTCHA/Turnstile, richer link detection, and moderator notification workflows remain separate roadmap items.
+- **Local spam scoring shipped.** `spam.max_links`, `spam.blocked_terms`, the `spam_reasons` column, and `linkCount()` are now enforced during `CreateCommentAction`. Link detection now covers `http(s)://`, `www.`, and bare-domain links while avoiding email-domain false positives. Residual risk: the heuristic remains intentionally local and simple; external spam providers, CAPTCHA/Turnstile, and richer reputation scoring remain separate roadmap items.
 
 - **Throttle bypass via email field shipped.** The public submit throttle no longer includes attacker-controlled author email in the primary bucket. Residual risk: there is not yet a secondary per-author-email cap or broader abuse telemetry.
 
 - **Public render performance budget still needs measurement.** Manifest sets `frontendRenderBudgetMs: 20` and `adminQueryBudget: 40`. Reply hydration is now bounded by `reply_page_size` and per-parent load-more limits, but no benchmark asserts either budget. On a hot thread the budget is still aspirational until measured against seeded high-volume data.
 
-- **XSS / sanitization — low residual but worth hardening.** Body is `strip_tags` + whitespace-collapsed, capped at 5000 chars (`src/Support/CommentBodySanitizer.php`), and output is Blade-escaped via `{{ }}` (`resources/views/livewire/thread.blade.php:27,50`), and `PublicCommentData` omits all sensitive fields — so stored-XSS surface is low. Residual: the sanitizer does not strip Unicode bidi/zero-width/control characters (spoofing) and `linkCount()` only counts `http(s)://` (misses `www.`/bare domains), weakening any future link-based spam rule. `src/Support/CommentBodySanitizer.php:11-25`.
+- **XSS / sanitization hardening shipped.** Body is `strip_tags` + whitespace-collapsed, capped at 5000 chars, and now strips Unicode format controls plus ASCII control bytes before storage (`src/Support/CommentBodySanitizer.php`). Output is Blade-escaped via `{{ }}` and `PublicCommentData` omits sensitive fields, so stored-XSS and text-spoofing surface is low. Focused coverage proves bidi/zero-width stripping and broader link counting.
 
 - **Public-output safety coverage shipped.** `BuildPublicThreadAction::toData()` correctly emits only public id, sanitized body, display name, timestamp, depth, reply count, children — no status, model id, email, hashes, tokens, or admin URL (matches the README Public Safety contract). The thread endpoint sets `Cache-Control: no-store, private` (`src/Http/Controllers/RenderCommentThreadController.php:20`). `AutoInjectRenderHookTest` now exercises the real `RenderHookRegistry` auto-inject path and proves the cached shell omits comment bodies, author PII, model identifiers, moderation state, Livewire snapshots, and admin URLs. `CommentsBoundaryTest` adds package Arch coverage plus public Blade guards against database access and authoring markers.
 
 - **PII / retention.** Author `name`/`email` are `encrypted` at rest ✔ and `email_hash` is HMAC ✔ (`src/Models/CommentAuthor.php:50-58,123`). Gaps: (1) `email_hash_secret`/`visitor_hash_secret` default to `null` from env and silently fall back to `app.key` (`config/capell-comments.php:22-23`, `src/Support/VisitorHasher.php:15`, `CommentAuthor::emailHash`) — rotating `app.key` orphans all hashes; document and warn. (2) No retention/erasure policy or command for visitor IP/UA hashes or author records (GDPR right-to-erasure). (3) `internal_notes` and `moderation_note` are plaintext.
 
-- **Test gaps.** Coverage now includes health diagnostics, spam scoring, moderator notification wiring/status-gating, `auto_inject` anonymous-leakage, reply pagination, public-output Architecture guards, public submit throttling, and bot-trap rejection at action and Livewire levels. Still not covered: performance budgets.
+- **Test gaps.** Coverage now includes health diagnostics, spam scoring, sanitizer hardening, moderator notification wiring/status-gating, `auto_inject` anonymous-leakage, reply pagination, public-output Architecture guards, public submit throttling, and bot-trap rejection at action and Livewire levels. Still not covered: performance budgets.
 
 - **i18n.** Strings are translated via `capell-comments::` namespaces ✔. `diffForHumans()` in the public Blade (`thread.blade.php:24,47`) is not locale-pinned to the site language and may render in the app locale rather than the page's `language_id`.
 
@@ -104,7 +105,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 | Wire the 4 `screenshots.json` captures into marketplace + new summary/description                         | Now    | S      | Med    | §5          |
 | Shipped 2026-06-04: implement reply pagination using `reply_page_size`; cap subtree query                 | Next   | M      | High   | §2, §3      |
 | Benchmark + assert `frontendRenderBudgetMs`/`adminQueryBudget`                                            | Next   | M      | Med    | §4          |
-| Harden sanitizer (bidi/zero-width strip; broaden link detection)                                          | Next   | S      | Med    | §4          |
+| Shipped 2026-06-04: harden sanitizer (bidi/zero-width strip; broaden link detection)                     | Next   | S      | Med    | §4          |
 | Memoize resolved commentable in Livewire component                                                        | Next   | S      | Low    | §2          |
 | Locale-pin public timestamps to page `language_id`                                                        | Next   | S      | Low    | §4          |
 | Pluggable external spam provider (Akismet/Turnstile) contract                                             | Later  | M      | Med    | §3          |

@@ -18,7 +18,9 @@ editors keep approval and author-management work inside Capell Admin.
   depth, throttling, spam checks, and moderator notifications.
 - Public form bot-trap controls for honeypot-filled and too-fast submissions.
 - Automatic local spam scoring for configured link-count and blocked-term
-  rules.
+  rules, including scheme, `www.`, and bare-domain link detection.
+- Comment body sanitization that strips tags plus invisible/control characters
+  before storage.
 - Settings-aware reply pagination with per-parent "load more replies" support.
 - Queued moderator notifications for configured moderator email addresses.
 - Diagnostics checks for storage tables, settings registration, thread route
@@ -47,6 +49,8 @@ not reveal internal moderation data.
 - `VerifyCommentAuthorEmailController` handles author verification links.
 - `ScoreCommentSpamAction` applies local spam heuristics before comment
   verification or public visibility decisions.
+- `CommentBodySanitizer` normalizes public body text and reports link counts
+  for spam scoring.
 - `NotifyModeratorsOfNewComment` listens for `CommentCreated` and notifies
   configured moderators when comments need review.
 - `CommentsHealthCheck` reports real Diagnostics results for package storage,
@@ -94,5 +98,5 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
 The current focused tests cover settings registration, settings resolution,
 manifest requirements, health diagnostics, email verification, spam scoring,
 moderator notification wiring, public thread rendering, component submission,
-auto-inject shell safety, reply pagination, package architecture boundaries,
-throttling, and bot-trap rejection.
+sanitization hardening, auto-inject shell safety, reply pagination, package
+architecture boundaries, throttling, and bot-trap rejection.

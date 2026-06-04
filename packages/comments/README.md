@@ -49,7 +49,8 @@ to registered Capell content.
   configurable minimum form age.
 - Automatic spam scoring for configured link-count and blocked-term rules,
   storing reasons on the comment and routing flagged submissions to `Spam`
-  before verification mail is sent.
+  before verification mail is sent. Link counting covers scheme, `www.`, and
+  bare-domain links.
 - Queued moderator notifications for valid configured moderator email
   addresses when new comments are waiting on approval or email verification.
 - Diagnostics-ready `CommentsHealthCheck` coverage for storage tables, settings
@@ -123,6 +124,9 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
   omit them, but public forms should pass them through `CreateCommentData`.
 - Keep spam scoring in `ScoreCommentSpamAction`; new heuristics should return
   explicit `spam_reasons` and must not leak into public thread DTOs.
+- Keep `CommentBodySanitizer` stripping invisible/control characters before
+  storage so public comments cannot spoof readable text with bidi or zero-width
+  controls.
 - Keep the primary public submission throttle keyed to commentable + IP data;
   attacker-controlled fields such as author email must not reset that bucket.
 - Keep moderator notifications status-gated to comments that need review; spam

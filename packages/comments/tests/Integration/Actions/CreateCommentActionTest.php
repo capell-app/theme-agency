@@ -184,6 +184,26 @@ it('marks configured spam submissions before verification or moderation', functi
     Notification::assertNothingSent();
 });
 
+it('uses broadened public link detection before storing spam decisions', function (): void {
+    Notification::fake();
+    config()->set('capell-comments.spam.max_links', 1);
+
+    $page = $this->createCommentsPage();
+
+    $comment = CreateCommentAction::run(new CreateCommentData(
+        commentable: $page,
+        body: 'Visit www.one.test and two.example/deal for more details.',
+        authorName: 'Link Spammer',
+        authorEmail: 'links@example.com',
+    ));
+
+    expect($comment->status)->toBe(CommentStatus::Spam)
+        ->and($comment->link_count)->toBe(2)
+        ->and($comment->spam_reasons)->toContain('too_many_links');
+
+    Notification::assertNothingSent();
+});
+
 it('binds a verified authenticated user to an existing anonymous author without duplicate email hash failures', function (): void {
     $page = $this->createCommentsPage();
     $anonymousAuthor = CommentAuthor::factory()->unverified()->create([
