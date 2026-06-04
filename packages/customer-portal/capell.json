@@ -88,6 +88,7 @@
         "portal-event-registration-feed",
         "portal-newsletter-preference-feed",
         "portal-support-requests",
+        "portal-support-request-notifications",
         "portal-support-request-triage"
     ],
     "performance": {

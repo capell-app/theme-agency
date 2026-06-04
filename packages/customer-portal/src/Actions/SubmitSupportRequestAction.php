@@ -6,10 +6,13 @@ namespace Capell\CustomerPortal\Actions;
 
 use Capell\CustomerPortal\Data\SupportRequestData;
 use Capell\CustomerPortal\Enums\SupportRequestStatus;
+use Capell\CustomerPortal\Events\PortalSupportRequestSubmitted;
 use Capell\CustomerPortal\Models\PortalAccount;
 use Capell\CustomerPortal\Models\PortalSupportRequest;
+use Capell\CustomerPortal\Notifications\SupportRequestSubmittedNotification;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -37,7 +40,7 @@ class SubmitSupportRequestAction
             ]);
         }
 
-        return DB::transaction(function () use ($portalAccount, $supportRequestData, $subject, $message): PortalSupportRequest {
+        $supportRequest = DB::transaction(function () use ($portalAccount, $supportRequestData, $subject, $message): PortalSupportRequest {
             /** @var PortalSupportRequest $supportRequest */
             $supportRequest = PortalSupportRequest::query()->create([
                 'site_id' => $portalAccount->site_id,
@@ -55,5 +58,20 @@ class SubmitSupportRequestAction
 
             return $supportRequest;
         });
+
+        event(new PortalSupportRequestSubmitted($supportRequest));
+        $this->notifyRequester($supportRequest);
+
+        return $supportRequest;
+    }
+
+    private function notifyRequester(PortalSupportRequest $supportRequest): void
+    {
+        if (! is_string($supportRequest->requester_email) || trim($supportRequest->requester_email) === '') {
+            return;
+        }
+
+        Notification::route('mail', $supportRequest->requester_email)
+            ->notify(new SupportRequestSubmittedNotification($supportRequest));
     }
 }

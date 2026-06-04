@@ -23,12 +23,18 @@ use Capell\CustomerPortal\Enums\PortalDashboardItemPriority;
 use Capell\CustomerPortal\Enums\PortalSelfServiceItemType;
 use Capell\CustomerPortal\Enums\SupportRequestPriority;
 use Capell\CustomerPortal\Enums\SupportRequestStatus;
+use Capell\CustomerPortal\Events\PortalSupportRequestStatusChanged;
+use Capell\CustomerPortal\Events\PortalSupportRequestSubmitted;
 use Capell\CustomerPortal\Models\PortalAccount;
 use Capell\CustomerPortal\Models\PortalSupportRequest;
+use Capell\CustomerPortal\Notifications\SupportRequestStatusChangedNotification;
+use Capell\CustomerPortal\Notifications\SupportRequestSubmittedNotification;
 use Capell\CustomerPortal\Support\PortalDashboardItemRegistry;
 use Capell\CustomerPortal\Support\PortalProfileProviderRegistry;
 use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Capell\CustomerPortal\Tests\CustomerPortalTestCase;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 
@@ -98,6 +104,9 @@ it('updates portal preferences through the action boundary', function (): void {
 });
 
 it('records support requests for portal accounts', function (): void {
+    Event::fake([PortalSupportRequestSubmitted::class]);
+    Notification::fake();
+
     $portalAccount = FindOrCreatePortalAccountAction::run(new PortalAccountIdentityData(
         siteId: $this->createCustomerPortalSite(),
         email: 'support@example.test',
@@ -121,6 +130,20 @@ it('records support requests for portal accounts', function (): void {
         ->and($supportRequest->requester_email)->toBe('support@example.test')
         ->and($supportRequest->context)->toBe(['path' => '/portal/support'])
         ->and($portalAccount->supportRequests()->open()->count())->toBe(1);
+
+    Event::assertDispatched(
+        PortalSupportRequestSubmitted::class,
+        static fn (PortalSupportRequestSubmitted $event): bool => $event->supportRequest->is($supportRequest),
+    );
+    Notification::assertSentOnDemand(
+        SupportRequestSubmittedNotification::class,
+        static function (SupportRequestSubmittedNotification $notification): bool {
+            $mail = $notification->toMail(new stdClass);
+
+            return $mail->subject === __('capell-customer-portal::generic.notifications.support_submitted_subject')
+                && in_array('Subject: Billing question', $mail->introLines, true);
+        },
+    );
 });
 
 it('provides factories for portal accounts and support requests', function (): void {
@@ -150,6 +173,12 @@ it('provides factories for portal accounts and support requests', function (): v
 });
 
 it('triages support request status through the action boundary', function (): void {
+    Event::fake([
+        PortalSupportRequestStatusChanged::class,
+        PortalSupportRequestSubmitted::class,
+    ]);
+    Notification::fake();
+
     $portalAccount = FindOrCreatePortalAccountAction::run(new PortalAccountIdentityData(
         siteId: $this->createCustomerPortalSite(),
         email: 'triage@example.test',
@@ -169,6 +198,38 @@ it('triages support request status through the action boundary', function (): vo
         ->and($resolved->resolved_at)->not->toBeNull()
         ->and($resolved->closed_at)->toBeNull()
         ->and($portalAccount->supportRequests()->open()->count())->toBe(0);
+
+    Event::assertDispatched(
+        PortalSupportRequestStatusChanged::class,
+        static fn (PortalSupportRequestStatusChanged $event): bool => $event->supportRequest->is($resolved)
+            && $event->previousStatus === SupportRequestStatus::Open
+            && $event->status === SupportRequestStatus::Resolved,
+    );
+    Notification::assertSentOnDemand(
+        SupportRequestStatusChangedNotification::class,
+        static function (SupportRequestStatusChangedNotification $notification): bool {
+            $mail = $notification->toMail(new stdClass);
+
+            return $mail->subject === __('capell-customer-portal::generic.notifications.support_status_changed_subject')
+                && in_array('Subject: Need help', $mail->introLines, true)
+                && in_array('Status changed from Open to Resolved.', $mail->introLines, true);
+        },
+    );
+});
+
+it('does not emit status notifications when support request status is unchanged', function (): void {
+    Event::fake([PortalSupportRequestStatusChanged::class]);
+    Notification::fake();
+
+    $supportRequest = PortalSupportRequest::factory()->create([
+        'status' => SupportRequestStatus::Open,
+        'requester_email' => 'unchanged@example.test',
+    ]);
+
+    UpdateSupportRequestStatusAction::run($supportRequest, SupportRequestStatus::Open);
+
+    Event::assertNotDispatched(PortalSupportRequestStatusChanged::class);
+    Notification::assertNothingSent();
 });
 
 it('resolves dashboard items from registered providers in priority order', function (): void {

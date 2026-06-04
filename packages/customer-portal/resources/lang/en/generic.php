@@ -27,6 +27,15 @@ return [
     'navigation' => [
         'group' => 'Customer Portal',
     ],
+    'notifications' => [
+        'open_portal' => 'Open customer portal',
+        'support_status_changed_line' => 'Your support request has been updated.',
+        'support_status_changed_status' => 'Status changed from :previous to :status.',
+        'support_status_changed_subject' => 'Your support request was updated',
+        'support_subject' => 'Subject: :subject',
+        'support_submitted_line' => 'We have received your support request.',
+        'support_submitted_subject' => 'We received your support request',
+    ],
     'resources' => [
         'support_requests' => 'Support requests',
     ],

@@ -54,6 +54,7 @@ it('declares a cache-safe package-local foundation manifest', function (): void 
             'portal-event-registration-feed',
             'portal-newsletter-preference-feed',
             'portal-support-requests',
+            'portal-support-request-notifications',
         )
         ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
 });
