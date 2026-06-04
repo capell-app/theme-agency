@@ -16,7 +16,7 @@ composer test             # all packages, parallel
 | -------------------------- | -------------------------------- |
 | `composer test`            | Full suite (parallel)            |
 | `composer test:unit`       | Unit suite only                  |
-| `composer coverage`        | HTML coverage report (min 80%)   |
+| `composer coverage`        | HTML coverage report (min 90%)   |
 | `composer coverage-report` | Coverage summary in the terminal |
 
 Run a single package:
@@ -60,7 +60,7 @@ composer coverage           # writes HTML to coverage-html/
 composer coverage-report    # text summary only
 ```
 
-The minimum threshold is **80%**. ServiceProviders, Console commands, and Middleware are excluded
+The minimum threshold is **90%**. ServiceProviders, Console commands, and Middleware are excluded
 from the measured source because they require an integration harness to test meaningfully.
 
 ## Pre-commit checks
