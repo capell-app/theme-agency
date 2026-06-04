@@ -23,7 +23,7 @@ class ActivityTrailPage extends Page implements HasActions, HasTable
 
     protected static BackedEnum|string|null $navigationIcon = Heroicon::OutlinedSparkles;
 
-    protected static ?string $slug = 'dashboard-dashboard_reports/activity-trail';
+    protected static ?string $slug = 'reports/activity-trail';
 
     protected static ?int $navigationSort = 1;
 
@@ -44,7 +44,7 @@ class ActivityTrailPage extends Page implements HasActions, HasTable
     #[Override]
     public static function getNavigationGroup(): ?string
     {
-        return (string) (__('capell-admin::navigation.group_system'));
+        return (string) __('capell-admin::navigation.group_reports');
     }
 
     #[Override]
