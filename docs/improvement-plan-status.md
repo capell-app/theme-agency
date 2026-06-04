@@ -9,7 +9,7 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 | Bucket | Rows |
 | ------ | ---: |
 | Now    | 295 |
-| Next   | 317 |
+| Next   | 316 |
 | Later  | 202 |
 
 The work is not complete until every package plan has been reviewed against current code, required features are implemented or intentionally deferred, new behavior is documented, and focused verification passes for each changed package.
@@ -48,7 +48,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | frontend-optimizer | 3 | 7 | 4 | Slice committed | Current follow-up deepens translated renderer/storage/generator/queue health checks, adds public head-render safety coverage for anonymous and non-admin visitors, removes the unused debug query setting, limits marketplace screenshots to committed assets, and documents the HTML Cache invalidation blocker. Continue with screenshot capture, cache invalidation extension points, listener/job/settings coverage, and completion review. |
 | ga4-reports | 6 | 7 | 5 | Slice committed | Current follow-up adds GA4 token/Data API retry-backoff, Retry-After handling, and explicit quota-exhaustion messaging; continue with cache/read-budget, screenshots, operator sync actions, and command convention rows. |
 | hero | 6 | 6 | 4 | Slice committed | Current follow-up aligns admin dependency/surface metadata, declares hero capabilities, removes provider dead code, and updates docs/tests; continue with screenshots, cache safety, render-budget, CTA, and accessibility rows. |
-| html-cache | 7 | 6 | 4 | Slice committed | `b260cd847` fixed invalidation/header issues; CDN purge/SWR/telemetry remain. |
+| html-cache | 7 | 5 | 4 | Slice committed | Current follow-up adds config-driven path/cookie bypass rules that prevent configured public or personalized requests from reading or writing shared HTML cache entries, including direct `PageCache` writes and eligibility diagnostics. CDN purge, SWR, telemetry, screenshot reconciliation, and completion review remain. |
 | insights | 6 | 6 | 4 | Slice committed | `5afe307aa` landed privacy hardening; continue with analytics/product gaps. |
 | knowledge-base | 6 | 7 | 3 | Slice committed | Current follow-up throttles/dedupes anonymous feedback and updates shipped-feature docs; policies and edit/versioning gaps remain high priority. |
 | layout-builder | 7 | 5 | 4 | Slice committed | Current follow-up removes dead cache enum, reconciles screenshot manifests, and documents remaining render-budget risk. |
