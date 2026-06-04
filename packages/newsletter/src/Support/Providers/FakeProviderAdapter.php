@@ -47,7 +47,11 @@ class FakeProviderAdapter implements NewsletterProviderAdapter
 
     public function verifyWebhook(ProviderConnection $connection, Request $request): bool
     {
-        return true;
+        if ((bool) config('capell-newsletter.webhooks.allow_fake_provider', false)) {
+            return true;
+        }
+
+        return app()->environment('local', 'testing');
     }
 
     public function normalizeWebhook(ProviderConnection $connection, Request $request): ?ProviderWebhookEventData

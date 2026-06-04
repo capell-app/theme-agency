@@ -113,8 +113,11 @@ it('creates a subscriber when a FormSubmitted event is dispatched through the re
 
     $subscriber = Subscriber::query()->where('site_id', $site->getKey())->first();
 
-    expect($subscriber)->toBeInstanceOf(Subscriber::class)
-        ->and($subscriber->email_hash)->toBe(hash('sha256', 'listener@example.com'));
+    expect($subscriber)->toBeInstanceOf(Subscriber::class);
+
+    throw_unless($subscriber instanceof Subscriber, RuntimeException::class, 'Expected listener to create subscriber.');
+
+    expect($subscriber->email_hash)->toBe(hash('sha256', 'listener@example.com'));
 });
 
 it('keeps the same email isolated per site', function (): void {

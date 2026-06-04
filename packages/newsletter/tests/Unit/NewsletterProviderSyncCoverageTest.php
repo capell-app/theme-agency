@@ -251,6 +251,27 @@ it('covers the fake provider adapter and settings fallback policy', function ():
         ->toBe(ResubscribePolicy::RequireDoubleOptIn);
 });
 
+it('blocks fake provider webhook verification outside local and testing environments', function (): void {
+    $site = $this->createNewsletterSite();
+    $connection = createNewsletterProviderConnectionForCoverage((int) $site->getKey(), true, 'Fake Adapter');
+    $adapter = new FakeProviderAdapter;
+    $request = Request::create('/newsletter/webhook');
+
+    expect($adapter->verifyWebhook($connection, $request))->toBeTrue();
+
+    app()->detectEnvironment(static fn (): string => 'production');
+
+    try {
+        expect($adapter->verifyWebhook($connection, $request))->toBeFalse();
+
+        config()->set('capell-newsletter.webhooks.allow_fake_provider', true);
+
+        expect($adapter->verifyWebhook($connection, $request))->toBeTrue();
+    } finally {
+        app()->detectEnvironment(static fn (): string => 'testing');
+    }
+});
+
 it('builds confirmation notification mail content', function (): void {
     $notification = new ConfirmNewsletterSubscriptionNotification('confirm-token');
     $mail = $notification->toMail(new stdClass);

@@ -17,12 +17,13 @@ class CreatePreferenceCenterTokenAction
     public function handle(Subscriber $subscriber): string
     {
         $rawToken = Str::random(64);
+        $expiresAt = now()->addHours((int) config('capell-newsletter.public_tokens.token_expiry_hours', 72));
 
         PublicToken::query()->create([
             'subscriber_id' => $subscriber->getKey(),
             'type' => PublicTokenType::PreferenceCenter,
             'token_hash' => hash('sha256', $rawToken),
-            'expires_at' => null,
+            'expires_at' => $expiresAt,
         ]);
 
         return $rawToken;

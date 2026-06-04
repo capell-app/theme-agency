@@ -139,10 +139,12 @@ final class RecentPurchaserSegmentProvider implements NewsletterSegmentProvider
 | `capell-newsletter.double_opt_in.enabled_by_default`        | Default double opt-in state for mappings and manual flows.                                           |
 | `capell-newsletter.double_opt_in.default_confirmation_mode` | Default confirmation owner.                                                                          |
 | `capell-newsletter.double_opt_in.token_expiry_hours`        | Confirm token lifetime.                                                                              |
+| `capell-newsletter.public_tokens.token_expiry_hours`        | Unsubscribe and preference-center token lifetime.                                                     |
 | `capell-newsletter.resubscribe_policy`                      | Default policy for resubscribing previously known subscribers.                                       |
 | `capell-newsletter.newsletter_tag_type`                     | Tag type accepted by `ApplyNewsletterTagsAction`.                                                    |
 | `capell-newsletter.sync.queue`                              | Queue for provider sync jobs.                                                                        |
 | `capell-newsletter.sync.retry_minutes`                      | Retry schedule used for provider sync attempts.                                                      |
+| `capell-newsletter.webhooks.allow_fake_provider`            | Explicit opt-in for Fake provider webhook verification outside local/testing environments.            |
 
 ## Public Routes
 

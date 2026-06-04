@@ -5,6 +5,8 @@ All notable changes to `capell-app/newsletter` will be documented in this file.
 ## Unreleased
 
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
+- Added expiry to unsubscribe and preference-center public tokens via `capell-newsletter.public_tokens.token_expiry_hours`.
+- Hardened the Fake provider adapter so webhook verification is only accepted in local/testing environments unless `capell-newsletter.webhooks.allow_fake_provider` is explicitly enabled.
 
 ## 2026-06-03
 

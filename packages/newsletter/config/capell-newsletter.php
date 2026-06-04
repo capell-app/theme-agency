@@ -26,6 +26,9 @@ return [
         'default_confirmation_mode' => ConfirmationMode::CapellOwned->value,
         'token_expiry_hours' => 72,
     ],
+    'public_tokens' => [
+        'token_expiry_hours' => 72,
+    ],
     'resubscribe_policy' => ResubscribePolicy::RequireDoubleOptIn->value,
     'newsletter_tag_type' => 'newsletter',
     'sync' => [
@@ -37,6 +40,7 @@ return [
         'max_rows' => 10000,
     ],
     'webhooks' => [
+        'allow_fake_provider' => false,
         'signature_headers' => [
             'kit' => 'X-Kit-Webhook-Signature',
             'mailchimp' => 'X-Mailchimp-Signature',
