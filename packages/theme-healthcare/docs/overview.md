@@ -12,6 +12,7 @@ Editorial Healthcare is a standalone Capell theme package. It registers the `hea
 - Theme renderer/views for Editorial Healthcare page output.
 - Section Blade views for utility bar, navigation, appointment hero, service finder, services, clinicians, booking, events, proof, comparison, resources, contact, CTA, and footer.
 - Booking, event, and blog teaser renderers that receive optional Form Builder, Events, and Blog availability before Blade renders.
+- A public skip-link target, translated event carousel controls, and image loading attributes for hero, clinician, service, and resource card images.
 - Dependency on Foundation Theme.
 
 ## Developer Notes
@@ -24,6 +25,7 @@ Adds a renderer package that uses Foundation Theme runtime contracts while leavi
 - Ships Blade resources for the page wrapper, service discovery sections, booking panel, event panel, comparison, proof, blog teaser, CTA, and footer views.
 - No migrations, config, routes, models, admin navigation, or package-owned settings are present.
 - Public theme output must not expose package identifiers, signed admin URLs, Filament/editor markers, or other authoring metadata. The package test renders every section and checks for those leak tokens.
+- The rendered page keeps the skip link wired to `#main-content`; image-heavy sections include explicit loading and dimension attributes.
 
 ## Operational Notes
 

@@ -28,6 +28,10 @@
                             <img
                                 src="{{ $item['image'] ?? $item['imageUrl'] }}"
                                 alt="{{ $item['imageAlt'] ?? '' }}"
+                                width="800"
+                                height="600"
+                                loading="lazy"
+                                decoding="async"
                                 class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105"
                             />
                         @endif

@@ -43,6 +43,10 @@
                             <img
                                 src="{{ $service['image'] ?? $service['imageUrl'] }}"
                                 alt="{{ $service['imageAlt'] ?? '' }}"
+                                width="800"
+                                height="800"
+                                loading="lazy"
+                                decoding="async"
                                 class="aspect-square w-full rounded-lg object-cover"
                             />
                         @else

@@ -9,5 +9,7 @@
     style="{{ collect($brand->tokens())->map(fn (mixed $value, string $token): string => $token . ':' . $value)->implode(';') }}"
     class="healthcare-shell min-h-screen antialiased"
 >
-    {!! $content !!}
+    <main id="main-content">
+        {!! $content !!}
+    </main>
 </div>

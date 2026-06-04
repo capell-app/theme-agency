@@ -44,6 +44,10 @@
                 <img
                     src="{{ $section->mediaUrl }}"
                     alt="{{ $section->mediaAlt ?? '' }}"
+                    width="1200"
+                    height="900"
+                    fetchpriority="high"
+                    decoding="async"
                     class="aspect-[4/3] w-full rounded-xl object-cover"
                 />
             @else

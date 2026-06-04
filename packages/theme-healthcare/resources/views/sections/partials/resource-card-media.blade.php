@@ -2,6 +2,10 @@
     <img
         src="{{ $imageUrl }}"
         alt="{{ $imageAlt }}"
+        width="960"
+        height="600"
+        loading="lazy"
+        decoding="async"
         class="aspect-[16/10] w-full object-cover"
     />
 @else

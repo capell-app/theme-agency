@@ -154,6 +154,8 @@ it('renders public healthcare markup without forbidden package or authoring toke
                 heading: 'Specialist care with calm, clear next steps',
                 eyebrow: 'Private healthcare',
                 summary: 'Appointment-led pages for services, clinicians, resources, and locations.',
+                mediaUrl: '/images/clinic-hero.jpg',
+                mediaAlt: 'Clinician consultation room',
                 actions: [['label' => 'Book appointment', 'url' => '/appointments']],
             ),
             healthcareThemeSection('service-finder', [
@@ -162,11 +164,11 @@ it('renders public healthcare markup without forbidden package or authoring toke
             ]),
             healthcareThemeSection('services', [
                 'heading' => 'Clinical services',
-                'items' => [['title' => 'Health assessments', 'summary' => 'Structured checks and plans.']],
+                'items' => [['title' => 'Health assessments', 'summary' => 'Structured checks and plans.', 'image' => '/images/service.jpg', 'imageAlt' => 'Consultation room']],
             ]),
             healthcareThemeSection('clinicians', [
                 'heading' => 'Meet the clinicians',
-                'items' => [['title' => 'Dr Amara Patel', 'summary' => 'Consultant physician.']],
+                'items' => [['title' => 'Dr Amara Patel', 'summary' => 'Consultant physician.', 'image' => '/images/clinician.jpg', 'imageAlt' => 'Dr Amara Patel']],
             ]),
             healthcareThemeSection('booking', [
                 'heading' => 'Request an appointment',
@@ -213,6 +215,15 @@ it('renders public healthcare markup without forbidden package or authoring toke
 
     expect($html)
         ->toContain('Aster Clinic')
+        ->toContain('href="#main-content"')
+        ->toContain('id="main-content"')
+        ->toContain('fetchpriority="high"')
+        ->toContain('decoding="async"')
+        ->toContain('loading="lazy"')
+        ->toContain('width="1200"')
+        ->toContain('width="800"')
+        ->toContain('Previous items')
+        ->toContain('Next items')
         ->toContain('Clinical trust')
         ->toContain('Safety review')
         ->toContain('Escalation route')

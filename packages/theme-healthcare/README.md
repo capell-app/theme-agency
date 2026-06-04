@@ -27,6 +27,7 @@ Appointment-led healthcare theme for Capell, shipped under the existing `healthc
 - Editorial Healthcare theme for Capell.
 - Public views for utility bar, navigation, appointment hero, service finder, services, clinicians, booking, events, proof, comparison, resources, contact, CTA, and footer sections.
 - Booking, event, and blog teaser renderers receive optional Form Builder, Events, and Blog availability from the service provider, then render enhanced or neutral panels without querying from Blade.
+- The page wrapper includes a real skip-link target, event carousel controls use package translations, and rendered images include explicit loading, decoding, and dimension attributes.
 
 ## Why It Matters
 
@@ -66,6 +67,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Ships Blade resources for the page wrapper, service discovery sections, booking panel, event panel, comparison, proof, blog teaser, CTA, and footer views.
 - No migrations, config, routes, models, admin navigation, or package-owned settings are present.
 - Public theme output must stay free of package identifiers, signed admin URLs, Filament/editor markers, and other authoring metadata.
+- Keep the skip link target, translated controls, and image loading attributes in place when changing public section views.
 
 ## Code Map
 
