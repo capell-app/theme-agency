@@ -77,7 +77,7 @@ This is a **foundation/bundled** package (`tier: free`, `bundle: foundation`, `p
 | Shipped 2026-06-04: guard publishing-studio approval branch behind `isPackageInstalled` + stop swallowing errors | Done | M | High | §2, §4 |
 | Promote real desktop+mobile captures into `marketplace.screenshots[]`; delete orphan nested asset | Now    | S        | Med    | §4, §5      |
 | Sharpen composer `description` + marketplace `summary` to outcome-led copy                        | Now    | S        | Med    | §5          |
-| Add `EditableRegionSigner` tamper/format unit test + beacon render-budget assertion               | Now    | S        | Med    | §4          |
+| Shipped 2026-06-04: add `EditableRegionSigner` tamper/format unit test + beacon render-budget assertion | Done | S | Med | §4 |
 | Refresh CHANGELOG with signer/beacon-origin/approval history                                      | Now    | S        | Low    | §2          |
 | Extract beacon admin-manifest assembly into a `BuildBeaconResponse` Action                        | Next   | M        | Med    | §2          |
 | Replace field/type/surface/status string literals with backed enums (`HasLabels`)                 | Next   | M        | Med    | §2          |
