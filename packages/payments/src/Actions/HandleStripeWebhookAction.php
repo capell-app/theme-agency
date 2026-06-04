@@ -30,7 +30,7 @@ final class HandleStripeWebhookAction
         $event = $this->recordEvent($eventPayload, $signatureHeader);
 
         if ($event->status !== PaymentWebhookEventStatus::Processed && $event->status !== PaymentWebhookEventStatus::Ignored) {
-            $pendingDispatch = ProcessStripeWebhookEventJob::dispatch((int) $event->getKey());
+            $pendingDispatch = dispatch(new ProcessStripeWebhookEventJob((int) $event->getKey()));
             $queueName = config('capell-payments.webhooks.queue');
 
             if (is_string($queueName) && $queueName !== '') {
