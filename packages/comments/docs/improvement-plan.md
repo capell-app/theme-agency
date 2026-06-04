@@ -21,6 +21,7 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 - **2026-06-04:** Hardened public body sanitization by stripping invisible Unicode format controls and ASCII control bytes, and broadened spam link detection to count scheme, `www.`, and bare-domain links without counting email domains.
 - **2026-06-04:** Memoized the resolved public commentable model within each Livewire request, avoiding duplicate page lookups during submit/refresh flows without serializing Eloquent models into Livewire state.
 - **2026-06-04:** Locale-pinned public timestamp labels to the resolved commentable language so `diffForHumans()` output follows page `language_id` instead of the ambient app locale, with Livewire serialization coverage.
+- **2026-06-04:** Added enforceable performance-budget coverage for public thread hydration/rendering and admin comment widgets, and batched sibling reply counts to avoid empty-grandchild query fanout.
 
 ## 2. Improvements (existing functionality)
 
@@ -35,6 +36,8 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 - **Surface validation errors per-field on submit** — `thread.blade.php` shows a generic "validation_failed" banner (`:9-13`) plus per-field `@error` blocks, but `CreateCommentAction` throws `ValidationException` from inside `CreateCommentAction::run()` called in `submit()` without Livewire `$this->validate()` wiring, so messages may not bind to the component's `$errors` bag reliably. — why: guests get an opaque failure. Catch `ValidationException` in `submit()` and map to `addError()`, or move validation into the component rules. — `src/Livewire/CommentThreadComponent.php:61-87` — S
 
 - **Shipped 2026-06-04: Stop double-querying the commentable on every Livewire action** — `CommentThreadComponent` now keeps the decrypted/resolved model in private request-local properties and resets that cache on Livewire hydration. Submit flows reuse the same model for `CreateCommentAction` and the post-submit `refreshComments()` call, with query-count coverage proving the duplicate page lookup is gone. — `src/Livewire/CommentThreadComponent.php`, `tests/Integration/CommentThreadComponentTest.php` — S
+
+- **Shipped 2026-06-04: Enforce public/admin performance budgets** — `BuildPublicThreadAction` now batches approved child-count lookups for each sibling group and skips empty child fetches, removing the old per-comment empty-grandchild query fanout. `PerformanceBudgetTest` seeds a bounded hot public thread, asserts hydration stays at or below 20 queries, and checks warmed Blade rendering against `capell.json` `frontendRenderBudgetMs: 20`; `CommentsAdminSurfaceTest` asserts the stats/latest-comments widgets stay under `adminQueryBudget: 40`. — `src/Actions/BuildPublicThreadAction.php`, `tests/Integration/PerformanceBudgetTest.php`, `tests/Integration/Filament/CommentsAdminSurfaceTest.php` — M
 
 - **Shipped 2026-06-03: Index/labels parity in admin** — `LatestCommentsWidget` is registered at runtime and declared in `capell.json` `contributes[]`, with manifest coverage proving every dashboard widget stays discoverable by marketplace and Diagnostics tooling. — `capell.json`, `tests/Unit/ManifestRequirementsTest.php` — S
 
@@ -64,7 +67,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **Throttle bypass via email field shipped.** The public submit throttle no longer includes attacker-controlled author email in the primary bucket. Residual risk: there is not yet a secondary per-author-email cap or broader abuse telemetry.
 
-- **Public render performance budget still needs measurement.** Manifest sets `frontendRenderBudgetMs: 20` and `adminQueryBudget: 40`. Reply hydration is now bounded by `reply_page_size` and per-parent load-more limits, but no benchmark asserts either budget. On a hot thread the budget is still aspirational until measured against seeded high-volume data.
+- **Performance budgets shipped.** Manifest budgets are now enforced by focused tests: a seeded public thread checks bounded hydration query count plus warmed Blade render time against `frontendRenderBudgetMs: 20`, and admin stats/latest-comments widget queries are checked against `adminQueryBudget: 40`. Residual risk: these are deterministic package-level guards, not production load tests across every host theme.
 
 - **XSS / sanitization hardening shipped.** Body is `strip_tags` + whitespace-collapsed, capped at 5000 chars, and now strips Unicode format controls plus ASCII control bytes before storage (`src/Support/CommentBodySanitizer.php`). Output is Blade-escaped via `{{ }}` and `PublicCommentData` omits sensitive fields, so stored-XSS and text-spoofing surface is low. Focused coverage proves bidi/zero-width stripping and broader link counting.
 
@@ -72,7 +75,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **PII / retention.** Author `name`/`email` are `encrypted` at rest ✔ and `email_hash` is HMAC ✔ (`src/Models/CommentAuthor.php:50-58,123`). Gaps: (1) `email_hash_secret`/`visitor_hash_secret` default to `null` from env and silently fall back to `app.key` (`config/capell-comments.php:22-23`, `src/Support/VisitorHasher.php:15`, `CommentAuthor::emailHash`) — rotating `app.key` orphans all hashes; document and warn. (2) No retention/erasure policy or command for visitor IP/UA hashes or author records (GDPR right-to-erasure). (3) `internal_notes` and `moderation_note` are plaintext.
 
-- **Test gaps.** Coverage now includes health diagnostics, spam scoring, sanitizer hardening, moderator notification wiring/status-gating, `auto_inject` anonymous-leakage, reply pagination, public-output Architecture guards, Livewire commentable memoization, locale-pinned public timestamps, public submit throttling, and bot-trap rejection at action and Livewire levels. Still not covered: performance budgets.
+- **Test gaps.** Coverage now includes health diagnostics, spam scoring, sanitizer hardening, moderator notification wiring/status-gating, `auto_inject` anonymous-leakage, reply pagination, performance budgets, public-output Architecture guards, Livewire commentable memoization, locale-pinned public timestamps, public submit throttling, and bot-trap rejection at action and Livewire levels.
 
 - **i18n shipped.** Strings are translated via `capell-comments::` namespaces ✔. Public timestamp labels are now produced by `BuildPublicThreadAction` with the commentable language locale, serialized through `PublicCommentData`, and rendered as preformatted labels in Blade so Livewire hydration does not fall back to the ambient app locale.
 
@@ -106,7 +109,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 | Shipped 2026-06-03: add `LatestCommentsWidget` to `capell.json` contributes[]                             | Now    | S      | Med    | §2, §4      |
 | Wire the 4 `screenshots.json` captures into marketplace + new summary/description                         | Now    | S      | Med    | §5          |
 | Shipped 2026-06-04: implement reply pagination using `reply_page_size`; cap subtree query                 | Next   | M      | High   | §2, §3      |
-| Benchmark + assert `frontendRenderBudgetMs`/`adminQueryBudget`                                            | Next   | M      | Med    | §4          |
+| Shipped 2026-06-04: benchmark + assert `frontendRenderBudgetMs`/`adminQueryBudget`                        | Next   | M      | Med    | §4          |
 | Shipped 2026-06-04: harden sanitizer (bidi/zero-width strip; broaden link detection)                      | Next   | S      | Med    | §4          |
 | Shipped 2026-06-04: memoize resolved commentable in Livewire component                                    | Next   | S      | Low    | §2          |
 | Shipped 2026-06-04: locale-pin public timestamps to page `language_id`                                    | Next   | S      | Low    | §4          |

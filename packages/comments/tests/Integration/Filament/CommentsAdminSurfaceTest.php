@@ -19,6 +19,8 @@ use Filament\Actions\ActionGroup;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Notification;
 use Spatie\Permission\Models\Role;
@@ -222,6 +224,42 @@ it('declares comment dashboard settings and latest comments table metadata', fun
         ->and($table->getRecordUrl($comment))->toContain('tableSearch=' . $comment->getKey());
 });
 
+it('keeps admin comment widgets inside the declared query budget', function (): void {
+    Gate::before(fn (): bool => true);
+
+    $budget = commentsAdminQueryBudget();
+    $site = $this->createCommentsSite();
+    $author = CommentAuthor::factory()->create(['site_id' => $site->getKey(), 'name' => 'Taylor Editor']);
+
+    foreach (range(1, 12) as $index) {
+        Comment::factory()->create([
+            'site_id' => $site->getKey(),
+            'comment_author_id' => $author->getKey(),
+            'status' => match (true) {
+                $index <= 4 => CommentStatus::PendingApproval,
+                $index <= 8 => CommentStatus::Approved,
+                default => CommentStatus::Spam,
+            },
+            'body' => 'Budgeted moderation row ' . $index,
+        ]);
+    }
+
+    $queryCount = 0;
+
+    DB::listen(static function (QueryExecuted $query) use (&$queryCount): void {
+        $queryCount++;
+    });
+
+    $stats = (new ReflectionMethod(CommentStatsWidget::class, 'getStats'))->invoke(new CommentStatsWidget);
+    $table = (new LatestCommentsWidget)->table(commentAdminTableForCoverage());
+    $records = $table->getQuery()?->limit(10)->get();
+
+    expect($queryCount)->toBeLessThanOrEqual($budget)
+        ->and($stats)->toHaveCount(3)
+        ->and($records)->not->toBeNull()
+        ->and($records)->toHaveCount(10);
+});
+
 function commentAdminTableForCoverage(): Table
 {
     $livewire = Mockery::mock(HasTable::class);
@@ -246,4 +284,15 @@ function commentAdminActionNames(array $actions): array
         ->map(fn (Action $action): string => $action->getName() ?? '')
         ->values()
         ->all();
+}
+
+function commentsAdminQueryBudget(): int
+{
+    $manifest = json_decode(
+        (string) file_get_contents(dirname(__DIR__, 3) . '/capell.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    return (int) data_get($manifest, 'performance.adminQueryBudget', 40);
 }

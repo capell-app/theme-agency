@@ -45,6 +45,8 @@ to registered Capell content.
 - `CommentThreadComponent` for post-load public thread rendering.
 - Settings-aware root and reply paging, with per-parent "load more replies"
   support for public threads.
+- Batched sibling reply-count hydration so public threads avoid empty
+  grandchild query fanout.
 - Request-local commentable memoization during Livewire actions so submit
   refreshes do not re-query the same page.
 - Locale-pinned public timestamp labels based on the commentable page language.
@@ -121,6 +123,9 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
 - Keep public thread data anonymous-safe and moderation-free.
 - Keep reply pagination settings-aware and bounded; public rendering should not
   hydrate an entire hot discussion subtree in one request.
+- Keep the public performance-budget test tied to `capell.json`
+  `frontendRenderBudgetMs` and the admin widget query test tied to
+  `adminQueryBudget`.
 - Keep commentable memoization request-local only; do not serialize Eloquent
   models into public Livewire state.
 - Keep registration logic in package providers or Actions rather than public

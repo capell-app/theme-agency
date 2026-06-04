@@ -75,17 +75,14 @@ class BuildPublicThreadAction
 
         $locale = $this->localeForLanguageId($languageId);
 
-        return array_values($roots
-            ->map(fn (Comment $comment): PublicCommentData => $this->toData(
-                comment: $comment,
-                languageId: $languageId,
-                locale: $locale,
-                replyLimit: $resolvedReplyLimit,
-                maxDepth: $maxDepth,
-                replyLimitsByPublicId: $replyLimitsByPublicId,
-            ))
-            ->values()
-            ->all());
+        return $this->toDataList(
+            comments: $roots,
+            languageId: $languageId,
+            locale: $locale,
+            replyLimit: $resolvedReplyLimit,
+            maxDepth: $maxDepth,
+            replyLimitsByPublicId: $replyLimitsByPublicId,
+        );
     }
 
     private function canRead(int $siteId, string $commentableType): bool
@@ -102,7 +99,37 @@ class BuildPublicThreadAction
     }
 
     /**
+     * @param  EloquentCollection<int, Comment>  $comments
      * @param  array<string, int>  $replyLimitsByPublicId
+     * @return list<PublicCommentData>
+     */
+    private function toDataList(
+        EloquentCollection $comments,
+        ?int $languageId,
+        string $locale,
+        int $replyLimit,
+        int $maxDepth,
+        array $replyLimitsByPublicId,
+    ): array {
+        $replyCountsByParentId = $this->approvedChildrenCountsByParentId($comments, $languageId, $maxDepth);
+
+        return array_values($comments
+            ->map(fn (Comment $comment): PublicCommentData => $this->toData(
+                comment: $comment,
+                languageId: $languageId,
+                locale: $locale,
+                replyLimit: $replyLimit,
+                maxDepth: $maxDepth,
+                replyLimitsByPublicId: $replyLimitsByPublicId,
+                replyCountsByParentId: $replyCountsByParentId,
+            ))
+            ->values()
+            ->all());
+    }
+
+    /**
+     * @param  array<string, int>  $replyLimitsByPublicId
+     * @param  array<int, int>  $replyCountsByParentId
      */
     private function toData(
         Comment $comment,
@@ -111,26 +138,27 @@ class BuildPublicThreadAction
         int $replyLimit,
         int $maxDepth,
         array $replyLimitsByPublicId,
+        array $replyCountsByParentId,
     ): PublicCommentData {
         $author = $comment->author;
         $submittedAt = $comment->submitted_at;
-        $children = collect();
-        $replyCount = 0;
+        /** @var EloquentCollection<int, Comment> $children */
+        $children = new EloquentCollection;
+        $replyCount = $replyCountsByParentId[(int) $comment->getKey()] ?? 0;
 
-        if ((int) $comment->depth < $maxDepth) {
-            $childrenQuery = $this->approvedChildrenQuery($comment, $languageId);
-            $replyCount = (clone $childrenQuery)->count();
+        if ((int) $comment->depth < $maxDepth && $replyCount > 0) {
             $visibleLimit = max(0, $replyLimitsByPublicId[(string) $comment->public_id] ?? $replyLimit);
 
             /** @var EloquentCollection<int, Comment> $children */
             $children = $visibleLimit > 0
-                ? $childrenQuery
+                ? $this->approvedChildrenQuery($comment, $languageId)
                     ->limit($visibleLimit)
                     ->get()
-                : collect();
+                : new EloquentCollection;
         }
 
         throw_unless($author instanceof CommentAuthor, RuntimeException::class, 'Public comments require an author.');
+
         throw_unless($submittedAt instanceof CarbonImmutable, RuntimeException::class, 'Public comments require a submitted timestamp.');
 
         return new PublicCommentData(
@@ -142,18 +170,61 @@ class BuildPublicThreadAction
             depth: (int) $comment->depth,
             replyCount: $replyCount,
             hasMoreReplies: $replyCount > $children->count(),
-            children: array_values($children
-                ->map(fn (Comment $child): PublicCommentData => $this->toData(
-                    comment: $child,
+            children: $children->isEmpty()
+                ? []
+                : $this->toDataList(
+                    comments: $children,
                     languageId: $languageId,
                     locale: $locale,
                     replyLimit: $replyLimit,
                     maxDepth: $maxDepth,
                     replyLimitsByPublicId: $replyLimitsByPublicId,
-                ))
-                ->values()
-                ->all()),
+                ),
         );
+    }
+
+    /**
+     * @param  EloquentCollection<int, Comment>  $comments
+     * @return array<int, int>
+     */
+    private function approvedChildrenCountsByParentId(EloquentCollection $comments, ?int $languageId, int $maxDepth): array
+    {
+        $parentIds = $comments
+            ->filter(fn (Comment $comment): bool => (int) $comment->depth < $maxDepth)
+            ->map(fn (Comment $comment): int => (int) $comment->getKey())
+            ->filter(fn (int $commentId): bool => $commentId > 0)
+            ->values()
+            ->all();
+
+        if ($parentIds === []) {
+            return [];
+        }
+
+        /** @var EloquentCollection<int, Comment> $counts */
+        $counts = Comment::query()
+            ->select('parent_id')
+            ->selectRaw('count(*) as comments_count')
+            ->whereIn('parent_id', $parentIds)
+            ->where('status', CommentStatus::Approved)
+            ->when(
+                $languageId !== null,
+                fn (Builder $query): Builder => $query->where('language_id', $languageId),
+            )
+            ->groupBy('parent_id')
+            ->get();
+
+        $results = [];
+
+        foreach ($counts as $count) {
+            $parentId = $count->getAttribute('parent_id');
+            $commentCount = $count->getAttribute('comments_count');
+
+            if (is_numeric($parentId) && is_numeric($commentCount)) {
+                $results[(int) $parentId] = (int) $commentCount;
+            }
+        }
+
+        return $results;
     }
 
     /**

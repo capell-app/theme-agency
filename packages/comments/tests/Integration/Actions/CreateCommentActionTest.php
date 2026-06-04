@@ -16,8 +16,8 @@ use Capell\Comments\Models\CommentAuthor;
 use Capell\Comments\Models\CommentToken;
 use Capell\Comments\Notifications\ConfirmCommentAuthorEmailNotification;
 use Capell\Comments\Settings\CommentSettings;
+use Capell\Comments\Tests\Fixtures\UnregisteredCommentable;
 use Capell\Tests\Fixtures\Models\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
@@ -308,7 +308,7 @@ it('applies commentable-specific identity mode overrides during submission', fun
 })->throws(ValidationException::class);
 
 it('rejects invalid comment submissions before persisting moderation records', function (): void {
-    $unregisteredCommentable = new class extends Model {};
+    $unregisteredCommentable = new UnregisteredCommentable;
 
     expectCommentValidation(function () use ($unregisteredCommentable): void {
         bindCommentSettings();

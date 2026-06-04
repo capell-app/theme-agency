@@ -217,10 +217,10 @@ it('serializes localized public timestamp labels through livewire', function ():
         body: 'Visible',
         authorName: 'Ben',
         submittedAt: $submittedAt,
+        submittedAtForHumans: 'il y a 1 heure',
         depth: 0,
         replyCount: 0,
         children: [],
-        submittedAtForHumans: 'il y a 1 heure',
     );
 
     $rehydrated = PublicCommentData::fromLivewire($comment->toLivewire());
@@ -301,10 +301,10 @@ it('escapes public comment output and hides pending comments when rendered', fun
         body: '<script>alert("x")</script>',
         authorName: '<strong>Ben</strong>',
         submittedAt: now()->toImmutable(),
+        submittedAtForHumans: '2 minutes ago',
         depth: 0,
         replyCount: 0,
         children: [],
-        submittedAtForHumans: '2 minutes ago',
     );
 
     $html = Blade::render(
