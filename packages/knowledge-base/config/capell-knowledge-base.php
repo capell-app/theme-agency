@@ -10,5 +10,6 @@ return [
     'default_search_weight' => 50,
     'feedback' => [
         'hash_salt' => Env::get('APP_KEY', 'capell-knowledge-base'),
+        'throttle' => '30,1',
     ],
 ];

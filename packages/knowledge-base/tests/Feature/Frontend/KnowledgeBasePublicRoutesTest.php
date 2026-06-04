@@ -21,6 +21,12 @@ it('registers public knowledge base routes', function (): void {
         ->and(Route::has('capell-knowledge-base.article.feedback'))->toBeTrue();
 });
 
+it('throttles the public article feedback route', function (): void {
+    $route = Route::getRoutes()->getByName('capell-knowledge-base.article.feedback');
+
+    expect($route?->gatherMiddleware())->toContain('throttle:30,1');
+});
+
 it('renders public navigation and articles without authoring internals', function (): void {
     $collection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
         title: 'Getting Started',
@@ -95,6 +101,41 @@ it('records public article feedback without exposing raw visitor identifiers', f
         ->and($feedback->comment)->toBe('Needs more detail.')
         ->and($feedback->visitor_hash)->not->toBeNull()
         ->and($feedback->visitor_hash)->not->toBe('127.0.0.1');
+});
+
+it('updates repeat public article feedback instead of stuffing duplicate votes', function (): void {
+    $collection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Getting Started',
+    ));
+
+    CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $collection,
+        title: 'Install Capell',
+        body: '<p>Run the installer.</p>',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+
+    $this
+        ->from('/docs/getting-started/install-capell')
+        ->post('/docs/getting-started/install-capell/feedback', [
+            'helpful' => '0',
+            'comment' => 'Needs more detail.',
+        ])
+        ->assertRedirect('/docs/getting-started/install-capell');
+
+    $this
+        ->from('/docs/getting-started/install-capell')
+        ->post('/docs/getting-started/install-capell/feedback', [
+            'helpful' => '1',
+            'comment' => 'The update helped.',
+        ])
+        ->assertRedirect('/docs/getting-started/install-capell');
+
+    $feedback = KnowledgeBaseArticleFeedback::query()->firstOrFail();
+
+    expect(KnowledgeBaseArticleFeedback::query()->count())->toBe(1)
+        ->and($feedback->helpful)->toBeTrue()
+        ->and($feedback->comment)->toBe('The update helped.');
 });
 
 it('does not render private collections or draft articles through public routes', function (): void {

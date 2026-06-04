@@ -14,15 +14,30 @@ final class RecordKnowledgeBaseArticleFeedbackAction
 
     public function handle(RecordKnowledgeBaseArticleFeedbackData $data): KnowledgeBaseArticleFeedback
     {
-        return KnowledgeBaseArticleFeedback::query()->create([
+        $visitorHash = $this->hashNullable($data->visitorIdentifier);
+        $articleVersionId = $data->articleVersion?->getKey() ?? $data->article->current_version_id;
+
+        $feedback = $visitorHash === null
+            ? new KnowledgeBaseArticleFeedback
+            : KnowledgeBaseArticleFeedback::query()->firstOrNew([
+                'article_id' => $data->article->getKey(),
+                'article_version_id' => $articleVersionId,
+                'visitor_hash' => $visitorHash,
+            ]);
+
+        $feedback->fill([
             'article_id' => $data->article->getKey(),
-            'article_version_id' => $data->articleVersion?->getKey() ?? $data->article->current_version_id,
+            'article_version_id' => $articleVersionId,
             'helpful' => $data->helpful,
             'comment' => $data->comment === null ? null : trim($data->comment),
-            'visitor_hash' => $this->hashNullable($data->visitorIdentifier),
+            'visitor_hash' => $visitorHash,
             'user_agent_hash' => $this->hashNullable($data->userAgent),
             'submitted_at' => now(),
         ]);
+
+        $feedback->save();
+
+        return $feedback;
     }
 
     private function hashNullable(?string $value): ?string

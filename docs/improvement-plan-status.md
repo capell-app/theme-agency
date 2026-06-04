@@ -50,7 +50,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | hero | 6 | 6 | 4 | Needs audit | No recent package slice identified; audit against plan before implementation. |
 | html-cache | 7 | 6 | 4 | Slice committed | `b260cd847` fixed invalidation/header issues; CDN purge/SWR/telemetry remain. |
 | insights | 6 | 6 | 4 | Slice committed | `5afe307aa` landed privacy hardening; continue with analytics/product gaps. |
-| knowledge-base | 6 | 7 | 3 | Needs audit | No recent package slice identified; policies, feedback throttling, and edit/versioning gaps are high priority. |
+| knowledge-base | 6 | 7 | 3 | Slice committed | Current follow-up throttles/dedupes anonymous feedback and updates shipped-feature docs; policies and edit/versioning gaps remain high priority. |
 | layout-builder | 7 | 5 | 4 | Slice committed | Current follow-up removes dead cache enum, reconciles screenshot manifests, and documents remaining render-budget risk. |
 | login-audit | 7 | 6 | 2 | Slice committed | `043626303` landed health/session fixes; continue with hot-path and retention rows. |
 | media-ai | 6 | 6 | 3 | Slice committed | `f4b35bc06` landed health/allow-list fixes; production image-doctor/provider story remains. |
@@ -89,9 +89,8 @@ No package should be marked `Complete` from commit history alone. Completion req
 
 Highest-value remaining work should start with packages that are both high-risk and still marked `Needs audit`:
 
-1. `knowledge-base` policy/feed/versioning risks.
-2. `shopify-commerce` sync-loop and webhook reachability.
-3. `ga4-reports` retry/backoff, PHP constraint, and budget drift.
-4. Theme-line systemic pass: `extends` alignment, token-driven colors, screenshots, WCAG/dark mode.
+1. `shopify-commerce` sync-loop and webhook reachability.
+2. `ga4-reports` retry/backoff, PHP constraint, and budget drift.
+3. Theme-line systemic pass: `extends` alignment, token-driven colors, screenshots, WCAG/dark mode.
 
 After each package slice lands, update this tracker with the commit and any rows that remain high-risk.

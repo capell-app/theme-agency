@@ -153,3 +153,36 @@ it('records redacted feedback and related article links', function (): void {
         ->and($publicArticle?->relatedArticles[0]->title)->toBe('Check Logs')
         ->and($publicArticle?->relatedArticles[0]->body)->toBe('');
 });
+
+it('deduplicates repeat feedback from the same visitor for the same article version', function (): void {
+    $collection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Troubleshooting',
+    ));
+    $article = CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $collection,
+        title: 'Fix Cache',
+        body: '<p>Clear cache safely.</p>',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+
+    $firstFeedback = RecordKnowledgeBaseArticleFeedbackAction::run(new RecordKnowledgeBaseArticleFeedbackData(
+        article: $article,
+        helpful: false,
+        comment: 'Needs more detail.',
+        visitorIdentifier: '192.0.2.10',
+        userAgent: 'Example Browser',
+    ));
+
+    $secondFeedback = RecordKnowledgeBaseArticleFeedbackAction::run(new RecordKnowledgeBaseArticleFeedbackData(
+        article: $article,
+        helpful: true,
+        comment: 'The update helped.',
+        visitorIdentifier: '192.0.2.10',
+        userAgent: 'Example Browser',
+    ));
+
+    expect($secondFeedback->getKey())->toBe($firstFeedback->getKey())
+        ->and(KnowledgeBaseArticleFeedback::query()->count())->toBe(1)
+        ->and($secondFeedback->helpful)->toBeTrue()
+        ->and($secondFeedback->comment)->toBe('The update helped.');
+});
