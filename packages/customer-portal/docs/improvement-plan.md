@@ -34,7 +34,7 @@ Tied to `capabilities[]` and customer-portal table stakes:
 - **Shipped 2026-06-03: admin cross-tenant support-request leak fixed.** The support-request resource is site-scoped for non-global admins.
 - **Shipped 2026-06-03: critical health check is real.** The package health check now fails when required storage is missing.
 - **Dead capability `portal-profile` / unused registries (tech debt + manifest mismatch).** Profile & preferences provider registries have no resolver, no consumer, and no implementer anywhere. — `src/Support/PortalProfileProviderRegistry.php`, `src/Support/PortalPreferencesProviderRegistry.php`, `src/Providers/CustomerPortalServiceProvider.php`.
-- **`frontendRenderBudgetMs: 0` is a placeholder (manifest).** A render budget of 0ms is unenforceable/meaningless for a page that fans out across N provider packages and runs DB queries. Set a real budget (e.g. 150–250ms) and add a query budget for the frontend path (only `adminQueryBudget: 20` exists). — `capell.json` `performance`.
+- **Shipped 2026-06-04: frontend render/query budgets.** `capell.json` now declares `frontendRenderBudgetMs: 200` and `frontendQueryBudget: 20`, with manifest tests covering both values.
 - **Shipped 2026-06-04: frontend account isolation coverage.** `CustomerPortalFrontendTest` now proves one account cannot see another account's support requests on the same site.
 - **No negative-path / authz tests.** Missing: unauthenticated request → 403 (the `abort_unless` in `ResolvesPortalAccount`), throttle on `support.store` (`throttle:12,1`), and broader admin resource gating. Suspended/archived accounts and cross-site admin scope are now covered. — `tests/`.
 - **PII handling is good but partial.** `subject`/`message`/`requester_email`/`context` are `encrypted` and emails are HMAC-hashed for lookup (`PortalAccount::emailHash`), but `hash_secret` defaults to `null` in config and falls through to an app secret — document the key-rotation story, and note encrypted columns are unsearchable in admin (the resource has no search, consistent with this, but worth stating). — `config/capell-customer-portal.php`, `src/Models/PortalSupportRequest.php`.
@@ -71,7 +71,7 @@ Tied to `capabilities[]` and customer-portal table stakes:
 | Add unauthenticated/throttle/suspended negative-path tests                       | Shipped | S      | Med    | §4          |
 | Enforce `PortalAccountStatus` (block suspended/archived)                         | Shipped | S      | Med    | §3          |
 | Emit events + notifications on submit / status change                            | Shipped | M      | High   | §3          |
-| Set real `frontendRenderBudgetMs` + frontend query budget                        | Next    | S      | Med    | §4          |
+| Set real `frontendRenderBudgetMs` + frontend query budget                        | Shipped | S      | Med    | §4          |
 | Capture marketplace screenshots (4 surfaces) + rewrite summary/description       | Next    | S      | High   | §5          |
 | Schema-drive preferences (single source for view + validation)                   | Next    | M      | Med    | §2, §3      |
 | Cap / paginate dashboard + self-service provider fan-out                         | Next    | M      | Med    | §2          |

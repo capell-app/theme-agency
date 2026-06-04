@@ -16,6 +16,7 @@ The Customer Portal package now includes authenticated frontend routes for a min
 - The frontend route group requires authentication, and support submissions are throttled at 12 attempts per minute.
 - Suspended and archived portal accounts are blocked by `ResolveAuthenticatedPortalAccountAction` before frontend dashboard, preference, or support workflows run.
 - Support request submissions emit `PortalSupportRequestSubmitted`; status transitions emit `PortalSupportRequestStatusChanged`. Both customer-visible workflows queue requester mail notifications when the request has an email address.
+- The authenticated frontend route declares a 200ms render budget and a 20-query frontend budget in `capell.json`; provider adapters should keep customer-facing dashboard data hydrated before Blade rendering.
 - A Filament admin resource lists and edits portal support requests for triage. Status transitions go through `UpdateSupportRequestStatusAction` so resolved and closed timestamps remain consistent.
 
 ## Integration

@@ -9,7 +9,7 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 | Bucket | Rows |
 | ------ | ---: |
 | Now    | 332 |
-| Next   | 329 |
+| Next   | 328 |
 | Later  | 202 |
 
 The work is not complete until every package plan has been reviewed against current code, required features are implemented or intentionally deferred, new behavior is documented, and focused verification passes for each changed package.
@@ -32,7 +32,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | comments | 1 | 0 | 0 | Slice committed | Latest Comments slice adds public Like reactions, aggregate public reaction counts, approved-reply author notifications, and tokenized reply-notification opt-out handling; continue with marketplace screenshot capture/wiring. |
 | contacts | 0 | 7 | 2 | Slice committed | Current follow-ups expose audited privacy export/anonymization and queue/isolate all source-adapter listeners. Contacts has no Now rows left, but still needs Next/Later CRM depth work and a full package completion review before it can be marked Complete. |
 | content-sections | 5 | 6 | 4 | Slice committed | `54b758fe1` landed readiness fixes; continue with remaining render safety/content rows. |
-| customer-portal | 0 | 5 | 3 | Slice committed | Current follow-up adds same-site frontend account-isolation coverage, blocks suspended/archived accounts, adds package factories for portal accounts/support requests, covers unauthenticated/throttled frontend paths, wires `portal-profile` through an Action/rendered dashboard section, and adds support request events/requester notifications. Continue with Next/Later dashboard/preference hardening and a package completion review before marking Complete. |
+| customer-portal | 0 | 4 | 3 | Slice committed | Current follow-up adds same-site frontend account-isolation coverage, blocks suspended/archived accounts, adds package factories for portal accounts/support requests, covers unauthenticated/throttled frontend paths, wires `portal-profile` through an Action/rendered dashboard section, adds support request events/requester notifications, and replaces placeholder frontend performance budgets. Continue with Next/Later dashboard/preference hardening and a package completion review before marking Complete. |
 | dashboard-reports | 7 | 5 | 3 | Slice committed | `5779a66d6` landed a now-bucket slice; continue with budget/reporting gaps. |
 | demo-kit | 5 | 6 | 4 | Slice committed | `aa2d02c4c` fixed seed fanout; continue with demo coverage and safety rows. |
 | deployments | 6 | 7 | 3 | Slice committed | `8f5c95387` landed health/manifest fixes; continue with deploy history and rollback rows. |

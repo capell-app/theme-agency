@@ -35,6 +35,9 @@ it('declares a cache-safe package-local foundation manifest', function (): void 
         ])
         ->and(class_implements(PortalSupportRequestResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(CustomerPortalFrontendRoutesContribution::class))->toContain(RegistersExtensionRoute::class)
+        ->and($manifest['performance']['frontendRenderBudgetMs'])->toBe(200)
+        ->and($manifest['performance']['frontendQueryBudget'])->toBe(20)
+        ->and($manifest['performance']['adminQueryBudget'])->toBe(20)
         ->and($manifest['performance']['cacheSafety']['cacheable'])->toBeFalse()
         ->and($manifest['performance']['cacheSafety']['sensitiveOutput'])->toBeTrue()
         ->and($manifest['providers']['runtime'])->toBe([

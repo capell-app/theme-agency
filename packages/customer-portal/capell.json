@@ -92,7 +92,8 @@
         "portal-support-request-triage"
     ],
     "performance": {
-        "frontendRenderBudgetMs": 0,
+        "frontendRenderBudgetMs": 200,
+        "frontendQueryBudget": 20,
         "adminQueryBudget": 20,
         "cacheTags": ["customer-portal"],
         "cacheSafety": {
