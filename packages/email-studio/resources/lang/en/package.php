@@ -10,7 +10,7 @@ return [
             'summary' => 'Email Studio body retention matched :matched message(s) older than :days day(s), and cleared :pruned rendered body snapshot(s).',
         ],
     ],
-    'description' => 'Template-driven transactional email, delivery auditing, provider events, replies, and suppressions.',
+    'description' => 'Template-driven transactional email, delivery auditing, provider adapter normalization foundations, and suppressions.',
     'health' => [
         'components' => [
             'address_normalizer' => 'EmailAddressNormalizer',
@@ -36,7 +36,7 @@ return [
             'remediation' => 'Run Email Studio migrations and confirm provider adapters are registered in EmailProviderRegistry.',
         ],
         'provider_events' => [
-            'label' => 'Provider webhook events and inbound replies normalize into local records',
+            'label' => 'Provider webhook and inbound reply normalization foundations are present',
             'passed' => 'Registered adapters normalize webhook events and inbound replies, and the events and replies tables are available.',
             'remediation' => 'Run Email Studio migrations and confirm registered provider adapters can normalize webhook events and inbound replies.',
         ],

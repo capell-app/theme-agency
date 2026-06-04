@@ -24,7 +24,7 @@ it('runs the four declared email studio diagnostics and passes when the slice is
             'Email templates render through typed template actions',
             'Queued email delivery records provider results per recipient',
             'Suppressions are enforced before provider handoff',
-            'Provider webhook events and inbound replies normalize into local records',
+            'Provider webhook and inbound reply normalization foundations are present',
         ])
         ->and($checks->every(fn (DoctorCheckResultData $check): bool => $check->remediation === null))->toBeTrue()
         ->and(EmailStudioHealthCheck::passed())->toBeTrue();
@@ -87,7 +87,7 @@ it('fails the provider events diagnostic when registered adapters cannot normali
     $checks = EmailStudioHealthCheck::runDiagnostics();
 
     $providerEventsCheck = $checks->firstOrFail(
-        fn (DoctorCheckResultData $check): bool => $check->label === 'Provider webhook events and inbound replies normalize into local records',
+        fn (DoctorCheckResultData $check): bool => $check->label === 'Provider webhook and inbound reply normalization foundations are present',
     );
 
     expect($providerEventsCheck->passed)->toBeFalse()

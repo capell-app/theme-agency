@@ -1,6 +1,6 @@
 # Email Studio
 
-Template-driven transactional email, delivery auditing, provider events, replies, and suppressions for Capell CMS.
+Template-driven transactional email, delivery auditing, provider adapter normalization foundations, and suppressions for Capell CMS.
 
 ## At A Glance
 
@@ -12,7 +12,7 @@ Template-driven transactional email, delivery auditing, provider events, replies
 
 ## Why It Helps Your Capell Workflow
 
-- Gives Capell a transactional email center for reusable templates, provider delivery, suppressions, replies, and event audit.
+- Gives Capell a transactional email center for reusable templates, provider delivery, suppressions, and send audit.
 - Helps owners keep email behavior visible in admin instead of burying delivery state inside provider dashboards.
 - Gives developers provider adapters and send Actions so forms, automations, and workflow packages can send consistently.
 
@@ -24,7 +24,7 @@ Template-driven transactional email, delivery auditing, provider events, replies
 
 ## What It Adds
 
-- Template-driven transactional email, delivery auditing, provider events, replies, and suppressions for Capell CMS.
+- Template-driven transactional email, delivery auditing, provider adapter normalization foundations, and suppressions for Capell CMS.
 
 ## Why It Matters
 
@@ -51,6 +51,7 @@ That is the part clients pay for. Sending an email is easy; proving what happene
 - `EmailProviderRegistry` isolates provider adapters from the send pipeline.
 - `SendEmailAction` creates the message and recipient records, renders the selected variant, applies suppression state, and queues delivery.
 - `DeliverEmailMessageAction` rechecks suppressions, calls the provider adapter, and records recipient/message outcomes.
+- Provider adapters can normalize webhook event and inbound reply payloads for later ingestion slices; no webhook or reply ingestion route/action ships yet.
 
 ## Code Map
 

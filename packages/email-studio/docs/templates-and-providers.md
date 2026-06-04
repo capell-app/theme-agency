@@ -1,6 +1,6 @@
 # Templates And Providers
 
-Email Studio separates template registration, message creation, delivery, tracking, and provider webhooks. Package code should call Actions and registries rather than creating message rows by hand.
+Email Studio separates template registration, message creation, provider delivery, and provider adapter normalization. Package code should call Actions and registries rather than creating message rows by hand.
 
 ## Register a Template
 
@@ -57,7 +57,7 @@ If the constructor shape changes, update this example with the data class.
 
 ## Register a Provider Adapter
 
-Provider adapters implement `EmailProviderAdapter`. They normalize outbound delivery, webhook payloads, and inbound replies.
+Provider adapters implement `EmailProviderAdapter`. They normalize outbound delivery immediately, and expose webhook payload plus inbound reply normalizers for later ingestion slices. The current package does not ship webhook or reply ingestion routes/actions.
 
 ```php
 use Capell\EmailStudio\Contracts\EmailProviderAdapter;
@@ -110,18 +110,18 @@ Use a new `EmailProviderType` case before registering a real provider. The `Fake
 
 ## Config Keys
 
-| Key                                             | Use                                                                                          |
-| ----------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `capell-email-studio.default_provider`          | Provider used when an email profile does not override it.                                    |
-| `capell-email-studio.queue`                     | Queue used by `SendEmailJob`. Can be set with `CAPELL_EMAIL_STUDIO_QUEUE`.                   |
-| `capell-email-studio.track_opens`               | Enables open tracking where the provider supports it.                                        |
-| `capell-email-studio.track_clicks`              | Enables click tracking where the provider supports it.                                       |
-| `capell-email-studio.body_retention_days`       | How long rendered message bodies should be retained.                                         |
-| `capell-email-studio.webhook_tolerance_seconds` | Tolerance window for provider webhook validation.                                            |
-| `capell-email-studio.public_route_prefix`       | Prefix for tracking and webhook routes. Can be set with `CAPELL_EMAIL_STUDIO_PUBLIC_PREFIX`. |
-| `capell-email-studio.tracking_token_ttl_days`   | Lifetime of tracking tokens.                                                                 |
-| `capell-email-studio.webhook_rate_limit`        | Rate limiter name for webhooks.                                                              |
-| `capell-email-studio.tracking_rate_limit`       | Rate limiter name for tracking routes.                                                       |
+| Key                                             | Use                                                                                                           |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `capell-email-studio.default_provider`          | Provider used when an email profile does not override it.                                                     |
+| `capell-email-studio.queue`                     | Queue used by `SendEmailJob`. Can be set with `CAPELL_EMAIL_STUDIO_QUEUE`.                                    |
+| `capell-email-studio.track_opens`               | Reserved for the planned open tracking slice. No open tracking route ships yet.                               |
+| `capell-email-studio.track_clicks`              | Reserved for the planned click tracking slice. No click tracking route ships yet.                             |
+| `capell-email-studio.body_retention_days`       | How long rendered message bodies should be retained.                                                          |
+| `capell-email-studio.webhook_tolerance_seconds` | Reserved tolerance window for planned provider webhook validation.                                            |
+| `capell-email-studio.public_route_prefix`       | Reserved prefix for planned tracking and webhook routes. Can be set with `CAPELL_EMAIL_STUDIO_PUBLIC_PREFIX`. |
+| `capell-email-studio.tracking_token_ttl_days`   | Lifetime of tracking tokens.                                                                                  |
+| `capell-email-studio.webhook_rate_limit`        | Reserved rate limiter name for planned webhooks.                                                              |
+| `capell-email-studio.tracking_rate_limit`       | Reserved rate limiter name for planned tracking routes.                                                       |
 
 Table-name keys are part of install and migration behavior. Document them in migration notes rather than setup prose unless a host app needs custom table names.
 

@@ -53,6 +53,7 @@
     "permissions": [],
     "capabilities": [
         "delivery-audit",
+        "provider-normalization-foundation",
         "provider-adapters",
         "suppressions",
         "template-rendering",
@@ -94,7 +95,7 @@
         },
         {
             "key": "email-studio.provider-events",
-            "label": "Provider webhook events and inbound replies normalize into local records",
+            "label": "Provider webhook and inbound reply normalization foundations are present",
             "class": "Capell\\EmailStudio\\Health\\EmailStudioHealthCheck",
             "severity": "warning",
             "surface": "frontend"
