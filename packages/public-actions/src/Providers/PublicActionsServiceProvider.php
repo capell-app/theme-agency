@@ -8,6 +8,7 @@ use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\PublicActions\Contracts\PublicActionWebhookHostResolver;
 use Capell\PublicActions\Enums\ResourceEnum;
 use Capell\PublicActions\Listeners\SubmitPublicActionFromFormSubmission;
 use Capell\PublicActions\Models\PublicAction;
@@ -20,6 +21,7 @@ use Capell\PublicActions\Policies\PublicActionDispatchAttemptPolicy;
 use Capell\PublicActions\Policies\PublicActionIntegrationTokenPolicy;
 use Capell\PublicActions\Policies\PublicActionPolicy;
 use Capell\PublicActions\Policies\PublicActionSubmissionPolicy;
+use Capell\PublicActions\Support\Providers\DnsPublicActionWebhookHostResolver;
 use Capell\PublicActions\Support\Providers\HttpWebhookPublicActionAdapter;
 use Capell\PublicActions\Support\PublicActionDestinationAdapterRegistry;
 use Capell\PublicActions\Support\PublicActionHandlerRegistry;
@@ -64,6 +66,7 @@ class PublicActionsServiceProvider extends AbstractPackageServiceProvider
 
     public function packageRegistered(): void
     {
+        $this->app->singleton(PublicActionWebhookHostResolver::class, DnsPublicActionWebhookHostResolver::class);
         $this->app->singleton(PublicActionHandlerRegistry::class);
         $this->app->singleton(PublicActionProviderPresetRegistry::class);
         $this->app->singleton(PublicActionDestinationAdapterRegistry::class, static function (): PublicActionDestinationAdapterRegistry {

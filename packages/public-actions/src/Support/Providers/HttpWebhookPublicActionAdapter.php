@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Capell\PublicActions\Support\Providers;
 
 use Capell\PublicActions\Contracts\PublicActionDestinationAdapter;
+use Capell\PublicActions\Contracts\PublicActionWebhookHostResolver;
 use Capell\PublicActions\Data\PublicActionDispatchResultData;
+use Capell\PublicActions\Data\ResolvedWebhookEndpointData;
 use Capell\PublicActions\Enums\PublicActionDispatchStatus;
 use Capell\PublicActions\Models\PublicActionDestination;
 use Capell\PublicActions\Models\PublicActionDispatchAttempt;
@@ -18,6 +20,10 @@ use Throwable;
 
 final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAdapter
 {
+    public function __construct(
+        private readonly PublicActionWebhookHostResolver $hostResolver,
+    ) {}
+
     public function dispatch(
         PublicActionDestination $destination,
         PublicActionSubmission $submission,
@@ -40,11 +46,13 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
         ]);
 
         try {
-            $endpointUrl = $this->endpointUrl($destination);
+            $endpoint = $this->endpoint($destination);
 
             $response = Http::timeout($this->timeoutSeconds($destination))
-                ->withHeaders($this->headers($destination, $body))
-                ->send($this->method($destination), $endpointUrl, $this->sendOptions($destination, $body));
+                ->withoutRedirecting()
+                ->withHeaders($this->headers($destination, $body, $endpoint))
+                ->withOptions($this->requestOptions($endpoint))
+                ->send($this->method($destination), $endpoint->url, $this->sendOptions($destination, $body));
 
             $status = $response->successful()
                 ? PublicActionDispatchStatus::Succeeded
@@ -104,8 +112,11 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
      * @param  array<string, mixed>  $body
      * @return array<string, string>
      */
-    private function headers(PublicActionDestination $destination, array $body): array
-    {
+    private function headers(
+        PublicActionDestination $destination,
+        array $body,
+        ResolvedWebhookEndpointData $endpoint,
+    ): array {
         $headers = is_array($destination->headers) ? $destination->headers : [];
 
         $normalizedHeaders = collect($headers)
@@ -117,7 +128,25 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
             $normalizedHeaders['X-Capell-Signature'] = hash_hmac('sha256', json_encode($body, JSON_THROW_ON_ERROR), $destination->secret);
         }
 
+        $normalizedHeaders['Host'] = $endpoint->hostHeader();
+
         return $normalizedHeaders;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function requestOptions(ResolvedWebhookEndpointData $endpoint): array
+    {
+        if (! defined('CURLOPT_RESOLVE')) {
+            throw new InvalidArgumentException('Webhook destination dispatch requires cURL host pinning support.');
+        }
+
+        return [
+            'curl' => [
+                CURLOPT_RESOLVE => [$endpoint->curlResolveEntry()],
+            ],
+        ];
     }
 
     /**
@@ -153,10 +182,13 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
         return is_int($configuredTimeout) && $configuredTimeout > 0 ? $configuredTimeout : 10;
     }
 
-    private function endpointUrl(PublicActionDestination $destination): string
+    private function endpoint(PublicActionDestination $destination): ResolvedWebhookEndpointData
     {
         $endpointUrl = is_string($destination->endpoint_url) ? $destination->endpoint_url : '';
         $parts = parse_url($endpointUrl);
+
+        throw_if(! is_array($parts), InvalidArgumentException::class, 'Webhook destination endpoint must be an absolute HTTP URL.');
+
         $scheme = is_string($parts['scheme'] ?? null) ? strtolower($parts['scheme']) : null;
         $host = is_string($parts['host'] ?? null) ? strtolower($parts['host']) : null;
 
@@ -164,28 +196,52 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
 
         throw_if($scheme !== 'https' && ! config('capell-public-actions.allow_insecure_webhook_urls', false), InvalidArgumentException::class, 'Webhook destination endpoint must use HTTPS.');
 
-        throw_if(! config('capell-public-actions.allow_private_webhook_urls', false) && $this->isPrivateHost($host), InvalidArgumentException::class, 'Webhook destination endpoint host is not allowed.');
+        $addresses = $this->resolvedHostAddresses($host);
 
-        return $endpointUrl;
+        throw_if($addresses === [], InvalidArgumentException::class, 'Webhook destination endpoint host could not be resolved.');
+
+        throw_if(! config('capell-public-actions.allow_private_webhook_urls', false) && $this->hasPrivateAddress($addresses), InvalidArgumentException::class, 'Webhook destination endpoint host is not allowed.');
+
+        return new ResolvedWebhookEndpointData(
+            url: $endpointUrl,
+            scheme: $scheme,
+            host: $host,
+            port: $this->port($parts, $scheme),
+            address: $addresses[0],
+        );
     }
 
-    private function isPrivateHost(string $host): bool
+    /**
+     * @param  array<string, mixed>  $parts
+     */
+    private function port(array $parts, string $scheme): int
     {
-        if (in_array($host, ['localhost', 'localhost.localdomain'], true) || str_ends_with($host, '.localhost')) {
-            return true;
+        $port = $parts['port'] ?? null;
+
+        if (is_int($port) && $port > 0 && $port <= 65535) {
+            return $port;
         }
 
-        if (filter_var($host, FILTER_VALIDATE_IP) !== false) {
-            return $this->isPrivateAddress($host);
-        }
+        return $scheme === 'https' ? 443 : 80;
+    }
 
-        foreach ($this->resolvedHostAddresses($host) as $address) {
+    /**
+     * @param  list<string>  $addresses
+     */
+    private function hasPrivateAddress(array $addresses): bool
+    {
+        foreach ($addresses as $address) {
             if ($this->isPrivateAddress($address)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    private function isPrivateHostLabel(string $host): bool
+    {
+        return in_array($host, ['localhost', 'localhost.localdomain'], true) || str_ends_with($host, '.localhost');
     }
 
     private function isPrivateAddress(string $address): bool
@@ -202,17 +258,18 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
      */
     private function resolvedHostAddresses(string $host): array
     {
-        $records = dns_get_record($host, DNS_A | DNS_AAAA);
-
-        if ($records === false) {
-            return [];
+        if ($this->isPrivateHostLabel($host)) {
+            return ['127.0.0.1'];
         }
 
-        return array_values(collect($records)
-            ->flatMap(static fn (array $record): array => array_values(array_filter([
-                is_string($record['ip'] ?? null) ? $record['ip'] : null,
-                is_string($record['ipv6'] ?? null) ? $record['ipv6'] : null,
-            ], static fn (?string $address): bool => $address !== null && $address !== '')))
+        if (filter_var($host, FILTER_VALIDATE_IP) !== false) {
+            return [$host];
+        }
+
+        $addresses = $this->hostResolver->resolve($host);
+
+        return array_values(collect($addresses)
+            ->filter(static fn (string $address): bool => filter_var($address, FILTER_VALIDATE_IP) !== false)
             ->unique()
             ->values()
             ->all());

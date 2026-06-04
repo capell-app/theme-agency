@@ -8,9 +8,11 @@ use Capell\Admin\Providers\AdminServiceProvider;
 use Capell\Admin\Providers\Filament\AdminPanelProvider;
 use Capell\Core\Facades\CapellCore;
 use Capell\Frontend\Providers\FrontendServiceProvider;
+use Capell\PublicActions\Contracts\PublicActionWebhookHostResolver;
 use Capell\PublicActions\Providers\PublicActionsServiceProvider;
 use Capell\PublicActions\Support\PublicActionHandlerRegistry;
 use Capell\PublicActions\Tests\Fakes\FakePublicActionHandler;
+use Capell\PublicActions\Tests\Fakes\FakePublicActionWebhookHostResolver;
 use Capell\PublicActions\Tests\Fakes\FakeValidationPublicActionHandler;
 use Capell\Tests\AbstractTestCase;
 use Illuminate\Foundation\Application;
@@ -22,6 +24,11 @@ abstract class PublicActionsTestCase extends AbstractTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        app()->singleton(
+            PublicActionWebhookHostResolver::class,
+            static fn (): FakePublicActionWebhookHostResolver => new FakePublicActionWebhookHostResolver,
+        );
 
         $registry = resolve(PublicActionHandlerRegistry::class);
         $registry->register('test.handler', FakePublicActionHandler::class);

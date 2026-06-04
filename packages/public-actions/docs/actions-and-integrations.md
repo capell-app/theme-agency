@@ -101,6 +101,17 @@ Provider presets are config defaults over the built-in `http_webhook` adapter. A
 
 Use a destination adapter instead when the provider needs signing, OAuth, polling, custom retries, or a non-HTTP transport.
 
+## Built-In HTTP Webhook Safety
+
+The built-in `http_webhook` adapter is designed for untrusted destination URLs:
+
+- Endpoint URLs must be absolute HTTP URLs, and HTTPS is required unless `capell-public-actions.allow_insecure_webhook_urls` is explicitly enabled.
+- Hostnames are resolved before dispatch. Empty DNS results fail closed, and private, loopback, link-local, multicast, reserved, and localhost-style addresses are blocked unless `allow_private_webhook_urls` is explicitly enabled.
+- Dispatch uses cURL host pinning (`CURLOPT_RESOLVE`) against the validated address while keeping the original URL host and `Host` header, which closes the DNS-rebinding gap between validation and send.
+- Redirect following is disabled. A provider returning `3xx` is recorded as a retryable provider response rather than followed to a second, unchecked URL.
+
+Only enable insecure or private webhook URLs for controlled local development or an internal deployment where the network path is owned and reviewed.
+
 ## Integration Tokens
 
 Use `CreatePublicActionIntegrationTokenAction` when a provider needs API access:
@@ -135,4 +146,4 @@ The plain text token is returned once. Store only the hashed token in the databa
 
 ## What To Test
 
-Test the action handler directly for business behaviour, then one HTTP submission path for payload shape and throttling. Destination adapters should have a focused test for redaction, provider failure responses, and retryable failures.
+Test the action handler directly for business behaviour, then one HTTP submission path for payload shape and throttling. Destination adapters should have a focused test for redaction, provider failure responses, retryable failures, and any SSRF or redirect safety guarantees they own.

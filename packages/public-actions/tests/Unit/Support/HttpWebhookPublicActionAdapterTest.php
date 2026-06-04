@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\PublicActions\Actions\DispatchPublicActionDestinationAction;
+use Capell\PublicActions\Contracts\PublicActionWebhookHostResolver;
 use Capell\PublicActions\Enums\PublicActionDispatchStatus;
 use Capell\PublicActions\Jobs\DispatchPublicActionDestinationJob;
 use Capell\PublicActions\Models\PublicAction;
@@ -10,6 +11,7 @@ use Capell\PublicActions\Models\PublicActionDestination;
 use Capell\PublicActions\Models\PublicActionDispatchAttempt;
 use Capell\PublicActions\Models\PublicActionSubmission;
 use Capell\PublicActions\Support\Providers\HttpWebhookPublicActionAdapter;
+use Capell\PublicActions\Tests\Fakes\FakePublicActionWebhookHostResolver;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
@@ -54,6 +56,7 @@ it('dispatches a submission to a json webhook and records a successful attempt',
             && $request->url() === 'https://hooks.example.test/success'
             && $request->hasHeader('X-Custom', 'custom-value')
             && $request->hasHeader('X-Capell-Signature')
+            && $request->hasHeader('Host', 'hooks.example.test')
             && data_get($data, 'action.key') === 'preview-access'
             && data_get($data, 'payload.email') === 'person@example.test';
     });
@@ -189,4 +192,71 @@ it('blocks private webhook endpoint hosts', function (): void {
         ->and(PublicActionDispatchAttempt::query()->firstOrFail()->status)->toBe(PublicActionDispatchStatus::Failed);
 
     Http::assertNothingSent();
+});
+
+it('blocks webhook endpoint hosts that resolve to private addresses', function (): void {
+    Http::fake();
+
+    $resolver = resolve(PublicActionWebhookHostResolver::class);
+    throw_unless($resolver instanceof FakePublicActionWebhookHostResolver);
+    $resolver->set('metadata.example.test', ['169.254.169.254']);
+
+    $destination = PublicActionDestination::factory()->create([
+        'adapter' => 'http_webhook',
+        'endpoint_url' => 'https://metadata.example.test/latest',
+    ]);
+    $submission = PublicActionSubmission::factory()->create();
+
+    $result = resolve(HttpWebhookPublicActionAdapter::class)->dispatch($destination, $submission);
+
+    expect($result->success)->toBeFalse()
+        ->and(PublicActionDispatchAttempt::query()->firstOrFail()->status)->toBe(PublicActionDispatchStatus::Failed);
+
+    Http::assertNothingSent();
+});
+
+it('fails closed when a webhook endpoint host cannot be resolved', function (): void {
+    Http::fake();
+
+    $resolver = resolve(PublicActionWebhookHostResolver::class);
+    throw_unless($resolver instanceof FakePublicActionWebhookHostResolver);
+    $resolver->set('missing.example.test', []);
+
+    $destination = PublicActionDestination::factory()->create([
+        'adapter' => 'http_webhook',
+        'endpoint_url' => 'https://missing.example.test/webhook',
+    ]);
+    $submission = PublicActionSubmission::factory()->create();
+
+    $result = resolve(HttpWebhookPublicActionAdapter::class)->dispatch($destination, $submission);
+
+    expect($result->success)->toBeFalse()
+        ->and(PublicActionDispatchAttempt::query()->firstOrFail()->status)->toBe(PublicActionDispatchStatus::Failed);
+
+    Http::assertNothingSent();
+});
+
+it('pins webhook dispatch to the validated address while keeping the original host', function (): void {
+    $resolver = resolve(PublicActionWebhookHostResolver::class);
+    throw_unless($resolver instanceof FakePublicActionWebhookHostResolver);
+    $resolver->set('hooks.example.test', ['93.184.216.34', '93.184.216.35']);
+
+    $destination = PublicActionDestination::factory()->create([
+        'adapter' => 'http_webhook',
+        'endpoint_url' => 'https://hooks.example.test:8443/pinned',
+    ]);
+    $adapter = resolve(HttpWebhookPublicActionAdapter::class);
+
+    $endpointMethod = new ReflectionMethod($adapter, 'endpoint');
+    $endpoint = $endpointMethod->invoke($adapter, $destination);
+
+    $optionsMethod = new ReflectionMethod($adapter, 'requestOptions');
+    $options = $optionsMethod->invoke($adapter, $endpoint);
+
+    expect($endpoint->host)->toBe('hooks.example.test')
+        ->and($endpoint->port)->toBe(8443)
+        ->and($endpoint->address)->toBe('93.184.216.34')
+        ->and($endpoint->hostHeader())->toBe('hooks.example.test:8443')
+        ->and($options)->toHaveKey('curl')
+        ->and($options['curl'][CURLOPT_RESOLVE] ?? null)->toBe(['hooks.example.test:8443:93.184.216.34']);
 });

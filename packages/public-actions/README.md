@@ -96,6 +96,7 @@ vendor/bin/pest packages/public-actions/tests --configuration=phpunit.xml
 ## Maintenance Notes
 
 - Treat public routes as untrusted input and keep validation, permission checks, and side effects inside actions or dedicated services.
+- Treat outbound webhook URLs as untrusted too. The built-in HTTP adapter pins dispatch to the validated DNS address, disables redirects, and fails closed for unresolved or private hosts by default.
 - Use `Idempotency-Key` for retryable public submissions; duplicate keys replay the stored submission result instead of creating another submission.
 - Spam protection runs through adapters registered in `PublicActionSpamProtectionAdapterRegistry`; honeypot is enabled by default and Turnstile can be enabled through config.
 - Put behaviour changes in `src/Actions/`; UI classes, commands, and controllers should call actions instead of owning domain logic.

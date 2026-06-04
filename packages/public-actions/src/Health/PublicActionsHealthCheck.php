@@ -146,10 +146,10 @@ final class PublicActionsHealthCheck implements ChecksExtensionHealth
      */
     public function missingTables(): array
     {
-        return collect($this->storageTableNames())
+        return array_values(collect($this->storageTableNames())
             ->reject(static fn (string $tableName): bool => Schema::hasTable($tableName))
             ->values()
-            ->all();
+            ->all());
     }
 
     public function hasHttpWebhookAdapter(): bool
@@ -166,14 +166,14 @@ final class PublicActionsHealthCheck implements ChecksExtensionHealth
     {
         $registry = resolve(PublicActionProviderPresetRegistry::class);
 
-        return collect(self::EXPECTED_PRESET_KEYS)
+        return array_values(collect(self::EXPECTED_PRESET_KEYS)
             ->reject(function (string $presetKey) use ($registry): bool {
                 $preset = $registry->get($presetKey);
 
                 return $preset !== null && $preset->adapter !== '';
             })
             ->values()
-            ->all();
+            ->all());
     }
 
     /**
@@ -183,14 +183,14 @@ final class PublicActionsHealthCheck implements ChecksExtensionHealth
     {
         $tables = config('capell-public-actions.tables', []);
 
-        return collect(self::STORAGE_TABLE_KEYS)
+        return array_values(collect(self::STORAGE_TABLE_KEYS)
             ->map(static function (string $fallback, string $key) use ($tables): string {
                 $value = is_array($tables) ? ($tables[$key] ?? null) : null;
 
                 return is_string($value) && $value !== '' ? $value : $fallback;
             })
             ->values()
-            ->all();
+            ->all());
     }
 
     /**
