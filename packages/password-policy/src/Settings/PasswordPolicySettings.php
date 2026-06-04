@@ -18,6 +18,14 @@ class PasswordPolicySettings extends Settings implements SettingsContract, Setti
 
     public bool $force_change_enabled;
 
+    public int $minimum_password_length;
+
+    public bool $require_mixed_case;
+
+    public bool $require_numbers;
+
+    public bool $require_symbols;
+
     public bool $compromised_password_checks_enabled;
 
     public bool $password_history_enabled;

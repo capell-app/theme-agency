@@ -1,6 +1,6 @@
 # Password Policy
 
-Password expiry, forced password changes, and password safety policy for Capell CMS.
+Admin password expiry, forced password changes, complexity rules, reuse history, and breached-password checks for Capell CMS.
 
 ## At A Glance
 
@@ -13,7 +13,7 @@ Password expiry, forced password changes, and password safety policy for Capell 
 
 ## Why It Helps Your Capell Workflow
 
-- Adds password expiry, forced password changes, and password safety policy for Capell admin and user accounts.
+- Adds password expiry, forced password changes, complexity rules, reuse history, and breached-password checks for Capell admin and user accounts.
 - Helps operators enforce account hygiene without custom middleware in each host app.
 - Pairs with login audit so security policy and authentication history can be reviewed together.
 
@@ -26,7 +26,7 @@ Password expiry, forced password changes, and password safety policy for Capell 
 ## What It Adds
 
 - Password expiry, forced password changes, and password safety policy for Capell CMS.
-- Settings-backed policy controls for password age, history, and forced changes.
+- Settings-backed policy controls for password age, complexity, history, compromised checks, and forced changes.
 - Admin-facing forced password change flow.
 
 ## Built With

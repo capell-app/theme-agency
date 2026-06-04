@@ -36,6 +36,21 @@ class PasswordPolicySettingsSchema implements HasSchema
             Grid::make(2)
                 ->columnSpanFull()
                 ->schema([
+                    TextInput::make('minimum_password_length')
+                        ->label(__('capell-password-policy::settings.minimum_password_length'))
+                        ->integer()
+                        ->minValue(8)
+                        ->required(),
+                    Toggle::make('require_mixed_case')
+                        ->label(__('capell-password-policy::settings.require_mixed_case')),
+                    Toggle::make('require_numbers')
+                        ->label(__('capell-password-policy::settings.require_numbers')),
+                    Toggle::make('require_symbols')
+                        ->label(__('capell-password-policy::settings.require_symbols')),
+                ]),
+            Grid::make(2)
+                ->columnSpanFull()
+                ->schema([
                     Toggle::make('compromised_password_checks_enabled')
                         ->label(__('capell-password-policy::settings.compromised_password_checks_enabled')),
                     Toggle::make('password_history_enabled')

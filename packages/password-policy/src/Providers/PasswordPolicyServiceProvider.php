@@ -108,6 +108,7 @@ class PasswordPolicyServiceProvider extends AbstractPackageServiceProvider
         $this->app->tag(PasswordPolicyPanelExtender::class, AdminPanelExtender::TAG);
 
         if (interface_exists(UserFormExtender::class)) {
+            $this->app->scoped(PasswordPolicyUserFormExtender::class);
             $this->app->tag(PasswordPolicyUserFormExtender::class, UserFormExtender::TAG);
         }
 

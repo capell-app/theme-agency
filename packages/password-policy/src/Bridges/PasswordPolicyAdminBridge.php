@@ -35,6 +35,7 @@ final class PasswordPolicyAdminBridge implements AdminBridge
             settingsGroup: 'password_policy',
             icon: Heroicon::OutlinedKey,
         ));
+        app()->scoped(PasswordPolicyUserFormExtender::class);
         app()->tag(PasswordPolicyUserFormExtender::class, UserFormExtender::TAG);
         app()->tag(PasswordPolicyUserTableExtender::class, UserTableExtender::TAG);
     }

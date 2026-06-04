@@ -31,7 +31,21 @@ class ValidatePasswordChangeAction
             ]);
         }
 
-        $passwordRule = Password::min(8);
+        $settings = resolve(PasswordPolicySettingsResolver::class)->settings();
+
+        $passwordRule = Password::min($settings->minimumPasswordLength);
+
+        if ($settings->requireMixedCase) {
+            $passwordRule->mixedCase();
+        }
+
+        if ($settings->requireNumbers) {
+            $passwordRule->numbers();
+        }
+
+        if ($settings->requireSymbols) {
+            $passwordRule->symbols();
+        }
 
         if ($checkCompromisedPasswords) {
             $passwordRule->uncompromised();

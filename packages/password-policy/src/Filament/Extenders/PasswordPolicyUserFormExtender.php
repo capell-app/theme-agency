@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Schema;
 
 class PasswordPolicyUserFormExtender implements UserFormExtender
 {
+    /**
+     * @var array<string, string>
+     */
+    private array $pendingPasswordHistoryHashes = [];
+
     public function mutateDataBeforeCreate(array $data): array
     {
         if ($this->hasNoPassword($data)) {
@@ -50,7 +55,7 @@ class PasswordPolicyUserFormExtender implements UserFormExtender
             $settings->compromisedPasswordChecksEnabled,
         );
 
-        RecordPasswordHistoryAction::run($record, (string) $record->getAttribute('password'));
+        $this->pendingPasswordHistoryHashes[$this->recordHistoryKey($record)] = (string) $record->getAttribute('password');
 
         return $data;
     }
@@ -59,6 +64,14 @@ class PasswordPolicyUserFormExtender implements UserFormExtender
     {
         if (! $record->wasChanged('password')) {
             return;
+        }
+
+        $recordHistoryKey = $this->recordHistoryKey($record);
+        $passwordHash = $this->pendingPasswordHistoryHashes[$recordHistoryKey] ?? null;
+        unset($this->pendingPasswordHistoryHashes[$recordHistoryKey]);
+
+        if (is_string($passwordHash) && $passwordHash !== '') {
+            RecordPasswordHistoryAction::run($record, $passwordHash);
         }
 
         $this->persistPasswordPolicyAttributes($record);
@@ -103,5 +116,10 @@ class PasswordPolicyUserFormExtender implements UserFormExtender
         }
 
         $record->forceFill($values)->save();
+    }
+
+    private function recordHistoryKey(Model $record): string
+    {
+        return $record->getTable() . ':' . $record->getKey();
     }
 }

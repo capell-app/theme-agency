@@ -31,6 +31,7 @@ use Capell\Tests\Support\LegacyAdminBridgeFallbackHost;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
@@ -203,6 +204,10 @@ it('saves password security settings from the package settings page', function (
             'password_expiry_enabled' => true,
             'password_expiry_days' => 45,
             'force_change_enabled' => true,
+            'minimum_password_length' => 12,
+            'require_mixed_case' => true,
+            'require_numbers' => true,
+            'require_symbols' => true,
             'compromised_password_checks_enabled' => true,
             'password_history_enabled' => true,
             'password_history_count' => 6,
@@ -215,6 +220,10 @@ it('saves password security settings from the package settings page', function (
     expect($settings->password_expiry_enabled)->toBeTrue()
         ->and($settings->password_expiry_days)->toBe(45)
         ->and($settings->force_change_enabled)->toBeTrue()
+        ->and($settings->minimum_password_length)->toBe(12)
+        ->and($settings->require_mixed_case)->toBeTrue()
+        ->and($settings->require_numbers)->toBeTrue()
+        ->and($settings->require_symbols)->toBeTrue()
         ->and($settings->compromised_password_checks_enabled)->toBeTrue()
         ->and($settings->password_history_enabled)->toBeTrue()
         ->and($settings->password_history_count)->toBe(6);
@@ -289,6 +298,13 @@ it('uses the package history policy when admin users are edited with passwords',
     expect(Hash::check('new-password', (string) $user->getAttribute('password')))->toBeTrue()
         ->and($user->getAttribute('password_changed_at'))->not->toBeNull()
         ->and((bool) $user->getAttribute('must_change_password'))->toBeFalse();
+
+    $historyHashes = DB::table('password_policy_password_histories')
+        ->where('user_id', $user->getKey())
+        ->pluck('password');
+
+    expect($historyHashes)->toHaveCount(1)
+        ->and(Hash::check('old-password', (string) $historyHashes->first()))->toBeTrue();
 
     Livewire::test(EditUser::class, ['record' => $user->getKey()])
         ->fillForm([

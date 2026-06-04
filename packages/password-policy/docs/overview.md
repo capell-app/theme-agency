@@ -5,7 +5,7 @@ description: 'How the Capell Password Policy package enforces expiry, forced cha
 
 # Password Policy Overview
 
-Password Policy adds opt-in password safety rules to Capell Admin. It can force a user to change their password, expire old passwords, reject compromised passwords, and prevent recent password reuse.
+Password Policy adds opt-in password safety rules to Capell Admin. It can force a user to change their password, expire old passwords, enforce complexity rules, reject compromised passwords, and prevent recent password reuse.
 
 Use it for Capell installs that need stronger admin account controls without putting password rules into app-specific Filament pages.
 
@@ -19,12 +19,13 @@ Use it for Capell installs that need stronger admin account controls without put
 
 ## Policy Rules
 
-| Rule              | Setting                                              | Behaviour                                                                                                                                                    |
-| ----------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Password expiry   | `password_expiry_enabled`, `password_expiry_days`    | Users with an old `password_changed_at` value are treated as expired; missing legacy timestamps are shown separately but do not force a reset by themselves. |
-| Forced change     | `force_change_enabled`                               | Users with `must_change_password` set must choose a new password.                                                                                            |
-| Compromised check | `compromised_password_checks_enabled`                | New passwords can use Laravel's `Password::uncompromised()` rule.                                                                                            |
-| Password history  | `password_history_enabled`, `password_history_count` | Recent hashes are checked before a new password is accepted.                                                                                                 |
+| Rule              | Setting                                                                               | Behaviour                                                                                                                                                    |
+| ----------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Password expiry   | `password_expiry_enabled`, `password_expiry_days`                                     | Users with an old `password_changed_at` value are treated as expired; missing legacy timestamps are shown separately but do not force a reset by themselves. |
+| Forced change     | `force_change_enabled`                                                                | Users with `must_change_password` set must choose a new password.                                                                                            |
+| Complexity        | `minimum_password_length`, `require_mixed_case`, `require_numbers`, `require_symbols` | New passwords are checked with Laravel's password rule builder for the configured length and character requirements.                                         |
+| Compromised check | `compromised_password_checks_enabled`                                                 | New passwords can use Laravel's `Password::uncompromised()` rule.                                                                                            |
+| Password history  | `password_history_enabled`, `password_history_count`                                  | Recent hashes are checked before a new password is accepted.                                                                                                 |
 
 The package checks for required columns and tables before using them, so partially migrated environments fail softly where possible.
 
@@ -46,13 +47,13 @@ The package registers its two normal Laravel migrations through `PasswordPolicyS
 
 Use the Actions directly when changing password behaviour:
 
-| Action                            | Purpose                                                                                   |
-| --------------------------------- | ----------------------------------------------------------------------------------------- |
-| `EvaluatePasswordPolicyAction`    | Returns whether a user must change password or has an expired password.                   |
-| `ValidatePasswordChangeAction`    | Validates current password, confirmation, compromised-password checks, and history reuse. |
-| `UpdatePasswordAction`            | Updates the user's password through the package flow.                                     |
-| `RecordPasswordHistoryAction`     | Stores password history after a successful change.                                        |
-| `MarkUserForPasswordChangeAction` | Marks a user for the forced-change flow.                                                  |
+| Action                            | Purpose                                                                                               |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `EvaluatePasswordPolicyAction`    | Returns whether a user must change password or has an expired password.                               |
+| `ValidatePasswordChangeAction`    | Validates current password, confirmation, complexity, compromised-password checks, and history reuse. |
+| `UpdatePasswordAction`            | Updates the user's password through the package flow.                                                 |
+| `RecordPasswordHistoryAction`     | Stores password history after a successful change.                                                    |
+| `MarkUserForPasswordChangeAction` | Marks a user for the forced-change flow.                                                              |
 
 Keep validation and history rules in these Actions rather than duplicating them in Filament pages or controllers.
 

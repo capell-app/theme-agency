@@ -36,7 +36,10 @@ abstract class PasswordPolicyTestCase extends AbstractTestCase
         );
 
         $this->registerAndMigrateSettings(
-            ['2026_05_10_190864_01_create_password_policy_settings'],
+            [
+                '2026_05_10_190864_01_create_password_policy_settings',
+                '2026_06_04_000001_01_add_password_complexity_settings',
+            ],
             __DIR__ . '/../database/settings',
         );
     }
