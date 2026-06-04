@@ -27,6 +27,10 @@ The publishable config lives at `packages/ga4-reports/config/capell-ga4-reports.
 | `enabled`          | `false`             | Keeps the package inert until GA4 is configured.              |
 | `property_id`      | `null`              | GA4 property to query.                                        |
 | `credentials_path` | `null`              | Service account credential path used by the data client.      |
+| `http_timeout`     | `20`                | Token and Data API request timeout.                           |
+| `http_retry_times` | `3`                 | Total attempts for retryable token and Data API failures.     |
+| `http_retry_delay_ms` | `250`            | Base retry delay for transient GA4 HTTP failures.             |
+| `http_retry_max_delay_ms` | `5000`       | Maximum retry delay, including `Retry-After` delays.          |
 | `sync_days`        | `30`                | Number of days included in the sync window.                   |
 | `route_slug`       | `ga4-reports`       | Admin route slug for the reports page.                        |
 | `tables.*`         | package table names | Allows host apps to override the local table names if needed. |
@@ -50,6 +54,8 @@ The command calls `SyncGA4ReportsMetricsAction`, which:
 5. Marks the sync run as `succeeded` or `failed`.
 
 Failures are captured on the sync run and the command still exits successfully, so scheduled jobs can keep running while the dashboard shows the latest known state.
+
+The GA4 data client retries transient connection failures, quota-limited responses, and common upstream error statuses before the sync run is marked failed. Final quota failures are reported as quota exhaustion instead of a generic non-2xx response.
 
 ## Stored Data
 

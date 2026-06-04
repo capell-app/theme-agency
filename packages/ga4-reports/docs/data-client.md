@@ -9,11 +9,17 @@ GA4 Reports reads Google Analytics data through `GA4ReportsDataClientInterface`,
 | `capell-ga4-reports.enabled`          | Enables sync and admin reporting.                      |
 | `capell-ga4-reports.property_id`      | GA4 property ID.                                       |
 | `capell-ga4-reports.credentials_path` | Service account credentials path.                      |
+| `capell-ga4-reports.http_timeout`     | Per-request timeout for token and Data API calls.      |
+| `capell-ga4-reports.http_retry_times` | Total attempts for retryable GA4 HTTP failures.        |
+| `capell-ga4-reports.http_retry_delay_ms` | Base retry delay in milliseconds.                   |
+| `capell-ga4-reports.http_retry_max_delay_ms` | Maximum retry delay in milliseconds.             |
 | `capell-ga4-reports.sync_days`        | Default lookback window for sync actions.              |
 | `capell-ga4-reports.route_slug`       | Admin route slug.                                      |
 | `capell-ga4-reports.tables.*`         | Table-name overrides and protected table registration. |
 
 Prefer settings UI values when a host app exposes them; config is still the package fallback.
+
+The real client retries transient network failures, `408`, `425`, `429`, `500`, `502`, `503`, and `504` responses, plus GA4 `RESOURCE_EXHAUSTED` quota responses. It honours `Retry-After` when Google provides it, otherwise it uses bounded exponential backoff.
 
 ## Swap the Data Client
 

@@ -46,7 +46,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | foundation-theme | 6 | 6 | 4 | Slice committed | `978ed62e8` landed health/manifest consistency; continue with WCAG, dark mode, and token rows. |
 | frontend-authoring | 7 | 6 | 3 | Slice committed | `f329dd1e2` landed health/signer tests; continue with gate and publishing integration rows. |
 | frontend-optimizer | 7 | 7 | 4 | Slice committed | `acc89aa2d` landed health/copy fixes; continue with cache invalidation and hot-path rows. |
-| ga4-reports | 6 | 7 | 5 | Needs audit | No recent package slice identified; retry/backoff and PHP/budget drift are likely first checks. |
+| ga4-reports | 6 | 7 | 5 | Slice committed | Current follow-up adds GA4 token/Data API retry-backoff, Retry-After handling, and explicit quota-exhaustion messaging; continue with cache/read-budget, screenshots, operator sync actions, and command convention rows. |
 | hero | 6 | 6 | 4 | Needs audit | No recent package slice identified; audit against plan before implementation. |
 | html-cache | 7 | 6 | 4 | Slice committed | `b260cd847` fixed invalidation/header issues; CDN purge/SWR/telemetry remain. |
 | insights | 6 | 6 | 4 | Slice committed | `5afe307aa` landed privacy hardening; continue with analytics/product gaps. |
@@ -89,7 +89,9 @@ No package should be marked `Complete` from commit history alone. Completion req
 
 Highest-value remaining work should start with packages that are both high-risk and still marked `Needs audit`:
 
-1. `ga4-reports` retry/backoff, PHP constraint, and budget drift.
-2. Theme-line systemic pass: `extends` alignment, token-driven colors, screenshots, WCAG/dark mode.
+1. `events` registration/waitlist capability reachability.
+2. `hero` plan audit and implementation slice.
+3. `tags` taxonomy/status/workspace drift.
+4. Theme-line systemic pass: `extends` alignment, token-driven colors, screenshots, WCAG/dark mode.
 
 After each package slice lands, update this tracker with the commit and any rows that remain high-risk.

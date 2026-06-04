@@ -41,6 +41,28 @@ function createGA4ReportsCredentialsFile(): string
 /**
  * @return array{dimensionValues: list<array{value: string}>, metricValues: list<array{value: string}>}
  */
+function createGA4ReportsDailyReportRow(): array
+{
+    return [
+        'dimensionValues' => [
+            ['value' => '20260504'],
+        ],
+        'metricValues' => [
+            ['value' => '12'],
+            ['value' => '20'],
+            ['value' => '45'],
+            ['value' => '14'],
+            ['value' => '0.7'],
+            ['value' => '63.4'],
+            ['value' => '90'],
+            ['value' => '3'],
+        ],
+    ];
+}
+
+/**
+ * @return array{dimensionValues: list<array{value: string}>, metricValues: list<array{value: string}>}
+ */
 function createGA4ReportsPageReportRow(int $index): array
 {
     return [
@@ -76,21 +98,7 @@ it('maps GA4 daily and page report rows into data objects', function (): void {
         'https://oauth2.googleapis.com/token' => Http::response(['access_token' => 'test-token'], 200),
         'https://analyticsdata.googleapis.com/*' => Http::sequence()
             ->push([
-                'rows' => [[
-                    'dimensionValues' => [
-                        ['value' => '20260504'],
-                    ],
-                    'metricValues' => [
-                        ['value' => '12'],
-                        ['value' => '20'],
-                        ['value' => '45'],
-                        ['value' => '14'],
-                        ['value' => '0.7'],
-                        ['value' => '63.4'],
-                        ['value' => '90'],
-                        ['value' => '3'],
-                    ],
-                ]],
+                'rows' => [createGA4ReportsDailyReportRow()],
             ], 200)
             ->push([
                 'rows' => [[
@@ -142,6 +150,109 @@ it('maps GA4 daily and page report rows into data objects', function (): void {
         ->and($pageMetrics[0]->pageTitle)->toBe('About')
         ->and($pageMetrics[0]->screenPageViews)->toBe(30)
         ->and($pageMetrics[0]->conversions)->toBe(2);
+});
+
+it('retries transient token requests before syncing metrics', function (): void {
+    $credentialsPath = createGA4ReportsCredentialsFile();
+
+    Http::fake([
+        'https://oauth2.googleapis.com/token' => Http::sequence()
+            ->push([], 503)
+            ->push(['access_token' => 'test-token'], 200),
+        'https://analyticsdata.googleapis.com/*' => Http::response([
+            'rows' => [createGA4ReportsDailyReportRow()],
+        ], 200),
+    ]);
+
+    $client = new GA4ReportsDataClient([
+        'enabled' => true,
+        'property_id' => '123456789',
+        'credentials_path' => $credentialsPath,
+        'http_retry_times' => 2,
+        'http_retry_delay_ms' => 0,
+    ]);
+
+    $metrics = $client->dailyMetrics(new GA4ReportsWindowData(
+        startsAt: CarbonImmutable::parse('2026-05-04'),
+        endsAt: CarbonImmutable::parse('2026-05-04'),
+        propertyId: '123456789',
+    ));
+
+    unlink($credentialsPath);
+
+    Http::assertSentCount(3);
+
+    expect($metrics)->toHaveCount(1)
+        ->and($metrics[0]->screenPageViews)->toBe(45);
+});
+
+it('retries quota limited GA4 report requests before returning rows', function (): void {
+    $credentialsPath = createGA4ReportsCredentialsFile();
+
+    Http::fake([
+        'https://oauth2.googleapis.com/token' => Http::response(['access_token' => 'test-token'], 200),
+        'https://analyticsdata.googleapis.com/*' => Http::sequence()
+            ->push([
+                'error' => ['status' => 'RESOURCE_EXHAUSTED'],
+            ], 429, ['Retry-After' => '0'])
+            ->push([
+                'rows' => [createGA4ReportsDailyReportRow()],
+            ], 200),
+    ]);
+
+    $client = new GA4ReportsDataClient([
+        'enabled' => true,
+        'property_id' => '123456789',
+        'credentials_path' => $credentialsPath,
+        'http_retry_times' => 2,
+        'http_retry_delay_ms' => 0,
+    ]);
+
+    $metrics = $client->dailyMetrics(new GA4ReportsWindowData(
+        startsAt: CarbonImmutable::parse('2026-05-04'),
+        endsAt: CarbonImmutable::parse('2026-05-04'),
+        propertyId: '123456789',
+    ));
+
+    unlink($credentialsPath);
+
+    Http::assertSentCount(3);
+
+    expect($metrics)->toHaveCount(1)
+        ->and($metrics[0]->totalUsers)->toBe(12);
+});
+
+it('reports quota exhaustion clearly after retry attempts are exhausted', function (): void {
+    $credentialsPath = createGA4ReportsCredentialsFile();
+
+    Http::fake([
+        'https://oauth2.googleapis.com/token' => Http::response(['access_token' => 'test-token'], 200),
+        'https://analyticsdata.googleapis.com/*' => Http::sequence()
+            ->push([
+                'error' => ['status' => 'RESOURCE_EXHAUSTED'],
+            ], 429, ['Retry-After' => '0'])
+            ->push([
+                'error' => ['status' => 'RESOURCE_EXHAUSTED'],
+            ], 429, ['Retry-After' => '0']),
+    ]);
+
+    $client = new GA4ReportsDataClient([
+        'enabled' => true,
+        'property_id' => '123456789',
+        'credentials_path' => $credentialsPath,
+        'http_retry_times' => 2,
+        'http_retry_delay_ms' => 0,
+    ]);
+
+    expect(fn (): array => $client->dailyMetrics(new GA4ReportsWindowData(
+        startsAt: CarbonImmutable::parse('2026-05-04'),
+        endsAt: CarbonImmutable::parse('2026-05-04'),
+        propertyId: '123456789',
+    )))->toThrow(GA4ReportsApiException::class, 'GA4 Reports Data API quota was exhausted with HTTP status 429.');
+
+    unlink($credentialsPath);
+
+    Http::assertSentCount(3);
 });
 
 it('throws when the GA4 API fails', function (): void {

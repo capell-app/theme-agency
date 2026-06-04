@@ -4,6 +4,12 @@ All notable changes to `capell-app/ga4-reports` will be documented in this file.
 
 ## Unreleased
 
+### 2026-06-04
+
+- Added bounded retry/backoff configuration for GA4 token and Data API calls, including transient connection failures, common upstream error statuses, `Retry-After`, and GA4 quota exhaustion responses.
+- Report final GA4 quota failures with a specific quota-exhaustion message instead of a generic HTTP failure.
+- Documented the new GA4 HTTP retry configuration and retry behavior.
+
 ### 2026-06-03
 
 - Replaced the stub `Ga4ReportsHealthCheck` with real diagnostics that verify the snapshot storage tables exist and the integration is configured (enabled, property ID, and a readable service-account credentials file) without disclosing the property ID or credentials path.

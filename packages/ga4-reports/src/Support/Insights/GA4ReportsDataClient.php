@@ -10,9 +10,14 @@ use Capell\GA4Reports\Data\GA4ReportsPageMetricData;
 use Capell\GA4Reports\Data\GA4ReportsWindowData;
 use Capell\GA4Reports\Exceptions\GA4ReportsApiException;
 use Carbon\CarbonImmutable;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
 use JsonException;
+use Throwable;
 
 final class GA4ReportsDataClient implements GA4ReportsDataClientInterface
 {
@@ -21,6 +26,19 @@ final class GA4ReportsDataClient implements GA4ReportsDataClientInterface
     private const int PAGE_METRIC_PAGE_SIZE = 250;
 
     private const int MAX_PAGE_METRIC_ROWS = 5000;
+
+    /**
+     * @var list<int>
+     */
+    private const array RETRYABLE_HTTP_STATUSES = [
+        408,
+        425,
+        429,
+        500,
+        502,
+        503,
+        504,
+    ];
 
     private ?string $accessToken = null;
 
@@ -183,10 +201,16 @@ final class GA4ReportsDataClient implements GA4ReportsDataClientInterface
         $response = Http::withToken($accessToken)
             ->acceptJson()
             ->timeout($this->httpTimeout())
+            ->retry(
+                $this->httpRetryTimes(),
+                fn (int $attempt, Throwable $exception): int => $this->httpRetryDelayMilliseconds($attempt, $exception),
+                fn (Throwable $exception, PendingRequest $request, ?string $method): bool => $this->shouldRetryHttpException($exception),
+                throw: false,
+            )
             ->post('https://analyticsdata.googleapis.com/v1beta/properties/' . $window->propertyId . ':runReport', $payload);
 
         if (! $response->successful()) {
-            throw new GA4ReportsApiException('GA4 Reports Data API request failed with HTTP status ' . $response->status() . '.');
+            throw new GA4ReportsApiException($this->dataApiFailureMessage($response));
         }
 
         /** @var list<array<string, mixed>> $rows */
@@ -349,13 +373,19 @@ final class GA4ReportsDataClient implements GA4ReportsDataClientInterface
 
         $response = Http::asForm()
             ->timeout($this->httpTimeout())
+            ->retry(
+                $this->httpRetryTimes(),
+                fn (int $attempt, Throwable $exception): int => $this->httpRetryDelayMilliseconds($attempt, $exception),
+                fn (Throwable $exception, PendingRequest $request, ?string $method): bool => $this->shouldRetryHttpException($exception),
+                throw: false,
+            )
             ->post($credentials['token_uri'] ?? 'https://oauth2.googleapis.com/token', [
                 'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
                 'assertion' => $assertion,
             ]);
 
         if (! $response->successful()) {
-            throw new GA4ReportsApiException('GA4 Reports token request failed with HTTP status ' . $response->status() . '.');
+            throw new GA4ReportsApiException($this->tokenFailureMessage($response));
         }
 
         $accessToken = $response->json('access_token');
@@ -422,5 +452,107 @@ final class GA4ReportsDataClient implements GA4ReportsDataClientInterface
     private function httpTimeout(): int
     {
         return max(1, (int) ($this->config['http_timeout'] ?? 20));
+    }
+
+    private function httpRetryTimes(): int
+    {
+        return max(1, (int) ($this->config['http_retry_times'] ?? 3));
+    }
+
+    private function httpRetryDelayMilliseconds(int $attempt, Throwable $exception): int
+    {
+        $retryAfterMilliseconds = $this->retryAfterMilliseconds($exception);
+
+        if ($retryAfterMilliseconds !== null) {
+            return min($retryAfterMilliseconds, $this->httpRetryMaxDelayMilliseconds());
+        }
+
+        $baseDelay = max(0, (int) ($this->config['http_retry_delay_ms'] ?? 250));
+
+        if ($baseDelay === 0) {
+            return 0;
+        }
+
+        $backoffMultiplier = 2 ** max(0, $attempt - 1);
+
+        return min($baseDelay * $backoffMultiplier, $this->httpRetryMaxDelayMilliseconds());
+    }
+
+    private function httpRetryMaxDelayMilliseconds(): int
+    {
+        return max(0, (int) ($this->config['http_retry_max_delay_ms'] ?? 5000));
+    }
+
+    private function shouldRetryHttpException(Throwable $exception): bool
+    {
+        if ($exception instanceof ConnectionException) {
+            return true;
+        }
+
+        if (! $exception instanceof RequestException) {
+            return false;
+        }
+
+        if ($this->isQuotaResponse($exception->response)) {
+            return true;
+        }
+
+        return in_array($exception->response->status(), self::RETRYABLE_HTTP_STATUSES, true);
+    }
+
+    private function retryAfterMilliseconds(Throwable $exception): ?int
+    {
+        if (! $exception instanceof RequestException) {
+            return null;
+        }
+
+        $retryAfter = $exception->response->header('Retry-After');
+
+        if (! is_string($retryAfter) || trim($retryAfter) === '') {
+            return null;
+        }
+
+        $retryAfter = trim($retryAfter);
+
+        if (ctype_digit($retryAfter)) {
+            return max(0, (int) $retryAfter * 1000);
+        }
+
+        $retryAfterTimestamp = strtotime($retryAfter);
+
+        if ($retryAfterTimestamp === false) {
+            return null;
+        }
+
+        return max(0, ($retryAfterTimestamp - Date::now()->getTimestamp()) * 1000);
+    }
+
+    private function dataApiFailureMessage(Response $response): string
+    {
+        if ($this->isQuotaResponse($response)) {
+            return 'GA4 Reports Data API quota was exhausted with HTTP status ' . $response->status() . '.';
+        }
+
+        return 'GA4 Reports Data API request failed with HTTP status ' . $response->status() . '.';
+    }
+
+    private function tokenFailureMessage(Response $response): string
+    {
+        if ($this->isQuotaResponse($response)) {
+            return 'GA4 Reports token request was rate limited with HTTP status ' . $response->status() . '.';
+        }
+
+        return 'GA4 Reports token request failed with HTTP status ' . $response->status() . '.';
+    }
+
+    private function isQuotaResponse(Response $response): bool
+    {
+        if ($response->status() === 429) {
+            return true;
+        }
+
+        $errorStatus = $response->json('error.status');
+
+        return is_string($errorStatus) && mb_strtoupper($errorStatus) === 'RESOURCE_EXHAUSTED';
     }
 }

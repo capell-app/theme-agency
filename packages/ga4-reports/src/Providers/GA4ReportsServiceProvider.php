@@ -137,6 +137,9 @@ final class GA4ReportsServiceProvider extends AbstractPackageServiceProvider
                 'property_id' => $resolvedConfig->propertyId,
                 'credentials_path' => $resolvedConfig->credentialsPath,
                 'http_timeout' => config('capell-ga4-reports.http_timeout', 20),
+                'http_retry_times' => config('capell-ga4-reports.http_retry_times', 3),
+                'http_retry_delay_ms' => config('capell-ga4-reports.http_retry_delay_ms', 250),
+                'http_retry_max_delay_ms' => config('capell-ga4-reports.http_retry_max_delay_ms', 5000),
             ]);
         });
 
