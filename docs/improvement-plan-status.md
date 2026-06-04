@@ -9,7 +9,7 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 | Bucket | Rows |
 | ------ | ---: |
 | Now    | 295 |
-| Next   | 318 |
+| Next   | 317 |
 | Later  | 202 |
 
 The work is not complete until every package plan has been reviewed against current code, required features are implemented or intentionally deferred, new behavior is documented, and focused verification passes for each changed package.
@@ -54,7 +54,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | layout-builder | 7 | 5 | 4 | Slice committed | Current follow-up removes dead cache enum, reconciles screenshot manifests, and documents remaining render-budget risk. |
 | login-audit | 0 | 5 | 2 | Slice committed | Current follow-up adds real auth-event capture coverage, syncs vendor retention purge execution, records purge success timestamps, adds translated capture-configuration health diagnostics, and moves admin/user last-seen writes behind shared throttled Actions. Continue with remaining Next/Later operational rows and completion review. |
 | media-ai | 6 | 6 | 3 | Slice committed | `f4b35bc06` landed health/allow-list fixes; production image-doctor/provider story remains. |
-| media-library | 7 | 5 | 3 | Slice committed | `16207ad15` landed upload/health fixes; cleanup UI, duplicate detection, and private URL rows remain. |
+| media-library | 7 | 4 | 3 | Slice committed | Current follow-up keeps private Curator media off Glide/public conversion URLs, uses temporary disk URLs when supported, returns no URL when private disks cannot sign, and suppresses responsive srcsets for private media. Continue with cleanup UI, duplicate detection, config/owner FK depth, and completion review. |
 | migration-assistant | 7 | 5 | 3 | Slice committed | `3f14f3f77` landed readiness fixes; continue with end-to-end import rows. |
 | navigation | 7 | 5 | 4 | Slice committed | `8b7c1f8df` replaced JSON reverse lookup; resolver/render-boundary rows remain. |
 | newsletter | 6 | 6 | 4 | Slice committed | `d934f6d59` landed token hardening; delivery engine and campaign rows remain. |
