@@ -3,6 +3,10 @@
     "composerName": "capell-app/dashboard-reports",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
+    "composerRequires": [
+        "capell-app/dashboard-reports",
+        "capell-app/content-blocks"
+    ],
     "outputDirectory": "packages/dashboard-reports/docs/screenshots",
     "entries": [
         {
