@@ -28,6 +28,7 @@ return [
     'spam' => [
         'max_links' => 3,
         'blocked_terms' => [],
+        'minimum_form_age_seconds' => 2,
     ],
     'notifications' => [
         'moderators' => [],

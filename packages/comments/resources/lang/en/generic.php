@@ -15,6 +15,7 @@ return [
     'replying' => 'Replying to a comment.',
     'submit' => 'Post comment',
     'submitting' => 'Posting...',
+    'website' => 'Website',
     'comment_status' => [
         'pending_email_verification' => 'Pending email verification',
         'pending_approval' => 'Pending approval',

@@ -9,6 +9,7 @@ return [
     'body_required' => 'Enter a comment.',
     'commentable_unavailable' => 'Comments are not available here.',
     'comments_disabled' => 'Comments are disabled.',
+    'comment_rejected' => 'This comment could not be accepted.',
     'email_required' => 'Enter a valid email address.',
     'email_must_be_verified' => 'The author email must be verified before this comment can be approved.',
     'email_verified' => 'Your email address has been verified. Your comment is now waiting for moderation.',

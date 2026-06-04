@@ -65,6 +65,29 @@
     </ol>
 
     <form wire:submit="submit">
+        <div
+            aria-hidden="true"
+            style="
+                position: absolute;
+                left: -10000px;
+                top: auto;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+            "
+        >
+            <label>
+                <span>{{ __('capell-comments::generic.website') }}</span>
+                <input
+                    type="text"
+                    wire:model="commentWebsite"
+                    name="website"
+                    tabindex="-1"
+                    autocomplete="off"
+                />
+            </label>
+        </div>
+
         @if ($parentPublicId !== null)
             <p>
                 {{ __('capell-comments::generic.replying') }}

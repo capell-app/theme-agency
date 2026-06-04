@@ -8,13 +8,18 @@ Comments adds moderated, threaded, dynamically-loaded discussion to registered C
 
 Current marketplace `summary` (verbatim): _"Comments adds moderated, configurable, cache-safe threaded discussion surfaces to Capell content."_ Screenshots declared in the manifest: **1** (`docs/assets/marketplace/extension-card.jpg`). Note the mismatch: `docs/screenshots.json` defines **4** required runtime screenshots (moderation inbox, comments resource, authors resource, public thread) that the marketplace `screenshots[]` array does not reference — the marketplace block ships only the generic extension card.
 
+## Completed Improvement Slices
+
+- **2026-06-03:** Rewrote marketplace/Composer copy, declared `LatestCommentsWidget` in manifest contributions, and added manifest coverage for registered dashboard widgets.
+- **2026-06-04:** Added public comment form bot-trap controls: a hidden honeypot field, configurable minimum form age, action-level rejection before persistence, component state reset, and action/Livewire tests.
+
 ## 2. Improvements (existing functionality)
 
 - **Wire moderator new-comment notifications (advertised, not implemented)** — `CommentCreated` is dispatched (`src/Actions/CreateCommentAction.php:119`) but has **no listener**, and `config('capell-comments.notifications.moderators')` (`config/capell-comments.php:32`) / the README's "notification settings" claim are never consumed. Add a queued listener that notifies the configured moderator addresses (and/or users holding the comment policy ability) when a comment lands in `PendingApproval` / `PendingEmailVerification`. — why: editors currently have zero signal that a queue is filling up; the manifest capability `comments-created-event` only emits, nothing acts. — `src/Events/CommentCreated.php`, `src/Providers/CommentsServiceProvider.php` — M
 
 - **Make `CommentsHealthCheck` a real check** — `src/Health/CommentsHealthCheck.php` implements only `compatibleCapellApiVersion()`; it has no `check()`/health method, yet `capell.json` advertises it as `severity: "critical"` with the label "package surfaces, providers, and moderation health are discoverable by Diagnostics." — why: a critical health check that returns nothing is a false green in Diagnostics. It should assert the four required tables exist, settings resolve, the thread route is registered, and the Livewire component is bound. — `src/Health/CommentsHealthCheck.php`, `capell.json` — M
 
-- **Add a honeypot + minimum-render-age check to the public form** — `resources/views/livewire/thread.blade.php` and `CommentThreadComponent::submit()` accept name/email/body with no bot trap. — why: this is the single cheapest, highest-yield anti-spam control for guest comment forms and is expected of the category. Add a non-displayed honeypot field plus a "form rendered at" timestamp, both validated in `CreateCommentData`/`CreateCommentAction`. — `src/Livewire/CommentThreadComponent.php:61`, `resources/views/livewire/thread.blade.php:67`, `src/Data/CreateCommentData.php` — S
+- **Shipped 2026-06-04: Add a honeypot + minimum-render-age check to the public form** — `thread.blade.php` now renders a hidden honeypot field, `CommentThreadComponent` tracks `formRenderedAt`, and `CreateCommentAction` rejects honeypot-filled or too-fast submissions before persistence. The minimum age is configurable at `capell-comments.spam.minimum_form_age_seconds`. — `src/Livewire/CommentThreadComponent.php`, `resources/views/livewire/thread.blade.php`, `src/Data/CreateCommentData.php` — S
 
 - **Paginate / lazy-load replies and root comments** — `BuildPublicThreadAction` loads all roots up to `rootLimit` (default 20) and then _all_ descendants in one query, building the full tree (`src/Actions/BuildPublicThreadAction.php:35-89`). `reply_page_size` exists in config/settings (`config/capell-comments.php:20`, `src/Settings/CommentSettings.php:33`) but is **never used**. — why: a popular thread blows the 20ms `frontendRenderBudgetMs` and returns unbounded payloads; the advertised reply paging is dead. Add "load more replies" / root cursor pagination honoring `reply_page_size`. — `src/Actions/BuildPublicThreadAction.php`, `src/Livewire/CommentThreadComponent.php:111` — M
 
@@ -58,7 +63,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **PII / retention.** Author `name`/`email` are `encrypted` at rest ✔ and `email_hash` is HMAC ✔ (`src/Models/CommentAuthor.php:50-58,123`). Gaps: (1) `email_hash_secret`/`visitor_hash_secret` default to `null` from env and silently fall back to `app.key` (`config/capell-comments.php:22-23`, `src/Support/VisitorHasher.php:15`, `CommentAuthor::emailHash`) — rotating `app.key` orphans all hashes; document and warn. (2) No retention/erasure policy or command for visitor IP/UA hashes or author records (GDPR right-to-erasure). (3) `internal_notes` and `moderation_note` are plaintext.
 
-- **Test gaps.** 41 cases across 8 files (`CreateCommentActionTest` 13, `PublicThreadActionTest` 10, `CommentsAdminSurfaceTest` 9, `CommentThreadComponentTest` 3, `VerifyCommentAuthorEmailRouteTest` 3, three Unit tests 1 each). Covered: script-tag sanitization (`PublicThreadActionTest.php:211-226`, `CreateCommentActionTest.php:32`), spam comments excluded from public thread, verification flows, admin surface actions, no-store thread headers, manifest requirements. **Not covered:** rate-limit/throttle behavior, honeypot (feature absent), automatic spam scoring (feature absent), moderator notification (feature absent), `auto_inject` anonymous-leakage, reply pagination, performance budgets, and there are **no Architecture tests** for this package.
+- **Test gaps.** Coverage now includes bot-trap rejection at action and Livewire levels. Still not covered: rate-limit/throttle behavior, automatic spam scoring (feature absent), moderator notification (feature absent), `auto_inject` anonymous-leakage, reply pagination, performance budgets, and there are **no Architecture tests** for this package.
 
 - **i18n.** Strings are translated via `capell-comments::` namespaces ✔. `diffForHumans()` in the public Blade (`thread.blade.php:24,47`) is not locale-pinned to the site language and may render in the app locale rather than the page's `language_id`.
 
@@ -88,7 +93,6 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 | Implement automatic spam scoring (`max_links`, `blocked_terms`, write `spam_reasons`)     | Now    | M      | High   | §3, §4      |
 | Fix throttle key (drop attacker-controlled email from primary bucket)                     | Now    | S      | High   | §3, §4      |
 | Wire moderator new-comment notification listener on `CommentCreated`                      | Now    | M      | High   | §2, §3      |
-| Add honeypot + min-render-age to public form                                              | Now    | S      | High   | §2, §3      |
 | Add `auto_inject` anonymous-leakage + throttle Pest tests; add Arch tests                 | Now    | M      | High   | §4          |
 | Add `LatestCommentsWidget` to `capell.json` contributes[]; fix README/supports mismatches | Now    | S      | Med    | §2, §4      |
 | Wire the 4 `screenshots.json` captures into marketplace + new summary/description         | Now    | S      | Med    | §5          |

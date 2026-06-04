@@ -30,6 +30,10 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
 
     public ?string $parentPublicId = null;
 
+    public string $commentWebsite = '';
+
+    public int $formRenderedAt = 0;
+
     public bool $submitted = false;
 
     /**
@@ -55,6 +59,7 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
     public function mount(?string $threadKey = null): void
     {
         $this->threadKey = is_string($threadKey) ? $threadKey : '';
+        $this->resetBotTrap();
         $this->refreshComments();
     }
 
@@ -79,10 +84,13 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
             ipAddress: request()->ip(),
             userAgent: request()->userAgent(),
             url: request()->fullUrl(),
+            honeypot: $this->commentWebsite,
+            formRenderedAt: $this->formRenderedAt,
         ));
 
         $this->submitted = true;
-        $this->reset('body', 'authorName', 'authorEmail', 'parentPublicId');
+        $this->reset('body', 'authorName', 'authorEmail', 'parentPublicId', 'commentWebsite');
+        $this->resetBotTrap();
         $this->refreshComments();
     }
 
@@ -106,6 +114,11 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
         return array_key_exists($key, $model->getAttributes())
             ? $model->getAttribute($key)
             : null;
+    }
+
+    private function resetBotTrap(): void
+    {
+        $this->formRenderedAt = now()->getTimestamp();
     }
 
     private function refreshComments(): void

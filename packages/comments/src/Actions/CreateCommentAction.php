@@ -35,6 +35,8 @@ class CreateCommentAction
 
     public function handle(CreateCommentData $data): Comment
     {
+        $this->assertNoBotSignals($data);
+
         return DB::transaction(function () use ($data): Comment {
             $commentableType = $this->commentableRegistry->forModel($data->commentable);
 
@@ -120,6 +122,27 @@ class CreateCommentAction
 
             return $freshComment;
         });
+    }
+
+    private function assertNoBotSignals(CreateCommentData $data): void
+    {
+        if (is_string($data->honeypot) && trim($data->honeypot) !== '') {
+            throw ValidationException::withMessages([
+                'body' => __('capell-comments::messages.comment_rejected'),
+            ]);
+        }
+
+        $minimumFormAgeSeconds = (int) config('capell-comments.spam.minimum_form_age_seconds', 0);
+
+        if ($minimumFormAgeSeconds <= 0 || ! is_int($data->formRenderedAt) || $data->formRenderedAt <= 0) {
+            return;
+        }
+
+        if ((now()->getTimestamp() - $data->formRenderedAt) < $minimumFormAgeSeconds) {
+            throw ValidationException::withMessages([
+                'body' => __('capell-comments::messages.comment_rejected'),
+            ]);
+        }
     }
 
     private function resolveAuthor(CreateCommentData $data, int $siteId, string $commentableType): CommentAuthor

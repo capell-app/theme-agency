@@ -16,6 +16,7 @@ editors keep approval and author-management work inside Capell Admin.
 - Admin resources, moderation inbox, settings schema, and dashboard widgets.
 - Settings for identity mode, publication policy, verification flow, page size,
   depth, throttling, spam checks, and moderator notifications.
+- Public form bot-trap controls for honeypot-filled and too-fast submissions.
 
 ## Why It Matters
 
@@ -64,6 +65,8 @@ thread DTOs.
 - Public DTOs should stay free of moderation status, model IDs, author email,
   visitor hashes, tokens, permissions, and admin URLs.
 - The public thread endpoint should not be cached as shared HTML.
+- The Livewire public form passes honeypot and render-age metadata into
+  `CreateCommentAction`; keep those checks before persistence.
 
 ## Verification
 
@@ -72,4 +75,5 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
 ```
 
 The current focused tests cover settings registration, settings resolution,
-manifest requirements, and the email verification route.
+manifest requirements, email verification, public thread rendering, component
+submission, and bot-trap rejection.

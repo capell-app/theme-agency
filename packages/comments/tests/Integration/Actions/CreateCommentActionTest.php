@@ -16,7 +16,6 @@ use Capell\Comments\Models\CommentToken;
 use Capell\Comments\Notifications\ConfirmCommentAuthorEmailNotification;
 use Capell\Comments\Settings\CommentSettings;
 use Capell\Tests\Fixtures\Models\User;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
@@ -115,6 +114,36 @@ it('does not let anonymous commenters inherit trusted author verification', func
         ->and($author->refresh()->name)->toBe('Trusted Author');
 
     Notification::assertSentOnDemand(ConfirmCommentAuthorEmailNotification::class);
+});
+
+it('rejects bot-trap comment submissions before persisting comments', function (): void {
+    Notification::fake();
+    config()->set('capell-comments.spam.minimum_form_age_seconds', 2);
+
+    $page = $this->createCommentsPage();
+
+    expectCommentValidation(function () use ($page): void {
+        CreateCommentAction::run(new CreateCommentData(
+            commentable: $page,
+            body: 'Filled honeypot',
+            authorName: 'Bot',
+            authorEmail: 'bot@example.com',
+            honeypot: 'https://spam.test',
+            formRenderedAt: now()->subSeconds(3)->getTimestamp(),
+        ));
+    }, 'body');
+
+    expectCommentValidation(function () use ($page): void {
+        CreateCommentAction::run(new CreateCommentData(
+            commentable: $page,
+            body: 'Too fast',
+            authorName: 'Fast Bot',
+            authorEmail: 'fast@example.com',
+            formRenderedAt: now()->getTimestamp(),
+        ));
+    }, 'body');
+
+    expect(Comment::query()->whereIn('body', ['Filled honeypot', 'Too fast'])->exists())->toBeFalse();
 });
 
 it('binds a verified authenticated user to an existing anonymous author without duplicate email hash failures', function (): void {
@@ -221,10 +250,7 @@ it('applies commentable-specific identity mode overrides during submission', fun
 })->throws(ValidationException::class);
 
 it('rejects invalid comment submissions before persisting moderation records', function (): void {
-    $unregisteredCommentable = new class extends Model
-    {
-        use HasFactory;
-    };
+    $unregisteredCommentable = new class extends Model {};
 
     expectCommentValidation(function () use ($unregisteredCommentable): void {
         bindCommentSettings();

@@ -21,5 +21,7 @@ class CreateCommentData extends Data
         public ?string $ipAddress = null,
         public ?string $userAgent = null,
         public ?string $url = null,
+        public ?string $honeypot = null,
+        public ?int $formRenderedAt = null,
     ) {}
 }
