@@ -12,6 +12,7 @@ The Customer Portal package now includes authenticated frontend routes for a min
 - Actions are the entry points for creating accounts, updating preferences, submitting support requests, and resolving dashboard items.
 - `ResolvePortalSelfServiceItemsAction` aggregates typed self-service items for the authenticated dashboard.
 - Authenticated frontend controllers resolve the current user into a portal account, render dashboard items, allow preference updates, and submit support requests.
+- The frontend route group requires authentication, and support submissions are throttled at 12 attempts per minute.
 - Suspended and archived portal accounts are blocked by `ResolveAuthenticatedPortalAccountAction` before frontend dashboard, preference, or support workflows run.
 - A Filament admin resource lists and edits portal support requests for triage. Status transitions go through `UpdateSupportRequestStatusAction` so resolved and closed timestamps remain consistent.
 

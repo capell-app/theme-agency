@@ -41,6 +41,20 @@ it('registers authenticated customer portal frontend routes', function (): void 
         ->and(Route::has('capell-customer-portal.support.store'))->toBeTrue();
 });
 
+it('requires authentication for frontend workflows', function (string $httpMethod, string $routeName): void {
+    $response = match ($httpMethod) {
+        'get' => $this->withHeader('Accept', 'application/json')->get(route($routeName)),
+        'post' => $this->withHeader('Accept', 'application/json')->post(route($routeName)),
+        default => throw new InvalidArgumentException(sprintf('Unsupported HTTP method [%s].', $httpMethod)),
+    };
+
+    $response->assertUnauthorized();
+})->with([
+    ['get', 'capell-customer-portal.dashboard'],
+    ['post', 'capell-customer-portal.preferences.update'],
+    ['post', 'capell-customer-portal.support.store'],
+]);
+
 it('renders an authenticated dashboard without exposing package internals', function (): void {
     $this->createCustomerPortalSite();
 
@@ -140,6 +154,32 @@ it('submits authenticated support requests from the frontend', function (): void
         ->and($supportRequest->priority->value)->toBe('high')
         ->and($supportRequest->source)->toBe('customer-portal')
         ->and($supportRequest->requester_email)->toBe('morgan@example.test');
+});
+
+it('throttles repeated authenticated support submissions', function (): void {
+    $this->createCustomerPortalSite();
+
+    $user = customerPortalUser();
+
+    for ($attempt = 1; $attempt <= 12; $attempt++) {
+        $this->actingAs($user)
+            ->post(route('capell-customer-portal.support.store'), [
+                'subject' => 'Invoice question ' . $attempt,
+                'priority' => 'normal',
+                'message' => 'Please resend the latest invoice.',
+            ])
+            ->assertRedirect(route('capell-customer-portal.dashboard'));
+    }
+
+    $this->actingAs($user)
+        ->post(route('capell-customer-portal.support.store'), [
+            'subject' => 'Thirteenth invoice question',
+            'priority' => 'normal',
+            'message' => 'Please resend the latest invoice again.',
+        ])
+        ->assertStatus(429);
+
+    expect(PortalSupportRequest::query()->count())->toBe(12);
 });
 
 it('only renders support requests for the authenticated portal account', function (): void {
