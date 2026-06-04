@@ -57,6 +57,25 @@ it('requires a password change when password expiry is enabled and expired', fun
         ->and($status->reason)->toBe('expired');
 });
 
+it('still requires a forced change for flagged legacy users without a password timestamp', function (): void {
+    $settings = PasswordPolicySettings::instance();
+    $settings->force_change_enabled = true;
+    $settings->password_expiry_enabled = true;
+    $settings->password_expiry_days = 30;
+    $settings->save();
+
+    $user = UserFactory::new()->create([
+        'must_change_password' => true,
+        'password_changed_at' => null,
+    ]);
+
+    $status = EvaluatePasswordPolicyAction::run($user);
+
+    expect($status->mustChangePassword)->toBeTrue()
+        ->and($status->passwordExpired)->toBeFalse()
+        ->and($status->reason)->toBe('forced');
+});
+
 it('updates the password, clears force change, and records the change time', function (): void {
     $user = UserFactory::new()->create([
         'password' => Hash::make('old-password'),

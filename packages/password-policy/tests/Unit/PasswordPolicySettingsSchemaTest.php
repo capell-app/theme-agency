@@ -40,7 +40,7 @@ it('builds settings schema controls and exposes package metadata', function (): 
         ->and($thirdGridComponents[2])->toBeInstanceOf(TextInput::class);
 });
 
-it('marks missing password change timestamps as expired when expiry is enabled', function (): void {
+it('does not expire missing legacy password change timestamps when expiry is enabled', function (): void {
     $settings = PasswordPolicySettings::instance();
     $settings->password_expiry_enabled = true;
     $settings->password_expiry_days = 30;
@@ -53,9 +53,9 @@ it('marks missing password change timestamps as expired when expiry is enabled',
 
     $status = EvaluatePasswordPolicyAction::run($user);
 
-    expect($status->passwordExpired)->toBeTrue()
-        ->and($status->reason)->toBe('missing_password_changed_at')
-        ->and($status->shouldRedirect())->toBeTrue();
+    expect($status->passwordExpired)->toBeFalse()
+        ->and($status->reason)->toBeNull()
+        ->and($status->shouldRedirect())->toBeFalse();
 });
 
 it('keeps password change data and resolved settings as typed boundaries', function (): void {

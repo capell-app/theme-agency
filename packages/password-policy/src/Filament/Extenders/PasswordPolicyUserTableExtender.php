@@ -139,9 +139,7 @@ class PasswordPolicyUserTableExtender implements UserTableExtender
         $settings = resolve(PasswordPolicySettingsResolver::class)->settings();
 
         return $query->where(function (Builder $passwordQuery) use ($settings): void {
-            $passwordQuery
-                ->whereNull('password_changed_at')
-                ->orWhere('password_changed_at', '<=', now()->subDays(max(1, $settings->passwordExpiryDays)));
+            $passwordQuery->where('password_changed_at', '<=', now()->subDays(max(1, $settings->passwordExpiryDays)));
         });
     }
 }

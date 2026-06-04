@@ -30,8 +30,10 @@ use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Capell\Tests\Support\LegacyAdminBridgeFallbackHost;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Livewire\Livewire;
 
 use function Pest\Laravel\get;
@@ -88,6 +90,25 @@ it('declares its installable database migrations', function (): void {
         '2026_05_10_190863_01_add_password_policy_columns_to_users_table',
         '2026_05_10_190863_02_create_password_policy_password_histories_table',
     ]);
+});
+
+it('backfills password change timestamps for existing users when installing columns', function (): void {
+    Schema::table('users', function (Blueprint $table): void {
+        if (Schema::hasColumn('users', 'must_change_password')) {
+            $table->dropColumn('must_change_password');
+        }
+
+        if (Schema::hasColumn('users', 'password_changed_at')) {
+            $table->dropColumn('password_changed_at');
+        }
+    });
+
+    $user = UserFactory::new()->create();
+    $migration = require __DIR__ . '/../../database/migrations/2026_05_10_190863_01_add_password_policy_columns_to_users_table.php';
+    $migration->up();
+
+    expect($user->refresh()->getAttribute('password_changed_at'))->not->toBeNull()
+        ->and((bool) $user->getAttribute('must_change_password'))->toBeFalse();
 });
 
 it('registers password policy settings as an extension management surface', function (): void {

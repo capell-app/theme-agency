@@ -107,4 +107,5 @@ vendor/bin/pest packages/password-policy/tests --configuration=phpunit.xml
 ## Maintenance Notes
 
 - Put behaviour changes in `src/Actions/`; UI classes, commands, and controllers should call actions instead of owning domain logic.
+- Password expiry does not force-reset legacy users only because `password_changed_at` is missing. The install migration backfills existing users, and explicit `must_change_password` remains the operator-controlled reset path.
 - Use package `Data` classes at boundaries instead of passing anonymous arrays between layers.

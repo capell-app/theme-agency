@@ -4,6 +4,7 @@ All notable changes to `capell-app/password-policy` will be documented in this f
 
 ## Unreleased
 
+- Prevented expiry enablement from locking out legacy admins: install now backfills `password_changed_at`, null legacy timestamps are no longer treated as expired, and the expired-users filter excludes unknown timestamps.
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
 
 ## 2026-06-03

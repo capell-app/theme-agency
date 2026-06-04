@@ -38,11 +38,7 @@ class EvaluatePasswordPolicyAction
             : $this->parseChangedAt($changedAtValue);
 
         if (! $changedAt instanceof CarbonImmutable) {
-            return new PasswordPolicyStatusData(
-                mustChangePassword: false,
-                passwordExpired: true,
-                reason: 'missing_password_changed_at',
-            );
+            return new PasswordPolicyStatusData(false, false);
         }
 
         $expiresAt = $changedAt->addDays(max(1, $settings->passwordExpiryDays));
