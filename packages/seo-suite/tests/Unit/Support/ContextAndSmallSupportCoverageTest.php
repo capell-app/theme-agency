@@ -147,7 +147,7 @@ it('returns schema components only for matching seo suite extension hooks', func
 });
 
 it('clears the ai provider circuit breaker from the admin handler', function (): void {
-    Cache::put('ai_circuit_breaker_state', ['failures' => 5], 300);
+    Cache::put('ai_circuit_breaker_state:openai', ['failures' => 5], 300);
 
     $component = new class extends Component
     {

@@ -12,6 +12,7 @@ use Capell\SeoSuite\Data\PageSpeedAuditSummaryData;
 use Capell\SeoSuite\Enums\PageSpeedStrategyEnum;
 use Capell\SeoSuite\Models\PageSpeedAuditRun;
 use Capell\SeoSuite\Notifications\PageSpeedAuditDigestNotification;
+use Capell\SeoSuite\Providers\SeoSuiteServiceProvider;
 use Illuminate\Support\Facades\Notification;
 use Spatie\Permission\Models\Role;
 
@@ -37,6 +38,21 @@ it('resolves PageSpeed digest recipients through admin notification subscription
     expect($recipients->pluck('id')->all())
         ->toContain($developer->getKey())
         ->not->toContain($superAdmin->getKey());
+});
+
+it('resolves default PageSpeed digest recipients through the user role relation', function (): void {
+    Role::findOrCreate('super_admin');
+
+    $superAdmin = UserFactory::new()->create()->assignRole('super_admin');
+    $developer = UserFactory::new()->create();
+    $provider = app()->getProvider(SeoSuiteServiceProvider::class);
+    $method = new ReflectionMethod(SeoSuiteServiceProvider::class, 'defaultPageSpeedDigestRecipients');
+
+    $recipients = $method->invoke($provider);
+
+    expect($recipients->pluck('id')->all())
+        ->toContain($superAdmin->getKey())
+        ->not->toContain($developer->getKey());
 });
 
 it('sends PageSpeed digest mail notifications only to subscribed recipients', function (): void {

@@ -50,6 +50,9 @@ it('declares implemented diagnostics commands tables and capabilities', function
             'seo-suite-site-discovery-registry',
             'seo-suite-marketplace-structured-data-freshness',
             'seo-suite-crawler-preview-report',
+            'seo-suite-pagespeed-audits',
+            'seo-suite-pagespeed-digest',
+            'seo-suite-search-console-rankings',
         );
 
     expect($manifest['actions'] ?? [])
@@ -81,6 +84,45 @@ it('declares implemented diagnostics commands tables and capabilities', function
             'syncAiDiscoveryPageProfiles',
             SyncAiDiscoveryPageProfilesAction::class,
         );
+});
+
+it('declares settings permissions supported integrations and cache invalidation accurately', function (): void {
+    $manifest = json_decode(
+        File::get(__DIR__ . '/../../capell.json'),
+        associative: true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    expect($manifest['dependencies']['supports'] ?? [])->toContain(
+        'capell-app/blog',
+        'capell-app/publishing-studio',
+        'capell-app/url-manager',
+    )
+        ->and($manifest['settings'] ?? [])->toContain(
+            'Capell\\SeoSuite\\Settings\\AIOrchestratorSettings',
+            'Capell\\SeoSuite\\Settings\\SeoSuiteSettings',
+        )
+        ->and($manifest['permissions'] ?? [])->toContain(
+            'View:SeoAuditPage',
+            'Manage:BrokenLinks',
+            'Manage:AiDiscovery',
+            'Manage:SeoSuiteSettings',
+            'Use:AiCreator',
+        )
+        ->and($manifest['performance']['cacheSafety']['cacheable'] ?? false)->toBeTrue()
+        ->and($manifest['performance']['cacheSafety']['invalidationSources'] ?? [])->toContain([
+            'model' => 'Capell\\Core\\Models\\Page',
+            'events' => ['saved', 'deleted'],
+        ], [
+            'model' => 'Capell\\SeoSuite\\Models\\AiDiscoverySiteProfile',
+            'events' => ['saved', 'deleted'],
+        ], [
+            'model' => 'Capell\\SeoSuite\\Models\\AiDiscoveryPageProfile',
+            'events' => ['saved', 'deleted'],
+        ], [
+            'model' => 'Capell\\SeoSuite\\Models\\AiDiscoveryCrawlerRule',
+            'events' => ['saved', 'deleted'],
+        ]);
 });
 
 it('declares implemented admin pages routes and no longer defers core seo suite surfaces', function (): void {

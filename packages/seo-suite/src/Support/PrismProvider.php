@@ -16,7 +16,7 @@ use Throwable;
 
 class PrismProvider implements ServiceContract
 {
-    private const string CIRCUIT_BREAKER_KEY = 'ai_circuit_breaker_state';
+    private const string CIRCUIT_BREAKER_KEY_PREFIX = 'ai_circuit_breaker_state';
 
     private const int FAILURE_THRESHOLD = 5;
 
@@ -84,22 +84,25 @@ class PrismProvider implements ServiceContract
 
                 $duration = microtime(true) - $startTime;
                 $this->resetCircuitBreaker();
+                $promptTokens = $this->promptTokens($response->usage);
+                $completionTokens = $this->completionTokens($response->usage);
+                $totalTokens = $promptTokens + $completionTokens;
 
                 Log::debug('AI API Call Metrics', [
                     'provider' => $providerName,
                     'model' => $model,
-                    'total_tokens' => $response->usage->promptTokens + $response->usage->completionTokens,
+                    'total_tokens' => $totalTokens,
                     'duration_ms' => round($duration * 1000, 2),
                 ]);
 
                 return new AiResponse(
                     content: $response->text,
-                    tokensUsed: $response->usage->promptTokens + $response->usage->completionTokens,
+                    tokensUsed: $totalTokens,
                     model: $model,
                     duration: $duration,
                     metadata: [
-                        'prompt_tokens' => $response->usage->promptTokens,
-                        'completion_tokens' => $response->usage->completionTokens,
+                        'prompt_tokens' => $promptTokens,
+                        'completion_tokens' => $completionTokens,
                     ],
                 );
             } catch (Throwable $e) {
@@ -136,7 +139,14 @@ class PrismProvider implements ServiceContract
 
     public function resetCircuitBreaker(): void
     {
-        Cache::forget(self::CIRCUIT_BREAKER_KEY);
+        Cache::forget($this->circuitBreakerKey());
+    }
+
+    public function circuitBreakerKey(): string
+    {
+        $providerName = $this->config['provider'] ?? 'openai';
+
+        return self::CIRCUIT_BREAKER_KEY_PREFIX . ':' . strtolower((string) $providerName);
     }
 
     protected function resolveProvider(string $name): Provider
@@ -151,15 +161,29 @@ class PrismProvider implements ServiceContract
 
     protected function isCircuitOpen(): bool
     {
-        $state = Cache::get(self::CIRCUIT_BREAKER_KEY, ['failures' => 0]);
+        $state = Cache::get($this->circuitBreakerKey(), ['failures' => 0]);
 
         return (int) ($state['failures'] ?? 0) >= self::FAILURE_THRESHOLD;
     }
 
     protected function recordFailure(): void
     {
-        $state = Cache::get(self::CIRCUIT_BREAKER_KEY, ['failures' => 0]);
+        $state = Cache::get($this->circuitBreakerKey(), ['failures' => 0]);
         $state['failures'] = (int) ($state['failures'] ?? 0) + 1;
-        Cache::put(self::CIRCUIT_BREAKER_KEY, $state, self::CIRCUIT_TIMEOUT);
+        Cache::put($this->circuitBreakerKey(), $state, self::CIRCUIT_TIMEOUT);
+    }
+
+    private function promptTokens(mixed $usage): int
+    {
+        return is_object($usage) && isset($usage->promptTokens)
+            ? (int) $usage->promptTokens
+            : 0;
+    }
+
+    private function completionTokens(mixed $usage): int
+    {
+        return is_object($usage) && isset($usage->completionTokens)
+            ? (int) $usage->completionTokens
+            : 0;
     }
 }

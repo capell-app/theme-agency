@@ -21,7 +21,11 @@
             "capell-app/insights",
             "capell-app/site-discovery"
         ],
-        "supports": [],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/publishing-studio",
+            "capell-app/url-manager"
+        ],
         "conflicts": []
     },
     "providers": {
@@ -115,8 +119,23 @@
         "syncAiDiscoveryPageProfiles": "Capell\\SeoSuite\\Actions\\SyncAiDiscoveryPageProfilesAction",
         "install": "Capell\\SeoSuite\\Actions\\InstallSeoSuitePackageAction"
     },
-    "settings": [],
-    "permissions": [],
+    "settings": [
+        "Capell\\SeoSuite\\Settings\\AIOrchestratorSettings",
+        "Capell\\SeoSuite\\Settings\\SeoSuiteSettings"
+    ],
+    "permissions": [
+        "View:SeoAuditPage",
+        "View:BrokenLinksPage",
+        "Manage:BrokenLinks",
+        "View:NotFoundUrlsPage",
+        "Manage:NotFoundUrls",
+        "View:AiDiscoveryPage",
+        "Manage:AiDiscovery",
+        "View:SearchRankingsPage",
+        "View:TranslationCoveragePage",
+        "Manage:SeoSuiteSettings",
+        "Use:AiCreator"
+    ],
     "capabilities": [
         "seo-suite",
         "seo-suite-admin",
@@ -129,17 +148,41 @@
         "seo-suite-stale-output-regeneration",
         "seo-suite-site-discovery-registry",
         "seo-suite-marketplace-structured-data-freshness",
-        "seo-suite-crawler-preview-report"
+        "seo-suite-crawler-preview-report",
+        "seo-suite-pagespeed-audits",
+        "seo-suite-pagespeed-digest",
+        "seo-suite-search-console-rankings",
+        "seo-suite-ai-generation",
+        "seo-suite-publishing-studio-gates",
+        "seo-suite-blog-article-schema",
+        "seo-suite-url-manager-redirect-opportunities"
     ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
         "cacheTags": ["seo-suite"],
         "cacheSafety": {
-            "cacheable": false,
+            "cacheable": true,
             "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
-            "invalidationSources": [],
+            "invalidationSources": [
+                {
+                    "model": "Capell\\Core\\Models\\Page",
+                    "events": ["saved", "deleted"]
+                },
+                {
+                    "model": "Capell\\SeoSuite\\Models\\AiDiscoverySiteProfile",
+                    "events": ["saved", "deleted"]
+                },
+                {
+                    "model": "Capell\\SeoSuite\\Models\\AiDiscoveryPageProfile",
+                    "events": ["saved", "deleted"]
+                },
+                {
+                    "model": "Capell\\SeoSuite\\Models\\AiDiscoveryCrawlerRule",
+                    "events": ["saved", "deleted"]
+                }
+            ],
             "queueInvalidation": true
         }
     },

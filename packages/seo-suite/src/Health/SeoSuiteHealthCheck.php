@@ -126,7 +126,7 @@ final class SeoSuiteHealthCheck implements ChecksExtensionHealth
                 : __('capell-seo-suite::generic.health_storage_tables_failed', ['tables' => implode(', ', $missingTables)]),
             remediation: $missingTables === []
                 ? null
-                : __('capell-seo-suite::generic.health_storage_tables_remediation'),
+                : (string) __('capell-seo-suite::generic.health_storage_tables_remediation'),
         );
     }
 
@@ -145,7 +145,7 @@ final class SeoSuiteHealthCheck implements ChecksExtensionHealth
                 : __('capell-seo-suite::generic.health_ai_discovery_routes_failed', ['routes' => implode(', ', $missingRoutes)]),
             remediation: $missingRoutes === []
                 ? null
-                : __('capell-seo-suite::generic.health_ai_discovery_routes_remediation'),
+                : (string) __('capell-seo-suite::generic.health_ai_discovery_routes_remediation'),
         );
     }
 
@@ -164,7 +164,7 @@ final class SeoSuiteHealthCheck implements ChecksExtensionHealth
                 : __('capell-seo-suite::generic.health_seo_services_failed', ['services' => implode(', ', $unresolvableServices)]),
             remediation: $unresolvableServices === []
                 ? null
-                : __('capell-seo-suite::generic.health_seo_services_remediation'),
+                : (string) __('capell-seo-suite::generic.health_seo_services_remediation'),
         );
     }
 
@@ -183,7 +183,7 @@ final class SeoSuiteHealthCheck implements ChecksExtensionHealth
                 : __('capell-seo-suite::generic.health_schema_templates_failed', ['templates' => implode(', ', $missingTemplates)]),
             remediation: $missingTemplates === []
                 ? null
-                : __('capell-seo-suite::generic.health_schema_templates_remediation'),
+                : (string) __('capell-seo-suite::generic.health_schema_templates_remediation'),
         );
     }
 
@@ -202,7 +202,7 @@ final class SeoSuiteHealthCheck implements ChecksExtensionHealth
                 : __('capell-seo-suite::generic.health_ai_crawler_policy_failed', ['agents' => implode(', ', $missingCrawlerAgents)]),
             remediation: $missingCrawlerAgents === []
                 ? null
-                : __('capell-seo-suite::generic.health_ai_crawler_policy_remediation'),
+                : (string) __('capell-seo-suite::generic.health_ai_crawler_policy_remediation'),
         );
     }
 
@@ -275,13 +275,21 @@ final class SeoSuiteHealthCheck implements ChecksExtensionHealth
      */
     public function missingAiCrawlerAgents(): array
     {
-        $configuredAgents = collect(config('capell-seo-suite.ai_discovery.default_crawler_rules', []))
-            ->map(static fn (mixed $rule): ?string => is_array($rule) && is_string($rule['user_agent'] ?? null) ? $rule['user_agent'] : null)
-            ->filter(static fn (?string $userAgent): bool => $userAgent !== null && $userAgent !== '')
-            ->values();
+        $configuredRules = config('capell-seo-suite.ai_discovery.default_crawler_rules', []);
+        $configuredAgents = [];
+
+        if (is_array($configuredRules)) {
+            foreach ($configuredRules as $rule) {
+                if (! is_array($rule) || ! is_string($rule['user_agent'] ?? null) || trim($rule['user_agent']) === '') {
+                    continue;
+                }
+
+                $configuredAgents[] = $rule['user_agent'];
+            }
+        }
 
         return array_values(collect(self::REQUIRED_AI_CRAWLER_AGENTS)
-            ->reject(static fn (string $userAgent): bool => $configuredAgents->contains($userAgent))
+            ->reject(static fn (string $userAgent): bool => in_array($userAgent, $configuredAgents, true))
             ->values()
             ->all());
     }

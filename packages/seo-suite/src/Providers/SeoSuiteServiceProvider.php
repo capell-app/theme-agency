@@ -144,6 +144,7 @@ use Filament\Support\Icons\Heroicon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -854,15 +855,28 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             return new EloquentCollection;
         }
 
-        return $userModel::query()
+        $query = $userModel::query();
+        $superAdminRole = (string) config('capell.roles.super_admin', 'super_admin');
+
+        if (method_exists($userModel, 'roles')) {
+            return $query
+                ->whereHas(
+                    'roles',
+                    fn (Builder $query): Builder => $query->where('name', $superAdminRole),
+                )
+                ->get()
+                ->values();
+        }
+
+        return $query
             ->get()
-            ->filter(function (Model $user): bool {
+            ->filter(function (Model $user) use ($superAdminRole): bool {
                 if (method_exists($user, 'isGlobalAdmin') && $user->isGlobalAdmin()) {
                     return true;
                 }
 
                 return method_exists($user, 'hasRole')
-                    && $user->hasRole(config('capell.roles.super_admin', 'super_admin'));
+                    && $user->hasRole($superAdminRole);
             })
             ->values();
     }

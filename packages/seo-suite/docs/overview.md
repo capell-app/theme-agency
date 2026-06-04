@@ -9,6 +9,7 @@ This page is the consolidated implementation overview for the SEO Suite package.
 SEO Suite adds metadata panels, AI Discovery outputs, structured data, broken link tracking, Search Console insights, AI-assisted content briefs, generated-output diagnostics, and publish checks.
 
 - Page and site SEO schema extenders, including the page editor SEO settings tab, report-backed edit audit widget, and Pages-list audit overview widget.
+- Page SEO reports cover every enum-backed check: metadata, canonical URL, robots, schema, social image, image alt text, internal links, broken links, redirect opportunities, translation coverage, sitemap URL availability, `llms.txt` eligibility, and Search Console status.
 - SEO audit, AI Discovery, broken links, not-found URLs, and translation coverage pages.
 - AI creator actions for briefs, images, layouts, metadata suggestions, and draft application.
 - AI Discovery generation for `llms.txt`, optional `llms-full.txt`, per-page Markdown views, `robots.txt` AI crawler rules, and page-readiness audit signals.
@@ -54,6 +55,7 @@ Gives editors and site operators practical checks before publishing and operatio
 - Adds `llms.txt`, `llms-full.txt`, `robots.txt`, and page Markdown frontend output.
 - Requires Site Discovery for public page discovery and sitemap outputs.
 - Adds config for AI provider/model, image model, Search Console, publish gates, and prompts.
+- Manifest metadata declares the SEO Suite settings classes, admin permissions, PageSpeed audit/digest capabilities, supported Blog/Publishing Studio/URL Manager integrations, and cache invalidation sources for generated AI Discovery output.
 
 ## Diagnostics
 
@@ -65,7 +67,8 @@ Structured data reporting also includes marketplace freshness warnings for Produ
 
 ## Remaining Roadmap
 
-- Wire crawler-preview reports into the admin diagnostics UI.
+- Build a dedicated crawler-preview diagnostics tab if the existing doctor and AI Discovery admin surfaces need a richer UI.
+- Add the next tier of scored content analysis: focus keyword grading, heading structure, readability, and bulk metadata workflows.
 
 ## Data And Retention
 
@@ -120,6 +123,8 @@ The AI creator modal still needs a dedicated interaction capture once the demo p
 - Keep AI Discovery page summaries specific. Thin summaries, duplicate entity names, no canonical URL, no schema, no server-rendered text, disabled Markdown views, and noindex pages are reported by the AI-readiness audit action.
 - Review crawler defaults before publishing robots output; search crawlers and training crawlers are deliberately configurable separately.
 - Use the SEO Suite settings crawler policy as the default posture, then use crawler rule rows when a site needs a provider-specific override.
+- Prism provider telemetry treats missing usage data as zero tokens, and the circuit breaker is scoped by configured provider.
+- PageSpeed digest default recipients use the user role relation when available instead of loading all users into memory.
 
 ## Verification
 

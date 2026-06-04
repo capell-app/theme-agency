@@ -10,9 +10,14 @@ use Capell\Core\Models\Site;
 use Capell\Core\Models\Translation;
 use Capell\Frontend\Actions\ResolvePageCanonicalUrlAction;
 use Capell\Frontend\Actions\ResolvePageRobotsDirectivesAction;
+use Capell\SeoSuite\Data\InternalLinkSuggestionData;
 use Capell\SeoSuite\Data\PageSeoReportData;
+use Capell\SeoSuite\Data\RedirectOpportunityData;
+use Capell\SeoSuite\Data\SchemaTemplateReportData;
+use Capell\SeoSuite\Data\SearchConsoleInsightData;
 use Capell\SeoSuite\Data\SeoIssueData;
 use Capell\SeoSuite\Data\SeoPreviewData;
+use Capell\SeoSuite\Data\SocialMetaData;
 use Capell\SeoSuite\Enums\RobotsDirectiveEnum;
 use Capell\SeoSuite\Enums\SeoCheckKeyEnum;
 use Capell\SeoSuite\Enums\SeoIssueSeverityEnum;
@@ -35,11 +40,14 @@ final class BuildPageSeoReportAction
             'pageUrl' => fn (BuilderContract $query): BuilderContract => $query->where('language_id', $language->id),
             'pageUrl.siteDomain',
             'canonicalPage.pageUrls.siteDomain',
+            'image',
             'site',
+            'socialImage',
             'translations',
         ]);
 
         $site->load([
+            'image',
             'translation' => fn (BuilderContract $query): BuilderContract => $query->where('language_id', $language->id),
         ]);
 
@@ -82,11 +90,37 @@ final class BuildPageSeoReportAction
             );
         }
 
-        if ($settings->seo_audit_enabled && $this->hasNoIndexDirective($page)) {
+        $robotsDirectives = array_values(ResolvePageRobotsDirectivesAction::run($page, $language));
+
+        if ($settings->seo_audit_enabled && $this->hasNoIndexDirective($robotsDirectives)) {
             $issues[] = new SeoIssueData(
                 key: SeoCheckKeyEnum::Robots,
                 severity: SeoIssueSeverityEnum::Warning,
                 message: __('capell-seo-suite::generic.seo_issue_robots_noindex'),
+            );
+        }
+
+        $previewUrl = $this->previewUrl($page);
+        $canonicalUrl = ResolvePageCanonicalUrlAction::run($page, $language) ?? $previewUrl;
+        $socialMeta = BuildSocialMetaAction::run($page, $site, $language);
+        $internalLinkSuggestions = SuggestInternalLinksAction::run($page, $site, $language);
+        $schemaDashboardReports = BuildSchemaTemplateReportAction::run($page, $site, $language);
+        $redirectOpportunities = BuildRedirectOpportunityReportAction::run($site->id, $language->id, (int) $page->getKey());
+        $searchConsoleInsights = array_values(BuildPageSearchConsoleInsightsAction::run($page));
+
+        if ($settings->seo_audit_enabled) {
+            $this->addTechnicalIssues(
+                issues: $issues,
+                page: $page,
+                site: $site,
+                language: $language,
+                previewUrl: $previewUrl,
+                canonicalUrl: $canonicalUrl,
+                socialMeta: $socialMeta,
+                internalLinkSuggestions: $internalLinkSuggestions,
+                schemaDashboardReports: $schemaDashboardReports,
+                redirectOpportunities: $redirectOpportunities,
+                searchConsoleInsights: $searchConsoleInsights,
             );
         }
 
@@ -96,7 +130,6 @@ final class BuildPageSeoReportAction
             ?? $this->stringValue($page->name)
             ?? '';
         $searchDescription = $metaDescription ?? '';
-        $previewUrl = $this->previewUrl($page);
         $siteName = $this->stringValue($site->translation?->title);
 
         $searchPreview = new SeoPreviewData(
@@ -107,10 +140,10 @@ final class BuildPageSeoReportAction
         );
 
         $socialPreview = new SeoPreviewData(
-            title: $this->metaValue($page, 'social_title') ?? $searchTitle,
-            description: $this->metaValue($page, 'social_description') ?? $searchDescription,
+            title: $socialMeta->title !== '' ? $socialMeta->title : $searchTitle,
+            description: $socialMeta->description !== '' ? $socialMeta->description : $searchDescription,
             url: $previewUrl,
-            imageUrl: null,
+            imageUrl: $socialMeta->imageUrl,
             siteName: $siteName,
         );
 
@@ -120,12 +153,12 @@ final class BuildPageSeoReportAction
             socialPreview: $socialPreview,
             issues: $issues,
             passedChecks: $this->passedChecks($issues, $settings),
-            internalLinkSuggestions: SuggestInternalLinksAction::run($page, $site, $language),
-            schemaDashboardReports: BuildSchemaTemplateReportAction::run($page, $site, $language),
-            redirectOpportunities: BuildRedirectOpportunityReportAction::run($site->id, $language->id, (int) $page->getKey()),
-            searchConsoleInsights: BuildPageSearchConsoleInsightsAction::run($page),
-            canonicalUrl: ResolvePageCanonicalUrlAction::run($page, $language) ?? $previewUrl,
-            robotsDirectives: ResolvePageRobotsDirectivesAction::run($page, $language),
+            internalLinkSuggestions: $internalLinkSuggestions,
+            schemaDashboardReports: $schemaDashboardReports,
+            redirectOpportunities: $redirectOpportunities,
+            searchConsoleInsights: $searchConsoleInsights,
+            canonicalUrl: $canonicalUrl,
+            robotsDirectives: $robotsDirectives,
             intelligenceSummary: BuildPageIntelligenceSummaryAction::run($page, $site, $language),
         );
     }
@@ -200,9 +233,155 @@ final class BuildPageSeoReportAction
             ->exists();
     }
 
-    private function hasNoIndexDirective(Page $page): bool
+    /**
+     * @param  list<string>  $robotsDirectives
+     */
+    private function hasNoIndexDirective(array $robotsDirectives): bool
     {
-        return in_array(RobotsDirectiveEnum::NoIndex->value, ResolvePageRobotsDirectivesAction::run($page), true);
+        return in_array(RobotsDirectiveEnum::NoIndex->value, $robotsDirectives, true);
+    }
+
+    /**
+     * @param  list<SeoIssueData>  $issues
+     * @param  list<InternalLinkSuggestionData>  $internalLinkSuggestions
+     * @param  list<SchemaTemplateReportData>  $schemaDashboardReports
+     * @param  list<RedirectOpportunityData>  $redirectOpportunities
+     * @param  list<SearchConsoleInsightData>  $searchConsoleInsights
+     */
+    private function addTechnicalIssues(
+        array &$issues,
+        Page $page,
+        Site $site,
+        Language $language,
+        string $previewUrl,
+        ?string $canonicalUrl,
+        SocialMetaData $socialMeta,
+        array $internalLinkSuggestions,
+        array $schemaDashboardReports,
+        array $redirectOpportunities,
+        array $searchConsoleInsights,
+    ): void {
+        if ($canonicalUrl === null || trim($canonicalUrl) === '') {
+            $issues[] = $this->issue(SeoCheckKeyEnum::Canonical, SeoIssueSeverityEnum::Warning, 'seo_issue_canonical_missing');
+        }
+
+        if ($previewUrl === '') {
+            $issues[] = $this->issue(SeoCheckKeyEnum::Sitemap, SeoIssueSeverityEnum::Warning, 'seo_issue_sitemap_url_missing');
+        }
+
+        if ($socialMeta->imageUrl === null || trim($socialMeta->imageUrl) === '') {
+            $issues[] = $this->issue(SeoCheckKeyEnum::SocialImage, SeoIssueSeverityEnum::Notice, 'seo_issue_social_image_missing');
+        } elseif ($socialMeta->imageAlt === null || trim((string) $socialMeta->imageAlt) === '') {
+            $issues[] = $this->issue(SeoCheckKeyEnum::ImageAltText, SeoIssueSeverityEnum::Warning, 'seo_issue_image_alt_text_missing');
+        }
+
+        $schemaIssue = $this->schemaIssue($schemaDashboardReports);
+        if ($schemaIssue instanceof SeoIssueData) {
+            $issues[] = $schemaIssue;
+        }
+
+        if ($internalLinkSuggestions === []) {
+            $issues[] = $this->issue(SeoCheckKeyEnum::InternalLinks, SeoIssueSeverityEnum::Notice, 'seo_issue_internal_links_missing');
+        }
+
+        if ($redirectOpportunities !== []) {
+            $issues[] = $this->issue(SeoCheckKeyEnum::Redirects, SeoIssueSeverityEnum::Warning, 'seo_issue_redirects_available');
+            $issues[] = $this->issue(SeoCheckKeyEnum::BrokenLinks, SeoIssueSeverityEnum::Warning, 'seo_issue_broken_links_found');
+        }
+
+        $searchConsoleIssue = $this->searchConsoleIssue($searchConsoleInsights);
+        if ($searchConsoleIssue instanceof SeoIssueData) {
+            $issues[] = $searchConsoleIssue;
+        }
+
+        if (! $this->hasRequestedTranslation($page, $language)) {
+            $issues[] = $this->issue(SeoCheckKeyEnum::TranslationCoverage, SeoIssueSeverityEnum::Warning, 'seo_issue_translation_coverage_missing');
+        }
+
+        if (! $this->isAiDiscoveryReady($page, $site, $language)) {
+            $issues[] = $this->issue(SeoCheckKeyEnum::LlmsTxt, SeoIssueSeverityEnum::Notice, 'seo_issue_llms_txt_unavailable');
+        }
+    }
+
+    private function issue(SeoCheckKeyEnum $key, SeoIssueSeverityEnum $severity, string $messageKey): SeoIssueData
+    {
+        return new SeoIssueData(
+            key: $key,
+            severity: $severity,
+            message: __('capell-seo-suite::generic.' . $messageKey),
+        );
+    }
+
+    /**
+     * @param  list<SchemaTemplateReportData>  $schemaDashboardReports
+     */
+    private function schemaIssue(array $schemaDashboardReports): ?SeoIssueData
+    {
+        if ($schemaDashboardReports === []) {
+            return $this->issue(SeoCheckKeyEnum::Schema, SeoIssueSeverityEnum::Warning, 'seo_issue_schema_missing');
+        }
+
+        foreach ($schemaDashboardReports as $schemaReport) {
+            if (! $schemaReport instanceof SchemaTemplateReportData) {
+                continue;
+            }
+
+            if ($schemaReport->severity === SeoIssueSeverityEnum::Critical) {
+                return $this->issue(SeoCheckKeyEnum::Schema, SeoIssueSeverityEnum::Critical, 'seo_issue_schema_required_fields_missing');
+            }
+
+            if ($schemaReport->severity === SeoIssueSeverityEnum::Warning || $schemaReport->missingFields !== [] || $schemaReport->warnings !== []) {
+                return $this->issue(SeoCheckKeyEnum::Schema, SeoIssueSeverityEnum::Warning, 'seo_issue_schema_warnings');
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param  list<SearchConsoleInsightData>  $searchConsoleInsights
+     */
+    private function searchConsoleIssue(array $searchConsoleInsights): ?SeoIssueData
+    {
+        if ($searchConsoleInsights === []) {
+            return $this->issue(SeoCheckKeyEnum::SearchConsole, SeoIssueSeverityEnum::Notice, 'seo_issue_search_console_missing');
+        }
+
+        foreach ($searchConsoleInsights as $insight) {
+            if (! $insight instanceof SearchConsoleInsightData) {
+                continue;
+            }
+
+            if ($insight->severity !== SeoIssueSeverityEnum::Passed) {
+                return new SeoIssueData(
+                    key: SeoCheckKeyEnum::SearchConsole,
+                    severity: $insight->severity,
+                    message: $insight->message,
+                );
+            }
+        }
+
+        return null;
+    }
+
+    private function hasRequestedTranslation(Page $page, Language $language): bool
+    {
+        foreach ($page->translations as $translation) {
+            if ($translation instanceof Translation && (int) $translation->language_id === (int) $language->getKey()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function isAiDiscoveryReady(Page $page, Site $site, Language $language): bool
+    {
+        try {
+            return PageIsDiscoverableForAiDiscoveryAction::run($page, $site, $language);
+        } catch (Throwable) {
+            return false;
+        }
     }
 
     /**
@@ -252,7 +431,18 @@ final class BuildPageSeoReportAction
             $checks[] = SeoCheckKeyEnum::DuplicateTitle;
         }
 
+        $checks[] = SeoCheckKeyEnum::SocialImage;
+        $checks[] = SeoCheckKeyEnum::Canonical;
         $checks[] = SeoCheckKeyEnum::Robots;
+        $checks[] = SeoCheckKeyEnum::ImageAltText;
+        $checks[] = SeoCheckKeyEnum::InternalLinks;
+        $checks[] = SeoCheckKeyEnum::Schema;
+        $checks[] = SeoCheckKeyEnum::BrokenLinks;
+        $checks[] = SeoCheckKeyEnum::Redirects;
+        $checks[] = SeoCheckKeyEnum::TranslationCoverage;
+        $checks[] = SeoCheckKeyEnum::Sitemap;
+        $checks[] = SeoCheckKeyEnum::LlmsTxt;
+        $checks[] = SeoCheckKeyEnum::SearchConsole;
 
         return $checks;
     }

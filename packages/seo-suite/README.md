@@ -32,6 +32,7 @@ SEO Suite adds metadata panels, structured data, broken link tracking, Search Co
 - AI creator actions for briefs, images, layouts, metadata suggestions, and draft application.
 - AI Discovery for `llms.txt`, optional `llms-full.txt`, page Markdown URLs, `Accept: text/markdown`, configurable AI crawler rules, and page-readiness audits.
 - Search Console sync and dashboard reports.
+- Page SEO reports account for every `SeoCheckKeyEnum` check: metadata, canonical, robots, schema, social image, image alt text, internal links, broken links, redirects, translation coverage, sitemap URL availability, `llms.txt` eligibility, and Search Console status.
 - Diagnostics for route ownership, generated document content types, sitemap quality, crawler policy, public-output leaks, and stale AI Discovery snapshots.
 
 ## Why It Matters
@@ -76,6 +77,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 ## Technical Shape
 
 - SeoSuiteServiceProvider registers settings, pages, extenders, commands, routes, and views.
+- The manifest declares SEO Suite settings classes, admin permissions, PageSpeed capabilities, supported Blog/Publishing Studio/URL Manager integrations, and AI Discovery cache invalidation sources.
 - Config files: capell-seo-suite.php and exchanger.php.
 - Migrations create broken links, page SEO snapshots, Search Console metrics, AI creator contexts, AI histories, AI sessions, AI Discovery profiles, crawler rules, and generated-output snapshots.
 - Commands cover install, setup, AI cache, AI usage, and OpenAI connection testing.
@@ -234,6 +236,8 @@ These items are approved product direction for the package. Keep implementation 
 - Do not enable AI creator without checking provider credentials and review workflow.
 - Search Console requires credentials and property URL.
 - Publish gates can block publishing when required metadata is missing.
+- Prism AI telemetry is defensive around missing usage data, and the circuit breaker is scoped per configured provider so one provider outage does not disable every AI provider.
+- PageSpeed digest default recipients resolve through the user role relation when available rather than loading every user into memory.
 - Site Discovery owns sitemap output and public URL discovery; SEO Suite consumes that public discovery boundary for AI Discovery.
 - Review AI Discovery summaries, Markdown previews, and crawler policy before launching a site that should be visible to AI search and answer engines.
 

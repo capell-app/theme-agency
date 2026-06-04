@@ -296,6 +296,68 @@ it('serves llms full txt and page markdown through cache aware controllers', fun
         ->and(AiDiscoverySnapshot::query()->where('kind', AiDiscoverySnapshotKindEnum::PageMarkdown->value)->exists())->toBeTrue();
 });
 
+it('serves anonymous ai discovery outputs without admin or editor leak markers', function (): void {
+    $language = createAiDiscoveryLanguage();
+    $site = Site::factory()->language($language)->withTranslations($language)->create();
+    $siteDomain = $site->siteDomains()->first();
+    $page = Page::factory()
+        ->home()
+        ->site($site)
+        ->withTranslations($language, [
+            'title' => 'Public Home',
+            'content' => '<p>Public markdown body for search and AI discovery.</p>',
+            'meta' => [
+                'title' => 'Public Home Search Title',
+                'description' => 'Public Home search description for generated output.',
+            ],
+        ], slug: '/')
+        ->create();
+
+    ResolveAiDiscoveryProfileAction::run($site, $language, $page);
+
+    resolve(FrontendState::class)
+        ->withSite($site)
+        ->withLanguage($language)
+        ->withDomain($siteDomain)
+        ->withPage($page);
+
+    $responses = [
+        resolve(LlmsTxtController::class)(),
+        resolve(PageMarkdownController::class)(Request::create('/index.md'), 'index'),
+        resolve(RobotsTxtController::class)(),
+    ];
+    $forbiddenMarkers = [
+        '/admin',
+        '/filament',
+        'signature=',
+        'expires=',
+        'wire:',
+        'livewire',
+        'field_path',
+        'field-path',
+        'fieldPath',
+        'model_id',
+        'model-id',
+        'modelId',
+        'page_id',
+        'page-id',
+        'pageId',
+        'editor-only',
+        'capell-editor',
+        'data-editor',
+    ];
+
+    foreach ($responses as $response) {
+        $content = (string) $response->getContent();
+
+        expect($response->getStatusCode())->toBe(200);
+
+        foreach ($forbiddenMarkers as $forbiddenMarker) {
+            expect(mb_strtolower($content))->not->toContain(mb_strtolower($forbiddenMarker));
+        }
+    }
+});
+
 it('does not serve direct page markdown for noindex pages', function (): void {
     $language = createAiDiscoveryLanguage();
     $site = Site::factory()->language($language)->withTranslations($language)->create();

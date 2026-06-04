@@ -7,6 +7,7 @@ use Capell\Core\Database\Factories\PageFactory;
 use Capell\Core\Database\Factories\SiteFactory;
 use Capell\Core\Models\PageUrl;
 use Capell\SeoSuite\Actions\BuildPageSeoReportAction;
+use Capell\SeoSuite\Data\SeoIssueData;
 use Capell\SeoSuite\Enums\SeoCheckKeyEnum;
 use Capell\SeoSuite\Enums\SeoIssueSeverityEnum;
 use Capell\SeoSuite\Models\BrokenLink;
@@ -22,6 +23,39 @@ it('dashboard-dashboard_reports critical issues for missing title and descriptio
     expect($report->score)->toBeLessThan(100)
         ->and(collect($report->issues)->pluck('key'))->toContain(SeoCheckKeyEnum::MetaTitle)
         ->and(collect($report->issues)->pluck('key'))->toContain(SeoCheckKeyEnum::MetaDescription);
+});
+
+it('accounts for every SEO check key in report issues or passed checks', function (): void {
+    $language = LanguageFactory::new()->create(['name' => 'English', 'code' => 'en']);
+    $site = SiteFactory::new()->recycle($language)->language($language)->withTranslations($language)->create();
+    $page = PageFactory::new()
+        ->site($site)
+        ->withTranslations($language, [
+            'title' => 'Complete SEO Page',
+            'content' => '<p>Useful public content about package readiness and search visibility.</p>',
+            'meta' => [
+                'title' => 'A complete search title for this SEO page',
+                'description' => 'A complete search description that gives editors enough useful context.',
+            ],
+        ])
+        ->create();
+
+    PageUrl::factory()->page($page)->site($site)->language($language)->state(['url' => '/complete-seo-page'])->create();
+
+    $report = BuildPageSeoReportAction::run($page, $site, $language);
+    $coveredKeys = collect($report->issues)
+        ->merge($report->passedChecks)
+        ->map(fn (mixed $check): ?SeoCheckKeyEnum => $check instanceof SeoIssueData ? $check->key : null)
+        ->filter()
+        ->map(fn (SeoCheckKeyEnum $key): string => $key->value)
+        ->unique()
+        ->values()
+        ->all();
+
+    expect($coveredKeys)->toEqualCanonicalizing(array_map(
+        fn (SeoCheckKeyEnum $key): string => $key->value,
+        SeoCheckKeyEnum::cases(),
+    ));
 });
 
 it('builds search and social previews from translation meta', function (): void {

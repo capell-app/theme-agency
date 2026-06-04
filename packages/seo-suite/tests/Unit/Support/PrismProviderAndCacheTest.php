@@ -139,7 +139,7 @@ it('resolves configured prism provider names to prism enums', function (string $
 it('opens and resets the prism circuit breaker after repeated failures', function (): void {
     Cache::flush();
 
-    $provider = new PrismProvider;
+    $provider = new PrismProvider(['provider' => 'openai']);
     $recordFailure = new ReflectionMethod(PrismProvider::class, 'recordFailure');
 
     expect($provider->isAvailable())->toBeTrue();
@@ -154,4 +154,30 @@ it('opens and resets the prism circuit breaker after repeated failures', functio
     $provider->resetCircuitBreaker();
 
     expect($provider->isAvailable())->toBeTrue();
+});
+
+it('scopes prism circuit breakers by provider', function (): void {
+    Cache::flush();
+
+    $openAiProvider = new PrismProvider(['provider' => 'openai']);
+    $anthropicProvider = new PrismProvider(['provider' => 'anthropic']);
+    $recordFailure = new ReflectionMethod(PrismProvider::class, 'recordFailure');
+
+    for ($failure = 1; $failure <= 5; $failure++) {
+        $recordFailure->invoke($openAiProvider);
+    }
+
+    expect($openAiProvider->circuitBreakerKey())->toBe('ai_circuit_breaker_state:openai')
+        ->and($anthropicProvider->circuitBreakerKey())->toBe('ai_circuit_breaker_state:anthropic')
+        ->and($openAiProvider->isAvailable())->toBeFalse()
+        ->and($anthropicProvider->isAvailable())->toBeTrue();
+});
+
+it('normalizes missing prism usage telemetry to zero tokens', function (): void {
+    $provider = new PrismProvider;
+    $promptTokens = new ReflectionMethod(PrismProvider::class, 'promptTokens');
+    $completionTokens = new ReflectionMethod(PrismProvider::class, 'completionTokens');
+
+    expect($promptTokens->invoke($provider, null))->toBe(0)
+        ->and($completionTokens->invoke($provider, null))->toBe(0);
 });
