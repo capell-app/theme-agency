@@ -71,7 +71,7 @@ Tied to declared `capabilities[]`: `diagnostics`, `diagnostics-admin`, `diagnost
 | Stub/broken health-check detector across all packages (the differentiator)                                      | Now    | M      | High   | §3          |
 | Replace palette danger denylist heuristic with explicit allowlist/risk map                                      | Now    | M      | High   | §2, §4      |
 | Make `DiagnosticsHealthCheck` a real check (reference implementation)                                           | Now    | M      | High   | §2, §4      |
-| Redact secrets before persisting `command_palette_runs.output`                                                  | Now    | S      | High   | §4          |
+| [Shipped] Redact secrets before persisting `command_palette_runs.output`                                        | Done   | S      | High   | §4          |
 | Add `RunExtensionHealthChecksAction` + `capell:diagnostics:health` console command (fulfil `console` surface)   | Next   | M      | High   | §3, §4      |
 | Single severity rollup / system health score                                                                    | Next   | M      | High   | §3          |
 | Wire 6 light/dark screenshots into `marketplace.screenshots`; rewrite summary + composer description + keywords | Next   | S      | High   | §5          |
