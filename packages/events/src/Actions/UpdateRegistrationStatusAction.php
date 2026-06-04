@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Events\Actions;
 
 use Capell\Events\Enums\EventRegistrationStatusEnum;
+use Capell\Events\Events\EventRegistrationCancelled;
 use Capell\Events\Models\EventRegistration;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -27,7 +28,8 @@ class UpdateRegistrationStatusAction
             'registration_count' => $occurrence->confirmedRegistrationQuantity(),
         ])->save();
 
-        if ($status === EventRegistrationStatusEnum::Cancelled && PromoteWaitlistAction::run($occurrence) instanceof EventRegistration) {
+        if ($status === EventRegistrationStatusEnum::Cancelled) {
+            event(new EventRegistrationCancelled($registration->refresh()));
             $occurrence->refresh();
         }
 

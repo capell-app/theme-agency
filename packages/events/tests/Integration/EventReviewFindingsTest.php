@@ -14,6 +14,7 @@ use Capell\Events\Actions\BuildCalendarFeedAction;
 use Capell\Events\Actions\BuildEventSchemaAction;
 use Capell\Events\Actions\ProcessDueEventNotificationLogsAction;
 use Capell\Events\Actions\QueryPublicEventOccurrencesAction;
+use Capell\Events\Actions\ReconcileEventWaitlistsAction;
 use Capell\Events\Actions\RegisterForEventOccurrenceAction;
 use Capell\Events\Actions\ResolvePublicEventSchemaOccurrenceAction;
 use Capell\Events\Actions\ScheduleEventNotificationsAction;
@@ -25,6 +26,7 @@ use Capell\Events\Enums\EventNotificationTypeEnum;
 use Capell\Events\Enums\EventOccurrenceStatusEnum;
 use Capell\Events\Enums\EventRegistrationStatusEnum;
 use Capell\Events\Enums\EventVisibilityEnum;
+use Capell\Events\Events\EventRegistrationCancelled;
 use Capell\Events\Filament\Resources\Events\EventResource;
 use Capell\Events\Filament\Resources\Events\Pages\CreateEvent;
 use Capell\Events\Filament\Resources\Events\Pages\EditEvent;
@@ -46,6 +48,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event as EventFacade;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 use Spatie\LaravelPackageTools\Package;
@@ -384,6 +387,14 @@ it('registers scheduled processing for due event notification logs', function ()
 
     expect($event->withoutOverlapping)->toBeTrue()
         ->and($event->onOneServer)->toBeTrue();
+
+    $waitlistEvent = collect($schedule->events())
+        ->first(fn (mixed $scheduledEvent): bool => $scheduledEvent->description === 'capell-events:reconcile-waitlists');
+
+    throw_unless($waitlistEvent instanceof ScheduledEvent, RuntimeException::class, 'Expected events waitlist reconcile schedule to be registered.');
+
+    expect($waitlistEvent->withoutOverlapping)->toBeTrue()
+        ->and($waitlistEvent->onOneServer)->toBeTrue();
 });
 
 it('hydrates public event schema occurrences before building JSON-LD', function (): void {
@@ -458,6 +469,11 @@ it('refreshes occurrence registration count after waitlist promotion', function 
 
     expect($occurrence->refresh()->registration_count)->toBe(1)
         ->and($occurrence->registrations()->where('status', EventRegistrationStatusEnum::Pending)->count())->toBe(1);
+});
+
+it('registers the cancellation listener and scheduled waitlist reconcile action', function (): void {
+    expect(EventFacade::hasListeners(EventRegistrationCancelled::class))->toBeTrue()
+        ->and(class_exists(ReconcileEventWaitlistsAction::class))->toBeTrue();
 });
 
 function bindEventsFrontendSite(Site $site): void

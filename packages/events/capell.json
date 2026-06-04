@@ -54,7 +54,7 @@
         "install": "capell:events-install",
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": "capell:events-doctor"
     },
     "actions": {
         "install": "Capell\\Events\\Actions\\InstallEventsPackageAction"

@@ -15,10 +15,14 @@ use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
 use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Capell\Events\Actions\ProcessDueEventNotificationLogsAction;
+use Capell\Events\Actions\ReconcileEventWaitlistsAction;
+use Capell\Events\Console\Commands\EventsDoctorCommand;
 use Capell\Events\Console\Commands\InstallCommand;
 use Capell\Events\Enums\LivewireComponentEnum;
 use Capell\Events\Enums\ResourceEnum;
+use Capell\Events\Events\EventRegistrationCancelled;
 use Capell\Events\Filament\Pages\EventCalendarPage;
+use Capell\Events\Listeners\PromoteWaitlistAfterRegistrationCancelled;
 use Capell\Events\Models\Event;
 use Capell\Events\Models\EventOccurrence;
 use Capell\Events\Models\EventRegistration;
@@ -43,6 +47,7 @@ use Composer\InstalledVersions;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Event as EventFacade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
@@ -62,6 +67,7 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
             ->hasViews(self::$name)
             ->hasTranslations()
             ->hasCommands([
+                EventsDoctorCommand::class,
                 InstallCommand::class,
             ])
             ->hasMigrations([
@@ -126,6 +132,7 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
             ->registerLivewireComponents()
             ->registerRoutes()
             ->registerRenderHooks()
+            ->registerEventListeners()
             ->registerSchedule()
             ->registerSeoSchemaTemplate()
             ->registerPublicUrlContributors()
@@ -257,12 +264,25 @@ class EventsServiceProvider extends AbstractPackageServiceProvider
         return $this;
     }
 
+    private function registerEventListeners(): self
+    {
+        EventFacade::listen(EventRegistrationCancelled::class, PromoteWaitlistAfterRegistrationCancelled::class);
+
+        return $this;
+    }
+
     private function registerSchedule(): self
     {
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
             $schedule->call(fn (): int => ProcessDueEventNotificationLogsAction::run())
                 ->name('capell-events:process-notifications')
                 ->everyMinute()
+                ->withoutOverlapping()
+                ->onOneServer();
+
+            $schedule->call(fn (): int => ReconcileEventWaitlistsAction::run())
+                ->name('capell-events:reconcile-waitlists')
+                ->everyFifteenMinutes()
                 ->withoutOverlapping()
                 ->onOneServer();
         });
