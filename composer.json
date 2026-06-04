@@ -112,20 +112,6 @@
     },
     "repositories": [
         {
-            "type": "path",
-            "url": "../capell-4/packages/admin",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "type": "path",
-            "url": "packages/record-switcher",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
             "type": "vcs",
             "url": "https://github.com/capell-app/admin"
         },
@@ -212,6 +198,9 @@
     },
     "conflict": {
         "firebase/php-jwt": "<7.0.0"
+    },
+    "replace": {
+        "capell-app/record-switcher": "self.version"
     },
     "require-dev": {
         "awcodes/filament-curator": "^4.0|^5.0",
