@@ -99,21 +99,21 @@ SEO Suite is the premium search/SEO package for the Capell CMS. It bolts metadat
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                           | Bucket | Effort | Impact | Section ref |
-| ---------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Add anonymous/non-admin public-output safety tests for `/llms.txt`, `/index.md`, `/robots.txt` | Now    | M      | High   | §4          |
-| Wire up the 11 dormant `SeoCheckKeyEnum` checks (canonical, schema, alt, links…)               | Now    | L      | High   | §2          |
-| Make `SeoSuiteHealthCheck` perform real per-key probes                                         | Now    | M      | High   | §2/§4       |
-| Strengthen `leakMatches()` beyond `signature=`/`expires=`                                      | Now    | M      | High   | §2/§4       |
-| Correct manifest `cacheSafety`, `permissions`, `settings`, PageSpeed capabilities              | Now    | S      | Med    | §4          |
-| Fix `defaultPageSpeedDigestRecipients()` to filter in-query                                    | Now    | S      | Med    | §2          |
-| Scope AI circuit breaker per provider; guard null Prism usage                                  | Now    | S      | Med    | §2/§4       |
-| Weighted SEO score with category breakdown                                                     | Next   | M      | High   | §2          |
-| On-page content analysis (H1, headings, word count, keyword density)                           | Next   | L      | High   | §3          |
-| Focus-keyword workflow graded by the audit                                                     | Next   | M      | High   | §3          |
-| Redirect manager UI (bulk/regex/410)                                                           | Next   | L      | High   | §3          |
-| User-level AI-generation authorization + cost persistence/dashboard                            | Next   | M      | Med    | §2/§3       |
-| Promote real screenshots + rewrite marketplace summary/description                             | Next   | S      | High   | §5          |
-| Embedding/semantic internal-link + anchor-text suggestions                                     | Later  | L      | Med    | §2/§3       |
-| AI-answer/GEO visibility tracking (ChatGPT/Perplexity/AI Overviews citations)                  | Later  | L      | High   | §3          |
-| Search Console striking-distance opportunity report in editor                                  | Later  | M      | Med    | §3          |
+| Item                                                                                           | Bucket | Effort | Impact | Section ref                                                                                  |
+| ---------------------------------------------------------------------------------------------- | ------ | ------ | ------ | -------------------------------------------------------------------------------------------- |
+| Add anonymous/non-admin public-output safety tests for `/llms.txt`, `/index.md`, `/robots.txt` | Now    | M      | High   | §4                                                                                           |
+| Wire up the 11 dormant `SeoCheckKeyEnum` checks (canonical, schema, alt, links…)               | Now    | L      | High   | §2                                                                                           |
+| Make `SeoSuiteHealthCheck` perform real per-key probes                                         | Now    | M      | High   | §2/§4                                                                                        |
+| Strengthen `leakMatches()` beyond `signature=`/`expires=`                                      | Now    | M      | High   | §2/§4                                                                                        |
+| Correct manifest `cacheSafety`, `permissions`, `settings`, PageSpeed capabilities              | Now    | S      | Med    | §4                                                                                           |
+| Fix `defaultPageSpeedDigestRecipients()` to filter in-query                                    | Done   | S      | Med    | §2 — Done 2026-06-04: role filtering now stays in the recipient query with focused coverage. |
+| Scope AI circuit breaker per provider; guard null Prism usage                                  | Now    | S      | Med    | §2/§4                                                                                        |
+| Weighted SEO score with category breakdown                                                     | Next   | M      | High   | §2                                                                                           |
+| On-page content analysis (H1, headings, word count, keyword density)                           | Next   | L      | High   | §3                                                                                           |
+| Focus-keyword workflow graded by the audit                                                     | Next   | M      | High   | §3                                                                                           |
+| Redirect manager UI (bulk/regex/410)                                                           | Next   | L      | High   | §3                                                                                           |
+| User-level AI-generation authorization + cost persistence/dashboard                            | Next   | M      | Med    | §2/§3                                                                                        |
+| Promote real screenshots + rewrite marketplace summary/description                             | Next   | S      | High   | §5                                                                                           |
+| Embedding/semantic internal-link + anchor-text suggestions                                     | Later  | L      | Med    | §2/§3                                                                                        |
+| AI-answer/GEO visibility tracking (ChatGPT/Perplexity/AI Overviews citations)                  | Later  | L      | High   | §3                                                                                           |
+| Search Console striking-distance opportunity report in editor                                  | Later  | M      | Med    | §3                                                                                           |
