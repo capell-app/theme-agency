@@ -18,6 +18,20 @@ it('declares foundation as the default theme package', function (): void {
         ->and($manifest['extends'])->toBeNull();
 });
 
+it('registers only the shipped foundation theme service provider', function (): void {
+    $manifest = themePackageManifest('foundation-theme');
+    $composer = themePackageComposer('foundation-theme');
+
+    expect($manifest['providers']['runtime'])->toBe([
+        FoundationThemeServiceProvider::class,
+    ])
+        ->and($manifest['providers']['admin'])->toBe([])
+        ->and($manifest['providers']['frontend'])->toBe([])
+        ->and($composer['extra']['laravel']['providers'])->toBe([
+            FoundationThemeServiceProvider::class,
+        ]);
+});
+
 it('defines the Foundation Theme Studio parent contract', function (): void {
     $definition = FoundationThemeServiceProvider::definition();
 

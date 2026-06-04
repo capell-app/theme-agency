@@ -6,8 +6,8 @@ Capell default theme - ships the standard Tailwind asset pipeline, Blade directi
 
 - Package: `capell-app/foundation-theme`
 - Namespace: `Capell\FoundationTheme\`
-- Surfaces: Livewire, console
-- Service providers: `packages/foundation-theme/src/Providers/AdminServiceProvider.php`, `packages/foundation-theme/src/Providers/FoundationThemeServiceProvider.php`
+- Surfaces: admin, frontend
+- Service provider: `packages/foundation-theme/src/Providers/FoundationThemeServiceProvider.php`
 - Capell dependencies: `capell-app/frontend`, `capell-app/layout-builder`
 - Third-party dependencies: `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`
 
@@ -26,8 +26,9 @@ Capell default theme - ships the standard Tailwind asset pipeline, Blade directi
 ## What It Adds
 
 - Capell default theme - ships the standard Tailwind asset pipeline, Blade directives, URL generator, and SVG media component.
-- Livewire components: `AbstractAssets`, `AbstractWidget`, `PageAssets`, `Pages`.
-- Package setup or maintenance commands.
+- Theme Studio registration, frontend Blade chrome, Layout Builder rendering views, widget components, and runtime asset registration.
+- Livewire helpers for page listings and page-asset selection where the frontend runtime needs them.
+- Package setup and Tailwind asset generation commands.
 - A `header` Layout Builder area so editors can place normal layout widgets inside the Foundation header chrome.
 - Seven `kitchen-sink-*` reference widgets for the Demo Kit kitchen sink page: rich text, structured text, data display, forms, interactions, embeds, and utility states.
 
@@ -57,11 +58,11 @@ This package makes its Composer dependencies visible because they are part of th
 
 ## Screens And Workflow
 
-Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) during package deployment.
+Screenshot capture targets are defined in [docs/screenshots.json](docs/screenshots.json) during package deployment.
 
-- Default theme settings screen.
-- Frontend page using the default theme.
-- Generated Tailwind asset output review.
+- 12 deployment capture targets cover the Foundation settings screen, Tailwind asset output review, frontend render checks, the header Layout Builder area, and marketplace layout captures.
+- 9 marketplace media entries ship in `capell.json`: one extension card image and eight labelled layout mockups.
+- 6 generated PNG screenshots are currently committed under `docs/screenshots` for settings, frontend, and Tailwind output review in light and dark variants.
 
 ## Technical Shape
 
@@ -83,9 +84,9 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 | Area      | Path                                      | Purpose                                                           |
 | --------- | ----------------------------------------- | ----------------------------------------------------------------- |
 | Actions   | `packages/foundation-theme/src/Actions`   | Domain operations. Test these directly where possible.            |
-| Enums     | `packages/foundation-theme/src/Enums`     | Persisted states and Filament option values.                      |
-| Filament  | `packages/foundation-theme/src/Filament`  | Admin resources, pages, widgets, and settings UI.                 |
-| Livewire  | `packages/foundation-theme/src/Livewire`  | Interactive frontend or admin components.                         |
+| Enums     | `packages/foundation-theme/src/Enums`     | Persisted states and option values.                               |
+| Filament  | `packages/foundation-theme/src/Filament`  | Settings schema surfaced through the main provider.               |
+| Livewire  | `packages/foundation-theme/src/Livewire`  | Page listing and page-asset helper components.                    |
 | Providers | `packages/foundation-theme/src/Providers` | Registration, extension hooks, routes, migrations, and resources. |
 | Resources | `packages/foundation-theme/resources`     | Views, translations, assets, and package resources.               |
 | Config    | `packages/foundation-theme/config`        | Package configuration and publishable config.                     |
@@ -94,11 +95,16 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Admin Surface
 
-- Settings: `FoundationThemeSettings`, `FoundationThemeSettingsMigrationProvider`.
+- Settings schema: `FoundationThemeSettingsSchema`.
+- Settings data and migrations: `FoundationThemeSettings`, `FoundationThemeSettingsMigrationProvider`.
+- Theme chrome choices: Foundation header and footer registrations.
 
 ## Runtime Surface
 
-- Livewire: `AbstractAssets`, `AbstractWidget`, `PageAssets`, `Pages`.
+- Frontend Blade namespaces and components under `capell::...` and `capell-foundation-theme::...`.
+- Theme Studio definition and Blade renderer for `themeKey: default`.
+- Conditional frontend asset registration for CSS, runtime JavaScript, Tailwind imports, and Tailwind sources.
+- Livewire helpers: `AbstractAssets`, `AbstractWidget`, `PageAssets`, `Pages`.
 
 ## Commands
 

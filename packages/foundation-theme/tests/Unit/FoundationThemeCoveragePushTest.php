@@ -27,7 +27,6 @@ use Capell\FoundationTheme\Filament\Settings\FoundationThemeSettingsSchema;
 use Capell\FoundationTheme\Listeners\RunTailwindAssetsOnPackageChange;
 use Capell\FoundationTheme\Livewire\Assets\Table\PageAssets;
 use Capell\FoundationTheme\Livewire\Widget\Pages as LivewirePages;
-use Capell\FoundationTheme\Providers\AdminServiceProvider;
 use Capell\FoundationTheme\Providers\FoundationThemeServiceProvider;
 use Capell\FoundationTheme\Settings\FoundationThemeSettings;
 use Capell\FoundationTheme\Settings\FoundationThemeSettingsMigrationProvider;
@@ -261,7 +260,6 @@ it('declares foundation settings schema and settings migrations', function (): v
         ->and(FoundationThemeSettings::sectionSpacingCssValueFor(null))->toBe(FoundationThemeSettings::SECTION_SPACING_OPTIONS['relaxed'])
         ->and(FoundationThemeSettings::widgetGapCssValueFor(null))->toBe(FoundationThemeSettings::WIDGET_GAP_OPTIONS['balanced']);
 
-    (new AdminServiceProvider(app()))->register();
 });
 
 it('compiles foundation blade directives across build tools and buffer expressions', function (): void {
