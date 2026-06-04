@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Comments\Actions;
 
 use Capell\Comments\Data\CommentableTypeData;
+use Capell\Comments\Data\CommentSpamCheckData;
 use Capell\Comments\Data\CreateCommentData;
 use Capell\Comments\Enums\CommentIdentityMode;
 use Capell\Comments\Enums\CommentPublicationPolicy;
@@ -84,7 +85,20 @@ class CreateCommentAction
             }
 
             $linkCount = $this->sanitizer->linkCount($body);
-            $spamScore = ScoreCommentSpamAction::run($body, $linkCount);
+            $spamScore = ScoreCommentSpamAction::run($body, $linkCount, new CommentSpamCheckData(
+                body: $body,
+                linkCount: $linkCount,
+                siteId: $siteId,
+                commentableType: $commentableType->key,
+                commentableId: $data->commentable->getKey(),
+                parentPublicId: $data->parentPublicId,
+                authorName: $data->authorName,
+                authorEmail: $data->authorEmail,
+                ipAddress: $data->ipAddress,
+                userAgent: $data->userAgent,
+                authenticatedUserType: $data->user instanceof Model ? $data->user->getMorphClass() : null,
+                authenticatedUserId: $data->user instanceof Model ? $data->user->getKey() : null,
+            ));
             $initialStatus = $spamScore->isSpam()
                 ? CommentStatus::Spam
                 : $this->initialStatus($author, $siteId, $commentableType->key, $emailVerifiedForSubmission);

@@ -23,6 +23,7 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 - **2026-06-04:** Locale-pinned public timestamp labels to the resolved commentable language so `diffForHumans()` output follows page `language_id` instead of the ambient app locale, with Livewire serialization coverage.
 - **2026-06-04:** Added enforceable performance-budget coverage for public thread hydration/rendering and admin comment widgets, and batched sibling reply counts to avoid empty-grandchild query fanout.
 - **2026-06-04:** Added privacy retention and erasure tooling for old visitor hashes, moderation notes, tokens, and author PII, plus hash-secret rotation documentation.
+- **2026-06-04:** Added the pluggable `CommentSpamProvider` contract, default local provider, configured provider chain, and spam-check context data for Akismet/Turnstile-style adapters.
 
 ## 2. Improvements (existing functionality)
 
@@ -58,7 +59,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **Edit / delete window for authors (table-stakes-ish).** Authenticated/verified authors cannot edit or soft-delete their own comments from the frontend; only admins transition status. A short author edit window is expected by most comment systems.
 
-- **Akismet / external spam provider hook (differentiator).** A pluggable spam-provider contract (Akismet, reCAPTCHA/Turnstile) layered over the local heuristics would be a strong premium up-sell and pairs with the honeypot in §2.
+- **Shipped 2026-06-04: Akismet / external spam provider hook (differentiator).** `CommentSpamProvider` lets host apps append Akismet, Turnstile, CAPTCHA, or reputation-service adapters through `capell-comments.spam.providers`. `ConfiguredCommentSpamProvider` combines provider scores, `LocalCommentSpamProvider` preserves built-in link/blocked-term checks, and `CreateCommentAction` passes sanitized body, site/commentable context, public author fields, IP/user-agent, and authenticated user context into the scorer.
 
 ## 4. Issues / Risks
 
@@ -114,6 +115,6 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 | Shipped 2026-06-04: harden sanitizer (bidi/zero-width strip; broaden link detection)                      | Next   | S      | Med    | §4          |
 | Shipped 2026-06-04: memoize resolved commentable in Livewire component                                    | Next   | S      | Low    | §2          |
 | Shipped 2026-06-04: locale-pin public timestamps to page `language_id`                                    | Next   | S      | Low    | §4          |
-| Pluggable external spam provider (Akismet/Turnstile) contract                                             | Later  | M      | Med    | §3          |
+| Shipped 2026-06-04: pluggable external spam provider (Akismet/Turnstile) contract                         | Later  | M      | Med    | §3          |
 | Reactions/voting + author-reply notifications (Engagement Suite up-sell)                                  | Later  | L      | Med    | §3, §5      |
 | Shipped 2026-06-04: PII retention/erasure command + secret-rotation docs for hashes                       | Later  | M      | Med    | §4          |

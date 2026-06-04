@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Capell\Comments\Enums\CommentIdentityMode;
 use Capell\Comments\Enums\CommentPublicationPolicy;
 use Capell\Comments\Enums\CommentVerificationFlow;
+use Capell\Comments\Support\Spam\LocalCommentSpamProvider;
 use Illuminate\Support\Env;
 
 return [
@@ -26,6 +27,9 @@ return [
         'decay_seconds' => 60,
     ],
     'spam' => [
+        'providers' => [
+            LocalCommentSpamProvider::class,
+        ],
         'max_links' => 3,
         'blocked_terms' => [],
         'minimum_form_age_seconds' => 2,

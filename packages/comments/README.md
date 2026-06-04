@@ -56,6 +56,9 @@ to registered Capell content.
   storing reasons on the comment and routing flagged submissions to `Spam`
   before verification mail is sent. Link counting covers scheme, `www.`, and
   bare-domain links.
+- A pluggable `CommentSpamProvider` contract so host apps can append external
+  Akismet, Turnstile, or reputation-service scoring without replacing the local
+  heuristics.
 - Queued moderator notifications for valid configured moderator email
   addresses when new comments are waiting on approval or email verification.
 - Privacy retention tooling that prunes old visitor hashes, moderation notes,
@@ -95,8 +98,9 @@ to registered Capell content.
 | Moderation    | `src/Actions/TransitionCommentStatusAction.php`, `src/Listeners/NotifyModeratorsOfNewComment.php`, `src/Filament/Pages/CommentModerationInbox.php`  |
 | Notifications | `src/Notifications/ConfirmCommentAuthorEmailNotification.php`, `src/Notifications/ModerateCommentNotification.php`                                  |
 | Settings      | `src/Settings/CommentSettings.php`, `src/Filament/Settings/CommentSettingsSchema.php`                                                               |
-| Data objects  | `src/Data/PublicCommentData.php`, `src/Data/PublicCommentableThreadData.php`, `src/Data/CreateCommentData.php`, `src/Data/CommentSpamScoreData.php` |
+| Data objects  | `src/Data/PublicCommentData.php`, `src/Data/PublicCommentableThreadData.php`, `src/Data/CreateCommentData.php`, `src/Data/CommentSpamCheckData.php`, `src/Data/CommentSpamScoreData.php` |
 | Models        | `src/Models/Comment.php`, `src/Models/CommentAuthor.php`, `src/Models/CommentToken.php`                                                             |
+| Spam scoring  | `src/Contracts/CommentSpamProvider.php`, `src/Support/Spam/LocalCommentSpamProvider.php`, `src/Support/Spam/ConfiguredCommentSpamProvider.php`       |
 
 ## Install Impact
 
@@ -111,6 +115,7 @@ to registered Capell content.
 - [Docs index](docs/README.md)
 - [Overview](docs/overview.md)
 - [Privacy and retention](docs/privacy-and-retention.md)
+- [Spam providers](docs/spam-providers.md)
 - [Screenshot manifest](docs/screenshots.json)
 - [Package documentation standard](../../docs/package-documentation-standard.md)
 
@@ -136,8 +141,9 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
   Blade.
 - Keep bot-trap fields public-form only; API/programmatic comment creation may
   omit them, but public forms should pass them through `CreateCommentData`.
-- Keep spam scoring in `ScoreCommentSpamAction`; new heuristics should return
-  explicit `spam_reasons` and must not leak into public thread DTOs.
+- Keep spam scoring in `ScoreCommentSpamAction` and `CommentSpamProvider`
+  implementations; new heuristics should return explicit `spam_reasons` and
+  must not leak into public thread DTOs.
 - Keep `CommentBodySanitizer` stripping invisible/control characters before
   storage so public comments cannot spoof readable text with bidi or zero-width
   controls.

@@ -6,6 +6,7 @@ use Capell\Comments\Actions\CreateCommentAction;
 use Capell\Comments\Actions\ScoreCommentSpamAction;
 use Capell\Comments\Actions\TransitionCommentStatusAction;
 use Capell\Comments\Actions\VerifyCommentAuthorEmailAction;
+use Capell\Comments\Data\CommentSpamCheckData;
 use Capell\Comments\Data\CreateCommentData;
 use Capell\Comments\Enums\CommentPublicationPolicy;
 use Capell\Comments\Enums\CommentStatus;
@@ -16,6 +17,8 @@ use Capell\Comments\Models\CommentAuthor;
 use Capell\Comments\Models\CommentToken;
 use Capell\Comments\Notifications\ConfirmCommentAuthorEmailNotification;
 use Capell\Comments\Settings\CommentSettings;
+use Capell\Comments\Support\Spam\LocalCommentSpamProvider;
+use Capell\Comments\Tests\Fixtures\FlaggingCommentSpamProvider;
 use Capell\Comments\Tests\Fixtures\UnregisteredCommentable;
 use Capell\Tests\Fixtures\Models\User;
 use Illuminate\Support\Facades\Event;
@@ -161,6 +164,29 @@ it('scores comments against configured spam rules', function (): void {
         ->and($score->reasons)->toContain('too_many_links', 'blocked_term:casino');
 });
 
+it('combines local spam rules with configured external providers', function (): void {
+    config()->set('capell-comments.spam.providers', [
+        LocalCommentSpamProvider::class,
+        FlaggingCommentSpamProvider::class,
+    ]);
+    config()->set('capell-comments.spam.max_links', 1);
+
+    $score = ScoreCommentSpamAction::run(
+        body: 'Visit https://one.test and https://two.test',
+        linkCount: 2,
+        check: new CommentSpamCheckData(
+            body: 'Visit https://one.test and https://two.test',
+            linkCount: 2,
+            siteId: 123,
+            commentableType: 'page',
+        ),
+    );
+
+    expect($score->isSpam())->toBeTrue()
+        ->and($score->linkCount)->toBe(2)
+        ->and($score->reasons)->toContain('too_many_links', 'external_fixture:site:123', 'external_fixture:type:page');
+});
+
 it('marks configured spam submissions before verification or moderation', function (): void {
     Notification::fake();
     config()->set('capell-comments.spam.max_links', 1);
@@ -179,6 +205,31 @@ it('marks configured spam submissions before verification or moderation', functi
         ->and($comment->spam_reasons)->toContain('too_many_links', 'blocked_term:casino')
         ->and($comment->link_count)->toBe(2)
         ->and($comment->marked_spam_at)->not->toBeNull()
+        ->and(CommentToken::query()->where('comment_id', $comment->getKey())->exists())->toBeFalse();
+
+    Notification::assertNothingSent();
+});
+
+it('passes create-flow context to configured external spam providers', function (): void {
+    Notification::fake();
+    config()->set('capell-comments.spam.providers', [
+        FlaggingCommentSpamProvider::class,
+    ]);
+
+    $page = $this->createCommentsPage();
+
+    $comment = CreateCommentAction::run(new CreateCommentData(
+        commentable: $page,
+        body: 'External provider should flag this.',
+        authorName: 'Checked Author',
+        authorEmail: 'checked@example.com',
+    ));
+
+    expect($comment->status)->toBe(CommentStatus::Spam)
+        ->and($comment->spam_reasons)->toContain(
+            'external_fixture:site:' . (string) $page->site_id,
+            'external_fixture:type:page',
+        )
         ->and(CommentToken::query()->where('comment_id', $comment->getKey())->exists())->toBeFalse();
 
     Notification::assertNothingSent();

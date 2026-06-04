@@ -7,6 +7,7 @@ keeping moderation, verification, and author records in the admin workflow.
 
 - [Overview](overview.md)
 - [Privacy and retention](privacy-and-retention.md)
+- [Spam providers](spam-providers.md)
 - [Package README](../README.md)
 - [Package documentation standard](../../../docs/package-documentation-standard.md)
 
@@ -18,6 +19,7 @@ keeping moderation, verification, and author records in the admin workflow.
 | Register commentable content | `src/Support/CommentableRegistry.php`, `src/Actions/RegisterDefaultCommentablesAction.php`        |
 | Render a public thread       | `src/Livewire/CommentThreadComponent.php`, `src/Actions/ResolvePublicCommentableThreadAction.php` |
 | Create and verify comments   | `src/Actions/CreateCommentAction.php`, `src/Actions/VerifyCommentAuthorEmailAction.php`           |
+| Extend spam scoring          | `src/Contracts/CommentSpamProvider.php`, `src/Support/Spam/ConfiguredCommentSpamProvider.php`     |
 | Moderate comments            | `src/Filament/Pages/CommentModerationInbox.php`, `src/Actions/TransitionCommentStatusAction.php`  |
 | Prune privacy data           | `src/Actions/ApplyCommentPrivacyRetentionAction.php`, `src/Console/Commands/PruneCommentPrivacyDataCommand.php` |
 | Tune settings                | `config/capell-comments.php`, `src/Settings/CommentSettings.php`                                  |

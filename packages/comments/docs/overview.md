@@ -19,6 +19,8 @@ editors keep approval and author-management work inside Capell Admin.
 - Public form bot-trap controls for honeypot-filled and too-fast submissions.
 - Automatic local spam scoring for configured link-count and blocked-term
   rules, including scheme, `www.`, and bare-domain link detection.
+- Pluggable external spam provider support through `CommentSpamProvider`,
+  layered with the local provider by default.
 - Comment body sanitization that strips tags plus invisible/control characters
   before storage.
 - Settings-aware reply pagination with per-parent "load more replies" support.
@@ -56,8 +58,11 @@ not reveal internal moderation data.
 - `CommentThreadComponent` memoizes the decrypted commentable model for the
   current Livewire request only.
 - `VerifyCommentAuthorEmailController` handles author verification links.
-- `ScoreCommentSpamAction` applies local spam heuristics before comment
-  verification or public visibility decisions.
+- `ScoreCommentSpamAction` delegates to configured `CommentSpamProvider`
+  implementations before comment verification or public visibility decisions.
+- `LocalCommentSpamProvider` preserves the built-in link-count and blocked-term
+  checks, while `ConfiguredCommentSpamProvider` combines configured provider
+  scores.
 - `CommentBodySanitizer` normalizes public body text and reports link counts
   for spam scoring.
 - `NotifyModeratorsOfNewComment` listens for `CommentCreated` and notifies
@@ -109,9 +114,9 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
 ```
 
 The current focused tests cover settings registration, settings resolution,
-manifest requirements, health diagnostics, email verification, spam scoring,
-moderator notification wiring, public thread rendering, component submission,
-sanitization hardening, auto-inject shell safety, reply pagination, package
-architecture boundaries, commentable memoization, locale-pinned public
-timestamps, performance budgets, privacy retention, throttling, and bot-trap
-rejection.
+manifest requirements, health diagnostics, email verification, local and
+external-provider spam scoring, moderator notification wiring, public thread
+rendering, component submission, sanitization hardening, auto-inject shell
+safety, reply pagination, package architecture boundaries, commentable
+memoization, locale-pinned public timestamps, performance budgets, privacy
+retention, throttling, and bot-trap rejection.

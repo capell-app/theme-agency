@@ -9,6 +9,7 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Comments\Actions\RegisterDefaultCommentablesAction;
 use Capell\Comments\Console\Commands\InstallCommentsCommand;
 use Capell\Comments\Console\Commands\PruneCommentPrivacyDataCommand;
+use Capell\Comments\Contracts\CommentSpamProvider;
 use Capell\Comments\Events\CommentCreated;
 use Capell\Comments\Filament\Settings\CommentSettingsSchema;
 use Capell\Comments\Listeners\NotifyModeratorsOfNewComment;
@@ -20,6 +21,7 @@ use Capell\Comments\Policies\CommentAuthorPolicy;
 use Capell\Comments\Policies\CommentPolicy;
 use Capell\Comments\Settings\CommentSettings;
 use Capell\Comments\Support\CommentableRegistry;
+use Capell\Comments\Support\Spam\ConfiguredCommentSpamProvider;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
@@ -56,6 +58,7 @@ class CommentsServiceProvider extends AbstractPackageServiceProvider
     public function registeringPackage(): void
     {
         $this->app->singleton(CommentableRegistry::class);
+        $this->app->bind(CommentSpamProvider::class, ConfiguredCommentSpamProvider::class);
         $this->app->register(AdminServiceProvider::class);
         $this->app->register(FrontendServiceProvider::class);
 
