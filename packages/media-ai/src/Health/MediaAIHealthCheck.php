@@ -148,10 +148,6 @@ final class MediaAIHealthCheck implements ChecksExtensionHealth
 
     private function canBuildStructuredRequest(): bool
     {
-        if (ImageDoctorRequest::OPERATIONS === []) {
-            return false;
-        }
-
         try {
             new ImageDoctorRequest(
                 operation: ImageDoctorRequest::OPERATIONS[0],

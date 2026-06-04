@@ -13,9 +13,9 @@ use Capell\SeoSuite\Filament\Actions\AiImageGeneratorAction;
 use Capell\SeoSuite\Models\AiCreatorContext;
 use Capell\SeoSuite\Models\AiCreatorSession;
 use Filament\Actions\Action;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\ViewField;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Utilities\Get;
@@ -128,7 +128,7 @@ it('builds ai content brief result placeholders and list markup', function (): v
 
     expect(AiContentBriefAction::getDefaultName())->toBe('ai_content_brief')
         ->and($schema)->toHaveCount(8)
-        ->and($schema[0])->toBeInstanceOf(Placeholder::class)
+        ->and($schema[0])->toBeInstanceOf(TextEntry::class)
         ->and($schema[0]->getName())->toBe('content_angle')
         ->and($schema[1]->getName())->toBe('missing_topics');
 

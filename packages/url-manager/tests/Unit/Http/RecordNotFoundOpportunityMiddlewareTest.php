@@ -21,7 +21,7 @@ it('records frontend 404 responses as not-found opportunities', function (): voi
 
     $response = (new RecordNotFoundOpportunityMiddleware)->handle(
         $request,
-        static fn (): Response => new Response('', 404),
+        static fn (): Response => new Response('', Response::HTTP_NOT_FOUND),
     );
 
     $opportunity = NotFoundOpportunity::query()->first();
@@ -41,7 +41,7 @@ it('does not record ignored 404 paths', function (): void {
 
     (new RecordNotFoundOpportunityMiddleware)->handle(
         Request::create('/admin/missing'),
-        static fn (): Response => new Response('', 404),
+        static fn (): Response => new Response('', Response::HTTP_NOT_FOUND),
     );
 
     expect(NotFoundOpportunity::query()->count())->toBe(0);

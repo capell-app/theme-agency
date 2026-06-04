@@ -15,8 +15,8 @@ final class FlaggingCommentSpamProvider implements CommentSpamProvider
         return new CommentSpamScoreData(
             linkCount: $check->linkCount,
             reasons: [
-                'external_fixture:site:' . (string) $check->siteId,
-                'external_fixture:type:' . (string) $check->commentableType,
+                'external_fixture:site:' . $check->siteId,
+                'external_fixture:type:' . $check->commentableType,
             ],
         );
     }

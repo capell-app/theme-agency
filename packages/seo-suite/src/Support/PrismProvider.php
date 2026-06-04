@@ -80,7 +80,7 @@ class PrismProvider implements ServiceContract
                     ->withPrompt($userMessage)
                     ->withMaxTokens($maxTokens)
                     ->usingTemperature($temperature)
-                    ->generate();
+                    ->asText();
 
                 $duration = microtime(true) - $startTime;
                 $this->resetCircuitBreaker();

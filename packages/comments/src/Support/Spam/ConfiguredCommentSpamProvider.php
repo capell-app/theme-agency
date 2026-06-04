@@ -49,7 +49,15 @@ final class ConfiguredCommentSpamProvider implements CommentSpamProvider
         $providerClasses = [];
 
         foreach ($providers as $provider) {
-            if (! is_string($provider) || $provider === self::class || ! is_subclass_of($provider, CommentSpamProvider::class)) {
+            if (! is_string($provider)) {
+                continue;
+            }
+
+            if ($provider === self::class) {
+                continue;
+            }
+
+            if (! is_subclass_of($provider, CommentSpamProvider::class)) {
                 continue;
             }
 

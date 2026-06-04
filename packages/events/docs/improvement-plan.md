@@ -74,7 +74,7 @@ Declared `capabilities[]`: `events`, `events-admin`, `events-console`, `events-f
 | ----------------------------------------------------------------------------------------------- | ------ | ------ | ------ | -------------- |
 | Wire `UpdateRegistrationStatusAction` into `EventRegistrationResource` (confirm/cancel actions) | Done   | M      | High   | §4, §3         |
 | Auto-trigger `PromoteWaitlistAction` on cancellation (listener) + scheduled reconcile           | Now    | M      | High   | §4, §3         |
-| Add package-specific `doctor` command wiring for Events diagnostics                              | Now    | S      | Med    | §4             |
+| Add package-specific `doctor` command wiring for Events diagnostics                             | Now    | S      | Med    | §4             |
 | Move RSVP mail out of locked transaction; queue `EventRegistrationNotification`                 | Now    | M      | High   | §2.1, §2.2, §4 |
 | Capture + commit the 7 `screenshots.json` targets; sync manifest `screenshots`                  | Now    | S      | Med    | §1, §5         |
 | Fix composer `description`; adopt improved summary/description                                  | Now    | S      | Med    | §5             |

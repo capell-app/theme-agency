@@ -7,9 +7,9 @@ namespace Capell\LoginAudit\Filament\Settings;
 use Capell\Admin\Filament\Contracts\HasSchema;
 use Capell\Admin\Filament\Support\HelperText;
 use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 
@@ -53,9 +53,9 @@ final class LoginAuditSettingsSchema implements HasSchema
                             ->label(__('capell-login-audit::settings.enable_user_resource_bridge')),
                         'capell-login-audit::settings.enable_user_resource_bridge_helper',
                     ),
-                    Placeholder::make('last_purged_at')
+                    TextEntry::make('last_purged_at')
                         ->label(__('capell-login-audit::settings.last_purged_at'))
-                        ->content(fn (?string $state): string => $state ?: (string) __('capell-login-audit::settings.never_purged')),
+                        ->state(fn (?string $state): string => $state ?: (string) __('capell-login-audit::settings.never_purged')),
                 ]),
         ];
     }

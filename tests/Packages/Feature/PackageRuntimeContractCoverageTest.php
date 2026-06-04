@@ -110,8 +110,8 @@ it('builds package table configurators used by Filament list and relation manage
 
         expect($table->getColumns())->toBeArray()
             ->and($table->getFilters())->toBeArray()
-            ->and($table->getActions())->toBeArray()
-            ->and($table->getBulkActions())->toBeArray();
+            ->and($table->getRecordActions())->toBeArray()
+            ->and($table->getToolbarActions())->toBeArray();
     }
 
     expect($checked)->toBeGreaterThan(20);

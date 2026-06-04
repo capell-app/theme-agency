@@ -39,7 +39,7 @@ class AiCreatorAction extends Action
             ->visible(fn (): bool => resolve(AiCreatorPolicy::class)->isEnabledFor(
                 $this->resolveSiteFromRecord(),
             ))
-            ->form(fn (): array => $this->buildWizardForm())
+            ->schema(fn (): array => $this->buildWizardForm())
             ->action(function (array $data): void {
                 $this->runCreator($data);
             });

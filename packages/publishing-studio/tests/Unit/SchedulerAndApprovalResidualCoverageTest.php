@@ -25,6 +25,7 @@ use Carbon\CarbonImmutable;
 use Filament\Actions\Action;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
@@ -32,6 +33,9 @@ uses(CreatesAdminUser::class);
 
 it('configures the scheduled publishing table columns filters actions and pagination', function (): void {
     $table = ScheduledPublishingTable::configure(publishingStudioTableForCoverage());
+    $query = $table->getQuery();
+
+    throw_unless($query instanceof Builder, RuntimeException::class, 'Expected scheduled publishing table to expose an Eloquent query.');
 
     expect(array_keys($table->getColumns()))->toBe([
         'title',
@@ -49,7 +53,7 @@ it('configures the scheduled publishing table columns filters actions and pagina
             'state',
             'quick',
         ])
-        ->and(collect($table->getActions())
+        ->and(collect($table->getRecordActions())
             ->filter(fn (mixed $action): bool => method_exists($action, 'getName'))
             ->map(fn (object $action): string => $action->getName())
             ->all())->toBe([
@@ -57,7 +61,7 @@ it('configures the scheduled publishing table columns filters actions and pagina
                 'retry',
                 'cancel',
             ])
-        ->and($table->getDefaultSortColumn())->toBe('scheduled_for')
+        ->and($table->getDefaultSort($query, 'asc'))->toBe('scheduled_for')
         ->and($table->getDefaultSortDirection())->toBe('asc')
         ->and($table->getPaginationPageOptions())->toBe([10, 25, 50]);
 });
@@ -474,7 +478,7 @@ function publishingStudioTableForCoverage(): Table
 
 function publishingStudioTableActionForCoverage(Table $table, string $name): Action
 {
-    $action = collect($table->getActions())
+    $action = collect($table->getRecordActions())
         ->first(fn (mixed $candidate): bool => $candidate instanceof Action && $candidate->getName() === $name);
 
     expect($action)->toBeInstanceOf(Action::class);

@@ -244,7 +244,7 @@ it('covers page asset table query branches and selected record submission', func
     expect($query)->toBeInstanceOf(Builder::class)
         ->and($query->toSql())->toContain('not')
         ->and($component->getTableRecordKey($uuidModel))->toBe('8fd9d7f7-e9a3-44b5-a9d8-88e5fb308c92')
-        ->and($component->exposeShouldPersistTableFiltersInSession())->toBeTrue();
+        ->and($component->exposePersistsTableFiltersInSession())->toBeTrue();
 
     $component->isDisabled = true;
     $component->selectRecords();

@@ -27,7 +27,7 @@ class ListSubscribers extends ListRecords
             CreateAction::make(),
             Action::make('export_subscribers')
                 ->label(__('capell-newsletter::actions.export_subscribers'))
-                ->form([
+                ->schema([
                     SiteSelect::make('site_id')->required(),
                 ])
                 ->action(function (array $data): StreamedResponse {

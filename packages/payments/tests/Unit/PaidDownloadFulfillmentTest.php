@@ -13,7 +13,7 @@ use Capell\Payments\Models\CheckoutSession;
 use Capell\Payments\Models\PaymentDownloadEntitlement;
 use Capell\Payments\Support\Fulfillment\PaidDownloadFulfillmentHandler;
 use Capell\Payments\Tests\TestCase;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 
 uses(TestCase::class);
@@ -57,7 +57,7 @@ it('grants paid download entitlements from completed checkout sessions', functio
 });
 
 it('keeps paid download fulfilment idempotent for the same checkout session', function (): void {
-    Carbon::setTestNow(Carbon::parse('2026-06-04 12:00:00'));
+    Date::setTestNow(Date::parse('2026-06-04 12:00:00'));
 
     $checkoutSession = paidDownloadCheckoutSession([
         'provider_session_id' => 'cs_paid_download_repeat',
@@ -74,7 +74,7 @@ it('keeps paid download fulfilment idempotent for the same checkout session', fu
         $expiresAtTimestamp = $entitlement->expires_at?->getTimestamp();
         $fulfilledAtTimestamp = $entitlement->fulfilled_at?->getTimestamp();
 
-        Carbon::setTestNow(Carbon::parse('2026-06-05 12:00:00'));
+        Date::setTestNow(Date::parse('2026-06-05 12:00:00'));
 
         FulfillCompletedCheckoutSessionAction::run($checkoutSession);
 
@@ -82,12 +82,12 @@ it('keeps paid download fulfilment idempotent for the same checkout session', fu
             ->and($entitlement->refresh()->expires_at?->getTimestamp())->toBe($expiresAtTimestamp)
             ->and($entitlement->fulfilled_at?->getTimestamp())->toBe($fulfilledAtTimestamp);
     } finally {
-        Carbon::setTestNow();
+        Date::setTestNow();
     }
 });
 
 it('updates paid download descriptors on replay without extending access', function (): void {
-    Carbon::setTestNow(Carbon::parse('2026-06-04 12:00:00'));
+    Date::setTestNow(Date::parse('2026-06-04 12:00:00'));
 
     $checkoutSession = paidDownloadCheckoutSession([
         'provider_session_id' => 'cs_paid_download_descriptor_replay',
@@ -104,7 +104,7 @@ it('updates paid download descriptors on replay without extending access', funct
         $entitlement = PaymentDownloadEntitlement::query()->firstOrFail();
         $expiresAtTimestamp = $entitlement->expires_at?->getTimestamp();
 
-        Carbon::setTestNow(Carbon::parse('2026-06-05 12:00:00'));
+        Date::setTestNow(Date::parse('2026-06-05 12:00:00'));
 
         $checkoutSession->forceFill([
             'metadata' => [
@@ -121,7 +121,7 @@ it('updates paid download descriptors on replay without extending access', funct
             ->and($entitlement->path)->toBe('paid/updated-guide.pdf')
             ->and($entitlement->expires_at?->getTimestamp())->toBe($expiresAtTimestamp);
     } finally {
-        Carbon::setTestNow();
+        Date::setTestNow();
     }
 });
 

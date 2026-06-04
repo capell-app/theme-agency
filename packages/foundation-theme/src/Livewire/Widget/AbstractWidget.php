@@ -15,7 +15,6 @@ use Capell\FoundationTheme\Providers\FoundationThemeServiceProvider;
 use Capell\FoundationTheme\Support\View\FoundationThemeViewName;
 use Capell\Frontend\Actions\Performance\RecordExtensionRenderContributionAction;
 use Capell\Frontend\Facades\Frontend;
-use Capell\LayoutBuilder\Enums\CapellLayoutCacheKeyEnum;
 use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Support\LayoutWidgetData;
 use Capell\LayoutBuilder\Support\Livewire\OpaqueWidgetReference;
@@ -35,6 +34,8 @@ use Throwable;
  */
 abstract class AbstractWidget extends Component
 {
+    private const string WIDGET_BY_KEY_CACHE_PREFIX = 'capell.layout-builder.widget-by-key.';
+
     public string $widgetReference = '';
 
     protected string $containerKey = '';
@@ -91,7 +92,7 @@ abstract class AbstractWidget extends Component
 
     public static function getWidgetByKey(string $widgetKey): ?Widget
     {
-        $cacheKey = CapellLayoutCacheKeyEnum::WidgetByKey->value . $widgetKey;
+        $cacheKey = self::WIDGET_BY_KEY_CACHE_PREFIX . $widgetKey;
 
         return self::getCached(
             $cacheKey,

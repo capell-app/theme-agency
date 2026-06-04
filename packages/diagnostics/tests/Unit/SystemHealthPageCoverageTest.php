@@ -46,7 +46,7 @@ it('exposes diagnostics health compatibility and content health data boundaries'
         filterUrl: '/admin/pages?filter=missing-meta',
     );
     $data = new ContentHealthData(ContentHealthIssueData::collect([$issue], DataCollection::class));
-    $firstIssue = diagnosticsContentHealthIssue($data->issues->first());
+    $firstIssue = diagnosticsContentHealthIssue(collect($data->issues->items())->first());
 
     expect(DiagnosticsHealthCheck::compatibleCapellApiVersion())->toBe('^4.0')
         ->and($data->issues)->toHaveCount(1)

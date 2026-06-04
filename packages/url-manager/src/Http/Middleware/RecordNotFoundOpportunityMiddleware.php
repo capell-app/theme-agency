@@ -21,7 +21,7 @@ final class RecordNotFoundOpportunityMiddleware
     {
         $response = $next($request);
 
-        if ($response->getStatusCode() !== 404 || ! (bool) config('capell-url-manager.not_found.capture_middleware_enabled', true)) {
+        if ($response->getStatusCode() !== Response::HTTP_NOT_FOUND || ! (bool) config('capell-url-manager.not_found.capture_middleware_enabled', true)) {
             return $response;
         }
 

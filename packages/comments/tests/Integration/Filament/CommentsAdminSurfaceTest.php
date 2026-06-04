@@ -37,9 +37,9 @@ it('builds the comments moderation resources with their table controls', functio
         ->and(CommentAuthorResource::getPages())->toHaveKey('index')
         ->and(array_keys($commentsTable->getColumns()))->toContain('commentable', 'author.name', 'body', 'status')
         ->and(array_keys($commentsTable->getFilters()))->toContain('status')
-        ->and(commentAdminActionNames($commentsTable->getActions()))->toContain('context', 'approve', 'reject', 'spam', 'archive')
+        ->and(commentAdminActionNames($commentsTable->getRecordActions()))->toContain('context', 'approve', 'reject', 'spam', 'archive')
         ->and(array_keys($authorsTable->getColumns()))->toContain('name', 'email', 'comments_count', 'email_verified_at', 'trusted_at', 'blocked_at')
-        ->and(commentAdminActionNames($authorsTable->getActions()))->toContain('trust', 'block', 'unblock', 'verify', 'resend_verification');
+        ->and(commentAdminActionNames($authorsTable->getRecordActions()))->toContain('trust', 'block', 'unblock', 'verify', 'resend_verification');
 });
 
 it('denies comment moderation resources to users without global or site scope', function (): void {
@@ -75,7 +75,7 @@ it('runs the approve moderation table action and records the moderation event', 
         'email_verified_at' => now(),
     ]);
 
-    $action = collect(CommentsTable::configure(commentAdminTableForCoverage())->getActions())
+    $action = collect(CommentsTable::configure(commentAdminTableForCoverage())->getRecordActions())
         ->first(fn (Action|ActionGroup $action): bool => $action instanceof Action && $action->getName() === 'approve');
 
     expect($action)->toBeInstanceOf(Action::class);
@@ -105,7 +105,7 @@ it('author moderation actions enforce update authorization inside callbacks', fu
 
     $site = $this->createCommentsSite();
     $author = CommentAuthor::factory()->unverified()->create(['site_id' => $site->getKey()]);
-    $actions = collect(CommentAuthorResource::table(commentAdminTableForCoverage())->getActions());
+    $actions = collect(CommentAuthorResource::table(commentAdminTableForCoverage())->getRecordActions());
     $trustAction = $actions->first(fn (Action|ActionGroup $action): bool => $action instanceof Action && $action->getName() === 'trust');
     $resendAction = $actions->first(fn (Action|ActionGroup $action): bool => $action instanceof Action && $action->getName() === 'resend_verification');
 
@@ -138,7 +138,7 @@ it('author moderation actions update records when the actor can update the autho
 
     $site = $this->createCommentsSite();
     $author = CommentAuthor::factory()->unverified()->create(['site_id' => $site->getKey()]);
-    $action = collect(CommentAuthorResource::table(commentAdminTableForCoverage())->getActions())
+    $action = collect(CommentAuthorResource::table(commentAdminTableForCoverage())->getRecordActions())
         ->first(fn (Action|ActionGroup $tableAction): bool => $tableAction instanceof Action && $tableAction->getName() === 'trust');
 
     expect($action)->toBeInstanceOf(Action::class);

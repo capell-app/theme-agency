@@ -29,7 +29,7 @@ class AiImageGeneratorAction extends Action
             ->icon('heroicon-o-sparkles')
             ->modalHeading('AI Image Generator')
             ->modalSubmitActionLabel('Accept')
-            ->form(function (Get $get) use ($contextFieldKeys): array {
+            ->schema(function (Get $get) use ($contextFieldKeys): array {
                 $contextParts = [];
                 foreach ($contextFieldKeys as $key => $label) {
                     $value = $get($key);

@@ -52,7 +52,7 @@ it('exposes appointment request workflow actions and audit log relation', functi
     $table = AppointmentRequestResource::table(bookingsAdminTableForCoverage());
     $page = new EditAppointmentRequest;
 
-    expect(bookingsAdminActionNames($table->getActions()))->toContain('confirm', 'cancel')
+    expect(bookingsAdminActionNames($table->getRecordActions()))->toContain('confirm', 'cancel')
         ->and(bookingsAdminActionNames(bookingsAdminEditAppointmentHeaderActions($page)))->toBe(['confirm', 'cancel'])
         ->and(AppointmentRequestResource::getRelations())->toBe([AppointmentAuditLogsRelationManager::class])
         ->and(AppointmentAuditLogsRelationManager::getRelationshipName())->toBe('auditLogs');

@@ -82,7 +82,7 @@ final class ThemeLocalServicesHealthCheck implements ChecksExtensionHealth
             && $definition->package === LocalServicesThemeServiceProvider::$packageName
             && $definition->extends === 'default'
             && ($definition->assets['css'] ?? null) === 'vendor/capell/themes/local-services.css'
-            && count($definition->presets) > 0
+            && $definition->presets !== []
             && $missingSections === [];
 
         return new DoctorCheckResultData(

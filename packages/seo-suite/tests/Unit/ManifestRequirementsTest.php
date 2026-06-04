@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\Core\Contracts\Extensions\ExtensionContribution;
+use Capell\Core\Models\Page;
 use Capell\SeoSuite\Actions\BuildCrawlerPreviewReportAction;
 use Capell\SeoSuite\Actions\BuildMarketplaceStructuredDataFreshnessWarningsAction;
 use Capell\SeoSuite\Actions\BuildSchemaTemplateReportAction;
@@ -23,6 +24,11 @@ use Capell\SeoSuite\Manifest\NotFoundUrlsPageContribution;
 use Capell\SeoSuite\Manifest\SearchRankingsPageContribution;
 use Capell\SeoSuite\Manifest\SeoAuditPageContribution;
 use Capell\SeoSuite\Manifest\TranslationCoveragePageContribution;
+use Capell\SeoSuite\Models\AiDiscoveryCrawlerRule;
+use Capell\SeoSuite\Models\AiDiscoveryPageProfile;
+use Capell\SeoSuite\Models\AiDiscoverySiteProfile;
+use Capell\SeoSuite\Settings\AIOrchestratorSettings;
+use Capell\SeoSuite\Settings\SeoSuiteSettings;
 use Illuminate\Support\Facades\File;
 
 it('declares implemented diagnostics commands tables and capabilities', function (): void {
@@ -99,8 +105,8 @@ it('declares settings permissions supported integrations and cache invalidation 
         'capell-app/url-manager',
     )
         ->and($manifest['settings'] ?? [])->toContain(
-            'Capell\\SeoSuite\\Settings\\AIOrchestratorSettings',
-            'Capell\\SeoSuite\\Settings\\SeoSuiteSettings',
+            AIOrchestratorSettings::class,
+            SeoSuiteSettings::class,
         )
         ->and($manifest['permissions'] ?? [])->toContain(
             'View:SeoAuditPage',
@@ -111,16 +117,16 @@ it('declares settings permissions supported integrations and cache invalidation 
         )
         ->and($manifest['performance']['cacheSafety']['cacheable'] ?? false)->toBeTrue()
         ->and($manifest['performance']['cacheSafety']['invalidationSources'] ?? [])->toContain([
-            'model' => 'Capell\\Core\\Models\\Page',
+            'model' => Page::class,
             'events' => ['saved', 'deleted'],
         ], [
-            'model' => 'Capell\\SeoSuite\\Models\\AiDiscoverySiteProfile',
+            'model' => AiDiscoverySiteProfile::class,
             'events' => ['saved', 'deleted'],
         ], [
-            'model' => 'Capell\\SeoSuite\\Models\\AiDiscoveryPageProfile',
+            'model' => AiDiscoveryPageProfile::class,
             'events' => ['saved', 'deleted'],
         ], [
-            'model' => 'Capell\\SeoSuite\\Models\\AiDiscoveryCrawlerRule',
+            'model' => AiDiscoveryCrawlerRule::class,
             'events' => ['saved', 'deleted'],
         ]);
 });

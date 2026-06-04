@@ -73,7 +73,7 @@ class CommentsTable
             ->color($color)
             ->requiresConfirmation()
             ->visible(fn (Comment $record): bool => $record->status !== $status && self::canTransition($record, $status))
-            ->form([
+            ->schema([
                 Textarea::make('note')
                     ->label(__('capell-comments::table.moderation_note'))
                     ->rows(3),

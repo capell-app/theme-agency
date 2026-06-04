@@ -43,12 +43,12 @@ final class LoginAuditsWidget extends BaseWidget implements CapellWidgetContract
     public function table(Table $table): Table
     {
         return $table
-            ->query(fn (): Builder => $this->getTableQuery())
+            ->query(fn (): Builder => $this->loginAuditTableQuery())
             ->paginationPageOptions([5])
             ->queryStringIdentifier('login-audits')
             ->searchable(false)
             ->heading(__('capell-admin::heading.login_audits'))
-            ->columns($this->getTableColumns())
+            ->columns($this->tableColumns())
             ->defaultSort('login_at', 'desc')
             ->recordClasses(
                 fn (LoginAudit $record): ?string => $record->authenticatable === null ? 'table-row-warning' : null,
@@ -65,12 +65,15 @@ final class LoginAuditsWidget extends BaseWidget implements CapellWidgetContract
     /**
      * @return Builder<Model>
      */
-    protected function getTableQuery(): Builder
+    protected function loginAuditTableQuery(): Builder
     {
         return BuildLoginAuditsQueryAction::run();
     }
 
-    protected function getTableColumns(): array
+    /**
+     * @return array<int, mixed>
+     */
+    protected function tableColumns(): array
     {
         return [
             Split::make([

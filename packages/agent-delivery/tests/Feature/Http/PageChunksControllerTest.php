@@ -180,7 +180,7 @@ function createChunksTestPage(string $url, array $translation = [], ?string $dom
  */
 function chunksTestUrl(string $routeName, array $parameters = [], string $host = 'example.com'): string
 {
-    URL::forceRootUrl('http://' . $host);
+    URL::useOrigin('http://' . $host);
 
     return route($routeName, $parameters);
 }

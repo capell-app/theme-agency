@@ -33,6 +33,7 @@ use Capell\UrlManager\Models\RedirectRule;
 use Capell\UrlManager\Providers\UrlManagerServiceProvider;
 use Capell\UrlManager\Support\Redirects\UrlManagerRedirectResolver;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -171,6 +172,9 @@ it('guards url manager pages behind view or manage permissions', function (): vo
 
 it('configures the redirect rules table with import export and lifecycle actions', function (): void {
     $table = RedirectRulesPage::table(Table::make(resolve(RedirectRulesPage::class)));
+    $query = $table->getQuery();
+
+    throw_unless($query instanceof Builder, RuntimeException::class, 'Expected redirect rules table to expose an Eloquent query.');
 
     expect(array_keys($table->getColumns()))
         ->toBe([
@@ -197,7 +201,7 @@ it('configures the redirect rules table with import export and lifecycle actions
         ])
         ->and(urlManagerTableActionNames($table->getToolbarActions()))
         ->toBe(['activateRedirectRules', 'disableRedirectRules', 'deleteRedirectRules'])
-        ->and($table->getDefaultSortColumn())
+        ->and($table->getDefaultSort($query, 'desc'))
         ->toBe('hit_count')
         ->and($table->getDefaultSortDirection())
         ->toBe('desc');
@@ -244,6 +248,9 @@ it('normalizes redirect rule form state into typed data for table actions', func
 
 it('configures the not found opportunities table with conversion and triage actions', function (): void {
     $table = NotFoundOpportunitiesPage::table(Table::make(resolve(NotFoundOpportunitiesPage::class)));
+    $query = $table->getQuery();
+
+    throw_unless($query instanceof Builder, RuntimeException::class, 'Expected not found opportunities table to expose an Eloquent query.');
 
     expect(array_keys($table->getColumns()))
         ->toBe([
@@ -259,7 +266,7 @@ it('configures the not found opportunities table with conversion and triage acti
         ->toBe(['convert_to_redirect', 'ignoreOpportunity', 'reopenOpportunity'])
         ->and(urlManagerTableActionNames($table->getToolbarActions()))
         ->toBe(['ignoreOpportunities', 'reopenOpportunities'])
-        ->and($table->getDefaultSortColumn())
+        ->and($table->getDefaultSort($query, 'desc'))
         ->toBe('hit_count')
         ->and($table->getDefaultSortDirection())
         ->toBe('desc');

@@ -57,7 +57,7 @@ final class EditAccessArea extends EditRecord
                 )),
             Action::make('approveNext')
                 ->label(__('capell-access-gate::filament.actions.approve_next'))
-                ->form([
+                ->schema([
                     TextInput::make('count')
                         ->label(__('capell-access-gate::filament.fields.count'))
                         ->numeric()
@@ -72,7 +72,7 @@ final class EditAccessArea extends EditRecord
                 )),
             Action::make('updateApprovalLimit')
                 ->label(__('capell-access-gate::filament.actions.update_approval_limit'))
-                ->form([
+                ->schema([
                     TextInput::make('approval_limit')
                         ->label(__('capell-access-gate::filament.fields.approval_limit'))
                         ->numeric()

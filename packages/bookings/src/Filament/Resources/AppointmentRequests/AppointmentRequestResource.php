@@ -139,7 +139,7 @@ final class AppointmentRequestResource extends Resource
             ->color('danger')
             ->authorize('update')
             ->visible(fn (AppointmentRequest $record): bool => $record->status->canCancel())
-            ->form([
+            ->schema([
                 Textarea::make('reason')
                     ->label(__('capell-bookings::admin.fields.reason'))
                     ->rows(3)

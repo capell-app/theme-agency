@@ -45,7 +45,7 @@ it('does not mark encrypted contact columns as searchable', function (): void {
 });
 
 it('exposes operator privacy actions for contact records', function (): void {
-    $actions = ContactResource::table(contactsResourceTestTable())->getActions();
+    $actions = ContactResource::table(contactsResourceTestTable())->getRecordActions();
     $user = new User;
     $contact = new Contact;
 

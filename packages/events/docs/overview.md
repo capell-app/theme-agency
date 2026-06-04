@@ -29,14 +29,14 @@ Optional integrations are declared for address, form builder, SEO Suite, and tag
 
 ## Admin Surfaces
 
-| Surface                           | Purpose                                     |
-| --------------------------------- | ------------------------------------------- |
-| `EventResource` index/create/edit | Manage event records and recurrence fields. |
-| `EventVenueResource`              | Manage venues.                              |
-| `EventOccurrenceResource`         | Review generated occurrences.               |
+| Surface                           | Purpose                                          |
+| --------------------------------- | ------------------------------------------------ |
+| `EventResource` index/create/edit | Manage event records and recurrence fields.      |
+| `EventVenueResource`              | Manage venues.                                   |
+| `EventOccurrenceResource`         | Review generated occurrences.                    |
 | `EventRegistrationResource`       | Review, confirm, and cancel event registrations. |
-| `EventCalendarPage`               | Calendar view under content navigation.     |
-| `EventCalendarWidget`             | Dashboard/admin calendar widget.            |
+| `EventCalendarPage`               | Calendar view under content navigation.          |
+| `EventCalendarWidget`             | Dashboard/admin calendar widget.                 |
 
 ## Frontend Surfaces
 

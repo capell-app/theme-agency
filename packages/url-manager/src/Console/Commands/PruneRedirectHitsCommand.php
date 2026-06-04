@@ -6,6 +6,7 @@ namespace Capell\UrlManager\Console\Commands;
 
 use Capell\UrlManager\Actions\PruneRedirectHitsAction;
 use Illuminate\Console\Command;
+use Override;
 
 final class PruneRedirectHitsCommand extends Command
 {
@@ -13,6 +14,7 @@ final class PruneRedirectHitsCommand extends Command
 
     protected $description = 'Prune old URL Manager redirect-hit rows.';
 
+    #[Override]
     public function getDescription(): string
     {
         return (string) __('capell-url-manager::action.prune_redirect_hits_description');

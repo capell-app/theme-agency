@@ -10,19 +10,13 @@ it('declares the required first-party theme manifest boundaries', function (): v
     $database = $manifest['database'] ?? null;
     $providers = $manifest['providers'] ?? null;
 
-    if (! is_array($database)) {
-        throw new RuntimeException('Theme Education database manifest data must be an array.');
-    }
+    throw_unless(is_array($database), RuntimeException::class, 'Theme Education database manifest data must be an array.');
 
-    if (! is_array($providers)) {
-        throw new RuntimeException('Theme Education providers manifest data must be an array.');
-    }
+    throw_unless(is_array($providers), RuntimeException::class, 'Theme Education providers manifest data must be an array.');
 
     $runtimeProviders = $providers['runtime'] ?? null;
 
-    if (! is_array($runtimeProviders)) {
-        throw new RuntimeException('Theme Education runtime providers must be an array.');
-    }
+    throw_unless(is_array($runtimeProviders), RuntimeException::class, 'Theme Education runtime providers must be an array.');
 
     expect($manifest['themeKey'])->toBe('education')
         ->and($manifest['extends'])->toBe('capell-app/foundation-theme')
@@ -34,22 +28,16 @@ it('uses buyer-facing marketplace copy and committed real preview assets', funct
     $manifest = educationThemeManifest();
     $marketplace = $manifest['marketplace'] ?? null;
 
-    if (! is_array($marketplace)) {
-        throw new RuntimeException('Theme Education marketplace manifest data must be an array.');
-    }
+    throw_unless(is_array($marketplace), RuntimeException::class, 'Theme Education marketplace manifest data must be an array.');
 
     $screenshots = $marketplace['screenshots'] ?? null;
 
-    if (! is_array($screenshots)) {
-        throw new RuntimeException('Theme Education marketplace screenshots must be an array.');
-    }
+    throw_unless(is_array($screenshots), RuntimeException::class, 'Theme Education marketplace screenshots must be an array.');
 
     $screenshotPaths = [];
 
     foreach ($screenshots as $screenshot) {
-        if (! is_array($screenshot) || ! is_string($screenshot['path'] ?? null)) {
-            throw new RuntimeException('Theme Education marketplace screenshots must define string paths.');
-        }
+        throw_if(! is_array($screenshot) || ! is_string($screenshot['path'] ?? null), RuntimeException::class, 'Theme Education marketplace screenshots must define string paths.');
 
         $screenshotPaths[] = $screenshot['path'];
     }
@@ -78,9 +66,7 @@ function educationThemeManifest(): array
         flags: JSON_THROW_ON_ERROR,
     );
 
-    if (! is_array($manifest)) {
-        throw new RuntimeException('Theme Education manifest must decode to an array.');
-    }
+    throw_unless(is_array($manifest), RuntimeException::class, 'Theme Education manifest must decode to an array.');
 
     return $manifest;
 }

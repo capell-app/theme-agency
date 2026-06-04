@@ -113,7 +113,7 @@ final class HandleStripeWebhookAction
                 'payload' => $eventPayload,
                 'received_at' => CarbonImmutable::now(),
             ]);
-        } catch (QueryException $exception) {
+        } catch (QueryException $queryException) {
             $event = PaymentWebhookEvent::query()
                 ->where('provider', PaymentProvider::Stripe->value)
                 ->where('provider_event_id', $providerEventId)
@@ -123,7 +123,7 @@ final class HandleStripeWebhookAction
                 return $event;
             }
 
-            throw $exception;
+            throw $queryException;
         }
     }
 

@@ -82,7 +82,7 @@ final class ThemeNonprofitHealthCheck implements ChecksExtensionHealth
             && $definition->package === NonprofitThemeServiceProvider::$packageName
             && $definition->extends === 'default'
             && ($definition->assets['css'] ?? null) === 'vendor/capell/themes/nonprofit.css'
-            && count($definition->presets) > 0
+            && $definition->presets !== []
             && $missingSections === [];
 
         return new DoctorCheckResultData(

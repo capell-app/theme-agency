@@ -6,6 +6,7 @@ namespace Capell\FoundationTheme\Tests\Fixtures;
 
 use Capell\Core\Models\Page;
 use Capell\FoundationTheme\Livewire\Assets\Table\PageAssets;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
 final class FoundationThemeFinalPageAssetsHarness extends PageAssets
@@ -18,8 +19,8 @@ final class FoundationThemeFinalPageAssetsHarness extends PageAssets
         return $this->getTableQuery();
     }
 
-    public function exposeShouldPersistTableFiltersInSession(): bool
+    public function exposePersistsTableFiltersInSession(): bool
     {
-        return $this->shouldPersistTableFiltersInSession();
+        return $this->table(Table::make($this))->persistsFiltersInSession();
     }
 }

@@ -269,7 +269,7 @@ it('passes create-flow context to configured external spam providers', function 
 
     expect($comment->status)->toBe(CommentStatus::Spam)
         ->and($comment->spam_reasons)->toContain(
-            'external_fixture:site:' . (string) $page->site_id,
+            'external_fixture:site:' . $page->site_id,
             'external_fixture:type:page',
         )
         ->and(CommentToken::query()->where('comment_id', $comment->getKey())->exists())->toBeFalse();

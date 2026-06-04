@@ -138,9 +138,7 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
      */
     private function requestOptions(ResolvedWebhookEndpointData $endpoint): array
     {
-        if (! defined('CURLOPT_RESOLVE')) {
-            throw new InvalidArgumentException('Webhook destination dispatch requires cURL host pinning support.');
-        }
+        throw_unless(defined('CURLOPT_RESOLVE'), InvalidArgumentException::class, 'Webhook destination dispatch requires cURL host pinning support.');
 
         return [
             'curl' => [

@@ -36,8 +36,8 @@ final class RedirectRuleForm
 
                             try {
                                 PrepareRedirectRuleDataAction::make()->normalizeRegexSource((string) $value);
-                            } catch (InvalidArgumentException $exception) {
-                                $fail($exception->getMessage());
+                            } catch (InvalidArgumentException $invalidArgumentException) {
+                                $fail($invalidArgumentException->getMessage());
                             }
                         },
                     ])
@@ -50,8 +50,8 @@ final class RedirectRuleForm
                         fn (Get $get): Closure => function (string $attribute, mixed $value, Closure $fail) use ($get): void {
                             try {
                                 PrepareRedirectRuleDataAction::run(self::redirectRuleDataFromFormState($get));
-                            } catch (InvalidArgumentException $exception) {
-                                $fail($exception->getMessage());
+                            } catch (InvalidArgumentException $invalidArgumentException) {
+                                $fail($invalidArgumentException->getMessage());
                             }
                         },
                     ])

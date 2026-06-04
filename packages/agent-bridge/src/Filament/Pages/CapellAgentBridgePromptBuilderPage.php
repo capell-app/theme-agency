@@ -93,7 +93,7 @@ final class CapellAgentBridgePromptBuilderPage extends Page implements HasForms
 
     public function mount(): void
     {
-        $this->getForm('form')?->fill($this->data);
+        $this->getSchema('form')?->fill($this->data);
     }
 
     public function form(Schema $schema): Schema
@@ -146,7 +146,7 @@ final class CapellAgentBridgePromptBuilderPage extends Page implements HasForms
 
     public function buildPrompt(): void
     {
-        $state = $this->getForm('form')?->getState() ?? $this->data;
+        $state = $this->getSchema('form')?->getState() ?? $this->data;
         $this->preparedPrompt = BuildAgentBridgePromptAction::run(AgentBridgePromptData::fromArray($state));
 
         Notification::make('capell_agent-bridge_prompt_ready')

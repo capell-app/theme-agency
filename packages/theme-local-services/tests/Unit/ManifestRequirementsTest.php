@@ -12,23 +12,15 @@ it('declares the required first-party theme manifest boundaries', function (): v
     $providers = $manifest['providers'] ?? null;
     $marketplace = $manifest['marketplace'] ?? null;
 
-    if (! is_array($database)) {
-        throw new RuntimeException('Theme Local Services database manifest data must be an array.');
-    }
+    throw_unless(is_array($database), RuntimeException::class, 'Theme Local Services database manifest data must be an array.');
 
-    if (! is_array($providers)) {
-        throw new RuntimeException('Theme Local Services providers manifest data must be an array.');
-    }
+    throw_unless(is_array($providers), RuntimeException::class, 'Theme Local Services providers manifest data must be an array.');
 
-    if (! is_array($marketplace)) {
-        throw new RuntimeException('Theme Local Services marketplace manifest data must be an array.');
-    }
+    throw_unless(is_array($marketplace), RuntimeException::class, 'Theme Local Services marketplace manifest data must be an array.');
 
     $runtimeProviders = $providers['runtime'] ?? null;
 
-    if (! is_array($runtimeProviders)) {
-        throw new RuntimeException('Theme Local Services runtime providers must be an array.');
-    }
+    throw_unless(is_array($runtimeProviders), RuntimeException::class, 'Theme Local Services runtime providers must be an array.');
 
     expect($manifest['themeKey'])->toBe('local-services')
         ->and($manifest['extends'])->toBe('capell-app/foundation-theme')
@@ -43,20 +35,14 @@ it('declares only marketplace screenshots that exist in the package', function (
     $manifest = localServicesThemeManifest();
     $marketplace = $manifest['marketplace'] ?? null;
 
-    if (! is_array($marketplace)) {
-        throw new RuntimeException('Theme Local Services marketplace manifest data must be an array.');
-    }
+    throw_unless(is_array($marketplace), RuntimeException::class, 'Theme Local Services marketplace manifest data must be an array.');
 
     $screenshots = $marketplace['screenshots'] ?? null;
 
-    if (! is_array($screenshots)) {
-        throw new RuntimeException('Theme Local Services marketplace screenshots must be an array.');
-    }
+    throw_unless(is_array($screenshots), RuntimeException::class, 'Theme Local Services marketplace screenshots must be an array.');
 
     foreach ($screenshots as $screenshot) {
-        if (! is_array($screenshot) || ! is_string($screenshot['path'] ?? null)) {
-            throw new RuntimeException('Theme Local Services marketplace screenshots must define string paths.');
-        }
+        throw_if(! is_array($screenshot) || ! is_string($screenshot['path'] ?? null), RuntimeException::class, 'Theme Local Services marketplace screenshots must define string paths.');
 
         expect(File::exists(__DIR__ . '/../../' . $screenshot['path']))->toBeTrue();
     }
@@ -73,9 +59,7 @@ function localServicesThemeManifest(): array
         flags: JSON_THROW_ON_ERROR,
     );
 
-    if (! is_array($manifest)) {
-        throw new RuntimeException('Theme Local Services manifest must decode to an array.');
-    }
+    throw_unless(is_array($manifest), RuntimeException::class, 'Theme Local Services manifest must decode to an array.');
 
     return $manifest;
 }
@@ -91,9 +75,7 @@ function localServicesThemeComposer(): array
         flags: JSON_THROW_ON_ERROR,
     );
 
-    if (! is_array($composer)) {
-        throw new RuntimeException('Theme Local Services composer data must decode to an array.');
-    }
+    throw_unless(is_array($composer), RuntimeException::class, 'Theme Local Services composer data must decode to an array.');
 
     return $composer;
 }

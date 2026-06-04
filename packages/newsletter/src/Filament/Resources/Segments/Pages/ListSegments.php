@@ -27,7 +27,7 @@ class ListSegments extends ListRecords
             CreateAction::make(),
             Action::make('export_segment')
                 ->label(__('capell-newsletter::actions.export_subscribers'))
-                ->form([
+                ->schema([
                     Select::make('segment_id')
                         ->label(__('capell-newsletter::navigation.segments'))
                         ->options(fn (): array => SegmentResource::getEloquentQuery()->pluck('name', 'id')->all())

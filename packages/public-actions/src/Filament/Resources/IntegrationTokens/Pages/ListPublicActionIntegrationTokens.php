@@ -33,7 +33,7 @@ final class ListPublicActionIntegrationTokens extends ListRecords
             Action::make('createToken')
                 ->label(__('capell-public-actions::filament.actions.create_token'))
                 ->authorize('create')
-                ->form([
+                ->schema([
                     TextInput::make('name')
                         ->label(__('capell-public-actions::filament.fields.name'))
                         ->required(),

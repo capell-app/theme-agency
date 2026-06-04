@@ -75,17 +75,17 @@ The TTL comes from `shopify_commerce.search_cache_ttl_minutes`, with a fallback 
 
 ## Failure Boundaries
 
-| Boundary                    | Failure behavior                                                                                                                    |
-| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| Invalid shop domain         | Install route aborts with `422`; admin page adds a field error.                                                                     |
-| Missing app credentials     | Install route redirects back to `filament.admin.pages.shopify-commerce` with a configuration error.                                 |
-| Bad callback HMAC           | Callback logs `Shopify OAuth failed` and redirects back with an OAuth error.                                                        |
-| Expired or wrong-user state | Callback logs `Shopify OAuth failed` and shows the invalid-state message.                                                           |
-| GraphQL request failure     | `ExecuteShopifyAdminGraphqlAction` throws `ShopifyGraphqlException`.                                                                |
+| Boundary                    | Failure behavior                                                                                                                                       |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Invalid shop domain         | Install route aborts with `422`; admin page adds a field error.                                                                                        |
+| Missing app credentials     | Install route redirects back to `filament.admin.pages.shopify-commerce` with a configuration error.                                                    |
+| Bad callback HMAC           | Callback logs `Shopify OAuth failed` and redirects back with an OAuth error.                                                                           |
+| Expired or wrong-user state | Callback logs `Shopify OAuth failed` and shows the invalid-state message.                                                                              |
+| GraphQL request failure     | `ExecuteShopifyAdminGraphqlAction` throws `ShopifyGraphqlException`.                                                                                   |
 | Bulk start failure          | Connection `sync_status` becomes `failed`; GraphQL user errors also mark connection `status` as `error`; persisted errors are scrubbed before storage. |
-| Bulk poll failure status    | `FAILED` or `CANCELED` marks `sync_status` as lowercase status and connection `status` as `error`.                                  |
-| Import failure              | Connection `sync_status` becomes `failed`, connection `status` becomes `error`, and `last_sync_error` stores a scrubbed exception summary. |
-| Revoked connection          | Sync/import returns without reactivating the connection.                                                                            |
+| Bulk poll failure status    | `FAILED` or `CANCELED` marks `sync_status` as lowercase status and connection `status` as `error`.                                                     |
+| Import failure              | Connection `sync_status` becomes `failed`, connection `status` becomes `error`, and `last_sync_error` stores a scrubbed exception summary.             |
+| Revoked connection          | Sync/import returns without reactivating the connection.                                                                                               |
 
 ## Troubleshooting
 

@@ -22,6 +22,7 @@ use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 it('exposes translation coverage table columns for page, language completeness, missing languages, and author', function (): void {
@@ -147,9 +148,12 @@ it('configures and drives ai discovery table actions through profile workflows',
     $fillSummaryAction = $actions->get('fill_ai_summary');
     $bulkIncludeAction = $bulkActions->get('include_ai_index');
     $bulkExcludeAction = $bulkActions->get('exclude_ai_index');
+    $query = $table->getQuery();
 
-    expect($table->getQuery())->not->toBeNull()
-        ->and($table->getDefaultSortColumn())->toBe('updated_at')
+    throw_unless($query instanceof Builder, RuntimeException::class, 'Expected AI discovery table to expose an Eloquent query.');
+
+    expect($query)->not->toBeNull()
+        ->and($table->getDefaultSort($query, 'asc'))->toBe('updated_at')
         ->and($editAction)->toBeInstanceOf(Action::class)
         ->and($includeAction)->toBeInstanceOf(Action::class)
         ->and($excludeAction)->toBeInstanceOf(Action::class)

@@ -68,10 +68,10 @@ it('builds package admin table configurators with the expected editor-facing con
 
     $columnNames = array_keys($table->getColumns());
     $filterNames = array_keys($table->getFilters());
-    $actionNames = packageAdminTableActionNames($table->getActions());
+    $actionNames = packageAdminTableActionNames($table->getRecordActions());
     $toolbarActionNames = method_exists($table, 'getToolbarActions')
         ? packageAdminTableActionNames($table->getToolbarActions())
-        : packageAdminTableActionNames($table->getBulkActions());
+        : packageAdminTableActionNames($table->getToolbarActions());
 
     expect($columnNames)->toContain(...$requiredColumns)
         ->and($filterNames)->toContain(...$requiredFilters)
@@ -239,7 +239,7 @@ it('builds the html cache map table and searches by canonical url hash', functio
 
     expect(array_keys($table->getColumns()))->toContain('url', 'cacheable_type', 'cacheable', 'site.name', 'last_seen_at')
         ->and(array_keys($table->getFilters()))->toContain('site_id', 'language_id', 'cacheable_type')
-        ->and(packageAdminTableActionNames($table->getActions()))->toContain('open_url', 'clear')
+        ->and(packageAdminTableActionNames($table->getRecordActions()))->toContain('open_url', 'clear')
         ->and($query->pluck('id')->all())->toBe([$matchingRecord->getKey()]);
 });
 
@@ -275,7 +275,7 @@ it('builds the layout builder layouts table with widget inventory filters and in
 
     expect($table->getColumns())->not->toBeEmpty()
         ->and(array_keys($table->getFilters()))->toContain('widget_key')
-        ->and(packageAdminTableActionNames($table->getActions()))->toContain('info')
+        ->and(packageAdminTableActionNames($table->getRecordActions()))->toContain('info')
         ->and($widgetWidgetsForLayout->invoke(null, $layout)->pluck('name')->all())->toBe(['Hero widget', 'Cards widget'])
         ->and($matchingQuery->pluck('id')->all())->toBe([$layout->getKey()]);
 });
@@ -289,7 +289,7 @@ it('builds package resource tables with their expected operational columns and a
     $table = $resourceClass::table(packageAdminTableForCoverage());
     $columnNames = array_keys($table->getColumns());
     $filterNames = array_keys($table->getFilters());
-    $actionNames = packageAdminTableActionNames($table->getActions());
+    $actionNames = packageAdminTableActionNames($table->getRecordActions());
 
     expect($columnNames)->toContain(...$requiredColumns);
 

@@ -93,10 +93,10 @@ final class PublishingStudioHealthCheck implements ChecksExtensionHealth
      */
     public function missingTables(): array
     {
-        return collect(self::REQUIRED_TABLES)
-            ->reject(static fn (string $tableName): bool => Schema::hasTable($tableName))
-            ->values()
-            ->all();
+        return array_values(array_filter(
+            self::REQUIRED_TABLES,
+            static fn (string $tableName): bool => ! Schema::hasTable($tableName),
+        ));
     }
 
     /**

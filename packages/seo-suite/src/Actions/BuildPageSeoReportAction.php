@@ -271,7 +271,7 @@ final class BuildPageSeoReportAction
 
         if ($socialMeta->imageUrl === null || trim($socialMeta->imageUrl) === '') {
             $issues[] = $this->issue(SeoCheckKeyEnum::SocialImage, SeoIssueSeverityEnum::Notice, 'seo_issue_social_image_missing');
-        } elseif ($socialMeta->imageAlt === null || trim((string) $socialMeta->imageAlt) === '') {
+        } elseif ($socialMeta->imageAlt === null || trim($socialMeta->imageAlt) === '') {
             $issues[] = $this->issue(SeoCheckKeyEnum::ImageAltText, SeoIssueSeverityEnum::Warning, 'seo_issue_image_alt_text_missing');
         }
 

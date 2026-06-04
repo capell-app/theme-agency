@@ -41,7 +41,7 @@ class ListImportBatches extends ListRecords
     {
         return Action::make($dryRun ? 'dry_run_import' : 'commit_import')
             ->label($dryRun ? __('capell-newsletter::actions.dry_run_import') : __('capell-newsletter::actions.commit_import'))
-            ->form($this->importForm())
+            ->schema($this->importForm())
             ->action(function (array $data) use ($dryRun): void {
                 Gate::authorize('create', ImportBatch::class);
                 NewsletterAdminAccess::authorizeSiteId((int) $data['site_id']);

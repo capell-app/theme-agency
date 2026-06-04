@@ -67,7 +67,7 @@ class SubscriberResource extends Resource
             ])
             ->filters([
                 Filter::make('email')
-                    ->form([
+                    ->schema([
                         TextInput::make('email')
                             ->label(__('capell-newsletter::table.email'))
                             ->email(),

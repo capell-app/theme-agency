@@ -9,9 +9,7 @@ describe('theme healthcare capell.json manifest', function (): void {
         $manifest = healthcareThemeManifest();
         $commands = $manifest['commands'] ?? null;
 
-        if (! is_array($commands)) {
-            throw new RuntimeException('Theme Healthcare manifest commands must be an array.');
-        }
+        throw_unless(is_array($commands), RuntimeException::class, 'Theme Healthcare manifest commands must be an array.');
 
         expect($commands['demo'])->toBe('capell:theme-healthcare-demo')
             ->and($commands['demoParams'])->toBe(['url', 'languages', 'sites']);
@@ -21,22 +19,16 @@ describe('theme healthcare capell.json manifest', function (): void {
         $manifest = healthcareThemeManifest();
         $marketplace = $manifest['marketplace'] ?? null;
 
-        if (! is_array($marketplace)) {
-            throw new RuntimeException('Theme Healthcare marketplace manifest data must be an array.');
-        }
+        throw_unless(is_array($marketplace), RuntimeException::class, 'Theme Healthcare marketplace manifest data must be an array.');
 
         $screenshots = $marketplace['screenshots'] ?? null;
 
-        if (! is_array($screenshots)) {
-            throw new RuntimeException('Theme Healthcare marketplace screenshots must be an array.');
-        }
+        throw_unless(is_array($screenshots), RuntimeException::class, 'Theme Healthcare marketplace screenshots must be an array.');
 
         $screenshotPaths = [];
 
         foreach ($screenshots as $screenshot) {
-            if (! is_array($screenshot) || ! is_string($screenshot['path'] ?? null)) {
-                throw new RuntimeException('Theme Healthcare marketplace screenshots must define string paths.');
-            }
+            throw_if(! is_array($screenshot) || ! is_string($screenshot['path'] ?? null), RuntimeException::class, 'Theme Healthcare marketplace screenshots must define string paths.');
 
             $screenshotPaths[] = $screenshot['path'];
         }
@@ -66,9 +58,7 @@ function healthcareThemeManifest(): array
         flags: JSON_THROW_ON_ERROR,
     );
 
-    if (! is_array($manifest)) {
-        throw new RuntimeException('Theme Healthcare manifest must decode to an array.');
-    }
+    throw_unless(is_array($manifest), RuntimeException::class, 'Theme Healthcare manifest must decode to an array.');
 
     return $manifest;
 }

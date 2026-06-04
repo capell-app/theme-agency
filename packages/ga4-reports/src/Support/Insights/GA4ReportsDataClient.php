@@ -518,7 +518,7 @@ final class GA4ReportsDataClient implements GA4ReportsDataClientInterface
             return max(0, (int) $retryAfter * 1000);
         }
 
-        $retryAfterTimestamp = strtotime($retryAfter);
+        $retryAfterTimestamp = Date::parse($retryAfter)->getTimestamp();
 
         if ($retryAfterTimestamp === false) {
             return null;

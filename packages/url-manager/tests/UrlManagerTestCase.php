@@ -15,11 +15,9 @@ class UrlManagerTestCase extends TestCase
 {
     use RefreshDatabase;
 
-    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
-
         Lang::addNamespace('capell-url-manager', __DIR__ . '/../resources/lang');
         config(['capell-url-manager' => require __DIR__ . '/../config/capell-url-manager.php']);
     }

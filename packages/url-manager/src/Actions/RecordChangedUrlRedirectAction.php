@@ -71,7 +71,7 @@ final class RecordChangedUrlRedirectAction
         $currentSegments = $this->segments($currentUrl);
 
         return count($previousSegments) === count($currentSegments)
-            && count($previousSegments) > 0
+            && $previousSegments !== []
             && Collection::make($previousSegments)->slice(0, -1)->values()->all() === Collection::make($currentSegments)->slice(0, -1)->values()->all();
     }
 

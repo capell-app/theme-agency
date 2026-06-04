@@ -171,7 +171,7 @@ function createIndexTestPage(string $url, array $translation = [], ?Site $site =
  */
 function indexTestUrl(string $routeName, array $parameters = [], string $host = 'example.com'): string
 {
-    URL::forceRootUrl('http://' . $host);
+    URL::useOrigin('http://' . $host);
 
     return route($routeName, $parameters);
 }

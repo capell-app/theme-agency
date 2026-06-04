@@ -29,7 +29,7 @@ class SaveAsDraftFormAction extends Action
             ->modalDescription(__('capell-admin::message.save_as_draft_description'))
             ->modalSubmitActionLabel(__('capell-admin::button.save_as_draft_modal_submit'))
             ->hidden(fn (): bool => $this->isEditingDraft())
-            ->form(fn (): array => $this->formSchema())
+            ->schema(fn (): array => $this->formSchema())
             ->fillForm(fn (): array => $this->defaults())
             ->action(function (array $data): void {
                 $livewire = $this->getLivewire();

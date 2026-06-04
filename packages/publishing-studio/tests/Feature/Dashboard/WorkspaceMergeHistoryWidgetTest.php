@@ -65,7 +65,7 @@ it('optimizes queries using withCount for page count', function (): void {
     expect($result->entries)->toBeInstanceOf(DataCollection::class);
     // Verify page count is available
     if ($result->entries->count() > 0) {
-        $entry = publishingStudioTestInstance($result->entries->first(), MergeHistoryEntryData::class);
+        $entry = publishingStudioTestInstance(collect($result->entries->items())->first(), MergeHistoryEntryData::class);
 
         expect($entry->pageCount)->toBeInt();
     }

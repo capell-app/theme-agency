@@ -9,7 +9,7 @@ use Capell\Admin\Contracts\Extenders\PageExportExtender;
 use Capell\Admin\Contracts\Extenders\PageResourcePageExtender;
 use Capell\Admin\Contracts\Extenders\PageTableExtender;
 use Capell\Core\Facades\CapellCore;
-use Capell\Core\Models\AssetRelation;
+use Capell\Core\Models\AssetAttachment;
 use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Layout;
@@ -215,7 +215,7 @@ class PublishingStudioServiceProvider extends ServiceProvider
             Language::class,
             Media::class,
             PageUrl::class,
-            AssetRelation::class,
+            AssetAttachment::class,
         ];
 
         foreach ($simpleModels as $modelClass) {

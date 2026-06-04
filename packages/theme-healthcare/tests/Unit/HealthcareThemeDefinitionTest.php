@@ -154,9 +154,9 @@ it('renders public healthcare markup without forbidden package or authoring toke
                 heading: 'Specialist care with calm, clear next steps',
                 eyebrow: 'Private healthcare',
                 summary: 'Appointment-led pages for services, clinicians, resources, and locations.',
+                actions: [['label' => 'Book appointment', 'url' => '/appointments']],
                 mediaUrl: '/images/clinic-hero.jpg',
                 mediaAlt: 'Clinician consultation room',
-                actions: [['label' => 'Book appointment', 'url' => '/appointments']],
             ),
             healthcareThemeSection('service-finder', [
                 'heading' => 'Find the right care',

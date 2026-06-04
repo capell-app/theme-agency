@@ -13,7 +13,7 @@ use Capell\Newsletter\Enums\SegmentType;
 use Capell\Newsletter\Enums\SubscriberStatus;
 use Capell\Newsletter\Models\Segment;
 use Capell\Newsletter\Models\Subscriber;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Route;
 
 it('resolves a reusable preference center token into active same-site segment preferences', function (): void {
@@ -76,7 +76,7 @@ it('rejects invalid expired and wrong-purpose preference center tokens', functio
 it('creates expiring preference center and unsubscribe tokens', function (): void {
     config()->set('capell-newsletter.public_tokens.token_expiry_hours', 24);
 
-    Carbon::setTestNow(Carbon::parse('2026-06-04 12:00:00'));
+    Date::setTestNow(Date::parse('2026-06-04 12:00:00'));
 
     try {
         $subscriber = Subscriber::factory()->create([
@@ -89,17 +89,17 @@ it('creates expiring preference center and unsubscribe tokens', function (): voi
 
         $preferencePublicToken = $subscriber->publicTokens()
             ->where('type', PublicTokenType::PreferenceCenter)
-            ->where('token_hash', hash('sha256', $preferenceToken))
+            ->where('token_hash', hash('sha256', (string) $preferenceToken))
             ->first();
         $unsubscribePublicToken = $subscriber->publicTokens()
             ->where('type', PublicTokenType::Unsubscribe)
-            ->where('token_hash', hash('sha256', $unsubscribeToken))
+            ->where('token_hash', hash('sha256', (string) $unsubscribeToken))
             ->first();
 
         expect($preferencePublicToken?->expires_at?->equalTo(now()->addHours(24)))->toBeTrue()
             ->and($unsubscribePublicToken?->expires_at?->equalTo(now()->addHours(24)))->toBeTrue();
     } finally {
-        Carbon::setTestNow();
+        Date::setTestNow();
     }
 });
 

@@ -54,7 +54,7 @@ it('builds every package-owned filament table configurator through the table con
             $built++;
 
             expect($table)->toBeInstanceOf(Table::class)
-                ->and($table->getColumns() !== [] || $table->getActions() !== [] || $table->getFilters() !== [])->toBeTrue();
+                ->and($table->getColumns() !== [] || $table->getRecordActions() !== [] || $table->getFilters() !== [])->toBeTrue();
 
         } catch (Throwable $throwable) {
             if (str_contains($throwable->getMessage(), 'is already registered.')) {

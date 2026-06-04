@@ -6,6 +6,8 @@ namespace Capell\Comments\Models;
 
 use Capell\Comments\Enums\CommentReactionType;
 use Capell\Core\Models\Site;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -20,6 +22,9 @@ use Override;
  */
 class CommentReaction extends Model
 {
+    /** @use HasFactory<Factory<self>> */
+    use HasFactory;
+
     protected $table = 'comment_reactions';
 
     /** @var list<string> */

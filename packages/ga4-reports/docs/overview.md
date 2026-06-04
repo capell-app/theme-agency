@@ -22,18 +22,18 @@ Use it for installed sites that need GA4 visibility in the Capell admin panel. T
 
 The publishable config lives at `packages/ga4-reports/config/capell-ga4-reports.php`.
 
-| Key                | Default             | Purpose                                                       |
-| ------------------ | ------------------- | ------------------------------------------------------------- |
-| `enabled`          | `false`             | Keeps the package inert until GA4 is configured.              |
-| `property_id`      | `null`              | GA4 property to query.                                        |
-| `credentials_path` | `null`              | Service account credential path used by the data client.      |
-| `http_timeout`     | `20`                | Token and Data API request timeout.                           |
-| `http_retry_times` | `3`                 | Total attempts for retryable token and Data API failures.     |
-| `http_retry_delay_ms` | `250`            | Base retry delay for transient GA4 HTTP failures.             |
-| `http_retry_max_delay_ms` | `5000`       | Maximum retry delay, including `Retry-After` delays.          |
-| `sync_days`        | `30`                | Number of days included in the sync window.                   |
-| `route_slug`       | `ga4-reports`       | Admin route slug for the reports page.                        |
-| `tables.*`         | package table names | Allows host apps to override the local table names if needed. |
+| Key                       | Default             | Purpose                                                       |
+| ------------------------- | ------------------- | ------------------------------------------------------------- |
+| `enabled`                 | `false`             | Keeps the package inert until GA4 is configured.              |
+| `property_id`             | `null`              | GA4 property to query.                                        |
+| `credentials_path`        | `null`              | Service account credential path used by the data client.      |
+| `http_timeout`            | `20`                | Token and Data API request timeout.                           |
+| `http_retry_times`        | `3`                 | Total attempts for retryable token and Data API failures.     |
+| `http_retry_delay_ms`     | `250`               | Base retry delay for transient GA4 HTTP failures.             |
+| `http_retry_max_delay_ms` | `5000`              | Maximum retry delay, including `Retry-After` delays.          |
+| `sync_days`               | `30`                | Number of days included in the sync window.                   |
+| `route_slug`              | `ga4-reports`       | Admin route slug for the reports page.                        |
+| `tables.*`                | package table names | Allows host apps to override the local table names if needed. |
 
 If the package is not configured, `SyncGA4ReportsMetricsAction` exits cleanly and records no rows.
 

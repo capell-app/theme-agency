@@ -37,7 +37,7 @@ it('declares comments as optional for supported companion packages', function ()
         ->and($manifest['capabilities'])->toContain('comments-reactions')
         ->and($manifest['capabilities'])->toContain('comments-reply-notifications')
         ->and($manifest['database']['requiredTables'])->toContain('comment_reactions')
-        ->and(app(CommentSpamProvider::class))->toBeInstanceOf(ConfiguredCommentSpamProvider::class)
+        ->and(resolve(CommentSpamProvider::class))->toBeInstanceOf(ConfiguredCommentSpamProvider::class)
         ->and(config('capell-comments.spam.providers'))->toContain(LocalCommentSpamProvider::class)
         ->and(class_exists(InstallCommentsCommand::class))->toBeTrue()
         ->and(class_exists(PruneCommentPrivacyDataCommand::class))->toBeTrue();

@@ -12,7 +12,7 @@ use RuntimeException;
  * Registry of models that participate in the workspace/version system.
  *
  * First-party models (Page, Navigation, Site, Type, Layout, Translation,
- * PageUrl, AssetRelation) register themselves from the core service
+ * PageUrl, AssetAttachment) register themselves from the core service
  * provider. External packages call {@see self::register()} from their own
  * service provider to opt in.
  */

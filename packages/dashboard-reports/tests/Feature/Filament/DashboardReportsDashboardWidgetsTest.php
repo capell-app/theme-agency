@@ -122,7 +122,7 @@ it('builds content health data through the installed provider and widget data co
     $widgetData = (new ContentHealthWidget)->data();
 
     $providerIssues = collect($providerData->issues->toArray())->keyBy('id');
-    $firstWidgetIssue = $widgetData->issues->first();
+    $firstWidgetIssue = collect($widgetData->issues->items())->first();
 
     throw_unless($firstWidgetIssue instanceof ContentHealthIssueData, RuntimeException::class, 'Expected content health widget to return a first issue.');
 

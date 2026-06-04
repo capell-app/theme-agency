@@ -280,7 +280,15 @@ final class SeoSuiteHealthCheck implements ChecksExtensionHealth
 
         if (is_array($configuredRules)) {
             foreach ($configuredRules as $rule) {
-                if (! is_array($rule) || ! is_string($rule['user_agent'] ?? null) || trim($rule['user_agent']) === '') {
+                if (! is_array($rule)) {
+                    continue;
+                }
+
+                if (! is_string($rule['user_agent'] ?? null)) {
+                    continue;
+                }
+
+                if (trim($rule['user_agent']) === '') {
                     continue;
                 }
 

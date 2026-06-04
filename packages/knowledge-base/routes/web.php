@@ -22,7 +22,7 @@ if (config('capell-knowledge-base.public_routes_enabled', true) === true) {
                 ])
                 ->name('article');
             Route::post('/{collectionSlug}/{articleSlug}/feedback', StoreKnowledgeBaseArticleFeedbackController::class)
-                ->middleware('throttle:' . (string) config('capell-knowledge-base.feedback.throttle', '30,1'))
+                ->middleware('throttle:' . config('capell-knowledge-base.feedback.throttle', '30,1'))
                 ->where([
                     'collectionSlug' => '[A-Za-z0-9\\-]+',
                     'articleSlug' => '[A-Za-z0-9\\-]+',

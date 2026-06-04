@@ -19,12 +19,12 @@ Use it for Capell installs that need stronger admin account controls without put
 
 ## Policy Rules
 
-| Rule              | Setting                                              | Behaviour                                                                        |
-| ----------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Rule              | Setting                                              | Behaviour                                                                                                                                                    |
+| ----------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Password expiry   | `password_expiry_enabled`, `password_expiry_days`    | Users with an old `password_changed_at` value are treated as expired; missing legacy timestamps are shown separately but do not force a reset by themselves. |
-| Forced change     | `force_change_enabled`                               | Users with `must_change_password` set must choose a new password.                |
-| Compromised check | `compromised_password_checks_enabled`                | New passwords can use Laravel's `Password::uncompromised()` rule.                |
-| Password history  | `password_history_enabled`, `password_history_count` | Recent hashes are checked before a new password is accepted.                     |
+| Forced change     | `force_change_enabled`                               | Users with `must_change_password` set must choose a new password.                                                                                            |
+| Compromised check | `compromised_password_checks_enabled`                | New passwords can use Laravel's `Password::uncompromised()` rule.                                                                                            |
+| Password history  | `password_history_enabled`, `password_history_count` | Recent hashes are checked before a new password is accepted.                                                                                                 |
 
 The package checks for required columns and tables before using them, so partially migrated environments fail softly where possible.
 

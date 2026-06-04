@@ -100,7 +100,7 @@ class ScheduledPublishingTable implements TableConfigurator
                         'review_reminders_due' => __('capell-publishing-studio::scheduler.quick_filters.review_reminders_due'),
                     ]),
             ])
-            ->actions([
+            ->recordActions([
                 Action::make('details')
                     ->label(__('capell-publishing-studio::scheduler.actions.details'))
                     ->modalHeading(fn (array $record): string => (string) $record['title'])

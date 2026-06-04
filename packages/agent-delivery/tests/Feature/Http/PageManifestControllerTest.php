@@ -32,7 +32,7 @@ it('returns a public-safe page manifest for an already public page', function ()
         ],
     ]);
 
-    URL::forceRootUrl('http://example.com');
+    URL::useOrigin('http://example.com');
 
     getJson(route('capell-agent-delivery.pages.manifest', ['url' => $pageUrl->url]))
         ->assertOk()
@@ -178,7 +178,7 @@ function createAgentDeliveryPage(string $url, array $translation = [], ?string $
  */
 function agentDeliveryUrl(string $routeName, array $parameters = [], string $host = 'example.com'): string
 {
-    URL::forceRootUrl('http://' . $host);
+    URL::useOrigin('http://' . $host);
 
     return route($routeName, $parameters);
 }

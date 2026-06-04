@@ -17,16 +17,12 @@ describe('theme commerce capell.json manifest', function (): void {
         $marketplace = $manifest['marketplace'] ?? null;
         $screenshots = is_array($marketplace) ? ($marketplace['screenshots'] ?? null) : null;
 
-        if (! is_array($screenshots)) {
-            throw new RuntimeException('Theme Commerce manifest screenshots must be an array.');
-        }
+        throw_unless(is_array($screenshots), RuntimeException::class, 'Theme Commerce manifest screenshots must be an array.');
 
         $screenshotPaths = [];
 
         foreach ($screenshots as $screenshot) {
-            if (! is_array($screenshot) || ! is_string($screenshot['path'] ?? null)) {
-                throw new RuntimeException('Theme Commerce manifest screenshot path must be a string.');
-            }
+            throw_if(! is_array($screenshot) || ! is_string($screenshot['path'] ?? null), RuntimeException::class, 'Theme Commerce manifest screenshot path must be a string.');
 
             $screenshotPaths[] = $screenshot['path'];
         }
@@ -56,9 +52,7 @@ function commerceThemeManifest(): array
         flags: JSON_THROW_ON_ERROR,
     );
 
-    if (! is_array($manifest)) {
-        throw new RuntimeException('Theme Commerce manifest must decode to an array.');
-    }
+    throw_unless(is_array($manifest), RuntimeException::class, 'Theme Commerce manifest must decode to an array.');
 
     return $manifest;
 }

@@ -81,7 +81,7 @@ final class ThemePortfolioHealthCheck implements ChecksExtensionHealth
             && $definition->package === PortfolioThemeServiceProvider::$packageName
             && $definition->extends === 'default'
             && ($definition->assets['css'] ?? null) === 'vendor/capell/themes/portfolio.css'
-            && count($definition->presets) > 0
+            && $definition->presets !== []
             && $missingSections === [];
 
         return new DoctorCheckResultData(

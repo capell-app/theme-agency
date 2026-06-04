@@ -13,7 +13,7 @@ use Capell\SeoSuite\Filament\Components\Forms\Page\PageSeoPanel;
 use Filament\Actions\Action;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Placeholder;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Icons\Heroicon;
@@ -36,9 +36,9 @@ class AiContentBriefAction extends Action
             ->schema(fn (Get $get): array => [
                 Hidden::make('language_id')
                     ->default($get('language_id')),
-                Placeholder::make('readonly_notice')
+                TextEntry::make('readonly_notice')
                     ->label(__('capell-seo-suite::generic.ai_content_brief_readonly_notice_label'))
-                    ->content(__('capell-seo-suite::generic.ai_content_brief_readonly_notice')),
+                    ->state(__('capell-seo-suite::generic.ai_content_brief_readonly_notice')),
             ])
             ->registerModalActions([
                 $this->resultsAction(),
@@ -113,14 +113,14 @@ class AiContentBriefAction extends Action
     }
 
     /**
-     * @return array<int, Placeholder>
+     * @return array<int, TextEntry>
      */
     private function resultsSchema(AiContentBriefData $brief): array
     {
         return [
-            Placeholder::make('content_angle')
+            TextEntry::make('content_angle')
                 ->label(__('capell-seo-suite::generic.ai_content_brief_content_angle'))
-                ->content($brief->contentAngle),
+                ->state($brief->contentAngle),
             $this->listPlaceholder('missing_topics', __('capell-seo-suite::generic.ai_content_brief_missing_topics'), $brief->missingTopics),
             $this->listPlaceholder('suggested_headings', __('capell-seo-suite::generic.ai_content_brief_suggested_headings'), $brief->suggestedHeadings),
             $this->listPlaceholder('faq_ideas', __('capell-seo-suite::generic.ai_content_brief_faq_ideas'), $brief->faqIdeas),
@@ -134,11 +134,11 @@ class AiContentBriefAction extends Action
     /**
      * @param  array<int, mixed>  $items
      */
-    private function listPlaceholder(string $name, string $label, array $items): Placeholder
+    private function listPlaceholder(string $name, string $label, array $items): TextEntry
     {
-        return Placeholder::make($name)
+        return TextEntry::make($name)
             ->label($label)
-            ->content($this->listHtml($items));
+            ->state($this->listHtml($items));
     }
 
     /**

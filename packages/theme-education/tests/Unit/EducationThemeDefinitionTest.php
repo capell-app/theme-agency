@@ -249,7 +249,7 @@ it('keeps education default card copy in translations instead of Blade literals'
         ->and($eventsBlade)->not->toBeFalse()
         ->and($instructorsBlade)->not->toBeFalse();
 
-    $blade = (string) $catalogueBlade . "\n" . (string) $eventsBlade . "\n" . (string) $instructorsBlade;
+    $blade = $catalogueBlade . "\n" . $eventsBlade . "\n" . $instructorsBlade;
 
     expect($blade)
         ->not->toContain('Starter Path')

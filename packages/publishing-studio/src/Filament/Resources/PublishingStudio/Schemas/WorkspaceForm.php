@@ -9,9 +9,9 @@ use Capell\Admin\Filament\Contracts\FormConfigurator;
 use Capell\PublishingStudio\Enums\WorkspaceKindEnum;
 use Capell\PublishingStudio\Models\Workspace;
 use Filament\Forms\Components\ColorPicker;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Livewire;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -52,9 +52,9 @@ class WorkspaceForm implements FormConfigurator
                 ->collapsible()
                 ->collapsed()
                 ->schema([
-                    Placeholder::make('roles_overview')
+                    TextEntry::make('roles_overview')
                         ->label(__('capell-admin::workspace.workflow.roles_label'))
-                        ->content(new HtmlString(__('capell-admin::workspace.workflow.roles_overview'))),
+                        ->state(new HtmlString(__('capell-admin::workspace.workflow.roles_overview'))),
                     TextInput::make('settings.required_approval_levels')
                         ->label(__('capell-admin::workspace.workflow.approvals_required'))
                         ->helperText(__('capell-admin::workspace.workflow.approvals_required_helper'))

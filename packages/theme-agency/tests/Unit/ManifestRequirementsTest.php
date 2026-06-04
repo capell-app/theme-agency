@@ -15,14 +15,10 @@ describe('theme agency capell.json manifest', function (): void {
         $marketplace = $manifest['marketplace'] ?? null;
         $screenshots = is_array($marketplace) ? ($marketplace['screenshots'] ?? null) : null;
 
-        if (! is_array($screenshots)) {
-            throw new RuntimeException('Theme Agency manifest screenshots must be an array.');
-        }
+        throw_unless(is_array($screenshots), RuntimeException::class, 'Theme Agency manifest screenshots must be an array.');
 
         foreach ($screenshots as $screenshot) {
-            if (! is_array($screenshot) || ! is_string($screenshot['path'] ?? null)) {
-                throw new RuntimeException('Theme Agency manifest screenshot path must be a string.');
-            }
+            throw_if(! is_array($screenshot) || ! is_string($screenshot['path'] ?? null), RuntimeException::class, 'Theme Agency manifest screenshot path must be a string.');
 
             expect($screenshot['path'])->toStartWith('docs/screenshots/')
                 ->toEndWith('.png')
@@ -49,9 +45,7 @@ function agencyThemeManifest(): array
         flags: JSON_THROW_ON_ERROR,
     );
 
-    if (! is_array($manifest)) {
-        throw new RuntimeException('Theme Agency manifest must decode to an array.');
-    }
+    throw_unless(is_array($manifest), RuntimeException::class, 'Theme Agency manifest must decode to an array.');
 
     return $manifest;
 }

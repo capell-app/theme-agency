@@ -78,7 +78,7 @@ it('declares resource models pages schemas and tables', function (): void {
         'grants_count',
     )
         ->and(array_keys($areaTable->getFilters()))->toBe(['status', 'identity_mode'])
-        ->and(accessGateActionNames($areaTable->getActions()))->toContain('edit')
+        ->and(accessGateActionNames($areaTable->getRecordActions()))->toContain('edit')
         ->and(array_keys($registrationTable->getColumns()))->toContain(
             'email',
             'area.key',
@@ -91,7 +91,7 @@ it('declares resource models pages schemas and tables', function (): void {
             'claimed_at',
         )
         ->and(array_keys($registrationTable->getFilters()))->toBe(['access_area_id', 'status', 'requested_host'])
-        ->and(accessGateActionNames($registrationTable->getActions()))->toContain(
+        ->and(accessGateActionNames($registrationTable->getRecordActions()))->toContain(
             'approve',
             'reject',
             'resendClaim',
