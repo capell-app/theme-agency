@@ -7,10 +7,12 @@ use Capell\PrivacyCenter\Actions\ApplyRetentionRulesAction;
 use Capell\PrivacyCenter\Actions\BuildPrivacyExportAction;
 use Capell\PrivacyCenter\Actions\CreateRetentionRuleAction;
 use Capell\PrivacyCenter\Actions\MarkPrivacyRequestFulfilledAction;
+use Capell\PrivacyCenter\Actions\MarkPrivacyRequestVerifiedAction;
 use Capell\PrivacyCenter\Actions\OpenPrivacyRequestAction;
 use Capell\PrivacyCenter\Actions\RecordConsentAction;
 use Capell\PrivacyCenter\Actions\RecordPolicyAcceptanceAction;
 use Capell\PrivacyCenter\Actions\RegisterConsentPolicyAction;
+use Capell\PrivacyCenter\Actions\RejectPrivacyRequestAction;
 use Capell\PrivacyCenter\Data\ConsentPolicyData;
 use Capell\PrivacyCenter\Data\ConsentRecordData;
 use Capell\PrivacyCenter\Data\PolicyAcceptanceData;
@@ -149,6 +151,37 @@ it('anonymizes package-owned subject links for delete workflows', function (): v
         ->and(ConsentRecord::query()->first()?->subject_type)->toBeNull()
         ->and(PolicyAcceptance::query()->first()?->subject_type)->toBeNull()
         ->and(PrivacyRequest::query()->first()?->email_hash)->toBeNull();
+});
+
+it('marks privacy requests verified and rejected through workflow actions', function (): void {
+    $siteId = $this->createPrivacyCenterSite();
+    $submittedAt = CarbonImmutable::parse('2026-06-01 09:00:00', 'UTC');
+    $verifiedAt = CarbonImmutable::parse('2026-06-01 10:00:00', 'UTC');
+    $rejectedAt = CarbonImmutable::parse('2026-06-01 11:00:00', 'UTC');
+
+    $requestForVerification = OpenPrivacyRequestAction::run(new PrivacyRequestData(
+        type: PrivacyRequestType::Access,
+        siteId: $siteId,
+        email: 'verify@example.test',
+        submittedAt: $submittedAt,
+    ));
+    $requestForRejection = OpenPrivacyRequestAction::run(new PrivacyRequestData(
+        type: PrivacyRequestType::Delete,
+        siteId: $siteId,
+        email: 'reject@example.test',
+        submittedAt: $submittedAt,
+    ));
+
+    $verifiedRequest = MarkPrivacyRequestVerifiedAction::run($requestForVerification, $verifiedAt);
+    $rejectedRequest = RejectPrivacyRequestAction::run($requestForRejection, 'Unable to verify identity.', $rejectedAt);
+
+    expect($verifiedRequest->status)->toBe(PrivacyRequestStatus::Processing)
+        ->and($verifiedRequest->verified_at?->equalTo($verifiedAt))->toBeTrue()
+        ->and($verifiedRequest->fulfilled_at)->toBeNull()
+        ->and($rejectedRequest->status)->toBe(PrivacyRequestStatus::Rejected)
+        ->and($rejectedRequest->rejected_at?->equalTo($rejectedAt))->toBeTrue()
+        ->and($rejectedRequest->rejection_reason)->toBe('Unable to verify identity.')
+        ->and($rejectedRequest->fulfilled_at)->toBeNull();
 });
 
 it('applies active retention rules to expired privacy records', function (): void {

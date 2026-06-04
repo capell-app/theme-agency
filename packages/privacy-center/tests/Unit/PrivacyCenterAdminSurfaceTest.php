@@ -13,6 +13,7 @@ use Capell\PrivacyCenter\Enums\RetentionAction;
 use Capell\PrivacyCenter\Filament\Resources\ConsentPolicies\ConsentPolicyResource;
 use Capell\PrivacyCenter\Filament\Resources\ConsentRecords\ConsentRecordResource;
 use Capell\PrivacyCenter\Filament\Resources\PolicyAcceptances\PolicyAcceptanceResource;
+use Capell\PrivacyCenter\Filament\Resources\PrivacyRequests\Pages\EditPrivacyRequest;
 use Capell\PrivacyCenter\Filament\Resources\PrivacyRequests\PrivacyRequestResource;
 use Capell\PrivacyCenter\Filament\Resources\RetentionRules\RetentionRuleResource;
 use Capell\PrivacyCenter\Filament\Widgets\PrivacyCenterOverviewWidget;
@@ -47,6 +48,20 @@ it('exposes expected admin resource pages', function (): void {
         ->and(array_keys(PolicyAcceptanceResource::getPages()))->toBe(['index'])
         ->and(array_keys(PrivacyRequestResource::getPages()))->toBe(['index', 'edit'])
         ->and(array_keys(RetentionRuleResource::getPages()))->toBe(['index', 'create', 'edit']);
+});
+
+it('exposes privacy request edit workflow actions', function (): void {
+    $page = new EditPrivacyRequest;
+
+    expect(privacyCenterAdminActionNames(PrivacyRequestResource::privacyRequestWorkflowActions()))->toBe([
+        'mark_verified',
+        'mark_fulfilled',
+        'reject',
+    ])->and(privacyCenterAdminActionNames(privacyCenterAdminEditRequestHeaderActions($page)))->toBe([
+        'mark_verified',
+        'mark_fulfilled',
+        'reject',
+    ]);
 });
 
 it('builds privacy center overview widget stats from package-owned records', function (): void {
@@ -104,3 +119,26 @@ it('builds privacy center overview widget stats from package-owned records', fun
         'active_retention_rules' => 1,
     ])->and(class_implements(PrivacyCenterOverviewWidget::class))->toContain(CapellWidgetContract::class);
 });
+
+/**
+ * @param  array<array-key, mixed>  $actions
+ * @return array<int, string>
+ */
+function privacyCenterAdminActionNames(array $actions): array
+{
+    return collect($actions)
+        ->map(fn (mixed $action): string => is_object($action) && method_exists($action, 'getName') ? (string) $action->getName() : '')
+        ->filter(fn (string $name): bool => $name !== '')
+        ->values()
+        ->all();
+}
+
+/**
+ * @return array<array-key, mixed>
+ */
+function privacyCenterAdminEditRequestHeaderActions(EditPrivacyRequest $page): array
+{
+    $method = new ReflectionMethod(EditPrivacyRequest::class, 'getHeaderActions');
+
+    return $method->invoke($page);
+}

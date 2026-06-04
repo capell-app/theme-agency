@@ -64,6 +64,11 @@ return [
             'privacy_requests' => 'Privacy requests',
             'retention_rules' => 'Retention rules',
         ],
+        'actions' => [
+            'mark_fulfilled' => 'Mark fulfilled',
+            'mark_verified' => 'Mark verified',
+            'reject' => 'Reject',
+        ],
         'fields' => [
             'accepted_at' => 'Accepted',
             'action' => 'Action',
@@ -105,6 +110,11 @@ return [
             'verified_at' => 'Verified',
             'version' => 'Version',
             'workflow_payload' => 'Workflow payload',
+        ],
+        'messages' => [
+            'privacy_request_fulfilled' => 'Privacy request marked fulfilled.',
+            'privacy_request_rejected' => 'Privacy request rejected.',
+            'privacy_request_verified' => 'Privacy request marked verified.',
         ],
         'widgets' => [
             'active_retention_rules' => 'Active retention rules',
