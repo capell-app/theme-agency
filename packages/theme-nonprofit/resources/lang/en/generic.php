@@ -21,6 +21,7 @@ return [
     'contact_route_partner' => 'Partner referrals',
     'contact_route_summary' => 'Clear routing keeps supporters, donors, and partners from landing in one generic inbox.',
     'events_connected' => 'Connected events calendar is available.',
+    'events_label' => 'Campaigns calendar',
     'events_static' => 'Static events list is available.',
     'hero_label' => 'Campaign command centre',
     'hero_summary' => 'Give supporters a first screen that connects the mission, urgent campaign progress, donation routes, and visible community proof.',

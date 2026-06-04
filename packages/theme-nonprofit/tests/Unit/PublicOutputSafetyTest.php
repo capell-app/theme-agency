@@ -29,6 +29,8 @@ it('uses the premium page wrapper with brand tokens and skip link', function ():
     expect($blade)
         ->toContain('$brand->tokens()')
         ->toContain('skip_to_content')
+        ->toContain('id="main-content"')
+        ->toContain('<main')
         ->toContain('nonprofit-shell');
 });
 
@@ -63,6 +65,7 @@ it('keeps public Blade free of database query calls', function (): void {
         ->not->toContain('PageLoader::')
         ->not->toContain('SiteLoader::')
         ->not->toContain('NavigationLoader::')
+        ->not->toContain('CapellCore::isPackageInstalled')
         ->not->toContain('->translation')
         ->not->toContain('->assets')
         ->not->toContain('->media->')

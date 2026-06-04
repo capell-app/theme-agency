@@ -186,6 +186,47 @@ it('renders new premium nonprofit layouts through the registry', function (): vo
         ->not->toContain('capell-app/theme-nonprofit');
 });
 
+it('renders translated event labels and the skip-link target', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(NonprofitThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new NonprofitThemeServiceProvider($this->app))->boot($registry);
+
+    $renderer = $registry->sectionRenderer('nonprofit', 'events');
+
+    assert($renderer instanceof SectionRenderer);
+
+    $html = $renderer->render(nonprofitThemeSection('events', [
+        'heading' => 'Upcoming supporter events',
+    ]));
+
+    $page = view('capell-theme-nonprofit::page', [
+        'brand' => new readonly class
+        {
+            /**
+             * @return array<string, string>
+             */
+            public function tokens(): array
+            {
+                return ['--theme-primary' => '#166534'];
+            }
+        },
+        'content' => $html,
+    ])->render();
+
+    expect($html)
+        ->toContain('Campaigns calendar')
+        ->toContain('Upcoming supporter events')
+        ->not->toContain('Campaigns Calendar')
+        ->not->toContain('capell-app/theme-nonprofit');
+
+    expect($page)
+        ->toContain('href="#main-content"')
+        ->toContain('id="main-content"')
+        ->toContain('<main');
+});
+
 /**
  * @param  array<string, mixed>  $viewData
  */

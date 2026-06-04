@@ -38,7 +38,7 @@ or volunteer calls to action.
 ## What It Adds
 
 - Registers the `nonprofit` theme definition and preset.
-- Ships an impact-led page wrapper and theme CSS.
+- Ships an impact-led page wrapper, reachable skip-link target, and theme CSS.
 - Adds section renderers for impact, campaigns, volunteer/donate, events,
   stories, contact, proof, CTA, and supporting content blocks.
 - Uses Core `ViewSectionRenderer` extra view data for optional Campaign Studio, Form Builder,
@@ -90,5 +90,7 @@ vendor/bin/pest packages/theme-nonprofit/tests --configuration=phpunit.xml
   selectors, theme internals, model IDs, and permission metadata.
 - Keep optional package checks inside the service provider/renderer layer, not
   public Blade.
+- Keep the skip link and `main-content` target together when changing the page
+  shell.
 - Keep the docs aligned with `NonprofitThemeServiceProvider::definition()` when
   section keys, presets, or optional integrations change.

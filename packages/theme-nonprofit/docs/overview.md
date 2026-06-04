@@ -10,7 +10,7 @@ contact paths, and supporter calls to action in one coherent frontend theme.
 ## What This Package Adds
 
 - A `nonprofit` theme definition and preset.
-- Nonprofit-specific CSS and page wrapper.
+- Nonprofit-specific CSS and a page wrapper with a reachable skip-link target.
 - Section renderers for impact, campaigns, volunteer/donate, events, stories,
   contact, proof, CTA, and footer flows.
 - Optional renderer awareness for Campaign Studio, Form Builder, Events, and
@@ -36,6 +36,8 @@ optional packages when those packages are installed.
 - Core `ViewSectionRenderer` extra view data guards optional Campaign Studio, Form Builder,
   Events, and Blog sections.
 - `ThemeNonprofitHealthCheck` exposes package health to diagnostics.
+- Public Blade receives optional package state from the provider/renderer layer;
+  sections should not call package installation APIs directly.
 
 ## Data And Persistence
 
@@ -44,8 +46,9 @@ Foundation Theme runtime data and Capell page content.
 
 ## Screenshot Plan
 
-`docs/screenshots.json` describes marketplace screenshots for homepage,
-directory, detail, contact, conversion CTA, and section-suite states.
+`docs/screenshots.json` describes the intended route-backed capture set. The
+current marketplace manifest still includes committed JPG previews plus SVG
+layout diagrams; replacing those diagrams with real captures remains open.
 
 ## Verification
 
@@ -53,5 +56,6 @@ directory, detail, contact, conversion CTA, and section-suite states.
 vendor/bin/pest packages/theme-nonprofit/tests --configuration=phpunit.xml
 ```
 
-The focused tests cover theme definition, manifest requirements, package-aware
-rendering, and public output safety.
+The focused tests cover theme definition, event rendering, the skip-link target,
+manifest requirements, package-aware rendering, health checks, and public output
+safety.
