@@ -1,10 +1,24 @@
 @php
-    $actions = $section->actions !== []
+    $actions = ($section->actions ?? []) !== []
         ? $section->actions
         : [
-            ['label' => 'Explore content', 'url' => '#content', 'style' => 'primary'],
-            ['label' => 'View media', 'url' => '#gallery', 'style' => 'secondary'],
+            ['label' => __('capell-theme-corporate::generic.hero_primary_action'), 'url' => '#content', 'style' => 'primary'],
+            ['label' => __('capell-theme-corporate::generic.hero_secondary_action'), 'url' => '#gallery', 'style' => 'secondary'],
         ];
+    $stats = $section->stats ?? [
+        [
+            'label' => __('capell-theme-corporate::generic.hero_stat_confidence_label'),
+            'value' => __('capell-theme-corporate::generic.hero_stat_confidence_value'),
+        ],
+        [
+            'label' => __('capell-theme-corporate::generic.hero_stat_advisory_label'),
+            'value' => __('capell-theme-corporate::generic.hero_stat_advisory_value'),
+        ],
+        [
+            'label' => __('capell-theme-corporate::generic.hero_stat_reporting_label'),
+            'value' => __('capell-theme-corporate::generic.hero_stat_reporting_value'),
+        ],
+    ];
 @endphp
 
 <section
@@ -20,7 +34,7 @@
                 <span
                     class="text-[var(--theme-primary)] dark:text-[var(--theme-accent)]"
                 >
-                    {{ $section->eyebrow ?: 'Featured' }}
+                    {{ $section->eyebrow ?: __('capell-theme-corporate::generic.hero_default_eyebrow') }}
                 </span>
 
                 @if ($section->mediaAlt)
@@ -57,42 +71,27 @@
             <dl
                 class="grid grid-cols-3 gap-2 border-t border-slate-200 pt-4 text-xs sm:max-w-xl sm:gap-4 sm:pt-5 dark:border-white/10"
             >
-                <div>
-                    <dt
-                        class="font-semibold tracking-[0.12em] text-slate-400 uppercase dark:text-slate-500"
-                    >
-                        Pages
-                    </dt>
-                    <dd
-                        class="mt-1 font-semibold text-slate-900 dark:text-white"
-                    >
-                        Content
-                    </dd>
-                </div>
-                <div>
-                    <dt
-                        class="font-semibold tracking-[0.12em] text-slate-400 uppercase dark:text-slate-500"
-                    >
-                        Media
-                    </dt>
-                    <dd
-                        class="mt-1 font-semibold text-slate-900 dark:text-white"
-                    >
-                        Assets
-                    </dd>
-                </div>
-                <div>
-                    <dt
-                        class="font-semibold tracking-[0.12em] text-slate-400 uppercase dark:text-slate-500"
-                    >
-                        Layout
-                    </dt>
-                    <dd
-                        class="mt-1 font-semibold text-slate-900 dark:text-white"
-                    >
-                        Widgets
-                    </dd>
-                </div>
+                @foreach ($stats as $stat)
+                    @php
+                        $statLabel = is_array($stat) && is_scalar($stat['label'] ?? null) ? (string) $stat['label'] : '';
+                        $statValue = is_array($stat) && is_scalar($stat['value'] ?? null) ? (string) $stat['value'] : '';
+                    @endphp
+
+                    @if ($statLabel !== '' && $statValue !== '')
+                        <div>
+                            <dt
+                                class="font-semibold tracking-[0.12em] text-slate-400 uppercase dark:text-slate-500"
+                            >
+                                {{ $statLabel }}
+                            </dt>
+                            <dd
+                                class="mt-1 font-semibold text-slate-900 dark:text-white"
+                            >
+                                {{ $statValue }}
+                            </dd>
+                        </div>
+                    @endif
+                @endforeach
             </dl>
         </div>
 

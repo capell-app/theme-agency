@@ -10,6 +10,7 @@ Theme Corporate is a standalone Capell theme package. It registers the `corporat
 
 - Corporate theme service provider.
 - Theme renderer/views for corporate theme output.
+- Translated hero credibility stats, proof/gallery controls, and content-listing labels with optional data-driven hero stats.
 - Dependency on Foundation Theme.
 
 ## Developer Notes
@@ -19,6 +20,8 @@ Adds a renderer package that plugs into Foundation Theme contracts and runtime s
 - CorporateThemeServiceProvider registers the renderer.
 - `capell.json` declares `themeKey: "corporate"` and `extends: "capell-app/foundation-theme"`.
 - Uses Foundation Theme runtime data and standard section keys, while rendering its own page and section Blade views.
+- Hero credibility stats can be supplied by section render data, with translated defaults for pages that do not provide custom stats.
+- Proof/gallery controls and content-listing labels use package translations so public UI copy stays localisable.
 - Ships Blade resources for the page wrapper and standard theme sections.
 - No migrations, config, routes, models, admin navigation, or package-owned settings are present.
 
@@ -47,7 +50,7 @@ Provides a corporate visual option for sites that need restrained, trust-focused
 - Install Foundation Theme before using this renderer.
 - Install Layout Builder before running `capell:foundation-theme-setup`; Foundation Theme layout defaults need the `blocks` table.
 - Build both frontend and Filament assets in demo apps. The frontend build needs Foundation Theme npm dependencies such as `swiper`, `tippy.js`, `@tailwindcss/typography`, `@awcodes/alpine-floating-ui`, and `@ryangjchandler/alpine-tooltip`.
-- Theme Studio settings must use a Corporate preset such as `boardroom`, `civic`, or `advisory`. A preset from another theme fails at render time.
+- Theme Studio settings must use a Corporate preset such as `boardroom`, `civic`, `advisory`, `integrity`, `enterprise-trust`, or `public-ledger`. A preset from another theme fails at render time.
 - Public theme token CSS filenames must stay opaque. Do not expose theme keys or preset keys in cached public HTML.
 - Do not install a Studio metapackage; this package installs independently.
 

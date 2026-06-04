@@ -25,7 +25,7 @@
 
             <div
                 class="theme-carousel relative"
-                data-carousel="corporate-proof"
+                data-carousel="proof"
             >
                 <div
                     class="flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 md:grid md:grid-cols-2 [&::-webkit-scrollbar]:hidden"
@@ -40,11 +40,11 @@
                                     type="button"
                                     class="mb-4 block w-full"
                                     data-gallery-open="{{ $item['image'] }}"
-                                    aria-label="Open image for {{ $item['title'] ?? $item['name'] ?? $item['logo'] ?? 'proof item' }}"
+                                    aria-label="{{ __('capell-theme-corporate::generic.gallery_open_image', ['item' => $item['title'] ?? $item['name'] ?? $item['logo'] ?? __('capell-theme-corporate::generic.proof_item_label')]) }}"
                                 >
                                     <img
                                         src="{{ $item['image'] }}"
-                                        alt="{{ $item['title'] ?? $item['name'] ?? $item['logo'] ?? 'Proof image' }}"
+                                        alt="{{ $item['title'] ?? $item['name'] ?? $item['logo'] ?? __('capell-theme-corporate::generic.proof_image_alt') }}"
                                         class="aspect-[5/3] w-full rounded-[0.25rem] object-cover opacity-90 transition hover:opacity-100 sm:mb-5 sm:aspect-[16/9]"
                                     />
                                 </button>
@@ -87,7 +87,7 @@
                 <button
                     type="button"
                     class="theme-carousel-button carousel-prev absolute top-1/2 left-2 hidden -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-2 text-sm font-semibold text-white shadow-md"
-                    aria-label="Previous proof cards"
+                    aria-label="{{ __('capell-theme-corporate::generic.carousel_previous_proof') }}"
                     data-carousel-prev
                 >
                     ‹
@@ -95,7 +95,7 @@
                 <button
                     type="button"
                     class="theme-carousel-button carousel-next absolute top-1/2 right-2 hidden -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-2 text-sm font-semibold text-white shadow-md"
-                    aria-label="Next proof cards"
+                    aria-label="{{ __('capell-theme-corporate::generic.carousel_next_proof') }}"
                     data-carousel-next
                 >
                     ›
@@ -113,7 +113,7 @@
         type="button"
         class="absolute top-4 right-4 rounded-full bg-white px-3 py-1 text-xs font-bold text-black"
         data-gallery-close
-        aria-label="Close gallery"
+        aria-label="{{ __('capell-theme-corporate::generic.gallery_close') }}"
     >
         ✕
     </button>
@@ -121,44 +121,38 @@
 </div>
 
 <script>
-    document
-        .querySelectorAll('[data-carousel="corporate-proof"]')
-        .forEach((carousel) => {
-            const track = carousel.querySelector('[data-carousel-track]')
-            const prev = carousel.querySelector('[data-carousel-prev]')
-            const next = carousel.querySelector('[data-carousel-next]')
+    document.querySelectorAll('[data-carousel="proof"]').forEach((carousel) => {
+        const track = carousel.querySelector('[data-carousel-track]')
+        const prev = carousel.querySelector('[data-carousel-prev]')
+        const next = carousel.querySelector('[data-carousel-next]')
 
-            if (!track || !prev || !next) {
-                return
-            }
+        if (!track || !prev || !next) {
+            return
+        }
 
-            const step = () =>
-                Math.max(280, Math.floor(track.clientWidth * 0.82))
+        const step = () => Math.max(280, Math.floor(track.clientWidth * 0.82))
 
-            const updateButtons = () => {
-                const canScroll = track.scrollWidth > track.clientWidth + 1
-                prev.classList.toggle(
-                    'hidden',
-                    !canScroll || track.scrollLeft <= 2,
-                )
-                next.classList.toggle(
-                    'hidden',
-                    !canScroll ||
-                        track.scrollLeft >=
-                            track.scrollWidth - track.clientWidth - 2,
-                )
-            }
+        const updateButtons = () => {
+            const canScroll = track.scrollWidth > track.clientWidth + 1
+            prev.classList.toggle('hidden', !canScroll || track.scrollLeft <= 2)
+            next.classList.toggle(
+                'hidden',
+                !canScroll ||
+                    track.scrollLeft >=
+                        track.scrollWidth - track.clientWidth - 2,
+            )
+        }
 
-            const scrollByAmount = (direction) => {
-                track.scrollBy({ left: direction * step(), behavior: 'smooth' })
-            }
+        const scrollByAmount = (direction) => {
+            track.scrollBy({ left: direction * step(), behavior: 'smooth' })
+        }
 
-            prev.addEventListener('click', () => scrollByAmount(-1))
-            next.addEventListener('click', () => scrollByAmount(1))
-            track.addEventListener('scroll', updateButtons, { passive: true })
-            window.addEventListener('resize', updateButtons)
-            updateButtons()
-        })
+        prev.addEventListener('click', () => scrollByAmount(-1))
+        next.addEventListener('click', () => scrollByAmount(1))
+        track.addEventListener('scroll', updateButtons, { passive: true })
+        window.addEventListener('resize', updateButtons)
+        updateButtons()
+    })
 
     document.querySelectorAll('[data-gallery-open]').forEach((trigger) => {
         trigger.addEventListener('click', () => {

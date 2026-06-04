@@ -12,6 +12,7 @@ Trust-led corporate theme for Capell.
 
 - Provides restrained renderer views for B2B, public-sector, and professional-service Capell sites.
 - Helps owners launch a trust-led site with a theme direction that fits formal content and service pages.
+- Renders translated corporate defaults for hero credibility stats, proof/gallery controls, and content listing labels while allowing page render data to supply real stats.
 - Gives developers a corporate theme package to customize without weakening the shared Foundation Theme base.
 
 ## Best Used With
@@ -56,6 +57,8 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - CorporateThemeServiceProvider registers the renderer.
 - `capell.json` declares `themeKey: "corporate"` and `extends: "capell-app/foundation-theme"`.
 - Uses Foundation Theme runtime data and standard section keys, while rendering its own page and section Blade views.
+- Hero credibility stats can be supplied through section render data; translated corporate defaults are used when no custom stats exist.
+- Proof/gallery controls and content-listing labels use package translations so public UI copy stays localisable.
 - Ships Blade resources for the page wrapper and standard theme sections.
 - No migrations, config, routes, models, admin navigation, or package-owned settings are present.
 
@@ -94,7 +97,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Install Foundation Theme before using this renderer.
 - Install Layout Builder before running `capell:foundation-theme-setup`; Foundation Theme layout defaults need `blocks`.
 - Build frontend and Filament assets in demo apps. Foundation Theme frontend CSS needs the npm dependencies published by the theme stack.
-- Keep Theme Studio's active preset aligned with this theme (`boardroom`, `civic`, or `advisory`). A preset from another theme will fail when Corporate renders.
+- Keep Theme Studio's active preset aligned with this theme (`boardroom`, `civic`, `advisory`, `integrity`, `enterprise-trust`, or `public-ledger`). A preset from another theme will fail when Corporate renders.
 - Public output must not expose package/theme identifiers. Token CSS filenames are intentionally opaque.
 - Do not install a Studio metapackage; this package installs independently.
 

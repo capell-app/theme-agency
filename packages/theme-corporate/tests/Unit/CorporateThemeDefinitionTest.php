@@ -94,6 +94,103 @@ it('renders the corporate hero with a board briefing fallback', function (): voi
         ->not->toContain('capell-app/theme-corporate');
 });
 
+it('renders translated fallback and custom corporate hero stats', function (): void {
+    View::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/lang');
+
+    $fallbackHtml = view('capell-theme-corporate::sections.hero', [
+        'section' => new HeroSectionData(
+            heading: 'Governance for growing teams',
+            summary: 'Practical strategy, compliance, and delivery support.',
+        ),
+    ])->render();
+
+    expect($fallbackHtml)
+        ->toContain('Confidence')
+        ->toContain('Clear signals')
+        ->toContain('Board support')
+        ->toContain('Structured proof')
+        ->not->toContain('Pages')
+        ->not->toContain('Content')
+        ->not->toContain('Media')
+        ->not->toContain('Assets')
+        ->not->toContain('Layout')
+        ->not->toContain('Widgets');
+
+    $customHtml = view('capell-theme-corporate::sections.hero', [
+        'section' => (object) [
+            'heading' => 'Governance for growing teams',
+            'eyebrow' => null,
+            'summary' => null,
+            'actions' => [],
+            'mediaAlt' => null,
+            'mediaUrl' => null,
+            'stats' => [
+                ['label' => 'Offices', 'value' => '12'],
+                ['label' => 'Clients', 'value' => '240'],
+                ['label' => 'Markets', 'value' => '8'],
+            ],
+        ],
+    ])->render();
+
+    expect($customHtml)
+        ->toContain('Offices')
+        ->toContain('240')
+        ->toContain('Markets')
+        ->not->toContain('Clear signals');
+});
+
+it('renders translated corporate proof aria labels with generic public selectors', function (): void {
+    View::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-corporate::sections.proof', [
+        'section' => new ProofSectionData(
+            heading: 'Evidence',
+            items: [
+                [
+                    'image' => '/proof.jpg',
+                    'name' => 'Assurance review',
+                    'quote' => 'Approvals moved faster.',
+                ],
+            ],
+        ),
+    ])->render();
+
+    expect($html)
+        ->toContain('aria-label="Open image for Assurance review"')
+        ->toContain('aria-label="Previous proof cards"')
+        ->toContain('aria-label="Next proof cards"')
+        ->toContain('aria-label="Close gallery"')
+        ->toContain('data-carousel="proof"')
+        ->not->toContain('data-carousel="corporate-proof"');
+});
+
+it('renders content listing variant labels from translations', function (): void {
+    View::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-corporate::sections.content-listing', [
+        'section' => new ContentListingSectionData(
+            heading: 'Common questions',
+            items: [
+                [
+                    'title' => 'How do we start?',
+                    'summary' => 'Start with a readiness review.',
+                    'url' => '/questions/start',
+                ],
+            ],
+            variant: 'faq',
+        ),
+    ])->render();
+
+    expect($html)
+        ->toContain('FAQ')
+        ->toContain('Question 1')
+        ->not->toContain('{{ ucfirst($variant) }}')
+        ->not->toContain('Question {{ $loop->iteration }}');
+});
+
 it('registers corporate only when the theme package is installed', function (): void {
     CapellCore::clearPackages();
 

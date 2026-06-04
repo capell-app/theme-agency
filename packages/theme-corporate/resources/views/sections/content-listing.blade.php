@@ -1,6 +1,13 @@
 @php
     $variant = $section->variant ?? 'editorial';
     $sectionId = $variant === 'gallery' || $variant === 'media' ? 'gallery' : 'content';
+    $variantLabel = match ($variant) {
+        'faq' => __('capell-theme-corporate::generic.variant_faq'),
+        'media' => __('capell-theme-corporate::generic.variant_media'),
+        'metrics' => __('capell-theme-corporate::generic.variant_metrics'),
+        'people' => __('capell-theme-corporate::generic.variant_people'),
+        default => __('capell-theme-corporate::generic.variant_editorial'),
+    };
 @endphp
 
 @if (in_array($variant, ['gallery', 'pathways', 'spotlight'], true))
@@ -18,7 +25,7 @@
                     <p
                         class="mb-3 text-xs font-semibold tracking-[0.16em] text-[var(--theme-primary)] uppercase dark:text-[var(--theme-accent)]"
                     >
-                        {{ ucfirst($variant) }}
+                        {{ $variantLabel }}
                     </p>
                     <h2
                         class="max-w-xl text-2xl leading-tight font-semibold text-slate-950 sm:text-3xl lg:text-4xl dark:text-white"
@@ -119,7 +126,7 @@
                             <span
                                 class="text-xs font-medium tracking-[0.16em] text-slate-400 uppercase"
                             >
-                                Question {{ $loop->iteration }}
+                                {{ __('capell-theme-corporate::generic.question_number', ['number' => $loop->iteration]) }}
                             </span>
                             <span>
                                 <span
