@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\Comments\Actions\CreateCommentAction;
+use Capell\Comments\Actions\ScoreCommentSpamAction;
 use Capell\Comments\Actions\TransitionCommentStatusAction;
 use Capell\Comments\Actions\VerifyCommentAuthorEmailAction;
 use Capell\Comments\Data\CreateCommentData;
@@ -144,6 +145,43 @@ it('rejects bot-trap comment submissions before persisting comments', function (
     }, 'body');
 
     expect(Comment::query()->whereIn('body', ['Filled honeypot', 'Too fast'])->exists())->toBeFalse();
+});
+
+it('scores comments against configured spam rules', function (): void {
+    config()->set('capell-comments.spam.max_links', 1);
+    config()->set('capell-comments.spam.blocked_terms', ['casino', '']);
+
+    $score = ScoreCommentSpamAction::run(
+        body: 'CASINO offer at https://one.test and https://two.test',
+        linkCount: 2,
+    );
+
+    expect($score->isSpam())->toBeTrue()
+        ->and($score->linkCount)->toBe(2)
+        ->and($score->reasons)->toContain('too_many_links', 'blocked_term:casino');
+});
+
+it('marks configured spam submissions before verification or moderation', function (): void {
+    Notification::fake();
+    config()->set('capell-comments.spam.max_links', 1);
+    config()->set('capell-comments.spam.blocked_terms', ['casino']);
+
+    $page = $this->createCommentsPage();
+
+    $comment = CreateCommentAction::run(new CreateCommentData(
+        commentable: $page,
+        body: 'CASINO offer at https://one.test and https://two.test',
+        authorName: 'Spammer',
+        authorEmail: 'spam@example.com',
+    ));
+
+    expect($comment->status)->toBe(CommentStatus::Spam)
+        ->and($comment->spam_reasons)->toContain('too_many_links', 'blocked_term:casino')
+        ->and($comment->link_count)->toBe(2)
+        ->and($comment->marked_spam_at)->not->toBeNull()
+        ->and(CommentToken::query()->where('comment_id', $comment->getKey())->exists())->toBeFalse();
+
+    Notification::assertNothingSent();
 });
 
 it('binds a verified authenticated user to an existing anonymous author without duplicate email hash failures', function (): void {

@@ -17,6 +17,8 @@ editors keep approval and author-management work inside Capell Admin.
 - Settings for identity mode, publication policy, verification flow, page size,
   depth, throttling, spam checks, and moderator notifications.
 - Public form bot-trap controls for honeypot-filled and too-fast submissions.
+- Automatic local spam scoring for configured link-count and blocked-term
+  rules.
 - Diagnostics checks for storage tables, settings registration, thread route
   registration, and Livewire component registration.
 
@@ -39,6 +41,8 @@ not reveal internal moderation data.
 - `FrontendServiceProvider` registers the public Livewire thread component.
 - `RenderCommentThreadController` serves the dynamic thread endpoint.
 - `VerifyCommentAuthorEmailController` handles author verification links.
+- `ScoreCommentSpamAction` applies local spam heuristics before comment
+  verification or public visibility decisions.
 - `CommentsHealthCheck` reports real Diagnostics results for package storage,
   settings, route, and component wiring.
 
@@ -79,5 +83,5 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
 ```
 
 The current focused tests cover settings registration, settings resolution,
-manifest requirements, health diagnostics, email verification, public thread
-rendering, component submission, and bot-trap rejection.
+manifest requirements, health diagnostics, email verification, spam scoring,
+public thread rendering, component submission, and bot-trap rejection.

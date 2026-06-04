@@ -13,6 +13,7 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 - **2026-06-03:** Rewrote marketplace/Composer copy, declared `LatestCommentsWidget` in manifest contributions, and added manifest coverage for registered dashboard widgets.
 - **2026-06-04:** Added public comment form bot-trap controls: a hidden honeypot field, configurable minimum form age, action-level rejection before persistence, component state reset, and action/Livewire tests.
 - **2026-06-04:** Implemented real `CommentsHealthCheck` diagnostics for required storage tables, settings registration, the public thread route, and the public thread Livewire component, with focused failure-mode tests.
+- **2026-06-04:** Implemented automatic local spam scoring for configured link-count and blocked-term rules, storing `spam_reasons`, marking flagged submissions as `Spam`, and skipping verification tokens for auto-spam comments.
 
 ## 2. Improvements (existing functionality)
 
@@ -34,7 +35,7 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 
 Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `comments-created-event` — these are structurally present. The gaps below are category table-stakes that are advertised in config/README but not built, plus differentiators.
 
-- **Spam scoring (table-stakes, advertised, NOT built).** `config('capell-comments.spam.max_links')` and `spam.blocked_terms` exist (`config/capell-comments.php:28-31`), the `comments.spam_reasons` JSON column exists (migration `..._000002`) and is `fillable`/cast (`src/Models/Comment.php:58,171`), and `CommentBodySanitizer::linkCount()` is computed and stored on every comment (`src/Actions/CreateCommentAction.php:97`) — **but nothing ever reads `max_links`/`blocked_terms`, writes `spam_reasons`, or sets `CommentStatus::Spam` automatically.** Spam status is only reachable via manual moderator action (`src/Filament/Resources/Comments/Tables/CommentsTable.php:63`, `TransitionCommentStatusAction`). The README's "spam ... settings" claim is unfulfilled. Build a `ScoreCommentSpamAction` invoked from `CreateCommentAction` that applies link-count + blocked-term rules, populates `spam_reasons`, and routes to `Spam`/`PendingApproval`.
+- **Shipped 2026-06-04: Spam scoring (table-stakes, advertised).** `ScoreCommentSpamAction` reads `config('capell-comments.spam.max_links')` and `spam.blocked_terms`, returns `CommentSpamScoreData`, and `CreateCommentAction` stores `spam_reasons`, sets `CommentStatus::Spam`, stamps `marked_spam_at`, and skips verification-token creation for flagged submissions. Focused coverage proves direct scoring and create-flow persistence. — `src/Actions/ScoreCommentSpamAction.php`, `src/Data/CommentSpamScoreData.php`, `src/Actions/CreateCommentAction.php`, `tests/Integration/Actions/CreateCommentActionTest.php`
 
 - **Rate-limit hardening (anti-abuse).** The submit throttle key includes attacker-controlled `$this->authorEmail` (`src/Livewire/CommentThreadComponent.php:176-181`), so a bot varying the email field resets its own bucket. Re-key on IP + commentable (+ optional author hash) only, and consider a per-author-email _secondary_ cap rather than the primary key. Table-stakes for guest comments.
 
@@ -52,7 +53,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **Health check coverage shipped.** `src/Health/CommentsHealthCheck.php` now exposes real Diagnostics results for the critical package-health declaration in `capell.json`. Residual risk: these checks cover package wiring, not spam scoring, notifications, or public render budgets.
 
-- **Dead spam configuration.** `spam.max_links`, `spam.blocked_terms`, the `spam_reasons` column, and `linkCount()` are wired up to the _write_ path but never _enforced_ (see §3). Tech debt + a security gap: the package presents as having spam protection it does not have. `config/capell-comments.php:28`, `src/Actions/CreateCommentAction.php:97`, `src/Models/Comment.php:58`.
+- **Local spam scoring shipped.** `spam.max_links`, `spam.blocked_terms`, the `spam_reasons` column, and `linkCount()` are now enforced during `CreateCommentAction`. Residual risk: the heuristic remains intentionally local and simple; external spam providers, CAPTCHA/Turnstile, richer link detection, and moderator notification workflows remain separate roadmap items.
 
 - **Throttle bypass via email field.** `src/Livewire/CommentThreadComponent.php:176`. A trivial bot loop defeats the only built-in rate limit. Spam resilience risk.
 
@@ -64,7 +65,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **PII / retention.** Author `name`/`email` are `encrypted` at rest ✔ and `email_hash` is HMAC ✔ (`src/Models/CommentAuthor.php:50-58,123`). Gaps: (1) `email_hash_secret`/`visitor_hash_secret` default to `null` from env and silently fall back to `app.key` (`config/capell-comments.php:22-23`, `src/Support/VisitorHasher.php:15`, `CommentAuthor::emailHash`) — rotating `app.key` orphans all hashes; document and warn. (2) No retention/erasure policy or command for visitor IP/UA hashes or author records (GDPR right-to-erasure). (3) `internal_notes` and `moderation_note` are plaintext.
 
-- **Test gaps.** Coverage now includes health diagnostics and bot-trap rejection at action and Livewire levels. Still not covered: rate-limit/throttle behavior, automatic spam scoring (feature absent), moderator notification (feature absent), `auto_inject` anonymous-leakage, reply pagination, performance budgets, and there are **no Architecture tests** for this package.
+- **Test gaps.** Coverage now includes health diagnostics, spam scoring, and bot-trap rejection at action and Livewire levels. Still not covered: rate-limit/throttle behavior, moderator notification (feature absent), `auto_inject` anonymous-leakage, reply pagination, performance budgets, and there are **no Architecture tests** for this package.
 
 - **i18n.** Strings are translated via `capell-comments::` namespaces ✔. `diffForHumans()` in the public Blade (`thread.blade.php:24,47`) is not locale-pinned to the site language and may render in the app locale rather than the page's `language_id`.
 
@@ -72,7 +73,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 ## 5. Marketplace & Selling
 
-**Critique.** The marketplace `summary` and the composer `description` ("Configurable moderated comments for Capell pages and content.") are accurate but generic and lean on two adjectives ("moderated, configurable, cache-safe") that undersell the real differentiators (post-load no-store rendering that keeps cached pages safe; encrypted author PII; per-site/per-type setting overrides) — and, worse, "configurable" currently implies spam/notification toggles that don't function (§3/§4). Fix the product before leaning on those words. Only 1 marketing screenshot is wired despite 4 high-value runtime captures already specified in `screenshots.json` (moderation inbox and a real public thread are the money shots).
+**Critique.** The marketplace `summary` and the composer `description` are now more specific about cache-safe public rendering, encrypted author records, and per-site moderation controls. The remaining weak spot is operational proof: moderator notifications still are not wired, and only 1 marketing screenshot is declared despite 4 high-value runtime captures already specified in `screenshots.json` (moderation inbox and a real public thread are the money shots).
 
 **Improved 1-sentence summary:** "Add moderated, threaded discussion to any Capell page or article — with cache-safe public rendering, encrypted author records, and per-site moderation controls, no custom code required."
 
@@ -80,7 +81,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 **Media gaps:** wire the 4 `screenshots.json` captures into `capell.json.marketplace.screenshots`; add a short GIF of the moderation approve/reject flow and a before/after of a cached page with comments loading in.
 
-**Pricing / tier / bundle positioning:** `tier: premium`, `bundle: comments`, `proposedLicense: paid`, `requestedCertification: first-party`, `supportPolicy: priority`. Reasonable, but to _hold_ premium it must close the spam/notification gaps — a "moderated comments" product that can't auto-flag spam or alert moderators is hard to defend at premium against bundled CMS comment add-ons. Cross-sell paths already in deps/manifest: **Blog** (`supports`) for article discussion — lead with this in the listing; **Email Studio** (`supports`) for richer moderator/author notification templates — make this the up-sell once §3 notifications ship; **HTML Cache** (README "Best Used With") — position the no-store design as the reason these two coexist safely. Extension-suite angle: package with Blog + Email Studio as an "Engagement Suite."
+**Pricing / tier / bundle positioning:** `tier: premium`, `bundle: comments`, `proposedLicense: paid`, `requestedCertification: first-party`, `supportPolicy: priority`. Reasonable, but to _hold_ premium it must close the moderator notification gap — a "moderated comments" product that can auto-flag spam but cannot alert moderators is still hard to defend at premium against bundled CMS comment add-ons. Cross-sell paths already in deps/manifest: **Blog** (`supports`) for article discussion — lead with this in the listing; **Email Studio** (`supports`) for richer moderator/author notification templates — make this the up-sell once §3 notifications ship; **HTML Cache** (README "Best Used With") — position the no-store design as the reason these two coexist safely. Extension-suite angle: package with Blog + Email Studio as an "Engagement Suite."
 
 **Differentiators / value props:** cache-safe post-load rendering; encrypted PII + HMAC dedup; per-site & per-commentable-type setting overrides; verification flows (verify-then-moderate / moderate-then-verify); soft-delete + full moderation audit trail (`comment_moderation_events`). **Target buyer:** content/marketing teams on Capell (esp. Blog users) who want managed discussion without standing up Disqus/a third party and without breaking page caching.
 
@@ -91,7 +92,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 | Item                                                                                          | Bucket | Effort | Impact | Section ref |
 | --------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
 | Shipped 2026-06-04: implement real `CommentsHealthCheck` (tables, settings, route, component) | Now    | M      | High   | §2, §4      |
-| Implement automatic spam scoring (`max_links`, `blocked_terms`, write `spam_reasons`)         | Now    | M      | High   | §3, §4      |
+| Shipped 2026-06-04: implement automatic spam scoring (`max_links`, `blocked_terms`, write `spam_reasons`) | Now    | M      | High   | §3, §4      |
 | Fix throttle key (drop attacker-controlled email from primary bucket)                         | Now    | S      | High   | §3, §4      |
 | Wire moderator new-comment notification listener on `CommentCreated`                          | Now    | M      | High   | §2, §3      |
 | Add `auto_inject` anonymous-leakage + throttle Pest tests; add Arch tests                     | Now    | M      | High   | §4          |

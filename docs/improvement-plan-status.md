@@ -8,7 +8,7 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 348 |
+| Now    | 347 |
 | Next   | 336 |
 | Later  | 205 |
 
@@ -29,7 +29,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | Package | Now | Next | Later | Current status | Evidence / next action |
 | ------- | --: | ---: | ----: | -------------- | ---------------------- |
 | campaign-studio | 6 | 5 | 5 | Slice committed | Latest Campaign Studio slice adds campaign hero UTM fields, decorates hero CTA URLs through `BuildCampaignUrlAction`, updates screenshots/docs, and adds public render coverage; continue with CTA/page-view capture, full-page public safety tests, cache/personalisation strategy, variant publish filtering, scheduling, and experiment result readout. |
-| comments | 5 | 5 | 3 | Slice committed | Latest Comments slice implements real Diagnostics health checks for storage tables, settings registration, the public thread route, and the public thread Livewire component; continue with spam scoring, throttle key hardening, moderator notifications, auto-inject leakage tests, reply pagination, marketplace screenshots, and retention/erasure work. |
+| comments | 4 | 5 | 3 | Slice committed | Latest Comments slice implements automatic spam scoring for configured link-count and blocked-term rules, stores `spam_reasons`, and routes flagged submissions to `Spam`; continue with throttle key hardening, moderator notifications, auto-inject leakage tests, reply pagination, marketplace screenshots, and retention/erasure work. |
 | contacts | 6 | 7 | 2 | Slice committed | `132778050` fixed stats scoping; continue with privacy/export/merge gaps. |
 | content-sections | 5 | 6 | 4 | Slice committed | `54b758fe1` landed readiness fixes; continue with remaining render safety/content rows. |
 | customer-portal | 6 | 7 | 3 | Slice committed | `6de22b6d4` landed a now-bucket slice; continue with cross-account and profile gaps. |

@@ -83,6 +83,13 @@ class CreateCommentAction
                 ]);
             }
 
+            $linkCount = $this->sanitizer->linkCount($body);
+            $spamScore = ScoreCommentSpamAction::run($body, $linkCount);
+            $initialStatus = $spamScore->isSpam()
+                ? CommentStatus::Spam
+                : $this->initialStatus($author, $siteId, $commentableType->key, $emailVerifiedForSubmission);
+            $submittedAt = now()->toImmutable();
+
             $comment = Comment::query()->create([
                 'site_id' => $siteId,
                 'language_id' => $data->languageId,
@@ -92,13 +99,15 @@ class CreateCommentAction
                 'parent_id' => $parent?->getKey(),
                 'root_id' => $parent instanceof Comment ? ($parent->root_id ?? $parent->getKey()) : null,
                 'depth' => $depth,
-                'status' => $this->initialStatus($author, $siteId, $commentableType->key, $emailVerifiedForSubmission),
+                'status' => $initialStatus,
                 'body' => $body,
                 'visitor_ip_hash' => $this->visitorHasher->hash($data->ipAddress, $siteId),
                 'visitor_user_agent_hash' => $this->visitorHasher->hash($data->userAgent, $siteId),
-                'link_count' => $this->sanitizer->linkCount($body),
-                'submitted_at' => now()->toImmutable(),
+                'link_count' => $linkCount,
+                'spam_reasons' => $spamScore->isSpam() ? $spamScore->reasons : null,
+                'submitted_at' => $submittedAt,
                 'email_verified_at' => $emailVerifiedForSubmission ? now()->toImmutable() : null,
+                'marked_spam_at' => $spamScore->isSpam() ? $submittedAt : null,
             ]);
 
             CommentModerationEventAction::run(
@@ -108,7 +117,7 @@ class CreateCommentAction
                 newStatus: $comment->status,
             );
 
-            if ($this->settings->requiresEmailVerification($siteId, $commentableType->key) && ! $emailVerifiedForSubmission && $author->email !== null) {
+            if (! $spamScore->isSpam() && $this->settings->requiresEmailVerification($siteId, $commentableType->key) && ! $emailVerifiedForSubmission && $author->email !== null) {
                 RequestCommentEmailVerificationAction::run($author, $comment);
             }
 

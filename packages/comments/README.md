@@ -45,6 +45,9 @@ to registered Capell content.
 - `CommentThreadComponent` for post-load public thread rendering.
 - Public comment form bot-trap controls: a hidden honeypot field and
   configurable minimum form age.
+- Automatic spam scoring for configured link-count and blocked-term rules,
+  storing reasons on the comment and routing flagged submissions to `Spam`
+  before verification mail is sent.
 - Diagnostics-ready `CommentsHealthCheck` coverage for storage tables, settings
   registration, the public thread route, and the public thread Livewire
   component.
@@ -75,7 +78,7 @@ to registered Capell content.
 | Verification  | `src/Actions/RequestCommentEmailVerificationAction.php`, `src/Actions/VerifyCommentAuthorEmailAction.php`      |
 | Moderation    | `src/Actions/TransitionCommentStatusAction.php`, `src/Filament/Pages/CommentModerationInbox.php`               |
 | Settings      | `src/Settings/CommentSettings.php`, `src/Filament/Settings/CommentSettingsSchema.php`                          |
-| Data objects  | `src/Data/PublicCommentData.php`, `src/Data/PublicCommentableThreadData.php`, `src/Data/CreateCommentData.php` |
+| Data objects  | `src/Data/PublicCommentData.php`, `src/Data/PublicCommentableThreadData.php`, `src/Data/CreateCommentData.php`, `src/Data/CommentSpamScoreData.php` |
 | Models        | `src/Models/Comment.php`, `src/Models/CommentAuthor.php`, `src/Models/CommentToken.php`                        |
 
 ## Install Impact
@@ -108,6 +111,8 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
   Blade.
 - Keep bot-trap fields public-form only; API/programmatic comment creation may
   omit them, but public forms should pass them through `CreateCommentData`.
+- Keep spam scoring in `ScoreCommentSpamAction`; new heuristics should return
+  explicit `spam_reasons` and must not leak into public thread DTOs.
 - Keep `CommentsHealthCheck` aligned with the manifest's critical package-health
   claim whenever routes, storage, settings, or frontend component aliases change.
 - Add focused docs when new commentable registries, notification flows, or

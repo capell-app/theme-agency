@@ -6,6 +6,8 @@ All notable changes to `capell-app/comments` will be documented in this file.
 
 ### 2026-06-04
 
+- Added automatic spam scoring for configured link-count and blocked-term rules, storing `spam_reasons` and routing flagged comments to `Spam`.
+- Added direct score and create-flow coverage proving auto-spam comments skip verification token creation.
 - Implemented real `CommentsHealthCheck` diagnostics for required storage tables, settings registration, the public thread route, and the public thread Livewire component.
 - Added focused health-check tests covering passing diagnostics and failure modes for missing storage, settings, and route wiring.
 - Added public comment form bot-trap controls: a hidden honeypot field and a configurable minimum form age.
