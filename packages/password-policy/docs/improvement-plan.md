@@ -75,7 +75,7 @@ Tied to `capabilities[]`: `password-policy`, `password-policy-admin`.
 | -------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
 | Test HIBP/`uncompromised` path with `Http::fake()` + stray-request guard                     | Done   | S      | High   | §4          |
 | Backfill `password_changed_at` on install (or treat null as non-expired)                     | Done   | M      | High   | §2, §4      |
-| Add direct middleware tests (redirect, allowed-route, compliant no-op)                       | Now    | S      | High   | §4          |
+| Add direct middleware tests (redirect, allowed-route, compliant no-op)                       | Done   | S      | High   | §4          |
 | Reconcile manifest drift: composer↔capell.json desc, fill README, resolve console capability | Done   | S      | Medium | §4, §5      |
 | Generate the 3 required marketplace screenshots; rewrite summary/description                 | Now    | S      | High   | §5          |
 | Add configurable complexity rules (length/case/number/symbol) + wire into validator          | Done   | M      | High   | §3, §2      |
