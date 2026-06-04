@@ -105,3 +105,13 @@ it('lazy audit badges expose issue counts for the edit page tabs', function (): 
         ->assertSet('issueCount', 2)
         ->assertSeeText('2');
 });
+
+it('renders lazy audit badges with a root element when context is unavailable', function (): void {
+    Livewire::test(EditPageSeoAuditBadge::class)
+        ->assertSet('issueCount', null)
+        ->assertOk();
+
+    Livewire::test(EditPagePageSpeedAuditBadge::class)
+        ->assertSet('issueCount', null)
+        ->assertOk();
+});
