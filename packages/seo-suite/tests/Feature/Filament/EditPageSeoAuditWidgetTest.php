@@ -5,6 +5,9 @@ declare(strict_types=1);
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
+use Capell\SeoSuite\Filament\Widgets\EditPageAuditTabsWidget;
+use Capell\SeoSuite\Filament\Widgets\EditPagePageSpeedAuditBadge;
+use Capell\SeoSuite\Filament\Widgets\EditPageSeoAuditBadge;
 use Capell\SeoSuite\Filament\Widgets\EditPageSeoAuditWidget;
 use Capell\SeoSuite\Support\Admin\PageSeoAuditPageEditExtender;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
@@ -18,7 +21,7 @@ beforeEach(function (): void {
     test()->actingAsAdmin();
 });
 
-it('contributes the edit page seo audit widget from seo suite', function (): void {
+it('contributes the edit page audit tabs widget from seo suite', function (): void {
     $extender = resolve(PageSeoAuditPageEditExtender::class);
     $widgets = $extender->getHeaderWidgets();
     $widget = $widgets[0] ?? null;
@@ -27,9 +30,30 @@ it('contributes the edit page seo audit widget from seo suite', function (): voi
 
     throw_unless($widget instanceof WidgetConfiguration, RuntimeException::class, 'Expected SEO audit header widget to be a widget configuration.');
 
-    expect($widget->widget)->toBe(EditPageSeoAuditWidget::class)
+    expect($widget->widget)->toBe(EditPageAuditTabsWidget::class)
         ->and($widget->getProperties())->toBe(['record' => null])
+        ->and($widgets)->toHaveCount(1)
         ->and($extender->getFormActions())->toBe([]);
+});
+
+it('switches edit page audit tabs without loading both tab bodies up front', function (): void {
+    $language = Language::factory()->create();
+    $site = Site::factory()
+        ->language($language)
+        ->withTranslations($language, siteDomainData: ['scheme' => 'https', 'domain' => 'example.com', 'path' => null])
+        ->create();
+
+    $page = Page::factory()
+        ->site($site)
+        ->withTranslations($language, slug: 'home')
+        ->create();
+
+    Livewire::test(EditPageAuditTabsWidget::class, ['record' => $page])
+        ->assertSet('activeTab', 'seo')
+        ->assertSeeText(__('capell-seo-suite::generic.seo_audit'))
+        ->assertSeeText(__('capell-seo-suite::generic.pagespeed_audit'))
+        ->call('selectTab', 'pagespeed')
+        ->assertSet('activeTab', 'pagespeed');
 });
 
 it('renders no checks when report context is unavailable', function (): void {
@@ -51,4 +75,25 @@ it('passes the meta description check when description is present', function ():
 
     Livewire::test(EditPageSeoAuditWidget::class, ['record' => $page])
         ->assertSet('checks', fn (SupportCollection $checks): bool => $checks['meta_description']->pass === true);
+});
+
+it('lazy audit badges expose issue counts for the edit page tabs', function (): void {
+    $language = Language::factory()->create();
+    $site = Site::factory()
+        ->language($language)
+        ->withTranslations($language, siteDomainData: ['scheme' => 'https', 'domain' => 'example.com', 'path' => null])
+        ->create();
+
+    $page = Page::factory()
+        ->site($site)
+        ->withTranslations($language, slug: 'home')
+        ->create();
+
+    Livewire::test(EditPageSeoAuditBadge::class, ['record' => $page])
+        ->assertSet('issueCount', 5)
+        ->assertSeeText('5');
+
+    Livewire::test(EditPagePageSpeedAuditBadge::class, ['record' => $page])
+        ->assertSet('issueCount', 2)
+        ->assertSeeText('2');
 });

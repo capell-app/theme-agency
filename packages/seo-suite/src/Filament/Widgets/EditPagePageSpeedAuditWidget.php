@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Capell\SeoSuite\Filament\Widgets;
 
 use Capell\Admin\Filament\Concerns\HasBlankPlaceholder;
-use Capell\Core\Contracts\Pageable;
 use Capell\Core\Models\Page;
 use Capell\SeoSuite\Contracts\PageSpeedInsightsClientInterface;
 use Capell\SeoSuite\Enums\PageSpeedStrategyEnum;
+use Capell\SeoSuite\Filament\Widgets\Concerns\ResolvesEditPageRecord;
 use Capell\SeoSuite\Jobs\RunPageSpeedAuditJob;
 use Capell\SeoSuite\Models\PageSpeedAuditResult;
 use Filament\Notifications\Notification;
@@ -21,26 +21,13 @@ use Livewire\Attributes\On;
 class EditPagePageSpeedAuditWidget extends Widget
 {
     use HasBlankPlaceholder;
+    use ResolvesEditPageRecord;
 
-    public ?Pageable $record = null;
-
-    public ?int $recordKey = null;
+    public bool $embedded = false;
 
     protected int|string|array $columnSpan = 'full';
 
     protected string $view = 'capell-seo-suite::filament.widgets.pagespeed-audit-edit';
-
-    private ?Pageable $resolvedRecord = null;
-
-    public function mount(): void
-    {
-        $this->recordKey ??= $this->initialRecordKey();
-    }
-
-    public function hydrate(): void
-    {
-        $this->recordKey ??= $this->initialRecordKey();
-    }
 
     public function runAudit(): void
     {
@@ -121,46 +108,5 @@ class EditPagePageSpeedAuditWidget extends Widget
             'poor', 'failed' => 'danger',
             default => 'gray',
         };
-    }
-
-    private function pageRecord(): ?Pageable
-    {
-        if ($this->resolvedRecord instanceof Pageable) {
-            return $this->resolvedRecord;
-        }
-
-        if ($this->record instanceof Pageable) {
-            $this->recordKey ??= (int) $this->record->getKey();
-            $this->resolvedRecord = $this->record;
-
-            return $this->resolvedRecord;
-        }
-
-        if ($this->recordKey === null) {
-            return null;
-        }
-
-        $this->resolvedRecord = Page::query()->find($this->recordKey);
-
-        return $this->resolvedRecord;
-    }
-
-    private function initialRecordKey(): ?int
-    {
-        if ($this->record instanceof Pageable) {
-            return (int) $this->record->getKey();
-        }
-
-        $routeRecord = request()->route('record');
-
-        if ($routeRecord instanceof Pageable) {
-            return (int) $routeRecord->getKey();
-        }
-
-        if (is_numeric($routeRecord)) {
-            return (int) $routeRecord;
-        }
-
-        return null;
     }
 }

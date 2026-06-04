@@ -1,9 +1,10 @@
-<x-filament-widgets::widget>
-    <x-filament::section
-        :heading="__('capell-seo-suite::generic.pagespeed_audit')"
-        icon="heroicon-o-bolt"
-        :collapsible="true"
-    >
+@if (! $embedded)
+    <x-filament-widgets::widget>
+        <x-filament::section
+            :heading="__('capell-seo-suite::generic.pagespeed_audit')"
+            icon="heroicon-o-bolt"
+            :collapsible="true"
+        >
         <x-slot name="headerEnd">
             <x-filament::button
                 icon="heroicon-o-arrow-path"
@@ -15,6 +16,19 @@
                 {{ __('capell-seo-suite::generic.pagespeed_run_audit') }}
             </x-filament::button>
         </x-slot>
+@else
+    <div class="mb-4 flex justify-end">
+        <x-filament::button
+            icon="heroicon-o-arrow-path"
+            size="sm"
+            wire:click="runAudit"
+            wire:loading.attr="disabled"
+            wire:target="runAudit"
+        >
+            {{ __('capell-seo-suite::generic.pagespeed_run_audit') }}
+        </x-filament::button>
+    </div>
+@endif
 
         @if ($this->latestResults->isEmpty())
             <p class="text-sm text-gray-500 dark:text-gray-400">
@@ -194,5 +208,7 @@
                 @endforeach
             </div>
         @endif
-    </x-filament::section>
-</x-filament-widgets::widget>
+@if (! $embedded)
+        </x-filament::section>
+    </x-filament-widgets::widget>
+@endif

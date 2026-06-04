@@ -1,9 +1,11 @@
-<x-filament-widgets::widget>
-    <x-filament::section
-        :heading="__('capell-seo-suite::generic.seo_audit')"
-        icon="heroicon-o-magnifying-glass"
-        :collapsible="true"
-    >
+@if (! $embedded)
+    <x-filament-widgets::widget>
+        <x-filament::section
+            :heading="__('capell-seo-suite::generic.seo_audit')"
+            icon="heroicon-o-magnifying-glass"
+            :collapsible="true"
+        >
+@endif
         @if ($this->checks->isEmpty())
             <p class="text-sm text-gray-500 dark:text-gray-400">
                 {{ __('capell-seo-suite::generic.no_checks') }}
@@ -65,5 +67,7 @@
                 @endforeach
             </div>
         @endif
-    </x-filament::section>
-</x-filament-widgets::widget>
+@if (! $embedded)
+        </x-filament::section>
+    </x-filament-widgets::widget>
+@endif
