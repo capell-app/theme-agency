@@ -87,8 +87,9 @@ No package should be marked `Complete` from commit history alone. Completion req
 
 ## Next Audit Queue
 
-Highest-value remaining work should start with packages that are both high-risk and still marked `Needs audit`:
+No package rows are currently marked `Needs audit`. Highest-value remaining work should continue from the explicit follow-up notes in the `Slice committed` rows:
 
-1. Theme-line systemic pass: `extends` alignment, token-driven colors, screenshots, WCAG/dark mode.
+1. Theme-line systemic pass: route-backed screenshots, token-driven colors, WCAG/dark mode, LCP/image handling, and render-budget coverage.
+2. Product-depth pass: real connected integrations, data-driven section content, and stronger vertical differentiators for each premium theme.
 
 After each package slice lands, update this tracker with the commit and any rows that remain high-risk.
