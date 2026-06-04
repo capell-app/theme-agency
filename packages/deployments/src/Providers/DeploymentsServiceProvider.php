@@ -44,9 +44,7 @@ class DeploymentsServiceProvider extends AbstractPackageServiceProvider
                     ->limit(2)
                     ->get();
 
-                if ($connections->count() > 1) {
-                    throw new LogicException('Deployments cannot choose a Composer publishing repository because multiple active deployment connections exist. Publish with PublishComposerRequirementAction and an explicit DeploymentConnection.');
-                }
+                throw_if($connections->count() > 1, LogicException::class, 'Deployments cannot choose a Composer publishing repository because multiple active deployment connections exist. Publish with PublishComposerRequirementAction and an explicit DeploymentConnection.');
 
                 $connection = $connections->firstOrFail();
 

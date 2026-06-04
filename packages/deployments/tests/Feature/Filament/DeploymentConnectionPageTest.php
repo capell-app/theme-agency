@@ -69,8 +69,8 @@ it('disables connect providers until repository and oauth client configuration a
     test()->actingAs(test()->createUserWithPermission('Manage:DeploymentConnectionPage'));
 
     config()->set('capell-deployments.oauth.github.client_id', 'github-client-id');
-    config()->set('capell-deployments.oauth.gitlab.client_id', null);
-    config()->set('capell-deployments.oauth.bitbucket.client_id', null);
+    config()->set('capell-deployments.oauth.gitlab.client_id');
+    config()->set('capell-deployments.oauth.bitbucket.client_id');
 
     $page = new DeploymentConnectionPage;
 

@@ -73,8 +73,11 @@ function companionDependencyBoundaryPackages(): array
 
         $packageName = $composer['name'] ?? null;
         $autoload = $composer['autoload']['psr-4'] ?? null;
+        if (! is_string($packageName)) {
+            continue;
+        }
 
-        if (! is_string($packageName) || ! is_array($autoload)) {
+        if (! is_array($autoload)) {
             continue;
         }
 
@@ -131,7 +134,11 @@ function companionDependencyBoundaryComposerFiles(): array
 function companionDependencyBoundarySourceNamespace(array $autoload): ?string
 {
     foreach ($autoload as $namespace => $path) {
-        if ($path !== 'src' || ! is_string($namespace)) {
+        if ($path !== 'src') {
+            continue;
+        }
+
+        if (! is_string($namespace)) {
             continue;
         }
 
@@ -155,7 +162,11 @@ function companionDependencyBoundaryRequiredPackageNames(mixed $requires): array
     $packageNames = [];
 
     foreach (array_keys($requires) as $packageName) {
-        if (! is_string($packageName) || ! str_starts_with($packageName, 'capell-app/')) {
+        if (! is_string($packageName)) {
+            continue;
+        }
+
+        if (! str_starts_with($packageName, 'capell-app/')) {
             continue;
         }
 

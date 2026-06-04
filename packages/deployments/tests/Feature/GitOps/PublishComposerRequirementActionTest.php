@@ -91,7 +91,7 @@ it('bound composer publisher fails loudly when multiple active connections exist
     DeploymentConnection::factory()->github()->create();
     DeploymentConnection::factory()->gitlab()->create();
 
-    expect(fn (): mixed => app(PublishesComposerChanges::class)->publish(
+    expect(fn (): mixed => resolve(PublishesComposerChanges::class)->publish(
         new ComposerRequirementData(composerName: 'capell/ambiguous-extension'),
     ))->toThrow(LogicException::class, 'multiple active deployment connections exist');
 });
