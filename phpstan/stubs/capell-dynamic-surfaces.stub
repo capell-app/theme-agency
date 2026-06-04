@@ -34,8 +34,8 @@ class ShieldConfig {}
 
 namespace Capell\Core\Models;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -46,19 +46,27 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $pageable_type
  * @property string $url
  * @property string|null $target_url
- * @property string|null $full_url
+ * @property string $full_url
  * @property mixed|null $type
  * @property bool $is_manual
  * @property int $hit_count
  * @property mixed|null $last_hit_at
  * @property mixed|null $updated_at
  * @property-read Language|null $language
+ *
+ * @method mixed siteDomain()
  */
-class PageUrl extends Model {}
+class PageUrl extends Model
+{
+    public function fullUrl(): string {}
+}
+
+class SiteDomain extends Model {}
 
 /**
+ * @property string $name
  * @property int $language_id
- * @property-read Collection<int, \Capell\Core\Models\Language> $languages
+ * @property-read Collection<int, Language> $languages
  * @property-read Collection<int, Model> $navigations
  * @property-read Language|null $language
  */
@@ -96,9 +104,11 @@ class Translation extends Model {}
  * @property-read Layout|null $layout
  * @property-read Site|null $site
  * @property-read PageUrl|null $pageUrl
+ * @property-read Collection<int, Page> $ancestors
  * @property-read Translation|null $translation
  * @property-read Collection<int, Model> $translations
  *
+ * @method mixed pageUrl()
  * @method \Illuminate\Database\Eloquent\Relations\MorphMany<Model, self> widgetAssets()
  * @method \Illuminate\Database\Eloquent\Relations\MorphToMany<Model, self> widgets()
  */
@@ -148,10 +158,27 @@ class Type extends Model {}
 
 namespace Filament\Resources;
 
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
 class Resource
 {
+    /** @return Builder<Model> */
+    public static function getEloquentQuery(): Builder {}
+
+    /** @return class-string<Model> */
+    public static function getModel(): string {}
+
+    public static function getResourceName(): string {}
+
+    /** @return array<int, string|array<int, string>> */
+    public static function getGloballySearchableAttributes(): array {}
+
+    public static function getRecordTitle(Model $record): string|Htmlable|null {}
+
     /** @param array<string, mixed> $parameters */
-    public static function getUrl(?string $name = null, array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?\Illuminate\Database\Eloquent\Model $tenant = null): string {}
+    public static function getUrl(?string $name = null, array $parameters = [], bool $isAbsolute = true, ?string $panel = null, ?Model $tenant = null): string {}
 }
 
 namespace Illuminate\Database\Eloquent\Relations;
@@ -222,7 +249,6 @@ interface Pageable
 
     public function site(): mixed;
 }
-
 
 namespace Capell\Core\Models\Contracts;
 
@@ -304,11 +330,14 @@ class AssertElement extends BaseAssert
 
 namespace Spatie\EloquentSortable;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
 interface Sortable
 {
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model>
+     * @param  Builder<Model>  $query
+     * @return Builder<Model>
      */
-    public function scopeOrdered(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder;
+    public function scopeOrdered(Builder $query): Builder;
 }

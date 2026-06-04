@@ -17,8 +17,7 @@
     x-load
     x-load-src="{{ $recordSwitcherScriptSrc }}"
     x-data="selectChangerComponent({
-                getResultsUsing: async (search) =>
-                    await $wire.getRecordSwitcherOptions(search),
+                getResultsUsing: async (search) => await $wire.getOptions(search),
                 hasDynamicSearchResults: true,
                 label: @js($label),
                 loadingMessage:

@@ -78,7 +78,7 @@
     },
     "marketplace": {
         "summary": "Jump between editable Capell records directly from the page heading with fast suggestions and Tab-to-accept keyboard flow.",
-        "description": "Record Switcher keeps editors moving across pages, layouts, widgets, sections, and navigation records without returning to table views. It ships first-party admin assets, a reusable Filament edit-page trait, and Capell-owned styling that matches the admin surface.",
+        "description": "Record Switcher keeps editors moving across pages, layouts, widgets, sections, and navigation records without returning to table views. It ships first-party admin assets, a Livewire heading component, and Capell-owned styling that matches the admin surface.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.svg",

@@ -15,7 +15,6 @@ namespace Filament\Actions {
 namespace Filament\Widgets {
     class Widget
     {
-        /** @var string */
         protected string $view;
     }
 }

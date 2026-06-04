@@ -21,7 +21,7 @@ Record Switcher gives editors a fast way to move between editable records from t
 
 ## Setup Notes
 
-Install `capell-app/record-switcher` and use `Capell\RecordSwitcher\Concerns\HasRecordSwitcher` on Filament edit pages that should expose record switching.
+Install `capell-app/record-switcher`. The package registers itself through Capell Admin's edit-record heading bridge, so supported Filament edit pages expose record switching without importing package traits in the consuming resource.
 
 ## Screenshot Instructions
 

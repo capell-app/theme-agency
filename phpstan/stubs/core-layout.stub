@@ -20,9 +20,3 @@ use Illuminate\Database\Eloquent\Model;
  * @method mixed layoutWidgets()
  */
 class Layout {}
-
-/**
- * @property string $full_url
- * @property string $url
- */
-class PageUrl {}
