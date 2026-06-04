@@ -45,6 +45,41 @@ it('builds a publishing trend series for the selected dashboard period', functio
         ->and($data->totalScheduled)->toBe(1);
 });
 
+it('maps grouped publishing trend aggregates back to the expected buckets', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-05-06 12:00:00'));
+
+    $rangeStart = CarbonImmutable::parse('2026-05-03 00:00:00');
+    $rangeEnd = CarbonImmutable::parse('2026-05-10 00:00:00');
+
+    Page::factory()->published(CarbonImmutable::parse('2026-05-03 06:00:00'))->create();
+    Page::factory()->published(CarbonImmutable::parse('2026-05-04 00:00:00'))->create();
+    Page::factory()->published(CarbonImmutable::parse('2026-05-06 11:00:00'))->create();
+    Page::factory()->published(CarbonImmutable::parse('2026-05-02 23:00:00'))->create();
+
+    Page::factory()->pending()->create([
+        'visible_from' => CarbonImmutable::parse('2026-05-06 18:00:00'),
+    ]);
+    Page::factory()->pending()->create([
+        'visible_from' => CarbonImmutable::parse('2026-05-08 00:00:00'),
+    ]);
+    Page::factory()->pending()->create([
+        'visible_from' => CarbonImmutable::parse('2026-05-10 01:00:00'),
+    ]);
+
+    $data = BuildPublishingTrendAction::run($rangeStart, $rangeEnd);
+
+    expect(array_map(
+        fn (PublishingTrendPointData $point): int => $point->publishedCount,
+        $data->points,
+    ))->toBe([1, 1, 0, 1, 0, 0, 0])
+        ->and(array_map(
+            fn (PublishingTrendPointData $point): int => $point->scheduledCount,
+            $data->points,
+        ))->toBe([0, 0, 0, 1, 0, 1, 0])
+        ->and($data->totalPublished)->toBe(3)
+        ->and($data->totalScheduled)->toBe(2);
+});
+
 it('counts pages on publishing trend bucket boundaries once', function (): void {
     CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-05-03 12:00:00'));
 
