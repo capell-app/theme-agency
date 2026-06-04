@@ -16,3 +16,7 @@ Payments is the Capell payment layer for provider-neutral payment records and na
 Payments owns payment records, Stripe gateway calls, webhook processing, and fulfillment dispatch. Owning packages contribute fulfillment handlers for package-specific outcomes, such as Access Gate granting paid access after a completed gated-access checkout session.
 
 Public routes are signed or webhook-only and must not expose Filament, package internals, or authoring metadata.
+
+Form Builder checkout return URLs are host allow-listed. The app host is accepted by default; add extra trusted hosts through `capell-payments.form_builder.allowed_return_hosts`.
+
+Stripe webhook events are locked before processing, and paid-download redeliveries do not extend existing entitlement expiry windows.

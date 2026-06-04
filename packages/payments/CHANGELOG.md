@@ -5,6 +5,9 @@ All notable changes to `capell-app/payments` will be documented in this file.
 ## Unreleased
 
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
+- Locked stored Stripe webhook events before processing so duplicate deliveries cannot concurrently run fulfillment for the same provider event.
+- Added host allow-list validation for Form Builder payment checkout success/cancel return URLs via `capell-payments.form_builder.allowed_return_hosts`.
+- Made paid-download fulfillment replay-safe by preserving the original entitlement expiry and fulfilled timestamp on duplicate checkout-complete deliveries.
 
 ## 2026-06-03
 

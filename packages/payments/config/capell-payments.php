@@ -37,6 +37,7 @@ return [
         'success_path' => '/payments/form/success',
         'cancel_path' => '/payments/form/cancel',
         'checkout_url_ttl_minutes' => 60,
+        'allowed_return_hosts' => [],
     ],
 
     'paid_downloads' => [

@@ -30,6 +30,8 @@ final class ResolveFormPaymentCheckoutDataAction
         $field = $this->paymentField($form);
         $amount = $this->amount($field, $submission);
         $currency = $this->currency($field);
+        $successUrl = ValidateFormPaymentReturnUrlAction::run($successUrl);
+        $cancelUrl = ValidateFormPaymentReturnUrlAction::run($cancelUrl);
 
         return new FormPaymentCheckoutData(
             form: $form,

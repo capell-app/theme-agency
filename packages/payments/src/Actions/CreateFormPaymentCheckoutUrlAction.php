@@ -22,6 +22,8 @@ final class CreateFormPaymentCheckoutUrlAction
         ?int $ttlMinutes = null,
     ): string {
         $ttl = $ttlMinutes ?? (int) config('capell-payments.form_builder.checkout_url_ttl_minutes', 60);
+        $successUrl = ValidateFormPaymentReturnUrlAction::run($successUrl);
+        $cancelUrl = ValidateFormPaymentReturnUrlAction::run($cancelUrl);
 
         return URL::temporarySignedRoute(
             name: 'capell-payments.form-builder.checkout',

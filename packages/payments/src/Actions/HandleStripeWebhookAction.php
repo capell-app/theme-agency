@@ -23,6 +23,7 @@ use Capell\Payments\Exceptions\PaymentGatewayConfigurationException;
 use Capell\Payments\Models\CheckoutSession;
 use Capell\Payments\Models\PaymentWebhookEvent;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -43,12 +44,18 @@ final class HandleStripeWebhookAction
         $eventPayload = VerifyStripeWebhookSignatureAction::run($payload, $signatureHeader, $endpointSecret);
         $event = $this->recordEvent($eventPayload, $signatureHeader);
 
-        if ($event->status === PaymentWebhookEventStatus::Processed || $event->status === PaymentWebhookEventStatus::Ignored) {
-            return $event;
-        }
-
         try {
-            DB::transaction(function () use ($eventPayload, $event): void {
+            $event = DB::transaction(function () use ($eventPayload, $event): PaymentWebhookEvent {
+                /** @var PaymentWebhookEvent $event */
+                $event = PaymentWebhookEvent::query()
+                    ->whereKey($event->getKey())
+                    ->lockForUpdate()
+                    ->firstOrFail();
+
+                if ($event->status === PaymentWebhookEventStatus::Processed || $event->status === PaymentWebhookEventStatus::Ignored) {
+                    return $event;
+                }
+
                 $this->processEvent($eventPayload);
 
                 $event->forceFill([
@@ -59,6 +66,8 @@ final class HandleStripeWebhookAction
                     'failed_at' => null,
                     'error' => null,
                 ])->save();
+
+                return $event;
             });
         } catch (Throwable $throwable) {
             $event->forceFill([
@@ -83,18 +92,39 @@ final class HandleStripeWebhookAction
 
         throw_if($providerEventId === null || $eventType === null, InvalidArgumentException::class, 'Stripe webhook payload is missing an event id or type.');
 
-        return PaymentWebhookEvent::query()->firstOrCreate([
-            'provider' => PaymentProvider::Stripe->value,
-            'provider_event_id' => $providerEventId,
-        ], [
-            'event_type' => $eventType,
-            'livemode' => (bool) ($eventPayload['livemode'] ?? false),
-            'api_version' => $this->stringValue($eventPayload['api_version'] ?? null),
-            'status' => PaymentWebhookEventStatus::Received->value,
-            'signature_header_hash' => is_string($signatureHeader) ? hash('sha256', $signatureHeader) : null,
-            'payload' => $eventPayload,
-            'received_at' => CarbonImmutable::now(),
-        ]);
+        $event = PaymentWebhookEvent::query()
+            ->where('provider', PaymentProvider::Stripe->value)
+            ->where('provider_event_id', $providerEventId)
+            ->first();
+
+        if ($event instanceof PaymentWebhookEvent) {
+            return $event;
+        }
+
+        try {
+            return PaymentWebhookEvent::query()->create([
+                'provider' => PaymentProvider::Stripe->value,
+                'provider_event_id' => $providerEventId,
+                'event_type' => $eventType,
+                'livemode' => (bool) ($eventPayload['livemode'] ?? false),
+                'api_version' => $this->stringValue($eventPayload['api_version'] ?? null),
+                'status' => PaymentWebhookEventStatus::Received,
+                'signature_header_hash' => is_string($signatureHeader) ? hash('sha256', $signatureHeader) : null,
+                'payload' => $eventPayload,
+                'received_at' => CarbonImmutable::now(),
+            ]);
+        } catch (QueryException $exception) {
+            $event = PaymentWebhookEvent::query()
+                ->where('provider', PaymentProvider::Stripe->value)
+                ->where('provider_event_id', $providerEventId)
+                ->first();
+
+            if ($event instanceof PaymentWebhookEvent) {
+                return $event;
+            }
+
+            throw $exception;
+        }
     }
 
     /**

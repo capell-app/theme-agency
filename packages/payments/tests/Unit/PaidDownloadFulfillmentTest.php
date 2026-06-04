@@ -13,6 +13,7 @@ use Capell\Payments\Models\CheckoutSession;
 use Capell\Payments\Models\PaymentDownloadEntitlement;
 use Capell\Payments\Support\Fulfillment\PaidDownloadFulfillmentHandler;
 use Capell\Payments\Tests\TestCase;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 uses(TestCase::class);
@@ -56,8 +57,77 @@ it('grants paid download entitlements from completed checkout sessions', functio
 });
 
 it('keeps paid download fulfilment idempotent for the same checkout session', function (): void {
+    Carbon::setTestNow(Carbon::parse('2026-06-04 12:00:00'));
+
     $checkoutSession = paidDownloadCheckoutSession([
         'provider_session_id' => 'cs_paid_download_repeat',
+        'payable_id' => 'guide',
+        'metadata' => [
+            'download_path' => 'paid/guide.pdf',
+            'download_ttl_minutes' => 30,
+        ],
+    ]);
+
+    try {
+        FulfillCompletedCheckoutSessionAction::run($checkoutSession);
+        $entitlement = PaymentDownloadEntitlement::query()->firstOrFail();
+        $expiresAtTimestamp = $entitlement->expires_at?->getTimestamp();
+        $fulfilledAtTimestamp = $entitlement->fulfilled_at?->getTimestamp();
+
+        Carbon::setTestNow(Carbon::parse('2026-06-05 12:00:00'));
+
+        FulfillCompletedCheckoutSessionAction::run($checkoutSession);
+
+        expect(PaymentDownloadEntitlement::query()->count())->toBe(1)
+            ->and($entitlement->refresh()->expires_at?->getTimestamp())->toBe($expiresAtTimestamp)
+            ->and($entitlement->fulfilled_at?->getTimestamp())->toBe($fulfilledAtTimestamp);
+    } finally {
+        Carbon::setTestNow();
+    }
+});
+
+it('updates paid download descriptors on replay without extending access', function (): void {
+    Carbon::setTestNow(Carbon::parse('2026-06-04 12:00:00'));
+
+    $checkoutSession = paidDownloadCheckoutSession([
+        'provider_session_id' => 'cs_paid_download_descriptor_replay',
+        'payable_id' => 'guide',
+        'metadata' => [
+            'download_path' => 'paid/guide.pdf',
+            'download_name' => 'Original guide',
+            'download_ttl_minutes' => 30,
+        ],
+    ]);
+
+    try {
+        FulfillCompletedCheckoutSessionAction::run($checkoutSession);
+        $entitlement = PaymentDownloadEntitlement::query()->firstOrFail();
+        $expiresAtTimestamp = $entitlement->expires_at?->getTimestamp();
+
+        Carbon::setTestNow(Carbon::parse('2026-06-05 12:00:00'));
+
+        $checkoutSession->forceFill([
+            'metadata' => [
+                'download_path' => 'paid/updated-guide.pdf',
+                'download_name' => 'Updated guide',
+                'download_ttl_minutes' => 1440,
+            ],
+        ])->save();
+
+        FulfillCompletedCheckoutSessionAction::run($checkoutSession->refresh());
+
+        expect(PaymentDownloadEntitlement::query()->count())->toBe(1)
+            ->and($entitlement->refresh()->download_name)->toBe('Updated guide')
+            ->and($entitlement->path)->toBe('paid/updated-guide.pdf')
+            ->and($entitlement->expires_at?->getTimestamp())->toBe($expiresAtTimestamp);
+    } finally {
+        Carbon::setTestNow();
+    }
+});
+
+it('keeps only one paid download entitlement for repeated fulfilment', function (): void {
+    $checkoutSession = paidDownloadCheckoutSession([
+        'provider_session_id' => 'cs_paid_download_repeat_count',
         'payable_id' => 'guide',
         'metadata' => [
             'download_path' => 'paid/guide.pdf',

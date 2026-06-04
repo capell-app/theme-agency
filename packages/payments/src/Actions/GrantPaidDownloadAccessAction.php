@@ -29,23 +29,33 @@ final class GrantPaidDownloadAccessAction
             ]);
         }
 
-        return PaymentDownloadEntitlement::query()->updateOrCreate([
+        $entitlement = PaymentDownloadEntitlement::query()->firstOrNew([
             'checkout_session_id' => $checkoutSession->getKey(),
             'download_key' => $downloadKey,
-        ], [
+        ]);
+        $entitlement->forceFill([
             'site_id' => $checkoutSession->site_id,
             'download_name' => $this->stringValue(Arr::get($metadata, 'download_name')) ?? $downloadKey,
             'disk' => $this->stringValue(Arr::get($metadata, 'download_disk')) ?? config('capell-payments.paid_downloads.default_disk', 'local'),
             'path' => $path,
             'file_name' => $this->stringValue(Arr::get($metadata, 'download_file_name')),
             'email' => $checkoutSession->customer?->email,
-            'expires_at' => now()->addMinutes($this->ttlMinutes($metadata)),
-            'fulfilled_at' => now(),
             'metadata' => array_filter([
                 'provider_session_id' => $checkoutSession->provider_session_id,
                 'reference_id' => $checkoutSession->reference_id,
             ], static fn (?string $value): bool => $value !== null && $value !== ''),
         ]);
+
+        if (! $entitlement->exists) {
+            $entitlement->forceFill([
+                'expires_at' => now()->addMinutes($this->ttlMinutes($metadata)),
+                'fulfilled_at' => now(),
+            ]);
+        }
+
+        $entitlement->save();
+
+        return $entitlement;
     }
 
     /**

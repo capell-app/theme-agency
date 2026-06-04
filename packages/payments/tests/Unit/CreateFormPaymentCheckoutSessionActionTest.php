@@ -23,6 +23,10 @@ use Illuminate\Validation\ValidationException;
 
 uses(FormBuilderPaymentsTestCase::class);
 
+beforeEach(function (): void {
+    config()->set('capell-payments.form_builder.allowed_return_hosts', ['example.test']);
+});
+
 it('creates form payment checkout sessions from portable Form Builder payment fields', function (): void {
     $form = paymentsFormBuilderForm();
     $submission = paymentsFormBuilderSubmission($form, [
@@ -122,6 +126,54 @@ it('creates signed public checkout URLs for form payment submissions', function 
         ->and($url)->toContain('signature=')
         ->and($url)->not->toContain('capell-app/payments')
         ->and($url)->not->toContain('Filament');
+});
+
+it('rejects form payment checkout return URLs outside the allowed hosts', function (): void {
+    $submission = paymentsFormBuilderSubmission(paymentsFormBuilderForm(), [
+        'email' => 'buyer@example.test',
+        'donation' => 3500,
+    ]);
+
+    CreateFormPaymentCheckoutUrlAction::run(
+        submission: $submission,
+        successUrl: 'https://attacker.example/thanks',
+        cancelUrl: 'https://example.test/retry',
+        ttlMinutes: 15,
+    );
+})->throws(ValidationException::class);
+
+it('passes configured allowed form payment return URLs to the provider checkout request', function (): void {
+    config()->set('capell-payments.form_builder.allowed_return_hosts', ['payments.example.test']);
+
+    $form = paymentsFormBuilderForm();
+    $submission = paymentsFormBuilderSubmission($form, [
+        'email' => 'buyer@example.test',
+        'donation' => 3500,
+    ]);
+    $gateway = new FakePaymentGateway(new CheckoutSessionData(
+        provider: PaymentProvider::Stripe,
+        providerSessionId: 'cs_form_payment_allowed_host',
+        status: CheckoutSessionStatus::Open,
+        mode: CheckoutMode::Payment,
+        purpose: PaymentPurpose::FormPayment,
+        url: 'https://checkout.stripe.com/c/pay/cs_form_payment_allowed_host',
+        currency: 'gbp',
+        amountSubtotal: 3500,
+        amountTotal: 3500,
+        customerEmail: 'buyer@example.test',
+        providerPayload: ['id' => 'cs_form_payment_allowed_host'],
+    ));
+
+    app()->instance(PaymentGateway::class, $gateway);
+
+    CreateFormPaymentCheckoutSessionAction::run(
+        submission: $submission,
+        successUrl: 'https://payments.example.test/thanks',
+        cancelUrl: 'https://payments.example.test/retry',
+    );
+
+    expect($gateway->lastRequest?->successUrl)->toBe('https://payments.example.test/thanks')
+        ->and($gateway->lastRequest?->cancelUrl)->toBe('https://payments.example.test/retry');
 });
 
 it('redirects signed form payment checkout requests to the provider checkout URL', function (): void {

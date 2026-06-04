@@ -30,6 +30,7 @@ return [
     'form_payments' => [
         'no_payment_field' => 'The form does not contain a payment field.',
         'invalid_amount' => 'The payment amount must be greater than zero.',
+        'invalid_return_url' => 'The payment return URL is not allowed.',
     ],
     'paid_downloads' => [
         'missing_download_reference' => 'The paid download checkout session is missing download file details.',
