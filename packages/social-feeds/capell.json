@@ -1,0 +1,118 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/social-feeds",
+    "slug": "social-feeds",
+    "displayName": "Social Feeds",
+    "kind": "package",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Premium social feed widgets for Capell with cached public rendering, provider extensibility, and configurable list, slideshow, carousel, and paginated layouts.",
+    "product": {
+        "tier": "premium",
+        "bundle": "growth",
+        "group": "Capell Growth"
+    },
+    "namespace": "Capell\\SocialFeeds",
+    "surfaces": ["admin", "frontend"],
+    "dependencies": {
+        "requires": [
+            "capell-app/admin",
+            "capell-app/block-library",
+            "capell-app/core"
+        ],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [
+            "Capell\\SocialFeeds\\Providers\\SocialFeedsServiceProvider"
+        ],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [],
+    "database": {
+        "migrations": true,
+        "settings": false,
+        "requiredTables": [
+            "social_feed_connections",
+            "social_feed_items",
+            "social_feed_oauth_states"
+        ]
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "actions": {
+        "fetchRenderData": "Capell\\SocialFeeds\\Actions\\FetchSocialFeedRenderDataAction",
+        "syncConnection": "Capell\\SocialFeeds\\Actions\\SyncSocialFeedConnectionAction",
+        "upsertItems": "Capell\\SocialFeeds\\Actions\\UpsertSocialFeedItemsAction"
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "social-feeds",
+        "social-feeds-admin",
+        "social-feeds-frontend",
+        "social-feed-provider-registry",
+        "social-feed-cached-rendering"
+    ],
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 40,
+        "cacheTags": ["social-feeds"],
+        "cacheSafety": {
+            "cacheable": true,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [
+                {
+                    "model": "Capell\\SocialFeeds\\Models\\SocialFeedConnection",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                },
+                {
+                    "model": "Capell\\SocialFeeds\\Models\\SocialFeedItem",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                }
+            ],
+            "queueInvalidation": true
+        }
+    },
+    "healthChecks": [],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "Place branded, cached social feeds anywhere in Capell with RSS, TikTok, YouTube, Bluesky, and custom provider support.",
+        "screenshots": [],
+        "categories": ["admin", "frontend", "growth"]
+    },
+    "contributionTraceability": {
+        "deferredContributions": [
+            "admin-resource",
+            "frontend-component",
+            "model",
+            "settings"
+        ]
+    }
+}
