@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Capell\CustomerPortal\Models;
 
 use Capell\Core\Models\Site;
+use Capell\CustomerPortal\Database\Factories\PortalSupportRequestFactory;
 use Capell\CustomerPortal\Enums\SupportRequestPriority;
 use Capell\CustomerPortal\Enums\SupportRequestStatus;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,7 +28,7 @@ use Override;
  */
 class PortalSupportRequest extends Model
 {
-    /** @use HasFactory<Factory<self>> */
+    /** @use HasFactory<PortalSupportRequestFactory> */
     use HasFactory;
 
     /** @var list<string> */
@@ -80,6 +80,11 @@ class PortalSupportRequest extends Model
             $supportRequest->requester_email = PortalAccount::normalizeEmail($supportRequest->requester_email);
             $supportRequest->requester_email_hash = PortalAccount::emailHash($supportRequest->requester_email);
         });
+    }
+
+    protected static function newFactory(): PortalSupportRequestFactory
+    {
+        return PortalSupportRequestFactory::new();
     }
 
     /**

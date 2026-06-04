@@ -6,6 +6,7 @@ The Customer Portal package now includes authenticated frontend routes for a min
 
 - `PortalAccount` stores the authenticated customer identity boundary for a site.
 - `PortalSupportRequest` stores self-service support submissions connected to a portal account.
+- `PortalAccount::factory()` and `PortalSupportRequest::factory()` are available for package tests, demos, and consuming app test suites; support request factories keep `site_id`, account ownership, and requester email aligned by default.
 - Profile, preferences, and dashboard item contracts let Access Gate, payments, document lifecycle, events, and newsletter packages contribute without Customer Portal importing their internals.
 - Self-service item contracts let owning packages contribute gated resources, payments, documents, event registrations, newsletter preference links, and support items without Customer Portal importing their internals.
 - Actions are the entry points for creating accounts, updating preferences, submitting support requests, and resolving dashboard items.

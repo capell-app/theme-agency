@@ -6,6 +6,7 @@ All notable changes to `capell-app/customer-portal` will be documented in this f
 
 ### 2026-06-04
 
+- Added package model factories for `PortalAccount` and `PortalSupportRequest`, including site/account states for customer portal tests and demos.
 - Added frontend account-isolation coverage proving one portal account cannot see another account's support requests on the same site.
 - Enforced `PortalAccountStatus` in the authenticated account resolver so suspended and archived portal accounts receive a forbidden response before dashboard, preference, or support workflows run.
 

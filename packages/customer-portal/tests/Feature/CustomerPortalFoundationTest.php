@@ -118,6 +118,32 @@ it('records support requests for portal accounts', function (): void {
         ->and($portalAccount->supportRequests()->open()->count())->toBe(1);
 });
 
+it('provides factories for portal accounts and support requests', function (): void {
+    $siteId = $this->createCustomerPortalSite();
+
+    $portalAccount = PortalAccount::factory()
+        ->forSite($siteId)
+        ->create([
+            'email' => 'factory-customer@example.test',
+            'display_name' => 'Factory Customer',
+        ]);
+
+    $supportRequest = PortalSupportRequest::factory()
+        ->forPortalAccount($portalAccount)
+        ->create([
+            'subject' => 'Factory support request',
+        ]);
+
+    expect($portalAccount)->toBeInstanceOf(PortalAccount::class)
+        ->and($portalAccount->site_id)->toBe($siteId)
+        ->and($portalAccount->email)->toBe('factory-customer@example.test')
+        ->and($portalAccount->email_hash)->toBe(PortalAccount::emailHash('factory-customer@example.test'))
+        ->and($supportRequest)->toBeInstanceOf(PortalSupportRequest::class)
+        ->and($supportRequest->site_id)->toBe($siteId)
+        ->and($supportRequest->account->is($portalAccount))->toBeTrue()
+        ->and($supportRequest->requester_email)->toBe('factory-customer@example.test');
+});
+
 it('triages support request status through the action boundary', function (): void {
     $portalAccount = FindOrCreatePortalAccountAction::run(new PortalAccountIdentityData(
         siteId: $this->createCustomerPortalSite(),

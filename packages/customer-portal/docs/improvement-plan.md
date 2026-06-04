@@ -67,7 +67,7 @@ Tied to `capabilities[]` and customer-portal table stakes:
 | Add tenant-isolation test (account A cannot see B's data)                        | Shipped | S     | High   | §4          |
 | Implement real health-check probe (tables + models)                              | Shipped | S     | High   | §2, §4      |
 | Resolve `portal-profile`: add resolve Action + render, or remove dead registries | Now    | M      | High   | §3, §4      |
-| Add factories (+ optional seeder) for both models                                | Now    | S      | Med    | §3          |
+| Add factories (+ optional seeder) for both models                                | Shipped | S     | Med    | §3          |
 | Add unauthenticated/throttle/suspended negative-path tests                       | Now    | S      | Med    | §4          |
 | Enforce `PortalAccountStatus` (block suspended/archived)                         | Shipped | S     | Med    | §3          |
 | Emit events + notifications on submit / status change                            | Next   | M      | High   | §3          |

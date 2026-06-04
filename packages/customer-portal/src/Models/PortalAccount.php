@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Capell\CustomerPortal\Models;
 
 use Capell\Core\Models\Site;
+use Capell\CustomerPortal\Database\Factories\PortalAccountFactory;
 use Capell\CustomerPortal\Enums\PortalAccountStatus;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,7 +29,7 @@ use Override;
  */
 class PortalAccount extends Model
 {
-    /** @use HasFactory<Factory<self>> */
+    /** @use HasFactory<PortalAccountFactory> */
     use HasFactory;
 
     /** @var list<string> */
@@ -101,6 +101,11 @@ class PortalAccount extends Model
             $portalAccount->email = self::normalizeEmail($portalAccount->email);
             $portalAccount->email_hash = self::emailHash($portalAccount->email);
         });
+    }
+
+    protected static function newFactory(): PortalAccountFactory
+    {
+        return PortalAccountFactory::new();
     }
 
     /**
