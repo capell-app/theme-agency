@@ -12,8 +12,13 @@ on:
       - 'composer.lock'
       - 'rector.php'
       - 'scripts/rector-changed.sh'
+      - 'scripts/check-phpstan-baseline-growth.sh'
+      - 'scripts/php-modernization-skill.sh'
+      - 'phpstan/**'
       - 'phpstan*.neon'
       - 'phpunit.xml'
+      - 'pint.json'
+      - '.php-cs-fixer.dist.php'
       - '.github/workflows/code-quality-and-styling.yml'
 
 permissions:
@@ -96,11 +101,36 @@ jobs:
             capell-app/installer \
             capell-app/marketplace
 
-      - name: Run Pint (Code Style)
-        run: composer lint
+      - name: Run Pint check
+        run: composer cs:check
 
-      - name: Run PHPStan (Static Analysis)
-        run: composer analyze
+      - name: Run PHPStan
+        run: composer phpstan
 
-      - name: Run Rector (Code Refactoring)
-        run: composer rector:changed -- --dry-run
+      - name: Run PHPStan deprecation rules
+        continue-on-error: true
+        run: composer phpstan:deprecations
+
+      - name: Check PHPStan baseline did not grow
+        run: composer phpstan:baseline-check
+
+      - name: Run PHPat architecture checks
+        run: composer phpat
+
+      - name: Run Composer audit
+        run: composer audit --locked
+
+      - name: Run Rector dry-run
+        run: composer rector:check
+
+      - name: Run modernization verifier advisory
+        continue-on-error: true
+        run: composer skill:verify
+
+      - name: Upload modernization artifacts
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: php-modernization-${{ github.run_id }}
+          path: .build/php-modernization/
+          if-no-files-found: ignore

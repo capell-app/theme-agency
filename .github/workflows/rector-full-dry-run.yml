@@ -1,0 +1,79 @@
+name: Rector Full Dry Run
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '41 4 * * 2'
+
+permissions:
+  contents: read
+
+jobs:
+  rector:
+    name: Rector full dry-run
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.ACCESS_TOKEN }}"} }'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Checkout Capell monorepo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          repository: capell-app/capell
+          ref: 4.x
+          token: ${{ secrets.ACCESS_TOKEN }}
+          path: capell-4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2
+        with:
+          php-version: '8.4'
+          extensions: curl, dom, fileinfo, intl, json, libxml, mbstring, phar, simplexml, zip
+          tools: composer:v2
+          coverage: none
+
+      - name: Check Composer public files
+        run: php scripts/check-composer-local-paths.php
+
+      - name: Check Composer lock file
+        run: composer run check:composer-lock
+
+      - name: Use Capell monorepo packages
+        run: |
+          php <<'PHP'
+          <?php
+
+          declare(strict_types=1);
+
+          $composerFile = 'composer.json';
+          $composer = json_decode((string) file_get_contents($composerFile), true, flags: JSON_THROW_ON_ERROR);
+
+          array_unshift($composer['repositories'], [
+              'type' => 'path',
+              'url' => 'capell-4/packages/*',
+              'options' => [
+                  'symlink' => false,
+              ],
+          ]);
+
+          file_put_contents(
+              $composerFile,
+              json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . PHP_EOL,
+          );
+          PHP
+
+      - name: Install Composer dependencies
+        run: |
+          composer update --no-interaction --no-progress --ansi --optimize-autoloader --with-all-dependencies -W \
+            capell-app/admin \
+            capell-app/core \
+            capell-app/frontend \
+            capell-app/installer \
+            capell-app/marketplace
+
+      - name: Run full Rector dry-run
+        run: composer rector:all:check

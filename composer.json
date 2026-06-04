@@ -22,13 +22,32 @@
         "rector": "@php vendor/bin/rector",
         "rector:changed": "bash ./scripts/rector-changed.sh",
         "rector:all": "XDEBUG_MODE=off \"$PHP_BINARY\" vendor/bin/rector --no-progress-bar",
+        "rector:all:check": "XDEBUG_MODE=off \"$PHP_BINARY\" vendor/bin/rector --no-progress-bar --dry-run",
+        "rector:check": "bash ./scripts/rector-changed.sh --dry-run",
         "lint": "@php vendor/bin/pint --parallel packages tests",
+        "cs:fix": "@lint",
+        "cs:check": "@php vendor/bin/pint --parallel --test packages tests",
         "lint:changed": "zsh ./scripts/lint-changed.sh",
         "analyze": "@php vendor/bin/phpstan analyse --memory-limit=-1 --configuration=phpstan.neon",
+        "phpstan": "@analyze",
+        "phpstan:baseline-check": "bash scripts/check-phpstan-baseline-growth.sh",
+        "phpstan:deprecations": "@php vendor/bin/phpstan analyse --memory-limit=-1 --configuration=phpstan/deprecations.neon",
         "prettier": "npx prettier --write \"packages/**/*.{css,js,yml,json,md,blade.php}\"",
         "eslint": "npx eslint 'packages/**/resources/js/**/*.js' --max-warnings=0",
         "check:composer-paths": "@php scripts/check-composer-local-paths.php",
         "check:composer-lock": "composer validate --no-check-publish",
+        "security:audit": "composer audit --locked",
+        "skill:inspect": "bash scripts/php-modernization-skill.sh inspect --format json",
+        "skill:verify": "bash scripts/php-modernization-skill.sh verify --format json --summary --no-cache",
+        "skill:verify:sarif": "bash scripts/php-modernization-skill.sh verify --format sarif --no-cache",
+        "skill:modernize:dry-run": "bash scripts/php-modernization-skill.sh modernize --mode dry-run --tools rector,phpstan",
+        "skill:qa": [
+            "@skill:inspect",
+            "@cs:check",
+            "@phpstan",
+            "@security:audit",
+            "@skill:verify"
+        ],
         "preflight": [
             "@check:composer-paths",
             "@lint:changed"
@@ -74,6 +93,8 @@
             "rm -rf .cache/phpunit/code-coverage",
             "@php -d memory_limit=-1 -d pcov.enabled=1 -d pcov.directory=packages vendor/bin/pest --coverage --coverage-html=coverage --colors=always --configuration=phpunit.xml"
         ],
+        "test:mutate": "@php -d memory_limit=-1 -d pcov.enabled=1 -d pcov.directory=packages vendor/bin/pest --mutate --everything --covered-only --parallel --colors=always --configuration=phpunit.xml",
+        "test:mutate:ci": "@php -d memory_limit=-1 -d pcov.enabled=1 -d pcov.directory=packages vendor/bin/pest --mutate --everything --covered-only --parallel --min=${PEST_MUTATION_MIN:-60} --bail --colors=always --configuration=phpunit.xml",
         "clear": [
             "CACHE_STORE=array \"$PHP_BINARY\" vendor/bin/testbench package:purge-skeleton --ansi",
             "@clear:views"
@@ -196,6 +217,7 @@
         "pestphp/pest-plugin-laravel": "^3.0|^4.0",
         "pestphp/pest-plugin-livewire": "^3.0|^4.0",
         "pestphp/pest-plugin-type-coverage": "^3.0|^4.0",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
         "phpstan/phpstan-mockery": "^2.0",
         "rector/rector": "^2.0",
         "sinnbeck/laravel-dom-assertions": "^3.0",

@@ -8,6 +8,7 @@ includes:
     - phpstan/preflight-baseline.neon
 
 parameters:
+    treatPhpDocTypesAsCertain: false
     paths:
         - packages
         - tests

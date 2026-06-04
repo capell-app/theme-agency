@@ -16,9 +16,6 @@
     xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.5/phpunit.xsd"
 >
     <testsuites>
-        <testsuite name="Architecture">
-            <directory suffix="Test.php">./packages/*/tests/Arch</directory>
-        </testsuite>
         <testsuite name="Feature">
             <directory suffix="Test.php">./packages/*/tests/Feature</directory>
             <directory suffix="Test.php">./tests/Packages/Feature</directory>
@@ -36,6 +33,7 @@
             <file>./tests/Packages/Arch/PageAndActionCoverageTest.php</file>
             <file>./tests/Packages/Arch/PackageMigrationLoadingTest.php</file>
             <file>./tests/Packages/Arch/ManifestProviderClassExistsTest.php</file>
+            <file>./tests/Packages/Arch/CompanionPackageDependencyBoundaryTest.php</file>
             <file>./tests/Packages/Arch/PackageSettingsFeatureHealthTest.php</file>
         </testsuite>
         <testsuite name="Unit">
