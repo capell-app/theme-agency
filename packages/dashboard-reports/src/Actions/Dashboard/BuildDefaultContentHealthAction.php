@@ -86,7 +86,7 @@ final class BuildDefaultContentHealthAction
     private function basePageQuery(): Builder
     {
         /** @var Builder<Page> $query */
-        $query = SiteScope::applyForCurrentActor(Page::query());
+        $query = SiteScope::applyForCurrentActor(Page::query(), denyWhenMissingActor: true);
 
         return $query;
     }

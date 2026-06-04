@@ -12,6 +12,7 @@ use Capell\DashboardReports\Filament\Widgets\ContentHealthWidget;
 use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartWidget;
 use Capell\DashboardReports\Providers\AdminServiceProvider;
 use Capell\DashboardReports\Support\Dashboard\DashboardReportsContentHealthDataProvider;
+use Capell\DashboardReports\Support\Dashboard\DashboardReportsSettingsResolver;
 use Capell\DashboardReports\Tests\DashboardReportsTestCase;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 
@@ -36,6 +37,23 @@ it('binds dashboard-dashboard_reports content health as the installed content he
     expect(resolve(ContentHealthDataProvider::class))
         ->toBeInstanceOf(DashboardReportsContentHealthDataProvider::class);
 });
+
+it('resolves the configured stale page threshold for content health', function (): void {
+    config()->set('capell-dashboard-reports.stale_page_threshold_days', 30);
+
+    expect(resolve(DashboardReportsSettingsResolver::class)->settings()->stalePageThresholdDays)->toBe(30);
+});
+
+it('falls back to the default stale page threshold when configuration is invalid', function (mixed $configured, int $expected): void {
+    config()->set('capell-dashboard-reports.stale_page_threshold_days', $configured);
+
+    expect(resolve(DashboardReportsSettingsResolver::class)->settings()->stalePageThresholdDays)->toBe($expected);
+})->with([
+    'missing' => [null, 90],
+    'not numeric' => ['soon', 90],
+    'too small' => [0, 1],
+    'too large' => [4000, 3650],
+]);
 
 it('does not replace another package content health provider', function (): void {
     $externalContentHealthDataProvider = new class implements ContentHealthDataProvider

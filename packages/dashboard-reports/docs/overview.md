@@ -16,7 +16,7 @@ Use it when a project needs a package-owned reporting layer, but does not need a
 - Filtered deep-links from content-health issue counts into the Page resource.
 - Dashboard widgets registered into the main Capell admin dashboard.
 - A `ContentHealthDataProvider` implementation that can replace the admin package's null provider when the package is installed.
-- Dashboard settings contribution for report visibility.
+- Dashboard settings contribution for report visibility, plus package config for the stale-page threshold.
 - Diagnostics checks for package install state, provider binding, dashboard widget registration, dashboard settings contribution, and page-table filter registration.
 
 ## Admin Surface
@@ -32,6 +32,8 @@ Dashboard Reports registers these widgets through `CapellAdmin::registerDashboar
 
 Content-health issue counts link to the Page resource with the package-owned `dashboard_reports_health` table filter preselected. The filter is registered through the admin `PageTableExtender` contract and covers scheduled pages, expired pages, pages without URLs, and stale published pages.
 
+The stale-page threshold defaults to 90 days and can be changed with `capell-dashboard-reports.stale_page_threshold_days`. The package clamps the resolved value to 1-3650 days, and the Content Health widget and Page resource drill-down filter share the same resolved threshold.
+
 ## Frontend Surface
 
 Dashboard Reports is admin-only. It does not register public frontend routes, public Blade renders, render hooks, or frontend assets in the current implementation.
@@ -42,7 +44,7 @@ The screenshot contract is stored in [screenshots.json](screenshots.json). Final
 
 ## Data Sources
 
-The package reads Capell core `Page` records through `SiteScope::applyForCurrentActor(...)`, so editors only see counts for sites they can access.
+The package reads Capell core `Page` records through `SiteScope::applyForCurrentActor(..., denyWhenMissingActor: true)`, so editors only see counts for sites they can access and non-admin/anonymous execution resolves empty report counts instead of unscoped site data.
 
 | Report             | Source                                                                      |
 | ------------------ | --------------------------------------------------------------------------- |

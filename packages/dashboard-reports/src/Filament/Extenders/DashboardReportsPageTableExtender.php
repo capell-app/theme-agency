@@ -7,6 +7,7 @@ namespace Capell\DashboardReports\Filament\Extenders;
 use Capell\Admin\Contracts\Extenders\PageTableExtender;
 use Capell\Core\Models\Page;
 use Capell\DashboardReports\Actions\Dashboard\BuildDefaultContentHealthAction;
+use Capell\DashboardReports\Support\Dashboard\DashboardReportsSettingsResolver;
 use Filament\Actions\BulkAction;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Filters\BaseFilter;
@@ -45,7 +46,7 @@ final class DashboardReportsPageTableExtender implements PageTableExtender
                     'expired_pages' => __('capell-dashboard-reports::dashboard.issue_expired_pages'),
                     'pages_without_urls' => __('capell-dashboard-reports::dashboard.issue_pages_without_urls'),
                     'stale_pages' => __('capell-dashboard-reports::dashboard.issue_stale_pages', [
-                        'days' => BuildDefaultContentHealthAction::DEFAULT_STALE_DAYS,
+                        'days' => $this->stalePageThresholdDays(),
                     ]),
                 ])
                 ->query(fn (Builder $query, array $data): Builder => $this->applyHealthFilter($query, $data)),
@@ -80,8 +81,15 @@ final class DashboardReportsPageTableExtender implements PageTableExtender
             'pages_without_urls' => $query->whereDoesntHave('pageUrls'),
             'stale_pages' => $query
                 ->publishedDate()
-                ->where($query->getModel()->qualifyColumn('updated_at'), '<', now()->subDays(BuildDefaultContentHealthAction::DEFAULT_STALE_DAYS)),
+                ->where($query->getModel()->qualifyColumn('updated_at'), '<', now()->subDays($this->stalePageThresholdDays())),
             default => $query,
         };
+    }
+
+    private function stalePageThresholdDays(): int
+    {
+        return resolve(DashboardReportsSettingsResolver::class)
+            ->settings()
+            ->stalePageThresholdDays;
     }
 }

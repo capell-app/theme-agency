@@ -6,10 +6,17 @@ use Capell\Core\Models\Page;
 use Capell\DashboardReports\Actions\Dashboard\BuildPublishingTrendAction;
 use Capell\DashboardReports\Data\Dashboard\PublishingTrendPointData;
 use Capell\DashboardReports\Tests\DashboardReportsTestCase;
+use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
-uses(DashboardReportsTestCase::class);
+uses(DashboardReportsTestCase::class, CreatesAdminUser::class);
+
+beforeEach(function (): void {
+    Role::findOrCreate(config('capell.roles.super_admin', 'super_admin'));
+    $this->actingAsAdmin();
+});
 
 /**
  * @return array{CarbonImmutable, CarbonImmutable}
@@ -69,16 +76,17 @@ it('resolves the publishing trend in a bounded number of grouped queries', funct
 
     BuildPublishingTrendAction::run(...dashboardReportsThisWeekRange());
 
-    $selectQueries = array_filter(
+    $pageSelectQueries = array_filter(
         DB::getQueryLog(),
-        fn (array $entry): bool => str_starts_with(strtolower(ltrim((string) $entry['query'])), 'select'),
+        fn (array $entry): bool => str_starts_with(strtolower(ltrim((string) $entry['query'])), 'select')
+            && str_contains(strtolower((string) $entry['query']), ' from "pages"'),
     );
 
     DB::disableQueryLog();
 
     // Two grouped bucket aggregates (published + scheduled), instead of the previous
     // 15 per-bucket COUNT round-trips and all-window scheduled total.
-    expect(count($selectQueries))->toBeLessThanOrEqual(2);
+    expect(count($pageSelectQueries))->toBeLessThanOrEqual(2);
 });
 
 it('counts scheduled pages on publishing trend bucket boundaries once', function (): void {
@@ -117,4 +125,20 @@ it('keeps the scheduled total scoped to the selected dashboard range', function 
     $data = BuildPublishingTrendAction::run(...dashboardReportsThisWeekRange());
 
     expect($data->totalScheduled)->toBe(1);
+});
+
+it('does not expose unscoped publishing trend counts without an authenticated actor', function (): void {
+    auth()->logout();
+
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-05-03 12:00:00'));
+
+    Page::factory()->published(CarbonImmutable::parse('2026-05-01 09:00:00'))->create();
+    Page::factory()->pending()->create([
+        'visible_from' => CarbonImmutable::parse('2026-05-03 18:00:00'),
+    ]);
+
+    $data = BuildPublishingTrendAction::run(...dashboardReportsThisWeekRange());
+
+    expect($data->totalPublished)->toBe(0)
+        ->and($data->totalScheduled)->toBe(0);
 });

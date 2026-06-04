@@ -17,6 +17,7 @@ final class DashboardReportsServiceProvider extends AbstractPackageServiceProvid
     {
         $package
             ->name(self::$name)
+            ->hasConfigFile(self::$name)
             ->hasTranslations()
             ->hasViews(self::$name);
     }

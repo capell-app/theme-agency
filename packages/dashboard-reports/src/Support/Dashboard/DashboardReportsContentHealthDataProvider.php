@@ -12,6 +12,8 @@ final class DashboardReportsContentHealthDataProvider implements ContentHealthDa
 {
     public function build(): ContentHealthData
     {
-        return BuildDefaultContentHealthAction::run();
+        $settings = resolve(DashboardReportsSettingsResolver::class)->settings();
+
+        return BuildDefaultContentHealthAction::run($settings->stalePageThresholdDays);
     }
 }
