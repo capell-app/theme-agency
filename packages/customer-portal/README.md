@@ -8,7 +8,7 @@ Customer Portal turns a Capell site into an authenticated self-service hub. It g
 - Site-scoped `PortalAccount` records with encrypted email, display name, profile, and preference storage.
 - A profile surface powered by `ResolvePortalProfileAction` and `PortalProfileProviderRegistry`.
 - Dashboard and self-service item registries so packages such as payments, document lifecycle, events, newsletter, and access-gate can contribute cards and feed items without Customer Portal importing their internals.
-- Preference updates through `UpdatePortalPreferencesAction`.
+- Preference updates through `UpdatePortalPreferencesAction`, with option rendering and validation driven by the package preference schema.
 - Support request submission through `SubmitSupportRequestAction`, with encrypted request details and requester email hashing.
 - Support request submitted/status-changed events and queued requester mail notifications.
 - Admin support-request triage through a Filament resource scoped to the current actor's assigned sites.

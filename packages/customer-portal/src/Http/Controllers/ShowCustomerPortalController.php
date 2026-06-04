@@ -6,9 +6,11 @@ namespace Capell\CustomerPortal\Http\Controllers;
 
 use BackedEnum;
 use Capell\CustomerPortal\Actions\ResolvePortalDashboardItemsAction;
+use Capell\CustomerPortal\Actions\ResolvePortalPreferenceOptionsAction;
 use Capell\CustomerPortal\Actions\ResolvePortalProfileAction;
 use Capell\CustomerPortal\Actions\ResolvePortalSelfServiceItemsAction;
 use Capell\CustomerPortal\Data\PortalDashboardItemData;
+use Capell\CustomerPortal\Data\PortalPreferenceOptionData;
 use Capell\CustomerPortal\Data\PortalProfileData;
 use Capell\CustomerPortal\Data\PortalSelfServiceItemData;
 use Capell\CustomerPortal\Enums\SupportRequestPriority;
@@ -29,6 +31,7 @@ final class ShowCustomerPortalController
     {
         $portalAccount = $this->portalAccount($request);
         $profileData = ResolvePortalProfileAction::run($portalAccount);
+        $preferenceOptions = ResolvePortalPreferenceOptionsAction::run();
         $dashboardItems = ResolvePortalDashboardItemsAction::run($portalAccount);
         $selfServiceItems = ResolvePortalSelfServiceItemsAction::run($portalAccount);
         $supportRequests = $portalAccount
@@ -49,6 +52,13 @@ final class ShowCustomerPortalController
             'email' => $profileData->email,
             'profileFields' => $this->profileFields($profileData),
             'preferences' => $portalAccount->preferences ?? [],
+            'preferenceOptions' => array_map(
+                static fn (PortalPreferenceOptionData $option): array => [
+                    'key' => $option->key,
+                    'label' => $option->label,
+                ],
+                $preferenceOptions,
+            ),
             'dashboardItems' => array_map(
                 static fn (PortalDashboardItemData $item): array => [
                     'label' => $item->label,

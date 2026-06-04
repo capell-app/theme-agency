@@ -20,6 +20,7 @@ use Capell\CustomerPortal\Support\PortalProfileProviderRegistry;
 use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
 use Capell\CustomerPortal\Tests\CustomerPortalTestCase;
 use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
 require_once dirname(__DIR__) . '/../autoload.php';
@@ -170,7 +171,51 @@ it('updates authenticated portal preferences from the frontend', function (): vo
 
     expect($portalAccount->preferences)->toBe([
         'email_updates' => true,
+        'product_updates' => false,
         'event_reminders' => true,
+    ]);
+});
+
+it('renders and saves preference options from the configured schema', function (): void {
+    $this->createCustomerPortalSite();
+    Config::set('capell-customer-portal.preferences', [
+        'billing_notices' => [
+            'label' => 'capell-customer-portal::generic.frontend.preference_email_updates',
+        ],
+    ]);
+
+    $user = customerPortalUser();
+    PortalAccount::factory()->create([
+        'site_id' => 1,
+        'owner_type' => $user->getMorphClass(),
+        'owner_id' => $user->getKey(),
+        'email' => 'morgan@example.test',
+        'preferences' => [
+            'billing_notices' => true,
+            'product_updates' => true,
+        ],
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('capell-customer-portal.dashboard'))
+        ->assertOk()
+        ->assertSee('billing_notices')
+        ->assertSee('Email updates')
+        ->assertDontSee('product_updates');
+
+    $this->actingAs($user)
+        ->post(route('capell-customer-portal.preferences.update'), [
+            'preferences' => [
+                'billing_notices' => '0',
+                'product_updates' => '1',
+            ],
+        ])
+        ->assertRedirect(route('capell-customer-portal.dashboard'));
+
+    $portalAccount = PortalAccount::query()->firstOrFail();
+
+    expect($portalAccount->preferences)->toBe([
+        'billing_notices' => false,
     ]);
 });
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\CustomerPortal\Actions\FindOrCreatePortalAccountAction;
 use Capell\CustomerPortal\Actions\ResolvePortalDashboardItemsAction;
+use Capell\CustomerPortal\Actions\ResolvePortalPreferenceOptionsAction;
 use Capell\CustomerPortal\Actions\ResolvePortalProfileAction;
 use Capell\CustomerPortal\Actions\ResolvePortalSelfServiceItemsAction;
 use Capell\CustomerPortal\Actions\SubmitSupportRequestAction;
@@ -101,6 +102,26 @@ it('updates portal preferences through the action boundary', function (): void {
         'newsletter' => false,
         'events' => true,
     ]);
+});
+
+it('resolves portal preference options from package config', function (): void {
+    config()->set('capell-customer-portal.preferences', [
+        'billing_notices' => [
+            'label' => 'capell-customer-portal::generic.frontend.preference_email_updates',
+        ],
+        '' => [
+            'label' => 'capell-customer-portal::generic.frontend.preference_product_updates',
+        ],
+        'broken' => [
+            'label' => '',
+        ],
+    ]);
+
+    $options = ResolvePortalPreferenceOptionsAction::run();
+
+    expect($options)->toHaveCount(1)
+        ->and($options[0]->key)->toBe('billing_notices')
+        ->and($options[0]->label)->toBe('Email updates');
 });
 
 it('records support requests for portal accounts', function (): void {

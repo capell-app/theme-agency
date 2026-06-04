@@ -274,19 +274,20 @@
                     class="stack"
                 >
                     @csrf
-                    @foreach ([
-                                  'email_updates' => __('capell-customer-portal::generic.frontend.preference_email_updates'),
-                                  'product_updates' => __('capell-customer-portal::generic.frontend.preference_product_updates'),
-                                  'event_reminders' => __('capell-customer-portal::generic.frontend.preference_event_reminders'),
-                              ] as $key => $label)
+                    @foreach ($preferenceOptions as $option)
                         <label>
                             <input
-                                type="checkbox"
-                                name="preferences[{{ $key }}]"
-                                value="1"
-                                @checked((bool) ($preferences[$key] ?? false))
+                                type="hidden"
+                                name="preferences[{{ $option['key'] }}]"
+                                value="0"
                             />
-                            {{ $label }}
+                            <input
+                                type="checkbox"
+                                name="preferences[{{ $option['key'] }}]"
+                                value="1"
+                                @checked((bool) ($preferences[$option['key']] ?? false))
+                            />
+                            {{ $option['label'] }}
                         </label>
                     @endforeach
 
