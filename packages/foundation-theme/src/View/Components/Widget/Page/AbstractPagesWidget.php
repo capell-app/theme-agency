@@ -7,7 +7,9 @@ namespace Capell\FoundationTheme\View\Components\Widget\Page;
 use Capell\FoundationTheme\View\Components\Widget\AbstractWidget;
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Request;
 use Override;
 
 abstract class AbstractPagesWidget extends AbstractWidget
@@ -15,9 +17,9 @@ abstract class AbstractPagesWidget extends AbstractWidget
     public ?string $componentItem = null;
 
     /**
-     * @var Collection<array-key, mixed>
+     * @var Collection<array-key, mixed>|LengthAwarePaginator<array-key, mixed>|null
      */
-    public ?Collection $pages = null;
+    public Collection|LengthAwarePaginator|null $pages = null;
 
     protected static string $defaultView = 'capell-foundation-theme::components.widget.asset.pages';
 
@@ -32,5 +34,28 @@ abstract class AbstractPagesWidget extends AbstractWidget
             ...$data,
             'pages' => $this->pages ?? collect(),
         ]);
+    }
+
+    protected function paginationEnabled(): bool
+    {
+        return (bool) ($this->widget->meta['pagination'] ?? false);
+    }
+
+    protected function paginationLimit(): ?int
+    {
+        $limit = $this->widget->meta['limit'] ?? null;
+
+        return is_numeric($limit) ? (int) $limit : null;
+    }
+
+    protected function paginationPage(string $paginationKey): ?int
+    {
+        if (! $this->paginationEnabled()) {
+            return null;
+        }
+
+        $page = Request::integer($paginationKey, Request::integer('page', 1));
+
+        return max(1, $page);
     }
 }

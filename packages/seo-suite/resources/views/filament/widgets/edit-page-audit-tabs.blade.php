@@ -15,7 +15,7 @@
                     class="h-4 w-4"
                 />
                 <span>{{ __('capell-seo-suite::generic.seo_audit') }}</span>
-                @livewire(EditPageSeoAuditBadge::class, ['recordKey' => $recordKey, 'lazy' => true], key('seo-audit-badge-' . ($recordKey ?? 'missing')))
+                @livewire('capell-seo-suite.edit-page-seo-audit-badge', ['recordKey' => $recordKey, 'lazy' => true], key('seo-audit-badge-' . ($recordKey ?? 'missing')))
             </button>
 
             <button
@@ -34,15 +34,15 @@
                 <span>
                     {{ __('capell-seo-suite::generic.pagespeed_audit') }}
                 </span>
-                @livewire(EditPagePageSpeedAuditBadge::class, ['recordKey' => $recordKey, 'lazy' => true], key('pagespeed-audit-badge-' . ($recordKey ?? 'missing')))
+                @livewire('capell-seo-suite.edit-page-pagespeed-audit-badge', ['recordKey' => $recordKey, 'lazy' => true], key('pagespeed-audit-badge-' . ($recordKey ?? 'missing')))
             </button>
         </div>
 
         <div class="mt-4">
             @if ($activeTab === 'seo')
-                @livewire(EditPageSeoAuditWidget::class, ['recordKey' => $recordKey, 'embedded' => true, 'lazy' => true], key('seo-audit-tab-' . ($recordKey ?? 'missing')))
+                @livewire('capell-seo-suite.edit-page-seo-audit', ['recordKey' => $recordKey, 'embedded' => true, 'lazy' => true], key('seo-audit-tab-' . ($recordKey ?? 'missing')))
             @else
-                @livewire(EditPagePageSpeedAuditWidget::class, ['recordKey' => $recordKey, 'embedded' => true, 'lazy' => true], key('pagespeed-audit-tab-' . ($recordKey ?? 'missing')))
+                @livewire('capell-seo-suite.edit-page-pagespeed-audit', ['recordKey' => $recordKey, 'embedded' => true, 'lazy' => true], key('pagespeed-audit-tab-' . ($recordKey ?? 'missing')))
             @endif
         </div>
     </x-filament::section>

@@ -194,6 +194,7 @@ These items are approved product direction for the package. Keep implementation 
 ### Diagnostics And Install Safety
 
 - `capell:seo-suite-doctor` checks route registration, route collisions, installed package state, AI Discovery settings, generated document responses, redirects, content types, public cache headers, sitemap XML, public-output leak markers, and web-server interception symptoms.
+- The edit-page integration contributes `EditPageAuditTabsWidget`, a lazy tabbed SEO/PageSpeed audit surface with lightweight issue-count badges so editors do not load both audit bodies up front.
 - SEO Suite owns `/robots.txt`, `/llms.txt`, `/llms-full.txt`, `/index.md`, and `/{url}.md` unless a host app intentionally overrides those routes and delegates to SEO Suite generators.
 - Add install/setup diagnostics that warn when generated Markdown is returned with HTTP `404`, when a static vhost block handles `.txt` or `.md` before Laravel, or when the package is installed without Site Discovery outputs available.
 

@@ -70,6 +70,11 @@ use Capell\SeoSuite\Filament\Settings\Contributors\SeoSuiteDashboardSettingsCont
 use Capell\SeoSuite\Filament\Settings\SeoSettingsSchema;
 use Capell\SeoSuite\Filament\Settings\StructuredDataSettingsSchema;
 use Capell\SeoSuite\Filament\Widgets\AiDiscoveryCoverageWidget;
+use Capell\SeoSuite\Filament\Widgets\EditPageAuditTabsWidget;
+use Capell\SeoSuite\Filament\Widgets\EditPagePageSpeedAuditBadge;
+use Capell\SeoSuite\Filament\Widgets\EditPagePageSpeedAuditWidget;
+use Capell\SeoSuite\Filament\Widgets\EditPageSeoAuditBadge;
+use Capell\SeoSuite\Filament\Widgets\EditPageSeoAuditWidget;
 use Capell\SeoSuite\Filament\Widgets\SearchConsoleOverviewWidget;
 use Capell\SeoSuite\Filament\Widgets\SearchIntelligenceWidget;
 use Capell\SeoSuite\Filament\Widgets\SearchMovementWidget;
@@ -154,6 +159,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
+use Livewire\Livewire;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -208,6 +214,11 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
 
             $this->bootInstalledPackage();
         });
+    }
+
+    public function packageBooted(): void
+    {
+        $this->registerLivewireComponents();
     }
 
     /**
@@ -537,6 +548,15 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(static::$packageName);
+    }
+
+    private function registerLivewireComponents(): void
+    {
+        Livewire::component('capell-seo-suite.edit-page-audit-tabs', EditPageAuditTabsWidget::class);
+        Livewire::component('capell-seo-suite.edit-page-seo-audit', EditPageSeoAuditWidget::class);
+        Livewire::component('capell-seo-suite.edit-page-pagespeed-audit', EditPagePageSpeedAuditWidget::class);
+        Livewire::component('capell-seo-suite.edit-page-seo-audit-badge', EditPageSeoAuditBadge::class);
+        Livewire::component('capell-seo-suite.edit-page-pagespeed-audit-badge', EditPagePageSpeedAuditBadge::class);
     }
 
     private function bootInstalledPackage(): self

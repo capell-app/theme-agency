@@ -65,6 +65,10 @@ The doctor and dashboard actions expose AI Discovery coverage, excluded reasons,
 
 Structured data reporting also includes marketplace freshness warnings for Product/Offer prices and AggregateRating metadata, including missing or expired `priceValidUntil` values and stale or undated rating data.
 
+## Edit Page Audits
+
+The package contributes one edit-page header widget, `EditPageAuditTabsWidget`, which groups the SEO audit and PageSpeed audit into lazy tabs. Lightweight Livewire badges show current issue counts for each tab, while the heavier audit bodies load only for the active tab. The original standalone SEO and PageSpeed widgets still render as full Filament widget sections when used outside the tab container.
+
 ## Remaining Roadmap
 
 - Build a dedicated crawler-preview diagnostics tab if the existing doctor and AI Discovery admin surfaces need a richer UI.

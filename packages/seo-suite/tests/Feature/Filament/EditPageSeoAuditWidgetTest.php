@@ -36,6 +36,14 @@ it('contributes the edit page audit tabs widget from seo suite', function (): vo
         ->and($extender->getFormActions())->toBe([]);
 });
 
+it('registers stable aliases for lazy edit page audit components', function (): void {
+    expect(Livewire::isDiscoverable('capell-seo-suite.edit-page-audit-tabs'))->toBeTrue()
+        ->and(Livewire::isDiscoverable('capell-seo-suite.edit-page-seo-audit'))->toBeTrue()
+        ->and(Livewire::isDiscoverable('capell-seo-suite.edit-page-pagespeed-audit'))->toBeTrue()
+        ->and(Livewire::isDiscoverable('capell-seo-suite.edit-page-seo-audit-badge'))->toBeTrue()
+        ->and(Livewire::isDiscoverable('capell-seo-suite.edit-page-pagespeed-audit-badge'))->toBeTrue();
+});
+
 it('switches edit page audit tabs without loading both tab bodies up front', function (): void {
     $language = Language::factory()->create();
     $site = Site::factory()

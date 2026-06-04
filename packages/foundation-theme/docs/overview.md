@@ -26,6 +26,7 @@ Provides the baseline Laravel view and asset pipeline that child themes and fron
 - Settings migration creates default theme settings.
 - Registers the `capell` Blade namespace and anonymous `capell::...` components.
 - Registers core layout builder frontend rendering views and widget components.
+- Page-listing widgets can opt into request-aware pagination through widget metadata (`pagination` plus an optional `limit`), with separate query keys for latest pages and selected pages.
 - Runtime theme data layers parent defaults, child defaults, and database edits in that order.
 - GenerateTailwindAssetsCommand writes one frontend Tailwind directive file; runtime theme colours are emitted as CSS variables by the theme head tokens.
 - core layout builder JavaScript is registered as a conditional vendor build asset and only loads when the resolved frontend layout contains widgets.
@@ -63,6 +64,7 @@ Gives each Capell installation a standard frontend foundation before a custom or
 - Add branded page wrappers and section views in child theme packages such as `theme-agency`, `theme-corporate`, or `theme-saas`.
 - Keep authoring behaviour in `capell-app/frontend-authoring`; themes should expose stable presentation selectors, not hidden editor metadata.
 - Keep child themes on shared `capell::...` views unless they need their own section markup.
+- When enabling pagination on page-listing widgets, set a bounded `limit` so public listings avoid unbounded page sizes and predictable query keys remain cache-safe.
 
 ## Verification
 

@@ -71,6 +71,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Registers the `capell` Blade namespace and anonymous `capell::...` components.
 - Registers core layout builder frontend rendering views and widget components.
 - Registers the `header` Layout Builder area and renders it from `capell::header.index`.
+- Page-listing widgets can opt into request-aware pagination with widget `pagination` and `limit` metadata; latest pages and selected pages use separate query keys.
 - Runtime theme data layers parent defaults, child defaults, and database edits in that order.
 - GenerateTailwindAssetsCommand writes one frontend Tailwind directive file; runtime theme colours are emitted as CSS variables by the theme head tokens.
 - core layout builder JavaScript is registered as a conditional vendor build asset and only loads when the resolved frontend layout contains widgets.
