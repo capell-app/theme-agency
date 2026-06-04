@@ -84,21 +84,21 @@ Tied to `capabilities: ["frontend-assets", "cache-blocking"]` and theme-foundati
 
 ## 6. Prioritized Roadmap
 
-| Item                                                               | Bucket | Effort | Impact | Section ref |
-| ------------------------------------------------------------------ | ------ | ------ | ------ | ----------- |
-| Replace stub health check with real probes                         | Now    | M      | High   | §2.1, §4    |
-| Route all `<style>` token values through the CSS safe-list         | Now    | S      | High   | §4          |
-| Add `getMeta(`/`->translation->` to public-Blade guard             | Now    | S      | High   | §2.4, §4    |
-| Delete no-op `AdminServiceProvider` + fix README surfaces          | Now    | S      | Med    | §2.3, §2.8  |
-| Decide demo subsystem: wire a `:demo` command or delete ~1,200 LOC | Now    | M      | High   | §2.2, §4    |
-| Reconcile screenshot counts (9/12/6) + label SVG mockups           | Now    | S      | Med    | §1, §5      |
-| Consolidate the two token sources into one typed Action            | Next   | M      | High   | §2.5, §5    |
-| Move head-token prologue into a hydrated Data object               | Next   | M      | Med    | §2.6        |
-| Publish documented child-theme override surface + arch test        | Next   | M      | High   | §3, §5      |
-| Add base-shell a11y primitives (skip-link, landmarks, aria-live)   | Next   | M      | High   | §3, §4      |
-| Ship a full dark token layer or drop dark screenshots              | Next   | M      | Med    | §3          |
-| Add render-budget + admin query-count assertions vs manifest       | Next   | S      | Med    | §4          |
-| Add RTL: `dir` emission + logical-property conventions             | Later  | L      | Med    | §3          |
-| Add typography-scale tokens + back `headingScale` setting          | Later  | M      | Med    | §3          |
-| Make `isNodeModuleImport()` origin-driven, not heuristic           | Later  | M      | Low    | §2.7        |
-| Rewrite marketplace `summary` + composer `description`             | Later  | S      | Med    | §5          |
+| Item                                                               | Bucket | Effort | Impact | Section ref                                                                                                                |
+| ------------------------------------------------------------------ | ------ | ------ | ------ | -------------------------------------------------------------------------------------------------------------------------- |
+| Replace stub health check with real probes                         | Now    | M      | High   | §2.1, §4                                                                                                                   |
+| Route all `<style>` token values through the CSS safe-list         | Done   | S      | High   | §4 — closed 2026-06-04: public Blade colour tokens now resolve through `ResolveSafeCssColorTokenAction` before CSS output. |
+| Add `getMeta(`/`->translation->` to public-Blade guard             | Now    | S      | High   | §2.4, §4                                                                                                                   |
+| Delete no-op `AdminServiceProvider` + fix README surfaces          | Now    | S      | Med    | §2.3, §2.8                                                                                                                 |
+| Decide demo subsystem: wire a `:demo` command or delete ~1,200 LOC | Now    | M      | High   | §2.2, §4                                                                                                                   |
+| Reconcile screenshot counts (9/12/6) + label SVG mockups           | Now    | S      | Med    | §1, §5                                                                                                                     |
+| Consolidate the two token sources into one typed Action            | Next   | M      | High   | §2.5, §5                                                                                                                   |
+| Move head-token prologue into a hydrated Data object               | Next   | M      | Med    | §2.6                                                                                                                       |
+| Publish documented child-theme override surface + arch test        | Next   | M      | High   | §3, §5                                                                                                                     |
+| Add base-shell a11y primitives (skip-link, landmarks, aria-live)   | Next   | M      | High   | §3, §4                                                                                                                     |
+| Ship a full dark token layer or drop dark screenshots              | Next   | M      | Med    | §3                                                                                                                         |
+| Add render-budget + admin query-count assertions vs manifest       | Next   | S      | Med    | §4                                                                                                                         |
+| Add RTL: `dir` emission + logical-property conventions             | Later  | L      | Med    | §3                                                                                                                         |
+| Add typography-scale tokens + back `headingScale` setting          | Later  | M      | Med    | §3                                                                                                                         |
+| Make `isNodeModuleImport()` origin-driven, not heuristic           | Later  | M      | Low    | §2.7                                                                                                                       |
+| Rewrite marketplace `summary` + composer `description`             | Later  | S      | Med    | §5                                                                                                                         |

@@ -301,3 +301,36 @@ test('reviewed foundation chrome avoids accessibility regressions', function ():
         ->and($languages)->not->toContain('role="menuitem"')
         ->and($languages)->toContain('alt=""');
 });
+
+test('public blade style tokens use css color safety resolver', function (): void {
+    $themePath = dirname(__DIR__, 2);
+    $files = [
+        'resources/views/components/app/head/tokens.blade.php',
+        'resources/views/components/footer/index.blade.php',
+        'resources/views/components/header/index.blade.php',
+        'resources/views/components/layout/main.blade.php',
+    ];
+    $violations = [];
+
+    foreach ($files as $file) {
+        $contents = file_get_contents($themePath . '/' . $file);
+
+        if (! is_string($contents)) {
+            throw new RuntimeException(sprintf('Expected %s to be readable.', $file));
+        }
+
+        if (! str_contains($contents, 'ResolveSafeCssColorTokenAction::run')) {
+            $violations[] = $file . ' does not use ResolveSafeCssColorTokenAction::run';
+        }
+
+        if (str_contains($contents, 'ColorConverterAction::run')) {
+            $violations[] = $file . ' calls ColorConverterAction::run directly';
+        }
+    }
+
+    expect($violations)->toBe(
+        [],
+        'Unsafe public Blade style-token resolvers found:' . PHP_EOL .
+        json_encode($violations, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
+    );
+});

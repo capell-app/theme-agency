@@ -1,5 +1,5 @@
 @php
-    use Capell\Core\Actions\ColorConverterAction;
+    use Capell\FoundationTheme\Actions\ResolveSafeCssColorTokenAction;
     use Capell\FoundationTheme\View\Components\Footer\Index as FooterComponent;
     use Capell\Frontend\Actions\RenderHtmlContentAction;
     use Capell\Frontend\Facades\Frontend;
@@ -11,11 +11,12 @@
     }
 
     $theme ??= Frontend::theme();
+    $resolveFooterColor = static fn (string $key, string $fallback): string => ResolveSafeCssColorTokenAction::run($theme->getMeta($key, $fallback), $fallback);
 @endphp
 
 <style>
     :root {
-        --color-footer: {{ ColorConverterAction::run($theme->getMeta('footer_color', '#1f2937')) }};
+        --color-footer: {{ $resolveFooterColor('footer_color', '#1f2937') }};
         --color-footer-heading: color-mix(
             in srgb,
             var(--color-footer),
@@ -31,7 +32,7 @@
             var(--color-footer),
             #020617 8%
         );
-        --bg-color-footer: {{ ColorConverterAction::run($theme->getMeta('footer_background_color', '#f1f5f9')) }};
+        --bg-color-footer: {{ $resolveFooterColor('footer_background_color', '#f1f5f9') }};
         --bg-color-footer-panel: color-mix(
             in srgb,
             var(--bg-color-footer),
@@ -42,11 +43,11 @@
             var(--bg-color-footer),
             #020617 6%
         );
-        --border-color-footer: {{ ColorConverterAction::run($theme->getMeta('footer_border_color', '#e2e8f0')) }};
+        --border-color-footer: {{ $resolveFooterColor('footer_border_color', '#e2e8f0') }};
     }
 
     .dark:root {
-        --color-footer: {{ ColorConverterAction::run($theme->getMeta('footer_dark_color', '#e5e7eb')) }};
+        --color-footer: {{ $resolveFooterColor('footer_dark_color', '#e5e7eb') }};
         --color-footer-heading: color-mix(
             in srgb,
             var(--color-footer),
@@ -62,7 +63,7 @@
             var(--color-footer),
             #ffffff 6%
         );
-        --bg-color-footer: {{ ColorConverterAction::run($theme->getMeta('footer_dark_background_color', '#111827')) }};
+        --bg-color-footer: {{ $resolveFooterColor('footer_dark_background_color', '#111827') }};
         --bg-color-footer-panel: color-mix(
             in srgb,
             var(--bg-color-footer),
@@ -73,7 +74,7 @@
             var(--bg-color-footer),
             #ffffff 8%
         );
-        --border-color-footer: {{ ColorConverterAction::run($theme->getMeta('footer_dark_border_color', '#374151')) }};
+        --border-color-footer: {{ $resolveFooterColor('footer_dark_border_color', '#374151') }};
     }
 </style>
 

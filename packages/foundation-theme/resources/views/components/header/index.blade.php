@@ -1,5 +1,5 @@
 @php
-    use Capell\Core\Actions\ColorConverterAction;
+    use Capell\FoundationTheme\Actions\ResolveSafeCssColorTokenAction;
     use Capell\Frontend\Actions\GetLayoutContainerWidthAction;
     use Capell\Frontend\Enums\RenderHookLocation;
     use Capell\Frontend\Facades\Frontend;
@@ -22,6 +22,7 @@
         : (bool) $theme->getMeta('header_over_hero', false);
 
     $containerWidth = GetLayoutContainerWidthAction::run();
+    $resolveHeaderColor = static fn (mixed $value, string $fallback): string => ResolveSafeCssColorTokenAction::run($value, $fallback);
 @endphp
 
 @props([
@@ -31,17 +32,17 @@
 <style>
     :root {
         --header-height: {{ $theme->getMeta('header_height', '4.7rem') }};
-        --color-header: {{ ColorConverterAction::run($theme->getMeta('header_color', '32,31,40')) }};
-        --bg-color-header: {{ ColorConverterAction::run($theme->getMeta('header_background_color', '255,255,255')) }};
-        --bg-color-main: {{ ColorConverterAction::run($theme->getMeta('main_background_color', '247,248,249')) }};
-        --border-header: {{ $headerBorderColor ? ColorConverterAction::run($headerBorderColor) : 'transparent' }};
+        --color-header: {{ $resolveHeaderColor($theme->getMeta('header_color', '32,31,40'), '32,31,40') }};
+        --bg-color-header: {{ $resolveHeaderColor($theme->getMeta('header_background_color', '255,255,255'), '255,255,255') }};
+        --bg-color-main: {{ $resolveHeaderColor($theme->getMeta('main_background_color', '247,248,249'), '247,248,249') }};
+        --border-header: {{ $headerBorderColor ? $resolveHeaderColor($headerBorderColor, 'transparent') : 'transparent' }};
     }
 
     .dark:root {
-        --color-header: {{ ColorConverterAction::run($theme->getMeta('header_dark_color', '233,233,233')) }};
-        --bg-color-header: {{ ColorConverterAction::run($theme->getMeta('header_dark_background_color', '32,31,40')) }};
-        --bg-color-main: {{ ColorConverterAction::run($theme->getMeta('main_dark_background_color', '32,31,40')) }};
-        --border-header: {{ $headerDarkBorderColor ? ColorConverterAction::run($headerDarkBorderColor) : 'transparent' }};
+        --color-header: {{ $resolveHeaderColor($theme->getMeta('header_dark_color', '233,233,233'), '233,233,233') }};
+        --bg-color-header: {{ $resolveHeaderColor($theme->getMeta('header_dark_background_color', '32,31,40'), '32,31,40') }};
+        --bg-color-main: {{ $resolveHeaderColor($theme->getMeta('main_dark_background_color', '32,31,40'), '32,31,40') }};
+        --border-header: {{ $headerDarkBorderColor ? $resolveHeaderColor($headerDarkBorderColor, 'transparent') : 'transparent' }};
     }
 
     #header.has-hero:not(.header-sticky):has(.fixed, .sticky) {
