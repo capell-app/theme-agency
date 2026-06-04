@@ -162,6 +162,94 @@ test('public blade keeps data loading out of templates', function (): void {
     );
 });
 
+test('public blade getMeta and translation relation reads stay reviewed', function (): void {
+    $themePath = dirname(__DIR__, 2);
+    $reviewedAccess = [
+        'resources/views/app.blade.php' => ['getMeta' => 2, 'translation' => 0],
+        'resources/views/components/app/body.blade.php' => ['getMeta' => 2, 'translation' => 0],
+        'resources/views/components/app/head/tokens.blade.php' => ['getMeta' => 4, 'translation' => 0],
+        'resources/views/components/content.blade.php' => ['getMeta' => 1, 'translation' => 0],
+        'resources/views/components/demo/contact-page.blade.php' => ['getMeta' => 0, 'translation' => 2],
+        'resources/views/components/footer/index.blade.php' => ['getMeta' => 1, 'translation' => 0],
+        'resources/views/components/footer/site-info.blade.php' => ['getMeta' => 4, 'translation' => 0],
+        'resources/views/components/header/index.blade.php' => ['getMeta' => 13, 'translation' => 1],
+        'resources/views/components/layout/index.blade.php' => ['getMeta' => 1, 'translation' => 3],
+        'resources/views/components/layout/main.blade.php' => ['getMeta' => 1, 'translation' => 0],
+        'resources/views/components/logo/index.blade.php' => ['getMeta' => 0, 'translation' => 1],
+        'resources/views/components/section/team-member.blade.php' => ['getMeta' => 1, 'translation' => 2],
+        'resources/views/components/widget/announcement-bar.blade.php' => ['getMeta' => 4, 'translation' => 2],
+        'resources/views/components/widget/asset/accordion.blade.php' => ['getMeta' => 5, 'translation' => 3],
+        'resources/views/components/widget/asset/banners.blade.php' => ['getMeta' => 1, 'translation' => 0],
+        'resources/views/components/widget/asset/carousel.blade.php' => ['getMeta' => 20, 'translation' => 10],
+        'resources/views/components/widget/asset/features.blade.php' => ['getMeta' => 9, 'translation' => 3],
+        'resources/views/components/widget/asset/index.blade.php' => ['getMeta' => 16, 'translation' => 3],
+        'resources/views/components/widget/asset/media.blade.php' => ['getMeta' => 9, 'translation' => 3],
+        'resources/views/components/widget/asset/pages.blade.php' => ['getMeta' => 16, 'translation' => 6],
+        'resources/views/components/widget/asset/testimonials.blade.php' => ['getMeta' => 20, 'translation' => 9],
+        'resources/views/components/widget/asset/widgets.blade.php' => ['getMeta' => 12, 'translation' => 3],
+        'resources/views/components/widget/banner-image.blade.php' => ['getMeta' => 8, 'translation' => 2],
+        'resources/views/components/widget/default.blade.php' => ['getMeta' => 10, 'translation' => 2],
+        'resources/views/components/widget/kitchen-sink/reference.blade.php' => ['getMeta' => 2, 'translation' => 3],
+        'resources/views/components/widget/modern/alternating-content.blade.php' => ['getMeta' => 0, 'translation' => 5],
+        'resources/views/components/widget/modern/card-grid.blade.php' => ['getMeta' => 3, 'translation' => 5],
+        'resources/views/components/widget/modern/cta-section.blade.php' => ['getMeta' => 4, 'translation' => 2],
+        'resources/views/components/widget/modern/faq-section.blade.php' => ['getMeta' => 2, 'translation' => 5],
+        'resources/views/components/widget/modern/feature-list.blade.php' => ['getMeta' => 2, 'translation' => 5],
+        'resources/views/components/widget/modern/hero-banner.blade.php' => ['getMeta' => 4, 'translation' => 2],
+        'resources/views/components/widget/modern/image-gallery.blade.php' => ['getMeta' => 1, 'translation' => 2],
+        'resources/views/components/widget/modern/pricing-table.blade.php' => ['getMeta' => 8, 'translation' => 5],
+        'resources/views/components/widget/modern/process-steps.blade.php' => ['getMeta' => 3, 'translation' => 5],
+        'resources/views/components/widget/modern/stats-section.blade.php' => ['getMeta' => 2, 'translation' => 5],
+        'resources/views/components/widget/modern/team-members.blade.php' => ['getMeta' => 1, 'translation' => 5],
+        'resources/views/components/widget/modern/testimonials.blade.php' => ['getMeta' => 6, 'translation' => 5],
+        'resources/views/components/widget/navigation/index.blade.php' => ['getMeta' => 4, 'translation' => 0],
+        'resources/views/components/widget/page/breadcrumbs.blade.php' => ['getMeta' => 0, 'translation' => 2],
+        'resources/views/components/widget/page/content.blade.php' => ['getMeta' => 6, 'translation' => 2],
+        'resources/views/components/widget/snippet.blade.php' => ['getMeta' => 3, 'translation' => 2],
+        'resources/views/components/widget/wrapper.blade.php' => ['getMeta' => 9, 'translation' => 0],
+    ];
+    $violations = [];
+
+    $files = (new Finder)
+        ->files()
+        ->in($themePath . '/resources/views')
+        ->name('*.blade.php')
+        ->notPath('components/filament')
+        ->notPath('components/infolists');
+
+    foreach ($files as $file) {
+        $contents = $file->getContents();
+        $relativePath = str_replace($themePath . '/', '', $file->getPathname());
+
+        preg_match_all('/getMeta\(/', $contents, $getMetaMatches);
+        preg_match_all('/(?:\?->|->)translation\b/', $contents, $translationMatches);
+
+        $actualAccess = [
+            'getMeta' => count($getMetaMatches[0]),
+            'translation' => count($translationMatches[0]),
+        ];
+        $allowedAccess = $reviewedAccess[$relativePath] ?? ['getMeta' => 0, 'translation' => 0];
+
+        foreach ($actualAccess as $accessType => $count) {
+            if ($count > $allowedAccess[$accessType]) {
+                $violations[] = sprintf(
+                    '%s contains %d reviewed %s reads, found %d',
+                    $relativePath,
+                    $allowedAccess[$accessType],
+                    $accessType,
+                    $count,
+                );
+            }
+        }
+    }
+
+    expect($violations)->toBe(
+        [],
+        'Unreviewed public Blade getMeta or translation relation reads found:' . PHP_EOL .
+        json_encode($violations, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
+    );
+});
+
 test('theme public views and assets avoid package and theme implementation markers', function (): void {
     $packagesRoot = dirname(__DIR__, 3);
     $packagePaths = [
