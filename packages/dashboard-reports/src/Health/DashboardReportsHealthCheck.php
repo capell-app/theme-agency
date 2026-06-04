@@ -24,6 +24,22 @@ use Throwable;
 
 final class DashboardReportsHealthCheck implements ChecksExtensionHealth
 {
+    /**
+     * @var list<class-string>
+     */
+    private const array REQUIRED_DASHBOARD_WIDGETS = [
+        PublishingTrendChartWidget::class,
+        ContentHealthWidget::class,
+    ];
+
+    /**
+     * @var list<string>
+     */
+    private const array REQUIRED_DASHBOARD_SETTINGS_KEYS = [
+        'publishing_trend',
+        'content_health',
+    ];
+
     public static function compatibleCapellApiVersion(): string
     {
         return '^4.0';
@@ -101,15 +117,15 @@ final class DashboardReportsHealthCheck implements ChecksExtensionHealth
 
     public function dashboardSettingsContributorCheck(): DoctorCheckResultData
     {
-        $registered = $this->tagContains(DashboardSettingsContributor::TAG, DashboardReportsDashboardSettingsContributor::class);
+        $missingSettingsKeys = $this->missingDashboardSettingsKeys();
 
         return new DoctorCheckResultData(
             label: $this->translation('capell-dashboard-reports::dashboard.health_dashboard_settings_contributor_label'),
-            passed: $registered,
-            message: $registered
+            passed: $missingSettingsKeys === [],
+            message: $missingSettingsKeys === []
                 ? $this->translation('capell-dashboard-reports::dashboard.health_dashboard_settings_contributor_passed')
-                : $this->translation('capell-dashboard-reports::dashboard.health_dashboard_settings_contributor_failed'),
-            remediation: $registered
+                : $this->translation('capell-dashboard-reports::dashboard.health_dashboard_settings_contributor_failed', ['settings' => implode(', ', $missingSettingsKeys)]),
+            remediation: $missingSettingsKeys === []
                 ? null
                 : $this->translation('capell-dashboard-reports::dashboard.health_dashboard_settings_contributor_remediation'),
         );
@@ -151,16 +167,46 @@ final class DashboardReportsHealthCheck implements ChecksExtensionHealth
      */
     public function missingDashboardWidgets(): array
     {
-        $registeredWidgets = CapellAdmin::getDashboardWidgets(DashboardEnum::Main);
-        $requiredWidgets = [
-            PublishingTrendChartWidget::class,
-            ContentHealthWidget::class,
-        ];
+        try {
+            $registeredWidgets = CapellAdmin::getDashboardWidgets(DashboardEnum::Main);
+        } catch (Throwable) {
+            return self::REQUIRED_DASHBOARD_WIDGETS;
+        }
 
         return array_values(array_filter(
-            $requiredWidgets,
+            self::REQUIRED_DASHBOARD_WIDGETS,
             static fn (string $widget): bool => ! in_array($widget, $registeredWidgets, true),
         ));
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function missingDashboardSettingsKeys(): array
+    {
+        try {
+            $registeredSettingsKeys = [];
+
+            foreach (app()->tagged(DashboardSettingsContributor::TAG) as $contributor) {
+                if (! $contributor instanceof DashboardReportsDashboardSettingsContributor) {
+                    continue;
+                }
+
+                foreach ($contributor->settingsKeys() as $setting) {
+                    $key = $setting['key'] ?? null;
+
+                    if (is_string($key) && $key !== '') {
+                        $registeredSettingsKeys[] = $key;
+                    }
+                }
+            }
+
+            $registeredSettingsKeys = array_values(array_unique($registeredSettingsKeys));
+
+            return array_values(array_diff(self::REQUIRED_DASHBOARD_SETTINGS_KEYS, $registeredSettingsKeys));
+        } catch (Throwable) {
+            return self::REQUIRED_DASHBOARD_SETTINGS_KEYS;
+        }
     }
 
     private function isContentHealthProviderAvailable(ContentHealthDataProvider $provider): bool

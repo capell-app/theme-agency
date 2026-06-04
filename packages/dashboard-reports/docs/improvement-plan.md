@@ -61,20 +61,20 @@ Manifest `capabilities` are only `["dashboard-reports", "dashboard-reports-admin
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                | Bucket | Effort | Impact | Section ref |
-| ----------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Shipped 2026-06-04: Eliminate double `build()` in ContentHealthWidget              | Done   | S      | High   | §2, §4      |
-| Shipped 2026-06-04: Replace 14-query trend loop with grouped aggregates            | Done   | M      | High   | §2, §4      |
-| Implement a real Diagnostics health check (providers/widgets/settings bound)        | Now    | M      | High   | §4          |
-| Fix per-issue filtered deep-links (not unfiltered index)                            | Now    | M      | Med    | §2, §3      |
-| Commit deployment screenshot captures for the 3 screenshot-contract targets         | Now    | S      | Med    | §1, §5      |
-| Rewrite marketplace summary + composer description                                  | Now    | S      | Med    | §5          |
-| Shipped 2026-06-04: Remove stale `ContentHealthData::from([...])` fixture + add gating/render tests | Done | S | Med | §4 |
-| De-duplicate date-range mapping (pass resolved range into Action)                   | Next   | S      | Med    | §2          |
-| Wire configurable stale-day threshold (+ reconcile docs)                            | Next   | S      | Med    | §2, §3      |
-| Resolve `totalScheduled` period semantics + range-aware bucketing/labels            | Next   | M      | Med    | §2          |
-| Pass `denyWhenMissingActor: true` (or doc Actions as admin-only)                    | Next   | S      | Med    | §4          |
-| CSV export per widget                                                               | Next   | M      | High   | §3          |
-| Scheduled email digest (Action + command + mailable)                                | Later  | L      | High   | §3          |
-| Report registry for sibling-package report cards (deferred `dashboard-widget`)      | Later  | L      | High   | §3, §5      |
-| Theme-token chart colours + dark-mode parity + i18n group label fix                 | Later  | S      | Low    | §2, §4      |
+| Item                                                                                                                                                                                                                                 | Bucket | Effort | Impact | Section ref |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ | ------ | ------ | ----------- |
+| Shipped 2026-06-04: Eliminate double `build()` in ContentHealthWidget                                                                                                                                                                | Done   | S      | High   | §2, §4      |
+| Shipped 2026-06-04: Replace 14-query trend loop with grouped aggregates                                                                                                                                                              | Done   | M      | High   | §2, §4      |
+| Shipped 2026-06-04: Implement a real Diagnostics health check (providers/widgets/settings bound); evidence: provider resolution, widget registration, settings key, and broken-binding coverage in `DashboardReportsHealthCheckTest` | Done   | M      | High   | §4          |
+| Fix per-issue filtered deep-links (not unfiltered index)                                                                                                                                                                             | Now    | M      | Med    | §2, §3      |
+| Commit deployment screenshot captures for the 3 screenshot-contract targets                                                                                                                                                          | Now    | S      | Med    | §1, §5      |
+| Rewrite marketplace summary + composer description                                                                                                                                                                                   | Now    | S      | Med    | §5          |
+| Shipped 2026-06-04: Remove stale `ContentHealthData::from([...])` fixture + add gating/render tests                                                                                                                                  | Done   | S      | Med    | §4          |
+| De-duplicate date-range mapping (pass resolved range into Action)                                                                                                                                                                    | Next   | S      | Med    | §2          |
+| Wire configurable stale-day threshold (+ reconcile docs)                                                                                                                                                                             | Next   | S      | Med    | §2, §3      |
+| Resolve `totalScheduled` period semantics + range-aware bucketing/labels                                                                                                                                                             | Next   | M      | Med    | §2          |
+| Pass `denyWhenMissingActor: true` (or doc Actions as admin-only)                                                                                                                                                                     | Next   | S      | Med    | §4          |
+| CSV export per widget                                                                                                                                                                                                                | Next   | M      | High   | §3          |
+| Scheduled email digest (Action + command + mailable)                                                                                                                                                                                 | Later  | L      | High   | §3          |
+| Report registry for sibling-package report cards (deferred `dashboard-widget`)                                                                                                                                                       | Later  | L      | High   | §3, §5      |
+| Theme-token chart colours + dark-mode parity + i18n group label fix                                                                                                                                                                  | Later  | S      | Low    | §2, §4      |
