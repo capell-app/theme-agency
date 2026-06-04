@@ -17,5 +17,6 @@ final class VariantAllocationData extends Data
         public string $variantKey,
         public string $allocationKey,
         public bool $isNewAllocation,
+        public ?int $allocationId = null,
     ) {}
 }

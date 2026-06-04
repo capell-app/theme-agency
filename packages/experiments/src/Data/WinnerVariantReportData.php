@@ -18,6 +18,11 @@ final class WinnerVariantReportData extends Data
         public int $allocations,
         public int $conversions,
         public float $conversionRate,
+        public bool $isBaseline = false,
+        public bool $meetsSampleSize = false,
+        public ?float $lift = null,
+        public ?float $pValue = null,
+        public bool $isStatisticallySignificant = false,
         public bool $isWinner = false,
     ) {}
 }

@@ -22,5 +22,8 @@ final class WinnerReportData extends Data
         public ?int $winningVariantId,
         public ?string $winningVariantKey,
         public array $variants,
+        public int $minimumSampleSize = 100,
+        public float $confidenceLevel = 0.95,
+        public bool $isStatisticallySignificant = false,
     ) {}
 }

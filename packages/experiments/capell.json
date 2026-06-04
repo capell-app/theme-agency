@@ -6,14 +6,14 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Run server-side A/B tests on any Capell page or campaign. Target visitors by path, UTM, referrer, query, or custom segments, keep every visitor on the same variant with deterministic sticky bucketing, and track goal conversions to surface a winning variant — all without third-party scripts or client-side flicker.",
+    "description": "Run server-side A/B tests on Capell pages or campaigns. Target visitors by path, UTM, referrer, query, or custom segments, choose sticky or per-request weighted allocation, and track goal conversions with statistically gated winner reports.",
     "product": {
         "group": "Capell Growth",
         "tier": "premium",
         "bundle": "growth"
     },
     "namespace": "Capell\\Experiments",
-    "surfaces": ["admin", "frontend"],
+    "surfaces": ["admin"],
     "dependencies": {
         "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
@@ -114,6 +114,7 @@
         "goal-tracking",
         "winner-reporting",
         "winner-declaration",
+        "statistical-significance",
         "experiments-admin",
         "campaign-experiments",
         "page-experiments",
@@ -138,7 +139,7 @@
             "label": "Experiments package models, migrations, and allocation surfaces are discoverable.",
             "class": "Capell\\Experiments\\Health\\ExperimentsHealthCheck",
             "severity": "critical",
-            "surface": "frontend"
+            "surface": "admin"
         }
     ],
     "commercial": {
@@ -148,9 +149,9 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Run server-side A/B tests on any Capell page or campaign — audience targeting, sticky bucketing, and goal-tracked winner reports, with no third-party scripts or client-side flicker.",
+        "summary": "Run statistically gated server-side A/B tests on Capell pages or campaigns — audience targeting, weighted allocation, and goal-tracked winner reports.",
         "screenshots": [],
-        "categories": ["growth", "analytics", "frontend"]
+        "categories": ["growth", "analytics"]
     },
     "contributionTraceability": {
         "deferredContributions": []

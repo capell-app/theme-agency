@@ -6,6 +6,7 @@ namespace Capell\Experiments\Actions;
 
 use Capell\Experiments\Data\ExperimentContextData;
 use Capell\Experiments\Data\VariantAllocationData;
+use Capell\Experiments\Enums\AllocationStrategy;
 use Capell\Experiments\Enums\ExperimentStatus;
 use Capell\Experiments\Models\Experiment;
 use Capell\Experiments\Models\ExperimentAllocation;
@@ -13,6 +14,7 @@ use Capell\Experiments\Models\ExperimentVariant;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RuntimeException;
 
@@ -23,23 +25,20 @@ final class AllocateVariantAction
     public function handle(Experiment $experiment, string $allocationKey, ?ExperimentContextData $context = null): ?VariantAllocationData
     {
         $context ??= new ExperimentContextData;
-        $allocationHash = hash('sha256', $allocationKey);
 
-        /** @var ExperimentAllocation|null $existingAllocation */
-        $existingAllocation = $experiment
-            ->allocations()
-            ->with('variant')
-            ->where('allocation_hash', $allocationHash)
-            ->first();
+        if ($experiment->allocation_strategy === AllocationStrategy::StickyWeighted) {
+            $existingAllocation = $this->existingStickyAllocation($experiment, $allocationKey);
 
-        if ($existingAllocation !== null) {
-            return new VariantAllocationData(
-                experimentId: $experiment->id,
-                variantId: $existingAllocation->experiment_variant_id,
-                variantKey: $existingAllocation->variant->key,
-                allocationKey: $allocationKey,
-                isNewAllocation: false,
-            );
+            if ($existingAllocation instanceof ExperimentAllocation) {
+                return new VariantAllocationData(
+                    experimentId: $experiment->id,
+                    variantId: $existingAllocation->experiment_variant_id,
+                    variantKey: $existingAllocation->variant->key,
+                    allocationKey: $allocationKey,
+                    isNewAllocation: false,
+                    allocationId: $existingAllocation->id,
+                );
+            }
         }
 
         if (! $this->canAllocate($experiment, $allocationKey, $context)) {
@@ -60,12 +59,33 @@ final class AllocateVariantAction
 
         $variant = $this->chooseVariant($experiment, $variants, $allocationKey);
 
-        return DB::transaction(function () use ($experiment, $variant, $allocationKey, $allocationHash, $context): VariantAllocationData {
+        return $this->persistAllocation($experiment, $variant, $allocationKey, $context);
+    }
+
+    private function existingStickyAllocation(Experiment $experiment, string $allocationKey): ?ExperimentAllocation
+    {
+        /** @var ExperimentAllocation|null $existingAllocation */
+        $existingAllocation = $experiment
+            ->allocations()
+            ->with('variant')
+            ->where('allocation_hash', $this->stickyAllocationHash($allocationKey))
+            ->first();
+
+        return $existingAllocation;
+    }
+
+    private function persistAllocation(
+        Experiment $experiment,
+        ExperimentVariant $variant,
+        string $allocationKey,
+        ExperimentContextData $context,
+    ): VariantAllocationData {
+        return DB::transaction(function () use ($experiment, $variant, $allocationKey, $context): VariantAllocationData {
             $allocation = ExperimentAllocation::query()->create([
                 'experiment_id' => $experiment->id,
                 'experiment_variant_id' => $variant->id,
                 'allocation_key' => $allocationKey,
-                'allocation_hash' => $allocationHash,
+                'allocation_hash' => $this->allocationHash($experiment, $allocationKey),
                 'source' => $context->source,
                 'external_id' => $context->externalId,
                 'allocated_at' => CarbonImmutable::now(),
@@ -78,6 +98,7 @@ final class AllocateVariantAction
                 variantKey: $variant->key,
                 allocationKey: $allocationKey,
                 isNewAllocation: true,
+                allocationId: $allocation->id,
             );
         });
     }
@@ -142,5 +163,24 @@ final class AllocateVariantAction
     private function stableNumber(string $key): int
     {
         return (int) hexdec(substr(hash('sha256', $key), 0, 8));
+    }
+
+    private function allocationHash(Experiment $experiment, string $allocationKey): string
+    {
+        if ($experiment->allocation_strategy === AllocationStrategy::StickyWeighted) {
+            return $this->stickyAllocationHash($allocationKey);
+        }
+
+        return hash('sha256', sprintf(
+            '%s:%d:%s',
+            $allocationKey,
+            $experiment->id,
+            Str::uuid()->toString(),
+        ));
+    }
+
+    private function stickyAllocationHash(string $allocationKey): string
+    {
+        return hash('sha256', $allocationKey);
     }
 }

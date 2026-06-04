@@ -16,6 +16,7 @@ use Capell\Experiments\Data\ExperimentData;
 use Capell\Experiments\Data\ExperimentGoalData;
 use Capell\Experiments\Data\ExperimentGoalEventData;
 use Capell\Experiments\Data\ExperimentVariantData;
+use Capell\Experiments\Enums\AllocationStrategy;
 use Capell\Experiments\Enums\AudienceOperator;
 use Capell\Experiments\Enums\AudienceRuleType;
 use Capell\Experiments\Enums\ExperimentGoalType;
@@ -94,11 +95,35 @@ it('allocates sticky variants records goals and builds a winner report', functio
 
     expect($report->totalAllocations)->toBe(1)
         ->and($report->totalConversions)->toBe(1)
-        ->and($report->winningVariantId)->toBe($firstAllocation?->variantId)
+        ->and($report->winningVariantId)->toBeNull()
+        ->and($report->isStatisticallySignificant)->toBeFalse()
         ->and($report->variants)->toHaveCount(2);
 });
 
-it('declares the winning variant from report data and ends the experiment', function (): void {
+it('honours weighted allocation strategy without reusing a sticky visitor row', function (): void {
+    $experiment = CreateExperimentAction::run(new ExperimentData(
+        name: 'Weighted allocation test',
+        status: ExperimentStatus::Active,
+        allocationStrategy: AllocationStrategy::Weighted,
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', weight: 0, isControl: true),
+            new ExperimentVariantData(name: 'Variant', key: 'variant', weight: 100),
+        ],
+    ));
+
+    $firstAllocation = AllocateVariantAction::run($experiment, 'visitor-123');
+    $secondAllocation = AllocateVariantAction::run($experiment, 'visitor-123');
+
+    expect($firstAllocation)->not->toBeNull()
+        ->and($secondAllocation)->not->toBeNull()
+        ->and($firstAllocation?->isNewAllocation)->toBeTrue()
+        ->and($secondAllocation?->isNewAllocation)->toBeTrue()
+        ->and($firstAllocation?->variantKey)->toBe('variant')
+        ->and($secondAllocation?->variantKey)->toBe('variant')
+        ->and($experiment->allocations()->count())->toBe(2);
+});
+
+it('declares a statistically significant winning variant and ends the experiment', function (): void {
     $experiment = CreateExperimentAction::run(new ExperimentData(
         name: 'Signup form CTA test',
         status: ExperimentStatus::Active,
@@ -113,24 +138,38 @@ it('declares the winning variant from report data and ends the experiment', func
     $goal = $experiment->goals()->firstOrFail();
     $controlVariant = $experiment->variants()->where('key', 'control')->firstOrFail();
     $benefitVariant = $experiment->variants()->where('key', 'benefit-cta')->firstOrFail();
-    $controlRecord = ExperimentAllocation::query()->create([
-        'experiment_id' => $experiment->getKey(),
-        'experiment_variant_id' => $controlVariant->getKey(),
-        'allocation_key' => 'visitor-control',
-        'allocation_hash' => hash('sha256', 'visitor-control'),
-        'allocated_at' => now(),
-    ]);
-    $benefitRecord = ExperimentAllocation::query()->create([
-        'experiment_id' => $experiment->getKey(),
-        'experiment_variant_id' => $benefitVariant->getKey(),
-        'allocation_key' => 'visitor-benefit',
-        'allocation_hash' => hash('sha256', 'visitor-benefit'),
-        'allocated_at' => now(),
-    ]);
 
-    RecordGoalEventAction::run($benefitRecord, $goal, new ExperimentGoalEventData(eventKey: 'signup'));
-    RecordGoalEventAction::run($benefitRecord, $goal, new ExperimentGoalEventData(eventKey: 'signup'));
-    RecordGoalEventAction::run($controlRecord, $goal, new ExperimentGoalEventData(eventKey: 'signup'));
+    foreach (range(1, 100) as $visitorIndex) {
+        $controlAllocation = ExperimentAllocation::query()->create([
+            'experiment_id' => $experiment->getKey(),
+            'experiment_variant_id' => $controlVariant->getKey(),
+            'allocation_key' => 'visitor-control-' . $visitorIndex,
+            'allocation_hash' => hash('sha256', 'visitor-control-' . $visitorIndex),
+            'allocated_at' => now(),
+        ]);
+        $benefitAllocation = ExperimentAllocation::query()->create([
+            'experiment_id' => $experiment->getKey(),
+            'experiment_variant_id' => $benefitVariant->getKey(),
+            'allocation_key' => 'visitor-benefit-' . $visitorIndex,
+            'allocation_hash' => hash('sha256', 'visitor-benefit-' . $visitorIndex),
+            'allocated_at' => now(),
+        ]);
+
+        if ($visitorIndex <= 10) {
+            RecordGoalEventAction::run($controlAllocation, $goal, new ExperimentGoalEventData(eventKey: 'signup'));
+        }
+
+        if ($visitorIndex <= 30) {
+            RecordGoalEventAction::run($benefitAllocation, $goal, new ExperimentGoalEventData(eventKey: 'signup'));
+        }
+    }
+
+    $report = BuildWinnerReportAction::run($experiment, $goal);
+
+    expect($report->isStatisticallySignificant)->toBeTrue()
+        ->and($report->winningVariantId)->toBe($benefitVariant->getKey())
+        ->and($report->minimumSampleSize)->toBe(100)
+        ->and($report->confidenceLevel)->toBe(0.95);
 
     $declaredAt = CarbonImmutable::parse('2026-06-01 10:00:00', 'UTC');
     $experiment = DeclareExperimentWinnerAction::run($experiment, $goal, $declaredAt);
@@ -139,7 +178,8 @@ it('declares the winning variant from report data and ends the experiment', func
         ->and($experiment->winning_variant_id)->toBe($benefitVariant->getKey())
         ->and($experiment->winner_declared_at?->toIso8601String())->toBe('2026-06-01T10:00:00+00:00')
         ->and($experiment->ends_at?->toIso8601String())->toBe('2026-06-01T10:00:00+00:00')
-        ->and($experiment->metadata['winner_report']['winning_variant_id'])->toBe($benefitVariant->getKey());
+        ->and($experiment->metadata['winner_report']['winning_variant_id'])->toBe($benefitVariant->getKey())
+        ->and($experiment->metadata['winner_report']['is_statistically_significant'])->toBeTrue();
 });
 
 it('does not declare a winner without allocation data', function (): void {
@@ -152,6 +192,48 @@ it('does not declare a winner without allocation data', function (): void {
     ));
 
     DeclareExperimentWinnerAction::run($experiment);
+})->throws(ValidationException::class);
+
+it('does not declare a raw conversion winner before the sample floor is met', function (): void {
+    $experiment = CreateExperimentAction::run(new ExperimentData(
+        name: 'Early winner experiment',
+        status: ExperimentStatus::Active,
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+            new ExperimentVariantData(name: 'Benefit CTA', key: 'benefit-cta'),
+        ],
+        goals: [
+            new ExperimentGoalData(name: 'Signup', key: 'signup', type: ExperimentGoalType::CustomEvent, isPrimary: true),
+        ],
+    ));
+    $goal = $experiment->goals()->firstOrFail();
+    $controlVariant = $experiment->variants()->where('key', 'control')->firstOrFail();
+    $benefitVariant = $experiment->variants()->where('key', 'benefit-cta')->firstOrFail();
+    ExperimentAllocation::query()->create([
+        'experiment_id' => $experiment->getKey(),
+        'experiment_variant_id' => $controlVariant->getKey(),
+        'allocation_key' => 'visitor-control',
+        'allocation_hash' => hash('sha256', 'visitor-control'),
+        'allocated_at' => now(),
+    ]);
+    $benefitAllocation = ExperimentAllocation::query()->create([
+        'experiment_id' => $experiment->getKey(),
+        'experiment_variant_id' => $benefitVariant->getKey(),
+        'allocation_key' => 'visitor-benefit',
+        'allocation_hash' => hash('sha256', 'visitor-benefit'),
+        'allocated_at' => now(),
+    ]);
+
+    RecordGoalEventAction::run($benefitAllocation, $goal, new ExperimentGoalEventData(eventKey: 'signup'));
+
+    $report = BuildWinnerReportAction::run($experiment, $goal);
+
+    expect($report->totalAllocations)->toBe(2)
+        ->and($report->totalConversions)->toBe(1)
+        ->and($report->winningVariantId)->toBeNull()
+        ->and($report->isStatisticallySignificant)->toBeFalse();
+
+    DeclareExperimentWinnerAction::run($experiment, $goal);
 })->throws(ValidationException::class);
 
 it('does not allocate visitors outside required audience rules', function (): void {
