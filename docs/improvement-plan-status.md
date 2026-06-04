@@ -66,7 +66,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | publishing-studio | 5 | 6 | 5 | Slice committed | `c6a886556` landed health/screenshots; continue with publishing workflow rows. |
 | search | 7 | 6 | 4 | Slice committed | `73eed65c8` landed Wave 7 readiness; continue with hot-path and analytics rows. |
 | seo-suite | 7 | 6 | 3 | Slice committed | `e548d68ac` landed readiness fixes; continue with redaction and AI discovery rows. |
-| shopify-commerce | 6 | 7 | 4 | Needs audit | No recent package slice identified; sync loop and webhook reachability are high value. |
+| shopify-commerce | 6 | 7 | 4 | Slice committed | Current follow-up scrubs persisted sync errors; sync loop, customer producer, and webhook reachability remain high value. |
 | site-discovery | 6 | 5 | 4 | Slice committed | `c76a0cc14` merged URL registry work; continue with remaining discovery/SEO rows. |
 | structured-content-library | 7 | 5 | 4 | Slice committed | `73eed65c8` landed Wave 7 readiness; current follow-up hardens public payload sanitization, publish timestamps, and import slug dedup. |
 | tags | 6 | 5 | 4 | Needs audit | No recent package slice identified; taxonomy/status/workspace drift needs review. |
@@ -89,8 +89,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 
 Highest-value remaining work should start with packages that are both high-risk and still marked `Needs audit`:
 
-1. `shopify-commerce` sync-loop and webhook reachability.
-2. `ga4-reports` retry/backoff, PHP constraint, and budget drift.
-3. Theme-line systemic pass: `extends` alignment, token-driven colors, screenshots, WCAG/dark mode.
+1. `ga4-reports` retry/backoff, PHP constraint, and budget drift.
+2. Theme-line systemic pass: `extends` alignment, token-driven colors, screenshots, WCAG/dark mode.
 
 After each package slice lands, update this tracker with the commit and any rows that remain high-risk.

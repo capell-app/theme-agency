@@ -85,7 +85,7 @@ final class ImportShopifyProductBulkSyncAction
                     $connection->forceFill([
                         'sync_status' => 'failed',
                         'status' => ShopifyConnectionStatus::Error,
-                        'last_sync_error' => $throwable->getMessage(),
+                        'last_sync_error' => SanitizeShopifySyncErrorAction::run($throwable, $connection),
                     ])->save();
                 }
 

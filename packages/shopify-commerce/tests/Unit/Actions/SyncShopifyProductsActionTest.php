@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\ShopifyCommerce\Actions\Catalog\ImportShopifyProductBulkSyncAction;
 use Capell\ShopifyCommerce\Actions\Catalog\PollShopifyProductBulkSyncAction;
+use Capell\ShopifyCommerce\Actions\Catalog\SanitizeShopifySyncErrorAction;
 use Capell\ShopifyCommerce\Actions\Catalog\SyncShopifyProductsAction;
 use Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus;
 use Capell\ShopifyCommerce\Exceptions\ShopifyGraphqlException;
@@ -43,7 +44,9 @@ it('starts a shopify bulk product sync', function (): void {
 });
 
 it('marks the connection as errored when starting bulk sync fails', function (): void {
-    $connection = shopifyBulkConnection();
+    $connection = shopifyBulkConnection([
+        'access_token' => 'shpat_secret_token',
+    ]);
 
     Http::fake([
         'foo.myshopify.com/admin/api/2026-04/graphql.json' => Http::response([
@@ -60,7 +63,9 @@ it('marks the connection as errored when starting bulk sync fails', function ():
 
     expect($connection->status)->toBe(ShopifyConnectionStatus::Error)
         ->and($connection->sync_status)->toBe('failed')
-        ->and($connection->last_sync_error)->not->toBeNull();
+        ->and($connection->last_sync_error)->not->toBeNull()
+        ->and($connection->last_sync_error)->not->toContain('shpat_secret_token')
+        ->and($connection->last_sync_error)->not->toContain('foo.myshopify.com');
 });
 
 it('polls completed and failed bulk operations', function (): void {
@@ -169,6 +174,23 @@ it('does not reactivate revoked connections during import', function (): void {
 
     expect(ImportShopifyProductBulkSyncAction::run($connection))->toBe(0)
         ->and($connection->refresh()->status)->toBe(ShopifyConnectionStatus::Revoked);
+});
+
+it('sanitizes persisted shopify sync error messages', function (): void {
+    $connection = shopifyBulkConnection([
+        'access_token' => 'shpat_secret_token',
+    ]);
+
+    $message = SanitizeShopifySyncErrorAction::run(
+        new RuntimeException('GET https://foo.myshopify.com/admin/api/graphql.json?access_token=shpat_secret_token failed with X-Shopify-Access-Token=shpat_secret_token'),
+        $connection,
+    );
+
+    expect($message)->toContain('[shopify-url]')
+        ->and($message)->not->toContain('foo.myshopify.com')
+        ->and($message)->not->toContain('shpat_secret_token')
+        ->and($message)->not->toContain('access_token=shpat_secret_token')
+        ->and($message)->not->toContain('X-Shopify-Access-Token=shpat_secret_token');
 });
 
 /**

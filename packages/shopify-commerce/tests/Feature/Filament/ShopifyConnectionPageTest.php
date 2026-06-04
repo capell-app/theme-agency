@@ -189,6 +189,9 @@ it('normalizes tampered site selections before mutating shopify connections', fu
 
         protected $table = 'users';
 
+        /**
+         * @return SupportCollection<int, int>
+         */
         public function getAssignedSiteIds(): SupportCollection
         {
             return collect([$this->assignedSiteId]);
@@ -204,6 +207,9 @@ it('normalizes tampered site selections before mutating shopify connections', fu
             return User::class;
         }
 
+        /**
+         * @return SupportCollection<int, string>
+         */
         protected function getGuardNames(): SupportCollection
         {
             return collect(['web']);

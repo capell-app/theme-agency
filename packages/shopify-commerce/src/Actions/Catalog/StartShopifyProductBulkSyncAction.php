@@ -52,7 +52,7 @@ final class StartShopifyProductBulkSyncAction
                 $connection->forceFill([
                     'sync_status' => 'failed',
                     'status' => $throwable instanceof ShopifyGraphqlException ? ShopifyConnectionStatus::Error : $connection->status,
-                    'last_sync_error' => $throwable->getMessage(),
+                    'last_sync_error' => SanitizeShopifySyncErrorAction::run($throwable, $connection),
                 ])->save();
 
                 throw $throwable;
