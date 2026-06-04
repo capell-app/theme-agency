@@ -39,7 +39,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | diagnostics | 5 | 6 | 4 | Slice committed | `86ebebd0a` improved readiness; platform health-check execution remains high priority. |
 | document-lifecycle | 7 | 5 | 4 | Slice committed | `32dfee056` landed health/acceptance/migration fixes; continue with admin lifecycle and export rows. |
 | email-studio | 6 | 5 | 4 | Slice committed | `8cacf75e1` landed health/copy fixes; continue with retry/backoff and delivery gaps. |
-| events | 7 | 6 | 4 | Needs audit | Re-check plan against current code; registration/waitlist capability reachability is high value. |
+| events | 7 | 6 | 4 | Slice committed | Current follow-up wires registration confirm/cancel admin actions, waitlist promotion reachability, and manifest permissions; continue with mail queueing, screenshots, portal cancellation, and doctor command rows. |
 | experiments | 5 | 6 | 5 | Slice committed | `cf3798724` landed health/subject fixes; continue with frontend allocation and significance rows. |
 | filament-peek | 7 | 7 | 4 | Slice committed | `1e0ef3735` landed health/preview safety tests; continue with dependency/runtime edge rows. |
 | form-builder | 5 | 6 | 4 | Slice committed | `f59eca815` landed health/spam safety fixes; admin UI and file/payment fields remain high value. |
@@ -89,9 +89,8 @@ No package should be marked `Complete` from commit history alone. Completion req
 
 Highest-value remaining work should start with packages that are both high-risk and still marked `Needs audit`:
 
-1. `events` registration/waitlist capability reachability.
-2. `hero` plan audit and implementation slice.
-3. `tags` taxonomy/status/workspace drift.
-4. Theme-line systemic pass: `extends` alignment, token-driven colors, screenshots, WCAG/dark mode.
+1. `hero` plan audit and implementation slice.
+2. `tags` taxonomy/status/workspace drift.
+3. Theme-line systemic pass: `extends` alignment, token-driven colors, screenshots, WCAG/dark mode.
 
 After each package slice lands, update this tracker with the commit and any rows that remain high-risk.

@@ -4,6 +4,12 @@ All notable changes to `capell-app/events` will be documented in this file.
 
 ## Unreleased
 
+### 2026-06-04
+
+- Added confirm and cancel row actions to the event registration admin resource; cancellation now reaches the existing waitlist-promotion workflow from the shipped staff surface.
+- Declared the Events resource permissions in `capell.json` so the manifest matches the registered event, venue, occurrence, and registration policies.
+- Documented registration workflow management in the package docs.
+
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
 
 ## 2026-06-03

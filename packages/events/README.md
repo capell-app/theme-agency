@@ -13,7 +13,7 @@ Events adds event records, venues, occurrences, registrations, calendar pages, n
 
 ## Why It Helps Your Capell Workflow
 
-- Adds event listings, venues, occurrences, registrations, calendar feeds, and Event schema for sites that publish schedules.
+- Adds event listings, venues, occurrences, staff-managed registrations, calendar feeds, and Event schema for sites that publish schedules.
 - Lets editors manage event content and feeds inside Capell instead of maintaining separate calendar tooling.
 - Gives developers documented extension points for registration, booking, feeds, schema, and publishing integration.
 
@@ -26,7 +26,7 @@ Events adds event records, venues, occurrences, registrations, calendar pages, n
 ## What It Adds
 
 - Events adds event records, venues, occurrences, registrations, calendar pages, notifications, and iCalendar feed support to Capell.
-- Admin resources: `EventOccurrenceResource`, `EventRegistrationResource`, `EventResource`, `EventVenueResource`.
+- Admin resources: `EventOccurrenceResource`, `EventRegistrationResource`, `EventResource`, `EventVenueResource`; registration rows can be confirmed or cancelled by staff.
 - Livewire components: `EventCalendar`, `EventsCalendarPage`, `EventsListingPage`.
 - Package setup or maintenance commands.
 

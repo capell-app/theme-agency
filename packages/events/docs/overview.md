@@ -34,7 +34,7 @@ Optional integrations are declared for address, form builder, SEO Suite, and tag
 | `EventResource` index/create/edit | Manage event records and recurrence fields. |
 | `EventVenueResource`              | Manage venues.                              |
 | `EventOccurrenceResource`         | Review generated occurrences.               |
-| `EventRegistrationResource`       | Review event registrations.                 |
+| `EventRegistrationResource`       | Review, confirm, and cancel event registrations. |
 | `EventCalendarPage`               | Calendar view under content navigation.     |
 | `EventCalendarWidget`             | Dashboard/admin calendar widget.            |
 
@@ -49,6 +49,10 @@ Optional integrations are declared for address, form builder, SEO Suite, and tag
 | `events/{listingPage}/feed.ics` | Listing-specific iCalendar feed route.              |
 
 Anonymous public output must not expose authoring controls, internal model IDs, editor URLs, or package internals.
+
+## Registration Workflow
+
+Native RSVP registrations start as pending or waitlisted depending on occurrence capacity. Staff can confirm or cancel registrations from `EventRegistrationResource`; cancelling a capacity-reserving registration reuses `UpdateRegistrationStatusAction`, refreshes the occurrence registration count, and promotes the next waitlisted attendee when capacity is available.
 
 ## Screenshot Coverage
 
