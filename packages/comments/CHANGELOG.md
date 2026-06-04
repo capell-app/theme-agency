@@ -6,6 +6,8 @@ All notable changes to `capell-app/comments` will be documented in this file.
 
 ### 2026-06-04
 
+- Hardened the public comment submission throttle key so changing the author email no longer resets the primary commentable/IP rate-limit bucket.
+- Added Livewire coverage proving repeated submissions to the same thread/IP are throttled even when the email changes.
 - Added automatic spam scoring for configured link-count and blocked-term rules, storing `spam_reasons` and routing flagged comments to `Spam`.
 - Added direct score and create-flow coverage proving auto-spam comments skip verification token creation.
 - Implemented real `CommentsHealthCheck` diagnostics for required storage tables, settings registration, the public thread route, and the public thread Livewire component.

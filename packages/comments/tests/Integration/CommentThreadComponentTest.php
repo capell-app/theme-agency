@@ -71,6 +71,33 @@ it('rejects public comments that trip the bot trap fields', function (): void {
     ])->exists())->toBeFalse();
 });
 
+it('throttles repeated public submissions even when the author email changes', function (): void {
+    Notification::fake();
+    bindCommentThreadSettings();
+    config()->set('capell-comments.throttle.max_attempts', 1);
+    config()->set('capell-comments.throttle.decay_seconds', 60);
+
+    $page = $this->createCommentsPage();
+    $threadKey = CommentThreadComponent::threadKeyFor($page);
+
+    Livewire::test(CommentThreadComponent::class, ['threadKey' => $threadKey])
+        ->set('body', 'First comment')
+        ->set('authorName', 'Public Reader')
+        ->set('authorEmail', 'first@example.com')
+        ->set('formRenderedAt', now()->subSeconds(3)->getTimestamp())
+        ->call('submit')
+        ->assertSet('submitted', true)
+        ->set('body', 'Second comment')
+        ->set('authorName', 'Public Reader')
+        ->set('authorEmail', 'second@example.com')
+        ->set('formRenderedAt', now()->subSeconds(3)->getTimestamp())
+        ->call('submit')
+        ->assertHasErrors(['body']);
+
+    expect(Comment::query()->where('commentable_id', $page->getKey())->count())->toBe(1)
+        ->and(Comment::query()->where('body', 'Second comment')->exists())->toBeFalse();
+});
+
 it('keeps reply intent inside the public thread component until the visitor cancels it', function (): void {
     $page = $this->createCommentsPage();
 

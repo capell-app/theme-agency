@@ -84,4 +84,5 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
 
 The current focused tests cover settings registration, settings resolution,
 manifest requirements, health diagnostics, email verification, spam scoring,
-public thread rendering, component submission, and bot-trap rejection.
+public thread rendering, component submission, throttling, and bot-trap
+rejection.

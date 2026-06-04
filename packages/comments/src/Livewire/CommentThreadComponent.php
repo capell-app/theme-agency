@@ -190,7 +190,6 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
             (string) $commentable->getMorphClass(),
             (string) $commentable->getKey(),
             (string) request()->ip(),
-            (string) $this->authorEmail,
         ]));
 
         $maxAttempts = (int) config('capell-comments.throttle.max_attempts', 6);

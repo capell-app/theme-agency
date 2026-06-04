@@ -113,6 +113,8 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
   omit them, but public forms should pass them through `CreateCommentData`.
 - Keep spam scoring in `ScoreCommentSpamAction`; new heuristics should return
   explicit `spam_reasons` and must not leak into public thread DTOs.
+- Keep the primary public submission throttle keyed to commentable + IP data;
+  attacker-controlled fields such as author email must not reset that bucket.
 - Keep `CommentsHealthCheck` aligned with the manifest's critical package-health
   claim whenever routes, storage, settings, or frontend component aliases change.
 - Add focused docs when new commentable registries, notification flows, or

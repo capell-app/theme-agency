@@ -14,6 +14,7 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 - **2026-06-04:** Added public comment form bot-trap controls: a hidden honeypot field, configurable minimum form age, action-level rejection before persistence, component state reset, and action/Livewire tests.
 - **2026-06-04:** Implemented real `CommentsHealthCheck` diagnostics for required storage tables, settings registration, the public thread route, and the public thread Livewire component, with focused failure-mode tests.
 - **2026-06-04:** Implemented automatic local spam scoring for configured link-count and blocked-term rules, storing `spam_reasons`, marking flagged submissions as `Spam`, and skipping verification tokens for auto-spam comments.
+- **2026-06-04:** Hardened the public submit throttle key to use commentable + IP data without attacker-controlled author email, with Livewire regression coverage.
 
 ## 2. Improvements (existing functionality)
 
@@ -37,7 +38,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **Shipped 2026-06-04: Spam scoring (table-stakes, advertised).** `ScoreCommentSpamAction` reads `config('capell-comments.spam.max_links')` and `spam.blocked_terms`, returns `CommentSpamScoreData`, and `CreateCommentAction` stores `spam_reasons`, sets `CommentStatus::Spam`, stamps `marked_spam_at`, and skips verification-token creation for flagged submissions. Focused coverage proves direct scoring and create-flow persistence. — `src/Actions/ScoreCommentSpamAction.php`, `src/Data/CommentSpamScoreData.php`, `src/Actions/CreateCommentAction.php`, `tests/Integration/Actions/CreateCommentActionTest.php`
 
-- **Rate-limit hardening (anti-abuse).** The submit throttle key includes attacker-controlled `$this->authorEmail` (`src/Livewire/CommentThreadComponent.php:176-181`), so a bot varying the email field resets its own bucket. Re-key on IP + commentable (+ optional author hash) only, and consider a per-author-email _secondary_ cap rather than the primary key. Table-stakes for guest comments.
+- **Shipped 2026-06-04: Rate-limit hardening (anti-abuse).** The primary public submit throttle key now uses commentable type, commentable ID, and requester IP only, so changing `$this->authorEmail` cannot reset the primary bucket. Focused Livewire coverage proves a second submission to the same thread/IP is throttled even when the email changes. — `src/Livewire/CommentThreadComponent.php`, `tests/Integration/CommentThreadComponentTest.php`
 
 - **Moderator notifications & digests (advertised).** See §2 — no new-comment notification exists; only the author email-verification mail is wired (`src/Notifications/ConfirmCommentAuthorEmailNotification.php`). A daily/instant moderation digest is a natural premium differentiator and the `supports: capell-app/email-studio` dependency is the intended vehicle.
 
@@ -55,7 +56,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **Local spam scoring shipped.** `spam.max_links`, `spam.blocked_terms`, the `spam_reasons` column, and `linkCount()` are now enforced during `CreateCommentAction`. Residual risk: the heuristic remains intentionally local and simple; external spam providers, CAPTCHA/Turnstile, richer link detection, and moderator notification workflows remain separate roadmap items.
 
-- **Throttle bypass via email field.** `src/Livewire/CommentThreadComponent.php:176`. A trivial bot loop defeats the only built-in rate limit. Spam resilience risk.
+- **Throttle bypass via email field shipped.** The public submit throttle no longer includes attacker-controlled author email in the primary bucket. Residual risk: there is not yet a secondary per-author-email cap or broader abuse telemetry.
 
 - **Public render performance budget unverifiable / at risk.** Manifest sets `frontendRenderBudgetMs: 20` and `adminQueryBudget: 40`, but `BuildPublicThreadAction` fetches the entire approved subtree with no depth/reply cap beyond `rootLimit` (`src/Actions/BuildPublicThreadAction.php:65-81`). No test or benchmark asserts either budget. On a hot thread this exceeds 20ms and the budget is effectively aspirational.
 
@@ -65,7 +66,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **PII / retention.** Author `name`/`email` are `encrypted` at rest ✔ and `email_hash` is HMAC ✔ (`src/Models/CommentAuthor.php:50-58,123`). Gaps: (1) `email_hash_secret`/`visitor_hash_secret` default to `null` from env and silently fall back to `app.key` (`config/capell-comments.php:22-23`, `src/Support/VisitorHasher.php:15`, `CommentAuthor::emailHash`) — rotating `app.key` orphans all hashes; document and warn. (2) No retention/erasure policy or command for visitor IP/UA hashes or author records (GDPR right-to-erasure). (3) `internal_notes` and `moderation_note` are plaintext.
 
-- **Test gaps.** Coverage now includes health diagnostics, spam scoring, and bot-trap rejection at action and Livewire levels. Still not covered: rate-limit/throttle behavior, moderator notification (feature absent), `auto_inject` anonymous-leakage, reply pagination, performance budgets, and there are **no Architecture tests** for this package.
+- **Test gaps.** Coverage now includes health diagnostics, spam scoring, public submit throttling, and bot-trap rejection at action and Livewire levels. Still not covered: moderator notification (feature absent), `auto_inject` anonymous-leakage, reply pagination, performance budgets, and there are **no Architecture tests** for this package.
 
 - **i18n.** Strings are translated via `capell-comments::` namespaces ✔. `diffForHumans()` in the public Blade (`thread.blade.php:24,47`) is not locale-pinned to the site language and may render in the app locale rather than the page's `language_id`.
 
@@ -93,7 +94,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 | --------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
 | Shipped 2026-06-04: implement real `CommentsHealthCheck` (tables, settings, route, component) | Now    | M      | High   | §2, §4      |
 | Shipped 2026-06-04: implement automatic spam scoring (`max_links`, `blocked_terms`, write `spam_reasons`) | Now    | M      | High   | §3, §4      |
-| Fix throttle key (drop attacker-controlled email from primary bucket)                         | Now    | S      | High   | §3, §4      |
+| Shipped 2026-06-04: fix throttle key (drop attacker-controlled email from primary bucket)     | Now    | S      | High   | §3, §4      |
 | Wire moderator new-comment notification listener on `CommentCreated`                          | Now    | M      | High   | §2, §3      |
 | Add `auto_inject` anonymous-leakage + throttle Pest tests; add Arch tests                     | Now    | M      | High   | §4          |
 | Shipped 2026-06-03: add `LatestCommentsWidget` to `capell.json` contributes[]                 | Now    | S      | Med    | §2, §4      |
