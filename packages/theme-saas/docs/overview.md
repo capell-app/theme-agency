@@ -10,7 +10,8 @@ SaaS is a standalone Capell theme package. It registers the `saas` theme key, ex
 
 - SaaS theme service provider.
 - Theme renderer/views for SaaS page output.
-- Section Blade views for navigation, hero, features, proof, content listing, comparison, calculator, CTA, footer, and blog.
+- Section Blade views for navigation, hero, features, proof, content listing, comparison, calculator, pricing, docs onboarding, demo request, CTA, footer, and blog.
+- Connected/static guidance for Content Sections-powered pricing detail, Document Lifecycle onboarding/docs, and Form Builder demo capture.
 - Blog index and article Blade views for Blog-aware rendering.
 - Dependency on Foundation Theme.
 
@@ -70,7 +71,7 @@ Provides a SaaS visual option for product sites managed through the normal Theme
 - Bundle: themes
 - Contexts: `frontend`
 - Requires: `capell-app/foundation-theme`
-- Optional dependencies: `capell-app/blog`
+- Optional dependencies: `capell-app/blog`, `capell-app/content-sections`, `capell-app/document-lifecycle`, `capell-app/form-builder`
 
 ## Admin Surfaces
 

@@ -22,6 +22,10 @@
                     {{ $summary }}
                 </p>
             @endif
+
+            <p class="text-sm font-bold text-slate-600">
+                {{ $contentSectionsAvailable ?? false ? __('capell-theme-saas::generic.pricing_connected') : __('capell-theme-saas::generic.pricing_static') }}
+            </p>
         </div>
 
         <div class="mt-10 grid gap-4 md:grid-cols-3">

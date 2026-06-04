@@ -1,6 +1,6 @@
 # Theme Saas Docs
 
-Theme SaaS registers the saas theme key and product-focused renderer views for software and subscription sites.
+Theme SaaS gives software and subscription businesses product-led renderer views for pricing, docs onboarding, demo requests, resources, and conversion-focused landing pages.
 
 Start at the [package README](../README.md) when deciding whether to install this package. Use the docs below for setup, extension, debugging, and verification details.
 

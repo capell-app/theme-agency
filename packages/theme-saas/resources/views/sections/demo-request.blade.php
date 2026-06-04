@@ -21,6 +21,10 @@
                         {{ $summary }}
                     </p>
                 @endif
+
+                <p class="mt-4 text-sm font-bold text-slate-300">
+                    {{ $formBuilderAvailable ?? false ? __('capell-theme-saas::generic.demo_request_connected') : __('capell-theme-saas::generic.demo_request_static') }}
+                </p>
             </div>
 
             <div class="grid gap-3">

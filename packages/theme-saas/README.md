@@ -17,13 +17,17 @@ Product-led SaaS theme for Capell, shipped under the existing `saas` theme key.
 ## Best Used With
 
 - [Foundation Theme](../foundation-theme/README.md)
+- [Content Sections](../content-sections/README.md) for richer pricing and plan detail.
+- [Document Lifecycle](../document-lifecycle/README.md) for onboarding/docs workflows.
+- [Form Builder](../form-builder/README.md) for demo or trial capture.
 - [Theme Agency](../theme-agency/README.md)
 - [Theme Corporate](../theme-corporate/README.md)
 
 ## What It Adds
 
 - Product-led SaaS theme for Capell.
-- Public views for navigation, hero, features, proof, content listing, comparison, calculator, CTA, footer, and blog sections.
+- Public views for navigation, hero, features, proof, content listing, comparison, calculator, pricing, docs onboarding, demo request, CTA, footer, and blog sections.
+- Connected/static guidance in pricing, docs onboarding, and demo request sections based on Content Sections, Document Lifecycle, and Form Builder availability.
 - Blog index and article views that render custom insight markup when Blog is installed and marketing-safe fallback cards when it is not.
 
 ## Why It Matters
@@ -118,3 +122,4 @@ vendor/bin/pest packages/theme-saas/tests --configuration=phpunit.xml
 ## Maintenance Notes
 
 - Theme output is public output. Keep admin-only metadata and editor hooks out of rendered markup.
+- Keep optional package checks inside the service provider/renderer layer; public Blade should consume injected availability flags.

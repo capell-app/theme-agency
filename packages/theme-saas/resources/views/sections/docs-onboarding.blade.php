@@ -21,6 +21,10 @@
                         {{ $summary }}
                     </p>
                 @endif
+
+                <p class="mt-4 text-sm font-bold text-slate-600">
+                    {{ $documentLifecycleAvailable ?? false ? __('capell-theme-saas::generic.docs_connected') : __('capell-theme-saas::generic.docs_static') }}
+                </p>
             </div>
 
             <div

@@ -158,6 +158,68 @@ it('renders new premium saas layouts through the registry', function (): void {
         ->not->toContain('capell-app/theme-saas');
 });
 
+it('passes optional availability flags into saas conversion sections', function (string $package, string $sectionKey, string $connectedCopy, string $staticCopy): void {
+    View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
+
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(SaasThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled($package);
+
+    $connectedRegistry = new ThemeRegistry;
+    (new SaasThemeServiceProvider($this->app))->boot($connectedRegistry);
+
+    $connectedRenderer = $connectedRegistry->sectionRenderer('saas', $sectionKey);
+
+    assert($connectedRenderer instanceof SectionRenderer);
+
+    $connectedHtml = $connectedRenderer->render(saasThemeSection($sectionKey, [
+        'heading' => 'Connected section',
+    ]));
+
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(SaasThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled($package, false);
+
+    $staticRegistry = new ThemeRegistry;
+    (new SaasThemeServiceProvider($this->app))->boot($staticRegistry);
+
+    $staticRenderer = $staticRegistry->sectionRenderer('saas', $sectionKey);
+
+    assert($staticRenderer instanceof SectionRenderer);
+
+    $staticHtml = $staticRenderer->render(saasThemeSection($sectionKey, [
+        'heading' => 'Static section',
+    ]));
+
+    expect($connectedHtml)
+        ->toContain($connectedCopy)
+        ->not->toContain($staticCopy);
+
+    expect($staticHtml)
+        ->toContain($staticCopy)
+        ->not->toContain($connectedCopy);
+})->with([
+    'pricing content sections' => [
+        'capell-app/content-sections',
+        'pricing',
+        'Connected Content Sections can provide richer plan detail.',
+        'Static pricing guidance is available until plan content is connected.',
+    ],
+    'docs lifecycle' => [
+        'capell-app/document-lifecycle',
+        'docs-onboarding',
+        'Connected Document Lifecycle guidance is available for onboarding content.',
+        'Static onboarding guidance is available until docs are connected.',
+    ],
+    'demo request form builder' => [
+        'capell-app/form-builder',
+        'demo-request',
+        'Connected Form Builder capture is available for demo requests.',
+        'Static demo request guidance is available until a form is connected.',
+    ],
+]);
+
 /**
  * @param  array<string, mixed>  $viewData
  */
