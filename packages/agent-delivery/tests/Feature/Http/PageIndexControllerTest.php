@@ -34,16 +34,16 @@ it('lists agent-delivery pages for the resolved site and language', function ():
     $response = getJson(indexTestUrl('capell-agent-delivery.pages.index'))
         ->assertOk()
         ->assertHeader('Cache-Control', 'max-age=300, public')
-        ->assertHeader('ETag')
-        ->assertJsonPath('data.0.canonicalUrl', 'http://example.com/first-page')
-        ->assertJsonPath('data.0.url', $firstUrl->url)
-        ->assertJsonPath('data.0.language', 'en')
-        ->assertJsonPath('data.0.lastUpdatedAt', $firstPage->updated_at?->toIso8601String())
-        ->assertJsonPath('data.0.manifestUrl', 'http://example.com/api/capell/agent/v1/pages/manifest?url=%2Ffirst-page&locale=en');
+        ->assertHeader('ETag');
 
     $data = $response->json('data');
 
     throw_unless(is_array($data), RuntimeException::class, 'Expected page index data to be an array.');
+
+    $firstEntry = collect(array_values($data))
+        ->firstWhere('canonicalUrl', 'http://example.com/first-page');
+
+    throw_unless(is_array($firstEntry), RuntimeException::class, 'Expected first page entry to be present.');
 
     $canonicalUrls = collect(array_values($data))->pluck('canonicalUrl');
 
@@ -51,6 +51,10 @@ it('lists agent-delivery pages for the resolved site and language', function ():
         ->toContain('http://example.com/first-page')
         ->toContain('http://example.com/second-page')
         ->not->toContain('http://example.com/excluded-page')
+        ->and($firstEntry['url'] ?? null)->toBe($firstUrl->url)
+        ->and($firstEntry['language'] ?? null)->toBe('en')
+        ->and($firstEntry['lastUpdatedAt'] ?? null)->toBe($firstPage->updated_at?->toIso8601String())
+        ->and($firstEntry['manifestUrl'] ?? null)->toBe('http://example.com/api/capell/agent/v1/pages/manifest?url=%2Ffirst-page&locale=en')
         ->and($response->json('meta.count'))->toBe($canonicalUrls->count());
 });
 

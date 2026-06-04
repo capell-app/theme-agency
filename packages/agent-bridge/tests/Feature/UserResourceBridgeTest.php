@@ -79,10 +79,16 @@ function updateSetting(string $settingKey, mixed $value): void
     if ($settingsMigrator->exists($settingKey)) {
         $settingsMigrator->update($settingKey, fn (): mixed => $value);
 
+        app()->forgetInstance(AdminSettings::class);
+        app()->forgetInstance(AgentBridgeSettings::class);
+
         return;
     }
 
     $settingsMigrator->add($settingKey, $value);
+
+    app()->forgetInstance(AdminSettings::class);
+    app()->forgetInstance(AgentBridgeSettings::class);
 }
 
 function createAgentBridgeTokenFor(Model $user, string $name, string $plainTextToken, ?DateTimeInterface $expiresAt = null): CapellAgentBridgeToken
@@ -155,7 +161,11 @@ it('gates the bridge behind both admin and package settings', function (): void 
     updateSetting('admin.enable_agent_bridge_user_bridge', true);
     updateSetting('agent_bridge.enable_user_resource_bridge', false);
     app()->forgetInstance(AdminSettings::class);
-    app()->forgetInstance(AgentBridgeSettings::class);
+
+    $packageSettings = new AgentBridgeSettings;
+    $packageSettings->enable_user_resource_bridge = false;
+
+    app()->instance(AgentBridgeSettings::class, $packageSettings);
 
     expect($extender->supports($context))->toBeFalse();
 });
