@@ -16,6 +16,7 @@ use Capell\Diagnostics\Palette\CapellArtisanPaletteCommandProvider;
 use Capell\Diagnostics\Tests\Fixtures\Autoload\TestCommandPaletteProvider;
 use Capell\Diagnostics\Tests\Fixtures\SecretOutputCommandPaletteProvider;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Foundation\Console\ClosureCommand;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\Console\Command\Command;
@@ -176,17 +177,19 @@ it('requires confirmation for unmapped capell artisan commands', function (): vo
         ->and($command->requiresConfirmation)->toBeTrue();
 });
 
-it('marks explicitly mapped safe capell artisan commands as safe', function (): void {
-    if (! array_key_exists('capell:diagnostics:health', Artisan::all())) {
-        Artisan::command('capell:diagnostics:health', fn (): int => Command::SUCCESS);
-    }
-
+it('uses explicit risk mapping for known capell artisan commands', function (string $artisanCommand, CommandPaletteDanger $expectedDanger, bool $expectedConfirmation): void {
+    ensurePaletteArtisanCommandExists($artisanCommand);
     $commands = (new CapellArtisanPaletteCommandProvider)->commandPaletteCommands();
-    $command = $commands['artisan.capell:diagnostics:health'];
+    $command = $commands['artisan.' . $artisanCommand];
 
-    expect($command->danger)->toBe(CommandPaletteDanger::Safe)
-        ->and($command->requiresConfirmation)->toBeFalse();
-});
+    expect($command->danger)->toBe($expectedDanger)
+        ->and($command->requiresConfirmation)->toBe($expectedConfirmation);
+})->with([
+    'safe diagnostics health' => ['capell:diagnostics:health', CommandPaletteDanger::Safe, false],
+    'confirm html cache clear' => ['capell:html-cache:clear', CommandPaletteDanger::Confirm, true],
+    'dangerous install' => ['capell:install', CommandPaletteDanger::Dangerous, true],
+    'dangerous demo' => ['capell:demo', CommandPaletteDanger::Dangerous, true],
+]);
 
 function testPaletteArtisanCommand(): CommandPaletteCommandData
 {
@@ -209,5 +212,16 @@ function testPaletteArtisanCommand(): CommandPaletteCommandData
             ),
         ],
         sort: 20,
+    );
+}
+
+function ensurePaletteArtisanCommandExists(string $artisanCommand): void
+{
+    if (array_key_exists($artisanCommand, Artisan::all())) {
+        return;
+    }
+
+    Artisan::registerCommand(
+        new ClosureCommand($artisanCommand, fn (): int => Command::SUCCESS),
     );
 }

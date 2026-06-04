@@ -69,7 +69,7 @@ Tied to declared `capabilities[]`: `diagnostics`, `diagnostics-admin`, `diagnost
 | --------------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
 | Reflect declared `healthChecks` classes; report implemented-vs-stub instead of `count()`                        | Now    | M      | High   | §2, §3, §4  |
 | Stub/broken health-check detector across all packages (the differentiator)                                      | Now    | M      | High   | §3          |
-| Replace palette danger denylist heuristic with explicit allowlist/risk map                                      | Now    | M      | High   | §2, §4      |
+| Replace palette danger denylist heuristic with explicit allowlist/risk map                                      | Done   | M      | High   | §2, §4 — Done 2026-06-04: explicit map plus safe/confirm/dangerous tests. |
 | Make `DiagnosticsHealthCheck` a real check (reference implementation)                                           | Now    | M      | High   | §2, §4      |
 | [Shipped] Redact secrets before persisting `command_palette_runs.output`                                        | Done   | S      | High   | §4          |
 | Add `RunExtensionHealthChecksAction` + `capell:diagnostics:health` console command (fulfil `console` surface)   | Next   | M      | High   | §3, §4      |
