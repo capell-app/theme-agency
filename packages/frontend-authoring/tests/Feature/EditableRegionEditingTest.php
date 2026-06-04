@@ -45,6 +45,7 @@ beforeEach(function (): void {
     Config::set('capell-frontend-authoring.enabled', true);
     Config::set('capell-frontend-authoring.workflow.require_approval', false);
     Config::set('capell-admin.auto_refresh_cache', false);
+    CapellCore::forcePackageInstalled(PublishingStudioServiceProvider::$packageName);
 });
 
 function bindEditableRegionAdminAccess(bool $isAdmin): void
