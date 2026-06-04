@@ -49,6 +49,12 @@ return [
         'review' => 'Review',
     ],
 
+    'commands' => [
+        'apply_retention' => [
+            'summary' => 'Applied :rules privacy retention rule(s), matched :matched record(s), and affected :affected record(s).',
+        ],
+    ],
+
     'admin' => [
         'navigation_group' => 'Privacy center',
         'resources' => [

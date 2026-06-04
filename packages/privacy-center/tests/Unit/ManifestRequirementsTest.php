@@ -47,6 +47,7 @@ it('declares privacy center manifest ownership and cache safety', function (): v
         ->and($manifest['performance']['cacheSafety']['sensitiveOutput'])->toBeTrue()
         ->and($manifest['dependencies']['requires'])->toContain('capell-app/admin')
         ->and($manifest['providers']['admin'])->toBe([AdminServiceProvider::class])
+        ->and($manifest['commands']['retention'])->toBe('privacy:apply-retention')
         ->and($manifest['capabilities'])->toContain(
             'privacy-center-consent',
             'privacy-center-cookie-categories',
@@ -94,6 +95,8 @@ it('declares privacy center manifest ownership and cache safety', function (): v
         ->and($manifest['contributes'])->toContain([
             'type' => 'scheduled-job',
             'class' => PrivacyRetentionScheduleContribution::class,
+            'command' => 'privacy:apply-retention',
+            'frequency' => 'daily',
         ])
         ->and(class_implements(ConsentPolicyResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(ConsentRecordResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)

@@ -70,7 +70,9 @@
         },
         {
             "type": "scheduled-job",
-            "class": "Capell\\PrivacyCenter\\Manifest\\PrivacyRetentionScheduleContribution"
+            "class": "Capell\\PrivacyCenter\\Manifest\\PrivacyRetentionScheduleContribution",
+            "command": "privacy:apply-retention",
+            "frequency": "daily"
         }
     ],
     "database": {
@@ -88,7 +90,8 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "retention": "privacy:apply-retention"
     },
     "settings": [],
     "actions": {

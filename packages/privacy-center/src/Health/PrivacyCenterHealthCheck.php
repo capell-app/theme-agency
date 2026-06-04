@@ -116,10 +116,10 @@ final class PrivacyCenterHealthCheck implements ChecksExtensionHealth
      */
     public function missingTables(): array
     {
-        return collect($this->requiredTableNames())
+        return array_values(collect($this->requiredTableNames())
             ->reject(static fn (string $tableName): bool => Schema::hasTable($tableName))
             ->values()
-            ->all();
+            ->all());
     }
 
     /**
@@ -127,11 +127,11 @@ final class PrivacyCenterHealthCheck implements ChecksExtensionHealth
      */
     public function unregisteredMorphAliases(): array
     {
-        return collect(self::MODELS_BY_MORPH_ALIAS)
+        return array_values(collect(self::MODELS_BY_MORPH_ALIAS)
             ->reject(static fn (string $modelClass, string $morphAlias): bool => Relation::getMorphedModel($morphAlias) === $modelClass)
             ->keys()
             ->values()
-            ->all();
+            ->all());
     }
 
     public function hasIdentityHashSecret(): bool

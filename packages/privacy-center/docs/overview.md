@@ -11,9 +11,9 @@ It intentionally does not replace package-specific consent capture in packages s
 - Policy version acceptance records.
 - Privacy subject requests for access, export, deletion, correction, restriction, and objection workflows.
 - Retention rules for package-owned or integration-owned data domains.
-- Retention execution Actions for delete, anonymize, and review workflows.
+- Retention execution Actions and the `privacy:apply-retention` console command for delete, anonymize, and review workflows.
 - Export and anonymization Actions that operate on Privacy Center records first.
-- A retention schedule contribution so installers can discover the package-owned retention execution hook.
+- A daily retention schedule contribution so installers can discover and run the package-owned retention execution hook.
 
 ## Integration Contract
 
@@ -29,6 +29,16 @@ Integrating packages should call Actions instead of writing Privacy Center table
 - `AnonymizePrivacySubjectAction`
 
 Public frontend output must not expose Privacy Center internals, package names, model identifiers, admin URLs, or editor state.
+
+## Console
+
+Run active retention rules manually with:
+
+```bash
+privacy:apply-retention
+```
+
+Use `--json` when automation needs the per-rule matched and affected record counts.
 
 ## Remaining Admin Surfaces
 

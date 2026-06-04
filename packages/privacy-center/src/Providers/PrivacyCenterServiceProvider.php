@@ -6,11 +6,13 @@ namespace Capell\PrivacyCenter\Providers;
 
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\PrivacyCenter\Console\Commands\ApplyRetentionRulesCommand;
 use Capell\PrivacyCenter\Models\ConsentPolicy;
 use Capell\PrivacyCenter\Models\ConsentRecord;
 use Capell\PrivacyCenter\Models\PolicyAcceptance;
 use Capell\PrivacyCenter\Models\PrivacyRequest;
 use Capell\PrivacyCenter\Models\RetentionRule;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Override;
 use Spatie\LaravelPackageTools\Package;
@@ -33,7 +35,8 @@ final class PrivacyCenterServiceProvider extends AbstractPackageServiceProvider
                 '2026_05_31_000003_create_privacy_policy_acceptances_table',
                 '2026_05_31_000004_create_privacy_retention_rules_table',
                 '2026_05_31_000005_create_privacy_requests_table',
-            ]);
+            ])
+            ->hasCommand(ApplyRetentionRulesCommand::class);
     }
 
     public function packageRegistered(): void
@@ -62,6 +65,13 @@ final class PrivacyCenterServiceProvider extends AbstractPackageServiceProvider
             'privacy_request' => PrivacyRequest::class,
             'privacy_retention_rule' => RetentionRule::class,
         ], merge: true);
+
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
+            $schedule->command('privacy:apply-retention')
+                ->daily()
+                ->withoutOverlapping()
+                ->onOneServer();
+        });
     }
 
     #[Override]

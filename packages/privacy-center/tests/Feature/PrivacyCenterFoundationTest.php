@@ -28,6 +28,8 @@ use Capell\PrivacyCenter\Models\PrivacyRequest;
 use Capell\PrivacyCenter\Models\RetentionRule;
 use Capell\PrivacyCenter\Tests\Fixtures\PrivacyCenterTestSubject;
 use Capell\PrivacyCenter\Tests\PrivacyCenterTestCase;
+use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Schema;
 
@@ -189,6 +191,54 @@ it('applies active retention rules to expired privacy records', function (): voi
         ->and($oldConsent->evidence)->toBeNull()
         ->and($recentConsent->refresh()->subject_type)->toBe(PrivacyCenterTestSubject::class)
         ->and($recentConsent->evidence)->toBe(['surface' => 'recent-banner']);
+});
+
+it('runs active retention rules through the console command', function (): void {
+    request()->server->set('REMOTE_ADDR', '203.0.113.42');
+    request()->headers->set('User-Agent', 'Privacy Center Retention Command Test');
+
+    $siteId = $this->createPrivacyCenterSite();
+    $subject = PrivacyCenterTestSubject::query()->create(['name' => 'Command Retention Subject']);
+    $now = CarbonImmutable::parse('2026-05-31 12:00:00', 'UTC');
+
+    CarbonImmutable::setTestNow($now);
+
+    try {
+        $oldConsent = RecordConsentAction::run(new ConsentRecordData(
+            category: CookieCategory::Analytics,
+            decision: ConsentDecision::Granted,
+            siteId: $siteId,
+            decidedAt: $now->subDays(45),
+            evidence: ['surface' => 'old-banner'],
+        ), $subject);
+        RecordConsentAction::run(new ConsentRecordData(
+            category: CookieCategory::Marketing,
+            decision: ConsentDecision::Granted,
+            siteId: $siteId,
+            decidedAt: $now->subDays(5),
+            evidence: ['surface' => 'recent-banner'],
+        ), $subject);
+        CreateRetentionRuleAction::run(new RetentionRuleData(
+            dataDomain: 'privacy-center',
+            retentionDays: 30,
+            siteId: $siteId,
+            recordType: ConsentRecord::class,
+            action: RetentionAction::Anonymize,
+        ));
+
+        $exitCode = Artisan::call('privacy:apply-retention', ['--json' => true]);
+        $rows = json_decode(Artisan::output(), associative: true, flags: JSON_THROW_ON_ERROR);
+
+        expect($exitCode)->toBe(0)
+            ->and($rows)->toBeArray()
+            ->and($rows[0]['matched_records'] ?? null)->toBe(1)
+            ->and($rows[0]['affected_records'] ?? null)->toBe(1)
+            ->and($oldConsent->refresh()->subject_type)->toBeNull()
+            ->and($oldConsent->ip_hash)->toBeNull()
+            ->and($oldConsent->evidence)->toBeNull();
+    } finally {
+        CarbonImmutable::setTestNow();
+    }
 });
 
 it('marks expired privacy records for retention review without deleting them', function (): void {
