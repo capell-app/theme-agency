@@ -72,7 +72,7 @@ Mapped to `capabilities[]`: `document-lifecycle`, `document-lifecycle-admin`, `d
 | Reconcile `frontend` surface: drop it or ship safe consent component      | Now    | S→L    | High   | §3, §4      |
 | Capture 4 admin screenshots; sync `marketplace.screenshots[]` to manifest | Now    | S      | High   | §1, §5      |
 | Make `RecordDocumentAcceptanceAction` request-context-pure (ip/UA params) | Done   | S      | Med    | §2, §4      |
-| Fix asymmetric `legal_acceptances` migration `down()` + rollback test     | Now    | S      | Med    | §2, §4      |
+| Fix asymmetric `legal_acceptances` migration `down()` + rollback test     | Done   | S      | Med    | §2, §4      |
 | Rewrite manifest `summary` + composer `description`                       | Now    | S      | Med    | §5          |
 | Admin lifecycle Actions (Publish / Archive / Record acceptance buttons)   | Done   | M      | High   | §3          |
 | Bulk export of acceptance evidence (CSV) per document/version             | Next   | M      | High   | §3          |
@@ -84,4 +84,4 @@ Mapped to `capabilities[]`: `document-lifecycle`, `document-lifecycle-admin`, `d
 | Per-version content snapshot + diff view                                  | Later  | L      | Med    | §3          |
 | Locale coverage beyond `en`; admin query-budget regression test           | Later  | S      | Low    | §4          |
 
-Row movement in the 2026-06-04 follow-up: **Admin lifecycle Actions (Publish / Archive / Record acceptance buttons)** moved from `Next` to `Done`. The remaining screenshot captures, exports, re-acceptance, retention/expiry, signed evidence, and content-diff rows stay outside the closed Now slice.
+Row movement in the 2026-06-04 follow-up: **Admin lifecycle Actions (Publish / Archive / Record acceptance buttons)** and **Fix asymmetric `legal_acceptances` migration `down()` + rollback test** moved to `Done`. The remaining screenshot captures, exports, re-acceptance, retention/expiry, signed evidence, and content-diff rows stay outside the closed Now slice.
