@@ -66,9 +66,6 @@ trait HasRecordSwitcher
      */
     protected static function applyRecordSwitcherAttributeConstraints(Builder $query, string $search): void
     {
-        /** @var Connection $databaseConnection */
-        $databaseConnection = $query->getConnection();
-
         $isForcedCaseInsensitive = static::isRecordSwitcherForcedCaseInsensitive();
         $search = static::recordSwitcherSearchTermExpression($search, $isForcedCaseInsensitive);
 
@@ -123,7 +120,7 @@ trait HasRecordSwitcher
                             $databaseConnection,
                         ),
                         'like',
-                        "%{$search}%",
+                        sprintf('%%%s%%', $search),
                     ),
                 ),
                 fn (Builder $query): Builder => $query->{$whereClause}(
@@ -134,7 +131,7 @@ trait HasRecordSwitcher
                         $databaseConnection,
                     ),
                     'like',
-                    "%{$search}%",
+                    sprintf('%%%s%%', $search),
                 ),
             );
 
@@ -164,13 +161,13 @@ trait HasRecordSwitcher
         $columnExpression = $databaseConnection->getQueryGrammar()->wrap($qualifiedColumn);
 
         if ($isSearchForcedCaseInsensitive) {
-            $columnExpression = "lower({$columnExpression})";
+            $columnExpression = sprintf('lower(%s)', $columnExpression);
         }
 
         $collation = $databaseConnection->getConfig('search_collation');
 
         if (filled($collation)) {
-            $columnExpression = "{$columnExpression} collate {$collation}";
+            $columnExpression = sprintf('%s collate %s', $columnExpression, $collation);
         }
 
         return new Expression($columnExpression);

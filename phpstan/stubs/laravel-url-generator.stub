@@ -1,0 +1,12 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Illuminate\Routing;
+
+class UrlGenerator
+{
+    public function current(): string {}
+
+    public function full(): string {}
+}

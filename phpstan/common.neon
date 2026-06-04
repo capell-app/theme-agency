@@ -106,5 +106,6 @@ parameters:
         - stubs/nestedset-traits.stub
         - stubs/core-layout.stub
         - stubs/capell-dynamic-surfaces.stub
+        - stubs/laravel-url-generator.stub
     scanFiles:
         - ../scripts/audit-manifest-v3.php

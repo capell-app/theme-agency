@@ -34,6 +34,7 @@ use Capell\Notes\Tests\NotesTestCase;
 use Capell\PasswordPolicy\Tests\PasswordPolicyTestCase;
 use Capell\PublicActions\Tests\PublicActionsTestCase;
 use Capell\PublishingStudio\Tests\PublishingStudioTestCase;
+use Capell\RecordSwitcher\Tests\RecordSwitcherTestCase;
 use Capell\Search\Tests\SearchTestCase;
 use Capell\SeoSuite\Tests\SeoSuiteTestCase;
 use Capell\ShopifyCommerce\Tests\TestCase as ShopifyCommerceTestCase;
@@ -137,6 +138,7 @@ extendCapellPackageTests(PackagesTestCase::class, 'foundation-theme', 'foundatio
 extendCapellPackageTests(PasswordPolicyTestCase::class, 'password-policy', 'password-policy');
 extendCapellPackageTests(PublishingStudioTestCase::class, 'publishing-studio', 'publishing-studio');
 extendCapellPackageTests(PublicActionsTestCase::class, 'public-actions', 'public-actions');
+extendCapellPackageTests(RecordSwitcherTestCase::class, 'record-switcher', 'record-switcher');
 extendCapellPackageTests(SearchTestCase::class, 'search', 'search');
 extendCapellPackageTests(SeoSuiteTestCase::class, 'seo-suite', 'seo-suite');
 extendCapellPackageTests(ShopifyCommerceTestCase::class, 'shopify-commerce', 'shopify-commerce');
