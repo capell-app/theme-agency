@@ -12,6 +12,7 @@ use Capell\PublicActions\Models\PublicActionDispatchAttempt;
 use Capell\PublicActions\Models\PublicActionSubmission;
 use Capell\PublicActions\Support\Providers\HttpWebhookPublicActionAdapter;
 use Capell\PublicActions\Tests\Fakes\FakePublicActionWebhookHostResolver;
+use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
@@ -50,7 +51,7 @@ it('dispatches a submission to a json webhook and records a successful attempt',
         ->and($attempt->request_hash)->toHaveLength(64);
 
     Http::assertSent(function (Request $request): bool {
-        $data = $request->data();
+        $data = json_decode($request->body(), true, flags: JSON_THROW_ON_ERROR);
 
         return $request->method() === 'POST'
             && $request->url() === 'https://hooks.example.test/success'
@@ -61,6 +62,39 @@ it('dispatches a submission to a json webhook and records a successful attempt',
             && data_get($data, 'payload.email') === 'person@example.test';
     });
 });
+
+it('does not follow redirects to unchecked internal webhook endpoints', function (string $redirectUrl): void {
+    /** @var array<string, mixed>|null $requestOptions */
+    $requestOptions = null;
+
+    Http::fake(function (Request $request, array $options) use ($redirectUrl, &$requestOptions): PromiseInterface {
+        $requestOptions = $options;
+
+        return Http::response('', 302, ['Location' => $redirectUrl]);
+    });
+
+    $destination = PublicActionDestination::factory()->create([
+        'adapter' => 'http_webhook',
+        'endpoint_url' => 'https://hooks.example.test/redirect',
+    ]);
+    $submission = PublicActionSubmission::factory()->create();
+
+    $result = resolve(HttpWebhookPublicActionAdapter::class)->dispatch($destination, $submission);
+    $attempt = PublicActionDispatchAttempt::query()->firstOrFail();
+
+    expect($result->success)->toBeFalse()
+        ->and($result->responseStatus)->toBe(302)
+        ->and($attempt->status)->toBe(PublicActionDispatchStatus::Retryable)
+        ->and($attempt->response_status)->toBe(302)
+        ->and(data_get($requestOptions, 'allow_redirects'))->toBeFalse();
+
+    Http::assertSentCount(1);
+    Http::assertSent(fn (Request $request): bool => $request->url() === 'https://hooks.example.test/redirect');
+})->with([
+    'cloud metadata link-local address' => ['http://169.254.169.254/latest/meta-data'],
+    'localhost loopback address' => ['http://127.0.0.1/admin'],
+    'internal hostname' => ['https://internal.service.localhost/private'],
+]);
 
 it('records provider failures as retryable and redacts response summaries', function (): void {
     Http::fake([

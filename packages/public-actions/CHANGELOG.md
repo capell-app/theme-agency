@@ -4,7 +4,8 @@ All notable changes to `capell-app/public-actions` will be documented in this fi
 
 ## Unreleased
 
-- Hardened HTTP webhook dispatch against DNS rebinding and unchecked redirects by resolving destination hosts once, blocking unresolved or private addresses by default, pinning cURL to the validated address, and disabling redirect following.
+- Hardened HTTP webhook dispatch against DNS rebinding and unchecked redirects by resolving destination hosts once, blocking unresolved or private addresses by default, pinning cURL to the validated address, disabling redirect following, and covering private/link-local/internal redirect targets.
+- Reused the canonical encoded webhook payload for request hashes, signatures, and non-GET request bodies.
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
 
 ## 2026-06-03

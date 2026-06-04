@@ -29,7 +29,8 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
         PublicActionSubmission $submission,
     ): PublicActionDispatchResultData {
         $body = $this->body($destination, $submission);
-        $requestHash = hash('sha256', json_encode($body, JSON_THROW_ON_ERROR));
+        $encodedBody = $this->encodedBody($body);
+        $requestHash = hash('sha256', $encodedBody);
         $attemptNumber = $this->nextAttemptNumber($destination, $submission);
 
         $attempt = PublicActionDispatchAttempt::query()->create([
@@ -47,12 +48,18 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
 
         try {
             $endpoint = $this->endpoint($destination);
+            $method = $this->method($destination);
 
-            $response = Http::timeout($this->timeoutSeconds($destination))
+            $request = Http::timeout($this->timeoutSeconds($destination))
                 ->withoutRedirecting()
-                ->withHeaders($this->headers($destination, $body, $endpoint))
-                ->withOptions($this->requestOptions($endpoint))
-                ->send($this->method($destination), $endpoint->url, $this->sendOptions($destination, $body));
+                ->withHeaders($this->headers($destination, $encodedBody, $endpoint))
+                ->withOptions($this->requestOptions($endpoint));
+
+            if ($method !== 'GET') {
+                $request->withBody($encodedBody, 'application/json');
+            }
+
+            $response = $request->send($method, $endpoint->url, $this->sendOptions($method, $body));
 
             $status = $response->successful()
                 ? PublicActionDispatchStatus::Succeeded
@@ -110,11 +117,18 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
 
     /**
      * @param  array<string, mixed>  $body
+     */
+    private function encodedBody(array $body): string
+    {
+        return json_encode($body, JSON_THROW_ON_ERROR);
+    }
+
+    /**
      * @return array<string, string>
      */
     private function headers(
         PublicActionDestination $destination,
-        array $body,
+        string $encodedBody,
         ResolvedWebhookEndpointData $endpoint,
     ): array {
         $headers = is_array($destination->headers) ? $destination->headers : [];
@@ -125,7 +139,7 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
             ->all();
 
         if (is_string($destination->secret) && $destination->secret !== '') {
-            $normalizedHeaders['X-Capell-Signature'] = hash_hmac('sha256', json_encode($body, JSON_THROW_ON_ERROR), $destination->secret);
+            $normalizedHeaders['X-Capell-Signature'] = hash_hmac('sha256', $encodedBody, $destination->secret);
         }
 
         $normalizedHeaders['Host'] = $endpoint->hostHeader();
@@ -151,13 +165,13 @@ final class HttpWebhookPublicActionAdapter implements PublicActionDestinationAda
      * @param  array<string, mixed>  $body
      * @return array<string, mixed>
      */
-    private function sendOptions(PublicActionDestination $destination, array $body): array
+    private function sendOptions(string $method, array $body): array
     {
-        if ($this->method($destination) === 'GET') {
+        if ($method === 'GET') {
             return ['query' => $body];
         }
 
-        return ['json' => $body];
+        return [];
     }
 
     private function method(PublicActionDestination $destination): string
