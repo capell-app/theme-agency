@@ -3,10 +3,7 @@
     "composerName": "capell-app/comments",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "composerRequires": [
-        "capell-app/comments",
-        "capell-app/content-blocks"
-    ],
+    "composerRequires": ["capell-app/comments", "capell-app/content-blocks"],
     "outputDirectory": "packages/comments/docs/screenshots",
     "entries": [
         {

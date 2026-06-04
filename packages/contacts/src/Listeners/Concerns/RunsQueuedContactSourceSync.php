@@ -18,8 +18,8 @@ trait RunsQueuedContactSourceSync
     {
         try {
             $callback();
-        } catch (Throwable $exception) {
-            report($exception);
+        } catch (Throwable $throwable) {
+            report($throwable);
         }
     }
 }

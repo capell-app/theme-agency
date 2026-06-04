@@ -45,7 +45,7 @@ Mapped against declared `capabilities[]` and CRM norms. **Table-stakes** unless 
 
 ## 5. Marketplace & Selling
 
-**Critique.** The current `summary` and composer `description` are accurate but inward-facing developer prose ("data foundation", "source identity", "package adapter records") — they describe plumbing, not buyer value, and they advertise dedup rules the code doesn't have. With `tier: premium`, `proposedLicense: paid`, `requestedCertification: first-party`, and `privateDocsRequested: true`, shipping **0 screenshots** and no README is a credibility gap; a paid CRM package needs to _show_ the contact list, activity timeline, and dashboard widget.
+**Critique.** The current marketplace `summary` and composer `description` are accurate and no longer advertise the removed merge/rules capability, but they still lean toward package plumbing more than buyer value. With `tier: premium`, `proposedLicense: paid`, `requestedCertification: first-party`, and `privateDocsRequested: true`, shipping **0 screenshots** and no README is a credibility gap; a paid CRM package needs to _show_ the contact list, activity timeline, and dashboard widget.
 
 **Improved 1-sentence summary:**
 
@@ -63,20 +63,20 @@ Mapped against declared `capabilities[]` and CRM norms. **Table-stakes** unless 
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                         | Bucket | Effort               | Impact                                       | Section ref |
-| -------------------------------------------------------------------------------------------- | ------ | -------------------- | -------------------------------------------- | ----------- |
-| Fix encrypted-column admin search (drop/replace `->searchable()`)                            | Shipped | S                   | High — core admin is currently broken        | §2.1        |
-| Implement real `ContactsHealthCheck` assertions                                              | Shipped | S                   | High — advertised critical check is fake     | §4          |
-| Site-scope overview stats (close cross-tenant leak)                                          | Shipped | S                   | High — privacy + correctness                 | §2.2, §4    |
-| Reconcile `contacts-deduplication-rules` capability with reality (drop claim or build merge) | Shipped | S                   | High — truth-in-advertising                  | §3, §4      |
-| Queue source-adapter listeners + isolate failures (`ShouldQueue` + try/catch)                | Shipped | M                   | High — producer resilience + latency         | §2.3, §4    |
-| Expose privacy export/erasure as admin action + `contacts:` command, with audit log          | Shipped | M                   | High — premium/paid GDPR promise             | §3, §4      |
-| Add contact view page + manual activity/note + lead status transitions (write surface)       | Next   | L                    | High — turns mirror into a CRM               | §3          |
-| Contact merge UI + rule config (deliver the dedup capability)                                | Next   | L                    | High — biggest differentiator                | §3, §4      |
-| Move tags out of encrypted `profile` into queryable relation + filtering/segments            | Next   | M                    | Medium-High — unlocks cross-sell             | §3          |
-| Eager-load Shopify `connection`; require emitters to preload                                 | Next   | S                    | Medium — bulk-sync N+1                       | §2.4        |
-| Revisit first-write-wins `fillWhenPresent` enrichment policy                                 | Next   | M                    | Medium — data accuracy                       | §2.5        |
-| Cache stats widget by site with `contacts` tag invalidation                                  | Next   | S                    | Medium — uses declared cacheTags             | §2.7, §4    |
-| Add screenshots, README, CHANGELOG; rewrite marketplace summary/description                  | Next   | S                    | Medium-High — required for certification     | §5, §4      |
-| Extract shared adapter base/trait; add arch + query-budget + search + site-scope tests       | Later  | M                    | Medium — maintainability + regression safety | §2.8, §4    |
-| CSV import + bulk export; custom-field registry; consent records; source attribution history | Later  | L                    | Medium — CRM completeness                    | §3          |
+| Item                                                                                         | Bucket  | Effort | Impact                                       | Section ref |
+| -------------------------------------------------------------------------------------------- | ------- | ------ | -------------------------------------------- | ----------- |
+| Fix encrypted-column admin search (drop/replace `->searchable()`)                            | Shipped | S      | High — core admin is currently broken        | §2.1        |
+| Implement real `ContactsHealthCheck` assertions                                              | Shipped | S      | High — advertised critical check is fake     | §4          |
+| Site-scope overview stats (close cross-tenant leak)                                          | Shipped | S      | High — privacy + correctness                 | §2.2, §4    |
+| Reconcile `contacts-deduplication-rules` capability with reality (drop claim or build merge) | Shipped | S      | High — truth-in-advertising                  | §3, §4      |
+| Queue source-adapter listeners + isolate failures (`ShouldQueue` + try/catch)                | Shipped | M      | High — producer resilience + latency         | §2.3, §4    |
+| Expose privacy export/erasure as admin action + `contacts:` command, with audit log          | Shipped | M      | High — premium/paid GDPR promise             | §3, §4      |
+| Add contact view page + manual activity/note + lead status transitions (write surface)       | Next    | L      | High — turns mirror into a CRM               | §3          |
+| Contact merge UI + rule config (deliver the dedup capability)                                | Next    | L      | High — biggest differentiator                | §3, §4      |
+| Move tags out of encrypted `profile` into queryable relation + filtering/segments            | Next    | M      | Medium-High — unlocks cross-sell             | §3          |
+| Eager-load Shopify `connection`; require emitters to preload                                 | Next    | S      | Medium — bulk-sync N+1                       | §2.4        |
+| Revisit first-write-wins `fillWhenPresent` enrichment policy                                 | Next    | M      | Medium — data accuracy                       | §2.5        |
+| Cache stats widget by site with `contacts` tag invalidation                                  | Next    | S      | Medium — uses declared cacheTags             | §2.7, §4    |
+| Add screenshots, README, CHANGELOG; rewrite marketplace summary/description                  | Next    | S      | Medium-High — required for certification     | §5, §4      |
+| Extract shared adapter base/trait; add arch + query-budget + search + site-scope tests       | Later   | M      | Medium — maintainability + regression safety | §2.8, §4    |
+| CSV import + bulk export; custom-field registry; consent records; source attribution history | Later   | L      | Medium — CRM completeness                    | §3          |
