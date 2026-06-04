@@ -8,7 +8,7 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 351 |
+| Now    | 348 |
 | Next   | 336 |
 | Later  | 205 |
 
