@@ -10,6 +10,7 @@ All notable changes to `capell-app/contacts` will be documented in this file.
 - Added audited privacy workflow actions: `AuditContactPrivacyExportAction` records export events without storing exported PII, and `AnonymizeContactWithAuditAction` records a non-PII erasure audit after anonymization clears sensitive contact, lead, and activity data.
 - Added explicit Contact policy methods and manifest permissions for privacy export and anonymization workflows.
 - Added tests covering admin privacy action registration, manifest wiring, audited privacy activity rows, and console export/anonymization reachability.
+- Queued all first-party Contacts source listeners and isolated adapter failures so form submissions, comments, registrations, campaign conversions, and Shopify sync events are not broken by CRM sync exceptions.
 
 ### 2026-06-03
 

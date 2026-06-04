@@ -5,11 +5,17 @@ declare(strict_types=1);
 namespace Capell\Contacts\Listeners;
 
 use Capell\Contacts\Actions\SyncAccessGateRegistrationContactAction;
+use Capell\Contacts\Listeners\Concerns\RunsQueuedContactSourceSync;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-final class SyncContactFromAccessGateRegistration
+final class SyncContactFromAccessGateRegistration implements ShouldQueue
 {
+    use Queueable;
+    use RunsQueuedContactSourceSync;
+
     public function handle(object $event): void
     {
-        SyncAccessGateRegistrationContactAction::run($event);
+        $this->runQueuedContactSourceSync(static fn (): mixed => SyncAccessGateRegistrationContactAction::run($event));
     }
 }

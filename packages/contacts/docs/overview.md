@@ -10,7 +10,7 @@ Contacts provides the shared CRM record layer for Capell package integrations, i
 - Read-only Filament admin resources for CRM records.
 - Contact identity matching by email, phone, package source identity, or model source.
 - Source record sync action for packages such as Form Builder submissions, Newsletter subscribers, Comments authors, Access Gate registrations, Event attendees, Shopify customers, and Campaign Studio conversions.
-- Event listeners for Form Builder submissions, Access Gate approvals, Event RSVPs, Comments, Campaign Studio conversions, and Shopify customer syncs when those packages are installed.
+- Queued event listeners for Form Builder submissions, Access Gate approvals, Event RSVPs, Comments, Campaign Studio conversions, and Shopify customer syncs when those packages are installed.
 - Newsletter calls the shared sync action directly from subscriber lifecycle actions so subscribers are represented in the same central CRM record layer.
 - Contact tagging and activity recording actions.
 - Dashboard overview stats for contacts, organisations, open leads, and activities. Callers can pass a site id to `BuildContactsOverviewStatsAction` for site-scoped totals; omitting the site id intentionally returns global package totals.
@@ -30,6 +30,8 @@ The action:
 - applies normalized tags;
 - optionally creates a lead;
 - optionally records an activity linked to the source model.
+
+The first-party event listeners implement `ShouldQueue` and report adapter exceptions instead of rethrowing them. Source producers should not fail their own request or webhook because the CRM mirror cannot sync a record.
 
 ## Privacy Workflows
 
