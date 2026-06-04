@@ -72,8 +72,8 @@ Manifest `capabilities`: `["deployments", "deployments-admin", "deployments-cons
 
 | Item                                                                                          | Bucket | Effort | Impact | Section ref |
 | --------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Gate `DeploymentConnectionWidget` with `canView()` (stop repo-identity leak)                  | Now    | S      | High   | §2, §4      |
-| Register the widget or delete it + its `screenshots.json` entry                               | Now    | S      | Med    | §2, §4      |
+| Gate `DeploymentConnectionWidget` with `canView()` (stop repo-identity leak)                  | Done   | S      | High   | §2, §4      |
+| Register the widget or delete it + its `screenshots.json` entry                               | Done   | S      | Med    | §2, §4      |
 | Resolve manifest mismatches: drop unbacked `console` surface/capability, fix screenshot count | Now    | S      | High   | §4          |
 | Confirm/wire a real consumer of `PublishesComposerChanges` (or document the external owner)   | Now    | M      | High   | §4          |
 | Fix `repo_name => 'app'` placeholder; add repo selection to the page                          | Now    | M      | High   | §2          |
