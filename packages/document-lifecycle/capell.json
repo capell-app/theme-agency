@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Document Lifecycle turns terms, privacy, and policy documents into auditable records: every publication is version-pinned and content-hashed, and every acceptance captures the exact version, hash, actor, and timestamp. It hooks into Publishing Studio so a published revision automatically becomes an immutable document publication — no custom audit layer required. Acceptance evidence surfaces in the admin and (with Customer Portal) in each account's self-service history, and the tables are registered as protected so the audit trail can't be casually deleted. Built for compliance-sensitive Capell sites that must answer \"which version did this user agree to, and when?\"",
+    "description": "Document Lifecycle tracks controlled documents as admin-managed records with version-labelled, content-hashed publications and acceptance history. Admin users can publish manual versions, matching Publishing Studio revisions can create publication records automatically, and acceptance records show which actor accepted which document version and when. The package also registers protected audit tables, a health diagnostic, and an authenticated Customer Portal feed for account self-service history.",
     "product": {
         "group": "Capell Operations",
         "tier": "premium",
@@ -104,7 +104,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Tamper-evident proof of which document version was published and who accepted it — controlled documents, immutable hashed versions, and a court-ready acceptance ledger for Capell.",
+        "summary": "Version-pinned acceptance evidence for controlled documents in Capell: register documents, publish hashed versions from admin or Publishing Studio, and record who accepted which version and when.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",

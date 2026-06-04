@@ -22,6 +22,22 @@ function documentLifecycleManifest(): array
     return $manifest;
 }
 
+/**
+ * @return array<string, mixed>
+ */
+function documentLifecycleComposerManifest(): array
+{
+    $composerManifest = json_decode(
+        (string) file_get_contents(dirname(__DIR__, 2) . '/composer.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    throw_unless(is_array($composerManifest), RuntimeException::class, 'Expected document lifecycle composer manifest array.');
+
+    return $composerManifest;
+}
+
 it('declares the document admin resource as a manifest contribution', function (): void {
     $manifest = documentLifecycleManifest();
 
@@ -49,6 +65,21 @@ it('declares only real package surfaces in the manifest', function (): void {
 
     expect($manifest['surfaces'] ?? null)->toBe(['admin', 'console'])
         ->and($manifest['providers']['frontend'] ?? null)->toBe([]);
+});
+
+it('keeps manifest and composer package copy aligned with shipped capabilities', function (): void {
+    $manifest = documentLifecycleManifest();
+    $composerManifest = documentLifecycleComposerManifest();
+
+    $summary = 'Version-pinned acceptance evidence for controlled documents in Capell: register documents, publish hashed versions from admin or Publishing Studio, and record who accepted which version and when.';
+
+    expect($manifest['marketplace']['summary'] ?? null)->toBe($summary)
+        ->and($composerManifest['description'] ?? null)->toBe($summary)
+        ->and($manifest['description'] ?? null)->toContain('admin-managed records')
+        ->and($manifest['description'] ?? null)->toContain('Publishing Studio revisions')
+        ->and($manifest['description'] ?? null)->toContain('authenticated Customer Portal feed')
+        ->and($summary)->not->toContain('court-ready')
+        ->and($summary)->not->toContain('immutable');
 });
 
 it('keeps marketplace screenshots limited to committed marketplace assets while preserving the screenshot contract', function (): void {

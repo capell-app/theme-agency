@@ -73,7 +73,7 @@ Mapped to `capabilities[]`: `document-lifecycle`, `document-lifecycle-admin`, `d
 | Capture 4 admin screenshots; sync `marketplace.screenshots[]` to manifest | Now    | S      | High   | §1, §5      |
 | Make `RecordDocumentAcceptanceAction` request-context-pure (ip/UA params) | Done   | S      | Med    | §2, §4      |
 | Fix asymmetric `legal_acceptances` migration `down()` + rollback test     | Done   | S      | Med    | §2, §4      |
-| Rewrite manifest `summary` + composer `description`                       | Now    | S      | Med    | §5          |
+| Rewrite manifest `summary` + composer `description`                       | Done   | S      | Med    | §5 — 2026-06-04: replaced court-ready/immutable phrasing with shipped admin, Publishing Studio, and acceptance-evidence wording; manifest test now locks composer/marketplace copy. |
 | Admin lifecycle Actions (Publish / Archive / Record acceptance buttons)   | Done   | M      | High   | §3          |
 | Bulk export of acceptance evidence (CSV) per document/version             | Next   | M      | High   | §3          |
 | Re-acceptance enforcement + outstanding-acceptances report                | Next   | M      | High   | §3          |
