@@ -79,19 +79,44 @@ final class BuildCanonicalUrlAction
 
         parse_str($query, $parameters);
 
-        $stripKeys = collect(config('capell-url-manager.canonical.strip_query_keys', []))
-            ->filter(static fn (mixed $key): bool => is_string($key) && $key !== '')
-            ->map(static fn (string $key): string => strtolower($key))
-            ->all();
+        $stripKeys = $this->configuredStripQueryKeys();
 
-        $filtered = collect($parameters)
-            ->reject(static fn (mixed $value, string $key): bool => in_array(strtolower($key), $stripKeys, true))
-            ->all();
+        $filtered = [];
+
+        foreach ($parameters as $key => $value) {
+            if (in_array(strtolower((string) $key), $stripKeys, true)) {
+                continue;
+            }
+
+            $filtered[(string) $key] = $value;
+        }
 
         if ($filtered === []) {
             return null;
         }
 
         return http_build_query($filtered);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function configuredStripQueryKeys(): array
+    {
+        $configuredKeys = config('capell-url-manager.canonical.strip_query_keys', []);
+
+        if (! is_array($configuredKeys)) {
+            return [];
+        }
+
+        $keys = [];
+
+        foreach ($configuredKeys as $key) {
+            if (is_string($key) && $key !== '') {
+                $keys[] = strtolower($key);
+            }
+        }
+
+        return array_values(array_unique($keys));
     }
 }

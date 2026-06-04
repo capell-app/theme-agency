@@ -114,14 +114,19 @@ final class UrlManagerHealthCheck implements ChecksExtensionHealth
      */
     public function missingTables(): array
     {
-        return array_values(collect(self::REQUIRED_TABLES)
-            ->reject(static fn (string $tableName): bool => Schema::hasTable($tableName))
-            ->values()
-            ->all());
+        $missingTables = [];
+
+        foreach (self::REQUIRED_TABLES as $tableName) {
+            if (! Schema::hasTable($tableName)) {
+                $missingTables[] = $tableName;
+            }
+        }
+
+        return $missingTables;
     }
 
     /**
-     * @return list<class-string>
+     * @return list<string>
      */
     public function missingActionClasses(): array
     {
@@ -131,15 +136,19 @@ final class UrlManagerHealthCheck implements ChecksExtensionHealth
             return [];
         }
 
-        return array_values(collect($actions)
-            ->filter(static fn (mixed $actionClass): bool => is_string($actionClass))
-            ->reject(static fn (string $actionClass): bool => class_exists($actionClass))
-            ->values()
-            ->all());
+        $missingActions = [];
+
+        foreach ($actions as $actionClass) {
+            if (is_string($actionClass) && ! class_exists($actionClass)) {
+                $missingActions[] = $actionClass;
+            }
+        }
+
+        return $missingActions;
     }
 
     /**
-     * @return list<class-string>
+     * @return list<string>
      */
     public function missingProviderClasses(): array
     {
@@ -149,15 +158,23 @@ final class UrlManagerHealthCheck implements ChecksExtensionHealth
             return [];
         }
 
-        return array_values(collect(['runtime', 'admin'])
-            ->flatMap(static fn (string $providerGroup): array => is_array($providers[$providerGroup] ?? null)
-                ? $providers[$providerGroup]
-                : [])
-            ->filter(static fn (mixed $providerClass): bool => is_string($providerClass))
-            ->reject(static fn (string $providerClass): bool => class_exists($providerClass))
-            ->unique()
-            ->values()
-            ->all());
+        $missingProviders = [];
+
+        foreach (['runtime', 'admin'] as $providerGroup) {
+            $providerClasses = $providers[$providerGroup] ?? [];
+
+            if (! is_array($providerClasses)) {
+                continue;
+            }
+
+            foreach ($providerClasses as $providerClass) {
+                if (is_string($providerClass) && ! class_exists($providerClass)) {
+                    $missingProviders[] = $providerClass;
+                }
+            }
+        }
+
+        return array_values(array_unique($missingProviders));
     }
 
     /**

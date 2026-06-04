@@ -10,6 +10,7 @@ use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
+use Capell\Frontend\Support\Routing\FrontendRouteMiddlewareRegistry;
 use Capell\UrlManager\Actions\BuildRedirectRulesCsvAction;
 use Capell\UrlManager\Actions\BuildRedirectRulesCsvTemplateAction;
 use Capell\UrlManager\Actions\DeleteRedirectRuleAction;
@@ -27,6 +28,7 @@ use Capell\UrlManager\Enums\UrlManagerPermission;
 use Capell\UrlManager\Filament\Pages\NotFoundOpportunitiesPage;
 use Capell\UrlManager\Filament\Pages\RedirectRulesPage;
 use Capell\UrlManager\Filament\Pages\Tables\RedirectRulesTable;
+use Capell\UrlManager\Http\Middleware\RecordNotFoundOpportunityMiddleware;
 use Capell\UrlManager\Models\RedirectRule;
 use Capell\UrlManager\Providers\UrlManagerServiceProvider;
 use Capell\UrlManager\Support\Redirects\UrlManagerRedirectResolver;
@@ -310,6 +312,20 @@ it('registers installed package admin pages and frontend redirect resolver behav
 
     expect($decision?->targetUrl)->toBe('/settled?campaign=spring')
         ->and($decision?->statusCode)->toBe(302);
+});
+
+it('registers frontend not-found capture middleware through the installed package provider', function (): void {
+    CapellCore::forcePackageInstalled(UrlManagerServiceProvider::$packageName);
+
+    app()->singleton(
+        FrontendRouteMiddlewareRegistry::class,
+        fn (): FrontendRouteMiddlewareRegistry => new FrontendRouteMiddlewareRegistry,
+    );
+
+    (new UrlManagerServiceProvider(app()))->registeringPackage();
+
+    expect(resolve(FrontendRouteMiddlewareRegistry::class)->all())
+        ->toContain(RecordNotFoundOpportunityMiddleware::class);
 });
 
 function urlManagerFilamentTestSite(): Site

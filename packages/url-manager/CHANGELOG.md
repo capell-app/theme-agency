@@ -11,6 +11,7 @@ All notable changes to `capell-app/url-manager` will be documented in this file.
 - Added open-redirect host protection, regex source bounds, exact-loop detection, priority ordering, deferred hit recording, parent-move prefix redirects, canonical URL building, and redirect-hit pruning.
 - Registered frontend 404 capture middleware through the Capell frontend middleware registry.
 - Documented the new runtime behavior, config, canonical URL policy, 404 capture, and retention command.
+- Added provider-level coverage proving the installed package wires frontend 404 capture middleware through the frontend middleware registry.
 
 ### 2026-06-03
 

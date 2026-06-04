@@ -20,6 +20,8 @@ return [
     'import_redirects' => 'Import redirects',
     'preview_import' => 'Preview import',
     'download_import_template' => 'Download template',
+    'prune_redirect_hits_description' => 'Prune old URL Manager redirect-hit rows.',
+    'prune_redirect_hits_result' => 'Pruned :count URL Manager redirect hit(s).',
     'redirect_created' => 'Redirect created',
     'redirect_updated' => 'Redirect updated',
     'redirect_imported' => ':imported redirects imported. :skipped rows skipped.',

@@ -20,6 +20,8 @@ Absolute targets are constrained to configured hosts plus the `app.url` host by 
 
 `RecordNotFoundOpportunityMiddleware` registers with Capell Frontend's middleware registry and records public 404 responses as `NotFoundOpportunity` rows. Ignored path prefixes, such as admin and Livewire paths, live in `capell-url-manager.not_found.ignored_path_prefixes`.
 
+Package tests cover the installed-provider wiring for both `UrlManagerRedirectResolver` and the frontend 404 capture middleware, so these capabilities are verified at the package boundary rather than only by action-level tests.
+
 ## Canonical URLs
 
 `BuildCanonicalUrlAction` provides the package canonical URL policy. It can force a scheme or host, lowercase paths, add or remove trailing slashes, and strip configured tracking query parameters. The action does not render tags by itself; consumers can call it when they need URL Manager's canonical policy.

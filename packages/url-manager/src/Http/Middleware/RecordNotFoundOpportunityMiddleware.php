@@ -46,9 +46,19 @@ final class RecordNotFoundOpportunityMiddleware
 
     private function isIgnoredPath(string $path): bool
     {
-        return collect(config('capell-url-manager.not_found.ignored_path_prefixes', []))
-            ->filter(static fn (mixed $prefix): bool => is_string($prefix) && $prefix !== '')
-            ->contains(static fn (string $prefix): bool => str_starts_with($path, $prefix));
+        $ignoredPrefixes = config('capell-url-manager.not_found.ignored_path_prefixes', []);
+
+        if (! is_array($ignoredPrefixes)) {
+            return false;
+        }
+
+        foreach ($ignoredPrefixes as $prefix) {
+            if (is_string($prefix) && $prefix !== '' && str_starts_with($path, $prefix)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function modelKey(mixed $value): ?int

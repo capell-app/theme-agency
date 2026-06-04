@@ -52,9 +52,7 @@ final class PrepareRedirectRuleDataAction
 
     private function assertAllowedStatusCode(int $statusCode): void
     {
-        $allowedStatusCodes = collect(config('capell-url-manager.redirects.allowed_status_codes', [301, 302, 307, 308]))
-            ->map(static fn (mixed $code): int => (int) $code)
-            ->all();
+        $allowedStatusCodes = $this->allowedStatusCodes();
 
         throw_unless(in_array($statusCode, $allowedStatusCodes, true), InvalidArgumentException::class, __('capell-url-manager::validation.status_code_invalid'));
     }
@@ -130,20 +128,48 @@ final class PrepareRedirectRuleDataAction
      */
     private function allowedAbsoluteTargetHosts(): array
     {
-        $configuredHosts = collect(config('capell-url-manager.redirects.absolute_target_allowed_hosts', []))
-            ->filter(static fn (mixed $host): bool => is_string($host) && trim($host) !== '')
-            ->map(static fn (string $host): string => strtolower(trim($host)))
-            ->values();
+        $configuredHosts = [];
+        $configuredHostValues = config('capell-url-manager.redirects.absolute_target_allowed_hosts', []);
+
+        if (is_array($configuredHostValues)) {
+            foreach ($configuredHostValues as $host) {
+                if (is_string($host) && trim($host) !== '') {
+                    $configuredHosts[] = strtolower(trim($host));
+                }
+            }
+        }
 
         if ((bool) config('capell-url-manager.redirects.allow_app_url_host', true)) {
             $appHost = parse_url((string) config('app.url'), PHP_URL_HOST);
 
             if (is_string($appHost) && $appHost !== '') {
-                $configuredHosts->push(strtolower($appHost));
+                $configuredHosts[] = strtolower($appHost);
             }
         }
 
-        return $configuredHosts->unique()->values()->all();
+        return array_values(array_unique($configuredHosts));
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function allowedStatusCodes(): array
+    {
+        $configuredStatusCodes = config('capell-url-manager.redirects.allowed_status_codes', [301, 302, 307, 308]);
+
+        if (! is_array($configuredStatusCodes)) {
+            return [301, 302, 307, 308];
+        }
+
+        $statusCodes = [];
+
+        foreach ($configuredStatusCodes as $statusCode) {
+            if (is_numeric($statusCode)) {
+                $statusCodes[] = (int) $statusCode;
+            }
+        }
+
+        return $statusCodes === [] ? [301, 302, 307, 308] : array_values(array_unique($statusCodes));
     }
 
     private function boundedPriority(int $priority): int
