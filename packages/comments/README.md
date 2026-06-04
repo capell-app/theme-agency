@@ -45,6 +45,9 @@ to registered Capell content.
 - `CommentThreadComponent` for post-load public thread rendering.
 - Public comment form bot-trap controls: a hidden honeypot field and
   configurable minimum form age.
+- Diagnostics-ready `CommentsHealthCheck` coverage for storage tables, settings
+  registration, the public thread route, and the public thread Livewire
+  component.
 - Admin resources for comment and author moderation.
 - `CommentStatsWidget` and `LatestCommentsWidget` for admin visibility.
 - `ResolvePublicCommentableThreadAction` and `BuildPublicThreadAction` for
@@ -105,5 +108,7 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
   Blade.
 - Keep bot-trap fields public-form only; API/programmatic comment creation may
   omit them, but public forms should pass them through `CreateCommentData`.
+- Keep `CommentsHealthCheck` aligned with the manifest's critical package-health
+  claim whenever routes, storage, settings, or frontend component aliases change.
 - Add focused docs when new commentable registries, notification flows, or
   moderation transitions become public extension points.

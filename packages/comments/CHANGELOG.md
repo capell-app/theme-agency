@@ -6,6 +6,8 @@ All notable changes to `capell-app/comments` will be documented in this file.
 
 ### 2026-06-04
 
+- Implemented real `CommentsHealthCheck` diagnostics for required storage tables, settings registration, the public thread route, and the public thread Livewire component.
+- Added focused health-check tests covering passing diagnostics and failure modes for missing storage, settings, and route wiring.
 - Added public comment form bot-trap controls: a hidden honeypot field and a configurable minimum form age.
 - Extended `CreateCommentData` and `CreateCommentAction` to reject honeypot-filled or too-fast public submissions before persisting comments.
 - Updated `CommentThreadComponent` to track and reset bot-trap state during public comment submission.

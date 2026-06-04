@@ -12,12 +12,13 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 
 - **2026-06-03:** Rewrote marketplace/Composer copy, declared `LatestCommentsWidget` in manifest contributions, and added manifest coverage for registered dashboard widgets.
 - **2026-06-04:** Added public comment form bot-trap controls: a hidden honeypot field, configurable minimum form age, action-level rejection before persistence, component state reset, and action/Livewire tests.
+- **2026-06-04:** Implemented real `CommentsHealthCheck` diagnostics for required storage tables, settings registration, the public thread route, and the public thread Livewire component, with focused failure-mode tests.
 
 ## 2. Improvements (existing functionality)
 
 - **Wire moderator new-comment notifications (advertised, not implemented)** — `CommentCreated` is dispatched (`src/Actions/CreateCommentAction.php:119`) but has **no listener**, and `config('capell-comments.notifications.moderators')` (`config/capell-comments.php:32`) / the README's "notification settings" claim are never consumed. Add a queued listener that notifies the configured moderator addresses (and/or users holding the comment policy ability) when a comment lands in `PendingApproval` / `PendingEmailVerification`. — why: editors currently have zero signal that a queue is filling up; the manifest capability `comments-created-event` only emits, nothing acts. — `src/Events/CommentCreated.php`, `src/Providers/CommentsServiceProvider.php` — M
 
-- **Make `CommentsHealthCheck` a real check** — `src/Health/CommentsHealthCheck.php` implements only `compatibleCapellApiVersion()`; it has no `check()`/health method, yet `capell.json` advertises it as `severity: "critical"` with the label "package surfaces, providers, and moderation health are discoverable by Diagnostics." — why: a critical health check that returns nothing is a false green in Diagnostics. It should assert the four required tables exist, settings resolve, the thread route is registered, and the Livewire component is bound. — `src/Health/CommentsHealthCheck.php`, `capell.json` — M
+- **Shipped 2026-06-04: Make `CommentsHealthCheck` a real check** — `CommentsHealthCheck::runDiagnostics()` now reports storage-table, settings-registration, thread-route, and Livewire-component checks, and `passed()` reflects the aggregate result. Focused tests cover happy path plus missing table, settings, and route failures. — `src/Health/CommentsHealthCheck.php`, `tests/Feature/CommentsHealthCheckTest.php` — M
 
 - **Shipped 2026-06-04: Add a honeypot + minimum-render-age check to the public form** — `thread.blade.php` now renders a hidden honeypot field, `CommentThreadComponent` tracks `formRenderedAt`, and `CreateCommentAction` rejects honeypot-filled or too-fast submissions before persistence. The minimum age is configurable at `capell-comments.spam.minimum_form_age_seconds`. — `src/Livewire/CommentThreadComponent.php`, `resources/views/livewire/thread.blade.php`, `src/Data/CreateCommentData.php` — S
 
@@ -27,7 +28,7 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 
 - **Stop double-querying the commentable on every Livewire action** — `resolveCommentable()` decrypts the thread key and re-`find()`s the model on `mount`, every `submit`, and every `refreshComments` (`src/Livewire/CommentThreadComponent.php:127`). — why: each round trip re-runs a DB lookup; memoize the resolved model per request. — `src/Livewire/CommentThreadComponent.php` — S
 
-- **Index/labels parity in admin** — `LatestCommentsWidget` is registered (`src/Providers/AdminServiceProvider.php:67`) but is **absent from `capell.json` `contributes[]`** (which lists only `CommentStatsWidget`). — why: manifest is the marketplace/Diagnostics source of truth; the widget is invisible to tooling. Add it to `contributes[]`. — `capell.json`, `src/Providers/AdminServiceProvider.php` — S
+- **Shipped 2026-06-03: Index/labels parity in admin** — `LatestCommentsWidget` is registered at runtime and declared in `capell.json` `contributes[]`, with manifest coverage proving every dashboard widget stays discoverable by marketplace and Diagnostics tooling. — `capell.json`, `tests/Unit/ManifestRequirementsTest.php` — S
 
 ## 3. Missing Features (gaps)
 
@@ -49,7 +50,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 ## 4. Issues / Risks
 
-- **Stub health check = false-positive Diagnostics.** `src/Health/CommentsHealthCheck.php` has no check logic but is `severity: critical` in `capell.json`. High risk: operators trust a green that means nothing.
+- **Health check coverage shipped.** `src/Health/CommentsHealthCheck.php` now exposes real Diagnostics results for the critical package-health declaration in `capell.json`. Residual risk: these checks cover package wiring, not spam scoring, notifications, or public render budgets.
 
 - **Dead spam configuration.** `spam.max_links`, `spam.blocked_terms`, the `spam_reasons` column, and `linkCount()` are wired up to the _write_ path but never _enforced_ (see §3). Tech debt + a security gap: the package presents as having spam protection it does not have. `config/capell-comments.php:28`, `src/Actions/CreateCommentAction.php:97`, `src/Models/Comment.php:58`.
 
@@ -63,11 +64,11 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **PII / retention.** Author `name`/`email` are `encrypted` at rest ✔ and `email_hash` is HMAC ✔ (`src/Models/CommentAuthor.php:50-58,123`). Gaps: (1) `email_hash_secret`/`visitor_hash_secret` default to `null` from env and silently fall back to `app.key` (`config/capell-comments.php:22-23`, `src/Support/VisitorHasher.php:15`, `CommentAuthor::emailHash`) — rotating `app.key` orphans all hashes; document and warn. (2) No retention/erasure policy or command for visitor IP/UA hashes or author records (GDPR right-to-erasure). (3) `internal_notes` and `moderation_note` are plaintext.
 
-- **Test gaps.** Coverage now includes bot-trap rejection at action and Livewire levels. Still not covered: rate-limit/throttle behavior, automatic spam scoring (feature absent), moderator notification (feature absent), `auto_inject` anonymous-leakage, reply pagination, performance budgets, and there are **no Architecture tests** for this package.
+- **Test gaps.** Coverage now includes health diagnostics and bot-trap rejection at action and Livewire levels. Still not covered: rate-limit/throttle behavior, automatic spam scoring (feature absent), moderator notification (feature absent), `auto_inject` anonymous-leakage, reply pagination, performance budgets, and there are **no Architecture tests** for this package.
 
 - **i18n.** Strings are translated via `capell-comments::` namespaces ✔. `diffForHumans()` in the public Blade (`thread.blade.php:24,47`) is not locale-pinned to the site language and may render in the app locale rather than the page's `language_id`.
 
-- **Manifest/README mismatches (low sev).** README "Best Used With" lists `html-cache` but `capell.json`/`composer.json` `supports` lists only `blog` + `email-studio`. `LatestCommentsWidget` missing from `contributes[]` (see §2). Marketplace `screenshots[]` (1) ≠ `screenshots.json` required runtime captures (4).
+- **Manifest/README mismatches (low sev).** README "Best Used With" lists `html-cache` but `capell.json`/`composer.json` `supports` lists only `blog` + `email-studio`. Marketplace `screenshots[]` (1) ≠ `screenshots.json` required runtime captures (4).
 
 ## 5. Marketplace & Selling
 
@@ -87,20 +88,20 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                      | Bucket | Effort | Impact | Section ref |
-| ----------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Implement real `CommentsHealthCheck` (tables, settings, route, component)                 | Now    | M      | High   | §2, §4      |
-| Implement automatic spam scoring (`max_links`, `blocked_terms`, write `spam_reasons`)     | Now    | M      | High   | §3, §4      |
-| Fix throttle key (drop attacker-controlled email from primary bucket)                     | Now    | S      | High   | §3, §4      |
-| Wire moderator new-comment notification listener on `CommentCreated`                      | Now    | M      | High   | §2, §3      |
-| Add `auto_inject` anonymous-leakage + throttle Pest tests; add Arch tests                 | Now    | M      | High   | §4          |
-| Add `LatestCommentsWidget` to `capell.json` contributes[]; fix README/supports mismatches | Now    | S      | Med    | §2, §4      |
-| Wire the 4 `screenshots.json` captures into marketplace + new summary/description         | Now    | S      | Med    | §5          |
-| Implement reply pagination using `reply_page_size`; cap subtree query                     | Next   | M      | High   | §2, §3      |
-| Benchmark + assert `frontendRenderBudgetMs`/`adminQueryBudget`                            | Next   | M      | Med    | §4          |
-| Harden sanitizer (bidi/zero-width strip; broaden link detection)                          | Next   | S      | Med    | §4          |
-| Memoize resolved commentable in Livewire component                                        | Next   | S      | Low    | §2          |
-| Locale-pin public timestamps to page `language_id`                                        | Next   | S      | Low    | §4          |
-| Pluggable external spam provider (Akismet/Turnstile) contract                             | Later  | M      | Med    | §3          |
-| Reactions/voting + author-reply notifications (Engagement Suite up-sell)                  | Later  | L      | Med    | §3, §5      |
-| PII retention/erasure command + secret-rotation docs for hashes                           | Later  | M      | Med    | §4          |
+| Item                                                                                          | Bucket | Effort | Impact | Section ref |
+| --------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Shipped 2026-06-04: implement real `CommentsHealthCheck` (tables, settings, route, component) | Now    | M      | High   | §2, §4      |
+| Implement automatic spam scoring (`max_links`, `blocked_terms`, write `spam_reasons`)         | Now    | M      | High   | §3, §4      |
+| Fix throttle key (drop attacker-controlled email from primary bucket)                         | Now    | S      | High   | §3, §4      |
+| Wire moderator new-comment notification listener on `CommentCreated`                          | Now    | M      | High   | §2, §3      |
+| Add `auto_inject` anonymous-leakage + throttle Pest tests; add Arch tests                     | Now    | M      | High   | §4          |
+| Shipped 2026-06-03: add `LatestCommentsWidget` to `capell.json` contributes[]                 | Now    | S      | Med    | §2, §4      |
+| Wire the 4 `screenshots.json` captures into marketplace + new summary/description             | Now    | S      | Med    | §5          |
+| Implement reply pagination using `reply_page_size`; cap subtree query                         | Next   | M      | High   | §2, §3      |
+| Benchmark + assert `frontendRenderBudgetMs`/`adminQueryBudget`                                | Next   | M      | Med    | §4          |
+| Harden sanitizer (bidi/zero-width strip; broaden link detection)                              | Next   | S      | Med    | §4          |
+| Memoize resolved commentable in Livewire component                                            | Next   | S      | Low    | §2          |
+| Locale-pin public timestamps to page `language_id`                                            | Next   | S      | Low    | §4          |
+| Pluggable external spam provider (Akismet/Turnstile) contract                                 | Later  | M      | Med    | §3          |
+| Reactions/voting + author-reply notifications (Engagement Suite up-sell)                      | Later  | L      | Med    | §3, §5      |
+| PII retention/erasure command + secret-rotation docs for hashes                               | Later  | M      | Med    | §4          |
