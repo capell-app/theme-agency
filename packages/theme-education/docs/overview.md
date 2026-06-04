@@ -14,6 +14,8 @@ coherent frontend theme.
 - Education-specific CSS and page wrapper.
 - Section renderers for learning-pathway content such as course catalogue,
   instructors, resources, events, enrolment CTA, FAQ, proof, and footer flows.
+- Translated default course catalogue cards, event cards, and instructor role
+  labels for localisable public education copy.
 - Optional renderer awareness for Blog, Events, and Form Builder.
 - A demo command that installs route-backed education demo pages.
 - Theme health and management-page manifest contributions.
@@ -44,8 +46,12 @@ Foundation Theme runtime data and Capell page content.
 
 ## Screenshot Plan
 
-`docs/screenshots.json` describes marketplace screenshots for homepage,
-directory, detail, contact, conversion CTA, and section-suite states.
+`docs/screenshots.json` describes deployment captures for the admin theme list,
+seeded frontend demo, homepage, course catalogue, instructors, events,
+enrolment, learning resources, and signed preview output. The committed
+marketplace manifest currently uses the three real preview assets under
+`docs/assets/marketplace`; the fuller route-backed PNG capture set still needs
+to be generated.
 
 ## Verification
 
@@ -53,5 +59,6 @@ directory, detail, contact, conversion CTA, and section-suite states.
 vendor/bin/pest packages/theme-education/tests --configuration=phpunit.xml
 ```
 
-The focused tests cover theme definition, manifest requirements, package-aware
-rendering, and public output safety.
+The focused tests cover theme definition, translated default education layouts,
+manifest requirements, package-aware rendering, health diagnostics, and public
+output safety.

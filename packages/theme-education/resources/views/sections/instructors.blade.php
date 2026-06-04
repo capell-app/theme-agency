@@ -1,3 +1,8 @@
+@php
+    $instructorRoles = __('capell-theme-education::generic.instructor_roles');
+    $instructorRoles = is_array($instructorRoles) ? $instructorRoles : [];
+@endphp
+
 <section class="theme-section theme-section-instructors bg-white">
     <div class="mx-auto max-w-5xl px-6 py-14">
         @isset($heading)
@@ -21,7 +26,15 @@
         @endisset
 
         <div class="mt-10 grid gap-4 md:grid-cols-3">
-            @foreach (['Programme lead', 'Cohort mentor', 'Assessment coach'] as $role)
+            @foreach ($instructorRoles as $role)
+                @php
+                    $roleLabel = is_scalar($role) ? (string) $role : '';
+                @endphp
+
+                @if ($roleLabel === '')
+                    @continue
+                @endif
+
                 <article class="border border-[#c7d2fe] bg-[#f8fbff] p-5">
                     <div
                         class="mb-5 flex aspect-[4/2.4] items-end bg-white p-4"
@@ -45,7 +58,7 @@
                     <p
                         class="text-xs font-black tracking-[0.18em] text-[#4338ca] uppercase"
                     >
-                        {{ $role }}
+                        {{ $roleLabel }}
                     </p>
                     <h3 class="mt-3 text-lg font-black text-[#0f172a]">
                         {{ __('capell-theme-education::generic.instructor_card_title') }}

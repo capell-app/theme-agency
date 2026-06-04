@@ -42,6 +42,8 @@ enrolment.
 - Ships an education page wrapper and theme CSS.
 - Adds education-specific section renderers for course catalogue, instructors,
   events, enrolment CTA, resources, FAQ, and supporting content blocks.
+- Keeps course catalogue, event, and instructor default card copy in package
+  translations so public education copy can be localised.
 - Uses Core `ViewSectionRenderer` extra view data for optional Blog, Events, and Form Builder
   sections.
 - Adds a demo install command backed by `InstallEducationThemeDemoAction`.
@@ -69,6 +71,8 @@ enrolment.
 - Depends on Foundation Theme and reads normal Capell page/theme runtime data.
 - Optional sections degrade through package-aware renderer integration checks
   when Blog, Events, or Form Builder are not installed.
+- Course catalogue cards, event defaults, and instructor role labels use package
+  translations; deeper data-driven course/event integration remains future work.
 
 ## Docs
 

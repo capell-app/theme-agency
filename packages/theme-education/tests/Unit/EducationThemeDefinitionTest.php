@@ -190,6 +190,81 @@ it('renders new premium education layouts through the registry', function (): vo
         ->not->toContain('capell-app/theme-education');
 });
 
+it('renders translated education catalogue, event, and instructor defaults', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(EducationThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/events', false);
+
+    $registry = new ThemeRegistry;
+    (new EducationThemeServiceProvider($this->app))->boot($registry);
+
+    $catalogueRenderer = $registry->sectionRenderer('education', 'course-catalog');
+    $eventsRenderer = $registry->sectionRenderer('education', 'events');
+    $instructorsRenderer = $registry->sectionRenderer('education', 'instructors');
+
+    assert($catalogueRenderer instanceof SectionRenderer);
+    assert($eventsRenderer instanceof SectionRenderer);
+    assert($instructorsRenderer instanceof SectionRenderer);
+
+    $catalogueHtml = $catalogueRenderer->render(educationThemeSection('course-catalog', [
+        'heading' => 'Find your course',
+    ]));
+
+    $eventsHtml = $eventsRenderer->render(educationThemeSection('events', [
+        'heading' => 'Open days',
+    ]));
+
+    $instructorsHtml = $instructorsRenderer->render(educationThemeSection('instructors', [
+        'heading' => 'Meet the team',
+    ]));
+
+    expect($catalogueHtml)
+        ->toContain('Starter Path')
+        ->toContain('Cohort Tracks')
+        ->toContain('Advanced Badge')
+        ->toContain('data-carousel="course-catalog"')
+        ->not->toContain('data-carousel="education-course-catalog"')
+        ->not->toContain('data-carousel-prev')
+        ->not->toContain('data-carousel-next');
+
+    expect($eventsHtml)
+        ->toContain('Static events list is available.')
+        ->toContain('Live Workshops')
+        ->toContain('Masterclasses')
+        ->toContain('Mentor Access');
+
+    expect($instructorsHtml)
+        ->toContain('Programme lead')
+        ->toContain('Cohort mentor')
+        ->toContain('Assessment coach')
+        ->toContain('Named educator profile');
+});
+
+it('keeps education default card copy in translations instead of Blade literals', function (): void {
+    $catalogueBlade = file_get_contents(__DIR__ . '/../../resources/views/sections/course-catalog.blade.php');
+    $eventsBlade = file_get_contents(__DIR__ . '/../../resources/views/sections/events.blade.php');
+    $instructorsBlade = file_get_contents(__DIR__ . '/../../resources/views/sections/instructors.blade.php');
+
+    expect($catalogueBlade)->not->toBeFalse()
+        ->and($eventsBlade)->not->toBeFalse()
+        ->and($instructorsBlade)->not->toBeFalse();
+
+    $blade = (string) $catalogueBlade . "\n" . (string) $eventsBlade . "\n" . (string) $instructorsBlade;
+
+    expect($blade)
+        ->not->toContain('Starter Path')
+        ->not->toContain('Cohort Tracks')
+        ->not->toContain('Advanced Badge')
+        ->not->toContain('Live Workshops')
+        ->not->toContain('Masterclasses')
+        ->not->toContain('Office Hours')
+        ->not->toContain('Programme lead')
+        ->not->toContain('Cohort mentor')
+        ->not->toContain('Assessment coach')
+        ->not->toContain('data-carousel-prev')
+        ->not->toContain('data-carousel-next');
+});
+
 /**
  * @param  array<string, mixed>  $viewData
  */

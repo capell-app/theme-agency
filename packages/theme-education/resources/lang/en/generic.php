@@ -7,8 +7,42 @@ return [
     'skip_to_content' => 'Skip to content',
     'carousel_next' => 'Next items',
     'carousel_previous' => 'Previous items',
+    'course_catalog_cards' => [
+        [
+            'format' => 'Online',
+            'title' => 'Starter Path',
+            'summary' => 'Quick onboarding and fundamentals to speed your team.',
+        ],
+        [
+            'format' => 'Cohorts',
+            'title' => 'Cohort Tracks',
+            'summary' => 'Guided sessions with checkpoints and mentor review.',
+        ],
+        [
+            'format' => 'Certification',
+            'title' => 'Advanced Badge',
+            'summary' => 'Practical assessments with publish-ready outcomes.',
+        ],
+    ],
     'enrolment_form_connected' => 'Connected enrolment workflow is available.',
     'enrolment_form_static' => 'Static enrolment CTA is ready.',
+    'event_cards' => [
+        [
+            'signal' => '',
+            'title' => 'Live Workshops',
+            'summary' => 'Instructor-led sessions for cohorts, teams, and launch support.',
+        ],
+        [
+            'signal' => 'Q4 Calendar',
+            'title' => 'Masterclasses',
+            'summary' => 'Focused deep-dive sessions with reusable materials and recordings.',
+        ],
+        [
+            'signal' => 'Office Hours',
+            'title' => 'Mentor Access',
+            'summary' => 'Fast feedback windows built for premium learners and teams.',
+        ],
+    ],
     'events_connected' => 'Connected events calendar is live and ready.',
     'events_static' => 'Static events list is available.',
     'cta_blurb' => 'Move prospects from curiosity into action with clear, confident calls to learn.',
@@ -52,6 +86,11 @@ return [
     'enrolment_step_three' => 'Start cohort',
     'enrolment_ready_label' => 'Interview-ready path',
     'instructors_label' => 'Teaching team',
+    'instructor_roles' => [
+        'Programme lead',
+        'Cohort mentor',
+        'Assessment coach',
+    ],
     'instructors_summary' => 'Give programme leads, mentors, and assessors a visible role in the enrolment story.',
     'instructor_card_title' => 'Named educator profile',
     'instructor_card_summary' => 'A compact card for expertise, learner support, and teaching context.',
