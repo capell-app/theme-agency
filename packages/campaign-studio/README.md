@@ -32,6 +32,7 @@ Campaign Studio adds campaign groups, landing-page variants, audience targeting,
 - Page schema extender for campaign fields.
 - core layout builder widget configurators for campaign hero, CTA, and lead form widgets.
 - Landing-page variant selection from UTM audience data, with optional experiment sync when Experiments is installed.
+- Campaign hero widget CTAs can append configured UTM metadata through the shared campaign URL builder.
 - Campaign conversion funnel reporting from conversion goals and recorded conversions.
 - Conversion recording actions for page views, CTA clicks, and form submissions.
 
@@ -171,6 +172,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 - Install dependent packages before expecting attribution from form-builder or insights.
 - Check UTM keys before launch.
+- Configure campaign hero UTM fields when hero CTAs should carry campaign attribution.
 - Create conversion goals before reporting on landing page success.
 
 ## Docs

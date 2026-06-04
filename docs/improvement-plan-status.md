@@ -28,7 +28,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 
 | Package | Now | Next | Later | Current status | Evidence / next action |
 | ------- | --: | ---: | ----: | -------------- | ---------------------- |
-| campaign-studio | 6 | 5 | 5 | Slice committed | `dd9bf35ea` landed a now-bucket slice; continue with remaining Next/Later rows. |
+| campaign-studio | 6 | 5 | 5 | Slice committed | Latest Campaign Studio slice adds campaign hero UTM fields, decorates hero CTA URLs through `BuildCampaignUrlAction`, updates screenshots/docs, and adds public render coverage; continue with CTA/page-view capture, full-page public safety tests, cache/personalisation strategy, variant publish filtering, scheduling, and experiment result readout. |
 | comments | 8 | 5 | 3 | Slice committed | `8fe039e95` landed a now-bucket slice; continue with remaining plan rows. |
 | contacts | 6 | 7 | 2 | Slice committed | `132778050` fixed stats scoping; continue with privacy/export/merge gaps. |
 | content-sections | 5 | 6 | 4 | Slice committed | `54b758fe1` landed readiness fixes; continue with remaining render safety/content rows. |

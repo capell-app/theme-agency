@@ -92,3 +92,34 @@ it('renders public CTA tracking attributes without leaking numeric campaign ids'
         ->not->toContain('data-campaign-id')
         ->not->toContain('campaign_group_id');
 });
+
+it('decorates campaign hero button URLs with configured UTM metadata', function (): void {
+    $widget = Widget::factory()->create([
+        'meta' => [
+            'primary_button_text' => 'Start trial',
+            'primary_button_url' => '/signup?plan=pro#pricing',
+            'secondary_button_text' => 'View demo',
+            'secondary_button_url' => '/demo',
+            'goal_key' => 'trial-started',
+            'utm_source' => 'newsletter',
+            'utm_medium' => 'email',
+            'utm_campaign' => 'spring-launch',
+            'utm_content' => 'hero',
+        ],
+    ]);
+
+    $html = view('capell-campaign-studio::components.widget.campaign-hero', [
+        'container' => [],
+        'containerKey' => 'main',
+        'containerWidth' => null,
+        'loop' => (object) ['index' => 0, 'first' => true, 'last' => true],
+        'widget' => $widget,
+    ])->render();
+
+    expect($html)
+        ->toContain('href="/signup?plan=pro&amp;utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=spring-launch&amp;utm_content=hero#pricing"')
+        ->toContain('href="/demo?utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=spring-launch&amp;utm_content=hero"')
+        ->toContain('data-campaign-goal="trial-started"')
+        ->not->toContain('campaign_group_id')
+        ->not->toContain('data-campaign-id');
+});

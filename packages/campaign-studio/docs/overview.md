@@ -12,6 +12,7 @@ CampaignStudio adds campaign groups, landing pages, CTA widgets, conversion goal
 - Campaign dashboard widgets.
 - Page schema extender for campaign fields.
 - core layout builder widget configurators for campaign hero, CTA, and lead form widgets.
+- Campaign hero widget CTAs can append configured UTM metadata through the shared campaign URL builder.
 - Conversion recording actions for page views, CTA clicks, and form submissions.
 - Optional Experiments integration that syncs campaign landing-page variants and conversion goals into campaign-scoped experiment definitions.
 
@@ -65,12 +66,15 @@ Lets marketing and editorial teams connect landing pages to goals and see which 
 
 ![Campaign CTA widget form](screenshots/cta-block-form.png)
 
-Campaign dashboard widgets screenshot target: `packages/campaign-studio/docs/screenshots/campaign-dashboard-widgets.png`. Keep this as text until the screenshot file is committed.
+![Campaign dashboard widgets](screenshots/campaign-dashboard-widgets.png)
+
+![Frontend landing page with campaign widgets](screenshots/frontend-landing-page-with-campaign-widgets.png)
 
 ## Pitfalls
 
 - Install dependent packages before expecting attribution from form-builder or insights.
 - Check UTM keys before launch.
+- Configure campaign hero UTM fields when hero CTAs should carry campaign attribution.
 - Create conversion goals before reporting on landing page success.
 
 ## Verification

@@ -29,6 +29,16 @@ final class CampaignHeroWidgetConfigurator extends DefaultWidgetConfigurator
                     ->label(__('capell-layout-builder::form.secondary_button_url')),
                 TextInput::make('meta.goal_key')
                     ->label(__('capell-campaign-studio::form.primary_goal')),
+                TextInput::make('meta.utm_source')
+                    ->label(__('capell-campaign-studio::form.utm_source')),
+                TextInput::make('meta.utm_medium')
+                    ->label(__('capell-campaign-studio::form.utm_medium')),
+                TextInput::make('meta.utm_campaign')
+                    ->label(__('capell-campaign-studio::form.utm_campaign')),
+                TextInput::make('meta.utm_term')
+                    ->label(__('capell-campaign-studio::form.utm_term')),
+                TextInput::make('meta.utm_content')
+                    ->label(__('capell-campaign-studio::form.utm_content')),
             ]);
     }
 }

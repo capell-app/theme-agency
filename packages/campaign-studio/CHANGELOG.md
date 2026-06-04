@@ -4,6 +4,12 @@ All notable changes to `capell-app/campaign-studio` will be documented in this f
 
 ## Unreleased
 
+### 2026-06-04
+
+- Added UTM fields to the campaign hero widget configurator so hero CTAs can use the same attribution metadata as campaign CTA widgets.
+- Routed campaign hero primary and secondary button URLs through `BuildCampaignUrlAction`, preserving existing query strings/fragments while appending missing UTM parameters.
+- Added render coverage proving campaign hero buttons emit decorated URLs without leaking numeric campaign identifiers.
+
 ### 2026-06-03
 
 - Rewrote the marketplace summary, package description, and composer description to lead with the buyer outcome rather than a feature list, and aligned all three so the manifest and composer manifest match.
