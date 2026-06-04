@@ -8,7 +8,7 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 295 |
+| Now    | 294 |
 | Next   | 316 |
 | Later  | 202 |
 
@@ -39,7 +39,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | diagnostics | 0 | 4 | 4 | Slice committed | Current follow-up adds implemented/stub/broken health-check reflection, runnable extension health checks, key-addressable Diagnostics assertions, explicit command-palette risk mapping, output redaction before audit persistence, and the `capell:diagnostics:health` doctor command. Continue with severity rollup, marketplace screenshot/copy wiring, expensive scan caching/snapshots, persisted health history, alerting, env/system info, JSON/CSV export, metadata cleanup, and completion review. |
 | document-lifecycle | 1 | 4 | 4 | Slice committed | Current follow-up adds package factories, removes the unbacked public frontend surface, keeps marketplace screenshots limited to committed assets while leaving admin screenshot capture open, adds enum-backed Filament status labels/colours, tightens acceptance mass assignment, and covers legacy rollback. Continue with real screenshot captures, admin lifecycle actions, exports, re-acceptance, retention/expiry, signed evidence, content diffs, and completion review. |
 | email-studio | 6 | 5 | 4 | Slice committed | `8cacf75e1` landed health/copy fixes; continue with retry/backoff and delivery gaps. |
-| events | 7 | 6 | 4 | Slice committed | Current follow-up wires registration confirm/cancel admin actions, waitlist promotion reachability, and manifest permissions; continue with mail queueing, screenshots, portal cancellation, and doctor command rows. |
+| events | 6 | 6 | 4 | Slice committed | Current follow-up queues event registration notifications after commit and defers registration notification scheduling until the registration transaction commits. Continue with waitlist reconcile, doctor command wiring, screenshots, marketplace copy, portal cancellation, and completion review. |
 | experiments | 5 | 6 | 5 | Slice committed | `cf3798724` landed health/subject fixes; continue with frontend allocation and significance rows. |
 | filament-peek | 7 | 7 | 4 | Slice committed | `1e0ef3735` landed health/preview safety tests; continue with dependency/runtime edge rows. |
 | form-builder | 5 | 6 | 4 | Slice committed | `f59eca815` landed health/spam safety fixes; admin UI and file/payment fields remain high value. |

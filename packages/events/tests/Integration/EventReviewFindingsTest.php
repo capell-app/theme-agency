@@ -45,6 +45,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
 use Spatie\LaravelPackageTools\Package;
@@ -241,6 +242,48 @@ it('does not resend duplicate notification logs that are already queued or sent'
         ->where('event_registration_id', $registration->getKey())
         ->where('type', EventNotificationTypeEnum::Confirmation)
         ->count())->toBe(1);
+});
+
+it('schedules registration notifications only after the registration transaction commits', function (): void {
+    Notification::fake();
+
+    $occurrence = EventOccurrence::factory()->create([
+        'booking_mode' => EventBookingModeEnum::NativeRsvp,
+        'capacity' => 10,
+        'starts_at' => CarbonImmutable::parse('2026-06-10 10:00:00', 'UTC'),
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        $registration = RegisterForEventOccurrenceAction::run(
+            $occurrence,
+            new EventRegistrationData(name: 'Alice Example', email: 'alice@example.com'),
+        );
+
+        expect(EventNotificationLog::query()
+            ->where('event_registration_id', $registration->getKey())
+            ->count())->toBe(0);
+
+        DB::commit();
+    } catch (Throwable $throwable) {
+        if (DB::transactionLevel() > 0) {
+            DB::rollBack();
+        }
+
+        throw $throwable;
+    }
+
+    expect(EventNotificationLog::query()
+        ->where('event_registration_id', $registration->getKey())
+        ->toBase()
+        ->pluck('type')
+        ->all())->toContain(
+            EventNotificationTypeEnum::Confirmation->value,
+            EventNotificationTypeEnum::Reminder->value,
+        );
+
+    Notification::assertSentOnDemand(EventRegistrationNotification::class);
 });
 
 it('prevents duplicate registration notification log identities at the database layer', function (): void {

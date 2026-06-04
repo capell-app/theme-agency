@@ -7,10 +7,11 @@ namespace Capell\Events\Notifications;
 use Capell\Events\Enums\EventNotificationTypeEnum;
 use Capell\Events\Models\EventRegistration;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class EventRegistrationNotification extends Notification
+class EventRegistrationNotification extends Notification implements ShouldQueueAfterCommit
 {
     use Queueable;
 

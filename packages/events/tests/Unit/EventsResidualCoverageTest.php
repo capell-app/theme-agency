@@ -23,6 +23,7 @@ use Carbon\CarbonImmutable;
 use Filament\Schemas\Schema;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
 
 it('builds events table configurator and schema template defaults', function (): void {
     $template = new EventSchemaTemplate;
@@ -55,6 +56,7 @@ it('builds event registration notification mail variants', function (EventNotifi
     $mail = $notification->toMail(new stdClass);
 
     expect($notification->via(new stdClass))->toBe(['mail'])
+        ->and($notification)->toBeInstanceOf(ShouldQueueAfterCommit::class)
         ->and($mail->subject)->toContain('Launch Briefing');
 })->with(EventNotificationTypeEnum::cases());
 

@@ -59,9 +59,11 @@ class RegisterForEventOccurrenceAction
 
             $this->refreshRegistrationCount($lockedOccurrence);
 
-            ScheduleEventNotificationsAction::run($registration);
-
             event(new EventRegistrationCreated($registration->refresh()));
+
+            DB::afterCommit(static function () use ($registration): void {
+                ScheduleEventNotificationsAction::run($registration->refresh());
+            });
 
             return $registration;
         });
