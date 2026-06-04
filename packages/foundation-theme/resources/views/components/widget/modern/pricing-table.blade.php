@@ -18,9 +18,8 @@
 >
     <section class="px-6 py-12 md:px-12 md:py-16">
         @if ($widget->translation)
-            <div
-                class="mx-auto mb-12 max-w-2xl text-center"
-            >
+            {{-- prettier-ignore --}}
+            <div class="mx-auto mb-12 max-w-2xl text-center">
                 @if ($widget->translation->title)
                     <h2
                         class="text-3xl font-bold tracking-tight text-gray-900 md:text-4xl"
@@ -30,9 +29,8 @@
                 @endif
 
                 @if ($widget->translation->content)
-                    <p
-                        class="mt-3 text-lg text-gray-500"
-                    >
+                    {{-- prettier-ignore --}}
+                    <p class="mt-3 text-lg text-gray-500">
                         {{ strip_tags($widget->translation->content) }}
                     </p>
                 @endif
@@ -42,16 +40,14 @@
         @if ($billingOptions === 'both')
             <div class="mb-12 flex items-center justify-center gap-4">
                 <span class="text-gray-700">Monthly</span>
-                {{-- format-ignore-start --}}
-                        <button
-                            class="billing-toggle-button relative h-8 w-14 rounded-full bg-stone-800 transition-colors"
-                            data-billing-toggle
-                        >
-                            <div
-                                class="billing-toggle-dot absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition-all"
-                            ></div>
-                        </button>
-                        {{-- format-ignore-end --}}
+                <button
+                    class="billing-toggle-button relative h-8 w-14 rounded-full bg-stone-800 transition-colors"
+                    data-billing-toggle
+                >
+                    <div
+                        class="billing-toggle-dot absolute top-1 left-1 h-6 w-6 rounded-full bg-white transition-all"
+                    ></div>
+                </button>
                 <span class="text-gray-700">Annual</span>
                 <span class="text-sm font-semibold text-emerald-700">
                     Save 17%
