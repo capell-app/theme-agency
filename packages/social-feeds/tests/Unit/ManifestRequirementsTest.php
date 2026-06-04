@@ -99,9 +99,11 @@ it('declares committed marketplace assets for every required screenshot capture 
         if (! is_array($contractEntry)) {
             continue;
         }
+
         if (($contractEntry['required'] ?? false) !== true) {
             continue;
         }
+
         $id = $contractEntry['id'] ?? null;
 
         throw_unless(is_string($id), RuntimeException::class, 'Required Social Feeds screenshot contract entries must have string ids.');
