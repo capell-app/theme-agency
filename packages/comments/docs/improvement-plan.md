@@ -6,7 +6,7 @@
 
 Comments adds moderated, threaded, dynamically-loaded discussion to registered Capell content (pages and, when Blog is installed, articles). It exposes two surfaces: an **admin** moderation experience (`CommentModerationInbox` page, `CommentResource` + `CommentAuthorResource`, `CommentStatsWidget`, `LatestCommentsWidget`) and a **frontend** Livewire component (`CommentThreadComponent`) loaded post-page via a no-store endpoint (`RenderCommentThreadController` → route `capell-comments.thread`). Key Actions are `CreateCommentAction`, `BuildPublicThreadAction` / `ResolvePublicCommentableThreadAction`, `TransitionCommentStatusAction`, `ToggleCommentReactionAction`, `RequestCommentEmailVerificationAction` / `VerifyCommentAuthorEmailAction`, `RequestCommentReplyNotificationAction`, and `RegisterDefaultCommentablesAction`. Models/tables: `comments`, `comment_authors`, `comment_tokens`, `comment_moderation_events`, `comment_reactions` (all registered as protected tables, all soft-delete on `comments`). Deps: `capell-app/{core,admin,frontend}`, Filament, Livewire, `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-settings`. Author `name`/`email` are `encrypted` casts; email is also stored as an HMAC `email_hash` for lookup.
 
-Current marketplace `summary` (verbatim): _"Comments adds moderated, configurable, cache-safe threaded discussion surfaces to Capell content."_ Screenshots declared in the manifest: **1** (`docs/assets/marketplace/extension-card.jpg`). Note the mismatch: `docs/screenshots.json` defines **4** required runtime screenshots (moderation inbox, comments resource, authors resource, public thread) that the marketplace `screenshots[]` array does not reference — the marketplace block ships only the generic extension card.
+Current marketplace `summary`: _"Add moderated, threaded discussion to any Capell page or article — with cache-safe public rendering, encrypted author records, and per-site moderation controls, no custom code required."_ Marketplace media declared in the manifest: **5** committed assets: the extension card plus four illustrated SVG gallery previews for the same surfaces listed in `docs/screenshots.json` (moderation inbox, comments resource, authors resource, public thread). The required runtime PNG captures from `docs/screenshots.json` have not been generated yet.
 
 ## Completed Improvement Slices
 
@@ -25,6 +25,7 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 - **2026-06-04:** Added privacy retention and erasure tooling for old visitor hashes, moderation notes, tokens, and author PII, plus hash-secret rotation documentation.
 - **2026-06-04:** Added the pluggable `CommentSpamProvider` contract, default local provider, configured provider chain, and spam-check context data for Akismet/Turnstile-style adapters.
 - **2026-06-04:** Added public Like reactions with aggregate public counts, plus approved-reply notifications with tokenized parent-author opt-out handling.
+- **2026-06-04:** Added committed illustrated marketplace gallery assets for all four required screenshot-contract surfaces, with manifest coverage to keep those gallery assets present. Runtime PNG captures remain open.
 
 ## 2. Improvements (existing functionality)
 
@@ -82,17 +83,17 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **i18n shipped.** Strings are translated via `capell-comments::` namespaces ✔. Public timestamp labels are now produced by `BuildPublicThreadAction` with the commentable language locale, serialized through `PublicCommentData`, and rendered as preformatted labels in Blade so Livewire hydration does not fall back to the ambient app locale.
 
-- **Manifest/README mismatches (low sev).** README "Best Used With" lists `html-cache` but `capell.json`/`composer.json` `supports` lists only `blog` + `email-studio`. Marketplace `screenshots[]` (1) ≠ `screenshots.json` required runtime captures (4).
+- **Manifest/README mismatches (low sev).** README "Best Used With" lists `html-cache` but `capell.json`/`composer.json` `supports` lists only `blog` + `email-studio`.
 
 ## 5. Marketplace & Selling
 
-**Critique.** The marketplace `summary` and the composer `description` are now more specific about cache-safe public rendering, encrypted author records, and per-site moderation controls. The remaining weak spot is operational proof: only 1 marketing screenshot is declared despite 4 high-value runtime captures already specified in `screenshots.json` (moderation inbox and a real public thread are the money shots).
+**Critique.** The marketplace `summary` and the composer `description` are now more specific about cache-safe public rendering, encrypted author records, and per-site moderation controls. The marketplace gallery now has committed illustrated SVG assets for the four high-value screenshot-contract surfaces in `docs/screenshots.json`, but it does not yet have live runtime PNG captures. The moderation inbox and a real public thread remain the money shots for final QA/marketing capture.
 
 **Improved 1-sentence summary:** "Add moderated, threaded discussion to any Capell page or article — with cache-safe public rendering, encrypted author records, and per-site moderation controls, no custom code required."
 
 **Improved 3–4 sentence description:** "Comments lets site owners open public, threaded discussion on pages and Blog articles while editors keep full control from a dedicated moderation inbox with author records, status transitions, and dashboard widgets. Threads load after the page via a private, no-store endpoint, so they never contaminate cached HTML or leak moderation state to anonymous visitors. Author identities are encrypted at rest and matched by HMAC, with optional email verification, guest-vs-authenticated identity modes, and configurable approval, throttling, and depth limits per site or content type. Developers register a commentable type once and the package resolves public-safe thread data for the frontend."
 
-**Media gaps:** wire the 4 `screenshots.json` captures into `capell.json.marketplace.screenshots`; add a short GIF of the moderation approve/reject flow and a before/after of a cached page with comments loading in.
+**Media gaps:** generate and commit full runtime PNG captures from `docs/screenshots.json`, then wire those captures into the marketplace gallery when they are reviewed and committed; add a short GIF of the moderation approve/reject flow and a before/after of a cached page with comments loading in.
 
 **Pricing / tier / bundle positioning:** `tier: premium`, `bundle: comments`, `proposedLicense: paid`, `requestedCertification: first-party`, `supportPolicy: priority`. The package now has the baseline premium moderation loop: spam scoring plus instant configured moderator notifications. Cross-sell paths already in deps/manifest: **Blog** (`supports`) for article discussion — lead with this in the listing; **Email Studio** (`supports`) for richer moderator/author notification templates and digests; **HTML Cache** (README "Best Used With") — position the no-store design as the reason these two coexist safely. Extension-suite angle: package with Blog + Email Studio as an "Engagement Suite."
 
@@ -110,7 +111,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 | Shipped 2026-06-04: wire moderator new-comment notification listener on `CommentCreated`                  | Now    | M      | High   | §2, §3      |
 | Shipped 2026-06-04: add `auto_inject` anonymous-leakage tests and Arch tests                              | Now    | M      | High   | §4          |
 | Shipped 2026-06-03: add `LatestCommentsWidget` to `capell.json` contributes[]                             | Now    | S      | Med    | §2, §4      |
-| Wire the 4 `screenshots.json` captures into marketplace + new summary/description                         | Now    | S      | Med    | §5          |
+| Generate/wire the 4 runtime PNG captures from `docs/screenshots.json`                                      | Now    | S      | Med    | §5          |
 | Shipped 2026-06-04: implement reply pagination using `reply_page_size`; cap subtree query                 | Next   | M      | High   | §2, §3      |
 | Shipped 2026-06-04: benchmark + assert `frontendRenderBudgetMs`/`adminQueryBudget`                        | Next   | M      | Med    | §4          |
 | Shipped 2026-06-04: harden sanitizer (bidi/zero-width strip; broaden link detection)                      | Next   | S      | Med    | §4          |

@@ -134,6 +134,26 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Comments extension preview image",
                 "caption": "Comments extension preview"
+            },
+            {
+                "path": "docs/assets/marketplace/comment-moderation-inbox.svg",
+                "alt": "Illustrated Comments moderation inbox with pending and spam review queues",
+                "caption": "Illustrated moderation inbox preview"
+            },
+            {
+                "path": "docs/assets/marketplace/comments-admin-resource.svg",
+                "alt": "Illustrated Comments admin table with authors statuses and moderation timestamps",
+                "caption": "Illustrated comments admin preview"
+            },
+            {
+                "path": "docs/assets/marketplace/comment-authors-admin-resource.svg",
+                "alt": "Illustrated comment authors admin table with verification and moderation state",
+                "caption": "Illustrated author management preview"
+            },
+            {
+                "path": "docs/assets/marketplace/public-comment-thread.svg",
+                "alt": "Illustrated public comment thread with approved replies and like counts",
+                "caption": "Illustrated public thread preview"
             }
         ],
         "categories": ["admin", "engagement", "frontend"]

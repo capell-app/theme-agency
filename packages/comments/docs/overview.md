@@ -94,6 +94,25 @@ Settings are stored through `CommentSettings`. Email and visitor identifiers are
 handled through hash helpers and token records rather than exposed in public
 thread DTOs.
 
+## Marketplace Gallery
+
+`capell.json` lists a committed marketplace gallery for the extension card plus
+four illustrated SVG previews for the required screenshot-contract surfaces:
+
+- moderation inbox
+- comments admin resource
+- comment authors admin resource
+- public comment thread
+
+Those gallery files live under `docs/assets/marketplace/` so marketplace
+validation only references committed assets. They are gallery illustrations, not
+live runtime captures.
+
+The runtime capture contract remains open in `docs/screenshots.json`; deployment
+screenshot runs should use that file to produce full PNG captures for QA and
+marketing artifacts before the screenshot-capture roadmap item is considered
+complete.
+
 ## Commands And Routes
 
 - Install command: `capell-comments:install`
