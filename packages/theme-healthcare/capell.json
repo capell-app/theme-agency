@@ -6,7 +6,7 @@
     "kind": "theme",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Theme Healthcare registers the healthcare theme key and clinical renderer views for appointments, services, clinicians, resources, and locations.",
+    "description": "Theme Healthcare turns Capell into a conversion-focused clinical website. It ships nineteen care-oriented sections — an appointment hero, service finder, clinician carousel, care-pathway guidance, insurance/trust signals, locations, events, and a booking panel — that route patients toward the right enquiry with calm, clinical styling. The booking, events, and resource sections light up automatically when Capell Bookings/Form Builder, Events, and Blog are installed, with no theme reconfiguration. Built on Foundation Theme with accessible focus states and a skip link, it activates from the Themes screen and seeds a full demo via `capell:theme-healthcare-demo`.",
     "product": {
         "group": "Capell Themes",
         "tier": "premium",
@@ -18,6 +18,7 @@
         "requires": ["capell-app/core", "capell-app/foundation-theme"],
         "supports": [
             "capell-app/blog",
+            "capell-app/bookings",
             "capell-app/events",
             "capell-app/form-builder"
         ],
@@ -86,7 +87,8 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Clinic and care-route theme screenshots from route-backed demo layouts.",
+        "summary": "A premium, appointment-led theme for private clinics and healthcare groups — service discovery, clinician profiles, care pathways, locations, and a booking-ready enquiry panel, all WCAG-minded and brand-tunable in Theme Studio.",
+        "description": "Theme Healthcare turns Capell into a conversion-focused clinical website. It ships nineteen care-oriented sections — an appointment hero, service finder, clinician carousel, care-pathway guidance, insurance/trust signals, locations, events, and a booking panel — that route patients toward the right enquiry with calm, clinical styling. The booking, events, and resource sections light up automatically when Capell Bookings/Form Builder, Events, and Blog are installed, with no theme reconfiguration. Built on Foundation Theme with accessible focus states and a skip link, it activates from the Themes screen and seeds a full demo via `capell:theme-healthcare-demo`.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
@@ -94,29 +96,14 @@
                 "caption": "Theme Healthcare extension preview"
             },
             {
-                "path": "docs/assets/marketplace/healthcare-clinician-layout.svg",
-                "alt": "Theme Healthcare Clinician Layout image",
-                "caption": "Theme Healthcare Clinician Layout"
-            },
-            {
-                "path": "docs/assets/marketplace/healthcare-contact-layout.svg",
-                "alt": "Theme Healthcare Contact Layout image",
-                "caption": "Theme Healthcare Contact Layout"
-            },
-            {
-                "path": "docs/assets/marketplace/healthcare-homepage-layout.svg",
-                "alt": "Theme Healthcare Homepage Layout image",
-                "caption": "Theme Healthcare Homepage Layout"
-            },
-            {
-                "path": "docs/assets/marketplace/healthcare-services-layout.svg",
-                "alt": "Theme Healthcare Services Layout image",
-                "caption": "Theme Healthcare Services Layout"
-            },
-            {
                 "path": "docs/assets/marketplace/hero-desktop.jpg",
                 "alt": "Theme Healthcare Hero Desktop image",
                 "caption": "Theme Healthcare Hero Desktop"
+            },
+            {
+                "path": "docs/assets/marketplace/hero-mobile.jpg",
+                "alt": "Theme Healthcare Hero Mobile image",
+                "caption": "Theme Healthcare Hero Mobile"
             }
         ],
         "categories": ["frontend", "themes"]

@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "URL Manager owns managed redirects, redirect hit counts, 404 opportunity tracking, import/export boundaries, and integration points for Core PageUrl changes and SEO Suite broken URL surfaces.",
+    "description": "URL Manager keeps your site's link equity intact when pages move or get renamed. It auto-creates redirects when a page URL changes, resolves exact, prefix, and regex rules on the live request, and tracks hit counts so you can see which redirects matter. Repeated 404s and SEO Suite broken-link findings surface as one-click redirect opportunities, with CSV import/export for bulk migrations. Built for editors and SEO teams who need redirect hygiene without touching server config.",
     "product": {
         "group": "Capell Search & SEO",
         "tier": "premium",
@@ -120,8 +120,50 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Manage redirects, preserve moved URLs, track redirect hits, and turn repeated 404s or SEO Suite broken URL findings into redirect opportunities.",
-        "screenshots": [],
+        "summary": "Stop losing traffic to broken links — manage redirects, auto-preserve moved page URLs, and turn repeated 404s into recovered SEO.",
+        "description": "URL Manager keeps your site's link equity intact when pages move or get renamed. It auto-creates redirects when a page URL changes, resolves exact, prefix, and regex rules on the live request, and tracks hit counts so you can see which redirects matter. Repeated 404s and SEO Suite broken-link findings surface as one-click redirect opportunities, with CSV import/export for bulk migrations. Built for editors and SEO teams who need redirect hygiene without touching server config.",
+        "screenshots": [
+            {
+                "path": "docs/screenshots/create-edit-redirect-form.png",
+                "alt": "URL Manager create and edit redirect rule form",
+                "caption": "Create and edit redirect rules"
+            },
+            {
+                "path": "docs/screenshots/create-edit-redirect-form-dark.png",
+                "alt": "URL Manager create and edit redirect rule form in dark mode",
+                "caption": "Create and edit redirect rules in dark mode"
+            },
+            {
+                "path": "docs/screenshots/redirect-import-workflow.png",
+                "alt": "URL Manager redirect import workflow",
+                "caption": "Import redirect rules from CSV"
+            },
+            {
+                "path": "docs/screenshots/redirect-import-workflow-dark.png",
+                "alt": "URL Manager redirect import workflow in dark mode",
+                "caption": "Import redirect rules from CSV in dark mode"
+            },
+            {
+                "path": "docs/screenshots/redirect-export-workflow.png",
+                "alt": "URL Manager redirect export workflow",
+                "caption": "Export redirect rules"
+            },
+            {
+                "path": "docs/screenshots/redirect-export-workflow-dark.png",
+                "alt": "URL Manager redirect export workflow in dark mode",
+                "caption": "Export redirect rules in dark mode"
+            },
+            {
+                "path": "docs/screenshots/redirect-health-snapshot-output.png",
+                "alt": "URL Manager redirect health snapshot output",
+                "caption": "Redirect health snapshot output"
+            },
+            {
+                "path": "docs/screenshots/redirect-health-snapshot-output-dark.png",
+                "alt": "URL Manager redirect health snapshot output in dark mode",
+                "caption": "Redirect health snapshot output in dark mode"
+            }
+        ],
         "categories": ["seo", "admin", "redirects"],
         "credits": []
     },

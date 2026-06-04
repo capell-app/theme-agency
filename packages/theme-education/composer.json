@@ -1,6 +1,6 @@
 {
     "name": "capell-app/theme-education",
-    "description": "Course and school theme for education providers, training teams, and learning programmes.",
+    "description": "A polished, course-first theme for schools, academies, and training providers — turning programme discovery, faculty trust, open days, and enrolment into one coherent learner journey.",
     "type": "library",
     "license": "MIT",
     "require": {
@@ -34,7 +34,19 @@
         "capell",
         "cms",
         "laravel",
-        "theme"
+        "theme",
+        "education",
+        "courses",
+        "school",
+        "e-learning",
+        "training",
+        "enrolment",
+        "academy",
+        "bootcamp",
+        "curriculum",
+        "instructors",
+        "admissions",
+        "learning-pathway"
     ],
     "authors": [
         {

@@ -82,7 +82,8 @@
         }
     ],
     "marketplace": {
-        "summary": "Premium studio and case-study theme screenshots from route-backed demo layouts.",
+        "summary": "A premium portfolio theme for creators and consultants — turn selected work into outcome-driven case studies, sell your services and media kit, and grow your audience from one polished site.",
+        "description": "Theme Portfolio gives independent creators, consultants, and studios a credibility-first website built around proof, not just pretty pictures. Lead with a work-led hero, walk visitors through outcome-rich case studies (scope, role, timeline, measurable results), and present your services, process, and media kit as things people can actually buy. Connect Media Library for real project imagery, Content Sections for deep case studies, and Newsletter for audience capture — every section degrades gracefully when an integration is not installed. Where an agency theme sells a team and campaigns, Theme Portfolio sells _you_: your work, your authority, and your availability.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",

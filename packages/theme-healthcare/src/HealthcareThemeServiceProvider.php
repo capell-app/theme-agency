@@ -65,6 +65,7 @@ class HealthcareThemeServiceProvider extends ServiceProvider
             ],
             assets: ['css' => 'vendor/capell/themes/healthcare.css'],
             runtime: FrontendRuntime::Blade,
+            // Foundation Theme registers the runtime inheritance key as "default"; capell.json records the package dependency.
             extends: 'default',
         );
     }

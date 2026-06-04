@@ -1,6 +1,6 @@
 {
     "name": "capell-app/theme-knowledge",
-    "description": "Editorial and resource-library theme for knowledge bases, publishers, and content-led teams.",
+    "description": "A premium knowledge-base and documentation theme for Capell — sidebar-navigated articles, in-page table of contents, prominent search, and clean code blocks out of the box.",
     "type": "library",
     "license": "MIT",
     "require": {
@@ -34,7 +34,19 @@
         "capell",
         "cms",
         "laravel",
-        "theme"
+        "theme",
+        "knowledge base",
+        "documentation",
+        "help center",
+        "docs theme",
+        "technical docs",
+        "sidebar navigation",
+        "table of contents",
+        "search",
+        "code blocks",
+        "resource library",
+        "developer docs",
+        "editorial"
     ],
     "authors": [
         {

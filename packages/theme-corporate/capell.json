@@ -6,7 +6,7 @@
     "kind": "theme",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Theme Corporate registers the corporate theme key and restrained renderer views for B2B, public sector, and professional-service sites.",
+    "description": "Theme Corporate gives established businesses, advisory firms, and public bodies a polished, credibility-first site without a design project. Six curated presets — Boardroom, Civic, Advisory, Integrity, Enterprise Trust, and Public Ledger — span deep-navy formal through accessible civic and editorial advisory looks, each tuned for clarity and contrast. Structured proof carousels, capability bands, and a measured content hierarchy are built to read as authoritative on desktop and mobile alike, with full dark-mode support. Drop it on any Capell site, run the one-command demo, and pick a preset.",
     "product": {
         "group": "Capell Foundation",
         "tier": "free",
@@ -82,37 +82,38 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Business and governance theme screenshots from route-backed demo layouts.",
+        "summary": "A restrained, trust-led website theme for B2B, professional-services, and public-sector organisations — formal hierarchy, board-grade proof blocks, and six palette presets out of the box.",
+        "description": "Theme Corporate gives established businesses, advisory firms, and public bodies a polished, credibility-first site without a design project. Six curated presets — Boardroom, Civic, Advisory, Integrity, Enterprise Trust, and Public Ledger — span deep-navy formal through accessible civic and editorial advisory looks, each tuned for clarity and contrast. Structured proof carousels, capability bands, and a measured content hierarchy are built to read as authoritative on desktop and mobile alike, with full dark-mode support. Drop it on any Capell site, run the one-command demo, and pick a preset.",
         "screenshots": [
             {
-                "path": "docs/assets/marketplace/extension-card.jpg",
-                "alt": "Theme Corporate extension preview image",
-                "caption": "Theme Corporate extension preview"
+                "path": "docs/screenshots/frontend-page-rendered-with-corporate-theme.png",
+                "alt": "Theme Corporate frontend page rendered with the corporate theme",
+                "caption": "Theme Corporate frontend render"
             },
             {
-                "path": "docs/assets/marketplace/corporate-article-layout.svg",
-                "alt": "Theme Corporate Article Layout image",
-                "caption": "Theme Corporate Article Layout"
+                "path": "docs/screenshots/frontend-page-rendered-with-corporate-theme-dark.png",
+                "alt": "Theme Corporate frontend page rendered with the corporate theme dark capture",
+                "caption": "Theme Corporate frontend render dark"
             },
             {
-                "path": "docs/assets/marketplace/corporate-contact-layout.svg",
-                "alt": "Theme Corporate Contact Layout image",
-                "caption": "Theme Corporate Contact Layout"
+                "path": "docs/screenshots/theme-preset-selection-showing-corporate.png",
+                "alt": "Theme Corporate preset selection showing corporate presets",
+                "caption": "Theme Corporate preset selection"
             },
             {
-                "path": "docs/assets/marketplace/corporate-governance-layout.svg",
-                "alt": "Theme Corporate Governance Layout image",
-                "caption": "Theme Corporate Governance Layout"
+                "path": "docs/screenshots/theme-preset-selection-showing-corporate-dark.png",
+                "alt": "Theme Corporate preset selection dark capture",
+                "caption": "Theme Corporate preset selection dark"
             },
             {
-                "path": "docs/assets/marketplace/corporate-homepage-layout.svg",
-                "alt": "Theme Corporate Homepage Layout image",
-                "caption": "Theme Corporate Homepage Layout"
+                "path": "docs/screenshots/theme-preview-url-output.png",
+                "alt": "Theme Corporate preview URL output",
+                "caption": "Theme Corporate preview URL output"
             },
             {
-                "path": "docs/assets/marketplace/corporate-investor-event-layout.svg",
-                "alt": "Theme Corporate Investor Event Layout image",
-                "caption": "Theme Corporate Investor Event Layout"
+                "path": "docs/screenshots/theme-preview-url-output-dark.png",
+                "alt": "Theme Corporate preview URL output dark capture",
+                "caption": "Theme Corporate preview URL output dark"
             }
         ],
         "categories": ["frontend", "themes"]

@@ -61,6 +61,7 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
             ],
             assets: ['css' => 'vendor/capell/themes/local-services.css'],
             runtime: FrontendRuntime::Blade,
+            // Theme Studio uses "default" as the runtime inheritance key; capell.json records the Foundation package dependency.
             extends: 'default',
         );
     }

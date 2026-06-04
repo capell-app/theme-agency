@@ -1,6 +1,6 @@
 {
     "name": "capell-app/theme-portfolio",
-    "description": "Creator and consultant portfolio theme for work, case studies, services, media kits, and newsletters.",
+    "description": "A premium portfolio theme for creators and consultants — turn selected work into outcome-driven case studies, sell your services and media kit, and grow your audience from one polished site.",
     "type": "library",
     "license": "MIT",
     "require": {

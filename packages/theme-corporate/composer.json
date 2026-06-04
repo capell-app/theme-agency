@@ -1,6 +1,6 @@
 {
     "name": "capell-app/theme-corporate",
-    "description": "Trust-led corporate theme for Capell",
+    "description": "A restrained, trust-led website theme for B2B, professional-services, and public-sector organisations — formal hierarchy, board-grade proof blocks, and six palette presets out of the box.",
     "type": "library",
     "license": "MIT",
     "require": {

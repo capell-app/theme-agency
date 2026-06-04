@@ -1,6 +1,6 @@
 {
     "name": "capell-app/theme-healthcare",
-    "description": "Editorial healthcare theme for Capell",
+    "description": "A premium, appointment-led theme for private clinics and healthcare groups — service discovery, clinician profiles, care pathways, locations, and a booking-ready enquiry panel, all WCAG-minded and brand-tunable in Theme Studio.",
     "type": "library",
     "license": "MIT",
     "require": {
@@ -34,7 +34,19 @@
         "capell",
         "cms",
         "laravel",
-        "theme"
+        "theme",
+        "healthcare",
+        "clinic",
+        "medical",
+        "appointments",
+        "booking",
+        "clinicians",
+        "patient acquisition",
+        "care pathways",
+        "accessibility",
+        "WCAG",
+        "dental physiotherapy",
+        "Capell theme"
     ],
     "authors": [
         {

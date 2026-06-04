@@ -64,6 +64,7 @@ class CommerceThemeServiceProvider extends ServiceProvider
             ],
             assets: ['css' => 'vendor/capell/themes/commerce.css'],
             runtime: FrontendRuntime::Blade,
+            // Foundation Theme registers the runtime inheritance key as "default"; capell.json records the package dependency.
             extends: 'default',
         );
     }

@@ -6,7 +6,7 @@
     "kind": "theme",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Theme Commerce registers the commerce theme key and image-led retail renderer views for catalog and conversion pages.",
+    "description": "Editorial Commerce is a premium Capell theme built for retail and e-commerce storefronts that need to feel like a buying journey, not a styled brochure. It ships an image-led hero, product finder, collection and product grids, comparison and proof sections, buying-guide editorial, and conversion CTAs — all driven by hydrated render data with zero database access in public Blade. Pair it with Capell Shopify Commerce to light up connected-catalog merchandising panels, and with Blog for buying-guide content that supports purchase decisions. Warm editorial direction (deep ink, forest-green merchandising, coral action accents) and a token-driven design system keep every store on-brand while staying fast and accessible.",
     "product": {
         "group": "Capell Themes",
         "tier": "premium",
@@ -16,7 +16,12 @@
     "surfaces": ["frontend"],
     "dependencies": {
         "requires": ["capell-app/core", "capell-app/foundation-theme"],
-        "supports": ["capell-app/blog", "capell-app/shopify-commerce"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/campaign-studio",
+            "capell-app/media-library",
+            "capell-app/shopify-commerce"
+        ],
         "conflicts": []
     },
     "providers": {
@@ -82,7 +87,8 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Retail buying-path theme screenshots from route-backed demo layouts.",
+        "summary": "A premium, conversion-focused retail theme for Capell — image-led catalog, product discovery, social proof, and buying-guide layouts that turn browsing into baskets.",
+        "description": "Editorial Commerce is a premium Capell theme built for retail and e-commerce storefronts that need to feel like a buying journey, not a styled brochure. It ships an image-led hero, product finder, collection and product grids, comparison and proof sections, buying-guide editorial, and conversion CTAs — all driven by hydrated render data with zero database access in public Blade. Pair it with Capell Shopify Commerce to light up connected-catalog merchandising panels, and with Blog for buying-guide content that supports purchase decisions. Warm editorial direction (deep ink, forest-green merchandising, coral action accents) and a token-driven design system keep every store on-brand while staying fast and accessible.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
@@ -90,29 +96,14 @@
                 "caption": "Theme Commerce extension preview"
             },
             {
-                "path": "docs/assets/marketplace/commerce-buying-guide-layout.svg",
-                "alt": "Theme Commerce Buying Guide Layout image",
-                "caption": "Theme Commerce Buying Guide Layout"
+                "path": "docs/assets/marketplace/hero-desktop.jpg",
+                "alt": "Theme Commerce Hero Desktop image",
+                "caption": "Theme Commerce Hero Desktop"
             },
             {
-                "path": "docs/assets/marketplace/commerce-campaign-layout.svg",
-                "alt": "Theme Commerce Campaign Layout image",
-                "caption": "Theme Commerce Campaign Layout"
-            },
-            {
-                "path": "docs/assets/marketplace/commerce-collection-layout.svg",
-                "alt": "Theme Commerce Collection Layout image",
-                "caption": "Theme Commerce Collection Layout"
-            },
-            {
-                "path": "docs/assets/marketplace/commerce-homepage-layout.svg",
-                "alt": "Theme Commerce Homepage Layout image",
-                "caption": "Theme Commerce Homepage Layout"
-            },
-            {
-                "path": "docs/assets/marketplace/commerce-lookbook-layout.svg",
-                "alt": "Theme Commerce Lookbook Layout image",
-                "caption": "Theme Commerce Lookbook Layout"
+                "path": "docs/assets/marketplace/hero-mobile.jpg",
+                "alt": "Theme Commerce Hero Mobile image",
+                "caption": "Theme Commerce Hero Mobile"
             }
         ],
         "categories": ["frontend", "themes"]

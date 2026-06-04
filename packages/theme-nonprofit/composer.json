@@ -1,6 +1,6 @@
 {
     "name": "capell-app/theme-nonprofit",
-    "description": "Impact-led civic and charity theme for campaigns, donations, volunteering, and community stories.",
+    "description": "A premium charity, NGO, and civic theme that moves visitors from your mission to a clear support action — donate, volunteer, or follow — with impact proof, live campaign progress, and transparent annual-report sections built in.",
     "type": "library",
     "license": "MIT",
     "require": {

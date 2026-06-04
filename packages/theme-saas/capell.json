@@ -6,7 +6,7 @@
     "kind": "theme",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Theme SaaS registers the saas theme key and product-focused renderer views for software and subscription sites.",
+    "description": "Theme SaaS gives software and subscription businesses a product-led storefront out of the box: an activation-first hero, metric and logo proof, a plan-comparison and pricing layout, an ROI calculator, docs onboarding, and a demo-request flow — all rendered from portable Capell content with no presentation markup stored in your pages. It extends Foundation Theme, so your content stays clean while this theme owns the conversion layout, palette, and rhythm. Pairs with Form Builder for live demo/trial capture and Document Lifecycle for in-theme docs, and reads brand tokens so the SaaS preset re-skins the whole site. Built on Blade + Tailwind, cache-safe, and translation-ready.",
     "product": {
         "group": "Capell Themes",
         "tier": "premium",
@@ -80,37 +80,38 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Product workflow and activation theme screenshots from route-backed demo layouts.",
+        "summary": "A conversion-focused premium theme for software and subscription products — hero, feature proof, pricing comparison, calculator, docs, and demo-request sections that turn a Capell site into a product-led landing experience.",
+        "description": "Theme SaaS gives software and subscription businesses a product-led storefront out of the box: an activation-first hero, metric and logo proof, a plan-comparison and pricing layout, an ROI calculator, docs onboarding, and a demo-request flow — all rendered from portable Capell content with no presentation markup stored in your pages. It extends Foundation Theme, so your content stays clean while this theme owns the conversion layout, palette, and rhythm. Pairs with Form Builder for live demo/trial capture and Document Lifecycle for in-theme docs, and reads brand tokens so the SaaS preset re-skins the whole site. Built on Blade + Tailwind, cache-safe, and translation-ready.",
         "screenshots": [
             {
-                "path": "docs/assets/marketplace/extension-card.jpg",
-                "alt": "Theme Saas extension preview image",
-                "caption": "Theme Saas extension preview"
+                "path": "docs/screenshots/frontend-page-rendered-with-saas-theme.png",
+                "alt": "Theme SaaS frontend page rendered with the SaaS theme",
+                "caption": "Theme SaaS frontend render"
             },
             {
-                "path": "docs/assets/marketplace/saas-blog-layout.svg",
-                "alt": "Theme Saas Blog Layout image",
-                "caption": "Theme Saas Blog Layout"
+                "path": "docs/screenshots/frontend-page-rendered-with-saas-theme-dark.png",
+                "alt": "Theme SaaS frontend page rendered with the SaaS theme dark capture",
+                "caption": "Theme SaaS frontend render dark"
             },
             {
-                "path": "docs/assets/marketplace/saas-campaign-layout.svg",
-                "alt": "Theme Saas Campaign Layout image",
-                "caption": "Theme Saas Campaign Layout"
+                "path": "docs/screenshots/theme-preset-selection-showing-saas.png",
+                "alt": "Theme SaaS preset selection showing SaaS presets",
+                "caption": "Theme SaaS preset selection"
             },
             {
-                "path": "docs/assets/marketplace/saas-demo-request-layout.svg",
-                "alt": "Theme Saas Demo Request Layout image",
-                "caption": "Theme Saas Demo Request Layout"
+                "path": "docs/screenshots/theme-preset-selection-showing-saas-dark.png",
+                "alt": "Theme SaaS preset selection dark capture",
+                "caption": "Theme SaaS preset selection dark"
             },
             {
-                "path": "docs/assets/marketplace/saas-docs-layout.svg",
-                "alt": "Theme Saas Docs Layout image",
-                "caption": "Theme Saas Docs Layout"
+                "path": "docs/screenshots/theme-preview-url-output.png",
+                "alt": "Theme SaaS preview URL output",
+                "caption": "Theme SaaS preview URL output"
             },
             {
-                "path": "docs/assets/marketplace/saas-feature-layout.svg",
-                "alt": "Theme Saas Feature Layout image",
-                "caption": "Theme Saas Feature Layout"
+                "path": "docs/screenshots/theme-preview-url-output-dark.png",
+                "alt": "Theme SaaS preview URL output dark capture",
+                "caption": "Theme SaaS preview URL output dark"
             }
         ],
         "categories": ["frontend", "themes"]

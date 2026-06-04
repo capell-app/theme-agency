@@ -1,6 +1,6 @@
 {
     "name": "capell-app/url-manager",
-    "description": "Managed redirects and URL opportunity tracking for Capell",
+    "description": "Stop losing traffic to broken links — manage redirects, auto-preserve moved page URLs, and turn repeated 404s into recovered SEO.",
     "keywords": [
         "capell",
         "redirects",

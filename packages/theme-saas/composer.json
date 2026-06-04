@@ -1,6 +1,6 @@
 {
     "name": "capell-app/theme-saas",
-    "description": "Conversion-led SaaS theme for Capell",
+    "description": "A conversion-focused premium theme for software and subscription products — hero, feature proof, pricing comparison, calculator, docs, and demo-request sections that turn a Capell site into a product-led landing experience.",
     "type": "library",
     "license": "MIT",
     "require": {

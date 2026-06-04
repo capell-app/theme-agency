@@ -21,7 +21,9 @@
             "capell-app/frontend-authoring",
             "capell-app/publishing-studio",
             "capell-app/seo-suite",
-            "capell-app/blog"
+            "capell-app/blog",
+            "capell-app/search",
+            "capell-app/newsletter"
         ],
         "conflicts": []
     },
@@ -82,27 +84,13 @@
         }
     ],
     "marketplace": {
-        "summary": "Research and archive theme screenshots from route-backed demo layouts.",
+        "summary": "A premium knowledge-base and documentation theme for Capell — sidebar-navigated articles, in-page table of contents, prominent search, and clean code blocks out of the box.",
+        "description": "Theme Knowledge turns a Capell site into a polished documentation and help centre. It pairs a category sidebar, sticky table of contents, and breadcrumb trails with a prominent search experience and readable long-form typography, so visitors find answers fast. Resource libraries, author bios, topic hubs, and newsletter capture round out a full knowledge-marketing surface, with optional Blog, Search, and Newsletter integrations lighting up automatically when those packages are installed. Built on the Capell foundation theme with a configurable colour palette and accessible focus states. (Note: the sidebar/TOC/breadcrumb/code-block/functional-search claims require the §3 work before this copy is truthful.)",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Theme Knowledge extension preview image",
                 "caption": "Theme Knowledge extension preview"
-            },
-            {
-                "path": "docs/assets/marketplace/knowledge-docs-layout.svg",
-                "alt": "Theme Knowledge Docs Layout image",
-                "caption": "Theme Knowledge Docs Layout"
-            },
-            {
-                "path": "docs/assets/marketplace/knowledge-homepage-layout.svg",
-                "alt": "Theme Knowledge Homepage Layout image",
-                "caption": "Theme Knowledge Homepage Layout"
-            },
-            {
-                "path": "docs/assets/marketplace/knowledge-search-layout.svg",
-                "alt": "Theme Knowledge Search Layout image",
-                "caption": "Theme Knowledge Search Layout"
             },
             {
                 "path": "docs/assets/marketplace/hero-desktop.jpg",

@@ -1,6 +1,6 @@
 {
     "name": "capell-app/theme-commerce",
-    "description": "Editorial commerce theme for Capell",
+    "description": "A premium, conversion-focused retail theme for Capell — image-led catalog, product discovery, social proof, and buying-guide layouts that turn browsing into baskets.",
     "type": "library",
     "license": "MIT",
     "require": {
@@ -34,7 +34,18 @@
         "capell",
         "cms",
         "laravel",
-        "theme"
+        "theme",
+        "ecommerce",
+        "retail",
+        "storefront",
+        "product grid",
+        "catalog",
+        "conversion",
+        "shopify",
+        "buying guide",
+        "lookbook",
+        "merchandising",
+        "collections"
     ],
     "authors": [
         {

@@ -20,6 +20,10 @@ it('declares URL Manager owned models and protected tables', function (): void {
     );
 
     expect((new RedirectRule)->getTable())->toBe('url_manager_redirect_rules')
+        ->and($manifest['description'])->toContain("site's link equity")
+        ->and($manifest['marketplace']['summary'])->toBe('Stop losing traffic to broken links — manage redirects, auto-preserve moved page URLs, and turn repeated 404s into recovered SEO.')
+        ->and($manifest['marketplace']['description'])->toContain('CSV import/export for bulk migrations')
+        ->and($manifest['marketplace']['screenshots'])->toHaveCount(8)
         ->and((new RedirectHit)->getTable())->toBe('url_manager_redirect_hits')
         ->and((new NotFoundOpportunity)->getTable())->toBe('url_manager_not_found_opportunities')
         ->and($manifest['database']['requiredTables'])->toBe([

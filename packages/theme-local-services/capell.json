@@ -82,7 +82,8 @@
         }
     ],
     "marketplace": {
-        "summary": "Local service and booking-path theme screenshots from route-backed demo layouts.",
+        "summary": "A conversion-first Capell theme for local trades, clinics, and service businesses — built around quote requests, service-area coverage, and click-to-call trust.",
+        "description": "Theme Local Services turns visitors into booked jobs. It ships hero, services, service-area, locality-proof, quote-estimator, case-study, and contact sections tuned for plumbers, electricians, salons, cleaners, and clinics, with a teal/amber palette and a quote desk front-and-centre. Optional Form Builder and Blog integrations upgrade the enquiry form and resources feed when those packages are installed, and the theme inherits foundation navigation, footer, and SEO. Drop in your services and coverage areas and launch a credible local-business site in minutes.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
