@@ -6,8 +6,11 @@ use Capell\CustomerPortal\Contracts\PortalDashboardItemProvider;
 use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
 use Capell\CustomerPortal\Data\PortalDashboardItemData;
 use Capell\CustomerPortal\Data\PortalSelfServiceItemData;
+use Capell\CustomerPortal\Enums\PortalAccountStatus;
 use Capell\CustomerPortal\Enums\PortalDashboardItemPriority;
 use Capell\CustomerPortal\Enums\PortalSelfServiceItemType;
+use Capell\CustomerPortal\Enums\SupportRequestPriority;
+use Capell\CustomerPortal\Enums\SupportRequestStatus;
 use Capell\CustomerPortal\Models\PortalAccount;
 use Capell\CustomerPortal\Models\PortalSupportRequest;
 use Capell\CustomerPortal\Support\PortalDashboardItemRegistry;
@@ -138,3 +141,74 @@ it('submits authenticated support requests from the frontend', function (): void
         ->and($supportRequest->source)->toBe('customer-portal')
         ->and($supportRequest->requester_email)->toBe('morgan@example.test');
 });
+
+it('only renders support requests for the authenticated portal account', function (): void {
+    $siteId = $this->createCustomerPortalSite();
+    $user = customerPortalUser();
+
+    $ownAccount = PortalAccount::query()->create([
+        'site_id' => $siteId,
+        'owner_type' => $user->getMorphClass(),
+        'owner_id' => $user->getKey(),
+        'email' => 'morgan@example.test',
+        'display_name' => 'Morgan Customer',
+        'status' => PortalAccountStatus::Active->value,
+    ]);
+    $otherAccount = PortalAccount::query()->create([
+        'site_id' => $siteId,
+        'email' => 'other-customer@example.test',
+        'display_name' => 'Other Customer',
+        'status' => PortalAccountStatus::Active->value,
+    ]);
+
+    PortalSupportRequest::query()->create([
+        'site_id' => $siteId,
+        'portal_account_id' => $ownAccount->getKey(),
+        'status' => SupportRequestStatus::Open->value,
+        'priority' => SupportRequestPriority::Normal->value,
+        'subject' => 'Own account support request',
+        'message' => 'Visible own account message.',
+        'requester_email' => 'morgan@example.test',
+        'source' => 'customer-portal',
+    ]);
+    PortalSupportRequest::query()->create([
+        'site_id' => $siteId,
+        'portal_account_id' => $otherAccount->getKey(),
+        'status' => SupportRequestStatus::Open->value,
+        'priority' => SupportRequestPriority::Normal->value,
+        'subject' => 'Other account support request',
+        'message' => 'Confidential other account message.',
+        'requester_email' => 'other-customer@example.test',
+        'source' => 'customer-portal',
+    ]);
+
+    $response = $this->actingAs($user)
+        ->get(route('capell-customer-portal.dashboard'));
+
+    $response
+        ->assertOk()
+        ->assertSee('Own account support request')
+        ->assertDontSee('Other account support request')
+        ->assertDontSee('Confidential other account message');
+});
+
+it('blocks suspended and archived portal accounts from frontend workflows', function (PortalAccountStatus $status): void {
+    $siteId = $this->createCustomerPortalSite();
+    $user = customerPortalUser();
+
+    PortalAccount::query()->create([
+        'site_id' => $siteId,
+        'owner_type' => $user->getMorphClass(),
+        'owner_id' => $user->getKey(),
+        'email' => 'morgan@example.test',
+        'display_name' => 'Morgan Customer',
+        'status' => $status->value,
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('capell-customer-portal.dashboard'))
+        ->assertForbidden();
+})->with([
+    PortalAccountStatus::Suspended,
+    PortalAccountStatus::Archived,
+]);

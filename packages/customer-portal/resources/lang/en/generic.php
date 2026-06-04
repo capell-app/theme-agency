@@ -57,6 +57,7 @@ return [
         'support' => 'Support',
     ],
     'frontend' => [
+        'account_unavailable' => 'This customer portal account is not available.',
         'customer' => 'Customer',
         'dashboard_items' => 'Your portal',
         'event_reminders' => 'Event reminders',

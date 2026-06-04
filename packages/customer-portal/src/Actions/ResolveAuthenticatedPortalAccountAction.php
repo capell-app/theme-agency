@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Capell\CustomerPortal\Actions;
 
 use Capell\CustomerPortal\Data\PortalAccountIdentityData;
+use Capell\CustomerPortal\Enums\PortalAccountStatus;
 use Capell\CustomerPortal\Models\PortalAccount;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -22,13 +24,26 @@ class ResolveAuthenticatedPortalAccountAction
 
     public function handle(Authenticatable $user): PortalAccount
     {
-        return FindOrCreatePortalAccountAction::run(new PortalAccountIdentityData(
+        $portalAccount = FindOrCreatePortalAccountAction::run(new PortalAccountIdentityData(
             siteId: $this->siteId(),
             email: $this->email($user),
             displayName: $this->displayName($user),
             ownerType: $this->ownerType($user),
             ownerId: $this->ownerId($user),
         ));
+
+        $this->authorizeActiveAccount($portalAccount);
+
+        return $portalAccount;
+    }
+
+    private function authorizeActiveAccount(PortalAccount $portalAccount): void
+    {
+        if ($portalAccount->status === PortalAccountStatus::Active) {
+            return;
+        }
+
+        throw new AuthorizationException(__('capell-customer-portal::generic.frontend.account_unavailable'));
     }
 
     private function siteId(): int

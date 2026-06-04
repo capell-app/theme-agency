@@ -4,6 +4,11 @@ All notable changes to `capell-app/customer-portal` will be documented in this f
 
 ## Unreleased
 
+### 2026-06-04
+
+- Added frontend account-isolation coverage proving one portal account cannot see another account's support requests on the same site.
+- Enforced `PortalAccountStatus` in the authenticated account resolver so suspended and archived portal accounts receive a forbidden response before dashboard, preference, or support workflows run.
+
 ### 2026-06-03
 
 - Scoped the admin support-request triage resource to the current actor's assigned sites so one site's admin can no longer read another site's decrypted support requests on a multi-site install.
