@@ -4,12 +4,12 @@
 
 ## Current Scope
 
-The current repository contains 55 package improvement plans. Their roadmap rows currently total:
+The current repository contains 56 package improvement plans. Their roadmap rows currently total:
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 268 |
-| Next   | 312 |
+| Now    | 263 |
+| Next   | 313 |
 | Later  | 207 |
 
 The work is not complete until every package plan has been reviewed against current code, required features are implemented or intentionally deferred, new behavior is documented, and focused verification passes for each changed package.
@@ -31,7 +31,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | campaign-studio | 0 | 4 | 5 | Now closed | `7e8accb2e` moves three rows from Now to shipped: `Harden overview conversion-rate join (null/duplicate utm_campaign)`, `Configurable attribution lookback window`, and `In-package A/B variant results readout (lift per variant)`. Continue with scheduling automation, revenue/ROAS, audience targeting, anonymous/no-identity dedup policy, experiment decoupling, and completion review. |
 | comments | 1 | 0 | 0 | Slice committed | Row-by-row review on 2026-06-04 leaves one Now row open: runtime PNG captures from `docs/screenshots.json`. The comments-only screenshot-runner dry run passes, but real local capture is blocked before package screenshots by the external screenshot app failing package discovery for `Capell\ContentBlocks\Providers\ContentBlocksServiceProvider`; no comments runtime PNGs exist under `packages/comments/docs/screenshots/`. Prior slice added illustrated marketplace gallery assets, public Like reactions, aggregate public reaction counts, approved-reply author notifications, and tokenized reply-notification opt-out handling. |
 | contacts | 0 | 7 | 2 | Slice committed | Current follow-ups expose audited privacy export/anonymization and queue/isolate all source-adapter listeners. Contacts has no Now rows left, but still needs Next/Later CRM depth work and a full package completion review before it can be marked Complete. |
-| content-sections | 5 | 6 | 4 | Slice committed | `54b758fe1` landed readiness fixes; continue with remaining render safety/content rows. |
+| content-sections | 0 | 7 | 4 | Now closed | `df230b604` reconciles the package plan after `54b758fe1` by moving five committed Now rows to Done: editor HTML sanitisation, anonymous public-output sanitisation tests, real `ContentSectionsHealthCheck`, `svg()` icon allow-list validation, and manifest accuracy for contributions/permissions/tables/surfaces. Explicit authenticated non-admin public-safety assertions remain open as Next work. Continue with render budget, cache invalidation, orphaned `simple-list`, marketplace screenshots/copy, stale docs cleanup, and completion review. |
 | customer-portal | 0 | 2 | 3 | Slice committed | Current follow-up adds same-site frontend account-isolation coverage, blocks suspended/archived accounts, adds package factories for portal accounts/support requests, covers unauthenticated/throttled frontend paths, wires `portal-profile` through an Action/rendered dashboard section, adds support request events/requester notifications, replaces placeholder frontend performance budgets, adds the package README, and schema-drives portal preferences. Continue with provider fan-out, marketplace screenshots/copy, Later rows, and a package completion review before marking Complete. |
 | dashboard-reports | 1 | 2 | 3 | Slice committed | `f942d08c4` adds committed marketplace gallery assets for all required dashboard-reports screenshot targets and package coverage proving the manifest/gallery contract. Runtime deployment PNG captures from `docs/screenshots.json` remain open; local runner capture is blocked by the screenshot app requiring missing `capell-app/content-blocks`. Continue with CSV export, scheduled digest, report registry, range-aware bucketing, theme-token chart colours, and completion review. |
 | demo-kit | 5 | 6 | 4 | Slice committed | Current follow-up expands the Kitchen Sink fixture to the full Layout Builder catalog with parent/sibling/child page context and page-selection widget assets, after `aa2d02c4c` fixed seed fanout. Continue with missing package demo-command reporting, Diagnostics-surfaced demo health, screenshot baselines, resettable seeding, and safety rows. |
