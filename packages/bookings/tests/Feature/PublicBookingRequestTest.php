@@ -4,15 +4,25 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../Pest.php';
 
+use Capell\Bookings\Actions\BuildAvailableBookingSlotsAction;
+use Capell\Bookings\Actions\BuildPublicBookingRequestPropsAction;
 use Capell\Bookings\Actions\CreateStaffCalendarFeedUrlAction;
+use Capell\Bookings\Contracts\PublicBookingRequestRenderer;
 use Capell\Bookings\Enums\AppointmentRequestStatusEnum;
 use Capell\Bookings\Enums\BookingAvailabilityStatusEnum;
 use Capell\Bookings\Models\AppointmentRequest;
+use Capell\Bookings\Models\BookingAvailabilityException;
 use Capell\Bookings\Models\BookingAvailabilityWindow;
 use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
 use Carbon\CarbonImmutable;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+afterEach(function (): void {
+    CarbonImmutable::setTestNow();
+});
 
 it('renders a public booking request form without exposing admin internals', function (): void {
     BookingService::factory()->create(['name' => 'Consultation']);
@@ -36,6 +46,113 @@ it('renders a public booking request form without exposing admin internals', fun
         ->assertDontSee('BookingServiceResource', false)
         ->assertDontSee('admin', false)
         ->assertDontSee('signed', false);
+});
+
+it('allows the public booking request renderer to be replaced', function (): void {
+    $this->app->bind(PublicBookingRequestRenderer::class, static fn (): PublicBookingRequestRenderer => new class implements PublicBookingRequestRenderer
+    {
+        public function render(Request $request): Response
+        {
+            return new Response('Custom booking request renderer');
+        }
+    });
+
+    $this->get(route('capell-bookings.request'))
+        ->assertOk()
+        ->assertSee('Custom booking request renderer');
+});
+
+it('builds hydrated public booking request props with available slots', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-06-01 08:00:00', 'Europe/London'));
+    config()->set('capell-bookings.public_slot_interval_minutes', 30);
+
+    $service = BookingService::factory()->create([
+        'duration_minutes' => 30,
+        'lead_time_minutes' => 0,
+        'buffer_before_minutes' => 0,
+        'buffer_after_minutes' => 0,
+        'max_future_days' => 7,
+    ]);
+    $staffMember = BookingStaffMember::factory()->create();
+    $location = BookingLocation::factory()->create();
+    $startsAt = CarbonImmutable::parse('2026-06-03 10:00:00', 'Europe/London');
+
+    BookingAvailabilityWindow::factory()->create([
+        'service_id' => $service->getKey(),
+        'staff_member_id' => $staffMember->getKey(),
+        'location_id' => $location->getKey(),
+        'day_of_week' => $startsAt->dayOfWeek,
+        'starts_at' => '10:00:00',
+        'ends_at' => '11:00:00',
+        'timezone' => 'Europe/London',
+        'capacity' => 2,
+        'status' => BookingAvailabilityStatusEnum::Available,
+    ]);
+
+    AppointmentRequest::factory()->create([
+        'service_id' => $service->getKey(),
+        'staff_member_id' => $staffMember->getKey(),
+        'location_id' => $location->getKey(),
+        'status' => AppointmentRequestStatusEnum::Confirmed,
+        'requested_starts_at' => $startsAt,
+        'requested_ends_at' => $startsAt->addMinutes(30),
+        'timezone' => 'Europe/London',
+    ]);
+
+    $request = Request::create('/bookings', 'GET', [
+        'service_id' => $service->getKey(),
+        'staff_member_id' => $staffMember->getKey(),
+        'location_id' => $location->getKey(),
+        'timezone' => 'Europe/London',
+    ]);
+
+    $props = BuildPublicBookingRequestPropsAction::run($request, false);
+
+    expect($props['postUrl'])->toBe(route('capell-bookings.request.store'))
+        ->and($props['timezone'])->toBe('Europe/London')
+        ->and($props['timezoneOptions'])->toContain('Europe/London')
+        ->and($props['options']['services'])->toHaveCount(1)
+        ->and($props['slots'])->toHaveCount(2)
+        ->and($props['slots'][0]['starts_at'])->toBe($startsAt->toIso8601String())
+        ->and($props['slots'][0]['capacity_remaining'])->toBe(1)
+        ->and($props['slots'][1]['capacity_remaining'])->toBe(2);
+});
+
+it('builds slots from date-specific available exceptions without weekly windows', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-06-01 08:00:00', 'Europe/London'));
+    config()->set('capell-bookings.public_slot_interval_minutes', 30);
+
+    $service = BookingService::factory()->create([
+        'duration_minutes' => 30,
+        'lead_time_minutes' => 0,
+        'buffer_before_minutes' => 0,
+        'buffer_after_minutes' => 0,
+        'max_future_days' => 7,
+    ]);
+    $startsAt = CarbonImmutable::parse('2026-06-06 10:00:00', 'Europe/London');
+
+    BookingAvailabilityException::factory()->create([
+        'service_id' => $service->getKey(),
+        'staff_member_id' => null,
+        'location_id' => null,
+        'status' => BookingAvailabilityStatusEnum::Available,
+        'date' => $startsAt,
+        'starts_at' => '10:00:00',
+        'ends_at' => '11:00:00',
+        'timezone' => 'Europe/London',
+        'capacity' => 1,
+    ]);
+
+    $slots = BuildAvailableBookingSlotsAction::run(
+        serviceId: (int) $service->getKey(),
+        timezone: 'Europe/London',
+        from: $startsAt->startOfDay(),
+        days: 1,
+    );
+
+    expect($slots)->toHaveCount(2)
+        ->and($slots[0]['starts_at'])->toBe($startsAt->toIso8601String())
+        ->and($slots[1]['starts_at'])->toBe($startsAt->addMinutes(30)->toIso8601String());
 });
 
 it('stores public appointment requests through the booking action', function (): void {

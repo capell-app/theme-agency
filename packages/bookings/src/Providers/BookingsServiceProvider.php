@@ -7,7 +7,9 @@ namespace Capell\Bookings\Providers;
 use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Bookings\Console\SendDueAppointmentRemindersCommand;
+use Capell\Bookings\Contracts\PublicBookingRequestRenderer;
 use Capell\Bookings\Enums\ResourceEnum;
+use Capell\Bookings\Rendering\BladePublicBookingRequestRenderer;
 use Capell\Bookings\Support\BookingsModelRegistrar;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
@@ -54,6 +56,8 @@ class BookingsServiceProvider extends AbstractPackageServiceProvider
 
     public function registeringPackage(): void
     {
+        $this->app->bindIf(PublicBookingRequestRenderer::class, BladePublicBookingRequestRenderer::class);
+
         $this->app->booted(function (): void {
             if (! $this->isPackageInstalled()) {
                 return;

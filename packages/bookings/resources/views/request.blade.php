@@ -152,7 +152,7 @@
             @else
                 <form
                     method="post"
-                    action="{{ route('capell-bookings.request.store') }}"
+                    action="{{ $postUrl }}"
                 >
                     @csrf
                     <div class="grid">
@@ -235,10 +235,10 @@
                                 name="timezone"
                                 required
                             >
-                                @foreach (DateTimeZone::listIdentifiers() as $timezoneIdentifier)
+                                @foreach ($timezoneOptions as $timezoneIdentifier)
                                     <option
                                         value="{{ $timezoneIdentifier }}"
-                                        @selected(old('timezone', 'Europe/London') === $timezoneIdentifier)
+                                        @selected(old('timezone', $timezone) === $timezoneIdentifier)
                                     >
                                         {{ $timezoneIdentifier }}
                                     </option>

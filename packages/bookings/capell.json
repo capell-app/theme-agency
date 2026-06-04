@@ -105,7 +105,10 @@
         "cancelAppointmentRequest": "Capell\\Bookings\\Actions\\CancelAppointmentRequestAction",
         "queueAppointmentReminder": "Capell\\Bookings\\Actions\\QueueAppointmentReminderAction",
         "createStaffCalendarFeedUrl": "Capell\\Bookings\\Actions\\CreateStaffCalendarFeedUrlAction",
-        "buildStaffCalendarFeed": "Capell\\Bookings\\Actions\\BuildStaffCalendarFeedAction"
+        "buildStaffCalendarFeed": "Capell\\Bookings\\Actions\\BuildStaffCalendarFeedAction",
+        "buildPublicBookingRequestOptions": "Capell\\Bookings\\Actions\\BuildPublicBookingRequestOptionsAction",
+        "buildPublicBookingRequestProps": "Capell\\Bookings\\Actions\\BuildPublicBookingRequestPropsAction",
+        "buildAvailableBookingSlots": "Capell\\Bookings\\Actions\\BuildAvailableBookingSlotsAction"
     },
     "settings": [],
     "permissions": [

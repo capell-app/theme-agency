@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Capell\Bookings\Health;
 
+use Capell\Bookings\Actions\BuildAvailableBookingSlotsAction;
 use Capell\Bookings\Actions\BuildPublicBookingRequestOptionsAction;
+use Capell\Bookings\Actions\BuildPublicBookingRequestPropsAction;
 use Capell\Bookings\Actions\BuildStaffCalendarFeedAction;
 use Capell\Bookings\Actions\CancelAppointmentRequestAction;
 use Capell\Bookings\Actions\ConfirmAppointmentRequestAction;
@@ -27,6 +29,8 @@ final class BookingsHealthCheck implements ChecksExtensionHealth
     /** @var list<class-string> */
     private const array ACTIONS = [
         BuildPublicBookingRequestOptionsAction::class,
+        BuildPublicBookingRequestPropsAction::class,
+        BuildAvailableBookingSlotsAction::class,
         BuildStaffCalendarFeedAction::class,
         CancelAppointmentRequestAction::class,
         ConfirmAppointmentRequestAction::class,
