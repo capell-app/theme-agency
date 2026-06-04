@@ -29,8 +29,6 @@ final class RecordDocumentAcceptanceAction
         ?string $userAgent = null,
     ): DocumentAcceptance {
         $acceptedAt ??= now();
-        $ipAddress ??= request()->ip();
-        $userAgent ??= request()->userAgent();
         $publication = ResolveLatestDocumentPublicationAction::run($documentKey);
         $documentVersion = $publication instanceof DocumentPublication
             ? $publication->version_label

@@ -71,7 +71,7 @@ Mapped to `capabilities[]`: `document-lifecycle`, `document-lifecycle-admin`, `d
 | Real health-check `report()` Action + health test                         | Now    | M      | High   | §2, §3, §4  |
 | Reconcile `frontend` surface: drop it or ship safe consent component      | Now    | S→L    | High   | §3, §4      |
 | Capture 4 admin screenshots; sync `marketplace.screenshots[]` to manifest | Now    | S      | High   | §1, §5      |
-| Make `RecordDocumentAcceptanceAction` request-context-pure (ip/UA params) | Now    | S      | Med    | §2, §4      |
+| Make `RecordDocumentAcceptanceAction` request-context-pure (ip/UA params) | Done   | S      | Med    | §2, §4      |
 | Fix asymmetric `legal_acceptances` migration `down()` + rollback test     | Now    | S      | Med    | §2, §4      |
 | Rewrite manifest `summary` + composer `description`                       | Now    | S      | Med    | §5          |
 | Admin lifecycle Actions (Publish / Archive / Record acceptance buttons)   | Done   | M      | High   | §3          |
