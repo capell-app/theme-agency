@@ -239,6 +239,69 @@ it('renders new premium knowledge layouts through the registry', function (): vo
         ->not->toContain('capell-app/theme-knowledge');
 });
 
+it('renders translated and data-driven knowledge author and topic sections', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(KnowledgeThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new KnowledgeThemeServiceProvider($this->app))->boot($registry);
+
+    $authorsRenderer = $registry->sectionRenderer('knowledge', 'authors');
+    $topicHubsRenderer = $registry->sectionRenderer('knowledge', 'topic-hubs');
+
+    assert($authorsRenderer instanceof SectionRenderer);
+    assert($topicHubsRenderer instanceof SectionRenderer);
+
+    $defaultAuthorsHtml = $authorsRenderer->render(knowledgeThemeSection('authors', [
+        'heading' => 'Knowledge authors',
+    ]));
+
+    $customAuthorsHtml = $authorsRenderer->render(knowledgeThemeSection('authors', [
+        'heading' => 'Specialist authors',
+        'items' => [
+            ['title' => 'Docs Engineering', 'summary' => 'Maintains API references and release notes.'],
+            ['name' => 'Support Research', 'description' => 'Turns support evidence into reader paths.'],
+        ],
+    ]));
+
+    $defaultTopicsHtml = $topicHubsRenderer->render(knowledgeThemeSection('topic-hubs', [
+        'heading' => 'Topic hubs',
+    ]));
+
+    $customTopicsHtml = $topicHubsRenderer->render(knowledgeThemeSection('topic-hubs', [
+        'heading' => 'Documentation routes',
+        'items' => [
+            ['title' => 'API Guides', 'summary' => 'Endpoint walkthroughs and integration patterns.'],
+            ['name' => 'Release Notes', 'description' => 'Version changes and upgrade guidance.'],
+        ],
+    ]));
+
+    expect($defaultAuthorsHtml)
+        ->toContain('Knowledge authors')
+        ->toContain('Editorial Team')
+        ->toContain('Subject-matter writing and review teams.');
+
+    expect($customAuthorsHtml)
+        ->toContain('Specialist authors')
+        ->toContain('Docs Engineering')
+        ->toContain('Support Research')
+        ->not->toContain('Editorial Team')
+        ->not->toContain('Growth Ops');
+
+    expect($defaultTopicsHtml)
+        ->toContain('Topic hubs')
+        ->toContain('Strategy')
+        ->toContain('Design systems')
+        ->toContain('Decision records, positioning notes, and planning guides.');
+
+    expect($customTopicsHtml)
+        ->toContain('Documentation routes')
+        ->toContain('API Guides')
+        ->toContain('Release Notes')
+        ->not->toContain('Growth library')
+        ->not->toContain('Operations');
+});
+
 /**
  * @param  array<string, mixed>  $viewData
  */

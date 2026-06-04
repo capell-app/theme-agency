@@ -68,3 +68,11 @@ it('keeps public Blade free of database query calls', function (): void {
         ->not->toContain('->media->')
         ->not->toContain('find(');
 });
+
+it('keeps optional package checks out of public Blade', function (): void {
+    $blade = knowledgeThemeBladeViews();
+
+    expect($blade)
+        ->not->toContain('CapellCore::')
+        ->not->toContain('isPackageInstalled(');
+});

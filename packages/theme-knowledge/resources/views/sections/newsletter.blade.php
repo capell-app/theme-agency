@@ -1,7 +1,5 @@
 @php
-    use Capell\Core\Facades\CapellCore;
-
-    $newsletterAvailable ??= CapellCore::isPackageInstalled('capell-app/newsletter');
+    $newsletterAvailable ??= false;
 @endphp
 
 <section

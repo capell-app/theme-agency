@@ -7,6 +7,24 @@ return [
     'skip_to_content' => 'Skip to content',
     'archive_label' => 'Research archive',
     'article_signal' => 'Article',
+    'author_cards' => [
+        [
+            'title' => 'Editorial Team',
+            'summary' => 'Subject-matter writing and review teams.',
+        ],
+        [
+            'title' => 'Design Staff',
+            'summary' => 'Visual systems and layout operators.',
+        ],
+        [
+            'title' => 'Research',
+            'summary' => 'Source analysts and fact-check workflows.',
+        ],
+        [
+            'title' => 'Growth Ops',
+            'summary' => 'Optimization and analytics enablement.',
+        ],
+    ],
     'authors_label' => 'Editorial bench',
     'carousel_next' => 'Next items',
     'carousel_previous' => 'Previous items',
@@ -80,6 +98,24 @@ return [
     'topic_hub_design' => 'Design systems',
     'topic_hub_growth' => 'Growth library',
     'topic_hub_operations' => 'Operations',
+    'topic_hub_cards' => [
+        [
+            'title' => 'Strategy',
+            'summary' => 'Decision records, positioning notes, and planning guides.',
+        ],
+        [
+            'title' => 'Design systems',
+            'summary' => 'Interface standards, component guidance, and design references.',
+        ],
+        [
+            'title' => 'Operations',
+            'summary' => 'Workflow documentation, process playbooks, and ownership maps.',
+        ],
+        [
+            'title' => 'Growth library',
+            'summary' => 'Experiment notes, channel research, and conversion resources.',
+        ],
+    ],
     'topic_hub_strategy' => 'Strategy',
     'topic_hubs_label' => 'Topic hubs',
     'topic_signal' => 'Topic',

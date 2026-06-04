@@ -41,6 +41,9 @@ hubs, and content-led teams that need searchable, editorial frontend pages.
   search listing, newsletter, authors, proof, and supporting content blocks.
 - Uses Core `ViewSectionRenderer` extra view data for optional Blog, Search, and Newsletter
   sections.
+- Keeps optional package availability checks in the service provider/renderer
+  layer, while author and topic hub cards can come from page render data with
+  translated defaults.
 - Adds a demo install command backed by `InstallKnowledgeThemeDemoAction`.
 - Adds `ThemeKnowledgeHealthCheck` and a Theme management page contribution.
 
@@ -66,6 +69,8 @@ hubs, and content-led teams that need searchable, editorial frontend pages.
 - Depends on Foundation Theme and reads normal Capell page/theme runtime data.
 - Optional sections stay guarded when Blog, Search, or Newsletter are not
   installed.
+- Author and topic hub defaults use package translations and accept hydrated
+  section items for real site-specific teams and topics.
 
 ## Docs
 

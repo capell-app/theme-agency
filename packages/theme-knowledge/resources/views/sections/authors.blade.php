@@ -1,5 +1,11 @@
+@php
+    $sectionHeading = $heading ?? ($section->heading ?? null);
+    $authorCards = $section->items ?? $items ?? __('capell-theme-knowledge::generic.author_cards');
+    $authorCards = is_array($authorCards) ? $authorCards : [];
+@endphp
+
 <section class="theme-section theme-section-authors bg-white">
-    @isset($heading)
+    @if ($sectionHeading)
         <div class="mx-auto max-w-5xl px-6 pt-14">
             <p
                 class="text-xs font-black tracking-[0.18em] text-[#1d4ed8] uppercase"
@@ -7,41 +13,37 @@
                 {{ __('capell-theme-knowledge::generic.authors_label') }}
             </p>
             <h2 class="mt-4 text-4xl font-black tracking-tight text-[#111827]">
-                {{ $heading }}
+                {{ $sectionHeading }}
             </h2>
         </div>
-    @endisset
+    @endif
 
     <div
         class="mx-auto mt-6 grid max-w-5xl gap-4 px-6 pb-14 sm:grid-cols-2 lg:grid-cols-4"
     >
-        <div class="border border-[#dbeafe] bg-[#eff6ff] p-4">
-            <p class="h-10 w-10 bg-[#1d4ed8]"></p>
-            <p class="mt-3 font-black text-[#111827]">Editorial Team</p>
-            <p class="mt-1 text-sm text-stone-600">
-                Subject-matter writing and review teams.
-            </p>
-        </div>
-        <div class="border border-[#dbeafe] bg-[#eff6ff] p-4">
-            <p class="h-10 w-10 bg-[#f59e0b]"></p>
-            <p class="mt-3 font-black text-[#111827]">Design Staff</p>
-            <p class="mt-1 text-sm text-stone-600">
-                Visual systems and layout operators.
-            </p>
-        </div>
-        <div class="border border-[#dbeafe] bg-[#eff6ff] p-4">
-            <p class="h-10 w-10 bg-[#1d4ed8]"></p>
-            <p class="mt-3 font-black text-[#111827]">Research</p>
-            <p class="mt-1 text-sm text-stone-600">
-                Source analysts and fact-check workflows.
-            </p>
-        </div>
-        <div class="border border-[#dbeafe] bg-[#eff6ff] p-4">
-            <p class="h-10 w-10 bg-[#f59e0b]"></p>
-            <p class="mt-3 font-black text-[#111827]">Growth Ops</p>
-            <p class="mt-1 text-sm text-stone-600">
-                Optimization and analytics enablement.
-            </p>
-        </div>
+        @foreach ($authorCards as $authorCard)
+            @php
+                $authorTitle = is_array($authorCard) && is_scalar($authorCard['title'] ?? $authorCard['name'] ?? null) ? (string) ($authorCard['title'] ?? $authorCard['name']) : '';
+                $authorSummary = is_array($authorCard) && is_scalar($authorCard['summary'] ?? $authorCard['description'] ?? null) ? (string) ($authorCard['summary'] ?? $authorCard['description']) : '';
+                $markerClass = $loop->even ? 'bg-[#f59e0b]' : 'bg-[#1d4ed8]';
+            @endphp
+
+            @if ($authorTitle !== '')
+                <div class="border border-[#dbeafe] bg-[#eff6ff] p-4">
+                    <p
+                        class="{{ $markerClass }} h-10 w-10"
+                        aria-hidden="true"
+                    ></p>
+                    <p class="mt-3 font-black text-[#111827]">
+                        {{ $authorTitle }}
+                    </p>
+                    @if ($authorSummary !== '')
+                        <p class="mt-1 text-sm text-stone-600">
+                            {{ $authorSummary }}
+                        </p>
+                    @endif
+                </div>
+            @endif
+        @endforeach
     </div>
 </section>

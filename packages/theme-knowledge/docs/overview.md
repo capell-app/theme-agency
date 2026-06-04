@@ -15,6 +15,7 @@ frontend theme.
 - Section renderers for topic hubs, featured content, resource library, search
   listing, newsletter, authors, proof, CTA, and footer flows.
 - Optional renderer awareness for Blog, Search, and Newsletter.
+- Data-driven author and topic hub cards with translated defaults.
 - A demo command that installs route-backed knowledge demo pages.
 - Theme health and management-page manifest contributions.
 
@@ -36,6 +37,8 @@ instead of assumed.
 - `DemoCommand` calls `InstallKnowledgeThemeDemoAction`.
 - Core `ViewSectionRenderer` extra view data guards optional Blog, Search, and Newsletter
   sections.
+- Public Blade relies on renderer-provided optional package flags rather than
+  checking package installation in the view layer.
 - `ThemeKnowledgeHealthCheck` exposes package health to diagnostics.
 
 ## Data And Persistence
@@ -54,5 +57,6 @@ directory, detail, contact, conversion CTA, and section-suite states.
 vendor/bin/pest packages/theme-knowledge/tests --configuration=phpunit.xml
 ```
 
-The focused tests cover theme definition, manifest requirements, package-aware
-rendering, and public output safety.
+The focused tests cover theme definition, translated/data-driven author and
+topic hub defaults, manifest requirements, package-aware rendering, health
+diagnostics, and public output safety.
