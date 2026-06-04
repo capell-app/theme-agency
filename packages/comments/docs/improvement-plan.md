@@ -17,6 +17,7 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 - **2026-06-04:** Hardened the public submit throttle key to use commentable + IP data without attacker-controlled author email, with Livewire regression coverage.
 - **2026-06-04:** Wired queued moderator notifications for configured moderator email addresses when new comments enter pending approval or pending email verification, with listener registration and status-gating tests.
 - **2026-06-04:** Added auto-inject anonymous-leakage coverage for the real render-hook path plus package Arch tests for strict equality, public-runtime admin/authoring isolation, and public Blade database/authoring-marker guards.
+- **2026-06-04:** Implemented settings-aware reply pagination with per-parent "load more replies" support, bounded child hydration, recursive public rendering, and Livewire-safe public comment DTO serialization.
 
 ## 2. Improvements (existing functionality)
 
@@ -26,7 +27,7 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 
 - **Shipped 2026-06-04: Add a honeypot + minimum-render-age check to the public form** — `thread.blade.php` now renders a hidden honeypot field, `CommentThreadComponent` tracks `formRenderedAt`, and `CreateCommentAction` rejects honeypot-filled or too-fast submissions before persistence. The minimum age is configurable at `capell-comments.spam.minimum_form_age_seconds`. — `src/Livewire/CommentThreadComponent.php`, `resources/views/livewire/thread.blade.php`, `src/Data/CreateCommentData.php` — S
 
-- **Paginate / lazy-load replies and root comments** — `BuildPublicThreadAction` loads all roots up to `rootLimit` (default 20) and then _all_ descendants in one query, building the full tree (`src/Actions/BuildPublicThreadAction.php:35-89`). `reply_page_size` exists in config/settings (`config/capell-comments.php:20`, `src/Settings/CommentSettings.php:33`) but is **never used**. — why: a popular thread blows the 20ms `frontendRenderBudgetMs` and returns unbounded payloads; the advertised reply paging is dead. Add "load more replies" / root cursor pagination honoring `reply_page_size`. — `src/Actions/BuildPublicThreadAction.php`, `src/Livewire/CommentThreadComponent.php:111` — M
+- **Shipped 2026-06-04: Paginate / lazy-load replies** — `BuildPublicThreadAction` now resolves root and reply page sizes through `CommentSettingsResolver`, hydrates each parent with a bounded child page, exposes `replyCount` / `hasMoreReplies`, and accepts per-public-id reply limits. `CommentThreadComponent` tracks per-parent reply limits and exposes `loadMoreReplies()`, while the public Blade now renders nested comments recursively with a translated load-more action. — `src/Actions/BuildPublicThreadAction.php`, `src/Livewire/CommentThreadComponent.php`, `src/Data/PublicCommentData.php`, `resources/views/livewire/partials/comment-list.blade.php`, `tests/Integration/Actions/PublicThreadActionTest.php`, `tests/Integration/CommentThreadComponentTest.php` — M
 
 - **Surface validation errors per-field on submit** — `thread.blade.php` shows a generic "validation_failed" banner (`:9-13`) plus per-field `@error` blocks, but `CreateCommentAction` throws `ValidationException` from inside `CreateCommentAction::run()` called in `submit()` without Livewire `$this->validate()` wiring, so messages may not bind to the component's `$errors` bag reliably. — why: guests get an opaque failure. Catch `ValidationException` in `submit()` and map to `addError()`, or move validation into the component rules. — `src/Livewire/CommentThreadComponent.php:61-87` — S
 
@@ -60,7 +61,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **Throttle bypass via email field shipped.** The public submit throttle no longer includes attacker-controlled author email in the primary bucket. Residual risk: there is not yet a secondary per-author-email cap or broader abuse telemetry.
 
-- **Public render performance budget unverifiable / at risk.** Manifest sets `frontendRenderBudgetMs: 20` and `adminQueryBudget: 40`, but `BuildPublicThreadAction` fetches the entire approved subtree with no depth/reply cap beyond `rootLimit` (`src/Actions/BuildPublicThreadAction.php:65-81`). No test or benchmark asserts either budget. On a hot thread this exceeds 20ms and the budget is effectively aspirational.
+- **Public render performance budget still needs measurement.** Manifest sets `frontendRenderBudgetMs: 20` and `adminQueryBudget: 40`. Reply hydration is now bounded by `reply_page_size` and per-parent load-more limits, but no benchmark asserts either budget. On a hot thread the budget is still aspirational until measured against seeded high-volume data.
 
 - **XSS / sanitization — low residual but worth hardening.** Body is `strip_tags` + whitespace-collapsed, capped at 5000 chars (`src/Support/CommentBodySanitizer.php`), and output is Blade-escaped via `{{ }}` (`resources/views/livewire/thread.blade.php:27,50`), and `PublicCommentData` omits all sensitive fields — so stored-XSS surface is low. Residual: the sanitizer does not strip Unicode bidi/zero-width/control characters (spoofing) and `linkCount()` only counts `http(s)://` (misses `www.`/bare domains), weakening any future link-based spam rule. `src/Support/CommentBodySanitizer.php:11-25`.
 
@@ -68,7 +69,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **PII / retention.** Author `name`/`email` are `encrypted` at rest ✔ and `email_hash` is HMAC ✔ (`src/Models/CommentAuthor.php:50-58,123`). Gaps: (1) `email_hash_secret`/`visitor_hash_secret` default to `null` from env and silently fall back to `app.key` (`config/capell-comments.php:22-23`, `src/Support/VisitorHasher.php:15`, `CommentAuthor::emailHash`) — rotating `app.key` orphans all hashes; document and warn. (2) No retention/erasure policy or command for visitor IP/UA hashes or author records (GDPR right-to-erasure). (3) `internal_notes` and `moderation_note` are plaintext.
 
-- **Test gaps.** Coverage now includes health diagnostics, spam scoring, moderator notification wiring/status-gating, `auto_inject` anonymous-leakage, public-output Architecture guards, public submit throttling, and bot-trap rejection at action and Livewire levels. Still not covered: reply pagination and performance budgets.
+- **Test gaps.** Coverage now includes health diagnostics, spam scoring, moderator notification wiring/status-gating, `auto_inject` anonymous-leakage, reply pagination, public-output Architecture guards, public submit throttling, and bot-trap rejection at action and Livewire levels. Still not covered: performance budgets.
 
 - **i18n.** Strings are translated via `capell-comments::` namespaces ✔. `diffForHumans()` in the public Blade (`thread.blade.php:24,47`) is not locale-pinned to the site language and may render in the app locale rather than the page's `language_id`.
 
@@ -92,20 +93,20 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                          | Bucket | Effort | Impact | Section ref |
-| --------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Shipped 2026-06-04: implement real `CommentsHealthCheck` (tables, settings, route, component) | Now    | M      | High   | §2, §4      |
+| Item                                                                                                      | Bucket | Effort | Impact | Section ref |
+| --------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Shipped 2026-06-04: implement real `CommentsHealthCheck` (tables, settings, route, component)             | Now    | M      | High   | §2, §4      |
 | Shipped 2026-06-04: implement automatic spam scoring (`max_links`, `blocked_terms`, write `spam_reasons`) | Now    | M      | High   | §3, §4      |
-| Shipped 2026-06-04: fix throttle key (drop attacker-controlled email from primary bucket)     | Now    | S      | High   | §3, §4      |
-| Shipped 2026-06-04: wire moderator new-comment notification listener on `CommentCreated`      | Now    | M      | High   | §2, §3      |
-| Shipped 2026-06-04: add `auto_inject` anonymous-leakage tests and Arch tests                 | Now    | M      | High   | §4          |
-| Shipped 2026-06-03: add `LatestCommentsWidget` to `capell.json` contributes[]                 | Now    | S      | Med    | §2, §4      |
-| Wire the 4 `screenshots.json` captures into marketplace + new summary/description             | Now    | S      | Med    | §5          |
-| Implement reply pagination using `reply_page_size`; cap subtree query                         | Next   | M      | High   | §2, §3      |
-| Benchmark + assert `frontendRenderBudgetMs`/`adminQueryBudget`                                | Next   | M      | Med    | §4          |
-| Harden sanitizer (bidi/zero-width strip; broaden link detection)                              | Next   | S      | Med    | §4          |
-| Memoize resolved commentable in Livewire component                                            | Next   | S      | Low    | §2          |
-| Locale-pin public timestamps to page `language_id`                                            | Next   | S      | Low    | §4          |
-| Pluggable external spam provider (Akismet/Turnstile) contract                                 | Later  | M      | Med    | §3          |
-| Reactions/voting + author-reply notifications (Engagement Suite up-sell)                      | Later  | L      | Med    | §3, §5      |
-| PII retention/erasure command + secret-rotation docs for hashes                               | Later  | M      | Med    | §4          |
+| Shipped 2026-06-04: fix throttle key (drop attacker-controlled email from primary bucket)                 | Now    | S      | High   | §3, §4      |
+| Shipped 2026-06-04: wire moderator new-comment notification listener on `CommentCreated`                  | Now    | M      | High   | §2, §3      |
+| Shipped 2026-06-04: add `auto_inject` anonymous-leakage tests and Arch tests                              | Now    | M      | High   | §4          |
+| Shipped 2026-06-03: add `LatestCommentsWidget` to `capell.json` contributes[]                             | Now    | S      | Med    | §2, §4      |
+| Wire the 4 `screenshots.json` captures into marketplace + new summary/description                         | Now    | S      | Med    | §5          |
+| Shipped 2026-06-04: implement reply pagination using `reply_page_size`; cap subtree query                 | Next   | M      | High   | §2, §3      |
+| Benchmark + assert `frontendRenderBudgetMs`/`adminQueryBudget`                                            | Next   | M      | Med    | §4          |
+| Harden sanitizer (bidi/zero-width strip; broaden link detection)                                          | Next   | S      | Med    | §4          |
+| Memoize resolved commentable in Livewire component                                                        | Next   | S      | Low    | §2          |
+| Locale-pin public timestamps to page `language_id`                                                        | Next   | S      | Low    | §4          |
+| Pluggable external spam provider (Akismet/Turnstile) contract                                             | Later  | M      | Med    | §3          |
+| Reactions/voting + author-reply notifications (Engagement Suite up-sell)                                  | Later  | L      | Med    | §3, §5      |
+| PII retention/erasure command + secret-rotation docs for hashes                                           | Later  | M      | Med    | §4          |

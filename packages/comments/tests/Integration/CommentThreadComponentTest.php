@@ -98,6 +98,42 @@ it('throttles repeated public submissions even when the author email changes', f
         ->and(Comment::query()->where('body', 'Second comment')->exists())->toBeFalse();
 });
 
+it('loads additional replies for the selected parent comment', function (): void {
+    bindCommentThreadSettings(['reply_page_size' => 1]);
+
+    $page = $this->createCommentsPage();
+    $parent = Comment::factory()->create([
+        'site_id' => $page->site_id,
+        'commentable_type' => $page->getMorphClass(),
+        'commentable_id' => $page->getKey(),
+        'body' => 'Parent comment',
+    ]);
+
+    foreach (['First reply', 'Second reply'] as $index => $body) {
+        Comment::factory()->create([
+            'site_id' => $page->site_id,
+            'commentable_type' => $page->getMorphClass(),
+            'commentable_id' => $page->getKey(),
+            'parent_id' => $parent->getKey(),
+            'root_id' => $parent->getKey(),
+            'depth' => 1,
+            'submitted_at' => now()->addSeconds($index),
+            'body' => $body,
+        ]);
+    }
+
+    Livewire::test(CommentThreadComponent::class, ['threadKey' => CommentThreadComponent::threadKeyFor($page)])
+        ->assertSet('replyPageSize', 1)
+        ->assertSee('Parent comment')
+        ->assertSee('First reply')
+        ->assertDontSee('Second reply')
+        ->assertSee(__('capell-comments::generic.load_more_replies'))
+        ->call('loadMoreReplies', (string) $parent->public_id)
+        ->assertSet('replyLimits.' . $parent->public_id, 2)
+        ->assertSee('Second reply')
+        ->assertDontSee(__('capell-comments::generic.load_more_replies'));
+});
+
 it('keeps reply intent inside the public thread component until the visitor cancels it', function (): void {
     $page = $this->createCommentsPage();
 
@@ -142,6 +178,8 @@ function bindCommentThreadSettings(array $overrides = []): void
     $settings->verification_flow = 'verify_then_moderate';
     $settings->require_email_verification = true;
     $settings->max_depth = 4;
+    $settings->root_page_size = 20;
+    $settings->reply_page_size = 5;
     $settings->site_overrides = [];
     $settings->commentable_type_overrides = [];
 

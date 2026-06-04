@@ -111,6 +111,50 @@ it('limits root comments before loading replies', function (): void {
         ))->not->toContain($second->public_id);
 });
 
+it('limits visible replies and reports when more replies are available', function (): void {
+    $page = $this->createCommentsPage();
+    $parent = Comment::factory()->create([
+        'site_id' => $page->site_id,
+        'commentable_type' => $page->getMorphClass(),
+        'commentable_id' => $page->getKey(),
+        'body' => 'Parent comment',
+    ]);
+
+    foreach (['First reply', 'Second reply', 'Third reply'] as $index => $body) {
+        Comment::factory()->create([
+            'site_id' => $page->site_id,
+            'commentable_type' => $page->getMorphClass(),
+            'commentable_id' => $page->getKey(),
+            'parent_id' => $parent->getKey(),
+            'root_id' => $parent->getKey(),
+            'depth' => 1,
+            'submitted_at' => now()->addSeconds($index),
+            'body' => $body,
+        ]);
+    }
+
+    bindPublicThreadCommentSettings(['reply_page_size' => 2]);
+
+    $comments = BuildPublicThreadAction::run($page);
+
+    expect($comments)->toHaveCount(1)
+        ->and($comments[0]->replyCount)->toBe(3)
+        ->and($comments[0]->hasMoreReplies)->toBeTrue()
+        ->and($comments[0]->children)->toHaveCount(2)
+        ->and(array_map(
+            fn (PublicCommentData $comment): string => $comment->body,
+            $comments[0]->children,
+        ))->toBe(['First reply', 'Second reply']);
+
+    $expandedComments = BuildPublicThreadAction::run(
+        commentable: $page,
+        replyLimitsByPublicId: [(string) $parent->public_id => 3],
+    );
+
+    expect($expandedComments[0]->children)->toHaveCount(3)
+        ->and($expandedComments[0]->hasMoreReplies)->toBeFalse();
+});
+
 it('scopes public comments to the commentable language when present', function (): void {
     $page = $this->createCommentsPage();
     $otherLanguage = Language::factory()->create();
@@ -251,6 +295,8 @@ function bindPublicThreadCommentSettings(array $overrides): void
     $settings->verification_flow = 'verify_then_moderate';
     $settings->require_email_verification = true;
     $settings->max_depth = 4;
+    $settings->root_page_size = 20;
+    $settings->reply_page_size = 5;
     $settings->site_overrides = [];
     $settings->commentable_type_overrides = [];
 

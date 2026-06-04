@@ -6,8 +6,11 @@ namespace Capell\Comments\Livewire;
 
 use Capell\Comments\Actions\CreateCommentAction;
 use Capell\Comments\Actions\ResolvePublicCommentableThreadAction;
+use Capell\Comments\Data\CommentableTypeData;
 use Capell\Comments\Data\CreateCommentData;
 use Capell\Comments\Data\PublicCommentData;
+use Capell\Comments\Support\CommentableRegistry;
+use Capell\Comments\Support\CommentSettingsResolver;
 use Capell\Core\Contracts\Extensions\RegistersExtensionFrontendComponent;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
@@ -35,6 +38,13 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
     public int $formRenderedAt = 0;
 
     public bool $submitted = false;
+
+    public int $replyPageSize = 5;
+
+    /**
+     * @var array<string, int>
+     */
+    public array $replyLimits = [];
 
     /**
      * @var list<PublicCommentData>
@@ -104,6 +114,18 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
         $this->parentPublicId = null;
     }
 
+    public function loadMoreReplies(string $publicId): void
+    {
+        if ($publicId === '') {
+            return;
+        }
+
+        $pageSize = max(1, $this->replyPageSize);
+        $currentLimit = max(0, $this->replyLimits[$publicId] ?? $pageSize);
+        $this->replyLimits[$publicId] = $currentLimit + $pageSize;
+        $this->refreshComments();
+    }
+
     public function render(): View
     {
         return view('capell-comments::livewire.thread');
@@ -130,11 +152,43 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
             return;
         }
 
+        $this->replyPageSize = $this->resolveReplyPageSize($commentable);
+
         $thread = ResolvePublicCommentableThreadAction::run(
             commentable: $commentable,
-            rootLimit: (int) config('capell-comments.root_page_size', 20),
+            rootLimit: $this->resolveRootPageSize($commentable),
+            replyLimit: $this->replyPageSize,
+            replyLimitsByPublicId: $this->replyLimits,
         );
         $this->comments = $thread->comments ?? [];
+    }
+
+    private function resolveRootPageSize(Model $commentable): int
+    {
+        $commentableType = resolve(CommentableRegistry::class)->forModel($commentable);
+
+        if (! $commentableType instanceof CommentableTypeData) {
+            return max(1, (int) config('capell-comments.root_page_size', 20));
+        }
+
+        return resolve(CommentSettingsResolver::class)->rootPageSize(
+            siteId: $commentableType->siteId($commentable),
+            commentableType: $commentableType->key,
+        );
+    }
+
+    private function resolveReplyPageSize(Model $commentable): int
+    {
+        $commentableType = resolve(CommentableRegistry::class)->forModel($commentable);
+
+        if (! $commentableType instanceof CommentableTypeData) {
+            return max(1, (int) config('capell-comments.reply_page_size', 5));
+        }
+
+        return max(1, resolve(CommentSettingsResolver::class)->replyPageSize(
+            siteId: $commentableType->siteId($commentable),
+            commentableType: $commentableType->key,
+        ));
     }
 
     private function resolveCommentable(): ?Model

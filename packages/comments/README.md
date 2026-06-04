@@ -43,6 +43,8 @@ to registered Capell content.
 - Public `capell-comments.thread` and email verification routes under the
   configured `route_prefix`.
 - `CommentThreadComponent` for post-load public thread rendering.
+- Settings-aware root and reply paging, with per-parent "load more replies"
+  support for public threads.
 - Public comment form bot-trap controls: a hidden honeypot field and
   configurable minimum form age.
 - Automatic spam scoring for configured link-count and blocked-term rules,
@@ -74,18 +76,18 @@ to registered Capell content.
 
 ## Runtime Surface
 
-| Area          | Path                                                                                                           |
-| ------------- | -------------------------------------------------------------------------------------------------------------- |
-| Config        | `config/capell-comments.php`                                                                                   |
-| Routes        | `routes/web.php`                                                                                               |
-| Install       | `src/Console/Commands/InstallCommentsCommand.php`, `src/Actions/InstallCommentsPackageAction.php`              |
-| Public thread | `src/Livewire/CommentThreadComponent.php`, `src/Http/Controllers/RenderCommentThreadController.php`            |
-| Verification  | `src/Actions/RequestCommentEmailVerificationAction.php`, `src/Actions/VerifyCommentAuthorEmailAction.php`      |
-| Moderation    | `src/Actions/TransitionCommentStatusAction.php`, `src/Listeners/NotifyModeratorsOfNewComment.php`, `src/Filament/Pages/CommentModerationInbox.php` |
-| Notifications | `src/Notifications/ConfirmCommentAuthorEmailNotification.php`, `src/Notifications/ModerateCommentNotification.php` |
-| Settings      | `src/Settings/CommentSettings.php`, `src/Filament/Settings/CommentSettingsSchema.php`                          |
+| Area          | Path                                                                                                                                                |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Config        | `config/capell-comments.php`                                                                                                                        |
+| Routes        | `routes/web.php`                                                                                                                                    |
+| Install       | `src/Console/Commands/InstallCommentsCommand.php`, `src/Actions/InstallCommentsPackageAction.php`                                                   |
+| Public thread | `src/Livewire/CommentThreadComponent.php`, `src/Http/Controllers/RenderCommentThreadController.php`                                                 |
+| Verification  | `src/Actions/RequestCommentEmailVerificationAction.php`, `src/Actions/VerifyCommentAuthorEmailAction.php`                                           |
+| Moderation    | `src/Actions/TransitionCommentStatusAction.php`, `src/Listeners/NotifyModeratorsOfNewComment.php`, `src/Filament/Pages/CommentModerationInbox.php`  |
+| Notifications | `src/Notifications/ConfirmCommentAuthorEmailNotification.php`, `src/Notifications/ModerateCommentNotification.php`                                  |
+| Settings      | `src/Settings/CommentSettings.php`, `src/Filament/Settings/CommentSettingsSchema.php`                                                               |
 | Data objects  | `src/Data/PublicCommentData.php`, `src/Data/PublicCommentableThreadData.php`, `src/Data/CreateCommentData.php`, `src/Data/CommentSpamScoreData.php` |
-| Models        | `src/Models/Comment.php`, `src/Models/CommentAuthor.php`, `src/Models/CommentToken.php`                        |
+| Models        | `src/Models/Comment.php`, `src/Models/CommentAuthor.php`, `src/Models/CommentToken.php`                                                             |
 
 ## Install Impact
 
@@ -113,6 +115,8 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
 ## Maintenance Notes
 
 - Keep public thread data anonymous-safe and moderation-free.
+- Keep reply pagination settings-aware and bounded; public rendering should not
+  hydrate an entire hot discussion subtree in one request.
 - Keep registration logic in package providers or Actions rather than public
   Blade.
 - Keep bot-trap fields public-form only; API/programmatic comment creation may

@@ -22,6 +22,8 @@ use Override;
 /**
  * @property string $public_id
  * @property int $site_id
+ * @property string $commentable_type
+ * @property int $commentable_id
  * @property int|null $parent_id
  * @property int|null $root_id
  * @property int $depth

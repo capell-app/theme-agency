@@ -12,57 +12,9 @@
         </div>
     @endif
 
-    <ol>
-        @foreach ($comments as $comment)
-            <li>
-                <article>
-                    <header>
-                        <strong>{{ $comment->authorName }}</strong>
-                        <time
-                            datetime="{{ $comment->submittedAt->toAtomString() }}"
-                        >
-                            {{ $comment->submittedAt->diffForHumans() }}
-                        </time>
-                    </header>
-                    <p>{{ $comment->body }}</p>
-                    <button
-                        type="button"
-                        wire:click="replyTo('{{ $comment->publicId }}')"
-                    >
-                        {{ __('capell-comments::generic.reply') }}
-                    </button>
-
-                    @if ($comment->children !== [])
-                        <ol>
-                            @foreach ($comment->children as $reply)
-                                <li>
-                                    <article>
-                                        <header>
-                                            <strong>
-                                                {{ $reply->authorName }}
-                                            </strong>
-                                            <time
-                                                datetime="{{ $reply->submittedAt->toAtomString() }}"
-                                            >
-                                                {{ $reply->submittedAt->diffForHumans() }}
-                                            </time>
-                                        </header>
-                                        <p>{{ $reply->body }}</p>
-                                        <button
-                                            type="button"
-                                            wire:click="replyTo('{{ $reply->publicId }}')"
-                                        >
-                                            {{ __('capell-comments::generic.reply') }}
-                                        </button>
-                                    </article>
-                                </li>
-                            @endforeach
-                        </ol>
-                    @endif
-                </article>
-            </li>
-        @endforeach
-    </ol>
+    @include('capell-comments::livewire.partials.comment-list', [
+        'comments' => $comments,
+    ])
 
     <form wire:submit="submit">
         <div

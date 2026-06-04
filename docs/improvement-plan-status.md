@@ -9,7 +9,7 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 | Bucket | Rows |
 | ------ | ---: |
 | Now    | 344 |
-| Next   | 336 |
+| Next   | 335 |
 | Later  | 205 |
 
 The work is not complete until every package plan has been reviewed against current code, required features are implemented or intentionally deferred, new behavior is documented, and focused verification passes for each changed package.
@@ -29,7 +29,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | Package | Now | Next | Later | Current status | Evidence / next action |
 | ------- | --: | ---: | ----: | -------------- | ---------------------- |
 | campaign-studio | 6 | 5 | 5 | Slice committed | Latest Campaign Studio slice adds campaign hero UTM fields, decorates hero CTA URLs through `BuildCampaignUrlAction`, updates screenshots/docs, and adds public render coverage; continue with CTA/page-view capture, full-page public safety tests, cache/personalisation strategy, variant publish filtering, scheduling, and experiment result readout. |
-| comments | 1 | 5 | 3 | Slice committed | Latest Comments slice adds real auto-inject anonymous-leakage coverage plus public-output Arch guards; continue with marketplace screenshots, reply pagination, performance budgets, sanitizer hardening, and retention/erasure work. |
+| comments | 1 | 4 | 3 | Slice committed | Latest Comments slice implements settings-aware reply pagination with per-parent load-more support and bounded child hydration; continue with marketplace screenshots, performance budgets, sanitizer hardening, and retention/erasure work. |
 | contacts | 6 | 7 | 2 | Slice committed | `132778050` fixed stats scoping; continue with privacy/export/merge gaps. |
 | content-sections | 5 | 6 | 4 | Slice committed | `54b758fe1` landed readiness fixes; continue with remaining render safety/content rows. |
 | customer-portal | 6 | 7 | 3 | Slice committed | `6de22b6d4` landed a now-bucket slice; continue with cross-account and profile gaps. |

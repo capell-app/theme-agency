@@ -45,6 +45,16 @@ class CommentSettingsResolver
         return max(0, (int) $this->value('max_depth', (int) config('capell-comments.max_depth', 4), $siteId, $commentableType));
     }
 
+    public function rootPageSize(?int $siteId = null, ?string $commentableType = null): int
+    {
+        return max(1, (int) $this->value('root_page_size', (int) config('capell-comments.root_page_size', 20), $siteId, $commentableType));
+    }
+
+    public function replyPageSize(?int $siteId = null, ?string $commentableType = null): int
+    {
+        return max(0, (int) $this->value('reply_page_size', (int) config('capell-comments.reply_page_size', 5), $siteId, $commentableType));
+    }
+
     private function value(string $key, mixed $fallback, ?int $siteId, ?string $commentableType): mixed
     {
         try {
@@ -54,7 +64,7 @@ class CommentSettingsResolver
             return $fallback;
         }
 
-        $value = property_exists($settings, $key) ? $settings->{$key} : $fallback;
+        $value = property_exists($settings, $key) && isset($settings->{$key}) ? $settings->{$key} : $fallback;
         $value = $this->overrideValue($settings->commentable_type_overrides, $commentableType, $key, $value);
 
         return $this->overrideValue($settings->site_overrides, $siteId === null ? null : (string) $siteId, $key, $value);

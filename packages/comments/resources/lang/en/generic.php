@@ -8,6 +8,7 @@ return [
     'comment' => 'Comment',
     'comments' => 'Comments',
     'email' => 'Email',
+    'load_more_replies' => 'Load more replies',
     'name' => 'Name',
     'page' => 'Page',
     'cancel_reply' => 'Cancel reply',
