@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Capell\DocumentLifecycle\Database\Factories\DocumentAcceptanceFactory;
+use Capell\DocumentLifecycle\Database\Factories\DocumentFactory;
+use Capell\DocumentLifecycle\Database\Factories\DocumentPublicationFactory;
 use Capell\DocumentLifecycle\Enums\DocumentStatusEnum;
 use Capell\DocumentLifecycle\Models\Document;
 use Capell\DocumentLifecycle\Models\DocumentAcceptance;
@@ -12,6 +15,22 @@ use Capell\Tests\Fixtures\Models\User;
 use Illuminate\Support\Str;
 
 require_once dirname(__DIR__) . '/DocumentLifecycleTestCase.php';
+
+it('resolves package factories from the document lifecycle models', function (): void {
+    expect(Document::factory())->toBeInstanceOf(DocumentFactory::class)
+        ->and(DocumentPublication::factory())->toBeInstanceOf(DocumentPublicationFactory::class)
+        ->and(DocumentAcceptance::factory())->toBeInstanceOf(DocumentAcceptanceFactory::class);
+});
+
+it('creates documents in each lifecycle state through the document factory', function (): void {
+    $draft = Document::factory()->draft()->create();
+    $active = Document::factory()->active()->create();
+    $archived = Document::factory()->archived()->create();
+
+    expect($draft->status)->toBe(DocumentStatusEnum::Draft)
+        ->and($active->status)->toBe(DocumentStatusEnum::Active)
+        ->and($archived->status)->toBe(DocumentStatusEnum::Archived);
+});
 
 it('creates documents, publications, and acceptances through package factories', function (): void {
     $user = User::factory()->create();

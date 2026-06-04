@@ -67,7 +67,7 @@ Mapped to `capabilities[]`: `document-lifecycle`, `document-lifecycle-admin`, `d
 
 | Item                                                                      | Bucket | Effort | Impact | Section ref |
 | ------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Ship model factories; fix/remove `database/factories` autoload            | Now    | S      | High   | §2, §4      |
+| Ship model factories; fix/remove `database/factories` autoload            | Done   | S      | High   | §2, §4      |
 | Real health-check `report()` Action + health test                         | Now    | M      | High   | §2, §3, §4  |
 | Reconcile `frontend` surface: drop it or ship safe consent component      | Now    | S→L    | High   | §3, §4      |
 | Capture 4 admin screenshots; sync `marketplace.screenshots[]` to manifest | Now    | S      | High   | §1, §5      |
