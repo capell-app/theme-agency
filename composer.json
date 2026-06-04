@@ -112,6 +112,20 @@
     },
     "repositories": [
         {
+            "type": "path",
+            "url": "../capell-4/packages/admin",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "packages/record-switcher",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
             "type": "vcs",
             "url": "https://github.com/capell-app/admin"
         },
@@ -163,7 +177,6 @@
         "filament/spatie-laravel-tags-plugin": "^4.0|^5.0",
         "guava/filament-icon-picker": "^3.0|^4.0",
         "guzzlehttp/guzzle": "^7.5",
-        "howdu/filament-record-switcher": "^2.0",
         "icamys/php-sitemap-generator": "^4.4.1",
         "jibaymcs/filament-tour": "^5.0",
         "jfcherng/php-diff": "^7.0",
@@ -294,6 +307,7 @@
             "Capell\\PublicActions\\Database\\Factories\\": "packages/public-actions/database/factories",
             "Capell\\PublishingStudio\\": "packages/publishing-studio/src",
             "Capell\\PublishingStudio\\Database\\Factories\\": "packages/publishing-studio/database/factories",
+            "Capell\\RecordSwitcher\\": "packages/record-switcher/src",
             "Capell\\Search\\": "packages/search/src",
             "Capell\\Search\\Database\\Factories\\": "packages/search/database/factories",
             "Capell\\SeoSuite\\": "packages/seo-suite/src",
@@ -384,6 +398,7 @@
             "Capell\\PrivacyCenter\\Tests\\": "packages/privacy-center/tests",
             "Capell\\PublicActions\\Tests\\": "packages/public-actions/tests",
             "Capell\\PublishingStudio\\Tests\\": "packages/publishing-studio/tests",
+            "Capell\\RecordSwitcher\\Tests\\": "packages/record-switcher/tests",
             "Capell\\Search\\Tests\\": "packages/search/tests",
             "Capell\\SeoSuite\\Tests\\": "packages/seo-suite/tests",
             "Capell\\ShopifyCommerce\\Tests\\": "packages/shopify-commerce/tests",

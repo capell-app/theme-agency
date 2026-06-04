@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "05942fd323e23e3b7bbc810b9e9b03ed",
+    "content-hash": "fae3f3dce0bfd24bce0e11a677cd5972",
     "packages": [
         {
             "name": "aimeos/laravel-nestedset",
@@ -712,22 +712,17 @@
         {
             "name": "capell-app/admin",
             "version": "4.x-dev",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:capell-app/admin.git",
-                "reference": "c128e147c4fd8681f95423b9af7461b047c0e6b8"
-            },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/capell-app/admin/zipball/c128e147c4fd8681f95423b9af7461b047c0e6b8",
-                "reference": "c128e147c4fd8681f95423b9af7461b047c0e6b8",
-                "shasum": ""
+                "type": "path",
+                "url": "../capell-4/packages/admin",
+                "reference": "a9716363ae31f69987468802c844cc195fcdafb4"
             },
             "require": {
                 "amidesfahani/filament-tinyeditor": "^4.0",
                 "awcodes/filament-badgeable-column": "^3.0|^4.0",
                 "bezhansalleh/filament-shield": "^4.1",
                 "capell-app/core": "self.version",
+                "capell-app/record-switcher": "^4.0 || 4.x-dev",
                 "cms-multi/filament-clear-cache": "^3.0",
                 "codewithdennis/filament-select-tree": "^4.0",
                 "ext-fileinfo": "*",
@@ -738,7 +733,6 @@
                 "filament/spatie-laravel-settings-plugin": "^4.0|^5.0",
                 "guava/filament-icon-picker": "^3.0|^4.0",
                 "guzzlehttp/guzzle": "^7.5",
-                "howdu/filament-record-switcher": "^2.0",
                 "lara-zeus/spatie-translatable": "^1.0|^2.0",
                 "laravel/framework": "^11.44.2|^12.0|^13.0",
                 "laravel/prompts": "^0.2|^0.3",
@@ -752,7 +746,6 @@
             "conflict": {
                 "firebase/php-jwt": "<7.0.0"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "laravel": {
@@ -789,11 +782,10 @@
                 "filamentphp",
                 "laravel"
             ],
-            "support": {
-                "source": "https://github.com/capell-app/admin/tree/v2.0.32",
-                "issues": "https://github.com/capell-app/admin/issues"
-            },
-            "time": "2026-06-02T08:40:48+00:00"
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         },
         {
             "name": "capell-app/core",
@@ -1089,6 +1081,80 @@
                 "issues": "https://github.com/capell-app/marketplace/issues"
             },
             "time": "2026-06-01T19:04:52+00:00"
+        },
+        {
+            "name": "capell-app/record-switcher",
+            "version": "4.x-dev",
+            "dist": {
+                "type": "path",
+                "url": "packages/record-switcher",
+                "reference": "33bf7b0d7d6ebb372d9f8a12fb28203adc0efa54"
+            },
+            "require": {
+                "filament/filament": "^4.7|^5.2",
+                "laravel/framework": "^11.44.2|^12.0|^13.0",
+                "livewire/livewire": "^3.0|^4.0",
+                "php": "^8.3",
+                "spatie/laravel-package-tools": "^1.15"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^9.15|^10.8|^11.0",
+                "pestphp/pest": "^3.8|^4.3",
+                "pestphp/pest-plugin-laravel": "^3.0|^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Capell\\RecordSwitcher\\Providers\\RecordSwitcherServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Capell\\RecordSwitcher\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Capell\\RecordSwitcher\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "bin/pest --colors=always"
+                ]
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Capell Team",
+                    "email": "team@capell.app",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Admin record switcher for Capell edit pages, with fast search and keyboard selection.",
+            "homepage": "https://github.com/capell-app/record-switcher",
+            "keywords": [
+                "admin",
+                "capell",
+                "cms",
+                "editor-productivity",
+                "filament",
+                "keyboard-navigation",
+                "laravel",
+                "record-switcher"
+            ],
+            "support": {
+                "source": "https://github.com/capell-app/capell-packages",
+                "docs": "https://docs.capell.app/packages/record-switcher"
+            },
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -3987,88 +4053,6 @@
                 }
             ],
             "time": "2026-05-23T22:00:21+00:00"
-        },
-        {
-            "name": "howdu/filament-record-switcher",
-            "version": "v2.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/howdu/filament-record-switcher.git",
-                "reference": "402f3a8173cf78df378e9a4c9673b944a3e8ad1e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/howdu/filament-record-switcher/zipball/402f3a8173cf78df378e9a4c9673b944a3e8ad1e",
-                "reference": "402f3a8173cf78df378e9a4c9673b944a3e8ad1e",
-                "shasum": ""
-            },
-            "require": {
-                "filament/filament": "^4.0 || ^5.0",
-                "filament/forms": "^4.0 || ^5.0",
-                "filament/schemas": "^4.0 || ^5.0",
-                "filament/tables": "^4.0 || ^5.0",
-                "php": "^8.2",
-                "spatie/laravel-package-tools": "^1.15.0"
-            },
-            "require-dev": {
-                "larastan/larastan": "^3.5",
-                "laravel/pint": "^1.0",
-                "nunomaduro/collision": "^8.0",
-                "orchestra/testbench": "^10.0",
-                "pestphp/pest": "^4.0",
-                "pestphp/pest-plugin-arch": "^4.0",
-                "pestphp/pest-plugin-laravel": "^4.0",
-                "pestphp/pest-plugin-livewire": "^4.0",
-                "phpstan/extension-installer": "^1.4",
-                "phpstan/phpstan": "^2.1",
-                "phpstan/phpstan-deprecation-rules": "^2.0",
-                "phpstan/phpstan-phpunit": "^2.0",
-                "sinnbeck/laravel-dom-assertions": "^3.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Howdu\\FilamentRecordSwitcher\\FilamentRecordSwitcherServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Howdu\\FilamentRecordSwitcher\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ben",
-                    "email": "howdu3@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Resource level navigation with search",
-            "homepage": "https://github.com/howdu/filament-record-switcher",
-            "keywords": [
-                "filament",
-                "filament-plugin",
-                "filament-record-switcher",
-                "howdu",
-                "laravel"
-            ],
-            "support": {
-                "issues": "https://github.com/howdu/filament-record-switcher/issues",
-                "source": "https://github.com/howdu/filament-record-switcher"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/howdu",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-01-28T07:05:57+00:00"
         },
         {
             "name": "icamys/php-sitemap-generator",

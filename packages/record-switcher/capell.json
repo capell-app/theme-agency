@@ -1,0 +1,96 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/record-switcher",
+    "slug": "record-switcher",
+    "displayName": "Record Switcher",
+    "kind": "package",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Fast Filament edit-page record switching for Capell admins, with searchable suggestions and keyboard selection.",
+    "product": {
+        "group": "Capell Foundation",
+        "tier": "free",
+        "bundle": "foundation"
+    },
+    "namespace": "Capell\\RecordSwitcher",
+    "surfaces": ["admin"],
+    "dependencies": {
+        "requires": ["capell-app/admin", "capell-app/core"],
+        "supports": [],
+        "conflicts": ["howdu/filament-record-switcher"]
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": [],
+        "admin": [
+            "Capell\\RecordSwitcher\\Providers\\RecordSwitcherServiceProvider"
+        ],
+        "frontend": []
+    },
+    "contributes": [
+        {
+            "type": "asset",
+            "class": "Capell\\RecordSwitcher\\Manifest\\RecordSwitcherAssetsContribution",
+            "surface": "admin",
+            "assets": ["record-switcher"]
+        }
+    ],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "actions": [],
+    "settings": [],
+    "permissions": [],
+    "capabilities": [
+        "admin-record-switching",
+        "edit-page-searchable-record-navigation",
+        "keyboard-tab-suggestion-acceptance",
+        "filament-heading-switcher",
+        "first-party-admin-assets"
+    ],
+    "performance": {
+        "frontendRenderBudgetMs": 0,
+        "adminQueryBudget": 10,
+        "cacheTags": [],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": [],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [],
+    "commercial": {
+        "proposedLicense": "free",
+        "requestedCertification": "first-party",
+        "supportPolicy": "capell-first-party",
+        "privateDocsRequested": false
+    },
+    "marketplace": {
+        "summary": "Jump between editable Capell records directly from the page heading with fast suggestions and Tab-to-accept keyboard flow.",
+        "description": "Record Switcher keeps editors moving across pages, layouts, widgets, sections, and navigation records without returning to table views. It ships first-party admin assets, a reusable Filament edit-page trait, and Capell-owned styling that matches the admin surface.",
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.svg",
+                "alt": "Record Switcher extension card showing searchable page suggestions",
+                "caption": "Marketplace preview for the Record Switcher admin extension."
+            },
+            {
+                "path": "docs/assets/marketplace/admin-heading-switcher.svg",
+                "alt": "Capell admin heading with record switcher suggestions open",
+                "caption": "Searchable heading switcher for moving between editable records."
+            }
+        ],
+        "categories": ["admin", "foundation", "editor-productivity"]
+    }
+}

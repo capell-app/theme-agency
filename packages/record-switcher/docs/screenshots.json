@@ -1,0 +1,18 @@
+{
+    "entries": [
+        {
+            "key": "record-switcher.extension-card",
+            "surface": "marketplace",
+            "title": "Record Switcher marketplace card",
+            "screenshotPath": "packages/record-switcher/docs/assets/marketplace/extension-card.svg",
+            "required": true
+        },
+        {
+            "key": "record-switcher.admin-heading-switcher",
+            "surface": "admin",
+            "title": "Admin heading switcher suggestions",
+            "screenshotPath": "packages/record-switcher/docs/assets/marketplace/admin-heading-switcher.svg",
+            "required": true
+        }
+    ]
+}

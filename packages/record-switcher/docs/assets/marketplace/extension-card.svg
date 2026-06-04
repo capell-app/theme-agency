@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+    <title id="title">Record Switcher extension card</title>
+    <desc id="desc">Capell admin heading with a record switcher search menu.</desc>
+    <rect width="1200" height="675" fill="#f8fafc"/>
+    <rect x="110" y="92" width="980" height="491" rx="28" fill="#ffffff" stroke="#d1d5db" stroke-width="2"/>
+    <text x="170" y="174" font-family="Inter, Arial, sans-serif" font-size="34" fill="#6b7280">Pages / News / Edit</text>
+    <text x="170" y="260" font-family="Inter, Arial, sans-serif" font-size="78" font-weight="800" fill="#111827">News</text>
+    <path d="M760 225l18 20 18-20z" fill="#374151"/>
+    <rect x="170" y="305" width="640" height="178" rx="18" fill="#ffffff" stroke="#9ca3af" stroke-width="3"/>
+    <text x="210" y="373" font-family="Inter, Arial, sans-serif" font-size="38" fill="#111827">metal</text>
+    <line x1="170" y1="404" x2="810" y2="404" stroke="#e5e7eb" stroke-width="2"/>
+    <text x="210" y="459" font-family="Inter, Arial, sans-serif" font-size="29" fill="#374151">Metal Fabrication News</text>
+    <text x="210" y="521" font-family="Inter, Arial, sans-serif" font-size="28" fill="#6b7280">Manufacturing / Market Updates</text>
+    <text x="170" y="600" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" fill="#111827">Fast admin record switching for Capell editors</text>
+</svg>

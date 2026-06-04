@@ -119,6 +119,7 @@ it('groups packages into the current product bundles', function (): void {
             'layout-builder/capell.json',
             'media-library/capell.json',
             'navigation/capell.json',
+            'record-switcher/capell.json',
             'structured-content-library/capell.json',
             'tags/capell.json',
             'theme-agency/capell.json',
