@@ -6,6 +6,8 @@ All notable changes to `capell-app/comments` will be documented in this file.
 
 ### 2026-06-04
 
+- Added auto-inject regression coverage proving cached comment shells do not expose comment bodies, author PII, model identifiers, moderation state, Livewire snapshots, or admin URLs.
+- Added Comments architecture coverage for strict equality, public-runtime admin/authoring isolation, and public Blade database-access/authoring-marker guards.
 - Wired queued moderator notifications for configured moderator email addresses when new comments enter pending approval or pending email verification.
 - Added listener registration and notification coverage for moderator emails, invalid-address filtering, duplicate suppression, and spam/approved suppression.
 - Hardened the public comment submission throttle key so changing the author email no longer resets the primary commentable/IP rate-limit bucket.

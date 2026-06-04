@@ -68,6 +68,9 @@ to registered Capell content.
   author email, visitor hashes, tokens, or admin URLs.
 - The thread endpoint is designed for dynamic frontend loading rather than
   embedding moderation state in cached page HTML.
+- The auto-injected cached shell is covered by regression tests that assert it
+  stays free of comment bodies, author PII, model identifiers, moderation state,
+  Livewire snapshots, and admin URLs.
 
 ## Runtime Surface
 
@@ -120,6 +123,9 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
   attacker-controlled fields such as author email must not reset that bucket.
 - Keep moderator notifications status-gated to comments that need review; spam
   and already-public comments should not trigger moderator email.
+- Keep public Blade and frontend runtime classes covered by the package Arch
+  tests so public output stays free of database access, admin dependencies, and
+  authoring markers.
 - Keep `CommentsHealthCheck` aligned with the manifest's critical package-health
   claim whenever routes, storage, settings, or frontend component aliases change.
 - Add focused docs when new commentable registries, notification flows, or

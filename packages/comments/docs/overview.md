@@ -76,6 +76,9 @@ thread DTOs.
 - Public DTOs should stay free of moderation status, model IDs, author email,
   visitor hashes, tokens, permissions, and admin URLs.
 - The public thread endpoint should not be cached as shared HTML.
+- The auto-injected cached shell has regression coverage proving it does not
+  expose comments, author PII, model identifiers, moderation state, Livewire
+  snapshots, or admin URLs before the no-store thread endpoint loads.
 - The Livewire public form passes honeypot and render-age metadata into
   `CreateCommentAction`; keep those checks before persistence.
 
@@ -88,4 +91,5 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
 The current focused tests cover settings registration, settings resolution,
 manifest requirements, health diagnostics, email verification, spam scoring,
 moderator notification wiring, public thread rendering, component submission,
-throttling, and bot-trap rejection.
+auto-inject shell safety, package architecture boundaries, throttling, and
+bot-trap rejection.

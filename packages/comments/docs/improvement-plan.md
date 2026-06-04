@@ -16,6 +16,7 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 - **2026-06-04:** Implemented automatic local spam scoring for configured link-count and blocked-term rules, storing `spam_reasons`, marking flagged submissions as `Spam`, and skipping verification tokens for auto-spam comments.
 - **2026-06-04:** Hardened the public submit throttle key to use commentable + IP data without attacker-controlled author email, with Livewire regression coverage.
 - **2026-06-04:** Wired queued moderator notifications for configured moderator email addresses when new comments enter pending approval or pending email verification, with listener registration and status-gating tests.
+- **2026-06-04:** Added auto-inject anonymous-leakage coverage for the real render-hook path plus package Arch tests for strict equality, public-runtime admin/authoring isolation, and public Blade database/authoring-marker guards.
 
 ## 2. Improvements (existing functionality)
 
@@ -63,11 +64,11 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **XSS / sanitization — low residual but worth hardening.** Body is `strip_tags` + whitespace-collapsed, capped at 5000 chars (`src/Support/CommentBodySanitizer.php`), and output is Blade-escaped via `{{ }}` (`resources/views/livewire/thread.blade.php:27,50`), and `PublicCommentData` omits all sensitive fields — so stored-XSS surface is low. Residual: the sanitizer does not strip Unicode bidi/zero-width/control characters (spoofing) and `linkCount()` only counts `http(s)://` (misses `www.`/bare domains), weakening any future link-based spam rule. `src/Support/CommentBodySanitizer.php:11-25`.
 
-- **Public-output safety — overall good, two notes.** `BuildPublicThreadAction::toData()` correctly emits only public id, sanitized body, display name, timestamp, depth, reply count, children — no status, model id, email, hashes, tokens, or admin URL (matches the README Public Safety contract). The thread endpoint sets `Cache-Control: no-store, private` (`src/Http/Controllers/RenderCommentThreadController.php:20`). Notes: (1) public Blade does not query the DB — data is hydrated by the Action ✔; (2) `auto_inject` injects `thread-shell` with the encrypted `threadKey` into cached page HTML (`src/Providers/FrontendServiceProvider.php:92`) — the key is `Crypt::encryptString` of type/id/site/lang, opaque and safe, but there is no test proving an anonymous, cached page never leaks the decrypted payload or moderation state. Add an explicit anonymous-leakage test for the `auto_inject` path.
+- **Public-output safety coverage shipped.** `BuildPublicThreadAction::toData()` correctly emits only public id, sanitized body, display name, timestamp, depth, reply count, children — no status, model id, email, hashes, tokens, or admin URL (matches the README Public Safety contract). The thread endpoint sets `Cache-Control: no-store, private` (`src/Http/Controllers/RenderCommentThreadController.php:20`). `AutoInjectRenderHookTest` now exercises the real `RenderHookRegistry` auto-inject path and proves the cached shell omits comment bodies, author PII, model identifiers, moderation state, Livewire snapshots, and admin URLs. `CommentsBoundaryTest` adds package Arch coverage plus public Blade guards against database access and authoring markers.
 
 - **PII / retention.** Author `name`/`email` are `encrypted` at rest ✔ and `email_hash` is HMAC ✔ (`src/Models/CommentAuthor.php:50-58,123`). Gaps: (1) `email_hash_secret`/`visitor_hash_secret` default to `null` from env and silently fall back to `app.key` (`config/capell-comments.php:22-23`, `src/Support/VisitorHasher.php:15`, `CommentAuthor::emailHash`) — rotating `app.key` orphans all hashes; document and warn. (2) No retention/erasure policy or command for visitor IP/UA hashes or author records (GDPR right-to-erasure). (3) `internal_notes` and `moderation_note` are plaintext.
 
-- **Test gaps.** Coverage now includes health diagnostics, spam scoring, moderator notification wiring/status-gating, public submit throttling, and bot-trap rejection at action and Livewire levels. Still not covered: `auto_inject` anonymous-leakage, reply pagination, performance budgets, and there are **no Architecture tests** for this package.
+- **Test gaps.** Coverage now includes health diagnostics, spam scoring, moderator notification wiring/status-gating, `auto_inject` anonymous-leakage, public-output Architecture guards, public submit throttling, and bot-trap rejection at action and Livewire levels. Still not covered: reply pagination and performance budgets.
 
 - **i18n.** Strings are translated via `capell-comments::` namespaces ✔. `diffForHumans()` in the public Blade (`thread.blade.php:24,47`) is not locale-pinned to the site language and may render in the app locale rather than the page's `language_id`.
 
@@ -97,7 +98,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 | Shipped 2026-06-04: implement automatic spam scoring (`max_links`, `blocked_terms`, write `spam_reasons`) | Now    | M      | High   | §3, §4      |
 | Shipped 2026-06-04: fix throttle key (drop attacker-controlled email from primary bucket)     | Now    | S      | High   | §3, §4      |
 | Shipped 2026-06-04: wire moderator new-comment notification listener on `CommentCreated`      | Now    | M      | High   | §2, §3      |
-| Add `auto_inject` anonymous-leakage + throttle Pest tests; add Arch tests                     | Now    | M      | High   | §4          |
+| Shipped 2026-06-04: add `auto_inject` anonymous-leakage tests and Arch tests                 | Now    | M      | High   | §4          |
 | Shipped 2026-06-03: add `LatestCommentsWidget` to `capell.json` contributes[]                 | Now    | S      | Med    | §2, §4      |
 | Wire the 4 `screenshots.json` captures into marketplace + new summary/description             | Now    | S      | Med    | §5          |
 | Implement reply pagination using `reply_page_size`; cap subtree query                         | Next   | M      | High   | §2, §3      |
