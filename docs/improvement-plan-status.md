@@ -69,7 +69,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | shopify-commerce | 6 | 7 | 4 | Slice committed | Current follow-up scrubs persisted sync errors; sync loop, customer producer, and webhook reachability remain high value. |
 | site-discovery | 6 | 5 | 4 | Slice committed | `c76a0cc14` merged URL registry work; continue with remaining discovery/SEO rows. |
 | structured-content-library | 7 | 5 | 4 | Slice committed | `73eed65c8` landed Wave 7 readiness; current follow-up hardens public payload sanitization, publish timestamps, and import slug dedup. |
-| tags | 6 | 5 | 4 | Needs audit | No recent package slice identified; taxonomy/status/workspace drift needs review. |
+| tags | 6 | 5 | 4 | Slice committed | Latest Tags slice binds admin tag type selection to `TagTypeEnum`, removes factory type drift, declares taxonomy capabilities/cache tag, and updates docs/tests; continue with workspace ownership, status visibility, cache invalidation sources, and policy/deletion tests. |
 | theme-agency | 6 | 6 | 3 | Needs audit | Theme-line systemic work: extends alignment, tokens, screenshots, WCAG/dark mode. |
 | theme-commerce | 6 | 5 | 4 | Needs audit | Theme-line systemic work plus commerce-specific real CTA/form behavior. |
 | theme-corporate | 7 | 5 | 3 | Needs audit | Theme-line systemic work plus corporate-specific screenshots and WCAG checks. |
@@ -89,7 +89,6 @@ No package should be marked `Complete` from commit history alone. Completion req
 
 Highest-value remaining work should start with packages that are both high-risk and still marked `Needs audit`:
 
-1. `tags` taxonomy/status/workspace drift.
-2. Theme-line systemic pass: `extends` alignment, token-driven colors, screenshots, WCAG/dark mode.
+1. Theme-line systemic pass: `extends` alignment, token-driven colors, screenshots, WCAG/dark mode.
 
 After each package slice lands, update this tracker with the commit and any rows that remain high-risk.
