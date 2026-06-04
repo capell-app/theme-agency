@@ -77,6 +77,21 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Dashboard Reports extension preview image",
                 "caption": "Dashboard Reports extension preview"
+            },
+            {
+                "path": "docs/assets/marketplace/publishing-trend-dashboard-widget.svg",
+                "alt": "Illustrated Dashboard Reports publishing trend widget with published and scheduled page series",
+                "caption": "Illustrated publishing trend widget preview"
+            },
+            {
+                "path": "docs/assets/marketplace/content-health-dashboard-widget.svg",
+                "alt": "Illustrated Dashboard Reports content health widget with scheduled expired stale and URL-less page issues",
+                "caption": "Illustrated content health widget preview"
+            },
+            {
+                "path": "docs/assets/marketplace/dashboard-report-settings.svg",
+                "alt": "Illustrated Dashboard Reports settings screen with widget visibility controls",
+                "caption": "Illustrated dashboard report settings preview"
             }
         ],
         "categories": ["admin", "operations"]

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Dashboard Reports content health widget</title>
+  <desc id="desc">Illustrated Capell admin dashboard card showing content health issues and counts.</desc>
+  <rect width="1280" height="720" fill="#f8fafc"/>
+  <rect x="112" y="68" width="1056" height="584" rx="28" fill="#ffffff" stroke="#dbe3ef" stroke-width="2"/>
+  <text x="162" y="128" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="700" fill="#102033">Content Health</text>
+  <text x="162" y="164" font-family="Inter, Arial, sans-serif" font-size="18" fill="#64748b">Editorial issues needing review</text>
+  <g>
+    <rect x="162" y="214" width="956" height="86" rx="20" fill="#eff6ff" stroke="#bfdbfe"/>
+    <circle cx="210" cy="257" r="18" fill="#2563eb"/>
+    <text x="202" y="264" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">8</text>
+    <text x="252" y="249" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700" fill="#1e3a8a">Scheduled pages</text>
+    <text x="252" y="276" font-family="Inter, Arial, sans-serif" font-size="16" fill="#475569">Pages queued for future publication</text>
+  </g>
+  <g>
+    <rect x="162" y="326" width="956" height="86" rx="20" fill="#fff7ed" stroke="#fed7aa"/>
+    <circle cx="210" cy="369" r="18" fill="#d97706"/>
+    <text x="202" y="376" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">3</text>
+    <text x="252" y="361" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700" fill="#7c2d12">Expired pages</text>
+    <text x="252" y="388" font-family="Inter, Arial, sans-serif" font-size="16" fill="#475569">Content past its visible window</text>
+  </g>
+  <g>
+    <rect x="162" y="438" width="956" height="86" rx="20" fill="#fef2f2" stroke="#fecaca"/>
+    <circle cx="210" cy="481" r="18" fill="#dc2626"/>
+    <text x="202" y="488" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">5</text>
+    <text x="252" y="473" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700" fill="#7f1d1d">Pages without URLs</text>
+    <text x="252" y="500" font-family="Inter, Arial, sans-serif" font-size="16" fill="#475569">Published content missing routable URLs</text>
+  </g>
+  <g>
+    <rect x="162" y="550" width="956" height="70" rx="20" fill="#f1f5f9" stroke="#cbd5e1"/>
+    <circle cx="210" cy="585" r="18" fill="#475569"/>
+    <text x="202" y="592" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">12</text>
+    <text x="252" y="592" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700" fill="#334155">Stale pages</text>
+  </g>
+</svg>
