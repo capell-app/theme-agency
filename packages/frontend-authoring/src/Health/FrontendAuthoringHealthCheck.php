@@ -60,14 +60,14 @@ final class FrontendAuthoringHealthCheck implements ChecksExtensionHealth
         $registered = $this->isBeaconRouteRegistered();
 
         return new DoctorCheckResultData(
-            label: 'Frontend Authoring beacon route',
+            label: $this->translation('health.beacon_route.label'),
             passed: $registered,
             message: $registered
-                ? 'The admin beacon route is registered.'
-                : 'The admin beacon route is not registered.',
+                ? $this->translation('health.beacon_route.passed')
+                : $this->translation('health.beacon_route.failed'),
             remediation: $registered
                 ? null
-                : 'Ensure FrontendAuthoringServiceProvider loads the package routes.',
+                : $this->translation('health.beacon_route.remediation'),
         );
     }
 
@@ -79,14 +79,16 @@ final class FrontendAuthoringHealthCheck implements ChecksExtensionHealth
         $unresolvableBindings = $this->unresolvableBindings();
 
         return new DoctorCheckResultData(
-            label: 'Frontend Authoring service bindings',
+            label: $this->translation('health.service_bindings.label'),
             passed: $unresolvableBindings === [],
             message: $unresolvableBindings === []
-                ? 'The editable region registry, editor surface registry, and signer are resolvable.'
-                : 'Unresolvable bindings: ' . implode(', ', $unresolvableBindings) . '.',
+                ? $this->translation('health.service_bindings.passed')
+                : $this->translation('health.service_bindings.failed', [
+                    'bindings' => implode(', ', $unresolvableBindings),
+                ]),
             remediation: $unresolvableBindings === []
                 ? null
-                : 'Ensure FrontendAuthoringServiceProvider registers the authoring service bindings.',
+                : $this->translation('health.service_bindings.remediation'),
         );
     }
 
@@ -98,14 +100,14 @@ final class FrontendAuthoringHealthCheck implements ChecksExtensionHealth
         $readable = $this->isConfigurationReadable();
 
         return new DoctorCheckResultData(
-            label: 'Frontend Authoring configuration',
+            label: $this->translation('health.configuration.label'),
             passed: $readable,
             message: $readable
-                ? 'The capell-frontend-authoring.enabled flag is readable.'
-                : 'The capell-frontend-authoring configuration is not loaded.',
+                ? $this->translation('health.configuration.passed')
+                : $this->translation('health.configuration.failed'),
             remediation: $readable
                 ? null
-                : 'Ensure FrontendAuthoringServiceProvider merges the package configuration.',
+                : $this->translation('health.configuration.remediation'),
         );
     }
 
@@ -117,14 +119,14 @@ final class FrontendAuthoringHealthCheck implements ChecksExtensionHealth
         $hasSecret = $this->hasSigningSecret();
 
         return new DoctorCheckResultData(
-            label: 'Frontend Authoring signing secret',
+            label: $this->translation('health.signing_secret.label'),
             passed: $hasSecret,
             message: $hasSecret
-                ? 'An application key is available for signing edit payloads.'
-                : 'No application key is available; edit payloads cannot be signed or verified.',
+                ? $this->translation('health.signing_secret.passed')
+                : $this->translation('health.signing_secret.failed'),
             remediation: $hasSecret
                 ? null
-                : 'Set app.key so signed editor routes can be generated and validated.',
+                : $this->translation('health.signing_secret.remediation'),
         );
     }
 
@@ -163,5 +165,13 @@ final class FrontendAuthoringHealthCheck implements ChecksExtensionHealth
         $secret = config('app.key');
 
         return is_string($secret) && $secret !== '';
+    }
+
+    /**
+     * @param  array<string, string>  $replace
+     */
+    private function translation(string $key, array $replace = []): string
+    {
+        return (string) __("capell-frontend-authoring::authoring.{$key}", $replace);
     }
 }

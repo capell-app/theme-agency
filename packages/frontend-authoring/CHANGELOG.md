@@ -4,6 +4,7 @@ All notable changes to `capell-app/frontend-authoring` will be documented in thi
 
 ## Unreleased
 
+- Added translated Diagnostics messages and focused failure-mode coverage for the real `FrontendAuthoringHealthCheck` probes.
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
 
 ## 2026-06-03

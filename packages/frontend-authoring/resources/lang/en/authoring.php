@@ -20,6 +20,32 @@ return [
     'edit_region' => 'Edit content',
     'editing_visible' => 'Edit areas shown',
     'hide_edit_areas' => 'Hide edit areas',
+    'health' => [
+        'beacon_route' => [
+            'failed' => 'The admin beacon route is not registered.',
+            'label' => 'Frontend Authoring beacon route',
+            'passed' => 'The admin beacon route is registered.',
+            'remediation' => 'Ensure FrontendAuthoringServiceProvider loads the package routes.',
+        ],
+        'configuration' => [
+            'failed' => 'The capell-frontend-authoring configuration is not loaded.',
+            'label' => 'Frontend Authoring configuration',
+            'passed' => 'The capell-frontend-authoring.enabled flag is readable.',
+            'remediation' => 'Ensure FrontendAuthoringServiceProvider merges the package configuration.',
+        ],
+        'service_bindings' => [
+            'failed' => 'Unresolvable bindings: :bindings.',
+            'label' => 'Frontend Authoring service bindings',
+            'passed' => 'The editable region registry, editor surface registry, and signer are resolvable.',
+            'remediation' => 'Ensure FrontendAuthoringServiceProvider registers the authoring service bindings.',
+        ],
+        'signing_secret' => [
+            'failed' => 'No application key is available; edit payloads cannot be signed or verified.',
+            'label' => 'Frontend Authoring signing secret',
+            'passed' => 'An application key is available for signing edit payloads.',
+            'remediation' => 'Set app.key so signed editor routes can be generated and validated.',
+        ],
+    ],
     'inline_editor' => 'Inline editor',
     'meta_description' => 'Page description',
     'page_content' => 'Page content',

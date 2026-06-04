@@ -72,6 +72,10 @@ The documentation screenshots include the package working inside `capell-app`: t
 - Controllers: `BeaconController`, `EditRegionController`.
 - Routes: `packages/frontend-authoring/routes/web.php`.
 
+## Diagnostics
+
+The package manifest registers `FrontendAuthoringHealthCheck` as a critical Diagnostics health check. It verifies the beacon route is registered, the enabled config flag is readable, `app.key` is present for signing, and the editable region registry, editor surface registry, and region signer resolve from the container.
+
 ## Data And Persistence
 
 - Config: `packages/frontend-authoring/config/capell-frontend-authoring.php`.
