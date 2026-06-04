@@ -69,7 +69,7 @@ Manifest `capabilities` are only `["dashboard-reports", "dashboard-reports-admin
 | Fix per-issue filtered deep-links (not unfiltered index)                            | Now    | M      | Med    | §2, §3      |
 | Commit deployment screenshot captures for the 3 screenshot-contract targets         | Now    | S      | Med    | §1, §5      |
 | Rewrite marketplace summary + composer description                                  | Now    | S      | Med    | §5          |
-| Remove stale `ContentHealthData::from([...])` test fixture; add gating/render tests | Now    | S      | Med    | §4          |
+| Shipped 2026-06-04: Remove stale `ContentHealthData::from([...])` fixture + add gating/render tests | Done | S | Med | §4 |
 | De-duplicate date-range mapping (pass resolved range into Action)                   | Next   | S      | Med    | §2          |
 | Wire configurable stale-day threshold (+ reconcile docs)                            | Next   | S      | Med    | §2, §3      |
 | Resolve `totalScheduled` period semantics + range-aware bucketing/labels            | Next   | M      | Med    | §2          |
