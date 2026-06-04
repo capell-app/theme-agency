@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\FrontendAuthoring\Actions;
 
+use Capell\Core\Facades\CapellCore;
 use Capell\FrontendAuthoring\Data\EditableRegionPayloadData;
 use Capell\PublishingStudio\Actions\CopyOnWriteAction;
 use Capell\PublishingStudio\Actions\GenerateWorkspacePreviewUrlAction;
@@ -19,11 +20,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsObject;
 use RuntimeException;
-use Throwable;
 
 class UpdateEditableRegionAction
 {
     use AsObject;
+
+    private const string PUBLISHING_STUDIO_PACKAGE = 'capell-app/publishing-studio';
 
     /**
      * @return array{cleared: int, urls: list<string>, status: string, redirect_url: string|null}
@@ -64,6 +66,8 @@ class UpdateEditableRegionAction
      */
     private function saveForApproval(Model $record, EditableRegionPayloadData $payload, string $value, array $urls): array
     {
+        abort_unless(CapellCore::isPackageInstalled(self::PUBLISHING_STUDIO_PACKAGE), 409);
+
         $workspaceClass = Workspace::class;
         $workspaceContextClass = WorkspaceContext::class;
         $workspaceRegistryClass = WorkspaceRegistry::class;
@@ -98,12 +102,8 @@ class UpdateEditableRegionAction
 
         $user = Auth::user();
 
-        if ($user instanceof User && method_exists($workspace, 'submitForApproval')) {
-            try {
-                $workspace->submitForApproval($user, 'Submitted from frontend inline editor.');
-            } catch (Throwable) {
-                $workspace->forceFill(['status' => 'in_review', 'submitted_at' => now()])->save();
-            }
+        if ($user instanceof User) {
+            $workspace->submitForApproval($user, 'Submitted from frontend inline editor.');
         }
 
         $path = parse_url($payload->currentUrl, PHP_URL_PATH);

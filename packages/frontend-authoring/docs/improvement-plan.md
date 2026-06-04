@@ -5,6 +5,7 @@
 ## Completed Improvement Slices
 
 - **2026-06-04:** Defined the advertised `frontend-authoring.edit` Gate as a package-owned deny-by-default ability that host apps can override, while preserving existing `editContent` / `update` pageable policy fallbacks. Focused coverage proves the ability is registered, denies by default, can be overridden, and does not suppress fallback authorization.
+- **2026-06-04:** Guarded the optional Publishing Studio approval workspace branch behind the package install state and removed the catch-all fallback that converted approval failures into `in_review` saves. Focused coverage proves unavailable Publishing Studio returns a 409 without creating a workspace, installed approval still creates an in-review workspace, and approval submission failures now surface.
 
 ## 1. Snapshot
 
@@ -16,7 +17,7 @@ Frontend Authoring is the foundation in-page editing bridge: it adds an admin-on
 - **Shipped 2026-06-04: Define the `frontend-authoring.edit` Gate.** `FrontendAuthoringServiceProvider` now registers the advertised ability as deny-by-default when the host has not defined it. Host apps can override it with `Gate::define()` / `Gate::before()`, and `AuthorizeEditableRegionAction` still falls back to pageable `editContent` / `update` policies when the package ability denies. `src/Providers/FrontendAuthoringServiceProvider.php`, `tests/Feature/AuthorizeEditableRegionActionTest.php` — S/M.
 - **Extract beacon admin-manifest assembly into an Action** — `BeaconController::__invoke` inlines user-shape building, page resolution, and view rendering. The skill mandates domain behaviour live in Actions; the controller should delegate to e.g. `BuildBeaconResponseAction`. Improves testability and keeps the controller thin like `EditRegionController`. `src/Http/Controllers/BeaconController.php:20-70` — M.
 - **Replace string-literal field/surface logic with typed enums** — `field`, `type` (`text`/`html`), `surface` (`field`), and `savedStatus` (`saved`/`pending_approval`) are bare strings compared in multiple files (`EditRegionField::field()`, `UpdateEditableRegionAction::applyValue()`, `currentValue()`). Per Capell enum conventions, model these as backed enums with `HasLabels` to remove drift risk between `region.blade.php`, the Livewire component, and the actions. `src/Livewire/EditRegionField.php:90-130`, `src/Actions/UpdateEditableRegionAction.php` — M.
-- **Harden `UpdateEditableRegionAction` approval branch against duck-typing** — it uses `method_exists($workspace, 'submitForApproval')` and a `try/catch(Throwable)` that silently `forceFill(['status' => 'in_review'])` on any failure, swallowing real errors. It also hard-references `Capell\PublishingStudio\Actions\*` though publishing-studio is not in `requires`/`supports`. Gate this branch on `CapellCore::isPackageInstalled('capell-app/publishing-studio')` and surface failures instead of masking them. `src/Actions/UpdateEditableRegionAction.php` — M.
+- **Shipped 2026-06-04: Harden `UpdateEditableRegionAction` approval branch against duck-typing.** The approval workspace branch now aborts with 409 unless `capell-app/publishing-studio` is installed, and `submitForApproval()` failures bubble instead of being caught and forced into `in_review`. `src/Actions/UpdateEditableRegionAction.php`, `tests/Feature/EditableRegionEditingTest.php` — M.
 - **Cache `BuildAuthoringBannerContextAction` table check** — it calls `Schema::hasTable(...)` on every admin beacon hit before querying `cached_model_urls`. Since html-cache is a hard dependency the table is always present; drop the probe or memoise it to respect the 20ms budget. `src/Actions/BuildAuthoringBannerContextAction.php` — S.
 - **Refresh the CHANGELOG** — only an `Unreleased` stub ("Prepared package metadata and documentation…"). The signed-payload editor, beacon origin hardening, and approval-workspace flow are unrecorded. `CHANGELOG.md` — S.
 
@@ -42,7 +43,7 @@ Tie-back to `capabilities: [authoring-surface, preview-only, beacon, cache-block
 
 - **Stub health check** misrepresents `severity: critical` coverage (see §2). `src/Health/FrontendAuthoringHealthCheck.php` — risk: Diagnostics reports green while the surface is broken.
 - **Undefined `frontend-authoring.edit` ability** (see §2/§3) — advertised gate is inert in production; real gating silently delegates to pageable policies. `src/Actions/AuthorizeEditableRegionAction.php:24`.
-- **Hard dependency on un-required publishing-studio classes** in `UpdateEditableRegionAction` — a fatal `Error` if the approval path runs without that package installed; not in `dependencies.requires`/`supports`. `src/Actions/UpdateEditableRegionAction.php`.
+- **Shipped 2026-06-04: approval path now respects optional publishing-studio availability.** `UpdateEditableRegionAction` checks `CapellCore::isPackageInstalled('capell-app/publishing-studio')` before creating an approval workspace and surfaces submission failures instead of masking them. `src/Actions/UpdateEditableRegionAction.php`.
 - **Orphan duplicate asset**: `packages/frontend-authoring/docs/images/screenshots/capell-app-frontend-authoring-working.png` (a nested `packages/frontend-authoring/...` path inside the package) — a single 37KB stray copy, unreferenced by `screenshots.json`. Delete.
 - **`PassThroughActivityMiddleware` is a literal no-op** aliased only when `frontend.activity` is unregistered. Fine as a fallback shim, but undocumented; a reader can't tell it's intentional. Add a class docblock. `src/Http/Middleware/PassThroughActivityMiddleware.php`.
 
@@ -73,7 +74,7 @@ This is a **foundation/bundled** package (`tier: free`, `bundle: foundation`, `p
 | ------------------------------------------------------------------------------------------------- | ------ | -------- | ------ | ----------- |
 | Implement real probes in `FrontendAuthoringHealthCheck` (severity is `critical`)                  | Now    | S        | High   | §2, §4      |
 | Shipped 2026-06-04: define/deny-by-default the `frontend-authoring.edit` ability                  | Done   | S/M      | High   | §2, §3, §4  |
-| Guard publishing-studio approval branch behind `isPackageInstalled` + stop swallowing errors      | Now    | M        | High   | §2, §4      |
+| Shipped 2026-06-04: guard publishing-studio approval branch behind `isPackageInstalled` + stop swallowing errors | Done | M | High | §2, §4 |
 | Promote real desktop+mobile captures into `marketplace.screenshots[]`; delete orphan nested asset | Now    | S        | Med    | §4, §5      |
 | Sharpen composer `description` + marketplace `summary` to outcome-led copy                        | Now    | S        | Med    | §5          |
 | Add `EditableRegionSigner` tamper/format unit test + beacon render-budget assertion               | Now    | S        | Med    | §4          |

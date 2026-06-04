@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Facades\CapellCore;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\PageUrl;
@@ -19,10 +20,12 @@ use Capell\HtmlCache\Models\CachedModelUrl;
 use Capell\HtmlCache\Support\Cache\HtmlCachePathResolver;
 use Capell\PublishingStudio\Enums\WorkspaceStatusEnum;
 use Capell\PublishingStudio\Models\Workspace;
+use Capell\PublishingStudio\Providers\PublishingStudioServiceProvider;
 use Capell\PublishingStudio\WorkspaceRegistry;
 use Capell\Tests\Fixtures\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -341,7 +344,9 @@ it('saves text rich html and meta edits while clearing every affected cached pag
 
 it('saves inline edits into an approval workspace and returns a preview redirect when approval is required', function (): void {
     Config::set('capell-frontend-authoring.workflow.require_approval', true);
+    CapellCore::forcePackageInstalled(PublishingStudioServiceProvider::$packageName);
     ensureEditableRegionWorkflowTables();
+    WorkspaceRegistry::reset();
     WorkspaceRegistry::register(Translation::class);
 
     $user = User::factory()->create();
@@ -368,7 +373,55 @@ it('saves inline edits into an approval workspace and returns a preview redirect
         ->and($draftTranslation->title)->toBe('Draft title');
 });
 
-function ensureEditableRegionWorkflowTables(): void
+it('rejects approval workspace saves when publishing studio is unavailable', function (): void {
+    Config::set('capell-frontend-authoring.workflow.require_approval', true);
+    CapellCore::forcePackageInstalled(PublishingStudioServiceProvider::$packageName, false);
+    ensureEditableRegionWorkflowTables();
+    WorkspaceRegistry::reset();
+    WorkspaceRegistry::register(Translation::class);
+
+    $user = User::factory()->create();
+    actingAs($user);
+    allowEditableRegionEdits();
+
+    $translation = createEditableRegionTranslation();
+
+    try {
+        UpdateEditableRegionAction::run(editableRegionPayload($translation, 'title'), 'Draft title', $user);
+    } catch (HttpException $exception) {
+        expect($exception->getStatusCode())->toBe(409);
+        $translation->refresh();
+
+        expect($translation->title)->toBe('Original title')
+            ->and(Workspace::query()->count())->toBe(0);
+
+        return;
+    }
+
+    throw new RuntimeException('Expected publishing studio unavailable saves to abort with HTTP 409.');
+});
+
+it('surfaces publishing studio approval failures instead of forcing an in review fallback', function (): void {
+    Config::set('capell-frontend-authoring.workflow.require_approval', true);
+    CapellCore::forcePackageInstalled(PublishingStudioServiceProvider::$packageName);
+    ensureEditableRegionWorkflowTables(includeApprovalTable: false);
+    WorkspaceRegistry::reset();
+    WorkspaceRegistry::register(Translation::class);
+
+    $user = User::factory()->create();
+    actingAs($user);
+    allowEditableRegionEdits();
+    Route::get('/workflow-preview-stub', fn (): string => 'preview')->name('capell-frontend.home');
+
+    $translation = createEditableRegionTranslation();
+
+    expect(fn (): array => UpdateEditableRegionAction::run(editableRegionPayload($translation, 'title'), 'Draft title', $user))
+        ->toThrow(QueryException::class);
+
+    expect(DB::table('preview_links')->count())->toBe(0);
+});
+
+function ensureEditableRegionWorkflowTables(bool $includeApprovalTable = true): void
 {
     Relation::morphMap([
         'workspace' => Workspace::class,
@@ -432,7 +485,7 @@ function ensureEditableRegionWorkflowTables(): void
         });
     }
 
-    if (! Schema::hasTable('workspace_approvals')) {
+    if ($includeApprovalTable && ! Schema::hasTable('workspace_approvals')) {
         Schema::create('workspace_approvals', function (Blueprint $table): void {
             $table->id();
             $table->unsignedBigInteger('workspace_id');
