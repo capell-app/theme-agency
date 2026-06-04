@@ -6,6 +6,7 @@ namespace Capell\FrontendOptimizer\Tests;
 
 use Capell\Admin\Providers\AdminServiceProvider as CapellAdminServiceProvider;
 use Capell\Core\Facades\CapellCore;
+use Capell\Frontend\Providers\FrontendServiceProvider;
 use Capell\FrontendOptimizer\Providers\FrontendOptimizerServiceProvider;
 use Capell\Tests\AbstractTestCase;
 use Livewire\LivewireServiceProvider;
@@ -25,6 +26,7 @@ abstract class FrontendOptimizerTestCase extends AbstractTestCase
         return [
             ...parent::getPackageProviders($app),
             CapellAdminServiceProvider::class,
+            FrontendServiceProvider::class,
             LivewireServiceProvider::class,
             FrontendOptimizerServiceProvider::class,
         ];
@@ -36,6 +38,7 @@ abstract class FrontendOptimizerTestCase extends AbstractTestCase
         parent::getEnvironmentSetUp($app);
 
         CapellCore::forcePackageInstalled(CapellAdminServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(FrontendServiceProvider::$packageName);
         CapellCore::registerPackage(
             FrontendOptimizerServiceProvider::$packageName,
             path: realpath(__DIR__ . '/../') ?: null,

@@ -21,7 +21,6 @@ return new class extends SettingsMigration
         $this->addIfMissing('frontend_optimizer.playwright_wait_strategy', 'networkidle');
         $this->addIfMissing('frontend_optimizer.playwright_timeout', 120);
         $this->addIfMissing('frontend_optimizer.max_inline_css_bytes', 20000);
-        $this->addIfMissing('frontend_optimizer.debug_query_support', true);
     }
 
     private function addIfMissing(string $key, mixed $value): void

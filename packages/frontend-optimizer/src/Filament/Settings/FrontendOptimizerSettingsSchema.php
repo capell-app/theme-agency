@@ -67,11 +67,6 @@ final class FrontendOptimizerSettingsSchema implements HasSchema
                         ->integer()
                         ->minValue(1)
                         ->suffix(__('capell-admin::form.seconds')),
-                    HelperText::apply(
-                        Toggle::make('debug_query_support')
-                            ->label(__('capell-frontend-optimizer::settings.debug_query_support')),
-                        'capell-frontend-optimizer::settings.debug_query_support_helper',
-                    ),
                 ]),
         ];
     }

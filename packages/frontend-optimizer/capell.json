@@ -90,11 +90,6 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Frontend Optimizer extension preview image",
                 "caption": "Frontend Optimizer extension preview"
-            },
-            {
-                "path": "docs/screenshots/frontend-page-before-after-html-output-inspection.png",
-                "alt": "Before and after comparison of a public page's head output with critical CSS inlined and non-critical assets deferred",
-                "caption": "Before and after: critical CSS inlined and non-critical CSS/JavaScript deferred in the public page head"
             }
         ],
         "categories": ["foundation", "frontend"]

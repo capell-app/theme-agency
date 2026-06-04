@@ -88,11 +88,6 @@ final class CriticalCssSettings
         return max(1, (int) $this->setting('max_inline_css_bytes', 20000));
     }
 
-    public function debugQuerySupportEnabled(): bool
-    {
-        return $this->setting('debug_query_support', true);
-    }
-
     /** @return array<string, mixed> */
     public function signature(): array
     {

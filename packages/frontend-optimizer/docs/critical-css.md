@@ -69,6 +69,12 @@ If any check fails, the renderer keeps normal asset tags and omits `data-critica
 
 When generated critical CSS is inlined, the renderer also prepends a tiny stability reset for browser-default body margin. This prevents the deferred full stylesheet from moving the whole page after first paint if the generated critical CSS does not include the reset rule.
 
+## HTML Cache Invalidation
+
+Critical CSS generation updates the render profile after the public page has already rendered at least once. If HTML Cache stores that first response, the cached page can keep the fallback stylesheet output until the page is invalidated by another change.
+
+Frontend Optimizer does not currently import `capell-app/html-cache` internals to clear cached HTML on generation completion. A shared event or frontend cache invalidation extension point is needed so `GenerateCriticalCssAction` can notify cache packages without creating direct package coupling.
+
 ## Page Type Opt-Out
 
 Some page types are not worth optimizing. The package adds a page type setting:
@@ -94,7 +100,6 @@ The extension settings page is backed by `FrontendOptimizerSettings` and `Fronte
 | `frontend_optimizer.playwright_wait_strategy` | Browser wait strategy: `load`, `domcontentloaded`, or `networkidle`.        |
 | `frontend_optimizer.playwright_timeout`       | Process timeout in seconds.                                                 |
 | `frontend_optimizer.max_inline_css_bytes`     | Maximum generated CSS size allowed for inline output.                       |
-| `frontend_optimizer.debug_query_support`      | Allows non-production debug query support for isolated critical CSS checks. |
 
 The Node binary still comes from config and can be overridden with `CAPELL_FRONTEND_OPTIMIZER_NODE`.
 

@@ -8,7 +8,7 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 306 |
+| Now    | 302 |
 | Next   | 319 |
 | Later  | 202 |
 
@@ -45,7 +45,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | form-builder | 5 | 6 | 4 | Slice committed | `f59eca815` landed health/spam safety fixes; admin UI and file/payment fields remain high value. |
 | foundation-theme | 6 | 6 | 4 | Slice committed | `978ed62e8` landed health/manifest consistency; continue with WCAG, dark mode, and token rows. |
 | frontend-authoring | 7 | 6 | 3 | Slice committed | `f329dd1e2` landed health/signer tests; continue with gate and publishing integration rows. |
-| frontend-optimizer | 7 | 7 | 4 | Slice committed | `acc89aa2d` landed health/copy fixes; continue with cache invalidation and hot-path rows. |
+| frontend-optimizer | 3 | 7 | 4 | Slice committed | Current follow-up deepens translated renderer/storage/generator/queue health checks, adds public head-render safety coverage for anonymous and non-admin visitors, removes the unused debug query setting, limits marketplace screenshots to committed assets, and documents the HTML Cache invalidation blocker. Continue with screenshot capture, cache invalidation extension points, listener/job/settings coverage, and completion review. |
 | ga4-reports | 6 | 7 | 5 | Slice committed | Current follow-up adds GA4 token/Data API retry-backoff, Retry-After handling, and explicit quota-exhaustion messaging; continue with cache/read-budget, screenshots, operator sync actions, and command convention rows. |
 | hero | 6 | 6 | 4 | Slice committed | Current follow-up aligns admin dependency/surface metadata, declares hero capabilities, removes provider dead code, and updates docs/tests; continue with screenshots, cache safety, render-budget, CTA, and accessibility rows. |
 | html-cache | 7 | 6 | 4 | Slice committed | `b260cd847` fixed invalidation/header issues; CDN purge/SWR/telemetry remain. |

@@ -6,8 +6,6 @@ return [
     'automatic_generation' => 'Automatic generation',
     'automatic_generation_helper' => 'Queue critical CSS generation when a render profile is missing generated CSS.',
     'critical_css' => 'Critical CSS',
-    'debug_query_support' => 'Debug query support',
-    'debug_query_support_helper' => 'Allow non-production requests to isolate above-the-fold CSS with debug query parameters.',
     'disable_critical_css' => 'Disable above-the-fold CSS',
     'enable_critical_css' => 'Enable critical CSS',
     'enable_critical_css_helper' => 'Inline generated above-the-fold CSS before deferred or full stylesheets.',

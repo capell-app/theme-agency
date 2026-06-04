@@ -33,8 +33,6 @@ final class FrontendOptimizerSettings extends Settings implements SettingsContra
 
     public int $max_inline_css_bytes = 20000;
 
-    public bool $debug_query_support = true;
-
     public static function group(): string
     {
         return 'frontend_optimizer';

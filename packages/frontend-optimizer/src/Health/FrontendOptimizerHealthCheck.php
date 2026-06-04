@@ -12,6 +12,7 @@ use Capell\FrontendOptimizer\Support\CriticalCssSettings;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Process\Process;
 use Throwable;
 
 final class FrontendOptimizerHealthCheck implements ChecksExtensionHealth
@@ -30,7 +31,9 @@ final class FrontendOptimizerHealthCheck implements ChecksExtensionHealth
 
         return collect([
             $check->rendererBindingCheck(),
-            $check->storageDiskWritableCheck(),
+            $check->manifestStorageWritableCheck(),
+            $check->criticalCssStorageWritableCheck(),
+            $check->generatorReadinessCheck(),
             $check->generationQueueDriverCheck(),
         ]);
     }
@@ -50,14 +53,14 @@ final class FrontendOptimizerHealthCheck implements ChecksExtensionHealth
         $isBound = $this->optimizerRendererIsBound();
 
         return new DoctorCheckResultData(
-            label: 'Frontend Optimizer asset renderer binding',
+            label: (string) __('capell-frontend-optimizer::health.renderer_binding.label'),
             passed: $isBound,
             message: $isBound
-                ? 'The public asset manifest renderer is bound to the Frontend Optimizer.'
-                : 'The public asset manifest renderer is not bound to the Frontend Optimizer; pages render with the default renderer and receive no optimization.',
+                ? (string) __('capell-frontend-optimizer::health.renderer_binding.passed')
+                : (string) __('capell-frontend-optimizer::health.renderer_binding.failed'),
             remediation: $isBound
                 ? null
-                : 'Ensure the Frontend Optimizer package is installed so its service provider rebinds the FrontendAssetManifestRenderer contract.',
+                : (string) __('capell-frontend-optimizer::health.renderer_binding.remediation'),
         );
     }
 
@@ -65,19 +68,51 @@ final class FrontendOptimizerHealthCheck implements ChecksExtensionHealth
      * Asserts the storage disk used for render-profile manifests and generated
      * critical CSS is writable, since both are written to disk during operation.
      */
-    public function storageDiskWritableCheck(): DoctorCheckResultData
+    public function manifestStorageWritableCheck(): DoctorCheckResultData
     {
-        $isWritable = $this->storageDiskIsWritable();
+        $isWritable = $this->storagePathIsWritable($this->manifestDirectory());
 
         return new DoctorCheckResultData(
-            label: 'Frontend Optimizer storage disk',
+            label: (string) __('capell-frontend-optimizer::health.manifest_storage.label'),
             passed: $isWritable,
             message: $isWritable
-                ? 'The local storage disk is writable for render-profile manifests and critical CSS.'
-                : 'The local storage disk is not writable; render-profile manifests and generated critical CSS cannot be persisted.',
+                ? (string) __('capell-frontend-optimizer::health.manifest_storage.passed')
+                : (string) __('capell-frontend-optimizer::health.manifest_storage.failed'),
             remediation: $isWritable
                 ? null
-                : 'Check filesystem permissions on the local disk so the optimizer can write manifest and critical-CSS files.',
+                : (string) __('capell-frontend-optimizer::health.manifest_storage.remediation'),
+        );
+    }
+
+    public function criticalCssStorageWritableCheck(): DoctorCheckResultData
+    {
+        $isWritable = $this->storagePathIsWritable($this->criticalCssDirectory());
+
+        return new DoctorCheckResultData(
+            label: (string) __('capell-frontend-optimizer::health.critical_css_storage.label'),
+            passed: $isWritable,
+            message: $isWritable
+                ? (string) __('capell-frontend-optimizer::health.critical_css_storage.passed')
+                : (string) __('capell-frontend-optimizer::health.critical_css_storage.failed'),
+            remediation: $isWritable
+                ? null
+                : (string) __('capell-frontend-optimizer::health.critical_css_storage.remediation'),
+        );
+    }
+
+    public function generatorReadinessCheck(): DoctorCheckResultData
+    {
+        $isReady = $this->generatorIsReady();
+
+        return new DoctorCheckResultData(
+            label: (string) __('capell-frontend-optimizer::health.generator.label'),
+            passed: $isReady,
+            message: $isReady
+                ? (string) __('capell-frontend-optimizer::health.generator.passed')
+                : (string) __('capell-frontend-optimizer::health.generator.failed'),
+            remediation: $isReady
+                ? null
+                : (string) __('capell-frontend-optimizer::health.generator.remediation'),
         );
     }
 
@@ -91,21 +126,21 @@ final class FrontendOptimizerHealthCheck implements ChecksExtensionHealth
         $isSafe = ! $this->generationRunsOnSyncQueue();
 
         return new DoctorCheckResultData(
-            label: 'Frontend Optimizer generation queue driver',
+            label: (string) __('capell-frontend-optimizer::health.queue_driver.label'),
             passed: $isSafe,
             message: $isSafe
-                ? 'Critical-CSS generation is dispatched to an asynchronous queue.'
-                : 'Automatic critical-CSS generation is enabled while the queue driver is "sync"; generation would run the real browser inside the public request.',
+                ? (string) __('capell-frontend-optimizer::health.queue_driver.passed')
+                : (string) __('capell-frontend-optimizer::health.queue_driver.failed'),
             remediation: $isSafe
                 ? null
-                : 'Configure a non-sync queue connection or disable automatic critical-CSS generation so the Playwright generator runs out of band.',
+                : (string) __('capell-frontend-optimizer::health.queue_driver.remediation'),
         );
     }
 
     public function optimizerRendererIsBound(): bool
     {
         try {
-            return app()->getAlias(FrontendAssetManifestRenderer::class) === CapellFrontendAssetManifestRenderer::class;
+            return is_a(app(FrontendAssetManifestRenderer::class), CapellFrontendAssetManifestRenderer::class);
         } catch (Throwable) {
             return false;
         }
@@ -113,9 +148,62 @@ final class FrontendOptimizerHealthCheck implements ChecksExtensionHealth
 
     public function storageDiskIsWritable(): bool
     {
+        return $this->storagePathIsWritable($this->manifestDirectory())
+            && $this->storagePathIsWritable($this->criticalCssDirectory());
+    }
+
+    public function generatorIsReady(): bool
+    {
+        return $this->nodeBinaryCanRun()
+            && $this->generatorScriptExists()
+            && $this->playwrightDependencyIsDeclared();
+    }
+
+    public function nodeBinaryCanRun(): bool
+    {
+        try {
+            $process = new Process([$this->nodeBinary(), '--version']);
+            $process->setTimeout(5);
+            $process->run();
+
+            return $process->isSuccessful()
+                && preg_match('/^v?\d+\.\d+\.\d+/', trim($process->getOutput())) === 1;
+        } catch (Throwable) {
+            return false;
+        }
+    }
+
+    public function generatorScriptExists(): bool
+    {
+        $script = config('capell-frontend-optimizer.playwright.script');
+
+        return is_string($script) && $script !== '' && is_file($script);
+    }
+
+    public function playwrightDependencyIsDeclared(): bool
+    {
+        try {
+            $packageJson = json_decode((string) file_get_contents($this->packagePath('package.json')), true, flags: JSON_THROW_ON_ERROR);
+
+            if (! is_array($packageJson)) {
+                return false;
+            }
+
+            $dependencies = $packageJson['dependencies'] ?? [];
+            $developmentDependencies = $packageJson['devDependencies'] ?? [];
+
+            return (is_array($dependencies) && array_key_exists('playwright', $dependencies))
+                || (is_array($developmentDependencies) && array_key_exists('playwright', $developmentDependencies));
+        } catch (Throwable) {
+            return false;
+        }
+    }
+
+    public function storagePathIsWritable(string $directory): bool
+    {
         try {
             $disk = $this->storageDisk();
-            $probePath = $this->manifestDirectory() . '/.frontend-optimizer-health-probe';
+            $probePath = trim($directory, '/') . '/.frontend-optimizer-health-probe-' . bin2hex(random_bytes(8));
 
             $disk->put($probePath, (string) now()->getTimestamp());
             $exists = $disk->exists($probePath);
@@ -154,5 +242,26 @@ final class FrontendOptimizerHealthCheck implements ChecksExtensionHealth
         return is_string($directory) && $directory !== ''
             ? trim($directory, '/')
             : 'capell/frontend-optimizer/manifests';
+    }
+
+    private function criticalCssDirectory(): string
+    {
+        $directory = config('capell-frontend-optimizer.paths.critical_css', 'capell/frontend-optimizer/critical-css');
+
+        return is_string($directory) && $directory !== ''
+            ? trim($directory, '/')
+            : 'capell/frontend-optimizer/critical-css';
+    }
+
+    private function nodeBinary(): string
+    {
+        $nodeBinary = config('capell-frontend-optimizer.playwright.node_binary', 'node');
+
+        return is_string($nodeBinary) && $nodeBinary !== '' ? $nodeBinary : 'node';
+    }
+
+    private function packagePath(string $path): string
+    {
+        return dirname(__DIR__, 2) . '/' . ltrim($path, '/');
     }
 }

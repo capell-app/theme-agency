@@ -21,11 +21,11 @@ it('reports a compatible capell api version', function (): void {
 it('runs real diagnostics returning check results', function (): void {
     $results = FrontendOptimizerHealthCheck::runDiagnostics();
 
-    expect($results)->toHaveCount(3)
+    expect($results)->toHaveCount(5)
         ->and($results->every(static fn (mixed $result): bool => $result instanceof DoctorCheckResultData))->toBeTrue();
 });
 
-it('passes when the renderer is bound, the disk is writable, and the queue is asynchronous', function (): void {
+it('passes when the renderer, storage paths, generator, and queue are ready', function (): void {
     $results = FrontendOptimizerHealthCheck::runDiagnostics();
 
     expect(FrontendOptimizerHealthCheck::passed())->toBeTrue()
@@ -46,7 +46,28 @@ it('passes the storage disk check when the local disk is writable', function ():
     $check = new FrontendOptimizerHealthCheck;
 
     expect($check->storageDiskIsWritable())->toBeTrue()
-        ->and($check->storageDiskWritableCheck()->passed)->toBeTrue();
+        ->and($check->manifestStorageWritableCheck()->passed)->toBeTrue()
+        ->and($check->criticalCssStorageWritableCheck()->passed)->toBeTrue();
+});
+
+it('passes the generator readiness check when node, script, and playwright declaration are present', function (): void {
+    $check = new FrontendOptimizerHealthCheck;
+
+    expect($check->nodeBinaryCanRun())->toBeTrue()
+        ->and($check->generatorScriptExists())->toBeTrue()
+        ->and($check->playwrightDependencyIsDeclared())->toBeTrue()
+        ->and($check->generatorReadinessCheck()->passed)->toBeTrue();
+});
+
+it('fails the generator readiness check when the configured script is missing', function (): void {
+    Config::set('capell-frontend-optimizer.playwright.script', __DIR__ . '/missing-generate-critical-css.mjs');
+
+    $check = new FrontendOptimizerHealthCheck;
+
+    expect($check->generatorScriptExists())->toBeFalse()
+        ->and($check->generatorIsReady())->toBeFalse()
+        ->and($check->generatorReadinessCheck()->passed)->toBeFalse()
+        ->and(FrontendOptimizerHealthCheck::passed())->toBeFalse();
 });
 
 it('fails the generation queue check when generation is enabled on the sync queue', function (): void {

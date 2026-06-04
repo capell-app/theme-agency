@@ -125,7 +125,7 @@ Render stored assets from Blade after the manifest has been persisted:
 
 `CAPELL_FRONTEND_OPTIMIZER_NODE` overrides the Node binary in local or deployed environments.
 
-Critical CSS runtime settings are stored under the `frontend_optimizer` settings group. They include `enable_critical_css`, `automatic_generation`, `profile_scope`, `viewports`, `fold_multiplier`, `extra_fold_pixels`, `playwright_wait_strategy`, `playwright_timeout`, `max_inline_css_bytes`, and `debug_query_support`.
+Critical CSS runtime settings are stored under the `frontend_optimizer` settings group. They include `enable_critical_css`, `automatic_generation`, `profile_scope`, `viewports`, `fold_multiplier`, `extra_fold_pixels`, `playwright_wait_strategy`, `playwright_timeout`, and `max_inline_css_bytes`.
 
 ## Verification
 
