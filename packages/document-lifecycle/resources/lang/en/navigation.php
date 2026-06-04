@@ -25,6 +25,15 @@ return [
         'publications' => 'Publications',
         'acceptances' => 'Acceptances',
     ],
+    'actions' => [
+        'register_document' => 'Register document',
+        'archive_document' => 'Archive document',
+        'restore_document' => 'Restore document',
+    ],
+    'messages' => [
+        'document_archived' => 'Document archived.',
+        'document_restored' => 'Document restored.',
+    ],
     'portal' => [
         'accepted_status' => 'Accepted',
         'acceptance_description' => 'Accepted version :version.',

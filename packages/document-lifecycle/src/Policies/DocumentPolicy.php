@@ -24,6 +24,11 @@ final class DocumentPolicy
         return $this->viewAny($user);
     }
 
+    public function create(User $user): bool
+    {
+        return $this->hasPermission($user, 'create');
+    }
+
     public function update(User $user): bool
     {
         return $this->hasPermission($user, 'update');

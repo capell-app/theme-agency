@@ -4,21 +4,30 @@ declare(strict_types=1);
 
 use Capell\DocumentLifecycle\Enums\DocumentStatusEnum;
 use Capell\DocumentLifecycle\Filament\Resources\Documents\DocumentResource;
+use Capell\DocumentLifecycle\Filament\Resources\Documents\Pages\CreateDocument;
 use Capell\DocumentLifecycle\Filament\Resources\Documents\Pages\EditDocument;
+use Capell\DocumentLifecycle\Filament\Resources\Documents\Pages\ListDocuments;
 use Capell\DocumentLifecycle\Filament\Resources\Documents\RelationManagers\AcceptancesRelationManager;
 use Capell\DocumentLifecycle\Filament\Resources\Documents\RelationManagers\PublicationsRelationManager;
 use Capell\DocumentLifecycle\Models\Document;
 use Capell\DocumentLifecycle\Models\DocumentAcceptance;
 use Capell\DocumentLifecycle\Models\DocumentPublication;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
+use Filament\Actions\Testing\TestAction;
+use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Date;
 
+use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\get;
 use function Pest\Livewire\livewire;
 
 use Spatie\Permission\Models\Permission;
 
 uses(CreatesAdminUser::class);
+
+beforeEach(function (): void {
+    Filament::setCurrentPanel(Filament::getPanel('admin'));
+});
 
 it('exposes controlled documents in the admin surface', function (): void {
     test()->actingAsAdmin();
@@ -114,4 +123,73 @@ it('allows permitted users to list and edit controlled documents', function (): 
     expect(DocumentResource::canAccess())->toBeTrue()
         ->and(DocumentResource::canViewAny())->toBeTrue()
         ->and(DocumentResource::canEdit($document))->toBeTrue();
+});
+
+it('registers controlled documents from the admin create page', function (): void {
+    test()->actingAsAdmin();
+
+    get(DocumentResource::getUrl('create'))->assertOk();
+
+    livewire(CreateDocument::class)
+        ->assertSuccessful()
+        ->fillForm([
+            'key' => 'Terms of Service',
+            'title' => 'Terms of Service',
+            'status' => DocumentStatusEnum::Draft->value,
+            'metadata' => ['owner' => 'legal'],
+        ])
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    assertDatabaseHas('document_lifecycle_documents', [
+        'key' => 'terms_of_service',
+        'title' => 'Terms of Service',
+        'status' => DocumentStatusEnum::Draft->value,
+    ]);
+});
+
+it('archives and restores controlled documents from table actions', function (): void {
+    test()->actingAsAdmin();
+
+    $document = Document::factory()->active()->create([
+        'key' => 'terms',
+        'title' => 'Terms of Service',
+    ]);
+
+    DocumentPublication::factory()->document($document)->create([
+        'version_label' => '2026-06-04',
+    ]);
+
+    livewire(ListDocuments::class)
+        ->assertSuccessful()
+        ->assertActionVisible(TestAction::make('archive')->table($document))
+        ->assertActionHidden(TestAction::make('restore')->table($document))
+        ->callAction(TestAction::make('archive')->table($document))
+        ->assertHasNoActionErrors()
+        ->assertNotified(__('capell-document-lifecycle::navigation.messages.document_archived'));
+
+    expect($document->refresh()->status)->toBe(DocumentStatusEnum::Archived);
+
+    livewire(ListDocuments::class)
+        ->assertSuccessful()
+        ->assertActionHidden(TestAction::make('archive')->table($document))
+        ->assertActionVisible(TestAction::make('restore')->table($document))
+        ->callAction(TestAction::make('restore')->table($document))
+        ->assertHasNoActionErrors()
+        ->assertNotified(__('capell-document-lifecycle::navigation.messages.document_restored'));
+
+    expect($document->refresh()->status)->toBe(DocumentStatusEnum::Active);
+});
+
+it('restores archived documents without publications to draft', function (): void {
+    test()->actingAsAdmin();
+
+    $document = Document::factory()->archived()->create();
+
+    livewire(ListDocuments::class)
+        ->assertSuccessful()
+        ->callAction(TestAction::make('restore')->table($document))
+        ->assertHasNoActionErrors();
+
+    expect($document->refresh()->status)->toBe(DocumentStatusEnum::Draft);
 });

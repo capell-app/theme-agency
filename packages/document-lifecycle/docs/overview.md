@@ -16,7 +16,8 @@ Document Lifecycle tracks controlled documents across publication and acceptance
 ## What It Adds
 
 - `DocumentResource` in the admin Websites navigation group.
-- Read/edit access to controlled document records.
+- Register/edit access to controlled document records.
+- Archive and restore actions for moving controlled documents through the admin lifecycle without bypassing package Actions.
 - Publication and acceptance relation managers on each document.
 - Actions for registering documents, publishing versioned content, resolving the latest publication, and recording acceptances.
 - Publishing Studio revision listener that creates document publications when a matching registered document is published.
@@ -26,10 +27,13 @@ Document Lifecycle tracks controlled documents across publication and acceptance
 
 | Surface                       | Purpose                                                                                 |
 | ----------------------------- | --------------------------------------------------------------------------------------- |
-| `DocumentResource` index      | Lists controlled documents with key, title, status, publication count, and update time. |
-| `EditDocument`                | Edits title, status, and metadata for a controlled document.                            |
+| `DocumentResource` index      | Lists controlled documents with key, title, status, publication count, update time, and archive/restore row actions. |
+| `CreateDocument`              | Registers a controlled document through `RegisterDocumentAction`, including key slugging and initial status.          |
+| `EditDocument`                | Edits title, status, and metadata for a controlled document.                                                   |
 | `PublicationsRelationManager` | Shows version labels, content hashes, publishing revision IDs, and publish times.       |
 | `AcceptancesRelationManager`  | Shows accepted versions, hashes, contexts, acceptors, and acceptance times.             |
+
+Archived documents can be restored from the index. Restore returns documents with publications to `active`, and documents without publications to `draft`; publishing a new version still goes through `PublishDocumentAction` or the Publishing Studio auto-publish listener.
 
 ## Frontend Surfaces
 
