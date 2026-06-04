@@ -60,7 +60,7 @@
         </div>
 
         <div
-            class="rounded-[2rem] bg-gradient-to-br from-[var(--theme-primary)] via-fuchsia-500 to-[var(--theme-accent)] p-3 shadow-2xl shadow-fuchsia-950/30"
+            class="site-brand-gradient rounded-[2rem] p-3 shadow-2xl shadow-fuchsia-950/30"
         >
             <div class="rounded-[1.55rem] bg-zinc-950 p-4">
                 <div class="grid gap-4 lg:grid-cols-[1fr_0.58fr]">
@@ -73,7 +73,7 @@
                             />
                         @else
                             <div
-                                class="flex aspect-[4/3] items-end rounded-[1rem] bg-gradient-to-br from-zinc-950 via-fuchsia-950 to-orange-900 p-5"
+                                class="site-brand-gradient flex aspect-[4/3] items-end rounded-[1rem] p-5"
                                 aria-hidden="true"
                             >
                                 <div class="w-full">

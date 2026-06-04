@@ -13,6 +13,7 @@ use Capell\Core\ThemeStudio\Data\HeroSectionData;
 use Capell\Core\ThemeStudio\Data\NavigationData;
 use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Data\ThemePageData;
+use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Agency\AgencyThemeServiceProvider;
 use Capell\ThemeStudio\Agency\Health\ThemeAgencyHealthCheck;
@@ -30,6 +31,53 @@ it('defines the agency free renderer contract', function (): void {
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->tags)->toContain('Expressive')
         ->and(ThemeAgencyHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
+});
+
+it('declares surface and foreground tokens for every agency preset', function (): void {
+    $definition = AgencyThemeServiceProvider::definition();
+
+    collect($definition->presets)
+        ->each(function (ThemePresetData $preset): void {
+            expect($preset->values)->toHaveKeys([
+                'surfaceColor',
+                'foregroundColor',
+                'neutralColor',
+            ]);
+        });
+});
+
+it('renders the page shell from brand surface and foreground tokens', function (): void {
+    View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
+
+    $html = view('capell-theme-agency::page', [
+        'brand' => new BrandProfileData(
+            surfaceColor: '#fafaf5',
+            foregroundColor: '#1a1c19',
+        ),
+        'content' => '<main id="main-content">Preview</main>',
+    ])->render();
+
+    expect($html)
+        ->toContain('--theme-surface:#fafaf5')
+        ->toContain('--theme-foreground:#1a1c19')
+        ->toContain('class="site-theme-shell min-h-screen antialiased"')
+        ->not->toContain('bg-zinc-950 text-zinc-950');
+});
+
+it('uses token-driven site gradients instead of fixed color stops', function (): void {
+    $css = file_get_contents(__DIR__ . '/../../resources/css/theme-agency.css') ?: '';
+    $sectionViews = implode("\n", array_map(
+        static fn (string $path): string => file_get_contents($path) ?: '',
+        glob(__DIR__ . '/../../resources/views/sections/*.blade.php') ?: [],
+    ));
+
+    expect($css)
+        ->toContain('--site-surface: var(--theme-surface, #09090b)')
+        ->toContain('--site-foreground: var(--theme-foreground, #f8fafc)')
+        ->toContain('.site-brand-gradient')
+        ->and($sectionViews)->toContain('site-brand-gradient')
+        ->and($sectionViews)->not->toContain('via-fuchsia-500')
+        ->and($sectionViews)->not->toContain('to-orange-900');
 });
 
 it('renders navigation from the agency package views', function (): void {

@@ -34,7 +34,7 @@
                         />
                     @else
                         <div
-                            class="aspect-[4/3] rounded-[1.1rem] bg-gradient-to-br from-[var(--theme-primary)] via-fuchsia-500 to-[var(--theme-accent)] p-4"
+                            class="site-brand-gradient aspect-[4/3] rounded-[1.1rem] p-4"
                             aria-hidden="true"
                         >
                             <div

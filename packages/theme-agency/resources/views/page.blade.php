@@ -7,7 +7,7 @@
 
 <div
     style="{{ collect($brand->tokens())->map(fn (mixed $value, string $token): string => $token . ':' . $value)->implode(';') }}"
-    class="site-theme-shell min-h-screen bg-zinc-950 text-zinc-950 antialiased"
+    class="site-theme-shell min-h-screen antialiased"
 >
     {!! $content !!}
 </div>

@@ -70,7 +70,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | site-discovery | 6 | 5 | 4 | Slice committed | `c76a0cc14` merged URL registry work; continue with remaining discovery/SEO rows. |
 | structured-content-library | 7 | 5 | 4 | Slice committed | `73eed65c8` landed Wave 7 readiness; current follow-up hardens public payload sanitization, publish timestamps, and import slug dedup. |
 | tags | 6 | 5 | 4 | Slice committed | Latest Tags slice binds admin tag type selection to `TagTypeEnum`, removes factory type drift, declares taxonomy capabilities/cache tag, and updates docs/tests; continue with workspace ownership, status visibility, cache invalidation sources, and policy/deletion tests. |
-| theme-agency | 6 | 6 | 3 | Needs audit | Theme-line systemic work: extends alignment, tokens, screenshots, WCAG/dark mode. |
+| theme-agency | 6 | 6 | 3 | Slice committed | Latest Agency slice binds the page shell to surface/foreground tokens, gives all presets explicit surface tokens, replaces fixed section gradients with `site-brand-gradient`, and updates docs/tests; continue with screenshot deployment captures, tier/bundle alignment, preview assets, navigation/proof a11y, and richer agency-specific renderers. |
 | theme-commerce | 6 | 5 | 4 | Needs audit | Theme-line systemic work plus commerce-specific real CTA/form behavior. |
 | theme-corporate | 7 | 5 | 3 | Needs audit | Theme-line systemic work plus corporate-specific screenshots and WCAG checks. |
 | theme-education | 6 | 7 | 2 | Needs audit | Theme-line systemic work plus education-specific conversion sections. |

@@ -22,9 +22,7 @@
             <article
                 class="group overflow-hidden rounded-[1.5rem] border border-white/10 bg-white text-zinc-950 shadow-sm transition hover:-translate-y-1 hover:shadow-2xl"
             >
-                <div
-                    class="bg-gradient-to-br from-[var(--theme-primary)] via-fuchsia-500 to-[var(--theme-accent)] p-4"
-                >
+                <div class="site-brand-gradient p-4">
                     <div class="rounded-2xl bg-zinc-950/90 p-4 text-white">
                         <div class="flex items-center justify-between">
                             <span

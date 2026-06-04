@@ -1,8 +1,29 @@
 @layer components {
     .site-theme-shell {
-        background: #09090b;
-        color: #f8fafc;
+        --site-primary: var(--theme-primary, #ff5a7e);
+        --site-accent: var(--theme-accent, #3b82f6);
+        --site-surface: var(--theme-surface, #09090b);
+        --site-foreground: var(--theme-foreground, #f8fafc);
+        --site-muted: color-mix(
+            in srgb,
+            var(--site-foreground) 72%,
+            var(--site-surface)
+        );
+        --site-card-ink: #09090b;
+        --site-card-muted: #52525b;
+
+        background: var(--site-surface);
+        color: var(--site-foreground);
         font-family: var(--theme-body-font, Inter, system-ui, sans-serif);
+    }
+
+    .site-brand-gradient {
+        background: linear-gradient(
+            135deg,
+            var(--site-primary) 0%,
+            color-mix(in srgb, var(--site-primary) 42%, var(--site-accent)) 52%,
+            var(--site-accent) 100%
+        );
     }
 
     .site-theme-shell section {
@@ -17,7 +38,7 @@
     .site-theme-shell h1,
     .site-theme-shell h2 {
         max-width: 12ch;
-        color: #fff;
+        color: var(--site-foreground);
         font-family: var(--theme-heading-font, inherit);
         font-size: clamp(3rem, 8vw, 6.5rem);
         font-weight: 900;
@@ -27,7 +48,7 @@
 
     .site-theme-shell p {
         max-width: 42rem;
-        color: rgb(255 255 255 / 72%);
+        color: var(--site-muted);
         font-size: 1.125rem;
         line-height: 1.8;
     }
@@ -37,8 +58,8 @@
     }
 
     .site-theme-skip-link {
-        background: #ffffff;
-        color: #09090b;
+        background: var(--theme-foreground, #ffffff);
+        color: var(--theme-surface, #09090b);
         font-weight: 800;
         left: 1rem;
         padding: 0.75rem 1rem;
@@ -59,11 +80,11 @@
 
     .site-theme-shell :is(.theme-features, .theme-content-listing) article h3,
     .site-theme-shell .theme-content-listing a h3 {
-        color: #09090b;
+        color: var(--site-card-ink);
     }
 
     .site-theme-shell :is(.theme-features, .theme-content-listing) article p,
     .site-theme-shell .theme-content-listing a p {
-        color: #52525b;
+        color: var(--site-card-muted);
     }
 }
