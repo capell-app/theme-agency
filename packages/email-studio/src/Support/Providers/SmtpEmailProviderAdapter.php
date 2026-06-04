@@ -80,7 +80,7 @@ class SmtpEmailProviderAdapter implements EmailProviderAdapter
     public function normalizeWebhookPayload(array $payload, array $headers = []): ProviderWebhookEventData
     {
         return new ProviderWebhookEventData(
-            provider: 'smtp',
+            provider: $this->providerKey(),
             eventType: (string) ($payload['event'] ?? 'sent'),
             providerMessageId: isset($payload['message_id']) ? (string) $payload['message_id'] : null,
             recipientEmail: isset($payload['recipient']) ? (string) $payload['recipient'] : null,
@@ -92,7 +92,7 @@ class SmtpEmailProviderAdapter implements EmailProviderAdapter
     public function normalizeInboundReply(array $payload, array $headers = []): InboundEmailReplyData
     {
         return new InboundEmailReplyData(
-            provider: 'smtp',
+            provider: $this->providerKey(),
             providerMessageId: isset($payload['message_id']) ? (string) $payload['message_id'] : null,
             fromEmail: (string) ($payload['from_email'] ?? ''),
             fromName: isset($payload['from_name']) ? (string) $payload['from_name'] : null,
@@ -115,5 +115,10 @@ class SmtpEmailProviderAdapter implements EmailProviderAdapter
         $mailerName = $message->profile->provider_settings['mailer'] ?? null;
 
         return is_string($mailerName) ? $mailerName : null;
+    }
+
+    protected function providerKey(): string
+    {
+        return 'smtp';
     }
 }

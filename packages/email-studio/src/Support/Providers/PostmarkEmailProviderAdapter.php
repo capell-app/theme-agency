@@ -16,4 +16,10 @@ class PostmarkEmailProviderAdapter extends SmtpEmailProviderAdapter
 
         return is_string($mailerName) ? $mailerName : 'postmark';
     }
+
+    #[Override]
+    protected function providerKey(): string
+    {
+        return 'postmark';
+    }
 }
