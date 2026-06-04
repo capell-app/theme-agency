@@ -7,6 +7,8 @@ use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
 use Capell\Comments\Settings\CommentSettings;
 use Capell\Core\Models\Site;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 
@@ -96,6 +98,32 @@ it('throttles repeated public submissions even when the author email changes', f
 
     expect(Comment::query()->where('commentable_id', $page->getKey())->count())->toBe(1)
         ->and(Comment::query()->where('body', 'Second comment')->exists())->toBeFalse();
+});
+
+it('memoizes the resolved commentable during public submit refreshes', function (): void {
+    Notification::fake();
+    bindCommentThreadSettings();
+
+    $page = $this->createCommentsPage();
+    $pageSelects = 0;
+
+    DB::listen(static function (QueryExecuted $query) use (&$pageSelects): void {
+        $sql = strtolower($query->sql);
+
+        if (str_contains($sql, 'from "pages"') || str_contains($sql, 'from `pages`') || str_contains($sql, 'from pages')) {
+            $pageSelects++;
+        }
+    });
+
+    Livewire::test(CommentThreadComponent::class, ['threadKey' => CommentThreadComponent::threadKeyFor($page)])
+        ->set('body', 'Memoized comment')
+        ->set('authorName', 'Public Reader')
+        ->set('authorEmail', 'reader@example.com')
+        ->set('formRenderedAt', now()->subSeconds(3)->getTimestamp())
+        ->call('submit')
+        ->assertSet('submitted', true);
+
+    expect($pageSelects)->toBe(2);
 });
 
 it('loads additional replies for the selected parent comment', function (): void {

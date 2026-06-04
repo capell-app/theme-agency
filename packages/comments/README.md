@@ -45,6 +45,8 @@ to registered Capell content.
 - `CommentThreadComponent` for post-load public thread rendering.
 - Settings-aware root and reply paging, with per-parent "load more replies"
   support for public threads.
+- Request-local commentable memoization during Livewire actions so submit
+  refreshes do not re-query the same page.
 - Public comment form bot-trap controls: a hidden honeypot field and
   configurable minimum form age.
 - Automatic spam scoring for configured link-count and blocked-term rules,
@@ -118,6 +120,8 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
 - Keep public thread data anonymous-safe and moderation-free.
 - Keep reply pagination settings-aware and bounded; public rendering should not
   hydrate an entire hot discussion subtree in one request.
+- Keep commentable memoization request-local only; do not serialize Eloquent
+  models into public Livewire state.
 - Keep registration logic in package providers or Actions rather than public
   Blade.
 - Keep bot-trap fields public-form only; API/programmatic comment creation may

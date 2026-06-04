@@ -6,6 +6,7 @@ All notable changes to `capell-app/comments` will be documented in this file.
 
 ### 2026-06-04
 
+- Memoized the resolved public commentable model for each Livewire request so submit refreshes do not re-query the same page.
 - Hardened public comment sanitization by stripping invisible Unicode format controls and ASCII control bytes before storage.
 - Broadened spam link detection to count scheme, `www.`, and bare-domain links while avoiding email-domain false positives.
 - Added settings-aware reply pagination for public comment threads, including per-parent "load more replies" support and bounded child hydration.

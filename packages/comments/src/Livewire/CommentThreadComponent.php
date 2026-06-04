@@ -51,6 +51,10 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
      */
     public array $comments = [];
 
+    private ?Model $resolvedCommentable = null;
+
+    private bool $resolvedCommentableAttempted = false;
+
     public static function compatibleCapellApiVersion(): string
     {
         return '^4.0';
@@ -131,6 +135,11 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
         return view('capell-comments::livewire.thread');
     }
 
+    public function hydrate(): void
+    {
+        $this->forgetResolvedCommentable();
+    }
+
     private static function optionalAttribute(Model $model, string $key): mixed
     {
         return array_key_exists($key, $model->getAttributes())
@@ -193,6 +202,12 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
 
     private function resolveCommentable(): ?Model
     {
+        if ($this->resolvedCommentableAttempted) {
+            return $this->resolvedCommentable;
+        }
+
+        $this->resolvedCommentableAttempted = true;
+
         if ($this->threadKey === '') {
             return null;
         }
@@ -232,7 +247,15 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
             return null;
         }
 
-        return $model;
+        $this->resolvedCommentable = $model;
+
+        return $this->resolvedCommentable;
+    }
+
+    private function forgetResolvedCommentable(): void
+    {
+        $this->resolvedCommentable = null;
+        $this->resolvedCommentableAttempted = false;
     }
 
     /**
