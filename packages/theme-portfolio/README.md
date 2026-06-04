@@ -43,6 +43,8 @@ and newsletter sections.
   speaking/media kit, newsletter, proof, CTA, and supporting content blocks.
 - Uses Core `ViewSectionRenderer` extra view data for optional Content Sections, Media Library, and
   Newsletter sections.
+- Renders the newsletter form only when hydrated with a real capture action;
+  static states use translated CTA copy instead of a dead form post.
 - Adds a demo install command backed by `InstallPortfolioThemeDemoAction`.
 - Adds `ThemePortfolioHealthCheck` and a Theme management page contribution.
 
@@ -97,5 +99,7 @@ vendor/bin/pest packages/theme-portfolio/tests --configuration=phpunit.xml
   selectors, theme internals, model IDs, and permission metadata.
 - Keep optional package checks inside the service provider/renderer layer, not
   public Blade.
+- Keep newsletter capture actions hydrated through section data; do not
+  reintroduce `action="#"` forms.
 - Keep the docs aligned with `PortfolioThemeServiceProvider::definition()` when
   section keys, presets, or optional integrations change.

@@ -1,44 +1,66 @@
+@php
+    $sectionHeading = $heading ?? ($section->heading ?? null);
+    $formAction = $section->formAction ?? $section->action ?? ($formAction ?? null);
+    $formMethod = strtoupper((string) ($section->formMethod ?? $method ?? 'POST'));
+    $formMethod = in_array($formMethod, ['GET', 'POST'], true) ? $formMethod : 'POST';
+    $formAction = is_string($formAction) ? trim($formAction) : '';
+@endphp
+
 <section class="theme-section theme-section-newsletter bg-[#f8fafc]">
-    @isset($heading)
+    @if ($sectionHeading)
         <div class="mx-auto max-w-5xl px-6 py-14">
             <div class="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
                 <div>
                     <h2
                         class="text-4xl font-black tracking-tight text-[#0f172a]"
                     >
-                        {{ $heading }}
+                        {{ $sectionHeading }}
                     </h2>
                     <p class="mt-4 max-w-2xl text-stone-600">
                         {{ $newsletterAvailable ?? false ? __('capell-theme-portfolio::generic.newsletter_connected') : __('capell-theme-portfolio::generic.newsletter_static') }}
                     </p>
                 </div>
-                <form
-                    class="rounded-xl border border-slate-200 bg-white p-3"
-                    action="#"
-                    aria-label="Newsletter signup"
-                >
-                    <label
-                        class="sr-only"
-                        for="portfolio-newsletter"
+
+                @if ($formAction !== '')
+                    <form
+                        class="rounded-xl border border-slate-200 bg-white p-3"
+                        action="{{ $formAction }}"
+                        method="{{ $formMethod }}"
+                        aria-label="{{ __('capell-theme-portfolio::generic.newsletter_form_label') }}"
                     >
-                        {{ __('capell-theme-portfolio::generic.email_label') ?? 'Email address' }}
-                    </label>
-                    <div class="flex min-w-[18rem] gap-2">
-                        <input
-                            id="portfolio-newsletter"
-                            type="email"
-                            placeholder="you@company.com"
-                            class="w-full rounded-full border border-slate-200 px-4 py-2 text-sm"
-                        />
-                        <button
-                            type="submit"
-                            class="rounded-full bg-[#0f172a] px-4 py-2 text-sm font-black text-white"
+                        <label
+                            class="sr-only"
+                            for="portfolio-newsletter"
                         >
-                            Subscribe
-                        </button>
+                            {{ __('capell-theme-portfolio::generic.email_label') }}
+                        </label>
+                        <div class="flex min-w-[18rem] gap-2">
+                            <input
+                                id="portfolio-newsletter"
+                                name="email"
+                                type="email"
+                                autocomplete="email"
+                                required
+                                placeholder="{{ __('capell-theme-portfolio::generic.email_placeholder') }}"
+                                class="w-full rounded-full border border-slate-200 px-4 py-2 text-sm"
+                            />
+                            <button
+                                type="submit"
+                                class="rounded-full bg-[#0f172a] px-4 py-2 text-sm font-black text-white"
+                            >
+                                {{ __('capell-theme-portfolio::generic.subscribe_label') }}
+                            </button>
+                        </div>
+                    </form>
+                @else
+                    <div
+                        class="rounded-xl border border-dashed border-slate-300 bg-white p-5 text-sm font-bold text-slate-600"
+                        aria-label="{{ __('capell-theme-portfolio::generic.newsletter_form_label') }}"
+                    >
+                        {{ __('capell-theme-portfolio::generic.newsletter_form_unavailable') }}
                     </div>
-                </form>
+                @endif
             </div>
         </div>
-    @endisset
+    @endif
 </section>

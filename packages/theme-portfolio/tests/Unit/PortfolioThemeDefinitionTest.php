@@ -241,6 +241,43 @@ it('renders new premium portfolio layouts through the registry', function (): vo
         ->not->toContain('capell-app/theme-portfolio');
 });
 
+it('renders newsletter chrome from translations and avoids inert forms', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(PortfolioThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new PortfolioThemeServiceProvider($this->app))->boot($registry);
+
+    $renderer = $registry->sectionRenderer('portfolio', 'newsletter');
+
+    assert($renderer instanceof SectionRenderer);
+
+    $staticHtml = $renderer->render(portfolioThemeSection('newsletter', [
+        'heading' => 'Join the studio notes',
+    ]));
+
+    $formHtml = $renderer->render(portfolioThemeSection('newsletter', [
+        'heading' => 'Join the studio notes',
+        'formAction' => '/newsletter/subscribe',
+        'formMethod' => 'post',
+    ]));
+
+    expect($staticHtml)
+        ->toContain('Join the studio notes')
+        ->toContain('Connect a newsletter form action to capture subscribers.')
+        ->not->toContain('action="#"')
+        ->not->toContain('Subscribe</button>');
+
+    expect($formHtml)
+        ->toContain('action="/newsletter/subscribe"')
+        ->toContain('method="POST"')
+        ->toContain('aria-label="Newsletter signup"')
+        ->toContain('placeholder="you@company.com"')
+        ->toContain('Subscribe')
+        ->not->toContain('action="#"')
+        ->not->toContain('capell-app/theme-portfolio');
+});
+
 /**
  * @param  array<string, mixed>  $viewData
  */

@@ -16,6 +16,8 @@ coherent frontend theme.
   speaking/media kit, newsletter, proof, CTA, and footer flows.
 - Optional renderer awareness for Content Sections, Media Library, and
   Newsletter.
+- Newsletter static states avoid inert form posts; hydrated section data can
+  provide a real capture action and method.
 - A demo command that installs route-backed portfolio demo pages.
 - Theme health and management-page manifest contributions.
 
@@ -51,8 +53,9 @@ media-kit, and newsletter ideas into the stronger theme.
 
 ## Screenshot Plan
 
-`docs/screenshots.json` describes marketplace screenshots for homepage,
-directory, detail, contact, conversion CTA, and section-suite states.
+`docs/screenshots.json` describes the intended route-backed capture set. The
+current marketplace manifest still includes committed JPG previews plus SVG
+layout diagrams; replacing those diagrams with real captures remains open.
 
 ## Verification
 
@@ -60,5 +63,6 @@ directory, detail, contact, conversion CTA, and section-suite states.
 vendor/bin/pest packages/theme-portfolio/tests --configuration=phpunit.xml
 ```
 
-The focused tests cover theme definition, manifest requirements, package-aware
-rendering, and public output safety.
+The focused tests cover theme definition, newsletter static/hydrated rendering,
+manifest requirements, package-aware rendering, health checks, and public output
+safety.

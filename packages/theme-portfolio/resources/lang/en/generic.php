@@ -10,7 +10,10 @@ return [
     'case_studies_static' => 'Static case studies are ready.',
     'case_artifacts_label' => 'Artifacts',
     'newsletter_connected' => 'Connected newsletter signup is available.',
+    'newsletter_form_label' => 'Newsletter signup',
+    'newsletter_form_unavailable' => 'Connect a newsletter form action to capture subscribers.',
     'newsletter_static' => 'Static newsletter CTA is available.',
+    'subscribe_label' => 'Subscribe',
     'capabilities_label' => 'Capabilities',
     'capability_signal' => 'Studio system',
     'brief_label' => 'Brief',
@@ -62,4 +65,5 @@ return [
     'work_grid_connected' => 'Connected media library.',
     'work_grid_static' => 'Static work grid.',
     'email_label' => 'Email address',
+    'email_placeholder' => 'you@company.com',
 ];
