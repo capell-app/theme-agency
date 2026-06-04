@@ -70,7 +70,9 @@
             "@php -r \"echo PHP_EOL . 'Running Pest...' . PHP_EOL;\"",
             "@test",
             "@php -r \"echo PHP_EOL . 'Running Pest coverage...' . PHP_EOL;\"",
-            "@coverage"
+            "@coverage",
+            "@php -r \"echo PHP_EOL . 'Running Pest mutation testing...' . PHP_EOL;\"",
+            "@test:mutate:ci"
         ],
         "test:unit": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --compact --configuration=phpunit.xml",
         "test:group": "@php -d memory_limit=-1 -d max_execution_time=0 -d pcov.enabled=0 vendor/bin/pest --colors=always --parallel --compact --group=${PEST_GROUP:-unit} --configuration=phpunit.xml",
