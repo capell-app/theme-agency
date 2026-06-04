@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Capell\Deployments\Http\Controllers\OAuth;
 
 use Capell\Deployments\Actions\ConnectDeploymentAction;
-use Capell\Deployments\Actions\OAuth\ValidateOAuthStateAction;
+use Capell\Deployments\Actions\OAuth\ConsumeOAuthStateAction;
 use Capell\Deployments\Enums\GitProviderType;
 use Capell\Deployments\Filament\Pages\DeploymentConnectionPage;
 use Illuminate\Http\Client\ConnectionException;
@@ -20,7 +20,8 @@ final class BitbucketCallbackController
     {
         abort_unless(DeploymentConnectionPage::canManageConnections(), 403);
 
-        if (ValidateOAuthStateAction::run(GitProviderType::Bitbucket, $request->query('state')) !== true) {
+        $connectionData = ConsumeOAuthStateAction::run(GitProviderType::Bitbucket, $request->query('state'));
+        if ($connectionData === null) {
             return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_invalid_state')]);
         }
 
@@ -71,15 +72,15 @@ final class BitbucketCallbackController
             return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_user_failed', ['provider' => 'Bitbucket'])]);
         }
 
-        $username = $userResponse['username'] ?? null;
-        if (! is_string($username) || $username === '') {
+        $userId = $userResponse['account_id'] ?? null;
+        if (! is_string($userId) || $userId === '') {
             return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_user_failed', ['provider' => 'Bitbucket'])]);
         }
 
         ConnectDeploymentAction::run(
             provider: GitProviderType::Bitbucket,
-            repoOwner: $username,
-            repoName: 'app',
+            repoOwner: $connectionData->repoOwner,
+            repoName: $connectionData->repoName,
             accessToken: $accessToken,
             refreshToken: is_string($refreshToken) ? $refreshToken : null,
         );

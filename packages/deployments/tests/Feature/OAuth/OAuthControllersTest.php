@@ -66,7 +66,7 @@ it('forbids oauth callbacks for read-only deployment viewers', function (): void
 });
 
 it('connects github only after oauth state validation passes', function (): void {
-    $state = CreateOAuthStateAction::run(GitProviderType::GitHub);
+    $state = CreateOAuthStateAction::run(GitProviderType::GitHub, 'capell-owner', 'capell-app');
     config()->set('capell-deployments.http_timeout', 7);
     $timeouts = [];
 
@@ -78,6 +78,7 @@ it('connects github only after oauth state validation passes', function (): void
                 'access_token' => 'github-access-token',
             ]),
             'https://api.github.com/user' => Http::response([
+                'id' => 123,
                 'login' => 'capell-owner',
             ]),
             default => Http::response([], 404),
@@ -93,13 +94,13 @@ it('connects github only after oauth state validation passes', function (): void
     expect(DeploymentConnection::query()->where([
         'provider' => GitProviderType::GitHub->value,
         'repo_owner' => 'capell-owner',
-        'repo_name' => 'app',
+        'repo_name' => 'capell-app',
     ])->exists())->toBeTrue()
         ->and($timeouts)->toBe([7, 7]);
 });
 
 it('connects gitlab after oauth state validation passes', function (): void {
-    $state = CreateOAuthStateAction::run(GitProviderType::GitLab);
+    $state = CreateOAuthStateAction::run(GitProviderType::GitLab, 'capell-group/platform', 'capell-app');
     config()->set('capell-deployments.http_timeout', 8);
     $timeouts = [];
 
@@ -112,6 +113,7 @@ it('connects gitlab after oauth state validation passes', function (): void {
                 'refresh_token' => 'gitlab-refresh-token',
             ]),
             'https://gitlab.com/api/v4/user' => Http::response([
+                'id' => 456,
                 'username' => 'gitlab-owner',
             ]),
             default => Http::response([], 404),
@@ -126,14 +128,14 @@ it('connects gitlab after oauth state validation passes', function (): void {
 
     expect(DeploymentConnection::query()->where([
         'provider' => GitProviderType::GitLab->value,
-        'repo_owner' => 'gitlab-owner',
-        'repo_name' => 'app',
+        'repo_owner' => 'capell-group/platform',
+        'repo_name' => 'capell-app',
     ])->exists())->toBeTrue()
         ->and($timeouts)->toBe([8, 8]);
 });
 
 it('connects bitbucket after oauth state validation passes', function (): void {
-    $state = CreateOAuthStateAction::run(GitProviderType::Bitbucket);
+    $state = CreateOAuthStateAction::run(GitProviderType::Bitbucket, 'capell-workspace', 'capell-app');
     config()->set('capell-deployments.http_timeout', 9);
     $timeouts = [];
 
@@ -146,6 +148,7 @@ it('connects bitbucket after oauth state validation passes', function (): void {
                 'refresh_token' => 'bitbucket-refresh-token',
             ]),
             'https://api.bitbucket.org/2.0/user' => Http::response([
+                'account_id' => 'bitbucket-account-id',
                 'username' => 'bitbucket-owner',
             ]),
             default => Http::response([], 404),
@@ -160,8 +163,8 @@ it('connects bitbucket after oauth state validation passes', function (): void {
 
     expect(DeploymentConnection::query()->where([
         'provider' => GitProviderType::Bitbucket->value,
-        'repo_owner' => 'bitbucket-owner',
-        'repo_name' => 'app',
+        'repo_owner' => 'capell-workspace',
+        'repo_name' => 'capell-app',
     ])->exists())->toBeTrue()
         ->and($timeouts)->toBe([9, 9]);
 });

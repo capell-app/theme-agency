@@ -8,6 +8,7 @@ use BackedEnum;
 use Capell\Deployments\Actions\OAuth\CreateOAuthStateAction;
 use Capell\Deployments\Enums\GitProviderType;
 use Capell\Deployments\Models\DeploymentConnection;
+use Closure;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
@@ -18,6 +19,10 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 final class DeploymentConnectionPage extends Page
 {
+    public string $repoOwner = '';
+
+    public string $repoName = '';
+
     protected string $view = 'capell-deployments::filament.pages.deployment-connection';
 
     protected static ?string $slug = 'deployment-connection';
@@ -86,9 +91,34 @@ final class DeploymentConnectionPage extends Page
         return DeploymentConnection::query()->where('is_active', true)->get()->all();
     }
 
+    /**
+     * @return array<int, array{label: string, url: string|null, disabledReason: string|null}>
+     */
+    public function getConnectProviders(): array
+    {
+        return [
+            $this->connectProvider(
+                provider: GitProviderType::GitHub,
+                label: (string) __('capell-deployments::plugins.deployment_connection.connect_github'),
+                url: fn (): string => $this->getGitHubOAuthUrl(),
+            ),
+            $this->connectProvider(
+                provider: GitProviderType::GitLab,
+                label: (string) __('capell-deployments::plugins.deployment_connection.connect_gitlab'),
+                url: fn (): string => $this->getGitLabOAuthUrl(),
+            ),
+            $this->connectProvider(
+                provider: GitProviderType::Bitbucket,
+                label: (string) __('capell-deployments::plugins.deployment_connection.connect_bitbucket'),
+                url: fn (): string => $this->getBitbucketOAuthUrl(),
+            ),
+        ];
+    }
+
     public function getGitHubOAuthUrl(): string
     {
         $this->authorizeManageConnections();
+        $this->authorizeRepositorySelection();
 
         $raw = config('capell-deployments.oauth.github.client_id');
         $clientId = is_string($raw) ? $raw : '';
@@ -97,13 +127,14 @@ final class DeploymentConnectionPage extends Page
             'client_id' => $clientId,
             'redirect_uri' => route('capell-deployments.oauth.github'),
             'scope' => 'repo',
-            'state' => CreateOAuthStateAction::run(GitProviderType::GitHub),
+            'state' => CreateOAuthStateAction::run(GitProviderType::GitHub, $this->normalizedRepoOwner(), $this->normalizedRepoName()),
         ]);
     }
 
     public function getGitLabOAuthUrl(): string
     {
         $this->authorizeManageConnections();
+        $this->authorizeRepositorySelection();
 
         $raw = config('capell-deployments.oauth.gitlab.client_id');
         $clientId = is_string($raw) ? $raw : '';
@@ -113,13 +144,14 @@ final class DeploymentConnectionPage extends Page
             'redirect_uri' => route('capell-deployments.oauth.gitlab'),
             'response_type' => 'code',
             'scope' => 'api',
-            'state' => CreateOAuthStateAction::run(GitProviderType::GitLab),
+            'state' => CreateOAuthStateAction::run(GitProviderType::GitLab, $this->normalizedRepoOwner(), $this->normalizedRepoName()),
         ]);
     }
 
     public function getBitbucketOAuthUrl(): string
     {
         $this->authorizeManageConnections();
+        $this->authorizeRepositorySelection();
 
         $raw = config('capell-deployments.oauth.bitbucket.client_id');
         $clientId = is_string($raw) ? $raw : '';
@@ -128,7 +160,7 @@ final class DeploymentConnectionPage extends Page
             'client_id' => $clientId,
             'redirect_uri' => route('capell-deployments.oauth.bitbucket'),
             'response_type' => 'code',
-            'state' => CreateOAuthStateAction::run(GitProviderType::Bitbucket),
+            'state' => CreateOAuthStateAction::run(GitProviderType::Bitbucket, $this->normalizedRepoOwner(), $this->normalizedRepoName()),
         ]);
     }
 
@@ -164,5 +196,63 @@ final class DeploymentConnectionPage extends Page
     private function authorizeManageConnections(): void
     {
         throw_unless(self::canManageConnections(), HttpException::class, 403);
+    }
+
+    /**
+     * @param  Closure(): string  $url
+     * @return array{label: string, url: string|null, disabledReason: string|null}
+     */
+    private function connectProvider(GitProviderType $provider, string $label, Closure $url): array
+    {
+        if (! $this->hasRepositorySelection()) {
+            return [
+                'label' => $label,
+                'url' => null,
+                'disabledReason' => (string) __('capell-deployments::plugins.deployment_connection.repository_required'),
+            ];
+        }
+
+        if (! $this->isProviderConfigured($provider)) {
+            return [
+                'label' => $label,
+                'url' => null,
+                'disabledReason' => (string) __('capell-deployments::plugins.deployment_connection.provider_not_configured', [
+                    'provider' => $provider->getLabel(),
+                ]),
+            ];
+        }
+
+        return [
+            'label' => $label,
+            'url' => $url(),
+            'disabledReason' => null,
+        ];
+    }
+
+    private function isProviderConfigured(GitProviderType $provider): bool
+    {
+        $clientId = config(sprintf('capell-deployments.oauth.%s.client_id', $provider->value));
+
+        return is_string($clientId) && trim($clientId) !== '';
+    }
+
+    private function hasRepositorySelection(): bool
+    {
+        return $this->normalizedRepoOwner() !== '' && $this->normalizedRepoName() !== '';
+    }
+
+    private function authorizeRepositorySelection(): void
+    {
+        throw_unless($this->hasRepositorySelection(), HttpException::class, 422);
+    }
+
+    private function normalizedRepoOwner(): string
+    {
+        return trim($this->repoOwner, " \t\n\r\0\x0B/");
+    }
+
+    private function normalizedRepoName(): string
+    {
+        return trim($this->repoName, " \t\n\r\0\x0B/");
     }
 }

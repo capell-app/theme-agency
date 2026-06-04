@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Capell\Deployments\Http\Controllers\OAuth;
 
 use Capell\Deployments\Actions\ConnectDeploymentAction;
-use Capell\Deployments\Actions\OAuth\ValidateOAuthStateAction;
+use Capell\Deployments\Actions\OAuth\ConsumeOAuthStateAction;
 use Capell\Deployments\Enums\GitProviderType;
 use Capell\Deployments\Filament\Pages\DeploymentConnectionPage;
 use Illuminate\Http\Client\ConnectionException;
@@ -20,7 +20,8 @@ final class GitHubCallbackController
     {
         abort_unless(DeploymentConnectionPage::canManageConnections(), 403);
 
-        if (ValidateOAuthStateAction::run(GitProviderType::GitHub, $request->query('state')) !== true) {
+        $connectionData = ConsumeOAuthStateAction::run(GitProviderType::GitHub, $request->query('state'));
+        if ($connectionData === null) {
             return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_invalid_state')]);
         }
 
@@ -67,16 +68,15 @@ final class GitHubCallbackController
             return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_user_failed', ['provider' => 'GitHub'])]);
         }
 
-        $login = $userResponse['login'] ?? null;
-        if (! is_string($login) || $login === '') {
+        $userId = $userResponse['id'] ?? null;
+        if (! is_int($userId) && ! is_string($userId)) {
             return back()->withErrors([__('capell-deployments::plugins.deployment_connection.oauth_user_failed', ['provider' => 'GitHub'])]);
         }
 
-        // Store without repo coordinates — user selects repo on the connection page
         ConnectDeploymentAction::run(
             provider: GitProviderType::GitHub,
-            repoOwner: $login,
-            repoName: 'app',
+            repoOwner: $connectionData->repoOwner,
+            repoName: $connectionData->repoName,
             accessToken: $accessToken,
         );
 

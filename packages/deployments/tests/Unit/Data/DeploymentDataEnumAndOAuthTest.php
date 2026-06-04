@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Deployments\Actions\OAuth\ConsumeOAuthStateAction;
 use Capell\Deployments\Actions\OAuth\CreateOAuthStateAction;
 use Capell\Deployments\Actions\OAuth\ValidateOAuthStateAction;
 use Capell\Deployments\Data\ComposerRequirementData;
@@ -61,6 +62,24 @@ it('creates one-time OAuth states per provider', function (): void {
         ->and(strlen((string) $state))->toBe(40)
         ->and(ValidateOAuthStateAction::run(GitProviderType::GitHub, $state))->toBeTrue()
         ->and(ValidateOAuthStateAction::run(GitProviderType::GitHub, $state))->toBeFalse();
+});
+
+it('consumes OAuth states with repository coordinates', function (): void {
+    $state = CreateOAuthStateAction::run(GitProviderType::GitLab, ' capell ', ' app ');
+
+    $connectionData = ConsumeOAuthStateAction::run(GitProviderType::GitLab, $state);
+
+    expect($connectionData)->not->toBeNull()
+        ->and($connectionData?->provider)->toBe(GitProviderType::GitLab)
+        ->and($connectionData?->repoOwner)->toBe('capell')
+        ->and($connectionData?->repoName)->toBe('app')
+        ->and(ConsumeOAuthStateAction::run(GitProviderType::GitLab, $state))->toBeNull();
+});
+
+it('rejects OAuth states without repository coordinates when consumed for a connection', function (): void {
+    $state = CreateOAuthStateAction::run(GitProviderType::GitHub);
+
+    expect(ConsumeOAuthStateAction::run(GitProviderType::GitHub, $state))->toBeNull();
 });
 
 it('rejects missing mismatched or wrong-provider OAuth states', function (): void {

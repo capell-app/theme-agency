@@ -43,6 +43,8 @@ it('builds provider oauth urls from named callback routes', function (): void {
     config()->set('capell-deployments.oauth.bitbucket.client_id', 'bitbucket-client-id');
 
     $page = new DeploymentConnectionPage;
+    $page->repoOwner = 'capell';
+    $page->repoName = 'app';
 
     expect($page->getGitHubOAuthUrl())->toContain(urlencode(route('capell-deployments.oauth.github')))
         ->and($page->getGitLabOAuthUrl())->toContain(urlencode(route('capell-deployments.oauth.gitlab')))
@@ -50,6 +52,38 @@ it('builds provider oauth urls from named callback routes', function (): void {
         ->and($page->getGitHubOAuthUrl())->toContain('state=')
         ->and($page->getGitLabOAuthUrl())->toContain('state=')
         ->and($page->getBitbucketOAuthUrl())->toContain('state=');
+});
+
+it('requires repository coordinates before building oauth urls', function (): void {
+    Permission::findOrCreate('Manage:DeploymentConnectionPage', 'web');
+    test()->actingAs(test()->createUserWithPermission('Manage:DeploymentConnectionPage'));
+
+    config()->set('capell-deployments.oauth.github.client_id', 'github-client-id');
+
+    expect(fn (): string => (new DeploymentConnectionPage)->getGitHubOAuthUrl())
+        ->toThrow(HttpException::class);
+});
+
+it('disables connect providers until repository and oauth client configuration are present', function (): void {
+    Permission::findOrCreate('Manage:DeploymentConnectionPage', 'web');
+    test()->actingAs(test()->createUserWithPermission('Manage:DeploymentConnectionPage'));
+
+    config()->set('capell-deployments.oauth.github.client_id', 'github-client-id');
+    config()->set('capell-deployments.oauth.gitlab.client_id', null);
+    config()->set('capell-deployments.oauth.bitbucket.client_id', null);
+
+    $page = new DeploymentConnectionPage;
+
+    expect(collect($page->getConnectProviders())->pluck('url')->all())->toBe([null, null, null]);
+
+    $page->repoOwner = 'capell';
+    $page->repoName = 'app';
+
+    $providers = $page->getConnectProviders();
+
+    expect($providers[0]['url'])->toContain('github.com/login/oauth/authorize')
+        ->and($providers[1]['url'])->toBeNull()
+        ->and($providers[1]['disabledReason'])->toBe('GitLab OAuth is not configured.');
 });
 
 it('does not fail when the deployment connections table has not been migrated yet', function (): void {

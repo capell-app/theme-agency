@@ -8,8 +8,8 @@ The current repository contains 55 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 332 |
-| Next   | 326 |
+| Now    | 326 |
+| Next   | 323 |
 | Later  | 202 |
 
 The work is not complete until every package plan has been reviewed against current code, required features are implemented or intentionally deferred, new behavior is documented, and focused verification passes for each changed package.
@@ -35,7 +35,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | customer-portal | 0 | 2 | 3 | Slice committed | Current follow-up adds same-site frontend account-isolation coverage, blocks suspended/archived accounts, adds package factories for portal accounts/support requests, covers unauthenticated/throttled frontend paths, wires `portal-profile` through an Action/rendered dashboard section, adds support request events/requester notifications, replaces placeholder frontend performance budgets, adds the package README, and schema-drives portal preferences. Continue with provider fan-out, marketplace screenshots/copy, Later rows, and a package completion review before marking Complete. |
 | dashboard-reports | 7 | 5 | 3 | Slice committed | `5779a66d6` landed a now-bucket slice; continue with budget/reporting gaps. |
 | demo-kit | 5 | 6 | 4 | Slice committed | `aa2d02c4c` fixed seed fanout; continue with demo coverage and safety rows. |
-| deployments | 6 | 7 | 3 | Slice committed | `8f5c95387` landed health/manifest fixes; continue with deploy history and rollback rows. |
+| deployments | 0 | 4 | 3 | Slice committed | Current follow-up gates/registers the dashboard widget, requires real repository coordinates before OAuth, surfaces OAuth client misconfiguration, documents the `PublishesComposerChanges` consumer boundary, and fails loudly when the default publisher sees multiple active connections. Continue with OAuth token refresh, install policy UI, publish history/status, idempotent PR dedupe, rollback/cancel, health-gated deploy hooks/events, and provider webhooks. |
 | diagnostics | 5 | 6 | 4 | Slice committed | `86ebebd0a` improved readiness; platform health-check execution remains high priority. |
 | document-lifecycle | 7 | 5 | 4 | Slice committed | `32dfee056` landed health/acceptance/migration fixes; continue with admin lifecycle and export rows. |
 | email-studio | 6 | 5 | 4 | Slice committed | `8cacf75e1` landed health/copy fixes; continue with retry/backoff and delivery gaps. |

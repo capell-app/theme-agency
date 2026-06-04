@@ -1,19 +1,19 @@
 # Deployments
 
-Repository deployment connections and Composer publishing for Capell CMS.
+Install and update Capell extensions from the admin panel by publishing Composer requirement changes through Git provider pull requests.
 
 ## At A Glance
 
 - Package: `capell-app/deployments`
 - Namespace: `Capell\Deployments\`
-- Surfaces: Filament admin, HTTP, database
+- Surfaces: Filament admin, authenticated HTTP callbacks, database
 - Service providers: `packages/deployments/src/Providers/DeploymentsServiceProvider.php`
 - Capell dependencies: `capell-app/admin`, `capell-app/core`
 - Third-party dependencies: `laravel/framework`, `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`
 
 ## Why It Helps Your Capell Workflow
 
-- Helps operators connect repository providers and publish Composer requirement changes from Capell-managed workflows.
+- Helps operators connect GitHub, GitLab, or Bitbucket repositories and publish Composer requirement changes from Capell-managed workflows.
 - Keeps deployment connection state and provider-specific behavior inside one package instead of scattering Git provider code.
 - Gives developers Actions for validating OAuth state, preparing requirement commits, and publishing requirement changes.
 
@@ -25,7 +25,10 @@ Repository deployment connections and Composer publishing for Capell CMS.
 
 ## What It Adds
 
-- Repository deployment connections and Composer publishing for Capell CMS.
+- OAuth-backed deployment repository connections for GitHub, GitLab, and Bitbucket.
+- A deployment repository page where operators enter the target owner/name before authorising the Git provider.
+- A dashboard widget that shows deployment repository connection state to authorised deployment page viewers.
+- A `PublishesComposerChanges` contract for install flows that need to publish Composer requirements without knowing provider APIs.
 
 ## Built With
 
@@ -74,7 +77,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 ## Admin Surface
 
 - Pages: `DeploymentConnectionPage`.
-- Widgets: `DeploymentConnectionWidget`.
+- Widgets: `DeploymentConnectionWidget` on the System Health dashboard.
 
 ## Runtime Surface
 
@@ -92,6 +95,24 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 - Contracts: `GitProviderContract`, `PublishesComposerChanges`.
 - Register Capell extension points, routes, migrations, settings, render hooks, and resources from service providers.
+
+### Publishing Composer Changes From Another Package
+
+Packages that install extensions can consume `PublishesComposerChanges` through the container:
+
+```php
+use Capell\Deployments\Contracts\PublishesComposerChanges;
+use Capell\Deployments\Data\ComposerRequirementData;
+
+$result = app(PublishesComposerChanges::class)->publish(new ComposerRequirementData(
+    composerName: 'capell-app/example-extension',
+    versionConstraint: '^4.0',
+    repositoryUrl: 'git@github.com:capell-app/example-extension.git',
+    label: 'Example Extension',
+));
+```
+
+The bound publisher is intentionally conservative: it publishes through the single active deployment connection. If a site has multiple active connections, call `PublishComposerRequirementAction::run($requirement, $connection)` with an explicit `DeploymentConnection` selected by the consuming workflow.
 
 ## Install And Setup
 

@@ -12,11 +12,15 @@ final class CreateOAuthStateAction
 {
     use AsAction;
 
-    public function handle(GitProviderType $provider): string
+    public function handle(GitProviderType $provider, ?string $repoOwner = null, ?string $repoName = null): string
     {
         $state = Str::random(40);
 
-        session()->put($this->sessionKey($provider), $state);
+        session()->put($this->sessionKey($provider), [
+            'state' => $state,
+            'repo_owner' => $repoOwner === null ? null : trim($repoOwner),
+            'repo_name' => $repoName === null ? null : trim($repoName),
+        ]);
 
         return $state;
     }

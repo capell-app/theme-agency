@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Deployments\Actions\PrepareComposerRequirementCommitAction;
 use Capell\Deployments\Actions\PublishComposerRequirementAction;
+use Capell\Deployments\Contracts\PublishesComposerChanges;
 use Capell\Deployments\Data\ComposerRequirementData;
 use Capell\Deployments\Data\RepoFile;
 use Capell\Deployments\Enums\InstallPolicy;
@@ -84,4 +85,13 @@ it('publishes composer requirements through pull requests and enables automerge 
         ->and($provider->commits)->toHaveCount(1)
         ->and($provider->commits[0]['branch'])->toStartWith('capell/add-extension-pr-extension-')
         ->and($provider->autoMergedPullRequestIds)->toBe([123]);
+});
+
+it('bound composer publisher fails loudly when multiple active connections exist', function (): void {
+    DeploymentConnection::factory()->github()->create();
+    DeploymentConnection::factory()->gitlab()->create();
+
+    expect(fn (): mixed => app(PublishesComposerChanges::class)->publish(
+        new ComposerRequirementData(composerName: 'capell/ambiguous-extension'),
+    ))->toThrow(LogicException::class, 'multiple active deployment connections exist');
 });

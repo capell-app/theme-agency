@@ -17,7 +17,8 @@ final class ValidateOAuthStateAction
             return false;
         }
 
-        $expectedState = session()->pull($this->sessionKey($provider));
+        $payload = session()->pull($this->sessionKey($provider));
+        $expectedState = is_array($payload) ? ($payload['state'] ?? null) : $payload;
 
         if (! is_string($expectedState) || $expectedState === '') {
             return false;
