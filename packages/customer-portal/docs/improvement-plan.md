@@ -75,7 +75,7 @@ Tied to `capabilities[]` and customer-portal table stakes:
 | Capture marketplace screenshots (4 surfaces) + rewrite summary/description       | Next    | S      | High   | §5          |
 | Schema-drive preferences (single source for view + validation)                   | Next    | M      | Med    | §2, §3      |
 | Cap / paginate dashboard + self-service provider fan-out                         | Next    | M      | Med    | §2          |
-| Add README + CHANGELOG                                                           | Next    | S      | Med    | §4          |
+| Add README + CHANGELOG                                                           | Shipped | S      | Med    | §4          |
 | Two-way support threading (replies + attachments)                                | Later   | L      | High   | §3          |
 | First-party billing & downloads/entitlement surfaces (suite cross-sell)          | Later   | L      | High   | §3, §5      |
 | Provide auth/SSO surface (or formally position as BYO-auth)                      | Later   | L      | High   | §3          |

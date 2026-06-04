@@ -11,6 +11,7 @@ All notable changes to `capell-app/customer-portal` will be documented in this f
 - Added frontend negative-path coverage for unauthenticated portal requests and the support submission throttle.
 - Added support request submitted/status-changed events and queued requester mail notifications.
 - Replaced placeholder frontend performance metadata with a 200ms render budget and 20-query frontend budget.
+- Added a package README covering implemented frontend, support, provider, safety, and testing workflows.
 - Wired the advertised `portal-profile` capability through `ResolvePortalProfileAction`, profile providers, manifest discovery, and the authenticated dashboard profile section.
 - Enforced `PortalAccountStatus` in the authenticated account resolver so suspended and archived portal accounts receive a forbidden response before dashboard, preference, or support workflows run.
 
