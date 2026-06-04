@@ -43,12 +43,12 @@ final class LoginAuditsWidget extends BaseWidget implements CapellWidgetContract
     public function table(Table $table): Table
     {
         return $table
-            ->query(fn (): Builder => $this->loginAuditTableQuery())
+            ->query(fn (): Builder => $this->getTableQuery())
             ->paginationPageOptions([5])
             ->queryStringIdentifier('login-audits')
             ->searchable(false)
             ->heading(__('capell-admin::heading.login_audits'))
-            ->columns($this->tableColumns())
+            ->columns($this->getTableColumns())
             ->defaultSort('login_at', 'desc')
             ->recordClasses(
                 fn (LoginAudit $record): ?string => $record->authenticatable === null ? 'table-row-warning' : null,
@@ -63,9 +63,25 @@ final class LoginAuditsWidget extends BaseWidget implements CapellWidgetContract
     }
 
     /**
+     * @param  Builder<Model>  $query
+     * @return CursorPaginator<array-key, mixed>
+     */
+    #[Override]
+    protected function paginateTableQuery(Builder $query): CursorPaginator
+    {
+        $recordsPerPage = $this->getTableRecordsPerPage();
+
+        return $query->cursorPaginate(
+            perPage: $recordsPerPage === 'all' ? $query->count() : (int) $recordsPerPage,
+            cursorName: (in_array($this->getTable()->getQueryStringIdentifier(), [null, '', '0'], true) ? 'login-audits' : $this->getTable()->getQueryStringIdentifier()) . '_cursor',
+        );
+    }
+
+    /**
      * @return Builder<Model>
      */
-    protected function loginAuditTableQuery(): Builder
+    #[Override]
+    protected function getTableQuery(): Builder
     {
         return BuildLoginAuditsQueryAction::run();
     }
@@ -73,7 +89,8 @@ final class LoginAuditsWidget extends BaseWidget implements CapellWidgetContract
     /**
      * @return array<int, mixed>
      */
-    protected function tableColumns(): array
+    #[Override]
+    protected function getTableColumns(): array
     {
         return [
             Split::make([
@@ -126,20 +143,6 @@ final class LoginAuditsWidget extends BaseWidget implements CapellWidgetContract
                     }),
             ]),
         ];
-    }
-
-    /**
-     * @param  Builder<Model>  $query
-     * @return CursorPaginator<array-key, mixed>
-     */
-    protected function paginateTableQuery(Builder $query): CursorPaginator
-    {
-        $recordsPerPage = $this->getTableRecordsPerPage();
-
-        return $query->cursorPaginate(
-            perPage: $recordsPerPage === 'all' ? $query->count() : (int) $recordsPerPage,
-            cursorName: (in_array($this->getTable()->getQueryStringIdentifier(), [null, '', '0'], true) ? 'login-audits' : $this->getTable()->getQueryStringIdentifier()) . '_cursor',
-        );
     }
 
     private function getFilamentUrl(LoginAudit $record): string

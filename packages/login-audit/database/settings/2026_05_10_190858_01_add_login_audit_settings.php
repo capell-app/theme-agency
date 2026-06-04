@@ -29,7 +29,7 @@ return new class extends SettingsMigration
         }
 
         if (! $this->migrator->exists('login_audit.last_purged_at')) {
-            $this->migrator->add('login_audit.last_purged_at', null);
+            $this->migrator->add('login_audit.last_purged_at');
         }
 
         if (! $this->migrator->exists('login_audit.enable_user_resource_bridge')) {
