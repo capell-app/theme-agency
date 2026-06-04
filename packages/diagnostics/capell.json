@@ -94,7 +94,7 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": "capell:diagnostics:health"
     },
     "actions": {
         "buildCacheHealth": "Capell\\Diagnostics\\Actions\\Dashboard\\BuildCacheHealthAction",
@@ -110,6 +110,7 @@
         "buildQueueHealthQuery": "Capell\\Diagnostics\\Actions\\DashboardReports\\BuildQueueHealthQueryAction",
         "buildQueueOperationsStats": "Capell\\Diagnostics\\Actions\\DashboardReports\\BuildQueueOperationsStatsAction",
         "ensureDiagnosticsPermissions": "Capell\\Diagnostics\\Actions\\EnsureDiagnosticsPermissionsAction",
+        "runExtensionHealthChecks": "Capell\\Diagnostics\\Actions\\Health\\RunExtensionHealthChecksAction",
         "inspectPackageOwnership": "Capell\\Diagnostics\\Actions\\InspectPackageOwnershipAction"
     },
     "settings": [],

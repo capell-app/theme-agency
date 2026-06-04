@@ -6,7 +6,7 @@ Diagnostics adds operational diagnostics for cache, configuration drift, migrati
 
 - Package: `capell-app/diagnostics`
 - Namespace: `Capell\Diagnostics\`
-- Surfaces: Filament admin, database
+- Surfaces: Filament admin, console, database
 - Service providers: `packages/diagnostics/src/Providers/AdminServiceProvider.php`, `packages/diagnostics/src/Providers/DiagnosticsServiceProvider.php`
 - Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/html-cache`
 - Third-party dependencies: `croustibat/filament-jobs-monitor`, `lorisleiva/laravel-actions`, `spatie/laravel-data`
@@ -15,6 +15,7 @@ Diagnostics adds operational diagnostics for cache, configuration drift, migrati
 
 - Gives developers and operators one admin surface for checking cache, config drift, migrations, packages, queues, permissions, setup health, and Tailwind status.
 - Shortens support loops because package health checks can be found from Capell instead of by reading logs first.
+- Reports whether declared package health checks are implemented, contract-only stubs, or broken declarations.
 - Provides extension points for command-palette style diagnostic actions with explicit ability and risk metadata.
 
 ## Best Used With
@@ -34,6 +35,7 @@ Diagnostics adds operational diagnostics for cache, configuration drift, migrati
 - Queue Operations report backed by [`croustibat/filament-jobs-monitor`](https://github.com/ultraviolettes/filament-jobs-monitor) telemetry.
 - Health widgets for cache, content, migrations, registry, setup, packages, and Tailwind.
 - Secure command palette discovery, execution, feedback, and audit logging for developer tools, system health, queue health, and trusted `capell:*` Artisan operations.
+- `capell:diagnostics:health` for running declared extension health checks from the console.
 
 ## Why It Matters
 
@@ -83,6 +85,8 @@ Current dummy-data screenshots are committed under `packages/diagnostics/docs/sc
 - DiagnosticsServiceProvider configures [`croustibat/filament-jobs-monitor`](https://packagist.org/packages/croustibat/filament-jobs-monitor) as the telemetry dependency, disables its upstream navigation, and routes queue UX through Capell Diagnostics.
 - AdminServiceProvider registers palette command providers through the `capell.diagnostics.command-palette-provider` container tag.
 - Command palette actions discover providers dynamically, authorize commands, validate parameters, execute navigation or Artisan commands, and record audit runs.
+- Command palette output is redacted before it is returned or persisted to the audit table.
+- `RunExtensionHealthChecksAction` resolves manifest-declared health checks, classifies implemented/stub/broken declarations, and executes runnable checks.
 - Actions build each health report.
 - Data objects describe report rows and dashboard state.
 - QueueMonitor, FailedJob, and PendingQueueJob models support Queue Operations reporting.
@@ -120,6 +124,7 @@ Current dummy-data screenshots are committed under `packages/diagnostics/docs/sc
 ## Extension Points
 
 - Contracts: `CommandPaletteProvider`.
+- Console: `capell:diagnostics:health` runs the extension health-check rollup with optional JSON output.
 - Register Capell extension points, routes, migrations, settings, render hooks, and resources from service providers.
 
 ## Install Impact

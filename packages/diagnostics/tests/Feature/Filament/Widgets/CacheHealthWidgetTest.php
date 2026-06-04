@@ -65,10 +65,9 @@ function createScopedUserForCacheHealthWidgetTest(SupportCollection $assignedSit
     ]);
     $user->save();
 
-    $user::$assignedSiteIds = $assignedSiteIds
+    $user::$assignedSiteIds = array_values($assignedSiteIds
         ->map(static fn (mixed $siteId): int => (int) $siteId)
-        ->values()
-        ->all();
+        ->all());
 
     return $user;
 }

@@ -59,11 +59,17 @@ final class RunExtensionHealthChecksAction
         $className = $declaration['class'];
 
         if ($className === '' || ! class_exists($className)) {
-            return $this->brokenResult($declaration, 'Declared health-check class could not be found.');
+            return $this->brokenResult(
+                $declaration,
+                (string) __('capell-diagnostics::package.health_check_broken_missing_class'),
+            );
         }
 
         if (! is_subclass_of($className, ChecksExtensionHealth::class)) {
-            return $this->brokenResult($declaration, 'Declared class does not implement the health-check contract.');
+            return $this->brokenResult(
+                $declaration,
+                (string) __('capell-diagnostics::package.health_check_broken_non_contract'),
+            );
         }
 
         if (! $this->isRunnable($className)) {
@@ -75,7 +81,7 @@ final class RunExtensionHealthChecksAction
                 severity: $declaration['severity'],
                 implementationStatus: HealthCheckImplementationStatus::Stub,
                 passed: null,
-                message: 'Check only satisfies the contract and asserts nothing.',
+                message: (string) __('capell-diagnostics::package.health_check_stub_no_assertions'),
             );
         }
 
@@ -89,8 +95,7 @@ final class RunExtensionHealthChecksAction
     private function executeRunnable(array $declaration, string $className): HealthCheckResultData
     {
         try {
-            /** @var iterable<int, mixed> $diagnostics */
-            $diagnostics = $className::{self::DIAGNOSTICS_METHOD}();
+            $diagnostics = $this->runDiagnosticsMethod($className, $declaration['key']);
             [$passed, $message] = $this->summarizeDiagnostics($diagnostics);
 
             return new HealthCheckResultData(
@@ -112,9 +117,33 @@ final class RunExtensionHealthChecksAction
                 severity: $declaration['severity'],
                 implementationStatus: HealthCheckImplementationStatus::Implemented,
                 passed: false,
-                message: 'Health check threw while running: ' . $throwable->getMessage(),
+                message: (string) __('capell-diagnostics::package.health_check_threw', [
+                    'message' => $throwable->getMessage(),
+                ]),
             );
         }
+    }
+
+    /**
+     * @param  class-string  $className
+     * @return iterable<int, mixed>
+     */
+    private function runDiagnosticsMethod(string $className, string $key): iterable
+    {
+        $reflection = new ReflectionClass($className);
+        $method = $reflection->getMethod(self::DIAGNOSTICS_METHOD);
+
+        if ($method->getNumberOfParameters() > 0) {
+            /** @var iterable<int, mixed> $diagnostics */
+            $diagnostics = $className::{self::DIAGNOSTICS_METHOD}($key);
+
+            return $diagnostics;
+        }
+
+        /** @var iterable<int, mixed> $diagnostics */
+        $diagnostics = $className::{self::DIAGNOSTICS_METHOD}();
+
+        return $diagnostics;
     }
 
     /**
@@ -141,16 +170,22 @@ final class RunExtensionHealthChecksAction
         }
 
         if ($total === 0) {
-            return [true, 'Check ran but returned no assertions.'];
+            return [true, (string) __('capell-diagnostics::package.health_check_empty_assertions')];
         }
 
         if ($failures === []) {
-            return [true, sprintf('All %d assertion(s) passed.', $total)];
+            return [true, (string) __('capell-diagnostics::package.health_check_assertions_passed', [
+                'total' => $total,
+            ])];
         }
 
         return [
             false,
-            sprintf('%d of %d assertion(s) failed: %s.', count($failures), $total, implode(', ', $failures)),
+            (string) __('capell-diagnostics::package.health_check_assertions_failed', [
+                'failed' => count($failures),
+                'total' => $total,
+                'failures' => implode(', ', $failures),
+            ]),
         ];
     }
 
@@ -185,7 +220,7 @@ final class RunExtensionHealthChecksAction
             return $diagnostic->label;
         }
 
-        return 'assertion';
+        return (string) __('capell-diagnostics::package.health_check_fallback_assertion_label');
     }
 
     /**

@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Capell\Diagnostics\Actions\Dashboard\BuildPackagesInstalledAction;
+use Capell\Diagnostics\Tests\Fixtures\Health\PassingFixtureHealthCheck;
+use Capell\Diagnostics\Tests\Fixtures\Health\StubFixtureHealthCheck;
 use Illuminate\Support\Facades\File;
 
 it('hydrates installed package health metadata from local package manifests', function (): void {
@@ -32,8 +34,9 @@ it('hydrates installed package health metadata from local package manifests', fu
             'doctor' => 'capell:events-doctor',
         ],
         'healthChecks' => [
-            ['name' => 'tables'],
-            ['name' => 'routes'],
+            ['key' => 'events.tables', 'label' => 'Tables', 'class' => PassingFixtureHealthCheck::class],
+            ['key' => 'events.routes', 'label' => 'Routes', 'class' => StubFixtureHealthCheck::class],
+            ['key' => 'events.missing', 'label' => 'Missing', 'class' => 'Missing\\EventsHealthCheck'],
         ],
     ], JSON_THROW_ON_ERROR));
 
@@ -45,7 +48,11 @@ it('hydrates installed package health metadata from local package manifests', fu
             ->and($package->name)->toBe('events')
             ->and($package->displayName)->toBe('Events')
             ->and($package->bundle)->toBe('growth')
-            ->and($package->healthCheckCount)->toBe(2)
+            ->and($package->healthCheckCount)->toBe(3)
+            ->and($package->healthCheckDeclaredCount)->toBe(3)
+            ->and($package->healthCheckImplementedCount)->toBe(1)
+            ->and($package->healthCheckStubCount)->toBe(1)
+            ->and($package->healthCheckBrokenCount)->toBe(1)
             ->and($package->installCommand)->toBe('capell:events-install')
             ->and($package->doctorCommand)->toBe('capell:events-doctor');
     } finally {
@@ -109,8 +116,8 @@ it('hydrates installed package metadata from composer install paths', function (
             'doctor' => 'capell:events-doctor',
         ],
         'healthChecks' => [
-            ['name' => 'tables'],
-            ['name' => 'routes'],
+            ['key' => 'events.tables', 'label' => 'Tables', 'class' => PassingFixtureHealthCheck::class],
+            ['key' => 'events.routes', 'label' => 'Routes', 'class' => StubFixtureHealthCheck::class],
         ],
     ], JSON_THROW_ON_ERROR));
 
@@ -123,6 +130,10 @@ it('hydrates installed package metadata from composer install paths', function (
             ->and($package->displayName)->toBe('Events')
             ->and($package->bundle)->toBe('growth')
             ->and($package->healthCheckCount)->toBe(2)
+            ->and($package->healthCheckDeclaredCount)->toBe(2)
+            ->and($package->healthCheckImplementedCount)->toBe(1)
+            ->and($package->healthCheckStubCount)->toBe(1)
+            ->and($package->healthCheckBrokenCount)->toBe(0)
             ->and($package->installCommand)->toBe('capell:events-install')
             ->and($package->doctorCommand)->toBe('capell:events-doctor');
     } finally {
@@ -158,6 +169,7 @@ it('reads health check counts from real package manifests', function (): void {
         ])
             ->and($apiPackage->healthCheckCount)->toBeGreaterThan(0)
             ->and($diagnosticsPackage->healthCheckCount)->toBeGreaterThan(0)
+            ->and($diagnosticsPackage->healthCheckImplementedCount)->toBeGreaterThan(0)
             ->and($migrationAssistantPackage->healthCheckCount)->toBeGreaterThan(0);
     } finally {
         File::deleteDirectory($temporaryRoot);

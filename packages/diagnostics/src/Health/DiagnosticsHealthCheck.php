@@ -31,16 +31,25 @@ final class DiagnosticsHealthCheck implements ChecksExtensionHealth
     /**
      * @return Collection<int, DoctorCheckResultData>
      */
-    public static function runDiagnostics(): Collection
+    public static function runDiagnostics(?string $key = null): Collection
     {
         $check = new self;
-
-        return collect([
-            $check->packageCatalogCheck(),
-            $check->manifestHealthCheck(),
-            $check->systemHealthWidgetsCheck(),
-            $check->queueHealthCheck(),
+        $assertions = collect([
+            'diagnostics.package-catalog' => $check->packageCatalogCheck(),
+            'diagnostics.manifest-health' => $check->manifestHealthCheck(),
+            'diagnostics.system-health-widgets' => $check->systemHealthWidgetsCheck(),
+            'diagnostics.queue-health' => $check->queueHealthCheck(),
         ]);
+
+        if ($key === null) {
+            return $assertions->values();
+        }
+
+        $assertion = $assertions->get($key);
+
+        return $assertion instanceof DoctorCheckResultData
+            ? collect([$assertion])
+            : collect();
     }
 
     public static function passed(): bool

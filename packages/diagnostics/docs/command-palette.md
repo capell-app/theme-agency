@@ -54,6 +54,22 @@ Use host-package translations for labels and descriptions. Do not put user-facin
 
 Keep dangerous commands out unless they have explicit authorization and confirmation.
 
+## Dynamic Capell Artisan Commands
+
+Diagnostics discovers installed `capell:*` Artisan commands and exposes them through `CapellArtisanPaletteCommandProvider`. Risk classification is explicit:
+
+- Commands listed in the provider risk map use their mapped `safe`, `confirm`, or `dangerous` level.
+- Unknown `capell:*` commands require confirmation by default.
+- New package commands that should run without confirmation must be added to the explicit safe map intentionally.
+
+This avoids treating a newly introduced destructive command as safe just because its name does not contain a known risky substring.
+
+## Output Redaction
+
+Command palette execution output is redacted before it is returned to the admin UI or persisted to `command_palette_runs.output`. The redaction layer covers common secret formats such as env-style password/token/API-key lines, array key/value output, bearer tokens, and credential URLs.
+
+Providers should still avoid exposing commands that print secrets or broad environment dumps. Redaction is a backstop, not a reason to make sensitive commands widely available.
+
 ## Verification
 
 ```bash

@@ -71,7 +71,10 @@ it('reports an implemented passing health check as passing', function (): void {
         ->and($report->failedCount)->toBe(0)
         ->and($check)->toBeInstanceOf(HealthCheckResultData::class)
         ->and($check->implementationStatus)->toBe(HealthCheckImplementationStatus::Implemented)
-        ->and($check->passed)->toBeTrue();
+        ->and($check->passed)->toBeTrue()
+        ->and($check->message)->toBe((string) __('capell-diagnostics::package.health_check_assertions_passed', [
+            'total' => 1,
+        ]));
 });
 
 it('reports an implemented failing health check as failing', function (): void {
@@ -87,7 +90,11 @@ it('reports an implemented failing health check as failing', function (): void {
         ->and($check->implementationStatus)->toBe(HealthCheckImplementationStatus::Implemented)
         ->and($check->passed)->toBeFalse()
         ->and($check->failed())->toBeTrue()
-        ->and($check->message)->toContain('Required route registered');
+        ->and($check->message)->toBe((string) __('capell-diagnostics::package.health_check_assertions_failed', [
+            'failed' => 1,
+            'total' => 2,
+            'failures' => 'Required route registered',
+        ]));
 });
 
 it('surfaces the declared severity of each check', function (): void {
@@ -114,7 +121,8 @@ it('classifies a contract-only class as a stub and does not execute it', functio
         ->and($report->implementedCount)->toBe(0)
         ->and($report->executedCount)->toBe(0)
         ->and($check->implementationStatus)->toBe(HealthCheckImplementationStatus::Stub)
-        ->and($check->passed)->toBeNull();
+        ->and($check->passed)->toBeNull()
+        ->and($check->message)->toBe((string) __('capell-diagnostics::package.health_check_stub_no_assertions'));
 });
 
 it('classifies a missing or non-contract class as broken', function (): void {
@@ -127,7 +135,8 @@ it('classifies a missing or non-contract class as broken', function (): void {
     expect($report->brokenCount)->toBe(1)
         ->and($report->executedCount)->toBe(0)
         ->and($check->implementationStatus)->toBe(HealthCheckImplementationStatus::Broken)
-        ->and($check->passed)->toBeNull();
+        ->and($check->passed)->toBeNull()
+        ->and($check->message)->toBe((string) __('capell-diagnostics::package.health_check_broken_missing_class'));
 });
 
 it('degrades gracefully when an implemented check throws', function (): void {
@@ -140,7 +149,9 @@ it('degrades gracefully when an implemented check throws', function (): void {
     expect($report->failedCount)->toBe(1)
         ->and($check->implementationStatus)->toBe(HealthCheckImplementationStatus::Implemented)
         ->and($check->passed)->toBeFalse()
-        ->and($check->message)->toContain('threw while running');
+        ->and($check->message)->toBe((string) __('capell-diagnostics::package.health_check_threw', [
+            'message' => 'check exploded',
+        ]));
 });
 
 it('rolls up implemented, stub and broken counts across declared checks', function (): void {

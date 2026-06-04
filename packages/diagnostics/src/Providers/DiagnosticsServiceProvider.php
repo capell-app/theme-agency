@@ -6,6 +6,7 @@ namespace Capell\Diagnostics\Providers;
 
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Diagnostics\Actions\DashboardReports\DiscoverQueueMonitorQueuesAction;
+use Capell\Diagnostics\Console\Commands\RunDiagnosticsHealthCommand;
 use Capell\Diagnostics\Models\QueueMonitor;
 use Croustibat\FilamentJobsMonitor\FilamentJobsMonitorPlugin;
 use Croustibat\FilamentJobsMonitor\Models\QueueMonitor as BaseQueueMonitor;
@@ -24,6 +25,7 @@ final class DiagnosticsServiceProvider extends AbstractPackageServiceProvider
             ->hasConfigFile(self::$name)
             ->hasTranslations()
             ->hasViews(self::$name)
+            ->hasCommand(RunDiagnosticsHealthCommand::class)
             ->hasMigrations([
                 '2026_05_10_190846_01_create_command_palette_runs_table',
                 '2026_05_29_000001_create_queue_monitors_table',

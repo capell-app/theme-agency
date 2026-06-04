@@ -36,10 +36,11 @@ final class ExecuteCommandPaletteCommandAction
 
         try {
             $result = $this->execute($command, $validatedParameters);
+            $redactedBody = $this->redactOutput($result->body);
 
             $run->update([
                 'status' => $result->successful ? 'succeeded' : 'failed',
-                'output' => $result->body,
+                'output' => $redactedBody,
                 'exit_code' => $this->lastExitCode,
                 'finished_at' => now(),
             ]);
@@ -47,14 +48,14 @@ final class ExecuteCommandPaletteCommandAction
             return new CommandPaletteResultData(
                 successful: $result->successful,
                 title: $result->title,
-                body: $result->body,
+                body: $redactedBody,
                 url: $result->url,
                 runId: $run->id,
             );
         } catch (Throwable $throwable) {
             $run->update([
                 'status' => 'failed',
-                'output' => Str::limit($throwable->getMessage(), 4000, ''),
+                'output' => $this->redactOutput(Str::limit($throwable->getMessage(), 4000, '')),
                 'finished_at' => now(),
             ]);
 
@@ -148,5 +149,14 @@ final class ExecuteCommandPaletteCommandAction
             ),
             body: $output,
         );
+    }
+
+    private function redactOutput(?string $output): ?string
+    {
+        if ($output === null || $output === '') {
+            return $output;
+        }
+
+        return RedactCommandPaletteOutputAction::run($output);
     }
 }

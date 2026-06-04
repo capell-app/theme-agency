@@ -18,6 +18,10 @@ final class PackageInfoData extends Data
         public readonly ?string $displayName = null,
         public readonly ?string $bundle = null,
         public readonly int $healthCheckCount = 0,
+        public readonly int $healthCheckDeclaredCount = 0,
+        public readonly int $healthCheckImplementedCount = 0,
+        public readonly int $healthCheckStubCount = 0,
+        public readonly int $healthCheckBrokenCount = 0,
         public readonly ?string $installCommand = null,
         public readonly ?string $doctorCommand = null,
     ) {}

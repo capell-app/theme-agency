@@ -6,6 +6,7 @@ use Capell\Core\Contracts\Extensions\RegistersExtensionWidget;
 use Capell\Diagnostics\Actions\Dashboard\BuildPackagesInstalledAction;
 use Capell\Diagnostics\Actions\DashboardReports\BuildInfrastructureStatusAction;
 use Capell\Diagnostics\Actions\DashboardReports\BuildPublicOutputSafetyReportAction;
+use Capell\Diagnostics\Actions\Health\RunExtensionHealthChecksAction;
 use Capell\Diagnostics\Actions\InspectPackageOwnershipAction;
 use Capell\Diagnostics\Filament\Pages\CommandPalettePage;
 use Capell\Diagnostics\Filament\Pages\DiagnosticsPage;
@@ -96,6 +97,8 @@ describe('diagnostics capell.json manifest', function (): void {
             ->and($manifest['actions'])->toHaveKey('buildInfrastructureStatus', BuildInfrastructureStatusAction::class)
             ->and($manifest['actions'])->toHaveKey('buildPublicOutputSafetyReport', BuildPublicOutputSafetyReportAction::class)
             ->and($manifest['actions'])->toHaveKey('inspectPackageOwnership', InspectPackageOwnershipAction::class)
+            ->and($manifest['actions'])->toHaveKey('runExtensionHealthChecks', RunExtensionHealthChecksAction::class)
+            ->and($manifest['commands']['doctor'])->toBe('capell:diagnostics:health')
             ->and($manifest['capabilities'])->toContain(
                 'diagnostics-cross-package-install-health',
                 'diagnostics-public-output-safety',

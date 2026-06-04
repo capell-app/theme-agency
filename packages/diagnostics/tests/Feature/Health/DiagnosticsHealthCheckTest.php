@@ -21,6 +21,14 @@ it('asserts its declared system-health-widget capability', function (): void {
         ->and($labels)->toContain('Package catalog discovery');
 });
 
+it('can run a single declared assertion by manifest key', function (): void {
+    $results = DiagnosticsHealthCheck::runDiagnostics('diagnostics.system-health-widgets');
+
+    expect($results)->toHaveCount(1)
+        ->and($results->first())->toBeInstanceOf(DoctorCheckResultData::class)
+        ->and($results->first()?->label)->toBe('System health widgets');
+});
+
 it('passes() reflects the conjunction of its assertions', function (): void {
     $expected = DiagnosticsHealthCheck::runDiagnostics()
         ->every(fn (DoctorCheckResultData $result): bool => $result->passed);

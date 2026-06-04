@@ -1,0 +1,129 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Capell\Diagnostics\Console\Commands;
+
+use Capell\Diagnostics\Actions\Health\RunExtensionHealthChecksAction;
+use Capell\Diagnostics\Data\Health\ExtensionHealthReportData;
+use Capell\Diagnostics\Data\Health\HealthCheckResultData;
+use Illuminate\Console\Command;
+use Override;
+use Symfony\Component\Console\Command\Command as SymfonyCommand;
+
+final class RunDiagnosticsHealthCommand extends Command
+{
+    protected $signature = 'capell:diagnostics:health
+        {--json : Output health-check data as JSON}';
+
+    protected $description = 'Run Diagnostics extension health checks.';
+
+    #[Override]
+    public function getDescription(): string
+    {
+        return (string) __('capell-diagnostics::package.health_command_description');
+    }
+
+    public function handle(): int
+    {
+        $report = RunExtensionHealthChecksAction::run();
+
+        if ((bool) $this->option('json')) {
+            $this->output->writeln(json_encode($this->payloadFor($report), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR));
+
+            return $this->exitCodeFor($report);
+        }
+
+        $this->components->info((string) __('capell-diagnostics::package.health_command_summary', [
+            'implemented' => $report->implementedCount,
+            'declared' => $report->declaredCount,
+            'stub' => $report->stubCount,
+            'broken' => $report->brokenCount,
+            'failed' => $report->failedCount,
+        ]));
+
+        if ($report->checks->count() > 0) {
+            $this->table([
+                (string) __('capell-diagnostics::package.health_command_column_package'),
+                (string) __('capell-diagnostics::package.health_command_column_key'),
+                (string) __('capell-diagnostics::package.health_command_column_status'),
+                (string) __('capell-diagnostics::package.health_command_column_result'),
+            ], $this->rowsFor($report));
+        }
+
+        return $this->exitCodeFor($report);
+    }
+
+    /**
+     * @return array{declared: int, implemented: int, stub: int, broken: int, executed: int, passed: int, failed: int, checks: list<array{package: string, key: string, label: string, class: string, severity: string, implementation: string, passed: bool|null, message: string|null}>}
+     */
+    private function payloadFor(ExtensionHealthReportData $report): array
+    {
+        /** @var list<array{package: string, key: string, label: string, class: string, severity: string, implementation: string, passed: bool|null, message: string|null}> $checks */
+        $checks = $report->checks
+            ->toCollection()
+            ->map(fn (HealthCheckResultData $check): array => [
+                'package' => $check->packageName,
+                'key' => $check->key,
+                'label' => $check->label,
+                'class' => $check->className,
+                'severity' => $check->severity,
+                'implementation' => $check->implementationStatus->value,
+                'passed' => $check->passed,
+                'message' => $check->message,
+            ])
+            ->values()
+            ->all();
+
+        return [
+            'declared' => $report->declaredCount,
+            'implemented' => $report->implementedCount,
+            'stub' => $report->stubCount,
+            'broken' => $report->brokenCount,
+            'executed' => $report->executedCount,
+            'passed' => $report->passedCount,
+            'failed' => $report->failedCount,
+            'checks' => $checks,
+        ];
+    }
+
+    /**
+     * @return list<array{package: string, key: string, status: string, result: string}>
+     */
+    private function rowsFor(ExtensionHealthReportData $report): array
+    {
+        /** @var list<array{package: string, key: string, status: string, result: string}> $rows */
+        $rows = $report->checks
+            ->toCollection()
+            ->map(fn (HealthCheckResultData $check): array => [
+                'package' => $check->packageName,
+                'key' => $check->key,
+                'status' => $check->implementationStatus->value,
+                'result' => $this->resultFor($check),
+            ])
+            ->values()
+            ->all();
+
+        return $rows;
+    }
+
+    private function resultFor(HealthCheckResultData $check): string
+    {
+        if ($check->passed === true) {
+            return (string) __('capell-diagnostics::package.health_command_result_passed');
+        }
+
+        if ($check->passed === false) {
+            return (string) __('capell-diagnostics::package.health_command_result_failed');
+        }
+
+        return (string) __('capell-diagnostics::package.health_command_result_not_run');
+    }
+
+    private function exitCodeFor(ExtensionHealthReportData $report): int
+    {
+        return $report->failedCount > 0 || $report->brokenCount > 0
+            ? SymfonyCommand::FAILURE
+            : SymfonyCommand::SUCCESS;
+    }
+}

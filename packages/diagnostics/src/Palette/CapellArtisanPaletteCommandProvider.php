@@ -18,6 +18,22 @@ use Symfony\Component\Console\Input\InputOption;
 final class CapellArtisanPaletteCommandProvider implements CommandPaletteProvider
 {
     /**
+     * Explicit command risk map. Commands not listed here require confirmation
+     * instead of defaulting to safe.
+     *
+     * @var array<string, CommandPaletteDanger>
+     */
+    private const array COMMAND_RISK = [
+        'capell:diagnostics:health' => CommandPaletteDanger::Safe,
+        'capell:html-cache:diagnose' => CommandPaletteDanger::Safe,
+        'capell:html-cache:clear' => CommandPaletteDanger::Confirm,
+        'capell:html-cache:process-stale' => CommandPaletteDanger::Confirm,
+        'capell:install' => CommandPaletteDanger::Dangerous,
+        'capell:setup' => CommandPaletteDanger::Dangerous,
+        'capell:upgrade' => CommandPaletteDanger::Dangerous,
+    ];
+
+    /**
      * @return array<string, CommandPaletteCommandData>
      */
     public function commandPaletteCommands(): array
@@ -52,15 +68,7 @@ final class CapellArtisanPaletteCommandProvider implements CommandPaletteProvide
 
     private function dangerForCommand(string $name): CommandPaletteDanger
     {
-        if (Str::contains($name, ['demo', 'install', 'setup', 'upgrade'])) {
-            return CommandPaletteDanger::Dangerous;
-        }
-
-        if (Str::contains($name, ['clear', 'cache', 'publish'])) {
-            return CommandPaletteDanger::Confirm;
-        }
-
-        return CommandPaletteDanger::Safe;
+        return self::COMMAND_RISK[$name] ?? CommandPaletteDanger::Confirm;
     }
 
     /**

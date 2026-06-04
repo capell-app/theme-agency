@@ -4,23 +4,30 @@ declare(strict_types=1);
 
 namespace Capell\Diagnostics\Actions\Dashboard;
 
+use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Diagnostics\Data\Dashboard\PackageInfoData;
 use Capell\Diagnostics\Data\Dashboard\PackagesInstalledData;
 use Illuminate\Support\Facades\File;
 use Lorisleiva\Actions\Concerns\AsAction;
+use ReflectionClass;
 use Spatie\LaravelData\DataCollection;
 
 /**
+ * @phpstan-type PackageMetadata array{short: string, config: ?string, docs: ?string, display?: ?string, bundle?: ?string, health_checks?: int, health_checks_declared?: int, health_checks_implemented?: int, health_checks_stub?: int, health_checks_broken?: int, install?: ?string, doctor?: ?string}
+ * @phpstan-type ManifestMetadata array{composer: string, values: PackageMetadata}
+ *
  * @method static PackagesInstalledData run()
  */
 final class BuildPackagesInstalledAction
 {
     use AsAction;
 
+    private const string HEALTH_CHECK_METHOD = 'runDiagnostics';
+
     /**
      * Maps a composer package name to its short handle, config-file name, and docs URL.
      *
-     * @var array<string, array{short: string, config: ?string, docs: ?string, display?: ?string, bundle?: ?string, health_checks?: int, install?: ?string, doctor?: ?string}>
+     * @var array<string, PackageMetadata>
      */
     private const array KNOWN_PACKAGES = [
         'capell-app/core' => [
@@ -128,6 +135,10 @@ final class BuildPackagesInstalledAction
                 displayName: $meta['display'] ?? null,
                 bundle: $meta['bundle'] ?? null,
                 healthCheckCount: $meta['health_checks'] ?? 0,
+                healthCheckDeclaredCount: $meta['health_checks_declared'] ?? $meta['health_checks'] ?? 0,
+                healthCheckImplementedCount: $meta['health_checks_implemented'] ?? 0,
+                healthCheckStubCount: $meta['health_checks_stub'] ?? 0,
+                healthCheckBrokenCount: $meta['health_checks_broken'] ?? 0,
                 installCommand: $meta['install'] ?? null,
                 doctorCommand: $meta['doctor'] ?? null,
             );
@@ -156,7 +167,7 @@ final class BuildPackagesInstalledAction
     }
 
     /**
-     * @return array<string, array{short: string, config: ?string, docs: ?string, display?: ?string, bundle?: ?string, health_checks?: int, install?: ?string, doctor?: ?string}>
+     * @return array<string, PackageMetadata>
      */
     private function knownPackages(): array
     {
@@ -186,13 +197,13 @@ final class BuildPackagesInstalledAction
             ];
         }
 
-        /** @var array<string, array{short: string, config: string|null, docs: string|null, display?: string|null, bundle?: string|null, health_checks?: int, install?: string|null, doctor?: string|null}> $knownPackages */
+        /** @var array<string, PackageMetadata> $knownPackages */
         return $knownPackages;
     }
 
     /**
      * @param  array{name: string, version: string, install_path?: string}  $package
-     * @return array{short: string, config: ?string, docs: ?string, display?: ?string, bundle?: ?string, health_checks?: int, install?: ?string, doctor?: ?string}|null
+     * @return PackageMetadata|null
      */
     private function metadataFromInstalledPackage(array $package): ?array
     {
@@ -213,7 +224,7 @@ final class BuildPackagesInstalledAction
     }
 
     /**
-     * @return array{composer: string, values: array{short: string, config: ?string, docs: ?string, display?: ?string, bundle?: ?string, health_checks?: int, install?: ?string, doctor?: ?string}}|null
+     * @return ManifestMetadata|null
      */
     private function metadataFromManifestPath(string $manifestPath, string $packagePath): ?array
     {
@@ -243,7 +254,7 @@ final class BuildPackagesInstalledAction
                 'docs' => 'https://github.com/capell-app/capell-packages/blob/4.x/packages/' . $slug . '/README.md',
                 'display' => is_string($manifest['displayName'] ?? null) ? $manifest['displayName'] : null,
                 'bundle' => $this->bundleFor($manifest),
-                'health_checks' => is_array($manifest['healthChecks'] ?? null) ? count($manifest['healthChecks']) : 0,
+                ...$this->healthCheckCountsFor($manifest),
                 'install' => $this->commandFor($manifest, 'install'),
                 'doctor' => $this->commandFor($manifest, 'doctor'),
             ],
@@ -293,5 +304,81 @@ final class BuildPackagesInstalledAction
         $command = $commands[$key] ?? null;
 
         return is_string($command) && $command !== '' ? $command : null;
+    }
+
+    /**
+     * @param  array<string, mixed>  $manifest
+     * @return array{health_checks: int, health_checks_declared: int, health_checks_implemented: int, health_checks_stub: int, health_checks_broken: int}
+     */
+    private function healthCheckCountsFor(array $manifest): array
+    {
+        $healthChecks = $manifest['healthChecks'] ?? null;
+        $declared = 0;
+        $implemented = 0;
+        $stub = 0;
+        $broken = 0;
+
+        if (! is_array($healthChecks)) {
+            return [
+                'health_checks' => 0,
+                'health_checks_declared' => 0,
+                'health_checks_implemented' => 0,
+                'health_checks_stub' => 0,
+                'health_checks_broken' => 0,
+            ];
+        }
+
+        foreach ($healthChecks as $healthCheck) {
+            if (! is_array($healthCheck)) {
+                continue;
+            }
+
+            $declared++;
+            $className = $healthCheck['class'] ?? null;
+
+            if (! is_string($className) || $className === '' || ! class_exists($className)) {
+                $broken++;
+
+                continue;
+            }
+
+            if (! is_subclass_of($className, ChecksExtensionHealth::class)) {
+                $broken++;
+
+                continue;
+            }
+
+            if ($this->isRunnableHealthCheck($className)) {
+                $implemented++;
+
+                continue;
+            }
+
+            $stub++;
+        }
+
+        return [
+            'health_checks' => $declared,
+            'health_checks_declared' => $declared,
+            'health_checks_implemented' => $implemented,
+            'health_checks_stub' => $stub,
+            'health_checks_broken' => $broken,
+        ];
+    }
+
+    /**
+     * @param  class-string  $className
+     */
+    private function isRunnableHealthCheck(string $className): bool
+    {
+        $reflection = new ReflectionClass($className);
+
+        if (! $reflection->hasMethod(self::HEALTH_CHECK_METHOD)) {
+            return false;
+        }
+
+        $method = $reflection->getMethod(self::HEALTH_CHECK_METHOD);
+
+        return $method->isPublic() && $method->isStatic();
     }
 }

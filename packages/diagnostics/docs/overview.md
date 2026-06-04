@@ -15,6 +15,8 @@ Diagnostics adds operational diagnostics for cache, configuration drift, migrati
 - Queue Operations report backed by [`croustibat/filament-jobs-monitor`](https://github.com/ultraviolettes/filament-jobs-monitor) queue telemetry.
 - Health widgets for cache, content, migrations, registry, setup, packages, and Tailwind.
 - Secure command palette discovery, execution, feedback, and audit logging for developer tools, system health, queue health, and trusted `capell:*` Artisan operations.
+- Health-check reflection that reports implemented, stub, and broken manifest declarations across installed packages.
+- `capell:diagnostics:health` for running declared extension health checks from the console.
 
 ## Developer Notes
 
@@ -23,6 +25,8 @@ Keeps diagnostics in actions and data objects so admin pages can show health inf
 - DiagnosticsServiceProvider and AdminServiceProvider register admin pages and widgets.
 - AdminServiceProvider registers `CapellArtisanPaletteCommandProvider` and `DiagnosticsPaletteCommandProvider` through the `capell.diagnostics.command-palette-provider` tag.
 - Command palette actions discover providers dynamically, authorize commands, validate parameters, execute navigation or Artisan commands, and record audit runs.
+- Command palette output is redacted before response and audit persistence.
+- `RunExtensionHealthChecksAction` resolves declared package health checks, classifies implementation status, and executes runnable checks.
 - Actions build each health report.
 - Data objects describe report rows and dashboard state.
 - QueueMonitor, FailedJob, and PendingQueueJob models support Queue Operations reporting.
@@ -101,8 +105,10 @@ Helps operators and agencies see setup problems before they become publishing or
 - Dynamic command palette metadata for trusted `capell:*` Artisan commands.
 - Dynamic discovery happens through the `capell.diagnostics.command-palette-provider` provider tag.
 - Commands can be navigation or Artisan commands and can define abilities, confirmation level, and parameters.
-- Confirmation is required for cache, clear, and publish commands.
-- Install, setup, upgrade, and demo commands are marked dangerous.
+- Explicitly mapped low-risk commands can run without confirmation.
+- Unknown dynamic `capell:*` commands require confirmation by default.
+- Install, setup, and upgrade commands are marked dangerous when mapped.
+- `capell:diagnostics:health`: runs declared extension health checks and supports `--json`.
 
 ## Command Palette
 

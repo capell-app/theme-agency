@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 use Capell\Diagnostics\Actions\CommandPalette\DiscoverCommandPaletteCommandsAction;
 use Capell\Diagnostics\Actions\CommandPalette\ExecuteCommandPaletteCommandAction;
+use Capell\Diagnostics\Actions\CommandPalette\RedactCommandPaletteOutputAction;
 use Capell\Diagnostics\Actions\CommandPalette\ValidateCommandPaletteParametersAction;
 use Capell\Diagnostics\Data\CommandPaletteCommandData;
 use Capell\Diagnostics\Data\CommandPaletteParameterData;
+use Capell\Diagnostics\Enums\CommandPaletteDanger;
 use Capell\Diagnostics\Enums\CommandPaletteParameterType;
 use Capell\Diagnostics\Enums\CommandPaletteType;
 use Capell\Diagnostics\Models\CommandPaletteRun;
 use Capell\Diagnostics\Palette\CapellArtisanPaletteCommandProvider;
 use Capell\Diagnostics\Tests\Fixtures\Autoload\TestCommandPaletteProvider;
+use Capell\Diagnostics\Tests\Fixtures\SecretOutputCommandPaletteProvider;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Validation\ValidationException;
@@ -100,6 +103,46 @@ it('executes artisan commands with validated parameters and stores command outpu
         ->and($run->exit_code)->toBe(0);
 });
 
+it('redacts secrets before returning and storing command output', function (): void {
+    $user = $this->createUser();
+
+    Artisan::command('capell:test-secret-output', function (): int {
+        $this->line('DB_PASSWORD=super-secret');
+        $this->line('Authorization: Bearer sk_test_1234567890abcdef');
+        $this->line('DATABASE_URL=mysql://user:secret-pass@example.test/db');
+        $this->line('Public value stays visible.');
+
+        return Command::SUCCESS;
+    });
+
+    app()->instance(SecretOutputCommandPaletteProvider::class, new SecretOutputCommandPaletteProvider);
+    app()->tag([SecretOutputCommandPaletteProvider::class], 'capell.diagnostics.command-palette-provider');
+
+    $result = ExecuteCommandPaletteCommandAction::run('test.secret-output', [], $user);
+    $run = CommandPaletteRun::query()->latest('id')->firstOrFail();
+
+    expect($result->body)->toContain('DB_PASSWORD=[redacted]')
+        ->and($result->body)->toContain('Bearer [redacted]')
+        ->and($result->body)->toContain('mysql://user:[redacted]@example.test/db')
+        ->and($result->body)->toContain('Public value stays visible.')
+        ->and($result->body)->not->toContain('super-secret')
+        ->and($result->body)->not->toContain('secret-pass')
+        ->and($run->output)->toBe($result->body);
+});
+
+it('redacts common secret output formats directly', function (): void {
+    $output = RedactCommandPaletteOutputAction::run(implode(PHP_EOL, [
+        'api_key: abc123secret',
+        "'client_secret' => hunter2",
+        'Nothing sensitive',
+    ]));
+
+    expect($output)->toContain('api_key: [redacted]')
+        ->and($output)->toContain("'client_secret' => [redacted]")
+        ->and($output)->toContain('Nothing sensitive')
+        ->and($output)->not->toContain('hunter2');
+});
+
 it('requires confirmation before executing commands marked for confirmation', function (): void {
     app()->instance(TestCommandPaletteProvider::class, new TestCommandPaletteProvider);
     app()->tag([TestCommandPaletteProvider::class], 'capell.diagnostics.command-palette-provider');
@@ -121,6 +164,28 @@ it('exposes capell artisan commands as palette commands with parameter metadata'
         ->and($command->parameters[0]->required)->toBeTrue()
         ->and($command->parameters[1]->name)->toBe('--force')
         ->and($command->parameters[1]->type)->toBe(CommandPaletteParameterType::Boolean);
+});
+
+it('requires confirmation for unmapped capell artisan commands', function (): void {
+    Artisan::command('capell:test-untagged-destructive', fn (): int => Command::SUCCESS);
+
+    $commands = (new CapellArtisanPaletteCommandProvider)->commandPaletteCommands();
+    $command = $commands['artisan.capell:test-untagged-destructive'];
+
+    expect($command->danger)->toBe(CommandPaletteDanger::Confirm)
+        ->and($command->requiresConfirmation)->toBeTrue();
+});
+
+it('marks explicitly mapped safe capell artisan commands as safe', function (): void {
+    if (! array_key_exists('capell:diagnostics:health', Artisan::all())) {
+        Artisan::command('capell:diagnostics:health', fn (): int => Command::SUCCESS);
+    }
+
+    $commands = (new CapellArtisanPaletteCommandProvider)->commandPaletteCommands();
+    $command = $commands['artisan.capell:diagnostics:health'];
+
+    expect($command->danger)->toBe(CommandPaletteDanger::Safe)
+        ->and($command->requiresConfirmation)->toBeFalse();
 });
 
 function testPaletteArtisanCommand(): CommandPaletteCommandData

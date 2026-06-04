@@ -105,13 +105,37 @@
                                     @endif
                                 </td>
                                 <td class="py-2 pr-4">
-                                    @if ($package->healthCheckCount > 0)
-                                        <span
-                                            class="bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-400 rounded px-1.5 py-0.5 text-xs"
-                                        >
-                                            {{ $package->healthCheckCount }}
-                                            {{ trans_choice('capell-diagnostics::package.packages_installed_checks', $package->healthCheckCount) }}
-                                        </span>
+                                    @if ($package->healthCheckDeclaredCount > 0)
+                                        <div class="space-y-1">
+                                            <span
+                                                @class([
+                                                    'rounded px-1.5 py-0.5 text-xs',
+                                                    'bg-success-100 text-success-700 dark:bg-success-900/30 dark:text-success-400' => $package->healthCheckStubCount === 0 && $package->healthCheckBrokenCount === 0,
+                                                    'bg-warning-100 text-warning-700 dark:bg-warning-900/30 dark:text-warning-400' => $package->healthCheckStubCount > 0 && $package->healthCheckBrokenCount === 0,
+                                                    'bg-danger-100 text-danger-700 dark:bg-danger-900/30 dark:text-danger-400' => $package->healthCheckBrokenCount > 0,
+                                                ])
+                                            >
+                                                {{
+                                                    __('capell-diagnostics::package.packages_installed_health_implemented', [
+                                                        'implemented' => $package->healthCheckImplementedCount,
+                                                        'declared' => $package->healthCheckDeclaredCount,
+                                                    ])
+                                                }}
+                                            </span>
+
+                                            @if ($package->healthCheckStubCount > 0 || $package->healthCheckBrokenCount > 0)
+                                                <div
+                                                    class="text-xs text-gray-500 dark:text-gray-400"
+                                                >
+                                                    {{
+                                                        __('capell-diagnostics::package.packages_installed_health_stub_broken', [
+                                                            'stub' => $package->healthCheckStubCount,
+                                                            'broken' => $package->healthCheckBrokenCount,
+                                                        ])
+                                                    }}
+                                                </div>
+                                            @endif
+                                        </div>
                                     @elseif ($package->doctorCommand !== null)
                                         <span
                                             class="bg-info-100 text-info-700 dark:bg-info-900/30 dark:text-info-400 rounded px-1.5 py-0.5 text-xs"

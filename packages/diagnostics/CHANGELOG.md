@@ -5,6 +5,11 @@ All notable changes to `capell-app/diagnostics` will be documented in this file.
 ## Unreleased
 
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
+- Package health reporting now reflects declared health-check classes and shows implemented/stub/broken counts instead of presenting raw manifest counts as health.
+- Command palette output is redacted before it is returned or persisted to `command_palette_runs.output`.
+- Dynamic `capell:*` palette commands now use an explicit risk map and require confirmation by default when they are not mapped.
+- Added the `capell:diagnostics:health` doctor command to run extension health checks from the console with table or JSON output.
+- `DiagnosticsHealthCheck` can run assertions by manifest key so the package's four declared health checks map to addressable checks.
 
 ## 2026-06-03
 
