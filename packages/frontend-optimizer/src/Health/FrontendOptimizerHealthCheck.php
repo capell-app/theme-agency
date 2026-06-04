@@ -9,9 +9,11 @@ use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\Frontend\Contracts\FrontendAssetManifestRenderer;
 use Capell\FrontendOptimizer\Support\CapellFrontendAssetManifestRenderer;
 use Capell\FrontendOptimizer\Support\CriticalCssSettings;
+use Closure;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use ReflectionFunction;
 use Symfony\Component\Process\Process;
 use Throwable;
 
@@ -139,11 +141,31 @@ final class FrontendOptimizerHealthCheck implements ChecksExtensionHealth
 
     public function optimizerRendererIsBound(): bool
     {
-        try {
-            return is_a(app(FrontendAssetManifestRenderer::class), CapellFrontendAssetManifestRenderer::class);
-        } catch (Throwable) {
+        if (! app()->bound(FrontendAssetManifestRenderer::class)) {
             return false;
         }
+
+        if (app()->resolved(FrontendAssetManifestRenderer::class)) {
+            try {
+                return resolve(FrontendAssetManifestRenderer::class) instanceof CapellFrontendAssetManifestRenderer;
+            } catch (Throwable) {
+                return false;
+            }
+        }
+
+        $binding = app()->getBindings()[FrontendAssetManifestRenderer::class] ?? null;
+
+        if (! is_array($binding)) {
+            return false;
+        }
+
+        $concrete = $binding['concrete'] ?? null;
+
+        if ($concrete instanceof Closure) {
+            $concrete = (new ReflectionFunction($concrete))->getStaticVariables()['concrete'] ?? null;
+        }
+
+        return is_string($concrete) && is_a($concrete, CapellFrontendAssetManifestRenderer::class, true);
     }
 
     public function storageDiskIsWritable(): bool

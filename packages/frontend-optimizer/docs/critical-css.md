@@ -91,17 +91,17 @@ The opt-out flag is captured when the frontend context is resolved. If the page 
 
 The extension settings page is backed by `FrontendOptimizerSettings` and `FrontendOptimizerSettingsSchema`.
 
-| Setting                                       | Purpose                                                                     |
-| --------------------------------------------- | --------------------------------------------------------------------------- |
-| `frontend_optimizer.enable_critical_css`      | Enables inline generated CSS.                                               |
-| `frontend_optimizer.automatic_generation`     | Queues generation when a profile is missing CSS.                            |
-| `frontend_optimizer.profile_scope`            | Default optimization scope.                                                 |
-| `frontend_optimizer.viewports`                | Viewport width/height pairs for extraction.                                 |
-| `frontend_optimizer.fold_multiplier`          | Multiplies viewport height for fold detection.                              |
-| `frontend_optimizer.extra_fold_pixels`        | Adds a fixed buffer below the fold.                                         |
-| `frontend_optimizer.playwright_wait_strategy` | Browser wait strategy: `load`, `domcontentloaded`, or `networkidle`.        |
-| `frontend_optimizer.playwright_timeout`       | Process timeout in seconds.                                                 |
-| `frontend_optimizer.max_inline_css_bytes`     | Maximum generated CSS size allowed for inline output.                       |
+| Setting                                       | Purpose                                                              |
+| --------------------------------------------- | -------------------------------------------------------------------- |
+| `frontend_optimizer.enable_critical_css`      | Enables inline generated CSS.                                        |
+| `frontend_optimizer.automatic_generation`     | Queues generation when a profile is missing CSS.                     |
+| `frontend_optimizer.profile_scope`            | Default optimization scope.                                          |
+| `frontend_optimizer.viewports`                | Viewport width/height pairs for extraction.                          |
+| `frontend_optimizer.fold_multiplier`          | Multiplies viewport height for fold detection.                       |
+| `frontend_optimizer.extra_fold_pixels`        | Adds a fixed buffer below the fold.                                  |
+| `frontend_optimizer.playwright_wait_strategy` | Browser wait strategy: `load`, `domcontentloaded`, or `networkidle`. |
+| `frontend_optimizer.playwright_timeout`       | Process timeout in seconds.                                          |
+| `frontend_optimizer.max_inline_css_bytes`     | Maximum generated CSS size allowed for inline output.                |
 
 The Node binary still comes from config and can be overridden with `CAPELL_FRONTEND_OPTIMIZER_NODE`.
 

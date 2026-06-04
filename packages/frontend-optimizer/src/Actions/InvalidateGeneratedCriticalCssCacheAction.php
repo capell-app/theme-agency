@@ -20,7 +20,7 @@ class InvalidateGeneratedCriticalCssCacheAction
                 return;
             }
 
-            $registry = app(CacheInvalidationRegistry::class);
+            $registry = resolve(CacheInvalidationRegistry::class);
 
             if (! $registry instanceof CacheInvalidationRegistry) {
                 return;

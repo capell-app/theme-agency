@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\FrontendOptimizer\Models\FrontendRenderProfile;
+
 it('keeps marketplace screenshots limited to committed marketplace assets while preserving the screenshot contract', function (): void {
     $manifest = frontendOptimizerPackageManifest();
     $screenshotContract = json_decode(
@@ -44,7 +46,11 @@ it('keeps marketplace screenshots limited to committed marketplace assets while 
     }
 
     foreach ($contractEntries as $contractEntry) {
-        if (! is_array($contractEntry) || ($contractEntry['required'] ?? false) !== true) {
+        if (! is_array($contractEntry)) {
+            continue;
+        }
+
+        if (($contractEntry['required'] ?? false) !== true) {
             continue;
         }
 
@@ -67,7 +73,7 @@ it('declares render profile cache invalidation metadata for generated critical c
     throw_unless(is_array($invalidationSources), RuntimeException::class, 'Expected invalidation source metadata array.');
 
     expect($invalidationSources)->toContain([
-        'model' => 'Capell\\FrontendOptimizer\\Models\\FrontendRenderProfile',
+        'model' => FrontendRenderProfile::class,
         'events' => ['updated'],
     ]);
 });
