@@ -2,12 +2,9 @@
 
 declare(strict_types=1);
 
-use Capell\Admin\Contracts\Extenders\PageSchemaExtender;
 use Capell\Admin\Enums\PageTranslationSchemaHookEnum;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Translation;
-use Capell\SeoSuite\Filament\Components\Forms\Page\PageSeoPanel;
-use Capell\SeoSuite\Filament\Extenders\Page\PageSeoPanelSchemaExtender;
 use Capell\SeoSuite\Filament\Extenders\Site\SiteTranslationMetaExtender;
 use Capell\SeoSuite\Handlers\ClearCircuitBreakerHandler;
 use Capell\SeoSuite\Policies\AiCreatorPolicy;
@@ -119,29 +116,14 @@ it('honours site ai creator overrides before global policy settings', function (
 });
 
 it('returns schema components only for matching seo suite extension hooks', function (): void {
-    $panelExtender = resolve(PageSeoPanelSchemaExtender::class);
     $siteTranslationExtender = resolve(SiteTranslationMetaExtender::class);
-    $page = Page::factory()->create();
-    $relationManagers = ['existing'];
-    $tabs = ['tab'];
 
-    $panelComponents = $panelExtender->extendTranslationComponentsForHook(
-        Schema::make(),
-        PageTranslationSchemaHookEnum::AfterSearchMeta,
-    );
     $siteComponents = $siteTranslationExtender->extendTranslationComponentsForHook(
         Schema::make(),
         PageTranslationSchemaHookEnum::AfterTitle,
     );
 
-    expect(collect(app()->tagged(PageSchemaExtender::TAG))->filter(fn (PageSchemaExtender $extender): bool => $extender instanceof PageSeoPanelSchemaExtender))->toHaveCount(1)
-        ->and($panelComponents)->toHaveCount(1)
-        ->and($panelComponents[0])->toBeInstanceOf(PageSeoPanel::class)
-        ->and($panelExtender->extendTranslationComponentsForHook(Schema::make(), PageTranslationSchemaHookEnum::BeforeSearchMeta))->toBe([])
-        ->and($panelExtender->extendRelationManagers($page, $relationManagers))->toBe($relationManagers)
-        ->and($panelExtender->extendTabs(Schema::make(), $tabs))->toBe($tabs)
-        ->and($panelExtender->extendSidebarComponents(Schema::make()))->toBe([])
-        ->and($siteComponents)->not->toBe([])
+    expect($siteComponents)->not->toBe([])
         ->and($siteComponents[0])->toBeInstanceOf(Group::class)
         ->and($siteTranslationExtender->extendTranslationComponentsForHook(Schema::make(), PageTranslationSchemaHookEnum::BeforeSearchMeta))->toBe([]);
 });

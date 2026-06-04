@@ -11,7 +11,6 @@ use Capell\SeoSuite\Filament\Widgets\EditPageSeoAuditBadge;
 use Capell\SeoSuite\Filament\Widgets\EditPageSeoAuditWidget;
 use Capell\SeoSuite\Support\Admin\PageSeoAuditPageEditExtender;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
-use Filament\Widgets\WidgetConfiguration;
 use Illuminate\Support\Collection as SupportCollection;
 use Livewire\Livewire;
 
@@ -21,18 +20,10 @@ beforeEach(function (): void {
     test()->actingAsAdmin();
 });
 
-it('contributes the edit page audit tabs widget from seo suite', function (): void {
+it('does not contribute edit page audit widgets above the form', function (): void {
     $extender = resolve(PageSeoAuditPageEditExtender::class);
-    $widgets = $extender->getHeaderWidgets();
-    $widget = $widgets[0] ?? null;
 
-    expect($widget)->toBeInstanceOf(WidgetConfiguration::class);
-
-    throw_unless($widget instanceof WidgetConfiguration, RuntimeException::class, 'Expected SEO audit header widget to be a widget configuration.');
-
-    expect($widget->widget)->toBe(EditPageAuditTabsWidget::class)
-        ->and($widget->getProperties())->toBe(['record' => null])
-        ->and($widgets)->toHaveCount(1)
+    expect($extender->getHeaderWidgets())->toBe([])
         ->and($extender->getFormActions())->toBe([]);
 });
 

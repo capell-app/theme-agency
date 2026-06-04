@@ -22,6 +22,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 
 it('builds campaign studio resource form schemas', function (): void {
@@ -79,10 +80,16 @@ it('declares campaign studio resource models navigation labels and pages', funct
         ->and(CampaignConversionGoalResource::getPages())->toHaveKeys(['index', 'create', 'edit']);
 });
 
-it('uses container query columns for page campaign sidebar fields', function (): void {
-    $components = (new CampaignPageSchemaExtender)->extendSidebarComponents(Schema::make());
+it('moves page campaign fields into a page editor tab', function (): void {
+    $extender = new CampaignPageSchemaExtender;
+    $tabs = $extender->extendTabs(Schema::make(), []);
+    $tab = $tabs[0] ?? null;
+    $components = $tab instanceof Tab ? ReadsRawSchemaComponents::childComponents($tab) : [];
 
-    expect($components)
+    expect($extender->extendSidebarComponents(Schema::make()))->toBe([])
+        ->and($tabs)->toHaveCount(1)
+        ->and($tab)->toBeInstanceOf(Tab::class)
+        ->and($components)
         ->toHaveCount(1)
         ->and($components[0])->toBeInstanceOf(Fieldset::class)
         ->and($components[0]->isGridContainer())->toBeTrue()

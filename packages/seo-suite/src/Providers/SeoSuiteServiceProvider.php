@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Capell\SeoSuite\Providers;
 
 use Capell\Admin\Contracts\DashboardSettingsContributor;
-use Capell\Admin\Contracts\Extenders\PageEditExtender;
 use Capell\Admin\Contracts\Extenders\PageHeaderActionExtender;
 use Capell\Admin\Contracts\Extenders\PageResourceWidgetExtender;
 use Capell\Admin\Contracts\Extenders\PageSchemaExtender;
@@ -54,7 +53,6 @@ use Capell\SeoSuite\Enums\MetaSchemaEnum;
 use Capell\SeoSuite\Enums\SchemaTemplateTypeEnum;
 use Capell\SeoSuite\Events\AiGenerationCompleted;
 use Capell\SeoSuite\Events\AiGenerationFailed;
-use Capell\SeoSuite\Filament\Extenders\Page\PageSeoPanelSchemaExtender;
 use Capell\SeoSuite\Filament\Extenders\Page\PageSeoSettingsTabExtender;
 use Capell\SeoSuite\Filament\Extenders\PageSpeed\PageSpeedPageTableExtender;
 use Capell\SeoSuite\Filament\Extenders\Site\SiteDetailsMetaExtender;
@@ -110,9 +108,9 @@ use Capell\SeoSuite\Settings\SeoSuiteSettings;
 use Capell\SeoSuite\Support\Admin\AiCreatorPageExtender;
 use Capell\SeoSuite\Support\Admin\AiCreatorSiteExtender;
 use Capell\SeoSuite\Support\Admin\PageContentEditorConfigurator;
-use Capell\SeoSuite\Support\Admin\PageSeoAuditPageEditExtender;
 use Capell\SeoSuite\Support\Admin\PageSeoAuditPageResourceWidgetExtender;
 use Capell\SeoSuite\Support\Admin\PageTitleWithSlugInputExtender;
+use Capell\SeoSuite\Support\Admin\RemoveInlineSeoTranslationComponents;
 use Capell\SeoSuite\Support\AiDiscovery\AiDiscoveryDiscoveryOutputSource;
 use Capell\SeoSuite\Support\AiFeatureRegistry;
 use Capell\SeoSuite\Support\AiRateLimiter;
@@ -343,10 +341,6 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
         ], SiteHeaderActionExtender::TAG);
 
         $this->app->tag([
-            PageSeoAuditPageEditExtender::class,
-        ], PageEditExtender::TAG);
-
-        $this->app->tag([
             PageSeoAuditPageResourceWidgetExtender::class,
         ], PageResourceWidgetExtender::TAG);
 
@@ -362,10 +356,12 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
         $this->app->tag(
             [
                 PageSeoSettingsTabExtender::class,
-                PageSeoPanelSchemaExtender::class,
             ],
             PageSchemaExtender::TAG,
         );
+
+        $this->app->singleton(RemoveInlineSeoTranslationComponents::class);
+        $this->app->tag(RemoveInlineSeoTranslationComponents::class, 'capell-admin:schema-component-replacers:page');
 
         return $this;
     }

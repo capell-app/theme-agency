@@ -7,16 +7,19 @@ namespace Capell\SeoSuite\Filament\Extenders\Page;
 use Capell\Admin\Contracts\Extenders\PageSchemaExtender;
 use Capell\Admin\Enums\PageTranslationSchemaHookEnum;
 use Capell\Admin\Filament\Components\Forms\CacheTimeSelect;
+use Capell\Admin\Filament\Components\Forms\Page\TranslationsRepeater;
 use Capell\Admin\Filament\Components\Forms\PageSelect;
 use Capell\Admin\Filament\Support\HelperText;
 use Capell\Core\Models\Page;
 use Capell\SeoSuite\Enums\RobotsDirectiveEnum;
+use Capell\SeoSuite\Filament\Components\Forms\Page\PageSeoPanel;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Livewire;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
@@ -67,10 +70,54 @@ class PageSeoSettingsTabExtender implements PageSchemaExtender
             ->icon(Heroicon::OutlinedArrowTrendingUp)
             ->columns()
             ->schema([
+                Livewire::make(
+                    'capell-seo-suite.edit-page-audit-tabs',
+                    fn (?Page $record = null): array => ['record' => $record],
+                )
+                    ->lazy()
+                    ->columnSpanFull(),
+                $this->getTranslationSeoSection(),
                 $this->getSeoSettingsSection(),
             ]);
 
         return $tabs;
+    }
+
+    private function getTranslationSeoSection(): TranslationsRepeater
+    {
+        return TranslationsRepeater::make('translations')
+            ->columnSpanFull()
+            ->schema([
+                $this->getSearchMetaSection(),
+                PageSeoPanel::make(),
+            ])
+            ->contained(fn (string $operation): bool => in_array($operation, ['create', 'edit'], true));
+    }
+
+    private function getSearchMetaSection(): Section
+    {
+        return Section::make(__('capell-admin::tab.seo_settings'))
+            ->statePath('meta')
+            ->collapsed()
+            ->compact()
+            ->columns()
+            ->columnSpanFull()
+            ->schema([
+                TextInput::make('title')
+                    ->label(__('capell-admin::form.meta_title.label'))
+                    ->helperText(__('capell-admin::form.meta_title.helper'))
+                    ->placeholder(':site')
+                    ->maxLength(255),
+                Textarea::make('description')
+                    ->label(__('capell-admin::form.meta_description.label'))
+                    ->helperText(__('capell-admin::form.meta_description.helper'))
+                    ->rows(3)
+                    ->maxLength(320),
+                TextInput::make('keywords')
+                    ->label(__('capell-admin::form.meta_keywords.label'))
+                    ->helperText(__('capell-admin::form.meta_keywords.helper'))
+                    ->maxLength(255),
+            ]);
     }
 
     private function getSeoSettingsSection(): Section

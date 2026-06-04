@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use Capell\Admin\Contracts\Extenders\PageSchemaExtender;
-use Capell\Admin\Enums\PageTranslationSchemaHookEnum;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
@@ -14,10 +12,8 @@ use Capell\SeoSuite\Data\SeoPreviewData;
 use Capell\SeoSuite\Enums\SeoCheckKeyEnum;
 use Capell\SeoSuite\Enums\SeoIssueSeverityEnum;
 use Capell\SeoSuite\Filament\Components\Forms\Page\PageSeoPanel;
-use Capell\SeoSuite\Filament\Extenders\Page\PageSeoPanelSchemaExtender;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 
@@ -43,25 +39,6 @@ function seoSuitePagePanelFakeGet(array $state): Get
         }
     };
 }
-
-it('registers the page SEO panel schema extender', function (): void {
-    $extenders = collect(app()->tagged(PageSchemaExtender::TAG));
-
-    expect($extenders->contains(
-        fn (PageSchemaExtender $extender): bool => $extender instanceof PageSeoPanelSchemaExtender,
-    ))->toBeTrue();
-});
-
-it('adds the page SEO panel after search meta', function (): void {
-    $extender = resolve(PageSeoPanelSchemaExtender::class);
-    $components = $extender->extendTranslationComponentsForHook(
-        Schema::make(),
-        PageTranslationSchemaHookEnum::AfterSearchMeta,
-    );
-
-    expect($components)->toHaveCount(1)
-        ->and($components[0])->toBeInstanceOf(PageSeoPanel::class);
-});
 
 it('resolves the panel language id from nested translation state paths', function (): void {
     $panel = PageSeoPanel::make();
