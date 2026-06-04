@@ -1,3 +1,11 @@
+@php
+    $trustBadges = $section->badges ?? [
+        ['label' => __('capell-theme-commerce::generic.hero_badge_stock_visuals')],
+        ['label' => __('capell-theme-commerce::generic.hero_badge_checkout')],
+        ['label' => __('capell-theme-commerce::generic.hero_badge_conversion')],
+    ];
+@endphp
+
 <section class="retail-hero relative overflow-hidden">
     <div
         class="pointer-events-none absolute inset-x-0 top-0 h-40 border-b border-stone-200 bg-[#fff3e5]"
@@ -38,21 +46,20 @@
                 @endforeach
             </div>
             <div class="mt-8 grid grid-cols-3 gap-2 sm:max-w-xl">
-                <div
-                    class="rounded-full bg-[#17211c] px-3 py-2 text-center text-xs font-black tracking-[0.12em] text-white uppercase"
-                >
-                    Premium stock visuals
-                </div>
-                <div
-                    class="rounded-full border border-stone-300 bg-white px-3 py-2 text-center text-xs font-black tracking-[0.12em] text-[#17211c] uppercase"
-                >
-                    Fast checkout
-                </div>
-                <div
-                    class="rounded-full border border-stone-300 bg-white px-3 py-2 text-center text-xs font-black tracking-[0.12em] text-[#17211c] uppercase"
-                >
-                    Built for conversion
-                </div>
+                @foreach ($trustBadges as $badgeIndex => $badge)
+                    @php
+                        $badgeValue = is_array($badge) ? ($badge['label'] ?? null) : $badge;
+                        $badgeLabel = is_scalar($badgeValue) ? (string) $badgeValue : '';
+                    @endphp
+
+                    @if ($badgeLabel !== '')
+                        <div
+                            class="{{ $badgeIndex === 0 ? 'bg-[#17211c] text-white' : 'border border-stone-300 bg-white text-[#17211c]' }} rounded-full px-3 py-2 text-center text-xs font-black tracking-[0.12em] uppercase"
+                        >
+                            {{ $badgeLabel }}
+                        </div>
+                    @endif
+                @endforeach
             </div>
         </div>
 

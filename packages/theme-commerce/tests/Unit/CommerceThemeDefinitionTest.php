@@ -231,6 +231,60 @@ it('keeps commerce typography defaults low specificity so section color utilitie
         ->not->toMatch('/(?:^|\n)\s*\.retail-shell\s+(?:h1|h2|h3|p)\b/');
 });
 
+it('renders translated fallback and data-driven hero trust badges', function (): void {
+    View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+
+    $fallbackHtml = view('capell-theme-commerce::sections.hero', [
+        'section' => new HeroSectionData(
+            heading: 'Browse the new range',
+            eyebrow: 'New season',
+            summary: 'Durable retail storytelling.',
+        ),
+    ])->render();
+
+    expect($fallbackHtml)
+        ->toContain('Premium stock visuals')
+        ->toContain('Fast checkout')
+        ->toContain('Built for conversion');
+
+    $customHtml = view('capell-theme-commerce::sections.hero', [
+        'section' => (object) [
+            'heading' => 'Browse the new range',
+            'badges' => [
+                ['label' => 'Limited run'],
+                ['label' => 'Two-day dispatch'],
+                'Repairable materials',
+            ],
+        ],
+    ])->render();
+
+    expect($customHtml)
+        ->toContain('Limited run')
+        ->toContain('Two-day dispatch')
+        ->toContain('Repairable materials')
+        ->not->toContain('Premium stock visuals');
+});
+
+it('renders catalog highlight copy through translations with generic public selectors', function (): void {
+    View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-commerce::sections.catalog', [
+        'section' => (object) [
+            'heading' => 'Connect the catalog',
+            'items' => [['title' => 'Collections']],
+        ],
+    ])->render();
+
+    expect($html)
+        ->toContain('Highlights')
+        ->toContain('Conversion-ready merchandising')
+        ->toContain('Discover products by behavior, seasonality, and intent signals for stronger margin.')
+        ->toContain('data-carousel="catalog"')
+        ->not->toContain('data-carousel="commerce-catalog"');
+});
+
 it('renders standard feature and content listing sections through commerce registry fallbacks', function (): void {
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(CommerceThemeServiceProvider::$packageName);

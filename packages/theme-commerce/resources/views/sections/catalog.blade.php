@@ -19,7 +19,7 @@
 
             <div
                 class="theme-carousel relative mt-8 max-w-full min-w-0 overflow-hidden"
-                data-carousel="commerce-catalog"
+                data-carousel="catalog"
             >
                 <div
                     class="flex max-w-full snap-x snap-mandatory [scrollbar-width:none] gap-3 overflow-x-auto pr-6 pb-2 sm:grid sm:grid-cols-3 [&::-webkit-scrollbar]:hidden"
@@ -73,14 +73,13 @@
             <p
                 class="text-xs font-black tracking-widest text-[#e86f5c] uppercase"
             >
-                Highlights
+                {{ __('capell-theme-commerce::generic.catalog_highlights_label') }}
             </p>
             <h3 class="mt-4 text-2xl font-black text-white">
-                Conversion-ready merchandising
+                {{ __('capell-theme-commerce::generic.catalog_highlights_heading') }}
             </h3>
             <p class="mt-3 text-sm text-stone-200">
-                Discover products by behavior, seasonality, and intent signals
-                for stronger margin.
+                {{ __('capell-theme-commerce::generic.catalog_highlights_summary') }}
             </p>
         </div>
     </div>

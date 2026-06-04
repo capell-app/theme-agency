@@ -31,6 +31,7 @@ it('keeps public Blade free of authoring or package metadata', function (): void
 
     expect($publicOutput)
         ->not->toContain('capell-app/theme-commerce')
+        ->not->toContain('commerce-catalog')
         ->not->toContain('authoring')
         ->not->toContain('data-theme-key')
         ->not->toContain('Filament')

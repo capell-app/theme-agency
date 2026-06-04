@@ -12,12 +12,15 @@ Product-led commerce theme for Capell, shipped under the existing `commerce` the
 
 - Provides Editorial Commerce renderer views for catalog and retail sites built on Capell.
 - Helps owners launch product-led pages with product finding, collections, product grids, comparison, catalog, proof, and resource surfaces.
+- Lets hero trust badges come from page render data, with translated retail defaults when no badges are provided.
 - Gives developers a focused theme package that reuses Foundation Theme conventions instead of hard-coding product layouts into content.
 
 ## Best Used With
 
 - [Foundation Theme](../foundation-theme/README.md)
 - [Blog](../blog/README.md)
+- [Campaign Studio](../campaign-studio/README.md)
+- [Media Library](../media-library/README.md)
 - [Shopify Commerce](../shopify-commerce/README.md)
 - [Theme Agency](../theme-agency/README.md)
 - [Theme Corporate](../theme-corporate/README.md)
@@ -65,6 +68,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Ships Blade resources for the page wrapper, product discovery sections, catalog panel, comparison, proof, blog teaser, CTA, and footer views.
 - No migrations, config, routes, models, admin navigation, or package-owned settings are present.
 - Public theme output must stay free of package identifiers, signed admin URLs, Filament/editor markers, and other authoring metadata.
+- Hero badge and catalog highlight copy is translated through `capell-theme-commerce::generic`.
 
 ## Code Map
 
@@ -103,6 +107,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Install Foundation Theme before using this renderer.
 - Build both frontend and Filament assets before browser capture.
 - Keep Theme Studio settings aligned with the `commerce` preset; stale settings from another theme can make screenshots misleading.
+- Pass `badges` into the hero section data when a page needs store-specific trust signals; otherwise the translated retail defaults render.
 - Do not install a Studio metapackage; this package installs independently.
 
 ## Docs
