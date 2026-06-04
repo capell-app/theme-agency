@@ -4,6 +4,13 @@ All notable changes to `capell-app/theme-local-services` will be documented in t
 
 ## Unreleased
 
+### 2026-06-04
+
+- Moved default service-area coverage cards into package translations.
+- Made service-area cards data-driven with real URLs and postcode labels instead of hardcoded districts.
+- Removed dead `href="#"` service-area links, added the contact anchor used by defaults, and covered the fallback/custom render paths in tests.
+- Hardened manifest tests so marketplace and provider boundaries fail with clearer typed assertions.
+
 ### 2026-06-03
 
 - Rewrote marketplace summary and description to lead with quote requests, service-area coverage, and click-to-call trust, and aligned the Composer description with that buyer-facing copy.

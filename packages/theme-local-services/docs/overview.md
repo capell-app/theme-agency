@@ -15,6 +15,8 @@ frontend theme.
 - Section renderers for services, service areas, quote forms, case studies,
   resources, contact, proof, CTA, and footer flows.
 - Optional renderer awareness for Blog and Form Builder.
+- Service-area cards that accept hydrated area data with `label`, `url`, and
+  optional `postcode` values, backed by translated defaults.
 - A demo command that installs route-backed local-services demo pages.
 - Theme health and management-page manifest contributions.
 
@@ -43,8 +45,9 @@ Foundation Theme runtime data and Capell page content.
 
 ## Screenshot Plan
 
-`docs/screenshots.json` describes marketplace screenshots for homepage,
-directory, detail, contact, conversion CTA, and section-suite states.
+`docs/screenshots.json` describes the intended route-backed capture set. The
+current marketplace manifest still includes committed JPG previews plus SVG
+layout diagrams; replacing those diagrams with real captures remains open.
 
 ## Verification
 
@@ -52,5 +55,6 @@ directory, detail, contact, conversion CTA, and section-suite states.
 vendor/bin/pest packages/theme-local-services/tests --configuration=phpunit.xml
 ```
 
-The focused tests cover theme definition, manifest requirements, package-aware
-rendering, and public output safety.
+The focused tests cover theme definition, service-area fallback/custom
+rendering, manifest requirements, package-aware rendering, health checks, and
+public output safety.

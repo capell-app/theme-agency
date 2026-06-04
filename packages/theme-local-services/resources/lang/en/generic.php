@@ -70,6 +70,34 @@ return [
     'response_signal' => 'Response window',
     'route_signal' => 'Route',
     'service_areas_copy' => 'Geographic service areas and operating capability are presented like active local coverage, not a generic list.',
+    'service_areas_empty' => 'Add service areas to show local coverage and quote availability.',
+    'service_area_defaults' => [
+        [
+            'label' => 'Central service area',
+            'url' => '#contact',
+            'postcode' => 'Local',
+        ],
+        [
+            'label' => 'North route',
+            'url' => '#contact',
+            'postcode' => 'Priority',
+        ],
+        [
+            'label' => 'West route',
+            'url' => '#contact',
+            'postcode' => 'Available',
+        ],
+        [
+            'label' => 'East route',
+            'url' => '#contact',
+            'postcode' => 'Available',
+        ],
+        [
+            'label' => 'Outlying coverage',
+            'url' => '#contact',
+            'postcode' => 'By request',
+        ],
+    ],
     'service_packages_label' => 'Service packages',
     'service_packages_ready' => 'Service bundles are ready for clear package comparison.',
     'service_routes_label' => 'Service routes',

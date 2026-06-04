@@ -42,6 +42,8 @@ requests.
 - Adds section renderers for services, service areas, quote forms, case studies,
   resources, contact, proof, CTA, and supporting content blocks.
 - Uses Core `ViewSectionRenderer` extra view data for optional Blog and Form Builder sections.
+- Renders service-area cards from hydrated area data (`label`, `url`, and
+  optional `postcode`) with translated defaults.
 - Adds a demo install command backed by `InstallLocalServicesThemeDemoAction`.
 - Adds `ThemeLocalServicesHealthCheck` and a Theme management page contribution.
 
@@ -88,5 +90,7 @@ vendor/bin/pest packages/theme-local-services/tests --configuration=phpunit.xml
   selectors, theme internals, model IDs, and permission metadata.
 - Keep optional package checks inside the service provider/renderer layer, not
   public Blade.
+- Keep public service-area cards pointed at real URLs or the contact anchor, or
+  render them as static labels; do not reintroduce dead `href="#"` links.
 - Keep the docs aligned with `LocalServicesThemeServiceProvider::definition()`
   when section keys, presets, or optional integrations change.

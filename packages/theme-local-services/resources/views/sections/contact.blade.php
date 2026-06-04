@@ -1,4 +1,11 @@
-<section class="theme-section theme-section-contact bg-white">
+@php
+    $sectionHeading = $heading ?? ($section->heading ?? null);
+@endphp
+
+<section
+    id="contact"
+    class="theme-section theme-section-contact bg-white"
+>
     <div class="mx-auto max-w-5xl px-6 py-14">
         <div class="grid gap-8 lg:grid-cols-[0.75fr_1fr] lg:items-start">
             <div>
@@ -7,13 +14,13 @@
                 >
                     {{ __('capell-theme-local-services::generic.contact_label') }}
                 </p>
-                @isset($heading)
+                @if ($sectionHeading)
                     <h2
                         class="mt-4 text-3xl font-black tracking-tight text-[#17211c]"
                     >
-                        {{ $heading }}
+                        {{ $sectionHeading }}
                     </h2>
-                @endisset
+                @endif
 
                 <p class="mt-4 max-w-2xl text-slate-600">
                     {{ __('capell-theme-local-services::generic.contact_copy') }}

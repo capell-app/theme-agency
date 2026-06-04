@@ -190,6 +190,59 @@ it('renders new premium local services layouts through the registry', function (
         ->not->toContain('capell-app/theme-local-services');
 });
 
+it('renders translated and data-driven service area links', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(LocalServicesThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new LocalServicesThemeServiceProvider($this->app))->boot($registry);
+
+    $renderer = $registry->sectionRenderer('local-services', 'service-areas');
+    $contactRenderer = $registry->sectionRenderer('local-services', 'contact');
+
+    assert($renderer instanceof SectionRenderer);
+    assert($contactRenderer instanceof SectionRenderer);
+
+    $defaultHtml = $renderer->render(localServicesThemeSection('service-areas', [
+        'heading' => 'Coverage areas',
+    ]));
+
+    $contactHtml = $contactRenderer->render(localServicesThemeSection('contact', [
+        'heading' => 'Request a quote',
+    ]));
+
+    $customHtml = $renderer->render(localServicesThemeSection('service-areas', [
+        'heading' => 'Live service routes',
+        'items' => [
+            ['label' => 'Cardiff', 'url' => '/areas/cardiff', 'postcode' => 'CF'],
+            ['title' => 'Penarth', 'url' => '/areas/penarth'],
+            ['name' => 'Vale rural route', 'postcodePrefix' => 'By request'],
+        ],
+    ]));
+
+    expect($defaultHtml)
+        ->toContain('Coverage areas')
+        ->toContain('Central service area Local')
+        ->toContain('href="#contact"')
+        ->not->toContain('Downtown')
+        ->not->toContain('Airport District')
+        ->not->toContain('href="#"');
+
+    expect($contactHtml)
+        ->toContain('id="contact"')
+        ->toContain('Request a quote');
+
+    expect($customHtml)
+        ->toContain('Live service routes')
+        ->toContain('Cardiff CF')
+        ->toContain('href="/areas/cardiff"')
+        ->toContain('Penarth')
+        ->toContain('href="/areas/penarth"')
+        ->toContain('Vale rural route By request')
+        ->not->toContain('href="#"')
+        ->not->toContain('Central service area');
+});
+
 /**
  * @param  array<string, mixed>  $viewData
  */
