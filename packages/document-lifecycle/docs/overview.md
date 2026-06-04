@@ -25,13 +25,13 @@ Document Lifecycle tracks controlled documents across publication and acceptance
 
 ## Admin Surfaces
 
-| Surface                       | Purpose                                                                                 |
-| ----------------------------- | --------------------------------------------------------------------------------------- |
+| Surface                       | Purpose                                                                                                                                                       |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `DocumentResource` index      | Lists controlled documents with key, title, status, publication count, update time, and publish/version, record-acceptance, archive, and restore row actions. |
-| `CreateDocument`              | Registers a controlled document through `RegisterDocumentAction`, including key slugging and initial status.          |
-| `EditDocument`                | Edits title, status, and metadata for a controlled document.                                                   |
-| `PublicationsRelationManager` | Shows version labels, content hashes, publishing revision IDs, and publish times.       |
-| `AcceptancesRelationManager`  | Shows accepted versions, hashes, contexts, acceptors, and acceptance times.             |
+| `CreateDocument`              | Registers a controlled document through `RegisterDocumentAction`, including key slugging and initial status.                                                  |
+| `EditDocument`                | Edits title, status, and metadata for a controlled document.                                                                                                  |
+| `PublicationsRelationManager` | Shows version labels, content hashes, publishing revision IDs, and publish times.                                                                             |
+| `AcceptancesRelationManager`  | Shows accepted versions, hashes, contexts, acceptors, and acceptance times.                                                                                   |
 
 Archived documents can be restored from the index. Restore returns documents with publications to `active`, and documents without publications to `draft`. Manual admin publishes call `PublishDocumentAction` with pasted content, an optional version label, the authenticated admin as publishing actor, and an optional admin note. Manual admin acceptances call `RecordDocumentAcceptanceAction` for the authenticated admin against the latest publication; documents without publications do not show the acceptance action.
 

@@ -188,9 +188,7 @@ it('publishes controlled document versions from table actions', function (): voi
 
     $admin = auth()->user();
 
-    if (! $admin instanceof Model) {
-        throw new RuntimeException('Expected an authenticated admin model.');
-    }
+    throw_unless($admin instanceof Model, RuntimeException::class, 'Expected an authenticated admin model.');
 
     $document = Document::factory()->draft()->create([
         'key' => 'terms',
@@ -223,9 +221,7 @@ it('records admin acceptances from table actions', function (): void {
 
     $admin = auth()->user();
 
-    if (! $admin instanceof Model) {
-        throw new RuntimeException('Expected an authenticated admin model.');
-    }
+    throw_unless($admin instanceof Model, RuntimeException::class, 'Expected an authenticated admin model.');
 
     $document = Document::factory()->active()->create([
         'key' => 'terms',
