@@ -6,6 +6,8 @@ All notable changes to `capell-app/comments` will be documented in this file.
 
 ### 2026-06-04
 
+- Wired queued moderator notifications for configured moderator email addresses when new comments enter pending approval or pending email verification.
+- Added listener registration and notification coverage for moderator emails, invalid-address filtering, duplicate suppression, and spam/approved suppression.
 - Hardened the public comment submission throttle key so changing the author email no longer resets the primary commentable/IP rate-limit bucket.
 - Added Livewire coverage proving repeated submissions to the same thread/IP are throttled even when the email changes.
 - Added automatic spam scoring for configured link-count and blocked-term rules, storing `spam_reasons` and routing flagged comments to `Spam`.

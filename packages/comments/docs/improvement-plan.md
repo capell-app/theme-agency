@@ -15,10 +15,11 @@ Current marketplace `summary` (verbatim): _"Comments adds moderated, configurabl
 - **2026-06-04:** Implemented real `CommentsHealthCheck` diagnostics for required storage tables, settings registration, the public thread route, and the public thread Livewire component, with focused failure-mode tests.
 - **2026-06-04:** Implemented automatic local spam scoring for configured link-count and blocked-term rules, storing `spam_reasons`, marking flagged submissions as `Spam`, and skipping verification tokens for auto-spam comments.
 - **2026-06-04:** Hardened the public submit throttle key to use commentable + IP data without attacker-controlled author email, with Livewire regression coverage.
+- **2026-06-04:** Wired queued moderator notifications for configured moderator email addresses when new comments enter pending approval or pending email verification, with listener registration and status-gating tests.
 
 ## 2. Improvements (existing functionality)
 
-- **Wire moderator new-comment notifications (advertised, not implemented)** — `CommentCreated` is dispatched (`src/Actions/CreateCommentAction.php:119`) but has **no listener**, and `config('capell-comments.notifications.moderators')` (`config/capell-comments.php:32`) / the README's "notification settings" claim are never consumed. Add a queued listener that notifies the configured moderator addresses (and/or users holding the comment policy ability) when a comment lands in `PendingApproval` / `PendingEmailVerification`. — why: editors currently have zero signal that a queue is filling up; the manifest capability `comments-created-event` only emits, nothing acts. — `src/Events/CommentCreated.php`, `src/Providers/CommentsServiceProvider.php` — M
+- **Shipped 2026-06-04: Wire moderator new-comment notifications** — `CommentCreated` now has a queued `NotifyModeratorsOfNewComment` listener registered by `CommentsServiceProvider`. It notifies valid, de-duplicated addresses from `config('capell-comments.notifications.moderators')` when a comment lands in `PendingApproval` or `PendingEmailVerification`, and skips spam/approved comments. — `src/Events/CommentCreated.php`, `src/Listeners/NotifyModeratorsOfNewComment.php`, `src/Notifications/ModerateCommentNotification.php`, `src/Providers/CommentsServiceProvider.php`, `tests/Feature/ModeratorNotificationTest.php` — M
 
 - **Shipped 2026-06-04: Make `CommentsHealthCheck` a real check** — `CommentsHealthCheck::runDiagnostics()` now reports storage-table, settings-registration, thread-route, and Livewire-component checks, and `passed()` reflects the aggregate result. Focused tests cover happy path plus missing table, settings, and route failures. — `src/Health/CommentsHealthCheck.php`, `tests/Feature/CommentsHealthCheckTest.php` — M
 
@@ -40,7 +41,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **Shipped 2026-06-04: Rate-limit hardening (anti-abuse).** The primary public submit throttle key now uses commentable type, commentable ID, and requester IP only, so changing `$this->authorEmail` cannot reset the primary bucket. Focused Livewire coverage proves a second submission to the same thread/IP is throttled even when the email changes. — `src/Livewire/CommentThreadComponent.php`, `tests/Integration/CommentThreadComponentTest.php`
 
-- **Moderator notifications & digests (advertised).** See §2 — no new-comment notification exists; only the author email-verification mail is wired (`src/Notifications/ConfirmCommentAuthorEmailNotification.php`). A daily/instant moderation digest is a natural premium differentiator and the `supports: capell-app/email-studio` dependency is the intended vehicle.
+- **Moderator digests / richer templates.** Instant configured-address moderator notifications are shipped. A daily moderation digest, role-based moderator discovery, and Email Studio-backed templates remain natural premium differentiators and the `supports: capell-app/email-studio` dependency is the intended vehicle.
 
 - **Reactions / voting (differentiator).** No upvote/like/reaction model. A `comment_reactions` table + aggregate counts on `PublicCommentData` would differentiate against bundled-CMS comment add-ons and is a common engagement lever for the "Capell Engagement" group.
 
@@ -66,7 +67,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **PII / retention.** Author `name`/`email` are `encrypted` at rest ✔ and `email_hash` is HMAC ✔ (`src/Models/CommentAuthor.php:50-58,123`). Gaps: (1) `email_hash_secret`/`visitor_hash_secret` default to `null` from env and silently fall back to `app.key` (`config/capell-comments.php:22-23`, `src/Support/VisitorHasher.php:15`, `CommentAuthor::emailHash`) — rotating `app.key` orphans all hashes; document and warn. (2) No retention/erasure policy or command for visitor IP/UA hashes or author records (GDPR right-to-erasure). (3) `internal_notes` and `moderation_note` are plaintext.
 
-- **Test gaps.** Coverage now includes health diagnostics, spam scoring, public submit throttling, and bot-trap rejection at action and Livewire levels. Still not covered: moderator notification (feature absent), `auto_inject` anonymous-leakage, reply pagination, performance budgets, and there are **no Architecture tests** for this package.
+- **Test gaps.** Coverage now includes health diagnostics, spam scoring, moderator notification wiring/status-gating, public submit throttling, and bot-trap rejection at action and Livewire levels. Still not covered: `auto_inject` anonymous-leakage, reply pagination, performance budgets, and there are **no Architecture tests** for this package.
 
 - **i18n.** Strings are translated via `capell-comments::` namespaces ✔. `diffForHumans()` in the public Blade (`thread.blade.php:24,47`) is not locale-pinned to the site language and may render in the app locale rather than the page's `language_id`.
 
@@ -74,7 +75,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 ## 5. Marketplace & Selling
 
-**Critique.** The marketplace `summary` and the composer `description` are now more specific about cache-safe public rendering, encrypted author records, and per-site moderation controls. The remaining weak spot is operational proof: moderator notifications still are not wired, and only 1 marketing screenshot is declared despite 4 high-value runtime captures already specified in `screenshots.json` (moderation inbox and a real public thread are the money shots).
+**Critique.** The marketplace `summary` and the composer `description` are now more specific about cache-safe public rendering, encrypted author records, and per-site moderation controls. The remaining weak spot is operational proof: only 1 marketing screenshot is declared despite 4 high-value runtime captures already specified in `screenshots.json` (moderation inbox and a real public thread are the money shots).
 
 **Improved 1-sentence summary:** "Add moderated, threaded discussion to any Capell page or article — with cache-safe public rendering, encrypted author records, and per-site moderation controls, no custom code required."
 
@@ -82,7 +83,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 **Media gaps:** wire the 4 `screenshots.json` captures into `capell.json.marketplace.screenshots`; add a short GIF of the moderation approve/reject flow and a before/after of a cached page with comments loading in.
 
-**Pricing / tier / bundle positioning:** `tier: premium`, `bundle: comments`, `proposedLicense: paid`, `requestedCertification: first-party`, `supportPolicy: priority`. Reasonable, but to _hold_ premium it must close the moderator notification gap — a "moderated comments" product that can auto-flag spam but cannot alert moderators is still hard to defend at premium against bundled CMS comment add-ons. Cross-sell paths already in deps/manifest: **Blog** (`supports`) for article discussion — lead with this in the listing; **Email Studio** (`supports`) for richer moderator/author notification templates — make this the up-sell once §3 notifications ship; **HTML Cache** (README "Best Used With") — position the no-store design as the reason these two coexist safely. Extension-suite angle: package with Blog + Email Studio as an "Engagement Suite."
+**Pricing / tier / bundle positioning:** `tier: premium`, `bundle: comments`, `proposedLicense: paid`, `requestedCertification: first-party`, `supportPolicy: priority`. The package now has the baseline premium moderation loop: spam scoring plus instant configured moderator notifications. Cross-sell paths already in deps/manifest: **Blog** (`supports`) for article discussion — lead with this in the listing; **Email Studio** (`supports`) for richer moderator/author notification templates and digests; **HTML Cache** (README "Best Used With") — position the no-store design as the reason these two coexist safely. Extension-suite angle: package with Blog + Email Studio as an "Engagement Suite."
 
 **Differentiators / value props:** cache-safe post-load rendering; encrypted PII + HMAC dedup; per-site & per-commentable-type setting overrides; verification flows (verify-then-moderate / moderate-then-verify); soft-delete + full moderation audit trail (`comment_moderation_events`). **Target buyer:** content/marketing teams on Capell (esp. Blog users) who want managed discussion without standing up Disqus/a third party and without breaking page caching.
 
@@ -95,7 +96,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 | Shipped 2026-06-04: implement real `CommentsHealthCheck` (tables, settings, route, component) | Now    | M      | High   | §2, §4      |
 | Shipped 2026-06-04: implement automatic spam scoring (`max_links`, `blocked_terms`, write `spam_reasons`) | Now    | M      | High   | §3, §4      |
 | Shipped 2026-06-04: fix throttle key (drop attacker-controlled email from primary bucket)     | Now    | S      | High   | §3, §4      |
-| Wire moderator new-comment notification listener on `CommentCreated`                          | Now    | M      | High   | §2, §3      |
+| Shipped 2026-06-04: wire moderator new-comment notification listener on `CommentCreated`      | Now    | M      | High   | §2, §3      |
 | Add `auto_inject` anonymous-leakage + throttle Pest tests; add Arch tests                     | Now    | M      | High   | §4          |
 | Shipped 2026-06-03: add `LatestCommentsWidget` to `capell.json` contributes[]                 | Now    | S      | Med    | §2, §4      |
 | Wire the 4 `screenshots.json` captures into marketplace + new summary/description             | Now    | S      | Med    | §5          |

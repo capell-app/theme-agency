@@ -48,6 +48,8 @@ to registered Capell content.
 - Automatic spam scoring for configured link-count and blocked-term rules,
   storing reasons on the comment and routing flagged submissions to `Spam`
   before verification mail is sent.
+- Queued moderator notifications for valid configured moderator email
+  addresses when new comments are waiting on approval or email verification.
 - Diagnostics-ready `CommentsHealthCheck` coverage for storage tables, settings
   registration, the public thread route, and the public thread Livewire
   component.
@@ -76,7 +78,8 @@ to registered Capell content.
 | Install       | `src/Console/Commands/InstallCommentsCommand.php`, `src/Actions/InstallCommentsPackageAction.php`              |
 | Public thread | `src/Livewire/CommentThreadComponent.php`, `src/Http/Controllers/RenderCommentThreadController.php`            |
 | Verification  | `src/Actions/RequestCommentEmailVerificationAction.php`, `src/Actions/VerifyCommentAuthorEmailAction.php`      |
-| Moderation    | `src/Actions/TransitionCommentStatusAction.php`, `src/Filament/Pages/CommentModerationInbox.php`               |
+| Moderation    | `src/Actions/TransitionCommentStatusAction.php`, `src/Listeners/NotifyModeratorsOfNewComment.php`, `src/Filament/Pages/CommentModerationInbox.php` |
+| Notifications | `src/Notifications/ConfirmCommentAuthorEmailNotification.php`, `src/Notifications/ModerateCommentNotification.php` |
 | Settings      | `src/Settings/CommentSettings.php`, `src/Filament/Settings/CommentSettingsSchema.php`                          |
 | Data objects  | `src/Data/PublicCommentData.php`, `src/Data/PublicCommentableThreadData.php`, `src/Data/CreateCommentData.php`, `src/Data/CommentSpamScoreData.php` |
 | Models        | `src/Models/Comment.php`, `src/Models/CommentAuthor.php`, `src/Models/CommentToken.php`                        |
@@ -115,6 +118,8 @@ vendor/bin/pest packages/comments/tests --configuration=phpunit.xml
   explicit `spam_reasons` and must not leak into public thread DTOs.
 - Keep the primary public submission throttle keyed to commentable + IP data;
   attacker-controlled fields such as author email must not reset that bucket.
+- Keep moderator notifications status-gated to comments that need review; spam
+  and already-public comments should not trigger moderator email.
 - Keep `CommentsHealthCheck` aligned with the manifest's critical package-health
   claim whenever routes, storage, settings, or frontend component aliases change.
 - Add focused docs when new commentable registries, notification flows, or

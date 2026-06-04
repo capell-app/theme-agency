@@ -8,7 +8,9 @@ use Capell\Admin\Data\Extensions\ExtensionManagementSurfaceData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Comments\Actions\RegisterDefaultCommentablesAction;
 use Capell\Comments\Console\Commands\InstallCommentsCommand;
+use Capell\Comments\Events\CommentCreated;
 use Capell\Comments\Filament\Settings\CommentSettingsSchema;
+use Capell\Comments\Listeners\NotifyModeratorsOfNewComment;
 use Capell\Comments\Models\Comment;
 use Capell\Comments\Models\CommentAuthor;
 use Capell\Comments\Models\CommentModerationEvent;
@@ -23,6 +25,7 @@ use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Override;
@@ -75,6 +78,7 @@ class CommentsServiceProvider extends AbstractPackageServiceProvider
                 ->registerSettings()
                 ->registerProtectedTables()
                 ->registerCommentables()
+                ->registerListeners()
                 ->registerRateLimits();
         });
     }
@@ -147,6 +151,13 @@ class CommentsServiceProvider extends AbstractPackageServiceProvider
     private function registerCommentables(): self
     {
         RegisterDefaultCommentablesAction::run();
+
+        return $this;
+    }
+
+    private function registerListeners(): self
+    {
+        Event::listen(CommentCreated::class, NotifyModeratorsOfNewComment::class);
 
         return $this;
     }
