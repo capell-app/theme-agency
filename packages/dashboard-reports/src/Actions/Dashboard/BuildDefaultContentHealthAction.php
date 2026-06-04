@@ -7,18 +7,24 @@ namespace Capell\DashboardReports\Actions\Dashboard;
 use Capell\Admin\Data\Dashboard\ContentHealthData;
 use Capell\Admin\Data\Dashboard\ContentHealthIssueData;
 use Capell\Admin\Filament\Resources\Pages\PageResource;
+use Capell\Admin\Support\AdminPanelEntrypoint;
 use Capell\Admin\Support\SiteScope;
 use Capell\Core\Models\Page;
-use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Lorisleiva\Actions\Concerns\AsObject;
 use Spatie\LaravelData\DataCollection;
+use Throwable;
 
 final class BuildDefaultContentHealthAction
 {
     use AsObject;
 
-    public function handle(int $staleDays = 90): ContentHealthData
+    public const int DEFAULT_STALE_DAYS = 90;
+
+    public const string PAGE_TABLE_FILTER_KEY = 'dashboard_reports_health';
+
+    public function handle(int $staleDays = self::DEFAULT_STALE_DAYS): ContentHealthData
     {
         $issues = [
             $this->makeIssue('scheduled_pages', __('capell-dashboard-reports::dashboard.issue_scheduled_pages'), $this->basePageQuery()->pending()->count()),
@@ -53,17 +59,25 @@ final class BuildDefaultContentHealthAction
             id: $id,
             label: $label,
             count: $count,
-            filterUrl: $this->pageIndexUrl(),
+            filterUrl: $this->pageIndexUrl($id),
         );
     }
 
-    private function pageIndexUrl(): ?string
+    private function pageIndexUrl(string $issueId): string
     {
         try {
-            return PageResource::getUrl('index');
-        } catch (Exception) {
-            return null;
+            $url = PageResource::getUrl('index');
+        } catch (Throwable) {
+            $url = url(trim(trim(AdminPanelEntrypoint::path(), '/') . '/pages', '/'));
         }
+
+        return $url . (str_contains($url, '?') ? '&' : '?') . Arr::query([
+            'tableFilters' => [
+                self::PAGE_TABLE_FILTER_KEY => [
+                    'value' => $issueId,
+                ],
+            ],
+        ]);
     }
 
     /**

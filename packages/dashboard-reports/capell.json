@@ -58,7 +58,7 @@
     "healthChecks": [
         {
             "key": "dashboard-reports.package-health",
-            "label": "Dashboard Reports package surfaces, providers, and install health are discoverable by Diagnostics.",
+            "label": "Dashboard Reports package install state, providers, widgets, settings, and page-list filters are discoverable by Diagnostics.",
             "class": "Capell\\DashboardReports\\Health\\DashboardReportsHealthCheck",
             "severity": "critical",
             "surface": "admin"

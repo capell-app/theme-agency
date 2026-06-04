@@ -4,7 +4,10 @@ All notable changes to `capell-app/dashboard-reports` will be documented in this
 
 ## Unreleased
 
-- Prepared package metadata and documentation for ongoing Capell 4.x package work.
+- Diagnostics: added real Dashboard Reports health checks for install state, content-health provider binding, dashboard widgets, settings contribution, and page-list filter registration.
+- Drill-downs: content-health issue counts now deep-link to the Page resource with a package-owned Content Health filter for scheduled, expired, URL-less, and stale pages.
+- Publishing trend: the widget now passes the admin dashboard's resolved date range into the Action, and `totalScheduled` is scoped to the same selected range as the scheduled chart series.
+- Tests: added health-check, content-health render/gating, filtered deep-link, page-table extender, and period-scoped scheduled total coverage.
 
 ## 2026-06-03
 

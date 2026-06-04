@@ -6,10 +6,12 @@ namespace Capell\DashboardReports\Providers;
 
 use Capell\Admin\Contracts\Dashboard\ContentHealthDataProvider;
 use Capell\Admin\Contracts\DashboardSettingsContributor;
+use Capell\Admin\Contracts\Extenders\PageTableExtender;
 use Capell\Admin\Enums\DashboardEnum;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Admin\Support\Dashboard\NullContentHealthDataProvider;
 use Capell\Core\Facades\CapellCore;
+use Capell\DashboardReports\Filament\Extenders\DashboardReportsPageTableExtender;
 use Capell\DashboardReports\Filament\Settings\Contributors\DashboardReportsDashboardSettingsContributor;
 use Capell\DashboardReports\Filament\Widgets\ContentHealthWidget;
 use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartWidget;
@@ -26,6 +28,7 @@ final class AdminServiceProvider extends ServiceProvider
 
         $this
             ->registerDashboardDataProviders()
+            ->registerPageTableExtender()
             ->registerDashboardSettingsContributor()
             ->registerDashboardWidgets();
     }
@@ -56,6 +59,13 @@ final class AdminServiceProvider extends ServiceProvider
     private function registerDashboardSettingsContributor(): self
     {
         $this->app->tag([DashboardReportsDashboardSettingsContributor::class], DashboardSettingsContributor::TAG);
+
+        return $this;
+    }
+
+    private function registerPageTableExtender(): self
+    {
+        $this->app->tag([DashboardReportsPageTableExtender::class], PageTableExtender::TAG);
 
         return $this;
     }

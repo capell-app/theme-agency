@@ -13,9 +13,18 @@ use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartWidget;
 use Capell\DashboardReports\Providers\AdminServiceProvider;
 use Capell\DashboardReports\Support\Dashboard\DashboardReportsContentHealthDataProvider;
 use Capell\DashboardReports\Tests\DashboardReportsTestCase;
-use Spatie\LaravelData\DataCollection;
+use Capell\Tests\Support\Concerns\CreatesAdminUser;
 
-uses(DashboardReportsTestCase::class);
+use function Pest\Livewire\livewire;
+
+use Spatie\LaravelData\DataCollection;
+use Spatie\Permission\Models\Role;
+
+uses(DashboardReportsTestCase::class, CreatesAdminUser::class);
+
+beforeEach(function (): void {
+    Role::findOrCreate(config('capell.roles.editor', 'editor'));
+});
 
 it('registers dashboard-dashboard_reports dashboard widgets on the main dashboard', function (): void {
     expect(CapellAdmin::getDashboardWidgets(DashboardEnum::Main))
@@ -120,4 +129,52 @@ it('builds content health data through the installed provider and widget data co
     expect($providerIssues)->toHaveKey('scheduled_pages')
         ->and($firstWidgetIssue->id)->toBe('custom_issue')
         ->and($firstWidgetIssue->count)->toBe(2);
+});
+
+it('hides content health when the provider has no issues', function (): void {
+    $this->actingAsRole(config('capell.roles.editor', 'editor'));
+
+    $emptyContentHealthDataProvider = new class implements ContentHealthDataProvider
+    {
+        public function build(): ContentHealthData
+        {
+            return new ContentHealthData(
+                issues: ContentHealthIssueData::collect([], DataCollection::class),
+            );
+        }
+    };
+
+    app()->instance(ContentHealthDataProvider::class, $emptyContentHealthDataProvider);
+
+    expect(ContentHealthWidget::canView())->toBeFalse();
+});
+
+it('renders content health issue links for an authenticated editor', function (): void {
+    $this->actingAsRole(config('capell.roles.editor', 'editor'));
+
+    $contentHealthDataProvider = new class implements ContentHealthDataProvider
+    {
+        public function build(): ContentHealthData
+        {
+            return new ContentHealthData(
+                issues: ContentHealthIssueData::collect([
+                    new ContentHealthIssueData(
+                        id: 'scheduled_pages',
+                        label: 'Scheduled pages',
+                        count: 3,
+                        filterUrl: '/admin/pages?tableFilters%5Bdashboard_reports_health%5D%5Bvalue%5D=scheduled_pages',
+                    ),
+                ], DataCollection::class),
+            );
+        }
+    };
+
+    app()->instance(ContentHealthDataProvider::class, $contentHealthDataProvider);
+
+    expect(ContentHealthWidget::canView())->toBeTrue();
+
+    livewire(ContentHealthWidget::class)
+        ->assertOk()
+        ->assertSee('Scheduled pages')
+        ->assertSeeHtml('tableFilters%5Bdashboard_reports_health%5D%5Bvalue%5D=scheduled_pages');
 });

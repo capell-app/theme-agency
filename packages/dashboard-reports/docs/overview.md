@@ -13,9 +13,11 @@ Use it when a project needs a package-owned reporting layer, but does not need a
 
 - Content health reporting for scheduled pages, expired pages, pages without URLs, and stale published pages.
 - Publishing trend reporting across common date windows.
+- Filtered deep-links from content-health issue counts into the Page resource.
 - Dashboard widgets registered into the main Capell admin dashboard.
 - A `ContentHealthDataProvider` implementation that can replace the admin package's null provider when the package is installed.
 - Dashboard settings contribution for report visibility.
+- Diagnostics checks for package install state, provider binding, dashboard widget registration, dashboard settings contribution, and page-table filter registration.
 
 ## Admin Surface
 
@@ -26,7 +28,9 @@ Dashboard Reports registers these widgets through `CapellAdmin::registerDashboar
 | `ContentHealthWidget`        | Shows content issues that need editorial attention.    |
 | `PublishingTrendChartWidget` | Shows published and scheduled page activity over time. |
 
-`ContentHealthWidget` is only visible when the resolved content health provider returns at least one issue. Its data is computed and cached by Livewire for 300 seconds.
+`ContentHealthWidget` is only visible when the resolved content health provider returns at least one issue. Its data is computed and cached by Livewire for 300 seconds, and the package also memoises the provider result for the current request so `canView()` and `data()` share the same build.
+
+Content-health issue counts link to the Page resource with the package-owned `dashboard_reports_health` table filter preselected. The filter is registered through the admin `PageTableExtender` contract and covers scheduled pages, expired pages, pages without URLs, and stale published pages.
 
 ## Frontend Surface
 
@@ -48,7 +52,17 @@ The package reads Capell core `Page` records through `SiteScope::applyForCurrent
 | Stale pages        | Published pages older than the configured stale-day threshold               |
 | Publishing trend   | Published and scheduled page counts bucketed across the selected date range |
 
-Dashboard Reports does not create reporting tables. It computes the current dashboard state from the installed site's page records.
+Dashboard Reports does not create reporting tables. It computes the current dashboard state from the installed site's page records. The publishing trend Action receives the dashboard's resolved date range from the widget, so chart buckets and headline totals use the same selected window.
+
+## Diagnostics
+
+`DashboardReportsHealthCheck` reports real Diagnostics results for:
+
+- Package installed state.
+- Content health provider availability.
+- Publishing Trend and Content Health widget registration.
+- Dashboard settings contributor registration.
+- Content-health Page resource filter registration.
 
 ## Extension Notes
 

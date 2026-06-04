@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use Capell\Admin\Contracts\Extenders\PageTableExtender;
 use Capell\Core\Models\Page;
+use Capell\DashboardReports\Filament\Extenders\DashboardReportsPageTableExtender;
 use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartWidget;
 use Capell\DashboardReports\Health\DashboardReportsHealthCheck;
 use Capell\DashboardReports\Providers\DashboardReportsServiceProvider;
@@ -44,4 +46,11 @@ it('builds publishing trend widget chart datasets from action data', function ()
         ->and($data['datasets'][0]['data'])->toHaveCount(7)
         ->and($data['datasets'][1]['data'])->toHaveCount(7)
         ->and($data['labels'])->toHaveCount(7);
+});
+
+it('registers the content health page-table filter extender', function (): void {
+    $extenders = collect(app()->tagged(PageTableExtender::TAG))
+        ->map(fn (PageTableExtender $extender): string => $extender::class);
+
+    expect($extenders)->toContain(DashboardReportsPageTableExtender::class);
 });

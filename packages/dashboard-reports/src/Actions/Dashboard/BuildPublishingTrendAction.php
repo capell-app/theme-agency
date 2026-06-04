@@ -19,9 +19,8 @@ final class BuildPublishingTrendAction
 
     private const int BUCKET_COUNT = 7;
 
-    public function handle(string $period = 'last_30_days'): PublishingTrendData
+    public function handle(CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd): PublishingTrendData
     {
-        [$rangeStart, $rangeEnd] = $this->resolveDateRange($period);
         $buckets = $this->buildBuckets($rangeStart, $rangeEnd);
 
         $page = new Page;
@@ -57,7 +56,7 @@ final class BuildPublishingTrendAction
         return new PublishingTrendData(
             points: $points,
             totalPublished: array_sum($publishedCounts),
-            totalScheduled: $this->basePageQuery()->pending()->count(),
+            totalScheduled: array_sum($scheduledCounts),
         );
     }
 
@@ -117,20 +116,6 @@ final class BuildPublishingTrendAction
         }
 
         return array_values($counts);
-    }
-
-    /** @return array{CarbonImmutable, CarbonImmutable} */
-    private function resolveDateRange(string $period): array
-    {
-        $now = CarbonImmutable::now();
-
-        return match ($period) {
-            'today' => [$now->startOfDay(), $now->endOfDay()],
-            'this_week' => [$now->startOfWeek(), $now->endOfWeek()],
-            'this_month' => [$now->startOfMonth(), $now->endOfMonth()],
-            'this_year' => [$now->startOfYear(), $now->endOfYear()],
-            default => [$now->subDays(30)->startOfDay(), $now->endOfDay()],
-        };
     }
 
     /**

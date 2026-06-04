@@ -1,6 +1,6 @@
 # Dashboard Reports
 
-Generic CMS reporting widgets for Capell dashboards.
+At-a-glance content-health and publishing-activity widgets for Capell admin dashboards.
 
 ## At A Glance
 
@@ -25,11 +25,11 @@ Generic CMS reporting widgets for Capell dashboards.
 
 ## What It Adds
 
-Generic CMS reporting widgets for Capell dashboards.
-
-- Shared dashboard reporting widgets for Capell admin screens.
+- Content Health and Publishing Trend widgets for Capell admin screens.
+- Filtered Content Health drill-downs into the Page resource for scheduled, expired, URL-less, and stale pages.
+- Diagnostics checks for install state, dashboard widgets, settings contribution, provider binding, and page-list filters.
 - Service providers for package and admin registration.
-- A reporting foundation that other operations packages can build on.
+- Typed reporting Actions that other operations packages can build on.
 
 ## Why It Matters
 
@@ -74,10 +74,12 @@ This package makes its Composer dependencies visible because they are part of th
 ## Admin Surface
 
 - Widgets: `ContentHealthWidget`, `PublishingTrendChartWidget`.
+- Page table extender: `DashboardReportsPageTableExtender` adds a hidden-by-default Content Health filter target for widget deep links.
 
 ## Data And Persistence
 
 - Data objects live in `src/Data/`; use them for payloads, form state, and view models.
+- The package does not create reporting tables. It reads Capell page state through site-scoped queries.
 
 ## Extension Points
 
