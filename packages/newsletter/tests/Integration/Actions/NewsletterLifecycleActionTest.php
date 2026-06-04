@@ -109,7 +109,7 @@ it('creates a subscriber when a FormSubmitted event is dispatched through the re
         'submitted_at' => now(),
     ]);
 
-    FormSubmitted::dispatch($form, $submission);
+    event(new FormSubmitted($form, $submission));
 
     $subscriber = Subscriber::query()->where('site_id', $site->getKey())->first();
 

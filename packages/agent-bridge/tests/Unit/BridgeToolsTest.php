@@ -184,9 +184,7 @@ it('lists built-in capability schemas for agent discovery', function (): void {
 
     $capabilities = agentBridgeStructuredContent($response)['capabilities'] ?? [];
 
-    if (! is_array($capabilities)) {
-        throw new RuntimeException('Agent Bridge capabilities response must be an array.');
-    }
+    throw_unless(is_array($capabilities), RuntimeException::class, 'Agent Bridge capabilities response must be an array.');
 
     $createDraft = collect($capabilities)->firstWhere('key', 'capell.pages.create_draft');
 

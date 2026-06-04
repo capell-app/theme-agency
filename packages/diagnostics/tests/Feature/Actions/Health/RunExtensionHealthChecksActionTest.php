@@ -41,9 +41,7 @@ function firstFixtureHealthCheck(ExtensionHealthReportData $report): HealthCheck
 {
     $check = $report->checks->toCollection()->first();
 
-    if (! $check instanceof HealthCheckResultData) {
-        throw new RuntimeException('Expected the fixture report to contain a health check result.');
-    }
+    throw_unless($check instanceof HealthCheckResultData, RuntimeException::class, 'Expected the fixture report to contain a health check result.');
 
     return $check;
 }

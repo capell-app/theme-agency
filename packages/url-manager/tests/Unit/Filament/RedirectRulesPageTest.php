@@ -104,7 +104,7 @@ CSV;
     expect($result->imported)->toBe(1)
         ->and($result->skipped)->toBe(1)
         ->and($result->errors[0])->toContain('A redirect cannot point to itself.')
-        ->and($template)->toContain('source_url,target_url,site_id,language_id,status_code,match_type,status,preserve_query,notes');
+        ->and($template)->toContain('source_url,target_url,site_id,language_id,status_code,match_type,status,priority,preserve_query,notes');
 });
 
 it('resolves redirect imports from uploaded files or pasted csv contents', function (): void {
@@ -177,6 +177,7 @@ it('configures the redirect rules table with import export and lifecycle actions
             'status_code',
             'match_type',
             'status',
+            'priority',
             'hit_count',
             'last_hit_at',
         ])

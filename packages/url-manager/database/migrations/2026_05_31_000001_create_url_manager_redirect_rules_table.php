@@ -25,6 +25,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('status_code')->default(301);
             $table->string('match_type')->default('exact');
             $table->string('status')->default('active');
+            $table->integer('priority')->default(0);
             $table->boolean('preserve_query')->default(true);
             $table->text('notes')->nullable();
             $table->unsignedBigInteger('hit_count')->default(0);
@@ -35,6 +36,7 @@ return new class extends Migration
             $table->unique(['site_id', 'language_id', 'source_hash', 'match_type'], 'url_manager_redirect_rules_unique_source');
             $table->index(['site_id', 'language_id', 'status']);
             $table->index(['status', 'match_type']);
+            $table->index(['status', 'match_type', 'priority'], 'url_manager_redirect_rules_status_match_priority');
         });
     }
 

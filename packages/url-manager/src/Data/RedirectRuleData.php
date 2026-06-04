@@ -18,6 +18,7 @@ final class RedirectRuleData extends Data
         public readonly int $statusCode = 301,
         public readonly RedirectMatchType $matchType = RedirectMatchType::Exact,
         public readonly RedirectRuleStatus $status = RedirectRuleStatus::Active,
+        public readonly int $priority = 0,
         public readonly bool $preserveQuery = true,
         public readonly ?string $notes = null,
         public readonly ?int $createdByUserId = null,

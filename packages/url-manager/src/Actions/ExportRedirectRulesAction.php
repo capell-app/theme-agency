@@ -30,6 +30,7 @@ final class ExportRedirectRulesAction
                 'status_code' => $redirectRule->status_code,
                 'match_type' => $redirectRule->match_type->value,
                 'status' => $redirectRule->status->value,
+                'priority' => $redirectRule->priority,
                 'preserve_query' => $redirectRule->preserve_query,
                 'hit_count' => $redirectRule->hit_count,
                 'last_hit_at' => $redirectRule->last_hit_at?->toISOString(),

@@ -19,19 +19,6 @@ use Throwable;
 
 final class NewsletterHealthCheck implements ChecksExtensionHealth
 {
-    /**
-     * Tables that back the four advertised health checks.
-     *
-     * @var array<string, string>
-     */
-    private const array REQUIRED_TABLES = [
-        'newsletter_subscribers' => 'subscribers',
-        'newsletter_consent_events' => 'consent_events',
-        'newsletter_sync_attempts' => 'sync_attempts',
-        'newsletter_processed_webhook_events' => 'processed_webhook_events',
-        'newsletter_segments' => 'segments',
-    ];
-
     public static function compatibleCapellApiVersion(): string
     {
         return '^4.0';

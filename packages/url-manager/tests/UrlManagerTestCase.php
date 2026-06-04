@@ -6,6 +6,7 @@ namespace Capell\UrlManager\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase;
 use Override;
@@ -13,6 +14,15 @@ use Override;
 class UrlManagerTestCase extends TestCase
 {
     use RefreshDatabase;
+
+    #[Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Lang::addNamespace('capell-url-manager', __DIR__ . '/../resources/lang');
+        config(['capell-url-manager' => require __DIR__ . '/../config/capell-url-manager.php']);
+    }
 
     /**
      * @return array<int, class-string>

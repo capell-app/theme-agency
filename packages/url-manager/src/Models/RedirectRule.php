@@ -24,6 +24,7 @@ use Override;
  * @property int $status_code
  * @property RedirectMatchType $match_type
  * @property RedirectRuleStatus $status
+ * @property int $priority
  * @property bool $preserve_query
  * @property int $hit_count
  * @property CarbonInterface|null $last_hit_at
@@ -47,6 +48,7 @@ class RedirectRule extends Model
         'status_code',
         'match_type',
         'status',
+        'priority',
         'preserve_query',
         'notes',
         'hit_count',
@@ -84,6 +86,7 @@ class RedirectRule extends Model
         return [
             'match_type' => RedirectMatchType::class,
             'status' => RedirectRuleStatus::class,
+            'priority' => 'int',
             'preserve_query' => 'bool',
             'hit_count' => 'int',
             'last_hit_at' => 'datetime',

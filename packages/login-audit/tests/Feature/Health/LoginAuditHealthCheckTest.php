@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\LoginAudit\Health\LoginAuditHealthCheck;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Schema;
 
 it('reports a compatible capell api version', function (): void {
@@ -37,7 +38,7 @@ it('fails the storage table check when the login audit table is missing', functi
 });
 
 it('fails the event listeners check when a listener is unconfigured', function (): void {
-    config()->set('login-audit.listeners.login', null);
+    config()->set('login-audit.listeners.login');
 
     $check = new LoginAuditHealthCheck;
 
@@ -47,14 +48,14 @@ it('fails the event listeners check when a listener is unconfigured', function (
 });
 
 it('fails the middleware alias check when the frontend activity alias is missing', function (): void {
-    app('router')->getMiddleware();
+    resolve(Router::class)->getMiddleware();
 
-    $reflection = new ReflectionObject(app('router'));
+    $reflection = new ReflectionObject(resolve(Router::class));
     $property = $reflection->getProperty('middleware');
-    $property->setAccessible(true);
-    $middleware = $property->getValue(app('router'));
+
+    $middleware = $property->getValue(resolve(Router::class));
     unset($middleware['frontend.activity']);
-    $property->setValue(app('router'), $middleware);
+    $property->setValue(resolve(Router::class), $middleware);
 
     $check = new LoginAuditHealthCheck;
 

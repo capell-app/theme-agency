@@ -25,9 +25,7 @@ it('declares every registered dashboard widget in the manifest contributes list'
 
     $contributions = $manifest['contributes'] ?? [];
 
-    if (! is_array($contributions)) {
-        throw new RuntimeException('Comments contributions must be an array.');
-    }
+    throw_unless(is_array($contributions), RuntimeException::class, 'Comments contributions must be an array.');
 
     $contributedWidgetClasses = collect($contributions)
         ->where('type', 'dashboard-widget')

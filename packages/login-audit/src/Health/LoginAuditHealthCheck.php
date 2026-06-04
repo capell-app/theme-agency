@@ -63,8 +63,8 @@ final class LoginAuditHealthCheck implements ChecksExtensionHealth
             label: 'Login audit storage table',
             passed: $tableExists,
             message: $tableExists
-                ? "The {$tableName} table is present and ready to record authentication events."
-                : "The {$tableName} table is missing, so authentication events cannot be recorded.",
+                ? sprintf('The %s table is present and ready to record authentication events.', $tableName)
+                : sprintf('The %s table is missing, so authentication events cannot be recorded.', $tableName),
             remediation: $tableExists
                 ? null
                 : 'Run the Capell migrations to create the login audit storage table.',

@@ -10,8 +10,11 @@ use Capell\Core\Enums\PackageTypeEnum;
 use Capell\Core\Events\PageUrlChanged;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\Frontend\Support\Routing\FrontendRouteMiddlewareRegistry;
+use Capell\UrlManager\Console\Commands\PruneRedirectHitsCommand;
 use Capell\UrlManager\Filament\Pages\NotFoundOpportunitiesPage;
 use Capell\UrlManager\Filament\Pages\RedirectRulesPage;
+use Capell\UrlManager\Http\Middleware\RecordNotFoundOpportunityMiddleware;
 use Capell\UrlManager\Listeners\RecordRedirectForChangedPageUrl;
 use Capell\UrlManager\Models\NotFoundOpportunity;
 use Capell\UrlManager\Models\RedirectHit;
@@ -32,11 +35,14 @@ final class UrlManagerServiceProvider extends AbstractPackageServiceProvider
     {
         $package
             ->name(self::$name)
+            ->hasConfigFile('capell-url-manager')
             ->hasTranslations()
+            ->hasCommand(PruneRedirectHitsCommand::class)
             ->hasMigrations([
                 '2026_05_31_000001_create_url_manager_redirect_rules_table',
                 '2026_05_31_000002_create_url_manager_redirect_hits_table',
                 '2026_05_31_000003_create_url_manager_not_found_opportunities_table',
+                '2026_06_04_000001_add_priority_to_url_manager_redirect_rules_table',
             ]);
     }
 
@@ -50,6 +56,7 @@ final class UrlManagerServiceProvider extends AbstractPackageServiceProvider
             ->registerModels()
             ->registerProtectedTables()
             ->registerRedirectResolver()
+            ->registerNotFoundCaptureMiddleware()
             ->registerChangedUrlListener()
             ->registerAdminPages();
     }
@@ -98,6 +105,23 @@ final class UrlManagerServiceProvider extends AbstractPackageServiceProvider
     {
         if (class_exists(PageUrlChanged::class)) {
             Event::listen(PageUrlChanged::class, [RecordRedirectForChangedPageUrl::class, 'handle']);
+        }
+
+        return $this;
+    }
+
+    private function registerNotFoundCaptureMiddleware(): self
+    {
+        if (! class_exists(FrontendRouteMiddlewareRegistry::class)) {
+            return $this;
+        }
+
+        $configure = static fn (FrontendRouteMiddlewareRegistry $registry): FrontendRouteMiddlewareRegistry => $registry->append([RecordNotFoundOpportunityMiddleware::class]);
+
+        $this->app->afterResolving(FrontendRouteMiddlewareRegistry::class, $configure);
+
+        if ($this->app->resolved(FrontendRouteMiddlewareRegistry::class)) {
+            $configure($this->app->make(FrontendRouteMiddlewareRegistry::class));
         }
 
         return $this;

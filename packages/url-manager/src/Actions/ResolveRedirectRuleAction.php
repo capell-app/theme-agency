@@ -9,6 +9,7 @@ use Capell\UrlManager\Enums\RedirectMatchType;
 use Capell\UrlManager\Enums\RedirectRuleStatus;
 use Capell\UrlManager\Models\RedirectRule;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Foundation\Application;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class ResolveRedirectRuleAction
@@ -34,8 +35,7 @@ final class ResolveRedirectRuleAction
         }
 
         if ($recordHit) {
-            RecordRedirectHitAction::run($redirectRule, $sourceUrl, $refererUrl, $userAgent, $ipAddress);
-            $redirectRule->refresh();
+            $this->recordHit($redirectRule, $sourceUrl, $refererUrl, $userAgent, $ipAddress);
         }
 
         return new RedirectResolutionData(
@@ -61,12 +61,19 @@ final class ResolveRedirectRuleAction
 
     private function findPrefixRule(string $sourceUrl, ?int $siteId, ?int $languageId): ?RedirectRule
     {
+        $prefixCandidates = $this->prefixCandidates($sourceUrl);
+
+        if ($prefixCandidates === []) {
+            return null;
+        }
+
         /** @var RedirectRule|null $redirectRule */
         $redirectRule = $this->baseRuleQuery($siteId, $languageId)
             ->where('match_type', RedirectMatchType::Prefix->value)
+            ->whereIn('source_url', $prefixCandidates)
+            ->orderByDesc('priority')
             ->orderByRaw('LENGTH(source_url) DESC')
-            ->get()
-            ->first(fn (RedirectRule $candidateRule): bool => str_starts_with($sourceUrl, $candidateRule->source_url));
+            ->first();
 
         return $redirectRule;
     }
@@ -76,6 +83,9 @@ final class ResolveRedirectRuleAction
         /** @var RedirectRule|null $redirectRule */
         $redirectRule = $this->baseRuleQuery($siteId, $languageId)
             ->where('match_type', RedirectMatchType::Regex->value)
+            ->orderByDesc('priority')
+            ->orderBy('id')
+            ->limit(max(1, (int) config('capell-url-manager.redirects.regex.max_rules_checked', 100)))
             ->get()
             ->first(fn (RedirectRule $candidateRule): bool => @preg_match($candidateRule->source_url, $sourceUrl) === 1);
 
@@ -98,7 +108,8 @@ final class ResolveRedirectRuleAction
                     ->when($languageId !== null, fn (Builder $query): Builder => $query->orWhere('language_id', $languageId));
             })
             ->orderByRaw('site_id IS NULL')
-            ->orderByRaw('language_id IS NULL');
+            ->orderByRaw('language_id IS NULL')
+            ->orderByDesc('priority');
     }
 
     private function targetUrl(RedirectRule $redirectRule, string $sourceUrl): string
@@ -114,5 +125,43 @@ final class ResolveRedirectRuleAction
         }
 
         return $redirectRule->target_url;
+    }
+
+    private function recordHit(
+        RedirectRule $redirectRule,
+        string $sourceUrl,
+        ?string $refererUrl,
+        ?string $userAgent,
+        ?string $ipAddress,
+    ): void {
+        $record = static function () use ($redirectRule, $sourceUrl, $refererUrl, $userAgent, $ipAddress): void {
+            RecordRedirectHitAction::run($redirectRule, $sourceUrl, $refererUrl, $userAgent, $ipAddress);
+        };
+
+        if ((bool) config('capell-url-manager.hit_recording.defer', true) && app() instanceof Application) {
+            app()->terminating($record);
+
+            return;
+        }
+
+        $record();
+        $redirectRule->refresh();
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function prefixCandidates(string $sourceUrl): array
+    {
+        $segments = array_values(array_filter(explode('/', trim($sourceUrl, '/')), static fn (string $segment): bool => $segment !== ''));
+        $candidates = ['/'];
+        $current = '';
+
+        foreach ($segments as $segment) {
+            $current .= '/' . $segment;
+            $candidates[] = $current;
+        }
+
+        return array_reverse($candidates);
     }
 }

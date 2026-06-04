@@ -46,9 +46,7 @@ it('real HtmlCacheMiddleware recognises the access_gate.protected attribute name
 
     $sourceFile = (new ReflectionClass(HtmlCacheMiddleware::class))->getFileName();
 
-    if (! is_string($sourceFile)) {
-        throw new RuntimeException('Unable to resolve HtmlCacheMiddleware source file.');
-    }
+    throw_unless(is_string($sourceFile), RuntimeException::class, 'Unable to resolve HtmlCacheMiddleware source file.');
 
     $source = (string) file_get_contents($sourceFile);
 

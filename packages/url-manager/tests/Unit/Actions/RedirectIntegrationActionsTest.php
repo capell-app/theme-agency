@@ -44,7 +44,11 @@ it('resolves managed redirects through the core redirect resolver contract', fun
 
     expect($decision?->targetUrl)->toBe('/current?utm_source=test')
         ->and($decision?->statusCode)->toBe(301)
-        ->and(RedirectRule::query()->first()?->hit_count)->toBe(1);
+        ->and(RedirectRule::query()->first()?->hit_count)->toBe(0);
+
+    app()->terminate();
+
+    expect(RedirectRule::query()->first()?->hit_count)->toBe(1);
 });
 
 it('does not hide an existing non redirect page URL with a managed redirect', function (): void {

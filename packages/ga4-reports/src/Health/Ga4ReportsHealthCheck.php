@@ -68,7 +68,7 @@ final class Ga4ReportsHealthCheck implements ChecksExtensionHealth
     {
         $config = $this->resolveConfig();
 
-        if ($config === null) {
+        if (! $config instanceof GA4ReportsConfigData) {
             return new DoctorCheckResultData(
                 label: 'GA4 Reports configuration',
                 passed: false,
@@ -82,7 +82,6 @@ final class Ga4ReportsHealthCheck implements ChecksExtensionHealth
                 label: 'GA4 Reports configuration',
                 passed: true,
                 message: 'GA4 Reports is disabled; no GA4 sync will run.',
-                remediation: null,
             );
         }
 
@@ -110,7 +109,6 @@ final class Ga4ReportsHealthCheck implements ChecksExtensionHealth
             label: 'GA4 Reports configuration',
             passed: true,
             message: 'GA4 Reports is enabled with a property ID and a readable service-account credentials file.',
-            remediation: null,
         );
     }
 

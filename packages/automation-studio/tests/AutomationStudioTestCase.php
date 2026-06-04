@@ -18,9 +18,7 @@ abstract class AutomationStudioTestCase extends TestCase
     {
         parent::setUp();
 
-        if (! $this->app instanceof Application) {
-            throw new RuntimeException('Laravel application is not available for Automation Studio tests.');
-        }
+        throw_unless($this->app instanceof Application, RuntimeException::class, 'Laravel application is not available for Automation Studio tests.');
 
         $this->app->make(Translator::class)->addNamespace('capell-automation-studio', __DIR__ . '/../resources/lang');
         $this->createSitesTable();

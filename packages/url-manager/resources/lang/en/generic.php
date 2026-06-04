@@ -19,4 +19,5 @@ return [
     'ignored' => 'Ignored',
     'converted' => 'Converted',
     'no_suggestion' => 'No suggestion',
+    'priority_help' => 'Higher priority wins when prefix or regex redirects overlap.',
 ];

@@ -20,9 +20,7 @@ it('fails when the configured preview cache store cannot be resolved', function 
 
     $cacheStoreResult = $diagnostics->firstWhere('label', 'Filament Peek preview cache store');
 
-    if (! $cacheStoreResult instanceof DoctorCheckResultData) {
-        throw new RuntimeException('Filament Peek preview cache store diagnostic was not returned.');
-    }
+    throw_unless($cacheStoreResult instanceof DoctorCheckResultData, RuntimeException::class, 'Filament Peek preview cache store diagnostic was not returned.');
 
     expect($cacheStoreResult)->not->toBeNull()
         ->and($cacheStoreResult->passed)->toBeFalse()

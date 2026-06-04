@@ -83,9 +83,7 @@ it('queries and prunes audit entries with retention boundaries', function (): vo
 it('registers the audit pruning command', function (): void {
     $command = $this->artisan('capell:agent-bridge-prune-audit', ['--days' => 30]);
 
-    if (! $command instanceof PendingCommand) {
-        throw new RuntimeException('Agent Bridge audit pruning command did not return a pending command.');
-    }
+    throw_unless($command instanceof PendingCommand, RuntimeException::class, 'Agent Bridge audit pruning command did not return a pending command.');
 
     $command->assertSuccessful();
 });

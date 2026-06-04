@@ -20,6 +20,7 @@ final class BuildRedirectRulesCsvTemplateAction
             'status_code',
             'match_type',
             'status',
+            'priority',
             'preserve_query',
             'notes',
         ]) . PHP_EOL;

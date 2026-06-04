@@ -87,7 +87,7 @@ it('imports seo suite broken link rows as 404 opportunities when seo suite is av
     $opportunity = NotFoundOpportunity::query()->first();
 
     expect($imported)->toBe(1)
-        ->and($opportunity?->source_url)->toBe('/missing-page?from=seo')
+        ->and($opportunity?->source_url)->toBe('/missing-page')
         ->and($opportunity?->site_id)->toBe(1)
         ->and($opportunity?->language_id)->toBe(1)
         ->and($opportunity?->context['source'] ?? null)->toBe('seo_suite_broken_link')

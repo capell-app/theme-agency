@@ -11,6 +11,7 @@ return [
     'match_type' => 'Match',
     'notes' => 'Notes',
     'preserve_query' => 'Preserve query string',
+    'priority' => 'Priority',
     'source_url' => 'Source URL',
     'status' => 'Status',
     'status_code' => 'Status code',

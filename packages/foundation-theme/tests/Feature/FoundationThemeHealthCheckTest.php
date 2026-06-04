@@ -13,7 +13,7 @@ beforeEach(function (): void {
     CapellCore::forcePackageInstalled('capell-app/frontend');
     CapellCore::forcePackageInstalled('capell-app/layout-builder');
 
-    $registry = app(ThemeRegistry::class);
+    $registry = resolve(ThemeRegistry::class);
     $registry->reset();
     $registry->register(
         FoundationThemeServiceProvider::definition(),
@@ -39,7 +39,7 @@ afterEach(function (): void {
         unlink($this->publishedManifestPath);
     }
 
-    app(ThemeRegistry::class)->reset();
+    resolve(ThemeRegistry::class)->reset();
 });
 
 it('reports a compatible capell api version', function (): void {
@@ -61,7 +61,7 @@ it('passes when the definition, required packages, and published assets are pres
 });
 
 it('fails the theme definition check when the definition is not registered', function (): void {
-    app(ThemeRegistry::class)->reset();
+    resolve(ThemeRegistry::class)->reset();
 
     $check = new FoundationThemeHealthCheck;
 

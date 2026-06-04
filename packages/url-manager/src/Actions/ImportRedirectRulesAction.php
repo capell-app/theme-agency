@@ -35,6 +35,7 @@ final class ImportRedirectRulesAction
                     statusCode: $this->nullableInt($row['status_code'] ?? null) ?? 301,
                     matchType: RedirectMatchType::from((string) ($row['match_type'] ?? RedirectMatchType::Exact->value)),
                     status: RedirectRuleStatus::from((string) ($row['status'] ?? RedirectRuleStatus::Active->value)),
+                    priority: $this->nullableInt($row['priority'] ?? null) ?? 0,
                     preserveQuery: (bool) ($row['preserve_query'] ?? true),
                     notes: is_string($row['notes'] ?? null) ? $row['notes'] : null,
                 ));

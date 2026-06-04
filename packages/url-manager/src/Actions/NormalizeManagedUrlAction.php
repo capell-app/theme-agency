@@ -15,17 +15,19 @@ final class NormalizeManagedUrlAction
     {
         $url = trim($url);
 
-        throw_if($url === '', InvalidArgumentException::class, 'URL cannot be empty.');
+        throw_if($url === '', InvalidArgumentException::class, __('capell-url-manager::validation.url_empty'));
 
         if ($allowAbsolute && $this->isAllowedAbsoluteUrl($url)) {
-            return rtrim($url, '/') ?: $url;
+            return $this->normalizeAbsoluteUrl($url);
         }
 
         $path = $this->pathFromUrl($url);
 
-        throw_if($path === null || ! str_starts_with($path, '/'), InvalidArgumentException::class, 'Managed URL paths must start with a slash.');
+        throw_if($path === null || ! str_starts_with($path, '/'), InvalidArgumentException::class, __('capell-url-manager::validation.path_must_start_with_slash'));
 
-        return $path === '/' ? '/' : rtrim($path, '/');
+        $normalizedPath = strtolower($path);
+
+        return $normalizedPath === '/' ? '/' : rtrim($normalizedPath, '/');
     }
 
     private function isAllowedAbsoluteUrl(string $url): bool
@@ -38,18 +40,28 @@ final class NormalizeManagedUrlAction
             && in_array(strtolower($scheme), ['http', 'https'], true);
     }
 
+    private function normalizeAbsoluteUrl(string $url): string
+    {
+        $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
+        $host = strtolower((string) parse_url($url, PHP_URL_HOST));
+        $port = parse_url($url, PHP_URL_PORT);
+        $path = parse_url($url, PHP_URL_PATH);
+        $query = parse_url($url, PHP_URL_QUERY);
+
+        $normalizedPath = is_string($path) && $path !== '' ? strtolower($path) : '/';
+        $normalizedPath = $normalizedPath === '/' ? '/' : rtrim($normalizedPath, '/');
+
+        $authority = $host . (is_int($port) ? ':' . $port : '');
+
+        return $scheme . '://' . $authority . $normalizedPath . (is_string($query) && $query !== '' ? '?' . $query : '');
+    }
+
     private function pathFromUrl(string $url): ?string
     {
         $path = parse_url($url, PHP_URL_PATH);
 
         if (! is_string($path) || $path === '') {
             return null;
-        }
-
-        $query = parse_url($url, PHP_URL_QUERY);
-
-        if (is_string($query) && $query !== '') {
-            return $path . '?' . $query;
         }
 
         return $path;

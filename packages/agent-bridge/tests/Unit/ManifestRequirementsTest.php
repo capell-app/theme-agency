@@ -36,9 +36,7 @@ describe('agent-bridge capell.json manifest', function (): void {
         $manifestData = $manifest();
         $screenshots = $manifestData['marketplace']['screenshots'] ?? [];
 
-        if (! is_array($screenshots)) {
-            throw new RuntimeException('Agent Bridge marketplace screenshots must be an array.');
-        }
+        throw_unless(is_array($screenshots), RuntimeException::class, 'Agent Bridge marketplace screenshots must be an array.');
 
         $screenshotPaths = collect($screenshots)
             ->pluck('path')

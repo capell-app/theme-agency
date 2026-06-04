@@ -111,7 +111,7 @@ final class FoundationThemeHealthCheck implements ChecksExtensionHealth
             return false;
         }
 
-        return app(ThemeRegistry::class)->has(FoundationThemeServiceProvider::THEME_KEY);
+        return resolve(ThemeRegistry::class)->has(FoundationThemeServiceProvider::THEME_KEY);
     }
 
     /**

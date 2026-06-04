@@ -68,6 +68,11 @@ final class RedirectRulesTable
                     ->label(__('capell-url-manager::table.status'))
                     ->badge()
                     ->sortable(),
+                TextColumn::make('priority')
+                    ->label(__('capell-url-manager::table.priority'))
+                    ->numeric()
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('hit_count')
                     ->label(__('capell-url-manager::table.hit_count'))
                     ->numeric()
@@ -235,6 +240,7 @@ final class RedirectRulesTable
             statusCode: self::nullableInt($data['status_code'] ?? null) ?? 301,
             matchType: RedirectMatchType::from((string) ($data['match_type'] ?? RedirectMatchType::Exact->value)),
             status: RedirectRuleStatus::from((string) ($data['status'] ?? RedirectRuleStatus::Active->value)),
+            priority: self::nullableInt($data['priority'] ?? null) ?? 0,
             preserveQuery: (bool) ($data['preserve_query'] ?? true),
             notes: is_string($data['notes'] ?? null) && trim($data['notes']) !== '' ? $data['notes'] : null,
         );

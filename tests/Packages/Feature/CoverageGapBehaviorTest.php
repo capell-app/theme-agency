@@ -749,6 +749,7 @@ it('dispatches access approval automation payloads from registration events', fu
     };
     $registration->forceFill([
         'id' => 88,
+        'site_id' => 1,
         'email' => 'approved@example.test',
         'area_id' => 12,
     ]);
@@ -784,7 +785,7 @@ it('dispatches workspace publication automation only for published transitions',
         /** @use HasFactory<Factory<static>> */
         use HasFactory;
     };
-    $workspace->forceFill(['id' => 44]);
+    $workspace->forceFill(['id' => 44, 'site_id' => 1]);
     $workspace->exists = true;
 
     $listener->handle((object) [

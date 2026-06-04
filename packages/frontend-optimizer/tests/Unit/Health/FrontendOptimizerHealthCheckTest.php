@@ -33,7 +33,7 @@ it('passes when the renderer is bound, the disk is writable, and the queue is as
 });
 
 it('fails the renderer binding check when the default renderer is bound', function (): void {
-    app()->instance(FrontendAssetManifestRenderer::class, app(DefaultFrontendAssetManifestRenderer::class));
+    app()->instance(FrontendAssetManifestRenderer::class, resolve(DefaultFrontendAssetManifestRenderer::class));
 
     $check = new FrontendOptimizerHealthCheck;
 

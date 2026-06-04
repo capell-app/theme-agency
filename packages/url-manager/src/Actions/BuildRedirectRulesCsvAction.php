@@ -27,6 +27,7 @@ final class BuildRedirectRulesCsvAction
             'status_code',
             'match_type',
             'status',
+            'priority',
             'preserve_query',
             'notes',
         ]);
@@ -40,6 +41,7 @@ final class BuildRedirectRulesCsvAction
                 $row['status_code'],
                 $row['match_type'],
                 $row['status'],
+                $row['priority'],
                 $row['preserve_query'] ? '1' : '0',
                 $row['notes'],
             ]);

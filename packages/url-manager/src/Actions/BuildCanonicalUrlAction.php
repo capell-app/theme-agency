@@ -1,0 +1,97 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Capell\UrlManager\Actions;
+
+use InvalidArgumentException;
+use Lorisleiva\Actions\Concerns\AsAction;
+
+final class BuildCanonicalUrlAction
+{
+    use AsAction;
+
+    public function handle(string $url): string
+    {
+        $url = trim($url);
+
+        throw_if($url === '', InvalidArgumentException::class, __('capell-url-manager::validation.url_empty'));
+
+        $scheme = $this->configuredScheme($url);
+        $host = $this->configuredHost($url);
+        $path = $this->canonicalPath((string) parse_url($url, PHP_URL_PATH));
+        $query = $this->canonicalQuery((string) parse_url($url, PHP_URL_QUERY));
+
+        if ($host === null) {
+            return $path . ($query === null ? '' : '?' . $query);
+        }
+
+        return $scheme . '://' . $host . $path . ($query === null ? '' : '?' . $query);
+    }
+
+    private function configuredScheme(string $url): string
+    {
+        $configured = config('capell-url-manager.canonical.scheme');
+
+        if (is_string($configured) && in_array(strtolower($configured), ['http', 'https'], true)) {
+            return strtolower($configured);
+        }
+
+        $scheme = parse_url($url, PHP_URL_SCHEME);
+
+        return is_string($scheme) && in_array(strtolower($scheme), ['http', 'https'], true)
+            ? strtolower($scheme)
+            : 'https';
+    }
+
+    private function configuredHost(string $url): ?string
+    {
+        $configured = config('capell-url-manager.canonical.host');
+
+        if (is_string($configured) && trim($configured) !== '') {
+            return strtolower(trim($configured));
+        }
+
+        $host = parse_url($url, PHP_URL_HOST);
+
+        return is_string($host) && $host !== '' ? strtolower($host) : null;
+    }
+
+    private function canonicalPath(string $path): string
+    {
+        $path = $path === '' ? '/' : $path;
+
+        if ((bool) config('capell-url-manager.canonical.lowercase_path', true)) {
+            $path = strtolower($path);
+        }
+
+        return match (config('capell-url-manager.canonical.trailing_slash', 'remove')) {
+            'add' => $path === '/' ? '/' : rtrim($path, '/') . '/',
+            default => $path === '/' ? '/' : rtrim($path, '/'),
+        };
+    }
+
+    private function canonicalQuery(string $query): ?string
+    {
+        if ($query === '') {
+            return null;
+        }
+
+        parse_str($query, $parameters);
+
+        $stripKeys = collect(config('capell-url-manager.canonical.strip_query_keys', []))
+            ->filter(static fn (mixed $key): bool => is_string($key) && $key !== '')
+            ->map(static fn (string $key): string => strtolower($key))
+            ->all();
+
+        $filtered = collect($parameters)
+            ->reject(static fn (mixed $value, string $key): bool => in_array(strtolower($key), $stripKeys, true))
+            ->all();
+
+        if ($filtered === []) {
+            return null;
+        }
+
+        return http_build_query($filtered);
+    }
+}

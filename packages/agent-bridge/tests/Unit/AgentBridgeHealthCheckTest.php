@@ -21,9 +21,7 @@ it('checks that the laravel mcp package is available', function (): void {
 
     $mcpCheck = $results->first(fn (DoctorCheckResultData $check): bool => $check->label === 'Laravel MCP package');
 
-    if (! $mcpCheck instanceof DoctorCheckResultData) {
-        throw new RuntimeException('Laravel MCP package health check was not returned.');
-    }
+    throw_unless($mcpCheck instanceof DoctorCheckResultData, RuntimeException::class, 'Laravel MCP package health check was not returned.');
 
     expect($mcpCheck)->not->toBeNull()
         ->and($mcpCheck->passed)->toBeTrue()
@@ -35,9 +33,7 @@ it('checks that agent bridge database tables exist', function (): void {
 
     $tableCheck = $results->first(fn (DoctorCheckResultData $check): bool => $check->label === 'Agent Bridge database tables');
 
-    if (! $tableCheck instanceof DoctorCheckResultData) {
-        throw new RuntimeException('Agent Bridge database tables health check was not returned.');
-    }
+    throw_unless($tableCheck instanceof DoctorCheckResultData, RuntimeException::class, 'Agent Bridge database tables health check was not returned.');
 
     expect($tableCheck)->not->toBeNull()
         ->and($tableCheck->passed)->toBeTrue()
@@ -49,9 +45,7 @@ it('checks that the capability registry is resolvable with capabilities', functi
 
     $registryCheck = $results->first(fn (DoctorCheckResultData $check): bool => $check->label === 'Agent Bridge capability registry');
 
-    if (! $registryCheck instanceof DoctorCheckResultData) {
-        throw new RuntimeException('Agent Bridge capability registry health check was not returned.');
-    }
+    throw_unless($registryCheck instanceof DoctorCheckResultData, RuntimeException::class, 'Agent Bridge capability registry health check was not returned.');
 
     expect($registryCheck)->not->toBeNull()
         ->and($registryCheck->passed)->toBeTrue()
@@ -63,9 +57,7 @@ it('checks route configuration status', function (): void {
 
     $routeCheck = $results->first(fn (DoctorCheckResultData $check): bool => $check->label === 'Agent Bridge MCP routes');
 
-    if (! $routeCheck instanceof DoctorCheckResultData) {
-        throw new RuntimeException('Agent Bridge MCP routes health check was not returned.');
-    }
+    throw_unless($routeCheck instanceof DoctorCheckResultData, RuntimeException::class, 'Agent Bridge MCP routes health check was not returned.');
 
     expect($routeCheck)->not->toBeNull()
         ->and($routeCheck->passed)->toBeTrue()
@@ -80,9 +72,7 @@ it('reports failed routes check when all routes are disabled', function (): void
 
     $routeCheck = $results->first(fn (DoctorCheckResultData $check): bool => $check->label === 'Agent Bridge MCP routes');
 
-    if (! $routeCheck instanceof DoctorCheckResultData) {
-        throw new RuntimeException('Agent Bridge MCP routes health check was not returned.');
-    }
+    throw_unless($routeCheck instanceof DoctorCheckResultData, RuntimeException::class, 'Agent Bridge MCP routes health check was not returned.');
 
     expect($routeCheck)->not->toBeNull()
         ->and($routeCheck->passed)->toBeFalse()

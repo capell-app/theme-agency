@@ -36,9 +36,9 @@ it('fails the storage table check when the connections table is missing', functi
 });
 
 it('fails the oauth provider configuration check when no client id is configured', function (): void {
-    Config::set('capell-deployments.oauth.github.client_id', null);
-    Config::set('capell-deployments.oauth.gitlab.client_id', null);
-    Config::set('capell-deployments.oauth.bitbucket.client_id', null);
+    Config::set('capell-deployments.oauth.github.client_id');
+    Config::set('capell-deployments.oauth.gitlab.client_id');
+    Config::set('capell-deployments.oauth.bitbucket.client_id');
 
     $check = new DeploymentsHealthCheck;
 
@@ -49,7 +49,7 @@ it('fails the oauth provider configuration check when no client id is configured
 
 it('reports configured provider labels without exposing credential values', function (): void {
     Config::set('capell-deployments.oauth.github.client_id', 'github-client-id');
-    Config::set('capell-deployments.oauth.gitlab.client_id', null);
+    Config::set('capell-deployments.oauth.gitlab.client_id');
     Config::set('capell-deployments.oauth.bitbucket.client_id', 'bitbucket-client-id');
 
     $check = new DeploymentsHealthCheck;
