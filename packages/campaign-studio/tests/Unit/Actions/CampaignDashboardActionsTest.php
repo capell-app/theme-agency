@@ -7,6 +7,7 @@ use Capell\CampaignStudio\Actions\BuildCampaignConversionFunnelAction;
 use Capell\CampaignStudio\Actions\BuildCampaignOverviewStatsAction;
 use Capell\CampaignStudio\Actions\BuildTopCampaignStudioQueryAction;
 use Capell\CampaignStudio\Actions\BuildTopLandingPagesQueryAction;
+use Capell\CampaignStudio\Actions\RecordCampaignConversionAction;
 use Capell\CampaignStudio\Actions\RecordCtaClickConversionAction;
 use Capell\CampaignStudio\Actions\RecordPageViewConversionAction;
 use Capell\CampaignStudio\Actions\ResolveCampaignFromUrlAction;
@@ -136,6 +137,42 @@ it('excludes campaigns with a blank utm_campaign from the overview visit count',
         'active_campaign-studio' => 1,
         'conversions' => 1,
         'conversion_rate' => 0.0,
+    ]);
+});
+
+it('counts duplicate campaign utm visits once in overview conversion rates', function (): void {
+    $startsAt = CarbonImmutable::parse('2026-04-01 00:00:00');
+    $endsAt = CarbonImmutable::parse('2026-04-30 23:59:59');
+    $campaign = CampaignGroup::factory()->create([
+        'utm_campaign' => 'shared-launch',
+    ]);
+    CampaignGroup::factory()->create([
+        'utm_campaign' => 'shared-launch',
+    ]);
+    $goal = CampaignConversionGoal::factory()
+        ->for($campaign, 'campaignGroup')
+        ->create();
+
+    CampaignConversion::factory()
+        ->for($campaign, 'campaignGroup')
+        ->for($goal, 'goal')
+        ->create(['converted_at' => CarbonImmutable::parse('2026-04-15 12:00:00')]);
+
+    InsightsVisit::factory()->create([
+        'utm_campaign' => 'shared-launch',
+        'last_seen_at' => CarbonImmutable::parse('2026-04-10 09:00:00'),
+    ]);
+    InsightsVisit::factory()->create([
+        'utm_campaign' => 'shared-launch',
+        'last_seen_at' => CarbonImmutable::parse('2026-04-11 09:00:00'),
+    ]);
+
+    $stats = BuildCampaignOverviewStatsAction::run($startsAt, $endsAt);
+
+    expect($stats)->toBe([
+        'active_campaign-studio' => 2,
+        'conversions' => 1,
+        'conversion_rate' => 50.0,
     ]);
 });
 
@@ -323,6 +360,30 @@ it('builds a conversion funnel ordered by goal conversion volume', function (): 
         ['goal' => 'Book demo', 'conversions' => 2],
         ['goal' => 'Lead form', 'conversions' => 1],
     ]);
+});
+
+it('drops stale visit attribution outside the configured conversion lookback window', function (): void {
+    config()->set('capell-campaign-studio.attribution.lookback_days', 7);
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-04-30 12:00:00'));
+
+    try {
+        $campaign = CampaignGroup::factory()->create();
+        $goal = CampaignConversionGoal::factory()
+            ->for($campaign, 'campaignGroup')
+            ->create();
+        $visit = InsightsVisit::factory()->create([
+            'utm_campaign' => 'expired-campaign',
+            'last_seen_at' => CarbonImmutable::parse('2026-04-20 12:00:00'),
+        ]);
+
+        $conversion = RecordCampaignConversionAction::run($goal, $visit);
+
+        expect($conversion)->toBeInstanceOf(CampaignConversion::class)
+            ->and($conversion->insights_visit_id)->toBeNull()
+            ->and($conversion->attribution?->utmCampaign)->toBeNull();
+    } finally {
+        CarbonImmutable::setTestNow();
+    }
 });
 
 it('records cta click conversions only for active cta click goals', function (): void {

@@ -14,5 +14,6 @@ it('registers the campaign-studio package metadata', function (): void {
 it('loads the campaign-studio config', function (): void {
     expect(config('capell-campaign-studio.tables.groups'))->toBe('campaign_groups')
         ->and(config('capell-campaign-studio.conversion_cookie'))->toBe('capell_campaign_visit')
-        ->and(config('capell-campaign-studio.tracking.route_prefix'))->toBe('capell/campaigns');
+        ->and(config('capell-campaign-studio.tracking.route_prefix'))->toBe('capell/campaigns')
+        ->and(config('capell-campaign-studio.attribution.lookback_days'))->toBe(30);
 });

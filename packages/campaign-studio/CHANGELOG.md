@@ -6,6 +6,9 @@ All notable changes to `capell-app/campaign-studio` will be documented in this f
 
 ### 2026-06-04
 
+- Added `BuildCampaignExperimentResultsAction` and typed result data so Campaign Studio can read back synced Experiments winner reports with per-variant conversion rates and lift over control.
+- Added configurable conversion attribution lookback via `capell-campaign-studio.attribution.lookback_days`; stale Insights visits no longer populate conversion identity or UTM attribution outside the configured window.
+- Counted distinct Insights visits in the campaign overview conversion-rate KPI so campaign groups sharing a `utm_campaign` no longer double-count the same visit.
 - Added the public campaign conversion beacon at `/capell/campaigns/conversions` and a post-load tracker that records page-view and CTA-click conversions from public campaign pages.
 - Added `CaptureCampaignConversionAction` and `CampaignConversionCaptureData` so beacon requests resolve Insights visits, landing pages, CTA widgets, and conversion goals through a typed package boundary.
 - Scoped CTA-click beacon goal resolution to the campaign landing page resolved from the submitted URL, avoiding cross-campaign misattribution when campaigns reuse the same goal key.

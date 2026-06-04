@@ -21,6 +21,9 @@ return [
     'tracking' => [
         'route_prefix' => 'capell/campaigns',
     ],
+    'attribution' => [
+        'lookback_days' => 30,
+    ],
     'layout_presets' => [
         'enabled' => true,
     ],

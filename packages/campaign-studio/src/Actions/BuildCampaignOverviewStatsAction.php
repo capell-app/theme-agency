@@ -54,6 +54,7 @@ final class BuildCampaignOverviewStatsAction
             ->where($groupsTableName . '.utm_campaign', '!=', '')
             ->when($startsAt instanceof CarbonImmutable, fn (Builder $builder): Builder => $builder->where($visitsTableName . '.last_seen_at', '>=', $startsAt))
             ->when($endsAt instanceof CarbonImmutable, fn (Builder $builder): Builder => $builder->where($visitsTableName . '.last_seen_at', '<=', $endsAt))
+            ->distinct()
             ->count($visitsTableName . '.id');
     }
 }

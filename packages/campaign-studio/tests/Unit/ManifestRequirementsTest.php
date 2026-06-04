@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\CampaignStudio\Actions\BuildCampaignConversionFunnelAction;
+use Capell\CampaignStudio\Actions\BuildCampaignExperimentResultsAction;
 use Capell\CampaignStudio\Actions\BuildCampaignLandingPageVariantsAction;
 use Capell\CampaignStudio\Actions\ResolveCampaignLandingPageVariantAction;
 use Capell\CampaignStudio\Actions\SyncCampaignExperimentAction;
@@ -60,6 +61,7 @@ it('declares experiments, variants, audience targeting, and funnel reporting cap
     $manifest = campaignStudioManifest();
 
     expect($manifest['actions'])->toHaveKey('syncCampaignExperiment', SyncCampaignExperimentAction::class)
+        ->and($manifest['actions'])->toHaveKey('buildCampaignExperimentResults', BuildCampaignExperimentResultsAction::class)
         ->and($manifest['actions'])->toHaveKey('buildCampaignLandingPageVariants', BuildCampaignLandingPageVariantsAction::class)
         ->and($manifest['actions'])->toHaveKey('resolveCampaignLandingPageVariant', ResolveCampaignLandingPageVariantAction::class)
         ->and($manifest['actions'])->toHaveKey('buildCampaignConversionFunnel', BuildCampaignConversionFunnelAction::class)

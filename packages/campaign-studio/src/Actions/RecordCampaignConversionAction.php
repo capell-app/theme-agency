@@ -15,6 +15,7 @@ use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
 use RuntimeException;
+use Throwable;
 
 final class RecordCampaignConversionAction
 {
@@ -32,6 +33,8 @@ final class RecordCampaignConversionAction
             return null;
         }
 
+        $convertedAt = $this->convertedAt($event);
+        $visit = $this->visitWithinAttributionWindow($visit, $convertedAt);
         $campaignGroup = $goal->campaignGroup;
         throw_unless($campaignGroup instanceof CampaignGroup, RuntimeException::class, 'Campaign conversion goal must belong to a campaign group.');
 
@@ -49,7 +52,7 @@ final class RecordCampaignConversionAction
             'site_id' => $event?->getAttribute('site_id') ?? $visit?->getAttribute('site_id') ?? $goal->site_id,
             'language_id' => $event?->getAttribute('language_id') ?? $visit?->getAttribute('language_id'),
             'attribution' => $attribution ?? BuildConversionAttributionAction::run($visit, $event),
-            'converted_at' => $this->convertedAt($event),
+            'converted_at' => $convertedAt,
         ];
 
         $conversion = $this->hasIdentity($identity)
@@ -83,5 +86,60 @@ final class RecordCampaignConversionAction
         }
 
         return now()->toImmutable();
+    }
+
+    private function visitWithinAttributionWindow(?Model $visit, CarbonImmutable $convertedAt): ?Model
+    {
+        if (! $visit instanceof Model) {
+            return null;
+        }
+
+        $lookbackDays = $this->attributionLookbackDays();
+
+        if ($lookbackDays === null) {
+            return $visit;
+        }
+
+        $visitedAt = $this->timestampAttribute($visit, 'last_seen_at') ?? $this->timestampAttribute($visit, 'started_at');
+
+        if (! $visitedAt instanceof CarbonImmutable) {
+            return $visit;
+        }
+
+        return $visitedAt->lessThan($convertedAt->subDays($lookbackDays)) ? null : $visit;
+    }
+
+    private function attributionLookbackDays(): ?int
+    {
+        $lookbackDays = config('capell-campaign-studio.attribution.lookback_days', 30);
+
+        if ($lookbackDays === null) {
+            return null;
+        }
+
+        if (is_numeric($lookbackDays) && (int) $lookbackDays > 0) {
+            return (int) $lookbackDays;
+        }
+
+        return 30;
+    }
+
+    private function timestampAttribute(Model $model, string $attribute): ?CarbonImmutable
+    {
+        $value = $model->getAttribute($attribute);
+
+        if ($value instanceof CarbonInterface) {
+            return $value->toImmutable();
+        }
+
+        if (! is_string($value) || trim($value) === '') {
+            return null;
+        }
+
+        try {
+            return CarbonImmutable::parse($value);
+        } catch (Throwable) {
+            return null;
+        }
     }
 }

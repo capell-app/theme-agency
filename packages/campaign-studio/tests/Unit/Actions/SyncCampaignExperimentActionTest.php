@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\CampaignStudio\Tests\Unit\Actions;
 
+use Capell\CampaignStudio\Actions\BuildCampaignExperimentResultsAction;
 use Capell\CampaignStudio\Actions\SyncCampaignExperimentAction;
 use Capell\CampaignStudio\Enums\CampaignStatus;
 use Capell\CampaignStudio\Enums\ConversionGoalType;
@@ -11,12 +12,16 @@ use Capell\CampaignStudio\Models\CampaignConversionGoal;
 use Capell\CampaignStudio\Models\CampaignGroup;
 use Capell\CampaignStudio\Models\CampaignLandingPage;
 use Capell\CampaignStudio\Tests\CampaignStudioExperimentsTestCase;
+use Capell\Experiments\Enums\AllocationStrategy;
 use Capell\Experiments\Enums\AudienceOperator;
 use Capell\Experiments\Enums\AudienceRuleType;
 use Capell\Experiments\Enums\ExperimentGoalType;
 use Capell\Experiments\Enums\ExperimentStatus;
 use Capell\Experiments\Enums\ExperimentSubjectType;
 use Capell\Experiments\Models\Experiment;
+use Capell\Experiments\Models\ExperimentAllocation;
+use Capell\Experiments\Models\ExperimentGoalEvent;
+use Carbon\CarbonImmutable;
 
 final class SyncCampaignExperimentActionTest extends CampaignStudioExperimentsTestCase
 {
@@ -117,6 +122,87 @@ final class SyncCampaignExperimentActionTest extends CampaignStudioExperimentsTe
         $this->assertSame('updated-campaign', $secondExperiment->audienceRules()->where('key', 'campaign')->firstOrFail()->value);
     }
 
+    public function test_it_builds_campaign_experiment_results_with_variant_lift(): void
+    {
+        $campaign = CampaignGroup::factory()->create([
+            'status' => CampaignStatus::Active,
+            'utm_campaign' => 'results-campaign',
+        ]);
+        CampaignLandingPage::factory()->for($campaign)->create([
+            'headline' => 'Control',
+            'utm_content' => 'control',
+            'is_primary' => true,
+        ]);
+        CampaignLandingPage::factory()->for($campaign)->create([
+            'headline' => 'Benefit',
+            'utm_content' => 'benefit',
+        ]);
+        CampaignConversionGoal::factory()->for($campaign)->create([
+            'name' => 'Book demo',
+            'key' => 'book-demo',
+            'type' => ConversionGoalType::FormSubmission,
+            'is_primary' => true,
+        ]);
+
+        $experiment = SyncCampaignExperimentAction::run($campaign);
+        $this->assertInstanceOf(Experiment::class, $experiment);
+        $experiment->forceFill(['allocation_strategy' => AllocationStrategy::StickyWeighted])->save();
+        $controlVariant = $experiment->variants()->where('key', 'control')->firstOrFail();
+        $benefitVariant = $experiment->variants()->where('key', 'benefit')->firstOrFail();
+        $goal = $experiment->goals()->where('key', 'book-demo')->firstOrFail();
+
+        for ($allocationIndex = 1; $allocationIndex <= 10; $allocationIndex++) {
+            ExperimentAllocation::query()->create([
+                'experiment_id' => $experiment->getKey(),
+                'experiment_variant_id' => $controlVariant->getKey(),
+                'allocation_key' => 'control-' . $allocationIndex,
+                'allocation_hash' => hash('sha256', 'control-' . $allocationIndex),
+                'allocated_at' => CarbonImmutable::parse('2026-05-01 12:00:00'),
+            ]);
+            ExperimentAllocation::query()->create([
+                'experiment_id' => $experiment->getKey(),
+                'experiment_variant_id' => $benefitVariant->getKey(),
+                'allocation_key' => 'benefit-' . $allocationIndex,
+                'allocation_hash' => hash('sha256', 'benefit-' . $allocationIndex),
+                'allocated_at' => CarbonImmutable::parse('2026-05-01 12:00:00'),
+            ]);
+        }
+
+        for ($conversionIndex = 1; $conversionIndex <= 2; $conversionIndex++) {
+            ExperimentGoalEvent::query()->create([
+                'experiment_id' => $experiment->getKey(),
+                'experiment_variant_id' => $controlVariant->getKey(),
+                'experiment_goal_id' => $goal->getKey(),
+                'event_key' => 'control-conversion-' . $conversionIndex,
+                'occurred_at' => CarbonImmutable::parse('2026-05-02 12:00:00'),
+            ]);
+        }
+
+        for ($conversionIndex = 1; $conversionIndex <= 4; $conversionIndex++) {
+            ExperimentGoalEvent::query()->create([
+                'experiment_id' => $experiment->getKey(),
+                'experiment_variant_id' => $benefitVariant->getKey(),
+                'experiment_goal_id' => $goal->getKey(),
+                'event_key' => 'benefit-conversion-' . $conversionIndex,
+                'occurred_at' => CarbonImmutable::parse('2026-05-02 12:00:00'),
+            ]);
+        }
+
+        $results = BuildCampaignExperimentResultsAction::run($campaign);
+
+        $this->assertNotNull($results);
+        $this->assertSame($experiment->getKey(), $results->experimentId);
+        $this->assertSame(20, $results->totalAllocations);
+        $this->assertSame(6, $results->totalConversions);
+        $this->assertSame('benefit', $results->winningVariantKey);
+        $this->assertCount(2, $results->variants);
+        $this->assertSame(20.0, $results->variants[0]->conversionRate);
+        $this->assertNull($results->variants[0]->liftPercent);
+        $this->assertSame(40.0, $results->variants[1]->conversionRate);
+        $this->assertSame(100.0, $results->variants[1]->liftPercent);
+        $this->assertTrue($results->variants[1]->isWinner);
+    }
+
     public function test_it_declares_campaign_experiment_sync_in_package_metadata(): void
     {
         $manifest = json_decode(
@@ -131,6 +217,7 @@ final class SyncCampaignExperimentActionTest extends CampaignStudioExperimentsTe
         );
 
         $this->assertContains('capell-app/experiments', $manifest['dependencies']['supports']);
+        $this->assertSame(BuildCampaignExperimentResultsAction::class, $manifest['actions']['buildCampaignExperimentResults']);
         $this->assertSame(SyncCampaignExperimentAction::class, $manifest['actions']['syncCampaignExperiment']);
         $this->assertContains('campaign-experiment-sync', $manifest['capabilities']);
         $this->assertContains('landing-page-variant-experiments', $manifest['capabilities']);

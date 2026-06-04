@@ -118,6 +118,7 @@
     "actions": {
         "applyCampaignPageDefaults": "Capell\\CampaignStudio\\Actions\\ApplyCampaignPageDefaultsAction",
         "buildCampaignConversionFunnel": "Capell\\CampaignStudio\\Actions\\BuildCampaignConversionFunnelAction",
+        "buildCampaignExperimentResults": "Capell\\CampaignStudio\\Actions\\BuildCampaignExperimentResultsAction",
         "buildCampaignLandingPageVariants": "Capell\\CampaignStudio\\Actions\\BuildCampaignLandingPageVariantsAction",
         "buildCampaignOverviewStats": "Capell\\CampaignStudio\\Actions\\BuildCampaignOverviewStatsAction",
         "buildCampaignUrl": "Capell\\CampaignStudio\\Actions\\BuildCampaignUrlAction",

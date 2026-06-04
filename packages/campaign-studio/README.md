@@ -32,6 +32,7 @@ Campaign Studio adds campaign groups, landing-page variants, audience targeting,
 - Page schema extender for campaign fields.
 - core layout builder widget configurators for campaign hero, CTA, and lead form widgets.
 - Landing-page variant selection from UTM audience data, with optional experiment sync when Experiments is installed.
+- Campaign experiment result readout from synced Experiments winner reports, including per-variant conversion rates and lift over the control variant.
 - Campaign hero widget CTAs can append configured UTM metadata through the shared campaign URL builder.
 - Campaign conversion funnel reporting from conversion goals and recorded conversions.
 - Conversion recording actions for page views, CTA clicks, and form submissions.
@@ -89,6 +90,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Filament resources cover each owned model.
 - Frontend routes and render hooks add the campaign conversion beacon and public tracker script.
 - Listeners sync landing pages, editorial calendar events, Site Discovery URLs, and form submission conversions.
+- `BuildCampaignExperimentResultsAction` reads synced campaign experiment results when `capell-app/experiments` is installed.
 
 ## Code Map
 
@@ -144,6 +146,7 @@ The tracker is post-load and contains no admin/editor state, signed editor URLs,
 - Adds campaign admin navigation and database tables.
 - Adds campaign dashboard widgets.
 - Adds config keys for conversion cookie, UTM keys, table names, tracker route prefix, and layout presets.
+- Adds `attribution.lookback_days` so stale Insights visits can be excluded from conversion identity and attribution.
 - May use Insights events and FormBuilder submissions when those packages are installed.
 - Registers `POST /capell/campaigns/conversions` for same-origin page-view and CTA-click conversion capture.
 
@@ -183,6 +186,7 @@ The tracker is post-load and contains no admin/editor state, signed editor URLs,
 - Configure campaign hero UTM fields when hero CTAs should carry campaign attribution.
 - Create conversion goals before reporting on landing page success.
 - Keep the Insights tracker enabled when visitor-level deduplication is required for CTA/page-view conversions.
+- Tune `capell-campaign-studio.attribution.lookback_days` for the marketing team's attribution policy.
 - Treat UTM-targeted campaign variant pages as dynamic frontend output; do not rely on static HTML cache to personalize variant selection.
 
 ## Docs
