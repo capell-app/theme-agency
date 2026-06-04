@@ -89,11 +89,11 @@ final class RssFeedProvider implements SocialFeedProvider
             return [];
         }
 
-        if (isset($feed->channel->item)) {
+        if (property_exists($feed->channel, 'item') && $feed->channel->item !== null) {
             return $this->parseRssItems($feed, $fallbackAuthor);
         }
 
-        if (isset($feed->entry)) {
+        if (property_exists($feed, 'entry') && $feed->entry !== null) {
             return $this->parseAtomEntries($feed, $fallbackAuthor);
         }
 
@@ -142,7 +142,7 @@ final class RssFeedProvider implements SocialFeedProvider
             $summary = trim(strip_tags((string) ($entry->summary ?: $entry->content)));
 
             $items[] = new SocialFeedPostData(
-                externalId: $id !== '' ? $id : ($link !== null ? $link : Str::uuid()->toString()),
+                externalId: $id !== '' ? $id : ($link ?? Str::uuid()->toString()),
                 type: $link !== null ? SocialFeedItemType::Link : SocialFeedItemType::Text,
                 text: trim((string) $entry->title) ?: $summary,
                 permalink: $link,
@@ -157,7 +157,7 @@ final class RssFeedProvider implements SocialFeedProvider
 
     private function firstMediaUrl(SimpleXMLElement $item): ?string
     {
-        if (isset($item->enclosure)) {
+        if (property_exists($item, 'enclosure') && $item->enclosure !== null) {
             $url = (string) $item->enclosure->attributes()['url'];
 
             return $url !== '' ? $url : null;
@@ -165,7 +165,7 @@ final class RssFeedProvider implements SocialFeedProvider
 
         $media = $item->children('media', true);
 
-        if (isset($media->content)) {
+        if (property_exists($media, 'content') && $media->content !== null) {
             $url = (string) $media->content->attributes()['url'];
 
             return $url !== '' ? $url : null;

@@ -90,14 +90,14 @@ final class SocialFeedBlockDefinitionProvider implements BlockDefinitionProvider
             new BlockSettingDefinitionData('autoplay', 'capell-social-feeds::package.blocks.social_feed.settings.autoplay', 'boolean', false, group: 'motion', order: 110),
             new BlockSettingDefinitionData('transition_ms', 'capell-social-feeds::package.blocks.social_feed.settings.transition_ms', 'number', 450, group: 'motion', order: 120),
             new BlockSettingDefinitionData('aspect_ratio', 'capell-social-feeds::package.blocks.social_feed.settings.aspect_ratio', 'select', 'square', options: [
-                'square' => 'Square',
-                'landscape' => 'Landscape',
-                'portrait' => 'Portrait',
-                'natural' => 'Natural',
+                'square' => 'capell-social-feeds::package.blocks.social_feed.aspect_ratios.square',
+                'landscape' => 'capell-social-feeds::package.blocks.social_feed.aspect_ratios.landscape',
+                'portrait' => 'capell-social-feeds::package.blocks.social_feed.aspect_ratios.portrait',
+                'natural' => 'capell-social-feeds::package.blocks.social_feed.aspect_ratios.natural',
             ], group: 'media', order: 130),
             new BlockSettingDefinitionData('empty_state', 'capell-social-feeds::package.blocks.social_feed.settings.empty_state', 'select', 'hidden', options: [
-                'hidden' => 'Hidden',
-                'message' => 'Message',
+                'hidden' => 'capell-social-feeds::package.blocks.social_feed.empty_states.hidden',
+                'message' => 'capell-social-feeds::package.blocks.social_feed.empty_states.message',
             ], group: 'display', order: 140),
         ];
     }

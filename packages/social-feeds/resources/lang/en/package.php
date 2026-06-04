@@ -29,6 +29,16 @@ return [
                 'carousel' => 'Carousel',
                 'paginated' => 'Paginated',
             ],
+            'aspect_ratios' => [
+                'square' => 'Square',
+                'landscape' => 'Landscape',
+                'portrait' => 'Portrait',
+                'natural' => 'Natural',
+            ],
+            'empty_states' => [
+                'hidden' => 'Hidden',
+                'message' => 'Message',
+            ],
         ],
     ],
     'providers' => [

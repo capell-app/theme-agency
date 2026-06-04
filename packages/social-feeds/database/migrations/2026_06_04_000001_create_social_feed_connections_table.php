@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('provider')->index();
             $table->string('name');
             $table->string('status')->index();
-            $table->json('credentials')->nullable();
+            $table->longText('credentials')->nullable();
             $table->json('meta')->nullable();
             $table->timestamp('last_synced_at')->nullable();
             $table->string('sync_status')->nullable()->index();
