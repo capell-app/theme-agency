@@ -6,6 +6,7 @@ namespace Capell\EmailStudio\Providers;
 
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\EmailStudio\Console\Commands\PruneEmailBodiesCommand;
 use Capell\EmailStudio\Enums\EmailProviderType;
 use Capell\EmailStudio\Models\EmailEvent;
 use Capell\EmailStudio\Models\EmailMessage;
@@ -22,6 +23,7 @@ use Capell\EmailStudio\Support\EmailTemplateRegistry;
 use Capell\EmailStudio\Support\Providers\FakeEmailProviderAdapter;
 use Capell\EmailStudio\Support\Providers\PostmarkEmailProviderAdapter;
 use Capell\EmailStudio\Support\Providers\SmtpEmailProviderAdapter;
+use Illuminate\Console\Scheduling\Schedule;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -50,7 +52,8 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
                 '2026_05_10_190847_09_create_email_template_registrations_table',
                 '2026_05_10_190847_10_create_email_tracking_tokens_table',
                 '2026_05_21_000001_add_site_foreign_keys_to_email_studio_tables',
-            ]);
+            ])
+            ->hasCommand(PruneEmailBodiesCommand::class);
     }
 
     public function registeringPackage(): void
@@ -75,6 +78,20 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
             $this
                 ->registerModels()
                 ->registerProtectedTables();
+        });
+    }
+
+    public function packageBooted(): void
+    {
+        if (! $this->isPackageInstalled()) {
+            return;
+        }
+
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
+            $schedule->command('capell-email-studio:prune-bodies')
+                ->daily()
+                ->withoutOverlapping()
+                ->onOneServer();
         });
     }
 

@@ -46,7 +46,8 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "retention": "capell-email-studio:prune-bodies"
     },
     "settings": [],
     "permissions": [],

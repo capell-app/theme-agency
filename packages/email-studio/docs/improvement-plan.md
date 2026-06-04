@@ -95,7 +95,7 @@ Email Studio is the transactional-email backbone for Capell: it registers reusab
 | Implement `EmailStudioHealthCheck` to run the 4 declared checks (or trim manifest)                                                                                    | Now    | M      | High   | §2, §4      |
 | ✅ Shipped: Add `SendEmailJob` retry/backoff/timeout + `failed()`; split transient vs permanent failures                                                              | Done   | M      | High   | §2, §4      |
 | Capture real provider message IDs (replace synthetic `smtp-*`/`fake-*`)                                                                                               | Now    | M      | High   | §2, §3      |
-| Enforce `body_retention_days` via scheduled prune command (PII)                                                                                                       | Now    | M      | High   | §2, §4      |
+| ✅ Shipped: Enforce `body_retention_days` via scheduled prune command (PII)                                                                                           | Done   | M      | High   | §2, §4      |
 | Batch recipient status writes in `DeliverEmailMessageAction` (query-budget)                                                                                           | Now    | M      | Med    | §2, §4      |
 | Provider webhook ingestion route + `RecordProviderEventAction` (writes `email_events`, updates recipient status) with signature verification + anonymous-safety tests | Next   | L      | High   | §3, §4      |
 | One-click unsubscribe: signed token route + `List-Unsubscribe` headers + self-service suppression                                                                     | Next   | M      | High   | §3, §4      |
