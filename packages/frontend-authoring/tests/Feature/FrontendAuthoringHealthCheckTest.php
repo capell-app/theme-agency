@@ -31,7 +31,7 @@ it('passes when the route, bindings, configuration, and signing secret are prese
 });
 
 it('fails the signing secret check when no application key is configured', function (): void {
-    Config::set('app.key', null);
+    Config::set('app.key');
 
     $check = new FrontendAuthoringHealthCheck;
 
@@ -78,9 +78,7 @@ it('confirms the beacon route is registered', function (): void {
 it('fails the beacon route check when the package route is unavailable', function (): void {
     $registeredRoutes = Route::getRoutes();
 
-    if (! $registeredRoutes instanceof RouteCollection) {
-        throw new RuntimeException('Expected the Laravel router to expose a concrete route collection.');
-    }
+    throw_unless($registeredRoutes instanceof RouteCollection, RuntimeException::class, 'Expected the Laravel router to expose a concrete route collection.');
 
     Route::setRoutes(new RouteCollection);
 

@@ -172,6 +172,6 @@ final class FrontendAuthoringHealthCheck implements ChecksExtensionHealth
      */
     private function translation(string $key, array $replace = []): string
     {
-        return (string) __("capell-frontend-authoring::authoring.{$key}", $replace);
+        return (string) __('capell-frontend-authoring::authoring.' . $key, $replace);
     }
 }
