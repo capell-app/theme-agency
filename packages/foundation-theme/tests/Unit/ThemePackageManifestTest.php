@@ -74,6 +74,41 @@ it('registers a Theme Studio definition that matches the manifest', function ():
         ->and($registered->extends)->toBe($manifest['extends']);
 });
 
+it('declares committed marketplace screenshots and labelled layout mockups', function (): void {
+    $manifest = themePackageManifest('foundation-theme');
+    $screenshots = data_get($manifest, 'marketplace.screenshots');
+
+    throw_unless(is_array($screenshots), RuntimeException::class, 'Foundation Theme marketplace screenshots must be an array.');
+
+    $paths = collect($screenshots)
+        ->map(function (mixed $screenshot): string {
+            throw_unless(is_array($screenshot), RuntimeException::class, 'Foundation Theme marketplace screenshot entries must be arrays.');
+
+            $path = $screenshot['path'] ?? null;
+
+            throw_unless(is_string($path), RuntimeException::class, 'Foundation Theme marketplace screenshot path must be a string.');
+
+            return $path;
+        })
+        ->values();
+
+    expect($paths)->toHaveCount(15)
+        ->and($paths->filter(fn (string $path): bool => str_starts_with($path, 'docs/screenshots/') && str_ends_with($path, '.png')))->toHaveCount(6)
+        ->and($paths->filter(fn (string $path): bool => str_starts_with($path, 'docs/assets/marketplace/') && str_ends_with($path, '.svg')))->toHaveCount(8)
+        ->and($paths)->toContain(
+            'docs/screenshots/foundation-theme-settings-screen.png',
+            'docs/screenshots/foundation-theme-settings-screen-dark.png',
+            'docs/screenshots/frontend-page-using-the-foundation-theme.png',
+            'docs/screenshots/frontend-page-using-the-foundation-theme-dark.png',
+            'docs/screenshots/generated-tailwind-asset-output-review.png',
+            'docs/screenshots/generated-tailwind-asset-output-review-dark.png',
+        );
+
+    foreach ($paths as $path) {
+        expect(is_file(dirname(__DIR__, 2) . '/' . $path))->toBeTrue();
+    }
+});
+
 it('declares standalone theme packages extending foundation', function (string $packageDirectory, string $composerName, string $themeKey): void {
     $manifest = themePackageManifest($packageDirectory);
     $composer = themePackageComposer($packageDirectory);
