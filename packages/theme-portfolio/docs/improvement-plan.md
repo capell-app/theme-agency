@@ -10,6 +10,7 @@ Theme key `portfolio` is registered in `src/PortfolioThemeServiceProvider.php` v
 
 - **2026-06-03:** Rewrote marketplace/Composer copy, replaced the critical health-check stub with real diagnostics, and documented the intentional split between runtime `extends: default` and manifest dependency `extends: capell-app/foundation-theme`.
 - **2026-06-04:** Moved newsletter chrome into translations, removed the inert `action="#"` fallback, added hydrated `formAction`/`formMethod` support, and covered static/hydrated newsletter rendering in tests.
+- **2026-06-05:** Reconciled product-group docs to `Capell Themes`, documented the manifest/runtime `extends` split in README and overview docs, and added manifest/docs assertions for both boundaries.
 
 ## 2. Improvements (existing functionality)
 
@@ -46,8 +47,8 @@ Differentiator vs table-stakes: case-study depth (outcome ledger, scope/role/tim
 
 ## 4. Issues / Risks
 
-- **Doc/manifest product-group drift** — `capell.json` declares `product.group: "Capell Themes"`, `tier: "premium"`; `docs/overview.md` states "Product group: **Capell Foundation** · Commercial proposal: **paid first-party theme**". Pick one source of truth — `capell.json` vs `docs/overview.md` (lines ~3–4) — and align the README too.
-- **Dual `extends` meaning is documented, but should stay tested** — runtime definition uses `extends: 'default'` (asserted by `tests/Unit/PortfolioThemeDefinitionTest.php`), while `capell.json.extends = "capell-app/foundation-theme"` (asserted by `tests/Unit/ManifestRequirementsTest.php`). The provider now documents the distinction; keep tests around both boundaries so this does not regress — `src/PortfolioThemeServiceProvider.php:64`, `capell.json`.
+- **Shipped 2026-06-05: Doc/manifest product-group drift** — `capell.json`, `README.md`, and `docs/overview.md` now agree on `product.group: "Capell Themes"` and tests assert the docs stay aligned with the manifest.
+- **Shipped 2026-06-05: Dual `extends` meaning tested and documented** — runtime definition uses `extends: 'default'`, while `capell.json.extends = "capell-app/foundation-theme"`; the README, overview, provider comment, and manifest tests now preserve that distinction.
 - **Health check shipped, keep expanding diagnostics as the package grows** — `ThemePortfolioHealthCheck` now verifies provider, package file, manifest, and screenshot boundaries. Add future sections/assets to those diagnostics instead of letting the critical check drift back into a shallow compatibility-only assertion — `src/Health/ThemePortfolioHealthCheck.php`.
 - **Stub management contribution** — `src/Manifest/ThemeManagementPageContribution.php` is a bare contract shell (`compatibleCapellApiVersion()` only); confirm `ThemeExtensionPage` needs nothing more, or it is dead surface area — `src/Manifest/ThemeManagementPageContribution.php`.
 - **Shipped 2026-06-04: Inert newsletter form** — the section no longer renders `action="#"`; static states show a translated CTA, and hydrated `formAction`/`formMethod` data renders a real capture form. Risk remains until the Newsletter integration provides real capture actions automatically — `resources/views/sections/newsletter.blade.php`.
@@ -79,7 +80,7 @@ The manifest marketplace description now uses this buyer-facing product story:
 | Item                                                                                 | Bucket | Effort | Impact | Section ref      |
 | ------------------------------------------------------------------------------------ | ------ | ------ | ------ | ---------------- |
 | Generate the 9 declared `screenshots.json` captures (+ dark pair)                    | Now    | M      | High   | §5               |
-| Reconcile product-group drift (overview.md vs capell.json) + document dual `extends` | Now    | S      | Med    | §4               |
+| Shipped 2026-06-05: Reconcile product-group drift (overview.md vs capell.json) + document dual `extends` | Done   | S      | Med    | §4               |
 | Make testimonials + speaking/media-kit data-driven                                   | Now    | M      | High   | §2.1, §2.2       |
 | Translate hardcoded copy (services, newsletter, stats) + add missing lang keys       | Now    | M      | Med    | §2.3, §2.4, §2.5 |
 | Add About/Bio section (creator lane differentiator vs agency)                        | Next   | M      | High   | §3               |

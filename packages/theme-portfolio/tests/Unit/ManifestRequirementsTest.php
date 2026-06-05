@@ -9,9 +9,21 @@ it('declares the required first-party theme manifest boundaries', function (): v
     $manifest = json_decode($contents === false ? '{}' : $contents, true, flags: JSON_THROW_ON_ERROR);
     $composerContents = file_get_contents(__DIR__ . '/../../composer.json');
     $composer = json_decode($composerContents === false ? '{}' : $composerContents, true, flags: JSON_THROW_ON_ERROR);
+    $overviewContents = file_get_contents(__DIR__ . '/../../docs/overview.md');
+    $overview = $overviewContents === false ? '' : $overviewContents;
+    $readmeContents = file_get_contents(__DIR__ . '/../../README.md');
+    $readme = $readmeContents === false ? '' : $readmeContents;
 
     expect($manifest['themeKey'])->toBe('portfolio')
+        ->and($manifest['product']['group'])->toBe('Capell Themes')
+        ->and($overview)->toContain('Product group:' . PHP_EOL . '**Capell Themes**')
+        ->and($readme)->toContain('- Product group: `Capell Themes`')
         ->and($manifest['extends'])->toBe('capell-app/foundation-theme')
+        ->and(PortfolioThemeServiceProvider::definition()->extends)->toBe('default')
+        ->and($overview)->toContain('runtime inheritance uses `extends: default`')
+        ->and($overview)->toContain('records `capell-app/foundation-theme` as the installable Foundation')
+        ->and($readme)->toContain('- Manifest extends: `capell-app/foundation-theme`')
+        ->and($readme)->toContain('- Runtime extends: `default`')
         ->and($manifest['database']['migrations'])->toBeFalse()
         ->and($manifest['providers']['runtime'])->toContain(PortfolioThemeServiceProvider::class)
         ->and($manifest['marketplace']['summary'])->toBe('A premium portfolio theme for creators and consultants — turn selected work into outcome-driven case studies, sell your services and media kit, and grow your audience from one polished site.')
