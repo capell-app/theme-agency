@@ -70,7 +70,7 @@ The manifest marketplace description now uses this buyer-facing product story:
 | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
 | Replace decorative quote-form with a real fallback `<form>`                      | Now    | M      | High   | §2.1        |
 | Add click-to-call / address / map to contact section                             | Now    | M      | High   | §3          |
-| Fix surfaces mismatch (manifest vs README)                                       | Now    | S      | Low    | §4          |
+| Fix surfaces mismatch (manifest vs README)                                       | Done   | S      | Low    | §4 — closed 2026-06-05: `capell.json` now declares both `frontend` and `console`, matching the README and demo command surface. |
 | Add LocalBusiness + Service + FAQPage JSON-LD (render-data driven)               | Next   | M      | High   | §3          |
 | Add reviews/testimonials section + lang keys                                     | Next   | M      | High   | §3          |
 | Add opening-hours section ("open now")                                           | Next   | M      | Med    | §3          |
