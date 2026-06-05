@@ -96,7 +96,7 @@ Marketplace and Composer copy now use the buyer-facing positioning below, and co
 | Item                                                                                       | Bucket | Effort | Impact | Section ref |
 | ------------------------------------------------------------------------------------------ | ------ | ------ | ------ | ----------- |
 | Commit the 8 real PNG screenshots + replace SVG placeholders                               | Now    | M      | High   | §4.3, §5    |
-| Add an explicit test documenting runtime `extends: default` vs manifest package dependency | Now    | S      | Med    | §4.1, §4.9  |
+| Add an explicit test documenting runtime `extends: default` vs manifest package dependency | Done   | S      | Med    | §4.1, §4.9 — closed 2026-06-05: the definition contract test now asserts runtime inheritance uses `default` while the manifest package dependency remains `capell-app/foundation-theme`. |
 | Make booking panel a live form / strong CTA (Form Builder + Bookings)                      | Next   | M      | High   | §2.2, §3    |
 | Wire hardcoded hex to brand tokens so presets recolour the page                            | Next   | L      | High   | §2.6, §4.6  |
 | Add empty-state fallbacks to item-driven sections                                          | Next   | M      | Med    | §2.5        |
