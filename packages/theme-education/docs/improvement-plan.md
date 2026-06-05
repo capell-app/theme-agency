@@ -84,7 +84,7 @@ Marketplace and Composer copy now use the improved buyer-facing positioning belo
 | Item                                                                                | Bucket | Effort | Impact | Section ref    |
 | ----------------------------------------------------------------------------------- | ------ | ------ | ------ | -------------- |
 | Capture & commit the 9 real demo screenshots; reconcile both manifests + README     | Now    | M      | High   | §4.6, §5       |
-| Reconcile `extends` (`default` vs foundation) and `surfaces` (frontend vs +console) | Now    | S      | Med    | §4.4, §4.5     |
+| Reconcile `extends` (`default` vs foundation) and `surfaces` (frontend vs +console) | Done   | S      | Med    | §4.4, §4.5 — closed 2026-06-05: manifest surfaces now include `console`, while tests keep runtime `extends: default` distinct from the package-level Foundation dependency. |
 | Verify `previewImage` / `assets` css paths resolve post-install                     | Now    | M      | Med    | §4.7           |
 | Translate hard-coded copy in `course-catalog`, `events`, `instructors`              | Done   | M      | High   | §2.1–2.3       |
 | Rewrite marketplace `summary` (+ extend composer keywords/description)              | Done   | S      | High   | §5             |
