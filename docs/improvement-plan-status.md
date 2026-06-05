@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 119 |
+| Now    | 118 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -48,7 +48,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | frontend-optimizer | 1 | 7 | 4 | Slice committed | `8814277ae` removes unused layout/widget asset registries and stale docs/tests, leaving the real Capell frontend manifest renderer flow. Remaining Now row: screenshot capture/contract reconciliation. Continue with hot-path safety and completion review. |
 | ga4-reports | 1 | 7 | 5 | Slice committed | Current follow-up implements secret-safe health diagnostics for storage tables, model/schema availability, credential readiness, latest successful sync freshness, and GA4 data-client reachability. Remaining Now row: screenshot/marketplace copy capture. |
 | hero | 1 | 6 | 4 | Slice committed | `b68c6ac19` adds responsive `srcset`/`sizes` descriptors for hero image/poster media and render coverage, after admin dependency/surface/capability cleanup. Remaining Now row: screenshot count/capture reconciliation. |
-| html-cache | 4 | 6 | 4 | Slice committed | `fc0cdba58` memoizes access-gate cacheability lookups after `6b7ba2b7b` proved both cookie-stripping middleware paths use the shared `CacheableResponseCookieStripper` list. Continue with targeted invalidation, real health check, screenshot reconciliation, and marketplace copy. |
+| html-cache | 3 | 6 | 4 | Slice committed | Current follow-up aligns README/docs copy with the shipped outcome-led marketplace/composer wording and adds manifest copy regression coverage, after access-gate cacheability lookup and cookie-stripping cleanup. Continue with targeted invalidation, real health check, and screenshot reconciliation. |
 | insights | 5 | 6 | 4 | Slice committed | Current follow-up derives unsafe/default visitor hash salts from `APP_KEY` and makes Diagnostics fail the public fallback state without exposing secrets. Remaining Now rows: first-visit recording, server-side consent region, migration/docs reconciliation, manifest metadata, and consent banner. |
 | knowledge-base | 5 | 7 | 3 | Slice committed | Current follow-up adds real health diagnostics for required tables, models, Actions, admin resources, and providers. Remaining Now rows: Edit pages, version/publish edit flow, policy/site-access hardening, slug-collision guard, and other admin workflow gaps. |
 | layout-builder | 1 | 5 | 4 | Slice committed | `5da9e0066` tightens the visual editor responsive preview frame/tree sizing after prior slices aligned manifest dependencies, implemented real health probes, removed the dead cache enum, promoted marketplace screenshots, rewrote manifest/composer copy, and added fragment invalid/replay safety coverage. Remaining Now row: add the full public render performance-budget test, especially the render-time budget; current stress coverage proves bounded query behavior only. |
