@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 121 |
+| Now    | 120 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -64,7 +64,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | privacy-center | 2 | 5 | 4 | Slice committed | Current follow-up lets mirrored consent infer a loaded subject/visit from its source, making Insights consent exportable and erasable. Remaining Now rows: DSAR edit actions and README/CHANGELOG expansion. |
 | public-actions | 4 | 7 | 5 | Slice committed | Current follow-up drops the unsupported `cache-blocking` capability while keeping route-level `no-store` cache safety covered by manifest tests. Remaining Now rows: health checks, DNS-rebinding/redirect hardening, SSRF/health-check tests, and marketplace screenshots/copy. |
 | publishing-studio | 3 | 6 | 5 | Slice committed | Current follow-up ships package config defaults for publish checks/release windows/scheduler settings and proves default publish checks resolve through the container. Remaining Now rows: manifest reconciliation, anonymous live-path safety, and CHANGELOG history. Note: full package Pest still has an unrelated scheduler table error in `SchedulerAndApprovalResidualCoverageTest`; focused publish-check pipeline coverage passes. |
-| search | 2 | 6 | 4 | Slice committed | Current follow-up defers search-log writes until after the response and keeps `RecordSearchAction` on scalar visitor metadata. Remaining Now rows: Scout/private visibility tests and click-count aggregate/cache-chain work. |
+| search | 1 | 6 | 4 | Slice committed | Current follow-up adds public-result guardrails for Scout payload visibility markers and fails the database driver closed when a configured published-status guard column is missing, after search-log writes were deferred until after the response. Remaining Now row: click-count aggregate/cache-chain work. |
 | seo-suite | 4 | 6 | 3 | Slice committed | Current follow-up guards missing Prism usage telemetry on the chat success path and keeps circuit-breaker state provider-scoped. Remaining Now rows: dormant SEO checks, real health probes, stronger leak matching, and manifest cache/settings/permissions/PageSpeed accuracy. |
 | shopify-commerce | 4 | 7 | 4 | Slice committed | Current follow-up scrubs secret-bearing sync exceptions before persisting `last_sync_error`, after the Start→Poll→Import bulk product sync loop was closed with a queued continuation action and configurable poll delay. Remaining Now rows: Feature/Arch safety coverage, customer producer, health probes, and GraphQL transaction cleanup. |
 | site-discovery | 4 | 5 | 4 | Slice committed | Current follow-up registers a real `/sitemap-xml` route/controller and adds generated XML safety coverage proving draft, noindex, private/admin, and signed URLs stay out of sitemap output. Remaining Now rows: health checks, unused sitemap dependency removal, screenshot reconciliation, and scheduled incremental regeneration. |
