@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 160 |
+| Now    | 159 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -46,7 +46,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | foundation-theme | 2 | 6 | 4 | Slice committed | `d62351ae4` implements Foundation Theme health probes after `17c76ea7e` guarded reviewed public Blade `getMeta()` and translation relation reads and updated footer site info to use hydrated relation data. Continue with demo subsystem decision, screenshots, WCAG, dark mode, and token-contract rows. |
 | frontend-authoring | 3 | 6 | 3 | Slice committed | `bdc185f6f` locks the real health-check probes to the manifest's critical severity, after `4dcb7b992` covered signer payload tampering and beacon selector-budget truncation. Continue with beacon assembly extraction, enums, screenshots, and copy rows. |
 | frontend-optimizer | 1 | 7 | 4 | Slice committed | `8814277ae` removes unused layout/widget asset registries and stale docs/tests, leaving the real Capell frontend manifest renderer flow. Remaining Now row: screenshot capture/contract reconciliation. Continue with hot-path safety and completion review. |
-| ga4-reports | 2 | 7 | 5 | Slice committed | Current follow-up verifies null-client fallback binding, reconciles the removed `GA4 Reports 4` typo, and confirms the orphan settings page is absent because settings use the registered `ga4_reports` management surface. Remaining Now rows: real health check and screenshot/marketplace copy capture. |
+| ga4-reports | 1 | 7 | 5 | Slice committed | Current follow-up implements secret-safe health diagnostics for storage tables, model/schema availability, credential readiness, latest successful sync freshness, and GA4 data-client reachability. Remaining Now row: screenshot/marketplace copy capture. |
 | hero | 1 | 6 | 4 | Slice committed | `b68c6ac19` adds responsive `srcset`/`sizes` descriptors for hero image/poster media and render coverage, after admin dependency/surface/capability cleanup. Remaining Now row: screenshot count/capture reconciliation. |
 | html-cache | 4 | 6 | 4 | Slice committed | `fc0cdba58` memoizes access-gate cacheability lookups after `6b7ba2b7b` proved both cookie-stripping middleware paths use the shared `CacheableResponseCookieStripper` list. Continue with targeted invalidation, real health check, screenshot reconciliation, and marketplace copy. |
 | insights | 6 | 6 | 4 | Slice committed | `5afe307aa` landed privacy hardening; continue with analytics/product gaps. |
