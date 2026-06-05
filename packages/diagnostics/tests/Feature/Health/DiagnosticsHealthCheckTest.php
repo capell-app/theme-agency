@@ -17,8 +17,8 @@ it('asserts its declared system-health-widget capability', function (): void {
         ->map(fn (DoctorCheckResultData $result): string => $result->label)
         ->all();
 
-    expect($labels)->toContain('System health widgets')
-        ->and($labels)->toContain('Package catalog discovery');
+    expect($labels)->toContain((string) __('capell-diagnostics::package.health_check_system_health_widgets_label'))
+        ->and($labels)->toContain((string) __('capell-diagnostics::package.health_check_package_catalog_label'));
 });
 
 it('can run a single declared assertion by manifest key', function (): void {
@@ -26,7 +26,26 @@ it('can run a single declared assertion by manifest key', function (): void {
 
     expect($results)->toHaveCount(1)
         ->and($results->first())->toBeInstanceOf(DoctorCheckResultData::class)
-        ->and($results->first()?->label)->toBe('System health widgets');
+        ->and($results->first()?->label)->toBe((string) __('capell-diagnostics::package.health_check_system_health_widgets_label'));
+});
+
+it('maps each declared manifest key to one runnable assertion', function (): void {
+    $expectedLabelsByKey = [
+        'diagnostics.package-catalog' => (string) __('capell-diagnostics::package.health_check_package_catalog_label'),
+        'diagnostics.manifest-health' => (string) __('capell-diagnostics::package.health_check_manifest_metadata_label'),
+        'diagnostics.system-health-widgets' => (string) __('capell-diagnostics::package.health_check_system_health_widgets_label'),
+        'diagnostics.queue-health' => (string) __('capell-diagnostics::package.health_check_queue_health_label'),
+    ];
+
+    foreach ($expectedLabelsByKey as $key => $expectedLabel) {
+        $results = DiagnosticsHealthCheck::runDiagnostics($key);
+
+        expect($results)->toHaveCount(1)
+            ->and($results->first())->toBeInstanceOf(DoctorCheckResultData::class)
+            ->and($results->first()?->label)->toBe($expectedLabel);
+    }
+
+    expect(DiagnosticsHealthCheck::runDiagnostics('diagnostics.unknown'))->toBeEmpty();
 });
 
 it('passes() reflects the conjunction of its assertions', function (): void {
