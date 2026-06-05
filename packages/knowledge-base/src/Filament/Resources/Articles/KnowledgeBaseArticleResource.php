@@ -8,7 +8,9 @@ use BackedEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\KnowledgeBase\Enums\KnowledgeBaseArticleStatus;
 use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\CreateKnowledgeBaseArticle;
+use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\EditKnowledgeBaseArticle;
 use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\ListKnowledgeBaseArticles;
+use Capell\KnowledgeBase\Filament\Resources\Articles\RelationManagers\ArticleVersionsRelationManager;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticle;
 use Capell\KnowledgeBase\Models\KnowledgeBaseCollection;
 use Capell\KnowledgeBase\Providers\KnowledgeBaseServiceProvider;
@@ -173,6 +175,15 @@ final class KnowledgeBaseArticleResource extends Resource
         return [
             'index' => ListKnowledgeBaseArticles::route('/'),
             'create' => CreateKnowledgeBaseArticle::route('/create'),
+            'edit' => EditKnowledgeBaseArticle::route('/{record}/edit'),
+        ];
+    }
+
+    #[Override]
+    public static function getRelations(): array
+    {
+        return [
+            ArticleVersionsRelationManager::class,
         ];
     }
 

@@ -5,13 +5,18 @@ declare(strict_types=1);
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
 use Capell\KnowledgeBase\Actions\BuildAiReadableKnowledgeBaseOutputAction;
 use Capell\KnowledgeBase\Actions\BuildKnowledgeBaseSearchDocumentsAction;
+use Capell\KnowledgeBase\Actions\CreateKnowledgeBaseArticleAction;
+use Capell\KnowledgeBase\Data\CreateKnowledgeBaseArticleData;
 use Capell\KnowledgeBase\Enums\KnowledgeBaseArticleStatus;
 use Capell\KnowledgeBase\Enums\ResourceEnum;
 use Capell\KnowledgeBase\Filament\Resources\Articles\KnowledgeBaseArticleResource;
 use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\CreateKnowledgeBaseArticle;
+use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\EditKnowledgeBaseArticle;
 use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\ListKnowledgeBaseArticles;
+use Capell\KnowledgeBase\Filament\Resources\Articles\RelationManagers\ArticleVersionsRelationManager;
 use Capell\KnowledgeBase\Filament\Resources\Collections\KnowledgeBaseCollectionResource;
 use Capell\KnowledgeBase\Filament\Resources\Collections\Pages\CreateKnowledgeBaseCollection;
+use Capell\KnowledgeBase\Filament\Resources\Collections\Pages\EditKnowledgeBaseCollection;
 use Capell\KnowledgeBase\Filament\Resources\Collections\Pages\ListKnowledgeBaseCollections;
 use Capell\KnowledgeBase\Manifest\KnowledgeBaseArticleResourceContribution;
 use Capell\KnowledgeBase\Manifest\KnowledgeBaseCollectionResourceContribution;
@@ -32,6 +37,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 
 require_once dirname(__DIR__, 2) . '/KnowledgeBaseTestCase.php';
@@ -47,17 +53,20 @@ it('exposes translated collection and article admin resources', function (): voi
         ->and(KnowledgeBaseCollectionResource::getNavigationGroup())->toBe('Knowledge base')
         ->and(KnowledgeBaseCollectionResource::getNavigationLabel())->toBe('Collections')
         ->and(KnowledgeBaseCollectionResource::getModelLabel())->toBe('knowledge base collection')
-        ->and(array_keys($collectionPages))->toBe(['index', 'create'])
+        ->and(array_keys($collectionPages))->toBe(['index', 'create', 'edit'])
         ->and($collectionPages['index']->getPage())->toBe(ListKnowledgeBaseCollections::class)
         ->and($collectionPages['create']->getPage())->toBe(CreateKnowledgeBaseCollection::class)
+        ->and($collectionPages['edit']->getPage())->toBe(EditKnowledgeBaseCollection::class)
         ->and(KnowledgeBaseArticleResource::getModel())->toBe(KnowledgeBaseArticle::class)
         ->and(KnowledgeBaseArticleResource::shouldRegisterNavigation())->toBeTrue()
         ->and(KnowledgeBaseArticleResource::getNavigationGroup())->toBe('Knowledge base')
         ->and(KnowledgeBaseArticleResource::getNavigationLabel())->toBe('Articles')
         ->and(KnowledgeBaseArticleResource::getModelLabel())->toBe('knowledge base article')
-        ->and(array_keys($articlePages))->toBe(['index', 'create'])
+        ->and(array_keys($articlePages))->toBe(['index', 'create', 'edit'])
         ->and($articlePages['index']->getPage())->toBe(ListKnowledgeBaseArticles::class)
         ->and($articlePages['create']->getPage())->toBe(CreateKnowledgeBaseArticle::class)
+        ->and($articlePages['edit']->getPage())->toBe(EditKnowledgeBaseArticle::class)
+        ->and(KnowledgeBaseArticleResource::getRelations())->toBe([ArticleVersionsRelationManager::class])
         ->and(ResourceEnum::Collections->value)->toBe(KnowledgeBaseCollectionResource::class)
         ->and(ResourceEnum::Articles->value)->toBe(KnowledgeBaseArticleResource::class);
 });
@@ -175,6 +184,72 @@ it('builds knowledge base resource forms and tables with configured controls', f
         ->and(KnowledgeBaseArticleStatus::Archived->getLabel())->toBe(__('capell-knowledge-base::generic.article_status.archived'));
 });
 
+it('exposes article version history in the article edit surface', function (): void {
+    $relationManager = new ArticleVersionsRelationManager;
+    $table = $relationManager->table(knowledgeBaseAdminTableForCoverage());
+
+    expect(ArticleVersionsRelationManager::getTitle(KnowledgeBaseArticle::factory()->make(), EditKnowledgeBaseArticle::class))
+        ->toBe(__('capell-knowledge-base::generic.admin.relations.versions'))
+        ->and(array_keys($table->getColumns()))->toBe([
+            'version',
+            'title',
+            'current_version',
+            'published_at',
+            'created_at',
+        ])
+        ->and(array_map(
+            static fn (object $column): string => $column::class,
+            array_values($table->getColumns()),
+        ))->toBe([
+            TextColumn::class,
+            TextColumn::class,
+            IconColumn::class,
+            TextColumn::class,
+            TextColumn::class,
+        ]);
+});
+
+it('saves article edits as published versions through the edit page adapter', function (): void {
+    $collection = KnowledgeBaseCollection::factory()->create([
+        'title' => 'Support Docs',
+        'slug' => 'support-docs',
+        'key' => 'support-docs',
+    ]);
+
+    $article = CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $collection,
+        title: 'Install Capell',
+        body: '<p>Install v1.</p>',
+        summary: 'Initial install guide.',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+
+    $updated = knowledgeBaseInvokeEditRecordUpdate(new EditKnowledgeBaseArticle, $article, [
+        'collection_id' => $collection->getKey(),
+        'status' => KnowledgeBaseArticleStatus::Published->value,
+        'title' => 'Install Capell Updated',
+        'slug' => 'install-capell-updated',
+        'summary' => 'Updated install guide.',
+        'body' => '<p>Install v2.</p>',
+        'version' => 'v2',
+        'search_weight' => 120,
+        'is_ai_readable' => '0',
+    ]);
+
+    $article->refresh()->load('currentVersion');
+
+    expect($updated)->toBeInstanceOf(KnowledgeBaseArticle::class)
+        ->and($article->title)->toBe('Install Capell Updated')
+        ->and($article->slug)->toBe('install-capell-updated')
+        ->and($article->status)->toBe(KnowledgeBaseArticleStatus::Published)
+        ->and($article->search_weight)->toBe(120)
+        ->and($article->is_ai_readable)->toBeFalse()
+        ->and($article->versions()->count())->toBe(2)
+        ->and($article->currentVersion?->version)->toBe('v2')
+        ->and($article->currentVersion?->body)->toBe('<p>Install v2.</p>')
+        ->and($article->currentVersion?->published_at)->not->toBeNull();
+});
+
 it('builds knowledge base list page create actions with translated labels', function (): void {
     $collectionActions = knowledgeBaseAdminListPageHeaderActions(new ListKnowledgeBaseCollections);
     $articleActions = knowledgeBaseAdminListPageHeaderActions(new ListKnowledgeBaseArticles);
@@ -232,6 +307,20 @@ function knowledgeBaseAdminTableForCoverage(): Table
     $livewire->shouldReceive('getTableArguments')->andReturn([])->byDefault();
 
     return Table::make($livewire);
+}
+
+/**
+ * @param  array<string, mixed>  $data
+ */
+function knowledgeBaseInvokeEditRecordUpdate(object $page, KnowledgeBaseArticle $article, array $data): Model
+{
+    $reflectionMethod = new ReflectionMethod($page, 'handleRecordUpdate');
+
+    $updated = $reflectionMethod->invoke($page, $article, $data);
+
+    expect($updated)->toBeInstanceOf(Model::class);
+
+    return $updated;
 }
 
 /**

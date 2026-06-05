@@ -7,6 +7,7 @@ namespace Capell\KnowledgeBase\Filament\Resources\Collections;
 use BackedEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\KnowledgeBase\Filament\Resources\Collections\Pages\CreateKnowledgeBaseCollection;
+use Capell\KnowledgeBase\Filament\Resources\Collections\Pages\EditKnowledgeBaseCollection;
 use Capell\KnowledgeBase\Filament\Resources\Collections\Pages\ListKnowledgeBaseCollections;
 use Capell\KnowledgeBase\Models\KnowledgeBaseCollection;
 use Capell\KnowledgeBase\Providers\KnowledgeBaseServiceProvider;
@@ -142,6 +143,7 @@ final class KnowledgeBaseCollectionResource extends Resource
         return [
             'index' => ListKnowledgeBaseCollections::route('/'),
             'create' => CreateKnowledgeBaseCollection::route('/create'),
+            'edit' => EditKnowledgeBaseCollection::route('/{record}/edit'),
         ];
     }
 }

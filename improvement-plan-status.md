@@ -1,0 +1,29 @@
+# Improvement Plan Status
+
+Last audited: 2026-06-05
+
+This file tracks the active package-improvement wave at a repository level. Package-level `docs/improvement-plan.md` files remain the detailed source of truth.
+
+## Current Wave
+
+| Package               | Status      | Shipped in this wave                                                                                                                | Remaining next step                                                                          |
+| --------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `wordpress-importer`  | In progress | WXR rows can execute into Capell Pages through Migration Assistant's external-page execution path, with rollback-session reporting. | Reconcile marketplace screenshots/copy, then health-check probes and PHP/metadata cleanup.   |
+| `migration-assistant` | In progress | Added the generic external-page execution path used by WXR previews.                                                                | Finish its own Now rows: rollback table naming, screenshots, and buyer-facing copy.          |
+| `knowledge-base`      | In progress | Article and Collection edit pages are wired through Actions; article edits create/publish versions and expose version history.      | Throttle/dedupe anonymous feedback, then route `/docs` through frontend middleware/cache.    |
+| `media-library`       | Near closed | README, overview, screenshot contract, manifest screenshots, and metadata coverage are reconciled.                                  | Continue with Next items: media-ai missing-alt signal and public URL/srcset safety coverage. |
+| `navigation`          | Near closed | Marketplace screenshots, dark-mode screenshot contract, manifest metadata, and package metadata coverage are reconciled.            | Move DB resolution out of frontend component `render()` into a resolver/composer.            |
+| `site-discovery`      | Near closed | Screenshot mismatch is closed with seven committed marketplace preview SVGs and manifest coverage.                                  | Debounce per-site regeneration and reconcile manifest cache invalidation sources.            |
+| `notes`               | Stabilized  | Inbox now renders notes, marks displayed mentions read, and exposes resolve/reopen/complete actions with focused coverage.          | Reconcile reminders before re-advertising them and generate planned screenshots.             |
+| `insights`            | Stabilized  | Manifest settings/permissions, migration registration, retention-setting behavior, and health docs/tests were tightened.            | Fix first-visit recording and server-side consent-region resolution.                         |
+| `login-audit`         | Near closed | Screenshot/copy status is marked Done in the package plan.                                                                          | Suspicious-login detection and alerts remain the next commercial depth.                      |
+| `layout-builder`      | Stabilized  | Stress coverage now uses deterministic query/leak guards instead of a brittle wall-clock CI assertion.                              | Continue with orphan Action audit and persist/install path coverage.                         |
+
+## Verification Snapshot
+
+- Focused verification has passed for the current blocker fixes: Notes inbox, Layout Builder stress coverage, and Healthcare theme demo screenshot capture.
+- A full `COMPOSER=composer.local.json composer test` run reached 1470/1471 passing before exposing the Notes Blade type-hint issue; that issue has been fixed. A fresh full re-run was started and then stopped on request so the remaining changes could be committed without further tests.
+
+## Commit Policy
+
+Commit all current wave changes together, per the latest instruction to keep this tracker updated and leave a clean worktree.

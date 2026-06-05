@@ -31,9 +31,17 @@ final class CreateKnowledgeBaseArticleVersionAction
             ]);
         }
 
+        $version = $version === '' ? 'v1' : $version;
+
+        if ($data->article->versions()->where('version', $version)->exists()) {
+            throw ValidationException::withMessages([
+                'version' => __('capell-knowledge-base::generic.validation.version_unique'),
+            ]);
+        }
+
         return KnowledgeBaseArticleVersion::query()->create([
             'article_id' => $data->article->getKey(),
-            'version' => $version === '' ? 'v1' : $version,
+            'version' => $version,
             'title' => $title,
             'summary' => $data->summary === null ? null : trim($data->summary),
             'body' => $body,

@@ -7,12 +7,16 @@ return [
         'actions' => [
             'create_article' => 'Create article',
             'create_collection' => 'Create collection',
+            'save_article' => 'Save article',
+            'save_collection' => 'Save collection',
         ],
         'fields' => [
             'ai_readable' => 'AI readable',
             'articles' => 'Articles',
             'body' => 'Body',
             'collection' => 'Collection',
+            'created_at' => 'Created at',
+            'current_version' => 'Current version',
             'description' => 'Description',
             'key' => 'Key',
             'parent_collection' => 'Parent collection',
@@ -37,6 +41,9 @@ return [
         'resources' => [
             'articles' => 'Articles',
             'collections' => 'Collections',
+        ],
+        'relations' => [
+            'versions' => 'Version history',
         ],
         'sections' => [
             'article' => 'Article',
@@ -102,8 +109,11 @@ return [
     'validation' => [
         'article_body_required' => 'Article content is required.',
         'article_title_required' => 'Article title is required.',
+        'collection_key_unique' => 'A collection with this key already exists.',
+        'collection_slug_unique' => 'A collection with this slug already exists.',
         'collection_title_required' => 'Collection title is required.',
         'slug_required' => 'A slug is required.',
         'slug_unique' => 'An article with this slug already exists in this collection.',
+        'version_unique' => 'An article version with this label already exists.',
     ],
 ];
