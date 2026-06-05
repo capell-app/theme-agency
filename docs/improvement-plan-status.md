@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 149 |
+| Now    | 148 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -60,7 +60,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | newsletter | 6 | 6 | 4 | Slice committed | `d934f6d59` landed token hardening; delivery engine and campaign rows remain. |
 | notes | 6 | 7 | 3 | Slice committed | `0a153655b` landed health/body validation; reminders and inbox workflow remain. |
 | password-policy | 1 | 6 | 4 | Slice committed | `899d37760` adds direct middleware coverage for redirect, forced-change allowed route, logout allowed route, and compliant no-op behavior, after prior HIBP/expiry/manifest/complexity/history slices. Remaining Now row: marketplace screenshots and summary/description. |
-| payments | 7 | 6 | 3 | Slice committed | Current follow-up queues Stripe webhook processing after verified event intake, adds a dedicated webhook processing job/action with locked event mutation, documents the `CAPELL_PAYMENTS_WEBHOOK_QUEUE` routing knob, and covers async intake/processing behavior. Continue with provider contract gaps, refund issuance, fulfillment result persistence, replay/reconcile commands, idempotency keys, and completion review. |
+| payments | 6 | 6 | 3 | Slice committed | Current follow-up moves paid-download delivery into an Action and adds Feature/Arch suites covering signed download paths, thin controllers, sensitive non-cacheable frontend settings, and public-output safety. Remaining Now rows: webhook row locking, marketplace media/copy, money casts, form-checkout URL allow-listing, and replay-safe paid-download expiry. |
 | privacy-center | 3 | 5 | 4 | Slice committed | Current follow-up adds provider/table/morph/hash-secret health diagnostics, removes the unshipped cookie-category public-surface capability, and reconciles already-shipped retention execution plus fail-loud hash-secret rows. Remaining Now rows: insights subject mirroring, DSAR edit actions, and README/CHANGELOG expansion. |
 | public-actions | 5 | 7 | 5 | Slice committed | `10c4b5906` adds explicit redirect-to-private/link-local/internal webhook regression coverage and reuses the canonical encoded webhook payload for hash/sign/send paths; durable fanout/replay/retention rows remain. |
 | publishing-studio | 5 | 6 | 5 | Slice committed | `c6a886556` landed health/screenshots; continue with publishing workflow rows. |
