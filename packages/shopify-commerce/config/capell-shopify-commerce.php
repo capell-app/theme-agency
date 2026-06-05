@@ -10,6 +10,7 @@ return [
     'default_scopes' => ['read_products'],
     'http_timeout' => env('CAPELL_SHOPIFY_COMMERCE_HTTP_TIMEOUT', 15),
     'bulk_sync_poll_delay_seconds' => env('CAPELL_SHOPIFY_COMMERCE_BULK_SYNC_POLL_DELAY_SECONDS', 15),
+    'health_max_catalog_sync_age_hours' => env('CAPELL_SHOPIFY_COMMERCE_HEALTH_MAX_CATALOG_SYNC_AGE_HOURS', 24),
     'state_ttl_seconds' => 600,
     'default_currency' => 'USD',
 ];

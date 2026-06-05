@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 102 |
+| Now    | 101 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -66,7 +66,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | publishing-studio | 3 | 6 | 5 | Slice committed | Current follow-up ships package config defaults for publish checks/release windows/scheduler settings and proves default publish checks resolve through the container. Remaining Now rows: manifest reconciliation, anonymous live-path safety, and CHANGELOG history. Note: full package Pest still has an unrelated scheduler table error in `SchedulerAndApprovalResidualCoverageTest`; focused publish-check pipeline coverage passes. |
 | search | 0 | 6 | 4 | Now closed | Current follow-up caches click-count aggregates by site/language, invalidates affected cache scopes when recording clicks, and removes a duplicate promoted-result conversion pass after public-result guardrails and deferred search-log writes. Search has no Now rows left; continue with click beacon CSRF, FULLTEXT detection, controller-side highlighting, autocomplete, and broader relevance/admin rows before completion review. |
 | seo-suite | 4 | 6 | 3 | Slice committed | Current follow-up guards missing Prism usage telemetry on the chat success path and keeps circuit-breaker state provider-scoped. Remaining Now rows: dormant SEO checks, real health probes, stronger leak matching, and manifest cache/settings/permissions/PageSpeed accuracy. |
-| shopify-commerce | 3 | 7 | 4 | Slice committed | Current follow-up adds regression coverage proving `FetchShopifyProductAction` performs the Shopify GraphQL request outside its persistence transaction, after sync-error scrubbing and bulk-sync continuation. Remaining Now rows: Feature/Arch safety coverage, customer producer, and health probes. |
+| shopify-commerce | 2 | 7 | 4 | Slice committed | Current follow-up implements real Shopify Commerce health probes for storage tables, app credentials, active connection tokens, lightweight Admin API token validity, stale sync operations, and catalog freshness with secret-safe translated output, after transaction and sync-error hardening. Remaining Now rows: Feature/Arch safety coverage and customer producer. |
 | site-discovery | 3 | 5 | 4 | Slice committed | Current follow-up removes the unused `icamys/php-sitemap-generator` dependency from package metadata/docs and guards against reintroduction, after registering the real `/sitemap-xml` route/controller and generated XML safety coverage. Remaining Now rows: health checks, screenshot reconciliation, and scheduled incremental regeneration. |
 | structured-content-library | 4 | 5 | 4 | Slice committed | Current follow-up proves `summary` uses the same portable HTML guard as content, after defaulting `published_at` on publish transition. Remaining Now rows: real health check, unique index/null-slug import dedup, payload escaping contract, and marketplace media/copy. |
 | tags | 0 | 5 | 4 | Now closed | `f854c06e5` adds direct `TagPolicy`, `Tag::getUrl()`, and deletion-integrity coverage after `754b95540` added the guarded `tags(type, site_id)` composite index migration. Tags has no Now rows left; continue with workspace/status visibility rows and completion review. |

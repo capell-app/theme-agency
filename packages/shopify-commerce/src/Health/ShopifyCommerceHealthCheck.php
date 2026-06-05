@@ -6,13 +6,24 @@ namespace Capell\ShopifyCommerce\Health;
 
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
+use Capell\ShopifyCommerce\Actions\Graphql\ExecuteShopifyAdminGraphqlAction;
+use Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
+use Throwable;
 
 final class ShopifyCommerceHealthCheck implements ChecksExtensionHealth
 {
+    private const string TOKEN_PROBE_QUERY = <<<'GRAPHQL'
+query capellShopifyCommerceHealthProbe {
+  shop {
+    name
+  }
+}
+GRAPHQL;
+
     public static function compatibleCapellApiVersion(): string
     {
         return '^4.0';
@@ -29,7 +40,9 @@ final class ShopifyCommerceHealthCheck implements ChecksExtensionHealth
             $check->storageTablesCheck(),
             $check->shopifyAppCredentialsCheck(),
             $check->connectionCredentialsCheck(),
+            $check->tokenValidityCheck(),
             $check->syncStateCheck(),
+            $check->catalogFreshnessCheck(),
         ]);
     }
 
@@ -44,14 +57,16 @@ final class ShopifyCommerceHealthCheck implements ChecksExtensionHealth
         $missingTables = $this->missingTables();
 
         return new DoctorCheckResultData(
-            label: 'Shopify Commerce storage tables',
+            label: (string) __('capell-shopify-commerce::capell-shopify-commerce.health.storage_tables_label'),
             passed: $missingTables === [],
             message: $missingTables === []
-                ? 'Connection, OAuth state, catalog, variant, and customer cache tables are present.'
-                : 'Missing tables: ' . implode(', ', $missingTables) . '.',
+                ? (string) __('capell-shopify-commerce::capell-shopify-commerce.health.storage_tables_passed')
+                : (string) __('capell-shopify-commerce::capell-shopify-commerce.health.storage_tables_failed', [
+                    'tables' => implode(', ', $missingTables),
+                ]),
             remediation: $missingTables === []
                 ? null
-                : 'Run the Capell migrations to create the Shopify Commerce storage tables.',
+                : (string) __('capell-shopify-commerce::capell-shopify-commerce.health.storage_tables_remediation'),
         );
     }
 
@@ -60,14 +75,16 @@ final class ShopifyCommerceHealthCheck implements ChecksExtensionHealth
         $missingKeys = $this->missingAppCredentialKeys();
 
         return new DoctorCheckResultData(
-            label: 'Shopify Commerce app credentials',
+            label: (string) __('capell-shopify-commerce::capell-shopify-commerce.health.app_credentials_label'),
             passed: $missingKeys === [],
             message: $missingKeys === []
-                ? 'Shopify OAuth client ID and client secret are configured.'
-                : 'Missing Shopify app configuration: ' . implode(', ', $missingKeys) . '.',
+                ? (string) __('capell-shopify-commerce::capell-shopify-commerce.health.app_credentials_passed')
+                : (string) __('capell-shopify-commerce::capell-shopify-commerce.health.app_credentials_failed', [
+                    'keys' => implode(', ', $missingKeys),
+                ]),
             remediation: $missingKeys === []
                 ? null
-                : 'Set SHOPIFY_APP_CLIENT_ID and SHOPIFY_APP_CLIENT_SECRET for the Shopify app.',
+                : (string) __('capell-shopify-commerce::capell-shopify-commerce.health.app_credentials_remediation'),
         );
     }
 
@@ -76,14 +93,45 @@ final class ShopifyCommerceHealthCheck implements ChecksExtensionHealth
         $missingTokenCount = $this->activeConnectionsMissingTokenCount();
 
         return new DoctorCheckResultData(
-            label: 'Shopify Commerce connection credentials',
+            label: (string) __('capell-shopify-commerce::capell-shopify-commerce.health.connection_credentials_label'),
             passed: $missingTokenCount === 0,
             message: $missingTokenCount === 0
-                ? 'Every active Shopify connection has a stored Admin API token.'
-                : $missingTokenCount . ' active Shopify connection(s) are missing a stored Admin API token.',
+                ? (string) __('capell-shopify-commerce::capell-shopify-commerce.health.connection_credentials_passed')
+                : trans_choice(
+                    'capell-shopify-commerce::capell-shopify-commerce.health.connection_credentials_failed',
+                    $missingTokenCount,
+                    ['count' => $missingTokenCount],
+                ),
             remediation: $missingTokenCount === 0
                 ? null
-                : 'Reconnect affected Shopify stores so encrypted Admin API tokens are stored again.',
+                : (string) __('capell-shopify-commerce::capell-shopify-commerce.health.connection_credentials_remediation'),
+        );
+    }
+
+    public function tokenValidityCheck(): DoctorCheckResultData
+    {
+        $probeConnections = $this->activeTokenProbeConnections();
+        $failedProbeCount = $probeConnections
+            ->filter(fn (ShopifyConnection $connection): bool => ! $this->tokenProbePassed($connection))
+            ->count();
+
+        return new DoctorCheckResultData(
+            label: (string) __('capell-shopify-commerce::capell-shopify-commerce.health.token_validity_label'),
+            passed: $failedProbeCount === 0,
+            message: $failedProbeCount === 0
+                ? trans_choice(
+                    'capell-shopify-commerce::capell-shopify-commerce.health.token_validity_passed',
+                    $probeConnections->count(),
+                    ['count' => $probeConnections->count()],
+                )
+                : trans_choice(
+                    'capell-shopify-commerce::capell-shopify-commerce.health.token_validity_failed',
+                    $failedProbeCount,
+                    ['count' => $failedProbeCount],
+                ),
+            remediation: $failedProbeCount === 0
+                ? null
+                : (string) __('capell-shopify-commerce::capell-shopify-commerce.health.token_validity_remediation'),
         );
     }
 
@@ -92,14 +140,38 @@ final class ShopifyCommerceHealthCheck implements ChecksExtensionHealth
         $staleSyncCount = $this->staleSyncOperationCount();
 
         return new DoctorCheckResultData(
-            label: 'Shopify Commerce sync state',
+            label: (string) __('capell-shopify-commerce::capell-shopify-commerce.health.sync_state_label'),
             passed: $staleSyncCount === 0,
             message: $staleSyncCount === 0
-                ? 'No queued, running, or importing Shopify sync operations appear stale.'
-                : $staleSyncCount . ' Shopify sync operation(s) appear stale.',
+                ? (string) __('capell-shopify-commerce::capell-shopify-commerce.health.sync_state_passed')
+                : trans_choice(
+                    'capell-shopify-commerce::capell-shopify-commerce.health.sync_state_failed',
+                    $staleSyncCount,
+                    ['count' => $staleSyncCount],
+                ),
             remediation: $staleSyncCount === 0
                 ? null
-                : 'Inspect the Shopify Commerce queue and rerun or clear stale sync operations from the admin.',
+                : (string) __('capell-shopify-commerce::capell-shopify-commerce.health.sync_state_remediation'),
+        );
+    }
+
+    public function catalogFreshnessCheck(): DoctorCheckResultData
+    {
+        $staleCatalogConnectionCount = $this->staleCatalogConnectionCount();
+
+        return new DoctorCheckResultData(
+            label: (string) __('capell-shopify-commerce::capell-shopify-commerce.health.catalog_freshness_label'),
+            passed: $staleCatalogConnectionCount === 0,
+            message: $staleCatalogConnectionCount === 0
+                ? (string) __('capell-shopify-commerce::capell-shopify-commerce.health.catalog_freshness_passed')
+                : trans_choice(
+                    'capell-shopify-commerce::capell-shopify-commerce.health.catalog_freshness_failed',
+                    $staleCatalogConnectionCount,
+                    ['count' => $staleCatalogConnectionCount],
+                ),
+            remediation: $staleCatalogConnectionCount === 0
+                ? null
+                : (string) __('capell-shopify-commerce::capell-shopify-commerce.health.catalog_freshness_remediation'),
         );
     }
 
@@ -141,13 +213,31 @@ final class ShopifyCommerceHealthCheck implements ChecksExtensionHealth
         }
 
         return ShopifyConnection::query()
-            ->where('status', 'active')
+            ->where('status', ShopifyConnectionStatus::Active->value)
             ->where(static function (Builder $query): void {
                 $query
                     ->whereNull('access_token')
                     ->orWhere('access_token', '');
             })
             ->count();
+    }
+
+    /**
+     * @return Collection<int, ShopifyConnection>
+     */
+    public function activeTokenProbeConnections(): Collection
+    {
+        if (! Schema::hasTable('shopify_connections')) {
+            return collect();
+        }
+
+        return ShopifyConnection::query()
+            ->where('status', ShopifyConnectionStatus::Active->value)
+            ->whereNotNull('access_token')
+            ->where('access_token', '!=', '')
+            ->orderBy('id')
+            ->get()
+            ->toBase();
     }
 
     public function staleSyncOperationCount(): int
@@ -183,6 +273,29 @@ final class ShopifyCommerceHealthCheck implements ChecksExtensionHealth
             ->count();
     }
 
+    public function staleCatalogConnectionCount(): int
+    {
+        if (! Schema::hasTable('shopify_connections')) {
+            return 0;
+        }
+
+        $staleBefore = now()->subHours($this->maxCatalogSyncAgeHours());
+
+        return ShopifyConnection::query()
+            ->where('status', ShopifyConnectionStatus::Active->value)
+            ->where(static function (Builder $query): void {
+                $query
+                    ->whereNull('sync_status')
+                    ->orWhereNotIn('sync_status', ['queued', 'running', 'importing']);
+            })
+            ->where(static function (Builder $query) use ($staleBefore): void {
+                $query
+                    ->whereNull('last_synced_at')
+                    ->orWhere('last_synced_at', '<', $staleBefore);
+            })
+            ->count();
+    }
+
     /**
      * @return list<string>
      */
@@ -195,5 +308,21 @@ final class ShopifyCommerceHealthCheck implements ChecksExtensionHealth
             'shopify_product_variants',
             'shopify_customers',
         ];
+    }
+
+    private function tokenProbePassed(ShopifyConnection $connection): bool
+    {
+        try {
+            $payload = ExecuteShopifyAdminGraphqlAction::run($connection, self::TOKEN_PROBE_QUERY);
+        } catch (Throwable) {
+            return false;
+        }
+
+        return is_string(data_get($payload, 'data.shop.name'));
+    }
+
+    private function maxCatalogSyncAgeHours(): int
+    {
+        return max(1, (int) config('capell-shopify-commerce.health_max_catalog_sync_age_hours', 24));
     }
 }
