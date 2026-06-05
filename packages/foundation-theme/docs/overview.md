@@ -93,6 +93,7 @@ Gives each Capell installation a standard frontend foundation before a custom or
 ## Commands
 
 - `capell:foundation-theme-setup {--force : Rebuild Foundation-managed layout defaults}` (packages/foundation-theme/src/Console/Commands/SetupCommand.php)
+- `capell:foundation-theme-demo {--site=* : Site name(s) to seed} {--language=* : Language code(s) to seed} {--base-url= : Base URL used for seeded demo links} {--force : Rebuild existing Foundation demo page layouts}` (packages/foundation-theme/src/Console/Commands/DemoCommand.php)
 - `capell:frontend-tailwind-assets {--report : Print the aggregated assets report instead of writing files} {--output-path= : Absolute path or directory for the generated frontend CSS entrypoint}` (packages/foundation-theme/src/Console/Commands/GenerateTailwindAssetsCommand.php)
 
 ## Routes And Config

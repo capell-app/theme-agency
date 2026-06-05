@@ -37,11 +37,12 @@
     "commands": {
         "install": null,
         "setup": "capell:foundation-theme-setup",
-        "demo": null,
+        "demo": "capell:foundation-theme-demo",
         "doctor": null
     },
     "actions": {
-        "setup": "Capell\\FoundationTheme\\Actions\\SetupFoundationThemePackageAction"
+        "setup": "Capell\\FoundationTheme\\Actions\\SetupFoundationThemePackageAction",
+        "demo": "Capell\\FoundationTheme\\Actions\\InstallFoundationThemeDemoAction"
     },
     "settings": [],
     "permissions": [],

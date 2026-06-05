@@ -29,6 +29,7 @@ Capell default theme - ships the standard Tailwind asset pipeline, Blade directi
 - Theme Studio registration, frontend Blade chrome, Layout Builder rendering views, widget components, and runtime asset registration.
 - Livewire helpers for page listings and page-asset selection where the frontend runtime needs them.
 - Package setup and Tailwind asset generation commands.
+- A demo seeding command for route-backed Foundation page captures.
 - A `header` Layout Builder area so editors can place normal layout widgets inside the Foundation header chrome.
 - Seven `kitchen-sink-*` reference widgets for the Demo Kit kitchen sink page: rich text, structured text, data display, forms, interactions, embeds, and utility states.
 
@@ -109,6 +110,7 @@ Screenshot capture targets are defined in [docs/screenshots.json](docs/screensho
 ## Commands
 
 - `capell:foundation-theme-setup {--force : Rebuild Foundation-managed layout defaults}` (packages/foundation-theme/src/Console/Commands/SetupCommand.php)
+- `capell:foundation-theme-demo {--site=* : Site name(s) to seed} {--language=* : Language code(s) to seed} {--base-url= : Base URL used for seeded demo links} {--force : Rebuild existing Foundation demo page layouts}` (packages/foundation-theme/src/Console/Commands/DemoCommand.php)
 - `capell:frontend-tailwind-assets {--report : Print the aggregated assets report instead of writing files} {--output-path= : Absolute path or directory for the generated frontend CSS entrypoint}` (packages/foundation-theme/src/Console/Commands/GenerateTailwindAssetsCommand.php)
 
 ## Data And Persistence
