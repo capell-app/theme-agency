@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 113 |
+| Now    | 112 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -60,7 +60,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | newsletter | 4 | 6 | 4 | Slice committed | Current follow-up proves confirm/unsubscribe public tokens stamp `used_at` and reject replay while preference-center self-service tokens remain reusable until expiry, after the Fake provider was blocked in production. Remaining Now rows: real health checks, direct FormSubmitted listener coverage, marketplace copy, and screenshots. |
 | notes | 4 | 7 | 3 | Slice committed | Current follow-up renders scoped inbox notes and marks displayed mentions read; `0a153655b` landed health/body validation. Remaining Now rows: resolve/reopen/complete UI, reminder reconciliation, anon/non-admin safety coverage before broader read surfaces, and display sanitization. |
 | password-policy | 1 | 6 | 4 | Slice committed | `899d37760` adds direct middleware coverage for redirect, forced-change allowed route, logout allowed route, and compliant no-op behavior, after prior HIBP/expiry/manifest/complexity/history slices. Remaining Now row: marketplace screenshots and summary/description. |
-| payments | 5 | 6 | 3 | Slice committed | Current follow-up validates form-checkout return URLs: local paths normalize to the app origin, absolute URLs must use allowed public hosts, and private/internal redirect targets are rejected. Remaining Now rows: webhook row locking, marketplace media/copy, money casts, and replay-safe paid-download expiry. |
+| payments | 4 | 6 | 3 | Slice committed | Current follow-up reconciles existing money-model integer casts and `MoneyModelAmountCastTest` coverage, after form-checkout return URL validation. Remaining Now rows: webhook row locking, marketplace media/copy, and replay-safe paid-download expiry. |
 | privacy-center | 2 | 5 | 4 | Slice committed | Current follow-up lets mirrored consent infer a loaded subject/visit from its source, making Insights consent exportable and erasable. Remaining Now rows: DSAR edit actions and README/CHANGELOG expansion. |
 | public-actions | 4 | 7 | 5 | Slice committed | Current follow-up drops the unsupported `cache-blocking` capability while keeping route-level `no-store` cache safety covered by manifest tests. Remaining Now rows: health checks, DNS-rebinding/redirect hardening, SSRF/health-check tests, and marketplace screenshots/copy. |
 | publishing-studio | 3 | 6 | 5 | Slice committed | Current follow-up ships package config defaults for publish checks/release windows/scheduler settings and proves default publish checks resolve through the container. Remaining Now rows: manifest reconciliation, anonymous live-path safety, and CHANGELOG history. Note: full package Pest still has an unrelated scheduler table error in `SchedulerAndApprovalResidualCoverageTest`; focused publish-check pipeline coverage passes. |
