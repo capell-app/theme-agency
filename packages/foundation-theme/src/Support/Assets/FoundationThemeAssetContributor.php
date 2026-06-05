@@ -12,14 +12,16 @@ final class FoundationThemeAssetContributor implements FrontendAssetContributor
 {
     public function requirements(FrontendAssetContextData $context): array
     {
-        $requirements = [
-            new FrontendAssetRequirementData(
+        $requirements = [];
+
+        if ($this->shouldLoadFrontendCss($context)) {
+            $requirements[] = new FrontendAssetRequirementData(
                 handle: 'foundation-theme:css',
                 kind: FrontendAssetRequirementData::KIND_CSS,
                 source: $this->frontendCssPath(),
                 buildPath: $this->frontendCssBuildPath($context),
-            ),
-        ];
+            );
+        }
 
         if ($this->shouldLoadRuntimeJavaScript($context)) {
             $requirements[] = new FrontendAssetRequirementData(
@@ -46,6 +48,13 @@ final class FoundationThemeAssetContributor implements FrontendAssetContributor
         $buildPath = $context->theme?->getMeta('assets_path', 'build');
 
         return is_string($buildPath) && $buildPath !== '' ? $buildPath : 'build';
+    }
+
+    private function shouldLoadFrontendCss(FrontendAssetContextData $context): bool
+    {
+        $value = data_get($context->theme?->meta, 'frontend_runtime.uses_foundation_theme_css');
+
+        return is_bool($value) ? $value : true;
     }
 
     private function shouldLoadRuntimeJavaScript(FrontendAssetContextData $context): bool
