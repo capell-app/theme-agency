@@ -1,0 +1,33 @@
+{
+    "package": "bookings",
+    "composerName": "capell-app/bookings",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/bookings/docs/screenshots",
+    "entries": [
+        {
+            "id": "public-booking-request",
+            "title": "Public booking request form.",
+            "package": "bookings",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/bookings",
+            "required": true,
+            "notes": "Capture a seeded public booking request route with services, staff, locations, timezone options, and visible validation-ready customer fields.",
+            "useCase": "A buyer confirms visitors can request appointments without seeing admin or authoring surfaces.",
+            "screenshotPath": "packages/bookings/docs/screenshots/public-booking-request.png"
+        },
+        {
+            "id": "appointment-requests-admin",
+            "title": "Appointment request admin queue.",
+            "package": "bookings",
+            "surface": "admin",
+            "targetType": "filament-resource",
+            "target": "AppointmentRequestResource:index",
+            "required": true,
+            "notes": "Capture requested and confirmed appointments with service, staff, location, customer, status, and audit context visible.",
+            "useCase": "An operator checks incoming appointment requests and manages confirmation or cancellation safely.",
+            "screenshotPath": "packages/bookings/docs/screenshots/appointment-requests-admin.png"
+        }
+    ]
+}

@@ -59,6 +59,7 @@
                 :title="$widget->translation->title"
                 heading-weight="semibold"
                 :text-align="$align"
+                :heading-size="$widget->getMeta('heading_size')"
                 :heading-style="$widget->getMeta('heading_style')"
                 class="mt-4"
             />

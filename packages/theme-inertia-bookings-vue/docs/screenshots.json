@@ -1,0 +1,21 @@
+{
+    "package": "theme-inertia-bookings-vue",
+    "composerName": "capell-app/theme-inertia-bookings-vue",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-inertia-bookings-vue/docs/screenshots",
+    "entries": [
+        {
+            "id": "vue-booking-components",
+            "title": "Vue booking component pack.",
+            "package": "theme-inertia-bookings-vue",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/bookings",
+            "required": true,
+            "notes": "Capture the Vue adapter runtime with Theme Inertia Bookings installed and the labelled booking request form visible.",
+            "useCase": "A buyer confirms the Vue pack renders the page, widgets, and booking request contract.",
+            "screenshotPath": "packages/theme-inertia-bookings-vue/docs/screenshots/vue-booking-components.png"
+        }
+    ]
+}

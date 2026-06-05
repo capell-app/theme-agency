@@ -61,8 +61,9 @@
                     :muted="in_array($containerKey, $theme->secondary_containers)"
                     :title="$widget->translation->title ?? ($showPageTitle ? $page->translation->title : null)"
                     :text-align="$widget->getMeta('align')"
+                    :heading-size="$widget->getMeta('heading_size')"
                     :heading-style="$widget->getMeta('heading_style')"
-                    :heading-tag="$showPageTitle ? 'h1' : null"
+                    :heading-tag="$showPageTitle ? 'h1' : $widget->getMeta('heading_size')"
                 />
             </div>
         @endif

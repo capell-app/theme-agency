@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Bookings extension card</title>
+  <desc id="desc">Marketplace preview for the Bookings package.</desc>
+  <rect width="1200" height="760" fill="#f8fafc"/>
+  <rect x="64" y="64" width="1072" height="632" rx="28" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="112" y="150" fill="#0f172a" font-family="Arial, sans-serif" font-size="58" font-weight="700">Bookings</text>
+  <text x="112" y="205" fill="#475569" font-family="Arial, sans-serif" font-size="28">Services, staff, availability, requests, reminders, and calendar feeds.</text>
+  <g transform="translate(112 280)">
+    <rect width="280" height="220" rx="18" fill="#0f766e"/>
+    <text x="32" y="64" fill="#ffffff" font-family="Arial, sans-serif" font-size="26" font-weight="700">Public requests</text>
+    <text x="32" y="112" fill="#ccfbf1" font-family="Arial, sans-serif" font-size="20">Timezone-aware slots</text>
+    <text x="32" y="148" fill="#ccfbf1" font-family="Arial, sans-serif" font-size="20">Capacity checks</text>
+  </g>
+  <g transform="translate(460 280)">
+    <rect width="280" height="220" rx="18" fill="#1e293b"/>
+    <text x="32" y="64" fill="#ffffff" font-family="Arial, sans-serif" font-size="26" font-weight="700">Admin queue</text>
+    <text x="32" y="112" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="20">Confirm or cancel</text>
+    <text x="32" y="148" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="20">Audit every change</text>
+  </g>
+  <g transform="translate(808 280)">
+    <rect width="280" height="220" rx="18" fill="#f97316"/>
+    <text x="32" y="64" fill="#111827" font-family="Arial, sans-serif" font-size="26" font-weight="700">Calendar feeds</text>
+    <text x="32" y="112" fill="#431407" font-family="Arial, sans-serif" font-size="20">Opaque staff URLs</text>
+    <text x="32" y="148" fill="#431407" font-family="Arial, sans-serif" font-size="20">Confirmed only</text>
+  </g>
+</svg>

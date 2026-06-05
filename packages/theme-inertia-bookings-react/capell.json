@@ -15,18 +15,31 @@
     "namespace": "Capell\\ThemeStudio\\InertiaBookingsReact",
     "surfaces": ["frontend"],
     "dependencies": {
-        "requires": ["capell-app/theme-inertia-bookings", "capell-app/inertia-react-adapter"],
+        "requires": [
+            "capell-app/theme-inertia-bookings",
+            "capell-app/inertia-react-adapter"
+        ],
         "supports": [],
         "conflicts": []
     },
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": ["Capell\\ThemeStudio\\InertiaBookingsReact\\Providers\\InertiaBookingsReactServiceProvider"],
+        "runtime": [
+            "Capell\\ThemeStudio\\InertiaBookingsReact\\Providers\\InertiaBookingsReactServiceProvider"
+        ],
         "admin": [],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "frontend-component",
+            "class": "Capell\\ThemeStudio\\InertiaBookingsReact\\Manifest\\InertiaBookingsReactComponentContribution",
+            "component": "Capell/Bookings/Request",
+            "adapter": "react",
+            "surface": "frontend"
+        }
+    ],
     "database": {
         "migrations": false,
         "settings": false,
@@ -71,7 +84,18 @@
     "marketplace": {
         "summary": "React components for Theme Inertia Bookings.",
         "description": "Provides React source components that implement the shared Capell/Page and Capell/Bookings/Request server contract.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.svg",
+                "alt": "Theme Inertia Bookings React component pack marketplace card.",
+                "caption": "React component pack for the Theme Inertia Bookings page and public booking request contracts."
+            },
+            {
+                "path": "docs/assets/marketplace/react-booking-components.svg",
+                "alt": "React booking components showing the page shell, widgets, and labelled request form.",
+                "caption": "The React pack ships a themed Inertia entrypoint plus labelled page, widget, and booking request components."
+            }
+        ],
         "categories": ["frontend", "themes"]
     }
 }

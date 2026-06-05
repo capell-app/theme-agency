@@ -9,6 +9,8 @@ use Capell\Inertia\Facades\CapellInertia;
 use Capell\Inertia\Http\Middleware\HandleInertiaRequests;
 use Capell\Inertia\Tests\InertiaTestCase;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
+use Illuminate\Testing\TestResponse;
 
 use function Pest\Laravel\get;
 
@@ -41,12 +43,33 @@ it('shares namespaced capell inertia props through the middleware', function ():
 });
 
 it('renders package route responses through the capell inertia helper', function (): void {
+    View::addNamespace('inertia-test', __DIR__ . '/../Fixtures/views');
+    config()->set('capell-inertia.root_view', 'inertia-test::app');
+
     Route::middleware([HandleInertiaRequests::class])->get('/_test/inertia', fn (): Response => CapellInertia::render('Capell/Test', ['message' => 'ok']));
+
+    get('/_test/inertia')
+        ->assertOk()
+        ->assertSee('data-page=', false)
+        ->assertSee('Capell\\/Test', false);
 
     get('/_test/inertia', ['X-Inertia' => 'true'])
         ->assertOk()
         ->assertJsonPath('component', 'Capell/Test')
         ->assertJsonPath('props.message', 'ok');
+});
+
+it('rejects package route initial html when inertia props expose authoring markers', function (): void {
+    $this->withoutExceptionHandling();
+    View::addNamespace('inertia-test', __DIR__ . '/../Fixtures/views');
+    config()->set('capell-inertia.root_view', 'inertia-test::app');
+
+    Route::middleware([HandleInertiaRequests::class])->get('/_test/inertia-unsafe', fn (): Response => CapellInertia::render('Capell/Test', [
+        'model_id' => 123,
+    ]));
+
+    expect(fn (): TestResponse => get('/_test/inertia-unsafe'))
+        ->toThrow(RuntimeException::class, 'Public HTML contains an authoring marker');
 });
 
 it('uses the capell head and inertia root components in the bridge view', function (): void {

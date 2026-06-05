@@ -178,7 +178,23 @@
     },
     "marketplace": {
         "summary": "Bookings adds appointment request workflows, availability, confirmations, reminders, and calendar feeds for healthcare, services, education, consulting, nonprofit, and portfolio sites.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.svg",
+                "alt": "Bookings marketplace card with services, staff, availability, requests, and calendar feeds.",
+                "caption": "A premium appointment workflow package for public requests and admin-managed booking operations."
+            },
+            {
+                "path": "docs/assets/marketplace/public-booking-request.svg",
+                "alt": "Public booking request form showing service, staff, location, time, and customer fields.",
+                "caption": "Visitors request appointments through a public form validated against availability, capacity, buffers, and timezone."
+            },
+            {
+                "path": "docs/assets/marketplace/appointment-requests-admin.svg",
+                "alt": "Admin appointment request queue with requested, confirmed, and audited booking states.",
+                "caption": "Operators review requests, confirm or cancel appointments, and keep an audit trail for each workflow event."
+            }
+        ],
         "categories": ["admin", "calendar", "operations"]
     },
     "contributionTraceability": {

@@ -71,18 +71,12 @@ class BuildAvailableBookingSlotsAction
         ?int $staffMemberId,
         ?int $locationId,
     ): array {
+        $displayStartsAt = $date->startOfDay();
+        $displayEndsAt = $displayStartsAt->addDay();
+
         /** @var EloquentCollection<int, BookingAvailabilityWindow> $windows */
         $windows = BookingAvailabilityWindow::query()
             ->available()
-            ->where('day_of_week', $date->dayOfWeek)
-            ->where(function (Builder $query) use ($date): void {
-                $query->whereNull('effective_from')
-                    ->orWhere('effective_from', '<=', $date->toDateString());
-            })
-            ->where(function (Builder $query) use ($date): void {
-                $query->whereNull('effective_until')
-                    ->orWhere('effective_until', '>=', $date->toDateString());
-            })
             ->where(function (Builder $query) use ($service): void {
                 $query->whereNull('service_id')
                     ->orWhere('service_id', $service->getKey());
@@ -107,22 +101,31 @@ class BuildAvailableBookingSlotsAction
         $stepMinutes = max(5, (int) config('capell-bookings.public_slot_interval_minutes', 15));
 
         foreach ($windows as $window) {
-            $slots = $this->mergeSlotsFromRange(
-                slots: $slots,
-                service: $service,
-                startsAt: CarbonImmutable::parse($date->toDateString() . ' ' . $window->starts_at, $timezone),
-                endsAt: CarbonImmutable::parse($date->toDateString() . ' ' . $window->ends_at, $timezone),
-                timezone: $timezone,
-                staffMemberId: $staffMemberId,
-                locationId: $locationId,
-                stepMinutes: $stepMinutes,
-            );
+            $availabilityTimezone = $this->safeTimezone($window->timezone);
+
+            foreach ($this->localDatesForRange($displayStartsAt, $displayEndsAt, $availabilityTimezone) as $localDate) {
+                if (! $this->windowAppliesToLocalDate($window, $localDate)) {
+                    continue;
+                }
+
+                $slots = $this->mergeSlotsFromRange(
+                    slots: $slots,
+                    service: $service,
+                    startsAt: CarbonImmutable::parse($localDate->toDateString() . ' ' . $window->starts_at, $availabilityTimezone),
+                    endsAt: CarbonImmutable::parse($localDate->toDateString() . ' ' . $window->ends_at, $availabilityTimezone),
+                    timezone: $timezone,
+                    displayStartsAt: $displayStartsAt,
+                    displayEndsAt: $displayEndsAt,
+                    staffMemberId: $staffMemberId,
+                    locationId: $locationId,
+                    stepMinutes: $stepMinutes,
+                );
+            }
         }
 
         /** @var EloquentCollection<int, BookingAvailabilityException> $availableExceptions */
         $availableExceptions = BookingAvailabilityException::query()
             ->available()
-            ->whereDate('date', $date->toDateString())
             ->whereNotNull('starts_at')
             ->whereNotNull('ends_at')
             ->whereNotNull('capacity')
@@ -151,12 +154,20 @@ class BuildAvailableBookingSlotsAction
                 continue;
             }
 
+            $availabilityTimezone = $this->safeTimezone($availableException->timezone);
+
+            if (! $this->exceptionDateOverlapsDisplayRange($availableException, $displayStartsAt, $displayEndsAt, $availabilityTimezone)) {
+                continue;
+            }
+
             $slots = $this->mergeSlotsFromRange(
                 slots: $slots,
                 service: $service,
-                startsAt: CarbonImmutable::parse($date->toDateString() . ' ' . $availableException->starts_at, $timezone),
-                endsAt: CarbonImmutable::parse($date->toDateString() . ' ' . $availableException->ends_at, $timezone),
+                startsAt: CarbonImmutable::parse($availableException->date->toDateString() . ' ' . $availableException->starts_at, $availabilityTimezone),
+                endsAt: CarbonImmutable::parse($availableException->date->toDateString() . ' ' . $availableException->ends_at, $availabilityTimezone),
                 timezone: $timezone,
+                displayStartsAt: $displayStartsAt,
+                displayEndsAt: $displayEndsAt,
                 staffMemberId: $staffMemberId,
                 locationId: $locationId,
                 stepMinutes: $stepMinutes,
@@ -178,6 +189,8 @@ class BuildAvailableBookingSlotsAction
         CarbonImmutable $startsAt,
         CarbonImmutable $endsAt,
         string $timezone,
+        CarbonImmutable $displayStartsAt,
+        CarbonImmutable $displayEndsAt,
         ?int $staffMemberId,
         ?int $locationId,
         int $stepMinutes,
@@ -186,7 +199,7 @@ class BuildAvailableBookingSlotsAction
 
         while ($slotStart->addMinutes($service->duration_minutes)->lessThanOrEqualTo($endsAt)) {
             $slotEnd = $slotStart->addMinutes($service->duration_minutes);
-            $slot = $this->slot($service, $slotStart, $slotEnd, $timezone, $staffMemberId, $locationId);
+            $slot = $this->slot($service, $slotStart, $slotEnd, $timezone, $displayStartsAt, $displayEndsAt, $staffMemberId, $locationId);
 
             if ($slot !== null) {
                 $slots[$slot['starts_at']] = $slot;
@@ -206,9 +219,17 @@ class BuildAvailableBookingSlotsAction
         CarbonImmutable $startsAt,
         CarbonImmutable $endsAt,
         string $timezone,
+        CarbonImmutable $displayStartsAt,
+        CarbonImmutable $displayEndsAt,
         ?int $staffMemberId,
         ?int $locationId,
     ): ?array {
+        $displayStartsAtForSlot = $startsAt->setTimezone($timezone);
+
+        if ($displayStartsAtForSlot->lessThan($displayStartsAt) || $displayStartsAtForSlot->greaterThanOrEqualTo($displayEndsAt)) {
+            return null;
+        }
+
         $appointmentRequestData = new AppointmentRequestData(
             serviceId: (int) $service->getKey(),
             requestedStartsAt: $startsAt,
@@ -237,9 +258,9 @@ class BuildAvailableBookingSlotsAction
         }
 
         return [
-            'starts_at' => $startsAt->toIso8601String(),
-            'ends_at' => $endsAt->toIso8601String(),
-            'label' => $startsAt->isoFormat('ddd D MMM, HH:mm'),
+            'starts_at' => $displayStartsAtForSlot->toIso8601String(),
+            'ends_at' => $endsAt->setTimezone($timezone)->toIso8601String(),
+            'label' => $displayStartsAtForSlot->isoFormat('ddd D MMM, HH:mm'),
             'timezone' => $timezone,
             'capacity_remaining' => $remaining,
         ];
@@ -276,20 +297,12 @@ class BuildAvailableBookingSlotsAction
         AppointmentRequestData $appointmentRequestData,
         CarbonImmutable $endsAt,
     ): ?BookingAvailabilityException {
-        $startsAt = $appointmentRequestData->requestedStartsAt->setTimezone($appointmentRequestData->timezone);
-        $endsAt = $endsAt->setTimezone($appointmentRequestData->timezone);
+        $candidateDateStart = $appointmentRequestData->requestedStartsAt->subDay()->toDateString();
+        $candidateDateEnd = $appointmentRequestData->requestedStartsAt->addDay()->toDateString();
 
         /** @var EloquentCollection<int, BookingAvailabilityException> $exceptions */
         $exceptions = BookingAvailabilityException::query()
-            ->whereDate('date', $startsAt->toDateString())
-            ->where(function (Builder $query) use ($startsAt): void {
-                $query->whereNull('starts_at')
-                    ->orWhere('starts_at', '<=', $startsAt->toTimeString());
-            })
-            ->where(function (Builder $query) use ($endsAt): void {
-                $query->whereNull('ends_at')
-                    ->orWhere('ends_at', '>=', $endsAt->toTimeString());
-            })
+            ->whereBetween('date', [$candidateDateStart, $candidateDateEnd])
             ->where(function (Builder $query) use ($appointmentRequestData): void {
                 $query->whereNull('service_id')
                     ->orWhere('service_id', $appointmentRequestData->serviceId);
@@ -311,6 +324,7 @@ class BuildAvailableBookingSlotsAction
             ->get();
 
         return $exceptions
+            ->filter(fn (BookingAvailabilityException $exception): bool => $this->exceptionCoversRange($exception, $appointmentRequestData, $endsAt))
             ->sortByDesc(fn (BookingAvailabilityException $exception): int => $exception->capacity ?? 0)
             ->sortByDesc(fn (BookingAvailabilityException $exception): int => $this->exceptionSpecificity($exception))
             ->first();
@@ -320,23 +334,9 @@ class BuildAvailableBookingSlotsAction
         AppointmentRequestData $appointmentRequestData,
         CarbonImmutable $endsAt,
     ): ?BookingAvailabilityWindow {
-        $startsAt = $appointmentRequestData->requestedStartsAt->setTimezone($appointmentRequestData->timezone);
-        $endsAt = $endsAt->setTimezone($appointmentRequestData->timezone);
-
         /** @var EloquentCollection<int, BookingAvailabilityWindow> $windows */
         $windows = BookingAvailabilityWindow::query()
             ->available()
-            ->where('day_of_week', $startsAt->dayOfWeek)
-            ->where('starts_at', '<=', $startsAt->toTimeString())
-            ->where('ends_at', '>=', $endsAt->toTimeString())
-            ->where(function (Builder $query) use ($startsAt): void {
-                $query->whereNull('effective_from')
-                    ->orWhere('effective_from', '<=', $startsAt->toDateString());
-            })
-            ->where(function (Builder $query) use ($startsAt): void {
-                $query->whereNull('effective_until')
-                    ->orWhere('effective_until', '>=', $startsAt->toDateString());
-            })
             ->where(function (Builder $query) use ($appointmentRequestData): void {
                 $query->whereNull('service_id')
                     ->orWhere('service_id', $appointmentRequestData->serviceId);
@@ -358,6 +358,7 @@ class BuildAvailableBookingSlotsAction
             ->get();
 
         return $windows
+            ->filter(fn (BookingAvailabilityWindow $window): bool => $this->windowCoversRange($window, $appointmentRequestData, $endsAt))
             ->sortByDesc(fn (BookingAvailabilityWindow $window): int => $window->capacity)
             ->sortByDesc(fn (BookingAvailabilityWindow $window): int => $this->windowSpecificity($window))
             ->first();
@@ -380,11 +381,12 @@ class BuildAvailableBookingSlotsAction
         $existingStartsBefore = $blockedEndsAt->addMinutes($service->buffer_before_minutes);
         $existingEndsAfter = $blockedStartsAt->subMinutes($service->buffer_after_minutes);
 
-        return AppointmentRequest::query()
+        /** @var EloquentCollection<int, AppointmentRequest> $appointments */
+        $appointments = AppointmentRequest::query()
             ->where('service_id', $service->getKey())
             ->whereIn('status', $blockingStatuses)
-            ->where('requested_starts_at', '<', $existingStartsBefore)
-            ->where('requested_ends_at', '>', $existingEndsAfter)
+            ->where('requested_starts_at', '<', $existingStartsBefore->addDay()->toDateTimeString())
+            ->where('requested_ends_at', '>', $existingEndsAfter->subDay()->toDateTimeString())
             ->where(function (Builder $query) use ($appointmentRequestData): void {
                 if ($appointmentRequestData->staffMemberId === null) {
                     return;
@@ -401,6 +403,14 @@ class BuildAvailableBookingSlotsAction
                 $query->whereNull('location_id')
                     ->orWhere('location_id', $appointmentRequestData->locationId);
             })
+            ->get();
+
+        return $appointments
+            ->filter(fn (AppointmentRequest $appointmentRequest): bool => $this->appointmentBlocksRange(
+                appointmentRequest: $appointmentRequest,
+                existingStartsBefore: $existingStartsBefore,
+                existingEndsAfter: $existingEndsAfter,
+            ))
             ->count();
     }
 
@@ -418,6 +428,105 @@ class BuildAvailableBookingSlotsAction
             + (int) ($exception->location_id !== null)
             + (int) ($exception->starts_at !== null)
             + (int) ($exception->ends_at !== null);
+    }
+
+    /**
+     * @return list<CarbonImmutable>
+     */
+    private function localDatesForRange(CarbonImmutable $startsAt, CarbonImmutable $endsAt, string $timezone): array
+    {
+        $localDate = $startsAt->setTimezone($timezone)->startOfDay();
+        $lastLocalDate = $endsAt->subSecond()->setTimezone($timezone)->startOfDay();
+        $dates = [];
+
+        while ($localDate->lessThanOrEqualTo($lastLocalDate)) {
+            $dates[] = $localDate;
+            $localDate = $localDate->addDay();
+        }
+
+        return $dates;
+    }
+
+    private function windowAppliesToLocalDate(BookingAvailabilityWindow $window, CarbonImmutable $localDate): bool
+    {
+        if ($window->day_of_week !== $localDate->dayOfWeek) {
+            return false;
+        }
+
+        if ($window->effective_from !== null && $window->effective_from->toDateString() > $localDate->toDateString()) {
+            return false;
+        }
+
+        return $window->effective_until === null
+            || $window->effective_until->toDateString() >= $localDate->toDateString();
+    }
+
+    private function exceptionDateOverlapsDisplayRange(
+        BookingAvailabilityException $exception,
+        CarbonImmutable $displayStartsAt,
+        CarbonImmutable $displayEndsAt,
+        string $availabilityTimezone,
+    ): bool {
+        foreach ($this->localDatesForRange($displayStartsAt, $displayEndsAt, $availabilityTimezone) as $localDate) {
+            if ($exception->date->toDateString() === $localDate->toDateString()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function exceptionCoversRange(
+        BookingAvailabilityException $exception,
+        AppointmentRequestData $appointmentRequestData,
+        CarbonImmutable $endsAt,
+    ): bool {
+        $timezone = $this->safeTimezone($exception->timezone);
+        $localStartsAt = $appointmentRequestData->requestedStartsAt->setTimezone($timezone);
+        $localEndsAt = $endsAt->setTimezone($timezone);
+
+        if ($exception->date->toDateString() !== $localStartsAt->toDateString()) {
+            return false;
+        }
+
+        if ($exception->starts_at !== null && $exception->starts_at > $localStartsAt->toTimeString()) {
+            return false;
+        }
+
+        return $exception->ends_at === null || $exception->ends_at >= $localEndsAt->toTimeString();
+    }
+
+    private function windowCoversRange(
+        BookingAvailabilityWindow $window,
+        AppointmentRequestData $appointmentRequestData,
+        CarbonImmutable $endsAt,
+    ): bool {
+        $timezone = $this->safeTimezone($window->timezone);
+        $localStartsAt = $appointmentRequestData->requestedStartsAt->setTimezone($timezone);
+        $localEndsAt = $endsAt->setTimezone($timezone);
+
+        return $this->windowAppliesToLocalDate($window, $localStartsAt)
+            && $window->starts_at <= $localStartsAt->toTimeString()
+            && $window->ends_at >= $localEndsAt->toTimeString();
+    }
+
+    private function appointmentBlocksRange(
+        AppointmentRequest $appointmentRequest,
+        CarbonImmutable $existingStartsBefore,
+        CarbonImmutable $existingEndsAfter,
+    ): bool {
+        return $this->appointmentDateTime($appointmentRequest, 'requested_starts_at')->lessThan($existingStartsBefore)
+            && $this->appointmentDateTime($appointmentRequest, 'requested_ends_at')->greaterThan($existingEndsAfter);
+    }
+
+    private function appointmentDateTime(AppointmentRequest $appointmentRequest, string $attribute): CarbonImmutable
+    {
+        $rawValue = $appointmentRequest->getRawOriginal($attribute);
+
+        return CarbonImmutable::parse(
+            is_string($rawValue) ? $rawValue : (string) $appointmentRequest->getAttribute($attribute),
+            $this->safeTimezone($appointmentRequest->timezone),
+        );
     }
 
     private function safeTimezone(?string $timezone): string

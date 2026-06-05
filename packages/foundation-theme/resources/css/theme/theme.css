@@ -124,7 +124,7 @@
         p,
         ul,
         ol {
-            margin-widget: 0.5rem;
+            margin-block: 0.5rem;
         }
 
         h1,
@@ -226,7 +226,7 @@
         display: inline-flex;
         flex: 0 0 auto;
         min-width: 0;
-        padding-widget: 0.75rem;
+        padding-block: 0.75rem;
     }
 
     .capell-product-header__brand-link {
@@ -620,7 +620,7 @@
         gap: clamp(1.5rem, 4vw, 3.25rem);
         grid-template-columns: minmax(0, 1fr);
         min-height: inherit;
-        padding-widget: clamp(2.75rem, 5.5vw, 4.75rem);
+        padding-block: clamp(2.75rem, 5.5vw, 4.75rem);
         position: relative;
         z-index: 1;
     }
@@ -812,11 +812,11 @@
     .ap-showcase-feature-list,
     .ap-showcase-gallery,
     .ap-showcase-cta {
-        padding-widget: var(--foundation-section-spacing);
+        padding-block: var(--foundation-section-spacing);
     }
 
     .ap-showcase-gallery {
-        padding-widget: var(--foundation-section-spacing);
+        padding-block: var(--foundation-section-spacing);
     }
 
     .ap-showcase-gallery .capell-showcase__section-head {
@@ -914,7 +914,7 @@
     .widget-ap-pricing-table section,
     .widget-ap-team-members section,
     .widget-ap-faq-section section {
-        padding-widget: var(--foundation-section-spacing);
+        padding-block: var(--foundation-section-spacing);
     }
 
     .widget-ap-stats-section h2,

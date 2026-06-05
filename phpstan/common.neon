@@ -2,7 +2,7 @@ includes:
     - ignore-errors.neon
 
 parameters:
-    level: 8
+    level: 9
     reportUnmatchedIgnoredErrors: false
     treatPhpDocTypesAsCertain: false
     checkAuthCallsWhenInRequestScope: false

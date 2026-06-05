@@ -1,0 +1,33 @@
+{
+    "package": "theme-inertia-bookings",
+    "composerName": "capell-app/theme-inertia-bookings",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-inertia-bookings/docs/screenshots",
+    "entries": [
+        {
+            "id": "inertia-bookings-homepage",
+            "title": "Inertia bookings homepage.",
+            "package": "theme-inertia-bookings",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-inertia-bookings-demo",
+            "required": true,
+            "notes": "Capture a seeded appointment-led homepage with hero, service proof, booking CTA, locations, FAQ, and footer sections.",
+            "useCase": "A booking business sees how the theme moves visitors from service evaluation to appointment request.",
+            "screenshotPath": "packages/theme-inertia-bookings/docs/screenshots/inertia-bookings-homepage.png"
+        },
+        {
+            "id": "inertia-bookings-request-flow",
+            "title": "Inertia public booking request.",
+            "package": "theme-inertia-bookings",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/bookings",
+            "required": true,
+            "notes": "Capture the Inertia-rendered public booking request route with lazy slot loading and labelled form fields.",
+            "useCase": "A buyer confirms the theme connects into the real Bookings public request workflow.",
+            "screenshotPath": "packages/theme-inertia-bookings/docs/screenshots/inertia-bookings-request-flow.png"
+        }
+    ]
+}

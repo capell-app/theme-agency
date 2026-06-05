@@ -31,7 +31,15 @@
         "admin": [],
         "frontend": []
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "frontend-component",
+            "class": "Capell\\ThemeStudio\\InertiaBookingsVue\\Manifest\\InertiaBookingsVueComponentContribution",
+            "component": "Capell/Bookings/Request",
+            "adapter": "vue",
+            "surface": "frontend"
+        }
+    ],
     "database": {
         "migrations": false,
         "settings": false,
@@ -76,7 +84,18 @@
     "marketplace": {
         "summary": "Vue components for Theme Inertia Bookings.",
         "description": "Provides Vue source components that implement the shared Capell/Page and Capell/Bookings/Request server contract.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.svg",
+                "alt": "Theme Inertia Bookings Vue component pack marketplace card.",
+                "caption": "Vue component pack for the Theme Inertia Bookings page and public booking request contracts."
+            },
+            {
+                "path": "docs/assets/marketplace/vue-booking-components.svg",
+                "alt": "Vue booking components showing the page shell, widgets, and labelled request form.",
+                "caption": "The Vue pack ships a themed Inertia entrypoint plus labelled page, widget, and booking request components."
+            }
+        ],
         "categories": ["frontend", "themes"]
     }
 }

@@ -21,6 +21,8 @@ class InertiaReactAdapterServiceProvider extends AbstractPackageServiceProvider
 
     public const string ENTRYPOINT = 'resources/js/app.jsx';
 
+    public const string THEME_BOOKINGS_REACT_PACKAGE = 'capell-app/theme-inertia-bookings-react';
+
     public static string $name = 'capell-inertia-react-adapter';
 
     public static string $packageName = 'capell-app/inertia-react-adapter';
@@ -77,7 +79,8 @@ class InertiaReactAdapterServiceProvider extends AbstractPackageServiceProvider
         resolve(VendorAssetConditionRegistry::class)->register(
             'capell-inertia-adapter-react',
             fn (mixed $context): bool => ($context->runtime->usesInertia ?? false)
-                && config('capell-inertia.adapter', self::ADAPTER_KEY) === self::ADAPTER_KEY,
+                && config('capell-inertia.adapter', self::ADAPTER_KEY) === self::ADAPTER_KEY
+                && ! CapellCore::isPackageInstalled(self::THEME_BOOKINGS_REACT_PACKAGE),
         );
     }
 

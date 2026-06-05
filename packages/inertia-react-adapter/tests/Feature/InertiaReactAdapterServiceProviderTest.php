@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Capell\Core\Data\VendorAssetData;
 use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\Support\Assets\VendorAssetConditionRegistry;
 use Capell\Inertia\Support\InertiaAdapterRegistry;
 use Capell\InertiaReactAdapter\Health\InertiaReactAdapterHealthCheck;
 use Capell\InertiaReactAdapter\Providers\InertiaReactAdapterServiceProvider;
@@ -65,6 +66,24 @@ it('registers npm dependencies and the react build entrypoint as vendor assets',
         'path' => InertiaReactAdapterServiceProvider::BUILD_PATH,
         'file' => InertiaReactAdapterServiceProvider::ENTRYPOINT,
     ]);
+});
+
+it('disables the generic react build condition when the bookings react component pack is installed', function (): void {
+    config()->set('capell-inertia.adapter', InertiaReactAdapterServiceProvider::ADAPTER_KEY);
+
+    $context = (object) [
+        'runtime' => (object) [
+            'usesInertia' => true,
+        ],
+    ];
+
+    $registry = resolve(VendorAssetConditionRegistry::class);
+
+    expect($registry->passes('capell-inertia-adapter-react', $context))->toBeTrue();
+
+    CapellCore::forcePackageInstalled(InertiaReactAdapterServiceProvider::THEME_BOOKINGS_REACT_PACKAGE);
+
+    expect($registry->passes('capell-inertia-adapter-react', $context))->toBeFalse();
 });
 
 it('passes health when the react adapter has been registered', function (): void {

@@ -48,6 +48,70 @@ it('builds available booking slots from active services and availability windows
         ->and($slots[0]['capacity_remaining'])->toBe(2);
 });
 
+it('converts availability windows and exceptions from their stored timezone into the requested timezone', function (): void {
+    config()->set('capell-bookings.public_slot_interval_minutes', 15);
+
+    [$service, $staffMember, $location, $monday] = createPublicSlotFixture(capacity: 1);
+
+    BookingAvailabilityException::factory()->create([
+        'service_id' => $service->getKey(),
+        'staff_member_id' => $staffMember->getKey(),
+        'location_id' => $location->getKey(),
+        'status' => BookingAvailabilityStatusEnum::Blocked,
+        'date' => $monday->toDateString(),
+        'starts_at' => '09:15:00',
+        'ends_at' => '09:45:00',
+        'timezone' => 'Europe/London',
+    ]);
+
+    $slots = BuildAvailableBookingSlotsAction::run(
+        serviceId: (int) $service->getKey(),
+        staffMemberId: (int) $staffMember->getKey(),
+        locationId: (int) $location->getKey(),
+        timezone: 'America/New_York',
+        from: CarbonImmutable::parse('2026-06-08 00:00:00', 'America/New_York'),
+        days: 1,
+    );
+
+    expect($slots)->toHaveCount(2)
+        ->and(array_column($slots, 'starts_at'))->toBe([
+            '2026-06-08T04:00:00-04:00',
+            '2026-06-08T04:30:00-04:00',
+        ])
+        ->and($slots[0]['timezone'])->toBe('America/New_York')
+        ->and($slots[0]['label'])->toBe('Mon 8 Jun, 04:00');
+});
+
+it('counts existing appointments in their stored timezone when building cross-timezone slots', function (): void {
+    config()->set('capell-bookings.public_slot_interval_minutes', 30);
+
+    [$service, $staffMember, $location] = createPublicSlotFixture(capacity: 1);
+    $bookedStartsAt = CarbonImmutable::parse('2026-06-08 04:00:00', 'America/New_York');
+
+    AppointmentRequest::factory()->create([
+        'service_id' => $service->getKey(),
+        'staff_member_id' => $staffMember->getKey(),
+        'location_id' => $location->getKey(),
+        'status' => AppointmentRequestStatusEnum::Confirmed,
+        'requested_starts_at' => $bookedStartsAt,
+        'requested_ends_at' => $bookedStartsAt->addMinutes(30),
+        'timezone' => 'America/New_York',
+    ]);
+
+    $slots = BuildAvailableBookingSlotsAction::run(
+        serviceId: (int) $service->getKey(),
+        staffMemberId: (int) $staffMember->getKey(),
+        locationId: (int) $location->getKey(),
+        timezone: 'America/New_York',
+        from: CarbonImmutable::parse('2026-06-08 00:00:00', 'America/New_York'),
+        days: 1,
+    );
+
+    expect(array_column($slots, 'starts_at'))->toBe([
+        '2026-06-08T04:30:00-04:00',
+    ]);
+});
+
 it('omits slots covered by blocked availability exceptions', function (): void {
     [$service, $staffMember, $location, $monday] = createPublicSlotFixture();
 

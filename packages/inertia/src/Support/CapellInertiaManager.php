@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Inertia\Support;
 
+use Capell\Frontend\Actions\AssertPublicHtmlContainsNoAuthoringSurfaceAction;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -21,6 +22,8 @@ class CapellInertiaManager
         if ($status !== null) {
             $response->setStatusCode($status);
         }
+
+        AssertPublicHtmlContainsNoAuthoringSurfaceAction::run($response);
 
         return $response;
     }

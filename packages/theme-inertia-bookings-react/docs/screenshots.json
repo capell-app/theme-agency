@@ -1,0 +1,21 @@
+{
+    "package": "theme-inertia-bookings-react",
+    "composerName": "capell-app/theme-inertia-bookings-react",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-inertia-bookings-react/docs/screenshots",
+    "entries": [
+        {
+            "id": "react-booking-components",
+            "title": "React booking component pack.",
+            "package": "theme-inertia-bookings-react",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/bookings",
+            "required": true,
+            "notes": "Capture the React adapter runtime with Theme Inertia Bookings installed and the labelled booking request form visible.",
+            "useCase": "A buyer confirms the React pack renders the page, widgets, and booking request contract.",
+            "screenshotPath": "packages/theme-inertia-bookings-react/docs/screenshots/react-booking-components.png"
+        }
+    ]
+}

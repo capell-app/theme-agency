@@ -44,6 +44,7 @@
                 :muted="in_array($containerKey, $theme->secondary_containers)"
                 :title="$widget->translation->title"
                 :text-align="$widget->getMeta('align')"
+                :heading-size="$widget->getMeta('heading_size')"
                 :heading-style="$widget->getMeta('heading_style')"
                 align="center"
             />

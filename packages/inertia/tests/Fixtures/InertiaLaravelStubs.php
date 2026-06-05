@@ -66,8 +66,21 @@ final class InertiaResponse
         private readonly array $props,
     ) {}
 
-    public function toResponse(Request $request): JsonResponse
+    public function toResponse(Request $request): Response
     {
+        if ($request->headers->get('X-Inertia') !== 'true') {
+            $page = [
+                'component' => $this->component,
+                'props' => $this->props,
+            ];
+
+            return new Response(
+                '<div id="app" data-page="' . htmlspecialchars((string) json_encode($page, JSON_THROW_ON_ERROR), ENT_QUOTES, 'UTF-8') . '"></div>',
+                Response::HTTP_OK,
+                ['Content-Type' => 'text/html; charset=UTF-8'],
+            );
+        }
+
         return new JsonResponse([
             'component' => $this->component,
             'props' => $this->props,

@@ -92,7 +92,23 @@
     "marketplace": {
         "summary": "Premium Inertia booking-business theme for services, clinics, consultants, classes, and appointments.",
         "description": "Theme Inertia Bookings renders Capell marketing pages through Inertia and links into the real Bookings appointment request flow with lazy slot loading.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/assets/marketplace/extension-card.svg",
+                "alt": "Theme Inertia Bookings marketplace card with booking-first Inertia page and request flow.",
+                "caption": "A premium Inertia theme for appointment-led service websites that need fast public pages and real booking requests."
+            },
+            {
+                "path": "docs/assets/marketplace/inertia-bookings-homepage.svg",
+                "alt": "Inertia bookings homepage with service proof, appointment action, and content sections.",
+                "caption": "The theme gives booking businesses a focused homepage structure for services, proof, locations, FAQs, and calls to action."
+            },
+            {
+                "path": "docs/assets/marketplace/inertia-bookings-request-flow.svg",
+                "alt": "Inertia booking request flow with lazy slot loading and appointment form fields.",
+                "caption": "The public request route uses Capell Inertia and the Bookings package contract for live slot selection."
+            }
+        ],
         "categories": ["frontend", "themes", "bookings"]
     },
     "themeKey": "inertia-bookings"
