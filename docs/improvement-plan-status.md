@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 21 |
+| Now    | 20 |
 | Next   | 295 |
 | Later  | 200 |
 
@@ -47,7 +47,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | frontend-authoring | 0 | 6 | 3 | Now closed | Current follow-up reconciles the shipped marketplace/composer outcome-led copy, promoted desktop/mobile authoring captures, orphan screenshot cleanup, and changelog history for signer, beacon-origin, approval-workspace, health, and marketplace work. Continue with beacon assembly extraction, enums, HTML sanitization policy, image/media editor surface, permissions, locale coverage, and completion review. |
 | frontend-optimizer | 1 | 7 | 4 | Slice committed | `8814277ae` removes unused layout/widget asset registries and stale docs/tests, leaving the real Capell frontend manifest renderer flow. Remaining Now row: screenshot capture/contract reconciliation. Continue with hot-path safety and completion review. |
 | ga4-reports | 1 | 7 | 5 | Slice committed | Current follow-up narrows the final Now row to screenshot capture only: manifest/composer/README/overview copy already leads with GA4 traffic, top-page, and conversion snapshots inside Capell admin, after secret-safe health diagnostics and null-client cleanup. Remaining Now row: generate the three required screenshots. |
-| hero | 1 | 6 | 4 | Slice committed | `b68c6ac19` adds responsive `srcset`/`sizes` descriptors for hero image/poster media and render coverage, after admin dependency/surface/capability cleanup. Remaining Now row: screenshot count/capture reconciliation. |
+| hero | 0 | 6 | 4 | Now closed | Current follow-up reconciles the screenshot contract: `capell.json` now lists the extension card plus both committed 1440×900 PNG captures from `docs/screenshots.json`, with SVG source captures and manifest coverage pinning paths and file existence. Continue with render budget, cache/invalidation truth, XSS boundary, carousel tests, CTA/variant/pause controls, abstract widget defaults, and carousel attributes before completion review. |
 | html-cache | 1 | 6 | 4 | Slice committed | Current follow-up keeps full flushes for route/structure changes but moves `Translation` create/update/delete onto dependency-indexed invalidation, so adding a new translation no longer cold-starts unrelated cached pages. Remaining Now row: screenshot reconciliation. |
 | insights | 0 | 2 | 4 | Now closed | `ac8d0bdaa` adds acquisition-source reporting and declares `insights-acquisition-reports`, after recent slices shipped consent banner behavior, first-visit recording, server-side consent-region resolution, retention purge chunking, dashboard aggregate caching, and health diagnostics. Insights has no Now rows left; continue with bot/self-traffic filtering, per-session journey boundaries, daily rollups, and consent-flow screenshots before completion review. |
 | knowledge-base | 0 | 7 | 3 | Now closed | `dab5594c3` reconciles feedback/version status after article and Collection edit pages were wired through Actions and article edits gained version history/publish flow. Knowledge Base has no Now rows left; continue with `/docs` frontend middleware/cache, search integration, AI-readable output, related articles, feedback aggregates, `variesBy` correctness, docs/demo, and completion review. |

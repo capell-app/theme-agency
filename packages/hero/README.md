@@ -79,6 +79,9 @@ Hero renders and seeds the default home-page hero widget used by Capell frontend
 - [overview.md](docs/overview.md)
 - [screenshots.json](docs/screenshots.json)
 
+The two declared frontend captures are committed under `docs/screenshots/` and
+listed in `capell.json` marketplace media with the extension card.
+
 ## Testing
 
 Run package tests from the repository root:
