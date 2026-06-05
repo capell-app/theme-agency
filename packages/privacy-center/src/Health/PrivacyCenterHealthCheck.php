@@ -11,6 +11,7 @@ use Capell\PrivacyCenter\Models\ConsentRecord;
 use Capell\PrivacyCenter\Models\PolicyAcceptance;
 use Capell\PrivacyCenter\Models\PrivacyRequest;
 use Capell\PrivacyCenter\Models\RetentionRule;
+use Capell\PrivacyCenter\Providers\PrivacyCenterServiceProvider;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
@@ -44,6 +45,7 @@ final class PrivacyCenterHealthCheck implements ChecksExtensionHealth
         return collect([
             $check->storageTablesCheck(),
             $check->modelMorphAliasCheck(),
+            $check->serviceProviderCheck(),
             $check->identityHashSecretCheck(),
         ]);
     }
@@ -112,6 +114,25 @@ final class PrivacyCenterHealthCheck implements ChecksExtensionHealth
     }
 
     /**
+     * Asserts Laravel has discovered and loaded the package service provider.
+     */
+    public function serviceProviderCheck(): DoctorCheckResultData
+    {
+        $providerLoaded = $this->isServiceProviderLoaded();
+
+        return new DoctorCheckResultData(
+            label: 'Privacy Center service provider',
+            passed: $providerLoaded,
+            message: $providerLoaded
+                ? 'The Privacy Center service provider is loaded by the application.'
+                : 'The Privacy Center service provider is not loaded by the application.',
+            remediation: $providerLoaded
+                ? null
+                : 'Ensure Composer package discovery includes PrivacyCenterServiceProvider and refresh the application package manifest.',
+        );
+    }
+
+    /**
      * @return list<string>
      */
     public function missingTables(): array
@@ -139,6 +160,11 @@ final class PrivacyCenterHealthCheck implements ChecksExtensionHealth
         $secret = config('capell-privacy-center.hash_secret') ?: config('app.key');
 
         return is_string($secret) && $secret !== '';
+    }
+
+    public function isServiceProviderLoaded(): bool
+    {
+        return app()->getLoadedProviders()[PrivacyCenterServiceProvider::class] ?? false;
     }
 
     /**

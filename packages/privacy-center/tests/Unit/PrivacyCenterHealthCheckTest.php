@@ -19,11 +19,11 @@ it('reports a compatible capell api version', function (): void {
 it('runs real diagnostics returning check results', function (): void {
     $results = PrivacyCenterHealthCheck::runDiagnostics();
 
-    expect($results)->toHaveCount(3)
+    expect($results)->toHaveCount(4)
         ->and($results->every(static fn (mixed $result): bool => $result instanceof DoctorCheckResultData))->toBeTrue();
 });
 
-it('passes when tables, morph aliases, and hash secret are present', function (): void {
+it('passes when tables, morph aliases, service provider, and hash secret are present', function (): void {
     $results = PrivacyCenterHealthCheck::runDiagnostics();
 
     expect(PrivacyCenterHealthCheck::passed())->toBeTrue()
@@ -56,4 +56,11 @@ it('confirms the privacy models are registered in the morph map', function (): v
 
     expect($check->unregisteredMorphAliases())->toBe([])
         ->and($check->modelMorphAliasCheck()->passed)->toBeTrue();
+});
+
+it('confirms the package service provider is loaded', function (): void {
+    $check = new PrivacyCenterHealthCheck;
+
+    expect($check->isServiceProviderLoaded())->toBeTrue()
+        ->and($check->serviceProviderCheck()->passed)->toBeTrue();
 });

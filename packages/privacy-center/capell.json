@@ -111,7 +111,6 @@
     "capabilities": [
         "privacy-center",
         "privacy-center-consent",
-        "privacy-center-cookie-categories",
         "privacy-center-insights-consent-mirror",
         "privacy-center-retention",
         "privacy-center-retention-execution",

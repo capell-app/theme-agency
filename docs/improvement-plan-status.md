@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 168 |
+| Now    | 164 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -61,7 +61,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | notes | 6 | 7 | 3 | Slice committed | `0a153655b` landed health/body validation; reminders and inbox workflow remain. |
 | password-policy | 1 | 6 | 4 | Slice committed | `899d37760` adds direct middleware coverage for redirect, forced-change allowed route, logout allowed route, and compliant no-op behavior, after prior HIBP/expiry/manifest/complexity/history slices. Remaining Now row: marketplace screenshots and summary/description. |
 | payments | 7 | 6 | 3 | Slice committed | Current follow-up queues Stripe webhook processing after verified event intake, adds a dedicated webhook processing job/action with locked event mutation, documents the `CAPELL_PAYMENTS_WEBHOOK_QUEUE` routing knob, and covers async intake/processing behavior. Continue with provider contract gaps, refund issuance, fulfillment result persistence, replay/reconcile commands, idempotency keys, and completion review. |
-| privacy-center | 7 | 5 | 4 | Slice committed | Current follow-up adds Action-backed DSAR edit-page workflow actions for verified/fulfilled/rejected states and makes status/timestamp fields read-only so operators cannot bypass audit stamps. Prior slice `c45d46877` wired retention command; consent UI, table filters, retention run-now UI, and cross-package privacy rows remain. |
+| privacy-center | 3 | 5 | 4 | Slice committed | Current follow-up adds provider/table/morph/hash-secret health diagnostics, removes the unshipped cookie-category public-surface capability, and reconciles already-shipped retention execution plus fail-loud hash-secret rows. Remaining Now rows: insights subject mirroring, DSAR edit actions, and README/CHANGELOG expansion. |
 | public-actions | 5 | 7 | 5 | Slice committed | `10c4b5906` adds explicit redirect-to-private/link-local/internal webhook regression coverage and reuses the canonical encoded webhook payload for hash/sign/send paths; durable fanout/replay/retention rows remain. |
 | publishing-studio | 5 | 6 | 5 | Slice committed | `c6a886556` landed health/screenshots; continue with publishing workflow rows. |
 | search | 3 | 6 | 4 | Slice committed | Current follow-up fixes the driver contract docs, documents the public-safe `highlight()` contract, refreshes marketplace/composer positioning, and promotes existing screenshot assets into manifest coverage. Remaining Now rows: Scout/private visibility tests, click-count aggregate/cache chain work, and deferred/queued search-log writes. |
