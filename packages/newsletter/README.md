@@ -101,6 +101,9 @@ Newsletter captures, confirms, segments, and syncs subscribers for Capell sites,
 - [screenshots.json](docs/screenshots.json)
 - [subscription-workflow.md](docs/subscription-workflow.md)
 
+The full 13-capture screenshot contract is committed under `docs/screenshots/`
+and listed in `capell.json` marketplace media with the extension card.
+
 ## Testing
 
 Run package tests from the repository root:

@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 18 |
+| Now    | 17 |
 | Next   | 295 |
 | Later  | 200 |
 
@@ -57,7 +57,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | media-library | 0 | 0 | 3 | Now closed | Current follow-up replaces path-only duplicate reporting with SHA-256 content-hash duplicate detection after structural rights-metadata parsing, short-TTL health/orphan report result caching, memoized `getFirstMedia()` owner lookups, anonymous/non-admin media output-safety coverage, and the `1a12ad1fa` media-ai missing-alt signal. Media Library has no Now/Next rows left; continue with premium DAM rows and completion review. |
 | migration-assistant | 0 | 5 | 3 | Now closed | `2714b18cf` reconciles tracker status after `42e122b08` promoted marketplace media and recent slices shipped translated health probes, rollback table-name repair, rollback-report support, external-page execution, and package reader paths. Migration Assistant has no Now rows left; continue with headless export/import, one-click rollback execution, site-import wizard reachability, job retry/backoff, query-budget coverage, and completion review. |
 | navigation | 0 | 4 | 4 | Now closed | `b87e8bc1c` moves frontend render-model resolution into a composer after screenshot/manifest reconciliation and indexed reference lookups. Navigation has no Now rows left; continue with role-aware visibility, breadcrumb builder, active-state modes, first-class external links, and completion review. |
-| newsletter | 1 | 6 | 4 | Slice committed | Current follow-up reconciles marketplace/composer/README/overview copy around the shipped capture, consent, segmentation, preference-center, scheduled-send-record, and provider-sync surfaces, after real keyed diagnostics, direct FormSubmitted listener, token replay, and Fake provider hardening. Remaining Now row: marketplace screenshots. |
+| newsletter | 0 | 6 | 4 | Now closed | Current follow-up reconciles the 13-shot screenshot contract: `capell.json` now lists the extension card plus committed 1440x900 PNG captures for subscribers, subscriber form, provider connections/audiences/interests, form mappings, tags, segments, import batches, sync attempts, overview stats, confirmation, and unsubscribe routes. Continue with send strategy, suppression, List-Unsubscribe, preference-center public-output safety, sync retry exhaustion, automation events, analytics, GDPR export/erasure, ESP 429 backoff, localization, and queued imports before completion review. |
 | notes | 0 | 9 | 4 | Now closed | `0b6eaee29` renders scoped inbox notes, marks displayed mentions read, and reconciles resolve/reopen/complete UI status after `0a153655b` landed health/body validation. Notes has no Now rows left; continue with reminders, record-editor visibility semantics, cached attention counts, searchable user selects, enum labels, generalized note subjects, notifications, orphaned morph cleanup, screenshot generation, and completion review. |
 | password-policy | 0 | 6 | 4 | Now closed | Current follow-up reconciles the marketplace screenshot contract: `capell.json` now lists the extension card plus all three committed 1440x900 PNG captures for settings, forced-change flow, and Users-table policy columns, with SVG sources and manifest coverage pinning paths/files. Continue with duplicate surface cleanup, history pruning, reusable policy rule/Fortify hooks, schema-probe caching, i18n, lifecycle events, lockout, role scoping, health assertions, and console commands before completion review. |
 | payments | 1 | 6 | 3 | Slice committed | Current follow-up reconciles already-shipped marketplace/composer copy around native Stripe Checkout, provider-neutral payment records, customer portal billing, and Form Builder payment fields after webhook locking, paid-download replay, money-cast, and return URL fixes. Remaining Now row: marketplace screenshots/GIF. |
@@ -84,6 +84,15 @@ No package should be marked `Complete` from commit history alone. Completion req
 | url-manager | 0 | 7 | 4 | Now closed | Current follow-up defers public redirect hit writes until application termination and updates rule counters atomically when the callback runs, closing the final Now row. Continue with regex safety, loop detection, Core 404 capture, and completion review. |
 | welcome-tour | 0 | 5 | 5 | Now closed | Current follow-up reconciles the package-owned `welcome_tour_user_states` persistence already covering hosts without `users.dismissed_hints`, closing the final Now row. Continue with anchored default steps, marketplace copy/media, and Next/Later rows before completion review. |
 | wordpress-importer | 0 | 5 | 3 | Now closed | `e1dcfeeb8` closes the remaining Now tracker rows after `701095d4a` reconciled marketplace metadata and recent slices added WXR execution through Migration Assistant, package reader selection, screenshot/copy reconciliation, health probes, PHP runtime metadata, keywords, and console preview. WordPress Importer has no Now rows left; continue with media download/rewrite, redirect preservation, idempotent re-import, streaming XML parsing, end-to-end integration coverage, and completion review. |
+
+## Screenshot Runner Audit
+
+2026-06-05 search results:
+
+- `record-switcher` has the only `docs/screenshots.json` missing `generatedFor: deployment-screenshot-runner`; its manifest also uses SVG marketplace assets as screenshot outputs.
+- Recent manual screenshot slices that should be regenerated or revalidated through the Capell screenshot runner before final completion review: `hero`, `password-policy`, `structured-content-library`, and `newsletter`.
+- Packages currently relying entirely on SVG marketplace media rather than committed runner PNGs include `bookings`, `comments`, `dashboard-reports`, `record-switcher`, `site-discovery`, `social-feeds`, and the Inertia booking/theme SVG packages. Treat those as illustrative marketplace artwork unless a real runner PNG contract is added.
+- The repo-level `scripts/validate-screenshot-manifests.js` is stale against current package practice: it still requires `marketplace.screenshots[].path` to start with `docs/assets/marketplace/`, while many packages now advertise `docs/screenshots/*.png`. Update the validator before using it as the source of truth for screenshot completion.
 
 ## Next Audit Queue
 

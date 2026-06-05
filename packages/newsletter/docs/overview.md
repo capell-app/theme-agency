@@ -53,19 +53,11 @@ Public routes should expose only confirmation/unsubscribe/webhook outcomes and m
 
 ## Screenshot Plan
 
-- Subscribers admin index.
-- Create/edit subscriber form.
-- Provider connections admin index and form.
-- Provider audiences admin index and form.
-- Provider interest mappings admin index and form.
-- Form mappings admin index and form.
-- Newsletter tags admin index and form.
-- Segments admin index and form.
-- Import batches admin index.
-- Sync attempts admin index.
-- Newsletter overview stats on the admin dashboard.
-- Confirmation route response.
-- Unsubscribe route response.
+The full screenshot plan is now committed as 13 1440x900 PNG captures under
+`docs/screenshots/` and listed in `capell.json` marketplace media:
+subscribers, subscriber form, provider connections, provider audiences,
+interest mappings, form mappings, tags, segments, import batches, sync
+attempts, overview stats, confirmation route, and unsubscribe route.
 
 ## Verification
 
@@ -74,6 +66,6 @@ Public routes should expose only confirmation/unsubscribe/webhook outcomes and m
 
 ## Known Risks
 
-- Screenshot capture needs seeded subscribers, provider connections, form mappings, segments, and sync attempts to avoid empty tables.
-- Public confirmation/unsubscribe screenshots need disposable public tokens.
+- Future route-backed screenshot refreshes need seeded subscribers, provider connections, form mappings, segments, and sync attempts to avoid empty tables.
+- Future public confirmation/unsubscribe refreshes need disposable public tokens.
 - Webhook coverage should use a signed or provider-authenticated request scenario rather than a browser-only screenshot.

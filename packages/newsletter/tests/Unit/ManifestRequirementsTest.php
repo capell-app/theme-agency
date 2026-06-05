@@ -70,3 +70,33 @@ it('declares newsletter segmentation, preference center, campaign send, and attr
             'newsletter-automation-hooks',
         );
 });
+
+it('declares the built newsletter marketplace screenshot contract', function (): void {
+    $manifest = newsletterManifest();
+    /** @var array{entries: list<array{id: string, screenshotPath: string}>} $contract */
+    $contract = json_decode(
+        (string) file_get_contents(__DIR__ . '/../../docs/screenshots.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    $contractPaths = collect($contract['entries'])
+        ->pluck('screenshotPath')
+        ->map(fn (string $path): string => str_replace('packages/newsletter/', '', $path))
+        ->all();
+
+    $manifestPaths = collect($manifest['marketplace']['screenshots'])
+        ->pluck('path')
+        ->all();
+
+    expect($manifestPaths)->toBe([
+        'docs/assets/marketplace/extension-card.jpg',
+        ...$contractPaths,
+    ]);
+
+    foreach ($manifestPaths as $path) {
+        expect(is_file(__DIR__ . '/../../' . $path))->toBeTrue();
+    }
+
+    expect($contractPaths)->toHaveCount(13);
+});
