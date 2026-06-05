@@ -22,6 +22,8 @@ uses(InertiaReactAdapterTestCase::class);
 it('registers the react adapter with the inertia bridge', function (): void {
     $adapter = resolve(InertiaAdapterRegistry::class)->get(InertiaReactAdapterServiceProvider::ADAPTER_KEY);
 
+    throw_if($adapter === null, RuntimeException::class, 'React adapter was not registered.');
+
     expect($adapter)->not->toBeNull()
         ->and($adapter->key)->toBe('react')
         ->and($adapter->packageName)->toBe(InertiaReactAdapterServiceProvider::$packageName)

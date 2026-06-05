@@ -20,10 +20,15 @@ uses(InertiaTestCase::class);
 
 it('registers the inertia renderer and middleware on the frontend route stack', function (): void {
     $middleware = resolve(FrontendRouteMiddlewareRegistry::class)->all();
+    $webMiddlewareIndex = array_search('web', $middleware, true);
+    $inertiaMiddlewareIndex = array_search(HandleInertiaRequests::class, $middleware, true);
+
+    throw_if($webMiddlewareIndex === false, RuntimeException::class, 'Web middleware was not registered.');
+    throw_if($inertiaMiddlewareIndex === false, RuntimeException::class, 'Inertia middleware was not registered.');
 
     expect(resolve(FrontendResponseRendererRegistry::class)->has(FrontendRuntime::Inertia))->toBeTrue()
         ->and($middleware)->toContain(HandleInertiaRequests::class)
-        ->and(array_search(HandleInertiaRequests::class, $middleware, true))->toBeGreaterThan(array_search('web', $middleware, true));
+        ->and($inertiaMiddlewareIndex)->toBeGreaterThan($webMiddlewareIndex);
 });
 
 it('shares namespaced capell inertia props through the middleware', function (): void {

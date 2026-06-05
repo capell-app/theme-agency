@@ -14,6 +14,7 @@ use Capell\Inertia\Rendering\CapellInertiaResponseRenderer;
 use Capell\Inertia\Support\CapellInertiaManager;
 use Capell\Inertia\Support\InertiaAdapterRegistry;
 use Illuminate\Support\Facades\Route;
+use Inertia\ServiceProvider as LaravelInertiaServiceProvider;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -33,6 +34,10 @@ class InertiaServiceProvider extends AbstractPackageServiceProvider
 
     public function packageRegistered(): void
     {
+        if (class_exists(LaravelInertiaServiceProvider::class) && $this->app->getProvider(LaravelInertiaServiceProvider::class) === null) {
+            $this->app->register(LaravelInertiaServiceProvider::class);
+        }
+
         $this->app->singleton('capell-inertia', fn (): CapellInertiaManager => new CapellInertiaManager);
         $this->app->singleton(InertiaAdapterRegistry::class);
     }

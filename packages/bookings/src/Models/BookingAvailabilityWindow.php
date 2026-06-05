@@ -18,6 +18,11 @@ use Override;
  * @property int $day_of_week
  * @property CarbonImmutable|null $effective_from
  * @property CarbonImmutable|null $effective_until
+ * @property string $ends_at
+ * @property int|null $location_id
+ * @property int|null $service_id
+ * @property int|null $staff_member_id
+ * @property string $starts_at
  * @property BookingAvailabilityStatusEnum $status
  * @property string $timezone
  */

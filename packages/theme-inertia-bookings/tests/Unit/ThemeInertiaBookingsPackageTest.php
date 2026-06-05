@@ -83,7 +83,7 @@ it('registers the theme, booking renderer, and inertia theme assets when install
 
     $provider = new InertiaBookingsThemeServiceProvider($this->app);
     $provider->register();
-    $provider->boot($registry);
+    $provider->packageBooted();
 
     $packageImports = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindImport)
         ->filter(static fn (mixed $asset): bool => $asset->packageName === InertiaBookingsThemeServiceProvider::$packageName)

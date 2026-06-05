@@ -16,6 +16,11 @@ use Override;
 /**
  * @property int|null $capacity
  * @property CarbonImmutable $date
+ * @property string|null $ends_at
+ * @property int|null $location_id
+ * @property int|null $service_id
+ * @property int|null $staff_member_id
+ * @property string|null $starts_at
  * @property BookingAvailabilityStatusEnum $status
  * @property string $timezone
  */

@@ -14,6 +14,8 @@ class CapellInertiaManager
      */
     public function render(string $component, array $props = [], ?int $status = null): Response
     {
+        Inertia::setRootView((string) config('capell-inertia.root_view', 'capell-inertia::app'));
+
         $response = Inertia::render($component, $props)->toResponse(request());
 
         if ($status !== null) {

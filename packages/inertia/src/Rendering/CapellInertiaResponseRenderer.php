@@ -26,9 +26,11 @@ final class CapellInertiaResponseRenderer implements FrontendResponseRenderer
             return response()->noContent($context->status ?? 404);
         }
 
+        Inertia::setRootView((string) config('capell-inertia.root_view', 'capell-inertia::app'));
+
         $response = Inertia::render(
-            component: (string) config('capell-inertia.page_component', 'Capell/Page'),
-            props: BuildInertiaPagePropsAction::run($context),
+            (string) config('capell-inertia.page_component', 'Capell/Page'),
+            BuildInertiaPagePropsAction::run($context),
         )->toResponse(request());
 
         if ($context->status !== null) {

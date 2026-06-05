@@ -7,7 +7,7 @@ namespace Capell\Inertia\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static \Symfony\Component\HttpFoundation\Response render(string $component, array $props = [], ?int $status = null)
+ * @method static \Symfony\Component\HttpFoundation\Response render(string $component, array<string, mixed> $props = [], ?int $status = null)
  */
 class CapellInertia extends Facade
 {
