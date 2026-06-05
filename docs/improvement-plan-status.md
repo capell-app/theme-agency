@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 86 |
+| Now    | 85 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -54,7 +54,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | layout-builder | 1 | 5 | 4 | Slice committed | `5da9e0066` tightens the visual editor responsive preview frame/tree sizing after prior slices aligned manifest dependencies, implemented real health probes, removed the dead cache enum, promoted marketplace screenshots, rewrote manifest/composer copy, and added fragment invalid/replay safety coverage. Remaining Now row: add the full public render performance-budget test, especially the render-time budget; current stress coverage proves bounded query behavior only. |
 | login-audit | 1 | 6 | 2 | Slice committed | Current follow-up reconciles the shipped real health diagnostics, daily retention purge tracking, and throttled admin activity writes. Remaining Now row: marketplace screenshot manifest/copy reconciliation. |
 | media-ai | 1 | 6 | 3 | Slice committed | Current follow-up rewrites marketplace/composer/docs copy around shipped provider-backed Doctor image operations, wires committed light/dark screenshots, and positions Media AI as a premium Media Library add-on. Remaining Now row: first-party AI Orchestrator image-doctor adapter. |
-| media-library | 2 | 5 | 3 | Slice committed | Current follow-up adds explicit owner-FK config precedence plus safe schema auto-discovery for conventional Curator owner columns, and routes media health/orphan reports through the shared resolver after real health checks, issue filtering, and upload validation. Remaining Now rows: visibility preservation and docs/screenshot reconciliation. |
+| media-library | 1 | 5 | 3 | Slice committed | Current follow-up adds direct regression coverage proving private source disk visibility is preserved when migrating Spatie media to Curator, after explicit owner-FK config precedence, safe schema auto-discovery, real health checks, issue filtering, and upload validation. Remaining Now row: docs/screenshot reconciliation. |
 | migration-assistant | 3 | 5 | 3 | Slice committed | Current follow-up implements translated manifest-keyed health probes for package reader readiness, rollback-report support, and media ingest limits, after locking the live `ImportSessionKind` contract to package-owned page/site imports and documenting WordPress/spreadsheet source readers as extension paths. Remaining Now rows: rollback table-name repair and marketplace media/copy. |
 | navigation | 1 | 5 | 4 | Slice committed | Current follow-up replaces the page-reference JSON `LIKE` scan with an indexed `whereExists` against `navigation_page_references` while retaining decoded item-tree validation for stale indexed rows, after real health probes and metadata/copy work. Remaining Now row: screenshot manifest reconciliation. |
 | newsletter | 2 | 6 | 4 | Slice committed | Current follow-up implements real keyed newsletter diagnostics for form subscription capture, provider sync retry, provider webhooks, and segment evaluation with translated output and focused tests, after direct FormSubmitted listener, token replay, and Fake provider hardening. Remaining Now rows: marketplace copy and screenshots. |
