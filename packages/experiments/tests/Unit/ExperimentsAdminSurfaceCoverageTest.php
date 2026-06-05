@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Filament\Forms\Components\DateTimePicker;
+
 require_once __DIR__ . '/../Pest.php';
 
 use Capell\Experiments\Actions\CreateExperimentAction;
@@ -57,8 +59,8 @@ it('builds experiments resource forms with configured fields and enum option lab
         TextInput::class,
         Select::class,
         TextInput::class,
-        'Filament\Forms\Components\DateTimePicker',
-        'Filament\Forms\Components\DateTimePicker',
+        DateTimePicker::class,
+        DateTimePicker::class,
         KeyValue::class,
     ])
         ->and(experimentsResourceFormComponentClasses(ExperimentVariantResource::form(Schema::make())))->toBe([

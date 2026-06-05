@@ -63,7 +63,7 @@ it('hashes explicitly provided ip and user agent independently of the request', 
 it('does not read request context inside the action', function (): void {
     app()->instance('request', Request::create(
         uri: '/admin/document-lifecycle',
-        method: 'POST',
+        method: Symfony\Component\HttpFoundation\Request::METHOD_POST,
         server: [
             'REMOTE_ADDR' => '198.51.100.44',
             'HTTP_USER_AGENT' => 'admin-browser/2.0',

@@ -276,11 +276,11 @@ final class Ga4ReportsHealthCheck implements ChecksExtensionHealth
 
         try {
             $client->dailyMetrics($this->apiProbeWindow($config));
-        } catch (Throwable $throwable) {
+        } catch (Throwable) {
             return new DoctorCheckResultData(
                 label: 'GA4 Reports data client',
                 passed: false,
-                message: $this->apiProbeFailureMessage($throwable),
+                message: $this->apiProbeFailureMessage(),
                 remediation: 'Confirm the service account can access the GA4 property and that Google Analytics Data API requests are not blocked or quota-limited.',
             );
         }
@@ -501,7 +501,7 @@ final class Ga4ReportsHealthCheck implements ChecksExtensionHealth
         );
     }
 
-    private function apiProbeFailureMessage(Throwable $throwable): string
+    private function apiProbeFailureMessage(): string
     {
         return 'The GA4 Reports data client could not complete the read probe.';
     }

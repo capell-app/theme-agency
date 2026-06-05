@@ -6,12 +6,14 @@ namespace Capell\Inertia\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Override;
 
 class HandleInertiaRequests extends Middleware
 {
     /** @var string */
     protected $rootView = 'capell-inertia::app';
 
+    #[Override]
     public function rootView(Request $request): string
     {
         $rootView = config('capell-inertia.root_view', $this->rootView);
@@ -22,6 +24,7 @@ class HandleInertiaRequests extends Middleware
     /**
      * @return array<string, mixed>
      */
+    #[Override]
     public function share(Request $request): array
     {
         return [

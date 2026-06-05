@@ -5,21 +5,21 @@ declare(strict_types=1);
 use Capell\EmailStudio\Enums\EmailMessageStatus;
 use Capell\EmailStudio\Models\EmailMessage;
 use Illuminate\Console\Command;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Date;
 
 afterEach(function (): void {
-    Carbon::setTestNow();
+    Date::setTestNow();
 });
 
 it('runs body retention through the console command in json dry-run mode', function (): void {
-    Carbon::setTestNow('2026-06-04 12:00:00');
+    Date::setTestNow('2026-06-04 12:00:00');
 
     $message = EmailMessage::factory()->create([
         'status' => EmailMessageStatus::Sent,
         'rendered_html' => '<p>Retained</p>',
         'rendered_text' => 'Retained',
-        'sent_at' => Carbon::now()->subDays(15),
+        'sent_at' => Date::now()->subDays(15),
     ]);
 
     $exitCode = Artisan::call('capell-email-studio:prune-bodies', [
@@ -42,13 +42,13 @@ it('runs body retention through the console command in json dry-run mode', funct
 });
 
 it('clears retained rendered bodies through the console command', function (): void {
-    Carbon::setTestNow('2026-06-04 12:00:00');
+    Date::setTestNow('2026-06-04 12:00:00');
 
     $message = EmailMessage::factory()->create([
         'status' => EmailMessageStatus::Sent,
         'rendered_html' => '<p>PII</p>',
         'rendered_text' => 'PII',
-        'sent_at' => Carbon::now()->subDays(15),
+        'sent_at' => Date::now()->subDays(15),
     ]);
 
     $this->artisan('capell-email-studio:prune-bodies', ['--days' => '7'])

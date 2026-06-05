@@ -5,14 +5,14 @@ declare(strict_types=1);
 use Capell\EmailStudio\Actions\PruneEmailBodiesAction;
 use Capell\EmailStudio\Enums\EmailMessageStatus;
 use Capell\EmailStudio\Models\EmailMessage;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
 
 afterEach(function (): void {
-    Carbon::setTestNow();
+    Date::setTestNow();
 });
 
 it('clears retained rendered bodies past the configured cutoff without deleting audit metadata', function (): void {
-    Carbon::setTestNow('2026-06-04 12:00:00');
+    Date::setTestNow('2026-06-04 12:00:00');
     config(['capell-email-studio.body_retention_days' => 30]);
 
     $expiredSent = EmailMessage::factory()->create([
@@ -23,7 +23,7 @@ it('clears retained rendered bodies past the configured cutoff without deleting 
         'rendered_text' => 'PII',
         'context_snapshot' => ['order_id' => 123],
         'headers' => ['X-Test' => 'yes'],
-        'sent_at' => Carbon::now()->subDays(31),
+        'sent_at' => Date::now()->subDays(31),
         'failed_at' => null,
     ]);
 
@@ -31,7 +31,7 @@ it('clears retained rendered bodies past the configured cutoff without deleting 
         'status' => EmailMessageStatus::Sent,
         'rendered_html' => '<p>Fresh</p>',
         'rendered_text' => 'Fresh',
-        'sent_at' => Carbon::now()->subDays(29),
+        'sent_at' => Date::now()->subDays(29),
         'failed_at' => null,
     ]);
 
@@ -40,7 +40,7 @@ it('clears retained rendered bodies past the configured cutoff without deleting 
         'rendered_html' => '<p>Failed PII</p>',
         'rendered_text' => 'Failed PII',
         'sent_at' => null,
-        'failed_at' => Carbon::now()->subDays(31),
+        'failed_at' => Date::now()->subDays(31),
         'failure_reason' => 'Provider failed.',
     ]);
 
@@ -48,7 +48,7 @@ it('clears retained rendered bodies past the configured cutoff without deleting 
         'status' => EmailMessageStatus::Queued,
         'rendered_html' => '<p>Still needed</p>',
         'rendered_text' => 'Still needed',
-        'created_at' => Carbon::now()->subDays(60),
+        'created_at' => Date::now()->subDays(60),
         'sent_at' => null,
         'failed_at' => null,
     ]);
@@ -80,13 +80,13 @@ it('clears retained rendered bodies past the configured cutoff without deleting 
 });
 
 it('reports matches without clearing rendered bodies during dry runs', function (): void {
-    Carbon::setTestNow('2026-06-04 12:00:00');
+    Date::setTestNow('2026-06-04 12:00:00');
 
     $message = EmailMessage::factory()->create([
         'status' => EmailMessageStatus::Sent,
         'rendered_html' => '<p>Retained</p>',
         'rendered_text' => 'Retained',
-        'sent_at' => Carbon::now()->subDays(10),
+        'sent_at' => Date::now()->subDays(10),
     ]);
 
     $result = PruneEmailBodiesAction::run(retentionDays: 7, dryRun: true);

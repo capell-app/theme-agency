@@ -35,7 +35,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
 
 require_once dirname(__DIR__) . '/autoload.php';
 
@@ -185,7 +185,7 @@ it('exposes privacy request edit workflow actions', function (): void {
 });
 
 it('marks privacy requests through edit workflow actions', function (): void {
-    Carbon::setTestNow(Carbon::parse('2026-06-05 10:30:00'));
+    Date::setTestNow(Date::parse('2026-06-05 10:30:00'));
 
     try {
         $siteId = $this->createPrivacyCenterSite();
@@ -226,7 +226,7 @@ it('marks privacy requests through edit workflow actions', function (): void {
             ->and($requestForRejection->rejected_at?->toDateTimeString())->toBe('2026-06-05 10:30:00')
             ->and($requestForRejection->rejection_reason)->toBe('Unable to verify identity.');
     } finally {
-        Carbon::setTestNow();
+        Date::setTestNow();
     }
 });
 

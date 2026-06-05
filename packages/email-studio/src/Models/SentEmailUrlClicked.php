@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Capell\EmailStudio\Models;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use jdavidbakr\MailTracker\Model\SentEmailUrlClicked as VendorSentEmailUrlClicked;
+use Override;
 
 /**
  * @property int $id
@@ -19,6 +21,9 @@ use jdavidbakr\MailTracker\Model\SentEmailUrlClicked as VendorSentEmailUrlClicke
  */
 class SentEmailUrlClicked extends VendorSentEmailUrlClicked
 {
+    use HasFactory;
+    use HasFactory;
+
     protected $table = 'sent_emails_url_clicked';
 
     /**
@@ -32,6 +37,7 @@ class SentEmailUrlClicked extends VendorSentEmailUrlClicked
     /**
      * @return array<string, string>
      */
+    #[Override]
     protected function casts(): array
     {
         return [

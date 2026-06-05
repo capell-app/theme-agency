@@ -14,13 +14,13 @@ use Capell\EmailStudio\Models\SentEmailUrlClicked;
 use Capell\EmailStudio\Providers\EmailStudioServiceProvider;
 use Capell\EmailStudio\Settings\EmailStudioSettings;
 use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 use jdavidbakr\MailTracker\MailTracker;
 
 afterEach(function (): void {
-    Carbon::setTestNow();
+    Date::setTestNow();
 });
 
 it('registers email studio settings and extension management surface', function (): void {
@@ -73,7 +73,7 @@ it('applies settings to mail tracker configuration and custom models', function 
 });
 
 it('purges expired tracked emails and click rows while preserving fresh records', function (): void {
-    Carbon::setTestNow('2026-06-05 10:00:00');
+    Date::setTestNow('2026-06-05 10:00:00');
     Storage::fake('local');
 
     $expiredEmail = SentEmail::query()->create([
@@ -81,8 +81,8 @@ it('purges expired tracked emails and click rows while preserving fresh records'
         'subject' => 'Expired',
         'content' => null,
         'meta' => collect(['content_file_path' => 'mail-tracker/expired.html']),
-        'created_at' => Carbon::now()->subDays(61),
-        'updated_at' => Carbon::now()->subDays(61),
+        'created_at' => Date::now()->subDays(61),
+        'updated_at' => Date::now()->subDays(61),
     ]);
     Storage::disk('local')->put('mail-tracker/expired.html', '<p>Expired</p>');
 
@@ -90,8 +90,8 @@ it('purges expired tracked emails and click rows while preserving fresh records'
         'hash' => 'fresh-tracked-email-hash-0000001',
         'subject' => 'Fresh',
         'content' => '<p>Fresh</p>',
-        'created_at' => Carbon::now()->subDays(10),
-        'updated_at' => Carbon::now()->subDays(10),
+        'created_at' => Date::now()->subDays(10),
+        'updated_at' => Date::now()->subDays(10),
     ]);
 
     SentEmailUrlClicked::query()->create([
@@ -121,13 +121,13 @@ it('purges expired tracked emails and click rows while preserving fresh records'
 });
 
 it('supports dry run tracked email purge without deleting rows', function (): void {
-    Carbon::setTestNow('2026-06-05 10:00:00');
+    Date::setTestNow('2026-06-05 10:00:00');
 
     $expiredEmail = SentEmail::query()->create([
         'hash' => 'dry-run-tracked-email-hash-001',
         'subject' => 'Dry run',
-        'created_at' => Carbon::now()->subDays(61),
-        'updated_at' => Carbon::now()->subDays(61),
+        'created_at' => Date::now()->subDays(61),
+        'updated_at' => Date::now()->subDays(61),
     ]);
 
     $result = PurgeTrackedEmailsAction::run(retentionDays: 60, dryRun: true);
@@ -139,13 +139,13 @@ it('supports dry run tracked email purge without deleting rows', function (): vo
 });
 
 it('runs tracked email purge through the console command in json mode', function (): void {
-    Carbon::setTestNow('2026-06-05 10:00:00');
+    Date::setTestNow('2026-06-05 10:00:00');
 
     SentEmail::query()->create([
         'hash' => 'console-tracked-email-hash-001',
         'subject' => 'Console',
-        'created_at' => Carbon::now()->subDays(61),
-        'updated_at' => Carbon::now()->subDays(61),
+        'created_at' => Date::now()->subDays(61),
+        'updated_at' => Date::now()->subDays(61),
     ]);
 
     $exitCode = Artisan::call('capell-email-studio:purge-tracked-emails', [

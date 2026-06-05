@@ -187,8 +187,8 @@ it('rejects duplicate article slugs inside the same collection only', function (
             body: '<p>Install the product again.</p>',
             status: KnowledgeBaseArticleStatus::Published,
         ));
-    } catch (ValidationException $exception) {
-        expect($exception->errors())->toBe([
+    } catch (ValidationException $validationException) {
+        expect($validationException->errors())->toBe([
             'slug' => [__('capell-knowledge-base::generic.validation.slug_unique')],
         ]);
 
@@ -216,10 +216,10 @@ it('rejects duplicate collection slugs and keys during updates', function (): vo
             slug: $otherCollection->slug,
             key: 'public-docs-updated',
         ));
-    } catch (ValidationException $exception) {
+    } catch (ValidationException $validationException) {
         $slugRejected = true;
 
-        expect($exception->errors())->toBe([
+        expect($validationException->errors())->toBe([
             'slug' => [__('capell-knowledge-base::generic.validation.collection_slug_unique')],
         ]);
     }
@@ -232,8 +232,8 @@ it('rejects duplicate collection slugs and keys during updates', function (): vo
             slug: 'public-docs-updated',
             key: $otherCollection->key,
         ));
-    } catch (ValidationException $exception) {
-        expect($exception->errors())->toBe([
+    } catch (ValidationException $validationException) {
+        expect($validationException->errors())->toBe([
             'key' => [__('capell-knowledge-base::generic.validation.collection_key_unique')],
         ]);
 

@@ -99,7 +99,7 @@ it('builds hydrated public booking request props with available slots', function
         'timezone' => 'Europe/London',
     ]);
 
-    $request = Request::create('/bookings', 'GET', [
+    $request = Request::create('/bookings', Symfony\Component\HttpFoundation\Request::METHOD_GET, [
         'service_id' => $service->getKey(),
         'staff_member_id' => $staffMember->getKey(),
         'location_id' => $location->getKey(),

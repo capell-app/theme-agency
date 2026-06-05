@@ -24,9 +24,8 @@ uses(DashboardReportsTestCase::class);
  */
 function dashboardReportsHealthSetMainDashboardWidgets(array $widgets): void
 {
-    $manager = app(CapellAdminManager::class);
+    $manager = resolve(CapellAdminManager::class);
     $property = new ReflectionProperty($manager, 'dashboardWidgets');
-    $property->setAccessible(true);
 
     $property->setValue($manager, [
         DashboardEnum::Main->value => $widgets,
@@ -36,7 +35,6 @@ function dashboardReportsHealthSetMainDashboardWidgets(array $widgets): void
 function dashboardReportsHealthForgetTag(string $tag): void
 {
     $property = new ReflectionProperty(Container::class, 'tags');
-    $property->setAccessible(true);
 
     $tags = $property->getValue(app());
     $tags = is_array($tags) ? $tags : [];

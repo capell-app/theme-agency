@@ -39,7 +39,7 @@ final class CapturingEmailStudioMailer implements MailerContract
      * @param  array<array-key, mixed>  $view
      * @param  array<array-key, mixed>  $data
      */
-    public function send(mixed $view, array $data = [], mixed $callback = null): ?IlluminateSentMessage
+    public function send(mixed $view, array $data = [], mixed $callback = null): IlluminateSentMessage
     {
         unset($view, $data);
 

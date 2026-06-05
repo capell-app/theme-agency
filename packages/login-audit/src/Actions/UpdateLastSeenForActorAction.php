@@ -33,7 +33,7 @@ final class UpdateLastSeenForActorAction
             )
             ->where('user_agent', $userAgent)
             ->where('login_at', '<', $trackedAt)
-            ->orderByDesc('login_at')
+            ->latest('login_at')
             ->orderByDesc('id')
             ->first();
 

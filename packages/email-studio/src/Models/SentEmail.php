@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\EmailStudio\Models;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use jdavidbakr\MailTracker\Model\SentEmail as VendorSentEmail;
@@ -31,6 +32,8 @@ use Override;
  */
 class SentEmail extends VendorSentEmail
 {
+    use HasFactory;
+
     protected $table = 'sent_emails';
 
     /** @var list<string> */

@@ -52,7 +52,7 @@ it('does not ship public output files with frontend authoring markers', function
         $packagePath . '/resources/js',
         $packagePath . '/resources/css',
         $packagePath . '/public',
-    ], static fn (string $path): bool => is_dir($path));
+    ], is_dir(...));
     $forbiddenFragments = [
         'frontend-authoring',
         'capell-authoring',

@@ -31,7 +31,7 @@ function makePasswordPolicyMiddlewareRequest(string $uri, Model $user, ?Route $r
     $request = Request::create($uri);
     $request->setUserResolver(fn (?string $guard = null): Model => $user);
 
-    if ($route !== null) {
+    if ($route instanceof Route) {
         $request->setRouteResolver(fn (): Route => $route);
     }
 
@@ -73,9 +73,7 @@ it('allows non-compliant users to access the forced password change page', funct
     ]);
     $changePasswordPath = parse_url(ForcedPasswordChangePage::getUrl(), PHP_URL_PATH);
 
-    if (! is_string($changePasswordPath)) {
-        throw new RuntimeException('Expected the forced password change URL to contain a path.');
-    }
+    throw_unless(is_string($changePasswordPath), RuntimeException::class, 'Expected the forced password change URL to contain a path.');
 
     $response = runPasswordPolicyMiddleware(
         makePasswordPolicyMiddlewareRequest($changePasswordPath, $user),

@@ -185,7 +185,7 @@ it('confirms and unsubscribes with one-use public tokens', function (): void {
 
     $unsubscribePublicToken = $subscriber->publicTokens()
         ->where('type', PublicTokenType::Unsubscribe)
-        ->where('token_hash', hash('sha256', $unsubscribeToken))
+        ->where('token_hash', hash('sha256', (string) $unsubscribeToken))
         ->firstOrFail();
 
     expect($unsubscribePublicToken->used_at)->not->toBeNull();

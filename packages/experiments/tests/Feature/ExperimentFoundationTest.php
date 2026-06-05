@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\Frontend\Actions\Performance\RecordExtensionRenderContributionAction;
+
 require_once __DIR__ . '/../Pest.php';
 
 use Capell\Experiments\Actions\AllocateVariantAction;
@@ -261,7 +263,7 @@ it('does not allocate visitors outside required audience rules', function (): vo
 });
 
 it('resolves an active request context variant with cache variation metadata', function (): void {
-    $recordContributionAction = 'Capell\\Frontend\\Actions\\Performance\\RecordExtensionRenderContributionAction';
+    $recordContributionAction = RecordExtensionRenderContributionAction::class;
 
     if (! class_exists($recordContributionAction)) {
         test()->markTestSkipped('Capell Frontend render contribution recording is not available.');

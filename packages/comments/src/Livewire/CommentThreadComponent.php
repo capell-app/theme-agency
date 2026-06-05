@@ -106,8 +106,8 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
                 honeypot: $this->commentWebsite,
                 formRenderedAt: $this->formRenderedAt,
             ));
-        } catch (ValidationException $exception) {
-            $this->surfaceValidationException($exception);
+        } catch (ValidationException $validationException) {
+            $this->surfaceValidationException($validationException);
 
             return;
         }

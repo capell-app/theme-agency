@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Capell\MediaAI\Support;
 
+use Capell\AIOrchestrator\Actions\RunAIOrchestratorCapabilityAction;
+use Capell\AIOrchestrator\Data\AIOrchestratorRunData;
 use Capell\Core\Models\Media;
 use Capell\MediaAI\Contracts\ImageDoctor;
 use Capell\MediaAI\Data\ImageDoctorRequest;
@@ -12,9 +14,9 @@ use Throwable;
 
 final class AIOrchestratorImageDoctor implements ImageDoctor
 {
-    private const RUN_ACTION_CLASS = 'Capell\\AIOrchestrator\\Actions\\RunAIOrchestratorCapabilityAction';
+    private const string RUN_ACTION_CLASS = RunAIOrchestratorCapabilityAction::class;
 
-    private const RUN_DATA_CLASS = 'Capell\\AIOrchestrator\\Data\\AIOrchestratorRunData';
+    private const string RUN_DATA_CLASS = AIOrchestratorRunData::class;
 
     public function doctor(Media $media, ImageDoctorRequest $request): ImageDoctorResult
     {

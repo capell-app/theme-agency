@@ -150,10 +150,12 @@ class BuildAvailableBookingSlotsAction
             ->get();
 
         foreach ($availableExceptions as $availableException) {
-            if ($availableException->starts_at === null || $availableException->ends_at === null) {
+            if ($availableException->starts_at === null) {
                 continue;
             }
-
+            if ($availableException->ends_at === null) {
+                continue;
+            }
             $availabilityTimezone = $this->safeTimezone($availableException->timezone);
 
             if (! $this->exceptionDateOverlapsDisplayRange($availableException, $displayStartsAt, $displayEndsAt, $availabilityTimezone)) {

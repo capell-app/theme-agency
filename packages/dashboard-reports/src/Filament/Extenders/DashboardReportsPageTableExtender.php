@@ -46,7 +46,9 @@ final class DashboardReportsPageTableExtender implements PageTableExtender
                     'expired_pages' => __('capell-dashboard-reports::dashboard.issue_expired_pages'),
                     'pages_without_urls' => __('capell-dashboard-reports::dashboard.issue_pages_without_urls'),
                     'stale_pages' => __('capell-dashboard-reports::dashboard.issue_stale_pages', [
-                        'days' => $this->stalePageThresholdDays(),
+                        'days' => resolve(DashboardReportsSettingsResolver::class)
+                            ->settings()
+                            ->stalePageThresholdDays,
                     ]),
                 ])
                 ->query(fn (Builder $query, array $data): Builder => $this->applyHealthFilter($query, $data)),
@@ -81,15 +83,10 @@ final class DashboardReportsPageTableExtender implements PageTableExtender
             'pages_without_urls' => $query->whereDoesntHave('pageUrls'),
             'stale_pages' => $query
                 ->publishedDate()
-                ->where($query->getModel()->qualifyColumn('updated_at'), '<', now()->subDays($this->stalePageThresholdDays())),
+                ->where($query->getModel()->qualifyColumn('updated_at'), '<', now()->subDays(resolve(DashboardReportsSettingsResolver::class)
+                    ->settings()
+                    ->stalePageThresholdDays)),
             default => $query,
         };
-    }
-
-    private function stalePageThresholdDays(): int
-    {
-        return resolve(DashboardReportsSettingsResolver::class)
-            ->settings()
-            ->stalePageThresholdDays;
     }
 }

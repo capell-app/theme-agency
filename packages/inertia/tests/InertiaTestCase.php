@@ -37,10 +37,12 @@ if ($composerAutoloader instanceof ClassLoader) {
 
         foreach ($autoloadNamespaces as $namespace => $paths) {
             foreach ((array) $paths as $path) {
-                if (! is_string($namespace) || ! is_string($path)) {
+                if (! is_string($namespace)) {
                     continue;
                 }
-
+                if (! is_string($path)) {
+                    continue;
+                }
                 $sourcePath = dirname($packageComposerFile) . '/' . $path;
 
                 if (is_dir($sourcePath)) {

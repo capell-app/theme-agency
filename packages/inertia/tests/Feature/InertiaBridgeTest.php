@@ -39,7 +39,7 @@ it('registers the inertia renderer and middleware on the frontend route stack', 
 it('shares namespaced capell inertia props through the middleware', function (): void {
     config()->set('capell-inertia.adapter', 'react');
 
-    $shared = app(HandleInertiaRequests::class)->share(request());
+    $shared = resolve(HandleInertiaRequests::class)->share(request());
 
     expect($shared)->toHaveKey('capell')
         ->and($shared['capell']['adapter'])->toBe('react');

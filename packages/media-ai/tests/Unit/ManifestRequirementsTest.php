@@ -55,7 +55,7 @@ function mediaAIScreenshotContract(): array
 it('keeps marketplace copy aligned with shipped image doctor capabilities', function (): void {
     $manifest = mediaAIManifest();
     $composerManifest = mediaAIComposerManifest();
-    $summary = 'Provider-backed image editing inside Capell\'s media library: improve images, remove backgrounds or objects, restore, and upscale through a Doctor image action that stays hidden until configured.';
+    $summary = "Provider-backed image editing inside Capell's media library: improve images, remove backgrounds or objects, restore, and upscale through a Doctor image action that stays hidden until configured.";
 
     expect($manifest['product'] ?? null)->toBe([
         'group' => 'Capell Media',

@@ -69,7 +69,7 @@ final class SentEmailInfolist
                     ViewEntry::make('clickRows')
                         ->view('capell-email-studio::filament.sent-emails.click-rows')
                         ->state(fn (SentEmail $record): array => [
-                            'clickRows' => $record->clickRows()->orderByDesc('updated_at')->get(),
+                            'clickRows' => $record->clickRows()->latest('updated_at')->get(),
                         ]),
                 ]),
         ]);

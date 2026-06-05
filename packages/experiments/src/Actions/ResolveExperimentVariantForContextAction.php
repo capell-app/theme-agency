@@ -10,6 +10,7 @@ use Capell\Experiments\Data\VariantAllocationData;
 use Capell\Experiments\Enums\ExperimentStatus;
 use Capell\Experiments\Models\Experiment;
 use Capell\Experiments\Models\ExperimentVariant;
+use Capell\Frontend\Actions\Performance\RecordExtensionRenderContributionAction;
 use Illuminate\Database\Eloquent\Builder;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -17,7 +18,7 @@ final class ResolveExperimentVariantForContextAction
 {
     use AsAction;
 
-    private const string RECORD_EXTENSION_RENDER_CONTRIBUTION_ACTION = 'Capell\\Frontend\\Actions\\Performance\\RecordExtensionRenderContributionAction';
+    private const string RECORD_EXTENSION_RENDER_CONTRIBUTION_ACTION = RecordExtensionRenderContributionAction::class;
 
     public function handle(string $allocationKey, ?ExperimentContextData $context = null): ?ResolvedExperimentVariantData
     {

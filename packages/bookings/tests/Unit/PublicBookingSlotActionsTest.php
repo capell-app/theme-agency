@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Inertia\Inertia;
+
 require_once __DIR__ . '/../Pest.php';
 
 use Capell\Bookings\Actions\BuildAvailableBookingSlotsAction;
@@ -172,7 +174,7 @@ it('omits full slots when existing appointment requests consume capacity', funct
 it('builds public booking props with eager options and optional lazy slots', function (): void {
     [$service, $staffMember, $location] = createPublicSlotFixture();
 
-    $request = Request::create('/bookings', 'GET', [
+    $request = Request::create('/bookings', Symfony\Component\HttpFoundation\Request::METHOD_GET, [
         'service_id' => $service->getKey(),
         'staff_member_id' => $staffMember->getKey(),
         'location_id' => $location->getKey(),
@@ -188,13 +190,13 @@ it('builds public booking props with eager options and optional lazy slots', fun
         ->and((string) $eagerProps['postUrl'])->toEndWith('/bookings')
         ->and($eagerProps['timezone'])->toBe('Europe/London');
 
-    if (class_exists('Inertia\\Inertia')) {
+    if (class_exists(Inertia::class)) {
         expect($lazyProps['slots'])->not->toBeArray();
     }
 });
 
 it('uses the blade booking request renderer by default', function (): void {
-    expect(app(PublicBookingRequestRenderer::class))->toBeInstanceOf(BladePublicBookingRequestRenderer::class);
+    expect(resolve(PublicBookingRequestRenderer::class))->toBeInstanceOf(BladePublicBookingRequestRenderer::class);
 });
 
 /**

@@ -107,10 +107,12 @@ it('declares committed marketplace assets for every required screenshot capture 
     $requiredMarketplaceAssetPaths = [];
 
     foreach ($contractEntries as $contractEntry) {
-        if (! is_array($contractEntry) || ($contractEntry['required'] ?? false) !== true) {
+        if (! is_array($contractEntry)) {
             continue;
         }
-
+        if (($contractEntry['required'] ?? false) !== true) {
+            continue;
+        }
         $id = $contractEntry['id'] ?? null;
 
         throw_unless(is_string($id), RuntimeException::class, 'Required Bookings screenshot contract entries must have string ids.');

@@ -29,9 +29,7 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:address-demo",
-            "demoParams": [
-                "sites"
-            ],
+            "demoParams": ["sites"],
             "doctorCommand": null,
             "entryCount": 5,
             "browserTestCount": 0
@@ -97,11 +95,7 @@
             "installCommand": "capell:blog-install",
             "setupCommand": "capell:blog-setup",
             "demoCommand": "capell:blog-demo",
-            "demoParams": [
-                "sites",
-                "languages",
-                "force"
-            ],
+            "demoParams": ["sites", "languages", "force"],
             "doctorCommand": null,
             "entryCount": 10,
             "browserTestCount": 0
@@ -460,13 +454,13 @@
         },
         {
             "package": "record-switcher",
-            "composerName": null,
+            "composerName": "capell-app/record-switcher",
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": null,
             "demoParams": [],
             "doctorCommand": null,
-            "entryCount": 2,
+            "entryCount": 1,
             "browserTestCount": 0
         },
         {
@@ -552,11 +546,7 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-agency-demo",
-            "demoParams": [
-                "url",
-                "languages",
-                "sites"
-            ],
+            "demoParams": ["url", "languages", "sites"],
             "doctorCommand": null,
             "entryCount": 12,
             "browserTestCount": 0
@@ -567,11 +557,7 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-commerce-demo",
-            "demoParams": [
-                "url",
-                "languages",
-                "sites"
-            ],
+            "demoParams": ["url", "languages", "sites"],
             "doctorCommand": null,
             "entryCount": 12,
             "browserTestCount": 0
@@ -582,11 +568,7 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-corporate-demo",
-            "demoParams": [
-                "url",
-                "languages",
-                "sites"
-            ],
+            "demoParams": ["url", "languages", "sites"],
             "doctorCommand": null,
             "entryCount": 12,
             "browserTestCount": 0
@@ -597,11 +579,7 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-education-demo",
-            "demoParams": [
-                "url",
-                "languages",
-                "sites"
-            ],
+            "demoParams": ["url", "languages", "sites"],
             "doctorCommand": null,
             "entryCount": 9,
             "browserTestCount": 0
@@ -612,11 +590,7 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-healthcare-demo",
-            "demoParams": [
-                "url",
-                "languages",
-                "sites"
-            ],
+            "demoParams": ["url", "languages", "sites"],
             "doctorCommand": null,
             "entryCount": 8,
             "browserTestCount": 0
@@ -660,11 +634,7 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-knowledge-demo",
-            "demoParams": [
-                "url",
-                "languages",
-                "sites"
-            ],
+            "demoParams": ["url", "languages", "sites"],
             "doctorCommand": null,
             "entryCount": 9,
             "browserTestCount": 0
@@ -675,11 +645,7 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-local-services-demo",
-            "demoParams": [
-                "url",
-                "languages",
-                "sites"
-            ],
+            "demoParams": ["url", "languages", "sites"],
             "doctorCommand": null,
             "entryCount": 9,
             "browserTestCount": 0
@@ -690,11 +656,7 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-nonprofit-demo",
-            "demoParams": [
-                "url",
-                "languages",
-                "sites"
-            ],
+            "demoParams": ["url", "languages", "sites"],
             "doctorCommand": null,
             "entryCount": 9,
             "browserTestCount": 0
@@ -705,11 +667,7 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-portfolio-demo",
-            "demoParams": [
-                "url",
-                "languages",
-                "sites"
-            ],
+            "demoParams": ["url", "languages", "sites"],
             "doctorCommand": null,
             "entryCount": 9,
             "browserTestCount": 0
@@ -720,11 +678,7 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-saas-demo",
-            "demoParams": [
-                "url",
-                "languages",
-                "sites"
-            ],
+            "demoParams": ["url", "languages", "sites"],
             "doctorCommand": null,
             "entryCount": 12,
             "browserTestCount": 0
@@ -3540,22 +3494,20 @@
             "composerName": "capell-app/publishing-studio"
         },
         {
-            "key": "record-switcher.extension-card",
-            "surface": "marketplace",
-            "title": "Record Switcher marketplace card",
-            "screenshotPath": "packages/record-switcher/docs/assets/marketplace/extension-card.svg",
-            "required": true,
+            "id": "admin-heading-switcher",
+            "title": "Record Switcher admin heading suggestions.",
             "package": "record-switcher",
-            "composerName": null
-        },
-        {
-            "key": "record-switcher.admin-heading-switcher",
             "surface": "admin",
-            "title": "Admin heading switcher suggestions",
-            "screenshotPath": "packages/record-switcher/docs/assets/marketplace/admin-heading-switcher.svg",
+            "targetType": "admin-surface",
+            "target": "RecordSwitcherHeadingExtender",
+            "url": "/pages/1/edit",
+            "click": ".filament-record-switcher .choices__inner",
+            "waitFor": ".filament-record-switcher .choices__list--dropdown.is-active",
             "required": true,
-            "package": "record-switcher",
-            "composerName": null
+            "notes": "Capture a Capell admin edit page heading with record-switcher suggestions open after typing a short query.",
+            "useCase": "An editor jumps between related editable records without returning to the table view.",
+            "screenshotPath": "packages/record-switcher/docs/screenshots/admin-heading-switcher.png",
+            "composerName": "capell-app/record-switcher"
         },
         {
             "id": "frontend-search-results-page",

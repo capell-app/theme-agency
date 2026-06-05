@@ -1,18 +1,25 @@
 {
+    "package": "record-switcher",
+    "composerName": "capell-app/record-switcher",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "composerRequires": ["capell-app/record-switcher"],
+    "outputDirectory": "packages/record-switcher/docs/screenshots",
     "entries": [
         {
-            "key": "record-switcher.extension-card",
-            "surface": "marketplace",
-            "title": "Record Switcher marketplace card",
-            "screenshotPath": "packages/record-switcher/docs/assets/marketplace/extension-card.svg",
-            "required": true
-        },
-        {
-            "key": "record-switcher.admin-heading-switcher",
+            "id": "admin-heading-switcher",
+            "title": "Record Switcher admin heading suggestions.",
+            "package": "record-switcher",
             "surface": "admin",
-            "title": "Admin heading switcher suggestions",
-            "screenshotPath": "packages/record-switcher/docs/assets/marketplace/admin-heading-switcher.svg",
-            "required": true
+            "targetType": "admin-surface",
+            "target": "RecordSwitcherHeadingExtender",
+            "url": "/pages/1/edit",
+            "click": ".filament-record-switcher .choices__inner",
+            "waitFor": ".filament-record-switcher .choices__list--dropdown.is-active",
+            "required": true,
+            "notes": "Capture a Capell admin edit page heading with record-switcher suggestions open after typing a short query.",
+            "useCase": "An editor jumps between related editable records without returning to the table view.",
+            "screenshotPath": "packages/record-switcher/docs/screenshots/admin-heading-switcher.png"
         }
     ]
 }

@@ -6,7 +6,6 @@ namespace Capell\EmailStudio\Filament\Resources\SentEmails\Pages;
 
 use Capell\EmailStudio\Filament\Resources\SentEmails\SentEmailResource;
 use Filament\Resources\Pages\ListRecords;
-use Illuminate\Contracts\Support\Htmlable;
 use Override;
 
 final class ListSentEmails extends ListRecords
@@ -19,7 +18,7 @@ final class ListSentEmails extends ListRecords
     }
 
     #[Override]
-    public function getSubheading(): string|Htmlable|null
+    public function getSubheading(): ?string
     {
         return __('capell-email-studio::mail_tracker.subheading.sent_emails');
     }

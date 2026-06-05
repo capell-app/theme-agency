@@ -389,8 +389,8 @@ it('rejects approval workspace saves when publishing studio is unavailable', fun
 
     try {
         UpdateEditableRegionAction::run(editableRegionPayload($translation, 'title'), 'Draft title', $user);
-    } catch (HttpException $exception) {
-        expect($exception->getStatusCode())->toBe(409);
+    } catch (HttpException $httpException) {
+        expect($httpException->getStatusCode())->toBe(409);
         $translation->refresh();
 
         expect($translation->title)->toBe('Original title')

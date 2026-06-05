@@ -60,9 +60,7 @@ final class ProcessStripeWebhookEventAction
         } catch (Throwable $throwable) {
             $event = PaymentWebhookEvent::query()->find($webhookEventId);
 
-            if (! $event instanceof PaymentWebhookEvent) {
-                throw $throwable;
-            }
+            throw_unless($event instanceof PaymentWebhookEvent, $throwable);
 
             $event->forceFill([
                 'status' => PaymentWebhookEventStatus::Failed->value,
