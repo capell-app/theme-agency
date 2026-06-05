@@ -28,6 +28,7 @@ Provider-backed image editing actions for Capell media records.
 
 - Optional image edit action for improve, remove-background, remove-object, restore, and upscale operations.
 - ImageDoctor contract with a safe null implementation.
+- Opt-in AI Orchestrator image doctor adapter configured through `capell-media-ai.image_doctor`.
 - Filament media action extender for admin workflows.
 - No public frontend output and no required AI provider binding.
 

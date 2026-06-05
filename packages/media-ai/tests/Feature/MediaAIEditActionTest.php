@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Capell\Admin\Contracts\Extenders\MediaEditActionExtender;
 use Capell\Admin\Filament\Resources\Media\Pages\EditMedia;
+use Capell\AIOrchestrator\Actions\RegisterAIOrchestratorModuleAction;
+use Capell\AIOrchestrator\Data\AIOrchestratorRunData;
+use Capell\AIOrchestrator\Support\AIOrchestratorModuleRegistry;
 use Capell\Core\Models\Media as CapellMedia;
 use Capell\Core\Models\Page;
 use Capell\MediaAI\Contracts\ImageDoctor;
@@ -11,7 +14,10 @@ use Capell\MediaAI\Data\ImageDoctorRequest;
 use Capell\MediaAI\Data\ImageDoctorResult;
 use Capell\MediaAI\Filament\MediaAIEditActionExtender;
 use Capell\MediaAI\Providers\MediaAIServiceProvider;
+use Capell\MediaAI\Support\AIOrchestratorImageDoctor;
 use Capell\MediaAI\Support\NullImageDoctor;
+use Capell\MediaAI\Tests\Fixtures\AIOrchestratorImageDoctorAction;
+use Capell\MediaAI\Tests\Fixtures\AIOrchestratorImageDoctorModule;
 use Capell\MediaAI\Tests\Fixtures\RecordingImageDoctor;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Notifications\Notification;
@@ -208,6 +214,34 @@ it('passes image doctor requests to the configured ai-orchestrator implementatio
     expect($doctor->media?->is($media))->toBeTrue()
         ->and($doctor->request?->operation)->toBe('remove_background')
         ->and($doctor->request?->instructions)->toBe('Remove the background and keep the subject sharp.');
+});
+
+it('runs image doctor requests through the configured ai-orchestrator capability', function (): void {
+    if (! class_exists(AIOrchestratorModuleRegistry::class)) {
+        test()->markTestSkipped('AI Orchestrator is not available in this checkout.');
+    }
+
+    app()->singleton(AIOrchestratorModuleRegistry::class, fn (): AIOrchestratorModuleRegistry => new AIOrchestratorModuleRegistry);
+    RegisterAIOrchestratorModuleAction::run(new AIOrchestratorImageDoctorModule);
+    AIOrchestratorImageDoctorAction::$lastRun = null;
+
+    $media = createMediaAIImage();
+    $result = (new AIOrchestratorImageDoctor)->doctor(
+        $media,
+        new ImageDoctorRequest(
+            operation: 'restore',
+            instructions: 'Restore scratches while preserving the original crop.',
+        ),
+    );
+
+    expect($result->successful)->toBeTrue()
+        ->and($result->message)->toBe('Doctor finished through AI Orchestrator')
+        ->and(AIOrchestratorImageDoctorAction::$lastRun)->toBeInstanceOf(AIOrchestratorRunData::class)
+        ->and(AIOrchestratorImageDoctorAction::$lastRun?->moduleKey)->toBe('media-ai')
+        ->and(AIOrchestratorImageDoctorAction::$lastRun?->capabilityKey)->toBe('doctor-image')
+        ->and(AIOrchestratorImageDoctorAction::$lastRun?->context['operation'])->toBe('restore')
+        ->and(AIOrchestratorImageDoctorAction::$lastRun?->context['instructions'])->toBe('Restore scratches while preserving the original crop.')
+        ->and(AIOrchestratorImageDoctorAction::$lastRun?->context['media']['id'])->toBe($media->getKey());
 });
 
 it('rejects crafted image doctor operations before calling the provider', function (): void {

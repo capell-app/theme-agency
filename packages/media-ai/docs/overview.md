@@ -11,11 +11,12 @@ Status: `Optional` · Tier: `Premium` · Bundle: `media` · Surface: `Admin` · 
 - A `Doctor image` action on image records in the Media resource.
 - A small form for the editor to choose the image operation and add instructions.
 - A `Capell\MediaAI\Contracts\ImageDoctor` contract that a provider package can bind to the real image-editing implementation, directly or through AI Orchestrator.
+- An opt-in `AIOrchestratorImageDoctor` adapter that runs a configured AI Orchestrator module/capability and maps its response back to `ImageDoctorResult`.
 - A safe default `NullImageDoctor`, so installing the package never exposes a broken action before an AI provider is configured.
 
 ## Marketplace Positioning
 
-Media AI is a premium Capell Media add-on to the free Media Library workflow. Today it should be sold as the admin-safe provider seam for image operations - improve, remove background, remove object, restore, and upscale - rather than as a full AI media suite. The `media` bundle can become a true bundle once additional paid media packages or a first-party AI Orchestrator image provider ship; until then, pair Media AI with Media Library for the editing surface and AI Orchestrator for provider governance.
+Media AI is a premium Capell Media add-on to the free Media Library workflow. Today it should be sold as the admin-safe provider seam for image operations - improve, remove background, remove object, restore, and upscale - rather than as a full AI media suite. Pair Media AI with Media Library for the editing surface and AI Orchestrator for provider governance; the bundled adapter connects to a registered AI Orchestrator image capability, but the actual image model/provider remains outside this package.
 
 ## Editor Flow
 
@@ -29,15 +30,21 @@ When the action runs, the editor sees a Filament notification carrying the `Imag
 
 ## Integration Contract
 
-AIOrchestrator-backed packages should bind the contract in their service provider:
+By default the package binds `NullImageDoctor`. To use the first-party AI Orchestrator adapter, configure the driver and capability keys:
 
 ```php
-use Capell\MediaAI\Contracts\ImageDoctor;
-
-$this->app->bind(ImageDoctor::class, AIOrchestratorImageDoctor::class);
+return [
+    'image_doctor' => [
+        'driver' => 'ai_orchestrator',
+        'ai_orchestrator' => [
+            'module' => 'media-ai',
+            'capability' => 'doctor-image',
+        ],
+    ],
+];
 ```
 
-The implementation receives the current media record and an `ImageDoctorRequest` (a validated `operation` plus free-text `instructions`). It returns an `ImageDoctorResult` reporting `successful` and an optional human-readable `message`. The `message` is rendered verbatim in the editor notification, so providers must return a translated, credential-free string.
+Custom providers can still bind `Capell\MediaAI\Contracts\ImageDoctor` directly. Every implementation receives the current media record and an `ImageDoctorRequest` (a validated `operation` plus free-text `instructions`). It returns an `ImageDoctorResult` reporting `successful` and an optional human-readable `message`. The `message` is rendered verbatim in the editor notification, so providers must return a translated, credential-free string.
 
 ## Boundaries
 
