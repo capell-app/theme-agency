@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 32 |
+| Now    | 31 |
 | Next   | 295 |
 | Later  | 200 |
 
@@ -48,7 +48,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | frontend-optimizer | 1 | 7 | 4 | Slice committed | `8814277ae` removes unused layout/widget asset registries and stale docs/tests, leaving the real Capell frontend manifest renderer flow. Remaining Now row: screenshot capture/contract reconciliation. Continue with hot-path safety and completion review. |
 | ga4-reports | 1 | 7 | 5 | Slice committed | Current follow-up narrows the final Now row to screenshot capture only: manifest/composer/README/overview copy already leads with GA4 traffic, top-page, and conversion snapshots inside Capell admin, after secret-safe health diagnostics and null-client cleanup. Remaining Now row: generate the three required screenshots. |
 | hero | 1 | 6 | 4 | Slice committed | `b68c6ac19` adds responsive `srcset`/`sizes` descriptors for hero image/poster media and render coverage, after admin dependency/surface/capability cleanup. Remaining Now row: screenshot count/capture reconciliation. |
-| html-cache | 2 | 6 | 4 | Slice committed | Current follow-up hardens the real `HtmlCacheHealthCheck` disk probe cleanup and reconciles the plan/manifest coverage for writable disk, middleware wiring, storage tables, and scheduled stale-command diagnostics. Remaining Now rows: targeted invalidation and screenshot reconciliation. |
+| html-cache | 1 | 6 | 4 | Slice committed | Current follow-up keeps full flushes for route/structure changes but moves `Translation` create/update/delete onto dependency-indexed invalidation, so adding a new translation no longer cold-starts unrelated cached pages. Remaining Now row: screenshot reconciliation. |
 | insights | 0 | 2 | 4 | Now closed | `ac8d0bdaa` adds acquisition-source reporting and declares `insights-acquisition-reports`, after recent slices shipped consent banner behavior, first-visit recording, server-side consent-region resolution, retention purge chunking, dashboard aggregate caching, and health diagnostics. Insights has no Now rows left; continue with bot/self-traffic filtering, per-session journey boundaries, daily rollups, and consent-flow screenshots before completion review. |
 | knowledge-base | 0 | 7 | 3 | Now closed | `dab5594c3` reconciles feedback/version status after article and Collection edit pages were wired through Actions and article edits gained version history/publish flow. Knowledge Base has no Now rows left; continue with `/docs` frontend middleware/cache, search integration, AI-readable output, related articles, feedback aggregates, `variesBy` correctness, docs/demo, and completion review. |
 | layout-builder | 0 | 5 | 4 | Now closed | Current follow-up adds manifest-driven public render performance coverage for query count, zero-query hydrated Blade rendering, 20ms render budget, and public metadata leaks, plus lazy opaque fragment-reference generation for normal Blade widgets. The active editor preview chrome is also tightened for tablet/mobile stacking, selected-node outlines, smaller editor radii, and searchable tree filtering. Layout Builder has no Now rows left; continue with cache invalidation documentation and Next/Later rows before completion review. |
