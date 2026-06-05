@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-GA4 Reports is a snapshot-based Google Analytics 4 reporting package: a scheduled/CLI sync (`SyncGA4ReportsMetricsAction` → `ga4-reports:sync`) pulls a date window from the GA4 Data API through a hand-rolled service-account client (`src/Support/Insights/GA4ReportsDataClient.php`, RS256 JWT auth, in-memory token cache, paginated page reports) and persists into three local tables (`ga4_reports_daily_metrics`, `ga4_reports_page_metrics`, `ga4_reports_sync_runs`). Admin surfaces — one extension `GA4ReportsPage`, five widgets (overview stats, traffic trend, top pages, top-pages table, setup status), three dashboard overview stats, and a settings group — read only from local rows via `Build*Action` DTO builders, never hitting GA4 during render. Surfaces declared: `admin`, `console`; deps `capell-app/admin`, `capell-app/core` plus `lorisleiva/laravel-actions` + `spatie/laravel-data`. Current marketplace summary, verbatim: **"GA4 Reports provides dashboard reporting for Capell."** Manifest declares **1** screenshot (`docs/assets/marketplace/extension-card.jpg`); `docs/screenshots.json` defines **3** deployment captures but `docs/screenshots/` does not exist — media gap.
+GA4 Reports is a snapshot-based Google Analytics 4 reporting package: a scheduled/CLI sync (`SyncGA4ReportsMetricsAction` → `ga4-reports:sync`) pulls a date window from the GA4 Data API through a hand-rolled service-account client (`src/Support/Insights/GA4ReportsDataClient.php`, RS256 JWT auth, in-memory token cache, paginated page reports) and persists into three local tables (`ga4_reports_daily_metrics`, `ga4_reports_page_metrics`, `ga4_reports_sync_runs`). Admin surfaces — one extension `GA4ReportsPage`, five widgets (overview stats, traffic trend, top pages, top-pages table, setup status), three dashboard overview stats, and a settings group — read only from local rows via `Build*Action` DTO builders, never hitting GA4 during render. Surfaces declared: `admin`, `console`; deps `capell-app/admin`, `capell-app/core` plus `lorisleiva/laravel-actions` + `spatie/laravel-data`. Current marketplace summary now leads with GA4 traffic, top-page, and conversion snapshots inside Capell admin. Manifest declares **1** screenshot (`docs/assets/marketplace/extension-card.jpg`); `docs/screenshots.json` defines **3** deployment captures but `docs/screenshots/` does not exist — media gap.
 
 ## Completed Improvement Slices
 
@@ -52,7 +52,7 @@ Capabilities declared: `ga4-reports`, `ga4-reports-admin`, `ga4-reports-console`
 
 ## 5. Marketplace & Selling
 
-**Current `summary`:** "GA4 Reports provides dashboard reporting for Capell." — too generic; "GA4" only appears in the name, "dashboard reporting" could describe any package, and it names no benefit, metric, or buyer. **Composer `description`:** "GA4 Reports 4 dashboard reporting for Capell." — same weakness plus the "Reports 4" typo.
+**Marketplace copy status:** manifest, Composer, README, and overview now lead with the concrete value: pulling Google Analytics 4 traffic, top-page, and conversion snapshots into Capell admin on a daily schedule without per-pageview API calls. The remaining buyer-facing gap is visual proof of the reporting surfaces.
 
 **Improved 1-sentence summary:**
 
@@ -79,23 +79,24 @@ Capabilities declared: `ga4-reports`, `ga4-reports-admin`, `ga4-reports-console`
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                              | Bucket | Effort | Impact | Section |
-| ------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ------- |
+| Item                                                                                              | Bucket  | Effort | Impact | Section |
+| ------------------------------------------------------------------------------------------------- | ------- | ------ | ------ | ------- |
 | Fix client binding to fall back to null client when unconfigured (or delete null client + claims) | Shipped | S      | High   | §4      |
 | Implement real `Ga4ReportsHealthCheck` (credentials, last-sync recency, API reachability)         | Shipped | M      | High   | §4      |
-| Add retry-with-backoff + 429/quota handling to GA4 HTTP calls                                     | Done   | M      | High   | §3, §4  |
+| Add retry-with-backoff + 429/quota handling to GA4 HTTP calls                                     | Done    | M      | High   | §3, §4  |
 | Fix "GA4 Reports 4" typo across composer/README/lang/command                                      | Shipped | S      | Med    | §4      |
-| Generate & commit the 3 required screenshots; rewrite marketplace summary + description           | Now    | S      | High   | §5      |
+| Generate & commit the 3 required screenshots                                                      | Now     | S      | High   | §5      |
+| Shipped: rewrite marketplace summary + description                                                | Done    | S      | High   | §5      |
 | Remove orphan `GA4ReportsSettingsPage` (or wire it)                                               | Shipped | S      | Med    | §4      |
-| Cache dashboard read aggregates; set `cacheTags` + revisit `cacheSafety` in manifest              | Next   | M      | High   | §2, §4  |
-| Make overview stats honour the dashboard date range                                               | Next   | S      | Med    | §2      |
-| Add period-over-period comparison (deltas) to widgets                                             | Next   | M      | High   | §3      |
-| Persisted/cross-process OAuth token cache                                                         | Next   | S      | Med    | §3      |
-| Add "Sync now" page action + surface last sync error                                              | Next   | M      | Med    | §2      |
-| Rename command to `capell:` convention; populate manifest `commands`                              | Next   | S      | Med    | §2      |
-| Configurable sync schedule (frequency/cron via settings)                                          | Next   | S      | Med    | §2      |
-| Multi-property support + property picker                                                          | Later  | L      | High   | §3      |
-| OAuth user-consent connect flow (alongside service account)                                       | Later  | L      | High   | §3      |
-| Events/conversions breakdown widget + CSV/PDF export & scheduled digest                           | Later  | L      | Med    | §3      |
-| Configurable report dimensions (channel, country, device)                                         | Later  | L      | Med    | §3      |
-| Test that the container binds the real client when configured                                     | Later  | S      | Med    | §4      |
+| Cache dashboard read aggregates; set `cacheTags` + revisit `cacheSafety` in manifest              | Next    | M      | High   | §2, §4  |
+| Make overview stats honour the dashboard date range                                               | Next    | S      | Med    | §2      |
+| Add period-over-period comparison (deltas) to widgets                                             | Next    | M      | High   | §3      |
+| Persisted/cross-process OAuth token cache                                                         | Next    | S      | Med    | §3      |
+| Add "Sync now" page action + surface last sync error                                              | Next    | M      | Med    | §2      |
+| Rename command to `capell:` convention; populate manifest `commands`                              | Next    | S      | Med    | §2      |
+| Configurable sync schedule (frequency/cron via settings)                                          | Next    | S      | Med    | §2      |
+| Multi-property support + property picker                                                          | Later   | L      | High   | §3      |
+| OAuth user-consent connect flow (alongside service account)                                       | Later   | L      | High   | §3      |
+| Events/conversions breakdown widget + CSV/PDF export & scheduled digest                           | Later   | L      | Med    | §3      |
+| Configurable report dimensions (channel, country, device)                                         | Later   | L      | Med    | §3      |
+| Test that the container binds the real client when configured                                     | Later   | S      | Med    | §4      |
