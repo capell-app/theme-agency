@@ -41,6 +41,12 @@ final class CreateKnowledgeBaseArticleAction
             ]);
         }
 
+        if ($this->slugExistsInCollection($data, $slug)) {
+            throw ValidationException::withMessages([
+                'slug' => __('capell-knowledge-base::generic.validation.slug_unique'),
+            ]);
+        }
+
         return DB::transaction(function () use ($data, $title, $slug): KnowledgeBaseArticle {
             $article = KnowledgeBaseArticle::query()->create([
                 'collection_id' => $data->collection->getKey(),
@@ -72,5 +78,13 @@ final class CreateKnowledgeBaseArticleAction
 
             return $article->refresh()->load(['collection', 'currentVersion']);
         });
+    }
+
+    private function slugExistsInCollection(CreateKnowledgeBaseArticleData $data, string $slug): bool
+    {
+        return KnowledgeBaseArticle::query()
+            ->whereBelongsTo($data->collection, 'collection')
+            ->where('slug', $slug)
+            ->exists();
     }
 }

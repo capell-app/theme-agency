@@ -104,5 +104,6 @@ return [
         'article_title_required' => 'Article title is required.',
         'collection_title_required' => 'Collection title is required.',
         'slug_required' => 'A slug is required.',
+        'slug_unique' => 'An article with this slug already exists in this collection.',
     ],
 ];

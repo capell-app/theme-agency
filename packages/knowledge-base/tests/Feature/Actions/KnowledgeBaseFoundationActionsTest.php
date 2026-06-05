@@ -21,6 +21,7 @@ use Capell\KnowledgeBase\Models\KnowledgeBaseArticleFeedback;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticleVersion;
 use Capell\KnowledgeBase\Tests\KnowledgeBaseTestCase;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\ValidationException;
 
 require_once dirname(__DIR__, 2) . '/KnowledgeBaseTestCase.php';
 
@@ -113,6 +114,46 @@ it('publishes new versions and keeps navigation, search, and ai output public on
         ->and($aiOutput->first()->content)->toBe('Updated Public body for visitors and AI.')
         ->and($aiOutput->first()->publicPath)->toBe('/docs/public-docs/public-article')
         ->and($aiOutput->pluck('title')->all())->not->toContain($hiddenArticle->title);
+});
+
+it('rejects duplicate article slugs inside the same collection only', function (): void {
+    $collection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Public Docs',
+    ));
+    $otherCollection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Developer Docs',
+    ));
+
+    CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $collection,
+        title: 'Install Capell',
+        body: '<p>Install the product.</p>',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+
+    CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $otherCollection,
+        title: 'Install Capell',
+        body: '<p>Install the developer tools.</p>',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+
+    try {
+        CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+            collection: $collection,
+            title: 'Install Capell',
+            body: '<p>Install the product again.</p>',
+            status: KnowledgeBaseArticleStatus::Published,
+        ));
+    } catch (ValidationException $exception) {
+        expect($exception->errors())->toBe([
+            'slug' => [__('capell-knowledge-base::generic.validation.slug_unique')],
+        ]);
+
+        return;
+    }
+
+    expect()->fail('Expected duplicate article slug validation to fail.');
 });
 
 it('records redacted feedback and related article links', function (): void {
