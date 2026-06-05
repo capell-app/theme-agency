@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 151 |
+| Now    | 150 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -64,7 +64,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | privacy-center | 3 | 5 | 4 | Slice committed | Current follow-up adds provider/table/morph/hash-secret health diagnostics, removes the unshipped cookie-category public-surface capability, and reconciles already-shipped retention execution plus fail-loud hash-secret rows. Remaining Now rows: insights subject mirroring, DSAR edit actions, and README/CHANGELOG expansion. |
 | public-actions | 5 | 7 | 5 | Slice committed | `10c4b5906` adds explicit redirect-to-private/link-local/internal webhook regression coverage and reuses the canonical encoded webhook payload for hash/sign/send paths; durable fanout/replay/retention rows remain. |
 | publishing-studio | 5 | 6 | 5 | Slice committed | `c6a886556` landed health/screenshots; continue with publishing workflow rows. |
-| search | 3 | 6 | 4 | Slice committed | Current follow-up fixes the driver contract docs, documents the public-safe `highlight()` contract, refreshes marketplace/composer positioning, and promotes existing screenshot assets into manifest coverage. Remaining Now rows: Scout/private visibility tests, click-count aggregate/cache chain work, and deferred/queued search-log writes. |
+| search | 2 | 6 | 4 | Slice committed | Current follow-up defers search-log writes until after the response and keeps `RecordSearchAction` on scalar visitor metadata. Remaining Now rows: Scout/private visibility tests and click-count aggregate/cache-chain work. |
 | seo-suite | 6 | 6 | 3 | Slice committed | `f599aeb31` filters PageSpeed digest recipients in the query after `790cefbc4` moved page SEO translation fields, SEO panel, and lazy audit tabs into the SEO tab while removing duplicate inline translation components. Continue with anonymous/non-admin AI Discovery endpoint safety tests, dormant SEO check wiring, health probes, screenshots, and completion review. |
 | shopify-commerce | 6 | 7 | 4 | Slice committed | Current follow-up scrubs persisted sync errors; sync loop, customer producer, and webhook reachability remain high value. |
 | site-discovery | 6 | 5 | 4 | Slice committed | `c76a0cc14` merged URL registry work; continue with remaining discovery/SEO rows. |
