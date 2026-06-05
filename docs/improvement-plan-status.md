@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 82 |
+| Now    | 81 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -50,7 +50,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | hero | 1 | 6 | 4 | Slice committed | `b68c6ac19` adds responsive `srcset`/`sizes` descriptors for hero image/poster media and render coverage, after admin dependency/surface/capability cleanup. Remaining Now row: screenshot count/capture reconciliation. |
 | html-cache | 2 | 6 | 4 | Slice committed | Current follow-up hardens the real `HtmlCacheHealthCheck` disk probe cleanup and reconciles the plan/manifest coverage for writable disk, middleware wiring, storage tables, and scheduled stale-command diagnostics. Remaining Now rows: targeted invalidation and screenshot reconciliation. |
 | insights | 5 | 6 | 4 | Slice committed | Current follow-up derives unsafe/default visitor hash salts from `APP_KEY` and makes Diagnostics fail the public fallback state without exposing secrets. Remaining Now rows: first-visit recording, server-side consent region, migration/docs reconciliation, manifest metadata, and consent banner. |
-| knowledge-base | 4 | 7 | 3 | Slice committed | Current follow-up adds a translated same-collection article slug collision guard after real health diagnostics for required tables, models, Actions, admin resources, and providers. Remaining Now rows: Edit pages, version/publish edit flow, policy/site-access hardening, and other admin workflow gaps. |
+| knowledge-base | 3 | 7 | 3 | Slice committed | Current follow-up replaces wide-open article/collection policies with Shield permission checks, global-admin bypass, and record `site_id` checks where present, after slug collision guards and real health diagnostics. Remaining Now rows: Edit pages, version/publish edit flow, and other admin workflow gaps. |
 | layout-builder | 0 | 5 | 4 | Now closed | Current follow-up adds manifest-driven public render performance coverage for query count, zero-query hydrated Blade rendering, 20ms render budget, and public metadata leaks, plus lazy opaque fragment-reference generation for normal Blade widgets. Layout Builder has no Now rows left; continue with cache invalidation documentation and Next/Later rows before completion review. |
 | login-audit | 1 | 6 | 2 | Slice committed | Current follow-up reconciles the shipped real health diagnostics, daily retention purge tracking, and throttled admin activity writes. Remaining Now row: marketplace screenshot manifest/copy reconciliation. |
 | media-ai | 1 | 6 | 3 | Slice committed | Current follow-up rewrites marketplace/composer/docs copy around shipped provider-backed Doctor image operations, wires committed light/dark screenshots, and positions Media AI as a premium Media Library add-on. Remaining Now row: first-party AI Orchestrator image-doctor adapter. |

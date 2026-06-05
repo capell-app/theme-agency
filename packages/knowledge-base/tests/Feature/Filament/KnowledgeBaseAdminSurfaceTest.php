@@ -19,8 +19,6 @@ use Capell\KnowledgeBase\Manifest\KnowledgeBaseFrontendRoutesContribution;
 use Capell\KnowledgeBase\Manifest\KnowledgeBaseModelsContribution;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticle;
 use Capell\KnowledgeBase\Models\KnowledgeBaseCollection;
-use Capell\KnowledgeBase\Policies\KnowledgeBaseArticlePolicy;
-use Capell\KnowledgeBase\Policies\KnowledgeBaseCollectionPolicy;
 use Capell\KnowledgeBase\Providers\AdminServiceProvider;
 use Capell\KnowledgeBase\Tests\KnowledgeBaseTestCase;
 use Filament\Actions\CreateAction;
@@ -34,8 +32,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Support\Facades\File;
 
 require_once dirname(__DIR__, 2) . '/KnowledgeBaseTestCase.php';
@@ -191,30 +187,6 @@ it('builds knowledge base list page create actions with translated labels', func
         ->and($articleActions[0])->toBeInstanceOf(CreateAction::class)
         ->and($articleActions[0]->getName())->toBe('create')
         ->and($articleActions[0]->getLabel())->toBe(__('capell-knowledge-base::generic.admin.actions.create_article'));
-});
-
-it('allows admin authoring but keeps destructive deletes disabled by default', function (): void {
-    $user = new class implements AuthenticatableContract
-    {
-        use Authenticatable;
-    };
-
-    $collection = KnowledgeBaseCollection::factory()->create();
-    $article = KnowledgeBaseArticle::factory()->create([
-        'collection_id' => $collection->getKey(),
-    ]);
-
-    $collectionPolicy = new KnowledgeBaseCollectionPolicy;
-    $articlePolicy = new KnowledgeBaseArticlePolicy;
-
-    expect($collectionPolicy->viewAny())->toBeTrue()
-        ->and($collectionPolicy->create())->toBeTrue()
-        ->and($collectionPolicy->update())->toBeTrue()
-        ->and($collectionPolicy->delete())->toBeFalse()
-        ->and($articlePolicy->viewAny())->toBeTrue()
-        ->and($articlePolicy->create())->toBeTrue()
-        ->and($articlePolicy->update())->toBeTrue()
-        ->and($articlePolicy->delete())->toBeFalse();
 });
 
 /**

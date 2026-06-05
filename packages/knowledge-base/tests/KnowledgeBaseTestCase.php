@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\KnowledgeBase\Tests;
 
+use BezhanSalleh\FilamentShield\FilamentShieldServiceProvider;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\CapellCoreManager;
 use Capell\KnowledgeBase\Providers\KnowledgeBaseServiceProvider;
@@ -28,6 +29,7 @@ abstract class KnowledgeBaseTestCase extends TestCase
     {
         return [
             ActionServiceProvider::class,
+            FilamentShieldServiceProvider::class,
             LaravelDataServiceProvider::class,
             KnowledgeBaseServiceProvider::class,
         ];
