@@ -2,7 +2,7 @@
 
 Status: **Available, schema-owning** · Kind: **package** · Tier: **premium** · Bundle: **newsletter** · Contexts: **admin, frontend** · Product group: **Capell Marketing**
 
-Newsletter manages audience capture, subscriber records, consent evidence, provider connections, provider sync attempts, segments, imports, campaign sends, preference center updates, UTM attribution, and public subscription lifecycle routes.
+Newsletter manages audience capture, subscriber records, consent evidence, provider connections, provider sync attempts, segments, imports, scheduled send records, preference center updates, UTM attribution, and public subscription lifecycle routes.
 
 ## Install
 
@@ -44,10 +44,10 @@ Public routes should expose only confirmation/unsubscribe/webhook outcomes and m
 - `CreateUnsubscribeTokenAction` and `UnsubscribeSubscriberAction` own unsubscribe flows without requiring Campaign Studio or Form Builder to understand newsletter internals.
 - `ResolveUtmAttributionAction` normalizes campaign attribution for newsletter sends and conversion reporting.
 
-## Campaign Sends
+## Scheduled Sends
 
 - `ScheduleNewsletterSendAction` creates scheduled campaign send records with segment/provider audience and UTM metadata.
-- `BuildDueNewsletterSendsAction` returns due scheduled sends in deterministic schedule order for workers or Automation Studio.
+- `BuildDueNewsletterSendsAction` returns due scheduled sends in deterministic schedule order for ESP, Email Studio, Campaign Studio, or Automation Studio delivery workers.
 - `UpdateNewsletterSendStatusAction` records lifecycle transitions for sending, sent, failed, and cancelled states with timestamps and delivery metadata.
 - Scheduled sends contribute to Publishing Studio's editorial calendar as `newsletter.send` events when Publishing Studio is installed.
 

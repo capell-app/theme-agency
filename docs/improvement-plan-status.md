@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 56 |
+| Now    | 55 |
 | Next   | 306 |
 | Later  | 204 |
 
@@ -57,7 +57,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | media-library | 0 | 0 | 3 | Now closed | Current follow-up replaces path-only duplicate reporting with SHA-256 content-hash duplicate detection after structural rights-metadata parsing, short-TTL health/orphan report result caching, memoized `getFirstMedia()` owner lookups, anonymous/non-admin media output-safety coverage, and the `1a12ad1fa` media-ai missing-alt signal. Media Library has no Now/Next rows left; continue with premium DAM rows and completion review. |
 | migration-assistant | 0 | 5 | 3 | Now closed | `2714b18cf` reconciles tracker status after `42e122b08` promoted marketplace media and recent slices shipped translated health probes, rollback table-name repair, rollback-report support, external-page execution, and package reader paths. Migration Assistant has no Now rows left; continue with headless export/import, one-click rollback execution, site-import wizard reachability, job retry/backoff, query-budget coverage, and completion review. |
 | navigation | 0 | 4 | 4 | Now closed | `b87e8bc1c` moves frontend render-model resolution into a composer after screenshot/manifest reconciliation and indexed reference lookups. Navigation has no Now rows left; continue with role-aware visibility, breadcrumb builder, active-state modes, first-class external links, and completion review. |
-| newsletter | 2 | 6 | 4 | Slice committed | Current follow-up implements real keyed newsletter diagnostics for form subscription capture, provider sync retry, provider webhooks, and segment evaluation with translated output and focused tests, after direct FormSubmitted listener, token replay, and Fake provider hardening. Remaining Now rows: marketplace copy and screenshots. |
+| newsletter | 1 | 6 | 4 | Slice committed | Current follow-up reconciles marketplace/composer/README/overview copy around the shipped capture, consent, segmentation, preference-center, scheduled-send-record, and provider-sync surfaces, after real keyed diagnostics, direct FormSubmitted listener, token replay, and Fake provider hardening. Remaining Now row: marketplace screenshots. |
 | notes | 0 | 9 | 4 | Now closed | `0b6eaee29` renders scoped inbox notes, marks displayed mentions read, and reconciles resolve/reopen/complete UI status after `0a153655b` landed health/body validation. Notes has no Now rows left; continue with reminders, record-editor visibility semantics, cached attention counts, searchable user selects, enum labels, generalized note subjects, notifications, orphaned morph cleanup, screenshot generation, and completion review. |
 | password-policy | 1 | 6 | 4 | Slice committed | `899d37760` adds direct middleware coverage for redirect, forced-change allowed route, logout allowed route, and compliant no-op behavior, after prior HIBP/expiry/manifest/complexity/history slices. Remaining Now row: marketplace screenshots and summary/description. |
 | payments | 2 | 6 | 3 | Slice committed | Current follow-up moves Stripe webhook terminal-status guarding under the `lockForUpdate()` processing transaction and adds no-replay coverage for terminal processed/ignored rows, after paid-download replay, money-cast, and form-checkout return URL fixes. Remaining Now rows: marketplace media/copy. |

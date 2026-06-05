@@ -1,6 +1,6 @@
 # Newsletter
 
-Newsletter manages audiences, subscriptions, consent state, imports, segmentation, campaign sends, preference center updates, UTM attribution, automation hooks, and public subscription routes.
+Newsletter captures, confirms, segments, and syncs subscribers for Capell sites, with consent evidence, imports, scheduled send records, preference center updates, UTM attribution, automation hooks, and public subscription routes.
 
 ## At A Glance
 
@@ -12,7 +12,7 @@ Newsletter manages audiences, subscriptions, consent state, imports, segmentatio
 
 ## Why It Helps Your Capell Workflow
 
-- Adds subscriber capture, consent state, imports, segmentation, campaign sends, preference center updates, UTM attribution, automation hooks, and public subscription routes for Capell sites.
+- Adds subscriber capture, consent state, imports, segmentation, scheduled send records, preference center updates, UTM attribution, automation hooks, and public subscription routes for Capell sites.
 - Helps owners build audience workflows without putting newsletter-specific logic into Form Builder or Campaign Studio.
 - Gives developers provider sync and subscription Actions that can connect to email, public actions, and growth workflows.
 
@@ -24,7 +24,7 @@ Newsletter manages audiences, subscriptions, consent state, imports, segmentatio
 
 ## What It Adds
 
-- Newsletter manages audiences, subscriptions, consent state, imports, segmentation, campaign sends, preference center updates, UTM attribution, automation hooks, and public subscription routes.
+- Newsletter manages audiences, subscriptions, consent state, imports, segmentation, scheduled send records, preference center updates, UTM attribution, automation hooks, and public subscription routes.
 - Admin resources: `FormMappingResource`, `ImportBatchResource`, `NewsletterSendResource`, `NewsletterTagResource`, `ProviderAudienceResource`, `ProviderConnectionResource`, `ProviderInterestMappingResource`, `SegmentResource`, `SubscriberResource`, `SyncAttemptResource`.
 - Package setup or maintenance commands.
 
