@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 101 |
+| Now    | 100 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -67,7 +67,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | search | 0 | 6 | 4 | Now closed | Current follow-up caches click-count aggregates by site/language, invalidates affected cache scopes when recording clicks, and removes a duplicate promoted-result conversion pass after public-result guardrails and deferred search-log writes. Search has no Now rows left; continue with click beacon CSRF, FULLTEXT detection, controller-side highlighting, autocomplete, and broader relevance/admin rows before completion review. |
 | seo-suite | 4 | 6 | 3 | Slice committed | Current follow-up guards missing Prism usage telemetry on the chat success path and keeps circuit-breaker state provider-scoped. Remaining Now rows: dormant SEO checks, real health probes, stronger leak matching, and manifest cache/settings/permissions/PageSpeed accuracy. |
 | shopify-commerce | 2 | 7 | 4 | Slice committed | Current follow-up implements real Shopify Commerce health probes for storage tables, app credentials, active connection tokens, lightweight Admin API token validity, stale sync operations, and catalog freshness with secret-safe translated output, after transaction and sync-error hardening. Remaining Now rows: Feature/Arch safety coverage and customer producer. |
-| site-discovery | 3 | 5 | 4 | Slice committed | Current follow-up removes the unused `icamys/php-sitemap-generator` dependency from package metadata/docs and guards against reintroduction, after registering the real `/sitemap-xml` route/controller and generated XML safety coverage. Remaining Now rows: health checks, screenshot reconciliation, and scheduled incremental regeneration. |
+| site-discovery | 2 | 5 | 4 | Slice committed | Current follow-up adds disabled-by-default scheduled incremental sitemap regeneration for `capell:xml-sitemap --incremental`, with daily/custom cron config, overlap locking, one-server execution, and focused scheduler coverage. Remaining Now rows: health checks and screenshot reconciliation. |
 | structured-content-library | 4 | 5 | 4 | Slice committed | Current follow-up proves `summary` uses the same portable HTML guard as content, after defaulting `published_at` on publish transition. Remaining Now rows: real health check, unique index/null-slug import dedup, payload escaping contract, and marketplace media/copy. |
 | tags | 0 | 5 | 4 | Now closed | `f854c06e5` adds direct `TagPolicy`, `Tag::getUrl()`, and deletion-integrity coverage after `754b95540` added the guarded `tags(type, site_id)` composite index migration. Tags has no Now rows left; continue with workspace/status visibility rows and completion review. |
 | theme-agency | 2 | 5 | 3 | Slice committed | Current follow-up reconciles paid product metadata across manifest, overview, screenshots copy, and plan by classifying Agency as `Capell Themes` / `premium` / `themes`, after the prior Agency slice bound the page shell to surface/foreground tokens, gave all presets explicit surface tokens, replaced fixed section gradients with `site-brand-gradient`, and updated docs/tests. Continue with screenshot deployment captures, preview assets, navigation/proof a11y, and richer agency-specific renderers. |
