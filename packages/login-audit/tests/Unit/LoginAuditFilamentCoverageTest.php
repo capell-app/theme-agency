@@ -14,7 +14,11 @@ use Filament\Panel;
 
 it('declares login audit dashboard settings keys', function (): void {
     expect((new LoginAuditDashboardSettingsContributor)->settingsKeys())->toBe([
-        ['key' => 'login_audits', 'label' => 'Access Logs', 'group' => 'System health'],
+        [
+            'key' => 'login_audits',
+            'label' => __('capell-login-audit::dashboard.access_logs'),
+            'group' => __('capell-login-audit::dashboard.group'),
+        ],
     ])->and((new LoginAuditAdminBridge)->isEnabled(AdminBridgeContextData::forPackage('capell-login-audit')))->toBeTrue();
 });
 

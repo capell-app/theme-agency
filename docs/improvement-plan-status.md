@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 186 |
+| Now    | 183 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -52,7 +52,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | insights | 6 | 6 | 4 | Slice committed | `5afe307aa` landed privacy hardening; continue with analytics/product gaps. |
 | knowledge-base | 6 | 7 | 3 | Slice committed | Current follow-up throttles/dedupes anonymous feedback and updates shipped-feature docs; policies and edit/versioning gaps remain high priority. |
 | layout-builder | 1 | 5 | 4 | Slice committed | `5da9e0066` tightens the visual editor responsive preview frame/tree sizing after prior slices aligned manifest dependencies, implemented real health probes, removed the dead cache enum, promoted marketplace screenshots, rewrote manifest/composer copy, and added fragment invalid/replay safety coverage. Remaining Now row: add the full public render performance-budget test, especially the render-time budget; current stress coverage proves bounded query behavior only. |
-| login-audit | 7 | 6 | 2 | Slice committed | Current follow-up adds real auth-event capture coverage, syncs vendor retention purge execution, records purge success timestamps, adds translated capture-configuration health diagnostics, and moves admin/user last-seen writes behind shared throttled Actions. Continue with remaining Next/Later operational rows and completion review. |
+| login-audit | 4 | 6 | 2 | Slice committed | Current follow-up fixes frontend activity row matching to prefer the latest login time, keeps dashboard settings labels on translation keys, and verifies real `Login`/`Failed` events create audit rows. Remaining Now rows: real health check, daily purge precision, admin activity throttling, and marketplace media/copy. |
 | media-ai | 6 | 6 | 3 | Slice committed | `f4b35bc06` landed health/allow-list fixes; production image-doctor/provider story remains. |
 | media-library | 7 | 5 | 3 | Slice committed | `14d6d286c` exercises configured owner FK columns in media health and orphan reports and documents the `owner_foreign_keys` config shape. Continue with cleanup UI, duplicate detection, owner FK discovery/depth, and completion review. |
 | migration-assistant | 7 | 5 | 3 | Slice committed | `3f14f3f77` landed readiness fixes; continue with end-to-end import rows. |
