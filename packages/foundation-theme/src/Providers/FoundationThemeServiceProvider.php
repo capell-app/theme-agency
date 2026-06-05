@@ -395,7 +395,7 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
             'foundation-theme-runtime',
             fn (FrontendAssetContextData $context): bool => $context->runtime->usesIslands
                 || $context->runtime->usesLivewire
-                || ($context->runtime->modules['layout-builder'] ?? false),
+                || ($context->runtime->modules['foundation-theme-runtime'] ?? false),
         );
     }
 
