@@ -55,7 +55,7 @@ Summary: the theme ships the _shape_ of supporter journeys but no live integrati
 - **Performance budget is tight and unverified** — `capell.json` sets `frontendRenderBudgetMs: 20` and `adminQueryBudget: 0`. No test asserts render time, and `cacheSafety.cacheable: false` (varies by `site`,`locale`) means every request re-renders 14 section views server-side. There is no render-budget guard test. File: `capell.json`.
 - **Shipped 2026-06-04: Optional-package detection duplicated in Blade** — `campaigns.blade.php` now relies on the provider-injected `campaignStudioAvailable` flag, and `PublicOutputSafetyTest` guards against future `CapellCore::isPackageInstalled` calls in public Blade. File: `resources/views/sections/campaigns.blade.php`.
 - **Test gaps** — strong on definition/manifest/demo/public-safety, but: (a) no per-section render test asserting each Blade compiles and emits expected structure with empty/partial `$section` data; (b) no accessibility/contrast or skip-link-target test; (c) `PackageAwareRendererTest` only covers `campaigns` — the other 5 optional sections (`donation-impact`, `volunteer-donate`, `volunteer-shifts`, `events`, `stories`) have no connected/static branch test; (d) no render-budget assertion. Files: `tests/Unit/`, `tests/Feature/`.
-- **Version/PHP drift** — `composer.json` requires `php: ^8.3`; project standard is PHP 8.4. `capell.json` is `manifest-version: 3` (confirm parity with sibling themes). `CHANGELOG.md` is effectively empty. Files: `composer.json`, `capell.json`, `CHANGELOG.md`.
+- **Shipped 2026-06-05: Version/PHP drift** — `composer.json` now requires `php: ^8.4`, `CHANGELOG.md` includes the recent package improvement slices, and manifest tests guard the package Composer PHP constraint. `capell.json` remains `manifest-version: 3` pending sibling parity review. Files: `composer.json`, `CHANGELOG.md`, `tests/Unit/ManifestRequirementsTest.php`.
 
 ## 5. Marketplace & Selling
 
@@ -79,7 +79,7 @@ The manifest marketplace description now uses this buyer-facing product story:
 | --------------------------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
 | Add `<h1>`/heading-order review after the skip-link target fix                                                              | Now    | S      | High   | §4 WCAG     |
 | Generate the 6 declared `docs/screenshots/*.png`; replace 3 SVG placeholders with real captures; verify demo routes resolve | Now    | M      | High   | §1, §4, §5  |
-| Bump `composer.json` PHP to `^8.4`; populate `CHANGELOG.md`                                                                 | Now    | S      | Low    | §4          |
+| Bump `composer.json` PHP to `^8.4`; populate `CHANGELOG.md`                                                                 | Done   | S      | Low    | §4 — closed 2026-06-05: package Composer now requires `^8.4`, the changelog has dated recent entries, and manifest tests assert the PHP constraint. |
 | Drive section colours from brand tokens instead of literal hex                                                              | Next   | M      | High   | §2.1        |
 | Make `campaigns`/`stories`/`contact` iterate `$section->items` (kill duplicate placeholder cards)                           | Next   | M      | High   | §2.3        |
 | Add WCAG contrast pass on dark/emerald section text + amber-on-dark                                                         | Next   | M      | High   | §4 WCAG     |
