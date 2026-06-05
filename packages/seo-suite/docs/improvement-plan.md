@@ -17,7 +17,7 @@ SEO Suite is the premium search/SEO package for the Capell CMS. It bolts metadat
 
 - **Wire up the 11 dormant SEO checks.** `SeoCheckKeyEnum` defines 15 cases (Canonical, Schema, ImageAltText, InternalLinks, BrokenLinks, Redirects, SocialImage, TranslationCoverage, Sitemap, LlmsTxt, SearchConsole, …) but `BuildPageSeoReportAction::enabledChecks()` only emits MetaTitle, MetaDescription, DuplicateTitle, Robots. Canonical/schema/alt/links never become issues or passed-checks, so the page score is blind to them. This is the single biggest credibility gap vs Yoast/RankMath. `src/Actions/BuildPageSeoReportAction.php`, `src/Enums/SeoCheckKeyEnum.php`. **Effort: L**
 
-- **Make `SeoSuiteHealthCheck` actually check something.** The class implements only `compatibleCapellApiVersion()`; the 4 manifest `healthChecks` (page-report critical, schema-graph, broken-links, ai-discovery) all point at this one no-op class. Health labels promise coverage that is never asserted at runtime. Add per-key probe methods (e.g. report builds without throwing, schema graph non-empty for a sample page, AI Discovery route resolves). `src/Health/SeoSuiteHealthCheck.php`, `capell.json` (healthChecks). **Effort: M**
+- **Done/Shipped: `SeoSuiteHealthCheck` performs real keyed diagnostics.** The manifest health keys now route to targeted diagnostics: page reports and broken links check storage plus service bindings, schema graph checks service bindings plus template registry, and AI Discovery checks storage, routes, services, and crawler policy. Evidence: `SeoSuiteHealthCheckTest` maps all four manifest keys and verifies unknown keys return no diagnostics. `src/Health/SeoSuiteHealthCheck.php`, `tests/Feature/Health/SeoSuiteHealthCheckTest.php`. **Effort: M**
 
 - **Weight the SEO score instead of flat severity penalties.** `CalculateSeoScoreAction` is `100 − Σ severity penalty` (Critical 25 / Warning 10 / Notice 3). A page missing only canonical scores identically to one missing alt text; there is no per-check weight or category breakdown. Introduce check-category weights and return a structured breakdown (on-page / technical / structured-data / links) so the widget can show sub-scores. `src/Actions/CalculateSeoScoreAction.php`, `src/Enums/SeoIssueSeverityEnum.php`. **Effort: M**
 
@@ -75,7 +75,7 @@ SEO Suite is the premium search/SEO package for the Capell CMS. It bolts metadat
 
 - **AI robustness edge: token-usage assumption.** `PrismProvider::chat()` reads `$response->usage->promptTokens + completionTokens` and `$response->usage` unconditionally for the debug log; a provider returning null usage (some Prism providers / Ollama) would throw inside the success path after a successful generation. Guard usage access. **`src/Support/PrismProvider.php`.**
 
-- **`SeoSuiteHealthCheck` no-op (repeat from §2 as a risk):** ships as a passing health check that proves nothing, giving false assurance in the extension health dashboard. **`src/Health/SeoSuiteHealthCheck.php`.**
+- **Done/Shipped: keyed SEO Suite health diagnostics.** `SeoSuiteHealthCheck` now exposes the full diagnostic set plus key-specific checks for the four manifest health rows, avoiding one generic dashboard result for every SEO surface. **`src/Health/SeoSuiteHealthCheck.php`, `tests/Feature/Health/SeoSuiteHealthCheckTest.php`.**
 
 ## 5. Marketplace & Selling
 
@@ -103,7 +103,7 @@ SEO Suite is the premium search/SEO package for the Capell CMS. It bolts metadat
 | ---------------------------------------------------------------------------------------------- | ------ | ------ | ------ | -------------------------------------------------------------------------------------------- |
 | Done/Shipped: Add anonymous/non-admin public-output safety tests for `/llms.txt`, `/index.md`, `/robots.txt`. Evidence: `GenerateLlmsTxtActionTest` covers anonymous and signed-in non-admin AI Discovery output through `PublicOutputLeakScanner`. | Done | M | High | §4 |
 | Wire up the 11 dormant `SeoCheckKeyEnum` checks (canonical, schema, alt, links…)               | Now    | L      | High   | §2                                                                                           |
-| Make `SeoSuiteHealthCheck` perform real per-key probes                                         | Now    | M      | High   | §2/§4                                                                                        |
+| Done/Shipped: Make `SeoSuiteHealthCheck` perform real per-key probes. Evidence: `SeoSuiteHealthCheckTest` covers manifest key mapping for page report, schema graph, broken links, and AI Discovery. | Done | M | High | §2/§4 |
 | Strengthen `leakMatches()` beyond `signature=`/`expires=`                                      | Now    | M      | High   | §2/§4                                                                                        |
 | Correct manifest `cacheSafety`, `permissions`, `settings`, PageSpeed capabilities              | Now    | S      | Med    | §4                                                                                           |
 | Fix `defaultPageSpeedDigestRecipients()` to filter in-query                                    | Done   | S      | Med    | §2 — Done 2026-06-04: role filtering now stays in the recipient query with focused coverage. |

@@ -20,6 +20,39 @@ it('runs real diagnostics returning check results', function (): void {
         ->and($results->every(static fn (DoctorCheckResultData $result): bool => $result->message !== ''))->toBeTrue();
 });
 
+it('maps each declared manifest health key to its targeted diagnostics', function (): void {
+    $expectedLabelsByKey = [
+        'seo-suite.page-report' => [
+            __('capell-seo-suite::generic.health_storage_tables_label'),
+            __('capell-seo-suite::generic.health_seo_services_label'),
+        ],
+        'seo-suite.schema-graph' => [
+            __('capell-seo-suite::generic.health_seo_services_label'),
+            __('capell-seo-suite::generic.health_schema_templates_label'),
+        ],
+        'seo-suite.broken-links' => [
+            __('capell-seo-suite::generic.health_storage_tables_label'),
+            __('capell-seo-suite::generic.health_seo_services_label'),
+        ],
+        'seo-suite.ai-discovery' => [
+            __('capell-seo-suite::generic.health_storage_tables_label'),
+            __('capell-seo-suite::generic.health_ai_discovery_routes_label'),
+            __('capell-seo-suite::generic.health_seo_services_label'),
+            __('capell-seo-suite::generic.health_ai_crawler_policy_label'),
+        ],
+    ];
+
+    foreach ($expectedLabelsByKey as $key => $expectedLabels) {
+        $labels = SeoSuiteHealthCheck::runDiagnostics($key)
+            ->map(static fn (DoctorCheckResultData $result): string => $result->label)
+            ->all();
+
+        expect($labels)->toBe($expectedLabels);
+    }
+
+    expect(SeoSuiteHealthCheck::runDiagnostics('seo-suite.unknown'))->toBeEmpty();
+});
+
 it('passes when storage, routes, services, schema templates, and crawler policy are configured', function (): void {
     $check = new SeoSuiteHealthCheck;
 
