@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 116 |
+| Now    | 115 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -68,7 +68,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | seo-suite | 4 | 6 | 3 | Slice committed | Current follow-up guards missing Prism usage telemetry on the chat success path and keeps circuit-breaker state provider-scoped. Remaining Now rows: dormant SEO checks, real health probes, stronger leak matching, and manifest cache/settings/permissions/PageSpeed accuracy. |
 | shopify-commerce | 4 | 7 | 4 | Slice committed | Current follow-up scrubs secret-bearing sync exceptions before persisting `last_sync_error`, after the Start→Poll→Import bulk product sync loop was closed with a queued continuation action and configurable poll delay. Remaining Now rows: Feature/Arch safety coverage, customer producer, health probes, and GraphQL transaction cleanup. |
 | site-discovery | 3 | 5 | 4 | Slice committed | Current follow-up removes the unused `icamys/php-sitemap-generator` dependency from package metadata/docs and guards against reintroduction, after registering the real `/sitemap-xml` route/controller and generated XML safety coverage. Remaining Now rows: health checks, screenshot reconciliation, and scheduled incremental regeneration. |
-| structured-content-library | 5 | 5 | 4 | Slice committed | Current follow-up defaults `published_at` on publish transition while preserving existing audit timestamps on other updates. Remaining Now rows: summary sanitization, real health check, unique index/null-slug import dedup, payload escaping contract, and marketplace media/copy. |
+| structured-content-library | 4 | 5 | 4 | Slice committed | Current follow-up proves `summary` uses the same portable HTML guard as content, after defaulting `published_at` on publish transition. Remaining Now rows: real health check, unique index/null-slug import dedup, payload escaping contract, and marketplace media/copy. |
 | tags | 0 | 5 | 4 | Now closed | `f854c06e5` adds direct `TagPolicy`, `Tag::getUrl()`, and deletion-integrity coverage after `754b95540` added the guarded `tags(type, site_id)` composite index migration. Tags has no Now rows left; continue with workspace/status visibility rows and completion review. |
 | theme-agency | 2 | 5 | 3 | Slice committed | Current follow-up reconciles paid product metadata across manifest, overview, screenshots copy, and plan by classifying Agency as `Capell Themes` / `premium` / `themes`, after the prior Agency slice bound the page shell to surface/foreground tokens, gave all presets explicit surface tokens, replaced fixed section gradients with `site-brand-gradient`, and updated docs/tests. Continue with screenshot deployment captures, preview assets, navigation/proof a11y, and richer agency-specific renderers. |
 | theme-commerce | 1 | 4 | 4 | Slice committed | Current follow-up reconciles the non-cacheable cache-safety manifest so Commerce no longer queues invalidation with no sources, after the prior Commerce slice translated hero/catalog retail copy, made hero trust badges data-driven, removed the theme-specific catalog carousel selector, and updated docs/tests. Remaining Now row: screenshot captures. Continue with token replacement, PDP/cart/promo/review surfaces, LCP hints, and broader section render tests. |
