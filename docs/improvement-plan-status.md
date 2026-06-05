@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 159 |
+| Now    | 158 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -82,7 +82,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | theme-saas | 3 | 7 | 3 | Slice committed | Current follow-up aligns README/overview verification commands to the repo-root Pest invocation and documents that Theme SaaS does not ship a package-local PHPUnit config, after the prior SaaS slice reconciled manifest cache safety by disabling queued invalidation for non-cacheable output. Continue with rendered anonymous leak tests, adapter translation, real pricing matrix, demo/trial form embed, route-backed screenshots, jargon copy, token colours, dark mode, and interactive calculator work. |
 | translation-manager | 6 | 5 | 5 | Slice committed | `56038d0db` landed import/export/readiness work; continue with placeholder validation and MT review. |
 | url-manager | 1 | 7 | 4 | Slice committed | Current follow-up tightens health diagnostics for action/provider metadata, promotes existing marketplace screenshots into manifest coverage, and reconciles already-shipped query/case normalization plus absolute-target allowlist rows. Remaining Now row: defer hot-path hit recording. |
-| welcome-tour | 1 | 5 | 5 | Slice committed | Current follow-up aligns the health-check label with real diagnostics, proves dashboard rendering reads pre-registered steps instead of registering during render, and reconciles shipped docs/capabilities rows. Remaining Now row: resilient persistence when `dismissed_hints` is absent. |
+| welcome-tour | 0 | 5 | 5 | Now closed | Current follow-up reconciles the package-owned `welcome_tour_user_states` persistence already covering hosts without `users.dismissed_hints`, closing the final Now row. Continue with anchored default steps, marketplace copy/media, and Next/Later rows before completion review. |
 | wordpress-importer | 7 | 6 | 3 | Slice committed | `d84dd4cdb` adds path-aware WXR stream-sniffing while preserving extension-only `.xml` selection for the current Migration Assistant registry, keeps direct non-WXR fallback parsing in memory, and cleans Migration Assistant naming copy. Continue with MA path-aware reader selection, field mapping, media execution, and broader import gaps before completion review. |
 
 ## Next Audit Queue
