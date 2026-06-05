@@ -14,7 +14,7 @@ Current marketplace summary (verbatim from `capell.json`): _"Newsletter adds sub
 
 - **Harden the Form Builder event binding** — the listener is wired by building the event class name from a string and guarding with `class_exists`: `Event::listen($formSubmittedEvent, SubscribeFromFormSubmission::class)`. If Form Builder renames/moves `FormSubmitted`, subscription silently stops with no error. Reference the class directly (it is a hard `requires` dependency) or assert its existence in a health check/test. — silent failure of the headline capability — `src/Providers/NewsletterServiceProvider.php:233-236` — **S**
 
-- **Restrict or gate the `Fake` provider adapter in production** — `ProviderType::Fake` is a selectable enum case (it has a label and is registered in the container at `NewsletterServiceProvider`), and `FakeProviderAdapter::verifyWebhook()` returns `true` unconditionally. A Fake `ProviderConnection` therefore exposes an unauthenticated public webhook that writes subscriber + consent rows. Hide `Fake` from the admin `provider` select (or block its webhook route) outside testing. — unauthenticated state mutation — `src/Support/Providers/FakeProviderAdapter.php`, `src/Enums/ProviderType.php` — **S**
+- **Closed 2026-06-05 — Restrict or gate the `Fake` provider adapter in production** — `Fake` is hidden from the admin provider select and fake adapter operations fail closed outside `local`/`testing` unless `capell-newsletter.providers.allow_fake_provider` (or the legacy webhook override) is explicitly enabled. Fake webhooks return 403 without mutating subscriber state in production by default. — unauthenticated state mutation — `src/Support/Providers/FakeProviderAdapter.php`, `src/Support/Providers/FakeProviderGuard.php`, `src/Filament/Resources/ProviderConnections/ProviderConnectionResource.php` — **S**
 
 - **Set token expiry for unsubscribe and preference-center tokens** — `CreateUnsubscribeTokenAction` and `CreatePreferenceCenterTokenAction` create `PublicToken`s with `'expires_at' => null`, so `isUsable()` treats them as valid forever. Confirm tokens correctly expire (72h). Long-lived unsubscribe/preference links are a standing risk if a URL leaks. Add a configurable expiry (reuse `token_expiry_hours` or a new key). — non-expiring public credentials — `src/Actions/CreateUnsubscribeTokenAction.php`, `src/Actions/CreatePreferenceCenterTokenAction.php`, `src/Models/PublicToken.php` — **S**
 
@@ -50,7 +50,7 @@ Tie-back to `capabilities[]` in `capell.json`.
 
 - **Stub health checks (critical).** Four manifest health checks resolve to a no-op class — `src/Health/NewsletterHealthCheck.php`. Marketplace certification and `capell:doctor`-style tooling will report green for capabilities that are never probed. (See §2.)
 
-- **Fake adapter accepts unsigned webhooks in production.** `FakeProviderAdapter::verifyWebhook()` → `true`; `ProviderType::Fake` is admin-selectable. `src/Support/Providers/FakeProviderAdapter.php`. (See §2.)
+- **Closed 2026-06-05 — Fake adapter accepts unsigned webhooks in production.** `FakeProviderAdapter::verifyWebhook()` now fails closed outside `local`/`testing` unless an explicit fake-provider override is enabled, and the admin provider select uses the same gate. `src/Support/Providers/FakeProviderAdapter.php`. (See §2.)
 
 - **Non-expiring unsubscribe/preference tokens.** `expires_at => null` in both create Actions. `src/Actions/CreateUnsubscribeTokenAction.php`, `CreatePreferenceCenterTokenAction.php`. (See §2.)
 
@@ -94,7 +94,7 @@ Tie-back to `capabilities[]` in `capell.json`.
 | Item                                                                           | Bucket | Effort | Impact | Section ref |
 | ------------------------------------------------------------------------------ | ------ | ------ | ------ | ----------- |
 | Implement real logic for the 4 advertised health checks                        | Now    | M      | High   | §2, §4      |
-| Hide/block `Fake` provider adapter in production (unsigned webhook)            | Now    | S      | High   | §2, §4      |
+| Hide/block `Fake` provider adapter in production (unsigned webhook)            | Done   | S      | High   | §2, §4      |
 | Add expiry + single-use burn (`used_at`) to unsubscribe/preference tokens      | Now    | S      | High   | §2, §4      |
 | Reference `FormSubmitted` directly + test the listener actually fires          | Now    | S      | High   | §2, §4      |
 | Honest marketplace summary + composer description (align the two)              | Now    | S      | Med    | §5          |

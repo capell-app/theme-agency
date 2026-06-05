@@ -113,6 +113,87 @@ it('normalizes provider webhooks into local subscriber state', function (): void
         ->toBe(SubscriberStatus::Unsubscribed);
 });
 
+it('blocks fake provider webhook writes in production unless explicitly enabled', function (): void {
+    $site = $this->createNewsletterSite();
+    $connection = ProviderConnection::query()->create([
+        'site_id' => $site->getKey(),
+        'name' => 'Fake',
+        'provider' => ProviderType::Fake,
+        'auth_type' => AuthType::ApiKey,
+        'credentials' => ['api_key' => 'fake'],
+        'is_enabled' => true,
+    ]);
+
+    app()->detectEnvironment(static fn (): string => 'production');
+
+    try {
+        $this->postJson(route('capell-newsletter.provider-webhook', ['providerConnection' => $connection]), [
+            'email' => 'blocked-webhook@example.com',
+            'status' => SubscriberStatus::Unsubscribed->value,
+            'event_type' => 'unsubscribe',
+        ])->assertForbidden();
+
+        expect(Subscriber::query()->forEmail($site->getKey(), 'blocked-webhook@example.com')->exists())
+            ->toBeFalse();
+
+        config()->set('capell-newsletter.providers.allow_fake_provider', true);
+
+        $this->postJson(route('capell-newsletter.provider-webhook', ['providerConnection' => $connection]), [
+            'email' => 'allowed-webhook@example.com',
+            'status' => SubscriberStatus::Unsubscribed->value,
+            'event_type' => 'unsubscribe',
+        ])->assertOk();
+
+        expect(Subscriber::query()->forEmail($site->getKey(), 'allowed-webhook@example.com')->exists())
+            ->toBeTrue();
+    } finally {
+        app()->detectEnvironment(static fn (): string => 'testing');
+    }
+});
+
+it('blocks fake provider sync attempts in production unless explicitly enabled', function (): void {
+    $site = $this->createNewsletterSite();
+    $subscriber = Subscriber::factory()->create([
+        'site_id' => $site->getKey(),
+        'email' => 'blocked-sync@example.com',
+    ]);
+    $connection = ProviderConnection::query()->create([
+        'site_id' => $site->getKey(),
+        'name' => 'Fake',
+        'provider' => ProviderType::Fake,
+        'auth_type' => AuthType::ApiKey,
+        'credentials' => ['api_key' => 'fake'],
+        'is_enabled' => true,
+    ]);
+    $audience = ProviderAudience::query()->create([
+        'provider_connection_id' => $connection->getKey(),
+        'name' => 'Default',
+        'remote_id' => 'fake-audience',
+        'is_default' => true,
+        'sync_subscribed_only' => true,
+    ]);
+    $syncAttempt = SyncAttempt::query()->create([
+        'subscriber_id' => $subscriber->getKey(),
+        'provider_connection_id' => $connection->getKey(),
+        'provider_audience_id' => $audience->getKey(),
+        'operation' => 'sync_subscriber',
+        'sync_status' => SyncStatus::Pending,
+        'attempts' => 0,
+    ]);
+
+    app()->detectEnvironment(static fn (): string => 'production');
+
+    try {
+        SyncSubscriberToProviderAction::run($syncAttempt);
+
+        expect($syncAttempt->refresh()->sync_status)->toBe(SyncStatus::RetryScheduled)
+            ->and($syncAttempt->error_message)->toBe('The fake newsletter provider is disabled for this environment.')
+            ->and(ProviderSubscriber::query()->where('subscriber_id', $subscriber->getKey())->exists())->toBeFalse();
+    } finally {
+        app()->detectEnvironment(static fn (): string => 'testing');
+    }
+});
+
 it('acknowledges duplicate provider webhook retries without re-recording consent', function (): void {
     if (! Schema::hasTable('newsletter_processed_webhook_events')) {
         Schema::create('newsletter_processed_webhook_events', function (Blueprint $table): void {

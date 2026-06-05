@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 135 |
+| Now    | 134 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -57,7 +57,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | media-library | 6 | 5 | 3 | Slice committed | Current follow-up wires orphan cleanup into the media health bulk UI and keeps selected cleanup constrained to genuinely unused records while deleting unshared files. Remaining Now rows: real health checks, package config/owner FK defaults, visibility preservation, upload validation, per-issue filtering/configurable stale threshold, and docs/screenshot reconciliation. |
 | migration-assistant | 6 | 5 | 3 | Slice committed | Current follow-up adds a package-local `StartSiteImportAction` path that creates `SiteImport` sessions from `site-export` packages and guards page imports against wrong archive kinds. Remaining Now rows: rollback table-name repair, prose cleanup, marketplace media/copy, health probes, dead kind reconciliation, and completion review. |
 | navigation | 3 | 5 | 4 | Slice committed | Current follow-up adds metadata coverage for the already-shipped direct Core dependency, manifest capabilities/cache invalidation sources, and marketplace/composer copy. Remaining Now rows: real health probes, JSON reverse-lookup replacement, and screenshot manifest reconciliation. |
-| newsletter | 6 | 6 | 4 | Slice committed | `d934f6d59` landed token hardening; delivery engine and campaign rows remain. |
+| newsletter | 5 | 6 | 4 | Slice committed | Current follow-up blocks the Fake provider in production across admin selection, webhooks, audience listing, and sync unless explicitly enabled. Remaining Now rows: real health checks, expiring/single-use public tokens, direct FormSubmitted listener coverage, marketplace copy, and screenshots. |
 | notes | 4 | 7 | 3 | Slice committed | Current follow-up renders scoped inbox notes and marks displayed mentions read; `0a153655b` landed health/body validation. Remaining Now rows: resolve/reopen/complete UI, reminder reconciliation, anon/non-admin safety coverage before broader read surfaces, and display sanitization. |
 | password-policy | 1 | 6 | 4 | Slice committed | `899d37760` adds direct middleware coverage for redirect, forced-change allowed route, logout allowed route, and compliant no-op behavior, after prior HIBP/expiry/manifest/complexity/history slices. Remaining Now row: marketplace screenshots and summary/description. |
 | payments | 6 | 6 | 3 | Slice committed | Current follow-up moves paid-download delivery into an Action and adds Feature/Arch suites covering signed download paths, thin controllers, sensitive non-cacheable frontend settings, and public-output safety. Remaining Now rows: webhook row locking, marketplace media/copy, money casts, form-checkout URL allow-listing, and replay-safe paid-download expiry. |

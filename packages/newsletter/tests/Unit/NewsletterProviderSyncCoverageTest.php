@@ -26,6 +26,7 @@ use Capell\Newsletter\Notifications\ConfirmNewsletterSubscriptionNotification;
 use Capell\Newsletter\Providers\AdminServiceProvider;
 use Capell\Newsletter\Support\NewsletterSettingsResolver;
 use Capell\Newsletter\Support\Providers\FakeProviderAdapter;
+use Capell\Newsletter\Support\Providers\FakeProviderGuard;
 use Capell\Tags\Models\Tag;
 use Illuminate\Console\Scheduling\Event as ScheduledEvent;
 use Illuminate\Console\Scheduling\Schedule;
@@ -262,11 +263,17 @@ it('blocks fake provider webhook verification outside local and testing environm
     app()->detectEnvironment(static fn (): string => 'production');
 
     try {
-        expect($adapter->verifyWebhook($connection, $request))->toBeFalse();
+        expect(FakeProviderGuard::isAllowed())->toBeFalse()
+            ->and($adapter->verifyWebhook($connection, $request))->toBeFalse();
 
-        config()->set('capell-newsletter.webhooks.allow_fake_provider', true);
+        expect(fn (): array => $adapter->listAudiences($connection))
+            ->toThrow(LogicException::class, 'The fake newsletter provider is disabled for this environment.');
 
-        expect($adapter->verifyWebhook($connection, $request))->toBeTrue();
+        config()->set('capell-newsletter.providers.allow_fake_provider', true);
+
+        expect(FakeProviderGuard::isAllowed())->toBeTrue()
+            ->and($adapter->verifyWebhook($connection, $request))->toBeTrue()
+            ->and($adapter->listAudiences($connection))->toHaveCount(1);
     } finally {
         app()->detectEnvironment(static fn (): string => 'testing');
     }

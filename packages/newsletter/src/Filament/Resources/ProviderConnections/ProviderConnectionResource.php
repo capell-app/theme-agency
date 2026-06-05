@@ -13,6 +13,7 @@ use Capell\Newsletter\Filament\Resources\ProviderConnections\Pages\CreateProvide
 use Capell\Newsletter\Filament\Resources\ProviderConnections\Pages\EditProviderConnection;
 use Capell\Newsletter\Filament\Resources\ProviderConnections\Pages\ListProviderConnections;
 use Capell\Newsletter\Models\ProviderConnection;
+use Capell\Newsletter\Support\Providers\FakeProviderGuard;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -108,7 +109,7 @@ class ProviderConnectionResource extends Resource
     private static function providerOptions(): array
     {
         return collect(ProviderType::cases())
-            ->reject(static fn (ProviderType $provider): bool => $provider === ProviderType::Fake)
+            ->reject(static fn (ProviderType $provider): bool => $provider === ProviderType::Fake && ! FakeProviderGuard::isAllowed())
             ->mapWithKeys(static fn (ProviderType $provider): array => [$provider->value => $provider->getLabel()])
             ->all();
     }
