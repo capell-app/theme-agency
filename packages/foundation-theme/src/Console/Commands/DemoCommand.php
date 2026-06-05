@@ -7,6 +7,7 @@ namespace Capell\FoundationTheme\Console\Commands;
 use Capell\FoundationTheme\Actions\InstallFoundationThemeDemoAction;
 use Capell\FoundationTheme\Data\ThemeDemoInstallData;
 use Illuminate\Console\Command;
+use Stringable;
 
 final class DemoCommand extends Command
 {
@@ -37,10 +38,18 @@ final class DemoCommand extends Command
      */
     private function stringOptions(string $name): array
     {
+        $options = $this->option($name);
+
+        if (! is_array($options)) {
+            return [];
+        }
+
         return array_values(array_filter(
             array_map(
-                static fn (mixed $value): string => trim((string) $value),
-                (array) $this->option($name),
+                static fn (mixed $value): string => is_scalar($value) || $value instanceof Stringable
+                    ? trim((string) $value)
+                    : '',
+                $options,
             ),
             static fn (string $value): bool => $value !== '',
         ));

@@ -200,14 +200,16 @@ it('normalizes local form payment return paths before sending them to the provid
     ));
 
     app()->instance(PaymentGateway::class, $gateway);
+    $submissionKey = $submission->getKey();
+    throw_unless(is_int($submissionKey) || is_string($submissionKey), RuntimeException::class, 'Expected form submission key.');
 
     CreateFormPaymentCheckoutSessionAction::run(
         submission: $submission,
-        successUrl: '/thanks?submission=' . $submission->getKey(),
+        successUrl: '/thanks?submission=' . $submissionKey,
         cancelUrl: '/retry',
     );
 
-    expect($gateway->lastRequest?->successUrl)->toBe('https://example.test/thanks?submission=' . $submission->getKey())
+    expect($gateway->lastRequest?->successUrl)->toBe('https://example.test/thanks?submission=' . $submissionKey)
         ->and($gateway->lastRequest?->cancelUrl)->toBe('https://example.test/retry');
 });
 

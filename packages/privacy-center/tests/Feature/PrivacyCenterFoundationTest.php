@@ -325,9 +325,12 @@ it('marks expired privacy records for retention review without deleting them', f
     ApplyRetentionRulesAction::run($now);
 
     $metadata = $request->refresh()->metadata;
+    throw_unless(is_array($metadata), RuntimeException::class, 'Expected privacy request metadata.');
+    $retentionReview = $metadata['retention_review'] ?? null;
+    throw_unless(is_array($retentionReview), RuntimeException::class, 'Expected retention review metadata.');
 
-    expect($metadata['retention_review']['data_domain'] ?? null)->toBe('privacy-requests')
-        ->and($metadata['retention_review']['rule_id'] ?? null)->toBe(RetentionRule::query()->value('id'))
-        ->and($metadata['retention_review']['marked_at'] ?? null)->toBeString()
+    expect($retentionReview['data_domain'] ?? null)->toBe('privacy-requests')
+        ->and($retentionReview['rule_id'] ?? null)->toBe(RetentionRule::query()->value('id'))
+        ->and($retentionReview['marked_at'] ?? null)->toBeString()
         ->and(RetentionRule::query()->count())->toBe(1);
 });

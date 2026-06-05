@@ -67,8 +67,8 @@ it('delivers queued recipients and rechecks suppressions before provider handoff
             EmailRecipientStatus::Sent,
         ])
         ->and($recipients->pluck('provider_message_id')->all())->toBe([
-            'fake-' . $message->getKey() . '-' . $firstRecipient->getKey(),
-            'fake-' . $message->getKey() . '-' . $secondRecipient->getKey(),
+            'fake-' . $message->id . '-' . $firstRecipient->id,
+            'fake-' . $message->id . '-' . $secondRecipient->id,
         ]);
 
     $suppressionMessage = SendEmailAction::run(new SendEmailData(
@@ -104,7 +104,7 @@ it('delivers queued recipients and rechecks suppressions before provider handoff
 
     expect($suppressedDeliveryMessage->status)->toBe(EmailMessageStatus::PartiallyFailed)
         ->and($allowedRecipient->status)->toBe(EmailRecipientStatus::Sent)
-        ->and($allowedRecipient->provider_message_id)->toBe('fake-' . $suppressionMessage->getKey() . '-' . $allowedRecipient->getKey())
+        ->and($allowedRecipient->provider_message_id)->toBe('fake-' . $suppressionMessage->id . '-' . $allowedRecipient->id)
         ->and($blockedRecipient->status)->toBe(EmailRecipientStatus::Suppressed)
         ->and($blockedRecipient->provider_message_id)->toBeNull()
         ->and($blockedRecipient->suppressed_at)->not->toBeNull();
@@ -202,7 +202,7 @@ it('delivers queued recipients and rechecks suppressions before provider handoff
         ->and($exceptionRecipient->status)->toBe(EmailRecipientStatus::Queued)
         ->and($exceptionRecipient->failure_reason)->toBeNull();
 
-    (new SendEmailJob((int) $exceptionFailureMessage->getKey()))->failed(new RuntimeException('Transport exploded.'));
+    (new SendEmailJob($exceptionFailureMessage->id))->failed(new RuntimeException('Transport exploded.'));
 
     $terminalFailureMessage = $exceptionFailureMessage->fresh(['recipients']);
     $terminalFailureRecipient = EmailRecipient::query()->where('email', 'exception@example.com')->sole();

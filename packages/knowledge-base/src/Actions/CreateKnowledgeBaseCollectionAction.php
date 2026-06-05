@@ -10,6 +10,9 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static KnowledgeBaseCollection run(CreateKnowledgeBaseCollectionData $data)
+ */
 final class CreateKnowledgeBaseCollectionAction
 {
     use AsObject;

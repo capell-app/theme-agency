@@ -108,9 +108,9 @@ it('records checkout session webhooks idempotently before queued processing upda
     ]);
 
     $firstEvent = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
-    $processedFirstEvent = ProcessStripeWebhookEventAction::run((int) $firstEvent->getKey());
+    $processedFirstEvent = ProcessStripeWebhookEventAction::run($firstEvent->id);
     $secondEvent = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
-    $processedSecondEvent = ProcessStripeWebhookEventAction::run((int) $secondEvent->getKey());
+    $processedSecondEvent = ProcessStripeWebhookEventAction::run($secondEvent->id);
 
     expect($firstEvent->is($secondEvent))->toBeTrue()
         ->and(PaymentWebhookEvent::query()->count())->toBe(1)
@@ -173,7 +173,7 @@ it('skips terminal webhook events without replaying fulfillment', function (Paym
         'processed_at' => CarbonImmutable::now(),
     ]);
 
-    $processedEvent = ProcessStripeWebhookEventAction::run((int) $event->getKey());
+    $processedEvent = ProcessStripeWebhookEventAction::run($event->id);
 
     expect($processedEvent->status)->toBe($terminalStatus)
         ->and(CheckoutSession::query()->count())->toBe(0)
@@ -540,7 +540,7 @@ it('queues stripe webhook processing after verified intake', function (): void {
     expect($event->status)->toBe(PaymentWebhookEventStatus::Received)
         ->and(PaymentIntent::query()->count())->toBe(0);
 
-    Queue::assertPushed(ProcessStripeWebhookEventJob::class, fn (ProcessStripeWebhookEventJob $job): bool => $job->webhookEventId === (int) $event->getKey()
+    Queue::assertPushed(ProcessStripeWebhookEventJob::class, fn (ProcessStripeWebhookEventJob $job): bool => $job->webhookEventId === $event->id
             && $job->queue === 'payments');
 });
 
@@ -578,5 +578,5 @@ function processStripeWebhookPayload(string $payload): PaymentWebhookEvent
 
     $event = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
 
-    return ProcessStripeWebhookEventAction::run((int) $event->getKey());
+    return ProcessStripeWebhookEventAction::run($event->id);
 }

@@ -76,6 +76,8 @@ it('declares committed marketplace assets for every required screenshot capture 
     $packagePath = dirname(__DIR__, 2);
     $manifest = json_decode(File::get($packagePath . '/capell.json'), true, flags: JSON_THROW_ON_ERROR);
     $screenshotContract = json_decode(File::get($packagePath . '/docs/screenshots.json'), true, flags: JSON_THROW_ON_ERROR);
+    throw_unless(is_array($manifest), RuntimeException::class, 'Bookings manifest must decode to an array.');
+    throw_unless(is_array($screenshotContract), RuntimeException::class, 'Bookings screenshot contract must decode to an array.');
 
     $marketplaceScreenshots = $manifest['marketplace']['screenshots'] ?? [];
     $contractEntries = $screenshotContract['entries'] ?? [];
@@ -100,15 +102,19 @@ it('declares committed marketplace assets for every required screenshot capture 
 
         expect(
             str_starts_with($path, 'docs/assets/marketplace/')
-                || str_starts_with($path, 'docs/screenshots/')
+                || str_starts_with($path, 'docs/screenshots/'),
         )->toBeTrue()
             ->and(File::exists($packagePath . '/' . $path))->toBeTrue()
             ->and(strlen(trim($alt)))->toBeGreaterThanOrEqual(12)
             ->and(strlen(trim($caption)))->toBeGreaterThanOrEqual(12);
     }
 
-    expect($screenshotContract['generatedFor'])->toBe('deployment-screenshot-runner')
-        ->and($screenshotContract['composerRequires'] ?? [])->toContain('capell-app/bookings');
+    $generatedFor = $screenshotContract['generatedFor'] ?? null;
+    $composerRequires = $screenshotContract['composerRequires'] ?? [];
+    throw_unless(is_array($composerRequires), RuntimeException::class, 'Bookings screenshot contract composer requirements must be an array.');
+
+    expect($generatedFor)->toBe('deployment-screenshot-runner')
+        ->and($composerRequires)->toContain('capell-app/bookings');
 
     $requiredMarketplaceScreenshotPaths = [];
 
@@ -116,9 +122,11 @@ it('declares committed marketplace assets for every required screenshot capture 
         if (! is_array($contractEntry)) {
             continue;
         }
+
         if (($contractEntry['required'] ?? false) !== true) {
             continue;
         }
+
         $id = $contractEntry['id'] ?? null;
         $screenshotPath = $contractEntry['screenshotPath'] ?? null;
 

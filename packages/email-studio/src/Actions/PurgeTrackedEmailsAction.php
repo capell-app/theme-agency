@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static TrackedEmailPurgeResultData run(?int $retentionDays = null, bool $dryRun = false)
+ */
 final class PurgeTrackedEmailsAction
 {
     use AsAction;

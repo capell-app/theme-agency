@@ -61,7 +61,7 @@ final class CapturingEmailStudioMailer implements MailerContract
      * @param  array<array-key, mixed>  $mailable
      * @param  array<array-key, mixed>  $data
      */
-    public function sendNow(mixed $mailable, array $data = [], mixed $callback = null): ?IlluminateSentMessage
+    public function sendNow(mixed $mailable, array $data = [], mixed $callback = null): IlluminateSentMessage
     {
         return $this->send($mailable, $data, $callback);
     }

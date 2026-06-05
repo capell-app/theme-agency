@@ -39,7 +39,16 @@ final class ArticleVersionsRelationManager extends RelationManager
                     ->wrap(),
                 IconColumn::make('current_version')
                     ->label(__('capell-knowledge-base::generic.admin.fields.current_version'))
-                    ->state(fn (KnowledgeBaseArticleVersion $record): bool => (int) $record->getKey() === (int) $this->getOwnerRecord()->getAttribute('current_version_id'))
+                    ->state(function (KnowledgeBaseArticleVersion $record): bool {
+                        $recordKey = $record->getKey();
+                        $currentVersionId = $this->getOwnerRecord()->getAttribute('current_version_id');
+
+                        if ((! is_int($recordKey) && ! is_string($recordKey)) || (! is_int($currentVersionId) && ! is_string($currentVersionId))) {
+                            return false;
+                        }
+
+                        return (int) $recordKey === (int) $currentVersionId;
+                    })
                     ->boolean(),
                 TextColumn::make('published_at')
                     ->label(__('capell-knowledge-base::generic.admin.fields.published_at'))

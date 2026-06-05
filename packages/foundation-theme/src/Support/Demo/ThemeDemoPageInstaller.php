@@ -23,6 +23,9 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static int run(ThemeDemoInstallData $data, string $themeKey, string $themeName)
+ */
 final class ThemeDemoPageInstaller
 {
     use AsObject;

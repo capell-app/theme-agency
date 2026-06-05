@@ -16,36 +16,44 @@ use Capell\EmailStudio\Settings\EmailStudioSettings;
 use Pest\Expectation;
 
 it('declares mail tracker settings admin resource model and purge schedule contributions', function (): void {
-    $manifest = json_decode(
-        (string) file_get_contents(dirname(__DIR__, 2) . '/capell.json'),
-        associative: true,
-        flags: JSON_THROW_ON_ERROR,
-    );
+    $manifest = capell_json_file_array(dirname(__DIR__, 2) . '/capell.json');
+    $screenshots = data_get($manifest, 'marketplace.screenshots', []);
+
+    throw_unless(is_array($screenshots), RuntimeException::class, 'Email Studio screenshots must be an array.');
+
     $screenshotPaths = array_map(
-        static fn (array $screenshot): string => dirname(__DIR__, 2) . '/' . $screenshot['path'],
-        $manifest['marketplace']['screenshots'],
+        static function (mixed $screenshot): string {
+            throw_unless(is_array($screenshot), RuntimeException::class, 'Email Studio screenshot entries must be arrays.');
+
+            $path = $screenshot['path'] ?? null;
+
+            throw_unless(is_string($path), RuntimeException::class, 'Email Studio screenshot paths must be strings.');
+
+            return dirname(__DIR__, 2) . '/' . $path;
+        },
+        $screenshots,
     );
 
-    expect($manifest['dependencies']['requires'])->toContain('jdavidbakr/mail-tracker')
-        ->and($manifest['commands']['mailTrackerPurge'])->toBe(PurgeTrackedEmailsCommand::class)
-        ->and($manifest['settings'])->toContain(EmailStudioSettings::class)
-        ->and($manifest['contributes'])->toContain([
+    expect(data_get($manifest, 'dependencies.requires'))->toContain('jdavidbakr/mail-tracker')
+        ->and(data_get($manifest, 'commands.mailTrackerPurge'))->toBe(PurgeTrackedEmailsCommand::class)
+        ->and(data_get($manifest, 'settings'))->toContain(EmailStudioSettings::class)
+        ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'admin-resource',
             'class' => SentEmailResourceContribution::class,
             'resourceClass' => SentEmailResource::class,
         ])
-        ->and($manifest['contributes'])->toContain([
+        ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'model',
             'class' => SentEmailModelContribution::class,
             'modelClass' => SentEmail::class,
         ])
-        ->and($manifest['contributes'])->toContain([
+        ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'setting',
             'class' => EmailStudioSettingsContribution::class,
             'settingsClass' => EmailStudioSettings::class,
             'settingsGroup' => EmailStudioSettings::group(),
         ])
-        ->and($manifest['contributes'])->toContain([
+        ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'scheduled-job',
             'class' => TrackedEmailPurgeScheduleContribution::class,
             'command' => 'capell-email-studio:purge-tracked-emails',

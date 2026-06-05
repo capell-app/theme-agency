@@ -319,6 +319,7 @@ function knowledgeBaseInvokeEditRecordUpdate(object $page, KnowledgeBaseArticle 
     $updated = $reflectionMethod->invoke($page, $article, $data);
 
     expect($updated)->toBeInstanceOf(Model::class);
+    throw_unless($updated instanceof Model, RuntimeException::class, 'Expected edit record update to return a model.');
 
     return $updated;
 }

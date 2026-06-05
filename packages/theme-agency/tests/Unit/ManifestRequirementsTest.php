@@ -15,7 +15,7 @@ describe('theme agency capell.json manifest', function (): void {
                 'tier' => 'premium',
                 'bundle' => 'themes',
             ])
-            ->and($manifest['commercial']['proposedLicense'])->toBe('paid')
+            ->and(data_get($manifest, 'commercial.proposedLicense'))->toBe('paid')
             ->and($overview)->toContain('Tier: **premium**')
             ->and($overview)->toContain('Product group: **Capell Themes**')
             ->and($manifest['marketplace']['summary'])->toBe('A bold, motion-led theme for creative studios and marketing agencies — campaign hero, case-study proof, and a filterable work showcase, with three presets from high-contrast Signal to editorial Atelier.')
@@ -48,13 +48,5 @@ describe('theme agency capell.json manifest', function (): void {
  */
 function agencyThemeManifest(): array
 {
-    $manifest = json_decode(
-        File::get(__DIR__ . '/../../capell.json'),
-        associative: true,
-        flags: JSON_THROW_ON_ERROR,
-    );
-
-    throw_unless(is_array($manifest), RuntimeException::class, 'Theme Agency manifest must decode to an array.');
-
-    return $manifest;
+    return capell_json_file_array(__DIR__ . '/../../capell.json');
 }

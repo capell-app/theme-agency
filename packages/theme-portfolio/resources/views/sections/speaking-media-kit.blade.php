@@ -21,6 +21,7 @@
                     {{ $summary }}
                 </p>
             @endif
+
             <div class="mt-7 grid gap-3 sm:grid-cols-3">
                 @foreach ($mediaKitCards as $card)
                     <article

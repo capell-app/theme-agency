@@ -153,9 +153,11 @@ class BuildAvailableBookingSlotsAction
             if ($availableException->starts_at === null) {
                 continue;
             }
+
             if ($availableException->ends_at === null) {
                 continue;
             }
+
             $availabilityTimezone = $this->safeTimezone($availableException->timezone);
 
             if (! $this->exceptionDateOverlapsDisplayRange($availableException, $displayStartsAt, $displayEndsAt, $availabilityTimezone)) {

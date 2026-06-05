@@ -62,21 +62,21 @@ Mapped to `capabilities[]` in `capell.json`:
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                          | Bucket | Effort | Impact | Section ref |
-| ----------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Item                                                                                        | Bucket | Effort | Impact | Section ref |
+| ------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
 | Done/Shipped: Implement real `UrlManagerHealthCheck` (tables/actions/provider discoverable) | Done   | S      | High   | §4          |
 | Done/Shipped: Populate `marketplace.screenshots` from existing `docs/screenshots/*`         | Done   | S      | High   | §5          |
 | Done/Shipped: Strip query from match key; lowercase normalisation                           | Done   | M      | High   | §2          |
 | Done/Shipped: Open-redirect host allowlist for absolute targets                             | Done   | M      | High   | §3, §4      |
-| Done/Shipped: Defer hot-path hit recording (queue / terminating)              | Done   | M      | High   | §2, §4      |
-| Validate & bound regex patterns at write time (ReDoS)                         | Next   | M      | High   | §4          |
-| Redirect loop & chain detection on save                                       | Next   | M      | High   | §3          |
-| Wire 404 capture into Core handler / documented hook                          | Next   | M      | High   | §3          |
-| Verify/confirm Core invokes the bound `RedirectResolver`                      | Next   | S      | High   | §3, §4      |
-| Add `priority` ordering column + resolver/form support                        | Next   | M      | Med    | §2, §3      |
-| Replace `get()->first()` prefix/regex scans with SQL                          | Next   | M      | Med    | §2, §4      |
-| Tests: resolver fallback, preserve_query, open-redirect, loops, SEO import    | Next   | M      | High   | §4          |
-| Add `config/` for status codes, host allowlist, regex/retention               | Later  | S      | Med    | §4          |
-| Prefix-cascade auto-redirects on page-subtree moves                           | Later  | M      | Med    | §3          |
-| Canonical URL management surface                                              | Later  | L      | Med    | §3          |
-| Translate Action exception messages                                           | Later  | S      | Low    | §4          |
+| Done/Shipped: Defer hot-path hit recording (queue / terminating)                            | Done   | M      | High   | §2, §4      |
+| Validate & bound regex patterns at write time (ReDoS)                                       | Next   | M      | High   | §4          |
+| Redirect loop & chain detection on save                                                     | Next   | M      | High   | §3          |
+| Wire 404 capture into Core handler / documented hook                                        | Next   | M      | High   | §3          |
+| Verify/confirm Core invokes the bound `RedirectResolver`                                    | Next   | S      | High   | §3, §4      |
+| Add `priority` ordering column + resolver/form support                                      | Next   | M      | Med    | §2, §3      |
+| Replace `get()->first()` prefix/regex scans with SQL                                        | Next   | M      | Med    | §2, §4      |
+| Tests: resolver fallback, preserve_query, open-redirect, loops, SEO import                  | Next   | M      | High   | §4          |
+| Add `config/` for status codes, host allowlist, regex/retention                             | Later  | S      | Med    | §4          |
+| Prefix-cascade auto-redirects on page-subtree moves                                         | Later  | M      | Med    | §3          |
+| Canonical URL management surface                                                            | Later  | L      | Med    | §3          |
+| Translate Action exception messages                                                         | Later  | S      | Low    | §4          |

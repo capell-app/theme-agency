@@ -17,6 +17,9 @@ use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static RetentionExecutionResultData run(RetentionRule $rule, ?CarbonInterface $now = null)
+ */
 final class ApplyRetentionRuleAction
 {
     use AsAction;

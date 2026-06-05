@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
+/**
+ * @method static EmailMessage run(EmailMessage|int $message)
+ */
 class DeliverEmailMessageAction
 {
     use AsAction;
@@ -152,7 +155,7 @@ class DeliverEmailMessageAction
         $failedRecipientIdsByReason = [];
 
         foreach ($queuedRecipients as $recipient) {
-            $recipientKey = (int) $recipient->getKey();
+            $recipientKey = $recipient->id;
             $failureReason = $failedRecipientReasons[$recipientKey] ?? null;
 
             if ($failureReason !== null) {

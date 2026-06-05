@@ -40,9 +40,11 @@ if ($composerAutoloader instanceof ClassLoader) {
                 if (! is_string($namespace)) {
                     continue;
                 }
+
                 if (! is_string($path)) {
                     continue;
                 }
+
                 $sourcePath = dirname($packageComposerFile) . '/' . $path;
 
                 if (is_dir($sourcePath)) {

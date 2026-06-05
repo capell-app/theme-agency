@@ -19,11 +19,11 @@ it('keeps oauth routes authenticated and declares no frontend provider', functio
 
     expect($routeFile)->not->toBeFalse()
         ->and((string) $routeFile)->toContain("Route::middleware(['web', 'auth'])")
-        ->and($manifest['surfaces'])->not->toContain('frontend')
-        ->and($manifest['providers']['frontend'])->toBe([])
-        ->and($manifest['performance']['frontendRenderBudgetMs'])->toBe(0)
-        ->and($manifest['performance']['cacheSafety']['cacheable'])->toBeFalse()
-        ->and($manifest['performance']['cacheSafety']['sensitiveOutput'])->toBeTrue();
+        ->and(data_get($manifest, 'surfaces'))->not->toContain('frontend')
+        ->and(data_get($manifest, 'providers.frontend'))->toBe([])
+        ->and(data_get($manifest, 'performance.frontendRenderBudgetMs'))->toBe(0)
+        ->and(data_get($manifest, 'performance.cacheSafety.cacheable'))->toBeFalse()
+        ->and(data_get($manifest, 'performance.cacheSafety.sensitiveOutput'))->toBeTrue();
 });
 
 it('does not ship public output files with shopify secrets or admin internals', function (): void {
@@ -34,7 +34,7 @@ it('does not ship public output files with shopify secrets or admin internals', 
         $packagePath . '/resources/js',
         $packagePath . '/resources/css',
         $packagePath . '/public',
-    ], static fn (string $path): bool => is_dir($path));
+    ], is_dir(...));
 
     if ($publicOutputPaths === []) {
         expect($publicOutputPaths)->toBeEmpty();
@@ -87,9 +87,5 @@ arch()
  */
 function shopifyCommerceManifest(): array
 {
-    return json_decode(
-        (string) file_get_contents(dirname(__DIR__, 2) . '/capell.json'),
-        associative: true,
-        flags: JSON_THROW_ON_ERROR,
-    );
+    return capell_json_file_array(dirname(__DIR__, 2) . '/capell.json');
 }

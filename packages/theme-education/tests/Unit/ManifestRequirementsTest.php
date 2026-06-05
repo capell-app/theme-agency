@@ -20,7 +20,7 @@ it('declares the required first-party theme manifest boundaries', function (): v
     expect($manifest['themeKey'])->toBe('education')
         ->and($manifest['extends'])->toBe('capell-app/foundation-theme')
         ->and($manifest['surfaces'])->toBe(['frontend', 'console'])
-        ->and($manifest['dependencies']['requires'])->toContain('capell-app/foundation-theme')
+        ->and(data_get($manifest, 'dependencies.requires'))->toContain('capell-app/foundation-theme')
         ->and($database['migrations'])->toBeFalse()
         ->and($runtimeProviders)->toContain(EducationThemeServiceProvider::class);
 });
@@ -61,13 +61,5 @@ it('uses buyer-facing marketplace copy and committed real preview assets', funct
  */
 function educationThemeManifest(): array
 {
-    $manifest = json_decode(
-        (string) file_get_contents(__DIR__ . '/../../capell.json'),
-        associative: true,
-        flags: JSON_THROW_ON_ERROR,
-    );
-
-    throw_unless(is_array($manifest), RuntimeException::class, 'Theme Education manifest must decode to an array.');
-
-    return $manifest;
+    return capell_json_file_array(__DIR__ . '/../../capell.json');
 }

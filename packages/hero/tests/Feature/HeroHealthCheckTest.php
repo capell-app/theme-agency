@@ -78,6 +78,8 @@ it('declares the built hero marketplace screenshots', function (): void {
     ]);
 
     foreach ($paths as $path) {
+        throw_unless(is_string($path), RuntimeException::class, 'Expected hero screenshot path to be a string.');
+
         expect(is_file(__DIR__ . '/../../' . $path))->toBeTrue();
     }
 });

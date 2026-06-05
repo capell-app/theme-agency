@@ -95,15 +95,16 @@ it('does not call shopify for revoked or tokenless connections', function (): vo
 });
 
 it('declares the customer sync producer in the package manifest', function (): void {
-    $manifest = json_decode(
-        (string) file_get_contents(__DIR__ . '/../../../capell.json'),
-        true,
-        flags: JSON_THROW_ON_ERROR,
-    );
+    $manifest = capell_json_file_array(__DIR__ . '/../../../capell.json');
+    $actions = $manifest['actions'] ?? null;
+    $commands = $manifest['commands'] ?? null;
 
-    expect($manifest['actions']['syncShopifyCustomers'])->toBe(SyncShopifyCustomersAction::class)
-        ->and($manifest['actions']['upsertShopifyCustomer'])->toBe(UpsertShopifyCustomerAction::class)
-        ->and($manifest['commands']['syncCustomers'])->toBe('capell-shopify-commerce:sync-customers')
+    throw_unless(is_array($actions), RuntimeException::class, 'Expected Shopify manifest actions array.');
+    throw_unless(is_array($commands), RuntimeException::class, 'Expected Shopify manifest commands array.');
+
+    expect($actions['syncShopifyCustomers'] ?? null)->toBe(SyncShopifyCustomersAction::class)
+        ->and($actions['upsertShopifyCustomer'] ?? null)->toBe(UpsertShopifyCustomerAction::class)
+        ->and($commands['syncCustomers'] ?? null)->toBe('capell-shopify-commerce:sync-customers')
         ->and(class_exists(SyncShopifyCustomersCommand::class))->toBeTrue();
 });
 

@@ -131,6 +131,6 @@ class SmtpEmailProviderAdapter implements EmailProviderAdapter
 
         $messageId = $sentMessage->getMessageId();
 
-        return is_string($messageId) && trim($messageId) !== '' ? trim($messageId) : null;
+        return trim($messageId) !== '' ? trim($messageId) : null;
     }
 }

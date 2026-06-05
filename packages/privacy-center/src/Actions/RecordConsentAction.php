@@ -10,6 +10,9 @@ use Capell\PrivacyCenter\Support\PrivacyIdentifier;
 use Illuminate\Database\Eloquent\Model;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static ConsentRecord run(ConsentRecordData $consentData, ?Model $subject = null, ?Model $source = null)
+ */
 final class RecordConsentAction
 {
     use AsAction;

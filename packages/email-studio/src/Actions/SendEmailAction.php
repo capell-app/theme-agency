@@ -20,6 +20,9 @@ use Capell\EmailStudio\Support\EmailProfileResolver;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static EmailMessage run(SendEmailData $data)
+ */
 class SendEmailAction
 {
     use AsAction;

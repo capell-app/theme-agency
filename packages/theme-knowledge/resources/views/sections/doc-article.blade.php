@@ -14,10 +14,17 @@
 @endphp
 
 <section class="theme-section theme-section-doc-article bg-[#f8fafc]">
-    <div class="mx-auto grid max-w-7xl gap-8 px-6 lg:grid-cols-[17rem_minmax(0,1fr)_15rem]">
-        <aside class="knowledge-doc-sidebar hidden lg:block" aria-label="{{ __('capell-theme-knowledge::generic.doc_sidebar_label') }}">
+    <div
+        class="mx-auto grid max-w-7xl gap-8 px-6 lg:grid-cols-[17rem_minmax(0,1fr)_15rem]"
+    >
+        <aside
+            class="knowledge-doc-sidebar hidden lg:block"
+            aria-label="{{ __('capell-theme-knowledge::generic.doc_sidebar_label') }}"
+        >
             <div class="sticky top-8 border border-slate-200 bg-white p-4">
-                <p class="text-xs font-black uppercase tracking-[0.18em] text-[#1d4ed8]">
+                <p
+                    class="text-xs font-black tracking-[0.18em] text-[#1d4ed8] uppercase"
+                >
                     {{ __('capell-theme-knowledge::generic.doc_sidebar_label') }}
                 </p>
                 <nav class="mt-4 space-y-1">
@@ -45,10 +52,17 @@
             </div>
         </aside>
 
-        <article class="knowledge-doc-article border border-slate-200 bg-white p-6 shadow-sm md:p-8 lg:p-10">
+        <article
+            class="knowledge-doc-article border border-slate-200 bg-white p-6 shadow-sm md:p-8 lg:p-10"
+        >
             @if ($breadcrumbs !== [])
-                <nav class="mb-8" aria-label="{{ __('capell-theme-knowledge::generic.doc_breadcrumb_label') }}">
-                    <ol class="flex flex-wrap items-center gap-2 text-sm font-bold text-slate-500">
+                <nav
+                    class="mb-8"
+                    aria-label="{{ __('capell-theme-knowledge::generic.doc_breadcrumb_label') }}"
+                >
+                    <ol
+                        class="flex flex-wrap items-center gap-2 text-sm font-bold text-slate-500"
+                    >
                         @foreach ($breadcrumbs as $breadcrumb)
                             @php
                                 $breadcrumbLabel = is_array($breadcrumb) && is_scalar($breadcrumb['label'] ?? $breadcrumb['title'] ?? null) ? (string) ($breadcrumb['label'] ?? $breadcrumb['title']) : '';
@@ -58,13 +72,25 @@
                             @if ($breadcrumbLabel !== '')
                                 <li class="flex items-center gap-2">
                                     @if (! $loop->first)
-                                        <span aria-hidden="true" class="text-slate-300">/</span>
+                                        <span
+                                            aria-hidden="true"
+                                            class="text-slate-300"
+                                        >
+                                            /
+                                        </span>
                                     @endif
 
                                     @if ($breadcrumbUrl !== null && ! $loop->last)
-                                        <a href="{{ $breadcrumbUrl }}" class="hover:text-[#1d4ed8]">{{ $breadcrumbLabel }}</a>
+                                        <a
+                                            href="{{ $breadcrumbUrl }}"
+                                            class="hover:text-[#1d4ed8]"
+                                        >
+                                            {{ $breadcrumbLabel }}
+                                        </a>
                                     @else
-                                        <span class="text-slate-700">{{ $breadcrumbLabel }}</span>
+                                        <span class="text-slate-700">
+                                            {{ $breadcrumbLabel }}
+                                        </span>
                                     @endif
                                 </li>
                             @endif
@@ -74,10 +100,14 @@
             @endif
 
             <header class="max-w-3xl">
-                <p class="text-xs font-black uppercase tracking-[0.18em] text-[#1d4ed8]">
+                <p
+                    class="text-xs font-black tracking-[0.18em] text-[#1d4ed8] uppercase"
+                >
                     {{ $category }}
                 </p>
-                <h2 class="mt-4 text-4xl font-black leading-tight text-[#172033] md:text-5xl">
+                <h2
+                    class="mt-4 text-4xl leading-tight font-black text-[#172033] md:text-5xl"
+                >
                     {{ $title }}
                 </h2>
                 @if ($summary !== null)
@@ -85,13 +115,20 @@
                         {{ $summary }}
                     </p>
                 @endif
-                <dl class="mt-6 flex flex-wrap gap-4 text-sm font-bold text-slate-500">
+
+                <dl
+                    class="mt-6 flex flex-wrap gap-4 text-sm font-bold text-slate-500"
+                >
                     <div class="flex gap-2">
-                        <dt>{{ __('capell-theme-knowledge::generic.doc_updated_label') }}</dt>
+                        <dt>
+                            {{ __('capell-theme-knowledge::generic.doc_updated_label') }}
+                        </dt>
                         <dd class="text-slate-700">{{ $updatedAt }}</dd>
                     </div>
                     <div class="flex gap-2">
-                        <dt>{{ __('capell-theme-knowledge::generic.doc_reading_label') }}</dt>
+                        <dt>
+                            {{ __('capell-theme-knowledge::generic.doc_reading_label') }}
+                        </dt>
                         <dd class="text-slate-700">{{ $readingTime }}</dd>
                     </div>
                 </dl>
@@ -101,17 +138,30 @@
                 @if (is_string($contentHtml) && $contentHtml !== '')
                     {!! $contentHtml !!}
                 @else
-                    <h3>{{ __('capell-theme-knowledge::generic.doc_section_overview') }}</h3>
-                    <p>{{ __('capell-theme-knowledge::generic.doc_section_overview_copy') }}</p>
-                    <h3>{{ __('capell-theme-knowledge::generic.doc_section_next_steps') }}</h3>
-                    <p>{{ __('capell-theme-knowledge::generic.doc_section_next_steps_copy') }}</p>
+                    <h3>
+                        {{ __('capell-theme-knowledge::generic.doc_section_overview') }}
+                    </h3>
+                    <p>
+                        {{ __('capell-theme-knowledge::generic.doc_section_overview_copy') }}
+                    </p>
+                    <h3>
+                        {{ __('capell-theme-knowledge::generic.doc_section_next_steps') }}
+                    </h3>
+                    <p>
+                        {{ __('capell-theme-knowledge::generic.doc_section_next_steps_copy') }}
+                    </p>
                 @endif
             </div>
         </article>
 
-        <aside class="knowledge-doc-toc hidden xl:block" aria-label="{{ __('capell-theme-knowledge::generic.doc_toc_label') }}">
+        <aside
+            class="knowledge-doc-toc hidden xl:block"
+            aria-label="{{ __('capell-theme-knowledge::generic.doc_toc_label') }}"
+        >
             <div class="sticky top-8 border border-slate-200 bg-white p-4">
-                <p class="text-xs font-black uppercase tracking-[0.18em] text-[#1d4ed8]">
+                <p
+                    class="text-xs font-black tracking-[0.18em] text-[#1d4ed8] uppercase"
+                >
                     {{ __('capell-theme-knowledge::generic.doc_toc_label') }}
                 </p>
                 <nav class="mt-4 space-y-3">
@@ -122,7 +172,10 @@
                         @endphp
 
                         @if ($tocLabel !== '')
-                            <a href="{{ $tocUrl }}" class="block border-l border-slate-200 pl-3 text-sm font-bold text-slate-600 hover:border-[#1d4ed8] hover:text-[#172033]">
+                            <a
+                                href="{{ $tocUrl }}"
+                                class="block border-l border-slate-200 pl-3 text-sm font-bold text-slate-600 hover:border-[#1d4ed8] hover:text-[#172033]"
+                            >
                                 {{ $tocLabel }}
                             </a>
                         @endif

@@ -26,8 +26,13 @@ it('merges default publish checks that resolve through the container', function 
         ->toContain(SeoMetaCheck::class);
 
     foreach ($checkClasses as $checkClass) {
-        expect(is_string($checkClass))->toBeTrue()
-            ->and(is_subclass_of($checkClass, PublishCheck::class))->toBeTrue()
+        expect(is_string($checkClass))->toBeTrue();
+
+        if (! is_string($checkClass)) {
+            continue;
+        }
+
+        expect(is_subclass_of($checkClass, PublishCheck::class))->toBeTrue()
             ->and(resolve($checkClass))->toBeInstanceOf(PublishCheck::class);
     }
 

@@ -22,7 +22,9 @@
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": ["Capell\\InertiaReactAdapter\\Providers\\InertiaReactAdapterServiceProvider"],
+        "runtime": [
+            "Capell\\InertiaReactAdapter\\Providers\\InertiaReactAdapterServiceProvider"
+        ],
         "admin": [],
         "frontend": []
     },

@@ -26,6 +26,7 @@ use Capell\KnowledgeBase\Models\KnowledgeBaseArticleVersion;
 use Capell\KnowledgeBase\Tests\KnowledgeBaseTestCase;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
+use PHPUnit\Framework\Assert;
 
 require_once dirname(__DIR__, 2) . '/KnowledgeBaseTestCase.php';
 
@@ -46,10 +47,14 @@ it('creates collections, versioned articles, and public-safe article data', func
         searchWeight: 80,
     ));
 
+    $currentVersion = $article->currentVersion;
+
     expect($article->status)->toBe(KnowledgeBaseArticleStatus::Published)
-        ->and($article->currentVersion)->toBeInstanceOf(KnowledgeBaseArticleVersion::class)
-        ->and($article->currentVersion->author_type)->toBeNull()
-        ->and($article->currentVersion->author_id)->toBeNull();
+        ->and($currentVersion)->toBeInstanceOf(KnowledgeBaseArticleVersion::class);
+    throw_unless($currentVersion instanceof KnowledgeBaseArticleVersion, RuntimeException::class, 'Expected the created article current version.');
+
+    expect($currentVersion->author_type)->toBeNull()
+        ->and($currentVersion->author_id)->toBeNull();
 
     $publicArticle = BuildPublicKnowledgeBaseArticleDataAction::run($article);
     $publicPayload = json_encode($publicArticle?->toArray(), JSON_THROW_ON_ERROR);
@@ -195,7 +200,7 @@ it('rejects duplicate article slugs inside the same collection only', function (
         return;
     }
 
-    expect()->fail('Expected duplicate article slug validation to fail.');
+    Assert::fail('Expected duplicate article slug validation to fail.');
 });
 
 it('rejects duplicate collection slugs and keys during updates', function (): void {
@@ -240,7 +245,7 @@ it('rejects duplicate collection slugs and keys during updates', function (): vo
         return;
     }
 
-    expect()->fail('Expected duplicate collection key validation to fail.');
+    Assert::fail('Expected duplicate collection key validation to fail.');
 });
 
 it('records redacted feedback and related article links', function (): void {

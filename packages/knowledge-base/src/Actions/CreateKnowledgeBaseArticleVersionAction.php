@@ -9,6 +9,9 @@ use Capell\KnowledgeBase\Models\KnowledgeBaseArticleVersion;
 use Illuminate\Validation\ValidationException;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static KnowledgeBaseArticleVersion run(CreateKnowledgeBaseArticleVersionData $data)
+ */
 final class CreateKnowledgeBaseArticleVersionAction
 {
     use AsObject;

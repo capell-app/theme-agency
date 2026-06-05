@@ -31,5 +31,10 @@
         "sort-packages": true
     },
     "prefer-stable": true,
-    "keywords": ["capell", "inertia", "bookings", "react"]
+    "keywords": [
+        "capell",
+        "inertia",
+        "bookings",
+        "react"
+    ]
 }

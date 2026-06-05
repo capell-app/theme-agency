@@ -136,12 +136,24 @@ dataset('standalone theme packages', function (): array {
 
     foreach ($themeManifests as $manifestPath) {
         $packageDirectory = basename(dirname($manifestPath));
-        $manifest = json_decode((string) file_get_contents($manifestPath), true, flags: JSON_THROW_ON_ERROR);
+        $manifest = themePackageManifest($packageDirectory);
+        $themeKey = $manifest['themeKey'] ?? null;
+        if (($manifest['kind'] ?? null) !== 'theme') {
+            continue;
+        }
 
-        $packages[$manifest['themeKey']] = [
+        if (! is_string($themeKey)) {
+            continue;
+        }
+
+        if (($manifest['extends'] ?? null) !== 'capell-app/foundation-theme') {
+            continue;
+        }
+
+        $packages[$themeKey] = [
             $packageDirectory,
             $manifest['name'],
-            $manifest['themeKey'],
+            $themeKey,
         ];
     }
 

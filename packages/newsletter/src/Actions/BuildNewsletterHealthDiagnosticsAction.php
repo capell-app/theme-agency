@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\Schema;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
+/**
+ * @method static Collection<int, DoctorCheckResultData> run(?string $key = null)
+ */
 final class BuildNewsletterHealthDiagnosticsAction
 {
     use AsAction;

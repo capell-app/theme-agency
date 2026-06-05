@@ -26,6 +26,9 @@ use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
+/**
+ * @method static PaymentWebhookEvent run(int $webhookEventId)
+ */
 final class ProcessStripeWebhookEventAction
 {
     use AsAction;

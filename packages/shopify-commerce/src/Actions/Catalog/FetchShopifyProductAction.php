@@ -10,6 +10,9 @@ use Capell\ShopifyCommerce\Models\ShopifyProduct;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static ShopifyProduct|null run(string $shopifyGid, ShopifyConnection $connection)
+ */
 final class FetchShopifyProductAction
 {
     use AsAction;

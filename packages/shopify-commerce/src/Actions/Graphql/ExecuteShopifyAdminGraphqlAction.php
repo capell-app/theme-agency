@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Sleep;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static array<string, mixed> run(ShopifyConnection $connection, string $query, array<string, mixed> $variables = [])
+ */
 final class ExecuteShopifyAdminGraphqlAction
 {
     use AsAction;

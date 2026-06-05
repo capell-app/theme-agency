@@ -112,7 +112,7 @@ GRAPHQL;
     {
         $probeConnections = $this->activeTokenProbeConnections();
         $failedProbeCount = $probeConnections
-            ->filter(fn (ShopifyConnection $connection): bool => ! $this->tokenProbePassed($connection))
+            ->reject(fn (ShopifyConnection $connection): bool => $this->tokenProbePassed($connection))
             ->count();
 
         return new DoctorCheckResultData(
@@ -323,6 +323,8 @@ GRAPHQL;
 
     private function maxCatalogSyncAgeHours(): int
     {
-        return max(1, (int) config('capell-shopify-commerce.health_max_catalog_sync_age_hours', 24));
+        $configuredHours = config('capell-shopify-commerce.health_max_catalog_sync_age_hours', 24);
+
+        return max(1, is_numeric($configuredHours) ? (int) $configuredHours : 24);
     }
 }

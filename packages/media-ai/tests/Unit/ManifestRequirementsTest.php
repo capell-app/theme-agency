@@ -9,15 +9,7 @@ use Illuminate\Support\Facades\File;
  */
 function mediaAIManifest(): array
 {
-    $manifest = json_decode(
-        File::get(dirname(__DIR__, 2) . '/capell.json'),
-        true,
-        flags: JSON_THROW_ON_ERROR,
-    );
-
-    throw_unless(is_array($manifest), RuntimeException::class, 'Expected Media AI manifest array.');
-
-    return $manifest;
+    return capell_json_file_array(dirname(__DIR__, 2) . '/capell.json');
 }
 
 /**
@@ -25,15 +17,7 @@ function mediaAIManifest(): array
  */
 function mediaAIComposerManifest(): array
 {
-    $composerManifest = json_decode(
-        File::get(dirname(__DIR__, 2) . '/composer.json'),
-        true,
-        flags: JSON_THROW_ON_ERROR,
-    );
-
-    throw_unless(is_array($composerManifest), RuntimeException::class, 'Expected Media AI composer manifest array.');
-
-    return $composerManifest;
+    return capell_json_file_array(dirname(__DIR__, 2) . '/composer.json');
 }
 
 /**
@@ -41,15 +25,7 @@ function mediaAIComposerManifest(): array
  */
 function mediaAIScreenshotContract(): array
 {
-    $screenshotContract = json_decode(
-        File::get(dirname(__DIR__, 2) . '/docs/screenshots.json'),
-        true,
-        flags: JSON_THROW_ON_ERROR,
-    );
-
-    throw_unless(is_array($screenshotContract), RuntimeException::class, 'Expected Media AI screenshot contract array.');
-
-    return $screenshotContract;
+    return capell_json_file_array(dirname(__DIR__, 2) . '/docs/screenshots.json');
 }
 
 it('keeps marketplace copy aligned with shipped image doctor capabilities', function (): void {
@@ -68,7 +44,7 @@ it('keeps marketplace copy aligned with shipped image doctor capabilities', func
             'supportPolicy' => 'priority',
             'privateDocsRequested' => true,
         ])
-        ->and($manifest['marketplace']['summary'] ?? null)->toBe($summary)
+        ->and(data_get($manifest, 'marketplace.summary'))->toBe($summary)
         ->and($manifest['description'] ?? null)->toContain('remove backgrounds or objects')
         ->and($manifest['description'] ?? null)->toContain('rather than a production AI provider')
         ->and($manifest['description'] ?? null)->toContain('premium Capell Media add-on')
@@ -81,7 +57,7 @@ it('keeps marketplace screenshots backed by the committed media ai gallery asset
     $packagePath = dirname(__DIR__, 2);
     $manifest = mediaAIManifest();
     $screenshotContract = mediaAIScreenshotContract();
-    $marketplaceScreenshotEntries = $manifest['marketplace']['screenshots'] ?? [];
+    $marketplaceScreenshotEntries = data_get($manifest, 'marketplace.screenshots', []);
     $contractEntries = $screenshotContract['entries'] ?? [];
 
     throw_unless(is_array($marketplaceScreenshotEntries), RuntimeException::class, 'Expected Media AI marketplace screenshot entries array.');

@@ -10,6 +10,11 @@ final class AIOrchestratorImageDoctorAction
 {
     public static ?AIOrchestratorRunData $lastRun = null;
 
+    public static function lastRun(): ?AIOrchestratorRunData
+    {
+        return self::$lastRun;
+    }
+
     /**
      * @return array{successful: bool, message: string}
      */

@@ -31,5 +31,9 @@
     },
     "prefer-stable": true,
     "homepage": "https://github.com/capell-app/inertia-react-adapter",
-    "keywords": ["capell", "inertia", "react"]
+    "keywords": [
+        "capell",
+        "inertia",
+        "react"
+    ]
 }

@@ -233,15 +233,20 @@ it('runs image doctor requests through the configured ai-orchestrator capability
             instructions: 'Restore scratches while preserving the original crop.',
         ),
     );
+    $lastRun = AIOrchestratorImageDoctorAction::lastRun();
 
     expect($result->successful)->toBeTrue()
         ->and($result->message)->toBe('Doctor finished through AI Orchestrator')
-        ->and(AIOrchestratorImageDoctorAction::$lastRun)->toBeInstanceOf(AIOrchestratorRunData::class)
-        ->and(AIOrchestratorImageDoctorAction::$lastRun?->moduleKey)->toBe('media-ai')
-        ->and(AIOrchestratorImageDoctorAction::$lastRun?->capabilityKey)->toBe('doctor-image')
-        ->and(AIOrchestratorImageDoctorAction::$lastRun?->context['operation'])->toBe('restore')
-        ->and(AIOrchestratorImageDoctorAction::$lastRun?->context['instructions'])->toBe('Restore scratches while preserving the original crop.')
-        ->and(AIOrchestratorImageDoctorAction::$lastRun?->context['media']['id'])->toBe($media->getKey());
+        ->and($lastRun)->toBeInstanceOf(AIOrchestratorRunData::class);
+    throw_unless($lastRun instanceof AIOrchestratorRunData, RuntimeException::class, 'Expected AI Orchestrator run data.');
+    $mediaContext = $lastRun->context['media'] ?? null;
+    throw_unless(is_array($mediaContext), RuntimeException::class, 'Expected AI Orchestrator media context.');
+
+    expect($lastRun->moduleKey)->toBe('media-ai')
+        ->and($lastRun->capabilityKey)->toBe('doctor-image')
+        ->and($lastRun->context['operation'])->toBe('restore')
+        ->and($lastRun->context['instructions'])->toBe('Restore scratches while preserving the original crop.')
+        ->and($mediaContext['id'])->toBe($media->getKey());
 });
 
 it('rejects crafted image doctor operations before calling the provider', function (): void {

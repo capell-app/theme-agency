@@ -9,6 +9,9 @@ use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Lorisleiva\Actions\Decorators\JobDecorator;
 
+/**
+ * @method static string run(ShopifyConnection|int $connection)
+ */
 final class ContinueShopifyProductBulkSyncAction
 {
     use AsAction;
@@ -45,7 +48,7 @@ final class ContinueShopifyProductBulkSyncAction
      */
     public function getJobMiddleware(ShopifyConnection|int $connection): array
     {
-        $connectionId = $connection instanceof ShopifyConnection ? (int) $connection->getKey() : $connection;
+        $connectionId = $connection instanceof ShopifyConnection ? $this->intValue($connection->getKey()) : $connection;
 
         return [
             (new WithoutOverlapping($this->lockKey($connectionId), $this->pollDelaySeconds()))->expireAfter(21_600),
@@ -65,11 +68,16 @@ final class ContinueShopifyProductBulkSyncAction
 
     private function pollDelaySeconds(): int
     {
-        return max(1, (int) config('capell-shopify-commerce.bulk_sync_poll_delay_seconds', 15));
+        return max(1, $this->intValue(config('capell-shopify-commerce.bulk_sync_poll_delay_seconds', 15), 15));
     }
 
     private function lockKey(int $connectionId): string
     {
         return sprintf('capell-shopify-commerce.sync.continue.%d', $connectionId);
+    }
+
+    private function intValue(mixed $value, int $default = 0): int
+    {
+        return is_numeric($value) ? (int) $value : $default;
     }
 }

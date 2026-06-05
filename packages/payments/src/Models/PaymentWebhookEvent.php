@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Override;
 
 /**
+ * @property int $id
  * @property PaymentProvider $provider
  * @property string $provider_event_id
  * @property string $event_type

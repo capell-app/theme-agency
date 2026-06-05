@@ -9,8 +9,8 @@ uses(DashboardReportsTestCase::class);
 
 it('declares committed marketplace gallery assets for every required screenshot capture target', function (): void {
     $packagePath = dirname(__DIR__, 3);
-    $manifest = json_decode(File::get($packagePath . '/capell.json'), true, flags: JSON_THROW_ON_ERROR);
-    $screenshotContract = json_decode(File::get($packagePath . '/docs/screenshots.json'), true, flags: JSON_THROW_ON_ERROR);
+    $manifest = capell_json_file_array($packagePath . '/capell.json');
+    $screenshotContract = capell_json_file_array($packagePath . '/docs/screenshots.json');
 
     $marketplace = $manifest['marketplace'] ?? [];
     $marketplaceScreenshots = $marketplace['screenshots'] ?? [];
@@ -66,8 +66,8 @@ it('declares committed marketplace gallery assets for every required screenshot 
 
 it('keeps marketplace and package descriptions focused on shipped dashboard report behavior', function (): void {
     $packagePath = dirname(__DIR__, 3);
-    $manifest = json_decode(File::get($packagePath . '/capell.json'), true, flags: JSON_THROW_ON_ERROR);
-    $composer = json_decode(File::get($packagePath . '/composer.json'), true, flags: JSON_THROW_ON_ERROR);
+    $manifest = capell_json_file_array($packagePath . '/capell.json');
+    $composer = capell_json_file_array($packagePath . '/composer.json');
     $packageTranslations = require $packagePath . '/resources/lang/en/package.php';
     $docsIndex = File::get($packagePath . '/docs/README.md');
 
@@ -75,13 +75,13 @@ it('keeps marketplace and package descriptions focused on shipped dashboard repo
     $expectedPackageDescription = 'Content-health and publishing-activity widgets for Capell admin dashboards.';
     $expectedDocsDescription = 'Dashboard Reports provides content-health and publishing-activity widgets for Capell admin dashboards.';
 
-    expect($manifest['marketplace']['summary'] ?? null)->toBe($expectedSummary)
+    expect(data_get($manifest, 'marketplace.summary'))->toBe($expectedSummary)
         ->and($composer['description'] ?? null)->toBe($expectedSummary)
         ->and($packageTranslations['description'] ?? null)->toBe($expectedPackageDescription)
         ->and($docsIndex)->toContain($expectedDocsDescription)
-        ->and($manifest['description'] ?? null)->toContain('Content Health widget flags scheduled, expired, stale, and URL-less pages')
-        ->and($manifest['description'] ?? null)->toContain('Publishing Trend chart tracks published-vs-scheduled activity')
-        ->and($manifest['description'] ?? null)->not->toContain('generic CMS reporting widgets')
+        ->and(data_get($manifest, 'description'))->toContain('Content Health widget flags scheduled, expired, stale, and URL-less pages')
+        ->and(data_get($manifest, 'description'))->toContain('Publishing Trend chart tracks published-vs-scheduled activity')
+        ->and(data_get($manifest, 'description'))->not->toContain('generic CMS reporting widgets')
         ->and($composer['description'] ?? null)->not->toContain('generic CMS reporting widgets')
         ->and($packageTranslations['description'] ?? null)->not->toContain('Generic CMS reporting widgets')
         ->and($docsIndex)->not->toContain('generic CMS reporting widgets');

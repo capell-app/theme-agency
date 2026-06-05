@@ -93,6 +93,30 @@ function capell_artisan(string $command, array $parameters = []): PendingCommand
     return $pendingCommand;
 }
 
+/**
+ * @return array<array-key, mixed>
+ */
+function capell_json_array(string $json): array
+{
+    $decoded = json_decode($json, associative: true, flags: JSON_THROW_ON_ERROR);
+
+    throw_unless(is_array($decoded), RuntimeException::class, 'JSON payload must decode to an array.');
+
+    return $decoded;
+}
+
+/**
+ * @return array<array-key, mixed>
+ */
+function capell_json_file_array(string $path): array
+{
+    $contents = file_get_contents($path);
+
+    throw_unless(is_string($contents), RuntimeException::class, sprintf('Unable to read JSON file [%s].', $path));
+
+    return capell_json_array($contents);
+}
+
 groupCapellPackageTests('package');
 groupCapellPackageDirectoriesByName();
 groupCapellPackageSuiteTests('Arch');

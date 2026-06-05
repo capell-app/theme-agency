@@ -23,6 +23,8 @@ use Capell\ThemeStudio\Saas\Rendering\BlogSectionRenderer;
 use Capell\ThemeStudio\Saas\SaasThemeServiceProvider;
 use Capell\ThemeStudio\Saas\ThemeStudio\Adapters\SaasThemePageAdapter;
 use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Foundation\Auth\User as AuthenticatableUser;
 use Illuminate\Support\Facades\Auth;
@@ -447,7 +449,11 @@ it('renders every public section without authoring leaks for anonymous and non a
 
     $anonymousHtml = renderSaasThemeAllSections($registry);
 
-    Auth::setUser(new class extends AuthenticatableUser {});
+    Auth::setUser(new class extends AuthenticatableUser
+    {
+        /** @use HasFactory<Factory<self>> */
+        use HasFactory;
+    });
 
     $nonAdminHtml = renderSaasThemeAllSections($registry);
 
@@ -664,8 +670,8 @@ function renderSaasThemeAllSections(ThemeRegistry $registry): string
                 heading: 'Customer proof',
                 summary: 'Evidence for the landing page.',
                 items: [
-                    ['metric' => '31%', 'name' => 'Activation lift', 'description' => 'Measured across onboarding experiments.'],
-                    ['metric' => '2.4x', 'name' => 'Expansion signal', 'description' => 'Stronger qualified pipeline.'],
+                    ['metric' => '31%', 'name' => 'Activation lift', 'quote' => 'Measured across onboarding experiments.'],
+                    ['metric' => '2.4x', 'name' => 'Expansion signal', 'quote' => 'Stronger qualified pipeline.'],
                 ],
             ),
             new ContentListingSectionData(

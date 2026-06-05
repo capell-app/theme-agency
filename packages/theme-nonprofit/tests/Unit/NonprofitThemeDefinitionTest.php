@@ -180,8 +180,11 @@ it('renders one public h1 after the skip-link target while sections keep h2 head
 
     expect(substr_count($page, '<h1'))->toBe(1)
         ->and($mainContentPosition)->not->toBeFalse()
-        ->and($headingPosition)->not->toBeFalse()
-        ->and($headingPosition)->toBeGreaterThan($mainContentPosition)
+        ->and($headingPosition)->not->toBeFalse();
+
+    throw_unless(is_int($mainContentPosition) && is_int($headingPosition), RuntimeException::class, 'Expected heading and main content positions.');
+
+    expect($headingPosition)->toBeGreaterThan($mainContentPosition)
         ->and($page)->toContain('id="main-content"')
         ->and($page)->toContain('<h1')
         ->and($page)->toContain('Fund the next community appeal')

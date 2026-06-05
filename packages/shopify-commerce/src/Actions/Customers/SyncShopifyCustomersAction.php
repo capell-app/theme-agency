@@ -10,6 +10,9 @@ use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Illuminate\Support\Facades\Cache;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static int run(ShopifyConnection|int $connection)
+ */
 final class SyncShopifyCustomersAction
 {
     use AsAction;
@@ -18,7 +21,7 @@ final class SyncShopifyCustomersAction
     {
         $connection = is_int($connection) ? ShopifyConnection::query()->findOrFail($connection) : $connection;
 
-        return Cache::lock($this->lockKey((int) $connection->getKey()), 300)->block(10, function () use ($connection): int {
+        $syncedCount = Cache::lock($this->lockKey($this->intValue($connection->getKey())), 300)->block(10, function () use ($connection): int {
             $connection->refresh();
 
             if ($connection->status === ShopifyConnectionStatus::Revoked || ! $connection->isActive()) {
@@ -69,21 +72,28 @@ final class SyncShopifyCustomersAction
 
             return $syncedCount;
         });
+
+        return is_int($syncedCount) ? $syncedCount : 0;
     }
 
     private function pageSize(): int
     {
-        return min(250, max(1, (int) config('capell-shopify-commerce.customer_sync_page_size', 100)));
+        return min(250, max(1, $this->intValue(config('capell-shopify-commerce.customer_sync_page_size', 100), 100)));
     }
 
     private function maxPages(): int
     {
-        return max(1, (int) config('capell-shopify-commerce.customer_sync_max_pages', 100));
+        return max(1, $this->intValue(config('capell-shopify-commerce.customer_sync_max_pages', 100), 100));
     }
 
     private function lockKey(int $connectionId): string
     {
         return sprintf('capell-shopify-commerce.customers.sync.%d', $connectionId);
+    }
+
+    private function intValue(mixed $value, int $default = 0): int
+    {
+        return is_numeric($value) ? (int) $value : $default;
     }
 
     private function query(): string

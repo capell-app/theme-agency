@@ -39,8 +39,10 @@ it('strips dangerous markup from the public article body while preserving safe r
 
     $articleData = BuildPublicKnowledgeBaseArticleDataAction::run($article);
 
-    expect($articleData)->not->toBeNull()
-        ->and($articleData->body)->toContain('<h2>Install</h2>')
+    expect($articleData)->not->toBeNull();
+    throw_unless($articleData !== null, RuntimeException::class, 'Expected public knowledge base article data.');
+
+    expect($articleData->body)->toContain('<h2>Install</h2>')
         ->and($articleData->body)->toContain('Run the')
         ->and($articleData->body)->toContain('installer')
         ->and($articleData->body)->not->toContain('<script>')

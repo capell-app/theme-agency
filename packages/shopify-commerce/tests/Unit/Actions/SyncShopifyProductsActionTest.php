@@ -23,6 +23,7 @@ it('starts a shopify bulk product sync', function (): void {
     $connection = shopifyBulkConnection();
     config()->set('capell-shopify-commerce.http_timeout', 6);
     config()->set('capell-shopify-commerce.bulk_sync_poll_delay_seconds', 9);
+
     $timeouts = [];
 
     Http::fake(function (ClientRequest $request, array $options) use (&$timeouts): PromiseInterface {
@@ -42,7 +43,7 @@ it('starts a shopify bulk product sync', function (): void {
 
     ContinueShopifyProductBulkSyncAction::assertPushed(
         1,
-        static fn (ContinueShopifyProductBulkSyncAction $action, array $parameters): bool => $parameters === [(int) $connection->getKey()],
+        static fn (ContinueShopifyProductBulkSyncAction $action, array $parameters): bool => $parameters === [shopifyBulkIntValue($connection->getKey())],
     );
 
     $connection->refresh();
@@ -231,7 +232,7 @@ it('releases unfinished bulk sync continuation jobs for another poll', function 
         ]),
     ]);
 
-    $job = ContinueShopifyProductBulkSyncAction::makeJob((int) $connection->getKey());
+    $job = ContinueShopifyProductBulkSyncAction::makeJob(shopifyBulkIntValue($connection->getKey()));
     $job->withFakeQueueInteractions();
 
     expect($job->handle())->toBe('RUNNING');
@@ -353,4 +354,9 @@ function shopifyBulkConnection(array $overrides = []): ShopifyConnection
     ]);
 
     return $connection;
+}
+
+function shopifyBulkIntValue(mixed $value): int
+{
+    return is_numeric($value) ? (int) $value : 0;
 }

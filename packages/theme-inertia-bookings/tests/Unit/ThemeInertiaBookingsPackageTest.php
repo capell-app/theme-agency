@@ -9,6 +9,7 @@ use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Manifest\ManifestValidator;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\Marketplace\Filament\Pages\ThemeExtensionPage;
 use Capell\Tests\Packages\PackagesTestCase;
 use Capell\ThemeStudio\InertiaBookings\Health\ThemeInertiaBookingsHealthCheck;
 use Capell\ThemeStudio\InertiaBookings\Manifest\ThemeManagementPageContribution;
@@ -39,7 +40,7 @@ it('declares valid Capell extension manifest metadata', function (): void {
     expect($manifest['contributes'])->toContain([
         'type' => 'admin-page',
         'class' => ThemeManagementPageContribution::class,
-        'pageClass' => 'Capell\\Marketplace\\Filament\\Pages\\ThemeExtensionPage',
+        'pageClass' => ThemeExtensionPage::class,
         'pageParameters' => [
             'themeKey' => InertiaBookingsThemeServiceProvider::THEME_KEY,
         ],
@@ -109,7 +110,11 @@ it('declares committed marketplace assets for every required screenshot capture 
     $requiredMarketplaceAssetPaths = [];
 
     foreach ($contractEntries as $contractEntry) {
-        if (! is_array($contractEntry) || ($contractEntry['required'] ?? false) !== true) {
+        if (! is_array($contractEntry)) {
+            continue;
+        }
+
+        if (($contractEntry['required'] ?? false) !== true) {
             continue;
         }
 

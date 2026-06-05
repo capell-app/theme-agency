@@ -9,6 +9,9 @@ use Capell\EmailStudio\Enums\EmailRecipientStatus;
 use Capell\EmailStudio\Models\EmailMessage;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static EmailMessage|null run(EmailMessage|int $message, ?string $failureReason = null)
+ */
 class MarkEmailMessageDeliveryFailedAction
 {
     use AsAction;

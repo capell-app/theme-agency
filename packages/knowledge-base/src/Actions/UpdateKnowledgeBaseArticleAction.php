@@ -13,6 +13,9 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static KnowledgeBaseArticle run(KnowledgeBaseArticle $article, UpdateKnowledgeBaseArticleData $data)
+ */
 final class UpdateKnowledgeBaseArticleAction
 {
     use AsObject;

@@ -8,6 +8,9 @@ use Capell\KnowledgeBase\Data\RecordKnowledgeBaseArticleFeedbackData;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticleFeedback;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static KnowledgeBaseArticleFeedback run(RecordKnowledgeBaseArticleFeedbackData $data)
+ */
 final class RecordKnowledgeBaseArticleFeedbackAction
 {
     use AsObject;

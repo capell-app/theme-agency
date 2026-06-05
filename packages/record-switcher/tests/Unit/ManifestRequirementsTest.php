@@ -80,19 +80,29 @@ describe('record-switcher manifest', function (): void {
             associative: true,
             flags: JSON_THROW_ON_ERROR,
         );
+        throw_unless(is_array($contract), RuntimeException::class, 'Record Switcher screenshot contract must decode to an array.');
 
         $entries = $contract['entries'] ?? [];
+        throw_unless(is_array($entries), RuntimeException::class, 'Record Switcher screenshot contract entries must be arrays.');
 
-        expect($contract['generatedFor'])->toBe('deployment-screenshot-runner')
-            ->and($contract['composerRequires'] ?? [])->toContain('capell-app/record-switcher')
+        $generatedFor = $contract['generatedFor'] ?? null;
+        $composerRequires = $contract['composerRequires'] ?? [];
+        throw_unless(is_array($composerRequires), RuntimeException::class, 'Record Switcher screenshot contract composer requirements must be an array.');
+
+        expect($generatedFor)->toBe('deployment-screenshot-runner')
+            ->and($composerRequires)->toContain('capell-app/record-switcher')
             ->and($entries)->not->toBeEmpty();
 
         foreach ($entries as $entry) {
-            expect($entry['required'])->toBeTrue()
-                ->and($entry['screenshotPath'])->toStartWith('packages/record-switcher/docs/screenshots/')
-                ->and($entry['screenshotPath'])->toEndWith('.png');
+            throw_unless(is_array($entry), RuntimeException::class, 'Record Switcher screenshot contract entries must be arrays.');
+            $screenshotPath = $entry['screenshotPath'] ?? null;
+            throw_unless(is_string($screenshotPath), RuntimeException::class, 'Record Switcher screenshot paths must be strings.');
 
-            $relativePath = str_replace('packages/record-switcher/', '', (string) $entry['screenshotPath']);
+            expect($entry['required'])->toBeTrue()
+                ->and($screenshotPath)->toStartWith('packages/record-switcher/docs/screenshots/')
+                ->and($screenshotPath)->toEndWith('.png');
+
+            $relativePath = str_replace('packages/record-switcher/', '', $screenshotPath);
 
             expect(File::exists($packagePath . '/' . $relativePath))->toBeTrue();
 

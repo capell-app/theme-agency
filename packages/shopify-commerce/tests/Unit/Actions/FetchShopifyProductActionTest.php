@@ -42,22 +42,31 @@ it('fetches a product through graphql and persists the local catalog row', funct
 
     $product = FetchShopifyProductAction::run('gid://shopify/Product/42', $connection);
 
-    expect($product)->toBeInstanceOf(ShopifyProduct::class)
-        ->and($product?->shopify_gid)->toBe('gid://shopify/Product/42')
-        ->and($product?->handle)->toBe('alpha-shirt')
-        ->and($product?->title)->toBe('Alpha Shirt')
-        ->and($product?->status)->toBe('active')
-        ->and($product?->featured_image)->toBe([
+    expect($product)->toBeInstanceOf(ShopifyProduct::class);
+    throw_unless($product instanceof ShopifyProduct, RuntimeException::class, 'Expected fetched Shopify product.');
+
+    expect($product->shopify_gid)->toBe('gid://shopify/Product/42')
+        ->and($product->handle)->toBe('alpha-shirt')
+        ->and($product->title)->toBe('Alpha Shirt')
+        ->and($product->status)->toBe('active')
+        ->and($product->featured_image)->toBe([
             'url' => 'https://cdn.example.test/alpha.jpg',
             'altText' => 'Alpha',
         ])
-        ->and($product?->search_text)->toBe('alpha shirt alpha-shirt')
-        ->and($product?->synced_at)->not->toBeNull()
+        ->and($product->search_text)->toBe('alpha shirt alpha-shirt')
+        ->and($product->synced_at)->not->toBeNull()
         ->and(ShopifyProduct::query()->where('shopify_gid', 'gid://shopify/Product/42')->exists())->toBeTrue()
-        ->and(InvalidateShopifyProductSearchCacheAction::version((int) $connection->getKey()))->toBe(2);
+        ->and(InvalidateShopifyProductSearchCacheAction::version(shopifyFetchProductIntValue($connection->getKey())))->toBe(2);
 
-    Http::assertSent(static fn (Request $request): bool => $request['variables']['id'] === 'gid://shopify/Product/42'
-        && str_contains((string) $request['query'], 'query ShopifyProduct'));
+    Http::assertSent(static function (Request $request): bool {
+        $variables = $request['variables'] ?? null;
+        $query = $request['query'] ?? null;
+
+        return is_array($variables)
+            && ($variables['id'] ?? null) === 'gid://shopify/Product/42'
+            && is_string($query)
+            && str_contains($query, 'query ShopifyProduct');
+    });
 });
 
 it('does not invoke graphql inside the persistence transaction', function (): void {
@@ -92,3 +101,8 @@ it('does not invoke graphql inside the persistence transaction', function (): vo
         ->and($product)->toBeInstanceOf(ShopifyProduct::class)
         ->and(ShopifyProduct::query()->where('shopify_gid', 'gid://shopify/Product/99')->exists())->toBeTrue();
 });
+
+function shopifyFetchProductIntValue(mixed $value): int
+{
+    return is_numeric($value) ? (int) $value : 0;
+}

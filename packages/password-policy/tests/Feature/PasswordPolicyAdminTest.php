@@ -405,7 +405,7 @@ it('declares the built password policy marketplace screenshots', function (): vo
     $manifest = json_decode((string) file_get_contents(__DIR__ . '/../../capell.json'), true, 512, JSON_THROW_ON_ERROR);
 
     $paths = collect($manifest['marketplace']['screenshots'])
-        ->pluck('path')
+        ->map(static fn (array $screenshot): string => $screenshot['path'])
         ->all();
 
     expect($paths)->toBe([

@@ -34,6 +34,12 @@ it('converts a Capell manifest into a layout scoped optimizer profile', function
     $assets = $profile->signature['assets'];
     $runtimeAsset = collect($assets)->firstWhere('handle', 'foundation-theme:runtime');
     $firstAsset = $assets[0];
+    $signature = $profile->signature;
+    throw_unless(is_array($signature), RuntimeException::class, 'Expected render profile signature.');
+    $signatureContext = $signature['context'] ?? null;
+    throw_unless(is_array($signatureContext), RuntimeException::class, 'Expected render profile context signature.');
+    $signaturePage = $signatureContext['page'] ?? null;
+    throw_unless(is_array($signaturePage), RuntimeException::class, 'Expected render profile page signature.');
 
     expect($firstAsset)->toHaveKeys(['critical_eligible', 'loading_strategy', 'slot']);
     expect($runtimeAsset)->not->toBeNull();
@@ -50,8 +56,8 @@ it('converts a Capell manifest into a layout scoped optimizer profile', function
         ->not->toContain('capell-app/foundation-theme')
         ->and($profile->scope)->toBe('layout')
         ->and($profile->label)->toBe($context->layout?->key . ' / ' . $context->theme?->key)
-        ->and($profile->signature['context']['page']['id'])->toBe($context->page?->getKey())
-        ->and($profile->signature['context']['page']['type'])->toBe($context->page?->getMorphClass())
+        ->and($signaturePage['id'])->toBe($context->page?->getKey())
+        ->and($signaturePage['type'])->toBe($context->page?->getMorphClass())
         ->and($firstAsset['handle'])->toBe('foundation-theme:css')
         ->and($firstAsset['critical_eligible'])->toBeTrue()
         ->and($firstAsset['loading_strategy'])->toBe('deferred')

@@ -177,7 +177,11 @@ it('probes active admin api tokens without leaking sensitive connection details'
         ->and($diagnosticsPayload)->not->toContain($secretToken)
         ->and($diagnosticsPayload)->not->toContain('dead.myshopify.com');
 
-    Http::assertSent(static fn (Request $request): bool => str_contains((string) $request['query'], 'capellShopifyCommerceHealthProbe'));
+    Http::assertSent(static function (Request $request): bool {
+        $query = $request['query'] ?? null;
+
+        return is_string($query) && str_contains($query, 'capellShopifyCommerceHealthProbe');
+    });
 });
 
 it('fails catalog freshness when active connections have no recent completed sync', function (): void {

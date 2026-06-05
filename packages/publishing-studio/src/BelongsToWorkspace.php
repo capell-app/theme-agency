@@ -42,7 +42,7 @@ trait BelongsToWorkspace
             // the workspace id up-front; copy-on-write only applies to edits of
             // pre-existing live rows.
             $currentWorkspaceId = $record->getAttribute('workspace_id');
-            if ($currentWorkspaceId === null || (int) $currentWorkspaceId === 0) {
+            if ($currentWorkspaceId === null || self::workspaceAttributeAsInt($record, 'workspace_id') === 0) {
                 $record->setAttribute('workspace_id', $activeWorkspaceId);
             }
         });
@@ -61,7 +61,7 @@ trait BelongsToWorkspace
                 return null;
             }
 
-            if ((int) $record->getAttribute('workspace_id') !== 0) {
+            if (self::workspaceAttributeAsInt($record, 'workspace_id') !== 0) {
                 return null;
             }
 
@@ -90,7 +90,7 @@ trait BelongsToWorkspace
                 return null;
             }
 
-            if ((int) $record->getAttribute('workspace_id') !== 0) {
+            if (self::workspaceAttributeAsInt($record, 'workspace_id') !== 0) {
                 return null;
             }
 
@@ -108,12 +108,12 @@ trait BelongsToWorkspace
 
     public function isLive(): bool
     {
-        return $this->getAttribute('workspace_id') === 0;
+        return self::workspaceAttributeAsInt($this, 'workspace_id') === 0;
     }
 
     public function isInWorkspace(): bool
     {
-        return (int) $this->getAttribute('workspace_id') > 0;
+        return self::workspaceAttributeAsInt($this, 'workspace_id') > 0;
     }
 
     /**
@@ -177,5 +177,20 @@ trait BelongsToWorkspace
     protected function scopeWithoutWorkspaceScope(Builder $query): Builder
     {
         return $query->withoutGlobalScope(WorkspaceContextScope::class);
+    }
+
+    private static function workspaceAttributeAsInt(Model $record, string $attribute): int
+    {
+        $value = $record->getAttribute($attribute);
+
+        if (is_int($value)) {
+            return $value;
+        }
+
+        if (is_numeric($value)) {
+            return (int) $value;
+        }
+
+        return 0;
     }
 }

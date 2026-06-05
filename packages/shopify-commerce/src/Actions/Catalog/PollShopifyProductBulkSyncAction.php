@@ -10,6 +10,9 @@ use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Illuminate\Support\Facades\Cache;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static string run(ShopifyConnection|int $connection)
+ */
 final class PollShopifyProductBulkSyncAction
 {
     use AsAction;
@@ -18,7 +21,7 @@ final class PollShopifyProductBulkSyncAction
     {
         $connection = is_int($connection) ? ShopifyConnection::query()->findOrFail($connection) : $connection;
 
-        return Cache::lock(sprintf('capell-shopify-commerce.sync.%d', $connection->getKey()), 300)->block(10, function () use ($connection): string {
+        $status = Cache::lock(sprintf('capell-shopify-commerce.sync.%d', $this->intValue($connection->getKey())), 300)->block(10, function () use ($connection): string {
             $connection->refresh();
 
             if ($connection->status === ShopifyConnectionStatus::Revoked) {
@@ -62,6 +65,13 @@ final class PollShopifyProductBulkSyncAction
 
             return $status;
         });
+
+        return is_string($status) ? $status : 'UNKNOWN';
+    }
+
+    private function intValue(mixed $value): int
+    {
+        return is_numeric($value) ? (int) $value : 0;
     }
 
     private function query(): string

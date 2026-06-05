@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Models\Site;
 use Capell\Newsletter\Actions\RequeueDueProviderSyncAttemptsAction;
 use Capell\Newsletter\Actions\SyncSubscriberToProviderAction;
 use Capell\Newsletter\Enums\AuthType;
@@ -144,7 +145,7 @@ it('blocks fake provider webhook writes in production unless explicitly enabled'
             'event_type' => 'unsubscribe',
         ])->assertOk();
 
-        expect(Subscriber::query()->forEmail($site->getKey(), 'allowed-webhook@example.com')->exists())
+        expect(Subscriber::query()->forEmail(newsletterProviderSyncSiteId($site), 'allowed-webhook@example.com')->exists())
             ->toBeTrue();
     } finally {
         app()->detectEnvironment(static fn (): string => 'testing');
@@ -232,7 +233,7 @@ it('acknowledges duplicate provider webhook retries without re-recording consent
     $this->postJson(route('capell-newsletter.provider-webhook', ['providerConnection' => $connection]), $payload)
         ->assertOk();
 
-    $subscriber = Subscriber::query()->forEmail($site->getKey(), 'webhook-retry@example.com')->first();
+    $subscriber = Subscriber::query()->forEmail(newsletterProviderSyncSiteId($site), 'webhook-retry@example.com')->first();
     $consentEventsCount = $subscriber?->consentEvents()->count();
     expect(DB::table('newsletter_processed_webhook_events')->count())->toBe(1);
 
@@ -337,3 +338,11 @@ it('does not requeue an attempt already claimed by another retry runner', functi
         SyncAttempt::setEventDispatcher($dispatcher);
     }
 });
+
+function newsletterProviderSyncSiteId(Site $site): int
+{
+    $siteId = $site->getKey();
+    throw_unless(is_numeric($siteId), RuntimeException::class, 'Expected newsletter site key to be numeric.');
+
+    return (int) $siteId;
+}

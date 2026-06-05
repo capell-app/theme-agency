@@ -9,6 +9,9 @@ use Capell\FoundationTheme\Providers\FoundationThemeServiceProvider;
 use Capell\FoundationTheme\Support\Demo\ThemeDemoPageInstaller;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static int run(ThemeDemoInstallData $data)
+ */
 final class InstallFoundationThemeDemoAction
 {
     use AsAction;

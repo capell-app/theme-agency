@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\PublishingStudio\Support\LoadTesting;
 
 use Capell\PublishingStudio\BelongsToWorkspace;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +20,8 @@ use Illuminate\Database\Eloquent\Model;
 class WorkspaceDraftableFixture extends Model
 {
     use BelongsToWorkspace;
+
+    /** @use HasFactory<Factory<self>> */
     use HasFactory;
 
     public $timestamps = true;

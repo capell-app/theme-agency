@@ -98,6 +98,7 @@ function knowledgeBasePolicyCall(object $policy, string $method, mixed ...$argum
     $result = (new ReflectionMethod($policy, $method))->invoke($policy, ...$arguments);
 
     expect($result)->toBeBool();
+    throw_unless(is_bool($result), RuntimeException::class, 'Expected policy call to return a boolean.');
 
     return $result;
 }

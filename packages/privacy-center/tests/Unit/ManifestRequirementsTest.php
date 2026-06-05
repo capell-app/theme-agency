@@ -38,18 +38,18 @@ require_once dirname(__DIR__) . '/autoload.php';
 uses(PrivacyCenterTestCase::class);
 
 it('declares privacy center manifest ownership and cache safety', function (): void {
-    $manifest = json_decode((string) file_get_contents(dirname(__DIR__, 2) . '/capell.json'), true);
+    $manifest = capell_json_file_array(dirname(__DIR__, 2) . '/capell.json');
 
     expect($manifest)->toBeArray()
         ->and($manifest['name'])->toBe('capell-app/privacy-center')
         ->and($manifest['namespace'])->toBe('Capell\\PrivacyCenter')
-        ->and($manifest['database']['requiredTables'])->toContain('privacy_consent_records')
-        ->and($manifest['performance']['cacheSafety']['sensitiveOutput'])->toBeTrue()
-        ->and($manifest['dependencies']['requires'])->toContain('capell-app/admin')
-        ->and($manifest['providers']['admin'])->toBe([AdminServiceProvider::class])
-        ->and($manifest['commands']['retention'])->toBe('privacy:apply-retention')
-        ->and($manifest['capabilities'])->not->toContain('privacy-center-cookie-categories')
-        ->and($manifest['capabilities'])->toContain(
+        ->and(data_get($manifest, 'database.requiredTables'))->toContain('privacy_consent_records')
+        ->and(data_get($manifest, 'performance.cacheSafety.sensitiveOutput'))->toBeTrue()
+        ->and(data_get($manifest, 'dependencies.requires'))->toContain('capell-app/admin')
+        ->and(data_get($manifest, 'providers.admin'))->toBe([AdminServiceProvider::class])
+        ->and(data_get($manifest, 'commands.retention'))->toBe('privacy:apply-retention')
+        ->and(data_get($manifest, 'capabilities'))->not->toContain('privacy-center-cookie-categories')
+        ->and(data_get($manifest, 'capabilities'))->toContain(
             'privacy-center-consent',
             'privacy-center-retention',
             'privacy-center-retention-execution',
@@ -58,41 +58,41 @@ it('declares privacy center manifest ownership and cache safety', function (): v
             'privacy-center-policy-acceptance',
             'privacy-center-subject-requests',
         )
-        ->and($manifest['contributes'])->toContain([
+        ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'admin-resource',
             'class' => ConsentPolicyResourceContribution::class,
             'resourceClass' => ConsentPolicyResource::class,
         ])
-        ->and($manifest['contributes'])->toContain([
+        ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'admin-resource',
             'class' => ConsentRecordResourceContribution::class,
             'resourceClass' => ConsentRecordResource::class,
         ])
-        ->and($manifest['contributes'])->toContain([
+        ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'admin-resource',
             'class' => PolicyAcceptanceResourceContribution::class,
             'resourceClass' => PolicyAcceptanceResource::class,
         ])
-        ->and($manifest['contributes'])->toContain([
+        ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'admin-resource',
             'class' => PrivacyRequestResourceContribution::class,
             'resourceClass' => PrivacyRequestResource::class,
         ])
-        ->and($manifest['contributes'])->toContain([
+        ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'admin-resource',
             'class' => RetentionRuleResourceContribution::class,
             'resourceClass' => RetentionRuleResource::class,
         ])
-        ->and($manifest['contributes'])->toContain([
+        ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'dashboard-widget',
             'class' => PrivacyCenterOverviewWidgetContribution::class,
             'widgetClass' => PrivacyCenterOverviewWidget::class,
         ])
-        ->and($manifest['contributes'])->toContain([
+        ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'model',
             'class' => PrivacyCenterModelsContribution::class,
         ])
-        ->and($manifest['contributes'])->toContain([
+        ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'scheduled-job',
             'class' => PrivacyRetentionScheduleContribution::class,
             'command' => 'privacy:apply-retention',
@@ -105,7 +105,7 @@ it('declares privacy center manifest ownership and cache safety', function (): v
         ->and(class_implements(RetentionRuleResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(PrivacyCenterOverviewWidgetContribution::class))->toContain(RegistersExtensionWidget::class)
         ->and(class_implements(PrivacyRetentionScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class)
-        ->and($manifest['actions'])->toMatchArray([
+        ->and(data_get($manifest, 'actions'))->toMatchArray([
             'anonymizePrivacySubject' => AnonymizePrivacySubjectAction::class,
             'applyRetentionRules' => ApplyRetentionRulesAction::class,
             'buildPrivacyCenterOverviewStats' => BuildPrivacyCenterOverviewStatsAction::class,
@@ -117,7 +117,7 @@ it('declares privacy center manifest ownership and cache safety', function (): v
             'recordPolicyAcceptance' => RecordPolicyAcceptanceAction::class,
             'registerConsentPolicy' => RegisterConsentPolicyAction::class,
         ])
-        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
+        ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([]);
 });
 
 it('declares cookie consent categories', function (): void {

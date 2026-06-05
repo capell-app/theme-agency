@@ -19,6 +19,12 @@ use Override;
  * @property string|null $phone
  * @property int $connection_id
  * @property string $shopify_gid
+ * @property string|null $email_hash
+ * @property bool $accepts_marketing
+ * @property string|null $marketing_state
+ * @property int $orders_count
+ * @property string $total_spent_amount
+ * @property string|null $total_spent_currency
  * @property CarbonImmutable|null $synced_at
  * @property-read ShopifyConnection|null $connection
  */

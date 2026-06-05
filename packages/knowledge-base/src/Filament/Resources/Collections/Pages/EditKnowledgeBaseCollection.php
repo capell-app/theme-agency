@@ -27,17 +27,18 @@ final class EditKnowledgeBaseCollection extends EditRecord
             return $record;
         }
 
-        $parent = isset($data['parent_id']) && $data['parent_id'] !== null && $data['parent_id'] !== ''
-            ? KnowledgeBaseCollection::query()->find((int) $data['parent_id'])
+        $parentId = $data['parent_id'] ?? null;
+        $parent = is_numeric($parentId)
+            ? KnowledgeBaseCollection::query()->find((int) $parentId)
             : null;
 
         return UpdateKnowledgeBaseCollectionAction::run($record, new UpdateKnowledgeBaseCollectionData(
-            title: (string) ($data['title'] ?? ''),
-            slug: isset($data['slug']) ? (string) $data['slug'] : null,
-            key: isset($data['key']) ? (string) $data['key'] : null,
-            description: isset($data['description']) ? (string) $data['description'] : null,
+            title: $this->stringFromForm($data['title'] ?? null, ''),
+            slug: $this->nullableStringFromForm($data['slug'] ?? null),
+            key: $this->nullableStringFromForm($data['key'] ?? null),
+            description: $this->nullableStringFromForm($data['description'] ?? null),
             parent: $parent,
-            sortOrder: isset($data['sort_order']) ? (int) $data['sort_order'] : 0,
+            sortOrder: $this->integerFromForm($data['sort_order'] ?? null),
             isPublic: $this->booleanFromForm($data['is_public'] ?? true),
         ));
     }
@@ -52,5 +53,20 @@ final class EditKnowledgeBaseCollection extends EditRecord
     private function booleanFromForm(mixed $value): bool
     {
         return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? true;
+    }
+
+    private function integerFromForm(mixed $value): int
+    {
+        return is_numeric($value) ? (int) $value : 0;
+    }
+
+    private function nullableStringFromForm(mixed $value): ?string
+    {
+        return is_scalar($value) ? trim((string) $value) : null;
+    }
+
+    private function stringFromForm(mixed $value, string $default): string
+    {
+        return $this->nullableStringFromForm($value) ?? $default;
     }
 }

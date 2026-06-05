@@ -43,6 +43,10 @@ final class KnowledgeBasePolicyTestUser extends User
     {
         unset($guardName);
 
+        if (! is_scalar($permission)) {
+            return false;
+        }
+
         return in_array((string) $permission, $this->permissions, true);
     }
 }

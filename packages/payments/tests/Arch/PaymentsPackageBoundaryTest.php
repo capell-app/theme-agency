@@ -39,10 +39,10 @@ it('keeps payments controllers thin', function (): void {
 it('marks payments frontend surfaces as sensitive and non-cacheable', function (): void {
     $manifest = paymentsPackageManifest();
 
-    expect($manifest['performance']['frontendRenderBudgetMs'])->toBe(0)
-        ->and($manifest['performance']['cacheSafety']['cacheable'])->toBeFalse()
-        ->and($manifest['performance']['cacheSafety']['sensitiveOutput'])->toBeTrue()
-        ->and($manifest['performance']['cacheSafety']['variesBy'])->toContain('site', 'customer');
+    expect(data_get($manifest, 'performance.frontendRenderBudgetMs'))->toBe(0)
+        ->and(data_get($manifest, 'performance.cacheSafety.cacheable'))->toBeFalse()
+        ->and(data_get($manifest, 'performance.cacheSafety.sensitiveOutput'))->toBeTrue()
+        ->and(data_get($manifest, 'performance.cacheSafety.variesBy'))->toContain('site', 'customer');
 });
 
 it('does not ship public output files with frontend authoring markers', function (): void {
@@ -98,11 +98,5 @@ arch()
  */
 function paymentsPackageManifest(): array
 {
-    $contents = file_get_contents(dirname(__DIR__, 2) . '/capell.json');
-
-    return json_decode(
-        $contents === false ? '[]' : $contents,
-        associative: true,
-        flags: JSON_THROW_ON_ERROR,
-    );
+    return capell_json_file_array(dirname(__DIR__, 2) . '/capell.json');
 }

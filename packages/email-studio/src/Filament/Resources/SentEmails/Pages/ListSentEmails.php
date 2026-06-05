@@ -18,7 +18,7 @@ final class ListSentEmails extends ListRecords
     }
 
     #[Override]
-    public function getSubheading(): ?string
+    public function getSubheading(): string
     {
         return __('capell-email-studio::mail_tracker.subheading.sent_emails');
     }

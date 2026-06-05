@@ -15,6 +15,9 @@ use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsObject;
 use RuntimeException;
 
+/**
+ * @method static Collection<int, KnowledgeBaseSearchDocumentData> run()
+ */
 final class BuildKnowledgeBaseSearchDocumentsAction
 {
     use AsObject;

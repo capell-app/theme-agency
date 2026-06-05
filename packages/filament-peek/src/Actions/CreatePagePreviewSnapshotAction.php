@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static array{snapshot: PagePreviewSnapshotData, url: string} run(Page $page, array<string, mixed> $formState)
+ */
 final class CreatePagePreviewSnapshotAction
 {
     use AsAction;

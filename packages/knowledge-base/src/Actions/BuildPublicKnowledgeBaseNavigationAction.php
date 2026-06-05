@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static Collection<int, PublicKnowledgeBaseNavigationItemData> run()
+ */
 final class BuildPublicKnowledgeBaseNavigationAction
 {
     use AsObject;

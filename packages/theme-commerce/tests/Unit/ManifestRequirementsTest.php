@@ -42,7 +42,7 @@ describe('theme commerce capell.json manifest', function (): void {
 
     it('keeps non-cacheable theme output from queueing invalidation without sources', function (): void {
         $manifest = commerceThemeManifest();
-        $cacheSafety = $manifest['performance']['cacheSafety'] ?? null;
+        $cacheSafety = data_get($manifest, 'performance.cacheSafety');
 
         throw_unless(is_array($cacheSafety), RuntimeException::class, 'Theme Commerce cache safety manifest data must be an array.');
 
@@ -61,13 +61,5 @@ describe('theme commerce capell.json manifest', function (): void {
  */
 function commerceThemeManifest(): array
 {
-    $manifest = json_decode(
-        File::get(__DIR__ . '/../../capell.json'),
-        associative: true,
-        flags: JSON_THROW_ON_ERROR,
-    );
-
-    throw_unless(is_array($manifest), RuntimeException::class, 'Theme Commerce manifest must decode to an array.');
-
-    return $manifest;
+    return capell_json_file_array(__DIR__ . '/../../capell.json');
 }

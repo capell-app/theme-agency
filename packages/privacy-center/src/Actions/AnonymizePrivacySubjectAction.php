@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static int run(Model $subject)
+ */
 final class AnonymizePrivacySubjectAction
 {
     use AsAction;
