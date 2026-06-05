@@ -9,7 +9,9 @@ use Capell\PublishingStudio\Enums\WorkspaceStatusEnum;
 use Capell\PublishingStudio\Http\Middleware\ResolveWorkspaceContext;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Publisher;
+use Capell\PublishingStudio\WorkspaceContext;
 use Capell\Tests\Support\Concerns\TestingFrontend;
+use Carbon\CarbonImmutable;
 
 use function Pest\Laravel\get;
 
@@ -107,4 +109,47 @@ test('workspace draft row is not rendered via its live url without workspace con
     // (the live row is still accessible even when shadowed — only in workspace
     // context does the shadow hide it). The key is no 404.
     get($page->pageUrl->full_url)->assertOk();
+});
+
+test('anonymous live page does not expose workspace markers or embargoed draft content', function (): void {
+    $siteDomain = SiteDomain::factory()->default()->create();
+    $page = Page::factory()
+        ->site($siteDomain->site)
+        ->withTranslations(data: [
+            'title' => 'Live public page',
+            'content' => '<p>Published public copy remains visible.</p>',
+        ])
+        ->create();
+
+    $workspace = Workspace::factory()->approved()->create([
+        'name' => 'Embargoed launch workspace',
+        'embargo_until' => CarbonImmutable::now()->addDay(),
+    ]);
+
+    WorkspaceContext::runWith($workspace, function () use ($page): void {
+        $draftTranslation = $page->translation()->firstOrFail();
+
+        $draftTranslation->forceFill([
+            'title' => 'Embargoed draft title',
+            'content' => '<p>Embargoed draft copy must stay private.</p>',
+        ])->save();
+    });
+
+    $response = get($page->pageUrl->full_url);
+    $cacheControl = (string) $response->baseResponse->headers->get('Cache-Control');
+
+    $response
+        ->assertOk()
+        ->assertSee('Published public copy remains visible.')
+        ->assertDontSee('Embargoed launch workspace')
+        ->assertDontSee('Embargoed draft title')
+        ->assertDontSee('Embargoed draft copy must stay private.')
+        ->assertDontSee('workspace-preview-pill')
+        ->assertDontSee('data-workspace-preview')
+        ->assertCookieMissing(ResolveWorkspaceContext::COOKIE_NAME);
+
+    expect($response->baseResponse->headers->get('Pragma'))->toBeNull()
+        ->and($response->baseResponse->headers->get('Expires'))->toBeNull()
+        ->and($cacheControl)->not->toContain('private')
+        ->and($cacheControl)->not->toContain('no-store');
 });
