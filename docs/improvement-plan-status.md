@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 148 |
+| Now    | 147 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -54,7 +54,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | layout-builder | 1 | 5 | 4 | Slice committed | `5da9e0066` tightens the visual editor responsive preview frame/tree sizing after prior slices aligned manifest dependencies, implemented real health probes, removed the dead cache enum, promoted marketplace screenshots, rewrote manifest/composer copy, and added fragment invalid/replay safety coverage. Remaining Now row: add the full public render performance-budget test, especially the render-time budget; current stress coverage proves bounded query behavior only. |
 | login-audit | 1 | 6 | 2 | Slice committed | Current follow-up reconciles the shipped real health diagnostics, daily retention purge tracking, and throttled admin activity writes. Remaining Now row: marketplace screenshot manifest/copy reconciliation. |
 | media-ai | 2 | 6 | 3 | Slice committed | Current follow-up removes unsupported console metadata, verifies disabled/null-provider/operation-validation paths, and reconciles docs with the package's notification-only no-mutation behavior. Remaining Now rows: first-party AI Orchestrator image-doctor adapter and remaining marketplace/bundle positioning work. |
-| media-library | 7 | 5 | 3 | Slice committed | `14d6d286c` exercises configured owner FK columns in media health and orphan reports and documents the `owner_foreign_keys` config shape. Continue with cleanup UI, duplicate detection, owner FK discovery/depth, and completion review. |
+| media-library | 6 | 5 | 3 | Slice committed | Current follow-up wires orphan cleanup into the media health bulk UI and keeps selected cleanup constrained to genuinely unused records while deleting unshared files. Remaining Now rows: real health checks, package config/owner FK defaults, visibility preservation, upload validation, per-issue filtering/configurable stale threshold, and docs/screenshot reconciliation. |
 | migration-assistant | 7 | 5 | 3 | Slice committed | `3f14f3f77` landed readiness fixes; continue with end-to-end import rows. |
 | navigation | 3 | 5 | 4 | Slice committed | Current follow-up adds metadata coverage for the already-shipped direct Core dependency, manifest capabilities/cache invalidation sources, and marketplace/composer copy. Remaining Now rows: real health probes, JSON reverse-lookup replacement, and screenshot manifest reconciliation. |
 | newsletter | 6 | 6 | 4 | Slice committed | `d934f6d59` landed token hardening; delivery engine and campaign rows remain. |
