@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 123 |
+| Now    | 122 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -53,7 +53,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | knowledge-base | 5 | 7 | 3 | Slice committed | Current follow-up adds real health diagnostics for required tables, models, Actions, admin resources, and providers. Remaining Now rows: Edit pages, version/publish edit flow, policy/site-access hardening, slug-collision guard, and other admin workflow gaps. |
 | layout-builder | 1 | 5 | 4 | Slice committed | `5da9e0066` tightens the visual editor responsive preview frame/tree sizing after prior slices aligned manifest dependencies, implemented real health probes, removed the dead cache enum, promoted marketplace screenshots, rewrote manifest/composer copy, and added fragment invalid/replay safety coverage. Remaining Now row: add the full public render performance-budget test, especially the render-time budget; current stress coverage proves bounded query behavior only. |
 | login-audit | 1 | 6 | 2 | Slice committed | Current follow-up reconciles the shipped real health diagnostics, daily retention purge tracking, and throttled admin activity writes. Remaining Now row: marketplace screenshot manifest/copy reconciliation. |
-| media-ai | 2 | 6 | 3 | Slice committed | Current follow-up removes unsupported console metadata, verifies disabled/null-provider/operation-validation paths, and reconciles docs with the package's notification-only no-mutation behavior. Remaining Now rows: first-party AI Orchestrator image-doctor adapter and remaining marketplace/bundle positioning work. |
+| media-ai | 1 | 6 | 3 | Slice committed | Current follow-up rewrites marketplace/composer/docs copy around shipped provider-backed Doctor image operations, wires committed light/dark screenshots, and positions Media AI as a premium Media Library add-on. Remaining Now row: first-party AI Orchestrator image-doctor adapter. |
 | media-library | 5 | 5 | 3 | Slice committed | Current follow-up adds config-driven mime, extension, and size validation to Curator uploads with actionable rejection errors and no row/file persistence on failure. Remaining Now rows: real health checks, package config/owner FK defaults, visibility preservation, per-issue filtering/configurable stale threshold, and docs/screenshot reconciliation. |
 | migration-assistant | 5 | 5 | 3 | Slice committed | Current follow-up removes garbled Migration Assistant prose from source/docs while preserving legacy rollback-table migration compatibility. Remaining Now rows: rollback table-name repair, marketplace media/copy, health probes, and dead import-kind reconciliation. |
 | navigation | 3 | 5 | 4 | Slice committed | Current follow-up adds metadata coverage for the already-shipped direct Core dependency, manifest capabilities/cache invalidation sources, and marketplace/composer copy. Remaining Now rows: real health probes, JSON reverse-lookup replacement, and screenshot manifest reconciliation. |

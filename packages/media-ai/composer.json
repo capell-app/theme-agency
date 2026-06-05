@@ -1,6 +1,6 @@
 {
     "name": "capell-app/media-ai",
-    "description": "AI image actions inside Capell's media library — remove backgrounds, clean up and upscale photos — with a safe no-op fallback until you connect a provider.",
+    "description": "Provider-backed image editing inside Capell's media library: improve images, remove backgrounds or objects, restore, and upscale through a safe Doctor image action.",
     "type": "library",
     "license": "proprietary",
     "require": {

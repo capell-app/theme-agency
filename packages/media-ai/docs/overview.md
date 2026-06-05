@@ -1,17 +1,21 @@
 # Media AI
 
-The Media AI package adds optional AI-backed image actions to Capell's existing media resource. It does not replace the media backend, crop system, or localized metadata model.
+The Media AI package adds provider-backed image actions to Capell's existing media resource. It does not replace the media backend, crop system, or localized metadata model.
 
-Status: `Optional` · Surface: `Admin` · Depends on: `capell-app/admin`, `capell-app/core`
+Status: `Optional` · Tier: `Premium` · Bundle: `media` · Surface: `Admin` · Depends on: `capell-app/admin`, `capell-app/core`
 
-![Media AIOrchestrator action surface in the media library](images/screenshots/media-ai-doctor-image.png)
+![Media AI Doctor image action surface in the media library](images/screenshots/media-ai-doctor-image.png)
 
 ## What It Adds
 
 - A `Doctor image` action on image records in the Media resource.
 - A small form for the editor to choose the image operation and add instructions.
-- A `Capell\MediaAI\Contracts\ImageDoctor` contract that an ai-orchestrator package can bind to the real image-editing implementation.
-- A safe default `NullImageDoctor`, so installing the package never exposes a broken action before an AI driver is configured.
+- A `Capell\MediaAI\Contracts\ImageDoctor` contract that a provider package can bind to the real image-editing implementation, directly or through AI Orchestrator.
+- A safe default `NullImageDoctor`, so installing the package never exposes a broken action before an AI provider is configured.
+
+## Marketplace Positioning
+
+Media AI is a premium Capell Media add-on to the free Media Library workflow. Today it should be sold as the admin-safe provider seam for image operations - improve, remove background, remove object, restore, and upscale - rather than as a full AI media suite. The `media` bundle can become a true bundle once additional paid media packages or a first-party AI Orchestrator image provider ship; until then, pair Media AI with Media Library for the editing surface and AI Orchestrator for provider governance.
 
 ## Editor Flow
 

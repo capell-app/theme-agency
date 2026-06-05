@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Media AI adds an AI \"Doctor image\" action to every image in the Capell Admin media library, letting editors remove backgrounds, erase objects, restore, and upscale without leaving the CMS. It's provider-agnostic by design: bind any image model through the `ImageDoctor` contract (pairs naturally with AI Orchestrator for failover), or leave it unconfigured and the action stays safely hidden behind a null implementation. On the roadmap, batch alt-text and caption generation feed Media Library's media-health workflow for accessibility and SEO at scale. Record-level media permissions are enforced on every request, and the package adds no public frontend output.",
+    "description": "Media AI adds a provider-backed \"Doctor image\" action to image records in the Capell Admin media library, letting editors improve images, remove backgrounds or objects, restore damaged assets, and request upscales without leaving the CMS. It ships the `ImageDoctor` contract and a safe null implementation rather than a production AI provider; bind an implementation directly or through AI Orchestrator, and the action stays hidden until one is configured. Media AI is positioned as a premium Capell Media add-on to the free Media Library workflow, with no public frontend output and no database writes of its own.",
     "product": {
         "group": "Capell Media",
         "tier": "premium",
@@ -83,7 +83,7 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "AI image actions inside Capell's media library — remove backgrounds, clean up and upscale photos, and (roadmap) auto-generate accessible, multilingual alt text — with a safe no-op fallback until you connect a provider.",
+        "summary": "Provider-backed image editing inside Capell's media library: improve images, remove backgrounds or objects, restore, and upscale through a Doctor image action that stays hidden until configured.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
