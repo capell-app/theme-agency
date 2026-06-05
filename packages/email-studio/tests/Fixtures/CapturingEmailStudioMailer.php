@@ -9,12 +9,16 @@ use Closure;
 use Illuminate\Contracts\Mail\Mailer as MailerContract;
 use Illuminate\Mail\Message;
 use Illuminate\Mail\PendingMail;
-use Illuminate\Mail\SentMessage;
+use Illuminate\Mail\SentMessage as IlluminateSentMessage;
+use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\SentMessage as SymfonySentMessage;
 use Symfony\Component\Mime\Email as SymfonyEmail;
 
 final class CapturingEmailStudioMailer implements MailerContract
 {
     public ?SymfonyEmail $message = null;
+
+    public string $transportMessageId = 'smtp-provider-message-id';
 
     public function to(mixed $users): PendingMail
     {
@@ -26,7 +30,7 @@ final class CapturingEmailStudioMailer implements MailerContract
         throw new BadMethodCallException('The coverage mailer only supports send().');
     }
 
-    public function raw(mixed $text, mixed $callback): ?SentMessage
+    public function raw(mixed $text, mixed $callback): ?IlluminateSentMessage
     {
         throw new BadMethodCallException('The coverage mailer only supports send().');
     }
@@ -35,7 +39,7 @@ final class CapturingEmailStudioMailer implements MailerContract
      * @param  array<array-key, mixed>  $view
      * @param  array<array-key, mixed>  $data
      */
-    public function send(mixed $view, array $data = [], mixed $callback = null): ?SentMessage
+    public function send(mixed $view, array $data = [], mixed $callback = null): ?IlluminateSentMessage
     {
         unset($view, $data);
 
@@ -47,14 +51,17 @@ final class CapturingEmailStudioMailer implements MailerContract
 
         $this->message = $message;
 
-        return null;
+        $sentMessage = new SymfonySentMessage($message, Envelope::create($message));
+        $sentMessage->setMessageId($this->transportMessageId);
+
+        return new IlluminateSentMessage($sentMessage);
     }
 
     /**
      * @param  array<array-key, mixed>  $mailable
      * @param  array<array-key, mixed>  $data
      */
-    public function sendNow(mixed $mailable, array $data = [], mixed $callback = null): ?SentMessage
+    public function sendNow(mixed $mailable, array $data = [], mixed $callback = null): ?IlluminateSentMessage
     {
         return $this->send($mailable, $data, $callback);
     }

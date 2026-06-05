@@ -11,8 +11,10 @@ use Capell\EmailStudio\Data\ProviderWebhookEventData;
 use Capell\EmailStudio\Enums\EmailRecipientStatus;
 use Capell\EmailStudio\Models\EmailMessage;
 use Capell\EmailStudio\Models\EmailProfile;
+use Capell\EmailStudio\Models\EmailRecipient;
 use Illuminate\Contracts\Mail\Mailer as MailerContract;
 use Illuminate\Mail\Message;
+use Illuminate\Mail\SentMessage;
 use Illuminate\Support\Facades\Mail;
 use RuntimeException;
 
@@ -26,7 +28,7 @@ class SmtpEmailProviderAdapter implements EmailProviderAdapter
         throw_unless($profile instanceof EmailProfile, RuntimeException::class, 'Email message profile must be loaded before SMTP delivery.');
 
         $deliverableRecipients = $message->recipients
-            ->filter(function ($recipient): bool {
+            ->filter(function (EmailRecipient $recipient): bool {
                 $status = $recipient->status instanceof EmailRecipientStatus
                     ? $recipient->status
                     : EmailRecipientStatus::from((string) $recipient->status);
@@ -34,7 +36,7 @@ class SmtpEmailProviderAdapter implements EmailProviderAdapter
                 return $status === EmailRecipientStatus::Queued;
             });
 
-        $this->mailer($message)->send([], [], function (Message $mail) use ($message, $profile, $deliverableRecipients): void {
+        $sentMessage = $this->mailer($message)->send([], [], function (Message $mail) use ($message, $profile, $deliverableRecipients): void {
             $mail->subject($message->subject);
             $mail->from($profile->from_email, $profile->from_name);
 
@@ -66,13 +68,12 @@ class SmtpEmailProviderAdapter implements EmailProviderAdapter
                 $mail->text($message->rendered_text);
             }
         });
+        $providerMessageId = $this->providerMessageId($sentMessage);
 
         return new ProviderSendResultData(
             successful: true,
             recipientProviderMessageIds: $deliverableRecipients
-                ->mapWithKeys(fn ($recipient): array => [
-                    (int) $recipient->getKey() => sprintf('smtp-%s-%s', $message->getKey(), $recipient->getKey()),
-                ])
+                ->mapWithKeys(fn (EmailRecipient $recipient): array => $providerMessageId === null ? [] : [(int) $recipient->getKey() => $providerMessageId])
                 ->all(),
         );
     }
@@ -120,5 +121,16 @@ class SmtpEmailProviderAdapter implements EmailProviderAdapter
     protected function providerKey(): string
     {
         return 'smtp';
+    }
+
+    private function providerMessageId(?SentMessage $sentMessage): ?string
+    {
+        if (! $sentMessage instanceof SentMessage) {
+            return null;
+        }
+
+        $messageId = $sentMessage->getMessageId();
+
+        return is_string($messageId) && trim($messageId) !== '' ? trim($messageId) : null;
     }
 }
