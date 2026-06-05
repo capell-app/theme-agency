@@ -62,14 +62,19 @@ describe('record-switcher manifest', function (): void {
         expect($screenshots)->not->toBeEmpty();
 
         foreach ($screenshots as $screenshot) {
-            expect($screenshot['path'])->toStartWith('docs/assets/marketplace/')
-                ->and(File::exists($packagePath . '/' . $screenshot['path']))->toBeTrue()
+            $path = (string) $screenshot['path'];
+
+            expect(
+                str_starts_with($path, 'docs/assets/marketplace/')
+                    || str_starts_with($path, 'docs/screenshots/'),
+            )->toBeTrue()
+                ->and(File::exists($packagePath . '/' . $path))->toBeTrue()
                 ->and(strlen(trim((string) $screenshot['alt'])))->toBeGreaterThanOrEqual(12)
                 ->and(strlen(trim((string) $screenshot['caption'])))->toBeGreaterThanOrEqual(12);
         }
     });
 
-    it('maps required screenshot contract entries to committed marketplace assets', function () use ($packagePath): void {
+    it('maps required screenshot contract entries to committed runner captures', function () use ($packagePath): void {
         $contract = json_decode(
             File::get($packagePath . '/docs/screenshots.json'),
             associative: true,
@@ -78,15 +83,23 @@ describe('record-switcher manifest', function (): void {
 
         $entries = $contract['entries'] ?? [];
 
-        expect($entries)->not->toBeEmpty();
+        expect($contract['generatedFor'])->toBe('deployment-screenshot-runner')
+            ->and($contract['composerRequires'] ?? [])->toContain('capell-app/record-switcher')
+            ->and($entries)->not->toBeEmpty();
 
         foreach ($entries as $entry) {
             expect($entry['required'])->toBeTrue()
-                ->and($entry['screenshotPath'])->toStartWith('packages/record-switcher/docs/assets/marketplace/');
+                ->and($entry['screenshotPath'])->toStartWith('packages/record-switcher/docs/screenshots/')
+                ->and($entry['screenshotPath'])->toEndWith('.png');
 
             $relativePath = str_replace('packages/record-switcher/', '', (string) $entry['screenshotPath']);
 
             expect(File::exists($packagePath . '/' . $relativePath))->toBeTrue();
+
+            $darkRelativePath = preg_replace('/\.png$/', '-dark.png', $relativePath);
+
+            expect(is_string($darkRelativePath))->toBeTrue()
+                ->and(File::exists($packagePath . '/' . $darkRelativePath))->toBeTrue();
         }
     });
 });

@@ -13,11 +13,12 @@
             "surface": "admin",
             "targetType": "admin-surface",
             "target": "RecordSwitcherHeadingExtender",
-            "url": "/pages/1/edit",
+            "scenario": "admin-form",
+            "url": "/pages/{first-record}/edit",
             "click": ".filament-record-switcher .choices__inner",
-            "waitFor": ".filament-record-switcher .choices__list--dropdown.is-active",
+            "waitFor": ".filament-record-switcher .choices__list--dropdown.is-active .choices__item[data-choice-selectable][data-value*=\"/pages/\"]",
             "required": true,
-            "notes": "Capture a Capell admin edit page heading with record-switcher suggestions open after typing a short query.",
+            "notes": "Capture a Capell admin edit page heading with record-switcher page suggestions loaded.",
             "useCase": "An editor jumps between related editable records without returning to the table view.",
             "screenshotPath": "packages/record-switcher/docs/screenshots/admin-heading-switcher.png"
         }
