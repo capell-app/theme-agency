@@ -79,7 +79,7 @@ Manifest `capabilities[]` is only `["theme-commerce","theme-commerce-frontend"]`
 | Rewrite `summary` + manifest description                                                         | Done   | S      | High   | 5           |
 | Declare `campaign-studio` + `media-library` in `capell.json` supports                            | Done   | S      | Med    | 4           |
 | Resolve `extends` (`foundation-theme` vs `default`)                                              | Done   | S      | Med    | 4           |
-| Reconcile cacheSafety contradiction                                                              | Now    | S      | Med    | 4           |
+| Reconcile cacheSafety contradiction                                                              | Done   | S      | Med    | 4 — closed 2026-06-05: the manifest now keeps non-cacheable theme output from queueing invalidation when no invalidation sources are declared, with regression coverage. |
 | Replace 106 hard-coded hex utilities with theme tokens                                           | Next   | L      | High   | 2           |
 | Build product-detail (PDP) section + view                                                        | Next   | L      | High   | 3           |
 | Add cart/mini-basket + promo/countdown + reviews/ratings components                              | Next   | L      | High   | 3           |

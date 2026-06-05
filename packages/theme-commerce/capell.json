@@ -68,7 +68,7 @@
             "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
-            "queueInvalidation": true
+            "queueInvalidation": false
         }
     },
     "healthChecks": [

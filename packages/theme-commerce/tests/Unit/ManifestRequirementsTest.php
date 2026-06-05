@@ -39,6 +39,21 @@ describe('theme commerce capell.json manifest', function (): void {
             expect(File::exists(__DIR__ . '/../../' . $screenshotPath))->toBeTrue();
         }
     });
+
+    it('keeps non-cacheable theme output from queueing invalidation without sources', function (): void {
+        $manifest = commerceThemeManifest();
+        $cacheSafety = $manifest['performance']['cacheSafety'] ?? null;
+
+        throw_unless(is_array($cacheSafety), RuntimeException::class, 'Theme Commerce cache safety manifest data must be an array.');
+
+        expect($cacheSafety)->toMatchArray([
+            'cacheable' => false,
+            'variesBy' => ['site', 'locale'],
+            'sensitiveOutput' => false,
+            'invalidationSources' => [],
+            'queueInvalidation' => false,
+        ]);
+    });
 });
 
 /**
