@@ -24,6 +24,8 @@ use Capell\ThemeStudio\Saas\SaasThemeServiceProvider;
 use Capell\ThemeStudio\Saas\ThemeStudio\Adapters\SaasThemePageAdapter;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Foundation\Auth\User as AuthenticatableUser;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 
@@ -433,6 +435,28 @@ it('renders public theme markup without package identifiers', function (): void 
         ->not->toContain('editor');
 });
 
+it('renders every public section without authoring leaks for anonymous and non admin visitors', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(SaasThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/blog');
+
+    $registry = new ThemeRegistry;
+    $provider = new SaasThemeServiceProvider($this->app);
+    $provider->register();
+    $provider->boot($registry);
+
+    $anonymousHtml = renderSaasThemeAllSections($registry);
+
+    Auth::setUser(new class extends AuthenticatableUser {});
+
+    $nonAdminHtml = renderSaasThemeAllSections($registry);
+
+    Auth::forgetGuards();
+
+    expectSaasPublicHtmlToBeSafe($anonymousHtml);
+    expectSaasPublicHtmlToBeSafe($nonAdminHtml);
+});
+
 it('renders SaaS blog views when Blog is installed', function (): void {
     View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
     resolve(Translator::class)->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
@@ -615,3 +639,134 @@ it('renders public blog views without database queries', function (): void {
         ->and($articleHtml)->toContain('saas-article')
         ->and($queries)->toBe([]);
 });
+
+function renderSaasThemeAllSections(ThemeRegistry $registry): string
+{
+    return $registry->renderer('saas')->render(new ThemePageData(
+        title: 'Launchdeck',
+        brand: new BrandProfileData,
+        sections: [
+            new HeroSectionData(
+                heading: 'Turn onboarding into activation',
+                eyebrow: 'Product-led growth',
+                summary: 'A public landing page for software teams improving activation.',
+                actions: [['label' => 'Start trial', 'url' => '/signup']],
+            ),
+            new FeatureSectionData(
+                heading: 'Activation paths',
+                summary: 'Reusable public feature cards for product teams.',
+                features: [
+                    ['title' => 'Guided setup', 'description' => 'Help accounts reach the first valuable action.'],
+                    ['title' => 'Usage signals', 'description' => 'Show teams where the next conversion lift sits.'],
+                ],
+            ),
+            new ProofSectionData(
+                heading: 'Customer proof',
+                summary: 'Evidence for the landing page.',
+                items: [
+                    ['metric' => '31%', 'name' => 'Activation lift', 'description' => 'Measured across onboarding experiments.'],
+                    ['metric' => '2.4x', 'name' => 'Expansion signal', 'description' => 'Stronger qualified pipeline.'],
+                ],
+            ),
+            new ContentListingSectionData(
+                heading: 'Resource pipeline',
+                summary: 'Guides and playbooks for SaaS teams.',
+                items: [
+                    ['title' => 'Onboarding teardown', 'summary' => 'A practical checklist.', 'url' => '/resources/onboarding'],
+                    ['title' => 'Pricing audit', 'summary' => 'Package the plan story clearly.', 'url' => '/resources/pricing'],
+                ],
+            ),
+            saasThemeSection('comparison', [
+                'heading' => 'Compare launch paths',
+                'summary' => 'Choose the route that fits your growth motion.',
+                'items' => [
+                    ['title' => 'Self serve', 'summary' => 'Fast activation for smaller teams.'],
+                    ['title' => 'Sales assisted', 'summary' => 'Qualified demos for larger accounts.'],
+                ],
+            ]),
+            saasThemeSection('calculator', [
+                'heading' => 'Model the lift',
+                'summary' => 'Estimate the compounding effect of activation improvements.',
+                'items' => [
+                    ['title' => 'Trial conversion', 'summary' => 'Turn more trials into qualified accounts.', 'metric' => '+18%'],
+                ],
+            ]),
+            saasThemeSection('pricing', [
+                'heading' => 'Choose a plan',
+                'summary' => 'Simple public pricing cards.',
+                'items' => [
+                    ['title' => 'Scale', 'summary' => 'Plan comparison for growing teams.', 'price' => '$249'],
+                ],
+            ]),
+            saasThemeSection('docs-onboarding', [
+                'heading' => 'Ship with guided docs',
+                'summary' => 'Help new accounts activate faster.',
+                'items' => [
+                    ['title' => 'Activation checklist', 'summary' => 'Documentation route for product activation.'],
+                ],
+            ]),
+            saasThemeSection('demo-request', [
+                'heading' => 'Route the right demo',
+                'summary' => 'Qualify high-intent accounts.',
+                'items' => [
+                    ['title' => 'Product-led qualification', 'summary' => 'Conversion path for sales conversations.'],
+                ],
+            ]),
+            new CtaSectionData(
+                heading: 'Launch the next test',
+                summary: 'Move the public page forward.',
+                actions: [['label' => 'Start trial', 'url' => '/signup']],
+            ),
+            saasThemeSection('blog', [
+                'heading' => 'Growth calendar',
+                'summary' => 'What product teams should test next.',
+                'items' => [
+                    ['title' => 'Activation forecast', 'summary' => 'A practical planning model.', 'url' => '/blog/activation-forecast'],
+                ],
+            ]),
+        ],
+        navigation: new NavigationData(
+            brandName: 'Launchdeck',
+            items: [
+                ['label' => 'Product', 'url' => '/product'],
+                ['label' => 'Pricing', 'url' => '/pricing'],
+            ],
+            ctaLabel: 'Start trial',
+            ctaUrl: '/signup',
+        ),
+        footer: new FooterData(
+            brandName: 'Launchdeck',
+            summary: 'A public SaaS site built from portable Capell content.',
+            columns: [
+                ['heading' => 'Company', 'links' => [['label' => 'Contact', 'url' => '/contact']]],
+            ],
+        ),
+    ));
+}
+
+function expectSaasPublicHtmlToBeSafe(string $html): void
+{
+    $normalizedHtml = strtolower($html);
+
+    expect($html)
+        ->toContain('Launchdeck')
+        ->toContain('Turn onboarding into activation')
+        ->toContain('Route the right demo')
+        ->not->toContain('capell-app/theme-saas')
+        ->not->toContain('capell-theme-saas')
+        ->not->toContain('data-theme-key')
+        ->not->toContain('data-field')
+        ->not->toContain('data-model')
+        ->not->toContain('field_path')
+        ->not->toContain('model_id')
+        ->not->toContain('contenteditable')
+        ->not->toContain('wire:')
+        ->not->toContain('signed');
+
+    expect($normalizedHtml)
+        ->not->toContain('filament')
+        ->not->toContain('livewire')
+        ->not->toContain('authoring')
+        ->not->toContain('permission')
+        ->not->toContain('editor');
+}
