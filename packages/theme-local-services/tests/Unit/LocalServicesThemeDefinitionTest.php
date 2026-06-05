@@ -243,6 +243,75 @@ it('renders translated and data-driven service area links', function (): void {
         ->not->toContain('Central service area');
 });
 
+it('renders data-driven contact actions without dead or unsafe links', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(LocalServicesThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new LocalServicesThemeServiceProvider($this->app))->boot($registry);
+
+    $renderer = $registry->sectionRenderer('local-services', 'contact');
+
+    assert($renderer instanceof SectionRenderer);
+
+    $defaultHtml = $renderer->render(localServicesThemeSection('contact', [
+        'heading' => 'Request a quote',
+    ]));
+
+    $customHtml = $renderer->render(localServicesThemeSection('contact', [
+        'heading' => 'Visit or call',
+        'phone' => '+44 29 2000 1234',
+        'email' => 'quotes@example.test',
+        'address' => '12 High Street, Cardiff CF10 1AA',
+        'mapUrl' => 'https://maps.example.test/local-services',
+    ]));
+
+    $unsafeHtml = $renderer->render(localServicesThemeSection('contact', [
+        'heading' => 'Static contact details',
+        'contact' => [
+            'phone' => 'Call the desk',
+            'email' => 'not-an-email',
+            'address' => 'Mobile team only',
+            'mapUrl' => 'javascript:alert(1)',
+        ],
+    ]));
+
+    expect($defaultHtml)
+        ->toContain('id="contact"')
+        ->toContain('Request a quote')
+        ->toContain('Call routing')
+        ->toContain('Quote desk')
+        ->toContain('Site visits')
+        ->toContain('Map')
+        ->not->toContain('href="#"')
+        ->not->toContain('href=""')
+        ->not->toContain('tel:')
+        ->not->toContain('mailto:')
+        ->not->toContain('capell-app/theme-local-services');
+
+    expect($customHtml)
+        ->toContain('Visit or call')
+        ->toContain('href="tel:+442920001234"')
+        ->toContain('+44 29 2000 1234')
+        ->toContain('href="mailto:quotes@example.test"')
+        ->toContain('quotes@example.test')
+        ->toContain('href="https://maps.example.test/local-services"')
+        ->toContain('12 High Street, Cardiff CF10 1AA')
+        ->toContain('Open map')
+        ->not->toContain('href="#"')
+        ->not->toContain('capell-app/theme-local-services');
+
+    expect($unsafeHtml)
+        ->toContain('Call the desk')
+        ->toContain('Direct urgent, planned, and account enquiries to the right team.')
+        ->toContain('not-an-email')
+        ->toContain('Mobile team only')
+        ->not->toContain('tel:')
+        ->not->toContain('mailto:')
+        ->not->toContain('javascript:alert')
+        ->not->toContain('href="#"');
+});
+
 it('renders a real public quote fallback form with configurable submission target', function (): void {
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(LocalServicesThemeServiceProvider::$packageName);
