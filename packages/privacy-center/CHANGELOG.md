@@ -7,6 +7,7 @@ All notable changes to `capell-app/privacy-center` will be documented in this fi
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
 - Added the `privacy:apply-retention` console command, registered it with the package provider, scheduled it daily, and exposed the command/frequency in `capell.json` so retention execution is reachable outside tests.
 - Added Action-backed privacy request edit-page workflow actions for marking DSAR requests verified, fulfilled, or rejected without bypassing the audit timestamp fields.
+- Expanded README and overview documentation around shipped admin/console surfaces, DSAR export and erasure boundaries, consent mirroring, retention execution, install/config notes, and public-output safety limits.
 
 ## 2026-06-03
 

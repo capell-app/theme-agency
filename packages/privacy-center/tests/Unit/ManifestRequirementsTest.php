@@ -132,3 +132,29 @@ it('declares cookie consent categories', function (): void {
         'functional',
     ]);
 });
+
+it('documents shipped privacy center surfaces without overclaiming public workflows', function (): void {
+    $packagePath = dirname(__DIR__, 2);
+    $readme = (string) file_get_contents($packagePath . '/README.md');
+    $overview = (string) file_get_contents($packagePath . '/docs/overview.md');
+    $changelog = (string) file_get_contents($packagePath . '/CHANGELOG.md');
+
+    expect($readme)
+        ->toContain('Privacy Center currently ships admin and console surfaces only')
+        ->toContain('does not ship a public cookie banner')
+        ->toContain('does not ship a public cookie banner, a public DSAR intake form')
+        ->toContain('BuildPrivacyExportAction')
+        ->toContain('AnonymizePrivacySubjectAction')
+        ->toContain('CAPELL_PRIVACY_CENTER_HASH_SECRET')
+        ->toContain('The admin provider contributes these Filament surfaces')
+        ->and($overview)
+        ->toContain('It does not ship a public cookie banner')
+        ->toContain('cross-package subject-data export/erasure registry')
+        ->toContain('`RecordConsentAction` can infer a subject from a source model')
+        ->toContain('frontendRenderBudgetMs: 0')
+        ->and($changelog)
+        ->toContain('Expanded README and overview documentation')
+        ->and($readme)
+        ->not->toContain('generic cookie banner is table-stakes')
+        ->not->toContain('one erasure call wipes contacts');
+});
