@@ -19,12 +19,16 @@ use Capell\Payments\Models\CheckoutSession;
 use Capell\Payments\Tests\Fakes\FakePaymentGateway;
 use Capell\Payments\Tests\FormBuilderPaymentsTestCase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\ValidationException;
 
 uses(FormBuilderPaymentsTestCase::class);
 
 beforeEach(function (): void {
+    config()->set('app.url', 'https://example.test');
     config()->set('capell-payments.form_builder.allowed_return_hosts', ['example.test']);
+    URL::forceRootUrl('https://example.test');
+    URL::forceScheme('https');
 });
 
 it('creates form payment checkout sessions from portable Form Builder payment fields', function (): void {
@@ -141,6 +145,71 @@ it('rejects form payment checkout return URLs outside the allowed hosts', functi
         ttlMinutes: 15,
     );
 })->throws(ValidationException::class);
+
+it('rejects private and internal form payment return URLs even when configured', function (string $returnUrl): void {
+    config()->set('capell-payments.form_builder.allowed_return_hosts', [
+        '127.0.0.1',
+        '10.0.0.25',
+        '172.16.0.25',
+        '192.168.1.25',
+        '169.254.169.254',
+        '[::1]',
+        'localhost',
+        'example.test',
+    ]);
+
+    $submission = paymentsFormBuilderSubmission(paymentsFormBuilderForm(), [
+        'email' => 'buyer@example.test',
+        'donation' => 3500,
+    ]);
+
+    CreateFormPaymentCheckoutUrlAction::run(
+        submission: $submission,
+        successUrl: $returnUrl,
+        cancelUrl: 'https://example.test/retry',
+        ttlMinutes: 15,
+    );
+})->with([
+    'loopback IPv4' => ['http://127.0.0.1/thanks'],
+    'private class A' => ['https://10.0.0.25/thanks'],
+    'private class B' => ['https://172.16.0.25/thanks'],
+    'private class C' => ['https://192.168.1.25/thanks'],
+    'link-local metadata' => ['http://169.254.169.254/latest/meta-data'],
+    'loopback IPv6' => ['http://[::1]/thanks'],
+    'localhost' => ['http://localhost/thanks'],
+])->throws(ValidationException::class);
+
+it('normalizes local form payment return paths before sending them to the provider', function (): void {
+    $form = paymentsFormBuilderForm();
+    $submission = paymentsFormBuilderSubmission($form, [
+        'email' => 'buyer@example.test',
+        'donation' => 3500,
+    ]);
+    $gateway = new FakePaymentGateway(new CheckoutSessionData(
+        provider: PaymentProvider::Stripe,
+        providerSessionId: 'cs_form_payment_local_paths',
+        status: CheckoutSessionStatus::Open,
+        mode: CheckoutMode::Payment,
+        purpose: PaymentPurpose::FormPayment,
+        url: 'https://checkout.stripe.com/c/pay/cs_form_payment_local_paths',
+        currency: 'gbp',
+        amountSubtotal: 3500,
+        amountTotal: 3500,
+        customerEmail: 'buyer@example.test',
+        providerPayload: ['id' => 'cs_form_payment_local_paths'],
+    ));
+
+    app()->instance(PaymentGateway::class, $gateway);
+
+    CreateFormPaymentCheckoutSessionAction::run(
+        submission: $submission,
+        successUrl: '/thanks?submission=' . $submission->getKey(),
+        cancelUrl: '/retry',
+    );
+
+    expect($gateway->lastRequest?->successUrl)->toBe('https://example.test/thanks?submission=' . $submission->getKey())
+        ->and($gateway->lastRequest?->cancelUrl)->toBe('https://example.test/retry');
+});
 
 it('passes configured allowed form payment return URLs to the provider checkout request', function (): void {
     config()->set('capell-payments.form_builder.allowed_return_hosts', ['payments.example.test']);

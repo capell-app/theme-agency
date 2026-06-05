@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 129 |
+| Now    | 128 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -60,7 +60,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | newsletter | 5 | 6 | 4 | Slice committed | Current follow-up blocks the Fake provider in production across admin selection, webhooks, audience listing, and sync unless explicitly enabled. Remaining Now rows: real health checks, expiring/single-use public tokens, direct FormSubmitted listener coverage, marketplace copy, and screenshots. |
 | notes | 4 | 7 | 3 | Slice committed | Current follow-up renders scoped inbox notes and marks displayed mentions read; `0a153655b` landed health/body validation. Remaining Now rows: resolve/reopen/complete UI, reminder reconciliation, anon/non-admin safety coverage before broader read surfaces, and display sanitization. |
 | password-policy | 1 | 6 | 4 | Slice committed | `899d37760` adds direct middleware coverage for redirect, forced-change allowed route, logout allowed route, and compliant no-op behavior, after prior HIBP/expiry/manifest/complexity/history slices. Remaining Now row: marketplace screenshots and summary/description. |
-| payments | 6 | 6 | 3 | Slice committed | Current follow-up moves paid-download delivery into an Action and adds Feature/Arch suites covering signed download paths, thin controllers, sensitive non-cacheable frontend settings, and public-output safety. Remaining Now rows: webhook row locking, marketplace media/copy, money casts, form-checkout URL allow-listing, and replay-safe paid-download expiry. |
+| payments | 5 | 6 | 3 | Slice committed | Current follow-up validates form-checkout return URLs: local paths normalize to the app origin, absolute URLs must use allowed public hosts, and private/internal redirect targets are rejected. Remaining Now rows: webhook row locking, marketplace media/copy, money casts, and replay-safe paid-download expiry. |
 | privacy-center | 3 | 5 | 4 | Slice committed | Current follow-up adds provider/table/morph/hash-secret health diagnostics, removes the unshipped cookie-category public-surface capability, and reconciles already-shipped retention execution plus fail-loud hash-secret rows. Remaining Now rows: insights subject mirroring, DSAR edit actions, and README/CHANGELOG expansion. |
 | public-actions | 4 | 7 | 5 | Slice committed | Current follow-up drops the unsupported `cache-blocking` capability while keeping route-level `no-store` cache safety covered by manifest tests. Remaining Now rows: health checks, DNS-rebinding/redirect hardening, SSRF/health-check tests, and marketplace screenshots/copy. |
 | publishing-studio | 3 | 6 | 5 | Slice committed | Current follow-up ships package config defaults for publish checks/release windows/scheduler settings and proves default publish checks resolve through the container. Remaining Now rows: manifest reconciliation, anonymous live-path safety, and CHANGELOG history. Note: full package Pest still has an unrelated scheduler table error in `SchedulerAndApprovalResidualCoverageTest`; focused publish-check pipeline coverage passes. |

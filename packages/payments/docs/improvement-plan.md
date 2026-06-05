@@ -93,7 +93,7 @@ Mapped against declared `capabilities[]` and payment-platform norms. Capabilitie
 | Add marketplace screenshots/GIF (currently 0)                                                 | Now    | S      | High   | §5          |
 | Rewrite marketplace summary + composer description                                            | Now    | S      | Medium | §5          |
 | Cast `amount` to integer across money models                                                  | Now    | S      | Medium | §2.4, §4    |
-| Validate form-checkout `success_url`/`cancel_url` (open-redirect)                             | Now    | S      | High   | §2.5, §4    |
+| Done/Shipped: Validate form-checkout `success_url`/`cancel_url` (open-redirect). Evidence: `ValidateFormPaymentReturnUrlAction` allows local paths, requires absolute URLs to use trusted hosts, and rejects foreign/private/internal redirects before signed checkout URLs reach Stripe. | Done | S | High | §2.5, §4 |
 | Make paid-download fulfilment expiry replay-safe                                              | Now    | S      | Medium | §2.6        |
 | Move webhook processing to a queued job                                                       | Next   | M      | High   | §2.1        |
 | Implement refund issuance (action + admin button)                                             | Next   | M      | High   | §3          |
