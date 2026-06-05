@@ -126,12 +126,68 @@ it('renders hydrated hero data through the Nonprofit hero view', function (): vo
 
     expect($html)
         ->toContain('Campaign command centre')
+        ->toContain('<h1')
         ->toContain('Fund the next community appeal')
         ->toContain('Hydrated nonprofit hero summary.')
         ->toContain('Donate today')
         ->toContain('Join the team')
         ->toContain('Winter support fund')
         ->not->toContain('capell-app/theme-nonprofit');
+});
+
+it('renders one public h1 after the skip-link target while sections keep h2 headings', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(NonprofitThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new NonprofitThemeServiceProvider($this->app))->boot($registry);
+
+    $heroRenderer = $registry->sectionRenderer('nonprofit', 'hero');
+    $featureRenderer = $registry->sectionRenderer('nonprofit', 'features');
+
+    assert($heroRenderer instanceof SectionRenderer);
+    assert($featureRenderer instanceof SectionRenderer);
+
+    $heroHtml = $heroRenderer->render(HeroSectionData::from([
+        'heading' => 'Fund the next community appeal',
+        'summary' => 'Hydrated nonprofit hero summary.',
+    ]));
+
+    $featureHtml = $featureRenderer->render(new FeatureSectionData(
+        heading: 'Impact pathways',
+        summary: 'Supporter cards should feel specific to nonprofit work.',
+        features: [
+            ['title' => 'Campaign paths', 'description' => 'Move supporters from belief to action.', 'type' => 'Campaigns'],
+        ],
+    ));
+
+    $page = view('capell-theme-nonprofit::page', [
+        'brand' => new readonly class
+        {
+            /**
+             * @return array<string, string>
+             */
+            public function tokens(): array
+            {
+                return ['--theme-primary' => '#166534'];
+            }
+        },
+        'content' => $heroHtml . $featureHtml,
+    ])->render();
+
+    $mainContentPosition = strpos($page, 'id="main-content"');
+    $headingPosition = strpos($page, '<h1');
+
+    expect(substr_count($page, '<h1'))->toBe(1)
+        ->and($mainContentPosition)->not->toBeFalse()
+        ->and($headingPosition)->not->toBeFalse()
+        ->and($headingPosition)->toBeGreaterThan($mainContentPosition)
+        ->and($page)->toContain('id="main-content"')
+        ->and($page)->toContain('<h1')
+        ->and($page)->toContain('Fund the next community appeal')
+        ->and($page)->toContain('<h2')
+        ->and($page)->toContain('Impact pathways')
+        ->and($page)->not->toContain('capell-app/theme-nonprofit');
 });
 
 it('renders new premium nonprofit layouts through the registry', function (): void {
