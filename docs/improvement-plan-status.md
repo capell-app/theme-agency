@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 117 |
+| Now    | 116 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -57,7 +57,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | media-library | 5 | 5 | 3 | Slice committed | Current follow-up adds config-driven mime, extension, and size validation to Curator uploads with actionable rejection errors and no row/file persistence on failure. Remaining Now rows: real health checks, package config/owner FK defaults, visibility preservation, per-issue filtering/configurable stale threshold, and docs/screenshot reconciliation. |
 | migration-assistant | 5 | 5 | 3 | Slice committed | Current follow-up removes garbled Migration Assistant prose from source/docs while preserving legacy rollback-table migration compatibility. Remaining Now rows: rollback table-name repair, marketplace media/copy, health probes, and dead import-kind reconciliation. |
 | navigation | 3 | 5 | 4 | Slice committed | Current follow-up adds metadata coverage for the already-shipped direct Core dependency, manifest capabilities/cache invalidation sources, and marketplace/composer copy. Remaining Now rows: real health probes, JSON reverse-lookup replacement, and screenshot manifest reconciliation. |
-| newsletter | 5 | 6 | 4 | Slice committed | Current follow-up blocks the Fake provider in production across admin selection, webhooks, audience listing, and sync unless explicitly enabled. Remaining Now rows: real health checks, expiring/single-use public tokens, direct FormSubmitted listener coverage, marketplace copy, and screenshots. |
+| newsletter | 4 | 6 | 4 | Slice committed | Current follow-up proves confirm/unsubscribe public tokens stamp `used_at` and reject replay while preference-center self-service tokens remain reusable until expiry, after the Fake provider was blocked in production. Remaining Now rows: real health checks, direct FormSubmitted listener coverage, marketplace copy, and screenshots. |
 | notes | 4 | 7 | 3 | Slice committed | Current follow-up renders scoped inbox notes and marks displayed mentions read; `0a153655b` landed health/body validation. Remaining Now rows: resolve/reopen/complete UI, reminder reconciliation, anon/non-admin safety coverage before broader read surfaces, and display sanitization. |
 | password-policy | 1 | 6 | 4 | Slice committed | `899d37760` adds direct middleware coverage for redirect, forced-change allowed route, logout allowed route, and compliant no-op behavior, after prior HIBP/expiry/manifest/complexity/history slices. Remaining Now row: marketplace screenshots and summary/description. |
 | payments | 5 | 6 | 3 | Slice committed | Current follow-up validates form-checkout return URLs: local paths normalize to the app origin, absolute URLs must use allowed public hosts, and private/internal redirect targets are rejected. Remaining Now rows: webhook row locking, marketplace media/copy, money casts, and replay-safe paid-download expiry. |
