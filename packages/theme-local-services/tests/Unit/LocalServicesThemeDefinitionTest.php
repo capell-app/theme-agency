@@ -243,6 +243,54 @@ it('renders translated and data-driven service area links', function (): void {
         ->not->toContain('Central service area');
 });
 
+it('renders a real public quote fallback form with configurable submission target', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(LocalServicesThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/form-builder', false);
+
+    $registry = new ThemeRegistry;
+    (new LocalServicesThemeServiceProvider($this->app))->boot($registry);
+
+    $renderer = $registry->sectionRenderer('local-services', 'quote-form');
+
+    assert($renderer instanceof SectionRenderer);
+
+    $defaultHtml = $renderer->render(localServicesThemeSection('quote-form', [
+        'heading' => 'Request a quote',
+    ]));
+
+    $customHtml = $renderer->render(localServicesThemeSection('quote-form', [
+        'heading' => 'Request a quote',
+        'formAction' => '/quotes',
+        'formMethod' => 'get',
+    ]));
+
+    expect($defaultHtml)
+        ->toContain('id="quote"')
+        ->toContain('<form')
+        ->toContain('action="/contact"')
+        ->toContain('method="POST"')
+        ->toContain('aria-label="Quote request"')
+        ->toContain('name="name"')
+        ->toContain('autocomplete="name"')
+        ->toContain('name="phone"')
+        ->toContain('autocomplete="tel"')
+        ->toContain('name="postcode"')
+        ->toContain('autocomplete="postal-code"')
+        ->toContain('name="service"')
+        ->toContain('name="message"')
+        ->toContain('Send quote request')
+        ->not->toContain('action="#"')
+        ->not->toContain('data-field')
+        ->not->toContain('capell-app/theme-local-services');
+
+    expect($customHtml)
+        ->toContain('action="/quotes"')
+        ->toContain('method="GET"')
+        ->not->toContain('action="#"')
+        ->not->toContain('capell-app/theme-local-services');
+});
+
 /**
  * @param  array<string, mixed>  $viewData
  */

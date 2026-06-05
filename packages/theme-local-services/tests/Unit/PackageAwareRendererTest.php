@@ -47,8 +47,13 @@ it('passes optional package availability into public section renderers', functio
         }
     });
 
-    expect($html)->toContain($expected)->not->toContain($missing);
+    expect($html)
+        ->toContain($expected)
+        ->toContain('<form')
+        ->toContain('name="phone"')
+        ->not->toContain($missing)
+        ->not->toContain('capell-app/theme-local-services');
 })->with([
-    'installed' => [true, 'Connected enquiry workflow', 'Static enquiry path'],
-    'not installed' => [false, 'Static enquiry path', 'Connected enquiry workflow'],
+    'installed' => [true, 'Connected enquiry workflow', 'Send a quote request with your contact details'],
+    'not installed' => [false, 'Send a quote request with your contact details', 'Connected enquiry workflow'],
 ]);
