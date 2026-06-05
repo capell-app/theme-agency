@@ -84,18 +84,18 @@ The manifest and Composer description now use this buyer-facing product story:
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                                  | Bucket | Effort | Impact | Section ref |
-| ----------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Implement real health-check logic (views/theme-registered/assets present), drop stub                  | Now    | S      | High   | §4          |
-| Add rendered-output anonymous/non-admin leak test across all sections + adapter query-count assertion | Now    | M      | High   | §4          |
-| Translate hard-coded English in `SaasThemePageAdapter` fallback sections                              | Now    | S      | Med    | §4          |
-| Build a real pricing/plan-comparison matrix (tiers × features, billing toggle, popular flag)          | Next   | M      | High   | §3          |
-| Implement functional demo-request/trial form via Form Builder (with static fallback)                  | Next   | M      | High   | §3          |
-| Deepen connected pricing/docs/demo-request states beyond guidance copy into real embeds/data          | Next   | M      | High   | §2.1, §3    |
-| Rewrite marketplace `summary` + composer `description`; capture & commit the 12 PNG screenshots       | Next   | M      | High   | §5          |
-| Replace jargon placeholder copy in `generic.php` and visible eyebrows                                 | Next   | S      | Med    | §2.5        |
-| Tokenize hard-coded palette so the `saas` preset actually re-skins the theme                          | Next   | L      | Med    | §2.3        |
-| Add genuine dark mode (token set + `dark:` variants) and a true dark screenshot                       | Next   | L      | High   | §2.2        |
-| Add logos/integrations strip + testimonial cards + FAQ accordion sections                             | Later  | M      | Med    | §3          |
-| Make calculator interactive (Alpine, cache-safe) or rename to value-summary                           | Later  | M      | Med    | §2.6        |
-| Verify demo-seeded slugs match `screenshots.json` capture routes (or fix the routes)                  | Later  | S      | Med    | §4          |
+| Item                                                                                                     | Bucket | Effort | Impact | Section ref |
+| -------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Shipped 2026-06-03: Implement real health-check logic (views/theme-registered/assets present), drop stub | Done   | S      | High   | §4          |
+| Add rendered-output anonymous/non-admin leak test across all sections + adapter query-count assertion    | Now    | M      | High   | §4          |
+| Translate hard-coded English in `SaasThemePageAdapter` fallback sections                                 | Now    | S      | Med    | §4          |
+| Build a real pricing/plan-comparison matrix (tiers × features, billing toggle, popular flag)             | Next   | M      | High   | §3          |
+| Implement functional demo-request/trial form via Form Builder (with static fallback)                     | Next   | M      | High   | §3          |
+| Deepen connected pricing/docs/demo-request states beyond guidance copy into real embeds/data             | Next   | M      | High   | §2.1, §3    |
+| Rewrite marketplace `summary` + composer `description`; capture & commit the 12 PNG screenshots          | Next   | M      | High   | §5          |
+| Replace jargon placeholder copy in `generic.php` and visible eyebrows                                    | Next   | S      | Med    | §2.5        |
+| Tokenize hard-coded palette so the `saas` preset actually re-skins the theme                             | Next   | L      | Med    | §2.3        |
+| Add genuine dark mode (token set + `dark:` variants) and a true dark screenshot                          | Next   | L      | High   | §2.2        |
+| Add logos/integrations strip + testimonial cards + FAQ accordion sections                                | Later  | M      | Med    | §3          |
+| Make calculator interactive (Alpine, cache-safe) or rename to value-summary                              | Later  | M      | Med    | §2.6        |
+| Verify demo-seeded slugs match `screenshots.json` capture routes (or fix the routes)                     | Later  | S      | Med    | §4          |
