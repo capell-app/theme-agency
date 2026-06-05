@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 132 |
+| Now    | 131 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -55,7 +55,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | login-audit | 1 | 6 | 2 | Slice committed | Current follow-up reconciles the shipped real health diagnostics, daily retention purge tracking, and throttled admin activity writes. Remaining Now row: marketplace screenshot manifest/copy reconciliation. |
 | media-ai | 2 | 6 | 3 | Slice committed | Current follow-up removes unsupported console metadata, verifies disabled/null-provider/operation-validation paths, and reconciles docs with the package's notification-only no-mutation behavior. Remaining Now rows: first-party AI Orchestrator image-doctor adapter and remaining marketplace/bundle positioning work. |
 | media-library | 6 | 5 | 3 | Slice committed | Current follow-up wires orphan cleanup into the media health bulk UI and keeps selected cleanup constrained to genuinely unused records while deleting unshared files. Remaining Now rows: real health checks, package config/owner FK defaults, visibility preservation, upload validation, per-issue filtering/configurable stale threshold, and docs/screenshot reconciliation. |
-| migration-assistant | 6 | 5 | 3 | Slice committed | Current follow-up adds a package-local `StartSiteImportAction` path that creates `SiteImport` sessions from `site-export` packages and guards page imports against wrong archive kinds. Remaining Now rows: rollback table-name repair, prose cleanup, marketplace media/copy, health probes, dead kind reconciliation, and completion review. |
+| migration-assistant | 5 | 5 | 3 | Slice committed | Current follow-up removes garbled Migration Assistant prose from source/docs while preserving legacy rollback-table migration compatibility. Remaining Now rows: rollback table-name repair, marketplace media/copy, health probes, and dead import-kind reconciliation. |
 | navigation | 3 | 5 | 4 | Slice committed | Current follow-up adds metadata coverage for the already-shipped direct Core dependency, manifest capabilities/cache invalidation sources, and marketplace/composer copy. Remaining Now rows: real health probes, JSON reverse-lookup replacement, and screenshot manifest reconciliation. |
 | newsletter | 5 | 6 | 4 | Slice committed | Current follow-up blocks the Fake provider in production across admin selection, webhooks, audience listing, and sync unless explicitly enabled. Remaining Now rows: real health checks, expiring/single-use public tokens, direct FormSubmitted listener coverage, marketplace copy, and screenshots. |
 | notes | 4 | 7 | 3 | Slice committed | Current follow-up renders scoped inbox notes and marks displayed mentions read; `0a153655b` landed health/body validation. Remaining Now rows: resolve/reopen/complete UI, reminder reconciliation, anon/non-admin safety coverage before broader read surfaces, and display sanitization. |
