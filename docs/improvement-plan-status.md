@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 179 |
+| Now    | 175 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -53,7 +53,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | knowledge-base | 6 | 7 | 3 | Slice committed | Current follow-up throttles/dedupes anonymous feedback and updates shipped-feature docs; policies and edit/versioning gaps remain high priority. |
 | layout-builder | 1 | 5 | 4 | Slice committed | `5da9e0066` tightens the visual editor responsive preview frame/tree sizing after prior slices aligned manifest dependencies, implemented real health probes, removed the dead cache enum, promoted marketplace screenshots, rewrote manifest/composer copy, and added fragment invalid/replay safety coverage. Remaining Now row: add the full public render performance-budget test, especially the render-time budget; current stress coverage proves bounded query behavior only. |
 | login-audit | 4 | 6 | 2 | Slice committed | Current follow-up fixes frontend activity row matching to prefer the latest login time, keeps dashboard settings labels on translation keys, and verifies real `Login`/`Failed` events create audit rows. Remaining Now rows: real health check, daily purge precision, admin activity throttling, and marketplace media/copy. |
-| media-ai | 6 | 6 | 3 | Slice committed | `f4b35bc06` landed health/allow-list fixes; production image-doctor/provider story remains. |
+| media-ai | 2 | 6 | 3 | Slice committed | Current follow-up removes unsupported console metadata, verifies disabled/null-provider/operation-validation paths, and reconciles docs with the package's notification-only no-mutation behavior. Remaining Now rows: first-party AI Orchestrator image-doctor adapter and remaining marketplace/bundle positioning work. |
 | media-library | 7 | 5 | 3 | Slice committed | `14d6d286c` exercises configured owner FK columns in media health and orphan reports and documents the `owner_foreign_keys` config shape. Continue with cleanup UI, duplicate detection, owner FK discovery/depth, and completion review. |
 | migration-assistant | 7 | 5 | 3 | Slice committed | `3f14f3f77` landed readiness fixes; continue with end-to-end import rows. |
 | navigation | 6 | 5 | 4 | Slice committed | `ce27d2110` adds explicit non-admin public-output safety coverage proving page navigation does not expose authoring labels, selectors, package names, model IDs, or signed URLs, after health diagnostics and record-switcher integration fixes. Continue with resolver/render-boundary rows, manifest metadata, screenshots, marketplace copy, and completion review. |

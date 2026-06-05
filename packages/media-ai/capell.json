@@ -13,7 +13,7 @@
         "bundle": "media"
     },
     "namespace": "Capell\\MediaAI",
-    "surfaces": ["admin", "console"],
+    "surfaces": ["admin"],
     "dependencies": {
         "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [],
@@ -40,7 +40,7 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["media-ai", "media-ai-admin", "media-ai-console"],
+    "capabilities": ["media-ai", "media-ai-admin"],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
@@ -101,6 +101,6 @@
                 "caption": "The Doctor image action shown in dark mode"
             }
         ],
-        "categories": ["admin", "console", "media"]
+        "categories": ["admin", "media"]
     }
 }
