@@ -82,8 +82,62 @@ it('renders hydrated hero data through the Portfolio hero view', function (): vo
         ->toContain('Portfolio signal')
         ->toContain('Editorial portfolio system')
         ->toContain('Hydrated summary copy should shape the hero.')
+        ->toContain('+42%')
+        ->toContain('120+')
+        ->toContain('6h')
         ->toContain('Open case study')
         ->toContain('Request deck')
+        ->not->toContain('capell-app/theme-portfolio');
+});
+
+it('renders service and work-grid defaults from translations', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(PortfolioThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new PortfolioThemeServiceProvider($this->app))->boot($registry);
+
+    $servicesRenderer = $registry->sectionRenderer('portfolio', 'services');
+    $workGridRenderer = $registry->sectionRenderer('portfolio', 'work-grid');
+
+    assert($servicesRenderer instanceof SectionRenderer);
+    assert($workGridRenderer instanceof SectionRenderer);
+
+    $servicesHtml = $servicesRenderer->render(portfolioThemeSection('services', [
+        'heading' => 'Build the offer',
+    ]));
+
+    $workGridHtml = $workGridRenderer->render(portfolioThemeSection('work-grid', [
+        'heading' => 'Selected projects',
+    ]));
+
+    expect($servicesHtml)
+        ->toContain('What we build')
+        ->toContain('A modular services layer built for portfolio storytelling that converts attention into action.')
+        ->toContain('DISCOVERY')
+        ->toContain('Brand systems')
+        ->toContain('Identity-led positioning and messaging frameworks.')
+        ->toContain('DESIGN')
+        ->toContain('Conversion storytelling')
+        ->toContain('Long-form narratives with visual hierarchy for trust.')
+        ->toContain('LAUNCH')
+        ->toContain('Performance tune-up')
+        ->toContain('Rapid iteration on headlines, UI, and conversion points.')
+        ->not->toContain('capell-app/theme-portfolio');
+
+    expect($workGridHtml)
+        ->toContain('30+ Projects')
+        ->toContain('12+ Industries')
+        ->toContain('97% Retention')
+        ->toContain('Visual Projects')
+        ->toContain('Landing suite')
+        ->toContain('Editorial and campaign modules packaged for growth.')
+        ->toContain('Brand Systems')
+        ->toContain('Portfolio refresh')
+        ->toContain('Premium visual system with section-level storytelling.')
+        ->toContain('Conversion')
+        ->toContain('Case study platform')
+        ->toContain('High-performance cards with clear next-step actions.')
         ->not->toContain('capell-app/theme-portfolio');
 });
 
@@ -308,7 +362,7 @@ function portfolioThemeSection(string $key, array $viewData): ThemeSection
          */
         public function toViewData(): array
         {
-            return ['section' => (object) $this->viewData];
+            return array_merge($this->viewData, ['section' => (object) $this->viewData]);
         }
     };
 }

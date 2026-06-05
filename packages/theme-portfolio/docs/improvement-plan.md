@@ -16,7 +16,7 @@ Theme key `portfolio` is registered in `src/PortfolioThemeServiceProvider.php` v
 
 1. **Make testimonials data-driven** — the entire section is three hardcoded English quotes ("Great clarity…", "Client Snapshot", etc.) and never reads `$section->items`; a buyer who connects real testimonials sees nothing change — `resources/views/sections/testimonials.blade.php` — M
 2. **Make speaking/media-kit data-driven** — identical problem: "Deck design / Media kit PDF / Interview prep" plus all body copy are hardcoded and `$section->items` is ignored, so the section is a fixed brochure — `resources/views/sections/speaking-media-kit.blade.php` — M
-3. **Translate hardcoded copy in services** — "What we build", the modular-services paragraph, and fallback labels `SERVICE` / `DISCOVERY` / `DESIGN` / `LAUNCH` plus the three fallback cards are literal English bypassing the `capell-theme-portfolio::generic` namespace used everywhere else — `resources/views/sections/services.blade.php` — S
+3. **Shipped 2026-06-05: Translate hardcoded copy in services/stats** — services fallback labels/cards plus hero and work-grid stat pills now use `capell-theme-portfolio::generic` translations, with render coverage proving the same defaults still output and source guards keeping those literals out of Blade — `resources/views/sections/services.blade.php`, `hero.blade.php`, `work-grid.blade.php` — S
 4. **Shipped 2026-06-04: Translate newsletter chrome and remove inert fallback** — newsletter labels, placeholder, form label, and button copy now come from `generic.php`; the section renders a real form only when hydrated with `formAction`, and otherwise shows a translated static CTA instead of posting to `action="#"`. — `resources/views/sections/newsletter.blade.php` + `resources/lang/en/generic.php` — S
 5. **Externalise hero/work-grid vanity stats** — `+42%`, `120+`, `6h` (hero) and `30+ Projects` / `12+ Industries` / `97% Retention` (work-grid) are baked into markup; every demo and every buyer who forgets to override ships identical fake metrics — `resources/views/sections/hero.blade.php`, `resources/views/sections/work-grid.blade.php` — M
 6. **Unify the empty-state strategy** — three incompatible behaviours coexist: case-studies fabricates rich fake records, availability/process render dashed "…ready" boxes, work-grid hardcodes 3 cards, testimonials/services/speaking always show static content. Pick one (prefer the dashed "add content" placeholder) so an un-populated site looks intentional — `resources/views/sections/{case-studies,work-grid,services,testimonials,speaking-media-kit}.blade.php` — M
@@ -77,20 +77,20 @@ The manifest marketplace description now uses this buyer-facing product story:
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                 | Bucket | Effort | Impact | Section ref      |
-| ------------------------------------------------------------------------------------ | ------ | ------ | ------ | ---------------- |
-| Generate the 9 declared `screenshots.json` captures (+ dark pair)                    | Now    | M      | High   | §5               |
+| Item                                                                                                     | Bucket | Effort | Impact | Section ref      |
+| -------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ---------------- |
+| Generate the 9 declared `screenshots.json` captures (+ dark pair)                                        | Now    | M      | High   | §5               |
 | Shipped 2026-06-05: Reconcile product-group drift (overview.md vs capell.json) + document dual `extends` | Done   | S      | Med    | §4               |
-| Make testimonials + speaking/media-kit data-driven                                   | Now    | M      | High   | §2.1, §2.2       |
-| Translate hardcoded copy (services, newsletter, stats) + add missing lang keys       | Now    | M      | Med    | §2.3, §2.4, §2.5 |
-| Add About/Bio section (creator lane differentiator vs agency)                        | Next   | M      | High   | §3               |
-| Implement real health-check probes or lower declared `critical` severity             | Next   | S      | Med    | §4               |
-| Add image LCP hints (dimensions, lazy/eager, srcset) + fix alt handling              | Next   | M      | Med    | §4               |
-| Unify empty-state strategy across sections                                           | Next   | M      | Med    | §2.6             |
-| Add render tests for footer/nav/services/testimonials/speaking/newsletter            | Next   | M      | Med    | §4               |
-| Wire Newsletter integration to provide real capture actions automatically            | Next   | M      | High   | §2.4, §4         |
-| Ship a dark preset + dark CSS                                                        | Next   | L      | High   | §2.7, §5         |
-| Add reduced-motion guards for carousels + hover transforms                           | Next   | S      | Med    | §2.8             |
-| Add gallery/lightbox + resume/CV + client-logo sections                              | Later  | L      | Med    | §3               |
-| Promote raw hex to design tokens for full theme-editor propagation                   | Later  | M      | Med    | §2.9             |
-| Add a frontend render-budget guardrail test (20ms)                                   | Later  | M      | Low    | §4               |
+| Make testimonials + speaking/media-kit data-driven                                                       | Now    | M      | High   | §2.1, §2.2       |
+| Shipped 2026-06-05: Translate hardcoded copy (services, newsletter, stats) + add missing lang keys       | Done   | M      | Med    | §2.3, §2.4, §2.5 |
+| Add About/Bio section (creator lane differentiator vs agency)                                            | Next   | M      | High   | §3               |
+| Implement real health-check probes or lower declared `critical` severity                                 | Next   | S      | Med    | §4               |
+| Add image LCP hints (dimensions, lazy/eager, srcset) + fix alt handling                                  | Next   | M      | Med    | §4               |
+| Unify empty-state strategy across sections                                                               | Next   | M      | Med    | §2.6             |
+| Add render tests for footer/nav/services/testimonials/speaking/newsletter                                | Next   | M      | Med    | §4               |
+| Wire Newsletter integration to provide real capture actions automatically                                | Next   | M      | High   | §2.4, §4         |
+| Ship a dark preset + dark CSS                                                                            | Next   | L      | High   | §2.7, §5         |
+| Add reduced-motion guards for carousels + hover transforms                                               | Next   | S      | Med    | §2.8             |
+| Add gallery/lightbox + resume/CV + client-logo sections                                                  | Later  | L      | Med    | §3               |
+| Promote raw hex to design tokens for full theme-editor propagation                                       | Later  | M      | Med    | §2.9             |
+| Add a frontend render-budget guardrail test (20ms)                                                       | Later  | M      | Low    | §4               |

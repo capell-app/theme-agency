@@ -34,17 +34,17 @@
                     <p
                         class="rounded-full border border-slate-200 bg-white px-4 py-2 text-center text-xs font-black tracking-[0.14em] text-slate-500"
                     >
-                        30+ Projects
+                        {{ __('capell-theme-portfolio::generic.work_grid_projects_stat') }}
                     </p>
                     <p
                         class="rounded-full border border-slate-200 bg-white px-4 py-2 text-center text-xs font-black tracking-[0.14em] text-slate-500"
                     >
-                        12+ Industries
+                        {{ __('capell-theme-portfolio::generic.work_grid_industries_stat') }}
                     </p>
                     <p
                         class="rounded-full border border-slate-200 bg-white px-4 py-2 text-center text-xs font-black tracking-[0.14em] text-slate-500"
                     >
-                        97% Retention
+                        {{ __('capell-theme-portfolio::generic.work_grid_retention_stat') }}
                     </p>
                 </div>
             </div>
@@ -84,13 +84,13 @@
                     <p
                         class="text-xs font-black tracking-widest text-slate-500 uppercase"
                     >
-                        Visual Projects
+                        {{ __('capell-theme-portfolio::generic.work_grid_visual_projects_label') }}
                     </p>
                     <h3 class="mt-2 text-lg font-black text-[#0f172a]">
-                        Landing suite
+                        {{ __('capell-theme-portfolio::generic.work_grid_landing_suite_title') }}
                     </h3>
                     <p class="mt-2 text-sm text-slate-600">
-                        Editorial and campaign modules packaged for growth.
+                        {{ __('capell-theme-portfolio::generic.work_grid_landing_suite_summary') }}
                     </p>
                 </article>
                 <article
@@ -99,13 +99,13 @@
                     <p
                         class="text-xs font-black tracking-widest text-slate-500 uppercase"
                     >
-                        Brand Systems
+                        {{ __('capell-theme-portfolio::generic.work_grid_brand_systems_label') }}
                     </p>
                     <h3 class="mt-2 text-lg font-black text-[#0f172a]">
-                        Portfolio refresh
+                        {{ __('capell-theme-portfolio::generic.work_grid_portfolio_refresh_title') }}
                     </h3>
                     <p class="mt-2 text-sm text-slate-600">
-                        Premium visual system with section-level storytelling.
+                        {{ __('capell-theme-portfolio::generic.work_grid_portfolio_refresh_summary') }}
                     </p>
                 </article>
                 <article
@@ -114,13 +114,13 @@
                     <p
                         class="text-xs font-black tracking-widest text-slate-500 uppercase"
                     >
-                        Conversion
+                        {{ __('capell-theme-portfolio::generic.work_grid_conversion_label') }}
                     </p>
                     <h3 class="mt-2 text-lg font-black text-[#0f172a]">
-                        Case study platform
+                        {{ __('capell-theme-portfolio::generic.work_grid_case_study_platform_title') }}
                     </h3>
                     <p class="mt-2 text-sm text-slate-600">
-                        High-performance cards with clear next-step actions.
+                        {{ __('capell-theme-portfolio::generic.work_grid_case_study_platform_summary') }}
                     </p>
                 </article>
             @endif

@@ -26,6 +26,17 @@ function portfolioThemePublicOutputAssets(): string
     ));
 }
 
+/**
+ * @param  list<string>  $sectionNames
+ */
+function portfolioThemeSectionBladeViews(array $sectionNames): string
+{
+    return implode("\n", array_map(
+        static fn (string $sectionName): string => file_get_contents(__DIR__ . '/../../resources/views/sections/' . $sectionName . '.blade.php') ?: '',
+        $sectionNames,
+    ));
+}
+
 it('uses the premium page wrapper with brand tokens and skip link', function (): void {
     $blade = portfolioThemeBladeViews();
 
@@ -70,4 +81,27 @@ it('keeps public Blade free of database query calls', function (): void {
         ->not->toContain('->assets')
         ->not->toContain('->media->')
         ->not->toContain('find(');
+});
+
+it('keeps translated service newsletter and stat copy out of Blade literals', function (): void {
+    $blade = portfolioThemeSectionBladeViews(['services', 'newsletter', 'hero', 'work-grid']);
+
+    expect($blade)
+        ->not->toContain('What we build')
+        ->not->toContain('A modular services layer built for portfolio storytelling')
+        ->not->toContain('SERVICE')
+        ->not->toContain('DISCOVERY')
+        ->not->toContain('Brand systems')
+        ->not->toContain('DESIGN')
+        ->not->toContain('Conversion storytelling')
+        ->not->toContain('LAUNCH')
+        ->not->toContain('Performance tune-up')
+        ->not->toContain('Connect a newsletter form action to capture subscribers.')
+        ->not->toContain('Newsletter signup')
+        ->not->toContain('+42%')
+        ->not->toContain('120+')
+        ->not->toContain('6h')
+        ->not->toContain('30+ Projects')
+        ->not->toContain('12+ Industries')
+        ->not->toContain('97% Retention');
 });
