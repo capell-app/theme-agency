@@ -10,7 +10,7 @@ Current marketplace summary (verbatim from `capell.json`): _"Newsletter adds sub
 
 ## 2. Improvements (existing functionality)
 
-- **Implement the four advertised health checks (currently a stub)** — `capell.json` declares `newsletter.form-subscription` (critical), `newsletter.provider-sync-retry` (critical), `newsletter.provider-webhooks` (critical), `newsletter.segments` (warning), all pointing at `Capell\Newsletter\Health\NewsletterHealthCheck`. That class implements only `compatibleCapellApiVersion()` and returns no probe results — every check is hollow. Add real probes (form listener wired? due sync attempts draining? webhook idempotency table present? segment evaluation returns a Builder?). — manifest oversells a critical capability — `src/Health/NewsletterHealthCheck.php` — **M**
+- **Done/Shipped: Implemented the four advertised health checks.** `NewsletterHealthCheck` now delegates to `BuildNewsletterHealthDiagnosticsAction`, which supports all checks or a single manifest key and probes Form Builder listener/table wiring, provider sync retry queryability, provider webhook route/action/idempotency storage, and static/dynamic segment evaluation. Diagnostics output is translated and covered. — manifest/behaviour alignment — `src/Actions/BuildNewsletterHealthDiagnosticsAction.php`, `src/Health/NewsletterHealthCheck.php`, `resources/lang/en/health.php`, `tests/Feature/NewsletterHealthCheckTest.php` — **M**
 
 - **Harden the Form Builder event binding** — the listener is wired by building the event class name from a string and guarding with `class_exists`: `Event::listen($formSubmittedEvent, SubscribeFromFormSubmission::class)`. If Form Builder renames/moves `FormSubmitted`, subscription silently stops with no error. Reference the class directly (it is a hard `requires` dependency) or assert its existence in a health check/test. — silent failure of the headline capability — `src/Providers/NewsletterServiceProvider.php:233-236` — **S**
 
@@ -48,7 +48,7 @@ Tie-back to `capabilities[]` in `capell.json`.
 
 ## 4. Issues / Risks
 
-- **Stub health checks (critical).** Four manifest health checks resolve to a no-op class — `src/Health/NewsletterHealthCheck.php`. Marketplace certification and `capell:doctor`-style tooling will report green for capabilities that are never probed. (See §2.)
+- **Done/Shipped: critical health checks are real.** The four manifest health checks now resolve to keyed diagnostics for form subscription capture, provider sync retry, provider webhooks, and segment evaluation. (See §2.)
 
 - **Closed 2026-06-05 — Fake adapter accepts unsigned webhooks in production.** `FakeProviderAdapter::verifyWebhook()` now fails closed outside `local`/`testing` unless an explicit fake-provider override is enabled, and the admin provider select uses the same gate. `src/Support/Providers/FakeProviderAdapter.php`. (See §2.)
 
@@ -60,7 +60,7 @@ Tie-back to `capabilities[]` in `capell.json`.
 
 - **Performance budget is asserted, not enforced.** `capell.json` sets `frontendRenderBudgetMs: 20` and `adminQueryBudget: 40`. No test measures the preference-center render or asserts the admin resource query budget. `cacheSafety.cacheable: false` is correct (per-subscriber output). No regression guard exists. **M**
 
-- **Test gaps.** 82 tests, but: no test for the Form Builder event binding actually firing the listener (the string-built `class_exists` path is untested); no test that confirm/unsubscribe tokens are burned (`used_at`) and reject replay; no test that the Fake webhook path is blocked in production config; no public-output-safety assertion test for the preference-center HTML (anonymous response must not leak admin labels/IDs — currently relied on by convention only); no health-check tests (because the checks are empty). `tests/`.
+- **Test gaps.** 102 package tests now cover Form Builder listener registration and dispatch, public token expiry/replay, Fake provider production blocking, and real newsletter health diagnostics. Remaining gaps: public-output-safety assertion test for the preference-center HTML (anonymous response must not leak admin labels/IDs) and broader provider retry/backoff coverage. `tests/`.
 
 - **PII at rest.** `newsletter_subscribers` stores `email`/`first_name`/`last_name`/`profile` as `longText` (plaintext) with a separate `email_hash` for lookup. Consider whether raw email should be encrypted given consent-grade PII handling claims; at minimum document the retention posture. `database/migrations/...02_create_newsletter_subscribers_table.php`. **M**
 
@@ -93,7 +93,7 @@ Tie-back to `capabilities[]` in `capell.json`.
 
 | Item                                                                           | Bucket | Effort | Impact | Section ref |
 | ------------------------------------------------------------------------------ | ------ | ------ | ------ | ----------- |
-| Implement real logic for the 4 advertised health checks                        | Now    | M      | High   | §2, §4      |
+| Done/Shipped: Implement real logic for the 4 advertised health checks. Evidence: keyed diagnostics cover form subscription capture, provider sync retry, provider webhooks, and segment evaluation with translated output and focused tests. | Done | M | High | §2, §4 |
 | Hide/block `Fake` provider adapter in production (unsigned webhook)            | Done   | S      | High   | §2, §4      |
 | Add expiry + single-use burn (`used_at`) to unsubscribe/preference tokens — Shipped: unsubscribe/preference tokens use `public_tokens.token_expiry_hours`; confirm/unsubscribe stamp `used_at` and replay returns 404; preference-center view/update tokens remain reusable until expiry for self-service UX. Covered by `PreferenceCenterActionTest` + `NewsletterLifecycleActionTest`. | Done   | S      | High   | §2, §4      |
 | Reference `FormSubmitted` directly + test the listener actually fires — Shipped: `NewsletterServiceProvider` registers `Event::listen(FormSubmitted::class, SubscribeFromFormSubmission::class)` directly, and `NewsletterLifecycleActionTest` asserts the raw Laravel listener registration before dispatching a real `FormSubmitted` event that creates a subscriber. | Done   | S      | High   | §2, §4      |
