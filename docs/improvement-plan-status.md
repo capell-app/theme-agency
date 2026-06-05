@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 140 |
+| Now    | 138 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -58,7 +58,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | migration-assistant | 6 | 5 | 3 | Slice committed | Current follow-up adds a package-local `StartSiteImportAction` path that creates `SiteImport` sessions from `site-export` packages and guards page imports against wrong archive kinds. Remaining Now rows: rollback table-name repair, prose cleanup, marketplace media/copy, health probes, dead kind reconciliation, and completion review. |
 | navigation | 3 | 5 | 4 | Slice committed | Current follow-up adds metadata coverage for the already-shipped direct Core dependency, manifest capabilities/cache invalidation sources, and marketplace/composer copy. Remaining Now rows: real health probes, JSON reverse-lookup replacement, and screenshot manifest reconciliation. |
 | newsletter | 6 | 6 | 4 | Slice committed | `d934f6d59` landed token hardening; delivery engine and campaign rows remain. |
-| notes | 6 | 7 | 3 | Slice committed | `0a153655b` landed health/body validation; reminders and inbox workflow remain. |
+| notes | 4 | 7 | 3 | Slice committed | Current follow-up renders scoped inbox notes and marks displayed mentions read; `0a153655b` landed health/body validation. Remaining Now rows: resolve/reopen/complete UI, reminder reconciliation, anon/non-admin safety coverage before broader read surfaces, and display sanitization. |
 | password-policy | 1 | 6 | 4 | Slice committed | `899d37760` adds direct middleware coverage for redirect, forced-change allowed route, logout allowed route, and compliant no-op behavior, after prior HIBP/expiry/manifest/complexity/history slices. Remaining Now row: marketplace screenshots and summary/description. |
 | payments | 6 | 6 | 3 | Slice committed | Current follow-up moves paid-download delivery into an Action and adds Feature/Arch suites covering signed download paths, thin controllers, sensitive non-cacheable frontend settings, and public-output safety. Remaining Now rows: webhook row locking, marketplace media/copy, money casts, form-checkout URL allow-listing, and replay-safe paid-download expiry. |
 | privacy-center | 3 | 5 | 4 | Slice committed | Current follow-up adds provider/table/morph/hash-secret health diagnostics, removes the unshipped cookie-category public-surface capability, and reconciles already-shipped retention execution plus fail-loud hash-secret rows. Remaining Now rows: insights subject mirroring, DSAR edit actions, and README/CHANGELOG expansion. |
