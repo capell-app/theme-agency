@@ -1,0 +1,77 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/theme-inertia-bookings-react",
+    "slug": "theme-inertia-bookings-react",
+    "displayName": "Theme Inertia Bookings React",
+    "kind": "plugin",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "React component pack for Theme Inertia Bookings.",
+    "product": {
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
+    },
+    "namespace": "Capell\\ThemeStudio\\InertiaBookingsReact",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": ["capell-app/theme-inertia-bookings", "capell-app/inertia-react-adapter"],
+        "supports": [],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": ["Capell\\ThemeStudio\\InertiaBookingsReact\\Providers\\InertiaBookingsReactServiceProvider"],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["theme-inertia-bookings-react"],
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["theme-inertia-bookings-react"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "theme-inertia-bookings-react.package-health",
+            "label": "Theme Inertia Bookings React components are present.",
+            "class": "Capell\\ThemeStudio\\InertiaBookingsReact\\Health\\InertiaBookingsReactHealthCheck",
+            "severity": "important",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "paid",
+        "requestedCertification": "first-party",
+        "supportPolicy": "priority",
+        "privateDocsRequested": true
+    },
+    "marketplace": {
+        "summary": "React components for Theme Inertia Bookings.",
+        "description": "Provides React source components that implement the shared Capell/Page and Capell/Bookings/Request server contract.",
+        "screenshots": [],
+        "categories": ["frontend", "themes"]
+    }
+}
