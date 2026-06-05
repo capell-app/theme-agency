@@ -14,5 +14,9 @@ final class PackagesInstalledData extends Data
      */
     public function __construct(
         public readonly DataCollection $packages,
+        public readonly int $healthCheckDeclaredCount = 0,
+        public readonly int $healthCheckImplementedCount = 0,
+        public readonly int $healthCheckStubCount = 0,
+        public readonly int $healthCheckBrokenCount = 0,
     ) {}
 }

@@ -9,6 +9,39 @@
                 .
             </p>
         @else
+            @if ($this->data->healthCheckDeclaredCount > 0)
+                <div
+                    @class([
+                        'mb-4 rounded border px-3 py-2 text-sm',
+                        'border-success-200 bg-success-50 text-success-800 dark:border-success-900/50 dark:bg-success-950/30 dark:text-success-300' => $this->data->healthCheckStubCount === 0 && $this->data->healthCheckBrokenCount === 0,
+                        'border-warning-200 bg-warning-50 text-warning-800 dark:border-warning-900/50 dark:bg-warning-950/30 dark:text-warning-300' => $this->data->healthCheckStubCount > 0 && $this->data->healthCheckBrokenCount === 0,
+                        'border-danger-200 bg-danger-50 text-danger-800 dark:border-danger-900/50 dark:bg-danger-950/30 dark:text-danger-300' => $this->data->healthCheckBrokenCount > 0,
+                    ])
+                >
+                    <div class="font-medium">
+                        {{
+                            __('capell-diagnostics::package.packages_installed_suite_health_summary', [
+                                'implemented' => $this->data->healthCheckImplementedCount,
+                                'declared' => $this->data->healthCheckDeclaredCount,
+                            ])
+                        }}
+                    </div>
+
+                    <div class="text-xs opacity-80">
+                        @if ($this->data->healthCheckStubCount > 0 || $this->data->healthCheckBrokenCount > 0)
+                            {{
+                                __('capell-diagnostics::package.packages_installed_suite_health_findings', [
+                                    'stub' => $this->data->healthCheckStubCount,
+                                    'broken' => $this->data->healthCheckBrokenCount,
+                                ])
+                            }}
+                        @else
+                            {{ __('capell-diagnostics::package.packages_installed_suite_health_clean') }}
+                        @endif
+                    </div>
+                </div>
+            @endif
+
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>

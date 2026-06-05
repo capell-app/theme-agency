@@ -148,6 +148,22 @@ final class BuildPackagesInstalledAction
 
         return new PackagesInstalledData(
             packages: PackageInfoData::collect($rows, DataCollection::class),
+            healthCheckDeclaredCount: array_sum(array_map(
+                static fn (PackageInfoData $package): int => $package->healthCheckDeclaredCount,
+                $rows,
+            )),
+            healthCheckImplementedCount: array_sum(array_map(
+                static fn (PackageInfoData $package): int => $package->healthCheckImplementedCount,
+                $rows,
+            )),
+            healthCheckStubCount: array_sum(array_map(
+                static fn (PackageInfoData $package): int => $package->healthCheckStubCount,
+                $rows,
+            )),
+            healthCheckBrokenCount: array_sum(array_map(
+                static fn (PackageInfoData $package): int => $package->healthCheckBrokenCount,
+                $rows,
+            )),
         );
     }
 
