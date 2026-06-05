@@ -1,6 +1,6 @@
 # Theme Agency — Improvement & Growth Plan
 
-> Package: capell-app/theme-agency · Kind: theme · Tier: free · Product group: Capell Foundation · Bundle: foundation · Status: Draft
+> Package: capell-app/theme-agency · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Draft
 
 ## 1. Snapshot
 
@@ -43,7 +43,7 @@ Versus siblings (10 themes exist: foundation-theme, theme-commerce, theme-corpor
 
 ## 4. Issues / Risks
 
-- **Manifest tier vs commercial conflict (high).** `capell.json` declares `product.tier: "free"`, `product.bundle: "foundation"`, `product.group: "Capell Foundation"`, yet `commercial.proposedLicense: "paid"` and the brief treats themes as premium. `docs/overview.md` separately states `Tier: free · Bundle: themes · Product group: Capell Themes`. Three sources, three different bundle/group values. A paid theme cannot ship `tier: free` in the bundle that gates marketplace pricing. `capell.json`, `docs/overview.md` — decide paid-tier classification and make all three agree.
+- **Shipped 2026-06-05: Manifest tier vs commercial conflict.** `capell.json`, `docs/overview.md`, and this plan now classify Theme Agency as a `premium` package in the `Capell Themes` / `themes` product group, matching `commercial.proposedLicense: "paid"`; manifest tests assert the pricing metadata boundary.
 - **Screenshot manifest mismatch (high, commercial blocker).** `docs/screenshots.json` declares 12 entries; `docs/screenshots/` contains 6 PNGs; **10 of 12 declared screenshot paths are MISSING** on disk (`agency-homepage-layout.png`, `agency-services-layout.png`, `agency-portfolio-layout.png`, `agency-case-study-layout.png`, `agency-insights-layout.png`, `agency-event-landing-layout.png`, `agency-lead-form-layout.png`, `agency-campaign-layout.png`, `agency-search-layout.png`, `theme-admin-list-showing-agency.png`). The 6 committed PNGs include three `-dark` variants referenced by neither manifest. `capell.json` `marketplace.screenshots` declares 6 paths but points at SVG wireframe placeholders (`docs/assets/marketplace/agency-*-layout.svg`), not captures. `docs/screenshots.json`, `capell.json`, `docs/screenshots/`, `docs/assets/marketplace/`.
 - **Health check is a stub but declared `critical` (medium).** `ThemeAgencyHealthCheck` implements only `compatibleCapellApiVersion()`; it performs no probe (theme registered? views resolvable? preset valid?). `capell.json` `healthChecks[0].severity: "critical"` overstates a no-op. Either implement real assertions or downgrade the severity. `src/Health/ThemeAgencyHealthCheck.php`, `capell.json`.
 - **Preset count canonicalised.** `AgencyThemeServiceProvider::definition()` defines 6 presets and `AgencyThemeDefinitionTest` asserts the same count. Current guard also proves every preset has surface/foreground/neutral tokens. Remaining risk is preview asset existence for those preset preview images. `src/AgencyThemeServiceProvider.php`, `tests/Unit/AgencyThemeDefinitionTest.php`.
@@ -75,7 +75,7 @@ Versus siblings (10 themes exist: foundation-theme, theme-commerce, theme-corpor
 
 | Item                                                                                                   | Bucket | Effort | Impact | Section ref |
 | ------------------------------------------------------------------------------------------------------ | ------ | ------ | ------ | ----------- |
-| Reconcile tier/bundle/group across `capell.json` + `docs/overview.md`; set paid classification         | Now    | S      | High   | §4          |
+| Reconcile tier/bundle/group across `capell.json` + `docs/overview.md`; set paid classification         | Done   | S      | High   | §4 — closed 2026-06-05: manifest, overview, and plan now agree on `Capell Themes` / `premium` / `themes`, matching the paid commercial block. |
 | Produce real screenshots for all 12 declared captures; sync `screenshots.json` ↔ `capell.json` ↔ files | Now    | M      | High   | §4, §5      |
 | Resolve preset-count contradiction (3 in code vs 6 in test); make canonical                            | Done   | S      | Med    | §4          |
 | Fix `definition()` assets path + missing preset preview JPEGs                                          | Now    | S      | Med    | §2.6, §4    |

@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 199 |
+| Now    | 198 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -70,7 +70,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | site-discovery | 6 | 5 | 4 | Slice committed | `c76a0cc14` merged URL registry work; continue with remaining discovery/SEO rows. |
 | structured-content-library | 7 | 5 | 4 | Slice committed | `73eed65c8` landed Wave 7 readiness; current follow-up hardens public payload sanitization, publish timestamps, import slug dedup, and scoped slug collision handling in write actions. |
 | tags | 0 | 5 | 4 | Now closed | `f854c06e5` adds direct `TagPolicy`, `Tag::getUrl()`, and deletion-integrity coverage after `754b95540` added the guarded `tags(type, site_id)` composite index migration. Tags has no Now rows left; continue with workspace/status visibility rows and completion review. |
-| theme-agency | 3 | 5 | 3 | Slice committed | Latest Agency slice binds the page shell to surface/foreground tokens, gives all presets explicit surface tokens, replaces fixed section gradients with `site-brand-gradient`, and updates docs/tests; continue with screenshot deployment captures, tier/bundle alignment, preview assets, navigation/proof a11y, and richer agency-specific renderers. |
+| theme-agency | 2 | 5 | 3 | Slice committed | Current follow-up reconciles paid product metadata across manifest, overview, screenshots copy, and plan by classifying Agency as `Capell Themes` / `premium` / `themes`, after the prior Agency slice bound the page shell to surface/foreground tokens, gave all presets explicit surface tokens, replaced fixed section gradients with `site-brand-gradient`, and updated docs/tests. Continue with screenshot deployment captures, preview assets, navigation/proof a11y, and richer agency-specific renderers. |
 | theme-commerce | 1 | 4 | 4 | Slice committed | Current follow-up reconciles the non-cacheable cache-safety manifest so Commerce no longer queues invalidation with no sources, after the prior Commerce slice translated hero/catalog retail copy, made hero trust badges data-driven, removed the theme-specific catalog carousel selector, and updated docs/tests. Remaining Now row: screenshot captures. Continue with token replacement, PDP/cart/promo/review surfaces, LCP hints, and broader section render tests. |
 | theme-corporate | 1 | 5 | 3 | Slice committed | Current follow-up aligns the manifest commercial contract and overview metadata with the free foundation product tier, after the prior Corporate slice replaced placeholder hero stats with translated/data-driven stats, translated proof/content-listing UI labels, removed the theme-specific proof carousel selector, and updated docs/tests. Remaining Now row: richer screenshot capture set. Continue with token/card/dark-mode work, JS extraction, and corporate-specific sections. |
 | theme-education | 2 | 6 | 2 | Slice committed | Current follow-up aligns manifest surfaces with the documented frontend+console package shape and keeps runtime `extends: default` distinct from the package-level Foundation dependency in tests, after the prior Education slice moved course catalogue, event, and instructor default copy into translations, removed dead course carousel controls, hardened manifest tests, and updated docs/tests. Continue with screenshot captures, data-driven course/events content, token colours, preview asset path verification, WCAG, and conversion sections. |

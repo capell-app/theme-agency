@@ -50,7 +50,7 @@
             "target": "/agency-homepage-layout",
             "required": true,
             "notes": "Capture the basic creative campaign homepage with launch-room hero, campaign proof, work-in-progress cards, and conversion CTA.",
-            "useCase": "A creative team reviews the free Agency preset as a campaign launch surface, not a premium case-study portfolio.",
+            "useCase": "A creative team reviews the premium Agency theme as a campaign launch surface, not a quiet creator portfolio.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-homepage-layout.png"
         },
         {
