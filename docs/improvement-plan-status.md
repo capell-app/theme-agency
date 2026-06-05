@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 107 |
+| Now    | 104 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -62,7 +62,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | password-policy | 1 | 6 | 4 | Slice committed | `899d37760` adds direct middleware coverage for redirect, forced-change allowed route, logout allowed route, and compliant no-op behavior, after prior HIBP/expiry/manifest/complexity/history slices. Remaining Now row: marketplace screenshots and summary/description. |
 | payments | 3 | 6 | 3 | Slice committed | Current follow-up adds webhook-level paid-download replay coverage proving existing entitlements keep original expiry/fulfillment timestamps, after money-model cast reconciliation and form-checkout return URL validation. Remaining Now rows: webhook row locking and marketplace media/copy. |
 | privacy-center | 1 | 5 | 4 | Slice committed | Current follow-up expands README/CHANGELOG/overview documentation around shipped admin and console surfaces without overclaiming public DSAR/cookie workflows, after mirrored consent subject inference. Remaining Now row: DSAR edit actions. |
-| public-actions | 4 | 7 | 5 | Slice committed | Current follow-up drops the unsupported `cache-blocking` capability while keeping route-level `no-store` cache safety covered by manifest tests. Remaining Now rows: health checks, DNS-rebinding/redirect hardening, SSRF/health-check tests, and marketplace screenshots/copy. |
+| public-actions | 1 | 7 | 5 | Slice committed | Current follow-up closes three stale Now rows: `PublicActionsHealthCheck` implements the four manifest diagnostics, webhook dispatch pins validated IPv4/IPv6 addresses through cURL while preserving the original host, and redirect-following remains disabled with focused SSRF regression coverage. Remaining Now row: marketplace screenshots/copy. |
 | publishing-studio | 3 | 6 | 5 | Slice committed | Current follow-up ships package config defaults for publish checks/release windows/scheduler settings and proves default publish checks resolve through the container. Remaining Now rows: manifest reconciliation, anonymous live-path safety, and CHANGELOG history. Note: full package Pest still has an unrelated scheduler table error in `SchedulerAndApprovalResidualCoverageTest`; focused publish-check pipeline coverage passes. |
 | search | 0 | 6 | 4 | Now closed | Current follow-up caches click-count aggregates by site/language, invalidates affected cache scopes when recording clicks, and removes a duplicate promoted-result conversion pass after public-result guardrails and deferred search-log writes. Search has no Now rows left; continue with click beacon CSRF, FULLTEXT detection, controller-side highlighting, autocomplete, and broader relevance/admin rows before completion review. |
 | seo-suite | 4 | 6 | 3 | Slice committed | Current follow-up guards missing Prism usage telemetry on the chat success path and keeps circuit-breaker state provider-scoped. Remaining Now rows: dormant SEO checks, real health probes, stronger leak matching, and manifest cache/settings/permissions/PageSpeed accuracy. |

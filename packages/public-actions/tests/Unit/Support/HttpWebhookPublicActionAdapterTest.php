@@ -211,6 +211,38 @@ it('can dispatch with the adapter directly for registered adapter use cases', fu
     Http::assertSent(fn (Request $request): bool => $request->method() === 'PUT');
 });
 
+it('pins webhook dispatches to validated ipv6 addresses while keeping the original host', function (): void {
+    /** @var array<string, mixed>|null $requestOptions */
+    $requestOptions = null;
+
+    $resolver = resolve(PublicActionWebhookHostResolver::class);
+    throw_unless($resolver instanceof FakePublicActionWebhookHostResolver);
+    $resolver->set('hooks.ipv6.example.test', ['2606:2800:220:1:248:1893:25c8:1946']);
+
+    Http::fake(function (Request $request, array $options) use (&$requestOptions): PromiseInterface {
+        $requestOptions = $options;
+
+        return Http::response('', 204);
+    });
+
+    $destination = PublicActionDestination::factory()->create([
+        'adapter' => 'http_webhook',
+        'endpoint_url' => 'https://hooks.ipv6.example.test/ipv6',
+    ]);
+    $submission = PublicActionSubmission::factory()->create();
+
+    $result = resolve(HttpWebhookPublicActionAdapter::class)->dispatch($destination, $submission);
+
+    expect($result->success)->toBeTrue()
+        ->and($requestOptions)->toBeArray()
+        ->and($requestOptions['curl'][CURLOPT_RESOLVE] ?? null)->toBe([
+            'hooks.ipv6.example.test:443:[2606:2800:220:1:248:1893:25c8:1946]',
+        ]);
+
+    Http::assertSent(fn (Request $request): bool => $request->url() === 'https://hooks.ipv6.example.test/ipv6'
+        && $request->hasHeader('Host', 'hooks.ipv6.example.test'));
+});
+
 it('blocks private webhook endpoint hosts', function (): void {
     Http::fake();
 
@@ -293,4 +325,27 @@ it('pins webhook dispatch to the validated address while keeping the original ho
         ->and($endpoint->hostHeader())->toBe('hooks.example.test:8443')
         ->and($options)->toHaveKey('curl')
         ->and($options['curl'][CURLOPT_RESOLVE] ?? null)->toBe(['hooks.example.test:8443:93.184.216.34']);
+});
+
+it('formats ipv6 addresses for curl host pinning', function (): void {
+    $resolver = resolve(PublicActionWebhookHostResolver::class);
+    throw_unless($resolver instanceof FakePublicActionWebhookHostResolver);
+    $resolver->set('hooks.ipv6.example.test', ['2606:2800:220:1:248:1893:25c8:1946']);
+
+    $destination = PublicActionDestination::factory()->create([
+        'adapter' => 'http_webhook',
+        'endpoint_url' => 'https://hooks.ipv6.example.test:8443/pinned',
+    ]);
+    $adapter = resolve(HttpWebhookPublicActionAdapter::class);
+
+    $endpointMethod = new ReflectionMethod($adapter, 'endpoint');
+    $endpoint = $endpointMethod->invoke($adapter, $destination);
+
+    $optionsMethod = new ReflectionMethod($adapter, 'requestOptions');
+    $options = $optionsMethod->invoke($adapter, $endpoint);
+
+    expect($endpoint->address)->toBe('2606:2800:220:1:248:1893:25c8:1946')
+        ->and($options['curl'][CURLOPT_RESOLVE] ?? null)->toBe([
+            'hooks.ipv6.example.test:8443:[2606:2800:220:1:248:1893:25c8:1946]',
+        ]);
 });

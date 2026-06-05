@@ -16,7 +16,7 @@ final readonly class ResolvedWebhookEndpointData
 
     public function curlResolveEntry(): string
     {
-        return sprintf('%s:%d:%s', $this->host, $this->port, $this->address);
+        return sprintf('%s:%d:%s', $this->host, $this->port, $this->curlAddress());
     }
 
     public function hostHeader(): string
@@ -26,5 +26,14 @@ final readonly class ResolvedWebhookEndpointData
         }
 
         return sprintf('%s:%d', $this->host, $this->port);
+    }
+
+    private function curlAddress(): string
+    {
+        if (filter_var($this->address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
+            return $this->address;
+        }
+
+        return sprintf('[%s]', $this->address);
     }
 }
