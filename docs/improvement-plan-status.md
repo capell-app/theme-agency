@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 90 |
+| Now    | 86 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -55,7 +55,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | login-audit | 1 | 6 | 2 | Slice committed | Current follow-up reconciles the shipped real health diagnostics, daily retention purge tracking, and throttled admin activity writes. Remaining Now row: marketplace screenshot manifest/copy reconciliation. |
 | media-ai | 1 | 6 | 3 | Slice committed | Current follow-up rewrites marketplace/composer/docs copy around shipped provider-backed Doctor image operations, wires committed light/dark screenshots, and positions Media AI as a premium Media Library add-on. Remaining Now row: first-party AI Orchestrator image-doctor adapter. |
 | media-library | 2 | 5 | 3 | Slice committed | Current follow-up adds explicit owner-FK config precedence plus safe schema auto-discovery for conventional Curator owner columns, and routes media health/orphan reports through the shared resolver after real health checks, issue filtering, and upload validation. Remaining Now rows: visibility preservation and docs/screenshot reconciliation. |
-| migration-assistant | 4 | 5 | 3 | Slice committed | Current follow-up locks the live `ImportSessionKind` contract to package-owned page/site imports and documents WordPress/spreadsheet source readers as extension paths, after garbled prose cleanup. Remaining Now rows: rollback table-name repair, marketplace media/copy, and health probes. |
+| migration-assistant | 3 | 5 | 3 | Slice committed | Current follow-up implements translated manifest-keyed health probes for package reader readiness, rollback-report support, and media ingest limits, after locking the live `ImportSessionKind` contract to package-owned page/site imports and documenting WordPress/spreadsheet source readers as extension paths. Remaining Now rows: rollback table-name repair and marketplace media/copy. |
 | navigation | 1 | 5 | 4 | Slice committed | Current follow-up replaces the page-reference JSON `LIKE` scan with an indexed `whereExists` against `navigation_page_references` while retaining decoded item-tree validation for stale indexed rows, after real health probes and metadata/copy work. Remaining Now row: screenshot manifest reconciliation. |
 | newsletter | 2 | 6 | 4 | Slice committed | Current follow-up implements real keyed newsletter diagnostics for form subscription capture, provider sync retry, provider webhooks, and segment evaluation with translated output and focused tests, after direct FormSubmitted listener, token replay, and Fake provider hardening. Remaining Now rows: marketplace copy and screenshots. |
 | notes | 4 | 7 | 3 | Slice committed | Current follow-up renders scoped inbox notes and marks displayed mentions read; `0a153655b` landed health/body validation. Remaining Now rows: resolve/reopen/complete UI, reminder reconciliation, anon/non-admin safety coverage before broader read surfaces, and display sanitization. |
