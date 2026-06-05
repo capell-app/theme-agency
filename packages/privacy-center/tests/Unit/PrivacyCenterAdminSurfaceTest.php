@@ -24,6 +24,7 @@ use Capell\PrivacyCenter\Models\PolicyAcceptance;
 use Capell\PrivacyCenter\Models\PrivacyRequest;
 use Capell\PrivacyCenter\Models\RetentionRule;
 use Capell\PrivacyCenter\Tests\PrivacyCenterTestCase;
+use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
@@ -34,6 +35,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
+use Illuminate\Support\Carbon;
 
 require_once dirname(__DIR__) . '/autoload.php';
 
@@ -182,6 +184,52 @@ it('exposes privacy request edit workflow actions', function (): void {
     ]);
 });
 
+it('marks privacy requests through edit workflow actions', function (): void {
+    Carbon::setTestNow(Carbon::parse('2026-06-05 10:30:00'));
+
+    try {
+        $siteId = $this->createPrivacyCenterSite();
+
+        $requestForVerification = PrivacyRequest::query()->create([
+            'site_id' => $siteId,
+            'reference' => 'PR-20260605-0001',
+            'type' => PrivacyRequestType::Export,
+            'status' => PrivacyRequestStatus::Submitted,
+            'submitted_at' => now(),
+        ]);
+        $requestForFulfilment = PrivacyRequest::query()->create([
+            'site_id' => $siteId,
+            'reference' => 'PR-20260605-0002',
+            'type' => PrivacyRequestType::Access,
+            'status' => PrivacyRequestStatus::Processing,
+            'submitted_at' => now(),
+        ]);
+        $requestForRejection = PrivacyRequest::query()->create([
+            'site_id' => $siteId,
+            'reference' => 'PR-20260605-0003',
+            'type' => PrivacyRequestType::Delete,
+            'status' => PrivacyRequestStatus::Verifying,
+            'submitted_at' => now(),
+        ]);
+
+        privacyCenterAdminEditRequestAction('mark_verified')->record($requestForVerification)->call();
+        privacyCenterAdminEditRequestAction('mark_fulfilled')->record($requestForFulfilment)->call();
+        privacyCenterAdminEditRequestAction('reject')->record($requestForRejection)->call([
+            'data' => ['reason' => 'Unable to verify identity.'],
+        ]);
+
+        expect($requestForVerification->refresh()->status)->toBe(PrivacyRequestStatus::Processing)
+            ->and($requestForVerification->verified_at?->toDateTimeString())->toBe('2026-06-05 10:30:00')
+            ->and($requestForFulfilment->refresh()->status)->toBe(PrivacyRequestStatus::Fulfilled)
+            ->and($requestForFulfilment->fulfilled_at?->toDateTimeString())->toBe('2026-06-05 10:30:00')
+            ->and($requestForRejection->refresh()->status)->toBe(PrivacyRequestStatus::Rejected)
+            ->and($requestForRejection->rejected_at?->toDateTimeString())->toBe('2026-06-05 10:30:00')
+            ->and($requestForRejection->rejection_reason)->toBe('Unable to verify identity.');
+    } finally {
+        Carbon::setTestNow();
+    }
+});
+
 it('builds privacy center overview widget stats from package-owned records', function (): void {
     $siteId = $this->createPrivacyCenterSite();
     $now = now();
@@ -259,6 +307,18 @@ function privacyCenterAdminEditRequestHeaderActions(EditPrivacyRequest $page): a
     $method = new ReflectionMethod(EditPrivacyRequest::class, 'getHeaderActions');
 
     return $method->invoke($page);
+}
+
+function privacyCenterAdminEditRequestAction(string $name): Action
+{
+    $action = collect(privacyCenterAdminEditRequestHeaderActions(new EditPrivacyRequest))
+        ->first(fn (mixed $candidate): bool => is_object($candidate) && method_exists($candidate, 'getName') && $candidate->getName() === $name);
+
+    if (! $action instanceof Action) {
+        throw new RuntimeException(sprintf('Privacy request edit action [%s] was not registered.', $name));
+    }
+
+    return $action;
 }
 
 /**
