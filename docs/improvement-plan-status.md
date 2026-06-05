@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 147 |
+| Now    | 146 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -83,7 +83,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | translation-manager | 6 | 5 | 5 | Slice committed | `56038d0db` landed import/export/readiness work; continue with placeholder validation and MT review. |
 | url-manager | 0 | 7 | 4 | Now closed | Current follow-up defers public redirect hit writes until application termination and updates rule counters atomically when the callback runs, closing the final Now row. Continue with regex safety, loop detection, Core 404 capture, and completion review. |
 | welcome-tour | 0 | 5 | 5 | Now closed | Current follow-up reconciles the package-owned `welcome_tour_user_states` persistence already covering hosts without `users.dismissed_hints`, closing the final Now row. Continue with anchored default steps, marketplace copy/media, and Next/Later rows before completion review. |
-| wordpress-importer | 7 | 6 | 3 | Slice committed | `d84dd4cdb` adds path-aware WXR stream-sniffing while preserving extension-only `.xml` selection for the current Migration Assistant registry, keeps direct non-WXR fallback parsing in memory, and cleans Migration Assistant naming copy. Continue with MA path-aware reader selection, field mapping, media execution, and broader import gaps before completion review. |
+| wordpress-importer | 6 | 6 | 3 | Slice committed | Current follow-up adds a package-owned WXR preview Action that maps WordPress fields into explicit `meta.wordpress.*` metadata for the console/headless preview path. Remaining Now rows: WXR execution path with MA, path-aware reader selection, screenshots, health probes, PHP/marketplace metadata, and broader import gaps. |
 
 ## Next Audit Queue
 
