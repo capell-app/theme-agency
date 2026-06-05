@@ -54,10 +54,10 @@
                     @foreach ($widget->assets as $asset)
                         @php
                             $assetRenderData = BuildWidgetAssetRenderDataAction::run($asset);
-                            $media = $assetRenderData->image;
+                            $media = $assetRenderData->image?->media;
                             $role = $assetRenderData->role ?? 'gallery-item';
                             $accent = $assetRenderData->accent ?? 'teal';
-                            $caption = $assetRenderData->caption ?? $media?->name;
+                            $caption = $assetRenderData->caption ?? $assetRenderData->title;
                             $cropPreset = $assetRenderData->cropPreset;
                         @endphp
 

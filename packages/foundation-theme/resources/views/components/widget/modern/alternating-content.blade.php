@@ -41,7 +41,7 @@
                     $assetRenderData = BuildWidgetAssetRenderDataAction::run($widgetAsset);
                     $isRight = $assetRenderData->position === 'right';
                     $icon = (string) ($assetRenderData->icon ?? '');
-                    $media = $assetRenderData->image;
+                    $media = $assetRenderData->image?->media;
                 @endphp
 
                 <div
