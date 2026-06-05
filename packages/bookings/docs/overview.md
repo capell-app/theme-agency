@@ -25,7 +25,7 @@ Confirmed appointments can be exported through opaque staff calendar feed URLs.
 - the public booking request route with service, staff, location, timezone, and customer fields;
 - the appointment request admin queue showing request workflow state and audit context.
 
-The committed SVG assets under `docs/assets/marketplace/` are interim gallery previews. Replace or supplement them with route-backed PNG captures before final Marketplace approval.
+The committed gallery keeps the extension card SVG and uses route-backed PNG captures for the public booking form and Capell admin appointment queue.
 
 ## Traceability
 

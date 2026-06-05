@@ -185,14 +185,14 @@
                 "caption": "A premium appointment workflow package for public requests and admin-managed booking operations."
             },
             {
-                "path": "docs/assets/marketplace/public-booking-request.svg",
+                "path": "docs/screenshots/public-booking-request.png",
                 "alt": "Public booking request form showing service, staff, location, time, and customer fields.",
-                "caption": "Visitors request appointments through a public form validated against availability, capacity, buffers, and timezone."
+                "caption": "Visitors request appointments through a route-backed public form validated against availability, capacity, buffers, and timezone."
             },
             {
-                "path": "docs/assets/marketplace/appointment-requests-admin.svg",
+                "path": "docs/screenshots/appointment-requests-admin.png",
                 "alt": "Admin appointment request queue with requested, confirmed, and audited booking states.",
-                "caption": "Operators review requests, confirm or cancel appointments, and keep an audit trail for each workflow event."
+                "caption": "Operators review seeded requests, confirm or cancel appointments, and keep an audit trail for each workflow event."
             }
         ],
         "categories": ["admin", "calendar", "operations"]

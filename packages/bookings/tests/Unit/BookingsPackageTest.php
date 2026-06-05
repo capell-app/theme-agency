@@ -98,13 +98,19 @@ it('declares committed marketplace assets for every required screenshot capture 
 
         $marketplaceScreenshotPaths[] = $path;
 
-        expect($path)->toStartWith('docs/assets/marketplace/')
+        expect(
+            str_starts_with($path, 'docs/assets/marketplace/')
+                || str_starts_with($path, 'docs/screenshots/')
+        )->toBeTrue()
             ->and(File::exists($packagePath . '/' . $path))->toBeTrue()
             ->and(strlen(trim($alt)))->toBeGreaterThanOrEqual(12)
             ->and(strlen(trim($caption)))->toBeGreaterThanOrEqual(12);
     }
 
-    $requiredMarketplaceAssetPaths = [];
+    expect($screenshotContract['generatedFor'])->toBe('deployment-screenshot-runner')
+        ->and($screenshotContract['composerRequires'] ?? [])->toContain('capell-app/bookings');
+
+    $requiredMarketplaceScreenshotPaths = [];
 
     foreach ($contractEntries as $contractEntry) {
         if (! is_array($contractEntry)) {
@@ -114,15 +120,17 @@ it('declares committed marketplace assets for every required screenshot capture 
             continue;
         }
         $id = $contractEntry['id'] ?? null;
+        $screenshotPath = $contractEntry['screenshotPath'] ?? null;
 
         throw_unless(is_string($id), RuntimeException::class, 'Required Bookings screenshot contract entries must have string ids.');
+        throw_unless(is_string($screenshotPath), RuntimeException::class, 'Required Bookings screenshot contract entries must have string screenshot paths.');
 
-        $requiredMarketplaceAssetPaths[] = 'docs/assets/marketplace/' . $id . '.svg';
+        $requiredMarketplaceScreenshotPaths[] = str_replace('packages/bookings/', '', $screenshotPath);
     }
 
     expect($marketplaceScreenshotPaths)
         ->toContain('docs/assets/marketplace/extension-card.svg')
-        ->toContain(...$requiredMarketplaceAssetPaths);
+        ->toContain(...$requiredMarketplaceScreenshotPaths);
 });
 
 it('declares implemented bookings contributions and feature capabilities', function (): void {

@@ -3,6 +3,7 @@
     "composerName": "capell-app/bookings",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
+    "composerRequires": ["capell-app/bookings"],
     "outputDirectory": "packages/bookings/docs/screenshots",
     "entries": [
         {
