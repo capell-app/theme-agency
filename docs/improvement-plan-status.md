@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 138 |
+| Now    | 137 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -62,7 +62,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | password-policy | 1 | 6 | 4 | Slice committed | `899d37760` adds direct middleware coverage for redirect, forced-change allowed route, logout allowed route, and compliant no-op behavior, after prior HIBP/expiry/manifest/complexity/history slices. Remaining Now row: marketplace screenshots and summary/description. |
 | payments | 6 | 6 | 3 | Slice committed | Current follow-up moves paid-download delivery into an Action and adds Feature/Arch suites covering signed download paths, thin controllers, sensitive non-cacheable frontend settings, and public-output safety. Remaining Now rows: webhook row locking, marketplace media/copy, money casts, form-checkout URL allow-listing, and replay-safe paid-download expiry. |
 | privacy-center | 3 | 5 | 4 | Slice committed | Current follow-up adds provider/table/morph/hash-secret health diagnostics, removes the unshipped cookie-category public-surface capability, and reconciles already-shipped retention execution plus fail-loud hash-secret rows. Remaining Now rows: insights subject mirroring, DSAR edit actions, and README/CHANGELOG expansion. |
-| public-actions | 5 | 7 | 5 | Slice committed | `10c4b5906` adds explicit redirect-to-private/link-local/internal webhook regression coverage and reuses the canonical encoded webhook payload for hash/sign/send paths; durable fanout/replay/retention rows remain. |
+| public-actions | 4 | 7 | 5 | Slice committed | Current follow-up drops the unsupported `cache-blocking` capability while keeping route-level `no-store` cache safety covered by manifest tests. Remaining Now rows: health checks, DNS-rebinding/redirect hardening, SSRF/health-check tests, and marketplace screenshots/copy. |
 | publishing-studio | 5 | 6 | 5 | Slice committed | `c6a886556` landed health/screenshots; continue with publishing workflow rows. |
 | search | 2 | 6 | 4 | Slice committed | Current follow-up defers search-log writes until after the response and keeps `RecordSearchAction` on scalar visitor metadata. Remaining Now rows: Scout/private visibility tests and click-count aggregate/cache-chain work. |
 | seo-suite | 5 | 6 | 3 | Slice committed | Current follow-up adds anonymous and signed-in non-admin AI Discovery public-output safety coverage for `/llms.txt`, `/index.md`, and `/robots.txt` using `PublicOutputLeakScanner`. Remaining Now rows: dormant SEO checks, real health probes, stronger leak matching, manifest cache/settings/permissions/PageSpeed accuracy, and AI circuit-breaker/null-usage hardening. |
