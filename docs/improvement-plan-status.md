@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 103 |
+| Now    | 102 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -60,7 +60,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | newsletter | 3 | 6 | 4 | Slice committed | Current follow-up locks the direct `FormSubmitted::class` listener registration and proves event dispatch creates a subscriber, after public-token replay coverage and Fake provider production blocking. Remaining Now rows: real health checks, marketplace copy, and screenshots. |
 | notes | 4 | 7 | 3 | Slice committed | Current follow-up renders scoped inbox notes and marks displayed mentions read; `0a153655b` landed health/body validation. Remaining Now rows: resolve/reopen/complete UI, reminder reconciliation, anon/non-admin safety coverage before broader read surfaces, and display sanitization. |
 | password-policy | 1 | 6 | 4 | Slice committed | `899d37760` adds direct middleware coverage for redirect, forced-change allowed route, logout allowed route, and compliant no-op behavior, after prior HIBP/expiry/manifest/complexity/history slices. Remaining Now row: marketplace screenshots and summary/description. |
-| payments | 3 | 6 | 3 | Slice committed | Current follow-up adds webhook-level paid-download replay coverage proving existing entitlements keep original expiry/fulfillment timestamps, after money-model cast reconciliation and form-checkout return URL validation. Remaining Now rows: webhook row locking and marketplace media/copy. |
+| payments | 2 | 6 | 3 | Slice committed | Current follow-up moves Stripe webhook terminal-status guarding under the `lockForUpdate()` processing transaction and adds no-replay coverage for terminal processed/ignored rows, after paid-download replay, money-cast, and form-checkout return URL fixes. Remaining Now rows: marketplace media/copy. |
 | privacy-center | 1 | 5 | 4 | Slice committed | Current follow-up expands README/CHANGELOG/overview documentation around shipped admin and console surfaces without overclaiming public DSAR/cookie workflows, after mirrored consent subject inference. Remaining Now row: DSAR edit actions. |
 | public-actions | 1 | 7 | 5 | Slice committed | Current follow-up closes three stale Now rows: `PublicActionsHealthCheck` implements the four manifest diagnostics, webhook dispatch pins validated IPv4/IPv6 addresses through cURL while preserving the original host, and redirect-following remains disabled with focused SSRF regression coverage. Remaining Now row: marketplace screenshots/copy. |
 | publishing-studio | 3 | 6 | 5 | Slice committed | Current follow-up ships package config defaults for publish checks/release windows/scheduler settings and proves default publish checks resolve through the container. Remaining Now rows: manifest reconciliation, anonymous live-path safety, and CHANGELOG history. Note: full package Pest still has an unrelated scheduler table error in `SchedulerAndApprovalResidualCoverageTest`; focused publish-check pipeline coverage passes. |

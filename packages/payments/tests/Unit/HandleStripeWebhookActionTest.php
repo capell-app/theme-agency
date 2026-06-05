@@ -9,6 +9,7 @@ use Capell\Payments\Contracts\PaymentFulfillmentHandler;
 use Capell\Payments\Enums\CheckoutSessionStatus;
 use Capell\Payments\Enums\PaymentDisputeStatus;
 use Capell\Payments\Enums\PaymentIntentStatus;
+use Capell\Payments\Enums\PaymentProvider;
 use Capell\Payments\Enums\PaymentRefundStatus;
 use Capell\Payments\Enums\PaymentWebhookEventStatus;
 use Capell\Payments\Enums\SubscriptionStatus;
@@ -129,6 +130,58 @@ it('records checkout session webhooks idempotently before queued processing upda
         ->and($checkoutSession->reference_id)->toBe('order_123')
         ->and(FakePaymentFulfillmentHandler::$fulfilledSessionIds)->toBe(['cs_test_completed']);
 });
+
+it('skips terminal webhook events without replaying fulfillment', function (PaymentWebhookEventStatus $terminalStatus): void {
+    app()->bind(FakePaymentFulfillmentHandler::class);
+    app()->tag([FakePaymentFulfillmentHandler::class], PaymentFulfillmentHandler::TAG);
+
+    $payload = stripeWebhookPayload([
+        'id' => 'evt_terminal_checkout_completed',
+        'type' => 'checkout.session.completed',
+        'data' => [
+            'object' => [
+                'id' => 'cs_terminal_checkout_completed',
+                'object' => 'checkout.session',
+                'mode' => 'payment',
+                'status' => 'complete',
+                'currency' => 'gbp',
+                'amount_subtotal' => 2500,
+                'amount_total' => 2500,
+                'metadata' => [
+                    'capell_purpose' => 'paid_download',
+                    'capell_payable_type' => 'download',
+                    'capell_payable_id' => 'guide',
+                ],
+                'completed_at' => CarbonImmutable::now()->getTimestamp(),
+            ],
+        ],
+    ]);
+
+    $eventPayload = json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
+
+    expect($eventPayload)->toBeArray();
+
+    $event = PaymentWebhookEvent::query()->create([
+        'provider' => PaymentProvider::Stripe->value,
+        'provider_event_id' => 'evt_terminal_checkout_completed',
+        'event_type' => 'checkout.session.completed',
+        'livemode' => false,
+        'api_version' => '2026-02-25.clover',
+        'status' => $terminalStatus->value,
+        'payload' => $eventPayload,
+        'received_at' => CarbonImmutable::now(),
+        'processed_at' => CarbonImmutable::now(),
+    ]);
+
+    $processedEvent = ProcessStripeWebhookEventAction::run((int) $event->getKey());
+
+    expect($processedEvent->status)->toBe($terminalStatus)
+        ->and(CheckoutSession::query()->count())->toBe(0)
+        ->and(FakePaymentFulfillmentHandler::$fulfilledSessionIds)->toBe([]);
+})->with([
+    'processed' => [PaymentWebhookEventStatus::Processed],
+    'ignored' => [PaymentWebhookEventStatus::Ignored],
+]);
 
 it('does not extend paid download entitlement expiry when checkout fulfilment replays', function (): void {
     app()->bind(PaidDownloadFulfillmentHandler::class);

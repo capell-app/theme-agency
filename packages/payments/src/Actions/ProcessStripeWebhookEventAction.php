@@ -32,8 +32,6 @@ final class ProcessStripeWebhookEventAction
 
     public function handle(int $webhookEventId): PaymentWebhookEvent
     {
-        $event = PaymentWebhookEvent::query()->findOrFail($webhookEventId);
-
         try {
             $event = DB::transaction(function () use ($webhookEventId): PaymentWebhookEvent {
                 /** @var PaymentWebhookEvent $event */
@@ -42,7 +40,7 @@ final class ProcessStripeWebhookEventAction
                     ->lockForUpdate()
                     ->firstOrFail();
 
-                if ($event->status === PaymentWebhookEventStatus::Processed || $event->status === PaymentWebhookEventStatus::Ignored) {
+                if ($this->hasTerminalStatus($event)) {
                     return $event;
                 }
 
@@ -60,6 +58,12 @@ final class ProcessStripeWebhookEventAction
                 return $event;
             });
         } catch (Throwable $throwable) {
+            $event = PaymentWebhookEvent::query()->find($webhookEventId);
+
+            if (! $event instanceof PaymentWebhookEvent) {
+                throw $throwable;
+            }
+
             $event->forceFill([
                 'status' => PaymentWebhookEventStatus::Failed->value,
                 'failed_at' => CarbonImmutable::now(),
@@ -70,6 +74,12 @@ final class ProcessStripeWebhookEventAction
         }
 
         return $event->refresh();
+    }
+
+    private function hasTerminalStatus(PaymentWebhookEvent $event): bool
+    {
+        return $event->status === PaymentWebhookEventStatus::Processed
+            || $event->status === PaymentWebhookEventStatus::Ignored;
     }
 
     /**
