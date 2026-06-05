@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 145 |
+| Now    | 144 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -65,7 +65,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | public-actions | 5 | 7 | 5 | Slice committed | `10c4b5906` adds explicit redirect-to-private/link-local/internal webhook regression coverage and reuses the canonical encoded webhook payload for hash/sign/send paths; durable fanout/replay/retention rows remain. |
 | publishing-studio | 5 | 6 | 5 | Slice committed | `c6a886556` landed health/screenshots; continue with publishing workflow rows. |
 | search | 2 | 6 | 4 | Slice committed | Current follow-up defers search-log writes until after the response and keeps `RecordSearchAction` on scalar visitor metadata. Remaining Now rows: Scout/private visibility tests and click-count aggregate/cache-chain work. |
-| seo-suite | 6 | 6 | 3 | Slice committed | `f599aeb31` filters PageSpeed digest recipients in the query after `790cefbc4` moved page SEO translation fields, SEO panel, and lazy audit tabs into the SEO tab while removing duplicate inline translation components. Continue with anonymous/non-admin AI Discovery endpoint safety tests, dormant SEO check wiring, health probes, screenshots, and completion review. |
+| seo-suite | 5 | 6 | 3 | Slice committed | Current follow-up adds anonymous and signed-in non-admin AI Discovery public-output safety coverage for `/llms.txt`, `/index.md`, and `/robots.txt` using `PublicOutputLeakScanner`. Remaining Now rows: dormant SEO checks, real health probes, stronger leak matching, manifest cache/settings/permissions/PageSpeed accuracy, and AI circuit-breaker/null-usage hardening. |
 | shopify-commerce | 6 | 7 | 4 | Slice committed | Current follow-up scrubs persisted sync errors; sync loop, customer producer, and webhook reachability remain high value. |
 | site-discovery | 6 | 5 | 4 | Slice committed | `c76a0cc14` merged URL registry work; continue with remaining discovery/SEO rows. |
 | structured-content-library | 6 | 5 | 4 | Slice committed | Current follow-up removes unwired section/theme adapter capability claims and marks those adapter contributions deferred while preserving the in-process section builder action. Remaining Now rows: summary sanitization, real health check, unique index/null-slug import dedup, payload escaping contract, publish timestamp default, and marketplace media/copy. |
