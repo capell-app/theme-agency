@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Public Actions is a framework package that lets Capell sites accept untrusted public submissions, run a registered server-side **handler** against the validated payload, and fan the resulting submission out to configured outbound **destinations** (HTTP webhooks for Zapier, Pipedream, n8n, Make, or generic). It exposes four surfaces: a public web form (`GET/POST /actions/{action}`), an authenticated Zapier-style JSON API (`/api/public-actions/zapier/*`), five Filament admin resources (actions, destinations, submissions, dispatch attempts, integration tokens), and a queue job for durable dispatch. Key Actions are `SubmitPublicActionAction` (the orchestrator: resolve → spam-check → validate → idempotency → persist → handler → dispatch), `DispatchPublicActionDestinationAction`, and the integration-token lifecycle actions; persistence is five tables (`public_actions`, `public_action_destinations`, `public_action_submissions`, `public_action_dispatch_attempts`, `public_action_integration_tokens`). Runtime deps are `capell-app/{admin,core,frontend}` plus `lorisleiva/laravel-actions`; it _supports_ `access-gate` and `form-builder`. Current marketplace summary (verbatim): _"Public Actions lets Capell sites run configured server-side actions and outbound automation from safe public submissions."_ Marketplace screenshot count: **1** (`docs/assets/marketplace/extension-card.jpg`) — but `docs/screenshots.json` defines **6** planned admin captures, none of which exist as files yet (mismatch).
+Public Actions is a framework package that lets Capell sites accept untrusted public submissions, run a registered server-side **handler** against the validated payload, and fan the resulting submission out to configured outbound **destinations** (HTTP webhooks for Zapier, Pipedream, n8n, Make, or generic). It exposes four surfaces: a public web form (`GET/POST /actions/{action}`), an authenticated Zapier-style JSON API (`/api/public-actions/zapier/*`), five Filament admin resources (actions, destinations, submissions, dispatch attempts, integration tokens), and a queue job for durable dispatch. Key Actions are `SubmitPublicActionAction` (the orchestrator: resolve → spam-check → validate → idempotency → persist → handler → dispatch), `DispatchPublicActionDestinationAction`, and the integration-token lifecycle actions; persistence is five tables (`public_actions`, `public_action_destinations`, `public_action_submissions`, `public_action_dispatch_attempts`, `public_action_integration_tokens`). Runtime deps are `capell-app/{admin,core,frontend}` plus `lorisleiva/laravel-actions`; it _supports_ `access-gate` and `form-builder`. Current marketplace summary: _"Turn any public form or API request into a signed, retried, fully-audited webhook to Zapier, Make, n8n, Pipedream, or your own endpoint — without exposing a single admin route."_ Marketplace screenshot count: **1** (`docs/assets/marketplace/extension-card.jpg`) — but `docs/screenshots.json` defines **6** planned admin captures, none of which exist as files yet (mismatch).
 
 ## 2. Improvements (existing functionality)
 
@@ -43,7 +43,7 @@ Public Actions is a framework package that lets Capell sites accept untrusted pu
 
 ## 5. Marketplace & Selling
 
-**Critique.** The marketplace `summary` and the composer `description` ("Reusable public submit actions, outbound automation dispatch, and integration endpoints for Capell CMS.") are accurate but generic and abstract — "configured server-side actions" means nothing to a buyer. Neither leads with the concrete, sellable hooks: Zapier/n8n/Make/Pipedream out of the box, signed webhooks, encrypted secrets, idempotent submissions, durable retry with full audit. The screenshot story is the biggest gap: **1 real asset vs 6 planned** in `screenshots.json`, and `capell.json.marketplace.screenshots` lists only the generic extension card — none of the admin surfaces (destinations with redacted secrets, dispatch-attempt audit, submissions, token issuance) are shown, so a buyer cannot see the product.
+**Critique.** Marketplace and Composer copy now lead with the concrete, sellable hooks: Zapier/n8n/Make/Pipedream, signed webhooks, encrypted secrets, idempotent submissions, durable retry, and full audit. The screenshot story is the biggest remaining gap: **1 real asset vs 6 planned** in `screenshots.json`, and `capell.json.marketplace.screenshots` lists only the generic extension card — none of the admin surfaces (destinations with redacted secrets, dispatch-attempt audit, submissions, token issuance) are shown, so a buyer cannot see the product.
 
 **Improved 1-sentence summary:** Turn any public form or API request into a signed, retried, fully-audited webhook to Zapier, Make, n8n, Pipedream, or your own endpoint — without exposing a single admin route.
 
@@ -59,22 +59,23 @@ Public Actions is a framework package that lets Capell sites accept untrusted pu
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                        | Bucket | Effort | Impact | Section ref |
-| --------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Implement the 4 advertised health checks (truth-in-manifest)                | Done | M | High | 2, 4 — closed by `PublicActionsHealthCheck` diagnostics and focused health coverage |
-| Close DNS-rebinding TOCTOU + disable/guard webhook redirects                | Done | M | High | 2, 4 — closed by cURL host pinning, redirect blocking, and IPv4/IPv6 pinning coverage |
-| Add SSRF rebinding + redirect-follow tests; add health-check test           | Done | M | High | 4 — closed by webhook redirect/pinning tests and health-check diagnostics coverage |
-| Ship the 6 specced marketplace screenshots + sharpen summary/description    | Now    | S      | High   | 5           |
-| Resolve `cache-blocking` (wire real dependency blocking or drop capability) | Done | S | Med | 3, 4 — closed by dropping unsupported capability |
-| Make destination fan-out durable/atomic (after-commit + pending rows)       | Next   | M      | High   | 2, 4        |
-| Gate schemaless submissions behind explicit opt-in config                   | Next   | S      | Med    | 2, 4        |
-| Add manual dispatch replay + dead-letter admin surface                      | Next   | M      | High   | 3           |
-| Configurable exponential backoff + jitter on dispatch job                   | Next   | S      | Med    | 2           |
-| Encode payload once per dispatch (hash/sign/send reuse)                     | Next   | S      | Low    | 2           |
-| Per-token + per-action rate-limit overrides                                 | Next   | M      | Med    | 3           |
-| Submission retention / PII purge command                                    | Next   | M      | Med    | 3           |
-| hCaptcha + reCAPTCHA v3 spam adapters                                       | Later  | M      | Med    | 3           |
-| Form Builder → action binding admin UI                                      | Later  | M      | High   | 3           |
-| Non-HTTP destination adapters (Slack, email-relay, SQS)                     | Later  | L      | High   | 3           |
-| Inbound signed-webhook verification (trusted submission lane)               | Later  | M      | High   | 3           |
-| Fill `docs/overview.md` + real `CHANGELOG` entries                          | Later  | S      | Low    | 2, 4        |
+| Item                                                                        | Bucket | Effort | Impact | Section ref                                                                           |
+| --------------------------------------------------------------------------- | ------ | ------ | ------ | ------------------------------------------------------------------------------------- |
+| Implement the 4 advertised health checks (truth-in-manifest)                | Done   | M      | High   | 2, 4 — closed by `PublicActionsHealthCheck` diagnostics and focused health coverage   |
+| Close DNS-rebinding TOCTOU + disable/guard webhook redirects                | Done   | M      | High   | 2, 4 — closed by cURL host pinning, redirect blocking, and IPv4/IPv6 pinning coverage |
+| Add SSRF rebinding + redirect-follow tests; add health-check test           | Done   | M      | High   | 4 — closed by webhook redirect/pinning tests and health-check diagnostics coverage    |
+| Ship the 6 specced marketplace screenshots                                  | Now    | S      | High   | 5                                                                                     |
+| Shipped: sharpen marketplace summary/description                            | Done   | S      | High   | 5                                                                                     |
+| Resolve `cache-blocking` (wire real dependency blocking or drop capability) | Done   | S      | Med    | 3, 4 — closed by dropping unsupported capability                                      |
+| Make destination fan-out durable/atomic (after-commit + pending rows)       | Next   | M      | High   | 2, 4                                                                                  |
+| Gate schemaless submissions behind explicit opt-in config                   | Next   | S      | Med    | 2, 4                                                                                  |
+| Add manual dispatch replay + dead-letter admin surface                      | Next   | M      | High   | 3                                                                                     |
+| Configurable exponential backoff + jitter on dispatch job                   | Next   | S      | Med    | 2                                                                                     |
+| Encode payload once per dispatch (hash/sign/send reuse)                     | Next   | S      | Low    | 2                                                                                     |
+| Per-token + per-action rate-limit overrides                                 | Next   | M      | Med    | 3                                                                                     |
+| Submission retention / PII purge command                                    | Next   | M      | Med    | 3                                                                                     |
+| hCaptcha + reCAPTCHA v3 spam adapters                                       | Later  | M      | Med    | 3                                                                                     |
+| Form Builder → action binding admin UI                                      | Later  | M      | High   | 3                                                                                     |
+| Non-HTTP destination adapters (Slack, email-relay, SQS)                     | Later  | L      | High   | 3                                                                                     |
+| Inbound signed-webhook verification (trusted submission lane)               | Later  | M      | High   | 3                                                                                     |
+| Fill `docs/overview.md` + real `CHANGELOG` entries                          | Later  | S      | Low    | 2, 4                                                                                  |
