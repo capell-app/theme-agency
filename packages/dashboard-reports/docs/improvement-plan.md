@@ -43,7 +43,7 @@ Manifest `capabilities` are only `["dashboard-reports", "dashboard-reports-admin
 
 ## 5. Marketplace & Selling
 
-**Critique.** The `capell.json` `marketplace.summary` and composer `description` are nearly identical and say nothing concrete: _"generic CMS reporting widgets"_ — "generic" actively undersells a premium first-party tier and names no outcome. The README is heavy on dependency-credit cards and code-map boilerplate, light on buyer value. One screenshot declared in the manifest vs three required by `screenshots.json`, and the three deployment PNGs are not committed.
+**Critique.** Marketplace/composer copy now names the shipped content-health and publishing-activity widgets directly, and package-local docs/translations no longer describe the package as "generic CMS reporting widgets". The README is still heavy on dependency-credit cards and code-map boilerplate. Runtime deployment captures for the three `screenshots.json` targets are not committed.
 
 **Improved summary (1 sentence):** At-a-glance content-health and publishing-activity widgets for the Capell admin dashboard — spot scheduled, expired, stale, and URL-less pages without opening a single resource.
 
@@ -68,7 +68,7 @@ Manifest `capabilities` are only `["dashboard-reports", "dashboard-reports-admin
 | Shipped 2026-06-04: Implement a real Diagnostics health check (providers/widgets/settings bound); evidence: provider resolution, widget registration, settings key, and broken-binding coverage in `DashboardReportsHealthCheckTest` | Done   | M      | High   | §4          |
 | Fix per-issue filtered deep-links (not unfiltered index)                                                                                                                                                                             | Now    | M      | Med    | §2, §3      |
 | Commit deployment screenshot captures for the 3 screenshot-contract targets                                                                                                                                                          | Now    | S      | Med    | §1, §5      |
-| Rewrite marketplace summary + composer description                                                                                                                                                                                   | Now    | S      | Med    | §5          |
+| Shipped 2026-06-05: Rewrite marketplace summary + composer description                                                                                                                                                               | Done   | S      | Med    | §5          |
 | Shipped 2026-06-04: Remove stale `ContentHealthData::from([...])` fixture + add gating/render tests                                                                                                                                  | Done   | S      | Med    | §4          |
 | De-duplicate date-range mapping (pass resolved range into Action)                                                                                                                                                                    | Next   | S      | Med    | §2          |
 | Wire configurable stale-day threshold (+ reconcile docs)                                                                                                                                                                             | Next   | S      | Med    | §2, §3      |

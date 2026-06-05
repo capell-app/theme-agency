@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 126 |
+| Now    | 125 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -33,7 +33,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | contacts | 0 | 7 | 2 | Slice committed | Current follow-ups expose audited privacy export/anonymization and queue/isolate all source-adapter listeners. Contacts has no Now rows left, but still needs Next/Later CRM depth work and a full package completion review before it can be marked Complete. |
 | content-sections | 0 | 7 | 4 | Now closed | `df230b604` reconciles the package plan after `54b758fe1` by moving five committed Now rows to Done: editor HTML sanitisation, anonymous public-output sanitisation tests, real `ContentSectionsHealthCheck`, `svg()` icon allow-list validation, and manifest accuracy for contributions/permissions/tables/surfaces. Explicit authenticated non-admin public-safety assertions remain open as Next work. Continue with render budget, cache invalidation, orphaned `simple-list`, marketplace screenshots/copy, stale docs cleanup, and completion review. |
 | customer-portal | 0 | 2 | 3 | Slice committed | Current follow-up adds same-site frontend account-isolation coverage, blocks suspended/archived accounts, adds package factories for portal accounts/support requests, covers unauthenticated/throttled frontend paths, wires `portal-profile` through an Action/rendered dashboard section, adds support request events/requester notifications, replaces placeholder frontend performance budgets, adds the package README, and schema-drives portal preferences. Continue with provider fan-out, marketplace screenshots/copy, Later rows, and a package completion review before marking Complete. |
-| dashboard-reports | 3 | 5 | 3 | Slice committed | `410b0f773` strengthens `DashboardReportsHealthCheck` to verify provider resolution, dashboard widgets, and settings keys, after `140ac4d3b` covered grouped publishing-trend aggregates. Remaining Now rows: filtered deep-links, runtime captures, and marketplace copy. |
+| dashboard-reports | 2 | 5 | 3 | Slice committed | Current follow-up removes stale generic reporting copy from package docs/translations and adds manifest/copy regression coverage. Remaining Now rows: filtered deep-links and runtime screenshot captures. |
 | demo-kit | 0 | 4 | 4 | Now closed | Current command coverage reports selected packages that do not declare `commands.demo`, after `47e1bea41` expanded the Kitchen Sink fixture and prior command work closed production guard, `--user` forwarding, `--seed` fan-out, manifest health-label accuracy, and marketplace/composer copy rows. Demo Kit has no Now rows left; continue with Diagnostics-surfaced demo health, screenshot baselines, resettable seeding, and locale/demo-key drift rows before completion review. |
 | deployments | 3 | 7 | 3 | Slice committed | `15ea26d27` locks the truthful admin-only manifest/media contract and replaces the stale widget screenshot target with committed connection-page captures, after `080b58559` covered widget visibility. Remaining Now rows: publisher consumer ownership, real repo selection, and marketplace copy/media. |
 | diagnostics | 2 | 6 | 4 | Slice committed | Current follow-up adds coverage proving declared health checks are reflected as implemented, stub, or broken rather than counted blindly. Remaining Now rows: suite-wide stub/broken detector and real `DiagnosticsHealthCheck`. |
