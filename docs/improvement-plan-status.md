@@ -1,6 +1,6 @@
 # Improvement Plan Status
 
-> Last refreshed: 2026-06-04. This is the control document for the long-running package improvement work. The per-package source of truth remains `packages/<package>/docs/improvement-plan.md`; this file tracks implementation progress and the next audit queue.
+> Last refreshed: 2026-06-05. This is the control document for the long-running package improvement work. The per-package source of truth remains `packages/<package>/docs/improvement-plan.md`; this file tracks implementation progress and the next audit queue.
 
 ## Current Scope
 
@@ -8,8 +8,8 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 220 |
-| Next   | 318 |
+| Now    | 210 |
+| Next   | 316 |
 | Later  | 203 |
 
 The work is not complete until every package plan has been reviewed against current code, required features are implemented or intentionally deferred, new behavior is documented, and focused verification passes for each changed package.
@@ -34,7 +34,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | content-sections | 0 | 7 | 4 | Now closed | `df230b604` reconciles the package plan after `54b758fe1` by moving five committed Now rows to Done: editor HTML sanitisation, anonymous public-output sanitisation tests, real `ContentSectionsHealthCheck`, `svg()` icon allow-list validation, and manifest accuracy for contributions/permissions/tables/surfaces. Explicit authenticated non-admin public-safety assertions remain open as Next work. Continue with render budget, cache invalidation, orphaned `simple-list`, marketplace screenshots/copy, stale docs cleanup, and completion review. |
 | customer-portal | 0 | 2 | 3 | Slice committed | Current follow-up adds same-site frontend account-isolation coverage, blocks suspended/archived accounts, adds package factories for portal accounts/support requests, covers unauthenticated/throttled frontend paths, wires `portal-profile` through an Action/rendered dashboard section, adds support request events/requester notifications, replaces placeholder frontend performance budgets, adds the package README, and schema-drives portal preferences. Continue with provider fan-out, marketplace screenshots/copy, Later rows, and a package completion review before marking Complete. |
 | dashboard-reports | 3 | 5 | 3 | Slice committed | `410b0f773` strengthens `DashboardReportsHealthCheck` to verify provider resolution, dashboard widgets, and settings keys, after `140ac4d3b` covered grouped publishing-trend aggregates. Remaining Now rows: filtered deep-links, runtime captures, and marketplace copy. |
-| demo-kit | 5 | 6 | 4 | Slice committed | Current follow-up expands the Kitchen Sink fixture to the full Layout Builder catalog with parent/sibling/child page context and page-selection widget assets, after `aa2d02c4c` fixed seed fanout. Continue with missing package demo-command reporting, Diagnostics-surfaced demo health, screenshot baselines, resettable seeding, and safety rows. |
+| demo-kit | 1 | 4 | 4 | Slice committed | `47e1bea41` expands the Kitchen Sink fixture to the full Layout Builder catalog with parent/sibling/child page context and page-selection widget assets, after `717e4c02a` and current command coverage closed production guard, `--user` forwarding, `--seed` fan-out, manifest health-label accuracy, and marketplace/composer copy rows. Remaining Now row: package `commands.demo` coverage campaign plus missing-demo report. Continue with Diagnostics-surfaced demo health, screenshot baselines, resettable seeding, and locale/demo-key drift rows. |
 | deployments | 3 | 7 | 3 | Slice committed | `15ea26d27` locks the truthful admin-only manifest/media contract and replaces the stale widget screenshot target with committed connection-page captures, after `080b58559` covered widget visibility. Remaining Now rows: publisher consumer ownership, real repo selection, and marketplace copy/media. |
 | diagnostics | 3 | 6 | 4 | Slice committed | `91c1dbe58` maps command-palette action risk explicitly after `016dc9cff` reconciled the already-shipped output redaction row. Remaining Now rows: health-check reflection/stub detection and real `DiagnosticsHealthCheck`. |
 | document-lifecycle | 3 | 4 | 4 | Slice committed | `ab32f72b0` replaces oversold court-ready/immutable package copy with shipped admin, Publishing Studio, and acceptance-evidence wording, after `af4378a47` covered migration rollback safety. Continue with real health report, frontend-surface reconciliation, and admin screenshots. |
@@ -51,7 +51,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | html-cache | 4 | 6 | 4 | Slice committed | `fc0cdba58` memoizes access-gate cacheability lookups after `6b7ba2b7b` proved both cookie-stripping middleware paths use the shared `CacheableResponseCookieStripper` list. Continue with targeted invalidation, real health check, screenshot reconciliation, and marketplace copy. |
 | insights | 6 | 6 | 4 | Slice committed | `5afe307aa` landed privacy hardening; continue with analytics/product gaps. |
 | knowledge-base | 6 | 7 | 3 | Slice committed | Current follow-up throttles/dedupes anonymous feedback and updates shipped-feature docs; policies and edit/versioning gaps remain high priority. |
-| layout-builder | 7 | 5 | 4 | Slice committed | Current follow-up tightens the visual editor responsive preview frame/tree sizing and keeps save controls sticky inside the preview canvas, after the prior slice removed dead cache enum, reconciled screenshot manifests, and documented remaining render-budget risk. |
+| layout-builder | 1 | 5 | 4 | Slice committed | `5da9e0066` tightens the visual editor responsive preview frame/tree sizing after prior slices aligned manifest dependencies, implemented real health probes, removed the dead cache enum, promoted marketplace screenshots, rewrote manifest/composer copy, and added fragment invalid/replay safety coverage. Remaining Now row: add the full public render performance-budget test, especially the render-time budget; current stress coverage proves bounded query behavior only. |
 | login-audit | 7 | 6 | 2 | Slice committed | Current follow-up adds real auth-event capture coverage, syncs vendor retention purge execution, records purge success timestamps, adds translated capture-configuration health diagnostics, and moves admin/user last-seen writes behind shared throttled Actions. Continue with remaining Next/Later operational rows and completion review. |
 | media-ai | 6 | 6 | 3 | Slice committed | `f4b35bc06` landed health/allow-list fixes; production image-doctor/provider story remains. |
 | media-library | 7 | 5 | 3 | Slice committed | `14d6d286c` exercises configured owner FK columns in media health and orphan reports and documents the `owner_foreign_keys` config shape. Continue with cleanup UI, duplicate detection, owner FK discovery/depth, and completion review. |
