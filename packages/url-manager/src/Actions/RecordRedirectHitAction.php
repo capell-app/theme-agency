@@ -6,6 +6,7 @@ namespace Capell\UrlManager\Actions;
 
 use Capell\UrlManager\Models\RedirectHit;
 use Capell\UrlManager\Models\RedirectRule;
+use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class RecordRedirectHitAction
@@ -30,10 +31,14 @@ final class RecordRedirectHitAction
             'hit_at' => $hitAt,
         ]);
 
-        $redirectRule->forceFill([
-            'hit_count' => $redirectRule->hit_count + 1,
-            'last_hit_at' => $hitAt,
-        ])->save();
+        RedirectRule::query()
+            ->whereKey($redirectRule->getKey())
+            ->update([
+                'hit_count' => DB::raw('COALESCE(hit_count, 0) + 1'),
+                'last_hit_at' => $hitAt,
+            ]);
+
+        $redirectRule->refresh();
 
         return $redirectHit;
     }
