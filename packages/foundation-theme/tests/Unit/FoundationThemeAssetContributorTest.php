@@ -120,7 +120,7 @@ it('does not load the foundation runtime for the frontend authoring beacon alone
         ->and(resolve(VendorAssetConditionRegistry::class)->passes('foundation-theme-runtime', $context))->toBeFalse();
 });
 
-it('loads the foundation runtime for blade-only layout builder interactions', function (): void {
+it('does not load the foundation runtime for blade-only layout builder output alone', function (): void {
     $context = new FrontendAssetContextData(
         page: null,
         site: null,
@@ -135,6 +135,31 @@ it('loads the foundation runtime for blade-only layout builder interactions', fu
             usesWireNavigate: false,
             usesIslands: false,
             modules: ['layout-builder' => true],
+        ),
+    );
+    $requirements = resolve(FoundationThemeAssetContributor::class)->requirements($context);
+    $registerVendorAssetConditions = new ReflectionMethod(FoundationThemeServiceProvider::class, 'registerVendorAssetConditions');
+    $registerVendorAssetConditions->invoke(new FoundationThemeServiceProvider(app()));
+
+    expect(collect($requirements)->pluck('handle')->all())->not->toContain('foundation-theme:runtime')
+        ->and(resolve(VendorAssetConditionRegistry::class)->passes('foundation-theme-runtime', $context))->toBeFalse();
+});
+
+it('loads the foundation runtime for the explicit foundation runtime module', function (): void {
+    $context = new FrontendAssetContextData(
+        page: null,
+        site: null,
+        language: null,
+        layout: null,
+        theme: null,
+        runtime: new FrontendRuntimeManifestData(
+            renderingStrategy: RenderingStrategyEnum::BladeOnly,
+            usesLivewire: false,
+            usesAlpine: true,
+            usesBeacon: false,
+            usesWireNavigate: false,
+            usesIslands: false,
+            modules: ['foundation-theme-runtime' => true],
         ),
     );
     $requirements = resolve(FoundationThemeAssetContributor::class)->requirements($context);
