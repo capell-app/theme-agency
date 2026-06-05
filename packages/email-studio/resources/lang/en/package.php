@@ -9,6 +9,10 @@ return [
             'dry_run' => 'Dry run only. No rendered email bodies were changed.',
             'summary' => 'Email Studio body retention matched :matched message(s) older than :days day(s), and cleared :pruned rendered body snapshot(s).',
         ],
+        'purge_tracked_emails' => [
+            'dry_run' => 'Dry run only. No tracked email rows were deleted.',
+            'summary' => 'MailTracker retention matched :matched email(s) older than :days day(s), deleted :clicks click row(s), and deleted :emails email row(s).',
+        ],
     ],
     'description' => 'Template-driven transactional email, delivery auditing, provider adapter normalization foundations, and suppressions.',
     'health' => [

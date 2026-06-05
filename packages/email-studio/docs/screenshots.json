@@ -4,10 +4,29 @@
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
     "outputDirectory": "packages/email-studio/docs/screenshots",
-    "notes": "Email Studio currently has no package-owned Filament resource, page, widget, public route, or public Blade screen. Keep entries empty until a visible admin or frontend surface ships.",
-    "blockers": [
-        "No screenshot target exists in the current implementation; active surfaces are actions, jobs, provider adapters, registries, and database records.",
-        "routes/web.php is intentionally empty, and AdminServiceProvider only loads translations."
-    ],
-    "entries": []
+    "notes": "Email Studio now ships a MailTracker-backed sent email resource and extension settings surface. Replace interim marketplace assets with fresh workbench captures once demo data is seeded.",
+    "blockers": [],
+    "entries": [
+        {
+            "key": "sent-emails-index",
+            "type": "filament-resource",
+            "route": "sent-emails",
+            "output": "packages/email-studio/docs/screenshots/sent-emails-index.png",
+            "description": "Sent emails table showing subject, sender, recipient, opens, clicks, and sent timestamp."
+        },
+        {
+            "key": "sent-email-view",
+            "type": "filament-resource-view",
+            "route": "sent-emails/{record}",
+            "output": "packages/email-studio/docs/screenshots/sent-email-view.png",
+            "description": "Sent email detail view with message metadata, headers, tracked URLs, and sandboxed HTML preview."
+        },
+        {
+            "key": "email-studio-settings",
+            "type": "extension-settings",
+            "settingsGroup": "email_studio",
+            "output": "packages/email-studio/docs/screenshots/email-studio-settings.png",
+            "description": "Email Studio settings for MailTracker open tracking, click tracking, content storage, search window, and retention."
+        }
+    ]
 }

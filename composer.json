@@ -165,6 +165,7 @@
         "guzzlehttp/guzzle": "^7.5",
         "icamys/php-sitemap-generator": "^4.4.1",
         "inertiajs/inertia-laravel": "^3.0",
+        "jdavidbakr/mail-tracker": "^8.1",
         "jibaymcs/filament-tour": "^5.0",
         "jfcherng/php-diff": "^7.0",
         "lara-zeus/spatie-translatable": "^1.0|^2.0",

@@ -18,7 +18,8 @@
         "requires": [
             "capell-app/admin",
             "capell-app/core",
-            "capell-app/frontend"
+            "capell-app/frontend",
+            "jdavidbakr/mail-tracker"
         ],
         "supports": [
             "capell-app/campaign-studio",
@@ -36,23 +37,53 @@
         "admin": ["Capell\\EmailStudio\\Providers\\AdminServiceProvider"],
         "frontend": ["Capell\\EmailStudio\\Providers\\FrontendServiceProvider"]
     },
-    "contributes": [],
+    "contributes": [
+        {
+            "type": "admin-resource",
+            "class": "Capell\\EmailStudio\\Manifest\\SentEmailResourceContribution",
+            "resourceClass": "Capell\\EmailStudio\\Filament\\Resources\\SentEmails\\SentEmailResource"
+        },
+        {
+            "type": "model",
+            "class": "Capell\\EmailStudio\\Manifest\\SentEmailModelContribution",
+            "modelClass": "Capell\\EmailStudio\\Models\\SentEmail"
+        },
+        {
+            "type": "setting",
+            "class": "Capell\\EmailStudio\\Manifest\\EmailStudioSettingsContribution",
+            "settingsClass": "Capell\\EmailStudio\\Settings\\EmailStudioSettings",
+            "settingsGroup": "email_studio"
+        },
+        {
+            "type": "scheduled-job",
+            "class": "Capell\\EmailStudio\\Manifest\\TrackedEmailPurgeScheduleContribution",
+            "command": "capell-email-studio:purge-tracked-emails",
+            "frequency": "daily"
+        }
+    ],
     "database": {
         "migrations": true,
-        "settings": false,
-        "requiredTables": []
+        "settings": true,
+        "requiredTables": ["sent_emails", "sent_emails_url_clicked"]
     },
     "commands": {
         "install": null,
         "setup": null,
         "demo": null,
         "doctor": null,
-        "retention": "capell-email-studio:prune-bodies"
+        "retention": "capell-email-studio:prune-bodies",
+        "mailTrackerPurge": "Capell\\EmailStudio\\Console\\Commands\\PurgeTrackedEmailsCommand"
     },
-    "settings": [],
+    "actions": {
+        "applyMailTrackerSettings": "Capell\\EmailStudio\\Actions\\ApplyMailTrackerSettingsAction",
+        "purgeTrackedEmails": "Capell\\EmailStudio\\Actions\\PurgeTrackedEmailsAction"
+    },
+    "settings": ["Capell\\EmailStudio\\Settings\\EmailStudioSettings"],
     "permissions": [],
     "capabilities": [
         "delivery-audit",
+        "mail-tracker-admin",
+        "mail-tracker-retention",
         "provider-normalization-foundation",
         "provider-adapters",
         "suppressions",
@@ -114,11 +145,26 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Email Studio extension preview image",
                 "caption": "Email Studio extension preview"
+            },
+            {
+                "path": "docs/screenshots/sent-emails-index.png",
+                "alt": "Email Studio sent emails table with MailTracker opens and clicks",
+                "caption": "Sent email activity table"
+            },
+            {
+                "path": "docs/screenshots/sent-email-view.png",
+                "alt": "Email Studio sent email detail page with headers and sandboxed HTML preview",
+                "caption": "Sent email detail view"
+            },
+            {
+                "path": "docs/screenshots/email-studio-settings.png",
+                "alt": "Email Studio MailTracker settings for tracking and retention",
+                "caption": "Mail tracking settings"
             }
         ],
         "categories": ["admin", "communications", "console", "frontend"]
     },
     "contributionTraceability": {
-        "deferredContributions": ["model"]
+        "deferredContributions": []
     }
 }

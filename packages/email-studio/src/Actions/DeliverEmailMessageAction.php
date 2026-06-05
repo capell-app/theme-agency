@@ -136,7 +136,16 @@ class DeliverEmailMessageAction
         $totalRecipientCount = $message->recipients()->count();
         $queuedRecipients = $message->recipients()
             ->where('status', EmailRecipientStatus::Queued->value)
-            ->get(['id']);
+            ->get([
+                'id',
+                'site_id',
+                'site_scope_key',
+                'email_message_id',
+                'type',
+                'email',
+                'normalized_email',
+                'email_hash',
+            ]);
         $sentAt = now()->toImmutable();
         $updatedAt = now()->toImmutable();
         $sentRows = [];
@@ -154,6 +163,13 @@ class DeliverEmailMessageAction
 
             $sentRows[] = [
                 'id' => $recipientKey,
+                'site_id' => $recipient->site_id,
+                'site_scope_key' => $recipient->site_scope_key,
+                'email_message_id' => $recipient->email_message_id,
+                'type' => $recipient->type,
+                'email' => $recipient->email,
+                'normalized_email' => $recipient->normalized_email,
+                'email_hash' => $recipient->email_hash,
                 'status' => EmailRecipientStatus::Sent->value,
                 'provider_message_id' => $providerMessageIds[$recipientKey] ?? null,
                 'sent_at' => $sentAt,

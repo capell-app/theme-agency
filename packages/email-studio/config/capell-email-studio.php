@@ -28,4 +28,16 @@ return [
     'tracking_token_ttl_days' => 180,
     'webhook_rate_limit' => 'email-studio-webhooks',
     'tracking_rate_limit' => 'email-studio-tracking',
+    'mail_tracker' => [
+        'inject_pixel' => true,
+        'track_links' => true,
+        'log_content' => true,
+        'log_content_strategy' => 'database',
+        'filesystem' => 'local',
+        'filesystem_folder' => 'mail-tracker',
+        'queue' => 'default',
+        'content_max_size' => 65_535,
+        'search_date_start_days' => 30,
+        'purge_retention_days' => 60,
+    ],
 ];

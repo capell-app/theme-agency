@@ -6,7 +6,7 @@ Template-driven transactional email, delivery auditing, provider adapter normali
 
 - Package: `capell-app/email-studio`
 - Namespace: `Capell\EmailStudio\`
-- Surfaces: HTTP, queue, database
+- Surfaces: admin, HTTP, queue, database
 - Service providers: `packages/email-studio/src/Providers/AdminServiceProvider.php`, `packages/email-studio/src/Providers/EmailStudioServiceProvider.php`, `packages/email-studio/src/Providers/FrontendServiceProvider.php`
 - Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/frontend`
 
@@ -14,6 +14,7 @@ Template-driven transactional email, delivery auditing, provider adapter normali
 
 - Gives Capell a transactional email center for reusable templates, provider delivery, suppressions, and send audit.
 - Helps owners keep email behavior visible in admin instead of burying delivery state inside provider dashboards.
+- Adds MailTracker viewing and retention controls for Laravel mail that does not yet flow through Email Studio's send actions.
 - Gives developers provider adapters and send Actions so forms, automations, and workflow packages can send consistently.
 
 ## Best Used With
@@ -44,7 +45,8 @@ That is the part clients pay for. Sending an email is easy; proving what happene
 ## Technical Shape
 
 - `EmailStudioServiceProvider` registers config, translations, routes, migrations, models, and provider adapters.
-- `AdminServiceProvider` and `FrontendServiceProvider` reserve the admin and public route surfaces for later slices.
+- `AdminServiceProvider` registers the read-only MailTracker sent email resource and Email Studio extension settings surface.
+- `FrontendServiceProvider` reserves public route surfaces for later Email Studio-owned tracking/unsubscribe slices.
 - `EmailTemplateRegistry` stores package-owned template registrations.
 - `EmailVariableRenderer` performs controlled `{{ variable }}` substitution using declared template variables.
 - `EmailProfileResolver` resolves a requested profile or the best default profile for the site scope.
@@ -52,6 +54,7 @@ That is the part clients pay for. Sending an email is easy; proving what happene
 - `SendEmailAction` creates the message and recipient records, renders the selected variant, applies suppression state, and queues delivery.
 - `DeliverEmailMessageAction` rechecks suppressions, calls the provider adapter, and records recipient/message outcomes.
 - Provider adapters can normalize webhook event and inbound reply payloads for later ingestion slices; no webhook or reply ingestion route/action ships yet.
+- MailTracker tracking routes stay active for pixel/link tracking, but its bundled Blade admin routes are disabled in favour of Capell Filament.
 
 ## Code Map
 
@@ -63,6 +66,7 @@ That is the part clients pay for. Sending an email is easy; proving what happene
 | Models    | `packages/email-studio/src/Models`    | Eloquent records owned by the package.                              |
 | Jobs      | `packages/email-studio/src/Jobs`      | Queued work and async side effects.                                 |
 | Providers | `packages/email-studio/src/Providers` | Registration, extension hooks, routes, migrations, and resources.   |
+| Filament  | `packages/email-studio/src/Filament`  | Admin resources and settings schemas.                               |
 | Resources | `packages/email-studio/resources`     | Views, translations, assets, and package resources.                 |
 | Routes    | `packages/email-studio/routes`        | Route files loaded by the service provider.                         |
 | Config    | `packages/email-studio/config`        | Package configuration and publishable config.                       |
@@ -71,12 +75,14 @@ That is the part clients pay for. Sending an email is easy; proving what happene
 
 ## Runtime Surface
 
-- Routes: `packages/email-studio/routes/web.php`.
+- Routes: `packages/email-studio/routes/web.php` plus MailTracker's tracking routes.
+- Admin resource: `SentEmailResource`.
 - Jobs: `SendEmailJob`.
+- Commands: `capell-email-studio:prune-bodies`, `capell-email-studio:purge-tracked-emails`.
 
 ## Data And Persistence
 
-- Models: `EmailEvent`, `EmailMessage`, `EmailProfile`, `EmailRecipient`, `EmailReply`, `EmailSuppression`, `EmailTemplate`, `EmailTemplateRegistration`, `EmailTemplateVariant`, `EmailTrackingToken`.
+- Models: `EmailEvent`, `EmailMessage`, `EmailProfile`, `EmailRecipient`, `EmailReply`, `EmailSuppression`, `EmailTemplate`, `EmailTemplateRegistration`, `EmailTemplateVariant`, `EmailTrackingToken`, `SentEmail`, `SentEmailUrlClicked`.
 - Migrations: `2026_05_10_190847_01_create_email_profiles_table.php`, `2026_05_10_190847_02_create_email_templates_table.php`, `2026_05_10_190847_03_create_email_template_variants_table.php`, `2026_05_10_190847_04_create_email_messages_table.php`, `2026_05_10_190847_05_create_email_recipients_table.php`, `2026_05_10_190847_06_create_email_events_table.php`, `2026_05_10_190847_07_create_email_replies_table.php`, `2026_05_10_190847_08_create_email_suppressions_table.php`, `2026_05_10_190847_09_create_email_template_registrations_table.php`, `2026_05_10_190847_10_create_email_tracking_tokens_table.php`.
 - Config: `packages/email-studio/config/capell-email-studio.php`.
 - Data objects live in `src/Data/`; use them for payloads, form state, and view models.

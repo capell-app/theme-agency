@@ -12,6 +12,8 @@ Email Studio owns:
 - delivery profiles and provider selection;
 - send requests, rendered snapshots, and recipient rows;
 - suppression checks before queueing and before delivery;
+- MailTracker-backed sent email viewing for non-Email Studio Laravel mail;
+- MailTracker tracking and retention settings;
 - provider adapter contracts;
 - future webhook events, reply capture, open/click tracking, and retention cleanup.
 
@@ -27,18 +29,21 @@ Those boundaries keep the package useful for transactional email without turning
 
 ## Visible Surfaces
 
-Email Studio currently has no package-owned Filament resource, page, widget, public route, or public Blade screen to capture. `AdminServiceProvider` and `FrontendServiceProvider` reserve those integration surfaces for later slices, while `routes/web.php` is intentionally empty in the current package.
+Email Studio ships a package-owned Filament sent email resource for MailTracker records and an extension settings surface for tracking and retention configuration. The vendor MailTracker tracking routes stay active, but its bundled Blade admin routes are disabled; Capell owns the admin viewing surface.
 
-The active runtime surface is service-level:
+The active runtime surfaces are:
 
 - package actions for registering templates, rendering variants, suppressing recipients, sending messages, and delivering queued mail;
 - `SendEmailJob`;
+- `SentEmailResource` for read-only sent email inspection;
+- `EmailStudioSettings` for MailTracker open tracking, click tracking, content storage, and retention;
+- `capell-email-studio:purge-tracked-emails` for scheduled tracked-email cleanup;
 - provider adapter contracts and registries;
 - database records for templates, profiles, messages, recipients, events, replies, suppressions, registrations, and tracking tokens.
 
 ## Screenshot Coverage
 
-The screenshot contract is stored in [screenshots.json](screenshots.json). It intentionally contains no required entries until an admin or frontend UI ships.
+The screenshot contract is stored in [screenshots.json](screenshots.json). Current targets cover the sent email index, sent email detail view, and Email Studio settings.
 
 ## Workflow
 
