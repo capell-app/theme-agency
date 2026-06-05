@@ -38,12 +38,15 @@ hubs, and content-led teams that need searchable, editorial frontend pages.
 - Registers the `knowledge` theme definition and preset.
 - Ships a knowledge-focused page wrapper and theme CSS.
 - Adds section renderers for topic hubs, featured content, resource library,
-  search listing, newsletter, authors, proof, and supporting content blocks.
+  doc articles, search listing, newsletter, authors, proof, and supporting
+  content blocks.
 - Uses Core `ViewSectionRenderer` extra view data for optional Blog, Search, and Newsletter
   sections.
 - Keeps optional package availability checks in the service provider/renderer
   layer, while author and topic hub cards can come from page render data with
   translated defaults.
+- Renders docs/article pages with hydrated breadcrumbs, category sidebar,
+  article metadata, readable body copy, and a sticky table of contents.
 - Adds a demo install command backed by `InstallKnowledgeThemeDemoAction`.
 - Adds `ThemeKnowledgeHealthCheck` and a Theme management page contribution.
 

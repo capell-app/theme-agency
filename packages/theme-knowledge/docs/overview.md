@@ -12,10 +12,12 @@ frontend theme.
 
 - A `knowledge` theme definition and preset.
 - Knowledge-specific CSS and page wrapper.
-- Section renderers for topic hubs, featured content, resource library, search
-  listing, newsletter, authors, proof, CTA, and footer flows.
+- Section renderers for doc articles, topic hubs, featured content, resource
+  library, search listing, newsletter, authors, proof, CTA, and footer flows.
 - Optional renderer awareness for Blog, Search, and Newsletter.
 - Data-driven author and topic hub cards with translated defaults.
+- A documentation/article layout with hydrated breadcrumbs, category sidebar,
+  readable article body, metadata, and sticky table of contents.
 - A demo command that installs route-backed knowledge demo pages.
 - Theme health and management-page manifest contributions.
 
@@ -37,8 +39,8 @@ instead of assumed.
 - `DemoCommand` calls `InstallKnowledgeThemeDemoAction`.
 - Core `ViewSectionRenderer` extra view data guards optional Blog, Search, and Newsletter
   sections.
-- Public Blade relies on renderer-provided optional package flags rather than
-  checking package installation in the view layer.
+- Public Blade relies on renderer-provided optional package flags and hydrated
+  article layout data rather than checking package installation in the view layer.
 - `ThemeKnowledgeHealthCheck` exposes package health to diagnostics.
 
 ## Data And Persistence

@@ -33,7 +33,7 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/knowledge.jpg',
             tags: ['Editorial', 'Resources', 'Search'],
             bestFit: ['Knowledge bases', 'Resource hubs', 'Content teams'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'topic-hubs', 'topic-index', 'reading-path', 'source-map', 'featured-content', 'resource-library', 'search-listing', 'newsletter', 'authors', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'doc-article', 'content-listing', 'topic-hubs', 'topic-index', 'reading-path', 'source-map', 'featured-content', 'resource-library', 'search-listing', 'newsletter', 'authors', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'knowledge',

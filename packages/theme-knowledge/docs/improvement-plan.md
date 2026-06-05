@@ -12,8 +12,9 @@ Marketplace and Composer copy are buyer-facing, and `capell.json` marketplace me
 
 - **2026-06-03:** Added buyer-facing marketplace and Composer copy, replaced the stub Diagnostics health check with real theme registration/view/vendor-asset probes, and limited marketplace screenshots to committed preview assets.
 - **2026-06-04:** Moved author bench and topic hub defaults into translations, made both sections accept hydrated item data, removed optional package installation checks from public newsletter/search Blade, and added tests for those public rendering contracts.
+- **2026-06-05:** Added a first-class `doc-article` section renderer with hydrated breadcrumbs, category sidebar, article metadata, constrained article body, and sticky table-of-contents layout, plus registry coverage and docs/manifest reconciliation.
 
-**Headline:** the package is positioned as a knowledge-base / documentation / help-site theme, but the shipped section suite is editorial-marketing (hero, features, proof, cta, newsletter, authors, topic-hubs). There is no doc/article layout, no sidebar/category navigation, no table of contents, no breadcrumbs, no code-block styling, and the "search" section is a non-functional visual mock.
+**Headline:** the package is positioned as a knowledge-base / documentation / help-site theme, and the core documentation layout now exists. The remaining shipped-feature gaps are screenshot reconciliation, code-block styling, dark mode, tokenization, and deeper differentiated affordances such as article feedback and versioning.
 
 ## 2. Improvements (existing functionality)
 
@@ -35,13 +36,13 @@ Prioritized. Real templates only.
 
 ## 3. Missing Features (gaps)
 
-`capabilities[]` = `["theme-knowledge", "theme-knowledge-frontend"]`. For the knowledge/docs/help vertical, the following are absent in code:
+`capabilities[]` = `["theme-knowledge", "theme-knowledge-frontend"]`. For the knowledge/docs/help vertical, the current feature status is:
 
-- **Doc/article layout (table stakes, differentiator-critical).** Only `page.blade.php` exists — a single generic shell rendering `{!! $content !!}`. There is no second layout for an article/doc page with a left category sidebar + right table of contents. The marketplace asset `knowledge-docs-layout.svg` advertises exactly this layout, which does not exist in `resources/views`. This is the single biggest gap.
-- **Persistent sidebar / category navigation.** Navigation is delegated wholesale to foundation-theme (`isFoundationSection()`), so there is no docs-style multi-level collapsible sidebar tree — the defining UI of a KB theme.
-- **Table of contents (in-page anchor nav).** Nothing renders headings into a sticky TOC.
-- **Breadcrumbs.** No breadcrumb section/partial anywhere.
-- **Functional search.** `search-listing.blade.php` is a static mock: the "input" is a `<div>` placeholder, the button is `type="button"`, results are seeded translation strings. It never renders a real `<form>`/`<input>` even when `searchAvailable` is true. A KB theme's search must be prominent and real (it should cross-sell `capell-app/search`).
+- **Done/Shipped: Doc/article layout (table stakes, differentiator-critical).** `doc-article` is now a first-class included section with a left category sidebar, breadcrumb trail, article metadata, constrained article body, and right sticky table of contents backed by hydrated renderer data and translated fallbacks. — `src/KnowledgeThemeServiceProvider.php`, `resources/views/sections/doc-article.blade.php`, `resources/lang/en/generic.php`, `tests/Unit/KnowledgeThemeDefinitionTest.php`
+- **Persistent sidebar / category navigation.** The shipped `doc-article` section renders a hydrated first-level category sidebar. Multi-level collapsible sidebar trees remain deeper follow-up work.
+- **Table of contents (in-page anchor nav).** The shipped `doc-article` section renders hydrated sticky TOC links. Automatic heading extraction remains future work.
+- **Breadcrumbs.** The shipped `doc-article` section renders hydrated breadcrumb trails with translated fallbacks.
+- **Done/Shipped: Functional search surface.** `search-listing.blade.php` now renders a translated `GET` search form with renderer-supplied availability/action data and query input. Deeper Search package result-page integration remains follow-up work.
 - **Code-block / syntax styling.** No `pre`/`code` styling in CSS or any prose component — essential for developer docs.
 - **Article feedback ("Was this helpful?").** No feedback widget/partial.
 - **Versioning / "last updated" / version switcher.** No version or freshness affordance.
@@ -56,24 +57,24 @@ Prioritized. Real templates only.
 - **Health check shipped.** `ThemeKnowledgeHealthCheck` now probes Theme Studio registration, required views, and vendor asset registration; tests cover passing diagnostics and an unregistered theme failure. — `src/Health/ThemeKnowledgeHealthCheck.php`, `tests/Unit/ThemeKnowledgeHealthCheckTest.php`
 - **Stub contribution class.** `src/Manifest/ThemeManagementPageContribution.php` is contract-only (`compatibleCapellApiVersion()` only); confirm the management page actually mounts for `themeKey: knowledge` rather than relying on an empty contract impl. — `src/Manifest/ThemeManagementPageContribution.php`
 - **Manifest screenshot drift remains.** `docs/screenshots.json` declares 9 render entries writing to `docs/screenshots/`, which does not exist (0 committed). `capell.json` marketplace media now references 3 committed JPG preview assets, but the route-backed capture set still needs to be generated. `docs/overview.md` "Screenshot Plan" still uses generic directory/detail/contact vocabulary that should be tightened to Knowledge sections. — `docs/screenshots.json`, `capell.json`, `docs/overview.md`
-- **Marketplace copy shipped, but overclaims future docs features.** Marketplace/Composer copy is buyer-facing, but the manifest description explicitly notes sidebar/TOC/breadcrumb/code-block/functional-search claims require the missing §3 work before they are fully truthful. — `capell.json`
+- **Marketplace copy shipped, with code-block caveat.** Marketplace/Composer copy is buyer-facing, and the manifest caveat now correctly narrows the remaining technical-docs promise gap to code-block styling. — `capell.json`
 - **`{!! $content !!}` trust boundary.** `page.blade.php:12` echoes pre-rendered section HTML unescaped. This is the standard foundation pattern (sections render server-side via the trusted renderer), so it is acceptable — but it means section template safety is the only guard; `PublicOutputSafetyTest` now guards against authoring markers, database calls, and public Blade `CapellCore::` package checks. Broader untranslated-literal detection remains open. — `resources/views/page.blade.php`, `tests/Unit/PublicOutputSafetyTest.php`
 - **Performance budget.** `capell.json` `performance.frontendRenderBudgetMs = 20`, `adminQueryBudget = 0`, `cacheSafety.cacheable = false` (varies by site, locale). No test asserts the render budget, and there is no LCP guidance for `hero-desktop.jpg` (698 KB)/`hero-mobile.jpg` (493 KB) demo assets — large hero media with no documented `loading`/`fetchpriority` strategy risks the LCP path. — `capell.json`, `docs/assets/marketplace/*`
-- **Test gaps.** `tests/` covers theme definition, manifest requirements, package-aware rendering, health diagnostics, translated/data-driven author and topic hub defaults, and public-output leak strings including `CapellCore::` checks. Not covered: a real article/doc layout (doesn't exist yet), search-section form behaviour, dark mode, broader untranslated-literal detection, reduced motion, and render budget. — `tests/Unit/`, `tests/Feature/Commands/DemoCommandTest.php`
+- **Test gaps.** `tests/` covers theme definition, manifest requirements, package-aware rendering, health diagnostics, translated/data-driven author and topic hub defaults, the doc/article layout renderer, and public-output leak strings including `CapellCore::` checks. Not covered: route-backed screenshot capture, code-block styling, dark mode, broader untranslated-literal detection, reduced motion, and render budget. — `tests/Unit/`, `tests/Feature/Commands/DemoCommandTest.php`
 
 ## 5. Marketplace & Selling
 
-**Critique.** Marketplace and Composer copy are now buyer-facing, but the description intentionally notes that sidebar/TOC/breadcrumb/code-block/functional-search claims require the §3 work before they are fully truthful. The visual story is still weak for a premium theme: marketplace uses 3 committed JPG preview assets, but there is no real rendered-page screenshot set in `docs/screenshots/`, and no dark-mode shot.
+**Critique.** Marketplace and Composer copy are now buyer-facing, and the description intentionally notes code-block styling as the remaining technical-docs copy gap. The visual story is still weak for a premium theme: marketplace uses 3 committed JPG preview assets, but there is no real rendered-page screenshot set in `docs/screenshots/`, and no dark-mode shot.
 
 **Improved 1-sentence summary:**
 
-> A premium knowledge-base and documentation theme for Capell — sidebar-navigated articles, in-page table of contents, prominent search, and clean code blocks out of the box.
+> A premium knowledge-base and documentation theme for Capell — sidebar-navigated articles, in-page table of contents, prominent search, and readable long-form layouts out of the box.
 
 **Improved 3–4 sentence description:**
 
-> Theme Knowledge turns a Capell site into a polished documentation and help centre. It pairs a category sidebar, sticky table of contents, and breadcrumb trails with a prominent search experience and readable long-form typography, so visitors find answers fast. Resource libraries, author bios, topic hubs, and newsletter capture round out a full knowledge-marketing surface, with optional Blog, Search, and Newsletter integrations lighting up automatically when those packages are installed. Built on the Capell foundation theme with a configurable colour palette and accessible focus states. (Note: the sidebar/TOC/breadcrumb/code-block/functional-search claims require the §3 work before this copy is truthful.)
+> Theme Knowledge turns a Capell site into a polished documentation and help centre. It pairs a category sidebar, sticky table of contents, and breadcrumb trails with a prominent search experience and readable long-form typography, so visitors find answers fast. Resource libraries, author bios, topic hubs, and newsletter capture round out a full knowledge-marketing surface, with optional Blog, Search, and Newsletter integrations lighting up automatically when those packages are installed. Built on the Capell foundation theme with a configurable colour palette and accessible focus states. (Note: code-block styling remains planned follow-up work before the full technical-docs promise is complete.)
 
-**Screenshot/media gaps.** Run `docs/screenshots.json` to generate the 9 declared renders and commit them to `docs/screenshots/` (currently empty); add a dark-mode variant (parity with `theme-agency`); add a doc-article layout screenshot once §3 lands so the documentation layout promise is backed by a real layout.
+**Screenshot/media gaps.** Run `docs/screenshots.json` to generate the 9 declared renders and commit them to `docs/screenshots/` (currently empty); add a dark-mode variant (parity with `theme-agency`); add a doc-article layout screenshot so the documentation layout promise is backed by a real capture.
 
 **Differentiation / target buyer.** Today the theme is hard to distinguish from a generic editorial/marketing theme. Target buyer: documentation/help-centre owners, dev-tool/SaaS teams, and internal-knowledge-base operators who want a docs site without a separate static-site generator. The wedge is "docs site inside your CMS" — sidebar + TOC + search + versioning — which no sibling theme currently fills.
 
@@ -83,7 +84,7 @@ Prioritized. Real templates only.
 
 | Item                                                                                                     | Bucket | Effort | Impact | Section ref |
 | -------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Add doc/article layout (sidebar + TOC + breadcrumbs) backing `knowledge-docs-layout.svg`                 | Now    | L      | High   | §3          |
+| Done/Shipped: Add doc/article layout (sidebar + TOC + breadcrumbs) backing `knowledge-docs-layout.svg`   | Done   | L      | High   | §3          |
 | Make `search-listing` a real, prominent search form (cross-sell `capell-app/search`)                     | Done   | M      | High   | §3, §2.6    |
 | Generate + commit the 9 `docs/screenshots.json` renders; replace placeholder SVGs                        | Now    | M      | High   | §4, §5      |
 | Add code-block / `pre`/`code` prose styling                                                              | Next   | M      | High   | §3          |

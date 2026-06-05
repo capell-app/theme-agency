@@ -71,12 +71,43 @@
 }
 
 .knowledge-shell .knowledge-command-panel,
-.knowledge-shell .knowledge-result-card {
+.knowledge-shell .knowledge-result-card,
+.knowledge-shell .knowledge-doc-sidebar > div,
+.knowledge-shell .knowledge-doc-article,
+.knowledge-shell .knowledge-doc-toc > div {
     border-radius: 8px;
 }
 
 .knowledge-shell .knowledge-result-card {
     box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+}
+
+.knowledge-shell .knowledge-doc-prose {
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+.knowledge-shell .knowledge-doc-prose > * + * {
+    margin-top: 1.25rem;
+}
+
+.knowledge-shell .knowledge-doc-prose h3 {
+    color: #172033;
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-top: 2rem;
+}
+
+.knowledge-shell .knowledge-doc-prose p {
+    max-width: 68ch;
+}
+
+.knowledge-shell .knowledge-doc-prose a {
+    color: #1d4ed8;
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
 }
 
 .knowledge-shell .theme-section-content-listing article {
