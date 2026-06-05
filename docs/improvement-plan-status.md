@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 124 |
+| Now    | 123 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -35,7 +35,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | customer-portal | 0 | 2 | 3 | Slice committed | Current follow-up adds same-site frontend account-isolation coverage, blocks suspended/archived accounts, adds package factories for portal accounts/support requests, covers unauthenticated/throttled frontend paths, wires `portal-profile` through an Action/rendered dashboard section, adds support request events/requester notifications, replaces placeholder frontend performance budgets, adds the package README, and schema-drives portal preferences. Continue with provider fan-out, marketplace screenshots/copy, Later rows, and a package completion review before marking Complete. |
 | dashboard-reports | 2 | 5 | 3 | Slice committed | Current follow-up removes stale generic reporting copy from package docs/translations and adds manifest/copy regression coverage. Remaining Now rows: filtered deep-links and runtime screenshot captures. |
 | demo-kit | 0 | 4 | 4 | Now closed | Current command coverage reports selected packages that do not declare `commands.demo`, after `47e1bea41` expanded the Kitchen Sink fixture and prior command work closed production guard, `--user` forwarding, `--seed` fan-out, manifest health-label accuracy, and marketplace/composer copy rows. Demo Kit has no Now rows left; continue with Diagnostics-surfaced demo health, screenshot baselines, resettable seeding, and locale/demo-key drift rows before completion review. |
-| deployments | 3 | 7 | 3 | Slice committed | `15ea26d27` locks the truthful admin-only manifest/media contract and replaces the stale widget screenshot target with committed connection-page captures, after `080b58559` covered widget visibility. Remaining Now rows: publisher consumer ownership, real repo selection, and marketplace copy/media. |
+| deployments | 2 | 7 | 3 | Slice committed | Current follow-up rewrites marketplace/composer/docs copy around shipped Git provider repository connections and marks active-connection/OAuth-to-PR media blocked until real assets exist. Remaining Now rows: publisher consumer ownership and real repo selection. |
 | diagnostics | 2 | 6 | 4 | Slice committed | Current follow-up adds coverage proving declared health checks are reflected as implemented, stub, or broken rather than counted blindly. Remaining Now rows: suite-wide stub/broken detector and real `DiagnosticsHealthCheck`. |
 | document-lifecycle | 3 | 4 | 4 | Slice committed | `ab32f72b0` replaces oversold court-ready/immutable package copy with shipped admin, Publishing Studio, and acceptance-evidence wording, after `af4378a47` covered migration rollback safety. Continue with real health report, frontend-surface reconciliation, and admin screenshots. |
 | email-studio | 2 | 5 | 4 | Slice committed | `972d05d69` aligns manifest/composer copy with shipped package behavior after `f10e436ad` implemented the four declared `EmailStudioHealthCheck` diagnostics for template rendering, provider delivery, suppressions, and provider event/reply normalization. Continue with real provider message IDs and batched recipient writes. |

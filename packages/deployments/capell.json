@@ -6,7 +6,7 @@
     "kind": "package",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Deployments turns extension installation into a no-terminal workflow. Connect a repository over OAuth (GitHub, GitLab, or Bitbucket), and Capell publishes Composer requirement changes back to it as a pull request — auto-merged, queued for manual review, or committed directly, per your policy. Encrypted-at-rest tokens and per-record admin permissions keep credentials and repository details locked to authorised operators. It's the operations layer that lets non-developer site owners add capabilities to a Capell instance safely.",
+    "description": "Deployments lets site operators connect GitHub, GitLab, or Bitbucket repositories from the Capell admin and publish Composer requirement changes without server shell access. OAuth-backed connections store encrypted tokens, remember the repository owner/name, and let extension install flows open pull requests, auto-merge them, or make direct commits according to policy. It is the Operations bundle bridge between Marketplace installs and reviewed repository changes.",
     "product": {
         "group": "Capell Operations",
         "tier": "premium",
@@ -74,22 +74,22 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Install and update Capell extensions straight from the admin panel — connect GitHub, GitLab, or Bitbucket once and let Deployments open the composer.json pull request for you.",
+        "summary": "Connect a Git repository once, then install or update Capell extensions from admin workflows that publish composer.json changes as reviewed pull requests.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
-                "alt": "Deployments extension preview image",
-                "caption": "Deployments extension preview"
+                "alt": "Illustrated Deployments marketplace card showing Git-backed extension publishing",
+                "caption": "Deployments connects Capell extension installs to reviewed Git repository changes"
             },
             {
                 "path": "docs/screenshots/deployment-connection-page.png",
-                "alt": "Deployment connection page showing connected Git provider repository",
-                "caption": "Connect and review the Git provider repository used for extension install pull requests"
+                "alt": "Deployment Repository page showing GitHub, GitLab, and Bitbucket OAuth connect buttons",
+                "caption": "Start the Git provider OAuth flow from the Deployment Repository admin page"
             },
             {
                 "path": "docs/screenshots/deployment-connection-page-dark.png",
-                "alt": "Deployment connection page in dark mode",
-                "caption": "Deployment connection page in dark mode"
+                "alt": "Deployment Repository page in dark mode showing Git provider OAuth connect buttons",
+                "caption": "Dark-mode view of the Git provider connection entry point"
             }
         ],
         "categories": ["admin", "operations"]

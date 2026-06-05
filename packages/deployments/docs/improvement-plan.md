@@ -6,7 +6,7 @@
 
 Deployments stores per-repository Git provider connections (GitHub / GitLab / Bitbucket) and publishes Composer requirement changes back to the connected repository as either a direct commit or a pull request (optionally auto-merged). It exposes two admin surfaces (`DeploymentConnectionPage`, `DeploymentConnectionWidget`), three OAuth callback routes (`routes/oauth.php`), a single model/table (`DeploymentConnection` / `deployment_connections`), and the `PublishesComposerChanges` contract intended to be consumed by other packages' install flows. Domain logic lives in five Actions (`ConnectDeploymentAction`, `PublishComposerRequirementAction`, `PrepareComposerRequirementCommitAction`, plus two OAuth-state Actions) delegating to three `GitProviderContract` implementations behind `GitProviderFactory`. Dependencies are light: `capell-app/admin`, `capell-app/core`, `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`.
 
-Current marketplace summary: _"Install and update Capell extensions straight from the admin panel — connect GitHub, GitLab, or Bitbucket once and let Deployments open the composer.json pull request for you."_ Manifest declares the committed marketplace card plus **2** functional screenshots under `docs/screenshots/` (`deployment-connection-page.png`, `-dark.png`), and `docs/screenshots.json` now maps to those committed captures.
+Current marketplace summary: _"Connect a Git repository once, then install or update Capell extensions from admin workflows that publish composer.json changes as reviewed pull requests."_ Manifest declares the committed marketplace card plus **2** functional screenshots under `docs/screenshots/` (`deployment-connection-page.png`, `-dark.png`), and `docs/screenshots.json` now maps to those committed pre-connection OAuth entry-point captures.
 
 ## 2. Improvements (existing functionality)
 
@@ -48,17 +48,17 @@ Manifest `capabilities`: `["deployments", "deployments-admin"]`. Manifest `surfa
 
 ## 5. Marketplace & Selling
 
-**Current `summary`:** _"Deployments owns repository deployment connections and Composer requirement publishing for Capell CMS."_ — Reads like an internal ownership/architecture note ("owns"), not a buyer benefit. It describes plumbing, not outcomes, and the `composer.json` `description` ("Repository deployment connections and Composer publishing for Capell CMS.") is the same internal framing. Neither mentions GitHub/GitLab/Bitbucket, pull requests, or "install extensions without SSH/CLI" — the actual reason an operator would buy this.
+**Current `summary`:** _"Connect a Git repository once, then install or update Capell extensions from admin workflows that publish composer.json changes as reviewed pull requests."_ This now leads with the admin outcome instead of package plumbing, and the `composer.json` description uses the same buyer-facing framing.
 
 **Improved 1-sentence summary:**
 
-> Install and update Capell extensions straight from the admin panel — connect GitHub, GitLab, or Bitbucket once and let Deployments open the `composer.json` pull request for you.
+> Connect a Git repository once, then install or update Capell extensions from admin workflows that publish `composer.json` changes as reviewed pull requests.
 
 **Improved 3–4 sentence description:**
 
-> Deployments turns extension installation into a no-terminal workflow. Connect a repository over OAuth (GitHub, GitLab, or Bitbucket), and Capell publishes Composer requirement changes back to it as a pull request — auto-merged, queued for manual review, or committed directly, per your policy. Encrypted-at-rest tokens and per-record admin permissions keep credentials and repository details locked to authorised operators. It's the operations layer that lets non-developer site owners add capabilities to a Capell instance safely.
+> Deployments lets site operators connect GitHub, GitLab, or Bitbucket repositories from the Capell admin and publish Composer requirement changes without server shell access. OAuth-backed connections store encrypted tokens, remember the repository owner/name, and let extension install flows open pull requests, auto-merge them, or make direct commits according to policy. It is the Operations bundle bridge between Marketplace installs and reviewed repository changes.
 
-**Screenshot / media gaps:** Manifest advertises the committed marketplace card plus 2 real screenshots (light + dark), and `docs/screenshots.json` maps to those captures. There is no screenshot of an _active connection with a published PR_ (the empty state only shows connect buttons), and no GIF/flow of the OAuth → PR journey, which is the actual selling moment.
+**Screenshot / media gaps:** Manifest advertises the committed marketplace card plus 2 real screenshots (light + dark), and `docs/screenshots.json` maps to those captures. The two functional captures show the pre-connection OAuth entry point; there is still no screenshot of an active connection and no GIF/flow of the OAuth-to-PR journey. Do not claim active-connection or full OAuth-flow media coverage until those assets are committed.
 
 **Pricing / tier / bundle positioning:** `tier: premium`, `bundle: operations`. Premium is defensible _only if_ the differentiators ship — today the live feature set (store a token, render a connection, open a PR with no history/rollback/health gate) is closer to a mid-tier utility. Strengthen with deploy history + rollback + health-gated auto-merge (Section 3) to earn "premium." It pairs naturally inside the Operations bundle alongside **Diagnostics** (publish health surfaced as a real check) and **Migration Assistant** (both are in this package's `docs/Read Next`).
 
@@ -87,4 +87,4 @@ Manifest `capabilities`: `["deployments", "deployments-admin"]`. Manifest `surfa
 | Rollback / cancel-pending-install (consume `closePullRequest`)                                | Later  | M      | Med    | §3, §4      |
 | Health-gated auto-merge + deploy hooks + success/failure events                               | Later  | M      | High   | §3          |
 | Provider webhook ingestion for async deploy/PR status                                         | Later  | L      | Med    | §3          |
-| Rewrite marketplace summary/description; add active-connection + OAuth-flow media             | Now    | S      | High   | §5          |
+| Capture active-connection + OAuth-to-PR media after real assets exist                        | Blocked | S      | High   | §5          |

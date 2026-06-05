@@ -1,6 +1,6 @@
 # Deployments Overview
 
-The Deployments package stores Git provider connections and publishes Composer requirement changes for package installation flows without requiring shell access.
+The Deployments package connects GitHub, GitLab, or Bitbucket repositories to Capell admin workflows and publishes Composer requirement changes for package installation flows without requiring shell access.
 
 ## Responsibilities
 
@@ -34,4 +34,6 @@ Install flows should resolve `Capell\Deployments\Contracts\PublishesComposerChan
 
 ## Screenshot Coverage
 
-The screenshot contract is stored in [screenshots.json](screenshots.json). Current committed capture coverage includes the deployment connection page in light and dark mode after demo connection data is prepared.
+The screenshot contract is stored in [screenshots.json](screenshots.json). Current committed capture coverage includes the deployment connection page in light and dark mode before a repository is connected, showing the Git provider OAuth entry points.
+
+An active-connection capture and an OAuth-to-pull-request flow capture are still needed before Marketplace approval can claim that media coverage.
