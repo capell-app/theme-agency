@@ -8,6 +8,7 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\ShopifyCommerce\Actions\InstallShopifyCommercePermissionsAction;
 use Capell\ShopifyCommerce\Console\Commands\InstallShopifyCommerceCommand;
+use Capell\ShopifyCommerce\Console\Commands\SyncShopifyCustomersCommand;
 use Capell\ShopifyCommerce\Console\Commands\SyncShopifyProductsCommand;
 use Capell\ShopifyCommerce\Filament\Pages\ShopifyConnectionPage;
 use Illuminate\Support\ServiceProvider;
@@ -39,6 +40,7 @@ final class AdminServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
+                SyncShopifyCustomersCommand::class,
                 SyncShopifyProductsCommand::class,
             ]);
         }

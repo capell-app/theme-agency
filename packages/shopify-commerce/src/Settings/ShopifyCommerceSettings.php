@@ -13,7 +13,7 @@ final class ShopifyCommerceSettings extends Settings implements SettingsContract
     public string $api_version = '2026-04';
 
     /** @var array<int, string> */
-    public array $default_scopes = ['read_products'];
+    public array $default_scopes = ['read_products', 'read_customers'];
 
     public int $search_cache_ttl_minutes = 5;
 

@@ -53,6 +53,12 @@ return [
         'default_scopes' => 'Default OAuth scopes',
         'search_cache_ttl_minutes' => 'Search cache TTL',
     ],
+    'commands' => [
+        'customer_sync' => [
+            'no_connection' => 'No active Shopify connection was found.',
+            'synced' => '{0} No Shopify customer records were synced.|{1} Synced 1 Shopify customer record.|[2,*] Synced :count Shopify customer records.',
+        ],
+    ],
     'health' => [
         'storage_tables_label' => 'Shopify Commerce storage tables',
         'storage_tables_passed' => 'Connection, OAuth state, catalog, variant, and customer cache tables are present.',

@@ -51,12 +51,14 @@
     },
     "commands": {
         "install": "capell-shopify-commerce:install",
+        "syncCustomers": "capell-shopify-commerce:sync-customers",
         "setup": null,
         "demo": null,
         "doctor": null
     },
     "actions": {
         "install": "Capell\\ShopifyCommerce\\Actions\\InstallShopifyCommercePackageAction",
+        "syncShopifyCustomers": "Capell\\ShopifyCommerce\\Actions\\Customers\\SyncShopifyCustomersAction",
         "upsertShopifyCustomer": "Capell\\ShopifyCommerce\\Actions\\Customers\\UpsertShopifyCustomerAction"
     },
     "settings": ["Capell\\ShopifyCommerce\\Settings\\ShopifyCommerceSettings"],

@@ -1,10 +1,10 @@
 # Shopify Commerce Overview
 
-Shopify Commerce connects a site-scoped Shopify store to Capell, stores the admin API token, and keeps a local product and variant cache for admin-side catalog lookup.
+Shopify Commerce connects a site-scoped Shopify store to Capell, stores the admin API token, and keeps local product, variant, and customer caches for admin-side catalog lookup and CRM integrations.
 
 ## Boundary
 
-This package owns Shopify app credentials, authenticated OAuth routes, site-scoped connection records, local product cache tables, catalog sync Actions, and the Filament page used by admins to connect or disconnect a store.
+This package owns Shopify app credentials, authenticated OAuth routes, site-scoped connection records, local product/customer cache tables, catalog/customer sync Actions, and the Filament page used by admins to connect or disconnect a store.
 
 It does not own public storefront rendering, checkout, carts, orders, webhooks, or product merchandising components. It may cache Shopify customer records for CRM integrations, but public frontend packages must not expose `shopify_connections.access_token`, OAuth state, GraphQL errors, internal product/customer snapshots, admin URLs, or site assignment metadata in rendered HTML.
 
@@ -18,11 +18,11 @@ It does not own public storefront rendering, checkout, carts, orders, webhooks, 
 | Settings    | `shopify_commerce.api_version`, `shopify_commerce.default_scopes`, `shopify_commerce.search_cache_ttl_minutes`                                    |
 | Routes      | `GET capell/oauth/shopify/install`, `GET capell/oauth/shopify/callback`                                                                           |
 | Route names | `capell-shopify-commerce.oauth.install`, `capell-shopify-commerce.oauth.callback`                                                                 |
-| Commands    | `capell-shopify-commerce:install`, `capell-shopify-commerce:sync {connection?}`                                                                   |
+| Commands    | `capell-shopify-commerce:install`, `capell-shopify-commerce:sync {connection?}`, `capell-shopify-commerce:sync-customers {connection?}`           |
 | Admin page  | `filament.admin.pages.shopify-commerce` backed by `ShopifyConnectionPage`                                                                         |
 | Permission  | `manage_shopify_commerce`                                                                                                                         |
-| Models      | `ShopifyConnection`, `ShopifyOAuthState`, `ShopifyProduct`, `ShopifyProductVariant`                                                               |
-| Tables      | `shopify_connections`, `shopify_oauth_states`, `shopify_products`, `shopify_product_variants`                                                     |
+| Models      | `ShopifyConnection`, `ShopifyOAuthState`, `ShopifyProduct`, `ShopifyProductVariant`, `ShopifyCustomer`                                            |
+| Tables      | `shopify_connections`, `shopify_oauth_states`, `shopify_products`, `shopify_product_variants`, `shopify_customers`                                |
 | Health      | `shopify-commerce.package-health` using `ShopifyCommerceHealthCheck`                                                                              |
 | Cache keys  | `capell-shopify-commerce.sync.{connectionId}`, `capell-shopify-commerce.search.{connectionId}.{version}.{hash}.{limit}`                           |
 
@@ -88,6 +88,7 @@ Shopify Commerce does not currently expose a formal provider contract for third-
 | ----------------------------- | -------------------------------------------------------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | Connect or disconnect a store | `ConnectShopifyStoreAction`, `DisconnectShopifyStoreAction`    | Admin UI or a trusted internal Action                     | Action test with fake token data and asserted `shopify_connections` changes.                    |
 | Trigger sync                  | `SyncShopifyProductsAction::run()` or `::dispatch()`           | Trusted admin command, job, or internal integration       | Fake HTTP or mock Actions; assert status transitions and `bulk_operation_id`.                   |
+| Sync customer cache           | `SyncShopifyCustomersAction::run()`                            | Trusted admin command, job, or internal integration       | Fake paginated Admin GraphQL customer responses; assert encrypted local customer rows.          |
 | Search cached products        | `SearchShopifyProductsAction::run($term, $limit, $connection)` | Admin-facing product picker or internal commerce workflow | Seed products; assert connection-scoped results and cache behavior.                             |
 | Expose safe frontend behavior | A separate package-owned public Action                         | Public Actions or a package controller                    | Frontend safety test proving no token, OAuth state, admin URL, or raw snapshot leaks.           |
 | Report package health         | `ShopifyCommerceHealthCheck`                                   | Diagnostics package discovery                             | Provider or manifest test asserting health class exists and implements `ChecksExtensionHealth`. |
@@ -102,6 +103,7 @@ Do not invent provider tags or registry contracts until a second concrete integr
 | OAuth route validation          | `vendor/bin/pest packages/shopify-commerce/tests/Feature/OAuth --configuration=phpunit.xml`                                    |
 | Shopify HMAC verification       | `vendor/bin/pest packages/shopify-commerce/tests/Unit/Actions/ValidateShopifyHmacActionTest.php --configuration=phpunit.xml`   |
 | Bulk sync lifecycle             | `vendor/bin/pest packages/shopify-commerce/tests/Unit/Actions/SyncShopifyProductsActionTest.php --configuration=phpunit.xml`   |
+| Customer sync producer          | `vendor/bin/pest packages/shopify-commerce/tests/Unit/Actions/SyncShopifyCustomersActionTest.php --configuration=phpunit.xml`  |
 | Cached search and live fallback | `vendor/bin/pest packages/shopify-commerce/tests/Unit/Actions/SearchShopifyProductsActionTest.php --configuration=phpunit.xml` |
 | Full package                    | `vendor/bin/pest packages/shopify-commerce/tests --configuration=phpunit.xml`                                                  |
 

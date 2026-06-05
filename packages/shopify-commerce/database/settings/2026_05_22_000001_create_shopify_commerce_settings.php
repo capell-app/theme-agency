@@ -13,7 +13,7 @@ return new class extends SettingsMigration
         }
 
         if (! $this->migrator->exists('shopify_commerce.default_scopes')) {
-            $this->migrator->add('shopify_commerce.default_scopes', ['read_products']);
+            $this->migrator->add('shopify_commerce.default_scopes', ['read_products', 'read_customers']);
         }
 
         if (! $this->migrator->exists('shopify_commerce.search_cache_ttl_minutes')) {
