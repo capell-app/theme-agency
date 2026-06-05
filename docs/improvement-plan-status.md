@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 158 |
+| Now    | 155 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -56,7 +56,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | media-ai | 2 | 6 | 3 | Slice committed | Current follow-up removes unsupported console metadata, verifies disabled/null-provider/operation-validation paths, and reconciles docs with the package's notification-only no-mutation behavior. Remaining Now rows: first-party AI Orchestrator image-doctor adapter and remaining marketplace/bundle positioning work. |
 | media-library | 7 | 5 | 3 | Slice committed | `14d6d286c` exercises configured owner FK columns in media health and orphan reports and documents the `owner_foreign_keys` config shape. Continue with cleanup UI, duplicate detection, owner FK discovery/depth, and completion review. |
 | migration-assistant | 7 | 5 | 3 | Slice committed | `3f14f3f77` landed readiness fixes; continue with end-to-end import rows. |
-| navigation | 6 | 5 | 4 | Slice committed | `ce27d2110` adds explicit non-admin public-output safety coverage proving page navigation does not expose authoring labels, selectors, package names, model IDs, or signed URLs, after health diagnostics and record-switcher integration fixes. Continue with resolver/render-boundary rows, manifest metadata, screenshots, marketplace copy, and completion review. |
+| navigation | 3 | 5 | 4 | Slice committed | Current follow-up adds metadata coverage for the already-shipped direct Core dependency, manifest capabilities/cache invalidation sources, and marketplace/composer copy. Remaining Now rows: real health probes, JSON reverse-lookup replacement, and screenshot manifest reconciliation. |
 | newsletter | 6 | 6 | 4 | Slice committed | `d934f6d59` landed token hardening; delivery engine and campaign rows remain. |
 | notes | 6 | 7 | 3 | Slice committed | `0a153655b` landed health/body validation; reminders and inbox workflow remain. |
 | password-policy | 1 | 6 | 4 | Slice committed | `899d37760` adds direct middleware coverage for redirect, forced-change allowed route, logout allowed route, and compliant no-op behavior, after prior HIBP/expiry/manifest/complexity/history slices. Remaining Now row: marketplace screenshots and summary/description. |
