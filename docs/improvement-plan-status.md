@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 197 |
+| Now    | 196 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -79,7 +79,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | theme-local-services | 1 | 8 | 3 | Slice committed | Current follow-up replaces the decorative quote fallback with a real translated public form, configurable `formAction`/`formMethod`, and provider-supplied Form Builder availability, after the prior Local Services slice aligned manifest surfaces with the README and demo command. Continue with contact click-to-call/address/map, screenshots, LocalBusiness schema, hero LCP/alt, literal translation sweep, token/radius work, and full section/render-budget coverage. |
 | theme-nonprofit | 1 | 6 | 4 | Slice committed | Current follow-up promotes the hero heading to the single public `<h1>` after the `main-content` skip-link target and tests the following section heading hierarchy, after the prior Nonprofit slice raised the package Composer PHP requirement to `^8.4`, populated the changelog, and asserted the package PHP constraint. Continue with screenshots, donation/payment flow, volunteer/event/story connected branches, token colours, hero LCP/progressbar, data-driven campaigns/stories/contact, and render-budget coverage. |
 | theme-portfolio | 3 | 8 | 3 | Slice committed | Current follow-up reconciles product-group docs to `Capell Themes`, documents the manifest/runtime `extends` split in README and overview docs, and asserts both boundaries in manifest tests, after the prior Portfolio slice translated newsletter chrome, removed inert `action=\"#\"` fallback forms, supported hydrated capture actions, and updated docs/tests. Continue with screenshots, data-driven testimonials/media-kit/contact, creator-lane about/bio, image LCP/alt, reduced motion, token colours, dark preset, and render-budget coverage. |
-| theme-saas | 4 | 7 | 3 | Slice committed | Current follow-up reconciles manifest cache safety by keeping theme output non-cacheable and disabling queued invalidation while no invalidation sources are declared, after the prior SaaS slice wired Content Sections, Document Lifecycle, and Form Builder availability into pricing/docs/demo-request guidance with branch tests and docs. Continue with rendered anonymous leak tests, adapter translation, real pricing matrix, demo/trial form embed, route-backed screenshots, jargon copy, token colours, dark mode, and interactive calculator work. |
+| theme-saas | 3 | 7 | 3 | Slice committed | Current follow-up aligns README/overview verification commands to the repo-root Pest invocation and documents that Theme SaaS does not ship a package-local PHPUnit config, after the prior SaaS slice reconciled manifest cache safety by disabling queued invalidation for non-cacheable output. Continue with rendered anonymous leak tests, adapter translation, real pricing matrix, demo/trial form embed, route-backed screenshots, jargon copy, token colours, dark mode, and interactive calculator work. |
 | translation-manager | 6 | 5 | 5 | Slice committed | `56038d0db` landed import/export/readiness work; continue with placeholder validation and MT review. |
 | url-manager | 5 | 7 | 4 | Slice committed | `f060bcb3e` landed verification improvements; continue with opportunity/decorator reachability. |
 | welcome-tour | 6 | 5 | 5 | Slice committed | `ce8f38f2d` landed improvements; continue with host-column/runtime edge rows. |

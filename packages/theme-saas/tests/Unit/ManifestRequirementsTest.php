@@ -52,6 +52,24 @@ describe('theme saas capell.json manifest', function (): void {
             'queueInvalidation' => false,
         ]);
     });
+
+    it('documents the repo-root package test command without a package-local phpunit config', function (): void {
+        $packageReadme = File::get(__DIR__ . '/../../README.md');
+        $overview = File::get(__DIR__ . '/../../docs/overview.md');
+        $improvementPlan = File::get(__DIR__ . '/../../docs/improvement-plan.md');
+
+        expect($packageReadme)
+            ->toContain('Run package tests from the repository root')
+            ->toContain('vendor/bin/pest packages/theme-saas/tests')
+            ->not->toContain('vendor/bin/pest packages/theme-saas/tests --configuration=phpunit.xml')
+            ->and($overview)
+            ->toContain('From the repository root, run `vendor/bin/pest packages/theme-saas/tests`')
+            ->toContain('this package does not ship its own PHPUnit config')
+            ->not->toContain('vendor/bin/pest packages/theme-saas/tests --configuration=phpunit.xml')
+            ->and($improvementPlan)
+            ->toContain('Verification command context documented.')
+            ->not->toContain('Fix docs: remove `--configuration=phpunit.xml`');
+    });
 });
 
 /**
