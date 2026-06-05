@@ -26,6 +26,38 @@ return [
     'service_launch_label' => 'LAUNCH',
     'service_launch_title' => 'Performance tune-up',
     'service_launch_summary' => 'Rapid iteration on headlines, UI, and conversion points.',
+    'testimonials_summary' => 'Client stories with measurable outcomes, visual direction, and clear outcomes.',
+    'testimonial_attribution_label' => 'Client Snapshot',
+    'testimonial_defaults' => [
+        [
+            'quote' => 'Great clarity, premium design execution, and measurable uplift.',
+            'attribution' => 'Client Snapshot',
+        ],
+        [
+            'quote' => 'A refined look and feel that reflects our brand promise from first screen.',
+            'attribution' => 'Creative Partner',
+        ],
+        [
+            'quote' => 'The layout is polished, fast, and conversion-minded.',
+            'attribution' => 'Design Lead',
+        ],
+    ],
+    'speaking_media_kit_label' => 'Speaking package',
+    'speaking_media_kit_summary' => 'Turn your thought leadership into reusable assets for proposals, websites, and partner channels.',
+    'speaking_media_kit_defaults' => [
+        [
+            'title' => 'Deck design',
+            'summary' => 'High-end keynote templates and visual language.',
+        ],
+        [
+            'title' => 'Media kit PDF',
+            'summary' => 'Press-ready assets with brand consistency and CTA rails.',
+        ],
+        [
+            'title' => 'Interview prep',
+            'summary' => 'Message architecture to communicate impact in under 90 seconds.',
+        ],
+    ],
     'capabilities_label' => 'Capabilities',
     'capability_signal' => 'Studio system',
     'brief_label' => 'Brief',
