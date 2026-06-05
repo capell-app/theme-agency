@@ -19,10 +19,12 @@ final class RecordConsentAction
         ?Model $subject = null,
         ?Model $source = null,
     ): ConsentRecord {
+        $resolvedSubject = $subject ?? $this->subjectFromSource($source);
+
         return ConsentRecord::query()->create([
             'site_id' => $consentData->siteId,
-            'subject_type' => PrivacyIdentifier::morphType($subject),
-            'subject_id' => $subject?->getKey(),
+            'subject_type' => PrivacyIdentifier::morphType($resolvedSubject),
+            'subject_id' => $resolvedSubject?->getKey(),
             'source_type' => PrivacyIdentifier::morphType($source),
             'source_id' => $source?->getKey(),
             'policy_id' => $consentData->policyId,
@@ -38,5 +40,26 @@ final class RecordConsentAction
             'revoked_at' => $consentData->revokedAt,
             'metadata' => $consentData->metadata === [] ? null : $consentData->metadata,
         ]);
+    }
+
+    private function subjectFromSource(?Model $source): ?Model
+    {
+        if (! $source instanceof Model) {
+            return null;
+        }
+
+        foreach (['subject', 'visit'] as $relationName) {
+            if (! $source->relationLoaded($relationName)) {
+                continue;
+            }
+
+            $relatedModel = $source->getRelation($relationName);
+
+            if ($relatedModel instanceof Model) {
+                return $relatedModel;
+            }
+        }
+
+        return null;
     }
 }
