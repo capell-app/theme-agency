@@ -13,6 +13,7 @@ use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Knowledge\Console\Commands\DemoCommand;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -113,7 +114,7 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
     }
 
     /**
-     * @param  array<string, array<string, bool>>  $optionalIntegrations
+     * @param  array<string, array<string, mixed>>  $optionalIntegrations
      */
     private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ?ViewSectionRenderer
     {
@@ -151,13 +152,16 @@ final class KnowledgeThemeServiceProvider extends ServiceProvider
     }
 
     /**
-     * @return array<string, array<string, bool>>
+     * @return array<string, array<string, mixed>>
      */
     private function optionalSectionIntegrations(bool $blogAvailable, bool $searchAvailable, bool $newsletterAvailable): array
     {
         return [
             'resource-library' => ['blogAvailable' => $blogAvailable],
-            'search-listing' => ['searchAvailable' => $searchAvailable],
+            'search-listing' => [
+                'searchAvailable' => $searchAvailable,
+                'searchAction' => Route::has('capell-frontend.search') ? route('capell-frontend.search') : url('/search'),
+            ],
             'topic-index' => ['searchAvailable' => $searchAvailable],
             'newsletter' => ['newsletterAvailable' => $newsletterAvailable],
         ];

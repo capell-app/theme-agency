@@ -84,7 +84,7 @@ Prioritized. Real templates only.
 | Item                                                                                                     | Bucket | Effort | Impact | Section ref |
 | -------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
 | Add doc/article layout (sidebar + TOC + breadcrumbs) backing `knowledge-docs-layout.svg`                 | Now    | L      | High   | §3          |
-| Make `search-listing` a real, prominent search form (cross-sell `capell-app/search`)                     | Now    | M      | High   | §3, §2.6    |
+| Make `search-listing` a real, prominent search form (cross-sell `capell-app/search`)                     | Done   | M      | High   | §3, §2.6    |
 | Generate + commit the 9 `docs/screenshots.json` renders; replace placeholder SVGs                        | Now    | M      | High   | §4, §5      |
 | Add code-block / `pre`/`code` prose styling                                                              | Next   | M      | High   | §3          |
 | Add dark mode (tokens + `dark:` variants) and a dark screenshot                                          | Next   | L      | High   | §2.3, §5    |
