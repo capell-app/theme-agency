@@ -83,7 +83,7 @@ for (const packageName of packageNames) {
 }
 
 const manifest = {
-    generatedFor: 'capell-docs-deployment',
+    generatedFor: 'deployment-screenshot-runner',
     source: 'packages/*/docs/screenshots.json',
     outputRoot: 'packages/*/docs/screenshots',
     requirements,

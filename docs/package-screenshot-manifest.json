@@ -1,5 +1,5 @@
 {
-    "generatedFor": "capell-docs-deployment",
+    "generatedFor": "deployment-screenshot-runner",
     "source": "packages/*/docs/screenshots.json",
     "outputRoot": "packages/*/docs/screenshots",
     "requirements": [
@@ -29,7 +29,9 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:address-demo",
-            "demoParams": ["sites"],
+            "demoParams": [
+                "sites"
+            ],
             "doctorCommand": null,
             "entryCount": 5,
             "browserTestCount": 0
@@ -95,7 +97,11 @@
             "installCommand": "capell:blog-install",
             "setupCommand": "capell:blog-setup",
             "demoCommand": "capell:blog-demo",
-            "demoParams": ["sites", "languages", "force"],
+            "demoParams": [
+                "sites",
+                "languages",
+                "force"
+            ],
             "doctorCommand": null,
             "entryCount": 10,
             "browserTestCount": 0
@@ -546,7 +552,11 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-agency-demo",
-            "demoParams": ["url", "languages", "sites"],
+            "demoParams": [
+                "url",
+                "languages",
+                "sites"
+            ],
             "doctorCommand": null,
             "entryCount": 12,
             "browserTestCount": 0
@@ -557,7 +567,11 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-commerce-demo",
-            "demoParams": ["url", "languages", "sites"],
+            "demoParams": [
+                "url",
+                "languages",
+                "sites"
+            ],
             "doctorCommand": null,
             "entryCount": 12,
             "browserTestCount": 0
@@ -568,7 +582,11 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-corporate-demo",
-            "demoParams": ["url", "languages", "sites"],
+            "demoParams": [
+                "url",
+                "languages",
+                "sites"
+            ],
             "doctorCommand": null,
             "entryCount": 12,
             "browserTestCount": 0
@@ -579,7 +597,11 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-education-demo",
-            "demoParams": ["url", "languages", "sites"],
+            "demoParams": [
+                "url",
+                "languages",
+                "sites"
+            ],
             "doctorCommand": null,
             "entryCount": 9,
             "browserTestCount": 0
@@ -590,7 +612,11 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-healthcare-demo",
-            "demoParams": ["url", "languages", "sites"],
+            "demoParams": [
+                "url",
+                "languages",
+                "sites"
+            ],
             "doctorCommand": null,
             "entryCount": 8,
             "browserTestCount": 0
@@ -634,7 +660,11 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-knowledge-demo",
-            "demoParams": ["url", "languages", "sites"],
+            "demoParams": [
+                "url",
+                "languages",
+                "sites"
+            ],
             "doctorCommand": null,
             "entryCount": 9,
             "browserTestCount": 0
@@ -645,7 +675,11 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-local-services-demo",
-            "demoParams": ["url", "languages", "sites"],
+            "demoParams": [
+                "url",
+                "languages",
+                "sites"
+            ],
             "doctorCommand": null,
             "entryCount": 9,
             "browserTestCount": 0
@@ -656,7 +690,11 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-nonprofit-demo",
-            "demoParams": ["url", "languages", "sites"],
+            "demoParams": [
+                "url",
+                "languages",
+                "sites"
+            ],
             "doctorCommand": null,
             "entryCount": 9,
             "browserTestCount": 0
@@ -667,7 +705,11 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-portfolio-demo",
-            "demoParams": ["url", "languages", "sites"],
+            "demoParams": [
+                "url",
+                "languages",
+                "sites"
+            ],
             "doctorCommand": null,
             "entryCount": 9,
             "browserTestCount": 0
@@ -678,7 +720,11 @@
             "installCommand": null,
             "setupCommand": null,
             "demoCommand": "capell:theme-saas-demo",
-            "demoParams": ["url", "languages", "sites"],
+            "demoParams": [
+                "url",
+                "languages",
+                "sites"
+            ],
             "doctorCommand": null,
             "entryCount": 12,
             "browserTestCount": 0

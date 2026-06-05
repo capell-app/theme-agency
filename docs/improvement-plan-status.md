@@ -96,8 +96,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 - Non-standard screenshot paths: `agent-delivery`, `frontend-authoring`, `media-ai`, `publishing-studio`, and `url-manager`; normalize these before using the repo-wide screenshot manifest as a release gate.
 - Packages with no marketplace screenshots: `automation-studio`, `contacts`, `customer-portal`, `experiments`, `inertia`, `inertia-react-adapter`, `inertia-vue-adapter`, `knowledge-base`, `payments`, and `privacy-center`.
 - Recent manual screenshot slices that should be regenerated or revalidated through the Capell screenshot runner before final completion review: `hero`, `password-policy`, `structured-content-library`, and `newsletter`.
-- The repo-level `scripts/validate-screenshot-manifests.js` is stale against current package practice: it still requires `marketplace.screenshots[].path` to start with `docs/assets/marketplace/`, while many packages now advertise `docs/screenshots/*.png`. Update the validator before using it as the source of truth for screenshot completion.
-- `scripts/build-package-screenshot-manifest.js` emits top-level `generatedFor: capell-docs-deployment`, while package manifests use `deployment-screenshot-runner`; reconcile the naming before broad release checks.
+- The repo-level screenshot tooling now accepts both interim `docs/assets/marketplace/` artwork and runner-backed `docs/screenshots/` PNG marketplace entries, and the aggregate manifest now uses `generatedFor: deployment-screenshot-runner`.
 
 ## Next Audit Queue
 

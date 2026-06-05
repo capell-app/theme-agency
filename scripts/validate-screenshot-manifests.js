@@ -259,9 +259,12 @@ function validateMarketplaceScreenshots(packageName) {
             continue
         }
 
-        if (!screenshot.path.startsWith('docs/assets/marketplace/')) {
+        if (
+            !screenshot.path.startsWith('docs/assets/marketplace/') &&
+            !screenshot.path.startsWith('docs/screenshots/')
+        ) {
             failures.push(
-                `${screenshotLabel}.path must start with docs/assets/marketplace/`,
+                `${screenshotLabel}.path must start with docs/assets/marketplace/ or docs/screenshots/`,
             )
         }
 
