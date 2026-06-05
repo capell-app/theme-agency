@@ -67,7 +67,7 @@ Tied to declared `capabilities[]`: `diagnostics`, `diagnostics-admin`, `diagnost
 
 | Item                                                                                                            | Bucket | Effort | Impact | Section ref |
 | --------------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Reflect declared `healthChecks` classes; report implemented-vs-stub instead of `count()`                        | Now    | M      | High   | §2, §3, §4  |
+| Reflect declared `healthChecks` classes; report implemented-vs-stub instead of `count()`                        | Done   | M      | High   | §2, §3, §4 — Done 2026-06-05: `BuildPackagesInstalledAction` reflects declared classes and the packages widget reports implemented/declared plus stub/broken counts. |
 | Stub/broken health-check detector across all packages (the differentiator)                                      | Now    | M      | High   | §3          |
 | Replace palette danger denylist heuristic with explicit allowlist/risk map                                      | Done   | M      | High   | §2, §4 — Done 2026-06-04: explicit map plus safe/confirm/dangerous tests. |
 | Make `DiagnosticsHealthCheck` a real check (reference implementation)                                           | Now    | M      | High   | §2, §4      |

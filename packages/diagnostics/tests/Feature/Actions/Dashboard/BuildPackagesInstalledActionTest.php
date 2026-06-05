@@ -37,6 +37,7 @@ it('hydrates installed package health metadata from local package manifests', fu
             ['key' => 'events.tables', 'label' => 'Tables', 'class' => PassingFixtureHealthCheck::class],
             ['key' => 'events.routes', 'label' => 'Routes', 'class' => StubFixtureHealthCheck::class],
             ['key' => 'events.missing', 'label' => 'Missing', 'class' => 'Missing\\EventsHealthCheck'],
+            ['key' => 'events.invalid', 'label' => 'Invalid', 'class' => stdClass::class],
         ],
     ], JSON_THROW_ON_ERROR));
 
@@ -48,11 +49,11 @@ it('hydrates installed package health metadata from local package manifests', fu
             ->and($package->name)->toBe('events')
             ->and($package->displayName)->toBe('Events')
             ->and($package->bundle)->toBe('growth')
-            ->and($package->healthCheckCount)->toBe(3)
-            ->and($package->healthCheckDeclaredCount)->toBe(3)
+            ->and($package->healthCheckCount)->toBe(4)
+            ->and($package->healthCheckDeclaredCount)->toBe(4)
             ->and($package->healthCheckImplementedCount)->toBe(1)
             ->and($package->healthCheckStubCount)->toBe(1)
-            ->and($package->healthCheckBrokenCount)->toBe(1)
+            ->and($package->healthCheckBrokenCount)->toBe(2)
             ->and($package->installCommand)->toBe('capell:events-install')
             ->and($package->doctorCommand)->toBe('capell:events-doctor');
     } finally {
