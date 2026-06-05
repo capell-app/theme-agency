@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 98 |
+| Now    | 97 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -56,7 +56,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | media-ai | 1 | 6 | 3 | Slice committed | Current follow-up rewrites marketplace/composer/docs copy around shipped provider-backed Doctor image operations, wires committed light/dark screenshots, and positions Media AI as a premium Media Library add-on. Remaining Now row: first-party AI Orchestrator image-doctor adapter. |
 | media-library | 4 | 5 | 3 | Slice committed | Current follow-up adds a translated media-health issue column/filter backed by the configured stale threshold, after config-driven upload validation. Remaining Now rows: real health checks, package config/owner FK defaults, visibility preservation, and docs/screenshot reconciliation. |
 | migration-assistant | 4 | 5 | 3 | Slice committed | Current follow-up locks the live `ImportSessionKind` contract to package-owned page/site imports and documents WordPress/spreadsheet source readers as extension paths, after garbled prose cleanup. Remaining Now rows: rollback table-name repair, marketplace media/copy, and health probes. |
-| navigation | 3 | 5 | 4 | Slice committed | Current follow-up adds metadata coverage for the already-shipped direct Core dependency, manifest capabilities/cache invalidation sources, and marketplace/composer copy. Remaining Now rows: real health probes, JSON reverse-lookup replacement, and screenshot manifest reconciliation. |
+| navigation | 2 | 5 | 4 | Slice committed | Current follow-up tightens `NavigationHealthCheck` so storage, morph alias, main navigation, orphaned-reference, and package-owned Foundation header hook diagnostics are real and covered; unrelated/partial header hooks now fail. Remaining Now rows: JSON reverse-lookup replacement and screenshot manifest reconciliation. |
 | newsletter | 3 | 6 | 4 | Slice committed | Current follow-up locks the direct `FormSubmitted::class` listener registration and proves event dispatch creates a subscriber, after public-token replay coverage and Fake provider production blocking. Remaining Now rows: real health checks, marketplace copy, and screenshots. |
 | notes | 4 | 7 | 3 | Slice committed | Current follow-up renders scoped inbox notes and marks displayed mentions read; `0a153655b` landed health/body validation. Remaining Now rows: resolve/reopen/complete UI, reminder reconciliation, anon/non-admin safety coverage before broader read surfaces, and display sanitization. |
 | password-policy | 1 | 6 | 4 | Slice committed | `899d37760` adds direct middleware coverage for redirect, forced-change allowed route, logout allowed route, and compliant no-op behavior, after prior HIBP/expiry/manifest/complexity/history slices. Remaining Now row: marketplace screenshots and summary/description. |
