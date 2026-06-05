@@ -92,7 +92,7 @@ final class SaasThemePageAdapter implements ThemePageAdapter
         $spotlight = $this->contentListingFrom(
             renderData: $renderData,
             key: 'spotlight',
-            defaultHeading: 'Theme spotlight',
+            defaultHeading: __('capell-theme-saas::generic.theme_spotlight_heading'),
             variant: 'spotlight',
         );
 
@@ -103,7 +103,7 @@ final class SaasThemePageAdapter implements ThemePageAdapter
         $gallery = $this->contentListingFrom(
             renderData: $renderData,
             key: 'gallery',
-            defaultHeading: 'Gallery',
+            defaultHeading: __('capell-theme-saas::generic.gallery_heading'),
             variant: 'gallery',
         );
 
@@ -114,7 +114,7 @@ final class SaasThemePageAdapter implements ThemePageAdapter
         $items = $this->contentListingFrom(
             renderData: $renderData,
             key: 'items',
-            defaultHeading: 'Browse entries',
+            defaultHeading: __('capell-theme-saas::generic.browse_entries_heading'),
         );
 
         if ($items instanceof ContentListingSectionData) {
@@ -148,12 +148,12 @@ final class SaasThemePageAdapter implements ThemePageAdapter
         }
 
         return FeatureSectionData::from([
-            'heading' => data_get($renderData, 'features_heading', 'Featured modules'),
+            'heading' => data_get($renderData, 'features_heading', __('capell-theme-saas::generic.featured_modules_heading')),
             'summary' => data_get($renderData, 'features_summary', data_get($renderData, 'summary')),
             'features' => collect($features)
                 ->filter(fn (mixed $feature): bool => is_array($feature))
                 ->map(fn (array $feature): array => [
-                    'title' => (string) data_get($feature, 'title', data_get($feature, 'name', 'Feature')),
+                    'title' => (string) data_get($feature, 'title', data_get($feature, 'name', __('capell-theme-saas::generic.feature_label'))),
                     'description' => (string) data_get($feature, 'description', data_get($feature, 'summary', '')),
                     'image' => data_get($feature, 'image', data_get($feature, 'imageUrl')),
                     'type' => data_get($feature, 'type'),
@@ -211,7 +211,9 @@ final class SaasThemePageAdapter implements ThemePageAdapter
         }
 
         return ProofSectionData::from([
-            'heading' => array_is_list($proof) ? 'Proof points' : data_get($proof, 'heading', 'Proof points'),
+            'heading' => array_is_list($proof)
+                ? __('capell-theme-saas::generic.proof_points_heading')
+                : data_get($proof, 'heading', __('capell-theme-saas::generic.proof_points_heading')),
             'summary' => array_is_list($proof) ? null : data_get($proof, 'summary'),
             'items' => $items,
         ]);
@@ -223,51 +225,51 @@ final class SaasThemePageAdapter implements ThemePageAdapter
     private function premiumLandingSections(string $title, ?Translation $translation): array
     {
         $summary = $this->summaryFrom($translation?->content)
-            ?? 'A product-led landing page for teams that need CMS structure, growth pages, and governed publishing to move together.';
+            ?? __('capell-theme-saas::generic.premium_landing_summary');
 
         return [
             new HeroSectionData(
                 heading: $title,
-                eyebrow: 'Engineered for momentum',
+                eyebrow: __('capell-theme-saas::generic.premium_landing_eyebrow'),
                 summary: $summary,
                 actions: [
-                    ['label' => 'Start free', 'url' => '/contact', 'style' => 'primary'],
-                    ['label' => 'View demo', 'url' => '/resources', 'style' => 'secondary'],
+                    ['label' => __('capell-theme-saas::generic.start_free_label'), 'url' => '/contact', 'style' => 'primary'],
+                    ['label' => __('capell-theme-saas::generic.view_demo_label'), 'url' => '/resources', 'style' => 'secondary'],
                 ],
             ),
             new ProofSectionData(
-                heading: 'Built for fast-moving publishing teams',
-                summary: 'Compact proof modules keep the first screen commercially sharp without storing presentation markup in page content.',
+                heading: __('capell-theme-saas::generic.premium_proof_heading'),
+                summary: __('capell-theme-saas::generic.premium_proof_summary'),
                 items: [
-                    ['metric' => '2.5k+', 'name' => 'Teams onboarded'],
-                    ['metric' => '42%', 'name' => 'Faster page launches'],
-                    ['metric' => '99.9%', 'name' => 'Cache-safe output'],
+                    ['metric' => '2.5k+', 'name' => __('capell-theme-saas::generic.teams_onboarded_label')],
+                    ['metric' => '42%', 'name' => __('capell-theme-saas::generic.faster_page_launches_label')],
+                    ['metric' => '99.9%', 'name' => __('capell-theme-saas::generic.cache_safe_output_label')],
                 ],
             ),
             new FeatureSectionData(
-                heading: 'Everything a premium landing page needs',
-                summary: 'The page keeps editable content portable while the active premium theme owns the conversion presentation.',
+                heading: __('capell-theme-saas::generic.premium_features_heading'),
+                summary: __('capell-theme-saas::generic.premium_features_summary'),
                 features: [
-                    ['title' => 'Live content model', 'description' => 'Typed pages, layouts, and blocks keep campaign surfaces consistent.'],
-                    ['title' => 'Growth dashboard feel', 'description' => 'Structured cards and metrics make the public page feel product-led.'],
-                    ['title' => 'Theme-owned rendering', 'description' => 'SaaS carries the premium landing rhythm without moving it into Foundation.'],
+                    ['title' => __('capell-theme-saas::generic.live_content_model_title'), 'description' => __('capell-theme-saas::generic.live_content_model_description')],
+                    ['title' => __('capell-theme-saas::generic.growth_dashboard_title'), 'description' => __('capell-theme-saas::generic.growth_dashboard_description')],
+                    ['title' => __('capell-theme-saas::generic.theme_owned_rendering_title'), 'description' => __('capell-theme-saas::generic.theme_owned_rendering_description')],
                 ],
             ),
             new ContentListingSectionData(
-                heading: 'Route visitors into the right next step',
-                summary: 'Use the landing page to connect services, resources, pricing, and contact without a separate template stack.',
+                heading: __('capell-theme-saas::generic.premium_content_heading'),
+                summary: __('capell-theme-saas::generic.premium_content_summary'),
                 items: [
-                    ['title' => 'Implementation', 'summary' => 'Plan a CMS rollout with clear technical ownership.', 'url' => '/implementation', 'type' => 'Delivery'],
-                    ['title' => 'Resources', 'summary' => 'Read practical guides for Capell page and package architecture.', 'url' => '/resources', 'type' => 'Learning'],
-                    ['title' => 'Pricing', 'summary' => 'Match the build scope to the right commercial path.', 'url' => '/pricing', 'type' => 'Commercial'],
+                    ['title' => __('capell-theme-saas::generic.implementation_title'), 'summary' => __('capell-theme-saas::generic.implementation_summary'), 'url' => '/implementation', 'type' => __('capell-theme-saas::generic.delivery_label')],
+                    ['title' => __('capell-theme-saas::generic.resources_title'), 'summary' => __('capell-theme-saas::generic.resources_summary'), 'url' => '/resources', 'type' => __('capell-theme-saas::generic.learning_label')],
+                    ['title' => __('capell-theme-saas::generic.pricing_title'), 'summary' => __('capell-theme-saas::generic.pricing_summary'), 'url' => '/pricing', 'type' => __('capell-theme-saas::generic.commercial_label')],
                 ],
             ),
             new CtaSectionData(
-                heading: 'Launch the next landing page with the premium theme',
-                summary: 'Foundation stays boring; SaaS carries the opinionated conversion layout.',
+                heading: __('capell-theme-saas::generic.premium_cta_heading'),
+                summary: __('capell-theme-saas::generic.premium_cta_summary'),
                 actions: [
-                    ['label' => 'Contact team', 'url' => '/contact', 'style' => 'primary'],
-                    ['label' => 'Browse services', 'url' => '/services', 'style' => 'secondary'],
+                    ['label' => __('capell-theme-saas::generic.contact_team_label'), 'url' => '/contact', 'style' => 'primary'],
+                    ['label' => __('capell-theme-saas::generic.browse_services_label'), 'url' => '/services', 'style' => 'secondary'],
                 ],
             ),
         ];
@@ -355,11 +357,11 @@ final class SaasThemePageAdapter implements ThemePageAdapter
         return NavigationData::from([
             'brandName' => $site->title ?? $site->name ?? 'Capell',
             'items' => [
-                ['label' => 'Product', 'url' => '#content'],
-                ['label' => 'Growth', 'url' => '#gallery'],
-                ['label' => 'Team', 'url' => '#footer'],
+                ['label' => __('capell-theme-saas::generic.product_label'), 'url' => '#content'],
+                ['label' => __('capell-theme-saas::generic.growth_label'), 'url' => '#gallery'],
+                ['label' => __('capell-theme-saas::generic.team_label'), 'url' => '#footer'],
             ],
-            'ctaLabel' => 'Get Started',
+            'ctaLabel' => __('capell-theme-saas::generic.get_started_label'),
             'ctaUrl' => '/contact',
         ]);
     }
@@ -368,17 +370,17 @@ final class SaasThemePageAdapter implements ThemePageAdapter
     {
         return FooterData::from([
             'brandName' => $navigation->brandName,
-            'summary' => 'A compact Capell site assembled from reusable content, media, and premium theme sections.',
+            'summary' => __('capell-theme-saas::generic.default_footer_summary'),
             'columns' => [
                 [
-                    'heading' => 'Explore',
-                    'links' => $navigation->items !== [] ? $navigation->items : [['label' => 'Home', 'url' => '/']],
+                    'heading' => __('capell-theme-saas::generic.explore_label'),
+                    'links' => $navigation->items !== [] ? $navigation->items : [['label' => __('capell-theme-saas::generic.home_label'), 'url' => '/']],
                 ],
                 [
                     'heading' => 'Capell',
                     'links' => [
-                        ['label' => 'Content model', 'url' => '#content'],
-                        ['label' => 'Media library', 'url' => '#gallery'],
+                        ['label' => __('capell-theme-saas::generic.content_model_label'), 'url' => '#content'],
+                        ['label' => __('capell-theme-saas::generic.media_library_label'), 'url' => '#gallery'],
                     ],
                 ],
             ],
