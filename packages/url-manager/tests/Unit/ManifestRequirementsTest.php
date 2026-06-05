@@ -72,3 +72,16 @@ it('declares URL Manager owned models and protected tables', function (): void {
         )
         ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
 });
+
+it('references existing URL Manager marketplace screenshots', function (): void {
+    $manifest = json_decode(
+        (string) file_get_contents(__DIR__ . '/../../capell.json'),
+        associative: true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    foreach ($manifest['marketplace']['screenshots'] as $screenshot) {
+        expect($screenshot['path'])->toStartWith('docs/screenshots/')
+            ->and(file_exists(__DIR__ . '/../../' . $screenshot['path']))->toBeTrue();
+    }
+});
