@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 114 |
+| Now    | 113 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -54,7 +54,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | layout-builder | 1 | 5 | 4 | Slice committed | `5da9e0066` tightens the visual editor responsive preview frame/tree sizing after prior slices aligned manifest dependencies, implemented real health probes, removed the dead cache enum, promoted marketplace screenshots, rewrote manifest/composer copy, and added fragment invalid/replay safety coverage. Remaining Now row: add the full public render performance-budget test, especially the render-time budget; current stress coverage proves bounded query behavior only. |
 | login-audit | 1 | 6 | 2 | Slice committed | Current follow-up reconciles the shipped real health diagnostics, daily retention purge tracking, and throttled admin activity writes. Remaining Now row: marketplace screenshot manifest/copy reconciliation. |
 | media-ai | 1 | 6 | 3 | Slice committed | Current follow-up rewrites marketplace/composer/docs copy around shipped provider-backed Doctor image operations, wires committed light/dark screenshots, and positions Media AI as a premium Media Library add-on. Remaining Now row: first-party AI Orchestrator image-doctor adapter. |
-| media-library | 5 | 5 | 3 | Slice committed | Current follow-up adds config-driven mime, extension, and size validation to Curator uploads with actionable rejection errors and no row/file persistence on failure. Remaining Now rows: real health checks, package config/owner FK defaults, visibility preservation, per-issue filtering/configurable stale threshold, and docs/screenshot reconciliation. |
+| media-library | 4 | 5 | 3 | Slice committed | Current follow-up adds a translated media-health issue column/filter backed by the configured stale threshold, after config-driven upload validation. Remaining Now rows: real health checks, package config/owner FK defaults, visibility preservation, and docs/screenshot reconciliation. |
 | migration-assistant | 4 | 5 | 3 | Slice committed | Current follow-up locks the live `ImportSessionKind` contract to package-owned page/site imports and documents WordPress/spreadsheet source readers as extension paths, after garbled prose cleanup. Remaining Now rows: rollback table-name repair, marketplace media/copy, and health probes. |
 | navigation | 3 | 5 | 4 | Slice committed | Current follow-up adds metadata coverage for the already-shipped direct Core dependency, manifest capabilities/cache invalidation sources, and marketplace/composer copy. Remaining Now rows: real health probes, JSON reverse-lookup replacement, and screenshot manifest reconciliation. |
 | newsletter | 4 | 6 | 4 | Slice committed | Current follow-up proves confirm/unsubscribe public tokens stamp `used_at` and reject replay while preference-center self-service tokens remain reusable until expiry, after the Fake provider was blocked in production. Remaining Now rows: real health checks, direct FormSubmitted listener coverage, marketplace copy, and screenshots. |
