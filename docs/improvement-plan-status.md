@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 45 |
+| Now    | 42 |
 | Next   | 295 |
 | Later  | 200 |
 
@@ -44,7 +44,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | filament-peek | 1 | 7 | 4 | Slice committed | Current follow-up adds unauthenticated and non-admin signed-preview rejection coverage, returns private 403 responses for render-path authorization failures, and reconciles the already-shipped health-check probe row. Remaining Now row: marketplace screenshot manifest fixes. |
 | form-builder | 0 | 6 | 4 | Now closed | `8e01aa8b2` closes all five remaining Now rows: admin Form CRUD UI with a permission-gated `FormResource`, marketplace screenshot manifest reconciliation, shipped-reality copy, spam reply/notification gating, and Livewire coverage for file, payment, and calculation fields. Continue with uploaded-file persistence/downloads, multi-step rendering, `SubmissionSiteAccess` memoisation, real payment checkout, autoresponder/redirect, export/webhook, and completion review. |
 | foundation-theme | 2 | 6 | 4 | Slice committed | `d62351ae4` implements Foundation Theme health probes after `17c76ea7e` guarded reviewed public Blade `getMeta()` and translation relation reads and updated footer site info to use hydrated relation data. Continue with demo subsystem decision, screenshots, WCAG, dark mode, and token-contract rows. |
-| frontend-authoring | 3 | 6 | 3 | Slice committed | `bdc185f6f` locks the real health-check probes to the manifest's critical severity, after `4dcb7b992` covered signer payload tampering and beacon selector-budget truncation. Continue with beacon assembly extraction, enums, screenshots, and copy rows. |
+| frontend-authoring | 0 | 6 | 3 | Now closed | Current follow-up reconciles the shipped marketplace/composer outcome-led copy, promoted desktop/mobile authoring captures, orphan screenshot cleanup, and changelog history for signer, beacon-origin, approval-workspace, health, and marketplace work. Continue with beacon assembly extraction, enums, HTML sanitization policy, image/media editor surface, permissions, locale coverage, and completion review. |
 | frontend-optimizer | 1 | 7 | 4 | Slice committed | `8814277ae` removes unused layout/widget asset registries and stale docs/tests, leaving the real Capell frontend manifest renderer flow. Remaining Now row: screenshot capture/contract reconciliation. Continue with hot-path safety and completion review. |
 | ga4-reports | 1 | 7 | 5 | Slice committed | Current follow-up implements secret-safe health diagnostics for storage tables, model/schema availability, credential readiness, latest successful sync freshness, and GA4 data-client reachability. Remaining Now row: screenshot/marketplace copy capture. |
 | hero | 1 | 6 | 4 | Slice committed | `b68c6ac19` adds responsive `srcset`/`sizes` descriptors for hero image/poster media and render coverage, after admin dependency/surface/capability cleanup. Remaining Now row: screenshot count/capture reconciliation. |
