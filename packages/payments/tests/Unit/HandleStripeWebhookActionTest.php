@@ -17,10 +17,12 @@ use Capell\Payments\Exceptions\StripeWebhookSignatureException;
 use Capell\Payments\Jobs\ProcessStripeWebhookEventJob;
 use Capell\Payments\Models\CheckoutSession;
 use Capell\Payments\Models\PaymentDispute;
+use Capell\Payments\Models\PaymentDownloadEntitlement;
 use Capell\Payments\Models\PaymentIntent;
 use Capell\Payments\Models\PaymentRefund;
 use Capell\Payments\Models\PaymentWebhookEvent;
 use Capell\Payments\Models\Subscription;
+use Capell\Payments\Support\Fulfillment\PaidDownloadFulfillmentHandler;
 use Capell\Payments\Tests\Fakes\FakePaymentFulfillmentHandler;
 use Capell\Payments\Tests\TestCase;
 use Carbon\CarbonImmutable;
@@ -126,6 +128,84 @@ it('records checkout session webhooks idempotently before queued processing upda
         ->and($checkoutSession->payable_id)->toBe('guide')
         ->and($checkoutSession->reference_id)->toBe('order_123')
         ->and(FakePaymentFulfillmentHandler::$fulfilledSessionIds)->toBe(['cs_test_completed']);
+});
+
+it('does not extend paid download entitlement expiry when checkout fulfilment replays', function (): void {
+    app()->bind(PaidDownloadFulfillmentHandler::class);
+    app()->tag([PaidDownloadFulfillmentHandler::class], PaymentFulfillmentHandler::TAG);
+
+    $payload = stripeWebhookPayload([
+        'id' => 'evt_paid_download_completed',
+        'type' => 'checkout.session.completed',
+        'data' => [
+            'object' => [
+                'id' => 'cs_test_paid_download_replay',
+                'object' => 'checkout.session',
+                'mode' => 'payment',
+                'status' => 'complete',
+                'currency' => 'gbp',
+                'amount_subtotal' => 2500,
+                'amount_total' => 2500,
+                'client_reference_id' => 'order_paid_download',
+                'metadata' => [
+                    'capell_purpose' => 'paid_download',
+                    'capell_site_id' => '42',
+                    'capell_payable_type' => 'download',
+                    'capell_payable_id' => 'guide',
+                    'download_path' => 'paid/guide.pdf',
+                    'download_name' => 'Original guide',
+                    'download_ttl_minutes' => '30',
+                ],
+                'completed_at' => CarbonImmutable::now()->getTimestamp(),
+            ],
+        ],
+    ]);
+
+    processStripeWebhookPayload($payload);
+
+    $entitlement = PaymentDownloadEntitlement::query()->firstOrFail();
+    $originalExpiresAtTimestamp = $entitlement->expires_at?->getTimestamp();
+    $originalFulfilledAtTimestamp = $entitlement->fulfilled_at?->getTimestamp();
+
+    expect($originalExpiresAtTimestamp)->toBe(CarbonImmutable::now()->addMinutes(30)->getTimestamp())
+        ->and($originalFulfilledAtTimestamp)->toBe(CarbonImmutable::now()->getTimestamp());
+
+    CarbonImmutable::setTestNow(CarbonImmutable::create(2026, 6, 1, 12, 0, 0));
+
+    $replayPayload = stripeWebhookPayload([
+        'id' => 'evt_paid_download_completed_replay',
+        'type' => 'checkout.session.completed',
+        'data' => [
+            'object' => [
+                'id' => 'cs_test_paid_download_replay',
+                'object' => 'checkout.session',
+                'mode' => 'payment',
+                'status' => 'complete',
+                'currency' => 'gbp',
+                'amount_subtotal' => 2500,
+                'amount_total' => 2500,
+                'client_reference_id' => 'order_paid_download',
+                'metadata' => [
+                    'capell_purpose' => 'paid_download',
+                    'capell_site_id' => '42',
+                    'capell_payable_type' => 'download',
+                    'capell_payable_id' => 'guide',
+                    'download_path' => 'paid/updated-guide.pdf',
+                    'download_name' => 'Updated guide',
+                    'download_ttl_minutes' => '1440',
+                ],
+                'completed_at' => CarbonImmutable::now()->getTimestamp(),
+            ],
+        ],
+    ]);
+
+    processStripeWebhookPayload($replayPayload);
+
+    expect(PaymentDownloadEntitlement::query()->count())->toBe(1)
+        ->and($entitlement->refresh()->download_name)->toBe('Updated guide')
+        ->and($entitlement->path)->toBe('paid/updated-guide.pdf')
+        ->and($entitlement->expires_at?->getTimestamp())->toBe($originalExpiresAtTimestamp)
+        ->and($entitlement->fulfilled_at?->getTimestamp())->toBe($originalFulfilledAtTimestamp);
 });
 
 it('records payment intent webhooks', function (): void {
