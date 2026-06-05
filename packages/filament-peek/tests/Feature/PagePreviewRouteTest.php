@@ -54,6 +54,7 @@ it('rejects expired signed preview URLs before loading snapshot data', function 
 it('rejects a validly-signed preview URL for an unauthenticated request', function (): void {
     $user = $this->createUserWithRole('super_admin');
     $this->actingAs($user);
+    registerPreviewTestRenderer();
 
     $page = Page::factory()->create();
     $snapshot = CreatePagePreviewSnapshotAction::run($page, ['name' => 'Preview'])['snapshot'];
@@ -63,7 +64,8 @@ it('rejects a validly-signed preview URL for an unauthenticated request', functi
 
     $this->get($url)
         ->assertForbidden()
-        ->assertHeader('Cache-Control', 'no-store, private');
+        ->assertHeader('Cache-Control', 'no-store, private')
+        ->assertDontSee('Preview renderer reached');
 });
 
 it('rejects a validly-signed preview URL for a non-admin user who does not own the snapshot', function (): void {
@@ -80,6 +82,34 @@ it('rejects a validly-signed preview URL for a non-admin user who does not own t
     $this->get($url)
         ->assertForbidden()
         ->assertHeader('Cache-Control', 'no-store, private');
+});
+
+it('rejects a validly-signed preview URL for a non-admin user who owns the snapshot before rendering', function (): void {
+    $nonAdmin = $this->createUser(['email' => 'non-admin-owner@example.test']);
+    $this->actingAs($nonAdmin);
+    registerPreviewTestRenderer();
+
+    $language = Language::factory()->create();
+    $site = Site::factory()->withTranslations($language)->language($language)->create();
+    $layout = Layout::factory()->site($site)->default()->create([
+        'containers' => [],
+    ]);
+    $page = Page::factory()
+        ->site($site)
+        ->layout($layout)
+        ->withTranslations($language, [
+            'title' => 'Saved title',
+            'content' => '<p>Saved body</p>',
+        ])
+        ->create(['name' => 'Saved page name']);
+
+    $snapshot = CreatePagePreviewSnapshotAction::run($page, ['name' => 'Preview'])['snapshot'];
+    $url = URL::signedRoute('capell-filament-peek.preview', ['token' => $snapshot->token]);
+
+    $this->get($url)
+        ->assertForbidden()
+        ->assertHeader('Cache-Control', 'no-store, private')
+        ->assertDontSee('Preview renderer reached');
 });
 
 it('renders unsaved page fields through a private signed preview without saving them', function (): void {
@@ -190,7 +220,7 @@ function registerPreviewTestRenderer(): void
                 e((string) $name),
                 e((string) $title),
                 $content,
-                e((string) $image),
+                e((string) $image) . ' Preview renderer reached',
             ));
         }
     });
