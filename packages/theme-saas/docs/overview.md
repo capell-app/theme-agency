@@ -56,7 +56,7 @@ Provides a SaaS visual option for product sites managed through the normal Theme
 
 ## Verification
 
-- Run `vendor/bin/pest packages/theme-saas/tests --configuration=phpunit.xml`.
+- From the repository root, run `vendor/bin/pest packages/theme-saas/tests`. Pest uses the root `phpunit.xml`; this package does not ship its own PHPUnit config.
 - In a disposable Capell app, install only the core stack, Layout Builder, Foundation Theme, and `capell-app/theme-saas`.
 - Open `/theme-saas-demo` anonymously and scan the response for `capell-theme`, `data-capell-theme`, `theme-saas`, `signed`, `filament`, `editor`, and `/admin`.
 - Capture the screenshots listed in [screenshots.json](screenshots.json).

@@ -8,10 +8,13 @@ use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
 use Capell\Frontend\Contracts\AdminAccessCheckerInterface;
+use Capell\FrontendAuthoring\Actions\BuildAuthoringBannerContextAction;
+use Capell\FrontendAuthoring\Actions\BuildEditableRegionManifestAction;
 use Capell\HtmlCache\Models\CachedModelUrl;
 use Capell\Tests\Fixtures\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Testing\TestResponse;
 
@@ -54,6 +57,17 @@ function postSameOriginBeacon(string $url, array $headers = []): TestResponse
         'Host' => $host . (is_int($port) ? ':' . $port : ''),
         'X-Forwarded-Proto' => $scheme,
     ] + $headers);
+}
+
+function frontendAuthoringFrontendRenderBudgetMilliseconds(): float
+{
+    $manifest = json_decode(
+        (string) file_get_contents(dirname(__DIR__, 2) . '/capell.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    return (float) data_get($manifest, 'performance.frontendRenderBudgetMs', 20);
 }
 
 it('returns 404 if no site domain', function (): void {
@@ -183,6 +197,56 @@ it('returns page and html cache context in admin authoring banner script', funct
         ->toContain('HTML cached')
         ->toContain('Test User')
         ->toContain('--capell-authoring-bottom-offset');
+});
+
+it('keeps the admin beacon inside a bounded query budget and renders its script inside the declared frontend budget', function (): void {
+    $user = User::factory()->create(['name' => 'Test User']);
+    actingAs($user);
+
+    fakeAdminAccessChecker();
+    allowFrontendAuthoringEditsForBeaconTests();
+
+    $site = Site::factory()->create();
+    $language = Language::factory()->create();
+    SiteDomain::factory()->for($site)->for($language)->create();
+    $page = Page::factory()->site($site)->create(['name' => 'Budget page']);
+    $page->forceFill([
+        'updated_by' => $user->getKey(),
+        'updated_at' => now()->subMinutes(5),
+    ])->saveQuietly();
+    $pageUrl = PageUrl::factory()->for($site)->for($language)->page($page)->create([
+        'url' => '/budget',
+    ]);
+
+    DB::flushQueryLog();
+    DB::enableQueryLog();
+
+    $response = postSameOriginBeacon($pageUrl->full_url);
+
+    $queryCount = count(DB::getQueryLog());
+    DB::disableQueryLog();
+
+    $response->assertOk();
+
+    $banner = BuildAuthoringBannerContextAction::run($pageUrl);
+    $regions = BuildEditableRegionManifestAction::run($pageUrl, $user);
+
+    view('capell::authoring.bootstrap-script', [
+        'banner' => $banner,
+        'regions' => $regions,
+    ])->render();
+
+    $startedAt = hrtime(true);
+    $script = view('capell::authoring.bootstrap-script', [
+        'banner' => $banner,
+        'regions' => $regions,
+    ])->render();
+    $renderMilliseconds = (hrtime(true) - $startedAt) / 1_000_000;
+
+    expect($queryCount)->toBeLessThanOrEqual(14)
+        ->and($renderMilliseconds)->toBeLessThanOrEqual(frontendAuthoringFrontendRenderBudgetMilliseconds())
+        ->and($response->json('scripts.0'))->toContain('CapellFrontendAuthoring')
+        ->and($script)->toContain('CapellFrontendAuthoring');
 });
 
 it('escapes hostile page and editor names in admin authoring banner script', function (): void {

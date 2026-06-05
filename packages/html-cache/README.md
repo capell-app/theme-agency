@@ -1,6 +1,6 @@
 # HTML Cache
 
-Static HTML cache, dependency indexing, and cache administration for Capell.
+Full-page static HTML cache for Capell with dependency-indexed invalidation, scheduled stale-regeneration, and public-output safety guarantees.
 
 ## At A Glance
 
@@ -13,7 +13,7 @@ Static HTML cache, dependency indexing, and cache administration for Capell.
 
 ## Why It Helps Your Capell Workflow
 
-- Adds static HTML cache indexing, dependency tracking, and admin cache controls for Capell public pages.
+- Serves Capell public pages as static HTML for fast anonymous responses while preserving dependency-aware invalidation.
 - Helps operators see stale cached URLs and refresh affected pages without manually clearing broad caches.
 - Protects public-output safety by keeping cached HTML suitable for anonymous visitors, admins, crawlers, and static exports.
 
@@ -25,7 +25,7 @@ Static HTML cache, dependency indexing, and cache administration for Capell.
 
 ## What It Adds
 
-- Static HTML cache, dependency indexing, and cache administration for Capell.
+- Full-page static HTML cache with dependency-indexed invalidation, scheduled stale-regeneration, and public-output safety guarantees.
 - Admin resources: `CachedModelUrlResource`.
 - Admin page: `MaintenanceCachePage`.
 - Dashboard widgets for cache overview, cache coverage, and stale regeneration queue.
@@ -64,6 +64,7 @@ Static HTML cache, dependency indexing, and cache administration for Capell.
 - Integration: registers `StaticMaintenancePageStore` so Capell frontend maintenance pages can use the `page_cache` disk when this package is installed.
 - Public cache headers are configured through `capell-html-cache.http_cache`; the filesystem cache itself has no TTL and is cleared or refreshed by invalidation.
 - Access Gate active-area checks are cached briefly through `capell-html-cache.access_gate.active_area_cache_seconds` so anonymous cache decisions do not query the access gate table on every request.
+- Shared-URL locale or segment negotiation should be listed in `capell-html-cache.bypass.headers` / `bypass.cookies` so those variants never read or write the host+path HTML cache entry.
 
 ## Commands
 

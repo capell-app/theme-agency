@@ -1,6 +1,6 @@
 # Dashboard Reports Docs
 
-Dashboard Reports provides generic CMS reporting widgets for Capell dashboards.
+Dashboard Reports provides content-health and publishing-activity widgets for Capell admin dashboards.
 
 Start at the [package README](../README.md) when deciding whether to install this package. Use the docs below for setup, extension, debugging, and verification details.
 

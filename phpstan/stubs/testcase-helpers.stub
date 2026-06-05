@@ -34,7 +34,7 @@ namespace PHPUnit\Framework {
      * @method $this actingAsUser(array<string,mixed> $attributes = [])
      * @method $this actingAs(object $user, string|null $guard = null)
      * @method $this withoutExceptionHandling(array<int, class-string<\Throwable>> $except = [])
-     * @method mixed artisan(string $command, array<string,mixed> $parameters = [])
+     * @method \Illuminate\Testing\PendingCommand artisan(string $command, array<string,mixed> $parameters = [])
      * @method mixed instance(string $abstract, mixed $instance)
      * @template TMock of object
      * @method TMock mock(class-string<TMock> $abstract, \Closure|null $mock = null)
@@ -43,6 +43,17 @@ namespace PHPUnit\Framework {
 }
 
 namespace Illuminate\Testing {
+    /**
+     * @method $this assertExitCode(int $exitCode)
+     * @method $this assertFailed()
+     * @method $this assertNotExitCode(int $exitCode)
+     * @method $this assertOk()
+     * @method $this assertSuccessful()
+     * @method int execute()
+     * @method int run()
+     */
+    class PendingCommand {}
+
     /**
      * @method string content()
      * @method string getContent()
@@ -89,7 +100,7 @@ namespace Pest\PendingCalls {
      * @method mixed createUser(array<string,mixed> $attributes = [])
      * @method mixed createUserWithRole(array<string>|string $roles, array<string,mixed> $attributes = [])
      * @method mixed createUserWithPermission(array<string>|string $permissions, array<string,mixed> $attributes = [])
-     * @method mixed artisan(string $command, array<string,mixed> $parameters = [])
+     * @method \Illuminate\Testing\PendingCommand artisan(string $command, array<string,mixed> $parameters = [])
      * @method mixed assertWorkspaceDraftableContract(mixed ...$arguments)
      * @method mixed afterEach(callable $callback)
      * @method mixed beforeApplicationDestroyed(callable $callback)

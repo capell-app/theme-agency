@@ -31,6 +31,9 @@ return [
     ],
     'resubscribe_policy' => ResubscribePolicy::RequireDoubleOptIn->value,
     'newsletter_tag_type' => 'newsletter',
+    'providers' => [
+        'allow_fake_provider' => false,
+    ],
     'sync' => [
         'queue' => null,
         'retry_minutes' => [5, 30, 120],

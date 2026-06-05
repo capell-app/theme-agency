@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\Frontend\Actions\Performance\RecordExtensionRenderContributionAction;
+
 require_once __DIR__ . '/../Pest.php';
 
 use Capell\Experiments\Actions\AllocateVariantAction;
@@ -261,6 +263,14 @@ it('does not allocate visitors outside required audience rules', function (): vo
 });
 
 it('resolves an active request context variant with cache variation metadata', function (): void {
+    $recordContributionAction = RecordExtensionRenderContributionAction::class;
+
+    if (! class_exists($recordContributionAction)) {
+        test()->markTestSkipped('Capell Frontend render contribution recording is not available.');
+    }
+
+    resolve($recordContributionAction)->clear();
+
     CreateExperimentAction::run(new ExperimentData(
         name: 'Pricing hero test',
         key: 'pricing-hero-test',
@@ -293,6 +303,8 @@ it('resolves an active request context variant with cache variation metadata', f
 
     $firstResolution = ResolveExperimentVariantForContextAction::run('visitor-123', $context);
     $secondResolution = ResolveExperimentVariantForContextAction::run('visitor-123', $context);
+    $contribution = collect(resolve($recordContributionAction)->recorded())
+        ->first(fn (mixed $record): bool => $record->contributionType === 'experiment-variant-resolution');
 
     expect($firstResolution)->not->toBeNull()
         ->and($firstResolution?->experimentKey)->toBe('pricing-hero-test')
@@ -305,7 +317,12 @@ it('resolves an active request context variant with cache variation metadata', f
         ])
         ->and($firstResolution?->isNewAllocation)->toBeTrue()
         ->and($secondResolution?->isNewAllocation)->toBeFalse()
-        ->and($secondResolution?->variantId)->toBe($firstResolution?->variantId);
+        ->and($secondResolution?->variantId)->toBe($firstResolution?->variantId)
+        ->and($contribution?->packageName)->toBe('capell-app/experiments')
+        ->and($contribution?->cacheable)->toBeFalse()
+        ->and($contribution?->sensitiveOutput)->toBeFalse()
+        ->and($contribution?->variesBy)->toBe(['visitor', 'experiment', 'variant'])
+        ->and($contribution?->cacheTags)->toContain('experiment-pricing-hero-test', 'experiment-variant-benefit-lead');
 });
 
 it('returns no resolved variant when request context misses active experiments', function (): void {

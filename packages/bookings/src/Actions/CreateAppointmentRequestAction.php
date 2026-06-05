@@ -14,6 +14,7 @@ use Capell\Bookings\Models\BookingLocation;
 use Capell\Bookings\Models\BookingService;
 use Capell\Bookings\Models\BookingStaffMember;
 use Carbon\CarbonImmutable;
+use DateTimeZone;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Facades\DB;
@@ -172,21 +173,12 @@ class CreateAppointmentRequestAction
         AppointmentRequestData $appointmentRequestData,
         CarbonImmutable $requestedEndsAt,
     ): ?BookingAvailabilityException {
-        $localStartsAt = $appointmentRequestData->requestedStartsAt->setTimezone($appointmentRequestData->timezone);
-        $localEndsAt = $requestedEndsAt->setTimezone($appointmentRequestData->timezone);
-        $localDate = $localStartsAt->toDateString();
+        $candidateDateStart = $appointmentRequestData->requestedStartsAt->subDay()->toDateString();
+        $candidateDateEnd = $appointmentRequestData->requestedStartsAt->addDay()->toDateString();
 
         /** @var EloquentCollection<int, BookingAvailabilityException> $availabilityExceptions */
         $availabilityExceptions = BookingAvailabilityException::query()
-            ->whereDate('date', $localDate)
-            ->where(function (Builder $query) use ($localStartsAt): void {
-                $query->whereNull('starts_at')
-                    ->orWhere('starts_at', '<=', $localStartsAt->toTimeString());
-            })
-            ->where(function (Builder $query) use ($localEndsAt): void {
-                $query->whereNull('ends_at')
-                    ->orWhere('ends_at', '>=', $localEndsAt->toTimeString());
-            })
+            ->whereBetween('date', [$candidateDateStart, $candidateDateEnd])
             ->where(function (Builder $query) use ($appointmentRequestData): void {
                 $query->whereNull('service_id')
                     ->orWhere('service_id', $appointmentRequestData->serviceId);
@@ -213,6 +205,7 @@ class CreateAppointmentRequestAction
         }
 
         return $availabilityExceptions
+            ->filter(fn (BookingAvailabilityException $availabilityException): bool => $this->availabilityExceptionCoversRange($availabilityException, $appointmentRequestData, $requestedEndsAt))
             ->sortByDesc(fn (BookingAvailabilityException $availabilityException): int => $availabilityException->capacity ?? 0)
             ->sortByDesc(fn (BookingAvailabilityException $availabilityException): int => $this->availabilityExceptionSpecificity($availabilityException))
             ->first();
@@ -222,24 +215,9 @@ class CreateAppointmentRequestAction
         AppointmentRequestData $appointmentRequestData,
         CarbonImmutable $requestedEndsAt,
     ): BookingAvailabilityWindow {
-        $localStartsAt = $appointmentRequestData->requestedStartsAt->setTimezone($appointmentRequestData->timezone);
-        $localEndsAt = $requestedEndsAt->setTimezone($appointmentRequestData->timezone);
-        $localDate = $localStartsAt->toDateString();
-
         /** @var EloquentCollection<int, BookingAvailabilityWindow> $availabilityWindows */
         $availabilityWindows = BookingAvailabilityWindow::query()
             ->available()
-            ->where('day_of_week', $localStartsAt->dayOfWeek)
-            ->where('starts_at', '<=', $localStartsAt->toTimeString())
-            ->where('ends_at', '>=', $localEndsAt->toTimeString())
-            ->where(function (Builder $query) use ($localDate): void {
-                $query->whereNull('effective_from')
-                    ->orWhere('effective_from', '<=', $localDate);
-            })
-            ->where(function (Builder $query) use ($localDate): void {
-                $query->whereNull('effective_until')
-                    ->orWhere('effective_until', '>=', $localDate);
-            })
             ->where(function (Builder $query) use ($appointmentRequestData): void {
                 $query->whereNull('service_id')
                     ->orWhere('service_id', $appointmentRequestData->serviceId);
@@ -268,6 +246,7 @@ class CreateAppointmentRequestAction
         }
 
         return $availabilityWindows
+            ->filter(fn (BookingAvailabilityWindow $availabilityWindow): bool => $this->availabilityWindowCoversRange($availabilityWindow, $appointmentRequestData, $requestedEndsAt))
             ->sortByDesc(fn (BookingAvailabilityWindow $availabilityWindow): int => $availabilityWindow->capacity)
             ->sortByDesc(fn (BookingAvailabilityWindow $availabilityWindow): int => $this->availabilitySpecificity($availabilityWindow))
             ->firstOrFail();
@@ -289,6 +268,61 @@ class CreateAppointmentRequestAction
             + (int) ($availabilityException->ends_at !== null);
     }
 
+    private function availabilityExceptionCoversRange(
+        BookingAvailabilityException $availabilityException,
+        AppointmentRequestData $appointmentRequestData,
+        CarbonImmutable $requestedEndsAt,
+    ): bool {
+        $timezone = $this->safeTimezone($availabilityException->timezone);
+        $localStartsAt = $appointmentRequestData->requestedStartsAt->setTimezone($timezone);
+        $localEndsAt = $requestedEndsAt->setTimezone($timezone);
+
+        if ($availabilityException->date->toDateString() !== $localStartsAt->toDateString()) {
+            return false;
+        }
+
+        if ($availabilityException->starts_at !== null && $availabilityException->starts_at > $localStartsAt->toTimeString()) {
+            return false;
+        }
+
+        return $availabilityException->ends_at === null || $availabilityException->ends_at >= $localEndsAt->toTimeString();
+    }
+
+    private function availabilityWindowCoversRange(
+        BookingAvailabilityWindow $availabilityWindow,
+        AppointmentRequestData $appointmentRequestData,
+        CarbonImmutable $requestedEndsAt,
+    ): bool {
+        $timezone = $this->safeTimezone($availabilityWindow->timezone);
+        $localStartsAt = $appointmentRequestData->requestedStartsAt->setTimezone($timezone);
+        $localEndsAt = $requestedEndsAt->setTimezone($timezone);
+        $localDate = $localStartsAt->toDateString();
+
+        if ($availabilityWindow->day_of_week !== $localStartsAt->dayOfWeek) {
+            return false;
+        }
+
+        if ($availabilityWindow->effective_from !== null && $availabilityWindow->effective_from->toDateString() > $localDate) {
+            return false;
+        }
+
+        if ($availabilityWindow->effective_until !== null && $availabilityWindow->effective_until->toDateString() < $localDate) {
+            return false;
+        }
+
+        return $availabilityWindow->starts_at <= $localStartsAt->toTimeString()
+            && $availabilityWindow->ends_at >= $localEndsAt->toTimeString();
+    }
+
+    private function safeTimezone(?string $timezone): string
+    {
+        if (is_string($timezone) && in_array($timezone, DateTimeZone::listIdentifiers(), true)) {
+            return $timezone;
+        }
+
+        return (string) config('app.timezone', 'UTC');
+    }
+
     private function validateCapacity(
         BookingService $service,
         int $availabilityCapacity,
@@ -308,11 +342,12 @@ class CreateAppointmentRequestAction
         $existingStartsBefore = $blockedEndsAt->addMinutes($service->buffer_before_minutes);
         $existingEndsAfter = $blockedStartsAt->subMinutes($service->buffer_after_minutes);
 
-        $blockingAppointmentCount = AppointmentRequest::query()
+        /** @var EloquentCollection<int, AppointmentRequest> $blockingAppointments */
+        $blockingAppointments = AppointmentRequest::query()
             ->where('service_id', $service->getKey())
             ->whereIn('status', $blockingStatuses)
-            ->where('requested_starts_at', '<', $existingStartsBefore)
-            ->where('requested_ends_at', '>', $existingEndsAfter)
+            ->where('requested_starts_at', '<', $existingStartsBefore->addDay()->toDateTimeString())
+            ->where('requested_ends_at', '>', $existingEndsAfter->subDay()->toDateTimeString())
             ->where(function (Builder $query) use ($appointmentRequestData): void {
                 if ($appointmentRequestData->staffMemberId === null) {
                     return;
@@ -330,6 +365,14 @@ class CreateAppointmentRequestAction
                     ->orWhere('location_id', $appointmentRequestData->locationId);
             })
             ->lockForUpdate()
+            ->get();
+
+        $blockingAppointmentCount = $blockingAppointments
+            ->filter(fn (AppointmentRequest $appointmentRequest): bool => $this->appointmentBlocksRange(
+                appointmentRequest: $appointmentRequest,
+                existingStartsBefore: $existingStartsBefore,
+                existingEndsAfter: $existingEndsAfter,
+            ))
             ->count();
 
         if ($blockingAppointmentCount < $availabilityCapacity) {
@@ -339,5 +382,24 @@ class CreateAppointmentRequestAction
         throw ValidationException::withMessages([
             'requested_starts_at' => __('capell-bookings::validation.appointment_capacity_exceeded'),
         ]);
+    }
+
+    private function appointmentBlocksRange(
+        AppointmentRequest $appointmentRequest,
+        CarbonImmutable $existingStartsBefore,
+        CarbonImmutable $existingEndsAfter,
+    ): bool {
+        return $this->appointmentDateTime($appointmentRequest, 'requested_starts_at')->lessThan($existingStartsBefore)
+            && $this->appointmentDateTime($appointmentRequest, 'requested_ends_at')->greaterThan($existingEndsAfter);
+    }
+
+    private function appointmentDateTime(AppointmentRequest $appointmentRequest, string $attribute): CarbonImmutable
+    {
+        $rawValue = $appointmentRequest->getRawOriginal($attribute);
+
+        return CarbonImmutable::parse(
+            is_string($rawValue) ? $rawValue : (string) $appointmentRequest->getAttribute($attribute),
+            $this->safeTimezone($appointmentRequest->timezone),
+        );
     }
 }

@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+    <title id="title">Hero home widget capture</title>
+    <desc id="desc">Responsive Capell Hero home widget with overlay background, media panel, CTA link, and Layout Builder context.</desc>
+    <rect width="1440" height="900" fill="#f8fafc"/>
+    <rect x="64" y="54" width="1312" height="792" rx="28" fill="#0f172a"/>
+    <path d="M64 186 C260 90 418 274 620 150 C842 14 1018 176 1376 92 L1376 54 L64 54 Z" fill="#2563eb" opacity="0.52"/>
+    <path d="M64 846 C314 708 476 832 704 724 C976 594 1128 744 1376 650 L1376 846 Z" fill="#14b8a6" opacity="0.22"/>
+    <g opacity="0.18" stroke="#ffffff" stroke-width="1">
+        <path d="M160 120 H1288"/>
+        <path d="M160 200 H1288"/>
+        <path d="M160 280 H1288"/>
+        <path d="M160 360 H1288"/>
+        <path d="M160 440 H1288"/>
+        <path d="M160 520 H1288"/>
+        <path d="M160 600 H1288"/>
+        <path d="M160 680 H1288"/>
+        <path d="M160 760 H1288"/>
+        <path d="M220 100 V786"/>
+        <path d="M360 100 V786"/>
+        <path d="M500 100 V786"/>
+        <path d="M640 100 V786"/>
+        <path d="M780 100 V786"/>
+        <path d="M920 100 V786"/>
+        <path d="M1060 100 V786"/>
+        <path d="M1200 100 V786"/>
+    </g>
+    <rect x="104" y="96" width="216" height="44" rx="12" fill="#ffffff" opacity="0.12"/>
+    <text x="128" y="124" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#dbeafe">capell::widget.hero</text>
+    <rect x="1024" y="96" width="286" height="44" rx="12" fill="#ffffff" opacity="0.12"/>
+    <text x="1048" y="124" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#dbeafe">Hero home widget capture</text>
+    <text x="132" y="270" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="800" letter-spacing="2" fill="#93c5fd">FOUNDATION HERO</text>
+    <text x="132" y="340" font-family="Inter, Arial, sans-serif" font-size="68" font-weight="900" fill="#ffffff">Start with a clean</text>
+    <text x="132" y="420" font-family="Inter, Arial, sans-serif" font-size="68" font-weight="900" fill="#ffffff">Capell foundation.</text>
+    <text x="136" y="484" font-family="Inter, Arial, sans-serif" font-size="26" fill="#cbd5e1">Responsive video/image media, decorative overlays, and theme-level styling</text>
+    <text x="136" y="522" font-family="Inter, Arial, sans-serif" font-size="26" fill="#cbd5e1">for the default home-page hero widget.</text>
+    <rect x="136" y="580" width="184" height="58" rx="16" fill="#f59e0b"/>
+    <text x="176" y="616" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#111827">Explore</text>
+    <rect x="340" y="580" width="248" height="58" rx="16" fill="#ffffff" opacity="0.12" stroke="#ffffff" stroke-opacity="0.22"/>
+    <text x="374" y="616" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#ffffff">Theme inherited</text>
+    <rect x="820" y="224" width="404" height="438" rx="28" fill="#ffffff" opacity="0.12" stroke="#ffffff" stroke-opacity="0.22"/>
+    <rect x="850" y="254" width="344" height="224" rx="22" fill="#60a5fa" opacity="0.88"/>
+    <circle cx="1022" cy="366" r="58" fill="#ffffff" opacity="0.88"/>
+    <polygon points="1004,330 1004,402 1060,366" fill="#2563eb"/>
+    <rect x="850" y="510" width="252" height="22" rx="8" fill="#ffffff" opacity="0.82"/>
+    <rect x="850" y="552" width="304" height="18" rx="8" fill="#ffffff" opacity="0.42"/>
+    <rect x="850" y="588" width="214" height="18" rx="8" fill="#ffffff" opacity="0.32"/>
+    <text x="104" y="806" font-family="Inter, Arial, sans-serif" font-size="18" fill="#bfdbfe">Declared screenshot target: hero-home-widget.png</text>
+</svg>

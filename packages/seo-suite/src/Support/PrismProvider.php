@@ -84,8 +84,9 @@ class PrismProvider implements ServiceContract
 
                 $duration = microtime(true) - $startTime;
                 $this->resetCircuitBreaker();
-                $promptTokens = $this->promptTokens($response->usage);
-                $completionTokens = $this->completionTokens($response->usage);
+                $usage = $this->usageFromResponse($response);
+                $promptTokens = $this->promptTokens($usage);
+                $completionTokens = $this->completionTokens($usage);
                 $totalTokens = $promptTokens + $completionTokens;
 
                 Log::debug('AI API Call Metrics', [
@@ -171,6 +172,15 @@ class PrismProvider implements ServiceContract
         $state = Cache::get($this->circuitBreakerKey(), ['failures' => 0]);
         $state['failures'] = (int) ($state['failures'] ?? 0) + 1;
         Cache::put($this->circuitBreakerKey(), $state, self::CIRCUIT_TIMEOUT);
+    }
+
+    private function usageFromResponse(mixed $response): mixed
+    {
+        if (! is_object($response) || ! isset($response->usage)) {
+            return null;
+        }
+
+        return $response->usage;
     }
 
     private function promptTokens(mixed $usage): int

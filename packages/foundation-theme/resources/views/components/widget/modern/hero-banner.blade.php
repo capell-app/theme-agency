@@ -8,6 +8,7 @@
     'container',
     'containerKey',
     'containerWidth' => null,
+    'hasPrimaryHeading' => false,
     'loop',
     'widget',
 ])
@@ -41,7 +42,12 @@
     $heroStyleAttribute = implode(' ', $heroStyleRules);
     $heroItems = BuildHeroRailItemsRenderDataAction::run($widget, $page, $heroAssetSource);
 
-    if ($title) {
+    $configuredHeadingTag = (string) $widget->getMeta('heading_tag', '');
+    $headingTag = in_array($configuredHeadingTag, ['h1', 'h2', 'h3'], true)
+        ? $configuredHeadingTag
+        : ($hasPrimaryHeading ? 'h2' : 'h1');
+
+    if ($title && $headingTag === 'h1') {
         MarkPrimaryHeadingRenderedAction::run();
     }
 @endphp
@@ -66,11 +72,11 @@
         <div class="ap-hero__inner capell-showcase__inner">
             <div class="ap-hero__content">
                 @if ($title)
-                    <h1
+                    <{{ $headingTag }}
                         class="ap-hero__title capell-showcase__heading ap-headline"
                     >
                         {{ $title }}
-                    </h1>
+                    </{{ $headingTag }}>
                 @endif
 
                 @if ($content)

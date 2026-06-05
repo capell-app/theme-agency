@@ -96,8 +96,8 @@ Helps operators and agencies see setup problems before they become publishing or
 
 - DiagnosticsPage (packages/diagnostics/src/Filament/Pages/DiagnosticsPage.php, slug `diagnostics`)
 - CommandPalettePage (packages/diagnostics/src/Filament/Pages/CommandPalettePage.php, slug `diagnostics/command-palette`)
-- PermissionAuditPage (packages/diagnostics/src/Filament/Pages/PermissionAuditPage.php, slug `dashboard-dashboard_reports/permission-audit`)
-- QueueHealthPage / Queue Operations (packages/diagnostics/src/Filament/Pages/QueueHealthPage.php, slug `dashboard-dashboard_reports/queue-health`)
+- PermissionAuditPage (packages/diagnostics/src/Filament/Pages/PermissionAuditPage.php, slug `reports/permission-audit`)
+- QueueHealthPage / Queue Operations (packages/diagnostics/src/Filament/Pages/QueueHealthPage.php, slug `reports/queue-health`)
 - SystemHealthPage (packages/diagnostics/src/Filament/Pages/SystemHealthPage.php, slug `system-health`)
 
 ## Commands

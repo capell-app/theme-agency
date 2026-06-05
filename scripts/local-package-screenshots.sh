@@ -94,13 +94,13 @@ export CAPELL_SCREENSHOT_SKIP_COMPOSER_UPDATE="${CAPELL_SCREENSHOT_SKIP_COMPOSER
 npm ci --prefix "${RUNNER_PATH}"
 
 if [[ "${DRY_RUN}" == true ]]; then
-  npm run screenshots:validate
+  npm run screenshots:validate -- "${ONLY_ARGS[@]}"
   npm run screenshots:capture:check -- --runner "${RUNNER_PATH}" --repo "${ROOT}" --dry-run --skip-build "${ONLY_ARGS[@]}"
   exit $?
 fi
 
 npm run screenshots:manifest
-npm run screenshots:validate
+npm run screenshots:validate -- "${ONLY_ARGS[@]}"
 npm run install:browsers --prefix "${RUNNER_PATH}"
 npm run prepare:app --prefix "${RUNNER_PATH}"
 

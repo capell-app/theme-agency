@@ -66,20 +66,20 @@ Versus siblings (`theme-agency`, `theme-saas`, `theme-commerce`, `theme-healthca
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                | Bucket | Effort | Impact | Section ref |
-| ----------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Reconcile manifest `tier` free vs `commercial` paid/priority                        | Now    | S      | High   | §4.2        |
-| Fix three-way screenshot mismatch; ship real PNG renders on the card                | Now    | M      | High   | §4.3, §5    |
-| Replace placeholder hero stat labels with real/translated content                   | Done   | M      | High   | §2.1, §4.9  |
-| Rewrite marketplace `summary` + manifest description                                | Done   | S      | High   | §5          |
-| Implement a real health-check probe (views + registry registered)                   | Done   | S      | Med    | §4.1        |
-| Translate remaining hard-coded `aria-label`/`Question` strings                      | Done   | S      | Med    | §2.3, §4.8  |
-| Sync README/overview preset list to the six shipped presets                         | Done   | S      | Med    | §4.4        |
-| Extract proof carousel/lightbox JS into a bundled, idempotent asset                 | Next   | M      | Med    | §2.2        |
-| Drive shell surface + card style/radius from preset tokens                          | Next   | L      | High   | §2.4, §2.5  |
-| Align dark-mode strategy (class vs `prefers-color-scheme`)                          | Next   | S      | Med    | §2.6        |
-| Add variant-matrix + section render tests (content-listing etc.)                    | Next   | M      | Med    | §4.7        |
-| Add a corporate-only section: multi-location/contact OR case study                  | Next   | L      | High   | §3          |
-| Add investor/press + careers patterns                                               | Later  | L      | Med    | §3          |
-| WCAG audit (carousel announce, nav `aria-expanded`) before "priority support" claim | Later  | M      | Med    | §4.8        |
-| Document/justify `cacheable: false` under the 20 ms budget, or enable caching       | Later  | M      | Low    | §4.6        |
+| Item                                                                                | Bucket | Effort | Impact | Section ref                                                                                                                                            |
+| ----------------------------------------------------------------------------------- | ------ | ------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Reconcile manifest `tier` free vs `commercial` paid/priority                        | Done   | S      | High   | §4.2 — closed 2026-06-05: manifest commercial terms now match the free foundation product tier and overview metadata, with a manifest regression test. |
+| Fix three-way screenshot mismatch; ship real PNG renders on the card                | Now    | M      | High   | §4.3, §5                                                                                                                                               |
+| Replace placeholder hero stat labels with real/translated content                   | Done   | M      | High   | §2.1, §4.9                                                                                                                                             |
+| Rewrite marketplace `summary` + manifest description                                | Done   | S      | High   | §5                                                                                                                                                     |
+| Implement a real health-check probe (views + registry registered)                   | Done   | S      | Med    | §4.1                                                                                                                                                   |
+| Translate remaining hard-coded `aria-label`/`Question` strings                      | Done   | S      | Med    | §2.3, §4.8                                                                                                                                             |
+| Sync README/overview preset list to the six shipped presets                         | Done   | S      | Med    | §4.4                                                                                                                                                   |
+| Extract proof carousel/lightbox JS into a bundled, idempotent asset                 | Next   | M      | Med    | §2.2                                                                                                                                                   |
+| Drive shell surface + card style/radius from preset tokens                          | Next   | L      | High   | §2.4, §2.5                                                                                                                                             |
+| Align dark-mode strategy (class vs `prefers-color-scheme`)                          | Next   | S      | Med    | §2.6                                                                                                                                                   |
+| Add variant-matrix + section render tests (content-listing etc.)                    | Next   | M      | Med    | §4.7                                                                                                                                                   |
+| Add a corporate-only section: multi-location/contact OR case study                  | Next   | L      | High   | §3                                                                                                                                                     |
+| Add investor/press + careers patterns                                               | Later  | L      | Med    | §3                                                                                                                                                     |
+| WCAG audit (carousel announce, nav `aria-expanded`) before "priority support" claim | Later  | M      | Med    | §4.8                                                                                                                                                   |
+| Document/justify `cacheable: false` under the 20 ms budget, or enable caching       | Later  | M      | Low    | §4.6                                                                                                                                                   |

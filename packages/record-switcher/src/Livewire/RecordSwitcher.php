@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Arr;
-use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Livewire\Attributes\Renderless;
@@ -46,7 +45,7 @@ final class RecordSwitcher extends Component
     }
 
     /**
-     * @return list<array{value: string, label: string|Htmlable, group?: string}>
+     * @return list<array{value: string, label: string, group?: string}>
      */
     #[Renderless]
     public function getOptions(?string $search = null): array
@@ -207,7 +206,7 @@ final class RecordSwitcher extends Component
     }
 
     /**
-     * @return array{value: string, label: string|Htmlable, group?: string}
+     * @return array{value: string, label: string, group?: string}
      */
     private function item(Model $model): array
     {
@@ -225,10 +224,12 @@ final class RecordSwitcher extends Component
         return $item;
     }
 
-    private function itemLabel(Model $model): string|Htmlable
+    private function itemLabel(Model $model): string
     {
         if (! $model instanceof Page) {
-            return $this->resourceClass::getRecordTitle($model) ?? '';
+            $label = $this->resourceClass::getRecordTitle($model);
+
+            return $label instanceof Htmlable ? $label->toHtml() : (string) $label;
         }
 
         $label = e($model->name);
@@ -242,9 +243,7 @@ final class RecordSwitcher extends Component
 
         $url = $this->pageUrl($model);
 
-        return new HtmlString(
-            $label . ($url !== '' ? sprintf("<br /><span class='text-xs tracking-wider text-gray-500 dark:text-gray-400'>%s</span>", e($url)) : ''),
-        );
+        return $label . ($url !== '' ? sprintf("<br /><span class='text-xs tracking-wider text-gray-500 dark:text-gray-400'>%s</span>", e($url)) : '');
     }
 
     private function itemGroup(Model $model): ?string

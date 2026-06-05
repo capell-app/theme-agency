@@ -21,6 +21,19 @@ final class UrlManagerHealthCheck implements ChecksExtensionHealth
         'url_manager_not_found_opportunities',
     ];
 
+    /**
+     * @var list<string>
+     */
+    private const array REQUIRED_PROVIDER_GROUPS = [
+        'runtime',
+        'admin',
+    ];
+
+    /**
+     * @param  array<string, mixed>|null  $manifest
+     */
+    public function __construct(private readonly ?array $manifest = null) {}
+
     public static function compatibleCapellApiVersion(): string
     {
         return '^4.0';
@@ -70,6 +83,17 @@ final class UrlManagerHealthCheck implements ChecksExtensionHealth
      */
     public function actionClassesCheck(): DoctorCheckResultData
     {
+        $actions = $this->manifest()['actions'] ?? null;
+
+        if (! is_array($actions) || $actions === []) {
+            return new DoctorCheckResultData(
+                label: 'URL Manager action classes',
+                passed: false,
+                message: 'URL Manager actions are not declared in capell.json.',
+                remediation: 'Restore the URL Manager actions map in capell.json.',
+            );
+        }
+
         $missingActions = $this->missingActionClasses();
 
         return new DoctorCheckResultData(
@@ -89,10 +113,25 @@ final class UrlManagerHealthCheck implements ChecksExtensionHealth
      */
     public function providerMetadataCheck(): DoctorCheckResultData
     {
+        $providers = $this->manifest()['providers'] ?? null;
+
+        if (! is_array($providers)) {
+            return new DoctorCheckResultData(
+                label: 'URL Manager provider metadata',
+                passed: false,
+                message: 'URL Manager provider metadata is not declared in capell.json.',
+                remediation: 'Restore URL Manager provider entries in capell.json.',
+            );
+        }
+
+        $missingProviderGroups = array_values(array_filter(
+            self::REQUIRED_PROVIDER_GROUPS,
+            static fn (string $providerGroup): bool => ! isset($providers[$providerGroup]) || ! is_array($providers[$providerGroup]) || $providers[$providerGroup] === [],
+        ));
         $missingProviders = $this->missingProviderClasses();
         $manifestTables = $this->manifestRequiredTables();
         $missingTableMetadata = array_values(array_diff(self::REQUIRED_TABLES, $manifestTables));
-        $passed = $missingProviders === [] && $missingTableMetadata === [];
+        $passed = $missingProviderGroups === [] && $missingProviders === [] && $missingTableMetadata === [];
 
         return new DoctorCheckResultData(
             label: 'URL Manager provider metadata',
@@ -100,6 +139,7 @@ final class UrlManagerHealthCheck implements ChecksExtensionHealth
             message: $passed
                 ? 'Provider classes and required redirect table metadata are declared in capell.json.'
                 : 'Missing providers or required table metadata: ' . implode(', ', [
+                    ...$missingProviderGroups,
                     ...$missingProviders,
                     ...$missingTableMetadata,
                 ]) . '.',
@@ -196,6 +236,10 @@ final class UrlManagerHealthCheck implements ChecksExtensionHealth
      */
     private function manifest(): array
     {
+        if ($this->manifest !== null) {
+            return $this->manifest;
+        }
+
         $manifestPath = dirname(__DIR__, 2) . '/capell.json';
 
         try {

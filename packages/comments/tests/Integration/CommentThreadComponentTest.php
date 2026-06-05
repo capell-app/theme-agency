@@ -73,6 +73,76 @@ it('rejects public comments that trip the bot trap fields', function (): void {
     ])->exists())->toBeFalse();
 });
 
+it('surfaces action validation messages on the matching public form fields', function (): void {
+    Notification::fake();
+    bindCommentThreadSettings();
+
+    $page = $this->createCommentsPage();
+    $threadKey = CommentThreadComponent::threadKeyFor($page);
+
+    Livewire::test(CommentThreadComponent::class, ['threadKey' => $threadKey])
+        ->set('body', 'Guest comment')
+        ->set('authorEmail', 'reader@example.com')
+        ->set('formRenderedAt', now()->subSeconds(3)->getTimestamp())
+        ->call('submit')
+        ->assertHasErrors(['authorName'])
+        ->assertSee(__('capell-comments::messages.name_required'))
+        ->assertSet('submitted', false)
+        ->set('authorName', 'Public Reader')
+        ->set('authorEmail', 'not-an-email')
+        ->call('submit')
+        ->assertHasErrors(['authorEmail'])
+        ->assertHasNoErrors(['authorName'])
+        ->assertSee(__('capell-comments::messages.email_required'))
+        ->assertDontSee(__('capell-comments::messages.name_required'))
+        ->assertSet('submitted', false)
+        ->set('authorEmail', 'reader@example.com')
+        ->set('body', '   ')
+        ->call('submit')
+        ->assertHasErrors(['body'])
+        ->assertHasNoErrors(['authorEmail'])
+        ->assertSee(__('capell-comments::messages.body_required'))
+        ->assertDontSee(__('capell-comments::messages.email_required'))
+        ->assertSet('submitted', false);
+
+    expect(Comment::query()->where('commentable_id', $page->getKey())->exists())->toBeFalse();
+});
+
+it('replaces stale submit state with current field validation feedback', function (): void {
+    Notification::fake();
+    bindCommentThreadSettings();
+    config()->set('capell-comments.throttle.max_attempts', 10);
+
+    $page = $this->createCommentsPage();
+    $threadKey = CommentThreadComponent::threadKeyFor($page);
+
+    Livewire::test(CommentThreadComponent::class, ['threadKey' => $threadKey])
+        ->set('body', 'First valid comment')
+        ->set('authorName', 'Public Reader')
+        ->set('authorEmail', 'reader@example.com')
+        ->set('formRenderedAt', now()->subSeconds(3)->getTimestamp())
+        ->call('submit')
+        ->assertSet('submitted', true)
+        ->assertHasNoErrors()
+        ->set('body', '   ')
+        ->set('authorName', 'Public Reader')
+        ->set('authorEmail', 'reader@example.com')
+        ->set('formRenderedAt', now()->subSeconds(3)->getTimestamp())
+        ->call('submit')
+        ->assertSet('submitted', false)
+        ->assertHasErrors(['body'])
+        ->assertSee(__('capell-comments::messages.body_required'))
+        ->assertDontSee(__('capell-comments::messages.submitted'))
+        ->set('body', 'Second valid comment')
+        ->set('formRenderedAt', now()->subSeconds(3)->getTimestamp())
+        ->call('submit')
+        ->assertSet('submitted', true)
+        ->assertHasNoErrors()
+        ->assertDontSee(__('capell-comments::messages.body_required'));
+
+    expect(Comment::query()->where('commentable_id', $page->getKey())->count())->toBe(2);
+});
+
 it('throttles repeated public submissions even when the author email changes', function (): void {
     Notification::fake();
     bindCommentThreadSettings();

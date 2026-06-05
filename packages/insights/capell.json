@@ -42,12 +42,14 @@
         "demo": null,
         "doctor": null
     },
-    "settings": [],
-    "permissions": [],
+    "settings": ["Capell\\Insights\\Settings\\InsightsSettings"],
+    "permissions": ["View:InsightsPage"],
     "capabilities": [
         "insights",
         "insights-admin",
         "insights-frontend",
+        "insights-consent-banner",
+        "insights-acquisition-reports",
         "insights-privacy-center-mirror",
         "beacon",
         "cache-blocking"

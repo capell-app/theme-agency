@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
+use Capell\Newsletter\Actions\BuildNewsletterHealthDiagnosticsAction;
 use Capell\Newsletter\Health\NewsletterHealthCheck;
 use Illuminate\Support\Facades\Schema;
 
@@ -17,10 +18,20 @@ it('runs real diagnostics returning four check results', function (): void {
         ->and($results->every(static fn (mixed $result): bool => $result instanceof DoctorCheckResultData))->toBeTrue();
 });
 
+it('can run a single declared diagnostic by manifest key', function (): void {
+    $results = NewsletterHealthCheck::runDiagnostics('newsletter.provider-webhooks');
+
+    expect($results)->toHaveCount(1)
+        ->and($results->first())->toBeInstanceOf(DoctorCheckResultData::class)
+        ->and($results->first()?->label)->toBe((string) __('capell-newsletter::health.provider_webhooks.label'))
+        ->and(NewsletterHealthCheck::runDiagnostics('newsletter.unknown'))->toBeEmpty();
+});
+
 it('passes when the listener, storage tables, and segment evaluation are healthy', function (): void {
-    $check = new NewsletterHealthCheck;
+    $check = new BuildNewsletterHealthDiagnosticsAction;
 
     expect($check->formSubmissionListenerRegistered())->toBeTrue()
+        ->and($check->syncRetryPipelineQueryable())->toBeTrue()
         ->and($check->segmentEvaluatesToBuilder())->toBeTrue()
         ->and($check->missingTables(['newsletter_subscribers', 'newsletter_consent_events', 'newsletter_sync_attempts', 'newsletter_processed_webhook_events', 'newsletter_segments']))->toBe([])
         ->and(NewsletterHealthCheck::passed())->toBeTrue()
@@ -34,7 +45,7 @@ it('reports the consent table as missing for the form subscription check', funct
     Schema::shouldReceive('hasTable')
         ->with('newsletter_consent_events')->andReturnFalse();
 
-    $check = new NewsletterHealthCheck;
+    $check = new BuildNewsletterHealthDiagnosticsAction;
     $result = $check->formSubscriptionCheck();
 
     expect($result->passed)->toBeFalse()
@@ -45,7 +56,7 @@ it('reports the sync attempt table as missing for the provider sync retry check'
     Schema::shouldReceive('hasTable')
         ->with('newsletter_sync_attempts')->andReturnFalse();
 
-    $check = new NewsletterHealthCheck;
+    $check = new BuildNewsletterHealthDiagnosticsAction;
     $result = $check->providerSyncRetryCheck();
 
     expect($result->passed)->toBeFalse()
@@ -57,7 +68,7 @@ it('reports the idempotency table as missing for the provider webhook check', fu
     Schema::shouldReceive('hasTable')
         ->with('newsletter_processed_webhook_events')->andReturnFalse();
 
-    $check = new NewsletterHealthCheck;
+    $check = new BuildNewsletterHealthDiagnosticsAction;
     $result = $check->providerWebhookCheck();
 
     expect($result->passed)->toBeFalse()

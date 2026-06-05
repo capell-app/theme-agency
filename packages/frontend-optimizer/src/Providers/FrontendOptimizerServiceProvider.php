@@ -23,9 +23,7 @@ use Capell\FrontendOptimizer\Models\FrontendRenderProfile;
 use Capell\FrontendOptimizer\Settings\FrontendOptimizerSettings;
 use Capell\FrontendOptimizer\Support\CapellFrontendAssetManifestRenderer;
 use Capell\FrontendOptimizer\Support\CriticalCssSettings;
-use Capell\FrontendOptimizer\Support\LayoutAssetRegistry;
 use Capell\FrontendOptimizer\Support\PlaywrightCriticalCssGenerator;
-use Capell\FrontendOptimizer\Support\WidgetAssetRegistry;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Override;
@@ -50,8 +48,6 @@ final class FrontendOptimizerServiceProvider extends AbstractPackageServiceProvi
     {
         parent::registeringPackage();
 
-        $this->app->singleton(LayoutAssetRegistry::class);
-        $this->app->singleton(WidgetAssetRegistry::class);
         $this->app->singleton(CriticalCssSettings::class);
         $this->app->singleton(CriticalCssGenerator::class, PlaywrightCriticalCssGenerator::class);
 

@@ -61,7 +61,7 @@ it('renders the visual layout builder by default from the package namespace', fu
     Livewire::test(LayoutBuilder::class, ['layout' => $layout])
         ->assertSet('editorMode', 'content_first')
         ->assertSee(__('capell-layout-builder::heading.layout_structure'))
-        ->assertDontSee('Inspector')
+        ->assertElementExists(fn (AssertElement $body): BaseAssert => $body->doesntContain('.visual-inspector'))
         ->assertSee(__('capell-layout-builder::message.container_empty'))
         ->assertElementExists('.layout-builder-visual-toolbar')
         ->assertElementExists('.layout-builder-command-group')
@@ -443,8 +443,8 @@ it('lets content editors use content first without advanced layout access from t
     $component = Livewire::test(LayoutBuilder::class, ['layout' => $layout])
         ->assertSet('editorMode', 'content_first')
         ->assertSee(__('capell-layout-builder::heading.layout_structure'))
-        ->assertDontSee(__('capell-layout-builder::button.add_container'))
-        ->assertDontSee(__('capell-layout-builder::button.add_widget'));
+        ->assertElementExists(fn (AssertElement $body): BaseAssert => $body->doesntContain('.layout-builder-add-container-button'))
+        ->assertDontSeeHtml("mountAction('addWidget')");
 
     $component
         ->call('showAdvancedLayout')
@@ -589,8 +589,13 @@ it('renders widget rows in the structure tree and wires preview widget actions f
 
     Livewire::test(LayoutBuilder::class, ['layout' => $layout])
         ->assertSee(__('capell-layout-builder::form.search_layout_tree'))
+        ->assertSee(__('capell-layout-builder::button.clear_layout_tree_search'))
+        ->assertSee(__('capell-layout-builder::message.layout_tree_search_empty'))
+        ->assertSee(__('capell-layout-builder::message.layout_tree_search_result'))
         ->assertSee('Featured')
         ->assertElementExists('[data-layout-builder-tree-search]')
+        ->assertElementExists('[data-layout-builder-tree-container]')
+        ->assertElementExists('[data-layout-builder-tree-widget]')
         ->assertElementExists('[data-clb-preview-node]')
         ->assertSeeHtml('previewWidgetActions')
         ->assertSeeHtml('runPreviewAction')
@@ -616,8 +621,20 @@ it('renders widget rows in the structure tree and wires preview widget actions f
 
     expect($treeView)
         ->not->toContain('$this->editWidgetAssetAction')
+        ->toContain('x-show="containerMatches($el)"')
+        ->toContain('x-show="widgetMatches($el)"')
+        ->toContain('treeContainerOpen(open, $el.closest')
+        ->toContain('treeSearchResultLabel()')
+        ->toContain('clearTreeSearch()')
+        ->toContain('data-layout-builder-tree-widget')
         ->and($editorView)
         ->not->toContain('visual-inspector')
+        ->toContain('treeSearchActive()')
+        ->toContain('treeSearchScope()')
+        ->toContain('treeSearchResultCount()')
+        ->toContain('containerHasMatchingChild(element)')
+        ->toContain('containerMatches(element)')
+        ->toContain('widgetMatches(element)')
         ->toContain('mountAction(actionName, args)')
         ->toContain("node.setAttribute('role', 'button')")
         ->toContain("node.setAttribute('aria-label', label)")
@@ -652,13 +669,10 @@ it('renders widget copy in the visual preview from the package namespace', funct
         ]],
     ]]);
 
-    $component = Livewire::test(LayoutBuilder::class, ['layout' => $layout])
+    Livewire::test(LayoutBuilder::class, ['layout' => $layout])
         ->assertSee('Every section can be rebuilt in the layout builder')
+        ->assertSeeHtml('Widget-owned support copy.')
         ->assertElementExists('[data-clb-preview-node-type="widget"]');
-
-    expect($component->get('visualPreviewHtml'))
-        ->toContain('Every section can be rebuilt in the layout builder')
-        ->toContain('Widget-owned support copy.');
 });
 
 it('sends layout only editors straight to the advanced layout editor from the package namespace', function (): void {

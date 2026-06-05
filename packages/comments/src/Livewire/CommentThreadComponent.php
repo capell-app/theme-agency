@@ -80,28 +80,37 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
 
     public function submit(): void
     {
+        $this->resetErrorBag();
+        $this->submitted = false;
+
         $commentable = $this->resolveCommentable();
         if (! $commentable instanceof Model) {
             return;
         }
 
-        $this->assertNotRateLimited($commentable);
+        try {
+            $this->assertNotRateLimited($commentable);
 
-        CreateCommentAction::run(new CreateCommentData(
-            commentable: $commentable,
-            body: $this->body,
-            siteId: is_numeric(self::optionalAttribute($commentable, 'site_id')) ? (int) self::optionalAttribute($commentable, 'site_id') : null,
-            languageId: is_numeric(self::optionalAttribute($commentable, 'language_id')) ? (int) self::optionalAttribute($commentable, 'language_id') : null,
-            authorName: $this->authorName,
-            authorEmail: $this->authorEmail,
-            user: auth()->user() instanceof Model ? auth()->user() : null,
-            parentPublicId: $this->parentPublicId,
-            ipAddress: request()->ip(),
-            userAgent: request()->userAgent(),
-            url: request()->fullUrl(),
-            honeypot: $this->commentWebsite,
-            formRenderedAt: $this->formRenderedAt,
-        ));
+            CreateCommentAction::run(new CreateCommentData(
+                commentable: $commentable,
+                body: $this->body,
+                siteId: is_numeric(self::optionalAttribute($commentable, 'site_id')) ? (int) self::optionalAttribute($commentable, 'site_id') : null,
+                languageId: is_numeric(self::optionalAttribute($commentable, 'language_id')) ? (int) self::optionalAttribute($commentable, 'language_id') : null,
+                authorName: $this->authorName,
+                authorEmail: $this->authorEmail,
+                user: auth()->user() instanceof Model ? auth()->user() : null,
+                parentPublicId: $this->parentPublicId,
+                ipAddress: request()->ip(),
+                userAgent: request()->userAgent(),
+                url: request()->fullUrl(),
+                honeypot: $this->commentWebsite,
+                formRenderedAt: $this->formRenderedAt,
+            ));
+        } catch (ValidationException $validationException) {
+            $this->surfaceValidationException($validationException);
+
+            return;
+        }
 
         $this->submitted = true;
         $this->reset('body', 'authorName', 'authorEmail', 'parentPublicId', 'commentWebsite');
@@ -169,6 +178,15 @@ class CommentThreadComponent extends Component implements RegistersExtensionFron
     private function resetBotTrap(): void
     {
         $this->formRenderedAt = now()->getTimestamp();
+    }
+
+    private function surfaceValidationException(ValidationException $exception): void
+    {
+        foreach ($exception->validator->errors()->messages() as $field => $messages) {
+            foreach ($messages as $message) {
+                $this->addError($field, $message);
+            }
+        }
     }
 
     private function refreshComments(): void

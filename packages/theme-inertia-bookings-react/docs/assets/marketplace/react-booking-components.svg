@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">React booking components</title>
+  <desc id="desc">Preview of React page, widget, and labelled form components.</desc>
+  <rect width="1200" height="760" fill="#f8fafc"/>
+  <rect x="100" y="90" width="1000" height="580" rx="28" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="152" y="170" fill="#0f172a" font-family="Arial, sans-serif" font-size="46" font-weight="700">React components</text>
+  <g fill="#ecfeff" stroke="#99f6e4">
+    <rect x="152" y="238" width="280" height="140" rx="18"/>
+    <rect x="460" y="238" width="280" height="140" rx="18"/>
+    <rect x="768" y="238" width="280" height="140" rx="18"/>
+  </g>
+  <g fill="#134e4a" font-family="Arial, sans-serif" font-size="24" font-weight="700">
+    <text x="188" y="314">Page shell</text>
+    <text x="496" y="314">Widgets</text>
+    <text x="804" y="314">Request form</text>
+  </g>
+  <rect x="152" y="448" width="896" height="92" rx="16" fill="#fff7ed" stroke="#fed7aa"/>
+  <text x="188" y="504" fill="#9a3412" font-family="Arial, sans-serif" font-size="28" font-weight="700">Labelled fields, lazy slots, and submit state</text>
+</svg>

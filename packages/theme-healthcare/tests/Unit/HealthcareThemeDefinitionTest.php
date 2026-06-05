@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\View;
 
 it('defines the healthcare premium renderer contract', function (): void {
     $definition = HealthcareThemeServiceProvider::definition();
-    $manifest = json_decode((string) file_get_contents(__DIR__ . '/../../capell.json'), true, flags: JSON_THROW_ON_ERROR);
+    $manifest = capell_json_file_array(__DIR__ . '/../../capell.json');
 
     expect($definition->package)->toBe('capell-app/theme-healthcare')
         ->and($definition->key)->toBe(HealthcareThemeServiceProvider::THEME_KEY)
@@ -56,8 +56,11 @@ it('defines the healthcare premium renderer contract', function (): void {
             'footer',
         ])
         ->and($definition->runtime->value)->toBe('blade')
+        ->and($definition->extends)->toBe('default')
         ->and($definition->tags)->toBe(['Healthcare', 'Appointments', 'Services'])
-        ->and($manifest['product']['tier'])->toBe('premium')
+        ->and(data_get($manifest, 'product.tier'))->toBe('premium')
+        ->and($manifest['extends'])->toBe('capell-app/foundation-theme')
+        ->and(data_get($manifest, 'dependencies.requires'))->toContain('capell-app/foundation-theme')
         ->and($manifest['commands']['demo'])->toBe('capell:theme-healthcare-demo')
         ->and($manifest['commands']['demoParams'])->toBe(['url', 'languages', 'sites'])
         ->and($manifest['healthChecks'][0]['class'])->toBe(ThemeHealthcareHealthCheck::class)

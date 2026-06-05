@@ -13,6 +13,9 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static KnowledgeBaseArticle run(CreateKnowledgeBaseArticleData $data)
+ */
 final class CreateKnowledgeBaseArticleAction
 {
     use AsObject;
@@ -38,6 +41,12 @@ final class CreateKnowledgeBaseArticleAction
         if ($slug === '') {
             throw ValidationException::withMessages([
                 'slug' => __('capell-knowledge-base::generic.validation.slug_required'),
+            ]);
+        }
+
+        if ($this->slugExistsInCollection($data, $slug)) {
+            throw ValidationException::withMessages([
+                'slug' => __('capell-knowledge-base::generic.validation.slug_unique'),
             ]);
         }
 
@@ -72,5 +81,13 @@ final class CreateKnowledgeBaseArticleAction
 
             return $article->refresh()->load(['collection', 'currentVersion']);
         });
+    }
+
+    private function slugExistsInCollection(CreateKnowledgeBaseArticleData $data, string $slug): bool
+    {
+        return KnowledgeBaseArticle::query()
+            ->whereBelongsTo($data->collection, 'collection')
+            ->where('slug', $slug)
+            ->exists();
     }
 }

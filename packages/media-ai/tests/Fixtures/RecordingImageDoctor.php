@@ -15,11 +15,15 @@ final class RecordingImageDoctor implements ImageDoctor
 
     public ?ImageDoctorRequest $request = null;
 
+    public function __construct(
+        private readonly ?ImageDoctorResult $result = null,
+    ) {}
+
     public function doctor(Media $media, ImageDoctorRequest $request): ImageDoctorResult
     {
         $this->media = $media;
         $this->request = $request;
 
-        return ImageDoctorResult::success('Doctor finished');
+        return $this->result ?? ImageDoctorResult::success('Doctor finished');
     }
 }

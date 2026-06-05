@@ -16,16 +16,14 @@ use Capell\Newsletter\Manifest\NewsletterSyncRetryScheduleContribution;
 
 function newsletterManifest(): array
 {
-    return json_decode(
-        (string) file_get_contents(__DIR__ . '/../../capell.json'),
-        true,
-        flags: JSON_THROW_ON_ERROR,
-    );
+    return capell_json_file_array(__DIR__ . '/../../capell.json');
 }
 
 it('declares implemented newsletter package contributions', function (): void {
     $manifest = newsletterManifest();
-    $contributions = collect($manifest['contributes']);
+    $manifestContributions = $manifest['contributes'] ?? [];
+    throw_unless(is_array($manifestContributions), RuntimeException::class, 'Newsletter contributions must be arrays.');
+    $contributions = collect($manifestContributions);
 
     expect($manifest['contributionTraceability']['deferredContributions'])->toBe([])
         ->and($contributions->pluck('class')->all())->toContain(
@@ -39,6 +37,9 @@ it('declares implemented newsletter package contributions', function (): void {
     $adminResources = $contributions->firstWhere('class', NewsletterAdminResourcesContribution::class);
     $routes = $contributions->firstWhere('class', NewsletterFrontendRoutesContribution::class);
     $scheduledJob = $contributions->firstWhere('class', NewsletterSyncRetryScheduleContribution::class);
+    throw_unless(is_array($adminResources), RuntimeException::class, 'Expected newsletter admin resource contribution.');
+    throw_unless(is_array($routes), RuntimeException::class, 'Expected newsletter route contribution.');
+    throw_unless(is_array($scheduledJob), RuntimeException::class, 'Expected newsletter scheduled job contribution.');
 
     expect($adminResources['resourceClasses'])->toContain(
         SubscriberResource::class,
@@ -69,4 +70,44 @@ it('declares newsletter segmentation, preference center, campaign send, and attr
             'newsletter-unsubscribe-routes',
             'newsletter-automation-hooks',
         );
+});
+
+it('declares the built newsletter marketplace screenshot contract', function (): void {
+    $manifest = newsletterManifest();
+    $contract = capell_json_file_array(__DIR__ . '/../../docs/screenshots.json');
+    $contractEntries = $contract['entries'] ?? [];
+    $marketplaceScreenshots = data_get($manifest, 'marketplace.screenshots');
+    throw_unless(is_array($contractEntries), RuntimeException::class, 'Newsletter screenshot contract entries must be arrays.');
+    throw_unless(is_array($marketplaceScreenshots), RuntimeException::class, 'Newsletter marketplace screenshots must be arrays.');
+
+    $contractPaths = [];
+
+    foreach ($contractEntries as $entry) {
+        throw_unless(is_array($entry), RuntimeException::class, 'Newsletter screenshot contract entries must be arrays.');
+        $screenshotPath = $entry['screenshotPath'] ?? null;
+        throw_unless(is_string($screenshotPath), RuntimeException::class, 'Newsletter screenshot paths must be strings.');
+
+        $contractPaths[] = str_replace('packages/newsletter/', '', $screenshotPath);
+    }
+
+    $manifestPaths = [];
+
+    foreach ($marketplaceScreenshots as $screenshot) {
+        throw_unless(is_array($screenshot), RuntimeException::class, 'Newsletter marketplace screenshots must be arrays.');
+        $path = $screenshot['path'] ?? null;
+        throw_unless(is_string($path), RuntimeException::class, 'Newsletter marketplace screenshot paths must be strings.');
+
+        $manifestPaths[] = $path;
+    }
+
+    expect($manifestPaths)->toBe([
+        'docs/assets/marketplace/extension-card.jpg',
+        ...$contractPaths,
+    ]);
+
+    foreach ($manifestPaths as $path) {
+        expect(is_file(__DIR__ . '/../../' . $path))->toBeTrue();
+    }
+
+    expect($contractPaths)->toHaveCount(13);
 });

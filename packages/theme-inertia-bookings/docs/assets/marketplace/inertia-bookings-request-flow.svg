@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Inertia bookings request flow</title>
+  <desc id="desc">Preview of lazy slot loading and booking request fields.</desc>
+  <rect width="1200" height="760" fill="#f8fafc"/>
+  <rect x="210" y="72" width="780" height="616" rx="26" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="270" y="152" fill="#0f172a" font-family="Arial, sans-serif" font-size="42" font-weight="700">Inertia request route</text>
+  <text x="270" y="196" fill="#64748b" font-family="Arial, sans-serif" font-size="23">Slots reload lazily after service, staff, location, or timezone changes.</text>
+  <rect x="270" y="270" width="660" height="70" rx="12" fill="#ccfbf1"/>
+  <text x="304" y="314" fill="#134e4a" font-family="Arial, sans-serif" font-size="24" font-weight="700">Deferred slots</text>
+  <rect x="270" y="376" width="300" height="64" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <rect x="630" y="376" width="300" height="64" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <rect x="270" y="472" width="660" height="64" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <rect x="270" y="584" width="238" height="58" rx="10" fill="#f97316"/>
+  <text x="306" y="621" fill="#111827" font-family="Arial, sans-serif" font-size="22" font-weight="700">Submit request</text>
+</svg>

@@ -1,3 +1,11 @@
+@php
+    $testimonialItems = $section->items ?? [];
+    $testimonials = $testimonialItems !== []
+        ? $testimonialItems
+        : __('capell-theme-portfolio::generic.testimonial_defaults');
+    $summary ??= $section->summary ?? __('capell-theme-portfolio::generic.testimonials_summary');
+@endphp
+
 <section
     class="theme-section theme-section-testimonials bg-[#f4f6f8] px-6 py-16"
 >
@@ -8,10 +16,11 @@
             </h2>
         @endisset
 
-        <p class="mt-4 max-w-2xl text-stone-600">
-            Client stories with measurable outcomes, visual direction, and clear
-            outcomes.
-        </p>
+        @if ($summary)
+            <p class="mt-4 max-w-2xl text-stone-600">
+                {{ $summary }}
+            </p>
+        @endif
     </div>
 
     <div
@@ -22,44 +31,20 @@
             class="mx-auto flex max-w-5xl snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 md:grid md:grid-cols-3 [&::-webkit-scrollbar]:hidden"
             data-carousel-track
         >
-            <article
-                class="min-w-[280px] snap-start rounded-2xl border border-slate-200 bg-white p-5"
-            >
-                <p class="text-sm text-stone-700">
-                    “Great clarity, premium design execution, and measurable
-                    uplift.”
-                </p>
-                <p
-                    class="mt-4 text-xs font-black tracking-[0.16em] text-slate-500"
+            @foreach ($testimonials as $testimonial)
+                <article
+                    class="min-w-[280px] snap-start rounded-2xl border border-slate-200 bg-white p-5 md:min-w-0"
                 >
-                    Client Snapshot
-                </p>
-            </article>
-            <article
-                class="min-w-[280px] snap-start rounded-2xl border border-slate-200 bg-white p-5 md:min-w-0"
-            >
-                <p class="text-sm text-stone-700">
-                    “A refined look and feel that reflects our brand promise
-                    from first screen.”
-                </p>
-                <p
-                    class="mt-4 text-xs font-black tracking-[0.16em] text-slate-500"
-                >
-                    Creative Partner
-                </p>
-            </article>
-            <article
-                class="min-w-[280px] snap-start rounded-2xl border border-slate-200 bg-white p-5 md:min-w-0"
-            >
-                <p class="text-sm text-stone-700">
-                    “The layout is polished, fast, and conversion-minded.”
-                </p>
-                <p
-                    class="mt-4 text-xs font-black tracking-[0.16em] text-slate-500"
-                >
-                    Design Lead
-                </p>
-            </article>
+                    <p class="text-sm text-stone-700">
+                        {{ $testimonial['quote'] ?? $testimonial['summary'] ?? $testimonial['description'] ?? '' }}
+                    </p>
+                    <p
+                        class="mt-4 text-xs font-black tracking-[0.16em] text-slate-500"
+                    >
+                        {{ $testimonial['attribution'] ?? $testimonial['name'] ?? $testimonial['title'] ?? __('capell-theme-portfolio::generic.testimonial_attribution_label') }}
+                    </p>
+                </article>
+            @endforeach
         </div>
 
         <button

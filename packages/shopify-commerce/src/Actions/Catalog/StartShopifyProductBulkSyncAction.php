@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Cache;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
+/**
+ * @method static string run(ShopifyConnection|int $connection)
+ */
 final class StartShopifyProductBulkSyncAction
 {
     use AsAction;
@@ -20,7 +23,7 @@ final class StartShopifyProductBulkSyncAction
     {
         $connection = is_int($connection) ? ShopifyConnection::query()->findOrFail($connection) : $connection;
 
-        return Cache::lock($this->lockKey((int) $connection->getKey()), 300)->block(10, function () use ($connection): string {
+        $bulkOperationId = Cache::lock($this->lockKey($this->intValue($connection->getKey())), 300)->block(10, function () use ($connection): string {
             $connection->refresh();
 
             if ($connection->status === ShopifyConnectionStatus::Revoked || ! $connection->isActive()) {
@@ -58,11 +61,18 @@ final class StartShopifyProductBulkSyncAction
                 throw $throwable;
             }
         });
+
+        return is_string($bulkOperationId) ? $bulkOperationId : '';
     }
 
     private function lockKey(int $connectionId): string
     {
         return sprintf('capell-shopify-commerce.sync.%d', $connectionId);
+    }
+
+    private function intValue(mixed $value): int
+    {
+        return is_numeric($value) ? (int) $value : 0;
     }
 
     private function mutation(): string

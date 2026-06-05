@@ -2,7 +2,6 @@
     use Capell\Core\Facades\CapellCore;
     use Capell\FoundationTheme\Actions\BuildWidgetAssetRenderDataAction;
     use Capell\Frontend\Facades\Frontend;
-    use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
     $page = Frontend::page();
     $theme = Frontend::theme();
@@ -25,6 +24,7 @@
     'carouselTouch' => $widget->getMeta('carousel_touch'),
     'carouselWheel' => (bool) $widget->getMeta('carousel_wheel', false),
     'color' => $widget->getMeta('color', 'light'),
+    'container',
     'containerKey',
     'containerIndex',
     'containerWidth',
@@ -59,6 +59,7 @@
                 :title="$widget->translation->title"
                 heading-weight="semibold"
                 :text-align="$align"
+                :heading-size="$widget->getMeta('heading_size')"
                 :heading-style="$widget->getMeta('heading_style')"
                 class="mt-4"
             />
@@ -109,7 +110,7 @@
                             $title = '';
                             $content = '';
                             $assetRenderData = BuildWidgetAssetRenderDataAction::run($widgetAsset);
-                            $media = $assetRenderData->image;
+                            $media = $assetRenderData->image?->media;
 
                             $position = is_object($assetRenderData->translation) && method_exists($assetRenderData->translation, 'getMeta')
                                 ? $assetRenderData->translation->getMeta('position', '')

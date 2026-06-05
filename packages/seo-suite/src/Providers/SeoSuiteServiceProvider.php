@@ -871,29 +871,37 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
             return new EloquentCollection;
         }
 
-        $query = $userModel::query();
         $superAdminRole = (string) config('capell.roles.super_admin', 'super_admin');
 
-        if (method_exists($userModel, 'roles')) {
-            return $query
-                ->whereHas(
-                    'roles',
-                    fn (Builder $query): Builder => $query->where('name', $superAdminRole),
-                )
-                ->get()
-                ->values();
+        if (! method_exists($userModel, 'roles')) {
+            return new EloquentCollection;
         }
 
-        return $query
-            ->get()
-            ->filter(function (Model $user) use ($superAdminRole): bool {
-                if (method_exists($user, 'isGlobalAdmin') && $user->isGlobalAdmin()) {
-                    return true;
-                }
+        return $userModel::query()
+            ->whereHas('roles', function (Builder $query) use ($superAdminRole): Builder {
+                $query->where('name', $superAdminRole);
 
-                return method_exists($user, 'hasRole')
-                    && $user->hasRole($superAdminRole);
+                return $this->whereGlobalRoleAssignment($query);
             })
+            ->get()
             ->values();
+    }
+
+    private function whereGlobalRoleAssignment(Builder $query): Builder
+    {
+        $tableNames = config('permission.table_names', []);
+        $modelHasRolesTable = is_array($tableNames) && is_string($tableNames['model_has_roles'] ?? null)
+            ? $tableNames['model_has_roles']
+            : 'model_has_roles';
+        $teamColumnConfig = config('permission.column_names.team_foreign_key', 'team_id');
+        $teamColumn = is_string($teamColumnConfig) && $teamColumnConfig !== ''
+            ? $teamColumnConfig
+            : 'team_id';
+
+        if (! Schema::hasColumn($modelHasRolesTable, $teamColumn)) {
+            return $query;
+        }
+
+        return $query->whereNull($modelHasRolesTable . '.' . $teamColumn);
     }
 }

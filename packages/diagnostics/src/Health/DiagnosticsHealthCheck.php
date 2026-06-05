@@ -69,12 +69,12 @@ final class DiagnosticsHealthCheck implements ChecksExtensionHealth
         }
 
         return new DoctorCheckResultData(
-            label: 'Package catalog discovery',
+            label: (string) __('capell-diagnostics::package.health_check_package_catalog_label'),
             passed: $discovered,
             message: $discovered
-                ? 'Installed Capell packages are discovered from composer metadata.'
-                : 'No installed Capell packages could be discovered from composer metadata.',
-            remediation: $discovered ? null : 'Ensure vendor/composer/installed.json exists and lists capell-app packages.',
+                ? (string) __('capell-diagnostics::package.health_check_package_catalog_passed')
+                : (string) __('capell-diagnostics::package.health_check_package_catalog_failed'),
+            remediation: $discovered ? null : (string) __('capell-diagnostics::package.health_check_package_catalog_remediation'),
         );
     }
 
@@ -83,12 +83,12 @@ final class DiagnosticsHealthCheck implements ChecksExtensionHealth
         $available = class_exists(BuildPackagesInstalledAction::class);
 
         return new DoctorCheckResultData(
-            label: 'Package manifest metadata',
+            label: (string) __('capell-diagnostics::package.health_check_manifest_metadata_label'),
             passed: $available,
             message: $available
-                ? 'Package manifests expose bundle, command, and health-check metadata.'
-                : 'Package manifest reader action is unavailable.',
-            remediation: $available ? null : 'Reinstall the Diagnostics package.',
+                ? (string) __('capell-diagnostics::package.health_check_manifest_metadata_passed')
+                : (string) __('capell-diagnostics::package.health_check_manifest_metadata_failed'),
+            remediation: $available ? null : (string) __('capell-diagnostics::package.health_check_reinstall_remediation'),
         );
     }
 
@@ -98,12 +98,12 @@ final class DiagnosticsHealthCheck implements ChecksExtensionHealth
             && class_exists(SystemHealthPage::class);
 
         return new DoctorCheckResultData(
-            label: 'System health widgets',
+            label: (string) __('capell-diagnostics::package.health_check_system_health_widgets_label'),
             passed: $registered,
             message: $registered
-                ? 'System health widgets and page are registered for developer users.'
-                : 'System health widgets or page are not registered.',
-            remediation: $registered ? null : 'Reinstall the Diagnostics package and clear caches.',
+                ? (string) __('capell-diagnostics::package.health_check_system_health_widgets_passed')
+                : (string) __('capell-diagnostics::package.health_check_system_health_widgets_failed'),
+            remediation: $registered ? null : (string) __('capell-diagnostics::package.health_check_clear_cache_remediation'),
         );
     }
 
@@ -118,12 +118,12 @@ final class DiagnosticsHealthCheck implements ChecksExtensionHealth
         }
 
         return new DoctorCheckResultData(
-            label: 'Queue health and failed-job summary',
+            label: (string) __('capell-diagnostics::package.health_check_queue_health_label'),
             passed: $queryable,
             message: $queryable
-                ? 'Queue health page and failed-job summary are available.'
-                : 'Queue health page or failed-job summary is unavailable.',
-            remediation: $queryable ? null : 'Run queue monitor migrations (croustibat/filament-jobs-monitor).',
+                ? (string) __('capell-diagnostics::package.health_check_queue_health_passed')
+                : (string) __('capell-diagnostics::package.health_check_queue_health_failed'),
+            remediation: $queryable ? null : (string) __('capell-diagnostics::package.health_check_queue_health_remediation'),
         );
     }
 }

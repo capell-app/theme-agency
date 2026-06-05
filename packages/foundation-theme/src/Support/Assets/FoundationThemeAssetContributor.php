@@ -12,14 +12,16 @@ final class FoundationThemeAssetContributor implements FrontendAssetContributor
 {
     public function requirements(FrontendAssetContextData $context): array
     {
-        $requirements = [
-            new FrontendAssetRequirementData(
+        $requirements = [];
+
+        if ($this->shouldLoadFrontendCss($context)) {
+            $requirements[] = new FrontendAssetRequirementData(
                 handle: 'foundation-theme:css',
                 kind: FrontendAssetRequirementData::KIND_CSS,
                 source: $this->frontendCssPath(),
                 buildPath: $this->frontendCssBuildPath($context),
-            ),
-        ];
+            );
+        }
 
         if ($this->shouldLoadRuntimeJavaScript($context)) {
             $requirements[] = new FrontendAssetRequirementData(
@@ -48,10 +50,17 @@ final class FoundationThemeAssetContributor implements FrontendAssetContributor
         return is_string($buildPath) && $buildPath !== '' ? $buildPath : 'build';
     }
 
+    private function shouldLoadFrontendCss(FrontendAssetContextData $context): bool
+    {
+        $value = data_get($context->theme?->meta, 'frontend_runtime.uses_foundation_theme_css');
+
+        return is_bool($value) ? $value : true;
+    }
+
     private function shouldLoadRuntimeJavaScript(FrontendAssetContextData $context): bool
     {
         return $context->runtime->usesIslands
             || $context->runtime->usesLivewire
-            || ($context->runtime->modules['layout-builder'] ?? false);
+            || ($context->runtime->modules['foundation-theme-runtime'] ?? false);
     }
 }

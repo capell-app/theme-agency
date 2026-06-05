@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Theme Inertia Bookings card</title>
+  <desc id="desc">Marketplace card for the Theme Inertia Bookings package.</desc>
+  <rect width="1200" height="760" fill="#0f172a"/>
+  <rect x="80" y="80" width="1040" height="600" rx="30" fill="#f8fafc"/>
+  <text x="132" y="168" fill="#0f172a" font-family="Arial, sans-serif" font-size="54" font-weight="700">Theme Inertia Bookings</text>
+  <text x="132" y="220" fill="#475569" font-family="Arial, sans-serif" font-size="26">Premium Inertia theme for appointment-led sites.</text>
+  <rect x="132" y="296" width="470" height="260" rx="24" fill="#ccfbf1"/>
+  <rect x="654" y="296" width="414" height="260" rx="24" fill="#fff7ed"/>
+  <text x="176" y="372" fill="#134e4a" font-family="Arial, sans-serif" font-size="34" font-weight="700">Booking-first pages</text>
+  <text x="176" y="424" fill="#0f766e" font-family="Arial, sans-serif" font-size="22">Hero, services, proof, locations, FAQ, CTA</text>
+  <text x="700" y="372" fill="#9a3412" font-family="Arial, sans-serif" font-size="34" font-weight="700">Real request flow</text>
+  <text x="700" y="424" fill="#c2410c" font-family="Arial, sans-serif" font-size="22">Lazy slots through Capell Inertia</text>
+</svg>

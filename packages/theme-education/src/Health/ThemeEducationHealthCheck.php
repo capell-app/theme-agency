@@ -141,8 +141,8 @@ final class ThemeEducationHealthCheck implements ChecksExtensionHealth
     {
         $missingAssets = [];
 
-        if (! is_file(dirname(__DIR__, 2) . '/resources/css/theme-education.css')) {
-            $missingAssets[] = 'resources/css/theme-education.css';
+        if (! is_file(dirname(__DIR__, 2) . '/' . EducationThemeServiceProvider::TAILWIND_IMPORT)) {
+            $missingAssets[] = EducationThemeServiceProvider::TAILWIND_IMPORT;
         }
 
         $registeredImports = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindImport);
@@ -150,12 +150,12 @@ final class ThemeEducationHealthCheck implements ChecksExtensionHealth
 
         $hasTailwindImport = $registeredImports->contains(
             static fn (mixed $asset): bool => $asset->packageName === EducationThemeServiceProvider::$packageName
-                && $asset->value === 'resources/css/theme-education.css',
+                && $asset->value === EducationThemeServiceProvider::TAILWIND_IMPORT,
         );
 
         $hasTailwindSource = $registeredSources->contains(
             static fn (mixed $asset): bool => $asset->packageName === EducationThemeServiceProvider::$packageName
-                && $asset->value === 'resources/views/**/*.blade.php',
+                && $asset->value === EducationThemeServiceProvider::TAILWIND_SOURCE,
         );
 
         if (! $hasTailwindImport) {

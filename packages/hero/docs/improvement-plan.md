@@ -4,12 +4,14 @@
 
 ## 1. Snapshot
 
-Hero ships the single default home-page hero widget (`capell::widget.hero`) plus a layout/theme-level hero **background** and **media** system that themes consume as a shared visual primitive. It contributes: one Livewire/Blade widget component (`src/View/Components/Widget/Hero.php` extending `AbstractWidget`), six anonymous Blade partials (`wrapper`, `slide`, `background`, `media`, `content`, `related`), three Data objects (`HeroWidgetRenderData`, `HeroBackgroundData`, `HeroMediaData`, plus `HeroAssetSlideData`), three resolver Actions (`ResolveHeroBackgroundDataAction`, `ResolveHeroMediaDataAction`, and the slide hydration in `HeroAssetSlideData::fromWidgetAsset`), an install Action (`InstallHeroLayoutDefaultsAction`) behind `capell:hero-setup`, and a Filament schema (`HeroBackgroundSchema`) injected into the Theme settings, Widget display, and Widget-asset forms via three extenders. It declares no migrations, settings, or permissions. Hard runtime deps per `capell.json`: `admin`, `core`, `frontend`, `layout-builder`. Marketplace summary now highlights responsive video/decorative overlay backgrounds, carousel, and inheritable theme styling. Screenshot count: **1** declared in `capell.json marketplace.screenshots` (`extension-card.jpg`), but `docs/screenshots.json` defines **2** capture entries (`hero-home-widget` required, `hero-slide-variant` optional) that are unbuilt — a manifest/contract mismatch.
+Hero ships the single default home-page hero widget (`capell::widget.hero`) plus a layout/theme-level hero **background** and **media** system that themes consume as a shared visual primitive. It contributes: one Livewire/Blade widget component (`src/View/Components/Widget/Hero.php` extending `AbstractWidget`), six anonymous Blade partials (`wrapper`, `slide`, `background`, `media`, `content`, `related`), three Data objects (`HeroWidgetRenderData`, `HeroBackgroundData`, `HeroMediaData`, plus `HeroAssetSlideData`), three resolver Actions (`ResolveHeroBackgroundDataAction`, `ResolveHeroMediaDataAction`, and the slide hydration in `HeroAssetSlideData::fromWidgetAsset`), an install Action (`InstallHeroLayoutDefaultsAction`) behind `capell:hero-setup`, and a Filament schema (`HeroBackgroundSchema`) injected into the Theme settings, Widget display, and Widget-asset forms via three extenders. It declares no migrations, settings, or permissions. Hard runtime deps per `capell.json`: `admin`, `core`, `frontend`, `layout-builder`. Marketplace summary now highlights responsive video/decorative overlay backgrounds, carousel, and inheritable theme styling. Screenshot count is reconciled: `capell.json` lists the extension card plus the two committed `docs/screenshots.json` PNG captures (`hero-home-widget` required, `hero-slide-variant` optional).
 
 ## Completed Improvement Slices
 
 - **2026-06-03:** Rewrote marketplace/composer copy, added a real `HeroHealthCheck`, and set `fetchpriority="high"` on the hero media poster image.
 - **2026-06-04:** Declared `capell-app/admin` as a hard dependency, added the `admin` surface, populated Hero feature capabilities, removed the empty provider branch, and updated docs/tests for the admin schema extenders.
+- **2026-06-04:** Added responsive width/density descriptors and `sizes="100vw"` hints to hero media image/poster sources for LCP.
+- **2026-06-05:** Built the two declared screenshot captures, added them to `capell.json` marketplace media, and pinned the screenshot paths/files in manifest coverage.
 
 ## 2. Improvements (existing functionality)
 
@@ -77,7 +79,7 @@ Both are flat and describe plumbing ("setup", "rendering"), not the visitor-faci
 
 **Improved composer description:** "Foundation hero section for Capell: responsive video/image backgrounds, decorative overlays, carousel slides, and inheritable theme styling, rendered safely for anonymous visitors."
 
-**Screenshot/media gaps:** Only one card image (`extension-card.jpg`) is shipped; the two `screenshots.json` capture entries (`hero-home-widget`, `hero-slide-variant`) are **not built**, and the richest features (video background, the 4 overlay styles, carousel) have no marketing visual at all. Add: (a) a video-background hero still/gif, (b) one image per overlay style or a 2×2 grid, (c) a multi-slide carousel capture. Reconcile `capell.json marketplace.screenshots` (1) with `docs/screenshots.json` (2) so the marketplace count is accurate.
+**Screenshot/media status:** `capell.json` now ships the extension card plus the two declared `docs/screenshots.json` PNG captures: `hero-home-widget.png` and `hero-slide-variant.png`. Future marketing depth can still add a video-background still/GIF and a 2×2 overlay-style grid, but the declared screenshot contract is no longer mismatched.
 
 **Platform-pitch contribution:** "Every Capell site ships with a hero that supports video, overlays, and carousels out of the box — no theme author has to build one." Declare the feature set as `capabilities[]` (currently empty) so the marketplace and Diagnostics can surface it.
 
@@ -89,8 +91,8 @@ Both are flat and describe plumbing ("setup", "rendering"), not the visitor-faci
 | ---------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
 | Declare `capell-app/admin` dependency (or guard admin registration)                | Done   | S      | High   | §4.1        |
 | Add `"admin"` to `surfaces` + fix overview "no Filament" claim                     | Done   | S      | High   | §4.2        |
-| Add responsive width/density descriptors to hero media sources (LCP)               | Now    | S      | Medium | §4.6        |
-| Reconcile screenshot count (1 vs 2) + build the 2 declared captures                | Now    | S      | Medium | §1, §5      |
+| Add responsive width/density descriptors to hero media sources (LCP)               | Done   | S      | Medium | §4.6        |
+| Done/Shipped: Reconcile screenshot count (1 vs 2) + build the 2 declared captures  | Done   | S      | Medium | §1, §5      |
 | Rewrite marketplace `summary` + composer `description`                             | Done   | S      | Medium | §5          |
 | Populate `capabilities[]` (video, overlay, carousel, inheritance)                  | Done   | S      | Medium | §3, §5      |
 | Memoize theme/widget resolver layers across slides (render budget)                 | Next   | M      | High   | §2.1        |

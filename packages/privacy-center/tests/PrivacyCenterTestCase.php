@@ -67,6 +67,12 @@ class PrivacyCenterTestCase extends OrchestraTestCase
             $table->timestamps();
         });
 
+        Schema::create('privacy_center_test_consent_sources', function (Blueprint $table): void {
+            $table->id();
+            $table->foreignId('visit_id')->nullable()->constrained('privacy_center_test_subjects')->nullOnDelete();
+            $table->timestamps();
+        });
+
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
     }
 }

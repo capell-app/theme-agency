@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\ShopifyCommerce\Models;
 
 use Capell\ShopifyCommerce\Data\ShopifyProductOptionData;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 use Spatie\LaravelData\DataCollection;
 
+/**
+ * @property string $shopify_gid
+ * @property string $handle
+ * @property string $title
+ * @property string $status
+ * @property array<string, mixed>|null $featured_image
+ * @property string $search_text
+ * @property CarbonImmutable|null $synced_at
+ */
 final class ShopifyProduct extends Model
 {
     /** @use HasFactory<Factory<static>> */

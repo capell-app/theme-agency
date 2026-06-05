@@ -17,6 +17,8 @@ use Capell\Frontend\Facades\Frontend;
 use Capell\Frontend\Support\CapellFrontendContext;
 use Capell\ThemeStudio\Saas\Tests\Fixtures\SaasThemeAdapterContextReader;
 use Capell\ThemeStudio\Saas\ThemeStudio\Adapters\SaasThemePageAdapter;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
 
 beforeEach(function (): void {
     app()->instance(ThemeRuntimeSettings::class, new class implements ThemeRuntimeSettings
@@ -106,6 +108,40 @@ it('adapts explicit SaaS render data into theme page sections navigation and foo
         ->and($themePage->sections[2])->toBeInstanceOf(ContentListingSectionData::class)
         ->and($themePage->sections[5])->toBeInstanceOf(ProofSectionData::class)
         ->and($themePage->sections[6])->toBeInstanceOf(CtaSectionData::class);
+});
+
+it('builds the current page from hydrated frontend context without database queries', function (): void {
+    $translation = new Translation([
+        'title' => 'Hydrated Growth Platform',
+        'content' => '<p>Already loaded public content.</p>',
+    ]);
+    $page = saasThemeAdapterPage([
+        'name' => 'Hydrated fallback',
+        'meta' => [
+            'theme_demo' => [
+                'render_data' => [
+                    'hero' => [
+                        'heading' => 'Launch from hydrated context',
+                        'actions' => [['label' => 'Start', 'url' => '/start']],
+                    ],
+                ],
+            ],
+        ],
+    ], $translation);
+
+    saasThemeBindFrontendContext($page, saasThemeAdapterSite(['name' => 'Capell SaaS']));
+
+    $queries = [];
+
+    DB::listen(function (QueryExecuted $query) use (&$queries): void {
+        $queries[] = $query->sql;
+    });
+
+    $themePage = (new SaasThemePageAdapter)->currentPage();
+
+    expect($themePage->title)->toBe('Hydrated Growth Platform')
+        ->and($themePage->sections)->toHaveCount(1)
+        ->and($queries)->toBe([]);
 });
 
 it('uses the premium landing fallback for immersive SaaS pages without render data', function (): void {

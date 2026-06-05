@@ -20,6 +20,8 @@ use Override;
  * @property bool $confirmation_required
  * @property CarbonImmutable|null $created_at
  * @property int $duration_minutes
+ * @property int $lead_time_minutes
+ * @property int|null $max_future_days
  * @property string $name
  */
 class BookingService extends Model

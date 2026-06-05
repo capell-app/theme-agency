@@ -1,0 +1,204 @@
+.capell-inertia-page,
+.capell-inertia-bookings-page,
+.capell-booking-request,
+.capell-inertia-booking-request {
+    --booking-primary: var(--color-primary, #0f766e);
+    --booking-accent: var(--color-accent, #f97316);
+    --booking-ink: var(--color-foreground, #111827);
+    --booking-muted: color-mix(in srgb, var(--booking-ink), white 42%);
+    --booking-line: color-mix(in srgb, var(--booking-primary), white 78%);
+    --booking-panel: color-mix(
+        in srgb,
+        var(--color-surface, #f8fafc),
+        white 62%
+    );
+    color: var(--booking-ink);
+    font-family: var(--font-family, ui-sans-serif, system-ui, sans-serif);
+}
+
+.capell-inertia-bookings-page {
+    display: grid;
+    gap: 3rem;
+    margin: 0 auto;
+    max-width: 72rem;
+    padding: 2rem clamp(1rem, 3vw, 2rem) 4rem;
+}
+
+.capell-inertia-bookings-hero {
+    display: grid;
+    gap: 1rem;
+    min-height: 26rem;
+    align-content: center;
+    border-bottom: 1px solid var(--booking-line);
+    padding: 3rem 0;
+}
+
+.capell-inertia-bookings-hero p {
+    margin: 0;
+    max-width: 42rem;
+    color: var(--booking-muted);
+}
+
+.capell-inertia-bookings-hero > p:first-child,
+.capell-bookings-widget-eyebrow {
+    color: var(--booking-primary);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.capell-inertia-bookings-hero h1,
+.capell-bookings-widget-title h2 {
+    margin: 0;
+    max-width: 52rem;
+    font-family: var(
+        --font-family-heading,
+        var(--font-family, ui-sans-serif, system-ui, sans-serif)
+    );
+    font-size: 4.5rem;
+    line-height: 0.95;
+}
+
+.capell-inertia-bookings-hero a,
+.capell-booking-request button,
+.capell-inertia-booking-request button {
+    display: inline-flex;
+    min-height: 2.75rem;
+    width: fit-content;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 0.5rem;
+    background: var(--booking-accent);
+    color: #111827;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+}
+
+.capell-inertia-bookings-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+    gap: 1rem;
+}
+
+.capell-bookings-widget {
+    display: grid;
+    gap: 0.75rem;
+    border: 1px solid var(--booking-line);
+    border-radius: 0.5rem;
+    background: var(--booking-panel);
+    padding: 1rem;
+}
+
+.capell-bookings-widget p,
+.capell-bookings-widget figure,
+.capell-bookings-widget img {
+    margin: 0;
+}
+
+.capell-bookings-widget img {
+    display: block;
+    width: 100%;
+    border-radius: 0.375rem;
+}
+
+.capell-booking-request,
+.capell-inertia-booking-request {
+    display: grid;
+    min-height: 100vh;
+    align-content: center;
+    background:
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--booking-primary), white 88%),
+            transparent 34rem
+        ),
+        var(--color-surface, #f8fafc);
+    padding: clamp(1rem, 3vw, 2rem);
+}
+
+.capell-booking-request form,
+.capell-inertia-booking-request form {
+    display: grid;
+    gap: 1rem;
+    width: min(100%, 42rem);
+    border: 1px solid var(--booking-line);
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, white, var(--booking-panel) 28%);
+    box-shadow: 0 1rem 3rem rgb(15 23 42 / 0.08);
+    padding: clamp(1rem, 3vw, 1.5rem);
+}
+
+.capell-booking-request label,
+.capell-inertia-booking-request label {
+    display: grid;
+    gap: 0.375rem;
+    color: var(--booking-muted);
+    font-size: 0.875rem;
+    font-weight: 750;
+}
+
+.capell-booking-request input,
+.capell-booking-request select,
+.capell-booking-request textarea,
+.capell-inertia-booking-request input,
+.capell-inertia-booking-request select,
+.capell-inertia-booking-request textarea {
+    width: 100%;
+    min-height: 2.75rem;
+    border: 1px solid var(--booking-line);
+    border-radius: 0.5rem;
+    background: white;
+    color: var(--booking-ink);
+    font: inherit;
+    padding: 0.7rem 0.75rem;
+}
+
+.capell-booking-request textarea,
+.capell-inertia-booking-request textarea {
+    min-height: 7.5rem;
+    resize: vertical;
+}
+
+.capell-booking-request input:focus,
+.capell-booking-request select:focus,
+.capell-booking-request textarea:focus,
+.capell-inertia-booking-request input:focus,
+.capell-inertia-booking-request select:focus,
+.capell-inertia-booking-request textarea:focus,
+.capell-inertia-bookings-hero a:focus-visible,
+.capell-booking-request button:focus-visible,
+.capell-inertia-booking-request button:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--booking-accent), white 30%);
+    outline-offset: 2px;
+}
+
+.capell-booking-request button:disabled,
+.capell-inertia-booking-request button:disabled {
+    cursor: wait;
+    opacity: 0.62;
+}
+
+@media (max-width: 42rem) {
+    .capell-inertia-bookings-page {
+        gap: 2rem;
+        padding-bottom: 2.5rem;
+    }
+
+    .capell-inertia-bookings-hero {
+        min-height: 20rem;
+    }
+
+    .capell-inertia-bookings-hero h1,
+    .capell-bookings-widget-title h2 {
+        font-size: 2.5rem;
+    }
+
+    .capell-booking-request,
+    .capell-inertia-booking-request {
+        align-content: start;
+    }
+}

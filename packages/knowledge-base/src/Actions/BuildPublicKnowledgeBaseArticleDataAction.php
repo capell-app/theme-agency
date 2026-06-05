@@ -13,6 +13,9 @@ use Capell\KnowledgeBase\Models\KnowledgeBaseRelatedArticle;
 use Capell\KnowledgeBase\Support\KnowledgeBasePublicPath;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static PublicKnowledgeBaseArticleData|null run(KnowledgeBaseArticle $article)
+ */
 final class BuildPublicKnowledgeBaseArticleDataAction
 {
     use AsObject;

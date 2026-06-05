@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Capell\ThemeStudio\LocalServices\LocalServicesThemeServiceProvider;
-use Illuminate\Support\Facades\File;
 
 it('declares the required first-party theme manifest boundaries', function (): void {
     $manifest = localServicesThemeManifest();
@@ -24,6 +23,7 @@ it('declares the required first-party theme manifest boundaries', function (): v
 
     expect($manifest['themeKey'])->toBe('local-services')
         ->and($manifest['extends'])->toBe('capell-app/foundation-theme')
+        ->and($manifest['surfaces'])->toBe(['frontend', 'console'])
         ->and($database['migrations'])->toBeFalse()
         ->and($runtimeProviders)->toContain(LocalServicesThemeServiceProvider::class)
         ->and($marketplace['summary'])->toBe('A conversion-first Capell theme for local trades, clinics, and service businesses — built around quote requests, service-area coverage, and click-to-call trust.')
@@ -44,7 +44,7 @@ it('declares only marketplace screenshots that exist in the package', function (
     foreach ($screenshots as $screenshot) {
         throw_if(! is_array($screenshot) || ! is_string($screenshot['path'] ?? null), RuntimeException::class, 'Theme Local Services marketplace screenshots must define string paths.');
 
-        expect(File::exists(__DIR__ . '/../../' . $screenshot['path']))->toBeTrue();
+        expect(file_exists(__DIR__ . '/../../' . $screenshot['path']))->toBeTrue();
     }
 });
 
@@ -54,7 +54,7 @@ it('declares only marketplace screenshots that exist in the package', function (
 function localServicesThemeManifest(): array
 {
     $manifest = json_decode(
-        File::get(__DIR__ . '/../../capell.json'),
+        (string) file_get_contents(__DIR__ . '/../../capell.json'),
         associative: true,
         flags: JSON_THROW_ON_ERROR,
     );
@@ -70,7 +70,7 @@ function localServicesThemeManifest(): array
 function localServicesThemeComposer(): array
 {
     $composer = json_decode(
-        File::get(__DIR__ . '/../../composer.json'),
+        (string) file_get_contents(__DIR__ . '/../../composer.json'),
         associative: true,
         flags: JSON_THROW_ON_ERROR,
     );

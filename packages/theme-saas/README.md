@@ -113,10 +113,10 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Testing
 
-Run package tests from the repository root:
+Run package tests from the repository root so Pest picks up the root `phpunit.xml`:
 
 ```bash
-vendor/bin/pest packages/theme-saas/tests --configuration=phpunit.xml
+vendor/bin/pest packages/theme-saas/tests
 ```
 
 ## Maintenance Notes

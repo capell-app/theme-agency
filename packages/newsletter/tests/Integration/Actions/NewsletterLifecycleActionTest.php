@@ -11,12 +11,15 @@ use Capell\FormBuilder\Models\Form;
 use Capell\FormBuilder\Models\Submission;
 use Capell\Newsletter\Actions\CreateUnsubscribeTokenAction;
 use Capell\Newsletter\Actions\SubscribeFromFormSubmissionAction;
+use Capell\Newsletter\Enums\PublicTokenType;
 use Capell\Newsletter\Enums\SubscriberStatus;
+use Capell\Newsletter\Listeners\SubscribeFromFormSubmission;
 use Capell\Newsletter\Models\ConsentEvent;
 use Capell\Newsletter\Models\FormMapping;
 use Capell\Newsletter\Models\Subscriber;
 use Capell\Newsletter\Notifications\ConfirmNewsletterSubscriptionNotification;
 use Capell\Tags\Models\Tag;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
@@ -109,6 +112,8 @@ it('creates a subscriber when a FormSubmitted event is dispatched through the re
         'submitted_at' => now(),
     ]);
 
+    expect(Event::getRawListeners()[FormSubmitted::class] ?? [])->toContain(SubscribeFromFormSubmission::class);
+
     event(new FormSubmitted($form, $submission));
 
     $subscriber = Subscriber::query()->where('site_id', $site->getKey())->first();
@@ -153,6 +158,13 @@ it('confirms and unsubscribes with one-use public tokens', function (): void {
         ->assertOk()
         ->assertSee(__('capell-newsletter::messages.confirmed'));
 
+    $confirmPublicToken = $subscriber->publicTokens()
+        ->where('type', PublicTokenType::Confirm)
+        ->where('token_hash', hash('sha256', $confirmToken))
+        ->firstOrFail();
+
+    expect($confirmPublicToken->used_at)->not->toBeNull();
+
     expect(Contact::query()->first()?->profile)->toMatchArray([
         'newsletter' => [
             'subscriber_id' => $subscriber->getKey(),
@@ -170,6 +182,16 @@ it('confirms and unsubscribes with one-use public tokens', function (): void {
     $this->get(route('capell-newsletter.unsubscribe', ['token' => $unsubscribeToken]))
         ->assertOk()
         ->assertSee(__('capell-newsletter::messages.unsubscribed'));
+
+    $unsubscribePublicToken = $subscriber->publicTokens()
+        ->where('type', PublicTokenType::Unsubscribe)
+        ->where('token_hash', hash('sha256', (string) $unsubscribeToken))
+        ->firstOrFail();
+
+    expect($unsubscribePublicToken->used_at)->not->toBeNull();
+
+    $this->get(route('capell-newsletter.unsubscribe', ['token' => $unsubscribeToken]))
+        ->assertNotFound();
 
     expect($subscriber->refresh()->status)->toBe(SubscriberStatus::Unsubscribed);
 

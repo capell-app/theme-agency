@@ -2,7 +2,7 @@
 
 Status: **Available, no schema impact** · Kind: **theme** · Theme key:
 **portfolio** · Contexts: **frontend, console** · Product group:
-**Capell Foundation** · Commercial proposal: **paid first-party theme**
+**Capell Themes** · Commercial proposal: **paid first-party theme**
 
 Theme Portfolio helps a Capell site present work, case studies, services,
 testimonials, media-kit content, newsletter signup, and conversion paths in one
@@ -35,6 +35,9 @@ optional packages when those packages are installed.
 
 - `PortfolioThemeServiceProvider` registers the theme when
   `capell-app/theme-portfolio` is installed.
+- Theme Studio runtime inheritance uses `extends: default`; package metadata
+  still records `capell-app/foundation-theme` as the installable Foundation
+  dependency.
 - `DemoCommand` calls `InstallPortfolioThemeDemoAction`.
 - Core `ViewSectionRenderer` extra view data guards optional Content Sections, Media Library,
   and Newsletter sections.

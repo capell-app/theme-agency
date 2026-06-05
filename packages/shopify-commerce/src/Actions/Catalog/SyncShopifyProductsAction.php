@@ -9,6 +9,9 @@ use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static string|null run(ShopifyConnection|int $connection)
+ */
 final class SyncShopifyProductsAction
 {
     use AsAction;
@@ -33,7 +36,14 @@ final class SyncShopifyProductsAction
             'last_sync_error' => null,
         ])->save();
 
-        return StartShopifyProductBulkSyncAction::run($connection);
+        $bulkOperationId = StartShopifyProductBulkSyncAction::run($connection);
+
+        if ($bulkOperationId !== '') {
+            ContinueShopifyProductBulkSyncAction::dispatch($this->intValue($connection->getKey()))
+                ->delay($this->pollDelaySeconds());
+        }
+
+        return $bulkOperationId;
     }
 
     /**
@@ -41,7 +51,7 @@ final class SyncShopifyProductsAction
      */
     public function getJobMiddleware(ShopifyConnection|int $connection): array
     {
-        $connectionId = $connection instanceof ShopifyConnection ? (int) $connection->getKey() : $connection;
+        $connectionId = $connection instanceof ShopifyConnection ? $this->intValue($connection->getKey()) : $connection;
 
         return [
             (new WithoutOverlapping($this->lockKey($connectionId)))->expireAfter(21_600),
@@ -51,5 +61,15 @@ final class SyncShopifyProductsAction
     private function lockKey(int $connectionId): string
     {
         return sprintf('capell-shopify-commerce.sync.%d', $connectionId);
+    }
+
+    private function pollDelaySeconds(): int
+    {
+        return max(1, $this->intValue(config('capell-shopify-commerce.bulk_sync_poll_delay_seconds', 15), 15));
+    }
+
+    private function intValue(mixed $value, int $default = 0): int
+    {
+        return is_numeric($value) ? (int) $value : $default;
     }
 }

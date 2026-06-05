@@ -23,6 +23,7 @@ use Capell\Core\ThemeStudio\Data\ThemePresetData;
 use Capell\Core\ThemeStudio\Rendering\BladeThemeRenderer;
 use Capell\Core\ThemeStudio\Rendering\ViewSectionRenderer;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Console\Commands\DemoCommand;
 use Capell\FoundationTheme\Console\Commands\GenerateTailwindAssetsCommand;
 use Capell\FoundationTheme\Console\Commands\SetupCommand;
 use Capell\FoundationTheme\Enums\FoundationThemeAssetEnum;
@@ -121,6 +122,7 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
             ->hasConfigFile()
             ->hasTranslations()
             ->hasCommands([
+                DemoCommand::class,
                 GenerateTailwindAssetsCommand::class,
                 SetupCommand::class,
             ]);
@@ -395,7 +397,7 @@ final class FoundationThemeServiceProvider extends AbstractPackageServiceProvide
             'foundation-theme-runtime',
             fn (FrontendAssetContextData $context): bool => $context->runtime->usesIslands
                 || $context->runtime->usesLivewire
-                || ($context->runtime->modules['layout-builder'] ?? false),
+                || ($context->runtime->modules['foundation-theme-runtime'] ?? false),
         );
     }
 

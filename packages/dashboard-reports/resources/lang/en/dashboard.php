@@ -11,7 +11,7 @@ return [
     'health_content_health_provider_label' => 'Dashboard Reports content health provider',
     'health_content_health_provider_passed' => 'A real content health provider is bound for dashboard widgets.',
     'health_content_health_provider_remediation' => 'Ensure the Dashboard Reports admin provider boots after Capell Admin so the null provider can be replaced.',
-    'health_dashboard_settings_contributor_failed' => 'Dashboard Reports visibility settings are not registered.',
+    'health_dashboard_settings_contributor_failed' => 'Dashboard Reports visibility settings are not registered or are missing keys: :settings.',
     'health_dashboard_settings_contributor_label' => 'Dashboard Reports settings contributor',
     'health_dashboard_settings_contributor_passed' => 'Dashboard Reports visibility settings are registered.',
     'health_dashboard_settings_contributor_remediation' => 'Ensure the Dashboard Reports admin provider tags its dashboard settings contributor.',

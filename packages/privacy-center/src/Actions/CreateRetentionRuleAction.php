@@ -8,6 +8,9 @@ use Capell\PrivacyCenter\Data\RetentionRuleData;
 use Capell\PrivacyCenter\Models\RetentionRule;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static RetentionRule run(RetentionRuleData $ruleData)
+ */
 final class CreateRetentionRuleAction
 {
     use AsAction;

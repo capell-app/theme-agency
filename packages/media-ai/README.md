@@ -1,6 +1,6 @@
 # Media AI
 
-Optional AI-assisted media actions for Capell.
+Provider-backed image editing actions for Capell media records.
 
 ## At A Glance
 
@@ -12,9 +12,9 @@ Optional AI-assisted media actions for Capell.
 
 ## Why It Helps Your Capell Workflow
 
-- Adds optional AI-assisted media actions without forcing the media library to depend on an AI provider.
-- Helps editors speed up media tasks while developers keep AI execution behind package Actions and orchestration boundaries.
-- Fits sites that want AI support for media workflows but still need predictable fallbacks when AI is disabled.
+- Adds a provider-backed `Doctor image` action without forcing the media library to depend on an AI provider.
+- Helps editors request background removal, object removal, image restoration, improvement, and upscaling from the admin media workflow.
+- Fits sites that want premium AI support for media workflows but still need predictable fallbacks when AI is disabled or unconfigured.
 
 ## Best Used With
 
@@ -24,10 +24,11 @@ Optional AI-assisted media actions for Capell.
 
 ## What It Adds
 
-Optional AI-assisted media actions for Capell.
+Provider-backed image editing actions for Capell media records.
 
-- Optional AI-assisted media edit actions.
+- Optional image edit action for improve, remove-background, remove-object, restore, and upscale operations.
 - ImageDoctor contract with a safe null implementation.
+- Opt-in AI Orchestrator image doctor adapter configured through `capell-media-ai.image_doctor`.
 - Filament media action extender for admin workflows.
 - No public frontend output and no required AI provider binding.
 

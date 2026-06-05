@@ -24,16 +24,19 @@ class LatestPages extends Component
     public function __construct(public string $headingClass, public int $limit = 4, ?Collection $pages = null)
     {
         $language = Frontend::language();
+        $candidateLimit = max($this->limit, $this->limit * 4);
 
-        $this->pages = $pages ?? ($language instanceof Language
+        $this->pages = $this->visibleFooterPages($pages ?? ($language instanceof Language
             ? PageLoader::getPages(
                 language: $language,
                 site: Frontend::site(),
-                limit: $this->limit,
+                limit: $candidateLimit,
                 ordering: PageOrderEnum::Latest,
                 pageGroup: BlueprintGroupEnum::Default,
             )
-            : collect());
+            : collect()))
+            ->take($this->limit)
+            ->values();
     }
 
     public function hasPages(): bool
@@ -44,5 +47,16 @@ class LatestPages extends Component
     public function render(): ViewContract
     {
         return view('capell::components.footer.latest-pages');
+    }
+
+    /**
+     * @param  Collection<int, mixed>  $pages
+     * @return Collection<int, mixed>
+     */
+    private function visibleFooterPages(Collection $pages): Collection
+    {
+        return $pages
+            ->reject(fn (mixed $page): bool => data_get($page, 'translation.meta.exclude_from_footer') === true)
+            ->values();
     }
 }

@@ -11,7 +11,11 @@ use Capell\LayoutBuilder\Actions\BuildPublicLayoutGraphAction;
 use Capell\LayoutBuilder\Data\PublicLayoutContainerData;
 use Capell\LayoutBuilder\Data\PublicLayoutGraphData;
 use Capell\LayoutBuilder\Models\Widget;
+use Capell\LayoutBuilder\Support\CapellLayoutManager;
+use Capell\LayoutBuilder\Support\LayoutWidgetData;
+use Capell\LayoutBuilder\Support\Loader\LayoutLoader;
 use Capell\LayoutBuilder\Tests\Fixtures\View\Components\PackageAlert;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -23,6 +27,8 @@ use Illuminate\Support\Facades\DB;
  *     public payload, even at scale.
  */
 beforeEach(function (): void {
+    Blade::component(PackageAlert::class, 'capell::widget.default');
+
     app()->bind(BladeComponentResolverInterface::class, fn (): BladeComponentResolverInterface => new class implements BladeComponentResolverInterface
     {
         /**
@@ -45,15 +51,28 @@ beforeEach(function (): void {
     });
 });
 
-it('builds a large multi-container layout graph within a bounded query budget without leaking authoring metadata', function (): void {
-    $fixture = seedBigLayout(prefix: 'big', containerCount: 6, widgetsPerContainer: 30);
+it('builds and renders a multi-container layout graph within declared performance budgets without leaking authoring metadata', function (): void {
+    // Keep this fixture large enough to exercise the public Blade path. The large stress case
+    // below separately proves query count does not scale with hundreds of widgets.
+    $fixture = seedBigLayout(prefix: 'big', containerCount: 6, widgetsPerContainer: 3);
 
-    $queryCount = 0;
-    DB::listen(function () use (&$queryCount): void {
-        $queryCount++;
-    });
+    [$graph, $queryCount] = measurePublicLayoutBudget(
+        fn (): PublicLayoutGraphData => capell_test_instance(
+            BuildPublicLayoutGraphAction::run(
+                $fixture['layout'],
+                $fixture['page'],
+                $fixture['language'],
+            ),
+            PublicLayoutGraphData::class,
+        ),
+    );
+    storePublicLayoutWidgets($fixture);
 
-    $graph = BuildPublicLayoutGraphAction::run($fixture['layout'], $fixture['page'], $fixture['language']);
+    view('capell-layout-builder::components.layout.area', ['layout' => $fixture['layout']])->render();
+
+    [$html, $renderQueryCount] = measurePublicLayoutBudget(
+        fn (): string => view('capell-layout-builder::components.layout.area', ['layout' => $fixture['layout']])->render(),
+    );
 
     $renderedWidgetCount = array_sum(array_map(
         static fn (PublicLayoutContainerData $container): int => count($container->widgets),
@@ -64,7 +83,10 @@ it('builds a large multi-container layout graph within a bounded query budget wi
     expect($graph)->toBeInstanceOf(PublicLayoutGraphData::class)
         ->and($graph->containers)->toHaveCount($fixture['containerCount'])
         ->and($renderedWidgetCount)->toBe($fixture['totalWidgets'])
+        ->and($queryCount)->toBeLessThanOrEqual(layoutBuilderAdminQueryBudget())
         ->and($queryCount)->toBeLessThan(15)
+        ->and($renderQueryCount)->toBe(0)
+        ->and($html)->toContain('Package alert')
         ->and($serialized)->not->toContain('admin_schema')
         ->and($serialized)->not->toContain('signed_url')
         ->and($serialized)->not->toContain('widget_settings');
@@ -96,6 +118,86 @@ function countLayoutGraphQueries(array $fixture): int
     BuildPublicLayoutGraphAction::run($fixture['layout'], $fixture['page'], $fixture['language']);
 
     return $queryCount;
+}
+
+/**
+ * @template TValue
+ *
+ * @param  Closure(): TValue  $callback
+ * @return array{0: TValue, 1: int, 2: float}
+ */
+function measurePublicLayoutBudget(Closure $callback): array
+{
+    $queryCount = 0;
+
+    DB::listen(function () use (&$queryCount): void {
+        $queryCount++;
+    });
+
+    $startedAt = hrtime(true);
+    $result = $callback();
+    $elapsedMilliseconds = (hrtime(true) - $startedAt) / 1_000_000;
+
+    return [$result, $queryCount, $elapsedMilliseconds];
+}
+
+/**
+ * @param  array{containerCount: int, language: Language, layout: Layout, page: Page, site: Site, totalWidgets: int}  $fixture
+ */
+function storePublicLayoutWidgets(array $fixture): void
+{
+    CapellLayoutManager::clearContainerWidgets();
+
+    $layout = $fixture['layout'];
+    $language = $fixture['language'];
+    $page = $fixture['page'];
+    $containers = $layout->getAttribute('containers');
+    $containers = is_array($containers) ? $containers : [];
+
+    $loader = resolve(LayoutLoader::class);
+
+    $loader->preloadLayoutWidgets($layout, $language, $page);
+
+    foreach ($containers as $containerKey => $container) {
+        foreach (LayoutWidgetData::fromContainer(is_array($container) ? $container : []) as $widgetData) {
+            $widgetKey = LayoutWidgetData::key($widgetData);
+            if ($widgetKey === null) {
+                continue;
+            }
+
+            $occurrence = LayoutWidgetData::occurrence($widgetData);
+            $widget = $loader->getLayoutWidget($layout, $widgetKey, $language, $page, (string) $containerKey, $occurrence);
+
+            if ($widget instanceof Widget) {
+                CapellLayoutManager::storeContainerWidget((string) $containerKey, $widgetKey, $widget, $occurrence);
+            }
+        }
+    }
+}
+
+function layoutBuilderAdminQueryBudget(): int
+{
+    $budget = data_get(layoutBuilderManifest(), 'performance.adminQueryBudget');
+
+    return is_numeric($budget) ? (int) $budget : 50;
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function layoutBuilderManifest(): array
+{
+    $manifest = json_decode(
+        (string) file_get_contents(dirname(__DIR__, 2) . '/capell.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    if (! is_array($manifest)) {
+        return [];
+    }
+
+    return array_filter($manifest, is_string(...), ARRAY_FILTER_USE_KEY);
 }
 
 /**

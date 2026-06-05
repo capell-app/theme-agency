@@ -10,12 +10,14 @@ Theme key `portfolio` is registered in `src/PortfolioThemeServiceProvider.php` v
 
 - **2026-06-03:** Rewrote marketplace/Composer copy, replaced the critical health-check stub with real diagnostics, and documented the intentional split between runtime `extends: default` and manifest dependency `extends: capell-app/foundation-theme`.
 - **2026-06-04:** Moved newsletter chrome into translations, removed the inert `action="#"` fallback, added hydrated `formAction`/`formMethod` support, and covered static/hydrated newsletter rendering in tests.
+- **2026-06-05:** Reconciled product-group docs to `Capell Themes`, documented the manifest/runtime `extends` split in README and overview docs, and added manifest/docs assertions for both boundaries.
+- **2026-06-05:** Made testimonials and speaking/media-kit sections read `$section->items` first, with translated fallback summary/card/quote defaults for unhydrated demo states.
 
 ## 2. Improvements (existing functionality)
 
-1. **Make testimonials data-driven** — the entire section is three hardcoded English quotes ("Great clarity…", "Client Snapshot", etc.) and never reads `$section->items`; a buyer who connects real testimonials sees nothing change — `resources/views/sections/testimonials.blade.php` — M
-2. **Make speaking/media-kit data-driven** — identical problem: "Deck design / Media kit PDF / Interview prep" plus all body copy are hardcoded and `$section->items` is ignored, so the section is a fixed brochure — `resources/views/sections/speaking-media-kit.blade.php` — M
-3. **Translate hardcoded copy in services** — "What we build", the modular-services paragraph, and fallback labels `SERVICE` / `DISCOVERY` / `DESIGN` / `LAUNCH` plus the three fallback cards are literal English bypassing the `capell-theme-portfolio::generic` namespace used everywhere else — `resources/views/sections/services.blade.php` — S
+1. **Shipped 2026-06-05: Make testimonials data-driven** — testimonials now render supplied `$section->items` first and fall back to translated demo quotes/attribution only when empty — `resources/views/sections/testimonials.blade.php` — M
+2. **Shipped 2026-06-05: Make speaking/media-kit data-driven** — speaking/media-kit cards now render supplied `$section->items` first and fall back to translated demo cards only when empty — `resources/views/sections/speaking-media-kit.blade.php` — M
+3. **Shipped 2026-06-05: Translate hardcoded copy in services/stats** — services fallback labels/cards plus hero and work-grid stat pills now use `capell-theme-portfolio::generic` translations, with render coverage proving the same defaults still output and source guards keeping those literals out of Blade — `resources/views/sections/services.blade.php`, `hero.blade.php`, `work-grid.blade.php` — S
 4. **Shipped 2026-06-04: Translate newsletter chrome and remove inert fallback** — newsletter labels, placeholder, form label, and button copy now come from `generic.php`; the section renders a real form only when hydrated with `formAction`, and otherwise shows a translated static CTA instead of posting to `action="#"`. — `resources/views/sections/newsletter.blade.php` + `resources/lang/en/generic.php` — S
 5. **Externalise hero/work-grid vanity stats** — `+42%`, `120+`, `6h` (hero) and `30+ Projects` / `12+ Industries` / `97% Retention` (work-grid) are baked into markup; every demo and every buyer who forgets to override ships identical fake metrics — `resources/views/sections/hero.blade.php`, `resources/views/sections/work-grid.blade.php` — M
 6. **Unify the empty-state strategy** — three incompatible behaviours coexist: case-studies fabricates rich fake records, availability/process render dashed "…ready" boxes, work-grid hardcodes 3 cards, testimonials/services/speaking always show static content. Pick one (prefer the dashed "add content" placeholder) so an un-populated site looks intentional — `resources/views/sections/{case-studies,work-grid,services,testimonials,speaking-media-kit}.blade.php` — M
@@ -46,8 +48,8 @@ Differentiator vs table-stakes: case-study depth (outcome ledger, scope/role/tim
 
 ## 4. Issues / Risks
 
-- **Doc/manifest product-group drift** — `capell.json` declares `product.group: "Capell Themes"`, `tier: "premium"`; `docs/overview.md` states "Product group: **Capell Foundation** · Commercial proposal: **paid first-party theme**". Pick one source of truth — `capell.json` vs `docs/overview.md` (lines ~3–4) — and align the README too.
-- **Dual `extends` meaning is documented, but should stay tested** — runtime definition uses `extends: 'default'` (asserted by `tests/Unit/PortfolioThemeDefinitionTest.php`), while `capell.json.extends = "capell-app/foundation-theme"` (asserted by `tests/Unit/ManifestRequirementsTest.php`). The provider now documents the distinction; keep tests around both boundaries so this does not regress — `src/PortfolioThemeServiceProvider.php:64`, `capell.json`.
+- **Shipped 2026-06-05: Doc/manifest product-group drift** — `capell.json`, `README.md`, and `docs/overview.md` now agree on `product.group: "Capell Themes"` and tests assert the docs stay aligned with the manifest.
+- **Shipped 2026-06-05: Dual `extends` meaning tested and documented** — runtime definition uses `extends: 'default'`, while `capell.json.extends = "capell-app/foundation-theme"`; the README, overview, provider comment, and manifest tests now preserve that distinction.
 - **Health check shipped, keep expanding diagnostics as the package grows** — `ThemePortfolioHealthCheck` now verifies provider, package file, manifest, and screenshot boundaries. Add future sections/assets to those diagnostics instead of letting the critical check drift back into a shallow compatibility-only assertion — `src/Health/ThemePortfolioHealthCheck.php`.
 - **Stub management contribution** — `src/Manifest/ThemeManagementPageContribution.php` is a bare contract shell (`compatibleCapellApiVersion()` only); confirm `ThemeExtensionPage` needs nothing more, or it is dead surface area — `src/Manifest/ThemeManagementPageContribution.php`.
 - **Shipped 2026-06-04: Inert newsletter form** — the section no longer renders `action="#"`; static states show a translated CTA, and hydrated `formAction`/`formMethod` data renders a real capture form. Risk remains until the Newsletter integration provides real capture actions automatically — `resources/views/sections/newsletter.blade.php`.
@@ -56,7 +58,7 @@ Differentiator vs table-stakes: case-study depth (outcome ledger, scope/role/tim
 - **LCP / image risk (image-heavy theme)** — no `loading`/`fetchpriority`/`width`/`height`/`srcset` on any `<img>` (hero, content-listing); demo seeds remote `images.unsplash.com` URLs. On a portfolio (image-led by definition) this risks poor LCP and layout shift. Add intrinsic dimensions and lazy/eager hints — `resources/views/sections/{hero,content-listing}.blade.php`.
 - **Cache safety** — `capell.json.performance.cacheSafety.cacheable = false`, `variesBy: ["site","locale"]`, `sensitiveOutput: false`. Consistent with locale-dependent `__()` output and no per-user data. The inline `style="…tokens…"` in `page.blade.php` is brand-derived (site-scoped), matching `variesBy`. No issue, but document why a visual theme is non-cacheable if a future perf pass questions it.
 - **Performance budget** — manifest sets `frontendRenderBudgetMs: 20`, `adminQueryBudget: 0`. No render benchmark test exists to enforce the 20ms budget; the many nested grids/carousels per section make this worth a guardrail test — `capell.json`, `tests/`.
-- **Test gaps** — no render test for footer, navigation, services, testimonials, speaking-media-kit, or newsletter (only hero, features, proof, content-listing, cta, case-studies, case-study-detail, process, availability, work-grid are exercised). The hardcoded-content sections (testimonials/speaking) are exactly the ones with no test, so their data-binding regressions would be invisible — `tests/Unit/`.
+- **Test gaps** — no render test for footer, navigation, services, testimonials, speaking-media-kit, or newsletter (only hero, features, proof, content-listing, cta, case-studies, case-study-detail, process, availability, work-grid are exercised). Testimonials/speaking are now data-driven, but their render branches still need direct coverage — `tests/Unit/`.
 
 ## 5. Marketplace & Selling
 
@@ -76,20 +78,20 @@ The manifest marketplace description now uses this buyer-facing product story:
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                 | Bucket | Effort | Impact | Section ref      |
-| ------------------------------------------------------------------------------------ | ------ | ------ | ------ | ---------------- |
-| Generate the 9 declared `screenshots.json` captures (+ dark pair)                    | Now    | M      | High   | §5               |
-| Reconcile product-group drift (overview.md vs capell.json) + document dual `extends` | Now    | S      | Med    | §4               |
-| Make testimonials + speaking/media-kit data-driven                                   | Now    | M      | High   | §2.1, §2.2       |
-| Translate hardcoded copy (services, newsletter, stats) + add missing lang keys       | Now    | M      | Med    | §2.3, §2.4, §2.5 |
-| Add About/Bio section (creator lane differentiator vs agency)                        | Next   | M      | High   | §3               |
-| Implement real health-check probes or lower declared `critical` severity             | Next   | S      | Med    | §4               |
-| Add image LCP hints (dimensions, lazy/eager, srcset) + fix alt handling              | Next   | M      | Med    | §4               |
-| Unify empty-state strategy across sections                                           | Next   | M      | Med    | §2.6             |
-| Add render tests for footer/nav/services/testimonials/speaking/newsletter            | Next   | M      | Med    | §4               |
-| Wire Newsletter integration to provide real capture actions automatically            | Next   | M      | High   | §2.4, §4         |
-| Ship a dark preset + dark CSS                                                        | Next   | L      | High   | §2.7, §5         |
-| Add reduced-motion guards for carousels + hover transforms                           | Next   | S      | Med    | §2.8             |
-| Add gallery/lightbox + resume/CV + client-logo sections                              | Later  | L      | Med    | §3               |
-| Promote raw hex to design tokens for full theme-editor propagation                   | Later  | M      | Med    | §2.9             |
-| Add a frontend render-budget guardrail test (20ms)                                   | Later  | M      | Low    | §4               |
+| Item                                                                                                     | Bucket | Effort | Impact | Section ref      |
+| -------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ---------------- |
+| Generate the 9 declared `screenshots.json` captures (+ dark pair)                                        | Now    | M      | High   | §5               |
+| Shipped 2026-06-05: Reconcile product-group drift (overview.md vs capell.json) + document dual `extends` | Done   | S      | Med    | §4               |
+| Shipped 2026-06-05: Make testimonials + speaking/media-kit data-driven                                   | Done   | M      | High   | §2.1, §2.2       |
+| Shipped 2026-06-05: Translate hardcoded copy (services, newsletter, stats) + add missing lang keys       | Done   | M      | Med    | §2.3, §2.4, §2.5 |
+| Add About/Bio section (creator lane differentiator vs agency)                                            | Next   | M      | High   | §3               |
+| Implement real health-check probes or lower declared `critical` severity                                 | Next   | S      | Med    | §4               |
+| Add image LCP hints (dimensions, lazy/eager, srcset) + fix alt handling                                  | Next   | M      | Med    | §4               |
+| Unify empty-state strategy across sections                                                               | Next   | M      | Med    | §2.6             |
+| Add render tests for footer/nav/services/testimonials/speaking/newsletter                                | Next   | M      | Med    | §4               |
+| Wire Newsletter integration to provide real capture actions automatically                                | Next   | M      | High   | §2.4, §4         |
+| Ship a dark preset + dark CSS                                                                            | Next   | L      | High   | §2.7, §5         |
+| Add reduced-motion guards for carousels + hover transforms                                               | Next   | S      | Med    | §2.8             |
+| Add gallery/lightbox + resume/CV + client-logo sections                                                  | Later  | L      | Med    | §3               |
+| Promote raw hex to design tokens for full theme-editor propagation                                       | Later  | M      | Med    | §2.9             |
+| Add a frontend render-budget guardrail test (20ms)                                                       | Later  | M      | Low    | §4               |

@@ -18,6 +18,15 @@ Visitors submit public appointment requests through the package route. Requests 
 
 Confirmed appointments can be exported through opaque staff calendar feed URLs.
 
+## Screenshot Plan
+
+`docs/screenshots.json` describes the required Marketplace capture set:
+
+- the public booking request route with service, staff, location, timezone, and customer fields;
+- the appointment request admin queue showing request workflow state and audit context.
+
+The committed gallery keeps the extension card SVG and uses route-backed PNG captures for the public booking form and Capell admin appointment queue.
+
 ## Traceability
 
 The package manifest declares admin resources, models, frontend routes, migrations, actions, and capabilities. `contributionTraceability.deferredContributions` is intentionally empty because the current appointment-request, notification, reminder, and calendar-feed scope is implemented by package-owned code.

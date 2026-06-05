@@ -86,9 +86,14 @@
                 "caption": "Marketplace preview for the Record Switcher admin extension."
             },
             {
-                "path": "docs/assets/marketplace/admin-heading-switcher.svg",
-                "alt": "Capell admin heading with record switcher suggestions open",
-                "caption": "Searchable heading switcher for moving between editable records."
+                "path": "docs/screenshots/admin-heading-switcher.png",
+                "alt": "Capell admin edit page with Record Switcher suggestions open",
+                "caption": "Searchable heading switcher for moving between editable records in the Capell admin."
+            },
+            {
+                "path": "docs/screenshots/admin-heading-switcher-dark.png",
+                "alt": "Dark mode Capell admin edit page with Record Switcher suggestions open",
+                "caption": "Dark mode capture of the same Record Switcher heading workflow."
             }
         ],
         "categories": ["admin", "foundation", "editor-productivity"]

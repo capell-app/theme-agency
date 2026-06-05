@@ -7,27 +7,27 @@
     "entries": [
         {
             "id": "deployment-connection-page",
-            "title": "Deployment connection page.",
+            "title": "Deployment connection page before a repository is connected.",
             "package": "deployments",
             "surface": "admin",
             "targetType": "admin-surface",
             "target": "DeploymentConnectionPage",
             "required": true,
-            "notes": "Capture as a user with View:DeploymentConnectionPage. The empty state only shows provider OAuth buttons; seed one active connection when the screenshot should include repository details.",
+            "notes": "Capture as a user with View:DeploymentConnectionPage. This committed capture shows the pre-connection state with GitHub, GitLab, and Bitbucket OAuth entry points.",
             "screenshotPath": "packages/deployments/docs/screenshots/deployment-connection-page.png",
-            "useCase": "An operator connects or reviews the Git provider repository used for package install pull requests."
+            "useCase": "An operator starts the Git provider OAuth flow used to connect the repository for package install pull requests."
         },
         {
-            "id": "deployment-connection-widget",
-            "title": "Deployment connection widget.",
+            "id": "deployment-connection-page-dark",
+            "title": "Deployment connection page before a repository is connected in dark mode.",
             "package": "deployments",
             "surface": "admin",
-            "targetType": "admin-widget",
-            "target": "DeploymentConnectionWidget",
+            "targetType": "admin-surface",
+            "target": "DeploymentConnectionPage",
             "required": true,
-            "notes": "Capture with one active DeploymentConnection when possible; otherwise the widget honestly shows the not-connected state.",
-            "screenshotPath": "packages/deployments/docs/screenshots/deployment-connection-widget.png",
-            "useCase": "An administrator checks from the dashboard whether package deployment publishing has an active repository connection."
+            "notes": "Capture the pre-connection deployment connection page with the admin panel in dark mode.",
+            "screenshotPath": "packages/deployments/docs/screenshots/deployment-connection-page-dark.png",
+            "useCase": "An operator starts the Git provider OAuth flow from the dark-mode admin page."
         }
     ]
 }

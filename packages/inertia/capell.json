@@ -1,0 +1,81 @@
+{
+    "manifest-version": 3,
+    "name": "capell-app/inertia",
+    "slug": "inertia",
+    "displayName": "Capell Inertia",
+    "kind": "plugin",
+    "capellApiVersion": "^4.0",
+    "version": "4.x-dev",
+    "description": "Shared Inertia runtime bridge for Capell public pages and package-owned frontend routes.",
+    "product": {
+        "group": "Capell Frontend",
+        "tier": "core",
+        "bundle": "frontend"
+    },
+    "namespace": "Capell\\Inertia",
+    "surfaces": ["frontend"],
+    "dependencies": {
+        "requires": [
+            "capell-app/core",
+            "capell-app/frontend",
+            "capell-app/api"
+        ],
+        "supports": ["capell-app/layout-builder"],
+        "conflicts": []
+    },
+    "providers": {
+        "metadata": [],
+        "install": [],
+        "runtime": ["Capell\\Inertia\\Providers\\InertiaServiceProvider"],
+        "admin": [],
+        "frontend": []
+    },
+    "contributes": [],
+    "database": {
+        "migrations": false,
+        "settings": false,
+        "requiredTables": []
+    },
+    "commands": {
+        "install": null,
+        "setup": null,
+        "demo": null,
+        "doctor": null
+    },
+    "settings": [],
+    "permissions": [],
+    "capabilities": ["inertia-runtime", "inertia-frontend"],
+    "performance": {
+        "frontendRenderBudgetMs": 20,
+        "adminQueryBudget": 0,
+        "cacheTags": ["inertia"],
+        "cacheSafety": {
+            "cacheable": false,
+            "variesBy": ["site", "locale"],
+            "sensitiveOutput": false,
+            "invalidationSources": [],
+            "queueInvalidation": false
+        }
+    },
+    "healthChecks": [
+        {
+            "key": "inertia.package-health",
+            "label": "Capell Inertia runtime bridge is installed and configured.",
+            "class": "Capell\\Inertia\\Health\\InertiaHealthCheck",
+            "severity": "critical",
+            "surface": "frontend"
+        }
+    ],
+    "commercial": {
+        "proposedLicense": "included",
+        "requestedCertification": "first-party",
+        "supportPolicy": "standard",
+        "privateDocsRequested": false
+    },
+    "marketplace": {
+        "summary": "Shared Inertia runtime bridge for Capell frontend pages and package routes.",
+        "description": "Registers the Inertia renderer, root view, middleware, and shared public prop helpers for Capell frontend runtimes.",
+        "screenshots": [],
+        "categories": ["frontend", "developer-tools"]
+    }
+}

@@ -181,9 +181,9 @@ it('delivers queued recipients through the smtp provider and maps provider messa
 
     expect($result->successful)->toBeTrue()
         ->and($result->recipientProviderMessageIds)->toBe([
-            $to->getKey() => 'smtp-' . $message->getKey() . '-' . $to->getKey(),
-            $cc->getKey() => 'smtp-' . $message->getKey() . '-' . $cc->getKey(),
-            $bcc->getKey() => 'smtp-' . $message->getKey() . '-' . $bcc->getKey(),
+            $to->getKey() => 'smtp-provider-message-id',
+            $cc->getKey() => 'smtp-provider-message-id',
+            $bcc->getKey() => 'smtp-provider-message-id',
         ])
         ->and($mailer->message)->toBeInstanceOf(SymfonyEmail::class)
         ->and($mailer->message?->getSubject())->toBe('Workflow update')

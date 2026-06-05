@@ -12,6 +12,7 @@ use Capell\Newsletter\Data\ProviderWebhookEventData;
 use Capell\Newsletter\Models\ProviderAudience;
 use Capell\Newsletter\Models\ProviderConnection;
 use Illuminate\Http\Request;
+use LogicException;
 
 class FakeProviderAdapter implements NewsletterProviderAdapter
 {
@@ -27,6 +28,8 @@ class FakeProviderAdapter implements NewsletterProviderAdapter
 
     public function listAudiences(ProviderConnection $connection): array
     {
+        $this->guardAllowed();
+
         return [
             new ProviderAudienceData(remoteId: 'fake-audience', name: 'Fake Audience'),
         ];
@@ -37,6 +40,8 @@ class FakeProviderAdapter implements NewsletterProviderAdapter
         ProviderAudience $audience,
         ProviderSubscriberData $subscriber,
     ): ProviderSyncResultData {
+        $this->guardAllowed();
+
         return new ProviderSyncResultData(
             successful: true,
             remoteId: 'fake-' . hash('xxh3', $subscriber->email),
@@ -47,15 +52,22 @@ class FakeProviderAdapter implements NewsletterProviderAdapter
 
     public function verifyWebhook(ProviderConnection $connection, Request $request): bool
     {
-        if ((bool) config('capell-newsletter.webhooks.allow_fake_provider', false)) {
-            return true;
-        }
-
-        return app()->environment('local', 'testing');
+        return FakeProviderGuard::isAllowed();
     }
 
     public function normalizeWebhook(ProviderConnection $connection, Request $request): ?ProviderWebhookEventData
     {
+        $this->guardAllowed();
+
         return ProviderWebhookEventData::from($request->all());
+    }
+
+    private function guardAllowed(): void
+    {
+        if (FakeProviderGuard::isAllowed()) {
+            return;
+        }
+
+        throw new LogicException('The fake newsletter provider is disabled for this environment.');
     }
 }

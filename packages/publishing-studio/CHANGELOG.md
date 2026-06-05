@@ -4,6 +4,13 @@ All notable changes to `capell-app/publishing-studio` will be documented in this
 
 ## Unreleased
 
+### 2026-06-05
+
+#### Changed
+
+- Declared the real package settings class, settings migration, and full package-owned storage table set in `capell.json` so Diagnostics and marketplace metadata match the installed surfaces.
+- Moved the load-test draftable fixture into production autoload under `src/Support/LoadTesting`, keeping the advertised `load-testing` capability reachable outside the test suite.
+
 ### 2026-06-03
 
 #### Changed

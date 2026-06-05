@@ -23,7 +23,8 @@ final class SanitizeShopifySyncErrorAction
 
         $message = preg_replace('/https?:\/\/[^\s)>\"]+/i', '[shopify-url]', $message) ?? $message;
         $message = preg_replace('/\b(shpat|shpca|shppa|shpss)_[A-Za-z0-9_\-]+/i', '[shopify-token]', $message) ?? $message;
-        $message = preg_replace('/(X-Shopify-Access-Token|access_token|client_secret)(\s*[=:]\s*)[^\s,;]+/i', '$1$2[redacted]', $message) ?? $message;
+        $message = preg_replace('/\b(Authorization)(\s*[:=]\s*)(Bearer|Basic)\s+[^\s,;]+/i', '$1$2$3 [redacted]', $message) ?? $message;
+        $message = preg_replace('/\b(X-Shopify-Access-Token|access_token|client_secret|token)(\s*[=:]\s*)[^\s,;]+/i', '$1$2[redacted]', $message) ?? $message;
 
         $shopDomain = $connection?->shop_domain;
         if (is_string($shopDomain) && $shopDomain !== '') {

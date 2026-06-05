@@ -20,6 +20,14 @@ it('runs real diagnostics returning check results', function (): void {
         ->and($results->every(static fn (mixed $result): bool => $result instanceof DoctorCheckResultData))->toBeTrue();
 });
 
+it('is registered as a critical diagnostics health check', function (): void {
+    $manifest = json_decode((string) file_get_contents(__DIR__ . '/../../capell.json'), true, 512, JSON_THROW_ON_ERROR);
+
+    expect($manifest['healthChecks'])->toHaveCount(1)
+        ->and($manifest['healthChecks'][0]['class'])->toBe(FrontendAuthoringHealthCheck::class)
+        ->and($manifest['healthChecks'][0]['severity'])->toBe('critical');
+});
+
 it('passes when the route, bindings, configuration, and signing secret are present', function (): void {
     $check = new FrontendAuthoringHealthCheck;
 

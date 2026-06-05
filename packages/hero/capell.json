@@ -86,6 +86,16 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Hero extension preview image",
                 "caption": "Hero extension preview"
+            },
+            {
+                "path": "docs/screenshots/hero-home-widget.png",
+                "alt": "Hero home widget rendered with responsive media, overlay background, and inherited theme styling.",
+                "caption": "Hero home widget"
+            },
+            {
+                "path": "docs/screenshots/hero-slide-variant.png",
+                "alt": "Hero slide variant with carousel pagination and related content cards.",
+                "caption": "Hero slide and related-content variant"
             }
         ],
         "categories": ["admin", "console", "foundation", "frontend"]

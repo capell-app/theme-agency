@@ -6,7 +6,13 @@ namespace Capell\EmailStudio\Providers;
 
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\Core\Support\Settings\SettingsGroupMetadata;
+use Capell\Core\Support\Settings\SettingsSchemaRegistry;
+use Capell\EmailStudio\Actions\ApplyMailTrackerSettingsAction;
+use Capell\EmailStudio\Console\Commands\PruneEmailBodiesCommand;
+use Capell\EmailStudio\Console\Commands\PurgeTrackedEmailsCommand;
 use Capell\EmailStudio\Enums\EmailProviderType;
+use Capell\EmailStudio\Filament\Settings\EmailStudioSettingsSchema;
 use Capell\EmailStudio\Models\EmailEvent;
 use Capell\EmailStudio\Models\EmailMessage;
 use Capell\EmailStudio\Models\EmailProfile;
@@ -17,11 +23,17 @@ use Capell\EmailStudio\Models\EmailTemplate;
 use Capell\EmailStudio\Models\EmailTemplateRegistration;
 use Capell\EmailStudio\Models\EmailTemplateVariant;
 use Capell\EmailStudio\Models\EmailTrackingToken;
+use Capell\EmailStudio\Models\SentEmail;
+use Capell\EmailStudio\Models\SentEmailUrlClicked;
+use Capell\EmailStudio\Settings\EmailStudioSettings;
+use Capell\EmailStudio\Settings\EmailStudioSettingsMigrationProvider;
 use Capell\EmailStudio\Support\EmailProviderRegistry;
 use Capell\EmailStudio\Support\EmailTemplateRegistry;
 use Capell\EmailStudio\Support\Providers\FakeEmailProviderAdapter;
 use Capell\EmailStudio\Support\Providers\PostmarkEmailProviderAdapter;
 use Capell\EmailStudio\Support\Providers\SmtpEmailProviderAdapter;
+use Filament\Support\Icons\Heroicon;
+use Illuminate\Console\Scheduling\Schedule;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -31,12 +43,23 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
 
     public static string $packageName = 'capell-app/email-studio';
 
+    /**
+     * @return list<string>
+     */
+    public static function getSettingMigrations(): array
+    {
+        return [
+            '2026_06_05_000001_create_email_studio_settings',
+        ];
+    }
+
     public function configurePackage(Package $package): void
     {
         $package
             ->name(self::$name)
             ->hasConfigFile('capell-email-studio')
             ->hasTranslations()
+            ->hasViews(self::$name)
             ->hasRoute('web')
             ->hasMigrations([
                 '2026_05_10_190847_01_create_email_profiles_table',
@@ -50,17 +73,22 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
                 '2026_05_10_190847_09_create_email_template_registrations_table',
                 '2026_05_10_190847_10_create_email_tracking_tokens_table',
                 '2026_05_21_000001_add_site_foreign_keys_to_email_studio_tables',
-            ]);
+            ])
+            ->hasCommand(PruneEmailBodiesCommand::class)
+            ->hasCommand(PurgeTrackedEmailsCommand::class);
     }
 
     public function registeringPackage(): void
     {
+        ApplyMailTrackerSettingsAction::run();
         $this->app->register(AdminServiceProvider::class);
         $this->app->register(FrontendServiceProvider::class);
     }
 
     public function packageRegistered(): void
     {
+        $this->registerSettingsMigrations();
+
         $this->app->singleton(EmailTemplateRegistry::class);
         $this->app->singleton(EmailProviderRegistry::class, static fn (): EmailProviderRegistry => (new EmailProviderRegistry)
             ->register(EmailProviderType::Fake, new FakeEmailProviderAdapter)
@@ -74,8 +102,37 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
 
             $this
                 ->registerModels()
+                ->registerSettings()
                 ->registerProtectedTables();
         });
+    }
+
+    public function packageBooted(): void
+    {
+        if (! $this->isPackageInstalled()) {
+            return;
+        }
+
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
+            $schedule->command('capell-email-studio:prune-bodies')
+                ->daily()
+                ->withoutOverlapping()
+                ->onOneServer();
+
+            $schedule->command('capell-email-studio:purge-tracked-emails')
+                ->daily()
+                ->withoutOverlapping()
+                ->onOneServer();
+        });
+
+        if ($this->app->runningInConsole()) {
+            /** @var EmailStudioSettingsMigrationProvider $provider */
+            $provider = $this->app->make(EmailStudioSettingsMigrationProvider::class);
+
+            $this->publishes([
+                $provider->path() . '/2026_06_05_000001_create_email_studio_settings.php' => database_path('settings/2026_06_05_000001_create_email_studio_settings.php'),
+            ], 'capell-email-studio-settings');
+        }
     }
 
     #[Override]
@@ -97,7 +154,35 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
             EmailSuppression::class,
             EmailTemplateRegistration::class,
             EmailTrackingToken::class,
+            SentEmail::class,
+            SentEmailUrlClicked::class,
         ]);
+
+        return $this;
+    }
+
+    private function registerSettings(): self
+    {
+        /** @var SettingsSchemaRegistry $registry */
+        $registry = $this->app->make(SettingsSchemaRegistry::class);
+
+        $registry->registerSettingsClass(EmailStudioSettings::group(), EmailStudioSettings::class);
+        $registry->registerMetadata(new SettingsGroupMetadata(
+            group: EmailStudioSettings::group(),
+            label: 'capell-email-studio::settings.title',
+            icon: Heroicon::OutlinedEnvelope,
+            navigationGroup: 'capell-admin::navigation.group_system',
+            navigationSort: 94,
+            packageName: self::$packageName,
+        ));
+        $registry->register(EmailStudioSettings::group(), EmailStudioSettingsSchema::class);
+
+        return $this;
+    }
+
+    private function registerSettingsMigrations(): self
+    {
+        $this->app->singleton(EmailStudioSettingsMigrationProvider::class);
 
         return $this;
     }
@@ -121,6 +206,9 @@ class EmailStudioServiceProvider extends AbstractPackageServiceProvider
 
             CapellCore::registerProtectedTable(static fn (): string => $tableName);
         }
+
+        CapellCore::registerProtectedTable(static fn (): string => 'sent_emails');
+        CapellCore::registerProtectedTable(static fn (): string => 'sent_emails_url_clicked');
 
         return $this;
     }

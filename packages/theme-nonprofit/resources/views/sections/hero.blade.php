@@ -28,11 +28,11 @@
                 >
                     {{ $eyebrow }}
                 </p>
-                <h2
+                <h1
                     class="mt-5 max-w-3xl text-5xl leading-tight font-black tracking-normal text-[#07110b]"
                 >
                     {{ $heading }}
-                </h2>
+                </h1>
                 @if ($summary)
                     <p class="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
                         {{ $summary }}

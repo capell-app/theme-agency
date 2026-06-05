@@ -306,6 +306,48 @@ it('stamps the most recent matching user session and ignores older and future ro
         ->and(loginAuditActivityTimestamp($futureAudit->refresh()->last_seen_at))->toBe($futureAuditLastSeenAt);
 });
 
+it('prefers the latest matching user login time over insertion order', function (): void {
+    $trackedAt = CarbonImmutable::parse('2026-05-07 10:00:00');
+    $this->travelTo($trackedAt);
+
+    $user = User::factory()->create();
+    $ipAddress = '203.0.113.45';
+    $userAgent = 'Capell Frontend Browser/1.0';
+
+    $newerSession = LoginAudit::factory()->create([
+        'authenticatable_type' => $user->getMorphClass(),
+        'authenticatable_id' => $user->getKey(),
+        'ip_address' => $ipAddress,
+        'user_agent' => $userAgent,
+        'login_at' => $trackedAt->subHour(),
+    ]);
+
+    $olderInsertedLater = LoginAudit::factory()->create([
+        'authenticatable_type' => $user->getMorphClass(),
+        'authenticatable_id' => $user->getKey(),
+        'ip_address' => $ipAddress,
+        'user_agent' => $userAgent,
+        'login_at' => $trackedAt->subHours(5),
+    ]);
+
+    $olderInsertedLaterLastSeenAt = loginAuditActivityTimestamp($olderInsertedLater->refresh()->last_seen_at);
+
+    $request = loginAuditActivityRequest(
+        path: '/account/profile',
+        user: $user,
+        ipAddress: $ipAddress,
+        userAgent: $userAgent,
+    );
+
+    (new UserActivityMiddleware)->handle(
+        $request,
+        fn (Request $handledRequest): Response => new Response('next:' . $handledRequest->path()),
+    );
+
+    expect(loginAuditActivityTimestamp($newerSession->refresh()->last_seen_at))->toBe($trackedAt->toDateTimeString())
+        ->and(loginAuditActivityTimestamp($olderInsertedLater->refresh()->last_seen_at))->toBe($olderInsertedLaterLastSeenAt);
+});
+
 it('skips user activity for guest requests', function (): void {
     $trackedAt = CarbonImmutable::parse('2026-05-07 10:00:00');
     $this->travelTo($trackedAt);

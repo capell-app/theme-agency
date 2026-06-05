@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static PrivacyRequest run(PrivacyRequestData $requestData, ?Model $requester = null, ?Model $subject = null)
+ */
 final class OpenPrivacyRequestAction
 {
     use AsAction;

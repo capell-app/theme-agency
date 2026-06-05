@@ -13,6 +13,7 @@ use Capell\SeoSuite\Enums\PageSpeedStrategyEnum;
 use Capell\SeoSuite\Models\PageSpeedAuditRun;
 use Capell\SeoSuite\Notifications\PageSpeedAuditDigestNotification;
 use Capell\SeoSuite\Providers\SeoSuiteServiceProvider;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Spatie\Permission\Models\Role;
 
@@ -40,19 +41,43 @@ it('resolves PageSpeed digest recipients through admin notification subscription
         ->not->toContain($superAdmin->getKey());
 });
 
-it('resolves default PageSpeed digest recipients through the user role relation', function (): void {
-    Role::findOrCreate('super_admin');
+it('resolves default PageSpeed digest recipients through the user role relation query', function (): void {
+    $role = Role::findOrCreate('super_admin');
+    Role::findOrCreate('editor');
 
     $superAdmin = UserFactory::new()->create()->assignRole('super_admin');
-    $developer = UserFactory::new()->create();
+    $siteScopedAdmin = UserFactory::new()->create();
+    $editor = UserFactory::new()->create()->assignRole('editor');
+    $unassignedUser = UserFactory::new()->create();
+
+    DB::table('model_has_roles')->insert([
+        'role_id' => $role->getKey(),
+        'model_type' => $siteScopedAdmin->getMorphClass(),
+        'model_id' => $siteScopedAdmin->getKey(),
+        'team_id' => 123,
+    ]);
+
     $provider = app()->getProvider(SeoSuiteServiceProvider::class);
     $method = new ReflectionMethod(SeoSuiteServiceProvider::class, 'defaultPageSpeedDigestRecipients');
 
+    DB::flushQueryLog();
+    DB::enableQueryLog();
+
     $recipients = $method->invoke($provider);
+
+    $queries = collect(DB::getQueryLog());
+    DB::disableQueryLog();
+
+    $userQueries = $queries
+        ->pluck('query')
+        ->filter(fn (string $query): bool => str_contains($query, 'from "users"') || str_contains($query, 'from `users`'))
+        ->values();
 
     expect($recipients->pluck('id')->all())
         ->toContain($superAdmin->getKey())
-        ->not->toContain($developer->getKey());
+        ->not->toContain($siteScopedAdmin->getKey(), $editor->getKey(), $unassignedUser->getKey())
+        ->and($userQueries)->toHaveCount(1)
+        ->and(strtolower($userQueries->first() ?? ''))->toContain('exists', 'model_has_roles', 'roles');
 });
 
 it('sends PageSpeed digest mail notifications only to subscribed recipients', function (): void {

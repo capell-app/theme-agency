@@ -4,30 +4,10 @@ declare(strict_types=1);
 
 namespace Capell\KnowledgeBase\Policies;
 
-final class KnowledgeBaseCollectionPolicy
+final class KnowledgeBaseCollectionPolicy extends AbstractKnowledgeBaseResourcePolicy
 {
-    public function viewAny(): bool
+    protected static function subject(): string
     {
-        return true;
-    }
-
-    public function view(): bool
-    {
-        return true;
-    }
-
-    public function create(): bool
-    {
-        return true;
-    }
-
-    public function update(): bool
-    {
-        return true;
-    }
-
-    public function delete(): bool
-    {
-        return false;
+        return 'KnowledgeBaseCollection';
     }
 }

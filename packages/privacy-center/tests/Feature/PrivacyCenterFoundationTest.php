@@ -28,6 +28,7 @@ use Capell\PrivacyCenter\Models\ConsentRecord;
 use Capell\PrivacyCenter\Models\PolicyAcceptance;
 use Capell\PrivacyCenter\Models\PrivacyRequest;
 use Capell\PrivacyCenter\Models\RetentionRule;
+use Capell\PrivacyCenter\Tests\Fixtures\PrivacyCenterTestConsentSource;
 use Capell\PrivacyCenter\Tests\Fixtures\PrivacyCenterTestSubject;
 use Capell\PrivacyCenter\Tests\PrivacyCenterTestCase;
 use Carbon\CarbonImmutable;
@@ -151,6 +152,35 @@ it('anonymizes package-owned subject links for delete workflows', function (): v
         ->and(ConsentRecord::query()->first()?->subject_type)->toBeNull()
         ->and(PolicyAcceptance::query()->first()?->subject_type)->toBeNull()
         ->and(PrivacyRequest::query()->first()?->email_hash)->toBeNull();
+});
+
+it('keeps mirrored consent exportable and erasable when the source carries a loaded visit subject', function (): void {
+    $siteId = $this->createPrivacyCenterSite();
+    $subject = PrivacyCenterTestSubject::query()->create(['name' => 'Insights Visitor']);
+    $source = PrivacyCenterTestConsentSource::query()
+        ->create(['visit_id' => $subject->getKey()])
+        ->load('visit');
+
+    $consent = RecordConsentAction::run(new ConsentRecordData(
+        category: CookieCategory::Analytics,
+        decision: ConsentDecision::Granted,
+        siteId: $siteId,
+        evidence: ['surface' => 'insights-consent'],
+        metadata: ['source_package' => 'capell-app/insights'],
+    ), source: $source);
+
+    $export = BuildPrivacyExportAction::run($subject);
+    $affectedRecords = AnonymizePrivacySubjectAction::run($subject);
+
+    expect($consent->subject_type)->toBe(PrivacyCenterTestSubject::class)
+        ->and($consent->subject_id)->toBe($subject->getKey())
+        ->and($consent->source_type)->toBe(PrivacyCenterTestConsentSource::class)
+        ->and($consent->source_id)->toBe($source->getKey())
+        ->and($export->consentRecords)->toHaveCount(1)
+        ->and($export->consentRecords[0]['metadata'])->toBe(['source_package' => 'capell-app/insights'])
+        ->and($affectedRecords)->toBe(1)
+        ->and($consent->refresh()->subject_type)->toBeNull()
+        ->and($consent->source_type)->toBeNull();
 });
 
 it('marks privacy requests verified and rejected through workflow actions', function (): void {
@@ -295,9 +325,12 @@ it('marks expired privacy records for retention review without deleting them', f
     ApplyRetentionRulesAction::run($now);
 
     $metadata = $request->refresh()->metadata;
+    throw_unless(is_array($metadata), RuntimeException::class, 'Expected privacy request metadata.');
+    $retentionReview = $metadata['retention_review'] ?? null;
+    throw_unless(is_array($retentionReview), RuntimeException::class, 'Expected retention review metadata.');
 
-    expect($metadata['retention_review']['data_domain'] ?? null)->toBe('privacy-requests')
-        ->and($metadata['retention_review']['rule_id'] ?? null)->toBe(RetentionRule::query()->value('id'))
-        ->and($metadata['retention_review']['marked_at'] ?? null)->toBeString()
+    expect($retentionReview['data_domain'] ?? null)->toBe('privacy-requests')
+        ->and($retentionReview['rule_id'] ?? null)->toBe(RetentionRule::query()->value('id'))
+        ->and($retentionReview['marked_at'] ?? null)->toBeString()
         ->and(RetentionRule::query()->count())->toBe(1);
 });

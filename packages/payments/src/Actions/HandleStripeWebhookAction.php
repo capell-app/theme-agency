@@ -14,6 +14,9 @@ use Illuminate\Database\QueryException;
 use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static PaymentWebhookEvent run(string $payload, ?string $signatureHeader)
+ */
 final class HandleStripeWebhookAction
 {
     use AsAction;

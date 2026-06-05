@@ -20,6 +20,8 @@ use Override;
  * @property int|null $policy_id
  * @property string|null $subject_type
  * @property int|null $subject_id
+ * @property string|null $source_type
+ * @property int|null $source_id
  * @property string|null $policy_version
  * @property CookieCategory $category
  * @property ConsentDecision $decision

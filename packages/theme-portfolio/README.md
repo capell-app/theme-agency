@@ -8,13 +8,15 @@ and newsletter sections.
 
 - Package: `capell-app/theme-portfolio`
 - Namespace: `Capell\ThemeStudio\Portfolio\`
+- Product group: `Capell Themes`
 - Theme key: `portfolio`
 - Surfaces: frontend, console
 - Service provider:
   `Capell\ThemeStudio\Portfolio\PortfolioThemeServiceProvider`
 - Demo command:
   `capell:theme-portfolio-demo {--url=} {--languages=} {--sites=} {--force}`
-- Extends: `capell-app/foundation-theme`
+- Manifest extends: `capell-app/foundation-theme`
+- Runtime extends: `default`
 - Database impact: none
 
 ## Why It Helps Your Capell Workflow

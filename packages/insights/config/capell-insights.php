@@ -13,10 +13,13 @@ return [
     'track_clicks' => true,
     'track_form-builder' => false,
     'automatic_click_tracking' => true,
+    'consent_banner_enabled' => true,
     'require_consent_for_all_regions' => false,
     'default_consent_region' => null,
     'policy_version' => '1.0',
     'retention_days' => 365,
+    'purge_batch_size' => 500,
+    'dashboard_cache_ttl_seconds' => 60,
     'hash_visitor_data' => true,
     'hash_salt' => null,
     'ignored_paths' => [

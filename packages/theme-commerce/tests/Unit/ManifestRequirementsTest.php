@@ -39,6 +39,21 @@ describe('theme commerce capell.json manifest', function (): void {
             expect(File::exists(__DIR__ . '/../../' . $screenshotPath))->toBeTrue();
         }
     });
+
+    it('keeps non-cacheable theme output from queueing invalidation without sources', function (): void {
+        $manifest = commerceThemeManifest();
+        $cacheSafety = data_get($manifest, 'performance.cacheSafety');
+
+        throw_unless(is_array($cacheSafety), RuntimeException::class, 'Theme Commerce cache safety manifest data must be an array.');
+
+        expect($cacheSafety)->toMatchArray([
+            'cacheable' => false,
+            'variesBy' => ['site', 'locale'],
+            'sensitiveOutput' => false,
+            'invalidationSources' => [],
+            'queueInvalidation' => false,
+        ]);
+    });
 });
 
 /**
@@ -46,13 +61,5 @@ describe('theme commerce capell.json manifest', function (): void {
  */
 function commerceThemeManifest(): array
 {
-    $manifest = json_decode(
-        File::get(__DIR__ . '/../../capell.json'),
-        associative: true,
-        flags: JSON_THROW_ON_ERROR,
-    );
-
-    throw_unless(is_array($manifest), RuntimeException::class, 'Theme Commerce manifest must decode to an array.');
-
-    return $manifest;
+    return capell_json_file_array(__DIR__ . '/../../capell.json');
 }

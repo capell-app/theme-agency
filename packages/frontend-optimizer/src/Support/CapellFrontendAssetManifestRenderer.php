@@ -126,6 +126,11 @@ final class CapellFrontendAssetManifestRenderer implements FrontendAssetManifest
                 'key' => $context->layout?->key,
                 'updated_at' => $context->layout?->updated_at?->toISOString(),
             ],
+            'page' => [
+                'id' => $context->page?->getKey(),
+                'type' => $context->page?->getMorphClass(),
+                'updated_at' => $context->page?->updated_at?->toISOString(),
+            ],
             'theme' => [
                 'id' => $context->theme?->getKey(),
                 'key' => $context->theme?->key,

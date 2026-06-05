@@ -9,6 +9,7 @@ use Capell\Newsletter\Enums\SyncStatus;
 use Capell\Newsletter\Filament\Resources\FormMappings\FormMappingResource;
 use Capell\Newsletter\Filament\Resources\NewsletterTags\NewsletterTagResource;
 use Capell\Newsletter\Filament\Resources\ProviderAudiences\ProviderAudienceResource;
+use Capell\Newsletter\Filament\Resources\ProviderConnections\ProviderConnectionResource;
 use Capell\Newsletter\Filament\Resources\ProviderInterestMappings\ProviderInterestMappingResource;
 use Capell\Newsletter\Filament\Resources\SyncAttempts\SyncAttemptResource;
 use Capell\Newsletter\Filament\Settings\NewsletterSettingsSchema;
@@ -72,6 +73,24 @@ it('declares newsletter provider resource forms, models, and pages', function ()
         ->and(ProviderAudienceResource::getPages())->toHaveKeys(['index', 'create', 'edit'])
         ->and(ProviderInterestMappingResource::getPages())->toHaveKeys(['index', 'create', 'edit'])
         ->and(SyncAttemptResource::getPages())->toHaveKey('index');
+});
+
+it('only offers the fake provider in allowed environments', function (): void {
+    $providerOptions = newsletterProviderConnectionOptions();
+
+    expect($providerOptions)->toHaveKey(ProviderType::Fake->value);
+
+    app()->detectEnvironment(static fn (): string => 'production');
+
+    try {
+        expect(newsletterProviderConnectionOptions())->not->toHaveKey(ProviderType::Fake->value);
+
+        config()->set('capell-newsletter.providers.allow_fake_provider', true);
+
+        expect(newsletterProviderConnectionOptions())->toHaveKey(ProviderType::Fake->value);
+    } finally {
+        app()->detectEnvironment(static fn (): string => 'testing');
+    }
 });
 
 it('declares newsletter tag and sync attempt table columns and navigation metadata', function (): void {
@@ -173,4 +192,15 @@ function newsletterCoverageTable(): Table
     $livewire->shouldReceive('makeFilamentTranslatableContentDriver')->andReturn(null);
 
     return Table::make($livewire);
+}
+
+/**
+ * @return array<array-key, mixed>
+ */
+function newsletterProviderConnectionOptions(): array
+{
+    $reflectionMethod = new ReflectionMethod(ProviderConnectionResource::class, 'providerOptions');
+    $options = $reflectionMethod->invoke(null);
+
+    return is_array($options) ? $options : [];
 }

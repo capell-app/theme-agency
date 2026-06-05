@@ -2,7 +2,6 @@
     use Capell\FoundationTheme\Actions\BuildWidgetAssetRenderDataAction;
     use Capell\Frontend\Facades\Frontend;
     use Spatie\Image\Image;
-    use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
     $theme = Frontend::theme();
 @endphp
@@ -62,8 +61,9 @@
                     :muted="in_array($containerKey, $theme->secondary_containers)"
                     :title="$widget->translation->title ?? ($showPageTitle ? $page->translation->title : null)"
                     :text-align="$widget->getMeta('align')"
+                    :heading-size="$widget->getMeta('heading_size')"
                     :heading-style="$widget->getMeta('heading_style')"
-                    :heading-tag="$showPageTitle ? 'h1' : null"
+                    :heading-tag="$showPageTitle ? 'h1' : $widget->getMeta('heading_size')"
                 />
             </div>
         @endif
@@ -131,15 +131,16 @@
                 @foreach ($widget->assets as $widgetAsset)
                     {{-- format-ignore-start --}}
                 @php
-                    /** @var Media|null $media */
                     $assetRenderData = BuildWidgetAssetRenderDataAction::run($widgetAsset);
-                    $media = $assetRenderData->image;
+                    $imageSource = $assetRenderData->image;
+                    $media = $imageSource?->media;
+
                     if (! $media) {
                         throw new RuntimeException('Image not found for WidgetAsset: ' . $widgetAsset->asset_type . ' ' . $widgetAsset->id);
                     }
 
-                    $imageWidth = $media->getCustomProperty('width');
-                    $imageHeight = $media->getCustomProperty('height');
+                    $imageWidth = $imageSource->width ?? $media->getCustomProperty('width');
+                    $imageHeight = $imageSource->height ?? $media->getCustomProperty('height');
 
                     if (Str::startsWith($media->mime_type, 'image/') && (! $imageWidth || ! $imageHeight)) {
                         $image = Image::load($media->getPath());

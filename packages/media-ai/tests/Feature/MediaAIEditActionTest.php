@@ -4,13 +4,23 @@ declare(strict_types=1);
 
 use Capell\Admin\Contracts\Extenders\MediaEditActionExtender;
 use Capell\Admin\Filament\Resources\Media\Pages\EditMedia;
+use Capell\AIOrchestrator\Actions\RegisterAIOrchestratorModuleAction;
+use Capell\AIOrchestrator\Data\AIOrchestratorRunData;
+use Capell\AIOrchestrator\Support\AIOrchestratorModuleRegistry;
 use Capell\Core\Models\Media as CapellMedia;
 use Capell\Core\Models\Page;
 use Capell\MediaAI\Contracts\ImageDoctor;
+use Capell\MediaAI\Data\ImageDoctorRequest;
+use Capell\MediaAI\Data\ImageDoctorResult;
 use Capell\MediaAI\Filament\MediaAIEditActionExtender;
+use Capell\MediaAI\Providers\MediaAIServiceProvider;
+use Capell\MediaAI\Support\AIOrchestratorImageDoctor;
 use Capell\MediaAI\Support\NullImageDoctor;
+use Capell\MediaAI\Tests\Fixtures\AIOrchestratorImageDoctorAction;
+use Capell\MediaAI\Tests\Fixtures\AIOrchestratorImageDoctorModule;
 use Capell\MediaAI\Tests\Fixtures\RecordingImageDoctor;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Notifications\Notification;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -34,6 +44,7 @@ beforeEach(function (): void {
 
     Queue::fake();
     Storage::fake('public');
+    config()->set('capell-media-ai.enabled', true);
     config()->set('capell.media.model', CapellMedia::class);
     config()->set('media-library.media_model', CapellMedia::class);
 });
@@ -145,6 +156,21 @@ it('registers a media edit action extender when enabled', function (): void {
         ->toBeTrue();
 });
 
+it('does not register a media edit action extender when disabled', function (): void {
+    $registeredBefore = collect(app()->tagged(MediaEditActionExtender::TAG))
+        ->filter(fn (object $extender): bool => $extender instanceof MediaAIEditActionExtender)
+        ->count();
+
+    config()->set('capell-media-ai.enabled', false);
+
+    (new MediaAIServiceProvider(app()))->registeringPackage();
+
+    expect(collect(app()->tagged(MediaEditActionExtender::TAG))
+        ->filter(fn (object $extender): bool => $extender instanceof MediaAIEditActionExtender)
+        ->count())
+        ->toBe($registeredBefore);
+});
+
 it('keeps the doctor action hidden until an ai-orchestrator-backed image doctor is bound', function (): void {
     expect(resolve(ImageDoctor::class))->toBeInstanceOf(NullImageDoctor::class);
 
@@ -153,6 +179,19 @@ it('keeps the doctor action hidden until an ai-orchestrator-backed image doctor 
     ])
         ->assertSuccessful()
         ->assertActionHidden('doctor-image');
+});
+
+it('returns a localized failure result from the null image doctor', function (): void {
+    $result = (new NullImageDoctor)->doctor(
+        createMediaAIImage(),
+        new ImageDoctorRequest(
+            operation: 'improve',
+            instructions: 'Try the default image doctor.',
+        ),
+    );
+
+    expect($result->successful)->toBeFalse()
+        ->and($result->message)->toBe(__('capell-media-ai::media-ai.not_configured'));
 });
 
 it('passes image doctor requests to the configured ai-orchestrator implementation', function (): void {
@@ -175,6 +214,77 @@ it('passes image doctor requests to the configured ai-orchestrator implementatio
     expect($doctor->media?->is($media))->toBeTrue()
         ->and($doctor->request?->operation)->toBe('remove_background')
         ->and($doctor->request?->instructions)->toBe('Remove the background and keep the subject sharp.');
+});
+
+it('runs image doctor requests through the configured ai-orchestrator capability', function (): void {
+    if (! class_exists(AIOrchestratorModuleRegistry::class)) {
+        test()->markTestSkipped('AI Orchestrator is not available in this checkout.');
+    }
+
+    app()->singleton(AIOrchestratorModuleRegistry::class, fn (): AIOrchestratorModuleRegistry => new AIOrchestratorModuleRegistry);
+    RegisterAIOrchestratorModuleAction::run(new AIOrchestratorImageDoctorModule);
+    AIOrchestratorImageDoctorAction::$lastRun = null;
+
+    $media = createMediaAIImage();
+    $result = (new AIOrchestratorImageDoctor)->doctor(
+        $media,
+        new ImageDoctorRequest(
+            operation: 'restore',
+            instructions: 'Restore scratches while preserving the original crop.',
+        ),
+    );
+    $lastRun = AIOrchestratorImageDoctorAction::lastRun();
+
+    expect($result->successful)->toBeTrue()
+        ->and($result->message)->toBe('Doctor finished through AI Orchestrator')
+        ->and($lastRun)->toBeInstanceOf(AIOrchestratorRunData::class);
+    throw_unless($lastRun instanceof AIOrchestratorRunData, RuntimeException::class, 'Expected AI Orchestrator run data.');
+    $mediaContext = $lastRun->context['media'] ?? null;
+    throw_unless(is_array($mediaContext), RuntimeException::class, 'Expected AI Orchestrator media context.');
+
+    expect($lastRun->moduleKey)->toBe('media-ai')
+        ->and($lastRun->capabilityKey)->toBe('doctor-image')
+        ->and($lastRun->context['operation'])->toBe('restore')
+        ->and($lastRun->context['instructions'])->toBe('Restore scratches while preserving the original crop.')
+        ->and($mediaContext['id'])->toBe($media->getKey());
+});
+
+it('rejects crafted image doctor operations before calling the provider', function (): void {
+    $doctor = new RecordingImageDoctor;
+    app()->instance(ImageDoctor::class, $doctor);
+
+    Livewire::test(EditMedia::class, [
+        'record' => createMediaAIImage()->getRouteKey(),
+    ])
+        ->assertSuccessful()
+        ->callAction('doctor-image', [
+            'operation' => 'delete_everything',
+            'instructions' => 'Crafted payload.',
+        ])
+        ->assertHasActionErrors(['operation']);
+
+    expect($doctor->media)->toBeNull()
+        ->and($doctor->request)->toBeNull();
+});
+
+it('shows warning notifications when the image doctor reports a null-provider failure', function (): void {
+    $doctor = new RecordingImageDoctor(ImageDoctorResult::failure(__('capell-media-ai::media-ai.not_configured')));
+    app()->instance(ImageDoctor::class, $doctor);
+
+    Livewire::test(EditMedia::class, [
+        'record' => createMediaAIImage()->getRouteKey(),
+    ])
+        ->assertSuccessful()
+        ->callAction('doctor-image', [
+            'operation' => 'improve',
+            'instructions' => 'Try the configured image doctor.',
+        ])
+        ->assertHasNoActionErrors()
+        ->assertNotified(
+            Notification::make()
+                ->title(__('capell-media-ai::media-ai.not_configured'))
+                ->warning(),
+        );
 });
 
 it('authorizes doctor requests against the media update policy', function (): void {

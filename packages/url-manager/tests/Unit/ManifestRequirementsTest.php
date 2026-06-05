@@ -13,41 +13,37 @@ use Capell\UrlManager\Models\RedirectRule;
 use Capell\UrlManager\Providers\UrlManagerServiceProvider;
 
 it('declares URL Manager owned models and protected tables', function (): void {
-    $manifest = json_decode(
-        (string) file_get_contents(__DIR__ . '/../../capell.json'),
-        associative: true,
-        flags: JSON_THROW_ON_ERROR,
-    );
+    $manifest = capell_json_file_array(__DIR__ . '/../../capell.json');
 
     expect((new RedirectRule)->getTable())->toBe('url_manager_redirect_rules')
-        ->and($manifest['description'])->toContain("site's link equity")
-        ->and($manifest['marketplace']['summary'])->toBe('Stop losing traffic to broken links — manage redirects, auto-preserve moved page URLs, and turn repeated 404s into recovered SEO.')
-        ->and($manifest['marketplace']['description'])->toContain('CSV import/export for bulk migrations')
-        ->and($manifest['marketplace']['screenshots'])->toHaveCount(8)
+        ->and(data_get($manifest, 'description'))->toContain("site's link equity")
+        ->and(data_get($manifest, 'marketplace.summary'))->toBe('Stop losing traffic to broken links — manage redirects, auto-preserve moved page URLs, and turn repeated 404s into recovered SEO.')
+        ->and(data_get($manifest, 'marketplace.description'))->toContain('CSV import/export for bulk migrations')
+        ->and(data_get($manifest, 'marketplace.screenshots'))->toHaveCount(8)
         ->and((new RedirectHit)->getTable())->toBe('url_manager_redirect_hits')
         ->and((new NotFoundOpportunity)->getTable())->toBe('url_manager_not_found_opportunities')
-        ->and($manifest['database']['requiredTables'])->toBe([
+        ->and(data_get($manifest, 'database.requiredTables'))->toBe([
             'url_manager_redirect_rules',
             'url_manager_redirect_hits',
             'url_manager_not_found_opportunities',
         ])
-        ->and($manifest['providers']['runtime'])->toContain(UrlManagerServiceProvider::class)
-        ->and($manifest['providers']['admin'])->toContain(UrlManagerServiceProvider::class)
-        ->and($manifest['contributes'])->toContain([
+        ->and(data_get($manifest, 'providers.runtime'))->toContain(UrlManagerServiceProvider::class)
+        ->and(data_get($manifest, 'providers.admin'))->toContain(UrlManagerServiceProvider::class)
+        ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'admin-page',
             'class' => RedirectRulesPageContribution::class,
             'pageClass' => RedirectRulesPage::class,
         ])
-        ->and($manifest['contributes'])->toContain([
+        ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'admin-page',
             'class' => NotFoundOpportunitiesPageContribution::class,
             'pageClass' => NotFoundOpportunitiesPage::class,
         ])
-        ->and($manifest['contributes'])->toContain([
+        ->and(data_get($manifest, 'contributes'))->toContain([
             'type' => 'model',
             'class' => UrlManagerModelsContribution::class,
         ])
-        ->and($manifest['actions'])->toHaveKeys([
+        ->and(data_get($manifest, 'actions'))->toHaveKeys([
             'buildNotFoundRedirectSuggestions',
             'convertNotFoundOpportunityToRedirect',
             'exportRedirectRules',
@@ -59,7 +55,7 @@ it('declares URL Manager owned models and protected tables', function (): void {
             'resolveRedirectRule',
             'upsertRedirectRule',
         ])
-        ->and($manifest['capabilities'])->toContain(
+        ->and(data_get($manifest, 'capabilities'))->toContain(
             'managed-redirects',
             'changed-url-redirect-detection',
             'redirect-hit-counts',
@@ -70,5 +66,23 @@ it('declares URL Manager owned models and protected tables', function (): void {
             'frontend-redirect-resolver',
             'url-manager-admin',
         )
-        ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
+        ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([]);
+});
+
+it('references existing URL Manager marketplace screenshots', function (): void {
+    $manifest = capell_json_file_array(__DIR__ . '/../../capell.json');
+    $screenshots = data_get($manifest, 'marketplace.screenshots', []);
+
+    throw_unless(is_array($screenshots), RuntimeException::class, 'URL Manager screenshots must be an array.');
+
+    foreach ($screenshots as $screenshot) {
+        throw_unless(is_array($screenshot), RuntimeException::class, 'URL Manager screenshot entries must be arrays.');
+
+        $path = $screenshot['path'] ?? null;
+
+        throw_unless(is_string($path), RuntimeException::class, 'URL Manager screenshot paths must be strings.');
+
+        expect($path)->toStartWith('docs/screenshots/')
+            ->and(file_exists(__DIR__ . '/../../' . $path))->toBeTrue();
+    }
 });

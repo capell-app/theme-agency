@@ -75,16 +75,16 @@ The package should continue toward this fuller buyer-facing product story as the
 
 | Item                                                                                                                            | Bucket | Effort | Impact | Section ref |
 | ------------------------------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Shipped 2026-06-04: Wire CTA-click + page-view conversion capture (beacon)                                                      | Now    | L      | High   | §2, §3      |
-| Shipped 2026-06-04: Add frontend render/feature tests proving widgets render + no ID/marker leak in full page                   | Now    | M      | High   | §4          |
-| Shipped 2026-06-04: Resolve the cacheable=false vs static-HTML-cache personalization contradiction (tracker contribution + doc) | Now    | M      | High   | §4          |
-| Shipped 2026-06-04: Filter variant resolution to published pages                                                                | Now    | M      | Medium | §2          |
-| Shipped 2026-06-04: Harden overview conversion-rate join (null/duplicate `utm_campaign`)                                        | Now    | M      | Medium | §2, §4      |
+| Shipped 2026-06-04: Wire CTA-click + page-view conversion capture (beacon)                                                      | Done   | L      | High   | §2, §3      |
+| Shipped 2026-06-04: Add frontend render/feature tests proving widgets render + no ID/marker leak in full page                   | Done   | M      | High   | §4          |
+| Shipped 2026-06-04: Resolve the cacheable=false vs static-HTML-cache personalization contradiction (tracker contribution + doc) | Done   | M      | High   | §4          |
+| Shipped 2026-06-04: Filter variant resolution to published pages                                                                | Done   | M      | Medium | §2          |
+| Shipped 2026-06-04: Harden overview conversion-rate join (null/duplicate `utm_campaign`)                                        | Done   | M      | Medium | §2, §4      |
 | Add campaign scheduling command (Scheduled→Active→Ended transitions)                                                            | Next   | M      | Medium | §3          |
-| Shipped 2026-06-04: In-package A/B variant results readout (lift per variant)                                                   | Now    | L      | High   | §3          |
+| Shipped 2026-06-04: In-package A/B variant results readout (lift per variant)                                                   | Done   | L      | High   | §3          |
 | Revenue/ROAS reporting using existing `value_amount` + `budget_amount`                                                          | Later  | M      | High   | §3          |
 | Geo/device/referrer audience targeting (use `torann/geoip`)                                                                     | Later  | L      | High   | §3          |
-| Shipped 2026-06-04: Configurable attribution lookback window                                                                    | Now    | M      | Medium | §3, §4      |
+| Shipped 2026-06-04: Configurable attribution lookback window                                                                    | Done   | M      | Medium | §3, §4      |
 | Anonymous/no-identity conversion dedup policy                                                                                   | Later  | M      | Medium | §3, §4      |
 | Decouple `SyncCampaignExperimentAction` update path from direct relation writes                                                 | Later  | M      | Low    | §4          |
 | Populate CHANGELOG + benchmark perf budgets (20ms render / 40 query)                                                            | Later  | S      | Low    | §2, §4      |

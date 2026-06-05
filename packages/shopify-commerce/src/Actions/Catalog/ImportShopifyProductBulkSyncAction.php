@@ -21,6 +21,9 @@ use RuntimeException;
 use SplFileObject;
 use Throwable;
 
+/**
+ * @method static int run(ShopifyConnection|int $connection)
+ */
 final class ImportShopifyProductBulkSyncAction
 {
     use AsAction;
@@ -29,7 +32,7 @@ final class ImportShopifyProductBulkSyncAction
     {
         $connection = is_int($connection) ? ShopifyConnection::query()->findOrFail($connection) : $connection;
 
-        return Cache::lock(sprintf('capell-shopify-commerce.sync.%d', $connection->getKey()), 300)->block(10, function () use ($connection): int {
+        $imported = Cache::lock(sprintf('capell-shopify-commerce.sync.%d', $this->intValue($connection->getKey())), 300)->block(10, function () use ($connection): int {
             $connection->refresh();
 
             if ($connection->status === ShopifyConnectionStatus::Revoked) {
@@ -92,6 +95,13 @@ final class ImportShopifyProductBulkSyncAction
                 throw $throwable;
             }
         });
+
+        return is_int($imported) ? $imported : 0;
+    }
+
+    private function intValue(mixed $value): int
+    {
+        return is_numeric($value) ? (int) $value : 0;
     }
 
     /**

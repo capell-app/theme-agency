@@ -1,6 +1,6 @@
 # Deployments Docs
 
-Deployments owns repository deployment connections and Composer requirement publishing for Capell CMS.
+Deployments connects GitHub, GitLab, or Bitbucket repositories to Capell admin workflows so extension installs can publish Composer requirement changes through reviewed Git changes.
 
 Start at the [package README](../README.md) when deciding whether to install this package. Use the docs below for setup, extension, debugging, and verification details.
 

@@ -63,7 +63,7 @@
                     $role = $assetRenderData->position;
                     $tags = $assetRenderData->tags;
                     $social = $assetRenderData->social;
-                    $media = $assetRenderData->image;
+                    $media = $assetRenderData->image?->media;
                     $icon = $assetRenderData->icon;
                 @endphp
 

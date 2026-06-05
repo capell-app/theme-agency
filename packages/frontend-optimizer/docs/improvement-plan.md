@@ -4,7 +4,7 @@
 
 ## 1. Snapshot
 
-Frontend Optimizer overrides Capell's `FrontendAssetManifestRenderer` contract to convert the public `<head>` asset manifest into a layout-scoped _render profile_ (a sha256 of asset list + context + critical-CSS settings), then defers non-critical CSS/JS and inlines generated above-the-fold CSS. The live entry point is real: `vendor/capell-app/frontend/resources/views/components/app/head/index.blade.php` calls `app(FrontendAssetManifestRenderer::class)->render(...)`, the optimizer rebinds that contract as a `singleton` at boot (`src/Providers/FrontendOptimizerServiceProvider.php:69`), and `CapellFrontendAssetManifestRenderer` falls back to the default renderer on any throwable. Critical CSS is generated out-of-band by `GenerateCriticalCssJob` → `GenerateCriticalCssAction` → `PlaywrightCriticalCssGenerator`, which shells out via `symfony/process` to `resources/js/generate-critical-css.mjs` (real Chromium, two viewports). Surfaces: `admin` + `frontend`. Models/tables: `FrontendRenderProfile` + `FrontendOptimizationRun` (`frontend_render_profiles`, `frontend_optimization_runs`). Deps: `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`, `symfony/process`; JS dep `playwright ^1.59.1`. Marketplace summary verbatim: _"Frontend Optimizer provides profile-based CSS and JavaScript delivery for public Capell pages."_ `capell.json` declares **1** screenshot (`docs/assets/marketplace/extension-card.jpg`); `docs/screenshots.json` requires **2** generated captures (`frontend-optimizer-profile-assets.png`, `frontend-optimizer-critical-css-output.png`) that are absent on disk — instead the `docs/screenshots/` folder holds unrelated before/after + middleware-proof images. Manifest mismatch confirmed.
+Frontend Optimizer overrides Capell's `FrontendAssetManifestRenderer` contract to convert the public `<head>` asset manifest into a layout-scoped _render profile_ (a sha256 of asset list + context + critical-CSS settings), then defers non-critical CSS/JS and inlines generated above-the-fold CSS. The live entry point is real: `vendor/capell-app/frontend/resources/views/components/app/head/index.blade.php` calls `app(FrontendAssetManifestRenderer::class)->render(...)`, the optimizer rebinds that contract as a `singleton` at boot (`src/Providers/FrontendOptimizerServiceProvider.php:69`), and `CapellFrontendAssetManifestRenderer` falls back to the default renderer on any throwable. Critical CSS is generated out-of-band by `GenerateCriticalCssJob` → `GenerateCriticalCssAction` → `PlaywrightCriticalCssGenerator`, which shells out via `symfony/process` to `resources/js/generate-critical-css.mjs` (real Chromium, two viewports). Surfaces: `admin` + `frontend`. Models/tables: `FrontendRenderProfile` + `FrontendOptimizationRun` (`frontend_render_profiles`, `frontend_optimization_runs`). Deps: `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`, `symfony/process`; JS dep `playwright ^1.59.1`. Marketplace summary now leads with faster first paint and real-render critical CSS. `capell.json` declares the extension card plus four committed Capell screenshot-runner PNGs for profile asset output and critical-CSS output in light and dark modes.
 
 ## 2. Improvements (existing functionality)
 
@@ -64,7 +64,7 @@ Differentiator vs table-stakes: minify/bundle, font/image optimization, and prel
 
 > Frontend Optimizer speeds up your public Capell site by inlining the exact above-the-fold CSS each layout needs and deferring everything else, so visitors see styled content sooner and your Core Web Vitals improve. Unlike source-scanning tools, it generates critical CSS from your pages as a real browser renders them — Layout Builder content, theme markup, render hooks, and responsive styles all included — across mobile and desktop viewports. Generation runs on your queue, never in the public response, and falls back safely to standard stylesheet delivery until critical CSS exists. Per-layout render profiles mean equivalent pages reuse one optimized result, and page types you don't want to optimize can opt out with a single toggle.
 
-**Screenshot / media gaps.** Manifest declares 1 marketplace image; `docs/screenshots.json` _requires_ 2 generated captures (`frontend-optimizer-profile-assets.png`, `frontend-optimizer-critical-css-output.png`) that **do not exist** — the `docs/screenshots/` folder instead contains before/after HTML-inspection and middleware-proof images not referenced by the manifest. Reconcile: generate the two required captures, add a third "before/after Lighthouse / CWV" comparison (the strongest sales asset), and surface the settings panel screenshot. Update `capell.json` `marketplace.screenshots[]` to match.
+**Screenshot / media gaps.** The required Capell screenshot-runner captures are committed and listed in `capell.json`: profile asset output and critical-CSS output, each with a dark-mode variant. Remaining media upside: add a "before/after Lighthouse / CWV" comparison (the strongest sales asset) and surface the settings panel screenshot when the admin workflow is buyer-ready.
 
 **Pricing / tier / bundle.** Positioned `premium` / `foundation` bundle — correct: performance is a cross-cutting concern every site wants, so bundling with the foundation drives adoption and it is a natural upgrade-justifier for the premium tier. Keep it foundation-bundled but ensure the _image/font_ gaps (§3) are closed before leaning on "Optimizer" as a premium differentiator, or competitors' all-in-one perf packages will look more complete.
 
@@ -81,23 +81,23 @@ Differentiator vs table-stakes: minify/bundle, font/image optimization, and prel
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                               | Bucket | Effort | Impact | Section ref    |
-| -------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | -------------- |
-| Implement real health-check probes (it's `critical`-severity but a stub)                           | Done   | M      | High   | §2.1, §4       |
-| Add anonymous/non-admin public-output safety integration test through real head render             | Done   | M      | High   | §4 (test gaps) |
-| Wire critical-CSS generation completion → html-cache invalidation source                           | Done   | M      | High   | §4             |
-| Resolve screenshot mismatch (generate the 2 required + CWV before/after) and update manifest       | Now    | S      | High   | §5             |
-| Remove or wire dead registries (`LayoutAssetRegistry`/`WidgetAssetRegistry`) + fix docs headline   | Now    | S      | Med    | §4             |
-| Rewrite marketplace summary + composer description (benefit-led)                                   | Done   | S      | High   | §5             |
-| Delete/implement dead `debug_query_support` setting                                                | Done   | S      | Med    | §2.3           |
-| Delete or wire orphaned `ResolveOptimizationScopeAction`; reconcile unreachable scopes             | Next   | S      | Med    | §2.2, §3       |
-| Validate/relax `frontendRenderBudgetMs:20` claim; move manifest disk-write off the hot render path | Next   | M      | High   | §4             |
-| Drive critical-eligibility + JS-idle from manifest hints, not hardcoded `foundation-theme:*`       | Next   | M      | High   | §2.5, §2.6     |
-| Add image optimization (responsive/lazy/AVIF-WebP) — pair with media-library                       | Next   | L      | High   | §3             |
-| Add preload/preconnect/fetchpriority + font optimization hints                                     | Next   | M      | High   | §3             |
-| Add profile/critical-CSS GC (prune on layout/theme delete + stale signatures)                      | Next   | M      | Med    | §2.7           |
-| Cover listener, job, settings, health in tests                                                     | Next   | M      | Med    | §4 (test gaps) |
-| Implement page-level (`PageUrl`) scope for hero-heavy landing pages                                | Later  | L      | Med    | §3             |
-| Add CWV/RUM before-after reporting panel (headline sales asset)                                    | Later  | L      | High   | §3, §5         |
-| Add CSS/JS minify + bundling to match "Optimizer" naming expectation                               | Later  | L      | Med    | §3, §5         |
-| Document Tailwind-v4-specific critical-CSS sanitiser coupling; harden for other themes             | Later  | M      | Med    | §4             |
+| Item                                                                                                                    | Bucket | Effort | Impact | Section ref    |
+| ----------------------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | -------------- |
+| Implement real health-check probes (it's `critical`-severity but a stub)                                                | Done   | M      | High   | §2.1, §4       |
+| Add anonymous/non-admin public-output safety integration test through real head render                                  | Done   | M      | High   | §4 (test gaps) |
+| Wire critical-CSS generation completion → html-cache invalidation source                                                | Done   | M      | High   | §4             |
+| Shipped 2026-06-05: generate the two required Capell runner captures plus dark variants and update marketplace manifest | Done   | S      | High   | §5             |
+| Remove or wire dead registries (`LayoutAssetRegistry`/`WidgetAssetRegistry`) + fix docs headline                        | Done   | S      | Med    | §4             |
+| Rewrite marketplace summary + composer description (benefit-led)                                                        | Done   | S      | High   | §5             |
+| Delete/implement dead `debug_query_support` setting                                                                     | Done   | S      | Med    | §2.3           |
+| Delete or wire orphaned `ResolveOptimizationScopeAction`; reconcile unreachable scopes                                  | Next   | S      | Med    | §2.2, §3       |
+| Validate/relax `frontendRenderBudgetMs:20` claim; move manifest disk-write off the hot render path                      | Next   | M      | High   | §4             |
+| Drive critical-eligibility + JS-idle from manifest hints, not hardcoded `foundation-theme:*`                            | Next   | M      | High   | §2.5, §2.6     |
+| Add image optimization (responsive/lazy/AVIF-WebP) — pair with media-library                                            | Next   | L      | High   | §3             |
+| Add preload/preconnect/fetchpriority + font optimization hints                                                          | Next   | M      | High   | §3             |
+| Add profile/critical-CSS GC (prune on layout/theme delete + stale signatures)                                           | Next   | M      | Med    | §2.7           |
+| Cover listener, job, settings, health in tests                                                                          | Next   | M      | Med    | §4 (test gaps) |
+| Implement page-level (`PageUrl`) scope for hero-heavy landing pages                                                     | Later  | L      | Med    | §3             |
+| Add CWV/RUM before-after reporting panel (headline sales asset)                                                         | Later  | L      | High   | §3, §5         |
+| Add CSS/JS minify + bundling to match "Optimizer" naming expectation                                                    | Later  | L      | Med    | §3, §5         |
+| Document Tailwind-v4-specific critical-CSS sanitiser coupling; harden for other themes                                  | Later  | M      | Med    | §4             |

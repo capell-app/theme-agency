@@ -14,6 +14,9 @@ return [
     'sync_overlap_minutes' => env('CAPELL_GA4_REPORTS_SYNC_OVERLAP_MINUTES', 120),
     'sync_days' => 30,
     'route_slug' => 'ga4-reports',
+    'health' => [
+        'max_successful_sync_age_hours' => env('CAPELL_GA4_REPORTS_HEALTH_MAX_SUCCESSFUL_SYNC_AGE_HOURS', 48),
+    ],
     'tables' => [
         'sync_runs' => 'ga4_reports_sync_runs',
         'daily_metrics' => 'ga4_reports_daily_metrics',

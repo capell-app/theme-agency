@@ -1,6 +1,6 @@
 {
     "name": "capell-app/document-lifecycle",
-    "description": "Tamper-evident proof of which document version was published and who accepted it — controlled documents, immutable hashed versions, and a court-ready acceptance ledger for Capell.",
+    "description": "Version-pinned acceptance evidence for controlled documents in Capell: register documents, publish hashed versions from admin or Publishing Studio, and record who accepted which version and when.",
     "keywords": [
         "capell",
         "document-lifecycle",

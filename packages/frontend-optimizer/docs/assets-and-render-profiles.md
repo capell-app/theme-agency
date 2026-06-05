@@ -1,6 +1,6 @@
 # Assets And Render Profiles
 
-Frontend Optimizer turns package asset registrations into render profiles. A render profile is a stable hash built from the asset list, optimization scope, and context.
+Frontend Optimizer turns Capell public asset manifests into render profiles. A render profile is a stable hash built from the asset list, optimization scope, and context.
 
 Use this package for public frontend CSS and JavaScript delivery. Do not use it for admin assets.
 
@@ -8,8 +8,6 @@ Use this package for public frontend CSS and JavaScript delivery. Do not use it 
 
 | Surface                                  | Purpose                                                                |
 | ---------------------------------------- | ---------------------------------------------------------------------- |
-| `LayoutAssetRegistry`                    | Assets that belong to a layout key.                                    |
-| `WidgetAssetRegistry`                    | Assets that belong to a widget type, optionally gated by widget data.  |
 | `FrontendAssetSet`                       | Fluent builder for CSS and JavaScript asset definitions.               |
 | `CapellFrontendAssetManifestRenderer`    | Converts Capell public asset manifests into optimizer render profiles. |
 | `ResolveRenderProfileAction`             | Merges asset sets and creates the profile hash/signature.              |
@@ -26,63 +24,6 @@ When the package is installed, `FrontendOptimizerServiceProvider` binds Capell's
 The Foundation theme stylesheet (`foundation-theme:css`) is marked as critical-CSS eligible and rendered with a deferred loading strategy once generated critical CSS exists. Until that file exists, the renderer falls back to a blocking stylesheet link for the eligible stylesheet so public pages do not flash unstyled content. Other manifest CSS remains blocking, and JavaScript remains deferred/module output.
 
 Render profile hashes are scoped to the layout/theme asset graph. Equivalent pages using the same layout, theme, and asset set reuse the same generated profile and critical CSS. If profile preparation or rendering cannot run safely, the package falls back to Capell frontend's default renderer.
-
-## Register Layout Assets
-
-```php
-use Capell\FrontendOptimizer\Enums\AssetLoadingStrategy;
-use Capell\FrontendOptimizer\Enums\AssetSlot;
-use Capell\FrontendOptimizer\Support\FrontendAssetSet;
-use Capell\FrontendOptimizer\Support\LayoutAssetRegistry;
-
-$this->app->afterResolving(LayoutAssetRegistry::class, static function (LayoutAssetRegistry $registry): void {
-    $registry->register(
-        'marketing-page',
-        FrontendAssetSet::make()
-            ->css(
-                handle: 'marketing-layout',
-                path: 'vendor/capell/marketing/layout.css',
-                loadingStrategy: AssetLoadingStrategy::Critical,
-                slot: AssetSlot::Base,
-                criticalEligible: true,
-                packageName: 'capell-app/marketing',
-            )
-            ->js(
-                handle: 'marketing-layout',
-                path: 'vendor/capell/marketing/layout.js',
-                loadingStrategy: AssetLoadingStrategy::Deferred,
-                slot: AssetSlot::Interactive,
-                packageName: 'capell-app/marketing',
-            ),
-    );
-});
-```
-
-Handles and paths cannot be empty. JavaScript cannot use the `Critical` loading strategy.
-
-## Register Widget Assets
-
-Widget assets can be conditional. The condition receives widget data and must return `true` to include the asset set.
-
-```php
-use Capell\FrontendOptimizer\Support\FrontendAssetSet;
-use Capell\FrontendOptimizer\Support\WidgetAssetRegistry;
-
-$this->app->afterResolving(WidgetAssetRegistry::class, static function (WidgetAssetRegistry $registry): void {
-    $registry->register(
-        'video-embed',
-        FrontendAssetSet::make()
-            ->js(
-                handle: 'video-embed',
-                path: 'vendor/capell/video/embed.js',
-                packageName: 'capell-app/video',
-            ),
-        static fn (array $widgetData): bool => ($widgetData['provider'] ?? null) === 'vimeo',
-    );
-});
-```
-
-Keep the condition pure. It may run while resolving a public page render profile.
 
 ## Build and Render a Profile
 

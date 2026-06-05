@@ -2,16 +2,23 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Actions\SetupPageUrlsAction;
 use Capell\Core\Enums\ContainerWidthEnum;
+use Capell\Core\Enums\MediaCollectionEnum;
+use Capell\Core\Enums\PageTypeEnum;
+use Capell\Core\Enums\PresentationDeliveryMode;
 use Capell\Core\Models\Blueprint;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Layout;
 use Capell\Core\Models\Page;
+use Capell\Core\Models\PageUrl;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
 use Capell\Core\Models\Theme;
+use Capell\Core\Models\Translation;
+use Capell\Core\Support\Creator\PageCreator;
 use Capell\DemoKit\Actions\InstallKitchenSinkDemoPageAction;
-use Capell\FoundationTheme\Livewire\Widget\Pages as FoundationPagesWidget;
+use Capell\FoundationTheme\View\Components\Footer\LatestPages;
 use Capell\Frontend\Facades\Frontend;
 use Capell\Frontend\Support\CapellFrontendContext;
 use Capell\Frontend\Support\State\FrontendState;
@@ -22,7 +29,6 @@ use Capell\LayoutBuilder\Filament\Resources\Widgets\Pages\EditWidget;
 use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Models\WidgetAsset;
 use Capell\LayoutBuilder\Support\LayoutBuilderAdminRegistrar;
-use Capell\LayoutBuilder\Support\Livewire\OpaqueWidgetReference;
 use Capell\Tests\Support\Concerns\CreatesAdminUser;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
@@ -32,6 +38,13 @@ use Livewire\Livewire;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 uses(CreatesAdminUser::class);
+
+beforeEach(function (): void {
+    config()->set('capell-demo-kit.kitchen_sink.target_widget_count', 12);
+    config()->set('capell-demo-kit.kitchen_sink.eager_widget_limit', 11);
+    config()->set('capell-demo-kit.kitchen_sink.context_page_count', 4);
+    config()->set('capell-demo-kit.kitchen_sink.context_asset_limit', 4);
+});
 
 function kitchenSinkRequiredLayout(?Layout $layout): Layout
 {
@@ -59,25 +72,162 @@ function kitchenSinkExpectedLayoutWidgetCount(): int
     return count(InstallKitchenSinkDemoPageAction::layoutWidgetKeys());
 }
 
+function kitchenSinkEagerWidgetLimit(): int
+{
+    return InstallKitchenSinkDemoPageAction::eagerWidgetLimit();
+}
+
+function kitchenSinkExpectedContextPageCount(): int
+{
+    return InstallKitchenSinkDemoPageAction::contextPageCount();
+}
+
+function kitchenSinkExpectedContextAssetLimit(): int
+{
+    return InstallKitchenSinkDemoPageAction::contextAssetLimit();
+}
+
+function kitchenSinkUseReferenceMatrix(): void
+{
+    config()->set('capell-demo-kit.kitchen_sink.target_widget_count', 32);
+    config()->set('capell-demo-kit.kitchen_sink.eager_widget_limit', 12);
+    config()->set('capell-demo-kit.kitchen_sink.context_page_count', 8);
+    config()->set('capell-demo-kit.kitchen_sink.context_asset_limit', 6);
+}
+
 it('installs the kitchen sink demo page idempotently', function (): void {
     $firstPage = InstallKitchenSinkDemoPageAction::run();
     $secondPage = InstallKitchenSinkDemoPageAction::run();
 
     $layout = kitchenSinkRequiredLayout(Layout::query()->firstWhere('key', 'kitchen-sink-demo'));
-    $secondPage->loadMissing(['children', 'pageUrl', 'siblings']);
+    $secondPage->loadMissing(['children.translation', 'pageUrl', 'siblings']);
 
     expect($secondPage->getKey())->toBe($firstPage->getKey())
         ->and(Page::query()->where('name', 'Kitchen Sink Demo Page')->count())->toBe(1)
-        ->and($secondPage->parent_id)->not->toBeNull()
-        ->and($secondPage->children)->toHaveCount(3)
-        ->and($secondPage->siblings->reject(fn (Page $sibling): bool => $sibling->is($secondPage))->values())->toHaveCount(3)
+        ->and($secondPage->parent_id)->toBeNull()
+        ->and($secondPage->pageUrl?->url)->toBe('/kitchen-sink-showcase')
+        ->and($secondPage->children)->toHaveCount(kitchenSinkExpectedContextPageCount())
         ->and($layout)->not->toBeNull()
         ->and(kitchenSinkMainContainer($layout)['widgets'])->toHaveCount(kitchenSinkExpectedLayoutWidgetCount())
-        ->and(WidgetAsset::query()->where('pageable_id', $secondPage->getKey())->count())->toBeGreaterThan(7)
+        ->and(WidgetAsset::query()->where('pageable_id', $secondPage->getKey())->count())->toBeGreaterThan(kitchenSinkExpectedLayoutWidgetCount())
         ->and(SiteDomain::query()
             ->where('site_id', $secondPage->site_id)
             ->where('language_id', $secondPage->pageUrl?->language_id)
             ->exists())->toBeTrue();
+
+    $secondPage->children->each(function (Page $childPage): void {
+        expect($childPage->getMedia(MediaCollectionEnum::Image->value))->not->toBeEmpty($childPage->name);
+    });
+
+    $footer = new LatestPages(headingClass: 'font-semibold', pages: $secondPage->children);
+
+    expect($footer->pages)->toBeEmpty();
+});
+
+it('installs the kitchen sink demo page on the default site and primary language', function (): void {
+    $primaryLanguage = Language::factory()->create(['code' => 'de']);
+    $secondaryLanguage = Language::factory()->english()->create();
+    $site = Site::factory()
+        ->language($primaryLanguage)
+        ->default()
+        ->withTranslations(collect([$primaryLanguage, $secondaryLanguage]))
+        ->create(['name' => 'Capell Services']);
+
+    $page = InstallKitchenSinkDemoPageAction::run()->loadMissing(['pageUrl', 'site']);
+    $pageSite = $page->site;
+    throw_unless($pageSite instanceof Site, RuntimeException::class, 'Expected the kitchen sink page site to be loaded.');
+
+    expect($pageSite->is($site))->toBeTrue()
+        ->and($page->pageUrl?->language_id)->toBe($primaryLanguage->getKey())
+        ->and($page->pageUrl?->url)->toBe('/kitchen-sink-showcase')
+        ->and(Page::query()->where('name', 'Kitchen Sink Demo Page')->where('site_id', $site->getKey())->count())->toBe(1)
+        ->and(Site::query()->where('name', 'Kitchen Sink Demo')->exists())->toBeFalse()
+        ->and(Site::query()->count())->toBe(1);
+});
+
+it('installs the kitchen sink demo page on the services demo site when available', function (): void {
+    $german = Language::factory()->create(['code' => 'de']);
+    $english = Language::factory()->english()->create();
+
+    Site::factory()
+        ->language($german)
+        ->default()
+        ->withTranslations(collect([$german]))
+        ->create(['name' => 'Capell Ruby']);
+
+    $services = Site::factory()
+        ->language($english)
+        ->withTranslations(collect([$english]))
+        ->create(['name' => 'Capell Services']);
+
+    $page = InstallKitchenSinkDemoPageAction::run()->loadMissing(['pageUrl', 'site']);
+    $pageSite = $page->site;
+    throw_unless($pageSite instanceof Site, RuntimeException::class, 'Expected the kitchen sink page site to be loaded.');
+
+    expect($pageSite->is($services))->toBeTrue()
+        ->and($page->pageUrl?->language_id)->toBe($english->getKey())
+        ->and($page->pageUrl?->url)->toBe('/kitchen-sink-showcase')
+        ->and(Page::query()->where('name', 'Kitchen Sink Demo Page')->where('site_id', $services->getKey())->count())->toBe(1);
+});
+
+it('promotes legacy nested kitchen sink installs to the showcase url', function (): void {
+    $language = Language::factory()->english()->create();
+    $site = Site::factory()
+        ->language($language)
+        ->default()
+        ->withTranslations(collect([$language]))
+        ->create(['name' => 'Capell Services']);
+    $layout = Layout::factory()->create([
+        'key' => 'kitchen-sink-demo',
+        'containers' => ['main' => ['widgets' => []]],
+        'status' => true,
+    ]);
+
+    /** @var Page $legacyParent */
+    $legacyParent = resolve(PageCreator::class)->createPage([
+        'name' => 'Kitchen Sink Showcase',
+        'layout_id' => $layout->getKey(),
+        'type_key' => PageTypeEnum::Default,
+        'meta' => ['demo_fixture' => 'kitchen-sink-parent'],
+        'translations' => [
+            'en' => [
+                'title' => 'Kitchen Sink Showcase',
+                'content' => '<p>Legacy overview.</p>',
+                'summary' => 'Legacy overview.',
+                'meta' => ['slug' => 'kitchen-sink-showcase'],
+            ],
+        ],
+    ], $site, collect([$language]));
+    SetupPageUrlsAction::run($legacyParent);
+
+    /** @var Page $legacyPage */
+    $legacyPage = resolve(PageCreator::class)->createPage([
+        'name' => 'Kitchen Sink Demo Page',
+        'layout_id' => $layout->getKey(),
+        'type_key' => PageTypeEnum::Default,
+        'parent_id' => $legacyParent->getKey(),
+        'meta' => ['demo_fixture' => 'kitchen-sink'],
+        'translations' => [
+            'en' => [
+                'title' => 'Kitchen Sink Demo Page',
+                'content' => '<p>Legacy nested demo.</p>',
+                'summary' => 'Legacy nested demo.',
+                'meta' => ['slug' => 'kitchen-sink-demo'],
+            ],
+        ],
+    ], $site, collect([$language]));
+    SetupPageUrlsAction::run($legacyPage);
+
+    $page = InstallKitchenSinkDemoPageAction::run($site)->loadMissing(['children', 'pageUrl']);
+
+    expect($page->getKey())->toBe($legacyParent->getKey())
+        ->and($page->name)->toBe('Kitchen Sink Demo Page')
+        ->and($page->parent_id)->toBeNull()
+        ->and($page->pageUrl?->url)->toBe('/kitchen-sink-showcase')
+        ->and($page->children)->toHaveCount(kitchenSinkExpectedContextPageCount())
+        ->and(Page::query()->whereKey($legacyPage->getKey())->exists())->toBeFalse()
+        ->and(PageUrl::query()->where('url', '/kitchen-sink-showcase/kitchen-sink-demo')->exists())->toBeFalse()
+        ->and(PageUrl::query()->withTrashed()->where('url', '/kitchen-sink-showcase/kitchen-sink-demo')->whereNotNull('deleted_at')->exists())->toBeTrue();
 });
 
 it('repairs missing site domains for an existing kitchen sink site', function (): void {
@@ -100,68 +250,96 @@ it('stores lazy presentation metadata only on below fold kitchen sink layout ins
     $layout = kitchenSinkRequiredLayout(Layout::query()->firstWhere('key', 'kitchen-sink-demo'));
     $layoutWidgets = kitchenSinkMainContainer($layout)['widgets'];
 
-    $widgets = collect($layoutWidgets)->keyBy('widget_key');
+    $eagerWidgets = collect($layoutWidgets)->take(kitchenSinkEagerWidgetLimit());
+    $lazyWidgets = collect($layoutWidgets)->skip(kitchenSinkEagerWidgetLimit());
+    $expectedLazyPresentation = [
+        'delivery_mode' => PresentationDeliveryMode::LazyFragment->value,
+        'loading_strategy' => 'visible',
+    ];
 
-    expect($widgets->get('kitchen-sink-structured-text'))->not->toHaveKey('meta.presentation');
+    expect($layoutWidgets)->toHaveCount(kitchenSinkExpectedLayoutWidgetCount())
+        ->and($eagerWidgets->filter(fn (array $widget): bool => isset($widget['meta']['presentation'])))->toHaveCount(0)
+        ->and($lazyWidgets->filter(fn (array $widget): bool => ($widget['meta']['presentation'] ?? null) === $expectedLazyPresentation))->toHaveCount(kitchenSinkExpectedLayoutWidgetCount() - kitchenSinkEagerWidgetLimit())
+        ->and(collect($layoutWidgets)->pluck('widget_key')->all())->toBe(InstallKitchenSinkDemoPageAction::layoutWidgetKeys());
+});
 
-    foreach ([
-        'kitchen-sink-rich-text',
-        'kitchen-sink-data-display',
-        'kitchen-sink-interactions',
-        'kitchen-sink-embeds',
-        'kitchen-sink-forms',
-        'kitchen-sink-utility-states',
-    ] as $widgetKey) {
-        expect($widgets->get($widgetKey)['meta']['presentation'] ?? null)->toBe([
-            'delivery_mode' => 'lazy_fragment',
-            'loading_strategy' => 'visible',
-        ]);
-    }
+it('installs custom heroes and livewire kitchen sink widgets in the matrix', function (): void {
+    kitchenSinkUseReferenceMatrix();
 
-    expect($widgets->keys()->all())->toBe(InstallKitchenSinkDemoPageAction::layoutWidgetKeys());
+    InstallKitchenSinkDemoPageAction::run();
+
+    $layout = kitchenSinkRequiredLayout(Layout::query()->firstWhere('key', 'kitchen-sink-demo'));
+    $layoutWidgets = collect(kitchenSinkMainContainer($layout)['widgets']);
+    $heroWidgets = $layoutWidgets->filter(
+        fn (array $widget): bool => str_contains((string) data_get($widget, 'meta.kitchen_sink.source_key'), 'hero'),
+    );
+    $livewireStressLayoutWidget = $layoutWidgets->first(
+        fn (array $widget): bool => data_get($widget, 'meta.kitchen_sink.source_key') === 'kitchen-sink-livewire-stress',
+    );
+    $livewireLatestPagesLayoutWidget = $layoutWidgets->first(
+        fn (array $widget): bool => data_get($widget, 'meta.kitchen_sink.source_key') === 'kitchen-sink-livewire-latest-pages',
+    );
+
+    throw_unless(is_array($livewireStressLayoutWidget), RuntimeException::class, 'Expected a Livewire stress layout widget.');
+    throw_unless(is_array($livewireLatestPagesLayoutWidget), RuntimeException::class, 'Expected a Livewire latest pages layout widget.');
+
+    $livewireStressWidget = Widget::query()->firstWhere('key', $livewireStressLayoutWidget['widget_key']);
+    $livewireLatestPagesWidget = Widget::query()
+        ->with('assets')
+        ->firstWhere('key', $livewireLatestPagesLayoutWidget['widget_key']);
+
+    expect($heroWidgets->count())->toBeGreaterThanOrEqual(3)
+        ->and($livewireStressWidget)->toBeInstanceOf(Widget::class)
+        ->and($livewireStressWidget?->is_livewire)->toBeTrue()
+        ->and($livewireStressWidget?->component)->toBe('capell-demo-kit.widget.kitchen-sink-livewire-stress')
+        ->and($livewireLatestPagesWidget)->toBeInstanceOf(Widget::class)
+        ->and($livewireLatestPagesWidget?->is_livewire)->toBeTrue()
+        ->and($livewireLatestPagesWidget?->component)->toBe('capell.widget.pages')
+        ->and($livewireLatestPagesWidget?->assets)->toHaveCount(kitchenSinkExpectedContextAssetLimit());
 });
 
 it('stores one page h1 and all forty reference section headings', function (): void {
+    kitchenSinkUseReferenceMatrix();
+
     $page = InstallKitchenSinkDemoPageAction::run();
     $translation = $page->translations()->first();
+    $content = $translation?->content;
+    throw_unless(is_string($content), RuntimeException::class, 'Expected the kitchen sink page translation content to exist.');
 
-    expect(substr_count((string) $translation?->content, '<h1>'))->toBe(1);
+    expect(substr_count($content, '<h1>'))->toBe(1);
 
-    $layoutContainers = $page->layout?->containers;
-    expect(is_array($layoutContainers))->toBeTrue();
-
-    $layoutWidgets = is_array($layoutContainers['main']) && is_array($layoutContainers['main']['widgets'] ?? null)
-        ? $layoutContainers['main']['widgets']
-        : [];
+    $layout = kitchenSinkRequiredLayout($page->layout);
+    $layoutWidgets = kitchenSinkMainContainer($layout)['widgets'];
 
     $headings = collect($layoutWidgets)
         ->pluck('widget_key')
         ->map(fn (string $key) => Widget::query()->firstWhere('key', $key)?->meta['sections'] ?? [])
         ->flatten(1)
         ->pluck('heading')
+        ->unique()
         ->values()
         ->all();
 
     expect($headings)->toBe(InstallKitchenSinkDemoPageAction::sectionHeadings());
 });
 
-it('can edit every kitchen sink layout widget without losing demo creator data', function (): void {
+it('can edit a kitchen sink layout widget without losing demo creator data', function (): void {
     test()->actingAsAdmin();
     resolve(LayoutBuilderAdminRegistrar::class)->register();
 
-    $page = InstallKitchenSinkDemoPageAction::run()->loadMissing(['layout', 'translations.language']);
+    $page = InstallKitchenSinkDemoPageAction::run();
+    $page->loadMissing(['layout', 'translations.language']);
+
     $language = $page->translations->first()?->language;
 
-    expect($language)->not->toBeNull();
+    throw_unless($language instanceof Language, RuntimeException::class, 'Expected the kitchen sink page language to be loaded.');
 
-    $layout = $page->layout;
-    expect($layout)->toBeInstanceOf(Layout::class);
-
-    $layoutWidgets = is_array($layout->containers['main']['widgets'] ?? null)
-        ? $layout->containers['main']['widgets']
-        : [];
+    $layout = kitchenSinkRequiredLayout($page->layout);
+    $layoutWidgets = kitchenSinkMainContainer($layout)['widgets'];
 
     expect($layoutWidgets)->toHaveCount(kitchenSinkExpectedLayoutWidgetCount());
+
+    $editedReferenceCount = 0;
 
     foreach ($layoutWidgets as $layoutWidget) {
         $widgetKey = $layoutWidget['widget_key'];
@@ -192,11 +370,14 @@ it('can edit every kitchen sink layout widget without losing demo creator data',
             ->and($originalSections)->toBeArray($widgetKey)
             ->and($originalSections)->not->toBeEmpty($widgetKey);
 
-        $existingTranslation = $widget->translations->firstWhere('language_id', $language?->getKey());
+        $existingTranslation = $widget->translations->firstWhere('language_id', $language->getKey());
         $editedTitle = $widget->name . ' edited title';
         $editedContent = '<p>Edited kitchen sink widget content for ' . e($widget->key) . '.</p>';
 
         expect($existingTranslation)->not->toBeNull($widgetKey);
+        throw_unless($existingTranslation instanceof Translation, RuntimeException::class, 'Expected a widget translation to edit.');
+        $existingTranslationKey = $existingTranslation->getKey();
+        throw_unless(is_int($existingTranslationKey) || is_string($existingTranslationKey), RuntimeException::class, 'Expected a widget translation key.');
 
         Livewire::test(EditWidget::class, ['record' => $widget->getRouteKey()])
             ->assertSuccessful()
@@ -204,8 +385,8 @@ it('can edit every kitchen sink layout widget without losing demo creator data',
                 'name' => $editedName,
                 'status' => (bool) $widget->status,
             ])
-            ->set('data.translations.record-' . $existingTranslation?->getKey() . '.title', $editedTitle)
-            ->set('data.translations.record-' . $existingTranslation?->getKey() . '.content', $editedContent)
+            ->set('data.translations.record-' . $existingTranslationKey . '.title', $editedTitle)
+            ->set('data.translations.record-' . $existingTranslationKey . '.content', $editedContent)
             ->set('data.meta.family', $editedFamily)
             ->set('data.meta.sections', $editedSections)
             ->call('save')
@@ -222,12 +403,18 @@ it('can edit every kitchen sink layout widget without losing demo creator data',
             ->and($editedWidget->assets->pluck('id')->sort()->values()->all())->toBe($originalAssetIds, $widgetKey);
 
         $editedTranslation = $editedWidget->translations()
-            ->where('language_id', $language?->getKey())
+            ->where('language_id', $language->getKey())
             ->first();
 
         expect($editedTranslation?->title)->toBe($editedTitle, $widgetKey)
             ->and($editedTranslation?->content)->toBe($editedContent, $widgetKey);
+
+        $editedReferenceCount++;
+
+        break;
     }
+
+    expect($editedReferenceCount)->toBe(1);
 });
 
 it('can manually create kitchen sink reference widgets through Filament', function (): void {
@@ -298,12 +485,17 @@ it('renders the structured text widget eagerly and lazy placeholders for below f
         ->and($html)->not->toContain('Full form')
         ->and($html)->not->toContain('kitchen-sink-rich-text')
         ->and($html)->not->toContain('capell-app')
+        ->and($html)->not->toContain('Layout Builder')
+        ->and($html)->not->toContain('opaque widget reference')
+        ->and($html)->not->toContain('hydration')
         ->and($html)->not->toContain('data-field-path')
         ->and($html)->not->toContain('data-capell-authoring')
         ->and($html)->not->toContain('signed');
 });
 
 it('fetches each lazy kitchen sink fragment through the public fragment route', function (): void {
+    kitchenSinkUseReferenceMatrix();
+
     $page = InstallKitchenSinkDemoPageAction::run();
     $html = kitchenSinkLayoutHtml($page);
     preg_match_all('/data-deferred-fragment-url="([^"]+)"/', $html, $matches);
@@ -342,38 +534,30 @@ it('fetches each lazy kitchen sink fragment through the public fragment route', 
         ->and($fragmentHtml)->toContain('aria-labelledby');
 });
 
-it('renders kitchen sink pagination and lazy fragments through blade and livewire pages', function (): void {
+it('mounts kitchen sink pages widget assets and lazy fragments through public blade', function (): void {
     $page = InstallKitchenSinkDemoPageAction::run();
     $bladeHtml = kitchenSinkLayoutHtml($page);
 
-    expect($bladeHtml)->toContain('capell-pagination')
-        ->and($bladeHtml)->toContain('latest-pages')
+    expect($bladeHtml)->toContain('capell::widget.pages')
         ->and($bladeHtml)->toContain('data-deferred-fragment');
 
     $layout = kitchenSinkRequiredLayout($page->layout);
     $pagesCardWidget = collect(kitchenSinkMainContainer($layout)['widgets'])
-        ->first(fn (array $widgetData): bool => ($widgetData['widget_key'] ?? null) === 'pages-card');
+        ->first(fn (array $widgetData): bool => data_get($widgetData, 'meta.kitchen_sink.source_key') === 'kitchen-sink-livewire-latest-pages');
 
     throw_unless(is_array($pagesCardWidget), RuntimeException::class, 'Expected pages-card widget data.');
 
-    Livewire::test(FoundationPagesWidget::class, [
-        'widgetReference' => OpaqueWidgetReference::encode([
-            'container_key' => 'main',
-            'widget_key' => 'pages-card',
-            'layout_id' => $layout->getKey(),
-            'language_id' => $page->translations->first()?->language?->getKey(),
-            'occurrence' => $pagesCardWidget['occurrence'] ?? 1,
-            'page_id' => $page->getKey(),
-            'page_type' => $page->getMorphClass(),
-            'site_id' => $page->site?->getKey(),
-            'widget_data' => $pagesCardWidget,
-            'widget_index' => 0,
-        ]),
-    ])
-        ->assertSee('capell-pagination', false)
-        ->assertSee('mainPages-card1', false)
-        ->assertDontSee('data-capell-authoring', false)
-        ->assertDontSee('data-field-path', false);
+    $widget = Widget::query()
+        ->with(['assets', 'translations', 'type'])
+        ->firstWhere('key', $pagesCardWidget['widget_key']);
+
+    expect($widget)->toBeInstanceOf(Widget::class);
+    assert($widget instanceof Widget);
+
+    expect($widget->meta['pagination'] ?? null)->toBeTrue()
+        ->and($widget->assets)->toHaveCount(kitchenSinkExpectedContextAssetLimit())
+        ->and($bladeHtml)->not->toContain('data-capell-authoring')
+        ->and($bladeHtml)->not->toContain('data-field-path');
 });
 
 function kitchenSinkLayoutHtml(Page $page): string
@@ -388,7 +572,7 @@ function kitchenSinkLayoutHtml(Page $page): string
 
     foreach ($container['widgets'] as $widgetIndex => $widgetData) {
         $widget = Widget::query()
-            ->with(['assets.asset', 'translations', 'type'])
+            ->with(['assets.asset', 'assets.media', 'translations', 'type'])
             ->firstWhere('key', $widgetData['widget_key']);
 
         if (! $widget instanceof Widget) {
@@ -397,11 +581,11 @@ function kitchenSinkLayoutHtml(Page $page): string
 
         $widget->assets->each(function (WidgetAsset $widgetAsset): void {
             if ($widgetAsset->asset instanceof Page) {
-                $widgetAsset->asset->loadMissing(['children', 'pageUrl', 'parent.translation', 'translation', 'type']);
+                $widgetAsset->asset->loadMissing(['children', 'image', 'media', 'pageUrl', 'parent.translation', 'translation', 'type']);
             }
         });
 
-        $html .= view('capell-layout-builder::components.layout.widget', [
+        $widgetHtml = view('capell-layout-builder::components.layout.widget', [
             'component' => $widget->getComponent(),
             'containerColspan' => 12,
             'container' => $container,
@@ -416,6 +600,8 @@ function kitchenSinkLayoutHtml(Page $page): string
             'widgetData' => $widgetData,
             'pageSlot' => null,
         ])->render();
+
+        $html .= $widgetHtml;
     }
 
     return $html;

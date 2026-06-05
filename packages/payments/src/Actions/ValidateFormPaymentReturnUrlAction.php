@@ -18,11 +18,22 @@ final class ValidateFormPaymentReturnUrlAction
             return null;
         }
 
+        $url = trim($url);
+
+        if ($this->isLocalPath($url)) {
+            return URL::to($url);
+        }
+
         $components = parse_url($url);
         $scheme = is_array($components) ? strtolower((string) ($components['scheme'] ?? '')) : '';
         $host = is_array($components) ? $this->normalizeHost($components['host'] ?? null) : null;
 
-        if (! in_array($scheme, ['http', 'https'], true) || $host === null || ! in_array($host, $this->allowedHosts(), true)) {
+        if (
+            ! in_array($scheme, ['http', 'https'], true)
+            || $host === null
+            || $this->isPrivateOrReservedHost($host)
+            || ! in_array($host, $this->allowedHosts(), true)
+        ) {
             throw ValidationException::withMessages([
                 'return_url' => __('capell-payments::generic.form_payments.invalid_return_url'),
             ]);
@@ -68,6 +79,26 @@ final class ValidateFormPaymentReturnUrlAction
             return null;
         }
 
-        return strtolower(trim($host));
+        return strtolower(trim($host, " \t\n\r\0\x0B[]"));
+    }
+
+    private function isLocalPath(string $url): bool
+    {
+        return str_starts_with($url, '/')
+            && ! str_starts_with($url, '//')
+            && ! str_contains($url, '\\');
+    }
+
+    private function isPrivateOrReservedHost(string $host): bool
+    {
+        if ($host === 'localhost' || str_ends_with($host, '.localhost')) {
+            return true;
+        }
+
+        if (! filter_var($host, FILTER_VALIDATE_IP)) {
+            return false;
+        }
+
+        return filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false;
     }
 }

@@ -70,3 +70,9 @@ Run the host app's package install and migration flow, then verify package chang
 ```bash
 vendor/bin/pest packages/password-policy/tests --configuration=phpunit.xml
 ```
+
+## Screenshot Coverage
+
+The marketplace manifest now lists the extension card plus all three required
+1440x900 PNG captures from `docs/screenshots.json`: settings, forced password
+change, and Users-table password policy columns.

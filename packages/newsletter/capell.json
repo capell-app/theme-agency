@@ -222,6 +222,71 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Newsletter extension preview image",
                 "caption": "Newsletter extension preview"
+            },
+            {
+                "path": "docs/screenshots/subscribers-admin-index.png",
+                "alt": "A marketer reviews subscriber status, consent, site scope, tags, and filters.",
+                "caption": "Subscribers admin index"
+            },
+            {
+                "path": "docs/screenshots/create-edit-subscriber-form.png",
+                "alt": "A marketer edits subscriber identity, status, site, tags, and consent-related fields.",
+                "caption": "Create/edit subscriber form"
+            },
+            {
+                "path": "docs/screenshots/provider-connections-admin.png",
+                "alt": "An operator configures a newsletter provider connection using demo-safe credentials.",
+                "caption": "Provider connections admin index and form"
+            },
+            {
+                "path": "docs/screenshots/provider-audiences-admin.png",
+                "alt": "An operator maps local sites to provider audiences.",
+                "caption": "Provider audiences admin index and form"
+            },
+            {
+                "path": "docs/screenshots/provider-interest-mappings-admin.png",
+                "alt": "An operator maps remote provider interests to local newsletter tags.",
+                "caption": "Provider interest mappings admin index and form"
+            },
+            {
+                "path": "docs/screenshots/form-mappings-admin.png",
+                "alt": "A marketer maps a seeded form-builder form into newsletter subscription handling.",
+                "caption": "Form mappings admin index and form"
+            },
+            {
+                "path": "docs/screenshots/newsletter-tags-admin.png",
+                "alt": "A marketer manages package-owned newsletter tags.",
+                "caption": "Newsletter tags admin index and form"
+            },
+            {
+                "path": "docs/screenshots/segments-admin.png",
+                "alt": "A marketer configures static or dynamic subscriber segments.",
+                "caption": "Segments admin index and form"
+            },
+            {
+                "path": "docs/screenshots/import-batches-admin.png",
+                "alt": "An operator reviews seeded import batch state and import outcomes.",
+                "caption": "Import batches admin index"
+            },
+            {
+                "path": "docs/screenshots/sync-attempts-admin.png",
+                "alt": "An operator reviews provider sync attempts, retries, and failures.",
+                "caption": "Sync attempts admin index"
+            },
+            {
+                "path": "docs/screenshots/newsletter-overview-stats.png",
+                "alt": "A marketer checks subscribed, pending, and sync-failure dashboard stats.",
+                "caption": "Newsletter overview stats"
+            },
+            {
+                "path": "docs/screenshots/confirm-subscription-route.png",
+                "alt": "A subscriber confirms a disposable newsletter token through the public route.",
+                "caption": "Subscription confirmation route response"
+            },
+            {
+                "path": "docs/screenshots/unsubscribe-route.png",
+                "alt": "A subscriber unsubscribes through a disposable public token without seeing provider internals.",
+                "caption": "Unsubscribe route response"
             }
         ],
         "categories": ["admin", "frontend", "newsletter"]

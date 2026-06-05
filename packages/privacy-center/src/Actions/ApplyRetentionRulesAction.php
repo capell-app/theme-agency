@@ -10,6 +10,9 @@ use Carbon\CarbonInterface;
 use Illuminate\Support\Collection;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static Collection<int, RetentionExecutionResultData> run(?CarbonInterface $now = null)
+ */
 final class ApplyRetentionRulesAction
 {
     use AsAction;

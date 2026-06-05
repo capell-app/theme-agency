@@ -1,5 +1,7 @@
 @php
     $searchAvailable ??= false;
+    $searchAction ??= '/search';
+    $searchQuery = $query ?? '';
 
     $filters ??= [
         __('capell-theme-knowledge::generic.topic_hub_strategy'),
@@ -69,19 +71,42 @@
                         {{ $searchAvailable ?? false ? __('capell-theme-knowledge::generic.search_connected') : __('capell-theme-knowledge::generic.search_static') }}
                     </p>
 
-                    <div class="mt-5 grid gap-3 md:grid-cols-[1fr_auto]">
-                        <div
-                            class="border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold text-slate-300"
+                    <form
+                        method="GET"
+                        action="{{ $searchAction }}"
+                        role="search"
+                        aria-label="{{ __('capell-theme-knowledge::generic.search_form_label') }}"
+                        class="mt-5 grid gap-3"
+                    >
+                        <label
+                            for="knowledge-search-listing-query"
+                            class="text-xs font-black tracking-[0.16em] text-[#bfdbfe] uppercase"
                         >
-                            {{ __('capell-theme-knowledge::generic.search_placeholder') }}
+                            {{ __('capell-theme-knowledge::generic.search_query_label') }}
+                        </label>
+
+                        <div class="grid gap-3 md:grid-cols-[1fr_auto]">
+                            <input
+                                id="knowledge-search-listing-query"
+                                type="search"
+                                name="q"
+                                value="{{ $searchQuery }}"
+                                placeholder="{{ __('capell-theme-knowledge::generic.search_placeholder') }}"
+                                autocomplete="off"
+                                class="min-h-12 border border-white/10 bg-white px-4 py-3 text-base font-bold text-[#111827] placeholder:text-slate-500 focus:border-[#f59e0b] focus:outline-2 focus:outline-offset-2 focus:outline-[#f59e0b]"
+                            />
+                            <button
+                                type="submit"
+                                class="min-h-12 bg-[#f59e0b] px-5 py-3 text-sm font-black text-[#07111f] focus:outline-2 focus:outline-offset-2 focus:outline-[#f59e0b]"
+                            >
+                                {{ __('capell-theme-knowledge::generic.search_action') }}
+                            </button>
                         </div>
-                        <button
-                            type="button"
-                            class="bg-[#f59e0b] px-5 py-3 text-sm font-black text-[#07111f]"
-                        >
-                            {{ __('capell-theme-knowledge::generic.search_action') }}
-                        </button>
-                    </div>
+
+                        <p class="text-sm leading-6 text-slate-400">
+                            {{ __('capell-theme-knowledge::generic.search_help') }}
+                        </p>
+                    </form>
 
                     <div class="mt-5">
                         <p

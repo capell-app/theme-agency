@@ -10,10 +10,12 @@
 
 - **2026-06-03:** Rewrote marketplace/Composer copy, replaced the critical health-check stub with real diagnostics, and documented the intentional split between runtime `extends: default` and manifest dependency `extends: capell-app/foundation-theme`.
 - **2026-06-04:** Moved service-area defaults into translations, made service-area cards data-driven from section render data, added the default contact anchor, removed dead `href="#"` links, added fallback/custom render coverage, and hardened manifest tests.
+- **2026-06-05:** Replaced the decorative quote-form fallback with a real translated public form, added configurable `formAction`/`formMethod` support, and covered fallback/custom render paths in tests.
+- **2026-06-05:** Added data-driven contact actions with safe `tel:`, `mailto:`, address, and map rendering, translated static fallback states, and focused public render coverage.
 
 ## 2. Improvements (existing functionality)
 
-1. **Replace decorative quote-form with a real fallback form** — the `quote-form` "static" path renders four label cards over inert `<span>` bars (`resources/views/sections/quote-form.blade.php`); a quote-led theme's headline conversion surface produces zero leads when Form Builder is absent. Ship a real `<form>` with name/phone/postcode/service/message inputs (POST target configurable) so the static path still captures enquiries. — converts the primary CTA from theatre to function — `resources/views/sections/quote-form.blade.php` — M
+1. **Shipped 2026-06-05: Replace decorative quote-form with a real fallback form** — `quote-form.blade.php` now renders a public `<form>` with translated name, phone, postcode, service, and message fields, a configurable `formAction`/`formMethod`, and a default `/contact` POST target. Focused render tests cover default and hydrated submission targets plus public-output safety. — converts the primary CTA from theatre to function — `resources/views/sections/quote-form.blade.php` — M
 2. **Shipped 2026-06-04: Fix dead service-area links + hardcoded districts** — `service-areas.blade.php` now renders translated default areas or `$section->items` entries with `label`/`title`/`name`, `url`, and optional `postcode`/`postcodePrefix`. Empty data renders a translated empty state, real URLs render anchors, default areas point to the contact section anchor, and no-URL entries render static labels. — fixes broken links + i18n on a core local-SEO section — `resources/views/sections/service-areas.blade.php` — S
 3. **Add real dark-mode token support or remove the stray variant** — only `services.blade.php` carries `dark:` variants (`dark:text-white`, `dark:text-stone-300`); the other 13 sections are light-only and the shell CSS (`resources/css/theme-local-services.css`) defines no dark palette. Either commit to a dark theme across all sections driven by `--theme-*` tokens, or strip the orphan `dark:` classes so output is consistent. — removes half-implemented styling that looks broken in dark UA — `resources/views/sections/services.blade.php`, `resources/css/theme-local-services.css` — M
 4. **Decide and standardise the Tailwind `tw:` prefix** — repo convention (`.ai/frontend-tailwind`) mandates the `tw:` prefix on store frontends to avoid Bootstrap collisions; this theme uses bare utilities throughout (0 `tw:` occurrences across `resources/`). Confirm whether themes are exempt (they import via `foundation-theme.css`); if not, this is a systemic correctness bug across all 16 views. — prevents class collisions / aligns with house rule — all `resources/views/**/*.blade.php` — L
@@ -26,7 +28,7 @@
 `capabilities[]` is only `["theme-local-services","theme-local-services-frontend"]` — generic theme registration, no local-business capability surfaced. For a local-services site the following are **table stakes** and currently absent:
 
 - **LocalBusiness structured data (JSON-LD)** — no `application/ld+json` anywhere in the package (grep: 0). A local-services theme without `LocalBusiness`/`Service`/`AggregateRating`/`OpeningHoursSpecification` schema forfeits rich results and AI-answer eligibility. This is the single biggest differentiator gap vs siblings (none of the sibling themes ship it either). **Differentiator.**
-- **Click-to-call / contact actions** — the `contact` section renders four static descriptive cards (`contact.blade.php`) with no `tel:`, `mailto:`, address, or map. Mobile local-services traffic is call-driven. **Table stakes.**
+- **Shipped 2026-06-05: Click-to-call / contact actions** — the `contact` section now renders hydrated phone, email, address, and map data as real safe links where possible, with translated non-clickable states when data is missing or unsafe. Mobile local-services traffic is call-driven. **Table stakes.**
 - **Opening hours section** — no section or lang keys for business hours / "open now" state. **Table stakes** for trades/salon/clinic.
 - **Reviews / testimonials** — `proof` is metric-tiles only; there is no quote/star/source testimonial section. **Table stakes** (trust).
 - **Trust / accreditation badges** — no Gas Safe / NICEIC / DBS / insurance / guarantee badge strip. **Differentiator** for trades verticals.
@@ -66,19 +68,19 @@ The manifest marketplace description now uses this buyer-facing product story:
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                             | Bucket | Effort | Impact | Section ref |
-| -------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Replace decorative quote-form with a real fallback `<form>`                      | Now    | M      | High   | §2.1        |
-| Add click-to-call / address / map to contact section                             | Now    | M      | High   | §3          |
-| Fix surfaces mismatch (manifest vs README)                                       | Now    | S      | Low    | §4          |
-| Add LocalBusiness + Service + FAQPage JSON-LD (render-data driven)               | Next   | M      | High   | §3          |
-| Add reviews/testimonials section + lang keys                                     | Next   | M      | High   | §3          |
-| Add opening-hours section ("open now")                                           | Next   | M      | Med    | §3          |
-| Move remaining literal English to `generic.php` lang file                        | Next   | S      | Med    | §2.6        |
-| Hero image LCP/CLS + required alt                                                | Next   | S      | Med    | §2.5        |
-| Resolve `tw:` prefix convention question across all views                        | Next   | L      | Med    | §2.4        |
-| Replace SVG placeholders with real screenshots; fulfil/prune screenshots.json    | Next   | M      | High   | §4, §5      |
-| Add anonymous render test per section + 0-query/20ms budget guard                | Next   | M      | Med    | §4          |
-| Add trust/accreditation badge strip + before/after gallery sections              | Later  | M      | Med    | §3          |
-| Real Form Builder / Bookings embed in quote-form (cross-sell) + dark-mode system | Later  | L      | High   | §3, §2.3    |
-| Keep dual `extends` semantics explicitly covered by tests                        | Later  | S      | Med    | §4          |
+| Item                                                                             | Bucket | Effort | Impact | Section ref                                                                                                                                                  |
+| -------------------------------------------------------------------------------- | ------ | ------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Replace decorative quote-form with a real fallback `<form>`                      | Done   | M      | High   | §2.1 — closed 2026-06-05: fallback quote form now renders translated name/phone/postcode/service/message fields with configurable submission target.         |
+| Add click-to-call / address / map to contact section                             | Done   | M      | High   | §3 — closed 2026-06-05: contact cards now render safe `tel:`, `mailto:`, address, and map links from hydrated section data with translated static fallbacks. |
+| Fix surfaces mismatch (manifest vs README)                                       | Done   | S      | Low    | §4 — closed 2026-06-05: `capell.json` now declares both `frontend` and `console`, matching the README and demo command surface.                              |
+| Add LocalBusiness + Service + FAQPage JSON-LD (render-data driven)               | Next   | M      | High   | §3                                                                                                                                                           |
+| Add reviews/testimonials section + lang keys                                     | Next   | M      | High   | §3                                                                                                                                                           |
+| Add opening-hours section ("open now")                                           | Next   | M      | Med    | §3                                                                                                                                                           |
+| Move remaining literal English to `generic.php` lang file                        | Next   | S      | Med    | §2.6                                                                                                                                                         |
+| Hero image LCP/CLS + required alt                                                | Next   | S      | Med    | §2.5                                                                                                                                                         |
+| Resolve `tw:` prefix convention question across all views                        | Next   | L      | Med    | §2.4                                                                                                                                                         |
+| Replace SVG placeholders with real screenshots; fulfil/prune screenshots.json    | Next   | M      | High   | §4, §5                                                                                                                                                       |
+| Add anonymous render test per section + 0-query/20ms budget guard                | Next   | M      | Med    | §4                                                                                                                                                           |
+| Add trust/accreditation badge strip + before/after gallery sections              | Later  | M      | Med    | §3                                                                                                                                                           |
+| Real Form Builder / Bookings embed in quote-form (cross-sell) + dark-mode system | Later  | L      | High   | §3, §2.3                                                                                                                                                     |
+| Keep dual `extends` semantics explicitly covered by tests                        | Later  | S      | Med    | §4                                                                                                                                                           |

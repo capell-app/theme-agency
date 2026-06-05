@@ -4,6 +4,10 @@ All notable changes to `capell-app/filament-peek` will be documented in this fil
 
 ## Unreleased
 
+### 2026-06-05
+
+- Added the proprietary `LICENSE` file declared by the package Composer manifest.
+
 ### 2026-06-04
 
 - Split cached preview snapshot lookup into `FindPagePreviewSnapshotAction`, so the signed preview controller no longer depends on the snapshot creation action for reads.

@@ -1,0 +1,69 @@
+{
+    "package": "theme-inertia-bookings",
+    "composerName": "capell-app/theme-inertia-bookings",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-inertia-bookings/docs/screenshots",
+    "entries": [
+        {
+            "id": "inertia-bookings-homepage",
+            "title": "Inertia bookings homepage.",
+            "package": "theme-inertia-bookings",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-inertia-bookings-demo",
+            "required": true,
+            "notes": "Capture a seeded appointment-led homepage with hero, service proof, booking CTA, locations, FAQ, and footer sections.",
+            "useCase": "A booking business sees how the theme moves visitors from service evaluation to appointment request.",
+            "screenshotPath": "packages/theme-inertia-bookings/docs/screenshots/inertia-bookings-homepage.png"
+        },
+        {
+            "id": "inertia-bookings-request-flow",
+            "title": "Inertia public booking request.",
+            "package": "theme-inertia-bookings",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/bookings",
+            "required": true,
+            "notes": "Capture the Inertia-rendered public booking request route with lazy slot loading and labelled form fields.",
+            "useCase": "A buyer confirms the theme connects into the real Bookings public request workflow.",
+            "screenshotPath": "packages/theme-inertia-bookings/docs/screenshots/inertia-bookings-request-flow.png"
+        },
+        {
+            "id": "inertia-bookings-services",
+            "title": "Inertia bookings service sections.",
+            "package": "theme-inertia-bookings",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-inertia-bookings-demo#services",
+            "required": true,
+            "notes": "Capture service cards, proof blocks, and appointment CTAs in the themed public page.",
+            "useCase": "A buyer evaluates the theme's appointment-led service presentation before the booking step.",
+            "screenshotPath": "packages/theme-inertia-bookings/docs/screenshots/inertia-bookings-services.png"
+        },
+        {
+            "id": "inertia-bookings-locations",
+            "title": "Inertia bookings locations and FAQ.",
+            "package": "theme-inertia-bookings",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-inertia-bookings-demo#locations",
+            "required": true,
+            "notes": "Capture location, FAQ, and final request-action sections with public theme styling.",
+            "useCase": "A buyer confirms the theme covers local-service trust and decision support sections.",
+            "screenshotPath": "packages/theme-inertia-bookings/docs/screenshots/inertia-bookings-locations.png"
+        },
+        {
+            "id": "inertia-bookings-mobile-request",
+            "title": "Inertia bookings mobile request flow.",
+            "package": "theme-inertia-bookings",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/bookings",
+            "required": true,
+            "notes": "Capture the public booking request flow at a mobile viewport with labels, slot state, and CTA visible.",
+            "useCase": "A buyer verifies the theme remains usable for appointment requests on phones.",
+            "screenshotPath": "packages/theme-inertia-bookings/docs/screenshots/inertia-bookings-mobile-request.png"
+        }
+    ]
+}

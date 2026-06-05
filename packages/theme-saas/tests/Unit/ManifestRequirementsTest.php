@@ -37,6 +37,39 @@ describe('theme saas capell.json manifest', function (): void {
         expect($commands['demo'])->toBe('capell:theme-saas-demo')
             ->and($commands['demoParams'])->toBe(['url', 'languages', 'sites']);
     });
+
+    it('keeps non-cacheable theme output from queueing invalidation without sources', function (): void {
+        $manifest = saasThemeManifest();
+        $cacheSafety = data_get($manifest, 'performance.cacheSafety');
+
+        throw_unless(is_array($cacheSafety), RuntimeException::class, 'Theme SaaS cache safety manifest data must be an array.');
+
+        expect($cacheSafety)->toMatchArray([
+            'cacheable' => false,
+            'variesBy' => ['site', 'locale'],
+            'sensitiveOutput' => false,
+            'invalidationSources' => [],
+            'queueInvalidation' => false,
+        ]);
+    });
+
+    it('documents the repo-root package test command without a package-local phpunit config', function (): void {
+        $packageReadme = File::get(__DIR__ . '/../../README.md');
+        $overview = File::get(__DIR__ . '/../../docs/overview.md');
+        $improvementPlan = File::get(__DIR__ . '/../../docs/improvement-plan.md');
+
+        expect($packageReadme)
+            ->toContain('Run package tests from the repository root')
+            ->toContain('vendor/bin/pest packages/theme-saas/tests')
+            ->not->toContain('vendor/bin/pest packages/theme-saas/tests --configuration=phpunit.xml')
+            ->and($overview)
+            ->toContain('From the repository root, run `vendor/bin/pest packages/theme-saas/tests`')
+            ->toContain('this package does not ship its own PHPUnit config')
+            ->not->toContain('vendor/bin/pest packages/theme-saas/tests --configuration=phpunit.xml')
+            ->and($improvementPlan)
+            ->toContain('Verification command context documented.')
+            ->not->toContain('Fix docs: remove `--configuration=phpunit.xml`');
+    });
 });
 
 /**
@@ -44,13 +77,5 @@ describe('theme saas capell.json manifest', function (): void {
  */
 function saasThemeManifest(): array
 {
-    $manifest = json_decode(
-        File::get(__DIR__ . '/../../capell.json'),
-        associative: true,
-        flags: JSON_THROW_ON_ERROR,
-    );
-
-    throw_unless(is_array($manifest), RuntimeException::class, 'Theme SaaS manifest must decode to an array.');
-
-    return $manifest;
+    return capell_json_file_array(__DIR__ . '/../../capell.json');
 }

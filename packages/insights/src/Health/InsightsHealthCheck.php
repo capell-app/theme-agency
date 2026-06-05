@@ -6,9 +6,16 @@ namespace Capell\Insights\Health;
 
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
+use Capell\Frontend\Data\RenderHookContext;
+use Capell\Frontend\Enums\RenderHookLocation;
+use Capell\Frontend\Support\Render\RenderHookRegistry;
+use Capell\Insights\Actions\ResolveInsightsHashSaltAction;
+use Illuminate\Console\Scheduling\Event;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
+use Throwable;
 
 final class InsightsHealthCheck implements ChecksExtensionHealth
 {
@@ -35,6 +42,8 @@ final class InsightsHealthCheck implements ChecksExtensionHealth
         return collect([
             $check->storageTablesCheck(),
             $check->beaconRoutesCheck(),
+            $check->frontendTrackerRenderHookCheck(),
+            $check->purgeScheduleCheck(),
             $check->visitorHashSecretCheck(),
         ]);
     }
@@ -103,6 +112,44 @@ final class InsightsHealthCheck implements ChecksExtensionHealth
     }
 
     /**
+     * Asserts the frontend tracker render hook is registered and emits the tracker payload.
+     */
+    public function frontendTrackerRenderHookCheck(): DoctorCheckResultData
+    {
+        $hasRenderHook = $this->hasFrontendTrackerRenderHook();
+
+        return new DoctorCheckResultData(
+            label: 'Insights frontend tracker render hook',
+            passed: $hasRenderHook,
+            message: $hasRenderHook
+                ? 'The BodyEnd render hook emits the insights tracker payload.'
+                : 'The BodyEnd render hook is missing the insights tracker payload.',
+            remediation: $hasRenderHook
+                ? null
+                : 'Ensure the frontend RenderHookRegistry is bound and the Insights package is installed/enabled.',
+        );
+    }
+
+    /**
+     * Asserts the retention purge command is scheduled.
+     */
+    public function purgeScheduleCheck(): DoctorCheckResultData
+    {
+        $hasSchedule = $this->hasPurgeSchedule();
+
+        return new DoctorCheckResultData(
+            label: 'Insights retention purge schedule',
+            passed: $hasSchedule,
+            message: $hasSchedule
+                ? 'The insights retention purge command is scheduled monthly.'
+                : 'The insights retention purge command is not scheduled.',
+            remediation: $hasSchedule
+                ? null
+                : 'Ensure the Insights admin provider boots and schedules insights:purge monthly.',
+        );
+    }
+
+    /**
      * @return list<string>
      */
     public function missingTables(): array
@@ -126,15 +173,61 @@ final class InsightsHealthCheck implements ChecksExtensionHealth
 
     public function hasSecureVisitorHashSecret(): bool
     {
-        $salt = config('capell-insights.hash_salt');
+        return ResolveInsightsHashSaltAction::run() !== ResolveInsightsHashSaltAction::PUBLIC_DEFAULT_SALT;
+    }
 
-        if (is_string($salt) && $salt !== '' && $salt !== 'capell-insights') {
-            return true;
+    /**
+     * @param  RenderHookRegistry<RenderHookContext>|null  $registry
+     */
+    public function hasFrontendTrackerRenderHook(?RenderHookRegistry $registry = null): bool
+    {
+        if (! $registry instanceof RenderHookRegistry && ! app()->bound(RenderHookRegistry::class)) {
+            return false;
         }
 
-        $applicationKey = config('app.key');
+        try {
+            $output = ($registry ?? app()->make(RenderHookRegistry::class))
+                ->renderAll(RenderHookLocation::BodyEnd);
+        } catch (Throwable) {
+            return false;
+        }
 
-        return is_string($applicationKey) && $applicationKey !== '';
+        if (! Route::has('capell-insights.events') || ! Route::has('capell-insights.consent')) {
+            return false;
+        }
+
+        return str_contains($output, 'data-capell-insights-tracker')
+            && str_contains($output, route('capell-insights.events'))
+            && str_contains($output, route('capell-insights.consent'));
+    }
+
+    public function hasPurgeSchedule(?Schedule $schedule = null): bool
+    {
+        try {
+            $events = ($schedule ?? app()->make(Schedule::class))->events();
+        } catch (Throwable) {
+            return false;
+        }
+
+        foreach ($events as $event) {
+            if (! $event instanceof Event) {
+                continue;
+            }
+
+            if (! is_string($event->command)) {
+                continue;
+            }
+
+            if (! str_contains((string) $event->command, 'insights:purge')) {
+                continue;
+            }
+
+            if ($event->getExpression() === '0 0 1 * *') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

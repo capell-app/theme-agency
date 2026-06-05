@@ -44,7 +44,11 @@ it('upserts shopify customer snapshots and dispatches a sync event', function ()
     ]);
 
     expect($customer)->toBeInstanceOf(ShopifyCustomer::class)
-        ->and($customer->connection->is($connection))->toBeTrue()
+        ->and($customer->connection)->toBeInstanceOf(ShopifyConnection::class);
+
+    throw_unless($customer->connection instanceof ShopifyConnection, RuntimeException::class, 'Expected synced customer connection.');
+
+    expect($customer->connection->is($connection))->toBeTrue()
         ->and($customer->email_hash)->toBe(ShopifyCustomer::emailHash('buyer@example.test'))
         ->and($customer->first_name)->toBe('Buyer')
         ->and($customer->last_name)->toBe('Example')

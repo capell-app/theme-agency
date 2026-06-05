@@ -1,0 +1,69 @@
+{
+    "package": "theme-inertia-bookings-vue",
+    "composerName": "capell-app/theme-inertia-bookings-vue",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/theme-inertia-bookings-vue/docs/screenshots",
+    "entries": [
+        {
+            "id": "vue-booking-components",
+            "title": "Vue booking component pack.",
+            "package": "theme-inertia-bookings-vue",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/bookings",
+            "required": true,
+            "notes": "Capture the Vue adapter runtime with Theme Inertia Bookings installed and the labelled booking request form visible.",
+            "useCase": "A buyer confirms the Vue pack renders the page, widgets, and booking request contract.",
+            "screenshotPath": "packages/theme-inertia-bookings-vue/docs/screenshots/vue-booking-components.png"
+        },
+        {
+            "id": "vue-booking-services",
+            "title": "Vue themed booking services.",
+            "package": "theme-inertia-bookings-vue",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/theme-inertia-bookings-demo#services",
+            "required": true,
+            "notes": "Capture Vue-rendered service cards and appointment CTAs from the themed component pack.",
+            "useCase": "A buyer verifies the Vue adapter covers the marketing sections, not only the booking form.",
+            "screenshotPath": "packages/theme-inertia-bookings-vue/docs/screenshots/vue-booking-services.png"
+        },
+        {
+            "id": "vue-booking-slot-loading",
+            "title": "Vue booking slot loading state.",
+            "package": "theme-inertia-bookings-vue",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/bookings",
+            "required": true,
+            "notes": "Capture the public request form while available slots are loading or refreshing.",
+            "useCase": "A buyer checks that async slot selection has an understandable Vue loading state.",
+            "screenshotPath": "packages/theme-inertia-bookings-vue/docs/screenshots/vue-booking-slot-loading.png"
+        },
+        {
+            "id": "vue-booking-validation",
+            "title": "Vue booking validation state.",
+            "package": "theme-inertia-bookings-vue",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/bookings",
+            "required": true,
+            "notes": "Capture validation feedback on required customer fields and service/slot selection.",
+            "useCase": "A buyer confirms the Vue pack presents booking errors without relying on placeholders.",
+            "screenshotPath": "packages/theme-inertia-bookings-vue/docs/screenshots/vue-booking-validation.png"
+        },
+        {
+            "id": "vue-booking-mobile",
+            "title": "Vue booking mobile layout.",
+            "package": "theme-inertia-bookings-vue",
+            "surface": "frontend",
+            "targetType": "frontend-url",
+            "target": "/bookings",
+            "required": true,
+            "notes": "Capture the Vue booking request page at a mobile viewport with labels and CTA visible.",
+            "useCase": "A buyer verifies the Vue component pack works for phone-based appointment requests.",
+            "screenshotPath": "packages/theme-inertia-bookings-vue/docs/screenshots/vue-booking-mobile.png"
+        }
+    ]
+}

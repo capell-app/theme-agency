@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    private bool $addedDocumentPublicationIdColumn = false;
+
+    private bool $addedDocumentHashColumn = false;
+
+    private bool $addedDocumentPublicationIndex = false;
+
+    private bool $addedAcceptorSubjectIndex = false;
+
     public function up(): void
     {
         if (! Schema::hasTable('legal_acceptances')) {
@@ -37,6 +45,9 @@ return new class extends Migration
             return;
         }
 
+        $needsDocumentPublicationIdColumn = ! Schema::hasColumn('legal_acceptances', 'document_publication_id');
+        $needsDocumentHashColumn = ! Schema::hasColumn('legal_acceptances', 'document_hash');
+
         Schema::table('legal_acceptances', function (Blueprint $table): void {
             if (! Schema::hasColumn('legal_acceptances', 'document_publication_id')) {
                 $table->foreignId('document_publication_id')
@@ -51,16 +62,23 @@ return new class extends Migration
             }
         });
 
+        $this->addedDocumentPublicationIdColumn = $needsDocumentPublicationIdColumn;
+        $this->addedDocumentHashColumn = $needsDocumentHashColumn;
+
         if (! Schema::hasIndex('legal_acceptances', ['document_key', 'document_publication_id'])) {
             Schema::table('legal_acceptances', function (Blueprint $table): void {
                 $table->index(['document_key', 'document_publication_id'], 'legal_acceptances_doc_publication_lookup');
             });
+
+            $this->addedDocumentPublicationIndex = true;
         }
 
         if (! Schema::hasIndex('legal_acceptances', ['acceptor_type', 'acceptor_id', 'subject_type', 'subject_id'])) {
             Schema::table('legal_acceptances', function (Blueprint $table): void {
                 $table->index(['acceptor_type', 'acceptor_id', 'subject_type', 'subject_id'], 'legal_acceptances_acceptor_subject_lookup');
             });
+
+            $this->addedAcceptorSubjectIndex = true;
         }
     }
 
@@ -70,26 +88,75 @@ return new class extends Migration
             return;
         }
 
-        if (Schema::hasIndex('legal_acceptances', ['document_key', 'document_publication_id'])) {
+        $hasDocumentPublicationForeignKey = $this->hasDocumentPublicationForeignKey();
+        $shouldDropDocumentPublicationIdColumn = $this->addedDocumentPublicationIdColumn || $hasDocumentPublicationForeignKey;
+        $shouldDropDocumentHashColumn = $this->addedDocumentHashColumn || $hasDocumentPublicationForeignKey;
+
+        if (
+            Schema::hasIndex('legal_acceptances', 'legal_acceptances_doc_publication_lookup')
+            && ($this->addedDocumentPublicationIndex || $shouldDropDocumentPublicationIdColumn)
+        ) {
             Schema::table('legal_acceptances', function (Blueprint $table): void {
                 $table->dropIndex('legal_acceptances_doc_publication_lookup');
             });
         }
 
-        if (Schema::hasIndex('legal_acceptances', ['acceptor_type', 'acceptor_id', 'subject_type', 'subject_id'])) {
+        if (
+            Schema::hasIndex('legal_acceptances', 'legal_acceptances_acceptor_subject_lookup')
+            && $this->addedAcceptorSubjectIndex
+        ) {
             Schema::table('legal_acceptances', function (Blueprint $table): void {
                 $table->dropIndex('legal_acceptances_acceptor_subject_lookup');
             });
         }
 
-        Schema::table('legal_acceptances', function (Blueprint $table): void {
-            if (Schema::hasColumn('legal_acceptances', 'document_publication_id')) {
-                $table->dropConstrainedForeignId('document_publication_id');
-            }
+        if (
+            $hasDocumentPublicationForeignKey
+            || $shouldDropDocumentPublicationIdColumn
+            || $shouldDropDocumentHashColumn
+        ) {
+            Schema::table('legal_acceptances', function (Blueprint $table) use (
+                $hasDocumentPublicationForeignKey,
+                $shouldDropDocumentPublicationIdColumn,
+                $shouldDropDocumentHashColumn,
+            ): void {
+                if ($hasDocumentPublicationForeignKey) {
+                    $table->dropForeign(['document_publication_id']);
+                }
 
-            if (Schema::hasColumn('legal_acceptances', 'document_hash')) {
-                $table->dropColumn('document_hash');
+                if (
+                    $shouldDropDocumentPublicationIdColumn
+                    && Schema::hasColumn('legal_acceptances', 'document_publication_id')
+                ) {
+                    $table->dropColumn('document_publication_id');
+                }
+
+                if (
+                    $shouldDropDocumentHashColumn
+                    && Schema::hasColumn('legal_acceptances', 'document_hash')
+                ) {
+                    $table->dropColumn('document_hash');
+                }
+            });
+        }
+    }
+
+    private function hasDocumentPublicationForeignKey(): bool
+    {
+        if (! Schema::hasColumn('legal_acceptances', 'document_publication_id')) {
+            return false;
+        }
+
+        foreach (Schema::getForeignKeys('legal_acceptances') as $foreignKey) {
+            /** @var array{columns?: list<string>, foreign_table?: string} $foreignKey */
+            if (
+                ($foreignKey['columns'] ?? []) === ['document_publication_id']
+                && ($foreignKey['foreign_table'] ?? null) === 'document_lifecycle_publications'
+            ) {
+                return true;
             }
-        });
+        }
+
+        return false;
     }
 };

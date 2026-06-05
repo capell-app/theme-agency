@@ -15,6 +15,30 @@ use Prism\Prism\Text\Response as PrismTextResponse;
 use Prism\Prism\ValueObjects\Meta;
 use Prism\Prism\ValueObjects\Usage;
 
+function makePrismTextResponseWithoutUsage(string $text): PrismTextResponse
+{
+    $reflection = new ReflectionClass(PrismTextResponse::class);
+
+    /** @var PrismTextResponse $response */
+    $response = $reflection->newInstanceWithoutConstructor();
+
+    foreach ([
+        'steps' => collect(),
+        'text' => $text,
+        'finishReason' => FinishReason::Stop,
+        'toolCalls' => [],
+        'toolResults' => [],
+        'meta' => new Meta(id: 'fake-response', model: 'gpt-test'),
+        'messages' => collect(),
+        'additionalContent' => [],
+        'raw' => null,
+    ] as $property => $value) {
+        (new ReflectionProperty(PrismTextResponse::class, $property))->setValue($response, $value);
+    }
+
+    return $response;
+}
+
 it('stores ai generation values behind the configured cache driver and ttl', function (): void {
     Cache::flush();
 
@@ -180,4 +204,37 @@ it('normalizes missing prism usage telemetry to zero tokens', function (): void 
 
     expect($promptTokens->invoke($provider, null))->toBe(0)
         ->and($completionTokens->invoke($provider, null))->toBe(0);
+});
+
+it('maps prism chat responses with missing usage telemetry to zero tokens', function (): void {
+    Cache::flush();
+    app()->instance('prism', new \Prism\Prism\Prism);
+
+    $fake = Prism::fake([
+        makePrismTextResponseWithoutUsage('Generated summary'),
+    ]);
+
+    $provider = new PrismProvider([
+        'provider' => 'ollama',
+        'model' => 'llama-test',
+        'max_retries' => 1,
+        'retry_delay_ms' => 0,
+    ]);
+
+    $response = $provider->chat([
+        'messages' => [
+            ['role' => 'user', 'content' => 'Draft a summary.'],
+        ],
+    ]);
+
+    $fake->assertCallCount(1);
+
+    expect($response->content)->toBe('Generated summary')
+        ->and($response->tokensUsed)->toBe(0)
+        ->and($response->model)->toBe('llama-test')
+        ->and($response->metadata)->toMatchArray([
+            'prompt_tokens' => 0,
+            'completion_tokens' => 0,
+        ])
+        ->and($provider->isAvailable())->toBeTrue();
 });

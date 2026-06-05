@@ -13,7 +13,7 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\LocalServices",
-    "surfaces": ["frontend"],
+    "surfaces": ["frontend", "console"],
     "dependencies": {
         "requires": ["capell-app/core", "capell-app/foundation-theme"],
         "supports": [

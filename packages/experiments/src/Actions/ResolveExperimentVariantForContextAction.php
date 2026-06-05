@@ -10,6 +10,7 @@ use Capell\Experiments\Data\VariantAllocationData;
 use Capell\Experiments\Enums\ExperimentStatus;
 use Capell\Experiments\Models\Experiment;
 use Capell\Experiments\Models\ExperimentVariant;
+use Capell\Frontend\Actions\Performance\RecordExtensionRenderContributionAction;
 use Illuminate\Database\Eloquent\Builder;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -17,8 +18,11 @@ final class ResolveExperimentVariantForContextAction
 {
     use AsAction;
 
+    private const string RECORD_EXTENSION_RENDER_CONTRIBUTION_ACTION = RecordExtensionRenderContributionAction::class;
+
     public function handle(string $allocationKey, ?ExperimentContextData $context = null): ?ResolvedExperimentVariantData
     {
+        $startedAt = microtime(true);
         $context ??= new ExperimentContextData;
 
         /** @var iterable<int, Experiment> $experiments */
@@ -31,7 +35,10 @@ final class ResolveExperimentVariantForContextAction
                 continue;
             }
 
-            return $this->resolvedData($experiment, $allocation);
+            $resolved = $this->resolvedData($experiment, $allocation);
+            $this->recordFrontendCacheSafetyContribution($resolved, $startedAt);
+
+            return $resolved;
         }
 
         return null;
@@ -91,6 +98,35 @@ final class ResolveExperimentVariantForContextAction
                 'variant' => $variant->key,
             ],
             variantPayload: $variant->payload ?? [],
+        );
+    }
+
+    private function recordFrontendCacheSafetyContribution(ResolvedExperimentVariantData $resolved, float $startedAt): void
+    {
+        if (! class_exists(self::RECORD_EXTENSION_RENDER_CONTRIBUTION_ACTION)) {
+            return;
+        }
+
+        $actionClass = self::RECORD_EXTENSION_RENDER_CONTRIBUTION_ACTION;
+
+        $actionClass::run(
+            packageName: 'capell-app/experiments',
+            surface: 'frontend',
+            contributionType: 'experiment-variant-resolution',
+            contributionClass: self::class,
+            elapsedMilliseconds: (microtime(true) - $startedAt) * 1000,
+            frontendRenderBudgetMs: 20,
+            cacheTags: [
+                'experiment-' . $resolved->experimentKey,
+                'experiment-variant-' . $resolved->variantKey,
+            ],
+            cacheable: false,
+            sensitiveOutput: false,
+            variesBy: [
+                'visitor',
+                'experiment',
+                'variant',
+            ],
         );
     }
 }

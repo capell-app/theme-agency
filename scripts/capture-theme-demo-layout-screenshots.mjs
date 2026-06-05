@@ -47,6 +47,24 @@ async function captureEntry(entry) {
         timeout: 10000,
     })
     await page.evaluate(async () => {
+        Array.from(document.images).forEach((image) => {
+            image.loading = 'eager'
+        })
+
+        const viewportHeight = window.innerHeight || 800
+        const documentHeight = Math.max(
+            document.body?.scrollHeight ?? 0,
+            document.documentElement?.scrollHeight ?? 0,
+        )
+        const scrollStep = Math.max(Math.floor(viewportHeight * 0.8), 1)
+
+        for (let position = 0; position <= documentHeight; position += scrollStep) {
+            window.scrollTo(0, position)
+            await new Promise((resolve) => setTimeout(resolve, 50))
+        }
+
+        window.scrollTo(0, 0)
+
         await Promise.all(
             Array.from(document.images).map(async (image) => {
                 if (image.complete && image.naturalWidth > 0) {
@@ -54,7 +72,10 @@ async function captureEntry(entry) {
                 }
 
                 try {
-                    await image.decode()
+                    await Promise.race([
+                        image.decode(),
+                        new Promise((resolve) => setTimeout(resolve, 3000)),
+                    ])
                 } catch {
                     // The result metadata records failed image decodes.
                 }

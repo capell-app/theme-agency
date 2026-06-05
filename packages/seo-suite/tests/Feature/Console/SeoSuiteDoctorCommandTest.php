@@ -8,6 +8,7 @@ use Capell\Core\Models\Site;
 use Capell\SeoSuite\Actions\BuildSeoSuiteDoctorReportAction;
 use Capell\SeoSuite\Data\SeoSuiteDoctorCheckData;
 use Capell\SeoSuite\Models\AiDiscoveryPageProfile;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
@@ -18,8 +19,10 @@ it('reports route collisions for generated seo suite outputs', function (): void
 
     $routeCheck = $checks->first(fn (SeoSuiteDoctorCheckData $check): bool => str_contains($check->message, '/llms.txt'));
 
-    expect($routeCheck)->not->toBeNull()
-        ->and($routeCheck->status)->toBe('warn')
+    expect($routeCheck)->not->toBeNull();
+    throw_unless($routeCheck instanceof SeoSuiteDoctorCheckData, RuntimeException::class, 'Expected route collision check.');
+
+    expect($routeCheck->status)->toBe('warn')
         ->and($routeCheck->message)->toBe('Route collision detected for /llms.txt')
         ->and($routeCheck->detail)->toContain('Closure');
 });
@@ -36,18 +39,22 @@ it('checks generated endpoint status and content types', function (): void {
 
     $checks = BuildSeoSuiteDoctorReportAction::run(baseUrl: 'https://example.test');
 
-    expect($checks->firstWhere('message', 'Crawler endpoint /robots.txt returned HTTP 200')->status)->toBe('ok')
-        ->and($checks->firstWhere('message', 'Crawler endpoint /robots.txt cache header')->status)->toBe('ok')
-        ->and($checks->firstWhere('message', 'Generated output /llms.txt public leak scan')->status)->toBe('ok')
-        ->and($checks->firstWhere('message', 'Sitemap endpoint /sitemap-xml XML validity')->status)->toBe('ok')
-        ->and($checks->firstWhere('message', 'Crawler endpoint /sitemap.xml returned HTTP 404')->status)->toBe('warn')
-        ->and($checks->firstWhere('message', 'Crawler endpoint /sitemap.xml returned HTTP 404')->detail)->toContain('possible nginx/Apache static handler interception');
+    expect(seoSuiteDoctorCheck($checks, 'Crawler endpoint /robots.txt returned HTTP 200')->status)->toBe('ok')
+        ->and(seoSuiteDoctorCheck($checks, 'Crawler endpoint /robots.txt cache header')->status)->toBe('ok')
+        ->and(seoSuiteDoctorCheck($checks, 'Generated output /llms.txt public leak scan')->status)->toBe('ok')
+        ->and(seoSuiteDoctorCheck($checks, 'Sitemap endpoint /sitemap-xml XML validity')->status)->toBe('ok')
+        ->and(seoSuiteDoctorCheck($checks, 'Crawler endpoint /sitemap.xml returned HTTP 404')->status)->toBe('warn')
+        ->and(seoSuiteDoctorCheck($checks, 'Crawler endpoint /sitemap.xml returned HTTP 404')->detail)->toContain('possible nginx/Apache static handler interception');
 });
 
 it('flags redirects invalid sitemap xml unsafe sitemap urls and generated output leaks', function (): void {
     Http::fake([
         'https://bad.test/robots.txt' => Http::response('', 302, ['Location' => 'https://bad.test/robots']),
-        'https://bad.test/llms.txt' => Http::response("[Admin](/admin)\n", 200, ['Content-Type' => 'text/markdown; charset=utf-8']),
+        'https://bad.test/llms.txt' => Http::response(
+            "[Admin](/admin)\n<script>window.CapellFrontendAuthoring = {}</script>\n<div wire:snapshot=\"{}\"></div>\n",
+            200,
+            ['Content-Type' => 'text/markdown; charset=utf-8'],
+        ),
         'https://bad.test/llms-full.txt' => Http::response("# Example\n", 200, ['Content-Type' => 'text/markdown; charset=utf-8', 'Cache-Control' => 'public, max-age=300']),
         'https://bad.test/index.md' => Http::response("# Home\n", 200, ['Content-Type' => 'text/markdown; charset=utf-8', 'Cache-Control' => 'public, max-age=300']),
         'https://bad.test/sitemap-xml' => Http::response('<not-xml', 200, ['Content-Type' => 'application/xml', 'Cache-Control' => 'public, max-age=300']),
@@ -57,10 +64,12 @@ it('flags redirects invalid sitemap xml unsafe sitemap urls and generated output
     $checks = BuildSeoSuiteDoctorReportAction::run(baseUrl: 'https://bad.test');
     $unsafeSitemapCheck = $checks->firstWhere('message', 'Sitemap endpoint /sitemap.xml unsafe URL scan');
 
-    expect($checks->firstWhere('message', 'Crawler endpoint /robots.txt returned HTTP 302')->detail)->toContain('redirect to https://bad.test/robots')
-        ->and($checks->firstWhere('message', 'Crawler endpoint /llms.txt cache header')->status)->toBe('warn')
-        ->and($checks->firstWhere('message', 'Generated output /llms.txt public leak scan')->detail)->toContain('/admin')
-        ->and($checks->firstWhere('message', 'Sitemap endpoint /sitemap-xml XML validity')->status)->toBe('warn')
+    expect(seoSuiteDoctorCheck($checks, 'Crawler endpoint /robots.txt returned HTTP 302')->detail)->toContain('redirect to https://bad.test/robots')
+        ->and(seoSuiteDoctorCheck($checks, 'Crawler endpoint /llms.txt cache header')->status)->toBe('warn')
+        ->and(seoSuiteDoctorCheck($checks, 'Generated output /llms.txt public leak scan')->detail)->toContain('/admin')
+        ->and(seoSuiteDoctorCheck($checks, 'Generated output /llms.txt public leak scan')->detail)->toContain('editor metadata')
+        ->and(seoSuiteDoctorCheck($checks, 'Generated output /llms.txt public leak scan')->detail)->toContain('Livewire internals')
+        ->and(seoSuiteDoctorCheck($checks, 'Sitemap endpoint /sitemap-xml XML validity')->status)->toBe('warn')
         ->and($unsafeSitemapCheck?->status)->toBe('warn')
         ->and($unsafeSitemapCheck?->detail)->toContain('signature=[redacted]')
         ->and($unsafeSitemapCheck?->detail)->not->toContain('signature=abc');
@@ -83,9 +92,21 @@ it('reports excluded ai discovery pages without reasons', function (): void {
 
     $checks = BuildSeoSuiteDoctorReportAction::run(includeHttp: false);
 
-    expect($checks->firstWhere('message', 'Excluded pages missing reasons')->status)->toBe('warn')
-        ->and($checks->firstWhere('message', 'Excluded pages missing reasons')->detail)->toBe('1');
+    expect(seoSuiteDoctorCheck($checks, 'Excluded pages missing reasons')->status)->toBe('warn')
+        ->and(seoSuiteDoctorCheck($checks, 'Excluded pages missing reasons')->detail)->toBe('1');
 });
+
+/**
+ * @param  Collection<int, SeoSuiteDoctorCheckData>  $checks
+ */
+function seoSuiteDoctorCheck(Collection $checks, string $message): SeoSuiteDoctorCheckData
+{
+    $check = $checks->firstWhere('message', $message);
+
+    throw_unless($check instanceof SeoSuiteDoctorCheckData, RuntimeException::class, sprintf('Expected SEO Suite doctor check [%s].', $message));
+
+    return $check;
+}
 
 it('registers the seo suite doctor artisan command', function (): void {
     $this->artisan('capell:seo-suite-doctor', ['--skip-http' => true])

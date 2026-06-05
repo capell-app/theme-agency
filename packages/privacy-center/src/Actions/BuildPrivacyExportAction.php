@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static PrivacyExportData run(Model $subject)
+ */
 final class BuildPrivacyExportAction
 {
     use AsAction;

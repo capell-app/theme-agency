@@ -7,6 +7,10 @@
     $businessName = $site->getMeta('business_name');
     $email = $site->getMeta('email');
     $phone = $site->getMeta('phone');
+    $siteRelations = method_exists($site, 'getRelations') ? $site->getRelations() : [];
+    $siteTranslation = $siteRelations['translation'] ?? null;
+    $siteTitle = data_get($siteTranslation, 'title', $site->name);
+    $tagline = data_get($siteTranslation, 'meta.tagline');
 @endphp
 
 <div
@@ -32,12 +36,12 @@
             @endif
         @else
             <span class="footer-logo-text text-2xl leading-tight font-semibold">
-                {{ $site->translation->title }}
+                {{ $siteTitle }}
             </span>
         @endif
     </a>
 
-    @if ($tagline = $site->translation->getMeta('tagline'))
+    @if ($tagline)
         <p
             class="footer-tagline max-w-prose text-sm leading-6 text-[var(--color-footer-muted)]"
         >

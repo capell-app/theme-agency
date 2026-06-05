@@ -53,9 +53,11 @@
     "actions": {
         "buildDuplicateMediaQuery": "Capell\\MediaLibrary\\Actions\\DashboardReports\\BuildDuplicateMediaQueryAction",
         "buildMediaHealthQuery": "Capell\\MediaLibrary\\Actions\\DashboardReports\\BuildMediaHealthQueryAction",
+        "buildMissingAltMediaQuery": "Capell\\MediaLibrary\\Actions\\DashboardReports\\BuildMissingAltMediaQueryAction",
         "buildMissingRightsMetadataQuery": "Capell\\MediaLibrary\\Actions\\DashboardReports\\BuildMissingRightsMetadataQueryAction",
         "buildOrphanMediaQuery": "Capell\\MediaLibrary\\Actions\\DashboardReports\\BuildOrphanMediaQueryAction",
         "deleteOrphanMediaRecords": "Capell\\MediaLibrary\\Actions\\DashboardReports\\DeleteOrphanMediaRecordsAction",
+        "dispatchMissingAltMediaSignals": "Capell\\MediaLibrary\\Actions\\DispatchMissingAltMediaSignalsAction",
         "migrateSpatieMediaToCurator": "Capell\\MediaLibrary\\Actions\\MigrateSpatieMediaToCuratorAction"
     },
     "settings": [],
@@ -64,6 +66,7 @@
         "media-library",
         "media-library-curator-backend",
         "media-library-focal-points",
+        "media-library-missing-alt-signal",
         "media-library-responsive-variants",
         "media-library-rights-metadata",
         "media-library-duplicate-detection",
@@ -125,9 +128,19 @@
                 "caption": "Media health dashboard"
             },
             {
+                "path": "docs/screenshots/media-health-page-dark.png",
+                "alt": "Media health dashboard page in dark mode",
+                "caption": "Media health dashboard (dark mode)"
+            },
+            {
                 "path": "docs/screenshots/media-health-table.png",
                 "alt": "Media health table listing assets with issues",
                 "caption": "Media health report table"
+            },
+            {
+                "path": "docs/screenshots/media-health-table-dark.png",
+                "alt": "Media health table listing assets with issues in dark mode",
+                "caption": "Media health report table (dark mode)"
             },
             {
                 "path": "docs/screenshots/curator-media-field-inside-a-form.png",
@@ -135,9 +148,19 @@
                 "caption": "Curator media field in a form"
             },
             {
+                "path": "docs/screenshots/curator-media-field-inside-a-form-dark.png",
+                "alt": "Curator media field inside an admin form in dark mode",
+                "caption": "Curator media field in a form (dark mode)"
+            },
+            {
                 "path": "docs/screenshots/migration-command-output-or-report.png",
                 "alt": "Spatie to Curator migration command output",
                 "caption": "Spatie-to-Curator migration output"
+            },
+            {
+                "path": "docs/screenshots/migration-command-output-or-report-dark.png",
+                "alt": "Spatie to Curator migration command output in dark mode",
+                "caption": "Spatie-to-Curator migration output (dark mode)"
             }
         ],
         "categories": ["admin", "foundation"]

@@ -10,6 +10,9 @@ use Capell\KnowledgeBase\Models\KnowledgeBaseRelatedArticle;
 use Illuminate\Validation\ValidationException;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static KnowledgeBaseRelatedArticle run(KnowledgeBaseArticle $article, KnowledgeBaseArticle $relatedArticle, KnowledgeBaseRelatedArticleType $relationType = KnowledgeBaseRelatedArticleType::Related, int $sortOrder = 0)
+ */
 final class RelateKnowledgeBaseArticlesAction
 {
     use AsObject;

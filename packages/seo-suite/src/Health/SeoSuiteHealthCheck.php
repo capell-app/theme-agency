@@ -22,6 +22,14 @@ use Throwable;
 
 final class SeoSuiteHealthCheck implements ChecksExtensionHealth
 {
+    private const string PAGE_REPORT_KEY = 'seo-suite.page-report';
+
+    private const string SCHEMA_GRAPH_KEY = 'seo-suite.schema-graph';
+
+    private const string BROKEN_LINKS_KEY = 'seo-suite.broken-links';
+
+    private const string AI_DISCOVERY_KEY = 'seo-suite.ai-discovery';
+
     /**
      * @var list<string>
      */
@@ -92,17 +100,15 @@ final class SeoSuiteHealthCheck implements ChecksExtensionHealth
     /**
      * @return Collection<int, DoctorCheckResultData>
      */
-    public static function runDiagnostics(): Collection
+    public static function runDiagnostics(?string $key = null): Collection
     {
         $check = new self;
 
-        return collect([
-            $check->storageTablesCheck(),
-            $check->aiDiscoveryRoutesCheck(),
-            $check->seoServiceBindingsCheck(),
-            $check->schemaTemplateRegistryCheck(),
-            $check->aiCrawlerPolicyCheck(),
-        ]);
+        if (is_string($key) && trim($key) !== '') {
+            return collect($check->diagnosticsForKey($key));
+        }
+
+        return collect($check->allDiagnostics());
     }
 
     public static function passed(): bool
@@ -300,5 +306,47 @@ final class SeoSuiteHealthCheck implements ChecksExtensionHealth
             ->reject(static fn (string $userAgent): bool => in_array($userAgent, $configuredAgents, true))
             ->values()
             ->all());
+    }
+
+    /**
+     * @return list<DoctorCheckResultData>
+     */
+    private function allDiagnostics(): array
+    {
+        return [
+            $this->storageTablesCheck(),
+            $this->aiDiscoveryRoutesCheck(),
+            $this->seoServiceBindingsCheck(),
+            $this->schemaTemplateRegistryCheck(),
+            $this->aiCrawlerPolicyCheck(),
+        ];
+    }
+
+    /**
+     * @return list<DoctorCheckResultData>
+     */
+    private function diagnosticsForKey(string $key): array
+    {
+        return match ($key) {
+            self::PAGE_REPORT_KEY => [
+                $this->storageTablesCheck(),
+                $this->seoServiceBindingsCheck(),
+            ],
+            self::SCHEMA_GRAPH_KEY => [
+                $this->seoServiceBindingsCheck(),
+                $this->schemaTemplateRegistryCheck(),
+            ],
+            self::BROKEN_LINKS_KEY => [
+                $this->storageTablesCheck(),
+                $this->seoServiceBindingsCheck(),
+            ],
+            self::AI_DISCOVERY_KEY => [
+                $this->storageTablesCheck(),
+                $this->aiDiscoveryRoutesCheck(),
+                $this->seoServiceBindingsCheck(),
+                $this->aiCrawlerPolicyCheck(),
+            ],
+            default => [],
+        };
     }
 }

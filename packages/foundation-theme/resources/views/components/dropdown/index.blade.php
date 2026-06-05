@@ -23,6 +23,8 @@
     'useFloat' => true,
 ])
 @php
+    use Illuminate\View\ComponentAttributeBag;
+
     $dropdownName = $name !== '' ? $name : 'dropdown';
 
     $floatDropdownData = "{\n        toggle: function (event) {\n            \$refs['{$dropdownName}_dropdown'].toggle(event)\n        },\n\n        open: function (event) {\n            \$refs['{$dropdownName}_dropdown'].open(event)\n        },\n\n        close: function (event) {\n            \$refs['{$dropdownName}_dropdown'].close(event)\n        },\n    }";
@@ -33,7 +35,7 @@
 
     $containerAttributes = $attributes->except('class')->merge(['class' => $containerClass]);
 
-    $panelAttributes = $attributes->class([
+    $panelAttributes = (new ComponentAttributeBag)->class([
         $dropdownClass,
         $rounded,
         $shadow,

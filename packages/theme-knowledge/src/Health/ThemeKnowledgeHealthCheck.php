@@ -23,6 +23,7 @@ final class ThemeKnowledgeHealthCheck implements ChecksExtensionHealth
         'capell-theme-knowledge::sections.hero',
         'capell-theme-knowledge::sections.features',
         'capell-theme-knowledge::sections.proof',
+        'capell-theme-knowledge::sections.doc-article',
         'capell-theme-knowledge::sections.content-listing',
         'capell-theme-knowledge::sections.topic-hubs',
         'capell-theme-knowledge::sections.topic-index',

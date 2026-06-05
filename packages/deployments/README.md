@@ -1,6 +1,6 @@
 # Deployments
 
-Install and update Capell extensions from the admin panel by publishing Composer requirement changes through Git provider pull requests.
+Connect GitHub, GitLab, or Bitbucket repositories from the Capell admin, then install or update extensions by publishing Composer requirement changes through Git provider pull requests.
 
 ## At A Glance
 
@@ -13,7 +13,7 @@ Install and update Capell extensions from the admin panel by publishing Composer
 
 ## Why It Helps Your Capell Workflow
 
-- Helps operators connect GitHub, GitLab, or Bitbucket repositories and publish Composer requirement changes from Capell-managed workflows.
+- Helps operators connect GitHub, GitLab, or Bitbucket repositories through OAuth and publish Composer requirement changes from Capell-managed workflows.
 - Keeps deployment connection state and provider-specific behavior inside one package instead of scattering Git provider code.
 - Gives developers Actions for validating OAuth state, preparing requirement commits, and publishing requirement changes.
 
@@ -55,7 +55,7 @@ This package makes its Composer dependencies visible because they are part of th
 
 ## Screens And Workflow
 
-Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) during package deployment.
+Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) during package deployment. The committed captures show the Deployment Repository OAuth entry point; active-connection and OAuth-to-pull-request flow media still need real captures before Marketplace approval.
 
 ## Code Map
 

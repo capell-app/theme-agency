@@ -1,6 +1,6 @@
 @php
-    use Capell\Core\Actions\ColorConverterAction;
     use Capell\Core\Contracts\Pageable;
+    use Capell\FoundationTheme\Actions\ResolveSafeCssColorTokenAction;
     use Capell\Frontend\Data\MainContentRenderHookData;
     use Capell\Frontend\Enums\RenderHookLocation;
     use Capell\Frontend\Support\Render\RenderHookRegistry;
@@ -24,15 +24,17 @@
         scenario: 'frontend-main-layout',
         target: 'capell::layout.main',
     );
+
+    $resolveMainBackgroundColor = static fn (string $key, string $fallback): string => ResolveSafeCssColorTokenAction::run($themeModel->getMeta($key, $fallback), $fallback);
 @endphp
 
 <style>
     :root {
-        --bg-color-main: {{ ColorConverterAction::run($themeModel->getMeta('main_background_color', '#f8fafc')) }};
+        --bg-color-main: {{ $resolveMainBackgroundColor('main_background_color', '#f8fafc') }};
     }
 
     .dark:root {
-        --bg-color-main: {{ ColorConverterAction::run($themeModel->getMeta('main_dark_background_color', '#111827')) }};
+        --bg-color-main: {{ $resolveMainBackgroundColor('main_dark_background_color', '#111827') }};
     }
 </style>
 

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Database\Factories\UserFactory;
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
@@ -31,6 +32,7 @@ use Capell\SeoSuite\Models\AiDiscoveryCrawlerRule;
 use Capell\SeoSuite\Models\AiDiscoveryPageProfile;
 use Capell\SeoSuite\Models\AiDiscoverySiteProfile;
 use Capell\SeoSuite\Models\AiDiscoverySnapshot;
+use Capell\SeoSuite\Support\PublicOutputLeakScanner;
 use Composer\Autoload\ClassLoader;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -69,6 +71,21 @@ function createAiDiscoveryLanguage(): Language
         'default' => true,
         'order' => 1,
     ]);
+}
+
+/**
+ * @param  list<Response>  $responses
+ */
+function expectAiDiscoveryResponsesToBePublicSafe(array $responses): void
+{
+    $leakScanner = new PublicOutputLeakScanner;
+
+    foreach ($responses as $response) {
+        $content = (string) $response->getContent();
+
+        expect($response->getStatusCode())->toBe(200)
+            ->and($leakScanner->labels($content))->toBe([]);
+    }
 }
 
 it('groups llms txt entries by section and orders by priority', function (): void {
@@ -326,36 +343,44 @@ it('serves anonymous ai discovery outputs without admin or editor leak markers',
         resolve(PageMarkdownController::class)(Request::create('/index.md'), 'index'),
         resolve(RobotsTxtController::class)(),
     ];
-    $forbiddenMarkers = [
-        '/admin',
-        '/filament',
-        'signature=',
-        'expires=',
-        'wire:',
-        'livewire',
-        'field_path',
-        'field-path',
-        'fieldPath',
-        'model_id',
-        'model-id',
-        'modelId',
-        'page_id',
-        'page-id',
-        'pageId',
-        'editor-only',
-        'capell-editor',
-        'data-editor',
+
+    expectAiDiscoveryResponsesToBePublicSafe($responses);
+});
+
+it('serves non-admin ai discovery outputs without admin or editor leak markers', function (): void {
+    test()->actingAs(UserFactory::new()->create());
+
+    $language = createAiDiscoveryLanguage();
+    $site = Site::factory()->language($language)->withTranslations($language)->create();
+    $siteDomain = $site->siteDomains()->first();
+    $page = Page::factory()
+        ->home()
+        ->site($site)
+        ->withTranslations($language, [
+            'title' => 'Signed In Public Home',
+            'content' => '<p>Non-admin public markdown body for search and AI discovery.</p>',
+            'meta' => [
+                'title' => 'Signed In Public Home Search Title',
+                'description' => 'Signed In Public Home search description for generated output.',
+            ],
+        ], slug: '/')
+        ->create();
+
+    ResolveAiDiscoveryProfileAction::run($site, $language, $page);
+
+    resolve(FrontendState::class)
+        ->withSite($site)
+        ->withLanguage($language)
+        ->withDomain($siteDomain)
+        ->withPage($page);
+
+    $responses = [
+        resolve(LlmsTxtController::class)(),
+        resolve(PageMarkdownController::class)(Request::create('/index.md'), 'index'),
+        resolve(RobotsTxtController::class)(),
     ];
 
-    foreach ($responses as $response) {
-        $content = (string) $response->getContent();
-
-        expect($response->getStatusCode())->toBe(200);
-
-        foreach ($forbiddenMarkers as $forbiddenMarker) {
-            expect(mb_strtolower($content))->not->toContain(mb_strtolower($forbiddenMarker));
-        }
-    }
+    expectAiDiscoveryResponsesToBePublicSafe($responses);
 });
 
 it('does not serve direct page markdown for noindex pages', function (): void {

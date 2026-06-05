@@ -76,8 +76,10 @@ it('creates queued sends and rejects records scoped only to another site', funct
         queue: true,
     ));
 
-    expect($message)->toBeInstanceOf(EmailMessage::class)
-        ->and($message->status)->toBe(EmailMessageStatus::Queued)
+    expect($message)->toBeInstanceOf(EmailMessage::class);
+    throw_unless($message instanceof EmailMessage, RuntimeException::class, 'Expected queued email message.');
+
+    expect($message->status)->toBe(EmailMessageStatus::Queued)
         ->and($message->site_id)->toBe(12)
         ->and($message->site_scope_key)->toBe('site:12')
         ->and($message->subject)->toBe('Hello &lt;Ben&gt;')
@@ -162,4 +164,13 @@ it('creates queued sends and rejects records scoped only to another site', funct
     )))->toThrow(EmailStudioSendingException::class);
 
     expect(EmailMessage::query()->count())->toBe($messageCountBeforeRejectedSend);
+});
+
+it('uses a bounded retry policy for queued delivery jobs', function (): void {
+    $job = new SendEmailJob(123);
+
+    expect($job->tries)->toBe(4)
+        ->and($job->timeout)->toBe(60)
+        ->and($job->backoff())->toBe([60, 300, 900])
+        ->and($job->retryUntil())->toBeInstanceOf(DateTimeInterface::class);
 });

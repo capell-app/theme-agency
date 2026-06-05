@@ -5,32 +5,23 @@
 @if ($media?->enabled && ($media->hasImage() || $media->hasVideo()))
     @php
         $poster = $media->poster();
-        $imageSources = [
-            ['viewport' => 'mobile', 'query' => '(max-width: 639px)'],
-            ['viewport' => 'tablet', 'query' => '(max-width: 1023px)'],
-            ['viewport' => 'desktop', 'query' => '(min-width: 1024px)'],
-        ];
-        $videoSources = [
-            ['viewport' => 'mobile', 'query' => '(max-width: 639px)'],
-            ['viewport' => 'tablet', 'query' => '(max-width: 1023px)'],
-            ['viewport' => 'desktop', 'query' => '(min-width: 1024px)'],
-        ];
+        $posterSrcset = $media->posterSrcset();
     @endphp
 
     <picture class="widget pointer-events-none absolute inset-0">
-        @foreach ($imageSources as $source)
-            @php($image = $media->images[$source['viewport']] ?? null)
-            @if ($image)
-                <source
-                    media="{{ $source['query'] }}"
-                    srcset="{{ $image->getUrl() }}"
-                />
-            @endif
+        @foreach ($media->imageSources() as $source)
+            <source
+                media="{{ $source['media'] }}"
+                srcset="{{ $source['srcset'] }}"
+                sizes="{{ $source['sizes'] }}"
+            />
         @endforeach
 
         @if ($poster)
             <img
                 src="{{ $poster->getUrl() }}"
+                @if ($posterSrcset) srcset="{{ $posterSrcset }}" @endif
+                sizes="{{ $media::FullBleedImageSizes }}"
                 alt=""
                 class="h-full w-full object-cover object-center"
                 loading="eager"
@@ -52,15 +43,12 @@
             preload="{{ $media->preload }}"
             @if ($poster) poster="{{ $poster->getUrl() }}" @endif
         >
-            @foreach ($videoSources as $source)
-                @php($video = $media->videos[$source['viewport']] ?? null)
-                @if ($video)
-                    <source
-                        media="{{ $source['query'] }}"
-                        src="{{ $video->getUrl() }}"
-                        type="{{ $video->mime_type ?: 'video/mp4' }}"
-                    />
-                @endif
+            @foreach ($media->videoSources() as $source)
+                <source
+                    media="{{ $source['media'] }}"
+                    src="{{ $source['src'] }}"
+                    type="{{ $source['type'] }}"
+                />
             @endforeach
         </video>
     @endif

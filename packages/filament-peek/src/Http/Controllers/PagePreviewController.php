@@ -7,6 +7,7 @@ namespace Capell\FilamentPeek\Http\Controllers;
 use Capell\FilamentPeek\Actions\FindPagePreviewSnapshotAction;
 use Capell\FilamentPeek\Actions\RenderPagePreviewSnapshotAction;
 use Filament\Facades\Filament;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -37,6 +38,12 @@ final class PagePreviewController extends Controller
 
         try {
             $response = RenderPagePreviewSnapshotAction::run($snapshot);
+        } catch (AuthorizationException) {
+            return $this->errorResponse(
+                403,
+                __('capell-filament-peek::errors.forbidden_title'),
+                __('capell-filament-peek::errors.forbidden_body'),
+            );
         } catch (Throwable $throwable) {
             report($throwable);
 

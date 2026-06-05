@@ -3,11 +3,11 @@
     "composerName": "capell-app/media-ai",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "outputDirectory": "packages/media-ai/docs/screenshots",
+    "outputDirectory": "packages/media-ai/docs/images/screenshots",
     "entries": [
         {
             "id": "media-ai-doctor-image",
-            "title": "Doctor image action on the Media edit page.",
+            "title": "Doctor image action on the Media edit page in light mode.",
             "package": "media-ai",
             "surface": "admin",
             "targetType": "admin-surface",
@@ -16,11 +16,30 @@
             "url": "/media",
             "waitFor": "table",
             "docsPage": "packages/media-ai/docs/overview.md",
-            "output": "packages/media-ai/docs/screenshots/media-ai-doctor-image.png",
-            "required": false,
-            "notes": "Optional until the runner supports opening resource actions; captures the media surface where the action appears.",
+            "output": "packages/media-ai/docs/images/screenshots/media-ai-doctor-image.png",
+            "required": true,
+            "capturedFile": "docs/images/screenshots/media-ai-doctor-image.png",
+            "notes": "Existing committed capture showing the media surface where the Doctor image action appears.",
             "useCase": "An administrator opens an image media record and uses the Doctor image action when an image doctor provider is bound.",
-            "screenshotPath": "packages/media-ai/docs/screenshots/media-ai-doctor-image.png"
+            "screenshotPath": "packages/media-ai/docs/images/screenshots/media-ai-doctor-image.png"
+        },
+        {
+            "id": "media-ai-doctor-image-dark",
+            "title": "Doctor image action on the Media edit page in dark mode.",
+            "package": "media-ai",
+            "surface": "admin",
+            "targetType": "admin-surface",
+            "target": "MediaAIEditActionExtender",
+            "scenario": "admin-index-dark",
+            "url": "/media",
+            "waitFor": "table",
+            "docsPage": "packages/media-ai/docs/overview.md",
+            "output": "packages/media-ai/docs/images/screenshots/media-ai-doctor-image-dark.png",
+            "required": true,
+            "capturedFile": "docs/images/screenshots/media-ai-doctor-image-dark.png",
+            "notes": "Existing committed dark-mode capture for the Media AI action surface.",
+            "useCase": "An administrator verifies the Doctor image action remains visible and readable in dark mode when a provider is bound.",
+            "screenshotPath": "packages/media-ai/docs/images/screenshots/media-ai-doctor-image-dark.png"
         }
     ]
 }

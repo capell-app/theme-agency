@@ -75,6 +75,122 @@ it('creates appointment requests inside an active availability window', function
         ->and($appointmentRequest->auditLogs()->where('event', AppointmentAuditEventEnum::Created->value)->exists())->toBeTrue();
 });
 
+it('creates appointment requests when the customer timezone differs from the availability timezone', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-05-29 08:00:00', 'Europe/London'));
+
+    $service = BookingService::factory()->create([
+        'duration_minutes' => 45,
+        'lead_time_minutes' => 0,
+        'buffer_after_minutes' => 0,
+    ]);
+    $startsAt = CarbonImmutable::parse('2026-06-01 04:00:00', 'America/New_York');
+    $availabilityStartsAt = $startsAt->setTimezone('Europe/London');
+
+    BookingAvailabilityWindow::factory()->create([
+        'service_id' => $service->getKey(),
+        'staff_member_id' => null,
+        'location_id' => null,
+        'day_of_week' => $availabilityStartsAt->dayOfWeek,
+        'starts_at' => '09:00:00',
+        'ends_at' => '10:00:00',
+        'timezone' => 'Europe/London',
+        'capacity' => 1,
+    ]);
+
+    $appointmentRequest = CreateAppointmentRequestAction::run(new AppointmentRequestData(
+        serviceId: (int) $service->getKey(),
+        requestedStartsAt: $startsAt,
+        timezone: 'America/New_York',
+        customerName: 'Jordan Lee',
+        customerEmail: 'jordan@example.com',
+    ));
+
+    expect($appointmentRequest)->toBeInstanceOf(AppointmentRequest::class)
+        ->and($appointmentRequest->timezone)->toBe('America/New_York')
+        ->and((int) $appointmentRequest->requested_starts_at->diffInMinutes($appointmentRequest->requested_ends_at))->toBe(45);
+});
+
+it('rejects cross-timezone appointment requests blocked by local availability exceptions', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-05-29 08:00:00', 'Europe/London'));
+
+    $service = BookingService::factory()->create([
+        'duration_minutes' => 45,
+        'lead_time_minutes' => 0,
+    ]);
+    $startsAt = CarbonImmutable::parse('2026-06-01 04:00:00', 'America/New_York');
+    $availabilityStartsAt = $startsAt->setTimezone('Europe/London');
+
+    BookingAvailabilityWindow::factory()->create([
+        'service_id' => $service->getKey(),
+        'staff_member_id' => null,
+        'location_id' => null,
+        'day_of_week' => $availabilityStartsAt->dayOfWeek,
+        'starts_at' => '09:00:00',
+        'ends_at' => '17:00:00',
+        'timezone' => 'Europe/London',
+        'capacity' => 1,
+    ]);
+
+    CreateAvailabilityExceptionAction::run(new AvailabilityExceptionData(
+        date: $availabilityStartsAt,
+        status: BookingAvailabilityStatusEnum::Blocked,
+        startsAt: '09:00:00',
+        endsAt: '10:00:00',
+        timezone: 'Europe/London',
+        serviceId: (int) $service->getKey(),
+        reason: 'Morning unavailable',
+    ));
+
+    CreateAppointmentRequestAction::run(new AppointmentRequestData(
+        serviceId: (int) $service->getKey(),
+        requestedStartsAt: $startsAt,
+        timezone: 'America/New_York',
+        customerName: 'Jordan Lee',
+        customerEmail: 'jordan@example.com',
+    ));
+})->throws(ValidationException::class);
+
+it('rejects appointment requests when cross-timezone existing appointments consume capacity', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-05-29 08:00:00', 'Europe/London'));
+
+    $service = BookingService::factory()->create([
+        'duration_minutes' => 45,
+        'lead_time_minutes' => 0,
+        'buffer_after_minutes' => 0,
+    ]);
+    $startsAt = CarbonImmutable::parse('2026-06-01 09:00:00', 'Europe/London');
+    $existingStartsAt = $startsAt->setTimezone('America/New_York');
+
+    BookingAvailabilityWindow::factory()->create([
+        'service_id' => $service->getKey(),
+        'staff_member_id' => null,
+        'location_id' => null,
+        'day_of_week' => $startsAt->dayOfWeek,
+        'starts_at' => '09:00:00',
+        'ends_at' => '10:00:00',
+        'timezone' => 'Europe/London',
+        'capacity' => 1,
+    ]);
+
+    AppointmentRequest::factory()->create([
+        'service_id' => $service->getKey(),
+        'staff_member_id' => null,
+        'location_id' => null,
+        'status' => AppointmentRequestStatusEnum::Confirmed,
+        'requested_starts_at' => $existingStartsAt,
+        'requested_ends_at' => $existingStartsAt->addMinutes(45),
+        'timezone' => 'America/New_York',
+    ]);
+
+    CreateAppointmentRequestAction::run(new AppointmentRequestData(
+        serviceId: (int) $service->getKey(),
+        requestedStartsAt: $startsAt,
+        timezone: 'Europe/London',
+        customerName: 'Jordan Lee',
+        customerEmail: 'jordan@example.com',
+    ));
+})->throws(ValidationException::class);
+
 it('rejects appointment requests outside availability', function (): void {
     $service = BookingService::factory()->create(['duration_minutes' => 45]);
     $startsAt = CarbonImmutable::parse('2026-06-01 18:00:00', 'Europe/London');

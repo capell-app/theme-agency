@@ -13,7 +13,7 @@ Shopify Admin API connection and catalog sync foundation for Capell CMS.
 
 ## Boundaries
 
-This package owns Shopify app configuration, admin OAuth, site-scoped Shopify connections, local catalog cache tables, catalog search, and the first-party admin page for connecting or syncing a store.
+This package owns Shopify app configuration, admin OAuth, site-scoped Shopify connections, local catalog and customer cache tables, catalog search, and the first-party admin page for connecting or syncing a store.
 
 It does not own storefront rendering, checkout, cart state, order import, webhook ingestion, product merchandising UI, or public frontend output. It may cache Shopify customer records for CRM integrations. Frontend packages should consume synced catalog/customer records through explicit Actions or package-owned view models, not by leaking Shopify admin tokens or connection metadata into public HTML.
 
@@ -21,7 +21,7 @@ It does not own storefront rendering, checkout, cart state, order import, webhoo
 
 - Adds site-scoped Shopify OAuth and product catalog sync so Capell can reference commerce data without storing Shopify credentials in content code.
 - Helps owners connect store catalog data to Capell workflows while keeping checkout and storefront ownership outside this package.
-- Gives developers Actions for OAuth, GraphQL, bulk sync, import, and local product search with focused test coverage.
+- Gives developers Actions for OAuth, GraphQL, bulk sync, customer sync, import, and local product search with focused test coverage.
 
 ## Best Used With
 
@@ -33,10 +33,10 @@ It does not own storefront rendering, checkout, cart state, order import, webhoo
 
 - Admin page: `Capell\ShopifyCommerce\Filament\Pages\ShopifyConnectionPage`.
 - OAuth routes: `capell-shopify-commerce.oauth.install` and `capell-shopify-commerce.oauth.callback` under `capell/oauth/shopify`.
-- Commands: `capell-shopify-commerce:install` and `capell-shopify-commerce:sync {connection?}`.
+- Commands: `capell-shopify-commerce:install`, `capell-shopify-commerce:sync {connection?}`, and `capell-shopify-commerce:sync-customers {connection?}`.
 - Settings group: `shopify_commerce` through `ShopifyCommerceSettings`.
 - Permission: `manage_shopify_commerce`.
-- Protected tables: `shopify_connections`, `shopify_oauth_states`, `shopify_products`, `shopify_product_variants`.
+- Protected tables: `shopify_connections`, `shopify_oauth_states`, `shopify_products`, `shopify_product_variants`, `shopify_customers`.
 - Diagnostics health check: `Capell\ShopifyCommerce\Health\ShopifyCommerceHealthCheck`.
 
 ## Install And Configure
@@ -71,6 +71,7 @@ The publishable config lives at `config/capell-shopify-commerce.php` in the host
 | GraphQL client   | `ExecuteShopifyAdminGraphqlAction`   | Calls Shopify Admin GraphQL and paces requests from throttle metadata.                                      |
 | Catalog sync     | `SyncShopifyProductsAction`          | Queues or starts a bulk product sync and prevents overlapping work per connection.                          |
 | Catalog import   | `ImportShopifyProductBulkSyncAction` | Imports JSONL bulk output into product and variant tables.                                                  |
+| Customer sync    | `SyncShopifyCustomersAction`         | Pulls paginated Admin GraphQL customer records into the encrypted local customer cache.                     |
 | Search           | `SearchShopifyProductsAction`        | Searches local products first and falls back to live Shopify product search when needed.                    |
 | Settings         | `ShopifyCommerceSettings`            | Stores API version, default scopes, and catalog search cache TTL.                                           |
 
@@ -94,6 +95,7 @@ Use focused tests while changing one surface:
 ```bash
 vendor/bin/pest packages/shopify-commerce/tests/Feature/OAuth --configuration=phpunit.xml
 vendor/bin/pest packages/shopify-commerce/tests/Unit/Actions/SyncShopifyProductsActionTest.php --configuration=phpunit.xml
+vendor/bin/pest packages/shopify-commerce/tests/Unit/Actions/SyncShopifyCustomersActionTest.php --configuration=phpunit.xml
 vendor/bin/pest packages/shopify-commerce/tests/Unit/Actions/SearchShopifyProductsActionTest.php --configuration=phpunit.xml
 ```
 
@@ -105,6 +107,7 @@ vendor/bin/pest packages/shopify-commerce/tests/Unit/Actions/SearchShopifyProduc
 | OAuth install redirects back with a configuration error | `SHOPIFY_APP_CLIENT_ID` or `SHOPIFY_APP_CLIENT_SECRET` is empty        | Inspect host config key `capell-shopify-commerce.client_id` and `capell-shopify-commerce.client_secret` | Set both env vars and clear host config cache.                                                           |
 | Callback fails after returning from Shopify             | HMAC mismatch, expired state, wrong user, or invalid shop domain       | Check Laravel logs for `Shopify OAuth failed` and inspect `shopify_oauth_states.expires_at`             | Restart OAuth from the admin page; verify app secret and callback URL.                                   |
 | Sync command says no connection exists                  | No active row in `shopify_connections`                                 | Query `shopify_connections.status` and `shopify_connections.sync_status`                                | Connect the store again or pass a specific connection id to `capell-shopify-commerce:sync {connection}`. |
+| Customer cache is empty                                 | Customer sync has not been run or the token lacks `read_customers`     | Query `shopify_customers`, connection scopes, and Shopify GraphQL errors                                | Run `capell-shopify-commerce:sync-customers {connection}` after granting the customer-read scope.        |
 | Search results are stale                                | Search cache version has not changed or sync has not imported new rows | Check cache key prefix `capell-shopify-commerce.search.` and product `synced_at` values                 | Run sync, then confirm `InvalidateShopifyProductSearchCacheAction` bumps the connection version.         |
 
 ## Maintenance Notes

@@ -12,15 +12,21 @@ use Capell\KnowledgeBase\Actions\CreateKnowledgeBaseCollectionAction;
 use Capell\KnowledgeBase\Actions\PublishKnowledgeBaseArticleVersionAction;
 use Capell\KnowledgeBase\Actions\RecordKnowledgeBaseArticleFeedbackAction;
 use Capell\KnowledgeBase\Actions\RelateKnowledgeBaseArticlesAction;
+use Capell\KnowledgeBase\Actions\UpdateKnowledgeBaseArticleAction;
+use Capell\KnowledgeBase\Actions\UpdateKnowledgeBaseCollectionAction;
 use Capell\KnowledgeBase\Data\CreateKnowledgeBaseArticleData;
 use Capell\KnowledgeBase\Data\CreateKnowledgeBaseArticleVersionData;
 use Capell\KnowledgeBase\Data\CreateKnowledgeBaseCollectionData;
 use Capell\KnowledgeBase\Data\RecordKnowledgeBaseArticleFeedbackData;
+use Capell\KnowledgeBase\Data\UpdateKnowledgeBaseArticleData;
+use Capell\KnowledgeBase\Data\UpdateKnowledgeBaseCollectionData;
 use Capell\KnowledgeBase\Enums\KnowledgeBaseArticleStatus;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticleFeedback;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticleVersion;
 use Capell\KnowledgeBase\Tests\KnowledgeBaseTestCase;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\ValidationException;
+use PHPUnit\Framework\Assert;
 
 require_once dirname(__DIR__, 2) . '/KnowledgeBaseTestCase.php';
 
@@ -41,10 +47,14 @@ it('creates collections, versioned articles, and public-safe article data', func
         searchWeight: 80,
     ));
 
+    $currentVersion = $article->currentVersion;
+
     expect($article->status)->toBe(KnowledgeBaseArticleStatus::Published)
-        ->and($article->currentVersion)->toBeInstanceOf(KnowledgeBaseArticleVersion::class)
-        ->and($article->currentVersion->author_type)->toBeNull()
-        ->and($article->currentVersion->author_id)->toBeNull();
+        ->and($currentVersion)->toBeInstanceOf(KnowledgeBaseArticleVersion::class);
+    throw_unless($currentVersion instanceof KnowledgeBaseArticleVersion, RuntimeException::class, 'Expected the created article current version.');
+
+    expect($currentVersion->author_type)->toBeNull()
+        ->and($currentVersion->author_id)->toBeNull();
 
     $publicArticle = BuildPublicKnowledgeBaseArticleDataAction::run($article);
     $publicPayload = json_encode($publicArticle?->toArray(), JSON_THROW_ON_ERROR);
@@ -113,6 +123,129 @@ it('publishes new versions and keeps navigation, search, and ai output public on
         ->and($aiOutput->first()->content)->toBe('Updated Public body for visitors and AI.')
         ->and($aiOutput->first()->publicPath)->toBe('/docs/public-docs/public-article')
         ->and($aiOutput->pluck('title')->all())->not->toContain($hiddenArticle->title);
+});
+
+it('updates an article by publishing a new version through the article update action', function (): void {
+    $collection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Public Docs',
+    ));
+    $article = CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $collection,
+        title: 'Public Article',
+        body: '<p>Old body.</p>',
+        summary: 'Old summary.',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+
+    $updated = UpdateKnowledgeBaseArticleAction::run($article, new UpdateKnowledgeBaseArticleData(
+        collection: $collection,
+        title: 'Public Article Revised',
+        body: '<p>New body.</p>',
+        slug: 'public-article-revised',
+        summary: 'New summary.',
+        version: 'v2',
+        status: KnowledgeBaseArticleStatus::Published,
+        searchWeight: 75,
+        isAiReadable: false,
+    ));
+
+    $updated->load('currentVersion');
+
+    expect($updated->status)->toBe(KnowledgeBaseArticleStatus::Published)
+        ->and($updated->title)->toBe('Public Article Revised')
+        ->and($updated->slug)->toBe('public-article-revised')
+        ->and($updated->summary)->toBe('New summary.')
+        ->and($updated->search_weight)->toBe(75)
+        ->and($updated->is_ai_readable)->toBeFalse()
+        ->and($updated->versions()->count())->toBe(2)
+        ->and($updated->currentVersion?->version)->toBe('v2')
+        ->and($updated->currentVersion?->body)->toBe('<p>New body.</p>')
+        ->and($updated->currentVersion?->published_at)->not->toBeNull();
+});
+
+it('rejects duplicate article slugs inside the same collection only', function (): void {
+    $collection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Public Docs',
+    ));
+    $otherCollection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Developer Docs',
+    ));
+
+    CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $collection,
+        title: 'Install Capell',
+        body: '<p>Install the product.</p>',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+
+    CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $otherCollection,
+        title: 'Install Capell',
+        body: '<p>Install the developer tools.</p>',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+
+    try {
+        CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+            collection: $collection,
+            title: 'Install Capell',
+            body: '<p>Install the product again.</p>',
+            status: KnowledgeBaseArticleStatus::Published,
+        ));
+    } catch (ValidationException $validationException) {
+        expect($validationException->errors())->toBe([
+            'slug' => [__('capell-knowledge-base::generic.validation.slug_unique')],
+        ]);
+
+        return;
+    }
+
+    Assert::fail('Expected duplicate article slug validation to fail.');
+});
+
+it('rejects duplicate collection slugs and keys during updates', function (): void {
+    $collection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Public Docs',
+        key: 'public-docs',
+    ));
+    $otherCollection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Developer Docs',
+        key: 'developer-docs',
+    ));
+
+    $slugRejected = false;
+
+    try {
+        UpdateKnowledgeBaseCollectionAction::run($collection, new UpdateKnowledgeBaseCollectionData(
+            title: 'Public Docs',
+            slug: $otherCollection->slug,
+            key: 'public-docs-updated',
+        ));
+    } catch (ValidationException $validationException) {
+        $slugRejected = true;
+
+        expect($validationException->errors())->toBe([
+            'slug' => [__('capell-knowledge-base::generic.validation.collection_slug_unique')],
+        ]);
+    }
+
+    expect($slugRejected)->toBeTrue();
+
+    try {
+        UpdateKnowledgeBaseCollectionAction::run($collection, new UpdateKnowledgeBaseCollectionData(
+            title: 'Public Docs',
+            slug: 'public-docs-updated',
+            key: $otherCollection->key,
+        ));
+    } catch (ValidationException $validationException) {
+        expect($validationException->errors())->toBe([
+            'key' => [__('capell-knowledge-base::generic.validation.collection_key_unique')],
+        ]);
+
+        return;
+    }
+
+    Assert::fail('Expected duplicate collection key validation to fail.');
 });
 
 it('records redacted feedback and related article links', function (): void {

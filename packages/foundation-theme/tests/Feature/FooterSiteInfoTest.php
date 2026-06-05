@@ -28,7 +28,10 @@ it('renders site contact details from meta', function (): void {
         ],
     ]);
     $site->setRelation('siteDomain', $siteDomain);
-    $site->setRelation('translation', new Translation(['title' => 'Capell Ruby']));
+    $site->setRelation('translation', new Translation([
+        'title' => 'Capell Ruby',
+        'meta' => ['tagline' => 'Boringly reliable CMS foundations'],
+    ]));
 
     $contactPage = new Page(['name' => 'Contact']);
     $contactPageUrl = new PageUrl(['url' => '/contact']);
@@ -56,8 +59,42 @@ it('renders site contact details from meta', function (): void {
     }
 
     expect($html)
+        ->toContain('Capell Ruby')
+        ->toContain('Boringly reliable CMS foundations')
         ->toContain('Capell Ltd')
         ->toContain('mailto:hello@example.test')
         ->toContain('tel:+442079460958')
         ->toContain('Talk to us');
+});
+
+it('falls back to the site name when the translation relation is not hydrated', function (): void {
+    Blade::anonymousComponentPath(__DIR__ . '/../../resources/views/components', 'capell');
+
+    $siteDomain = new SiteDomain([
+        'domain' => 'example.test',
+        'path' => null,
+        'scheme' => 'https',
+    ]);
+
+    $site = new Site(['name' => 'Fallback Site']);
+    $site->setRelation('siteDomain', $siteDomain);
+
+    $view = view('capell::components.footer.site-info', [
+        'site' => $site,
+        'contactPage' => null,
+    ]);
+    $wasBlazeEnabled = Blaze::isEnabled();
+    Blaze::disable();
+
+    try {
+        $html = $view->render();
+    } finally {
+        if ($wasBlazeEnabled) {
+            Blaze::enable();
+        }
+    }
+
+    expect($html)
+        ->toContain('Fallback Site')
+        ->not->toContain('footer-tagline');
 });

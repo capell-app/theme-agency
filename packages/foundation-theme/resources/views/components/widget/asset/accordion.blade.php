@@ -42,6 +42,7 @@
                 :muted="in_array($containerKey, $theme->secondary_containers)"
                 :title="$widget->translation->title"
                 :text-align="$widget->getMeta('align')"
+                :heading-size="$widget->getMeta('heading_size')"
                 :heading-style="$widget->getMeta('heading_style')"
             />
         @endif
@@ -63,6 +64,7 @@
 
                     $assetRenderData = BuildWidgetAssetRenderDataAction::run($widgetAsset);
                     $image = $assetRenderData->image;
+                    $media = $image?->media;
                     $linkedPageUrl = $assetRenderData->linkUrl;
                     $actions = $assetRenderData->actions;
                 @endphp
@@ -108,7 +110,7 @@
                                         />
                                     @endif
 
-                                    @if ($image)
+                                    @if ($media)
                                         @if ($linkedPageUrl)
                                             <a
                                                 href="{{ $linkedPageUrl }}"
@@ -116,7 +118,7 @@
                                                 class="shrink-0"
                                             >
                                                 <x-capell::media
-                                                    :media="$image"
+                                                    :media="$media"
                                                     :width="120"
                                                     :height="120"
                                                     :alt="$assetRenderData->title"
@@ -127,7 +129,7 @@
                                             </a>
                                         @else
                                             <x-capell::media
-                                                :media="$image"
+                                                :media="$media"
                                                 :width="120"
                                                 :height="120"
                                                 :alt="$assetRenderData->title"

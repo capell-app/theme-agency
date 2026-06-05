@@ -34,7 +34,7 @@ Install core baseline packages, hard dependencies, and `capell-app/hero`. Run `c
 
 ## Screenshot Coverage
 
-The screenshot contract should prove the public widget output and, when seeded, any slide/related content states. There is no standalone admin screen to capture.
+The screenshot contract now has committed 1440×900 PNG captures for both declared targets under `docs/screenshots/`, and `capell.json` exposes both images in marketplace media alongside the extension card. There is no standalone admin screen to capture.
 
 ## Known Risks
 

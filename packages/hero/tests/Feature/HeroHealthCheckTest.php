@@ -62,3 +62,24 @@ it('declares the hero feature capabilities exposed by the public renderer', func
         'hero-theme-inheritance',
     );
 });
+
+it('declares the built hero marketplace screenshots', function (): void {
+    /** @var array{marketplace: array{screenshots: list<array{path: string}>}} $manifest */
+    $manifest = json_decode((string) file_get_contents(__DIR__ . '/../../capell.json'), true, 512, JSON_THROW_ON_ERROR);
+
+    $paths = collect($manifest['marketplace']['screenshots'])
+        ->pluck('path')
+        ->all();
+
+    expect($paths)->toBe([
+        'docs/assets/marketplace/extension-card.jpg',
+        'docs/screenshots/hero-home-widget.png',
+        'docs/screenshots/hero-slide-variant.png',
+    ]);
+
+    foreach ($paths as $path) {
+        throw_unless(is_string($path), RuntimeException::class, 'Expected hero screenshot path to be a string.');
+
+        expect(is_file(__DIR__ . '/../../' . $path))->toBeTrue();
+    }
+});

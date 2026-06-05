@@ -302,6 +302,7 @@ it('renders responsive hero media without exposing editor metadata', function ()
                 'collection_name' => HeroMediaData::CollectionMobileImage,
                 'file_name' => 'hero-mobile.jpg',
                 'mime_type' => 'image/jpeg',
+                'custom_properties' => ['width' => 640],
             ])
             ->create(),
     ]));
@@ -332,6 +333,8 @@ it('renders responsive hero media without exposing editor metadata', function ()
         ->toContain('data-hero-video')
         ->toContain('hero-desktop.webm')
         ->toContain('hero-mobile.jpg')
+        ->toContain('hero-mobile.jpg 640w')
+        ->toContain('sizes="100vw"')
         ->toContain('data-pause-out-of-view="true"')
         ->not->toContain('capell-hero')
         ->not->toContain('hero_media')
@@ -378,6 +381,7 @@ it('marks the hero media poster as high fetch priority without exposing editor m
                 'collection_name' => HeroMediaData::CollectionDesktopImage,
                 'file_name' => 'hero-poster.jpg',
                 'mime_type' => 'image/jpeg',
+                'custom_properties' => ['width' => 1600],
             ])
             ->create(),
     ]));
@@ -406,6 +410,8 @@ it('marks the hero media poster as high fetch priority without exposing editor m
 
     expect($html)
         ->toContain('hero-poster.jpg')
+        ->toContain('hero-poster.jpg 1600w')
+        ->toContain('sizes="100vw"')
         ->toContain('fetchpriority="high"')
         ->not->toContain('capell-hero')
         ->not->toContain('hero_media')

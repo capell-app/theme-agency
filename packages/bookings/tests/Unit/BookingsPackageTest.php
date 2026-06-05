@@ -72,6 +72,75 @@ it('keeps package manifest requirements aligned with composer requirements', fun
         ->and($manifest['providers']['runtime'])->toContain(BookingsServiceProvider::class);
 });
 
+it('declares committed marketplace assets for every required screenshot capture target', function (): void {
+    $packagePath = dirname(__DIR__, 2);
+    $manifest = json_decode(File::get($packagePath . '/capell.json'), true, flags: JSON_THROW_ON_ERROR);
+    $screenshotContract = json_decode(File::get($packagePath . '/docs/screenshots.json'), true, flags: JSON_THROW_ON_ERROR);
+    throw_unless(is_array($manifest), RuntimeException::class, 'Bookings manifest must decode to an array.');
+    throw_unless(is_array($screenshotContract), RuntimeException::class, 'Bookings screenshot contract must decode to an array.');
+
+    $marketplaceScreenshots = $manifest['marketplace']['screenshots'] ?? [];
+    $contractEntries = $screenshotContract['entries'] ?? [];
+
+    throw_unless(is_array($marketplaceScreenshots), RuntimeException::class, 'Bookings marketplace screenshots must be an array.');
+    throw_unless(is_array($contractEntries), RuntimeException::class, 'Bookings screenshot contract entries must be an array.');
+
+    $marketplaceScreenshotPaths = [];
+
+    foreach ($marketplaceScreenshots as $marketplaceScreenshot) {
+        throw_unless(is_array($marketplaceScreenshot), RuntimeException::class, 'Bookings marketplace screenshot entries must be arrays.');
+
+        $path = $marketplaceScreenshot['path'] ?? null;
+        $alt = $marketplaceScreenshot['alt'] ?? null;
+        $caption = $marketplaceScreenshot['caption'] ?? null;
+
+        throw_unless(is_string($path), RuntimeException::class, 'Bookings marketplace screenshot paths must be strings.');
+        throw_unless(is_string($alt), RuntimeException::class, 'Bookings marketplace screenshot alt text must be strings.');
+        throw_unless(is_string($caption), RuntimeException::class, 'Bookings marketplace screenshot captions must be strings.');
+
+        $marketplaceScreenshotPaths[] = $path;
+
+        expect(
+            str_starts_with($path, 'docs/assets/marketplace/')
+                || str_starts_with($path, 'docs/screenshots/'),
+        )->toBeTrue()
+            ->and(File::exists($packagePath . '/' . $path))->toBeTrue()
+            ->and(strlen(trim($alt)))->toBeGreaterThanOrEqual(12)
+            ->and(strlen(trim($caption)))->toBeGreaterThanOrEqual(12);
+    }
+
+    $generatedFor = $screenshotContract['generatedFor'] ?? null;
+    $composerRequires = $screenshotContract['composerRequires'] ?? [];
+    throw_unless(is_array($composerRequires), RuntimeException::class, 'Bookings screenshot contract composer requirements must be an array.');
+
+    expect($generatedFor)->toBe('deployment-screenshot-runner')
+        ->and($composerRequires)->toContain('capell-app/bookings');
+
+    $requiredMarketplaceScreenshotPaths = [];
+
+    foreach ($contractEntries as $contractEntry) {
+        if (! is_array($contractEntry)) {
+            continue;
+        }
+
+        if (($contractEntry['required'] ?? false) !== true) {
+            continue;
+        }
+
+        $id = $contractEntry['id'] ?? null;
+        $screenshotPath = $contractEntry['screenshotPath'] ?? null;
+
+        throw_unless(is_string($id), RuntimeException::class, 'Required Bookings screenshot contract entries must have string ids.');
+        throw_unless(is_string($screenshotPath), RuntimeException::class, 'Required Bookings screenshot contract entries must have string screenshot paths.');
+
+        $requiredMarketplaceScreenshotPaths[] = str_replace('packages/bookings/', '', $screenshotPath);
+    }
+
+    expect($marketplaceScreenshotPaths)
+        ->toContain('docs/assets/marketplace/extension-card.svg')
+        ->toContain(...$requiredMarketplaceScreenshotPaths);
+});
+
 it('declares implemented bookings contributions and feature capabilities', function (): void {
     $manifest = json_decode(
         File::get(__DIR__ . '/../../capell.json'),

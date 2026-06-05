@@ -60,7 +60,7 @@
                             {{ __('capell-theme-portfolio::generic.hero_signal_label') }}
                         </dt>
                         <dd class="mt-2 text-2xl font-black text-[#0f172a]">
-                            +42%
+                            {{ __('capell-theme-portfolio::generic.hero_signal_value') }}
                         </dd>
                     </div>
                     <div class="border-l border-[#e2e8f0] p-4">
@@ -68,7 +68,7 @@
                             {{ __('capell-theme-portfolio::generic.hero_stories_label') }}
                         </dt>
                         <dd class="mt-2 text-2xl font-black text-[#0f172a]">
-                            120+
+                            {{ __('capell-theme-portfolio::generic.hero_stories_value') }}
                         </dd>
                     </div>
                     <div class="border-l border-[#e2e8f0] p-4">
@@ -76,7 +76,7 @@
                             {{ __('capell-theme-portfolio::generic.hero_launch_label') }}
                         </dt>
                         <dd class="mt-2 text-2xl font-black text-[#0f172a]">
-                            6h
+                            {{ __('capell-theme-portfolio::generic.hero_launch_value') }}
                         </dd>
                     </div>
                 </dl>

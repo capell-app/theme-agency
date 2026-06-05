@@ -24,6 +24,7 @@ final class CapellArtisanPaletteCommandProvider implements CommandPaletteProvide
      * @var array<string, CommandPaletteDanger>
      */
     private const array COMMAND_RISK = [
+        'capell:demo' => CommandPaletteDanger::Dangerous,
         'capell:diagnostics:health' => CommandPaletteDanger::Safe,
         'capell:html-cache:diagnose' => CommandPaletteDanger::Safe,
         'capell:html-cache:clear' => CommandPaletteDanger::Confirm,
@@ -52,8 +53,8 @@ final class CapellArtisanPaletteCommandProvider implements CommandPaletteProvide
                 description: $consoleCommand->getDescription() !== '' ? $consoleCommand->getDescription() : null,
                 command: $name,
                 ability: 'palette.run.' . str_replace([':', '-'], '_', $name),
-                danger: $this->dangerForCommand($name),
-                requiresConfirmation: $this->dangerForCommand($name) !== CommandPaletteDanger::Safe,
+                danger: $danger = $this->dangerForCommand($name),
+                requiresConfirmation: $danger !== CommandPaletteDanger::Safe,
                 parameters: $this->parametersForCommand($consoleCommand),
                 keywords: [$name],
                 group: (string) __('capell-diagnostics::package.command_palette_group_developer_tools'),

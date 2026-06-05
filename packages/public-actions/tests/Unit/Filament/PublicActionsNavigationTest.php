@@ -8,8 +8,8 @@ use Capell\PublicActions\Filament\Resources\IntegrationTokens\PublicActionIntegr
 use Capell\PublicActions\Filament\Resources\PublicActions\PublicActionResource;
 use Capell\PublicActions\Filament\Resources\Submissions\PublicActionSubmissionResource;
 
-it('keeps public actions contained under websites navigation', function (): void {
-    $navigationGroup = (string) __('capell-admin::navigation.group_websites');
+it('keeps public actions contained under system navigation', function (): void {
+    $navigationGroup = (string) __('capell-admin::navigation.group_system');
     $parentItem = (string) __('capell-public-actions::filament.navigation_group');
 
     expect(PublicActionResource::getNavigationGroup())->toBe($navigationGroup)

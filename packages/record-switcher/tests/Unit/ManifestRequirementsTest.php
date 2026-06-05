@@ -62,31 +62,54 @@ describe('record-switcher manifest', function (): void {
         expect($screenshots)->not->toBeEmpty();
 
         foreach ($screenshots as $screenshot) {
-            expect($screenshot['path'])->toStartWith('docs/assets/marketplace/')
-                ->and(File::exists($packagePath . '/' . $screenshot['path']))->toBeTrue()
+            $path = (string) $screenshot['path'];
+
+            expect(
+                str_starts_with($path, 'docs/assets/marketplace/')
+                    || str_starts_with($path, 'docs/screenshots/'),
+            )->toBeTrue()
+                ->and(File::exists($packagePath . '/' . $path))->toBeTrue()
                 ->and(strlen(trim((string) $screenshot['alt'])))->toBeGreaterThanOrEqual(12)
                 ->and(strlen(trim((string) $screenshot['caption'])))->toBeGreaterThanOrEqual(12);
         }
     });
 
-    it('maps required screenshot contract entries to committed marketplace assets', function () use ($packagePath): void {
+    it('maps required screenshot contract entries to committed runner captures', function () use ($packagePath): void {
         $contract = json_decode(
             File::get($packagePath . '/docs/screenshots.json'),
             associative: true,
             flags: JSON_THROW_ON_ERROR,
         );
+        throw_unless(is_array($contract), RuntimeException::class, 'Record Switcher screenshot contract must decode to an array.');
 
         $entries = $contract['entries'] ?? [];
+        throw_unless(is_array($entries), RuntimeException::class, 'Record Switcher screenshot contract entries must be arrays.');
 
-        expect($entries)->not->toBeEmpty();
+        $generatedFor = $contract['generatedFor'] ?? null;
+        $composerRequires = $contract['composerRequires'] ?? [];
+        throw_unless(is_array($composerRequires), RuntimeException::class, 'Record Switcher screenshot contract composer requirements must be an array.');
+
+        expect($generatedFor)->toBe('deployment-screenshot-runner')
+            ->and($composerRequires)->toContain('capell-app/record-switcher')
+            ->and($entries)->not->toBeEmpty();
 
         foreach ($entries as $entry) {
-            expect($entry['required'])->toBeTrue()
-                ->and($entry['screenshotPath'])->toStartWith('packages/record-switcher/docs/assets/marketplace/');
+            throw_unless(is_array($entry), RuntimeException::class, 'Record Switcher screenshot contract entries must be arrays.');
+            $screenshotPath = $entry['screenshotPath'] ?? null;
+            throw_unless(is_string($screenshotPath), RuntimeException::class, 'Record Switcher screenshot paths must be strings.');
 
-            $relativePath = str_replace('packages/record-switcher/', '', (string) $entry['screenshotPath']);
+            expect($entry['required'])->toBeTrue()
+                ->and($screenshotPath)->toStartWith('packages/record-switcher/docs/screenshots/')
+                ->and($screenshotPath)->toEndWith('.png');
+
+            $relativePath = str_replace('packages/record-switcher/', '', $screenshotPath);
 
             expect(File::exists($packagePath . '/' . $relativePath))->toBeTrue();
+
+            $darkRelativePath = preg_replace('/\.png$/', '-dark.png', $relativePath);
+
+            expect(is_string($darkRelativePath))->toBeTrue()
+                ->and(File::exists($packagePath . '/' . $darkRelativePath))->toBeTrue();
         }
     });
 });

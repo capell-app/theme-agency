@@ -7,12 +7,16 @@ return [
         'actions' => [
             'create_article' => 'Create article',
             'create_collection' => 'Create collection',
+            'save_article' => 'Save article',
+            'save_collection' => 'Save collection',
         ],
         'fields' => [
             'ai_readable' => 'AI readable',
             'articles' => 'Articles',
             'body' => 'Body',
             'collection' => 'Collection',
+            'created_at' => 'Created at',
+            'current_version' => 'Current version',
             'description' => 'Description',
             'key' => 'Key',
             'parent_collection' => 'Parent collection',
@@ -37,6 +41,9 @@ return [
         'resources' => [
             'articles' => 'Articles',
             'collections' => 'Collections',
+        ],
+        'relations' => [
+            'versions' => 'Version history',
         ],
         'sections' => [
             'article' => 'Article',
@@ -65,6 +72,35 @@ return [
         'no_articles' => 'No knowledge base articles are available yet.',
         'related_articles' => 'Related articles',
     ],
+    'health' => [
+        'actions' => [
+            'failed' => 'Undiscoverable Knowledge Base actions: :classes.',
+            'label' => 'Knowledge Base actions',
+            'passed' => 'Public output, search, authoring, versioning, feedback, relation, and HTML sanitization actions are discoverable.',
+        ],
+        'admin_resources' => [
+            'failed' => 'Undiscoverable Knowledge Base admin resources: :classes.',
+            'label' => 'Knowledge Base admin resources',
+            'passed' => 'Collection and article admin resources are discoverable.',
+        ],
+        'autoload_remediation' => 'Ensure the Knowledge Base package autoloader is registered (composer dump-autoload).',
+        'models' => [
+            'failed' => 'Undiscoverable Knowledge Base models: :classes.',
+            'label' => 'Knowledge Base models',
+            'passed' => 'Collection, article, version, feedback, and related-article models are discoverable.',
+        ],
+        'providers' => [
+            'failed' => 'Undiscoverable Knowledge Base providers: :classes.',
+            'label' => 'Knowledge Base providers',
+            'passed' => 'Runtime and admin service providers are discoverable.',
+        ],
+        'storage_tables' => [
+            'failed' => 'Missing Knowledge Base tables: :tables.',
+            'label' => 'Knowledge Base storage tables',
+            'passed' => 'All Knowledge Base collection, article, version, feedback, and related-article tables are present.',
+            'remediation' => 'Run the Capell migrations to create the Knowledge Base storage tables.',
+        ],
+    ],
     'related_article_type' => [
         'related' => 'Related',
         'prerequisite' => 'Prerequisite',
@@ -73,7 +109,11 @@ return [
     'validation' => [
         'article_body_required' => 'Article content is required.',
         'article_title_required' => 'Article title is required.',
+        'collection_key_unique' => 'A collection with this key already exists.',
+        'collection_slug_unique' => 'A collection with this slug already exists.',
         'collection_title_required' => 'Collection title is required.',
         'slug_required' => 'A slug is required.',
+        'slug_unique' => 'An article with this slug already exists in this collection.',
+        'version_unique' => 'An article version with this label already exists.',
     ],
 ];

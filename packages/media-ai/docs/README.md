@@ -1,6 +1,6 @@
 # Media AI Docs
 
-Media AI adds optional AI-assisted media actions for Capell.
+Media AI adds provider-backed image editing actions for Capell media records.
 
 Start at the [package README](../README.md) when deciding whether to install this package. Use the docs below for setup, extension, debugging, and verification details.
 

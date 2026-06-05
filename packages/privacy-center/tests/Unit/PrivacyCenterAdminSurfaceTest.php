@@ -6,6 +6,7 @@ use Capell\Admin\Contracts\CapellWidgetContract;
 use Capell\PrivacyCenter\Actions\BuildPrivacyCenterOverviewStatsAction;
 use Capell\PrivacyCenter\Enums\ConsentDecision;
 use Capell\PrivacyCenter\Enums\CookieCategory;
+use Capell\PrivacyCenter\Enums\PolicyType;
 use Capell\PrivacyCenter\Enums\PrivacyRequestStatus;
 use Capell\PrivacyCenter\Enums\PrivacyRequestType;
 use Capell\PrivacyCenter\Enums\ResourceEnum;
@@ -23,6 +24,18 @@ use Capell\PrivacyCenter\Models\PolicyAcceptance;
 use Capell\PrivacyCenter\Models\PrivacyRequest;
 use Capell\PrivacyCenter\Models\RetentionRule;
 use Capell\PrivacyCenter\Tests\PrivacyCenterTestCase;
+use Filament\Actions\Action;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Table;
+use Illuminate\Support\Facades\Date;
 
 require_once dirname(__DIR__) . '/autoload.php';
 
@@ -50,6 +63,113 @@ it('exposes expected admin resource pages', function (): void {
         ->and(array_keys(RetentionRuleResource::getPages()))->toBe(['index', 'create', 'edit']);
 });
 
+it('builds privacy center resource forms with configured fields and enum labels', function (): void {
+    expect(privacyCenterAdminFormComponentClasses(ConsentPolicyResource::form(Schema::make())))->toBe([
+        TextInput::class,
+        TextInput::class,
+        TextInput::class,
+        TextInput::class,
+        Select::class,
+        TextInput::class,
+        DateTimePicker::class,
+        DateTimePicker::class,
+        DateTimePicker::class,
+        KeyValue::class,
+    ])
+        ->and(privacyCenterAdminFormComponentClasses(ConsentRecordResource::form(Schema::make())))->toBe([
+            TextInput::class,
+            TextInput::class,
+            TextInput::class,
+            TextInput::class,
+            Select::class,
+            Select::class,
+            TextInput::class,
+            DateTimePicker::class,
+            DateTimePicker::class,
+            DateTimePicker::class,
+            KeyValue::class,
+        ])
+        ->and(privacyCenterAdminFormComponentClasses(PolicyAcceptanceResource::form(Schema::make())))->toBe([
+            TextInput::class,
+            TextInput::class,
+            TextInput::class,
+            Select::class,
+            TextInput::class,
+            TextInput::class,
+            TextInput::class,
+            DateTimePicker::class,
+            KeyValue::class,
+        ])
+        ->and(privacyCenterAdminFormComponentClasses(PrivacyRequestResource::form(Schema::make())))->toBe([
+            TextInput::class,
+            Select::class,
+            Select::class,
+            TextInput::class,
+            DateTimePicker::class,
+            DateTimePicker::class,
+            DateTimePicker::class,
+            DateTimePicker::class,
+            DateTimePicker::class,
+            TextInput::class,
+            KeyValue::class,
+            KeyValue::class,
+        ])
+        ->and(privacyCenterAdminFormComponentClasses(RetentionRuleResource::form(Schema::make())))->toBe([
+            TextInput::class,
+            TextInput::class,
+            TextInput::class,
+            TextInput::class,
+            Select::class,
+            TextInput::class,
+            Toggle::class,
+            KeyValue::class,
+        ])
+        ->and(PolicyType::DataProcessing->getLabel())->toBe(__('capell-privacy-center::privacy.policy_types.data_processing'))
+        ->and(CookieCategory::Functional->getLabel())->toBe(__('capell-privacy-center::privacy.cookie_categories.functional'))
+        ->and(ConsentDecision::Expired->getLabel())->toBe(__('capell-privacy-center::privacy.consent_decisions.expired'))
+        ->and(PrivacyRequestType::Object->getLabel())->toBe(__('capell-privacy-center::privacy.privacy_request_types.object'))
+        ->and(PrivacyRequestStatus::Cancelled->getLabel())->toBe(__('capell-privacy-center::privacy.privacy_request_statuses.cancelled'))
+        ->and(RetentionAction::Delete->getLabel())->toBe(__('capell-privacy-center::privacy.retention_actions.delete'));
+});
+
+it('builds privacy center resource tables with expected columns', function (
+    string $resourceClass,
+    array $expectedColumnNames,
+    array $expectedColumnClasses,
+): void {
+    $table = $resourceClass::table(privacyCenterAdminTableForCoverage());
+    $columns = $table->getColumns();
+
+    expect(array_keys($columns))->toBe($expectedColumnNames)
+        ->and(array_map(static fn (object $column): string => $column::class, array_values($columns)))->toBe($expectedColumnClasses);
+})->with([
+    'consent policies' => [
+        ConsentPolicyResource::class,
+        ['title', 'key', 'version', 'type', 'published_at', 'retired_at'],
+        [TextColumn::class, TextColumn::class, TextColumn::class, TextColumn::class, TextColumn::class, TextColumn::class],
+    ],
+    'consent records' => [
+        ConsentRecordResource::class,
+        ['category', 'decision', 'policy_version', 'jurisdiction', 'decided_at', 'expires_at'],
+        [TextColumn::class, TextColumn::class, TextColumn::class, TextColumn::class, TextColumn::class, TextColumn::class],
+    ],
+    'policy acceptances' => [
+        PolicyAcceptanceResource::class,
+        ['policy_key', 'policy_version', 'policy_type', 'context', 'accepted_at'],
+        [TextColumn::class, TextColumn::class, TextColumn::class, TextColumn::class, TextColumn::class],
+    ],
+    'privacy requests' => [
+        PrivacyRequestResource::class,
+        ['reference', 'type', 'status', 'submitted_at', 'due_at', 'fulfilled_at'],
+        [TextColumn::class, TextColumn::class, TextColumn::class, TextColumn::class, TextColumn::class, TextColumn::class],
+    ],
+    'retention rules' => [
+        RetentionRuleResource::class,
+        ['data_domain', 'record_type', 'retention_days', 'action', 'is_active'],
+        [TextColumn::class, TextColumn::class, TextColumn::class, TextColumn::class, IconColumn::class],
+    ],
+]);
+
 it('exposes privacy request edit workflow actions', function (): void {
     $page = new EditPrivacyRequest;
 
@@ -62,6 +182,52 @@ it('exposes privacy request edit workflow actions', function (): void {
         'mark_fulfilled',
         'reject',
     ]);
+});
+
+it('marks privacy requests through edit workflow actions', function (): void {
+    Date::setTestNow(Date::parse('2026-06-05 10:30:00'));
+
+    try {
+        $siteId = $this->createPrivacyCenterSite();
+
+        $requestForVerification = PrivacyRequest::query()->create([
+            'site_id' => $siteId,
+            'reference' => 'PR-20260605-0001',
+            'type' => PrivacyRequestType::Export,
+            'status' => PrivacyRequestStatus::Submitted,
+            'submitted_at' => now(),
+        ]);
+        $requestForFulfilment = PrivacyRequest::query()->create([
+            'site_id' => $siteId,
+            'reference' => 'PR-20260605-0002',
+            'type' => PrivacyRequestType::Access,
+            'status' => PrivacyRequestStatus::Processing,
+            'submitted_at' => now(),
+        ]);
+        $requestForRejection = PrivacyRequest::query()->create([
+            'site_id' => $siteId,
+            'reference' => 'PR-20260605-0003',
+            'type' => PrivacyRequestType::Delete,
+            'status' => PrivacyRequestStatus::Verifying,
+            'submitted_at' => now(),
+        ]);
+
+        privacyCenterAdminEditRequestAction('mark_verified')->record($requestForVerification)->call();
+        privacyCenterAdminEditRequestAction('mark_fulfilled')->record($requestForFulfilment)->call();
+        privacyCenterAdminEditRequestAction('reject')->record($requestForRejection)->call([
+            'data' => ['reason' => 'Unable to verify identity.'],
+        ]);
+
+        expect($requestForVerification->refresh()->status)->toBe(PrivacyRequestStatus::Processing)
+            ->and($requestForVerification->verified_at?->toDateTimeString())->toBe('2026-06-05 10:30:00')
+            ->and($requestForFulfilment->refresh()->status)->toBe(PrivacyRequestStatus::Fulfilled)
+            ->and($requestForFulfilment->fulfilled_at?->toDateTimeString())->toBe('2026-06-05 10:30:00')
+            ->and($requestForRejection->refresh()->status)->toBe(PrivacyRequestStatus::Rejected)
+            ->and($requestForRejection->rejected_at?->toDateTimeString())->toBe('2026-06-05 10:30:00')
+            ->and($requestForRejection->rejection_reason)->toBe('Unable to verify identity.');
+    } finally {
+        Date::setTestNow();
+    }
 });
 
 it('builds privacy center overview widget stats from package-owned records', function (): void {
@@ -141,4 +307,39 @@ function privacyCenterAdminEditRequestHeaderActions(EditPrivacyRequest $page): a
     $method = new ReflectionMethod(EditPrivacyRequest::class, 'getHeaderActions');
 
     return $method->invoke($page);
+}
+
+function privacyCenterAdminEditRequestAction(string $name): Action
+{
+    $action = collect(privacyCenterAdminEditRequestHeaderActions(new EditPrivacyRequest))
+        ->first(fn (mixed $candidate): bool => is_object($candidate) && method_exists($candidate, 'getName') && $candidate->getName() === $name);
+
+    if (! $action instanceof Action) {
+        throw new RuntimeException(sprintf('Privacy request edit action [%s] was not registered.', $name));
+    }
+
+    return $action;
+}
+
+/**
+ * @return list<class-string>
+ */
+function privacyCenterAdminFormComponentClasses(Schema $schema): array
+{
+    return array_map(
+        static fn (object $component): string => $component::class,
+        $schema->getComponents(),
+    );
+}
+
+function privacyCenterAdminTableForCoverage(): Table
+{
+    $livewire = Mockery::mock(HasTable::class);
+    $livewire->shouldIgnoreMissing();
+    $livewire->shouldReceive('makeFilamentTranslatableContentDriver')->andReturn(null)->byDefault();
+    $livewire->shouldReceive('getTableFilterState')->andReturn([])->byDefault();
+    $livewire->shouldReceive('isTableLoaded')->andReturnTrue()->byDefault();
+    $livewire->shouldReceive('getTableArguments')->andReturn([])->byDefault();
+
+    return Table::make($livewire);
 }

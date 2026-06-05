@@ -10,6 +10,9 @@ use Capell\Newsletter\Models\Subscriber;
 use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static string run(Subscriber $subscriber)
+ */
 class CreateUnsubscribeTokenAction
 {
     use AsAction;

@@ -28,7 +28,7 @@ Insights records first-party visits, events, consent decisions, page views, clic
 Insights records first-party visits, events, consent decisions, page views, clicks, and journey data for Capell sites.
 
 - Frontend beacon endpoints for events and consent.
-- Render hook that can register the tracker.
+- Render hook that registers the tracker and overrideable consent banner.
 - Dashboard widgets for overview stats, popular pages, top actions, journeys, and trending pages.
 - Settings schema for insights retention and behaviour.
 
@@ -79,7 +79,11 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Routes: POST capell/insights/events and POST capell/insights/consent by default.
 - Models: InsightsVisit, InsightsConsent, InsightsEvent.
 - Actions record page views, clicks, custom events, and consent updates.
-- PurgeInsightsDataCommand supports retention cleanup.
+- Acquisition reporting surfaces UTM source/medium/campaign, referrer hosts, and direct visits.
+- Dashboard aggregate Actions use short-TTL caching keyed by locale, window, scope, and limit.
+- The packaged consent banner calls the consent endpoint for accept, reject, and granular choices.
+- PurgeInsightsDataCommand supports chunked retention cleanup.
+- InsightsHealthCheck verifies tables, beacon routes, tracker render output, purge scheduling, and visitor-hash secret safety.
 
 ## Code Map
 
@@ -101,7 +105,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 ## Admin Surface
 
 - Pages: `InsightsPage`.
-- Widgets: `BuildsInsightsDashboardWindow`, `InsightsOverviewStatsWidget`, `LiveInsightsStatsWidget`, `PopularPagesWidget`, `RecentJourneysWidget`, `TopActionsWidget`, `TrendingPagesWidget`.
+- Widgets: `AcquisitionSourcesWidget`, `BuildsInsightsDashboardWindow`, `InsightsOverviewStatsWidget`, `LiveInsightsStatsWidget`, `PopularPagesWidget`, `RecentJourneysWidget`, `TopActionsWidget`, `TrendingPagesWidget`.
 - Settings: `InsightsSettings`, `InsightsSettingsMigrationProvider`.
 
 ## Runtime Surface
@@ -115,11 +119,11 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 
 ## Data And Persistence
 
-- insights_visits stores site, language, consent, landing URL, hashed visitor data, and start time.
+- insights_visits stores site, language, consent, landing URL, referrer, UTM campaign fields, hashed visitor data, and start time.
 - insights_consents stores consent decisions for a visit.
 - insights_events stores event type, URL, path, metadata, and occurrence time.
 - Visits relate to events and consents.
-- Retention is governed by retention_days and purge actions.
+- Retention is governed by retention_days, purge_batch_size, and purge actions.
 
 - Models: `InsightsConsent`, `InsightsEvent`, `InsightsVisit`.
 - Migrations: `2026_05_10_190855_01_create_insights_visits_table.php`, `2026_05_10_190855_02_create_insights_consents_table.php`, `2026_05_10_190855_03_create_insights_events_table.php`, `2026_05_10_190855_05_import_legacy_page_views.php`.
@@ -135,9 +139,10 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Adds insights tables and settings migration.
 - Adds beacon and consent public POST routes.
 - Beacon posts validate request origin when present, can require signed event URLs, and load the embedded tracker script through a cached package Action.
+- Injects a theme-overridable consent banner by default; disable it with `consent_banner_enabled=false` when a host site supplies its own consent UI.
 - Adds dashboard widgets and insights settings.
-- Uses capell-insights config keys for route prefix, consent, hashing, retention, and ignored paths.
-- May need scheduled cleanup if retention should be enforced automatically.
+- Uses capell-insights config keys for route prefix, consent, hashing, dashboard cache TTL, retention, purge batch size, and ignored paths.
+- Schedules monthly retention cleanup through `insights:purge`.
 
 ## Install And Setup
 

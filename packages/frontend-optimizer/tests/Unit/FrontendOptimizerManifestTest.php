@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Capell\FrontendOptimizer\Models\FrontendRenderProfile;
 
-it('keeps marketplace screenshots limited to committed marketplace assets while preserving the screenshot contract', function (): void {
+it('keeps marketplace screenshots aligned with the committed runner captures', function (): void {
     $manifest = frontendOptimizerPackageManifest();
     $screenshotContract = json_decode(
         (string) file_get_contents(dirname(__DIR__, 2) . '/docs/screenshots.json'),
@@ -38,28 +38,25 @@ it('keeps marketplace screenshots limited to committed marketplace assets while 
         }
     }
 
-    expect($marketplaceScreenshotPaths)->toBe(['docs/assets/marketplace/extension-card.jpg']);
+    $contractPaths = collect($contractEntries)
+        ->filter(fn (mixed $contractEntry): bool => is_array($contractEntry) && ($contractEntry['required'] ?? false) === true)
+        ->pluck('screenshotPath')
+        ->filter(fn (mixed $screenshotPath): bool => is_string($screenshotPath))
+        ->map(fn (string $screenshotPath): string => str_replace('packages/frontend-optimizer/', '', $screenshotPath))
+        ->values();
+
+    $darkVariantPaths = $contractPaths
+        ->map(fn (string $screenshotPath): string => str_replace('.png', '-dark.png', $screenshotPath))
+        ->all();
+
+    expect($marketplaceScreenshotPaths)->toBe([
+        'docs/assets/marketplace/extension-card.jpg',
+        ...$contractPaths->all(),
+        ...$darkVariantPaths,
+    ]);
 
     foreach ($marketplaceScreenshotPaths as $marketplaceScreenshotPath) {
-        expect($marketplaceScreenshotPath)->toStartWith('docs/assets/marketplace/')
-            ->and(file_exists(dirname(__DIR__, 2) . '/' . $marketplaceScreenshotPath))->toBeTrue();
-    }
-
-    foreach ($contractEntries as $contractEntry) {
-        if (! is_array($contractEntry)) {
-            continue;
-        }
-
-        if (($contractEntry['required'] ?? false) !== true) {
-            continue;
-        }
-
-        $screenshotPath = $contractEntry['screenshotPath'] ?? null;
-
-        if (is_string($screenshotPath)) {
-            expect($marketplaceScreenshotPaths)
-                ->not->toContain(str_replace('packages/frontend-optimizer/', '', $screenshotPath));
-        }
+        expect(file_exists(dirname(__DIR__, 2) . '/' . $marketplaceScreenshotPath))->toBeTrue();
     }
 });
 

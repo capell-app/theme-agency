@@ -10,6 +10,9 @@ use Capell\KnowledgeBase\Models\KnowledgeBaseArticleVersion;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsObject;
 
+/**
+ * @method static KnowledgeBaseArticle run(KnowledgeBaseArticleVersion $version)
+ */
 final class PublishKnowledgeBaseArticleVersionAction
 {
     use AsObject;

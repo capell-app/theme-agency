@@ -34,7 +34,7 @@ class QueueHealthPage extends Page implements HasActions, HasTable
 
     protected static BackedEnum|string|null $navigationIcon = Heroicon::OutlinedSignal;
 
-    protected static ?string $slug = 'dashboard-dashboard_reports/queue-health';
+    protected static ?string $slug = 'reports/queue-health';
 
     protected static ?int $navigationSort = 2;
 
@@ -89,7 +89,7 @@ class QueueHealthPage extends Page implements HasActions, HasTable
     #[Override]
     public static function getNavigationGroup(): ?string
     {
-        return (string) (__('capell-admin::navigation.group_system'));
+        return (string) __('capell-admin::navigation.group_reports');
     }
 
     #[Override]

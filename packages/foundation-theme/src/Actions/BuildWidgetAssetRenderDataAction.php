@@ -27,6 +27,8 @@ final class BuildWidgetAssetRenderDataAction
         $type = $asset instanceof Model ? $this->loadedRelation($asset, 'type') : null;
         $meta = is_array(data_get($asset, 'meta')) ? data_get($asset, 'meta') : [];
         $title = $this->stringValue($translation, 'title');
+        $placementTitle = $this->metaString($widgetAsset, 'title') ?? $this->metaString($widgetAsset, 'caption');
+        $placementContent = $this->metaString($widgetAsset, 'content');
         $contentStructure = data_get($type, 'content_structure');
 
         return new WidgetAssetRenderData(
@@ -38,9 +40,9 @@ final class BuildWidgetAssetRenderDataAction
             alt: $this->stringValue($translation, 'label') ?? $this->stringValue($translation, 'title') ?? '',
             actions: $this->metaArray($asset, 'actions'),
             accent: $this->metaString($asset, 'accent'),
-            caption: $this->metaString($asset, 'caption') ?? $title,
-            content: $this->stringValue($translation, 'content'),
-            contentStructure: $contentStructure instanceof ContentStructure ? $contentStructure : null,
+            caption: $placementTitle ?? $this->metaString($asset, 'caption') ?? $title,
+            content: $placementContent ?? $this->stringValue($translation, 'content'),
+            contentStructure: $placementContent !== null ? ContentStructure::Html : ($contentStructure instanceof ContentStructure ? $contentStructure : null),
             cropPreset: $this->metaString($asset, 'crop_preset'),
             headingSize: $this->metaString($asset, 'heading_size') ?? 'h3',
             headingWeight: $this->metaString($asset, 'heading_weight') ?? 'medium',
@@ -53,7 +55,7 @@ final class BuildWidgetAssetRenderDataAction
             status: $this->metaString($asset, 'status'),
             tags: $this->metaArray($asset, 'tags'),
             textAlign: $this->metaString($asset, 'align') ?? $this->metaString($type, 'align'),
-            title: $title,
+            title: $placementTitle ?? $title,
         );
     }
 

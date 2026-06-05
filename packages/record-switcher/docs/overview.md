@@ -25,7 +25,7 @@ Install `capell-app/record-switcher`. The package registers itself through Capel
 
 ## Screenshot Instructions
 
-Capture the edit page heading with suggestions open after typing a short query. The committed SVG assets are interim Marketplace previews until a seeded package harness captures real admin screenshots.
+The committed gallery uses the extension card SVG plus light and dark PNG captures from the Capell screenshot runner. Regenerate the edit-page heading capture with suggestions open when the admin heading bridge or switcher styling changes.
 
 ## Safety Caveats
 

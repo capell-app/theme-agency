@@ -9,6 +9,7 @@ use Capell\Payments\Contracts\PaymentFulfillmentHandler;
 use Capell\Payments\Enums\CheckoutSessionStatus;
 use Capell\Payments\Enums\PaymentDisputeStatus;
 use Capell\Payments\Enums\PaymentIntentStatus;
+use Capell\Payments\Enums\PaymentProvider;
 use Capell\Payments\Enums\PaymentRefundStatus;
 use Capell\Payments\Enums\PaymentWebhookEventStatus;
 use Capell\Payments\Enums\SubscriptionStatus;
@@ -17,10 +18,12 @@ use Capell\Payments\Exceptions\StripeWebhookSignatureException;
 use Capell\Payments\Jobs\ProcessStripeWebhookEventJob;
 use Capell\Payments\Models\CheckoutSession;
 use Capell\Payments\Models\PaymentDispute;
+use Capell\Payments\Models\PaymentDownloadEntitlement;
 use Capell\Payments\Models\PaymentIntent;
 use Capell\Payments\Models\PaymentRefund;
 use Capell\Payments\Models\PaymentWebhookEvent;
 use Capell\Payments\Models\Subscription;
+use Capell\Payments\Support\Fulfillment\PaidDownloadFulfillmentHandler;
 use Capell\Payments\Tests\Fakes\FakePaymentFulfillmentHandler;
 use Capell\Payments\Tests\TestCase;
 use Carbon\CarbonImmutable;
@@ -105,9 +108,9 @@ it('records checkout session webhooks idempotently before queued processing upda
     ]);
 
     $firstEvent = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
-    $processedFirstEvent = ProcessStripeWebhookEventAction::run((int) $firstEvent->getKey());
+    $processedFirstEvent = ProcessStripeWebhookEventAction::run($firstEvent->id);
     $secondEvent = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
-    $processedSecondEvent = ProcessStripeWebhookEventAction::run((int) $secondEvent->getKey());
+    $processedSecondEvent = ProcessStripeWebhookEventAction::run($secondEvent->id);
 
     expect($firstEvent->is($secondEvent))->toBeTrue()
         ->and(PaymentWebhookEvent::query()->count())->toBe(1)
@@ -126,6 +129,136 @@ it('records checkout session webhooks idempotently before queued processing upda
         ->and($checkoutSession->payable_id)->toBe('guide')
         ->and($checkoutSession->reference_id)->toBe('order_123')
         ->and(FakePaymentFulfillmentHandler::$fulfilledSessionIds)->toBe(['cs_test_completed']);
+});
+
+it('skips terminal webhook events without replaying fulfillment', function (PaymentWebhookEventStatus $terminalStatus): void {
+    app()->bind(FakePaymentFulfillmentHandler::class);
+    app()->tag([FakePaymentFulfillmentHandler::class], PaymentFulfillmentHandler::TAG);
+
+    $payload = stripeWebhookPayload([
+        'id' => 'evt_terminal_checkout_completed',
+        'type' => 'checkout.session.completed',
+        'data' => [
+            'object' => [
+                'id' => 'cs_terminal_checkout_completed',
+                'object' => 'checkout.session',
+                'mode' => 'payment',
+                'status' => 'complete',
+                'currency' => 'gbp',
+                'amount_subtotal' => 2500,
+                'amount_total' => 2500,
+                'metadata' => [
+                    'capell_purpose' => 'paid_download',
+                    'capell_payable_type' => 'download',
+                    'capell_payable_id' => 'guide',
+                ],
+                'completed_at' => CarbonImmutable::now()->getTimestamp(),
+            ],
+        ],
+    ]);
+
+    $eventPayload = json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
+
+    expect($eventPayload)->toBeArray();
+
+    $event = PaymentWebhookEvent::query()->create([
+        'provider' => PaymentProvider::Stripe->value,
+        'provider_event_id' => 'evt_terminal_checkout_completed',
+        'event_type' => 'checkout.session.completed',
+        'livemode' => false,
+        'api_version' => '2026-02-25.clover',
+        'status' => $terminalStatus->value,
+        'payload' => $eventPayload,
+        'received_at' => CarbonImmutable::now(),
+        'processed_at' => CarbonImmutable::now(),
+    ]);
+
+    $processedEvent = ProcessStripeWebhookEventAction::run($event->id);
+
+    expect($processedEvent->status)->toBe($terminalStatus)
+        ->and(CheckoutSession::query()->count())->toBe(0)
+        ->and(FakePaymentFulfillmentHandler::$fulfilledSessionIds)->toBe([]);
+})->with([
+    'processed' => [PaymentWebhookEventStatus::Processed],
+    'ignored' => [PaymentWebhookEventStatus::Ignored],
+]);
+
+it('does not extend paid download entitlement expiry when checkout fulfilment replays', function (): void {
+    app()->bind(PaidDownloadFulfillmentHandler::class);
+    app()->tag([PaidDownloadFulfillmentHandler::class], PaymentFulfillmentHandler::TAG);
+
+    $payload = stripeWebhookPayload([
+        'id' => 'evt_paid_download_completed',
+        'type' => 'checkout.session.completed',
+        'data' => [
+            'object' => [
+                'id' => 'cs_test_paid_download_replay',
+                'object' => 'checkout.session',
+                'mode' => 'payment',
+                'status' => 'complete',
+                'currency' => 'gbp',
+                'amount_subtotal' => 2500,
+                'amount_total' => 2500,
+                'client_reference_id' => 'order_paid_download',
+                'metadata' => [
+                    'capell_purpose' => 'paid_download',
+                    'capell_site_id' => '42',
+                    'capell_payable_type' => 'download',
+                    'capell_payable_id' => 'guide',
+                    'download_path' => 'paid/guide.pdf',
+                    'download_name' => 'Original guide',
+                    'download_ttl_minutes' => '30',
+                ],
+                'completed_at' => CarbonImmutable::now()->getTimestamp(),
+            ],
+        ],
+    ]);
+
+    processStripeWebhookPayload($payload);
+
+    $entitlement = PaymentDownloadEntitlement::query()->firstOrFail();
+    $originalExpiresAtTimestamp = $entitlement->expires_at?->getTimestamp();
+    $originalFulfilledAtTimestamp = $entitlement->fulfilled_at?->getTimestamp();
+
+    expect($originalExpiresAtTimestamp)->toBe(CarbonImmutable::now()->addMinutes(30)->getTimestamp())
+        ->and($originalFulfilledAtTimestamp)->toBe(CarbonImmutable::now()->getTimestamp());
+
+    CarbonImmutable::setTestNow(CarbonImmutable::create(2026, 6, 1, 12, 0, 0));
+
+    $replayPayload = stripeWebhookPayload([
+        'id' => 'evt_paid_download_completed_replay',
+        'type' => 'checkout.session.completed',
+        'data' => [
+            'object' => [
+                'id' => 'cs_test_paid_download_replay',
+                'object' => 'checkout.session',
+                'mode' => 'payment',
+                'status' => 'complete',
+                'currency' => 'gbp',
+                'amount_subtotal' => 2500,
+                'amount_total' => 2500,
+                'client_reference_id' => 'order_paid_download',
+                'metadata' => [
+                    'capell_purpose' => 'paid_download',
+                    'capell_site_id' => '42',
+                    'capell_payable_type' => 'download',
+                    'capell_payable_id' => 'guide',
+                    'download_path' => 'paid/updated-guide.pdf',
+                    'download_name' => 'Updated guide',
+                    'download_ttl_minutes' => '1440',
+                ],
+                'completed_at' => CarbonImmutable::now()->getTimestamp(),
+            ],
+        ],
+    ]);
+
+    processStripeWebhookPayload($replayPayload);
+
+    expect(PaymentDownloadEntitlement::query()->count())->toBe(1)
+        ->and($entitlement->refresh()->download_name)->toBe('Updated guide')
+        ->and($entitlement->path)->toBe('paid/updated-guide.pdf')
+        ->and($entitlement->expires_at?->getTimestamp())->toBe($originalExpiresAtTimestamp)
+        ->and($entitlement->fulfilled_at?->getTimestamp())->toBe($originalFulfilledAtTimestamp);
 });
 
 it('records payment intent webhooks', function (): void {
@@ -407,7 +540,7 @@ it('queues stripe webhook processing after verified intake', function (): void {
     expect($event->status)->toBe(PaymentWebhookEventStatus::Received)
         ->and(PaymentIntent::query()->count())->toBe(0);
 
-    Queue::assertPushed(ProcessStripeWebhookEventJob::class, fn (ProcessStripeWebhookEventJob $job): bool => $job->webhookEventId === (int) $event->getKey()
+    Queue::assertPushed(ProcessStripeWebhookEventJob::class, fn (ProcessStripeWebhookEventJob $job): bool => $job->webhookEventId === $event->id
             && $job->queue === 'payments');
 });
 
@@ -445,5 +578,5 @@ function processStripeWebhookPayload(string $payload): PaymentWebhookEvent
 
     $event = HandleStripeWebhookAction::run($payload, stripeSignatureHeader($payload));
 
-    return ProcessStripeWebhookEventAction::run((int) $event->getKey());
+    return ProcessStripeWebhookEventAction::run($event->id);
 }

@@ -49,7 +49,6 @@
     "capabilities": [
         "automation-webhooks",
         "public-form",
-        "cache-blocking",
         "public-actions",
         "submit-actions",
         "zapier-integration"

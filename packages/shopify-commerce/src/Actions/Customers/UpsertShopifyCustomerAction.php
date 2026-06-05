@@ -11,6 +11,9 @@ use Carbon\CarbonInterface;
 use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
+/**
+ * @method static ShopifyCustomer run(ShopifyConnection $connection, array<string, mixed> $snapshot)
+ */
 final class UpsertShopifyCustomerAction
 {
     use AsAction;

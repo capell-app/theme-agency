@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\ThemeStudio\Contracts\SectionRenderer;
 use Capell\Core\ThemeStudio\Contracts\ThemeSection;
@@ -13,6 +14,7 @@ use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\Tests\Packages\PackagesTestCase;
 use Capell\ThemeStudio\Education\EducationThemeServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
 uses(PackagesTestCase::class);
 
@@ -22,12 +24,45 @@ it('defines the Education theme contract', function (): void {
     expect($definition->key)->toBe('education')
         ->and($definition->package)->toBe('capell-app/theme-education')
         ->and($definition->extends)->toBe('default')
+        ->and($definition->previewImage)->toBe(EducationThemeServiceProvider::PUBLIC_PREVIEW_IMAGE)
+        ->and($definition->assets)->toBe(['css' => EducationThemeServiceProvider::GENERATED_FRONTEND_CSS])
         ->and($definition->includedSections)->toContain('hero')
         ->and($definition->includedSections)->toContain('features')
         ->and($definition->includedSections)->toContain('content-listing')
         ->and($definition->includedSections)->toContain('cta')
         ->and($definition->includedSections)->toContain('footer')
         ->and($definition->presets)->toHaveCount(1);
+});
+
+it('publishes the declared preview image and registers css through the tailwind source contract', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(EducationThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new EducationThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $publishPaths = ServiceProvider::pathsToPublish(EducationThemeServiceProvider::class, 'capell-theme-education-assets');
+    $publishedSourcePath = array_key_first($publishPaths);
+
+    expect($publishPaths)->toHaveCount(1)
+        ->and(realpath((string) $publishedSourcePath))->toBe(realpath(__DIR__ . '/../../docs/assets/marketplace/extension-card.jpg'))
+        ->and($publishPaths[$publishedSourcePath])->toBe(public_path(ltrim(EducationThemeServiceProvider::PUBLIC_PREVIEW_IMAGE, '/')));
+
+    $packageImports = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindImport)
+        ->filter(static fn (mixed $asset): bool => $asset->packageName === EducationThemeServiceProvider::$packageName)
+        ->pluck('value')
+        ->all();
+
+    $packageSources = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindSource)
+        ->filter(static fn (mixed $asset): bool => $asset->packageName === EducationThemeServiceProvider::$packageName)
+        ->pluck('value')
+        ->all();
+
+    expect($packageImports)->toContain(EducationThemeServiceProvider::TAILWIND_IMPORT)
+        ->and($packageSources)->toContain(EducationThemeServiceProvider::TAILWIND_SOURCE)
+        ->and($packageImports)->not->toContain('vendor/capell/themes/education.css')
+        ->and(file_exists(__DIR__ . '/../../' . EducationThemeServiceProvider::TAILWIND_IMPORT))->toBeTrue();
 });
 
 it('renders standard sections through Education views', function (): void {

@@ -9,7 +9,7 @@ Site Discovery owns public sitemap, discoverable URL, and generated-output regis
 - Surfaces: admin actions/tools, frontend sitemap pages, console
 - Service providers: `packages/site-discovery/src/Providers/SiteDiscoveryServiceProvider.php`
 - Capell dependencies: `capell-app/admin`, `capell-app/core`, `capell-app/frontend`
-- Third-party dependencies: `icamys/php-sitemap-generator`
+- Third-party dependencies: none
 
 ## Why It Helps Your Capell Workflow
 
@@ -37,10 +37,6 @@ Site Discovery owns public sitemap, discoverable URL, and generated-output regis
 - XML sitemap generation with chunking and incremental state.
 - Sitemap admin page, admin actions, and generation tool.
 - Lifecycle listeners that regenerate sitemap output when pages or sites change.
-
-## Built With
-
-- [PHP Sitemap Generator](https://github.com/icamys/php-sitemap-generator) - XML sitemap generation.
 
 ## Code Map
 
@@ -137,7 +133,7 @@ These items are approved product direction for Site Discovery and should be plan
 
 ## Screenshot Coverage
 
-The package screenshot contract covers the package-added Page and Site sitemap actions, the sitemap generation tool, `/sitemap`, and `/sitemap-xml`. Keep each capture focused on the added surface; avoid broad admin screenshots that hide which control belongs to this package.
+The package screenshot contract covers the package-added Page and Site sitemap actions, the sitemap generation tool, `/sitemap`, `/sitemap-xml`, the Public URL Registry parity page, and its quality report state. Keep each capture focused on the added surface; avoid broad admin screenshots that hide which control belongs to this package.
 
 Public sitemap screenshots should be checked for authoring or package identifiers. The public output must not expose `capell-site-discovery`, `capell-sitemap`, admin URLs, editor metadata, signed editor links, or unpublished pages.
 

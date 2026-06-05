@@ -33,7 +33,8 @@ final class UpdateLastSeenForActorAction
             )
             ->where('user_agent', $userAgent)
             ->where('login_at', '<', $trackedAt)
-            ->latest('id')
+            ->latest('login_at')
+            ->orderByDesc('id')
             ->first();
 
         if (! $audit instanceof LoginAudit) {

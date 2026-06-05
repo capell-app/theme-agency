@@ -7,6 +7,7 @@ use Capell\Admin\Data\Dashboard\ContentHealthData;
 use Capell\Admin\Data\Dashboard\ContentHealthIssueData;
 use Capell\Admin\Enums\DashboardEnum;
 use Capell\Admin\Facades\CapellAdmin;
+use Capell\Admin\Settings\AdminSettings;
 use Capell\Core\Models\Page;
 use Capell\DashboardReports\Filament\Widgets\ContentHealthWidget;
 use Capell\DashboardReports\Filament\Widgets\PublishingTrendChartWidget;
@@ -83,6 +84,8 @@ it('uses dashboard-dashboard_reports-owned translations and views for dashboard-
 });
 
 it('builds content health data once per request across canView and data', function (): void {
+    $this->actingAsRole(config('capell.roles.editor', 'editor'));
+
     $countingContentHealthDataProvider = new class implements ContentHealthDataProvider
     {
         public int $buildCount = 0;
@@ -106,12 +109,44 @@ it('builds content health data once per request across canView and data', functi
 
     app()->instance(ContentHealthDataProvider::class, $countingContentHealthDataProvider);
 
-    // Two distinct resolutions within one request (mirroring canView() then data())
-    // must share the request memo and build the provider data only once.
-    (new ContentHealthWidget)->data();
-    (new ContentHealthWidget)->data();
+    expect(ContentHealthWidget::canView())->toBeTrue()
+        ->and((new ContentHealthWidget)->data()->issues->count())->toBe(1)
+        ->and($countingContentHealthDataProvider->buildCount)->toBe(1);
+});
 
-    expect($countingContentHealthDataProvider->buildCount)->toBe(1);
+it('forgets content health data between request scopes', function (): void {
+    $countingContentHealthDataProvider = new class implements ContentHealthDataProvider
+    {
+        public int $buildCount = 0;
+
+        public function build(): ContentHealthData
+        {
+            $this->buildCount++;
+
+            return new ContentHealthData(
+                issues: ContentHealthIssueData::collect([
+                    new ContentHealthIssueData(
+                        id: 'scheduled_pages',
+                        label: 'Scheduled pages',
+                        count: $this->buildCount,
+                        filterUrl: null,
+                    ),
+                ], DataCollection::class),
+            );
+        }
+    };
+
+    app()->instance(ContentHealthDataProvider::class, $countingContentHealthDataProvider);
+
+    $firstRequestData = (new ContentHealthWidget)->data();
+
+    app()->forgetScopedInstances();
+
+    $secondRequestData = (new ContentHealthWidget)->data();
+
+    expect($countingContentHealthDataProvider->buildCount)->toBe(2)
+        ->and(collect($firstRequestData->issues->items())->first()?->count)->toBe(1)
+        ->and(collect($secondRequestData->issues->items())->first()?->count)->toBe(2);
 });
 
 it('builds content health data through the installed provider and widget data contract', function (): void {
@@ -154,8 +189,12 @@ it('hides content health when the provider has no issues', function (): void {
 
     $emptyContentHealthDataProvider = new class implements ContentHealthDataProvider
     {
+        public int $buildCount = 0;
+
         public function build(): ContentHealthData
         {
+            $this->buildCount++;
+
             return new ContentHealthData(
                 issues: ContentHealthIssueData::collect([], DataCollection::class),
             );
@@ -164,7 +203,76 @@ it('hides content health when the provider has no issues', function (): void {
 
     app()->instance(ContentHealthDataProvider::class, $emptyContentHealthDataProvider);
 
-    expect(ContentHealthWidget::canView())->toBeFalse();
+    expect(ContentHealthWidget::canView())->toBeFalse()
+        ->and($emptyContentHealthDataProvider->buildCount)->toBe(1);
+});
+
+it('hides content health for users outside the configured dashboard roles', function (): void {
+    Role::findOrCreate('viewer');
+
+    $this->actingAsRole('viewer');
+
+    $contentHealthDataProvider = new class implements ContentHealthDataProvider
+    {
+        public int $buildCount = 0;
+
+        public function build(): ContentHealthData
+        {
+            $this->buildCount++;
+
+            return new ContentHealthData(
+                issues: ContentHealthIssueData::collect([
+                    new ContentHealthIssueData(
+                        id: 'scheduled_pages',
+                        label: 'Scheduled pages',
+                        count: 1,
+                        filterUrl: null,
+                    ),
+                ], DataCollection::class),
+            );
+        }
+    };
+
+    app()->instance(ContentHealthDataProvider::class, $contentHealthDataProvider);
+
+    expect(ContentHealthWidget::canView())->toBeFalse()
+        ->and($contentHealthDataProvider->buildCount)->toBe(0);
+});
+
+it('hides content health when the dashboard setting is disabled', function (): void {
+    $this->actingAsRole(config('capell.roles.editor', 'editor'));
+
+    $settings = AdminSettings::instance();
+    $settings->enabled_widgets = [
+        ContentHealthWidget::settingsKey() => false,
+    ];
+    $settings->save();
+
+    $contentHealthDataProvider = new class implements ContentHealthDataProvider
+    {
+        public int $buildCount = 0;
+
+        public function build(): ContentHealthData
+        {
+            $this->buildCount++;
+
+            return new ContentHealthData(
+                issues: ContentHealthIssueData::collect([
+                    new ContentHealthIssueData(
+                        id: 'scheduled_pages',
+                        label: 'Scheduled pages',
+                        count: 1,
+                        filterUrl: null,
+                    ),
+                ], DataCollection::class),
+            );
+        }
+    };
+
+    app()->instance(ContentHealthDataProvider::class, $contentHealthDataProvider);
+
+    expect(ContentHealthWidget::canView())->toBeFalse()
+        ->and($contentHealthDataProvider->buildCount)->toBe(0);
 });
 
 it('renders content health issue links for an authenticated editor', function (): void {
@@ -172,8 +280,12 @@ it('renders content health issue links for an authenticated editor', function ()
 
     $contentHealthDataProvider = new class implements ContentHealthDataProvider
     {
+        public int $buildCount = 0;
+
         public function build(): ContentHealthData
         {
+            $this->buildCount++;
+
             return new ContentHealthData(
                 issues: ContentHealthIssueData::collect([
                     new ContentHealthIssueData(
@@ -195,4 +307,6 @@ it('renders content health issue links for an authenticated editor', function ()
         ->assertOk()
         ->assertSee('Scheduled pages')
         ->assertSeeHtml('tableFilters%5Bdashboard_reports_health%5D%5Bvalue%5D=scheduled_pages');
+
+    expect($contentHealthDataProvider->buildCount)->toBe(1);
 });

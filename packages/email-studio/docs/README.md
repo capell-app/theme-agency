@@ -1,6 +1,6 @@
 # Email Studio Docs
 
-Email Studio gives Capell a transactional email centre for reusable templates, delivery profiles, send audit trails, suppressions, replies, and provider events.
+Email Studio gives Capell a transactional email centre for reusable templates, delivery profiles, send audit trails, suppressions, and provider adapter normalization foundations. Provider event and inbound reply ingestion are planned follow-up slices.
 
 Start at the [package README](../README.md) when deciding whether to install this package. Use the docs below for setup, extension, debugging, and verification details.
 

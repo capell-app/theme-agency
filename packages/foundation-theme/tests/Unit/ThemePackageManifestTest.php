@@ -18,6 +18,20 @@ it('declares foundation as the default theme package', function (): void {
         ->and($manifest['extends'])->toBeNull();
 });
 
+it('registers only the shipped foundation theme service provider', function (): void {
+    $manifest = themePackageManifest('foundation-theme');
+    $composer = themePackageComposer('foundation-theme');
+
+    expect($manifest['providers']['runtime'])->toBe([
+        FoundationThemeServiceProvider::class,
+    ])
+        ->and($manifest['providers']['admin'])->toBe([])
+        ->and($manifest['providers']['frontend'])->toBe([])
+        ->and($composer['extra']['laravel']['providers'])->toBe([
+            FoundationThemeServiceProvider::class,
+        ]);
+});
+
 it('defines the Foundation Theme Studio parent contract', function (): void {
     $definition = FoundationThemeServiceProvider::definition();
 
@@ -60,6 +74,41 @@ it('registers a Theme Studio definition that matches the manifest', function ():
         ->and($registered->extends)->toBe($manifest['extends']);
 });
 
+it('declares committed marketplace screenshots and labelled layout mockups', function (): void {
+    $manifest = themePackageManifest('foundation-theme');
+    $screenshots = data_get($manifest, 'marketplace.screenshots');
+
+    throw_unless(is_array($screenshots), RuntimeException::class, 'Foundation Theme marketplace screenshots must be an array.');
+
+    $paths = collect($screenshots)
+        ->map(function (mixed $screenshot): string {
+            throw_unless(is_array($screenshot), RuntimeException::class, 'Foundation Theme marketplace screenshot entries must be arrays.');
+
+            $path = $screenshot['path'] ?? null;
+
+            throw_unless(is_string($path), RuntimeException::class, 'Foundation Theme marketplace screenshot path must be a string.');
+
+            return $path;
+        })
+        ->values();
+
+    expect($paths)->toHaveCount(15)
+        ->and($paths->filter(fn (string $path): bool => str_starts_with($path, 'docs/screenshots/') && str_ends_with($path, '.png')))->toHaveCount(6)
+        ->and($paths->filter(fn (string $path): bool => str_starts_with($path, 'docs/assets/marketplace/') && str_ends_with($path, '.svg')))->toHaveCount(8)
+        ->and($paths)->toContain(
+            'docs/screenshots/foundation-theme-settings-screen.png',
+            'docs/screenshots/foundation-theme-settings-screen-dark.png',
+            'docs/screenshots/frontend-page-using-the-foundation-theme.png',
+            'docs/screenshots/frontend-page-using-the-foundation-theme-dark.png',
+            'docs/screenshots/generated-tailwind-asset-output-review.png',
+            'docs/screenshots/generated-tailwind-asset-output-review-dark.png',
+        );
+
+    foreach ($paths as $path) {
+        expect(is_file(dirname(__DIR__, 2) . '/' . $path))->toBeTrue();
+    }
+});
+
 it('declares standalone theme packages extending foundation', function (string $packageDirectory, string $composerName, string $themeKey): void {
     $manifest = themePackageManifest($packageDirectory);
     $composer = themePackageComposer($packageDirectory);
@@ -87,12 +136,24 @@ dataset('standalone theme packages', function (): array {
 
     foreach ($themeManifests as $manifestPath) {
         $packageDirectory = basename(dirname($manifestPath));
-        $manifest = json_decode((string) file_get_contents($manifestPath), true, flags: JSON_THROW_ON_ERROR);
+        $manifest = themePackageManifest($packageDirectory);
+        $themeKey = $manifest['themeKey'] ?? null;
+        if (($manifest['kind'] ?? null) !== 'theme') {
+            continue;
+        }
 
-        $packages[$manifest['themeKey']] = [
+        if (! is_string($themeKey)) {
+            continue;
+        }
+
+        if (($manifest['extends'] ?? null) !== 'capell-app/foundation-theme') {
+            continue;
+        }
+
+        $packages[$themeKey] = [
             $packageDirectory,
             $manifest['name'],
-            $manifest['themeKey'],
+            $themeKey,
         ];
     }
 

@@ -12,13 +12,16 @@ it('hydrates installed package health metadata from local package manifests', fu
     $installedJsonPath = $temporaryRoot . '/vendor/composer/installed.json';
     $packagesPath = $temporaryRoot . '/packages';
     $packagePath = $packagesPath . '/events';
+    $secondPackagePath = $packagesPath . '/forms';
 
     File::ensureDirectoryExists(dirname($installedJsonPath));
     File::ensureDirectoryExists($packagePath . '/config');
+    File::ensureDirectoryExists($secondPackagePath);
 
     File::put($installedJsonPath, json_encode([
         'packages' => [
             ['name' => 'capell-app/events', 'version' => '4.x-dev'],
+            ['name' => 'capell-app/forms', 'version' => '4.x-dev'],
             ['name' => 'vendor/ignored', 'version' => '1.0.0'],
         ],
     ], JSON_THROW_ON_ERROR));
@@ -37,24 +40,39 @@ it('hydrates installed package health metadata from local package manifests', fu
             ['key' => 'events.tables', 'label' => 'Tables', 'class' => PassingFixtureHealthCheck::class],
             ['key' => 'events.routes', 'label' => 'Routes', 'class' => StubFixtureHealthCheck::class],
             ['key' => 'events.missing', 'label' => 'Missing', 'class' => 'Missing\\EventsHealthCheck'],
+            ['key' => 'events.invalid', 'label' => 'Invalid', 'class' => stdClass::class],
+        ],
+    ], JSON_THROW_ON_ERROR));
+    File::put($secondPackagePath . '/capell.json', json_encode([
+        'name' => 'capell-app/forms',
+        'slug' => 'forms',
+        'displayName' => 'Forms',
+        'healthChecks' => [
+            ['key' => 'forms.tables', 'label' => 'Tables', 'class' => PassingFixtureHealthCheck::class],
+            ['key' => 'forms.missing', 'label' => 'Missing', 'class' => 'Missing\\FormsHealthCheck'],
         ],
     ], JSON_THROW_ON_ERROR));
 
     try {
         $result = (new BuildPackagesInstalledAction($installedJsonPath, $packagesPath))->handle();
-        $package = diagnosticsPackageInfo($result->packages->toCollection()->first());
+        $packages = $result->packages->toCollection()->keyBy('composerName');
+        $package = diagnosticsPackageInfo($packages->get('capell-app/events'));
 
-        expect($result->packages)->toHaveCount(1)
+        expect($result->packages)->toHaveCount(2)
             ->and($package->name)->toBe('events')
             ->and($package->displayName)->toBe('Events')
             ->and($package->bundle)->toBe('growth')
-            ->and($package->healthCheckCount)->toBe(3)
-            ->and($package->healthCheckDeclaredCount)->toBe(3)
+            ->and($package->healthCheckCount)->toBe(4)
+            ->and($package->healthCheckDeclaredCount)->toBe(4)
             ->and($package->healthCheckImplementedCount)->toBe(1)
             ->and($package->healthCheckStubCount)->toBe(1)
-            ->and($package->healthCheckBrokenCount)->toBe(1)
+            ->and($package->healthCheckBrokenCount)->toBe(2)
             ->and($package->installCommand)->toBe('capell:events-install')
-            ->and($package->doctorCommand)->toBe('capell:events-doctor');
+            ->and($package->doctorCommand)->toBe('capell:events-doctor')
+            ->and($result->healthCheckDeclaredCount)->toBe(6)
+            ->and($result->healthCheckImplementedCount)->toBe(2)
+            ->and($result->healthCheckStubCount)->toBe(1)
+            ->and($result->healthCheckBrokenCount)->toBe(3);
     } finally {
         File::deleteDirectory($temporaryRoot);
     }

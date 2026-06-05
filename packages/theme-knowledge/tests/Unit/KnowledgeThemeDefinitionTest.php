@@ -25,6 +25,7 @@ it('defines the Knowledge theme contract', function (): void {
         ->and($definition->includedSections)->toContain('hero')
         ->and($definition->includedSections)->toContain('features')
         ->and($definition->includedSections)->toContain('proof')
+        ->and($definition->includedSections)->toContain('doc-article')
         ->and($definition->includedSections)->toContain('content-listing')
         ->and($definition->includedSections)->toContain('cta')
         ->and($definition->includedSections)->toContain('footer')
@@ -144,6 +145,13 @@ it('renders standard sections through Knowledge views', function (): void {
     expect($searchHtml)
         ->toContain('Search the archive')
         ->toContain('knowledge-search-console')
+        ->toContain('role="search"')
+        ->toContain('method="GET"')
+        ->toContain('action="http://localhost/search"')
+        ->toContain('type="search"')
+        ->toContain('name="q"')
+        ->toContain('Search query')
+        ->toContain('Submit a keyword to open the full search results experience.')
         ->toContain('knowledge-result-card')
         ->toContain('Facet filters')
         ->toContain('Source map')
@@ -197,10 +205,12 @@ it('renders new premium knowledge layouts through the registry', function (): vo
     $readingPathRenderer = $registry->sectionRenderer('knowledge', 'reading-path');
     $sourceMapRenderer = $registry->sectionRenderer('knowledge', 'source-map');
     $topicIndexRenderer = $registry->sectionRenderer('knowledge', 'topic-index');
+    $docArticleRenderer = $registry->sectionRenderer('knowledge', 'doc-article');
 
     assert($readingPathRenderer instanceof SectionRenderer);
     assert($sourceMapRenderer instanceof SectionRenderer);
     assert($topicIndexRenderer instanceof SectionRenderer);
+    assert($docArticleRenderer instanceof SectionRenderer);
 
     $readingPathHtml = $readingPathRenderer->render(knowledgeThemeSection('reading-path', [
         'heading' => 'Follow a reading path',
@@ -223,6 +233,27 @@ it('renders new premium knowledge layouts through the registry', function (): vo
         ],
     ]));
 
+    $docArticleHtml = $docArticleRenderer->render(knowledgeThemeSection('doc-article', [
+        'title' => 'Configure knowledge workflows',
+        'summary' => 'A docs page needs sidebar routing, breadcrumbs, and in-page anchors.',
+        'category' => 'Operations guide',
+        'updatedAt' => 'June 5, 2026',
+        'readingTime' => '11 min',
+        'breadcrumbs' => [
+            ['label' => 'Docs', 'url' => '/docs'],
+            ['label' => 'Operations'],
+        ],
+        'sidebarItems' => [
+            ['label' => 'Operations', 'url' => '/docs/operations', 'active' => true],
+            ['label' => 'Editorial review', 'url' => '/docs/review'],
+        ],
+        'tocItems' => [
+            ['label' => 'Plan the library', 'url' => '#plan-the-library'],
+            ['label' => 'Publish the article', 'url' => '#publish-the-article'],
+        ],
+        'contentHtml' => '<h3 id="plan-the-library">Plan the library</h3><p>Keep the article body constrained and readable.</p>',
+    ]));
+
     expect($readingPathHtml)
         ->toContain('Follow a reading path')
         ->toContain('Start with fundamentals')
@@ -236,6 +267,19 @@ it('renders new premium knowledge layouts through the registry', function (): vo
     expect($topicIndexHtml)
         ->toContain('Browse topic routes')
         ->toContain('Operations')
+        ->not->toContain('capell-app/theme-knowledge');
+
+    expect($docArticleHtml)
+        ->toContain('Configure knowledge workflows')
+        ->toContain('A docs page needs sidebar routing, breadcrumbs, and in-page anchors.')
+        ->toContain('Operations guide')
+        ->toContain('June 5, 2026')
+        ->toContain('11 min')
+        ->toContain('Docs')
+        ->toContain('Editorial review')
+        ->toContain('On this page')
+        ->toContain('Plan the library')
+        ->toContain('Keep the article body constrained and readable.')
         ->not->toContain('capell-app/theme-knowledge');
 });
 

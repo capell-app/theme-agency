@@ -6,22 +6,98 @@ namespace Capell\FoundationTheme\Health;
 
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
+use Capell\Core\Enums\FrontendRuntime;
+use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\Support\Settings\SettingsSchemaRegistry;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
+use Capell\FoundationTheme\Filament\Settings\FoundationThemeSettingsSchema;
 use Capell\FoundationTheme\Providers\FoundationThemeServiceProvider;
+use Capell\FoundationTheme\Settings\FoundationThemeSettings;
+use Capell\FoundationTheme\Support\Assets\FoundationThemeAssetContributor;
 use Illuminate\Support\Collection;
+use JsonException;
 
 final class FoundationThemeHealthCheck implements ChecksExtensionHealth
 {
+    private const string PACKAGE_ROOT = __DIR__ . '/../..';
+
     /**
      * Packages Foundation Theme cannot render without.
      *
      * @var list<string>
      */
-    private const array REQUIRED_PACKAGES = [
+    private const array REQUIRED_INSTALLED_PACKAGES = [
+        'capell-app/foundation-theme',
         'capell-app/frontend',
         'capell-app/layout-builder',
     ];
+
+    /**
+     * @var list<string>
+     */
+    private const array REQUIRED_SECTIONS = [
+        'navigation',
+        'hero',
+        'features',
+        'proof',
+        'content-listing',
+        'cta',
+        'footer',
+    ];
+
+    /**
+     * @var list<string>
+     */
+    private const array REQUIRED_VIEW_NAMES = [
+        'capell-foundation-theme::theme.page',
+        'capell-foundation-theme::theme.sections.navigation',
+        'capell-foundation-theme::theme.sections.hero',
+        'capell-foundation-theme::theme.sections.features',
+        'capell-foundation-theme::theme.sections.proof',
+        'capell-foundation-theme::theme.sections.content-listing',
+        'capell-foundation-theme::theme.sections.cta',
+        'capell-foundation-theme::theme.sections.footer',
+        'capell-foundation-theme::components.app.head.tokens',
+        'capell-foundation-theme::components.layout.main',
+        'capell-foundation-theme::components.widget.wrapper',
+    ];
+
+    /**
+     * @var list<string>
+     */
+    private const array REQUIRED_PACKAGE_FILES = [
+        'capell.json',
+        'config/capell-foundation-theme.php',
+        'publishes/build/manifest.json',
+        'resources/css/foundation-theme.css',
+        'resources/css/widgets/foundation-widgets.css',
+        'resources/js/capell-frontend.js',
+        'resources/views/components/app/head/tokens.blade.php',
+        'resources/views/theme/page.blade.php',
+        'resources/views/theme/sections/navigation.blade.php',
+        'resources/views/theme/sections/hero.blade.php',
+        'resources/views/theme/sections/features.blade.php',
+        'resources/views/theme/sections/proof.blade.php',
+        'resources/views/theme/sections/content-listing.blade.php',
+        'resources/views/theme/sections/cta.blade.php',
+        'resources/views/theme/sections/footer.blade.php',
+    ];
+
+    /**
+     * @var list<string>
+     */
+    private const array REQUIRED_TAILWIND_IMPORTS = [
+        'resources/css/foundation-theme.css',
+        'resources/css/widgets/foundation-widgets.css',
+        'tippy.js/dist/tippy.css',
+        'swiper/css',
+        'swiper/css/autoplay',
+        'swiper/css/pagination',
+        'swiper/css/navigation',
+    ];
+
+    public function __construct(private readonly string $packageRoot = self::PACKAGE_ROOT) {}
 
     public static function compatibleCapellApiVersion(): string
     {
@@ -36,9 +112,13 @@ final class FoundationThemeHealthCheck implements ChecksExtensionHealth
         $check = new self;
 
         return collect([
+            $check->packageInstallationCheck(),
+            $check->manifestProviderCheck(),
             $check->themeStudioDefinitionCheck(),
-            $check->requiredPackagesCheck(),
-            $check->publishedAssetsCheck(),
+            $check->themeViewsCheck(),
+            $check->assetPipelineCheck(),
+            $check->configAndTokensCheck(),
+            $check->providerRegistrationsCheck(),
         ]);
     }
 
@@ -48,60 +128,115 @@ final class FoundationThemeHealthCheck implements ChecksExtensionHealth
             ->every(static fn (DoctorCheckResultData $result): bool => $result->passed);
     }
 
-    /**
-     * Asserts the Foundation Theme Studio definition is registered so pages can render.
-     */
+    public function packageInstallationCheck(): DoctorCheckResultData
+    {
+        $missingPackages = $this->missingInstalledPackages();
+
+        return new DoctorCheckResultData(
+            label: 'Foundation Theme package installation',
+            passed: $missingPackages === [],
+            message: $missingPackages === []
+                ? 'Foundation Theme and its required frontend/layout-builder dependencies are installed.'
+                : 'Missing installed packages: ' . implode(', ', $missingPackages) . '.',
+            remediation: $missingPackages === []
+                ? null
+                : 'Install or enable Foundation Theme and its required Capell frontend dependencies before rendering this theme.',
+        );
+    }
+
+    public function manifestProviderCheck(): DoctorCheckResultData
+    {
+        $issues = $this->manifestProviderIssues();
+
+        return new DoctorCheckResultData(
+            label: 'Foundation Theme manifest and provider contract',
+            passed: $issues === [],
+            message: $issues === []
+                ? 'The manifest declares the expected theme key, dependencies, runtime provider, and critical health check.'
+                : 'Manifest/provider issues: ' . implode(' ', $issues),
+            remediation: $issues === []
+                ? null
+                : 'Update capell.json so Diagnostics, install, and Marketplace discovery match the shipped Foundation Theme provider.',
+        );
+    }
+
     public function themeStudioDefinitionCheck(): DoctorCheckResultData
     {
-        $registered = $this->isThemeStudioDefinitionRegistered();
+        $issues = $this->themeStudioDefinitionIssues();
 
         return new DoctorCheckResultData(
             label: 'Foundation Theme Studio definition',
-            passed: $registered,
-            message: $registered
-                ? 'The Foundation Theme Studio definition is registered and available for rendering.'
-                : 'The Foundation Theme Studio definition is not registered; pages cannot render through Foundation Theme.',
-            remediation: $registered
+            passed: $issues === [],
+            message: $issues === []
+                ? 'The Foundation Theme Studio definition is registered with the expected runtime, asset, preset, and section contract.'
+                : 'Theme Studio definition issues: ' . implode(' ', $issues),
+            remediation: $issues === []
                 ? null
-                : 'Ensure FoundationThemeServiceProvider boots and registers the theme definition with the ThemeRegistry.',
+                : 'Ensure FoundationThemeServiceProvider boots while the package is installed and registers the default Theme Studio definition.',
         );
     }
 
-    /**
-     * Asserts every package Foundation Theme depends on is installed.
-     */
-    public function requiredPackagesCheck(): DoctorCheckResultData
+    public function themeViewsCheck(): DoctorCheckResultData
     {
-        $missingPackages = $this->missingRequiredPackages();
+        $missingViews = $this->missingViews();
 
         return new DoctorCheckResultData(
-            label: 'Foundation Theme required packages',
-            passed: $missingPackages === [],
-            message: $missingPackages === []
-                ? 'The frontend and layout-builder packages Foundation Theme depends on are installed.'
-                : 'Missing required packages: ' . implode(', ', $missingPackages) . '.',
-            remediation: $missingPackages === []
+            label: 'Foundation Theme render views',
+            passed: $missingViews === [],
+            message: $missingViews === []
+                ? 'The Foundation layout, section, token, layout component, and widget wrapper views are resolvable.'
+                : 'Missing Foundation Theme views: ' . implode(', ', $missingViews) . '.',
+            remediation: $missingViews === []
                 ? null
-                : 'Install the missing Capell packages so Foundation Theme can register its assets and layout areas.',
+                : 'Ensure the Foundation Theme view namespace is loaded and required Blade files are present.',
         );
     }
 
-    /**
-     * Asserts the published frontend asset manifest exists at the public path.
-     */
-    public function publishedAssetsCheck(): DoctorCheckResultData
+    public function assetPipelineCheck(): DoctorCheckResultData
     {
-        $manifestExists = $this->publishedAssetManifestExists();
+        $missingAssets = $this->missingAssets();
 
         return new DoctorCheckResultData(
-            label: 'Foundation Theme published assets',
-            passed: $manifestExists,
-            message: $manifestExists
-                ? 'The Foundation Theme frontend asset manifest is published to the public path.'
-                : 'The Foundation Theme frontend asset manifest is missing from the public path.',
-            remediation: $manifestExists
+            label: 'Foundation Theme asset pipeline',
+            passed: $missingAssets === [],
+            message: $missingAssets === []
+                ? 'The Foundation source assets, publishable build manifest, published public manifest, and vendor asset registrations are present.'
+                : 'Missing Foundation Theme assets: ' . implode(', ', $missingAssets) . '.',
+            remediation: $missingAssets === []
                 ? null
-                : 'Run php artisan vendor:publish --tag=capell-foundation-theme-assets to publish the frontend build.',
+                : 'Restore missing package assets, boot the Foundation Theme provider, then publish the frontend build assets.',
+        );
+    }
+
+    public function configAndTokensCheck(): DoctorCheckResultData
+    {
+        $issues = $this->configAndTokenIssues();
+
+        return new DoctorCheckResultData(
+            label: 'Foundation Theme config and tokens',
+            passed: $issues === [],
+            message: $issues === []
+                ? 'Foundation config, settings schema, runtime token settings, and token Blade hook are available.'
+                : 'Config/token issues: ' . implode(' ', $issues),
+            remediation: $issues === []
+                ? null
+                : 'Restore the Foundation config/settings classes and ensure the provider registers the foundation_theme settings group.',
+        );
+    }
+
+    public function providerRegistrationsCheck(): DoctorCheckResultData
+    {
+        $issues = $this->providerRegistrationIssues();
+
+        return new DoctorCheckResultData(
+            label: 'Foundation Theme provider registrations',
+            passed: $issues === [],
+            message: $issues === []
+                ? 'The provider registered the Tailwind generator, asset contributor, runtime asset condition, and settings surface.'
+                : 'Provider registration issues: ' . implode(' ', $issues),
+            remediation: $issues === []
+                ? null
+                : 'Boot FoundationThemeServiceProvider with the package installed so runtime services and registries are populated.',
         );
     }
 
@@ -117,9 +252,9 @@ final class FoundationThemeHealthCheck implements ChecksExtensionHealth
     /**
      * @return list<string>
      */
-    public function missingRequiredPackages(): array
+    public function missingInstalledPackages(): array
     {
-        return array_values(collect(self::REQUIRED_PACKAGES)
+        return array_values(collect(self::REQUIRED_INSTALLED_PACKAGES)
             ->reject(static fn (string $packageName): bool => CapellCore::isPackageInstalled($packageName))
             ->values()
             ->all());
@@ -128,5 +263,296 @@ final class FoundationThemeHealthCheck implements ChecksExtensionHealth
     public function publishedAssetManifestExists(): bool
     {
         return is_file(public_path('vendor/capell-foundation-theme/manifest.json'));
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function manifestProviderIssues(): array
+    {
+        $manifest = $this->manifest();
+
+        if ($manifest === null) {
+            return ['capell.json is missing or invalid.'];
+        }
+
+        $issues = [];
+
+        if (($manifest['name'] ?? null) !== FoundationThemeServiceProvider::$packageName) {
+            $issues[] = 'Package name does not match the service provider package name.';
+        }
+
+        if (($manifest['kind'] ?? null) !== 'theme') {
+            $issues[] = 'Manifest kind must be theme.';
+        }
+
+        if (($manifest['capellApiVersion'] ?? null) !== self::compatibleCapellApiVersion()) {
+            $issues[] = 'Manifest Capell API version does not match the health check.';
+        }
+
+        if (($manifest['themeKey'] ?? null) !== FoundationThemeServiceProvider::THEME_KEY) {
+            $issues[] = 'Theme key does not match the service provider theme key.';
+        }
+
+        $surfaces = $manifest['surfaces'] ?? [];
+
+        if (! is_array($surfaces) || ! in_array('admin', $surfaces, true) || ! in_array('frontend', $surfaces, true)) {
+            $issues[] = 'Admin and frontend surfaces must be declared.';
+        }
+
+        $requiredPackages = $manifest['dependencies']['requires'] ?? [];
+
+        if (! is_array($requiredPackages) || collect(['capell-app/frontend', 'capell-app/layout-builder'])->diff($requiredPackages)->isNotEmpty()) {
+            $issues[] = 'Manifest dependencies must require frontend and layout-builder.';
+        }
+
+        $runtimeProviders = $manifest['providers']['runtime'] ?? [];
+
+        if (! is_array($runtimeProviders) || $runtimeProviders !== [FoundationThemeServiceProvider::class]) {
+            $issues[] = 'Runtime providers must contain only FoundationThemeServiceProvider.';
+        }
+
+        $healthChecks = is_array($manifest['healthChecks'] ?? null) ? $manifest['healthChecks'] : [];
+        $healthCheck = collect($healthChecks)->first(
+            static fn (mixed $check): bool => is_array($check)
+                && ($check['class'] ?? null) === self::class,
+        );
+
+        if (! is_array($healthCheck)) {
+            $issues[] = 'Health check class is not declared.';
+        } elseif (($healthCheck['severity'] ?? null) !== 'critical') {
+            $issues[] = 'Health check severity must remain critical.';
+        }
+
+        if (($manifest['commands']['setup'] ?? null) !== 'capell:foundation-theme-setup') {
+            $issues[] = 'Setup command is not declared.';
+        }
+
+        return $issues;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function themeStudioDefinitionIssues(): array
+    {
+        if (! $this->isThemeStudioDefinitionRegistered()) {
+            return ['Foundation Theme Studio definition is not registered.'];
+        }
+
+        $definition = resolve(ThemeRegistry::class)->definition(FoundationThemeServiceProvider::THEME_KEY);
+        $issues = [];
+
+        if ($definition->package !== FoundationThemeServiceProvider::$packageName) {
+            $issues[] = 'Registered definition package does not match Foundation Theme.';
+        }
+
+        if ($definition->runtime !== FrontendRuntime::Blade) {
+            $issues[] = 'Registered definition must use the Blade runtime.';
+        }
+
+        if (($definition->assets['css'] ?? null) !== 'vendor/capell-foundation-theme/foundation-theme.css') {
+            $issues[] = 'Registered definition CSS asset is missing.';
+        }
+
+        if ($definition->presets === []) {
+            $issues[] = 'Registered definition has no presets.';
+        }
+
+        $missingSections = array_values(collect(self::REQUIRED_SECTIONS)
+            ->diff($definition->includedSections)
+            ->values()
+            ->all());
+
+        if ($missingSections !== []) {
+            $issues[] = 'Missing definition sections: ' . implode(', ', $missingSections) . '.';
+        }
+
+        return $issues;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function missingViews(): array
+    {
+        if (! function_exists('view')) {
+            return self::REQUIRED_VIEW_NAMES;
+        }
+
+        return array_values(collect(self::REQUIRED_VIEW_NAMES)
+            ->reject(static fn (string $viewName): bool => view()->exists($viewName))
+            ->values()
+            ->all());
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function missingAssets(): array
+    {
+        $missingAssets = $this->missingPackageFiles();
+
+        if (! $this->publishedAssetManifestExists()) {
+            $missingAssets[] = 'public/vendor/capell-foundation-theme/manifest.json';
+        }
+
+        $buildAssets = CapellCore::getVendorAssetsForType(VendorAssetEnum::BuildAsset);
+        $tailwindImports = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindImport);
+        $tailwindSources = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindSource);
+
+        $hasBuildAsset = $buildAssets->contains(
+            static fn (mixed $asset): bool => $asset->packageName === FoundationThemeServiceProvider::$packageName
+                && $asset->value === 'vendor/capell-foundation-theme'
+                && $asset->secondaryValue === 'resources/js/capell-frontend.js'
+                && $asset->condition === 'foundation-theme-runtime',
+        );
+
+        if (! $hasBuildAsset) {
+            $missingAssets[] = 'build asset registration';
+        }
+
+        foreach (self::REQUIRED_TAILWIND_IMPORTS as $import) {
+            $hasImport = $tailwindImports->contains(
+                static fn (mixed $asset): bool => $asset->packageName === FoundationThemeServiceProvider::$packageName
+                    && $asset->value === $import,
+            );
+
+            if (! $hasImport) {
+                $missingAssets[] = 'Tailwind import registration: ' . $import;
+            }
+        }
+
+        $hasBladeSource = $tailwindSources->contains(
+            static fn (mixed $asset): bool => $asset->packageName === FoundationThemeServiceProvider::$packageName
+                && $asset->value === 'resources/views/**/*.blade.php',
+        );
+
+        if (! $hasBladeSource) {
+            $missingAssets[] = 'Tailwind Blade source registration';
+        }
+
+        return array_values($missingAssets);
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function missingPackageFiles(): array
+    {
+        $packageRoot = $this->packageRoot;
+
+        return array_values(collect(self::REQUIRED_PACKAGE_FILES)
+            ->reject(static fn (string $relativePath): bool => is_file($packageRoot . '/' . $relativePath))
+            ->values()
+            ->all());
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function configAndTokenIssues(): array
+    {
+        $issues = [];
+
+        if (! is_string(config('capell-foundation-theme.asset_build_tool')) || config('capell-foundation-theme.asset_build_tool') === '') {
+            $issues[] = 'asset_build_tool config is missing.';
+        }
+
+        $tailwindConfig = config('capell-foundation-theme.tailwind');
+
+        if (! is_array($tailwindConfig) || ! is_string($tailwindConfig['output_css'] ?? null) || $tailwindConfig['output_css'] === '') {
+            $issues[] = 'Tailwind output_css config is missing.';
+        }
+
+        $npmDependencies = config('capell-foundation-theme.npm_dependencies');
+
+        if (! is_array($npmDependencies) || ! isset($npmDependencies['tailwindcss'], $npmDependencies['swiper'])) {
+            $issues[] = 'Required npm dependency config is missing.';
+        }
+
+        if (FoundationThemeSettings::group() !== 'foundation_theme') {
+            $issues[] = 'Foundation settings group is incorrect.';
+        }
+
+        if (FoundationThemeSettings::schema() !== FoundationThemeSettingsSchema::class) {
+            $issues[] = 'Foundation settings schema link is incorrect.';
+        }
+
+        if (
+            FoundationThemeSettings::sectionSpacingCssValueFor('relaxed') === ''
+            || FoundationThemeSettings::widgetGapCssValueFor('balanced') === ''
+        ) {
+            $issues[] = 'Foundation spacing token defaults are missing.';
+        }
+
+        if (app()->bound(SettingsSchemaRegistry::class)) {
+            $registry = resolve(SettingsSchemaRegistry::class);
+
+            if ($registry->getSettingsClass('foundation_theme') !== FoundationThemeSettings::class) {
+                $issues[] = 'Foundation settings class is not registered.';
+            }
+
+            if (! in_array(FoundationThemeSettingsSchema::class, $registry->getSchemas('foundation_theme'), true)) {
+                $issues[] = 'Foundation settings schema is not registered.';
+            }
+        } else {
+            $issues[] = 'Settings schema registry is not bound.';
+        }
+
+        return $issues;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function providerRegistrationIssues(): array
+    {
+        $issues = [];
+
+        if (! app()->bound('capell.tailwind.generator')) {
+            $issues[] = 'Tailwind generator binding is missing.';
+        }
+
+        if (! app()->bound(FoundationThemeAssetContributor::class)) {
+            $issues[] = 'Foundation asset contributor binding is missing.';
+        }
+
+        $hasRuntimeCondition = collect(CapellCore::getVendorAssetsForType(VendorAssetEnum::BuildAsset))->contains(
+            static fn (mixed $asset): bool => $asset->packageName === FoundationThemeServiceProvider::$packageName
+                && $asset->condition === 'foundation-theme-runtime',
+        );
+
+        if (! $hasRuntimeCondition) {
+            $issues[] = 'Foundation runtime vendor asset condition is missing.';
+        }
+
+        return $issues;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    private function manifest(): ?array
+    {
+        $manifestPath = $this->packageRoot . '/capell.json';
+
+        if (! is_file($manifestPath)) {
+            return null;
+        }
+
+        try {
+            $contents = file_get_contents($manifestPath);
+
+            if ($contents === false) {
+                return null;
+            }
+
+            $manifest = json_decode($contents, true, flags: JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
+            return null;
+        }
+
+        return is_array($manifest) ? $manifest : null;
     }
 }

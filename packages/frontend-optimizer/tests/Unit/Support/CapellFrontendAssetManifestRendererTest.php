@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Models\Language;
 use Capell\Core\Models\Layout;
+use Capell\Core\Models\Page;
 use Capell\Core\Models\Site;
 use Capell\Core\Models\Theme;
 use Capell\Frontend\Data\FrontendAssetContextData;
@@ -33,6 +34,12 @@ it('converts a Capell manifest into a layout scoped optimizer profile', function
     $assets = $profile->signature['assets'];
     $runtimeAsset = collect($assets)->firstWhere('handle', 'foundation-theme:runtime');
     $firstAsset = $assets[0];
+    $signature = $profile->signature;
+    throw_unless(is_array($signature), RuntimeException::class, 'Expected render profile signature.');
+    $signatureContext = $signature['context'] ?? null;
+    throw_unless(is_array($signatureContext), RuntimeException::class, 'Expected render profile context signature.');
+    $signaturePage = $signatureContext['page'] ?? null;
+    throw_unless(is_array($signaturePage), RuntimeException::class, 'Expected render profile page signature.');
 
     expect($firstAsset)->toHaveKeys(['critical_eligible', 'loading_strategy', 'slot']);
     expect($runtimeAsset)->not->toBeNull();
@@ -49,6 +56,8 @@ it('converts a Capell manifest into a layout scoped optimizer profile', function
         ->not->toContain('capell-app/foundation-theme')
         ->and($profile->scope)->toBe('layout')
         ->and($profile->label)->toBe($context->layout?->key . ' / ' . $context->theme?->key)
+        ->and($signaturePage['id'])->toBe($context->page?->getKey())
+        ->and($signaturePage['type'])->toBe($context->page?->getMorphClass())
         ->and($firstAsset['handle'])->toBe('foundation-theme:css')
         ->and($firstAsset['critical_eligible'])->toBeTrue()
         ->and($firstAsset['loading_strategy'])->toBe('deferred')
@@ -111,9 +120,10 @@ function optimizerRendererContext(): FrontendAssetContextData
     $theme = Theme::factory()->create(['key' => 'default']);
     $site = Site::factory()->language($language)->theme($theme)->create();
     $layout = Layout::factory()->site($site)->create(['key' => 'standard']);
+    $page = Page::factory()->site($site)->layout($layout)->create();
 
     return new FrontendAssetContextData(
-        page: null,
+        page: $page,
         site: $site,
         language: $language,
         layout: $layout,
