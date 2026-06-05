@@ -19,18 +19,51 @@ use Capell\ThemeStudio\Agency\AgencyThemeServiceProvider;
 use Capell\ThemeStudio\Agency\Health\ThemeAgencyHealthCheck;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 it('defines the agency free renderer contract', function (): void {
     $definition = AgencyThemeServiceProvider::definition();
 
     expect($definition->package)->toBe('capell-app/theme-agency')
         ->and($definition->key)->toBe(AgencyThemeServiceProvider::THEME_KEY)
-        ->and($definition->assets)->toBe(['css' => 'vendor/capell/themes/agency.css'])
+        ->and($definition->previewImage)->toBe(AgencyThemeServiceProvider::PUBLIC_PREVIEW_IMAGE)
+        ->and($definition->assets)->toBe(['css' => AgencyThemeServiceProvider::GENERATED_FRONTEND_CSS])
         ->and($definition->includedSections)->toContain('hero', 'features', 'proof', 'cta')
         ->and($definition->presets)->toHaveCount(6)
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->tags)->toContain('Expressive')
         ->and(ThemeAgencyHealthCheck::compatibleCapellApiVersion())->toBe('^4.0');
+});
+
+it('publishes the declared preview image and registers css through the tailwind source contract', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(AgencyThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new AgencyThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $publishPaths = ServiceProvider::pathsToPublish(AgencyThemeServiceProvider::class, 'capell-theme-agency-assets');
+    $publishedSourcePath = array_key_first($publishPaths);
+
+    expect($publishPaths)->toHaveCount(1)
+        ->and(realpath((string) $publishedSourcePath))->toBe(realpath(__DIR__ . '/../../docs/assets/marketplace/extension-card.jpg'))
+        ->and($publishPaths[$publishedSourcePath])->toBe(public_path(ltrim(AgencyThemeServiceProvider::PUBLIC_PREVIEW_IMAGE, '/')));
+
+    $packageImports = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindImport)
+        ->filter(static fn (mixed $asset): bool => $asset->packageName === AgencyThemeServiceProvider::$packageName)
+        ->pluck('value')
+        ->all();
+
+    $packageSources = CapellCore::getVendorAssetsForType(VendorAssetEnum::TailwindSource)
+        ->filter(static fn (mixed $asset): bool => $asset->packageName === AgencyThemeServiceProvider::$packageName)
+        ->pluck('value')
+        ->all();
+
+    expect($packageImports)->toContain(AgencyThemeServiceProvider::TAILWIND_IMPORT)
+        ->and($packageSources)->toContain(AgencyThemeServiceProvider::TAILWIND_SOURCE)
+        ->and($packageImports)->not->toContain('vendor/capell/themes/agency.css')
+        ->and(file_exists(__DIR__ . '/../../' . AgencyThemeServiceProvider::TAILWIND_IMPORT))->toBeTrue();
 });
 
 it('declares surface and foreground tokens for every agency preset', function (): void {

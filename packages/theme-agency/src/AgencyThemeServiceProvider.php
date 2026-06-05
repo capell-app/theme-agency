@@ -20,6 +20,14 @@ class AgencyThemeServiceProvider extends ServiceProvider
 {
     public const string THEME_KEY = 'agency';
 
+    public const string GENERATED_FRONTEND_CSS = 'resources/css/capell/frontend.css';
+
+    public const string PUBLIC_PREVIEW_IMAGE = '/vendor/capell/themes/agency.jpg';
+
+    public const string TAILWIND_IMPORT = 'resources/css/theme-agency.css';
+
+    public const string TAILWIND_SOURCE = 'resources/views/**/*.blade.php';
+
     public static string $packageName = 'capell-app/theme-agency';
 
     public static function definition(): ThemeDefinitionData
@@ -28,8 +36,8 @@ class AgencyThemeServiceProvider extends ServiceProvider
             key: self::THEME_KEY,
             name: 'Agency',
             description: 'Expressive layouts with bold rhythm, immersive media, and confident calls to action.',
-            package: 'capell-app/theme-agency',
-            previewImage: '/vendor/capell/themes/agency-signal.jpg',
+            package: self::$packageName,
+            previewImage: self::PUBLIC_PREVIEW_IMAGE,
             tags: ['Expressive', 'Portfolio', 'Creative'],
             bestFit: ['Studios', 'Agencies', 'Brand-led teams'],
             includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'cta', 'footer'],
@@ -38,7 +46,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
                     key: 'signal',
                     name: 'Signal',
                     description: 'Sharp contrast, strong statements, and energetic section pacing.',
-                    previewImage: '/vendor/capell/themes/agency-signal.jpg',
+                    previewImage: self::PUBLIC_PREVIEW_IMAGE,
                     values: [
                         'primaryColor' => '#ff5a7e',
                         'accentColor' => '#3b82f6',
@@ -57,7 +65,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
                     key: 'gallery',
                     name: 'Gallery',
                     description: 'Media-forward presentation with calmer motion and framed project surfaces.',
-                    previewImage: '/vendor/capell/themes/agency-gallery.jpg',
+                    previewImage: self::PUBLIC_PREVIEW_IMAGE,
                     values: [
                         'primaryColor' => '#7c3aed',
                         'accentColor' => '#fb7185',
@@ -76,7 +84,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
                     key: 'atelier',
                     name: 'Atelier',
                     description: 'Editorial studio feel with soft neutrals and refined proof.',
-                    previewImage: '/vendor/capell/themes/agency-atelier.jpg',
+                    previewImage: self::PUBLIC_PREVIEW_IMAGE,
                     values: [
                         'primaryColor' => '#be123c',
                         'accentColor' => '#f97316',
@@ -95,7 +103,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
                     key: 'zenith',
                     name: 'Zenith',
                     description: 'Wellness editorial direction from the Stitch Zenith Yoga concept, with quiet space and organic imagery.',
-                    previewImage: '/vendor/capell/themes/agency-zenith.jpg',
+                    previewImage: self::PUBLIC_PREVIEW_IMAGE,
                     values: [
                         'primaryColor' => '#516447',
                         'accentColor' => '#bb957f',
@@ -119,7 +127,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
                     key: 'northstar',
                     name: 'Northstar',
                     description: 'Polished consultancy and brand-lab direction from the Stitch Northstar homepage.',
-                    previewImage: '/vendor/capell/themes/agency-northstar.jpg',
+                    previewImage: self::PUBLIC_PREVIEW_IMAGE,
                     values: [
                         'primaryColor' => '#155e75',
                         'accentColor' => '#f97316',
@@ -143,7 +151,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
                     key: 'motion-studio',
                     name: 'Motion Studio',
                     description: 'High-contrast portfolio rhythm for the more visual Stitch agency concepts.',
-                    previewImage: '/vendor/capell/themes/agency-motion-studio.jpg',
+                    previewImage: self::PUBLIC_PREVIEW_IMAGE,
                     values: [
                         'primaryColor' => '#e11d48',
                         'accentColor' => '#22d3ee',
@@ -164,7 +172,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
                     ],
                 ),
             ],
-            assets: ['css' => 'vendor/capell/themes/agency.css'],
+            assets: ['css' => self::GENERATED_FRONTEND_CSS],
             runtime: FrontendRuntime::Blade,
             // Theme Studio inherits section fallbacks from the runtime default; capell.json keeps package-level inheritance on Foundation Theme.
             extends: 'default',
@@ -178,6 +186,10 @@ class AgencyThemeServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([DemoCommand::class]);
+
+            $this->publishes([
+                __DIR__ . '/../docs/assets/marketplace/extension-card.jpg' => public_path(ltrim(self::PUBLIC_PREVIEW_IMAGE, '/')),
+            ], 'capell-theme-agency-assets');
         }
 
         if (! CapellCore::isPackageInstalled(self::$packageName)) {
@@ -204,11 +216,11 @@ class AgencyThemeServiceProvider extends ServiceProvider
     private function registerVendorCssAssets(): void
     {
         CapellCore::registerVendorAsset(
-            VendorAssetData::tailwindImport('resources/css/theme-agency.css', self::$packageName),
+            VendorAssetData::tailwindImport(self::TAILWIND_IMPORT, self::$packageName),
         );
 
         CapellCore::registerVendorAsset(
-            VendorAssetData::tailwindSource('resources/views/**/*.blade.php', self::$packageName),
+            VendorAssetData::tailwindSource(self::TAILWIND_SOURCE, self::$packageName),
         );
     }
 

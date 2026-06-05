@@ -21,6 +21,7 @@ Adds a renderer package that plugs into Foundation Theme rather than changing Ca
 - Uses Foundation Theme runtime data and standard section keys, while rendering its own page and section Blade views.
 - Ships Blade resources for the page wrapper and standard theme sections.
 - Six Agency presets provide primary, accent, neutral, surface, and foreground tokens, and the page shell reads those tokens at render time.
+- The public preview image publishes the committed marketplace card to `/vendor/capell/themes/agency.jpg`, while CSS resolves through the generated frontend Tailwind entrypoint fed by `resources/css/theme-agency.css`.
 - No migrations, config, routes, models, admin navigation, or package-owned settings are present.
 
 ## Operational Notes
