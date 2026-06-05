@@ -96,7 +96,7 @@ Tie-back to `capabilities[]` in `capell.json`.
 | Implement real logic for the 4 advertised health checks                        | Now    | M      | High   | §2, §4      |
 | Hide/block `Fake` provider adapter in production (unsigned webhook)            | Done   | S      | High   | §2, §4      |
 | Add expiry + single-use burn (`used_at`) to unsubscribe/preference tokens — Shipped: unsubscribe/preference tokens use `public_tokens.token_expiry_hours`; confirm/unsubscribe stamp `used_at` and replay returns 404; preference-center view/update tokens remain reusable until expiry for self-service UX. Covered by `PreferenceCenterActionTest` + `NewsletterLifecycleActionTest`. | Done   | S      | High   | §2, §4      |
-| Reference `FormSubmitted` directly + test the listener actually fires          | Now    | S      | High   | §2, §4      |
+| Reference `FormSubmitted` directly + test the listener actually fires — Shipped: `NewsletterServiceProvider` registers `Event::listen(FormSubmitted::class, SubscribeFromFormSubmission::class)` directly, and `NewsletterLifecycleActionTest` asserts the raw Laravel listener registration before dispatching a real `FormSubmitted` event that creates a subscriber. | Done   | S      | High   | §2, §4      |
 | Honest marketplace summary + composer description (align the two)              | Now    | S      | Med    | §5          |
 | Capture the remaining 12 marketplace screenshots                               | Now    | S      | Med    | §1, §5      |
 | Decide & ship send strategy: in-house sender vs. reposition as scheduling-only | Next   | L      | High   | §3          |

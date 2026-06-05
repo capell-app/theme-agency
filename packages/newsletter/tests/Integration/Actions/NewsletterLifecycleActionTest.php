@@ -13,11 +13,13 @@ use Capell\Newsletter\Actions\CreateUnsubscribeTokenAction;
 use Capell\Newsletter\Actions\SubscribeFromFormSubmissionAction;
 use Capell\Newsletter\Enums\PublicTokenType;
 use Capell\Newsletter\Enums\SubscriberStatus;
+use Capell\Newsletter\Listeners\SubscribeFromFormSubmission;
 use Capell\Newsletter\Models\ConsentEvent;
 use Capell\Newsletter\Models\FormMapping;
 use Capell\Newsletter\Models\Subscriber;
 use Capell\Newsletter\Notifications\ConfirmNewsletterSubscriptionNotification;
 use Capell\Tags\Models\Tag;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
@@ -109,6 +111,8 @@ it('creates a subscriber when a FormSubmitted event is dispatched through the re
         'status' => 'new',
         'submitted_at' => now(),
     ]);
+
+    expect(Event::getRawListeners()[FormSubmitted::class] ?? [])->toContain(SubscribeFromFormSubmission::class);
 
     event(new FormSubmitted($form, $submission));
 
