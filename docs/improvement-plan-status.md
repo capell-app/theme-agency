@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 134 |
+| Now    | 132 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -63,7 +63,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | payments | 6 | 6 | 3 | Slice committed | Current follow-up moves paid-download delivery into an Action and adds Feature/Arch suites covering signed download paths, thin controllers, sensitive non-cacheable frontend settings, and public-output safety. Remaining Now rows: webhook row locking, marketplace media/copy, money casts, form-checkout URL allow-listing, and replay-safe paid-download expiry. |
 | privacy-center | 3 | 5 | 4 | Slice committed | Current follow-up adds provider/table/morph/hash-secret health diagnostics, removes the unshipped cookie-category public-surface capability, and reconciles already-shipped retention execution plus fail-loud hash-secret rows. Remaining Now rows: insights subject mirroring, DSAR edit actions, and README/CHANGELOG expansion. |
 | public-actions | 4 | 7 | 5 | Slice committed | Current follow-up drops the unsupported `cache-blocking` capability while keeping route-level `no-store` cache safety covered by manifest tests. Remaining Now rows: health checks, DNS-rebinding/redirect hardening, SSRF/health-check tests, and marketplace screenshots/copy. |
-| publishing-studio | 5 | 6 | 5 | Slice committed | `c6a886556` landed health/screenshots; continue with publishing workflow rows. |
+| publishing-studio | 3 | 6 | 5 | Slice committed | Current follow-up ships package config defaults for publish checks/release windows/scheduler settings and proves default publish checks resolve through the container. Remaining Now rows: manifest reconciliation, anonymous live-path safety, and CHANGELOG history. Note: full package Pest still has an unrelated scheduler table error in `SchedulerAndApprovalResidualCoverageTest`; focused publish-check pipeline coverage passes. |
 | search | 2 | 6 | 4 | Slice committed | Current follow-up defers search-log writes until after the response and keeps `RecordSearchAction` on scalar visitor metadata. Remaining Now rows: Scout/private visibility tests and click-count aggregate/cache-chain work. |
 | seo-suite | 5 | 6 | 3 | Slice committed | Current follow-up adds anonymous and signed-in non-admin AI Discovery public-output safety coverage for `/llms.txt`, `/index.md`, and `/robots.txt` using `PublicOutputLeakScanner`. Remaining Now rows: dormant SEO checks, real health probes, stronger leak matching, manifest cache/settings/permissions/PageSpeed accuracy, and AI circuit-breaker/null-usage hardening. |
 | shopify-commerce | 5 | 7 | 4 | Slice committed | Current follow-up closes the Start→Poll→Import bulk product sync loop with a queued continuation action and configurable poll delay. Remaining Now rows: Feature/Arch safety coverage, customer producer, health probes, GraphQL transaction cleanup, and sync-error secret scrubbing. |

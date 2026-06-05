@@ -78,6 +78,8 @@ class PublishingStudioServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
+        $this->mergeConfigFrom(__DIR__ . '/../../config/publishing-studio.php', 'capell.publishing-studio');
+
         $this->app->register(AdminServiceProvider::class);
         $this->app->singleton(ReleaseWorkspaceItemRegistry::class);
 
@@ -86,6 +88,12 @@ class PublishingStudioServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'capell-publishing-studio');
+
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../../config/publishing-studio.php' => config_path('capell/publishing-studio.php'),
+            ], 'capell-publishing-studio-config');
+        }
 
         if (! $this->isPackageInstalled()) {
             return;
