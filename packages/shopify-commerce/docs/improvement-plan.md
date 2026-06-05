@@ -97,7 +97,7 @@ Shopify Commerce adds a site-scoped Shopify Admin API integration to Capell: adm
 | Add public-output-safety + full-chain composition tests; add `tests/Arch`               | Now    | M      | High                  | §4          |
 | Ship a producer for `shopify_customers` (bulk query or `customers/*` webhook)           | Now    | M      | High                  | §3          |
 | Implement the Diagnostics health check probe (token, last-sync age, stuck ops)          | Now    | S      | High                  | §3, §4      |
-| Move GraphQL fetch out of `DB::transaction` in `FetchShopifyProductAction`              | Now    | S      | Med                   | §2, §4      |
+| Done/Shipped: Move GraphQL fetch out of `DB::transaction` in `FetchShopifyProductAction`. Evidence: focused action tests verify the Shopify GraphQL HTTP fake observes only the test harness baseline transaction level, not the action persistence transaction, and the fetched product still persists locally. | Done | S | Med | §2, §4 |
 | Done/Shipped: Scrub secrets from `last_sync_error` before persisting. Evidence: start/import exception persistence tests redact URLs, shop domains, token values, and auth headers while ordinary errors remain readable. | Done | S | Med (security) | §2, §4 |
 | Webhook ingestion (`products/*`, `app/uninstalled`) reusing `ValidateShopifyHmacAction` | Next   | L      | High                  | §3          |
 | Scheduled per-connection sync with backoff + `WithoutOverlapping`                       | Next   | M      | High                  | §3          |
