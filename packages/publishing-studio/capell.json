@@ -148,8 +148,19 @@
     ],
     "database": {
         "migrations": true,
-        "settings": false,
-        "requiredTables": ["workspaces", "publishing_revisions"]
+        "settings": true,
+        "requiredTables": [
+            "preview_links",
+            "workspaces",
+            "versions",
+            "workspace_approvals",
+            "workspace_field_comments",
+            "workspace_review_assignments",
+            "publishing_revisions",
+            "publishing_scheduler_events",
+            "publishing_scheduler_deliveries",
+            "publishing_scheduler_ical_tokens"
+        ]
     },
     "commands": {
         "install": null,
@@ -172,7 +183,9 @@
         "syncWorkspaceSchedulerEvents": "Capell\\PublishingStudio\\Actions\\SyncWorkspaceSchedulerEventsAction",
         "validateWorkspaceSchedulerMetadata": "Capell\\PublishingStudio\\Actions\\ValidateWorkspaceSchedulerMetadataAction"
     },
-    "settings": [],
+    "settings": [
+        "Capell\\PublishingStudio\\Settings\\PublishingStudioSettings"
+    ],
     "permissions": [
         "submit_workspace_for_approval",
         "approve_workspace",

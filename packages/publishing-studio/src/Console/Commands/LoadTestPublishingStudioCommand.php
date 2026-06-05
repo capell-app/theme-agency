@@ -7,7 +7,7 @@ namespace Capell\PublishingStudio\Console\Commands;
 use Capell\PublishingStudio\Enums\WorkspaceStatusEnum;
 use Capell\PublishingStudio\Models\Workspace;
 use Capell\PublishingStudio\Publisher;
-use Capell\PublishingStudio\Tests\Integration\Fixtures\WorkspaceDraftableFixture;
+use Capell\PublishingStudio\Support\LoadTesting\WorkspaceDraftableFixture;
 use Capell\PublishingStudio\WorkspaceContext;
 use Capell\PublishingStudio\WorkspaceRegistry;
 use Illuminate\Console\Command;
@@ -148,9 +148,7 @@ class LoadTestPublishingStudioCommand extends Command
             }
         }
 
-        throw new RuntimeException(
-            'No workspace fixture model is available. Load-test requires the test-suite fixture to be on the autoloader.',
-        );
+        throw new RuntimeException('No workspace fixture model is available for the load-test command.');
     }
 
     /** @param  class-string<Model>  $modelClass */
