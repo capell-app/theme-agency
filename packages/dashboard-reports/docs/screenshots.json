@@ -5,7 +5,7 @@
     "requiresInstalledPackage": true,
     "composerRequires": [
         "capell-app/dashboard-reports",
-        "capell-app/content-blocks"
+        "capell-app/block-library"
     ],
     "outputDirectory": "packages/dashboard-reports/docs/screenshots",
     "entries": [
