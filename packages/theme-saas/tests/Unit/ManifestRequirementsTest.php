@@ -37,6 +37,21 @@ describe('theme saas capell.json manifest', function (): void {
         expect($commands['demo'])->toBe('capell:theme-saas-demo')
             ->and($commands['demoParams'])->toBe(['url', 'languages', 'sites']);
     });
+
+    it('keeps non-cacheable theme output from queueing invalidation without sources', function (): void {
+        $manifest = saasThemeManifest();
+        $cacheSafety = $manifest['performance']['cacheSafety'] ?? null;
+
+        throw_unless(is_array($cacheSafety), RuntimeException::class, 'Theme SaaS cache safety manifest data must be an array.');
+
+        expect($cacheSafety)->toMatchArray([
+            'cacheable' => false,
+            'variesBy' => ['site', 'locale'],
+            'sensitiveOutput' => false,
+            'invalidationSources' => [],
+            'queueInvalidation' => false,
+        ]);
+    });
 });
 
 /**

@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 204 |
+| Now    | 203 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -79,7 +79,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | theme-local-services | 2 | 8 | 3 | Slice committed | Current follow-up aligns manifest surfaces with the README and demo command by declaring both frontend and console surfaces, after the prior Local Services slice translated/data-drove service-area cards, added the contact anchor, removed dead area links, hardened manifest tests, and updated docs/tests. Continue with quote-form fallback, contact click-to-call/address/map, screenshots, LocalBusiness schema, hero LCP/alt, literal translation sweep, token/radius work, and full section/render-budget coverage. |
 | theme-nonprofit | 3 | 6 | 4 | Slice committed | Latest Nonprofit slice fixes the public skip-link target, translates the events label, removes public Blade package introspection, and updates docs/tests; continue with screenshots, heading hierarchy, donation/payment flow, volunteer/event/story connected branches, token colours, hero LCP/progressbar, data-driven campaigns/stories/contact, and render-budget coverage. |
 | theme-portfolio | 4 | 8 | 3 | Slice committed | Latest Portfolio slice translates newsletter chrome, removes inert `action="#"` fallback forms, supports hydrated capture actions, and updates docs/tests; continue with screenshots, product-group drift, data-driven testimonials/media-kit/contact, creator-lane about/bio, image LCP/alt, reduced motion, token colours, dark preset, and render-budget coverage. |
-| theme-saas | 5 | 7 | 3 | Slice committed | Latest SaaS slice wires Content Sections, Document Lifecycle, and Form Builder availability into pricing/docs/demo-request guidance with branch tests and docs; continue with rendered anonymous leak tests, cacheSafety reconciliation, adapter translation, real pricing matrix, demo/trial form embed, route-backed screenshots, jargon copy, token colours, dark mode, and interactive calculator work. |
+| theme-saas | 4 | 7 | 3 | Slice committed | Current follow-up reconciles manifest cache safety by keeping theme output non-cacheable and disabling queued invalidation while no invalidation sources are declared, after the prior SaaS slice wired Content Sections, Document Lifecycle, and Form Builder availability into pricing/docs/demo-request guidance with branch tests and docs. Continue with rendered anonymous leak tests, adapter translation, real pricing matrix, demo/trial form embed, route-backed screenshots, jargon copy, token colours, dark mode, and interactive calculator work. |
 | translation-manager | 6 | 5 | 5 | Slice committed | `56038d0db` landed import/export/readiness work; continue with placeholder validation and MT review. |
 | url-manager | 5 | 7 | 4 | Slice committed | `f060bcb3e` landed verification improvements; continue with opportunity/decorator reachability. |
 | welcome-tour | 6 | 5 | 5 | Slice committed | `ce8f38f2d` landed improvements; continue with host-column/runtime edge rows. |
