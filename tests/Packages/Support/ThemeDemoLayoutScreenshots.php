@@ -85,7 +85,7 @@ function installThemeDemoScreenshotFixture(
     expect((int) $exitCode)->toBe(Command::SUCCESS);
 
     $pages = Page::query()
-        ->with(['layout', 'pageUrl.siteDomain', 'translations', 'type'])
+        ->with(['layout', 'pageUrl.siteDomain', 'site', 'translations', 'type'])
         ->where('meta->theme_demo->theme_key', $themeKey)
         ->orderBy('order')
         ->orderBy('id')
@@ -95,7 +95,7 @@ function installThemeDemoScreenshotFixture(
     createThemeDemoScreenshotSystemPage($themeKey, $pages);
 
     $pages = Page::query()
-        ->with(['layout', 'pageUrl.siteDomain', 'translations', 'type'])
+        ->with(['layout', 'pageUrl.siteDomain', 'site', 'translations', 'type'])
         ->where('meta->theme_demo->theme_key', $themeKey)
         ->orderBy('order')
         ->orderBy('id')
@@ -103,7 +103,7 @@ function installThemeDemoScreenshotFixture(
 
     enrichThemeDemoScreenshotFixture($themeKey, $pages);
 
-    return $pages->fresh(['layout', 'pageUrl.siteDomain', 'translations', 'type']);
+    return $pages->fresh(['layout', 'pageUrl.siteDomain', 'site', 'translations', 'type']);
 }
 
 /**
@@ -135,7 +135,7 @@ function installFoundationThemeDemoScreenshotFixture(): Collection
     expect($exitCode)->toBe(Command::SUCCESS);
 
     $pages = Page::query()
-        ->with(['layout', 'pageUrl.siteDomain', 'translations', 'type'])
+        ->with(['layout', 'pageUrl.siteDomain', 'site', 'translations', 'type'])
         ->where('meta->theme_demo->theme_key', $themeKey)
         ->orderBy('order')
         ->orderBy('id')
@@ -145,7 +145,7 @@ function installFoundationThemeDemoScreenshotFixture(): Collection
     createThemeDemoScreenshotSystemPage($themeKey, $pages);
 
     $pages = Page::query()
-        ->with(['layout', 'pageUrl.siteDomain', 'translations', 'type'])
+        ->with(['layout', 'pageUrl.siteDomain', 'site', 'translations', 'type'])
         ->where('meta->theme_demo->theme_key', $themeKey)
         ->orderBy('order')
         ->orderBy('id')
@@ -153,7 +153,7 @@ function installFoundationThemeDemoScreenshotFixture(): Collection
 
     enrichThemeDemoScreenshotFixture($themeKey, $pages);
 
-    return $pages->fresh(['layout', 'pageUrl.siteDomain', 'translations', 'type']);
+    return $pages->fresh(['layout', 'pageUrl.siteDomain', 'site', 'translations', 'type']);
 }
 
 function registerFoundationThemeDemoScreenshotRenderer(): void
