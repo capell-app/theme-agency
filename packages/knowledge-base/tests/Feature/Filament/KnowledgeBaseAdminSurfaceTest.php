@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
 use Capell\KnowledgeBase\Actions\BuildAiReadableKnowledgeBaseOutputAction;
 use Capell\KnowledgeBase\Actions\BuildKnowledgeBaseSearchDocumentsAction;
+use Capell\KnowledgeBase\Enums\KnowledgeBaseArticleStatus;
 use Capell\KnowledgeBase\Enums\ResourceEnum;
 use Capell\KnowledgeBase\Filament\Resources\Articles\KnowledgeBaseArticleResource;
 use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\CreateKnowledgeBaseArticle;
@@ -22,6 +23,17 @@ use Capell\KnowledgeBase\Policies\KnowledgeBaseArticlePolicy;
 use Capell\KnowledgeBase\Policies\KnowledgeBaseCollectionPolicy;
 use Capell\KnowledgeBase\Providers\AdminServiceProvider;
 use Capell\KnowledgeBase\Tests\KnowledgeBaseTestCase;
+use Filament\Actions\CreateAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Support\Facades\File;
@@ -113,6 +125,74 @@ it('declares admin providers, resources, and owned tables in the manifest', func
         ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);
 });
 
+it('builds knowledge base resource forms and tables with configured controls', function (): void {
+    expect(knowledgeBaseAdminFormComponentClasses(KnowledgeBaseCollectionResource::form(Schema::make())))->toBe([
+        TextInput::class,
+        TextInput::class,
+        TextInput::class,
+        Select::class,
+        Textarea::class,
+        TextInput::class,
+        Select::class,
+    ])
+        ->and(knowledgeBaseAdminFormComponentClasses(KnowledgeBaseArticleResource::form(Schema::make())))->toBe([
+            Select::class,
+            Select::class,
+            TextInput::class,
+            TextInput::class,
+            Textarea::class,
+            Textarea::class,
+            TextInput::class,
+            TextInput::class,
+            Select::class,
+        ])
+        ->and(array_keys(KnowledgeBaseCollectionResource::table(knowledgeBaseAdminTableForCoverage())->getColumns()))->toBe([
+            'title',
+            'slug',
+            'is_public',
+            'sort_order',
+            'articles_count',
+        ])
+        ->and(array_map(
+            static fn (object $column): string => $column::class,
+            array_values(KnowledgeBaseCollectionResource::table(knowledgeBaseAdminTableForCoverage())->getColumns()),
+        ))->toBe([
+            TextColumn::class,
+            TextColumn::class,
+            IconColumn::class,
+            TextColumn::class,
+            TextColumn::class,
+        ])
+        ->and(array_keys(KnowledgeBaseArticleResource::table(knowledgeBaseAdminTableForCoverage())->getColumns()))->toBe([
+            'title',
+            'collection.title',
+            'status',
+            'is_ai_readable',
+            'search_weight',
+            'published_at',
+        ])
+        ->and(array_keys(KnowledgeBaseArticleResource::table(knowledgeBaseAdminTableForCoverage())->getFilters()))->toBe([
+            'status',
+            'collection_id',
+        ])
+        ->and(KnowledgeBaseArticleResource::table(knowledgeBaseAdminTableForCoverage())->getFilters()['status'])->toBeInstanceOf(SelectFilter::class)
+        ->and(KnowledgeBaseArticleStatus::Archived->getLabel())->toBe(__('capell-knowledge-base::generic.article_status.archived'));
+});
+
+it('builds knowledge base list page create actions with translated labels', function (): void {
+    $collectionActions = knowledgeBaseAdminListPageHeaderActions(new ListKnowledgeBaseCollections);
+    $articleActions = knowledgeBaseAdminListPageHeaderActions(new ListKnowledgeBaseArticles);
+
+    expect($collectionActions)->toHaveCount(1)
+        ->and($collectionActions[0])->toBeInstanceOf(CreateAction::class)
+        ->and($collectionActions[0]->getName())->toBe('create')
+        ->and($collectionActions[0]->getLabel())->toBe(__('capell-knowledge-base::generic.admin.actions.create_collection'))
+        ->and($articleActions)->toHaveCount(1)
+        ->and($articleActions[0])->toBeInstanceOf(CreateAction::class)
+        ->and($articleActions[0]->getName())->toBe('create')
+        ->and($articleActions[0]->getLabel())->toBe(__('capell-knowledge-base::generic.admin.actions.create_article'));
+});
+
 it('allows admin authoring but keeps destructive deletes disabled by default', function (): void {
     $user = new class implements AuthenticatableContract
     {
@@ -136,3 +216,58 @@ it('allows admin authoring but keeps destructive deletes disabled by default', f
         ->and($articlePolicy->update())->toBeTrue()
         ->and($articlePolicy->delete())->toBeFalse();
 });
+
+/**
+ * @return list<class-string>
+ */
+function knowledgeBaseAdminFormComponentClasses(Schema $schema): array
+{
+    $components = $schema->getComponents();
+
+    expect($components)->toHaveCount(1)
+        ->and($components[0])->toBeInstanceOf(Section::class);
+
+    return array_map(
+        static fn (object $component): string => $component::class,
+        knowledgeBaseAdminChildComponents($components[0]),
+    );
+}
+
+/**
+ * @return list<object>
+ */
+function knowledgeBaseAdminChildComponents(object $component): array
+{
+    if (method_exists($component, 'getDefaultChildComponents')) {
+        $components = $component->getDefaultChildComponents();
+
+        return is_array($components) ? array_values($components) : [];
+    }
+
+    $reflectionProperty = new ReflectionProperty($component, 'childComponents');
+    $childComponents = $reflectionProperty->getValue($component);
+
+    return array_values($childComponents['default'] ?? []);
+}
+
+function knowledgeBaseAdminTableForCoverage(): Table
+{
+    $livewire = Mockery::mock(HasTable::class);
+    $livewire->shouldIgnoreMissing();
+    $livewire->shouldReceive('makeFilamentTranslatableContentDriver')->andReturn(null)->byDefault();
+    $livewire->shouldReceive('getTableFilterState')->andReturn([])->byDefault();
+    $livewire->shouldReceive('isTableLoaded')->andReturnTrue()->byDefault();
+    $livewire->shouldReceive('getTableArguments')->andReturn([])->byDefault();
+
+    return Table::make($livewire);
+}
+
+/**
+ * @return array<int, CreateAction>
+ */
+function knowledgeBaseAdminListPageHeaderActions(object $page): array
+{
+    $reflectionMethod = new ReflectionMethod($page, 'getHeaderActions');
+
+    return $reflectionMethod->invoke($page);
+}

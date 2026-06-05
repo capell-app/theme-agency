@@ -90,6 +90,17 @@
             "browserTestCount": 0
         },
         {
+            "package": "bookings",
+            "composerName": "capell-app/bookings",
+            "installCommand": null,
+            "setupCommand": null,
+            "demoCommand": null,
+            "demoParams": [],
+            "doctorCommand": null,
+            "entryCount": 2,
+            "browserTestCount": 0
+        },
+        {
             "package": "blog",
             "composerName": "capell-app/blog",
             "installCommand": "capell:blog-install",
@@ -547,6 +558,39 @@
             "demoParams": ["url", "languages", "sites"],
             "doctorCommand": null,
             "entryCount": 8,
+            "browserTestCount": 0
+        },
+        {
+            "package": "theme-inertia-bookings",
+            "composerName": "capell-app/theme-inertia-bookings",
+            "installCommand": null,
+            "setupCommand": null,
+            "demoCommand": null,
+            "demoParams": [],
+            "doctorCommand": null,
+            "entryCount": 5,
+            "browserTestCount": 0
+        },
+        {
+            "package": "theme-inertia-bookings-react",
+            "composerName": "capell-app/theme-inertia-bookings-react",
+            "installCommand": null,
+            "setupCommand": null,
+            "demoCommand": null,
+            "demoParams": [],
+            "doctorCommand": null,
+            "entryCount": 5,
+            "browserTestCount": 0
+        },
+        {
+            "package": "theme-inertia-bookings-vue",
+            "composerName": "capell-app/theme-inertia-bookings-vue",
+            "installCommand": null,
+            "setupCommand": null,
+            "demoCommand": null,
+            "demoParams": [],
+            "doctorCommand": null,
+            "entryCount": 5,
             "browserTestCount": 0
         },
         {
