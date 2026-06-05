@@ -9,6 +9,7 @@ use Capell\EmailStudio\Enums\EmailRecipientStatus;
 use Capell\EmailStudio\Exceptions\RetryableEmailDeliveryException;
 use Capell\EmailStudio\Models\EmailMessage;
 use Capell\EmailStudio\Models\EmailProfile;
+use Capell\EmailStudio\Models\EmailRecipient;
 use Capell\EmailStudio\Support\EmailProviderRegistry;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -60,27 +61,13 @@ class DeliverEmailMessageAction
             return MarkEmailMessageDeliveryFailedAction::run($emailMessage, $providerResult->failureReason) ?? $emailMessage;
         }
 
-        foreach ($emailMessage->recipients()->where('status', EmailRecipientStatus::Queued->value)->get() as $recipient) {
-            $recipientKey = (int) $recipient->getKey();
-            $failureReason = $providerResult->failedRecipientReasons[$recipientKey] ?? null;
+        $recipientWriteSummary = $this->applyProviderRecipientResults($emailMessage, $providerResult->recipientProviderMessageIds, $providerResult->failedRecipientReasons);
 
-            if ($failureReason !== null) {
-                $recipient->update([
-                    'status' => EmailRecipientStatus::Failed,
-                    'failure_reason' => $failureReason,
-                ]);
-
-                continue;
-            }
-
-            $recipient->update([
-                'status' => EmailRecipientStatus::Sent,
-                'provider_message_id' => $providerResult->recipientProviderMessageIds[$recipientKey] ?? null,
-                'sent_at' => now()->toImmutable(),
-            ]);
-        }
-
-        $emailMessage->update($this->messageStatusAttributes($emailMessage, $providerResult->failureReason));
+        $emailMessage->update($this->messageStatusAttributes(
+            $recipientWriteSummary['sent'],
+            $recipientWriteSummary['failed'],
+            $providerResult->failureReason,
+        ));
 
         return $emailMessage->fresh(['profile', 'recipients']) ?? $emailMessage;
     }
@@ -117,30 +104,91 @@ class DeliverEmailMessageAction
 
     private function markNewSuppressions(EmailMessage $message): void
     {
+        $suppressedRecipientIds = [];
+
         foreach ($message->recipients()->where('status', EmailRecipientStatus::Queued->value)->get() as $recipient) {
             if (resolve(CheckEmailSuppressionAction::class)->handle($recipient->email, $message->site_scope_key) === false) {
                 continue;
             }
 
-            $recipient->update([
-                'status' => EmailRecipientStatus::Suppressed,
+            $suppressedRecipientIds[] = (int) $recipient->getKey();
+        }
+
+        if ($suppressedRecipientIds === []) {
+            return;
+        }
+
+        EmailRecipient::query()
+            ->whereKey($suppressedRecipientIds)
+            ->update([
+                'status' => EmailRecipientStatus::Suppressed->value,
                 'suppressed_at' => now()->toImmutable(),
             ]);
+    }
+
+    /**
+     * @param  array<int, string>  $providerMessageIds
+     * @param  array<int, string>  $failedRecipientReasons
+     * @return array{sent: int, failed: int}
+     */
+    private function applyProviderRecipientResults(EmailMessage $message, array $providerMessageIds, array $failedRecipientReasons): array
+    {
+        $totalRecipientCount = $message->recipients()->count();
+        $queuedRecipients = $message->recipients()
+            ->where('status', EmailRecipientStatus::Queued->value)
+            ->get(['id']);
+        $sentAt = now()->toImmutable();
+        $updatedAt = now()->toImmutable();
+        $sentRows = [];
+        $failedRecipientIdsByReason = [];
+
+        foreach ($queuedRecipients as $recipient) {
+            $recipientKey = (int) $recipient->getKey();
+            $failureReason = $failedRecipientReasons[$recipientKey] ?? null;
+
+            if ($failureReason !== null) {
+                $failedRecipientIdsByReason[$failureReason][] = $recipientKey;
+
+                continue;
+            }
+
+            $sentRows[] = [
+                'id' => $recipientKey,
+                'status' => EmailRecipientStatus::Sent->value,
+                'provider_message_id' => $providerMessageIds[$recipientKey] ?? null,
+                'sent_at' => $sentAt,
+                'updated_at' => $updatedAt,
+            ];
         }
+
+        foreach ($failedRecipientIdsByReason as $failureReason => $recipientIds) {
+            EmailRecipient::query()
+                ->whereKey($recipientIds)
+                ->update([
+                    'status' => EmailRecipientStatus::Failed->value,
+                    'failure_reason' => $failureReason,
+                ]);
+        }
+
+        if ($sentRows !== []) {
+            EmailRecipient::query()->upsert(
+                $sentRows,
+                ['id'],
+                ['status', 'provider_message_id', 'sent_at', 'updated_at'],
+            );
+        }
+
+        return [
+            'sent' => count($sentRows),
+            'failed' => $totalRecipientCount - count($sentRows),
+        ];
     }
 
     /**
      * @return array<string, mixed>
      */
-    private function messageStatusAttributes(EmailMessage $message, ?string $failureReason): array
+    private function messageStatusAttributes(int $sentCount, int $failedCount, ?string $failureReason): array
     {
-        $recipientStatuses = $message->recipients()->pluck('status');
-        $sentCount = $recipientStatuses->filter(
-            fn (EmailRecipientStatus|string $status): bool => ($status instanceof EmailRecipientStatus ? $status : EmailRecipientStatus::from($status)) === EmailRecipientStatus::Sent,
-        )->count();
-
-        $failedCount = $recipientStatuses->count() - $sentCount;
-
         if ($sentCount === 0) {
             return [
                 'status' => EmailMessageStatus::Failed,
