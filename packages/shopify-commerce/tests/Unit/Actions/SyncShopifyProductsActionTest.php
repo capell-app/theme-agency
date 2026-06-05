@@ -6,6 +6,7 @@ use Capell\ShopifyCommerce\Actions\Catalog\ContinueShopifyProductBulkSyncAction;
 use Capell\ShopifyCommerce\Actions\Catalog\ImportShopifyProductBulkSyncAction;
 use Capell\ShopifyCommerce\Actions\Catalog\PollShopifyProductBulkSyncAction;
 use Capell\ShopifyCommerce\Actions\Catalog\SanitizeShopifySyncErrorAction;
+use Capell\ShopifyCommerce\Actions\Catalog\StartShopifyProductBulkSyncAction;
 use Capell\ShopifyCommerce\Actions\Catalog\SyncShopifyProductsAction;
 use Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus;
 use Capell\ShopifyCommerce\Exceptions\ShopifyGraphqlException;
@@ -267,6 +268,74 @@ it('sanitizes persisted shopify sync error messages', function (): void {
         ->and($message)->not->toContain('shpat_secret_token')
         ->and($message)->not->toContain('access_token=shpat_secret_token')
         ->and($message)->not->toContain('X-Shopify-Access-Token=shpat_secret_token');
+});
+
+it('scrubs secret-bearing start sync exceptions before persistence', function (): void {
+    $connection = shopifyBulkConnection([
+        'access_token' => 'shpat_start_secret',
+    ]);
+
+    Http::fake(function (): never {
+        throw new RuntimeException(
+            'POST https://foo.myshopify.com/admin/api/graphql.json?token=query-secret failed with Authorization: Bearer bearer-secret and X-Shopify-Access-Token: shpat_start_secret',
+        );
+    });
+
+    expect(static fn (): string => StartShopifyProductBulkSyncAction::run($connection))
+        ->toThrow(RuntimeException::class);
+
+    $connection->refresh();
+
+    expect($connection->last_sync_error)->toContain('[shopify-url]')
+        ->and($connection->last_sync_error)->toContain('Authorization: Bearer [redacted]')
+        ->and($connection->last_sync_error)->toContain('X-Shopify-Access-Token: [redacted]')
+        ->and($connection->last_sync_error)->not->toContain('foo.myshopify.com')
+        ->and($connection->last_sync_error)->not->toContain('query-secret')
+        ->and($connection->last_sync_error)->not->toContain('bearer-secret')
+        ->and($connection->last_sync_error)->not->toContain('shpat_start_secret');
+});
+
+it('scrubs secret-bearing import sync exceptions before persistence', function (): void {
+    $connection = shopifyBulkConnection([
+        'access_token' => 'shpat_import_secret',
+        'sync_status' => 'completed',
+        'bulk_operation_url' => 'https://bulk.example/products.jsonl?token=query-secret',
+    ]);
+
+    Http::fake(function (): never {
+        throw new RuntimeException(
+            'GET https://bulk.example/products.jsonl?token=query-secret failed with Authorization=Bearer bearer-secret and X-Shopify-Access-Token=shpat_import_secret',
+        );
+    });
+
+    expect(static fn (): int => ImportShopifyProductBulkSyncAction::run($connection))
+        ->toThrow(RuntimeException::class);
+
+    $connection->refresh();
+
+    expect($connection->last_sync_error)->toContain('[shopify-url]')
+        ->and($connection->last_sync_error)->toContain('Authorization=Bearer [redacted]')
+        ->and($connection->last_sync_error)->toContain('X-Shopify-Access-Token=[redacted]')
+        ->and($connection->last_sync_error)->not->toContain('bulk.example')
+        ->and($connection->last_sync_error)->not->toContain('query-secret')
+        ->and($connection->last_sync_error)->not->toContain('bearer-secret')
+        ->and($connection->last_sync_error)->not->toContain('shpat_import_secret');
+});
+
+it('keeps ordinary persisted import errors useful', function (): void {
+    $connection = shopifyBulkConnection([
+        'sync_status' => 'completed',
+        'bulk_operation_url' => 'https://bulk.example/products.jsonl',
+    ]);
+
+    Http::fake(function (): never {
+        throw new RuntimeException('Shopify bulk operation download failed while reading JSONL response.');
+    });
+
+    expect(static fn (): int => ImportShopifyProductBulkSyncAction::run($connection))
+        ->toThrow(RuntimeException::class);
+
+    expect($connection->refresh()->last_sync_error)->toBe('Shopify bulk operation download failed while reading JSONL response.');
 });
 
 /**
