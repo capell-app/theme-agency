@@ -31,9 +31,17 @@ final class PublicOutputLeakScanner
     public function redact(string $content): string
     {
         $redacted = preg_replace(
-            '/([?&](?:expires|signature|token)=)[^\s&<>"\']+/i',
+            '#(/authoring/regions/)[A-Za-z0-9_-]+#',
             '$1[redacted]',
             $content,
+        );
+
+        $redacted = is_string($redacted) ? $redacted : $content;
+
+        $redacted = preg_replace(
+            '/([?&](?:expires|signature|token)=)[^\s&<>"\']+/i',
+            '$1[redacted]',
+            $redacted,
         );
 
         $redacted = is_string($redacted) ? $redacted : $content;
@@ -83,32 +91,65 @@ final class PublicOutputLeakScanner
     private function substringPatterns(): array
     {
         return [
-            __('capell-seo-suite::generic.public_output_leak_admin_url') => ['/admin'],
-            __('capell-seo-suite::generic.public_output_leak_filament_url') => ['/filament'],
+            __('capell-seo-suite::generic.public_output_leak_admin_url') => [
+                '/admin/',
+                '/admin?',
+                '/admin#',
+                '/admin/api/page-tree',
+            ],
+            __('capell-seo-suite::generic.public_output_leak_filament_url') => [
+                '/filament/',
+                '/filament?',
+                '/filament#',
+                '/filament-peek/preview',
+            ],
             __('capell-seo-suite::generic.public_output_leak_signature_parameter') => ['signature='],
             __('capell-seo-suite::generic.public_output_leak_expires_parameter') => ['expires='],
-            __('capell-seo-suite::generic.public_output_leak_livewire_directive') => ['wire:'],
-            __('capell-seo-suite::generic.public_output_leak_livewire_internal') => ['livewire'],
-            __('capell-seo-suite::generic.public_output_leak_field_path') => ['field_path', 'field-path', 'fieldPath', 'data-field-path'],
-            __('capell-seo-suite::generic.public_output_leak_model_id') => ['model_id', 'model-id', 'modelId', 'data-model-id'],
-            __('capell-seo-suite::generic.public_output_leak_page_id') => ['page_id', 'page-id', 'pageId', 'data-page-id'],
+            __('capell-seo-suite::generic.public_output_leak_livewire_internal') => [
+                '/livewire/',
+                'livewire/update',
+                'wire:id',
+                'wire:snapshot',
+                'wire:effects',
+                'data-livewire',
+            ],
+            __('capell-seo-suite::generic.public_output_leak_field_path') => ['data-field-path'],
+            __('capell-seo-suite::generic.public_output_leak_model_id') => ['data-model-id'],
+            __('capell-seo-suite::generic.public_output_leak_page_id') => ['data-page-id'],
             __('capell-seo-suite::generic.public_output_leak_editor_metadata') => [
-                'editor-only',
+                '/authoring/regions/',
+                'capell-authoring-',
+                'capell-frontend-authoring',
+                'capellfrontendauthoring',
                 'capell-editor',
-                'capell-authoring',
+                'data-capell-authoring',
                 'data-capell-editor',
-                'data-editor',
                 'data-editable',
+                'edit_url',
+                'editable_regions',
+                'editor-only',
                 'frontend-authoring',
+                'window.capellfrontendauthoring',
             ],
             __('capell-seo-suite::generic.public_output_leak_permission_marker') => [
                 'can-edit',
+                'data-can-edit',
                 'data-permission',
-                'permission:',
-                'permissions:',
             ],
-            __('capell-seo-suite::generic.public_output_leak_draft_marker') => ['draft=true', 'status=draft', '/draft'],
-            __('capell-seo-suite::generic.public_output_leak_unpublished_marker') => ['unpublished=true', 'status=unpublished', '/unpublished'],
+            __('capell-seo-suite::generic.public_output_leak_draft_marker') => [
+                'data-draft',
+                'draft=true',
+                'is_draft',
+                'isdraft',
+                'status=draft',
+            ],
+            __('capell-seo-suite::generic.public_output_leak_unpublished_marker') => [
+                'data-unpublished',
+                'is_unpublished',
+                'isunpublished',
+                'status=unpublished',
+                'unpublished=true',
+            ],
         ];
     }
 
@@ -118,31 +159,52 @@ final class PublicOutputLeakScanner
     private function regexPatterns(): array
     {
         return [
+            __('capell-seo-suite::generic.public_output_leak_admin_url') => [
+                '~(?<![A-Za-z0-9_-])/(?:admin)(?:[/?#)"\'\s]|$)~i',
+            ],
+            __('capell-seo-suite::generic.public_output_leak_filament_url') => [
+                '~(?<![A-Za-z0-9_-])/(?:filament|filament-peek)(?:[/?#)"\'\s]|$)~i',
+            ],
             __('capell-seo-suite::generic.public_output_leak_signature_parameter') => [
                 '/\bsignature\s*[:=]\s*["\']?[^"\'\s,}]+/i',
             ],
             __('capell-seo-suite::generic.public_output_leak_expires_parameter') => [
                 '/\bexpires\s*[:=]\s*["\']?[^"\'\s,}]+/i',
             ],
+            __('capell-seo-suite::generic.public_output_leak_livewire_directive') => [
+                '/\bwire:[A-Za-z][\w.-]*\s*=/',
+            ],
+            __('capell-seo-suite::generic.public_output_leak_livewire_internal') => [
+                '/\bLivewire\.(?:dispatch|find|first|on|start)\s*\(/',
+                '/\bwindow\.Livewire\b/',
+                '/\bwire:(?:effects|id|snapshot)\s*=/',
+            ],
             __('capell-seo-suite::generic.public_output_leak_field_path') => [
-                '/\b(?:fieldPath|field[_-]?path|data-field-path)\b/i',
+                '/(?:\bdata-field-path\b|["\'](?:fieldPath|field[_-]?path)["\'])\s*(?:=|:)\s*["\'][^"\']+["\']/i',
             ],
             __('capell-seo-suite::generic.public_output_leak_model_id') => [
-                '/\b(?:data-model-id|modelId|model[_-]?id)\b\s*(?:=|:)?\s*["\']?\d+/i',
+                '/(?:\bdata-model-id\b|["\'](?:modelId|model[_-]?id)["\'])\s*(?:=|:)\s*["\']?\d+/i',
             ],
             __('capell-seo-suite::generic.public_output_leak_page_id') => [
-                '/\b(?:data-page-id|pageId|page[_-]?id)\b\s*(?:=|:)?\s*["\']?\d+/i',
+                '/(?:\bdata-page-id\b|["\'](?:pageId|page[_-]?id)["\'])\s*(?:=|:)\s*["\']?\d+/i',
+            ],
+            __('capell-seo-suite::generic.public_output_leak_editor_metadata') => [
+                '#/authoring/regions/[A-Za-z0-9_-]+#',
+                '/["\'](?:currentUrl|edit_url|editable_regions|languageId|pageUrlId|recordKey|regionKey|selector|siteId)["\']\s*:/',
+                '/\bCapell\\\\(?:Admin|Core|Frontend|FrontendAuthoring|LayoutBuilder)\\\\[A-Za-z0-9_\\\\]+/',
             ],
             __('capell-seo-suite::generic.public_output_leak_permission_marker') => [
                 '/["\']permissions?["\']\s*:/i',
             ],
             __('capell-seo-suite::generic.public_output_leak_draft_marker') => [
                 '/\b(?:data-status|status)\s*=\s*["\']draft["\']/i',
-                '/["\'](?:draft|is_draft)["\']\s*:\s*true/i',
+                '/["\'](?:draft|isDraft|is_draft)["\']\s*:\s*true/i',
+                '~(?<![A-Za-z0-9_-])/draft(?:[/?#)"\'\s]|$)~i',
             ],
             __('capell-seo-suite::generic.public_output_leak_unpublished_marker') => [
                 '/\b(?:data-status|status)\s*=\s*["\']unpublished["\']/i',
-                '/["\'](?:unpublished|is_unpublished)["\']\s*:\s*true/i',
+                '/["\'](?:isUnpublished|is_unpublished|unpublished)["\']\s*:\s*true/i',
+                '~(?<![A-Za-z0-9_-])/unpublished(?:[/?#)"\'\s]|$)~i',
             ],
         ];
     }

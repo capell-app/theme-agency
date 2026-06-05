@@ -47,7 +47,11 @@ it('checks generated endpoint status and content types', function (): void {
 it('flags redirects invalid sitemap xml unsafe sitemap urls and generated output leaks', function (): void {
     Http::fake([
         'https://bad.test/robots.txt' => Http::response('', 302, ['Location' => 'https://bad.test/robots']),
-        'https://bad.test/llms.txt' => Http::response("[Admin](/admin)\n", 200, ['Content-Type' => 'text/markdown; charset=utf-8']),
+        'https://bad.test/llms.txt' => Http::response(
+            "[Admin](/admin)\n<script>window.CapellFrontendAuthoring = {}</script>\n<div wire:snapshot=\"{}\"></div>\n",
+            200,
+            ['Content-Type' => 'text/markdown; charset=utf-8'],
+        ),
         'https://bad.test/llms-full.txt' => Http::response("# Example\n", 200, ['Content-Type' => 'text/markdown; charset=utf-8', 'Cache-Control' => 'public, max-age=300']),
         'https://bad.test/index.md' => Http::response("# Home\n", 200, ['Content-Type' => 'text/markdown; charset=utf-8', 'Cache-Control' => 'public, max-age=300']),
         'https://bad.test/sitemap-xml' => Http::response('<not-xml', 200, ['Content-Type' => 'application/xml', 'Cache-Control' => 'public, max-age=300']),
@@ -60,6 +64,8 @@ it('flags redirects invalid sitemap xml unsafe sitemap urls and generated output
     expect($checks->firstWhere('message', 'Crawler endpoint /robots.txt returned HTTP 302')->detail)->toContain('redirect to https://bad.test/robots')
         ->and($checks->firstWhere('message', 'Crawler endpoint /llms.txt cache header')->status)->toBe('warn')
         ->and($checks->firstWhere('message', 'Generated output /llms.txt public leak scan')->detail)->toContain('/admin')
+        ->and($checks->firstWhere('message', 'Generated output /llms.txt public leak scan')->detail)->toContain('editor metadata')
+        ->and($checks->firstWhere('message', 'Generated output /llms.txt public leak scan')->detail)->toContain('Livewire internals')
         ->and($checks->firstWhere('message', 'Sitemap endpoint /sitemap-xml XML validity')->status)->toBe('warn')
         ->and($unsafeSitemapCheck?->status)->toBe('warn')
         ->and($unsafeSitemapCheck?->detail)->toContain('signature=[redacted]')

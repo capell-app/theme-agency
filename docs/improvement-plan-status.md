@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 83 |
+| Now    | 82 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -65,7 +65,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | public-actions | 1 | 7 | 5 | Slice committed | Current follow-up closes three stale Now rows: `PublicActionsHealthCheck` implements the four manifest diagnostics, webhook dispatch pins validated IPv4/IPv6 addresses through cURL while preserving the original host, and redirect-following remains disabled with focused SSRF regression coverage. Remaining Now row: marketplace screenshots/copy. |
 | publishing-studio | 3 | 6 | 5 | Slice committed | Current follow-up ships package config defaults for publish checks/release windows/scheduler settings and proves default publish checks resolve through the container. Remaining Now rows: manifest reconciliation, anonymous live-path safety, and CHANGELOG history. Note: full package Pest still has an unrelated scheduler table error in `SchedulerAndApprovalResidualCoverageTest`; focused publish-check pipeline coverage passes. |
 | search | 0 | 6 | 4 | Now closed | Current follow-up caches click-count aggregates by site/language, invalidates affected cache scopes when recording clicks, and removes a duplicate promoted-result conversion pass after public-result guardrails and deferred search-log writes. Search has no Now rows left; continue with click beacon CSRF, FULLTEXT detection, controller-side highlighting, autocomplete, and broader relevance/admin rows before completion review. |
-| seo-suite | 3 | 6 | 3 | Slice committed | Current follow-up maps the four declared manifest health keys to targeted SEO diagnostics, after guarding missing Prism usage telemetry on the chat success path and keeping circuit-breaker state provider-scoped. Remaining Now rows: dormant SEO checks, stronger leak matching, and manifest cache/settings/permissions/PageSpeed accuracy. |
+| seo-suite | 2 | 6 | 3 | Slice committed | Current follow-up strengthens public-output leak scanning for bounded admin/Filament URLs, authoring routes, Livewire internals, editor metadata, structured IDs, permission markers, and draft/unpublished flags, after mapping manifest health keys and Prism/circuit-breaker hardening. Remaining Now rows: dormant SEO checks and manifest cache/settings/permissions/PageSpeed accuracy. |
 | shopify-commerce | 2 | 7 | 4 | Slice committed | Current follow-up implements real Shopify Commerce health probes for storage tables, app credentials, active connection tokens, lightweight Admin API token validity, stale sync operations, and catalog freshness with secret-safe translated output, after transaction and sync-error hardening. Remaining Now rows: Feature/Arch safety coverage and customer producer. |
 | site-discovery | 1 | 5 | 4 | Slice committed | Current follow-up implements real keyed `SiteDiscoveryHealthCheck` diagnostics for public URL contributors, XML sitemap route/storage/output, incremental schedule/state, and HTML sitemap registry/Livewire/page type wiring, after scheduled incremental regeneration and route/XML safety work. Remaining Now row: screenshot reconciliation. |
 | structured-content-library | 1 | 5 | 4 | Slice committed | Current follow-up sanitizes public payload text by decoding entities before stripping dangerous markup and dropping unsafe URLs, after duplicate slug repair, health, summary portability, and publish-date defaults. Remaining Now row: marketplace media/copy. |
