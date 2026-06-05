@@ -33,7 +33,14 @@ final class SyncShopifyProductsAction
             'last_sync_error' => null,
         ])->save();
 
-        return StartShopifyProductBulkSyncAction::run($connection);
+        $bulkOperationId = StartShopifyProductBulkSyncAction::run($connection);
+
+        if ($bulkOperationId !== '') {
+            ContinueShopifyProductBulkSyncAction::dispatch((int) $connection->getKey())
+                ->delay($this->pollDelaySeconds());
+        }
+
+        return $bulkOperationId;
     }
 
     /**
@@ -51,5 +58,10 @@ final class SyncShopifyProductsAction
     private function lockKey(int $connectionId): string
     {
         return sprintf('capell-shopify-commerce.sync.%d', $connectionId);
+    }
+
+    private function pollDelaySeconds(): int
+    {
+        return max(1, (int) config('capell-shopify-commerce.bulk_sync_poll_delay_seconds', 15));
     }
 }

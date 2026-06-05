@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 144 |
+| Now    | 143 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -66,7 +66,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | publishing-studio | 5 | 6 | 5 | Slice committed | `c6a886556` landed health/screenshots; continue with publishing workflow rows. |
 | search | 2 | 6 | 4 | Slice committed | Current follow-up defers search-log writes until after the response and keeps `RecordSearchAction` on scalar visitor metadata. Remaining Now rows: Scout/private visibility tests and click-count aggregate/cache-chain work. |
 | seo-suite | 5 | 6 | 3 | Slice committed | Current follow-up adds anonymous and signed-in non-admin AI Discovery public-output safety coverage for `/llms.txt`, `/index.md`, and `/robots.txt` using `PublicOutputLeakScanner`. Remaining Now rows: dormant SEO checks, real health probes, stronger leak matching, manifest cache/settings/permissions/PageSpeed accuracy, and AI circuit-breaker/null-usage hardening. |
-| shopify-commerce | 6 | 7 | 4 | Slice committed | Current follow-up scrubs persisted sync errors; sync loop, customer producer, and webhook reachability remain high value. |
+| shopify-commerce | 5 | 7 | 4 | Slice committed | Current follow-up closes the Start→Poll→Import bulk product sync loop with a queued continuation action and configurable poll delay. Remaining Now rows: Feature/Arch safety coverage, customer producer, health probes, GraphQL transaction cleanup, and sync-error secret scrubbing. |
 | site-discovery | 6 | 5 | 4 | Slice committed | `c76a0cc14` merged URL registry work; continue with remaining discovery/SEO rows. |
 | structured-content-library | 6 | 5 | 4 | Slice committed | Current follow-up removes unwired section/theme adapter capability claims and marks those adapter contributions deferred while preserving the in-process section builder action. Remaining Now rows: summary sanitization, real health check, unique index/null-slug import dedup, payload escaping contract, publish timestamp default, and marketplace media/copy. |
 | tags | 0 | 5 | 4 | Now closed | `f854c06e5` adds direct `TagPolicy`, `Tag::getUrl()`, and deletion-integrity coverage after `754b95540` added the guarded `tags(type, site_id)` composite index migration. Tags has no Now rows left; continue with workspace/status visibility rows and completion review. |
