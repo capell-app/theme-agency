@@ -1,6 +1,6 @@
 # Theme Corporate
 
-Status: **Available, no schema impact** · Kind: **theme** · Tier: **free** · Bundle: **themes** · Contexts: **frontend** · Product group: **Capell Themes**
+Status: **Available, no schema impact** · Kind: **theme** · Tier: **free** · Bundle: **foundation** · Contexts: **frontend** · Product group: **Capell Foundation**
 
 This page is the consolidated implementation overview for the Theme Corporate package. It is extracted from the package README, service providers, migrations, config files, routes, resources, models, actions, and the shared Capell ERD notes where available.
 
@@ -64,10 +64,10 @@ Provides a corporate visual option for sites that need restrained, trust-focused
 
 - Composer name: `capell-app/theme-corporate`
 - Theme key: `corporate`
-- Product group: Capell Themes
+- Product group: Capell Foundation
 - Kind: theme
 - Tier: free
-- Bundle: themes
+- Bundle: foundation
 - Contexts: `frontend`
 - Requires: `capell-app/foundation-theme`
 - Optional dependencies: None listed.

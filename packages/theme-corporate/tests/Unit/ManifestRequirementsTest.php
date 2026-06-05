@@ -35,6 +35,22 @@ describe('theme corporate capell.json manifest', function (): void {
         expect($manifest['commands']['demo'])->toBe('capell:theme-corporate-demo')
             ->and($manifest['commands']['demoParams'])->toBe(['url', 'languages', 'sites']);
     });
+
+    it('keeps the commercial contract aligned with its free foundation tier', function (): void {
+        $manifest = corporateThemeManifest();
+
+        expect($manifest['product'])->toMatchArray([
+            'group' => 'Capell Foundation',
+            'tier' => 'free',
+            'bundle' => 'foundation',
+        ])
+            ->and($manifest['commercial'])->toMatchArray([
+                'proposedLicense' => 'free',
+                'requestedCertification' => 'first-party',
+                'supportPolicy' => 'capell-first-party',
+                'privateDocsRequested' => false,
+            ]);
+    });
 });
 
 /**

@@ -68,7 +68,7 @@ Versus siblings (`theme-agency`, `theme-saas`, `theme-commerce`, `theme-healthca
 
 | Item                                                                                | Bucket | Effort | Impact | Section ref |
 | ----------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Reconcile manifest `tier` free vs `commercial` paid/priority                        | Now    | S      | High   | §4.2        |
+| Reconcile manifest `tier` free vs `commercial` paid/priority                        | Done   | S      | High   | §4.2 — closed 2026-06-05: manifest commercial terms now match the free foundation product tier and overview metadata, with a manifest regression test. |
 | Fix three-way screenshot mismatch; ship real PNG renders on the card                | Now    | M      | High   | §4.3, §5    |
 | Replace placeholder hero stat labels with real/translated content                   | Done   | M      | High   | §2.1, §4.9  |
 | Rewrite marketplace `summary` + manifest description                                | Done   | S      | High   | §5          |
