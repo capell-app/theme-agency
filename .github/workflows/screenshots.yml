@@ -80,7 +80,7 @@ jobs:
 
     steps:
       - name: Checkout packages repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
           repository: capell-app/capell-packages
           ref: ${{ github.repository == 'capell-app/capell-packages' && github.sha || '4.x' }}
@@ -90,7 +90,7 @@ jobs:
 
       - name: Checkout split package repository
         if: inputs.package_repository != ''
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
           repository: ${{ inputs.package_repository }}
           ref: ${{ inputs.package_ref }}
@@ -159,7 +159,7 @@ jobs:
 
     steps:
       - name: Checkout packages repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
           repository: capell-app/capell-packages
           ref: ${{ github.repository == 'capell-app/capell-packages' && github.sha || '4.x' }}
@@ -168,7 +168,7 @@ jobs:
           path: repositories/capell-packages
 
       - name: Checkout Capell core repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
           repository: capell-app/capell
           ref: 4.x
@@ -176,7 +176,7 @@ jobs:
           path: repositories/capell
 
       - name: Checkout screenshot runner
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
           repository: capell-app/capell-screenshot-runner
           ref: ${{ inputs.screenshot_runner_ref || 'main' }}
@@ -185,7 +185,7 @@ jobs:
 
       - name: Checkout split package repository
         if: inputs.package_repository != ''
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
           repository: ${{ inputs.package_repository }}
           ref: ${{ inputs.package_ref }}
