@@ -7,13 +7,25 @@ namespace Capell\KnowledgeBase\Health;
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\KnowledgeBase\Actions\BuildAiReadableKnowledgeBaseOutputAction;
+use Capell\KnowledgeBase\Actions\BuildKnowledgeBaseSearchDocumentsAction;
 use Capell\KnowledgeBase\Actions\BuildPublicKnowledgeBaseArticleDataAction;
 use Capell\KnowledgeBase\Actions\BuildPublicKnowledgeBaseNavigationAction;
+use Capell\KnowledgeBase\Actions\CreateKnowledgeBaseArticleAction;
+use Capell\KnowledgeBase\Actions\CreateKnowledgeBaseArticleVersionAction;
+use Capell\KnowledgeBase\Actions\CreateKnowledgeBaseCollectionAction;
+use Capell\KnowledgeBase\Actions\PublishKnowledgeBaseArticleVersionAction;
+use Capell\KnowledgeBase\Actions\RecordKnowledgeBaseArticleFeedbackAction;
+use Capell\KnowledgeBase\Actions\RelateKnowledgeBaseArticlesAction;
+use Capell\KnowledgeBase\Actions\SanitizeKnowledgeBaseArticleHtmlAction;
+use Capell\KnowledgeBase\Filament\Resources\Articles\KnowledgeBaseArticleResource;
+use Capell\KnowledgeBase\Filament\Resources\Collections\KnowledgeBaseCollectionResource;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticle;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticleFeedback;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticleVersion;
 use Capell\KnowledgeBase\Models\KnowledgeBaseCollection;
 use Capell\KnowledgeBase\Models\KnowledgeBaseRelatedArticle;
+use Capell\KnowledgeBase\Providers\AdminServiceProvider;
+use Capell\KnowledgeBase\Providers\KnowledgeBaseServiceProvider;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 
@@ -44,10 +56,34 @@ final class KnowledgeBaseHealthCheck implements ChecksExtensionHealth
     /**
      * @var list<class-string>
      */
-    private const array PUBLIC_OUTPUT_ACTIONS = [
+    private const array REQUIRED_ACTIONS = [
         BuildPublicKnowledgeBaseNavigationAction::class,
         BuildPublicKnowledgeBaseArticleDataAction::class,
         BuildAiReadableKnowledgeBaseOutputAction::class,
+        BuildKnowledgeBaseSearchDocumentsAction::class,
+        CreateKnowledgeBaseCollectionAction::class,
+        CreateKnowledgeBaseArticleAction::class,
+        CreateKnowledgeBaseArticleVersionAction::class,
+        PublishKnowledgeBaseArticleVersionAction::class,
+        RecordKnowledgeBaseArticleFeedbackAction::class,
+        RelateKnowledgeBaseArticlesAction::class,
+        SanitizeKnowledgeBaseArticleHtmlAction::class,
+    ];
+
+    /**
+     * @var list<class-string>
+     */
+    private const array REQUIRED_ADMIN_RESOURCES = [
+        KnowledgeBaseCollectionResource::class,
+        KnowledgeBaseArticleResource::class,
+    ];
+
+    /**
+     * @var list<class-string>
+     */
+    private const array REQUIRED_PROVIDERS = [
+        KnowledgeBaseServiceProvider::class,
+        AdminServiceProvider::class,
     ];
 
     public static function compatibleCapellApiVersion(): string
@@ -65,7 +101,9 @@ final class KnowledgeBaseHealthCheck implements ChecksExtensionHealth
         return collect([
             $check->storageTablesCheck(),
             $check->modelsDiscoverableCheck(),
-            $check->publicOutputActionsDiscoverableCheck(),
+            $check->actionsDiscoverableCheck(),
+            $check->adminResourcesDiscoverableCheck(),
+            $check->providersDiscoverableCheck(),
         ]);
     }
 
@@ -83,14 +121,14 @@ final class KnowledgeBaseHealthCheck implements ChecksExtensionHealth
         $missingTables = $this->missingTables();
 
         return new DoctorCheckResultData(
-            label: 'Knowledge Base storage tables',
+            label: (string) __('capell-knowledge-base::generic.health.storage_tables.label'),
             passed: $missingTables === [],
             message: $missingTables === []
-                ? 'All Knowledge Base collection, article, version, feedback, and related-article tables are present.'
-                : 'Missing tables: ' . implode(', ', $missingTables) . '.',
+                ? (string) __('capell-knowledge-base::generic.health.storage_tables.passed')
+                : (string) __('capell-knowledge-base::generic.health.storage_tables.failed', ['tables' => implode(', ', $missingTables)]),
             remediation: $missingTables === []
                 ? null
-                : 'Run the Capell migrations to create the Knowledge Base storage tables.',
+                : (string) __('capell-knowledge-base::generic.health.storage_tables.remediation'),
         );
     }
 
@@ -102,34 +140,73 @@ final class KnowledgeBaseHealthCheck implements ChecksExtensionHealth
         $missingModels = $this->missingClasses(self::REQUIRED_MODELS);
 
         return new DoctorCheckResultData(
-            label: 'Knowledge Base models',
+            label: (string) __('capell-knowledge-base::generic.health.models.label'),
             passed: $missingModels === [],
             message: $missingModels === []
-                ? 'Collection, article, version, feedback, and related-article models are discoverable.'
-                : 'Undiscoverable models: ' . implode(', ', $missingModels) . '.',
+                ? (string) __('capell-knowledge-base::generic.health.models.passed')
+                : (string) __('capell-knowledge-base::generic.health.models.failed', ['classes' => implode(', ', $missingModels)]),
             remediation: $missingModels === []
                 ? null
-                : 'Ensure the Knowledge Base package autoloader is registered (composer dump-autoload).',
+                : (string) __('capell-knowledge-base::generic.health.autoload_remediation'),
         );
     }
 
     /**
-     * Asserts the public-facing output Actions that feed anonymous render data
+     * Asserts the package Actions declared by the Knowledge Base feature surface
      * are autoloadable.
      */
-    public function publicOutputActionsDiscoverableCheck(): DoctorCheckResultData
+    public function actionsDiscoverableCheck(): DoctorCheckResultData
     {
-        $missingActions = $this->missingClasses(self::PUBLIC_OUTPUT_ACTIONS);
+        $missingActions = $this->missingClasses(self::REQUIRED_ACTIONS);
 
         return new DoctorCheckResultData(
-            label: 'Knowledge Base public output actions',
+            label: (string) __('capell-knowledge-base::generic.health.actions.label'),
             passed: $missingActions === [],
             message: $missingActions === []
-                ? 'Public navigation, article, and AI-readable output actions are discoverable.'
-                : 'Undiscoverable public output actions: ' . implode(', ', $missingActions) . '.',
+                ? (string) __('capell-knowledge-base::generic.health.actions.passed')
+                : (string) __('capell-knowledge-base::generic.health.actions.failed', ['classes' => implode(', ', $missingActions)]),
             remediation: $missingActions === []
                 ? null
-                : 'Ensure the Knowledge Base package autoloader is registered (composer dump-autoload).',
+                : (string) __('capell-knowledge-base::generic.health.autoload_remediation'),
+        );
+    }
+
+    /**
+     * Asserts the contributed Filament resources are autoloadable.
+     */
+    public function adminResourcesDiscoverableCheck(): DoctorCheckResultData
+    {
+        $missingResources = $this->missingClasses(self::REQUIRED_ADMIN_RESOURCES);
+
+        return new DoctorCheckResultData(
+            label: (string) __('capell-knowledge-base::generic.health.admin_resources.label'),
+            passed: $missingResources === [],
+            message: $missingResources === []
+                ? (string) __('capell-knowledge-base::generic.health.admin_resources.passed')
+                : (string) __('capell-knowledge-base::generic.health.admin_resources.failed', ['classes' => implode(', ', $missingResources)]),
+            remediation: $missingResources === []
+                ? null
+                : (string) __('capell-knowledge-base::generic.health.autoload_remediation'),
+        );
+    }
+
+    /**
+     * Asserts the runtime and admin service providers named in the manifest are
+     * autoloadable.
+     */
+    public function providersDiscoverableCheck(): DoctorCheckResultData
+    {
+        $missingProviders = $this->missingClasses(self::REQUIRED_PROVIDERS);
+
+        return new DoctorCheckResultData(
+            label: (string) __('capell-knowledge-base::generic.health.providers.label'),
+            passed: $missingProviders === [],
+            message: $missingProviders === []
+                ? (string) __('capell-knowledge-base::generic.health.providers.passed')
+                : (string) __('capell-knowledge-base::generic.health.providers.failed', ['classes' => implode(', ', $missingProviders)]),
+            remediation: $missingProviders === []
+                ? null
+                : (string) __('capell-knowledge-base::generic.health.autoload_remediation'),
         );
     }
 

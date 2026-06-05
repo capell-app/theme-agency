@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 137 |
+| Now    | 136 |
 | Next   | 316 |
 | Later  | 203 |
 
@@ -50,7 +50,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | hero | 1 | 6 | 4 | Slice committed | `b68c6ac19` adds responsive `srcset`/`sizes` descriptors for hero image/poster media and render coverage, after admin dependency/surface/capability cleanup. Remaining Now row: screenshot count/capture reconciliation. |
 | html-cache | 4 | 6 | 4 | Slice committed | `fc0cdba58` memoizes access-gate cacheability lookups after `6b7ba2b7b` proved both cookie-stripping middleware paths use the shared `CacheableResponseCookieStripper` list. Continue with targeted invalidation, real health check, screenshot reconciliation, and marketplace copy. |
 | insights | 6 | 6 | 4 | Slice committed | `5afe307aa` landed privacy hardening; continue with analytics/product gaps. |
-| knowledge-base | 6 | 7 | 3 | Slice committed | Current follow-up throttles/dedupes anonymous feedback and updates shipped-feature docs; policies and edit/versioning gaps remain high priority. |
+| knowledge-base | 5 | 7 | 3 | Slice committed | Current follow-up adds real health diagnostics for required tables, models, Actions, admin resources, and providers. Remaining Now rows: Edit pages, version/publish edit flow, policy/site-access hardening, slug-collision guard, and other admin workflow gaps. |
 | layout-builder | 1 | 5 | 4 | Slice committed | `5da9e0066` tightens the visual editor responsive preview frame/tree sizing after prior slices aligned manifest dependencies, implemented real health probes, removed the dead cache enum, promoted marketplace screenshots, rewrote manifest/composer copy, and added fragment invalid/replay safety coverage. Remaining Now row: add the full public render performance-budget test, especially the render-time budget; current stress coverage proves bounded query behavior only. |
 | login-audit | 1 | 6 | 2 | Slice committed | Current follow-up reconciles the shipped real health diagnostics, daily retention purge tracking, and throttled admin activity writes. Remaining Now row: marketplace screenshot manifest/copy reconciliation. |
 | media-ai | 2 | 6 | 3 | Slice committed | Current follow-up removes unsupported console metadata, verifies disabled/null-provider/operation-validation paths, and reconciles docs with the package's notification-only no-mutation behavior. Remaining Now rows: first-party AI Orchestrator image-doctor adapter and remaining marketplace/bundle positioning work. |
