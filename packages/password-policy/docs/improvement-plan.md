@@ -6,7 +6,7 @@
 
 Password Policy adds opt-in admin password controls to Capell: password expiry, forced "must change", recent-password reuse blocking, and Laravel's compromised-password (HIBP) check. It surfaces through two Filament admin paths — an Extensions-page settings modal (`PasswordPolicySettingsSchema`) and a forced-change page (`ForcedPasswordChangePage`) gated by an auth middleware (`EnsurePasswordPolicyCompliance`) — plus columns/filters/row+bulk actions injected into the core Users table via `PasswordPolicyUserTableExtender` / `PasswordPolicyUserFormExtender`. Domain logic lives in six Actions (`ValidatePasswordChangeAction`, `EvaluatePasswordPolicyAction`, `UpdatePasswordAction`, `RecordPasswordHistoryAction`, `MarkUserForPasswordChangeAction`, `BuildPasswordSecurityPostureReportAction`); persistence is two `users` columns (`password_changed_at`, `must_change_password`), the `password_policy_password_histories` table, and a `password_policy` settings group. Deps: `capell-app/admin`, `capell-app/core`, `lorisleiva/laravel-actions`, `spatie/laravel-data`, `spatie/laravel-package-tools`.
 
-Current marketplace `summary` (verbatim): _"Password Policy provides opt-in password rules and enforcement for Capell CMS."_ Screenshots advertised in `capell.json`: **1** (`docs/assets/marketplace/extension-card.jpg`) — but `docs/screenshots.json` declares **3 required** deployment screenshots (settings page, forced-change form, user-table columns) and none are generated yet. The composer `description` ("Password expiry, forced password changes, and password safety policy for Capell CMS") does **not** match the `capell.json` description/summary — a manifest mismatch to reconcile.
+Current marketplace `summary`: _"Enforce admin password expiry, forced resets, reuse history, and breach (HIBP) checks across your Capell panels — configured from one settings screen, no code."_ Screenshots advertised in `capell.json`: **1** (`docs/assets/marketplace/extension-card.jpg`) — but `docs/screenshots.json` declares **3 required** deployment screenshots (settings page, forced-change form, user-table columns) and none are generated yet. The composer `description`, `capell.json` description/summary, README, and overview now agree on the shipped admin password controls.
 
 ## 2. Improvements (existing functionality)
 
@@ -49,7 +49,7 @@ Tied to `capabilities[]`: `password-policy`, `password-policy-admin`.
 
 ## 5. Marketplace & Selling
 
-**Critique.** The `summary` and composer `description` disagree, and both are weak. The summary ("opt-in password rules and enforcement") is generic and buries the actual deliverables; the composer description lists three features but omits compromised-password (HIBP) checks and history. Neither communicates _who it's for_ or _why it beats Laravel defaults_. The README is empty, so the GitHub/Packagist landing tells a buyer nothing. Only 1 of 3 required marketplace screenshots exists.
+**Critique.** Marketplace and Composer copy now agree on the shipped admin password controls: expiry, forced resets, reuse history, breach checks, and one settings screen. README and overview are populated. Only 1 of 3 required marketplace screenshots exists, so the buyer-facing gap is now visual proof rather than package positioning.
 
 **Improved summary (1 sentence):**
 
@@ -77,7 +77,8 @@ Tied to `capabilities[]`: `password-policy`, `password-policy-admin`.
 | Backfill `password_changed_at` on install (or treat null as non-expired)                     | Done   | M      | High   | §2, §4      |
 | Add direct middleware tests (redirect, allowed-route, compliant no-op)                       | Done   | S      | High   | §4          |
 | Reconcile manifest drift: composer↔capell.json desc, fill README, resolve console capability | Done   | S      | Medium | §4, §5      |
-| Generate the 3 required marketplace screenshots; rewrite summary/description                 | Now    | S      | High   | §5          |
+| Generate the 3 required marketplace screenshots                                              | Now    | S      | High   | §5          |
+| Shipped: rewrite marketplace summary/description                                             | Done   | S      | High   | §5          |
 | Add configurable complexity rules (length/case/number/symbol) + wire into validator          | Done   | M      | High   | §3, §2      |
 | Fix double/duplicate history write on admin edit; record once post-hash                      | Done   | M      | Medium | §2          |
 | De-duplicate extension-surface registration (bridge vs provider)                             | Next   | S      | Medium | §2          |
