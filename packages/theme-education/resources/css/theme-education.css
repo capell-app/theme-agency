@@ -202,3 +202,18 @@
     border-radius: 0.5rem;
     box-shadow: 0 28px 90px rgb(15 23 42 / 16%);
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .education-shell *,
+    .education-shell *::before,
+    .education-shell *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+
+    .education-shell :where(.transition, [class*='hover:-translate-y']):hover {
+        transform: none !important;
+    }
+}
