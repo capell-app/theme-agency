@@ -7,11 +7,14 @@ namespace Capell\GA4Reports\Filament\Pages;
 use BackedEnum;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Capell\GA4Reports\Actions\ResolveGA4ReportsConfigAction;
+use Capell\GA4Reports\Actions\SyncGA4ReportsMetricsAction;
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsOverviewStatsWidget;
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsSetupStatusWidget;
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesTableWidget;
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesWidget;
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsTrafficTrendWidget;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Panel;
 use Filament\Support\Icons\Heroicon;
@@ -78,5 +81,32 @@ final class GA4ReportsPage extends Page
         return [
             GA4ReportsTopPagesTableWidget::class,
         ];
+    }
+
+    /**
+     * @return array<int, Action>
+     */
+    #[Override]
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('syncNow')
+                ->label(__('capell-ga4-reports::sync.sync_now'))
+                ->icon('heroicon-o-arrow-path')
+                ->action(fn (): null => $this->syncNow()),
+        ];
+    }
+
+    private function syncNow(): null
+    {
+        $result = SyncGA4ReportsMetricsAction::run();
+
+        $notification = Notification::make()
+            ->title($result->message);
+
+        ($result->synced ? $notification->success() : $notification->danger())
+            ->send();
+
+        return null;
     }
 }

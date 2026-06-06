@@ -10,6 +10,7 @@ return [
     'ga4_reports_hint' => 'GA4 Reports provides dashboard reporting for Capell.',
     'last_status' => 'Last status',
     'last_sync' => 'Last sync',
+    'last_error' => 'Last error',
     'metric' => 'Metric',
     'never' => 'Never',
     'no' => 'No',
