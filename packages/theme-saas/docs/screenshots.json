@@ -42,7 +42,8 @@
             "notes": "Capture the seeded Launchdeck page after installing capell-app/theme-saas and building the Foundation Theme/frontend assets.",
             "useCase": "A visitor sees a seeded product page rendered through the SaaS navigation, hero, features, proof, content listing, CTA, and footer sections.",
             "screenshotPath": "packages/theme-saas/docs/screenshots/frontend-page-rendered-with-saas-theme.png",
-            "darkScreenshotPath": "packages/theme-saas/docs/screenshots/frontend-page-rendered-with-saas-theme-dark.png"
+            "darkScreenshotPath": "packages/theme-saas/docs/screenshots/frontend-page-rendered-with-saas-theme-dark.png",
+            "user": false
         },
         {
             "id": "saas-homepage-layout",
@@ -54,7 +55,8 @@
             "required": true,
             "notes": "Capture the product homepage with activation hero, feature proof, dashboard panels, workflow cards, and trial CTA.",
             "useCase": "A SaaS team checks that the theme sells product workflow and activation rather than broad startup marketing.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-homepage-layout.png"
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-homepage-layout.png",
+            "user": false
         },
         {
             "id": "saas-feature-layout",
@@ -66,7 +68,8 @@
             "required": true,
             "notes": "Capture feature narrative, workflow steps, comparison blocks, proof, and demo CTA.",
             "useCase": "A product team reviews whether feature pages explain jobs-to-be-done instead of becoming a services grid.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-feature-layout.png"
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-feature-layout.png",
+            "user": false
         },
         {
             "id": "saas-pricing-layout",
@@ -78,7 +81,8 @@
             "required": true,
             "notes": "Capture pricing plan cards, feature comparison, FAQ, trial risk reducers, and CTA. Requires capell-app/content-sections; show this package note on the captured image.",
             "useCase": "A SaaS buyer can compare plans and move toward a trial without the page feeling like Commerce merchandising.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-pricing-layout.png"
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-pricing-layout.png",
+            "user": false
         },
         {
             "id": "saas-docs-layout",
@@ -90,7 +94,8 @@
             "required": true,
             "notes": "Capture docs navigation, article content, related links, and product onboarding CTA. Requires capell-app/document-lifecycle; show this package note on the captured image.",
             "useCase": "A product team checks that docs support activation without overlapping Knowledge's editorial archive.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-docs-layout.png"
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-docs-layout.png",
+            "user": false
         },
         {
             "id": "saas-blog-layout",
@@ -102,7 +107,8 @@
             "required": true,
             "notes": "Capture a product article with hero, author, related resources, feature links, and demo CTA. Requires capell-app/blog; show this package note on the captured image.",
             "useCase": "A SaaS team can publish launches and education while keeping product activation visible.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-blog-layout.png"
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-blog-layout.png",
+            "user": false
         },
         {
             "id": "saas-demo-request-layout",
@@ -114,7 +120,8 @@
             "required": true,
             "notes": "Capture demo request qualification, routing, success state, and product proof. Requires capell-app/form-builder; show this package note on the captured image.",
             "useCase": "A sales team checks that demo conversion stays tied to product workflow rather than broad contact.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-demo-request-layout.png"
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-demo-request-layout.png",
+            "user": false
         },
         {
             "id": "saas-webinar-layout",
@@ -126,7 +133,8 @@
             "required": true,
             "notes": "Capture webinar agenda, speakers, product takeaways, and registration CTA. Requires capell-app/events; show this package note on the captured image.",
             "useCase": "A SaaS team can run product education events without drifting into Agency campaign pages.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-webinar-layout.png"
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-webinar-layout.png",
+            "user": false
         },
         {
             "id": "saas-search-layout",
@@ -138,7 +146,8 @@
             "required": true,
             "notes": "Capture product knowledge search with docs/blog results, snippets, and onboarding recovery. Requires capell-app/search; show this package note on the captured image.",
             "useCase": "A user can find product help without the page becoming a general Knowledge theme search experience.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-search-layout.png"
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-search-layout.png",
+            "user": false
         },
         {
             "id": "saas-campaign-layout",
@@ -150,7 +159,8 @@
             "required": true,
             "notes": "Capture product launch campaign with variant hero, audience segments, activation proof, and campaign analytics. Requires capell-app/campaign-studio; show this package note on the captured image.",
             "useCase": "A SaaS team can announce launches while keeping the page centred on product activation, not Agency creative delivery.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-campaign-layout.png"
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-campaign-layout.png",
+            "user": false
         }
     ]
 }
