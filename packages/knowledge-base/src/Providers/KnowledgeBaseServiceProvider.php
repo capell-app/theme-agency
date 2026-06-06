@@ -12,6 +12,8 @@ use Capell\KnowledgeBase\Models\KnowledgeBaseArticleFeedback;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticleVersion;
 use Capell\KnowledgeBase\Models\KnowledgeBaseCollection;
 use Capell\KnowledgeBase\Models\KnowledgeBaseRelatedArticle;
+use Capell\Search\Data\SearchableSourceData;
+use Capell\Search\Support\SearchableSourceRegistry;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Override;
 use Spatie\LaravelPackageTools\Package;
@@ -48,6 +50,7 @@ final class KnowledgeBaseServiceProvider extends AbstractPackageServiceProvider
                 ->registerModels()
                 ->registerMorphMap()
                 ->registerCacheInvalidationDependencies()
+                ->registerSearchableSource()
                 ->registerProtectedTables();
         });
     }
@@ -110,6 +113,33 @@ final class KnowledgeBaseServiceProvider extends AbstractPackageServiceProvider
         $registry->registerDependency(KnowledgeBaseArticle::class, 'knowledge-base-*');
         $registry->registerDependency(KnowledgeBaseArticleVersion::class, 'knowledge-base-*');
         $registry->registerDependency(KnowledgeBaseCollection::class, 'knowledge-base-*');
+
+        return $this;
+    }
+
+    private function registerSearchableSource(): self
+    {
+        if (! class_exists(SearchableSourceRegistry::class) || ! class_exists(SearchableSourceData::class)) {
+            return $this;
+        }
+
+        $registerSource = function (SearchableSourceRegistry $registry): void {
+            $registry->register(new SearchableSourceData(
+                key: 'knowledge-base',
+                label: __('capell-knowledge-base::generic.search.source_label'),
+                modelClass: KnowledgeBaseArticle::class,
+                type: 'knowledge-base',
+                enabledSettingKey: 'sources.knowledge-base.enabled',
+                enabledByDefault: true,
+                weight: (float) config('capell-knowledge-base.default_search_weight', 50),
+            ));
+        };
+
+        $this->app->afterResolving(SearchableSourceRegistry::class, $registerSource);
+
+        if ($this->app->bound(SearchableSourceRegistry::class)) {
+            $registerSource($this->app->make(SearchableSourceRegistry::class));
+        }
 
         return $this;
     }

@@ -6,6 +6,7 @@ namespace Capell\KnowledgeBase\Models;
 
 use Capell\KnowledgeBase\Database\Factories\KnowledgeBaseArticleFactory;
 use Capell\KnowledgeBase\Enums\KnowledgeBaseArticleStatus;
+use Capell\KnowledgeBase\Support\KnowledgeBasePublicPath;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -104,6 +105,41 @@ final class KnowledgeBaseArticle extends Model
             'article_id',
             'related_article_id',
         )->withPivot(['relation_type', 'sort_order'])->withTimestamps();
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        $this->loadMissing(['collection', 'currentVersion']);
+
+        $collection = $this->collection;
+        $currentVersion = $this->currentVersion;
+
+        if (! $collection instanceof KnowledgeBaseCollection || ! $collection->is_public) {
+            return [];
+        }
+
+        if (! $currentVersion instanceof KnowledgeBaseArticleVersion || ! $this->status->isPubliclyVisible()) {
+            return [];
+        }
+
+        return [
+            'title' => $currentVersion->title,
+            'url' => KnowledgeBasePublicPath::forArticle($this),
+            'excerpt' => $currentVersion->summary ?? '',
+            'body' => strip_tags($currentVersion->body),
+            'type' => 'knowledge-base',
+            'status' => 'published',
+            'is_public' => true,
+            'updated_at' => ($currentVersion->published_at ?? $this->published_at ?? $this->updated_at)?->toIso8601String(),
+            'meta' => [
+                'collection' => $collection->title,
+                'version' => $currentVersion->version,
+                'weight' => $this->search_weight,
+            ],
+        ];
     }
 
     /**

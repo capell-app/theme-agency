@@ -125,6 +125,40 @@ it('publishes new versions and keeps navigation, search, and ai output public on
         ->and($aiOutput->pluck('title')->all())->not->toContain($hiddenArticle->title);
 });
 
+it('exposes a public-safe search payload for the search package', function (): void {
+    $collection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Getting Started',
+    ));
+
+    $article = CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $collection,
+        title: 'Install Capell',
+        body: '<p>Run the installer.</p>',
+        summary: 'Install safely.',
+        status: KnowledgeBaseArticleStatus::Published,
+        searchWeight: 80,
+    ));
+
+    $payload = $article->refresh()->toSearchableArray();
+
+    expect($payload)->toMatchArray([
+        'title' => 'Install Capell',
+        'url' => '/docs/getting-started/install-capell',
+        'excerpt' => 'Install safely.',
+        'body' => 'Run the installer.',
+        'type' => 'knowledge-base',
+        'status' => 'published',
+        'is_public' => true,
+    ])
+        ->and($payload['meta'])->toMatchArray([
+            'collection' => 'Getting Started',
+            'version' => 'v1',
+            'weight' => 80,
+        ])
+        ->and($payload)->not->toHaveKey('author_id')
+        ->and($payload)->not->toHaveKey('field_path');
+});
+
 it('updates an article by publishing a new version through the article update action', function (): void {
     $collection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
         title: 'Public Docs',

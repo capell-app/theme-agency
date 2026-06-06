@@ -120,6 +120,9 @@ return [
         'prerequisite' => 'Prerequisite',
         'next_step' => 'Next step',
     ],
+    'search' => [
+        'source_label' => 'Knowledge base articles',
+    ],
     'validation' => [
         'article_body_required' => 'Article content is required.',
         'article_title_required' => 'Article title is required.',
