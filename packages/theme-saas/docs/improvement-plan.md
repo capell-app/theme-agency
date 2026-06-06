@@ -18,7 +18,7 @@ Theme SaaS registers the `saas` theme key (`SaasThemeServiceProvider::THEME_KEY 
 
 Prioritized.
 
-1. **Shipped 2026-06-04: Consume the availability flags already plumbed into views** — `pricing`, `docs-onboarding`, and `demo-request` now render translated connected/static guidance from `$contentSectionsAvailable`, `$documentLifecycleAvailable`, and `$formBuilderAvailable`, with tests covering both states. Full embeds/forms remain a follow-up. — why: removes dead data plumbing and makes the templates honest about their dependency on sibling packages — `src/SaasThemeServiceProvider.php`, `resources/views/sections/pricing.blade.php`, `resources/views/sections/docs-onboarding.blade.php`, `resources/views/sections/demo-request.blade.php` — M
+1. **Shipped 2026-06-04/06: Consume the availability flags already plumbed into views** — `pricing`, `docs-onboarding`, and `demo-request` now render translated connected/static guidance from `$contentSectionsAvailable`, `$documentLifecycleAvailable`, and `$formBuilderAvailable`, with tests covering both states. Follow-up slices turned pricing into a plan matrix, demo request into a Form Builder/static capture surface, and docs onboarding into a linked document-resource feed with lifecycle metadata. — why: removes dead data plumbing and makes the templates honest about their dependency on sibling packages — `src/SaasThemeServiceProvider.php`, `resources/views/sections/pricing.blade.php`, `resources/views/sections/docs-onboarding.blade.php`, `resources/views/sections/demo-request.blade.php` — M
 
 2. **Add dark-mode rendering** — there are **zero `dark:` variants in the views** and **no `prefers-color-scheme`/`.dark` rules in CSS**, yet the package ships a full `*-dark.png` screenshot set (`frontend-page-rendered-with-saas-theme-dark.png`, `theme-preset-selection-showing-saas-dark.png`, `theme-preview-url-output-dark.png`). The "dark" screenshots are OS/browser chrome around a light-only theme. SaaS buyers expect a dark theme. Either add genuine dark token variants (the `page.blade.php` already injects `$brand->tokens()` as CSS custom properties — extend with a dark token set) or stop implying dark support in media. — why: the dark screenshots over-promise; a real dark mode is a top SaaS differentiator — `resources/css/theme-saas.css`, `resources/views/page.blade.php`, all `resources/views/sections/*.blade.php` — L
 
@@ -44,11 +44,11 @@ Manifest `capabilities[]` is only `["theme-saas", "theme-saas-frontend"]` — i.
 - **Testimonials with attribution** — `proof` shows numeric metrics only; no quote/testimonial card with name/role/company/photo.
 - **FAQ section** — none. SaaS pricing/feature pages almost always pair with an FAQ accordion.
 - **Changelog / "what's new" surface** — SaaS vertical specifically values a changelog; not present (the `blog` section is the only content surface, and it degrades to generic "resources" when `capell-app/blog` is absent).
-- **Docs surface depends on an uninstalled-by-default sibling** — `docs-onboarding` is plumbed with `$documentLifecycleAvailable` but ignores it; `screenshots.json` notes the docs layout "Requires capell-app/document-lifecycle". Designed cross-sell, not wired.
+- **Docs surface now consumes document-style data** — `docs-onboarding` uses `$documentLifecycleAvailable` to distinguish connected/static states and renders linked document resources with version/status and duration metadata. Document Lifecycle remains admin/database-only, so the theme consumes prepared public data rather than querying the sibling package from Blade.
 
 **Cross-sell / differentiator vs table-stakes:**
 
-- Cross-sell with **form-builder** (demo-request/trial form) and **document-lifecycle** (docs) is _declared in screenshots.json and plumbed via availability flags_ but _not implemented in templates_. Finishing this is the highest-leverage gap and the clearest differentiator from sibling themes.
+- Cross-sell with **form-builder** (demo-request/trial form) and **document-lifecycle** (docs) is now visible in the templates: Form Builder can be embedded by handle and docs onboarding can render governed document links with lifecycle metadata.
 - A **payments** cross-sell (pricing CTA → checkout/subscription) is the obvious SaaS-vertical hook and is entirely absent — pricing CTAs are static `url` links.
 
 **Vs siblings:** the package leans on Foundation Theme for everything except section presentation; it does not register page types, settings, or its own routes (`database.migrations: false`, `settings: false`, no `providers.admin/frontend`). That keeps it light but means every differentiating SaaS feature (pricing toggle, FAQ, logos) must live in these section views — none of which exist yet beyond generic card loops.
@@ -74,7 +74,7 @@ The manifest marketplace summary now uses this buyer-facing sentence:
 The manifest and Composer description now use this buyer-facing product story:
 
 > Theme SaaS gives software and subscription businesses a product-led storefront out of the box: an activation-first hero, metric and logo proof, a plan-comparison and pricing layout, an ROI calculator, docs onboarding, and a demo-request flow — all rendered from portable Capell content with no presentation markup stored in your pages. It extends Foundation Theme, so your content stays clean while this theme owns the conversion layout, palette, and rhythm. Pairs with Form Builder for live demo/trial capture and Document Lifecycle for in-theme docs, and reads brand tokens so the SaaS preset re-skins the whole site. Built on Blade + Tailwind, cache-safe, and translation-ready.
-> (Note: pricing-comparison, calculator interactivity, logo/testimonial proof, and the Form Builder / Document Lifecycle integrations described above are still partially placeholder today — see §3.)
+> (Note: calculator interactivity and logo/testimonial proof remain future depth items — see §3.)
 
 **Screenshot/media gaps.** Marketplace now uses committed runner PNGs for the admin preset list, signed preview URL, frontend render, and seeded homepage/contact/CTA routes. Dark alternates remain available for the original admin/frontend evidence, but real dark-mode layout captures should wait until genuine dark mode exists (§2.2), rather than duplicating light-only theme output.
 
@@ -91,7 +91,7 @@ The manifest and Composer description now use this buyer-facing product story:
 | Shipped 2026-06-05: Translate hard-coded English in `SaasThemePageAdapter` fallback sections                        | Done   | S      | Med    | §4          |
 | Shipped 2026-06-06: Build a real pricing/plan-comparison matrix (tiers × features, popular flag, CTA/period fields) | Done   | M      | High   | §3          |
 | Shipped 2026-06-06: Implement functional demo-request/trial form via Form Builder (with static fallback)            | Done   | M      | High   | §3          |
-| Deepen connected pricing/docs/demo-request states beyond guidance copy into real embeds/data                        | Next   | M      | High   | §2.1, §3    |
+| Shipped 2026-06-06: Deepen connected pricing/docs/demo-request states beyond guidance copy into real embeds/data    | Done   | M      | High   | §2.1, §3    |
 | Done/Shipped: Rewrite marketplace `summary` + composer `description`; capture & commit the 12 PNG screenshots      | Done   | M      | High   | §5          |
 | Replace jargon placeholder copy in `generic.php` and visible eyebrows                                               | Done   | S      | Med    | §2.5        |
 | Shipped 2026-06-06: Tokenize hard-coded palette so the `saas` preset actually re-skins the theme                    | Done   | L      | Med    | §2.3        |

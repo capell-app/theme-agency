@@ -144,7 +144,13 @@ it('renders new premium saas layouts through the registry', function (): void {
     $docsHtml = $docsRenderer->render(saasThemeSection('docs-onboarding', [
         'heading' => 'Ship with guided docs',
         'items' => [
-            ['title' => 'Activation checklist', 'summary' => 'Documentation route for product activation.'],
+            [
+                'title' => 'Activation checklist',
+                'summary' => 'Documentation route for product activation.',
+                'url' => '/docs/activation',
+                'version' => 'v2.1',
+                'duration' => '6 min',
+            ],
         ],
     ]));
 
@@ -166,6 +172,8 @@ it('renders new premium saas layouts through the registry', function (): void {
     expect($docsHtml)
         ->toContain('Ship with guided docs')
         ->toContain('Activation checklist')
+        ->toContain('/docs/activation')
+        ->toContain('v2.1')
         ->not->toContain('capell-app/theme-saas');
 
     expect($demoHtml)
@@ -741,7 +749,13 @@ function renderSaasThemeAllSections(ThemeRegistry $registry): string
                 'heading' => 'Ship with guided docs',
                 'summary' => 'Help new accounts activate faster.',
                 'items' => [
-                    ['title' => 'Activation checklist', 'summary' => 'Documentation route for product activation.'],
+                    [
+                        'title' => 'Activation checklist',
+                        'summary' => 'Documentation route for product activation.',
+                        'url' => '/docs/activation',
+                        'version' => 'v2.1',
+                        'duration' => '6 min',
+                    ],
                 ],
             ]),
             saasThemeSection('demo-request', [

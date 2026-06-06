@@ -69,6 +69,7 @@ return [
     'next_article' => 'Next article',
     'pagination' => 'Pagination',
     'open_resource_label' => 'Open resource',
+    'open_docs_label' => 'Open docs',
     'outcome_signal' => 'Outcome',
     'pipeline_signal' => 'Pipeline',
     'premium_content_heading' => 'Route visitors into the right next step',
