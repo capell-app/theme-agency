@@ -128,7 +128,16 @@ it('renders new premium saas layouts through the registry', function (): void {
     $pricingHtml = $pricingRenderer->render(saasThemeSection('pricing', [
         'heading' => 'Choose a growth plan',
         'items' => [
-            ['title' => 'Scale', 'summary' => 'Plan comparison for growing teams.'],
+            [
+                'title' => 'Scale',
+                'summary' => 'Plan comparison for growing teams.',
+                'price' => '$249',
+                'popular' => true,
+                'features' => [
+                    'Seats' => '25',
+                    'Lifecycle analytics' => true,
+                ],
+            ],
         ],
     ]));
 
@@ -149,6 +158,8 @@ it('renders new premium saas layouts through the registry', function (): void {
     expect($pricingHtml)
         ->toContain('Choose a growth plan')
         ->toContain('Scale')
+        ->toContain('Plan comparison')
+        ->toContain('Lifecycle analytics')
         ->not->toContain('capell-app/theme-saas');
 
     expect($docsHtml)
@@ -699,9 +710,29 @@ function renderSaasThemeAllSections(ThemeRegistry $registry): string
             ]),
             saasThemeSection('pricing', [
                 'heading' => 'Choose a plan',
-                'summary' => 'Simple public pricing cards.',
+                'summary' => 'Compare plan fit by buyer motion, activation needs, and support model.',
                 'items' => [
-                    ['title' => 'Scale', 'summary' => 'Plan comparison for growing teams.', 'price' => '$249'],
+                    [
+                        'title' => 'Launch',
+                        'summary' => 'For small teams validating a product-led site.',
+                        'price' => '$149',
+                        'features' => [
+                            'Seats' => '10',
+                            'Activation playbooks' => true,
+                            'Dedicated success review' => false,
+                        ],
+                    ],
+                    [
+                        'title' => 'Scale',
+                        'summary' => 'Plan comparison for growing teams.',
+                        'price' => '$249',
+                        'popular' => true,
+                        'features' => [
+                            'Seats' => '25',
+                            'Activation playbooks' => true,
+                            'Dedicated success review' => true,
+                        ],
+                    ],
                 ],
             ]),
             saasThemeSection('docs-onboarding', [

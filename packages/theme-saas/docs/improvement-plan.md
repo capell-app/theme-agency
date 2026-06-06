@@ -89,7 +89,7 @@ The manifest and Composer description now use this buyer-facing product story:
 | Shipped 2026-06-03: Implement real health-check logic (views/theme-registered/assets present), drop stub            | Done   | S      | High   | §4          |
 | Done/Shipped: Rendered-output anonymous/non-admin leak coverage across all sections + adapter query-count assertion | Done   | M      | High   | §4          |
 | Shipped 2026-06-05: Translate hard-coded English in `SaasThemePageAdapter` fallback sections                        | Done   | S      | Med    | §4          |
-| Build a real pricing/plan-comparison matrix (tiers × features, billing toggle, popular flag)                        | Next   | M      | High   | §3          |
+| Shipped 2026-06-06: Build a real pricing/plan-comparison matrix (tiers × features, popular flag, CTA/period fields) | Done   | M      | High   | §3          |
 | Implement functional demo-request/trial form via Form Builder (with static fallback)                                | Next   | M      | High   | §3          |
 | Deepen connected pricing/docs/demo-request states beyond guidance copy into real embeds/data                        | Next   | M      | High   | §2.1, §3    |
 | Done/Shipped: Rewrite marketplace `summary` + composer `description`; capture & commit the 12 PNG screenshots      | Done   | M      | High   | §5          |
