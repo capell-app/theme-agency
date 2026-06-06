@@ -110,12 +110,17 @@
                 "alt": "Theme Education marketplace card.",
                 "caption": "Theme Education theme card."
             },
-            {
-                "path": "docs/screenshots/education-homepage-layout.png",
-                "alt": "Theme Education homepage with enrolment-focused headline, programme proof cards, and campus learning media.",
-                "caption": "Route-backed Education homepage rendered through the package theme shell."
-            }
-        ],
+        {
+            "path": "docs/screenshots/education-homepage-layout.png",
+            "alt": "Theme Education homepage with enrolment-focused headline, programme proof cards, and campus learning media.",
+            "caption": "Route-backed Education homepage rendered through the package theme shell."
+        },
+        {
+            "path": "docs/screenshots/education-enrolment-layout.png",
+            "alt": "Theme Education enrolment CTA with learner pathway steps and application actions.",
+            "caption": "Route-backed Education enrolment call-to-action."
+        }
+    ],
         "categories": [
             "frontend",
             "themes"
