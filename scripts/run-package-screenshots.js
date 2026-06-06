@@ -64,6 +64,81 @@ function readOnlyFile(filePath) {
         .filter(Boolean)
 }
 
+function packageMatchesOnly(packageName, only) {
+    if (only.length === 0) {
+        return true
+    }
+
+    return only.some((filter) => filter === packageName || filter.startsWith(`${packageName}:`))
+}
+
+function commandArgs(command, params) {
+    const args = ['artisan', command]
+
+    if (Array.isArray(params)) {
+        for (const param of params) {
+            if (typeof param === 'string' && param !== '') {
+                args.push(`--${param}`)
+            }
+        }
+    }
+
+    return args
+}
+
+function runPackageCommands(repoPath, appPath, only) {
+    if (!appPath) {
+        return
+    }
+
+    const packagesPath = path.join(repoPath, 'packages')
+
+    if (!fs.existsSync(packagesPath)) {
+        return
+    }
+
+    const packageNames = fs
+        .readdirSync(packagesPath, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => entry.name)
+        .filter((packageName) => packageMatchesOnly(packageName, only))
+        .sort()
+
+    for (const packageName of packageNames) {
+        const manifestPath = path.join(packagesPath, packageName, 'capell.json')
+
+        if (!fs.existsSync(manifestPath)) {
+            continue
+        }
+
+        const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
+        const commands = manifest.commands ?? {}
+
+        for (const [key, paramsKey] of [
+            ['setup', 'setupParams'],
+            ['demo', 'demoParams'],
+        ]) {
+            const command = commands[key]
+
+            if (typeof command !== 'string' || command === '') {
+                continue
+            }
+
+            const result = spawnSync('php', commandArgs(command, commands[paramsKey]), {
+                cwd: appPath,
+                env: process.env,
+                stdio: 'inherit',
+            })
+
+            if (result.status !== 0) {
+                process.exitCode = result.status ?? 1
+
+                return
+            }
+        }
+    }
+}
+
 function main() {
     const argv = process.argv.slice(2)
     const configuredRunnerPath = readOption(
@@ -121,6 +196,12 @@ function main() {
 
     if (argv.includes('--skip-build')) {
         runnerArgs.push('--skip-build')
+    }
+
+    runPackageCommands(repoPath, appPath ? path.resolve(appPath) : '', only)
+
+    if (process.exitCode) {
+        return
     }
 
     const result = spawnSync('node', runnerArgs, {
