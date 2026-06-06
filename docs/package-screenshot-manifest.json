@@ -1429,6 +1429,12 @@
             "surface": "admin",
             "targetType": "admin-page",
             "target": "CommentModerationInbox",
+            "scenario": "admin-index",
+            "url": "/comment-moderation-inbox",
+            "waitFor": ".fi-ta, table",
+            "colorSchemes": [
+                "light"
+            ],
             "required": true,
             "notes": "Capture as an admin user after seeding pending, approved, rejected, and spam comments.",
             "useCase": "An editor reviews incoming comments and decides which public replies should appear.",
@@ -1442,6 +1448,12 @@
             "surface": "admin",
             "targetType": "admin-surface",
             "target": "CommentResource",
+            "scenario": "admin-index",
+            "url": "/comments",
+            "waitFor": ".fi-ta, table",
+            "colorSchemes": [
+                "light"
+            ],
             "required": true,
             "notes": "Capture the comments table with seeded authors, statuses, nesting, and moderation timestamps.",
             "useCase": "An administrator audits comment status and moderation activity.",
@@ -1455,6 +1467,12 @@
             "surface": "admin",
             "targetType": "admin-surface",
             "target": "CommentAuthorResource",
+            "scenario": "admin-index",
+            "url": "/comment-authors",
+            "waitFor": ".fi-ta, table",
+            "colorSchemes": [
+                "light"
+            ],
             "required": true,
             "notes": "Capture the author table without exposing raw verification tokens or visitor hashes.",
             "useCase": "An administrator reviews public display names and author moderation state.",
@@ -1468,6 +1486,12 @@
             "surface": "frontend",
             "targetType": "frontend-url",
             "target": null,
+            "scenario": "frontend-page",
+            "url": "/screenshot-fixtures/comments/public-thread",
+            "waitFor": ".thread",
+            "colorSchemes": [
+                "light"
+            ],
             "required": true,
             "notes": "Capture a seeded public page after the comment thread loads. Verify the output excludes moderation status, model IDs, author email, tokens, and admin URLs.",
             "useCase": "A visitor reads and replies to an approved public discussion thread.",

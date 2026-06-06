@@ -8,7 +8,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 
 | Bucket | Rows |
 | ------ | ---: |
-| Now    | 16 |
+| Now    | 15 |
 | Next   | 295 |
 | Later  | 200 |
 
@@ -29,7 +29,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | Package | Now | Next | Later | Current status | Evidence / next action |
 | ------- | --: | ---: | ----: | -------------- | ---------------------- |
 | campaign-studio | 0 | 1 | 5 | Now closed | `7e8accb2e` moves three rows from Now to shipped: `Harden overview conversion-rate join (null/duplicate utm_campaign)`, `Configurable attribution lookback window`, and `In-package A/B variant results readout (lift per variant)`. Continue with scheduling automation, revenue/ROAS, audience targeting, anonymous/no-identity dedup policy, experiment decoupling, and completion review. |
-| comments | 1 | 0 | 0 | Slice committed | `1d6e114a5` maps `CreateCommentAction`/rate-limit `ValidationException` messages into the Livewire error bag so guest name/email/body errors bind to the existing public form fields, and stale submit state is cleared between attempts. The package roadmap was reconciled so previously shipped rows are `Done`; the only Now row left is runtime PNG captures from `docs/screenshots.json`. The package screenshot contract now requires `capell-app/block-library` instead of the stale `capell-app/content-blocks` name. |
+| comments | 0 | 0 | 0 | Now closed | Current follow-up replaces the four illustrated SVG marketplace previews with Capell runner PNG captures for the moderation inbox, comments admin resource, author resource, and public thread. The package roadmap now has no Now rows left; only optional GIF/cached-page media follow-ups remain outside Current Scope. |
 | contacts | 0 | 7 | 2 | Slice committed | Current follow-ups expose audited privacy export/anonymization and queue/isolate all source-adapter listeners. Contacts has no Now rows left, but still needs Next/Later CRM depth work and a full package completion review before it can be marked Complete. |
 | content-sections | 0 | 7 | 4 | Now closed | `df230b604` reconciles the package plan after `54b758fe1` by moving five committed Now rows to Done: editor HTML sanitisation, anonymous public-output sanitisation tests, real `ContentSectionsHealthCheck`, `svg()` icon allow-list validation, and manifest accuracy for contributions/permissions/tables/surfaces. Explicit authenticated non-admin public-safety assertions remain open as Next work. Continue with render budget, cache invalidation, orphaned `simple-list`, marketplace screenshots/copy, stale docs cleanup, and completion review. |
 | customer-portal | 0 | 2 | 3 | Slice committed | Current follow-up adds same-site frontend account-isolation coverage, blocks suspended/archived accounts, adds package factories for portal accounts/support requests, covers unauthenticated/throttled frontend paths, wires `portal-profile` through an Action/rendered dashboard section, adds support request events/requester notifications, replaces placeholder frontend performance budgets, adds the package README, and schema-drives portal preferences. Continue with provider fan-out, marketplace screenshots/copy, Later rows, and a package completion review before marking Complete. |
@@ -93,8 +93,9 @@ No package should be marked `Complete` from commit history alone. Completion req
 - `bookings` is closed from the SVG-only marketplace group after committed route-backed PNG captures for the public booking request form and Capell admin appointment queue replaced the two workflow SVG previews.
 - `social-feeds` is closed from the SVG-only marketplace group after committed route-backed PNG captures for the seeded public carousel, cached RSS state, and provider registry diagnostics replaced the three workflow SVG previews.
 - `theme-inertia-bookings`, `theme-inertia-bookings-react`, and `theme-inertia-bookings-vue` are closed from the SVG-only marketplace group after committed route-backed PNG captures replaced homepage/request/services/locations/mobile, React state, and Vue state workflow previews.
-- SVG-only marketplace galleries: none found in the current audit set.
-- Mixed SVG placeholder galleries with existing runner contracts: `comments`, `dashboard-reports`, `foundation-theme`, `site-discovery`, `theme-local-services`, `theme-nonprofit`, and `theme-portfolio`. Regenerate these through the runner before trusting their marketplace visuals.
+- `comments` is closed from the SVG-only marketplace group after committed Capell runner PNG captures replaced moderation inbox, comments resource, author resource, and public thread SVG previews.
+- SVG-only marketplace galleries still open in the current audit set: `dashboard-reports` and `site-discovery`.
+- Mixed SVG placeholder galleries with existing runner contracts: `foundation-theme`, `theme-local-services`, `theme-nonprofit`, and `theme-portfolio`. Regenerate these through the runner before trusting their marketplace visuals.
 - Runner contract exists but marketplace only shows card/hero assets: `api`, `block-library`, `content-sections`, `demo-kit`, `document-lifecycle`, `events`, `frontend-optimizer`, `ga4-reports`, `html-cache`, `notes`, `public-actions`, `shopify-commerce`, `theme-commerce`, `theme-education`, `theme-healthcare`, and `theme-knowledge`. `frontend-optimizer` is now closed from this group after four Capell runner PNGs were committed and promoted.
 - Non-standard screenshot paths: `agent-delivery`, `frontend-authoring`, `media-ai`, `publishing-studio`, and `url-manager`; normalize these before using the repo-wide screenshot manifest as a release gate.
 - Packages with no marketplace screenshots: `automation-studio`, `contacts`, `customer-portal`, `experiments`, `inertia`, `inertia-react-adapter`, `inertia-vue-adapter`, `knowledge-base`, `payments`, and `privacy-center`.
