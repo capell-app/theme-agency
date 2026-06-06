@@ -142,6 +142,25 @@ final class GitHubProvider implements GitProviderContract
         return $this->pullRequestDataFromResponse($response);
     }
 
+    public function findOpenPullRequestForBranch(DeploymentConnection $conn, string $headBranch): ?PullRequestData
+    {
+        $response = $this->client($conn)
+            ->retry(2, 200, throw: false)
+            ->get(sprintf('/repos/%s/%s/pulls', $conn->repo_owner, $conn->repo_name), [
+                'state' => 'open',
+                'head' => sprintf('%s:%s', $conn->repo_owner, $headBranch),
+                'base' => $conn->default_branch,
+            ])
+            ->throw()
+            ->json();
+
+        if (! is_array($response) || ! isset($response[0]) || ! is_array($response[0])) {
+            return null;
+        }
+
+        return $this->pullRequestDataFromResponse($response[0]);
+    }
+
     public function enableAutoMerge(DeploymentConnection $conn, int|string $pullRequestId): void
     {
         $nodeIdQuery = <<<'GRAPHQL'

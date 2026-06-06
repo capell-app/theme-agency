@@ -115,6 +115,26 @@ final class GitLabProvider implements GitProviderContract
         return $this->pullRequestDataFromResponse($response);
     }
 
+    public function findOpenPullRequestForBranch(DeploymentConnection $conn, string $headBranch): ?PullRequestData
+    {
+        $encodedProject = urlencode($conn->repoCoordinate());
+
+        $response = $this->client($conn, retry: true)
+            ->get(sprintf('/projects/%s/merge_requests', $encodedProject), [
+                'state' => 'opened',
+                'source_branch' => $headBranch,
+                'target_branch' => $conn->default_branch,
+            ])
+            ->throw()
+            ->json();
+
+        if (! is_array($response) || ! isset($response[0]) || ! is_array($response[0])) {
+            return null;
+        }
+
+        return $this->pullRequestDataFromResponse($response[0]);
+    }
+
     public function enableAutoMerge(DeploymentConnection $conn, int|string $pullRequestId): void
     {
         $encodedProject = urlencode($conn->repoCoordinate());

@@ -45,7 +45,7 @@
         "View:DeploymentConnectionPage",
         "Manage:DeploymentConnectionPage"
     ],
-    "capabilities": ["deployments", "deployments-admin", "deployments-install-policy"],
+    "capabilities": ["deployments", "deployments-admin", "deployments-install-policy", "deployments-publish-idempotency"],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,

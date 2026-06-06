@@ -110,6 +110,25 @@ final class BitbucketProvider implements GitProviderContract
         return $this->pullRequestDataFromResponse($response);
     }
 
+    public function findOpenPullRequestForBranch(DeploymentConnection $conn, string $headBranch): ?PullRequestData
+    {
+        $response = $this->client($conn)
+            ->retry(2, 200, throw: false)
+            ->get(sprintf('/repositories/%s/%s/pullrequests', $conn->repo_owner, $conn->repo_name), [
+                'q' => sprintf('source.branch.name="%s" AND state="OPEN"', $headBranch),
+            ])
+            ->throw()
+            ->json();
+
+        $pullRequests = $response['values'] ?? [];
+
+        if (! is_array($pullRequests) || ! isset($pullRequests[0]) || ! is_array($pullRequests[0])) {
+            return null;
+        }
+
+        return $this->pullRequestDataFromResponse($pullRequests[0]);
+    }
+
     public function enableAutoMerge(DeploymentConnection $conn, int|string $pullRequestId): void
     {
         Log::warning('BitbucketProvider: auto-merge is not natively supported by Bitbucket Cloud.', [
