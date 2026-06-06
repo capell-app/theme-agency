@@ -49,6 +49,7 @@ it('uses buyer-facing marketplace copy and committed real preview assets', funct
         ->and($screenshotPaths)->toBe([
             'docs/assets/marketplace/extension-card.jpg',
             'docs/screenshots/knowledge-homepage-layout.png',
+            'docs/screenshots/knowledge-homepage-layout-dark.png',
         ]);
 
     foreach ($screenshotPaths as $screenshotPath) {

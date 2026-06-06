@@ -16,12 +16,10 @@
             "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A publisher sees how the theme turns a content archive into a searchable reader journey.",
             "screenshotPath": "packages/theme-knowledge/docs/screenshots/frontend-page-rendered-with-knowledge-theme.png",
+            "darkScreenshotPath": "packages/theme-knowledge/docs/screenshots/frontend-page-rendered-with-knowledge-theme-dark.png",
             "scenario": "frontend-page",
             "url": "/theme-knowledge",
             "waitFor": ".knowledge-shell",
-            "colorSchemes": [
-                "light"
-            ],
             "user": false
         },
         {
@@ -35,12 +33,10 @@
             "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A resource-site buyer checks whether the first viewport feels like a serious library rather than a blog skin.",
             "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-homepage-layout.png",
+            "darkScreenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-homepage-layout-dark.png",
             "scenario": "frontend-page",
             "url": "/theme-knowledge",
             "waitFor": ".knowledge-shell",
-            "colorSchemes": [
-                "light"
-            ],
             "user": false
         },
         {

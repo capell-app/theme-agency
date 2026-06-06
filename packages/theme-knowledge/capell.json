@@ -113,6 +113,11 @@
                 "path": "docs/screenshots/knowledge-homepage-layout.png",
                 "alt": "Theme Knowledge homepage with dark documentation shell, search console, and expertise-led hero content.",
                 "caption": "Route-backed Knowledge homepage rendered through the package theme shell."
+            },
+            {
+                "path": "docs/screenshots/knowledge-homepage-layout-dark.png",
+                "alt": "Theme Knowledge homepage rendered through the package theme shell in dark mode.",
+                "caption": "Route-backed Knowledge homepage in dark mode."
             }
         ],
         "categories": [

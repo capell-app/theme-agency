@@ -1,6 +1,6 @@
 # Theme Knowledge — Improvement & Growth Plan
 
-> Package: capell-app/theme-knowledge · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Draft
+> Package: capell-app/theme-knowledge · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Complete
 
 ## 1. Snapshot
 
@@ -17,7 +17,7 @@ Marketplace and Composer copy are buyer-facing, but `capell.json` now promotes o
 - **2026-06-05:** Added a first-class `doc-article` section renderer with hydrated breadcrumbs, category sidebar, article metadata, constrained article body, and sticky table-of-contents layout, plus registry coverage and docs/manifest reconciliation.
 - **2026-06-06:** Added code-block/prose styling for technical articles, constrained long-form measures with calmer heading scale, tokenized theme colour utilities, dark-mode tokens, a reduced-motion guard for decorative grid overlays, and KB article feedback/version/freshness affordances.
 
-**Headline:** the package is positioned as a knowledge-base / documentation / help-site theme, and the core documentation layout now exists. The remaining shipped-feature gap is dark-mode capture; the seeded-route captures now render the actual Theme Knowledge shell/CSS, and marketplace promotion is intentionally conservative until inner-route demo content is stronger.
+**Headline:** the package is positioned as a knowledge-base / documentation / help-site theme, and the core documentation layout now exists. Seeded-route light and dark captures now render the actual Theme Knowledge shell/CSS, and marketplace promotion is intentionally conservative around the strongest homepage images until inner-route demo content is stronger.
 
 ## 2. Improvements (existing functionality)
 
@@ -27,7 +27,7 @@ Prioritized. Real templates only.
 
 2. **Author bench is translated and data-driven.** — `authors` now reads `$section->items`/`$items` when supplied and falls back to translated author cards, removing hard-coded public English from the Blade. — `resources/views/sections/authors.blade.php`, `resources/lang/en/generic.php`, `tests/Unit/KnowledgeThemeDefinitionTest.php` — **M**
 
-3. **Blocked by runner fixture: add dark mode screenshot.** Theme Knowledge now defines dark-mode token overrides under `prefers-color-scheme: dark` and normalizes white/slate utility surfaces inside `.knowledge-shell`. The dark screenshot remains open because the current Capell runner route `/screenshot-fixtures/theme-gallery/knowledge/*` returns hard-coded generic HTML/CSS rather than the package theme shell, so its attempted dark capture was light and was not promoted. — `resources/css/theme-knowledge.css`, `docs/screenshots.json` — **L**
+3. **Done/Shipped: add dark mode screenshot.** Theme Knowledge defines dark-mode token overrides and the screenshot contract now declares dark paths for the main frontend/homepage captures. The Capell runner captured the route-backed dark homepage through the real `.knowledge-shell`, and `capell.json` promotes it alongside the light homepage. — `resources/css/theme-knowledge.css`, `docs/screenshots.json`, `capell.json`, `docs/screenshots/knowledge-homepage-layout-dark.png` — **L**
 
 4. **Done/Shipped: tokenize hardcoded hex colors.** Theme views now use `.knowledge-shell` CSS custom properties such as `--site-theme-primary`, `--site-theme-accent`, `--site-theme-surface`, `--site-theme-heading`, and ink/code variants instead of inline arbitrary hex utilities. The literal hex values are centralized in `resources/css/theme-knowledge.css` token definitions so Theme Studio presets and future dark-mode overrides have one palette boundary. — `resources/views/**/*.blade.php`, `resources/css/theme-knowledge.css` — **L**
 
@@ -77,7 +77,7 @@ Prioritized. Real templates only.
 
 > Theme Knowledge turns a Capell site into a polished documentation and help centre. It pairs a category sidebar, sticky table of contents, code-friendly prose, and breadcrumb trails with a prominent search experience and readable long-form typography, so visitors find answers fast. Resource libraries, author bios, topic hubs, and newsletter capture round out a full knowledge-marketing surface, with optional Blog, Search, and Newsletter integrations lighting up automatically when those packages are installed. Built on the Capell foundation theme with a configurable colour palette and accessible focus states.
 
-**Screenshot/media status.** The 7 light renders are committed to `docs/screenshots/` from real seeded package routes. A seeded anonymous homepage capture renders the real styled Knowledge shell through the Capell runner and is promoted in `capell.json`; the shared screenshot wrapper suppresses the Insights consent panel. Dark marketplace captures remain open until a dark screenshot pass is added.
+**Screenshot/media status.** The 7 light renders and 2 dark renders are committed to `docs/screenshots/` from real seeded package routes. Seeded anonymous homepage light/dark captures render the real styled Knowledge shell through the Capell runner and are promoted in `capell.json`; the shared screenshot wrapper suppresses the Insights consent panel.
 
 **Differentiation / target buyer.** Today the theme is hard to distinguish from a generic editorial/marketing theme. Target buyer: documentation/help-centre owners, dev-tool/SaaS teams, and internal-knowledge-base operators who want a docs site without a separate static-site generator. The wedge is "docs site inside your CMS" — sidebar + TOC + search + versioning — which no sibling theme currently fills.
 
@@ -91,7 +91,7 @@ Prioritized. Real templates only.
 | Make `search-listing` a real, prominent search form (cross-sell `capell-app/search`)                     | Done   | M      | High   | §3, §2.6    |
 | Done/Shipped 2026-06-06: Replace generic `theme-gallery` fixture PNGs with real Theme Knowledge renderer captures | Done   | M      | High   | §4, §5      |
 | Done/Shipped: Add code-block / `pre`/`code` prose styling                                                | Done   | M      | High   | §3          |
-| Blocked by runner fixture: capture a real dark screenshot through a Theme Knowledge CSS fixture          | Next   | M      | High   | §2.3, §5    |
+| Done/Shipped 2026-06-06: capture a real dark screenshot through a Theme Knowledge CSS fixture          | Done   | M      | High   | §2.3, §5    |
 | Done/Shipped: Tokenize hardcoded hex to preset `--site-theme-*` variables                                | Done   | L      | Med    | §2.4        |
 | Done/Shipped: Constrained prose measure + heading-scale readability pass                                 | Done   | M      | Med    | §2.7        |
 | Done/Shipped: `prefers-reduced-motion` guard on animated grid `::before`                                 | Done   | S      | Low    | §2.5        |
@@ -103,3 +103,7 @@ Prioritized. Real templates only.
 | Done/Shipped: Article feedback ("Was this helpful?") affordance                                          | Done   | M      | Med    | §3          |
 | Done/Shipped: Versioning / "last updated" freshness affordance                                           | Done   | L      | Med    | §3          |
 | Done/Shipped 2026-06-06: extend `PublicOutputSafetyTest` with visible-copy guard; assert render budget in manifest coverage | Done   | M      | Med    | §4          |
+
+## Completion Review
+
+Completed 2026-06-06. Every prioritized roadmap row is closed. Theme Knowledge now ships doc/article layout, functional search form, real route-backed light/dark screenshot evidence, code/prose styling, tokenized colours, readable long-form measures, reduced-motion handling, package-safe public Blade, data-driven authors/topic hubs, health diagnostics, feedback/version affordances, semantic placeholders, and public-output/render-budget guard coverage. Verification for the final slice used the Capell screenshot runner, visual inspection of the dark homepage capture, PHP lint, JSON validation, screenshot manifest validation, and whitespace checks; Pest/composer tests were intentionally skipped per instruction.
