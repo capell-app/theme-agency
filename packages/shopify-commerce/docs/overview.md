@@ -18,7 +18,7 @@ It does not own public storefront rendering, checkout, carts, orders, webhooks, 
 | Settings    | `shopify_commerce.api_version`, `shopify_commerce.default_scopes`, `shopify_commerce.search_cache_ttl_minutes`                                    |
 | Routes      | `GET capell/oauth/shopify/install`, `GET capell/oauth/shopify/callback`                                                                           |
 | Route names | `capell-shopify-commerce.oauth.install`, `capell-shopify-commerce.oauth.callback`                                                                 |
-| Commands    | `capell-shopify-commerce:install`, `capell-shopify-commerce:sync {connection?}`, `capell-shopify-commerce:sync-customers {connection?}`           |
+| Commands    | `capell-shopify-commerce:install`, `capell-shopify-commerce:sync {connection?}`, `capell-shopify-commerce:sync-customers {connection?}`, `capell-shopify-commerce:prune-oauth-states` |
 | Admin page  | `filament.admin.pages.shopify-commerce` backed by `ShopifyConnectionPage`                                                                         |
 | Permission  | `manage_shopify_commerce`                                                                                                                         |
 | Models      | `ShopifyConnection`, `ShopifyOAuthState`, `ShopifyProduct`, `ShopifyProductVariant`, `ShopifyCustomer`                                            |
@@ -39,6 +39,7 @@ flowchart TD
     G -->|false| H["Skip Capell model/settings/protected table registration"]
     G -->|true| I["Register models and protected tables with CapellCore"]
     I --> J["Register shopify_commerce settings schema"]
+    I --> L["Schedule OAuth state pruning hourly"]
     F --> K["Install permissions, extension page, console commands"]
 ```
 
@@ -87,6 +88,7 @@ Shopify Commerce does not currently expose a formal provider contract for third-
 | Need                          | Use                                                            | Register or call from                                     | Test shape                                                                                      |
 | ----------------------------- | -------------------------------------------------------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | Connect or disconnect a store | `ConnectShopifyStoreAction`, `DisconnectShopifyStoreAction`    | Admin UI or a trusted internal Action                     | Action test with fake token data and asserted `shopify_connections` changes.                    |
+| Prune expired OAuth state     | `PruneExpiredShopifyOAuthStatesAction`                         | Scheduled maintenance or trusted console command          | Action test with expired and future OAuth state rows.                                           |
 | Trigger sync                  | `SyncShopifyProductsAction::run()` or `::dispatch()`           | Trusted admin command, job, or internal integration       | Fake HTTP or mock Actions; assert status transitions and `bulk_operation_id`.                   |
 | Sync customer cache           | `SyncShopifyCustomersAction::run()`                            | Trusted admin command, job, or internal integration       | Fake paginated Admin GraphQL customer responses; assert encrypted local customer rows.          |
 | Search cached products        | `SearchShopifyProductsAction::run($term, $limit, $connection)` | Admin-facing product picker or internal commerce workflow | Seed products; assert connection-scoped results and cache behavior.                             |

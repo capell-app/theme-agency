@@ -61,6 +61,7 @@ final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvide
             $this->registerModels()
                 ->registerSettings()
                 ->registerProtectedTables()
+                ->registerScheduledMaintenance()
                 ->registerScheduledSync();
         });
     }
@@ -123,6 +124,18 @@ final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvide
         $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
             $schedule->command('capell-shopify-commerce:sync', ['--all' => true])
                 ->everyFifteenMinutes()
+                ->withoutOverlapping()
+                ->onOneServer();
+        });
+
+        return $this;
+    }
+
+    private function registerScheduledMaintenance(): self
+    {
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
+            $schedule->command('capell-shopify-commerce:prune-oauth-states')
+                ->hourly()
                 ->withoutOverlapping()
                 ->onOneServer();
         });

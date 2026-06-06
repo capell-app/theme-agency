@@ -24,6 +24,8 @@ flowchart TD
 
 The install and callback routes both use `web` and `auth` middleware and both call `ShopifyConnectionPage::canAccess()`. A user without `manage_shopify_commerce` should never reach the Shopify OAuth redirect or callback handler.
 
+Expired OAuth nonce rows are removed by `capell-shopify-commerce:prune-oauth-states`, which is scheduled hourly after the package is installed. Callback validation still deletes the matched row immediately, so the scheduled pruning path only clears abandoned or already-expired connection attempts.
+
 ## OAuth Data Ownership
 
 | Data                    | Owner                              | Notes                                                                                                                               |

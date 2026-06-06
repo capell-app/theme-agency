@@ -55,6 +55,7 @@
     },
     "commands": {
         "install": "capell-shopify-commerce:install",
+        "pruneOAuthStates": "capell-shopify-commerce:prune-oauth-states",
         "syncCustomers": "capell-shopify-commerce:sync-customers",
         "setup": null,
         "demo": null,
@@ -62,6 +63,7 @@
     },
     "actions": {
         "install": "Capell\\ShopifyCommerce\\Actions\\InstallShopifyCommercePackageAction",
+        "pruneExpiredShopifyOAuthStates": "Capell\\ShopifyCommerce\\Actions\\OAuth\\PruneExpiredShopifyOAuthStatesAction",
         "syncShopifyCustomers": "Capell\\ShopifyCommerce\\Actions\\Customers\\SyncShopifyCustomersAction",
         "upsertShopifyCustomer": "Capell\\ShopifyCommerce\\Actions\\Customers\\UpsertShopifyCustomerAction"
     },

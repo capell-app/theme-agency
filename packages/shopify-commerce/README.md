@@ -33,7 +33,7 @@ It does not own storefront rendering, checkout, cart state, order import, webhoo
 
 - Admin page: `Capell\ShopifyCommerce\Filament\Pages\ShopifyConnectionPage`.
 - OAuth routes: `capell-shopify-commerce.oauth.install` and `capell-shopify-commerce.oauth.callback` under `capell/oauth/shopify`.
-- Commands: `capell-shopify-commerce:install`, `capell-shopify-commerce:sync {connection?}`, and `capell-shopify-commerce:sync-customers {connection?}`.
+- Commands: `capell-shopify-commerce:install`, `capell-shopify-commerce:sync {connection?}`, `capell-shopify-commerce:sync-customers {connection?}`, and `capell-shopify-commerce:prune-oauth-states`.
 - Settings group: `shopify_commerce` through `ShopifyCommerceSettings`.
 - Permission: `manage_shopify_commerce`.
 - Protected tables: `shopify_connections`, `shopify_oauth_states`, `shopify_products`, `shopify_product_variants`, `shopify_customers`.
@@ -68,6 +68,7 @@ The publishable config lives at `config/capell-shopify-commerce.php` in the host
 | Admin page       | `ShopifyConnectionPage`              | Connects a store, dispatches sync, disconnects a store, and searches cached products.                       |
 | OAuth install    | `ShopifyInstallController`           | Validates the shop domain, creates a nonce, and redirects to Shopify OAuth.                                 |
 | OAuth callback   | `ShopifyCallbackController`          | Validates HMAC and state, exchanges the code, stores the connection, and queues catalog sync.               |
+| OAuth pruning    | `PruneExpiredShopifyOAuthStatesAction` | Removes expired OAuth nonce rows; scheduled hourly while the package is installed.                          |
 | GraphQL client   | `ExecuteShopifyAdminGraphqlAction`   | Calls Shopify Admin GraphQL and paces requests from throttle metadata.                                      |
 | Catalog sync     | `SyncShopifyProductsAction`          | Queues or starts a bulk product sync and prevents overlapping work per connection.                          |
 | Catalog import   | `ImportShopifyProductBulkSyncAction` | Imports JSONL bulk output into product and variant tables.                                                  |
