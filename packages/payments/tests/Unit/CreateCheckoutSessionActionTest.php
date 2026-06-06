@@ -37,7 +37,9 @@ it('creates and records a checkout session through the configured gateway', func
         providerPayload: ['id' => 'cs_test_123'],
     );
 
-    app()->instance(PaymentGateway::class, new FakePaymentGateway($sessionData));
+    $gateway = new FakePaymentGateway($sessionData);
+
+    app()->instance(PaymentGateway::class, $gateway);
 
     $checkoutSession = CreateCheckoutSessionAction::run(new CreateCheckoutSessionData(
         successUrl: 'https://example.test/success',
@@ -62,7 +64,8 @@ it('creates and records a checkout session through the configured gateway', func
         ->and($checkoutSession->amount_total)->toBe(2500)
         ->and($checkoutSession->payable_type)->toBe('download')
         ->and($checkoutSession->payable_id)->toBe('guide')
-        ->and($checkoutSession->reference_id)->toBe('order_123');
+        ->and($checkoutSession->reference_id)->toBe('order_123')
+        ->and($gateway->lastRequest?->idempotencyKey)->toStartWith('capell-checkout-session-');
 
     expect(PaymentCustomer::query()->count())->toBe(1)
         ->and(PaymentCustomer::query()->first()?->provider_customer_id)->toBe('cus_123');

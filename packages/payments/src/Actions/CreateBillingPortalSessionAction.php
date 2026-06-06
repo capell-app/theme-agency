@@ -29,6 +29,7 @@ final class CreateBillingPortalSessionAction
             ->withToken($secretKey)
             ->withHeaders([
                 'Stripe-Version' => $this->apiVersion(),
+                'Idempotency-Key' => GeneratePaymentGatewayIdempotencyKeyAction::run('billing-portal-session', $data->toArray()),
             ])
             ->timeout($this->timeout())
             ->connectTimeout($this->connectTimeout())

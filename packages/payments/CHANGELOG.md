@@ -8,6 +8,7 @@ All notable changes to `capell-app/payments` will be documented in this file.
 - Locked stored Stripe webhook events before processing so duplicate deliveries cannot concurrently run fulfillment for the same provider event.
 - Added host allow-list validation for Form Builder payment checkout success/cancel return URLs via `capell-payments.form_builder.allowed_return_hosts`.
 - Made paid-download fulfillment replay-safe by preserving the original entitlement expiry and fulfilled timestamp on duplicate checkout-complete deliveries.
+- Generated deterministic Stripe idempotency keys for checkout sessions and billing portal sessions when callers do not supply one.
 
 ## 2026-06-03
 
