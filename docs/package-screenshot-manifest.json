@@ -261,6 +261,17 @@
             "browserTestCount": 0
         },
         {
+            "package": "experiments",
+            "composerName": "capell-app/experiments",
+            "installCommand": null,
+            "setupCommand": null,
+            "demoCommand": null,
+            "demoParams": [],
+            "doctorCommand": null,
+            "entryCount": 4,
+            "browserTestCount": 0
+        },
+        {
             "package": "filament-peek",
             "composerName": "capell-app/filament-peek",
             "installCommand": null,
@@ -2297,6 +2308,66 @@
                 "light"
             ],
             "composerName": "capell-app/events"
+        },
+        {
+            "id": "experiments-index",
+            "title": "Experiments admin index.",
+            "package": "experiments",
+            "surface": "admin",
+            "targetType": "admin-resource",
+            "target": "ExperimentResource",
+            "url": "/experiments",
+            "waitFor": "table",
+            "required": false,
+            "notes": "Capture seeded server-side experiments with safe fake campaign/page labels. The current screenshot runner app does not require capell-app/experiments, so the package is not autoloaded or installed during capture.",
+            "useCase": "A growth operator reviews active and scheduled experiments from the Capell admin.",
+            "screenshotPath": "packages/experiments/docs/screenshots/experiments-index.png",
+            "composerName": "capell-app/experiments"
+        },
+        {
+            "id": "experiment-variants-index",
+            "title": "Experiment variants admin index.",
+            "package": "experiments",
+            "surface": "admin",
+            "targetType": "admin-resource",
+            "target": "ExperimentVariantResource",
+            "url": "/experiment-variants",
+            "waitFor": "table",
+            "required": false,
+            "notes": "Capture seeded control and challenger variants with allocation weights once the runner app requires capell-app/experiments.",
+            "useCase": "A growth operator compares variant weights and control state before launching a test.",
+            "screenshotPath": "packages/experiments/docs/screenshots/experiment-variants-index.png",
+            "composerName": "capell-app/experiments"
+        },
+        {
+            "id": "experiment-goals-index",
+            "title": "Experiment goals admin index.",
+            "package": "experiments",
+            "surface": "admin",
+            "targetType": "admin-resource",
+            "target": "ExperimentGoalResource",
+            "url": "/experiment-goals",
+            "waitFor": "table",
+            "required": false,
+            "notes": "Capture seeded conversion and revenue goals tied to fake experiments once the runner app requires capell-app/experiments.",
+            "useCase": "A growth operator verifies the primary conversion goals used for winner reporting.",
+            "screenshotPath": "packages/experiments/docs/screenshots/experiment-goals-index.png",
+            "composerName": "capell-app/experiments"
+        },
+        {
+            "id": "experiment-audience-rules-index",
+            "title": "Experiment audience rules admin index.",
+            "package": "experiments",
+            "surface": "admin",
+            "targetType": "admin-resource",
+            "target": "ExperimentAudienceRuleResource",
+            "url": "/experiment-audience-rules",
+            "waitFor": "table",
+            "required": false,
+            "notes": "Capture seeded path, UTM, and segment rules once the runner app requires capell-app/experiments.",
+            "useCase": "A growth operator confirms which visitors are eligible for an experiment.",
+            "screenshotPath": "packages/experiments/docs/screenshots/experiment-audience-rules-index.png",
+            "composerName": "capell-app/experiments"
         },
         {
             "id": "page-edit-preview-actions",
