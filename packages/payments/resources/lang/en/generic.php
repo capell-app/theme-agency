@@ -27,6 +27,9 @@ return [
         'subscription_label' => 'Subscription',
         'subscription_period_description' => ':status subscription through :date.',
     ],
+    'actions' => [
+        'issue_refund' => 'Issue refund',
+    ],
     'form_payments' => [
         'no_payment_field' => 'The form does not contain a payment field.',
         'invalid_amount' => 'The payment amount must be greater than zero.',
@@ -126,6 +129,17 @@ return [
         'failed' => 'Failed',
         'canceled' => 'Canceled',
         'unknown' => 'Unknown',
+    ],
+    'refund_reasons' => [
+        'duplicate' => 'Duplicate',
+        'fraudulent' => 'Fraudulent',
+        'requested_by_customer' => 'Requested by customer',
+    ],
+    'help' => [
+        'refund_amount_minor_units' => 'Leave blank for a full refund, or enter a minor-unit amount such as 1099 for GBP 10.99.',
+    ],
+    'notifications' => [
+        'refund_issued' => 'Refund issued.',
     ],
     'dispute_statuses' => [
         'warning_needs_response' => 'Warning needs response',
