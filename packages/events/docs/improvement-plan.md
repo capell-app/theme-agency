@@ -35,7 +35,7 @@ Declared `capabilities[]`: `events`, `events-admin`, `events-console`, `events-f
 - **iCal per-attendee / VALARM reminders** _(differentiator)_ — feed emits `VEVENT`s but no `VALARM` reminders and no personalized `?token` feed per attendee. Reminder emails exist server-side but aren't reflected in the calendar subscription.
 - **Capacity/waitlist UI + automatic promotion** _(table-stakes)_ — capacity & waitlist logic is correct in `RegisterForEventOccurrenceAction`/`PromoteWaitlistAction`/`EventOccurrence`; cancellation now dispatches `EventRegistrationCancelled` and a scheduled reconcile promotes stale waitlisted registrations. Remaining gap: richer public/admin waitlist UI.
 - **Ticketing / paid registration** _(differentiator)_ — `booking_mode`/`booking_url` support external booking links only; no integration with `capell-app/payments` for paid tickets despite `payments` being in customer-portal's support graph.
-- **Recurring-event exception editing in the UI** _(differentiator)_ — the data model supports per-occurrence overrides (`is_override`, `override_data`, `CancelOccurrenceAction`, `RescheduleOccurrenceAction`) but there is no evidence these reschedule/cancel Actions are reachable from `ManageEventOccurrences` (verify; likely the same dead-wiring class as registrations).
+- **Shipped 2026-06-07: recurring-event exception editing is reachable in the occurrence UI.** `EventOccurrenceResource` now exposes cancel and reschedule row actions backed by `CancelOccurrenceAction` and `RescheduleOccurrenceAction`, with translated notifications and Livewire table-action coverage. — `src/Filament/Resources/Occurrences/EventOccurrenceResource.php`, `tests/Integration/EventRegistrationResourceWorkflowTest.php`
 - **Reminder cadence configuration** _(table-stakes)_ — reminder is hard-coded to `starts_at->subDay()` in `ScheduleEventNotificationsAction`; no multi-reminder schedule (e.g. 1 week + 1 day + 1 hour) and no per-event opt-out.
 
 ## 4. Issues / Risks
@@ -86,7 +86,7 @@ Declared `capabilities[]`: `events`, `events-admin`, `events-console`, `events-f
 | Per-listing-page filtered `.ics` feed (honor `{listingPage}`)                                   | Next   | M      | Med    | §2.8, §3       |
 | Viewer-timezone display + per-site default-tz setting                                           | Next   | M      | Med    | §3, §4         |
 | Configurable multi-reminder cadence + per-event opt-out                                         | Next   | M      | Low    | §3             |
-| Verify/expose `CancelOccurrenceAction`/`RescheduleOccurrenceAction` in occurrence UI            | Next   | S      | Med    | §3             |
+| Shipped 2026-06-07: Verify/expose `CancelOccurrenceAction`/`RescheduleOccurrenceAction` in occurrence UI | Done   | S      | Med    | §3             |
 | Paid ticketing via `capell-app/payments` integration                                            | Later  | L      | High   | §3             |
 | Customer-portal self-service RSVP cancellation                                                  | Later  | M      | Med    | §3             |
 | Personalized per-attendee iCal feed + VALARM reminders                                          | Later  | M      | Low    | §3             |

@@ -7,6 +7,7 @@ return [
     'booking_mode' => 'Booking mode',
     'booking_url' => 'Booking URL',
     'capacity' => 'Capacity',
+    'cancellation_reason' => 'Cancellation reason',
     'city' => 'City',
     'ends_at' => 'Ends at',
     'event_details' => 'Event details',
