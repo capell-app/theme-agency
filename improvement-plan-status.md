@@ -85,6 +85,7 @@ This file tracks the active package-improvement wave at a repository level. Pack
 - URL Manager now has stale redirect-depth rows reconciled: regex bounds, loop/chain detection, frontend 404 capture middleware, priority ordering, bounded prefix/regex resolution, and package config are all shipped.
 - Shopify Commerce now declares its Contacts, Search, and Diagnostics soft-support metadata in `capell.json`, matching the shipped customer-sync event and health/search positioning.
 - GA4 Reports now exposes a translated admin `Sync now` action and shows a bounded latest failure reason in the setup-status widget when the latest sync run failed.
+- GA4 Reports now has its configured real-client binding roadmap row reconciled against the existing `GA4ReportsPackageTest` coverage.
 - HTML Cache now promotes seven Capell runner captures across admin cache controls, diagnostics, page indicators, and public cached output.
 - Events now promotes 11 Capell runner captures across event CRUD, venues, occurrences, registrations, admin calendar/widget, public listing/calendar, and `.ics` feed output.
 - Public Actions now promotes eight Capell runner captures across configured actions, action form, destinations, submissions, dispatch attempts, integration tokens, frontend form, and Zapier discovery.
