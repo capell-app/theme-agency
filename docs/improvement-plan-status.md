@@ -115,6 +115,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 2026-06-06 subagent re-audit:
 
 - Unsupported custom scenario names are closed. A direct runner dry-run now reaches 654 skipped captures and 0 failures after normalizing stale custom/fixture scenario names in `address`, `diagnostics`, `document-lifecycle`, `events`, `foundation-theme`, `ga4-reports`, `html-cache`, `media-ai`, `payments`, `public-actions`, `record-switcher`, and the affected theme packages to the supported runner scenarios: `admin-activity-details`, `admin-dashboard`, `admin-form`, `admin-index`, and `frontend-page`.
+- Duplicate generated `*-dark-dark` capture IDs are closed for `deployments`, `layout-builder`, and `media-ai` by removing explicit dark source entries and letting the runner expand base entries into light/dark outputs.
 - The broad marketplace-card issue remains outside product screenshots: many packages still list `docs/assets/marketplace/extension-card.jpg` or hero artwork beside runner captures. Treat those as acceptable listing artwork only when actual product screenshots are also declared in `docs/screenshots.json`; replace remaining SVG/GIF placeholder product screenshots with runner-backed PNG captures.
 
 ## Next Audit Queue

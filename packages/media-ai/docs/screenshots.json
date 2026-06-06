@@ -7,7 +7,7 @@
     "entries": [
         {
             "id": "media-ai-doctor-image",
-            "title": "Doctor image action on the Media edit page in light mode.",
+            "title": "Doctor image action on the Media edit page.",
             "package": "media-ai",
             "surface": "admin",
             "targetType": "admin-surface",
@@ -21,23 +21,6 @@
             "notes": "Capture the media surface where the Doctor image action appears when an image doctor provider is bound.",
             "useCase": "An administrator opens an image media record and uses the Doctor image action when an image doctor provider is bound.",
             "screenshotPath": "packages/media-ai/docs/screenshots/media-ai-doctor-image.png"
-        },
-        {
-            "id": "media-ai-doctor-image-dark",
-            "title": "Doctor image action on the Media edit page in dark mode.",
-            "package": "media-ai",
-            "surface": "admin",
-            "targetType": "admin-surface",
-            "target": "MediaAIEditActionExtender",
-            "scenario": "admin-index",
-            "url": "/media",
-            "waitFor": "table",
-            "docsPage": "packages/media-ai/docs/overview.md",
-            "output": "packages/media-ai/docs/screenshots/media-ai-doctor-image-dark.png",
-            "required": true,
-            "notes": "Dark-mode companion capture for the media surface where the Doctor image action appears when an image doctor provider is bound.",
-            "useCase": "An administrator verifies the Doctor image action remains visible and readable in dark mode when a provider is bound.",
-            "screenshotPath": "packages/media-ai/docs/screenshots/media-ai-doctor-image-dark.png"
         }
     ]
 }
