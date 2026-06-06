@@ -13,7 +13,7 @@ Use it for installed sites that need GA4 visibility in the Capell admin panel. T
 
 - GA4 settings for property ID, credentials path, route slug, and sync window.
 - Local sync runs, daily metrics, and page metrics tables.
-- A `ga4-reports:sync` command for refreshing local snapshots.
+- A `capell:ga4-reports-sync` command for refreshing local snapshots. The older `ga4-reports:sync` command name remains available as an alias for existing schedules.
 - A `GA4ReportsPage` Filament extension page under the monitoring navigation group.
 - Dashboard widgets for setup status, overview stats, traffic trends, and top pages.
 - `GA4ReportsDataClientInterface` so the GA4 client can be swapped or faked in tests.
@@ -42,7 +42,7 @@ If the package is not configured, `SyncGA4ReportsMetricsAction` exits cleanly an
 Run the sync from the host Capell app:
 
 ```bash
-php artisan ga4-reports:sync
+php artisan capell:ga4-reports-sync
 ```
 
 The command calls `SyncGA4ReportsMetricsAction`, which:

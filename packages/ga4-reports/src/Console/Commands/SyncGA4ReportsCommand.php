@@ -9,7 +9,12 @@ use Illuminate\Console\Command;
 
 final class SyncGA4ReportsCommand extends Command
 {
-    protected $signature = 'ga4-reports:sync';
+    protected $signature = 'capell:ga4-reports-sync';
+
+    /**
+     * @var list<string>
+     */
+    protected $aliases = ['ga4-reports:sync'];
 
     protected $description = 'Sync GA4 Reports metrics into local dashboard snapshots.';
 

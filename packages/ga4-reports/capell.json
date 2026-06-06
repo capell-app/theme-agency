@@ -36,7 +36,7 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": "capell:ga4-reports-sync"
     },
     "settings": [],
     "permissions": [],

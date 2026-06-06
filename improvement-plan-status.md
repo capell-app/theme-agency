@@ -77,6 +77,7 @@ This file tracks the active package-improvement wave at a repository level. Pack
 - Foundation Theme now promotes route-backed PNG captures for all eight layout workflows instead of labelled SVG marketplace mockups.
 - Document Lifecycle now promotes four Capell runner admin PNG captures for controlled documents, edit form, publications, and acceptances.
 - GA4 Reports now promotes three Capell runner admin PNG captures for dashboard, setup status, and settings.
+- GA4 Reports now exposes `capell:ga4-reports-sync` as the primary sync command, keeps `ga4-reports:sync` as a compatibility alias, and wires the schedule/manifest to the Capell command name.
 - HTML Cache now promotes seven Capell runner captures across admin cache controls, diagnostics, page indicators, and public cached output.
 - Events now promotes 11 Capell runner captures across event CRUD, venues, occurrences, registrations, admin calendar/widget, public listing/calendar, and `.ics` feed output.
 - Public Actions now promotes eight Capell runner captures across configured actions, action form, destinations, submissions, dispatch attempts, integration tokens, frontend form, and Zapier discovery.
