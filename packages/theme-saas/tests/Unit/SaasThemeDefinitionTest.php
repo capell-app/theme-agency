@@ -740,6 +740,11 @@ function renderSaasThemeAllSections(ThemeRegistry $registry): string
             saasThemeSection('calculator', [
                 'heading' => 'Model the lift',
                 'summary' => 'Estimate the compounding effect of activation improvements.',
+                'defaults' => [
+                    'visitors' => 12000,
+                    'conversion' => 3.2,
+                    'lift' => 18,
+                ],
                 'items' => [
                     ['title' => 'Trial conversion', 'summary' => 'Turn more trials into qualified accounts.', 'metric' => '+18%'],
                 ],
