@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace Capell\Deployments\Filament\Pages;
 
 use BackedEnum;
+use Capell\Deployments\Actions\RefreshDeploymentPublicationStatusAction;
 use Capell\Deployments\Actions\OAuth\CreateOAuthStateAction;
 use Capell\Deployments\Enums\GitProviderType;
 use Capell\Deployments\Enums\InstallPolicy;
 use Capell\Deployments\Models\DeploymentConnection;
+use Capell\Deployments\Models\DeploymentPublication;
 use Closure;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Override;
@@ -25,6 +28,9 @@ final class DeploymentConnectionPage extends Page
     public string $repoName = '';
 
     public string $installPolicy = 'pr_auto_merge';
+
+    /** @var array<int, DeploymentConnection>|null */
+    private ?array $connections = null;
 
     protected string $view = 'capell-deployments::filament.pages.deployment-connection';
 
@@ -87,11 +93,42 @@ final class DeploymentConnectionPage extends Page
     /** @return array<int, DeploymentConnection> */
     public function getConnections(): array
     {
-        if (! Schema::hasTable('deployment_connections')) {
-            return [];
+        if ($this->connections !== null) {
+            return $this->connections;
         }
 
-        return DeploymentConnection::query()->where('is_active', true)->get()->all();
+        if (! Schema::hasTable('deployment_connections')) {
+            $this->connections = [];
+
+            return $this->connections;
+        }
+
+        $this->connections = DeploymentConnection::query()->where('is_active', true)->get()->all();
+
+        return $this->connections;
+    }
+
+    /**
+     * @return Collection<int, DeploymentPublication>
+     */
+    public function getRecentPublications(DeploymentConnection $connection): Collection
+    {
+        if (! Schema::hasTable('deployment_publications')) {
+            return collect();
+        }
+
+        return DeploymentPublication::query()
+            ->where('deployment_connection_id', $connection->id)
+            ->latest()
+            ->limit(5)
+            ->get()
+            ->map(function (DeploymentPublication $publication) use ($connection): DeploymentPublication {
+                if ($publication->commit_sha === null || $publication->dry_run) {
+                    return $publication;
+                }
+
+                return RefreshDeploymentPublicationStatusAction::run($publication, $connection);
+            });
     }
 
     /**
