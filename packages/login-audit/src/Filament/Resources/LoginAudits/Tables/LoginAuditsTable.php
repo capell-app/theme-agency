@@ -10,8 +10,10 @@ use Capell\Admin\Filament\Contracts\TableConfigurator;
 use Capell\LoginAudit\Models\LoginAudit;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -61,9 +63,23 @@ class LoginAuditsTable implements TableConfigurator
                     return $state;
                 })
                 ->toggleable(isToggledHiddenByDefault: true),
+            TextColumn::make('device_name')
+                ->label(__('capell-login-audit::settings.device'))
+                ->placeholder(__('capell-admin::generic.missing'))
+                ->searchable()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+            IconColumn::make('is_trusted')
+                ->label(__('capell-login-audit::settings.trusted_device'))
+                ->boolean()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
             DateColumn::make('login_at')
                 ->label(trans('filament-authentication-log::filament-authentication-log.column.login_at'))
                 ->icon(fn (LoginAudit $record): string => $record->login_successful ? 'heroicon-s-check-circle' : 'heroicon-s-x-circle'),
+            DateColumn::make('last_activity_at')
+                ->label(__('capell-login-audit::settings.last_activity_at'))
+                ->toggleable(isToggledHiddenByDefault: true),
             DateColumn::make('logout_at')
                 ->label(trans('filament-authentication-log::filament-authentication-log.column.logout_at'))
                 ->icon(fn (LoginAudit $record): string => $record->cleared_by_user ? 'heroicon-s-check-circle' : 'heroicon-s-x-circle')
@@ -102,6 +118,8 @@ class LoginAuditsTable implements TableConfigurator
             Filter::make('cleared_by_user')
                 ->toggle()
                 ->query(fn (Builder $query): Builder => $query->where('cleared_by_user', true)),
+            TernaryFilter::make('is_trusted')
+                ->label(__('capell-login-audit::settings.trusted_device')),
         ];
     }
 

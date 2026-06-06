@@ -4,6 +4,7 @@ All notable changes to `capell-app/login-audit` will be documented in this file.
 
 ## Unreleased
 
+- Added trusted-device, device-name, and last-activity surfaces to Login Audit resource tables and user relation manager history.
 - Added daily authentication-log purging with retention synced into the vendor purge command and a last-purged settings timestamp recorded after successful scheduled runs.
 - Added admin activity tracking controls and a last-seen write throttle to reduce per-request write volume.
 - Added a Login Audit capture configuration health check that verifies vendor authentication-log capture targets the package table and listener map.

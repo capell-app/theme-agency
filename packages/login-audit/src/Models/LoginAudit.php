@@ -25,6 +25,7 @@ use Rappasoft\LaravelAuthenticationLog\Models\AuthenticationLog;
  * @property CarbonImmutable|null $logout_at
  * @property bool $cleared_by_user
  * @property array<array-key, mixed>|null $location
+ * @property CarbonImmutable|null $last_activity_at
  * @property CarbonImmutable|null $last_seen_at
  * @property-read Model $authenticatable
  *
@@ -75,6 +76,7 @@ class LoginAudit extends AuthenticationLog
             ...$this->casts,
             'login_at' => 'immutable_datetime',
             'logout_at' => 'immutable_datetime',
+            'last_activity_at' => 'immutable_datetime',
             'last_seen_at' => 'immutable_datetime',
         ];
     }

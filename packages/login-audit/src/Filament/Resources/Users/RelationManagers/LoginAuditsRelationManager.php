@@ -9,6 +9,7 @@ use Capell\Admin\Filament\Components\Tables\Columns\DateColumn;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -67,14 +68,26 @@ final class LoginAuditsRelationManager extends RelationManager
                     ->label(__('capell-login-audit::settings.device'))
                     ->placeholder(__('capell-admin::generic.missing'))
                     ->toggleable(isToggledHiddenByDefault: true),
+                IconColumn::make('is_trusted')
+                    ->label(__('capell-login-audit::settings.trusted_device'))
+                    ->boolean()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 DateColumn::make('login_at')
                     ->label(trans('filament-authentication-log::filament-authentication-log.column.login_at'))
                     ->sortable(),
+                DateColumn::make('last_activity_at')
+                    ->label(__('capell-login-audit::settings.last_activity_at'))
+                    ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('cleared_by_user')
                     ->label(trans('filament-authentication-log::filament-authentication-log.column.cleared_by_user'))
                     ->boolean()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                TernaryFilter::make('is_trusted')
+                    ->label(__('capell-login-audit::settings.trusted_device')),
             ]);
     }
 

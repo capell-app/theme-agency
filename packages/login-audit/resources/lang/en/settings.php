@@ -13,6 +13,7 @@ return [
     'enable_user_resource_bridge_helper' => 'Adds the access summary and authentication history relation to user editing when the host user model supports it.',
     'active_sessions' => 'Active sessions',
     'failed_attempts' => 'Failed attempts',
+    'last_activity_at' => 'Last activity',
     'last_purged_at' => 'Last Purged',
     'login_audits' => 'Access log history',
     'login_audits_description' => 'Authentication attempts recorded for this user.',
@@ -29,4 +30,5 @@ return [
     'track_admin_activity_helper' => 'Updates last-seen activity for authenticated admin requests. Disable this if an admin dashboard is near its query budget.',
     'track_user_ip_addresses' => 'Track User IP Addresses',
     'track_user_ip_addresses_helper' => 'Stores IP addresses for audit rows. Disable this when the site policy requires access logs without IP retention.',
+    'trusted_device' => 'Trusted device',
 ];
