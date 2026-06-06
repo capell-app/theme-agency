@@ -13,7 +13,10 @@
         "bundle": "growth"
     },
     "namespace": "Capell\\CampaignStudio",
-    "surfaces": ["admin", "frontend"],
+    "surfaces": [
+        "admin",
+        "frontend"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -23,7 +26,10 @@
             "capell-app/insights",
             "capell-app/layout-builder"
         ],
-        "supports": ["capell-app/experiments", "capell-app/seo-suite"],
+        "supports": [
+            "capell-app/experiments",
+            "capell-app/seo-suite"
+        ],
         "conflicts": []
     },
     "providers": {
@@ -32,7 +38,9 @@
         "runtime": [
             "Capell\\CampaignStudio\\Providers\\CampaignStudioServiceProvider"
         ],
-        "admin": ["Capell\\CampaignStudio\\Providers\\AdminServiceProvider"],
+        "admin": [
+            "Capell\\CampaignStudio\\Providers\\AdminServiceProvider"
+        ],
         "frontend": [
             "Capell\\CampaignStudio\\Providers\\FrontendServiceProvider"
         ]
@@ -113,7 +121,8 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "statusSync": "capell:campaign-studio-sync-statuses"
     },
     "actions": {
         "applyCampaignPageDefaults": "Capell\\CampaignStudio\\Actions\\ApplyCampaignPageDefaultsAction",
@@ -134,7 +143,8 @@
         "resolveCampaignFromUrl": "Capell\\CampaignStudio\\Actions\\ResolveCampaignFromUrlAction",
         "resolveCampaignLandingPageFromUrl": "Capell\\CampaignStudio\\Actions\\ResolveCampaignLandingPageFromUrlAction",
         "resolveCampaignLandingPageVariant": "Capell\\CampaignStudio\\Actions\\ResolveCampaignLandingPageVariantAction",
-        "syncCampaignExperiment": "Capell\\CampaignStudio\\Actions\\SyncCampaignExperimentAction"
+        "syncCampaignExperiment": "Capell\\CampaignStudio\\Actions\\SyncCampaignExperimentAction",
+        "syncCampaignStatuses": "Capell\\CampaignStudio\\Actions\\SyncCampaignStatusesAction"
     },
     "settings": [],
     "permissions": [],
@@ -147,12 +157,15 @@
         "campaign-dashboard-reporting",
         "campaign-experiment-sync",
         "landing-page-variant-experiments",
-        "landing-page-variant-management"
+        "landing-page-variant-management",
+        "campaign-scheduling-automation"
     ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": ["campaign-studio"],
+        "cacheTags": [
+            "campaign-studio"
+        ],
         "cacheSafety": {
             "cacheable": false,
             "variesBy": [
@@ -221,7 +234,11 @@
                 "caption": "Campaign widgets render natively inside published pages"
             }
         ],
-        "categories": ["admin", "frontend", "growth"]
+        "categories": [
+            "admin",
+            "frontend",
+            "growth"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": []

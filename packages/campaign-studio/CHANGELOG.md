@@ -4,6 +4,10 @@ All notable changes to `capell-app/campaign-studio` will be documented in this f
 
 ## Unreleased
 
+### 2026-06-06
+
+- Added `SyncCampaignStatusesAction`, the `capell:campaign-studio-sync-statuses` command, and an every-five-minutes schedule so campaign windows automatically move groups from Scheduled to Active and from Active to Ended.
+
 ### 2026-06-04
 
 - Added `BuildCampaignExperimentResultsAction` and typed result data so Campaign Studio can read back synced Experiments winner reports with per-variant conversion rates and lift over control.

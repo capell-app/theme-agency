@@ -9,7 +9,7 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 | Bucket | Rows |
 | ------ | ---: |
 | Now    | 0 |
-| Next   | 294 |
+| Next   | 293 |
 | Later  | 200 |
 
 The work is not complete until every package plan has been reviewed against current code, required features are implemented or intentionally deferred, new behavior is documented, and focused verification passes for each changed package.
@@ -28,7 +28,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 
 | Package | Now | Next | Later | Current status | Evidence / next action |
 | ------- | --: | ---: | ----: | -------------- | ---------------------- |
-| campaign-studio | 0 | 1 | 5 | Now closed | `7e8accb2e` moves three rows from Now to shipped: `Harden overview conversion-rate join (null/duplicate utm_campaign)`, `Configurable attribution lookback window`, and `In-package A/B variant results readout (lift per variant)`. Continue with scheduling automation, revenue/ROAS, audience targeting, anonymous/no-identity dedup policy, experiment decoupling, and completion review. |
+| campaign-studio | 0 | 0 | 5 | Now/Next closed | Current follow-up ships campaign status automation: `SyncCampaignStatusesAction`, `capell:campaign-studio-sync-statuses`, manifest metadata, and an every-five-minutes schedule now move campaign groups from Scheduled to Active and Active to Ended based on `starts_at`/`ends_at`. Campaign Studio has no Now or Next rows left; continue with revenue/ROAS, audience targeting, anonymous/no-identity dedup policy, experiment decoupling, and completion review. |
 | comments | 0 | 0 | 0 | Now closed | Current follow-up replaces the four illustrated SVG marketplace previews with Capell runner PNG captures for the moderation inbox, comments admin resource, author resource, and public thread. The package roadmap now has no Now rows left; only optional GIF/cached-page media follow-ups remain outside Current Scope. |
 | contacts | 0 | 7 | 2 | Slice committed | Current follow-ups expose audited privacy export/anonymization and queue/isolate all source-adapter listeners. Contacts has no Now rows left, but still needs Next/Later CRM depth work and a full package completion review before it can be marked Complete. |
 | content-sections | 0 | 7 | 4 | Now closed | `df230b604` reconciles the package plan after `54b758fe1` by moving five committed Now rows to Done: editor HTML sanitisation, anonymous public-output sanitisation tests, real `ContentSectionsHealthCheck`, `svg()` icon allow-list validation, and manifest accuracy for contributions/permissions/tables/surfaces. Explicit authenticated non-admin public-safety assertions remain open as Next work. Continue with render budget, cache invalidation, orphaned `simple-list`, marketplace screenshots/copy, stale docs cleanup, and completion review. |
