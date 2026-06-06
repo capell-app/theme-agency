@@ -89,12 +89,12 @@
                 "caption": "Frontend Authoring extension preview"
             },
             {
-                "path": "docs/images/screenshots/frontend-page-with-authoring-enabled.png",
+                "path": "docs/screenshots/frontend-page-with-authoring-enabled.png",
                 "alt": "Admin hovering an editable region on a live page to reveal the inline edit control",
                 "caption": "Inline edit controls appear for admins after the page loads"
             },
             {
-                "path": "docs/images/screenshots/capell-app-frontend-authoring-mobile.png",
+                "path": "docs/screenshots/capell-app-frontend-authoring-mobile.png",
                 "alt": "Inline authoring overlay working on a mobile viewport",
                 "caption": "Authoring controls stay usable on mobile"
             }
