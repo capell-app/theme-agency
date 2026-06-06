@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
+use Capell\Frontend\Support\Routing\FrontendRouteMiddlewareRegistry;
+use Capell\KnowledgeBase\Http\Controllers\ShowKnowledgeBaseAiOutputController;
 use Capell\KnowledgeBase\Http\Controllers\ShowKnowledgeBaseArticleController;
 use Capell\KnowledgeBase\Http\Controllers\ShowKnowledgeBaseIndexController;
 use Capell\KnowledgeBase\Http\Controllers\StoreKnowledgeBaseArticleFeedbackController;
-use Capell\Frontend\Support\Routing\FrontendRouteMiddlewareRegistry;
 use Illuminate\Support\Facades\Route;
 
 if (config('capell-knowledge-base.public_routes_enabled', true) === true) {
@@ -21,6 +22,7 @@ if (config('capell-knowledge-base.public_routes_enabled', true) === true) {
         ->as('capell-knowledge-base.')
         ->group(function (): void {
             Route::get('/', ShowKnowledgeBaseIndexController::class)->name('index');
+            Route::get('/llms.txt', ShowKnowledgeBaseAiOutputController::class)->name('ai-output');
             Route::get('/{collectionSlug}/{articleSlug}', ShowKnowledgeBaseArticleController::class)
                 ->where([
                     'collectionSlug' => '[A-Za-z0-9\\-]+',

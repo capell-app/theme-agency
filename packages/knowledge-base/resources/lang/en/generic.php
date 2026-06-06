@@ -62,6 +62,7 @@ return [
         'archived' => 'Archived',
     ],
     'frontend' => [
+        'ai_output_title' => 'Knowledge base',
         'breadcrumbs' => 'Breadcrumbs',
         'feedback_comment' => 'Optional feedback',
         'feedback_helpful' => 'Helpful',

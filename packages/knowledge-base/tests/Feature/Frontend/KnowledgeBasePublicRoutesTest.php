@@ -17,6 +17,7 @@ uses(KnowledgeBaseTestCase::class);
 
 it('registers public knowledge base routes', function (): void {
     expect(Route::has('capell-knowledge-base.index'))->toBeTrue()
+        ->and(Route::has('capell-knowledge-base.ai-output'))->toBeTrue()
         ->and(Route::has('capell-knowledge-base.article'))->toBeTrue()
         ->and(Route::has('capell-knowledge-base.article.feedback'))->toBeTrue();
 });
@@ -57,6 +58,7 @@ it('renders public navigation and articles without authoring internals', functio
 
     $indexResponse = $this->get('/docs');
     $articleResponse = $this->get('/docs/getting-started/install-capell');
+    $aiOutputResponse = $this->get('/docs/llms.txt');
 
     $indexResponse
         ->assertOk()
@@ -79,6 +81,18 @@ it('renders public navigation and articles without authoring internals', functio
         ->assertDontSee('capell-app/knowledge-base', false)
         ->assertDontSee('Filament', false)
         ->assertDontSee('signed', false);
+
+    $aiOutputResponse
+        ->assertOk()
+        ->assertHeader('Content-Type', 'text/plain; charset=UTF-8')
+        ->assertSee('# Knowledge base', false)
+        ->assertSee('## Install Capell', false)
+        ->assertSee('- URL: /docs/getting-started/install-capell', false)
+        ->assertSee('Run the installer.', false)
+        ->assertDontSee('Draft Article')
+        ->assertDontSee('author_type', false)
+        ->assertDontSee('field_path', false)
+        ->assertDontSee('Filament', false);
 });
 
 it('records public article feedback without exposing raw visitor identifiers', function (): void {
