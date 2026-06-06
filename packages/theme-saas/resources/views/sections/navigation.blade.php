@@ -11,7 +11,7 @@
         </a>
 
         <div
-            class="hidden items-center gap-7 text-sm font-bold text-slate-600 md:flex"
+            class="saas-navigation__links hidden items-center gap-7 text-sm font-bold text-slate-600 md:flex"
         >
             @foreach ($section->items as $item)
                 <a

@@ -84,6 +84,18 @@
         transform: translateY(0);
     }
 
+    .saas-navigation__links {
+        align-items: center;
+        display: none;
+        gap: 1.75rem;
+    }
+
+    @media (min-width: 48rem) {
+        .saas-navigation__links {
+            display: flex;
+        }
+    }
+
     :where(
         .saas-shell a,
         .saas-shell button,
