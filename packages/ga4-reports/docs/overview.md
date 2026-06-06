@@ -84,3 +84,4 @@ Keep dashboard reads local. New widgets should read `GA4ReportsDailyMetric`, `GA
 ## Screenshot Automation
 
 Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve the admin page and settings section, and write images to `packages/ga4-reports/docs/screenshots`.
+The dashboard, setup-status, and settings captures are committed under `docs/screenshots/` and promoted into the marketplace manifest.

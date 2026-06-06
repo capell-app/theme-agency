@@ -13,17 +13,27 @@
         "bundle": "growth"
     },
     "namespace": "Capell\\GA4Reports",
-    "surfaces": ["admin", "console"],
+    "surfaces": [
+        "admin",
+        "console"
+    ],
     "dependencies": {
-        "requires": ["capell-app/admin", "capell-app/core"],
+        "requires": [
+            "capell-app/admin",
+            "capell-app/core"
+        ],
         "supports": [],
         "conflicts": []
     },
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": ["Capell\\GA4Reports\\Providers\\GA4ReportsServiceProvider"],
-        "admin": ["Capell\\GA4Reports\\Providers\\AdminServiceProvider"],
+        "runtime": [
+            "Capell\\GA4Reports\\Providers\\GA4ReportsServiceProvider"
+        ],
+        "admin": [
+            "Capell\\GA4Reports\\Providers\\AdminServiceProvider"
+        ],
         "frontend": []
     },
     "contributes": [],
@@ -40,7 +50,11 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["ga4-reports", "ga4-reports-admin", "ga4-reports-console"],
+    "capabilities": [
+        "ga4-reports",
+        "ga4-reports-admin",
+        "ga4-reports-console"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
@@ -75,9 +89,28 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "GA4 Reports extension preview image",
                 "caption": "GA4 Reports extension preview"
+            },
+            {
+                "path": "docs/screenshots/ga4-reports-dashboard-page.png",
+                "alt": "GA4 Reports admin dashboard with traffic trend, top pages, conversions, and sync state",
+                "caption": "GA4 reports dashboard"
+            },
+            {
+                "path": "docs/screenshots/ga4-reports-setup-status.png",
+                "alt": "GA4 Reports setup status widget showing property, credentials, and sync readiness",
+                "caption": "Setup status widget"
+            },
+            {
+                "path": "docs/screenshots/ga4-reports-settings.png",
+                "alt": "GA4 Reports settings for property ID, credentials, route slug, sync window, and enabled state",
+                "caption": "GA4 reports settings"
             }
         ],
-        "categories": ["admin", "console", "growth"]
+        "categories": [
+            "admin",
+            "console",
+            "growth"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": [
