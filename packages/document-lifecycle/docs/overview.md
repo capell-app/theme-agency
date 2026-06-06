@@ -50,7 +50,7 @@ The screenshot contract is stored in [screenshots.json](screenshots.json). The f
 - publications relation manager;
 - acceptances relation manager.
 
-Those admin captures are still pending. The marketplace manifest only lists committed marketplace assets from `docs/assets/marketplace/`; it must not point at future runner output under `docs/screenshots/` until those files are captured, reviewed, and committed as marketplace assets.
+Those admin captures are committed under `docs/screenshots/` and promoted into the marketplace manifest alongside the extension card.
 
 ## Install And Verify
 

@@ -82,7 +82,7 @@ it('keeps manifest and composer package copy aligned with shipped capabilities',
         ->and($summary)->not->toContain('immutable');
 });
 
-it('keeps marketplace screenshots limited to committed marketplace assets while preserving the screenshot contract', function (): void {
+it('promotes committed screenshot contract captures into marketplace media', function (): void {
     $manifest = documentLifecycleManifest();
     $screenshotContract = json_decode(
         (string) file_get_contents(dirname(__DIR__, 2) . '/docs/screenshots.json'),
@@ -134,14 +134,13 @@ it('keeps marketplace screenshots limited to committed marketplace assets while 
         }
     }
 
-    expect($manifestScreenshotPaths)->toBe(['docs/assets/marketplace/extension-card.jpg']);
+    expect($manifestScreenshotPaths)->toContain('docs/assets/marketplace/extension-card.jpg');
 
     foreach ($manifestScreenshotPaths as $manifestScreenshotPath) {
-        expect($manifestScreenshotPath)->toStartWith('docs/assets/marketplace/')
-            ->and(file_exists(dirname(__DIR__, 2) . '/' . $manifestScreenshotPath))->toBeTrue();
+        expect(file_exists(dirname(__DIR__, 2) . '/' . $manifestScreenshotPath))->toBeTrue();
     }
 
     foreach ($requiredScreenshotPaths as $requiredScreenshotPath) {
-        expect($manifestScreenshotPaths)->not->toContain($requiredScreenshotPath);
+        expect($manifestScreenshotPaths)->toContain($requiredScreenshotPath);
     }
 });

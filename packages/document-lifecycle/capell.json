@@ -13,14 +13,19 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\DocumentLifecycle",
-    "surfaces": ["admin", "console"],
+    "surfaces": [
+        "admin",
+        "console"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
             "capell-app/core",
             "capell-app/publishing-studio"
         ],
-        "supports": ["capell-app/customer-portal"],
+        "supports": [
+            "capell-app/customer-portal"
+        ],
         "conflicts": []
     },
     "providers": {
@@ -110,11 +115,38 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Document Lifecycle extension preview image",
                 "caption": "Document Lifecycle extension preview"
+            },
+            {
+                "path": "docs/screenshots/controlled-documents-index.png",
+                "alt": "Document Lifecycle controlled documents index in Capell admin",
+                "caption": "Controlled documents index"
+            },
+            {
+                "path": "docs/screenshots/controlled-document-edit.png",
+                "alt": "Document Lifecycle controlled document edit form in Capell admin",
+                "caption": "Controlled document edit form"
+            },
+            {
+                "path": "docs/screenshots/controlled-document-publications.png",
+                "alt": "Document Lifecycle publications relation manager with version and hash evidence",
+                "caption": "Document publications"
+            },
+            {
+                "path": "docs/screenshots/controlled-document-acceptances.png",
+                "alt": "Document Lifecycle acceptances relation manager with actor and version evidence",
+                "caption": "Document acceptances"
             }
         ],
-        "categories": ["admin", "console", "operations"]
+        "categories": [
+            "admin",
+            "console",
+            "operations"
+        ]
     },
     "contributionTraceability": {
-        "deferredContributions": ["model", "migration"]
+        "deferredContributions": [
+            "model",
+            "migration"
+        ]
     }
 }
