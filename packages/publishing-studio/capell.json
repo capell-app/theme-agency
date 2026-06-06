@@ -266,11 +266,6 @@
                 "caption": "Publishing Studio extension preview"
             },
             {
-                "path": "docs/screenshots/editorial-timeline-dashboard.png",
-                "alt": "Editorial timeline dashboard with active drafts and review status",
-                "caption": "Editorial timeline dashboard"
-            },
-            {
                 "path": "docs/screenshots/editor-responsibility.png",
                 "alt": "Editor managing draft changes in an isolated workspace",
                 "caption": "Editing in an isolated draft workspace"
@@ -279,21 +274,6 @@
                 "path": "docs/screenshots/reviewer-responsibility.png",
                 "alt": "Reviewer approving, rejecting, or requesting changes before publish",
                 "caption": "Review and approval before publish"
-            },
-            {
-                "path": "docs/screenshots/preview-link-management.png",
-                "alt": "Signed preview links with expiry, revocation, and access tracking",
-                "caption": "Signed, revocable preview link management"
-            },
-            {
-                "path": "docs/screenshots/scheduled-publishing.png",
-                "alt": "Scheduled publishing with embargo-aware release windows",
-                "caption": "Scheduled and embargo-aware publishing"
-            },
-            {
-                "path": "docs/screenshots/stale-drafts.png",
-                "alt": "Stale draft detection with review nudges and cleanup actions",
-                "caption": "Stale draft management"
             }
         ],
         "categories": [
