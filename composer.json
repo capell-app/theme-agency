@@ -90,9 +90,15 @@
             "@test:all"
         ],
         "coverage:blade": "@php -d memory_limit=-1 -d max_execution_time=0 vendor/bin/pest --blade-coverage --parallel --colors=always --configuration=phpunit.xml",
-        "coverage": "@php -d memory_limit=-1 -d pcov.enabled=1 -d pcov.directory=packages vendor/bin/pest --coverage --min=90 --colors=always --configuration=phpunit.xml",
+        "coverage": [
+            "@prepare",
+            "CACHE_STORE=array \"$PHP_BINARY\" vendor/bin/testbench optimize --except=routes --ansi",
+            "@php -d memory_limit=-1 -d pcov.enabled=1 -d pcov.directory=packages vendor/bin/pest --coverage --min=90 --colors=always --configuration=phpunit.xml"
+        ],
         "coverage-report": [
             "rm -rf .cache/phpunit/code-coverage",
+            "@prepare",
+            "CACHE_STORE=array \"$PHP_BINARY\" vendor/bin/testbench optimize --except=routes --ansi",
             "@php -d memory_limit=-1 -d pcov.enabled=1 -d pcov.directory=packages vendor/bin/pest --coverage --coverage-html=coverage --colors=always --configuration=phpunit.xml"
         ],
         "test:mutate": "@php -d memory_limit=-1 -d pcov.enabled=1 -d pcov.directory=packages vendor/bin/pest --mutate --everything --covered-only --parallel --colors=always --configuration=phpunit.xml",
