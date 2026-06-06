@@ -44,7 +44,7 @@ Public Actions is a framework package that lets Capell sites accept untrusted pu
 - **Performance budget unverified (low):** `capell.json` sets `frontendRenderBudgetMs:20` / `adminQueryBudget:40`. `ShowPublicActionController` reads only hydrated `payload_schema` (no N+1, safe), but no test asserts the budget; `dispatchAttempts`/submission admin lists over high-volume tables are the real query-budget risk and are unbenchmarked.
 - **i18n (low):** public/admin strings are translated (`generic.php`, `filament.php`), but webhook/SSRF `InvalidArgumentException` messages are hard-coded English. Acceptable (operator-facing, logged) but worth noting.
 - **Public-output safety (good):** verified clean. `ShowPublicActionController` passes only `{key,label,type,required}`; the Blade form leaks no model IDs, handler classes, selectors, or signed URLs; both controllers set `no-store, private`. Destination `secret`/`endpoint_url`/`headers` are `encrypted` at rest; tokens are stored hashed; webhook error/response summaries are redacted. This is the package's strongest area.
-- **Tech debt (low):** double/triple `json_encode` per dispatch; flat retry delay; `CHANGELOG.md` has only an "Unreleased" stub. The previously empty `docs/overview.md` is now filled with package surfaces, safety notes, and verification guidance.
+- **Tech debt (low):** double/triple `json_encode` per dispatch; flat retry delay. The previously empty `docs/overview.md` is now filled with package surfaces, safety notes, and verification guidance, and `CHANGELOG.md` now records dated health, webhook security, canonical payload, overview, and screenshot slices.
 
 ## 5. Marketplace & Selling
 
@@ -84,4 +84,4 @@ Public Actions is a framework package that lets Capell sites accept untrusted pu
 | Non-HTTP destination adapters (Slack, email-relay, SQS)                     | Later  | L      | High   | 3                                                                                     |
 | Inbound signed-webhook verification (trusted submission lane)               | Later  | M      | High   | 3                                                                                     |
 | Shipped: Fill `docs/overview.md`                                              | Done   | S      | Low    | 2, 4                                                                                  |
-| Add real `CHANGELOG` entries                                                  | Later  | S      | Low    | 4                                                                                     |
+| Shipped: Add real `CHANGELOG` entries                                          | Done   | S      | Low    | 4                                                                                     |
