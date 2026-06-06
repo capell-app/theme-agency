@@ -55,7 +55,7 @@
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": ["portal_accounts", "portal_support_requests"]
+        "requiredTables": ["portal_accounts", "portal_support_requests", "portal_support_request_replies"]
     },
     "commands": {
         "install": null,
@@ -65,6 +65,7 @@
     },
     "settings": [],
     "actions": {
+        "addSupportRequestReply": "Capell\\CustomerPortal\\Actions\\AddSupportRequestReplyAction",
         "findOrCreatePortalAccount": "Capell\\CustomerPortal\\Actions\\FindOrCreatePortalAccountAction",
         "resolvePortalDashboardItems": "Capell\\CustomerPortal\\Actions\\ResolvePortalDashboardItemsAction",
         "resolvePortalPreferenceOptions": "Capell\\CustomerPortal\\Actions\\ResolvePortalPreferenceOptionsAction",
@@ -89,6 +90,7 @@
         "portal-event-registration-feed",
         "portal-newsletter-preference-feed",
         "portal-support-requests",
+        "portal-support-request-threading",
         "portal-support-request-notifications",
         "portal-support-request-triage"
     ],

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
 /**
@@ -25,6 +26,7 @@ use Override;
  * @property string|null $requester_email_hash
  * @property array<string, mixed>|null $context
  * @property-read PortalAccount $account
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, PortalSupportRequestReply> $replies
  */
 class PortalSupportRequest extends Model
 {
@@ -71,6 +73,14 @@ class PortalSupportRequest extends Model
     public function account(): BelongsTo
     {
         return $this->belongsTo(PortalAccount::class, 'portal_account_id');
+    }
+
+    /**
+     * @return HasMany<PortalSupportRequestReply, $this>
+     */
+    public function replies(): HasMany
+    {
+        return $this->hasMany(PortalSupportRequestReply::class, 'portal_support_request_id');
     }
 
     #[Override]

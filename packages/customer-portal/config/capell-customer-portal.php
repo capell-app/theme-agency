@@ -6,6 +6,7 @@ return [
     'tables' => [
         'accounts' => 'portal_accounts',
         'support_requests' => 'portal_support_requests',
+        'support_request_replies' => 'portal_support_request_replies',
     ],
     'hash_secret' => null,
     'route_prefix' => 'portal',

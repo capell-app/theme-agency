@@ -8,6 +8,7 @@ use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\CustomerPortal\Models\PortalAccount;
 use Capell\CustomerPortal\Models\PortalSupportRequest;
+use Capell\CustomerPortal\Models\PortalSupportRequestReply;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use Throwable;
@@ -41,6 +42,7 @@ final class CustomerPortalHealthCheck implements ChecksExtensionHealth
         $requiredTables = [
             (new PortalAccount)->getTable(),
             (new PortalSupportRequest)->getTable(),
+            (new PortalSupportRequestReply)->getTable(),
         ];
 
         try {
@@ -67,7 +69,7 @@ final class CustomerPortalHealthCheck implements ChecksExtensionHealth
         return new DoctorCheckResultData(
             label: 'Customer Portal database tables',
             passed: true,
-            message: 'Required portal_accounts and portal_support_requests tables are present.',
+            message: 'Required portal_accounts, portal_support_requests, and portal_support_request_replies tables are present.',
         );
     }
 
@@ -76,6 +78,7 @@ final class CustomerPortalHealthCheck implements ChecksExtensionHealth
         try {
             new PortalAccount;
             new PortalSupportRequest;
+            new PortalSupportRequestReply;
         } catch (Throwable $throwable) {
             return new DoctorCheckResultData(
                 label: 'Customer Portal models',
@@ -88,7 +91,7 @@ final class CustomerPortalHealthCheck implements ChecksExtensionHealth
         return new DoctorCheckResultData(
             label: 'Customer Portal models',
             passed: true,
-            message: 'PortalAccount and PortalSupportRequest models are resolvable.',
+            message: 'PortalAccount, PortalSupportRequest, and PortalSupportRequestReply models are resolvable.',
         );
     }
 }

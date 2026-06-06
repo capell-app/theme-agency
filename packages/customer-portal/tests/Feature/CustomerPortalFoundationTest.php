@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\CustomerPortal\Actions\AddSupportRequestReplyAction;
 use Capell\CustomerPortal\Actions\FindOrCreatePortalAccountAction;
 use Capell\CustomerPortal\Actions\ResolvePortalDashboardItemsAction;
 use Capell\CustomerPortal\Actions\ResolvePortalPreferenceOptionsAction;
@@ -28,6 +29,7 @@ use Capell\CustomerPortal\Events\PortalSupportRequestStatusChanged;
 use Capell\CustomerPortal\Events\PortalSupportRequestSubmitted;
 use Capell\CustomerPortal\Models\PortalAccount;
 use Capell\CustomerPortal\Models\PortalSupportRequest;
+use Capell\CustomerPortal\Models\PortalSupportRequestReply;
 use Capell\CustomerPortal\Notifications\SupportRequestStatusChangedNotification;
 use Capell\CustomerPortal\Notifications\SupportRequestSubmittedNotification;
 use Capell\CustomerPortal\Support\PortalDashboardItemRegistry;
@@ -45,7 +47,8 @@ uses(CustomerPortalTestCase::class);
 
 it('loads the portal foundation tables', function (): void {
     expect(Schema::hasTable('portal_accounts'))->toBeTrue()
-        ->and(Schema::hasTable('portal_support_requests'))->toBeTrue();
+        ->and(Schema::hasTable('portal_support_requests'))->toBeTrue()
+        ->and(Schema::hasTable('portal_support_request_replies'))->toBeTrue();
 });
 
 it('creates and reuses portal accounts by normalized email', function (): void {
@@ -251,6 +254,50 @@ it('does not emit status notifications when support request status is unchanged'
 
     Event::assertNotDispatched(PortalSupportRequestStatusChanged::class);
     Notification::assertNothingSent();
+});
+
+it('adds threaded support replies and advances status by sender', function (): void {
+    Event::fake([PortalSupportRequestStatusChanged::class]);
+    Notification::fake();
+
+    $portalAccount = PortalAccount::factory()->create([
+        'site_id' => $this->createCustomerPortalSite(),
+        'email' => 'thread@example.test',
+    ]);
+    $supportRequest = PortalSupportRequest::factory()
+        ->forPortalAccount($portalAccount)
+        ->create(['status' => SupportRequestStatus::Open]);
+
+    $customerReply = AddSupportRequestReplyAction::run(
+        supportRequest: $supportRequest,
+        message: 'Here is more detail.',
+        senderType: 'customer',
+    );
+
+    expect($customerReply)->toBeInstanceOf(PortalSupportRequestReply::class)
+        ->and($customerReply->message)->toBe('Here is more detail.')
+        ->and($customerReply->sender_type)->toBe('customer')
+        ->and($supportRequest->refresh()->status)->toBe(SupportRequestStatus::WaitingOnTeam);
+
+    AddSupportRequestReplyAction::run(
+        supportRequest: $supportRequest,
+        message: 'We need one more document.',
+        senderType: 'team',
+        attachments: [[
+            'disk' => 'private',
+            'path' => 'support/thread/document.pdf',
+            'name' => 'document.pdf',
+        ]],
+    );
+
+    $teamReply = PortalSupportRequestReply::query()->latest('id')->firstOrFail();
+
+    expect($supportRequest->refresh()->status)->toBe(SupportRequestStatus::WaitingOnCustomer)
+        ->and($teamReply->attachments)->toBe([[
+            'disk' => 'private',
+            'path' => 'support/thread/document.pdf',
+            'name' => 'document.pdf',
+        ]]);
 });
 
 it('resolves dashboard items from registered providers in priority order', function (): void {

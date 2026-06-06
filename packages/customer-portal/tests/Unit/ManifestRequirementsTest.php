@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
+use Capell\CustomerPortal\Actions\AddSupportRequestReplyAction;
 use Capell\CustomerPortal\Actions\ResolvePortalPreferenceOptionsAction;
 use Capell\CustomerPortal\Actions\ResolvePortalProfileAction;
 use Capell\CustomerPortal\Filament\Resources\PortalSupportRequests\PortalSupportRequestResource;
@@ -23,6 +24,7 @@ it('declares a cache-safe package-local foundation manifest', function (): void 
         ->and($manifest['dependencies']['requires'])->toBe(['capell-app/admin', 'capell-app/core'])
         ->and($manifest['database']['requiredTables'])->toContain('portal_accounts')
         ->and($manifest['database']['requiredTables'])->toContain('portal_support_requests')
+        ->and($manifest['database']['requiredTables'])->toContain('portal_support_request_replies')
         ->and($manifest['providers']['admin'])->toBe([AdminServiceProvider::class])
         ->and($manifest['contributes'][0]['class'])->toBe(PortalSupportRequestResourceContribution::class)
         ->and($manifest['contributes'][0]['resourceClass'])->toBe(PortalSupportRequestResource::class)
@@ -46,6 +48,7 @@ it('declares a cache-safe package-local foundation manifest', function (): void 
         ])
         ->and($manifest['actions']['resolvePortalProfile'])->toBe(ResolvePortalProfileAction::class)
         ->and($manifest['actions']['resolvePortalPreferenceOptions'])->toBe(ResolvePortalPreferenceOptionsAction::class)
+        ->and($manifest['actions']['addSupportRequestReply'])->toBe(AddSupportRequestReplyAction::class)
         ->and($manifest['capabilities'])->toContain(
             'customer-portal-authenticated-routes',
             'customer-portal-dashboard-ui',
@@ -59,6 +62,7 @@ it('declares a cache-safe package-local foundation manifest', function (): void 
             'portal-event-registration-feed',
             'portal-newsletter-preference-feed',
             'portal-support-requests',
+            'portal-support-request-threading',
             'portal-support-request-notifications',
         )
         ->and($manifest['contributionTraceability']['deferredContributions'])->toBe([]);

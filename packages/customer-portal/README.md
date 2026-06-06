@@ -10,7 +10,7 @@ Customer Portal turns a Capell site into an authenticated self-service hub. It g
 - Dashboard and self-service item registries so packages such as payments, document lifecycle, events, newsletter, and access-gate can contribute cards and feed items without Customer Portal importing their internals.
 - Configurable per-provider and global caps for dashboard and self-service item fan-out.
 - Preference updates through `UpdatePortalPreferencesAction`, with option rendering and validation driven by the package preference schema.
-- Support request submission through `SubmitSupportRequestAction`, with encrypted request details and requester email hashing.
+- Support request submission and threaded replies through Actions, with encrypted request/reply details and requester email hashing.
 - Support request submitted/status-changed events and queued requester mail notifications.
 - Admin support-request triage through a Filament resource scoped to the current actor's assigned sites.
 - Real package health diagnostics for required tables and model resolution.
@@ -45,7 +45,7 @@ Customer Portal aggregates self-service links and dashboard cards; owning packag
 
 ## Support Workflow
 
-Customers can submit support requests from the dashboard. The package stores request subject, message, requester email, context, status, and priority in encrypted columns where appropriate. Submissions emit `PortalSupportRequestSubmitted`; status transitions emit `PortalSupportRequestStatusChanged` only when the status changes.
+Customers can submit support requests from the dashboard, then continue the thread from their recent-support history. Staff can reply from the admin triage table. The package stores request subject, message, requester email, context, status, priority, and threaded replies in encrypted columns where appropriate; reply attachments are represented as encrypted metadata references so file-owning packages can provide the actual storage/download surface. Submissions emit `PortalSupportRequestSubmitted`; status transitions emit `PortalSupportRequestStatusChanged` only when the status changes.
 
 Requester notifications are sent on demand through Laravel's notification system when a requester email address is available.
 
