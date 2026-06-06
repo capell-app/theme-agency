@@ -20,3 +20,7 @@ Payments gives Capell a general payment layer beyond Shopify Commerce. It stores
 ## Traceability
 
 The package manifest declares admin resources, payment models, frontend/payment routes, required tables, public actions, and capabilities. `contributionTraceability.deferredContributions` is intentionally empty because the current native payment scope is implemented by package-owned code or guarded optional-package integrations.
+
+## Screenshot Coverage
+
+The committed Capell runner-backed screenshot gallery covers checkout session monitoring, Stripe webhook event health, Payments settings, customer portal billing, and a Form Builder payment checkout handoff.
