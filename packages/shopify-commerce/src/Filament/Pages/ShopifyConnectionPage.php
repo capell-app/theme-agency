@@ -10,6 +10,7 @@ use Capell\ShopifyCommerce\Actions\Catalog\SearchShopifyProductsAction;
 use Capell\ShopifyCommerce\Actions\Catalog\SyncShopifyProductsAction;
 use Capell\ShopifyCommerce\Actions\OAuth\DisconnectShopifyStoreAction;
 use Capell\ShopifyCommerce\Actions\OAuth\ValidateShopifyShopDomainAction;
+use Capell\ShopifyCommerce\Actions\OAuth\VerifyShopifyConnectionTokenAction;
 use Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Capell\ShopifyCommerce\Models\ShopifyProduct;
@@ -175,6 +176,32 @@ final class ShopifyConnectionPage extends Page
             ->title(__('capell-shopify-commerce::capell-shopify-commerce.connection.disconnected'))
             ->success()
             ->send();
+    }
+
+    public function verifyToken(): void
+    {
+        throw_unless(self::canAccess(), HttpException::class, 403);
+
+        $this->resetResolvedConnectionState();
+
+        $connection = $this->getManageableConnection();
+
+        if (! $connection instanceof ShopifyConnection) {
+            return;
+        }
+
+        $verified = VerifyShopifyConnectionTokenAction::run($connection);
+
+        $notification = Notification::make()
+            ->title(__('capell-shopify-commerce::capell-shopify-commerce.connection.' . ($verified ? 'token_verified' : 'token_failed')));
+
+        if ($verified) {
+            $notification->success()->send();
+
+            return;
+        }
+
+        $notification->danger()->send();
     }
 
     public function search(): void

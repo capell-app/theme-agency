@@ -132,6 +132,14 @@
                             {{ __('capell-shopify-commerce::capell-shopify-commerce.connection.sync_now') }}
                         </button>
                         <button
+                            wire:click="verifyToken"
+                            wire:loading.attr="disabled"
+                            wire:target="verifyToken"
+                            class="fi-btn fi-btn-size-sm fi-color-gray fi-btn-color-gray"
+                        >
+                            {{ __('capell-shopify-commerce::capell-shopify-commerce.connection.verify_token') }}
+                        </button>
+                        <button
                             wire:click="disconnect"
                             wire:loading.attr="disabled"
                             wire:target="disconnect"
