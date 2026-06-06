@@ -6,42 +6,6 @@
     "outputDirectory": "packages/theme-corporate/docs/screenshots",
     "entries": [
         {
-            "id": "theme-admin-list-showing-corporate",
-            "title": "Themes admin list showing Corporate.",
-            "package": "theme-corporate",
-            "surface": "admin",
-            "targetType": "admin-surface",
-            "target": "ThemeResource:index",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real Theme Studio admin or signed URL fixture for package theme records.",
-            "useCase": "An administrator sees the Corporate theme record in the host Themes admin surface.",
-            "screenshotPath": "packages/theme-corporate/docs/screenshots/theme-admin-list-showing-corporate.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/corporate/theme-admin-list-showing-corporate",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
-        },
-        {
-            "id": "theme-preview-url-output",
-            "title": "Signed corporate URL output.",
-            "package": "theme-corporate",
-            "surface": "admin",
-            "targetType": "admin-url",
-            "target": "capell.admin.theme-preview",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real signed URL fixture for package theme records.",
-            "useCase": "An administrator opens a signed link to inspect a corporate page before publishing the theme choice.",
-            "screenshotPath": "packages/theme-corporate/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/corporate/theme-preview-url-output",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
-        },
-        {
             "id": "frontend-page-rendered-with-corporate-theme",
             "title": "Frontend page rendered with Corporate theme.",
             "package": "theme-corporate",

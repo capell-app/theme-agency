@@ -6,24 +6,6 @@
     "outputDirectory": "packages/theme-education/docs/screenshots",
     "entries": [
         {
-            "id": "theme-admin-list-showing-education",
-            "title": "Theme admin list showing Education.",
-            "package": "theme-education",
-            "surface": "admin",
-            "targetType": "filament-resource",
-            "target": "ThemeResource:index",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real Theme Studio admin or signed URL fixture for package theme records.",
-            "useCase": "An administrator confirms the Education theme is available before applying it to a course or school site.",
-            "screenshotPath": "packages/theme-education/docs/screenshots/theme-admin-list-showing-education.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/education/theme-admin-list-showing-education",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
-        },
-        {
             "id": "frontend-page-rendered-with-education-theme",
             "title": "Frontend page rendered with Education theme.",
             "package": "theme-education",
@@ -155,24 +137,6 @@
                 "light"
             ],
             "user": false
-        },
-        {
-            "id": "theme-preview-url-output",
-            "title": "Signed education URL output.",
-            "package": "theme-education",
-            "surface": "admin",
-            "targetType": "admin-url",
-            "target": "capell.admin.theme-preview",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real signed URL fixture for package theme records.",
-            "useCase": "An administrator opens a signed link to inspect a education page before publishing the theme choice.",
-            "screenshotPath": "packages/theme-education/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/education/theme-preview-url-output",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
         }
     ]
 }

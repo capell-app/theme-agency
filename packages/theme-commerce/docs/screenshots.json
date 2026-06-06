@@ -6,42 +6,6 @@
     "outputDirectory": "packages/theme-commerce/docs/screenshots",
     "entries": [
         {
-            "id": "theme-admin-list-showing-commerce",
-            "title": "Theme admin list showing commerce.",
-            "package": "theme-commerce",
-            "surface": "admin",
-            "targetType": "filament-resource",
-            "target": "ThemeResource:index",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real Theme Studio admin or signed URL fixture for package theme records.",
-            "useCase": "An administrator confirms the commerce theme is available through the core Themes resource without installing another theme package.",
-            "screenshotPath": "packages/theme-commerce/docs/screenshots/theme-admin-list-showing-commerce.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/commerce/theme-admin-list-showing-commerce",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
-        },
-        {
-            "id": "theme-preview-url-output",
-            "title": "Signed commerce URL output.",
-            "package": "theme-commerce",
-            "surface": "admin",
-            "targetType": "admin-url",
-            "target": "capell.admin.theme-preview",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real signed URL fixture for package theme records.",
-            "useCase": "An administrator opens a signed link to inspect a commerce page before publishing the theme choice.",
-            "screenshotPath": "packages/theme-commerce/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/commerce/theme-preview-url-output",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
-        },
-        {
             "id": "frontend-page-rendered-with-commerce-theme",
             "title": "Frontend page rendered with commerce theme.",
             "package": "theme-commerce",

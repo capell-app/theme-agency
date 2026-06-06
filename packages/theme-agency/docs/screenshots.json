@@ -6,42 +6,6 @@
     "outputDirectory": "packages/theme-agency/docs/screenshots",
     "entries": [
         {
-            "id": "theme-admin-list-showing-agency",
-            "title": "Themes admin list showing Agency.",
-            "package": "theme-agency",
-            "surface": "admin",
-            "targetType": "admin-surface",
-            "target": "ThemeResource:index",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real Theme Studio admin or signed URL fixture for package theme records.",
-            "useCase": "An administrator sees the Agency theme record in the host Themes admin surface.",
-            "screenshotPath": "packages/theme-agency/docs/screenshots/theme-admin-list-showing-agency.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/agency/theme-admin-list-showing-agency",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
-        },
-        {
-            "id": "theme-preview-url-output",
-            "title": "Signed agency URL output.",
-            "package": "theme-agency",
-            "surface": "admin",
-            "targetType": "admin-url",
-            "target": "capell.admin.theme-preview",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real signed URL fixture for package theme records.",
-            "useCase": "An administrator opens a signed link to inspect a agency page before publishing the theme choice.",
-            "screenshotPath": "packages/theme-agency/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/agency/theme-preview-url-output",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
-        },
-        {
             "id": "frontend-page-rendered-with-agency-theme",
             "title": "Frontend page rendered with Agency theme.",
             "package": "theme-agency",

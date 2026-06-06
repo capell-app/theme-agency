@@ -6,24 +6,6 @@
     "outputDirectory": "packages/theme-knowledge/docs/screenshots",
     "entries": [
         {
-            "id": "theme-admin-list-showing-knowledge",
-            "title": "Theme admin list showing Knowledge.",
-            "package": "theme-knowledge",
-            "surface": "admin",
-            "targetType": "filament-resource",
-            "target": "ThemeResource:index",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real Theme Studio admin or signed URL fixture for package theme records.",
-            "useCase": "An administrator confirms the Knowledge theme is available for an editorial, research, or resource site.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/theme-admin-list-showing-knowledge.png",
-            "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/knowledge/theme-admin-list-showing-knowledge",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
-        },
-        {
             "id": "frontend-page-rendered-with-knowledge-theme",
             "title": "Frontend page rendered with Knowledge theme.",
             "package": "theme-knowledge",
@@ -155,24 +137,6 @@
                 "light"
             ],
             "user": false
-        },
-        {
-            "id": "theme-preview-url-output",
-            "title": "Signed knowledge URL output.",
-            "package": "theme-knowledge",
-            "surface": "admin",
-            "targetType": "admin-url",
-            "target": "capell.admin.theme-preview",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real signed URL fixture for package theme records.",
-            "useCase": "An administrator opens a signed link to inspect a knowledge page before publishing the theme choice.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/knowledge/theme-preview-url-output",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
         }
     ]
 }
