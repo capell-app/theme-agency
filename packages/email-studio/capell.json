@@ -142,8 +142,8 @@
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
-                "alt": "Email Studio extension preview image",
-                "caption": "Email Studio extension preview"
+                "alt": "Email Studio sent email index captured from the Capell screenshot runner",
+                "caption": "Runner-captured sent email activity in Capell admin"
             },
             {
                 "path": "docs/screenshots/sent-emails-index.png",
@@ -151,14 +151,19 @@
                 "caption": "Sent email activity table"
             },
             {
+                "path": "docs/screenshots/sent-emails-index-dark.png",
+                "alt": "Email Studio sent emails table with MailTracker opens and clicks in dark mode",
+                "caption": "Sent email activity table in dark mode"
+            },
+            {
                 "path": "docs/screenshots/sent-email-view.png",
                 "alt": "Email Studio sent email detail page with headers and sandboxed HTML preview",
                 "caption": "Sent email detail view"
             },
             {
-                "path": "docs/screenshots/email-studio-settings.png",
-                "alt": "Email Studio MailTracker settings for tracking and retention",
-                "caption": "Mail tracking settings"
+                "path": "docs/screenshots/sent-email-view-dark.png",
+                "alt": "Email Studio sent email detail page with headers and sandboxed HTML preview in dark mode",
+                "caption": "Sent email detail view in dark mode"
             }
         ],
         "categories": ["admin", "communications", "console", "frontend"]

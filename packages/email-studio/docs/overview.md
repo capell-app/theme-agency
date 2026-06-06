@@ -43,7 +43,7 @@ The active runtime surfaces are:
 
 ## Screenshot Coverage
 
-The screenshot contract is stored in [screenshots.json](screenshots.json). Current targets cover the sent email index, sent email detail view, and Email Studio settings.
+The screenshot contract is stored in [screenshots.json](screenshots.json). Current committed runner captures cover the sent email index and sent email detail view in light and dark mode. The Email Studio settings target remains in the contract but is not promoted to Marketplace media until the runner app exposes the `email_studio` settings group on the shared settings page.
 
 ## Workflow
 
