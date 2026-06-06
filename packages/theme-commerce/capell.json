@@ -111,6 +111,11 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Theme Commerce marketplace card.",
                 "caption": "Theme Commerce theme card."
+            },
+            {
+                "path": "docs/screenshots/commerce-homepage-layout.png",
+                "alt": "Theme Commerce homepage with curated retail headline, buying-path CTAs, and product lifestyle media.",
+                "caption": "Route-backed Commerce homepage rendered through the package theme shell."
             }
         ],
         "categories": [

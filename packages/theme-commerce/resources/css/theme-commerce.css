@@ -34,6 +34,22 @@
         margin-inline: auto;
     }
 
+    .retail-navigation > div,
+    .retail-navigation div {
+        align-items: center;
+        display: flex;
+        gap: 1.5rem;
+    }
+
+    .retail-navigation > div {
+        justify-content: space-between;
+        padding: 1rem 1.5rem;
+    }
+
+    .retail-navigation a {
+        text-decoration: none;
+    }
+
     :where(.retail-shell h1, .retail-shell h2, .retail-shell h3) {
         color: var(--retail-ink);
         font-family: var(--theme-heading-font, inherit);
