@@ -6,6 +6,8 @@ namespace Capell\PasswordPolicy\Actions;
 
 use Capell\Core\Support\Database\RuntimeSchemaState;
 use Capell\PasswordPolicy\Data\PasswordChangeData;
+use Capell\PasswordPolicy\Enums\PasswordPolicyLifecycleEvent;
+use Capell\PasswordPolicy\Events\PasswordChanged;
 use Capell\PasswordPolicy\Support\PasswordPolicySettingsResolver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -39,5 +41,10 @@ class UpdatePasswordAction
 
             $user->forceFill($values)->save();
         });
+
+        NotifyPasswordPolicyLifecycleEventAction::run(
+            PasswordPolicyLifecycleEvent::PasswordChanged,
+            new PasswordChanged($user, 'password-policy.update-password'),
+        );
     }
 }

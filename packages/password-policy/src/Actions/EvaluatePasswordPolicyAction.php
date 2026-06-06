@@ -6,6 +6,8 @@ namespace Capell\PasswordPolicy\Actions;
 
 use Capell\Core\Support\Database\RuntimeSchemaState;
 use Capell\PasswordPolicy\Data\PasswordPolicyStatusData;
+use Capell\PasswordPolicy\Enums\PasswordPolicyLifecycleEvent;
+use Capell\PasswordPolicy\Events\PasswordExpired;
 use Capell\PasswordPolicy\Support\PasswordPolicySettingsResolver;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
@@ -43,11 +45,19 @@ class EvaluatePasswordPolicyAction
         }
 
         $expiresAt = $changedAt->addDays(max(1, $settings->passwordExpiryDays));
+        $passwordExpired = $expiresAt->isPast();
+
+        if ($passwordExpired) {
+            NotifyPasswordPolicyLifecycleEventAction::run(
+                PasswordPolicyLifecycleEvent::PasswordExpired,
+                new PasswordExpired($user, $expiresAt),
+            );
+        }
 
         return new PasswordPolicyStatusData(
             mustChangePassword: false,
-            passwordExpired: $expiresAt->isPast(),
-            reason: $expiresAt->isPast() ? 'expired' : null,
+            passwordExpired: $passwordExpired,
+            reason: $passwordExpired ? 'expired' : null,
         );
     }
 

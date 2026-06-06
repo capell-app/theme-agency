@@ -6,9 +6,12 @@ namespace Capell\PasswordPolicy\Filament\Extenders;
 
 use Capell\Admin\Contracts\Extenders\UserFormExtender;
 use Capell\Core\Support\Database\RuntimeSchemaState;
+use Capell\PasswordPolicy\Actions\NotifyPasswordPolicyLifecycleEventAction;
 use Capell\PasswordPolicy\Actions\RecordPasswordHistoryAction;
 use Capell\PasswordPolicy\Actions\ValidatePasswordChangeAction;
 use Capell\PasswordPolicy\Data\PasswordChangeData;
+use Capell\PasswordPolicy\Enums\PasswordPolicyLifecycleEvent;
+use Capell\PasswordPolicy\Events\PasswordChanged;
 use Capell\PasswordPolicy\Support\PasswordPolicySettingsResolver;
 use Illuminate\Database\Eloquent\Model;
 
@@ -75,6 +78,11 @@ class PasswordPolicyUserFormExtender implements UserFormExtender
         }
 
         $this->persistPasswordPolicyAttributes($record);
+
+        NotifyPasswordPolicyLifecycleEventAction::run(
+            PasswordPolicyLifecycleEvent::PasswordChanged,
+            new PasswordChanged($record, 'password-policy.admin-user-form'),
+        );
     }
 
     /**

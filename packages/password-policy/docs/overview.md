@@ -57,6 +57,21 @@ Use the Actions directly when changing password behaviour:
 
 Keep validation and history rules in these Actions rather than duplicating them in Filament pages or controllers.
 
+## Lifecycle Events
+
+Password Policy notifies Capell Core subscribers when password state changes so
+Login Audit, 2FA, or other security packages can react without coupling to
+Filament pages.
+
+| Event name                                | Context class                                                     | Emitted when                                      |
+| ----------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------- |
+| `password-policy.password-changed`        | `Capell\PasswordPolicy\Events\PasswordChanged`                    | A password is changed through the forced-change action or admin user form. |
+| `password-policy.password-expired`        | `Capell\PasswordPolicy\Events\PasswordExpired`                    | Policy evaluation detects an expired password.    |
+| `password-policy.user-marked-for-change`  | `Capell\PasswordPolicy\Events\UserMarkedForPasswordChange`        | A user is marked for forced password change.      |
+
+Subscribe through `CapellCore::subscriberManager()` with an implementation of
+`Capell\Core\Contracts\EventSubscriber`.
+
 ## Install And Verify
 
 Install the package in a host Capell app:
