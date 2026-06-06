@@ -31,7 +31,10 @@ final class PreviewRedirectRulesImportAction
                 $valid++;
             } catch (Throwable $throwable) {
                 $invalid++;
-                $errors[] = sprintf('Row %d: %s', $index + 1, $throwable->getMessage());
+                $errors[] = (string) __('capell-url-manager::validation.csv_row_error', [
+                    'row' => $index + 1,
+                    'message' => $throwable->getMessage(),
+                ]);
             }
         }
 
@@ -70,7 +73,9 @@ final class PreviewRedirectRulesImportAction
         $value = $row[$key] ?? null;
 
         if (! is_string($value) || trim($value) === '') {
-            throw new InvalidArgumentException(sprintf('The %s field is required.', $key));
+            throw new InvalidArgumentException((string) __('capell-url-manager::validation.csv_required_field', [
+                'field' => $key,
+            ]));
         }
 
         return $value;

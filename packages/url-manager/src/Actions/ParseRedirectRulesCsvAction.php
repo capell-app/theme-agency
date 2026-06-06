@@ -18,7 +18,11 @@ final class ParseRedirectRulesCsvAction
     {
         $stream = fopen('php://temp', 'r+');
 
-        throw_if($stream === false, InvalidArgumentException::class, 'Could not open a temporary CSV stream.');
+        throw_if(
+            $stream === false,
+            InvalidArgumentException::class,
+            __('capell-url-manager::validation.csv_temp_stream_failed'),
+        );
 
         fwrite($stream, $csv);
         rewind($stream);
