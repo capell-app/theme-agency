@@ -65,6 +65,28 @@ it('publishes the declared preview image and registers css through the tailwind 
         ->and(file_exists(__DIR__ . '/../../' . EducationThemeServiceProvider::TAILWIND_IMPORT))->toBeTrue();
 });
 
+it('has renderable views for every non foundation included section', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(EducationThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new EducationThemeServiceProvider($this->app))->boot($registry);
+
+    $foundationSections = ['navigation', 'footer'];
+
+    foreach (EducationThemeServiceProvider::definition()->includedSections as $sectionKey) {
+        if (in_array($sectionKey, $foundationSections, true)) {
+            continue;
+        }
+
+        expect(view()->exists('capell-theme-education::sections.' . $sectionKey))
+            ->toBeTrue('Missing Education section view for [' . $sectionKey . '].');
+
+        expect($registry->sectionRenderer('education', $sectionKey))
+            ->toBeInstanceOf(SectionRenderer::class);
+    }
+});
+
 it('renders standard sections through Education views', function (): void {
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(EducationThemeServiceProvider::$packageName);
