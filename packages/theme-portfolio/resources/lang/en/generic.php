@@ -99,6 +99,27 @@ return [
     'portfolio_copy' => 'Portfolio story',
     'availability_label' => 'Availability',
     'availability_ready' => 'Availability content is ready for enquiry, speaking, and media-kit paths.',
+    'about_bio_label' => 'Studio biography',
+    'about_bio_heading' => 'A creator-led practice, not an agency template',
+    'about_bio_summary' => 'Use this section to explain who leads the work, why the point of view matters, and what clients can expect before they enquire.',
+    'about_bio_card_label' => 'Profile',
+    'about_bio_defaults' => [
+        [
+            'type' => 'Point of view',
+            'title' => 'Built around a single creative lead',
+            'summary' => 'Position the person, studio, or consultant visitors are actually choosing to trust.',
+        ],
+        [
+            'type' => 'Working style',
+            'title' => 'Clear scope, proof, and launch rhythm',
+            'summary' => 'Frame the way projects move from discovery to case-study-ready outcomes.',
+        ],
+        [
+            'type' => 'Authority',
+            'title' => 'Services, speaking, and media in one lane',
+            'summary' => 'Keep the portfolio distinct from agency themes by centring biography and personal authority.',
+        ],
+    ],
     'premium_layout_empty' => 'Add section content to populate this premium layout.',
     'premium_layout_ready' => 'Premium layout ready',
     'process_label' => 'Process',

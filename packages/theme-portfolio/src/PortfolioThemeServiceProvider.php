@@ -32,7 +32,7 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/portfolio.jpg',
             tags: ['Portfolio', 'Case studies', 'Personal brand'],
             bestFit: ['Creators', 'Consultants', 'Independent studios'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'work-grid', 'case-studies', 'case-study-detail', 'process', 'services', 'testimonials', 'speaking-media-kit', 'availability', 'newsletter', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'about-bio', 'features', 'proof', 'content-listing', 'work-grid', 'case-studies', 'case-study-detail', 'process', 'services', 'testimonials', 'speaking-media-kit', 'availability', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'portfolio',

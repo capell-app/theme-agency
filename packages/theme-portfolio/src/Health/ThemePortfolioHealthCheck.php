@@ -22,6 +22,7 @@ final class ThemePortfolioHealthCheck implements ChecksExtensionHealth
     private const array INCLUDED_SECTIONS = [
         'navigation',
         'hero',
+        'about-bio',
         'features',
         'proof',
         'content-listing',
