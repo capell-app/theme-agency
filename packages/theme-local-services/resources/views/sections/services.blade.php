@@ -29,7 +29,7 @@
                         class="min-w-[220px] snap-start rounded-xl border border-stone-200 bg-white p-4 transition hover:-translate-y-1 hover:border-[#17211c] hover:bg-stone-950 hover:text-white"
                     >
                         <p
-                            class="text-xs font-black tracking-widest text-[#17211c] sm:text-stone-500 dark:text-white"
+                            class="text-xs font-black tracking-widest text-[#17211c] sm:text-stone-500"
                         >
                             {{ $service['category'] ?? __('capell-theme-local-services::generic.service_label') }}
                         </p>
@@ -37,7 +37,7 @@
                             {{ $service['title'] }}
                         </h3>
                         <p
-                            class="mt-2 text-sm text-stone-600 dark:text-stone-300"
+                            class="mt-2 text-sm text-stone-600"
                         >
                             {{ $service['summary'] ?? '' }}
                         </p>
