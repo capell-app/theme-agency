@@ -28,5 +28,25 @@ class RecordPasswordHistoryAction
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        $this->pruneHistory($user, max(1, $settings->passwordHistoryCount));
+    }
+
+    private function pruneHistory(Model $user, int $keepCount): void
+    {
+        $idsToPrune = DB::table('password_policy_password_histories')
+            ->where('user_id', $user->getKey())
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->skip($keepCount)
+            ->pluck('id');
+
+        if ($idsToPrune->isEmpty()) {
+            return;
+        }
+
+        DB::table('password_policy_password_histories')
+            ->whereIn('id', $idsToPrune->all())
+            ->delete();
     }
 }
