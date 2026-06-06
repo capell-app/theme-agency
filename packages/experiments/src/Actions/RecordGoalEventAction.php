@@ -17,15 +17,24 @@ final class RecordGoalEventAction
 
     public function handle(ExperimentAllocation $allocation, ExperimentGoal $goal, ExperimentGoalEventData $data): ExperimentGoalEvent
     {
-        return ExperimentGoalEvent::query()->create([
+        $attributes = [
             'experiment_id' => $allocation->experiment_id,
             'experiment_variant_id' => $allocation->experiment_variant_id,
             'experiment_goal_id' => $goal->id,
             'experiment_allocation_id' => $allocation->id,
             'event_key' => $data->eventKey,
+        ];
+
+        $values = [
             'value_amount' => $data->valueAmount ?? $goal->value_amount,
             'occurred_at' => $data->occurredAt ?? CarbonImmutable::now(),
             'metadata' => $data->metadata,
-        ]);
+        ];
+
+        if ($data->eventKey === null) {
+            return ExperimentGoalEvent::query()->create([...$attributes, ...$values]);
+        }
+
+        return ExperimentGoalEvent::query()->firstOrCreate($attributes, $values);
     }
 }

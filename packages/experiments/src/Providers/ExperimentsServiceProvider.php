@@ -37,6 +37,7 @@ final class ExperimentsServiceProvider extends AbstractPackageServiceProvider
                 '2026_05_31_000004_create_experiment_audience_rules_table',
                 '2026_05_31_000005_create_experiment_allocations_table',
                 '2026_05_31_000006_create_experiment_goal_events_table',
+                '2026_06_07_000001_add_idempotency_unique_to_experiment_goal_events_table',
             ]);
     }
 

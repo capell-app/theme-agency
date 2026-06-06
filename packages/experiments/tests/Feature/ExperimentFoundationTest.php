@@ -102,6 +102,49 @@ it('allocates sticky variants records goals and builds a winner report', functio
         ->and($report->variants)->toHaveCount(2);
 });
 
+it('records keyed goal events once per allocation and goal', function (): void {
+    $experiment = CreateExperimentAction::run(new ExperimentData(
+        name: 'Idempotent goal event test',
+        status: ExperimentStatus::Active,
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+        ],
+        goals: [
+            new ExperimentGoalData(name: 'Signup', key: 'signup', type: ExperimentGoalType::CustomEvent, isPrimary: true),
+        ],
+    ));
+    $allocation = ExperimentAllocation::query()->create([
+        'experiment_id' => $experiment->getKey(),
+        'experiment_variant_id' => $experiment->variants()->firstOrFail()->getKey(),
+        'allocation_key' => 'visitor-idempotent',
+        'allocation_hash' => hash('sha256', 'visitor-idempotent'),
+        'allocated_at' => now(),
+    ]);
+    $goal = $experiment->goals()->firstOrFail();
+
+    $firstEvent = RecordGoalEventAction::run(
+        allocation: $allocation,
+        goal: $goal,
+        data: new ExperimentGoalEventData(eventKey: 'signup', valueAmount: '25.00', metadata: ['source' => 'first']),
+    );
+    $secondEvent = RecordGoalEventAction::run(
+        allocation: $allocation,
+        goal: $goal,
+        data: new ExperimentGoalEventData(eventKey: 'signup', valueAmount: '99.00', metadata: ['source' => 'duplicate']),
+    );
+    $keylessEvent = RecordGoalEventAction::run(
+        allocation: $allocation,
+        goal: $goal,
+        data: new ExperimentGoalEventData(valueAmount: '50.00'),
+    );
+
+    expect($secondEvent->is($firstEvent))->toBeTrue()
+        ->and($keylessEvent->is($firstEvent))->toBeFalse()
+        ->and($goal->events()->count())->toBe(2)
+        ->and($secondEvent->value_amount)->toBe('25.00')
+        ->and($secondEvent->metadata)->toBe(['source' => 'first']);
+});
+
 it('honours weighted allocation strategy without reusing a sticky visitor row', function (): void {
     $experiment = CreateExperimentAction::run(new ExperimentData(
         name: 'Weighted allocation test',
