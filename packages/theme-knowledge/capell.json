@@ -13,9 +13,14 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Knowledge",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/foundation-theme"
+        ],
         "supports": [
             "capell-app/layout-builder",
             "capell-app/frontend-authoring",
@@ -56,19 +61,31 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-knowledge-demo",
-        "demoParams": ["url", "languages", "sites"],
+        "demoParams": [
+            "url",
+            "languages",
+            "sites"
+        ],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-knowledge", "theme-knowledge-frontend"],
+    "capabilities": [
+        "theme-knowledge",
+        "theme-knowledge-frontend"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-knowledge"],
+        "cacheTags": [
+            "theme-knowledge"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -88,52 +105,15 @@
         "description": "Theme Knowledge turns a Capell site into a polished documentation and help centre. It pairs a category sidebar, sticky table of contents, code-friendly prose, and breadcrumb trails with a prominent search experience and readable long-form typography, so visitors find answers fast. Resource libraries, author bios, topic hubs, and newsletter capture round out a full knowledge-marketing surface, with optional Blog, Search, and Newsletter integrations lighting up automatically when those packages are installed. Built on the Capell foundation theme with configurable colour tokens, dark-mode support, and accessible focus states.",
         "screenshots": [
             {
-                "path": "docs/screenshots/theme-admin-list-showing-knowledge.png",
-                "alt": "Theme admin list showing Knowledge capture for Theme Knowledge",
-                "caption": "Theme admin list showing Knowledge"
-            },
-            {
-                "path": "docs/screenshots/frontend-page-rendered-with-knowledge-theme.png",
-                "alt": "Frontend page rendered with Knowledge theme capture for Theme Knowledge",
-                "caption": "Frontend page rendered with Knowledge theme"
-            },
-            {
-                "path": "docs/screenshots/knowledge-homepage-layout.png",
-                "alt": "Knowledge homepage capture for Theme Knowledge",
-                "caption": "Knowledge homepage"
-            },
-            {
-                "path": "docs/screenshots/knowledge-search-layout.png",
-                "alt": "Search results and facets capture for Theme Knowledge",
-                "caption": "Search results and facets"
-            },
-            {
-                "path": "docs/screenshots/knowledge-topic-hubs-layout.png",
-                "alt": "Topic hubs capture for Theme Knowledge",
-                "caption": "Topic hub navigation"
-            },
-            {
-                "path": "docs/screenshots/knowledge-featured-content-layout.png",
-                "alt": "Featured research capture for Theme Knowledge",
-                "caption": "Featured research"
-            },
-            {
-                "path": "docs/screenshots/knowledge-newsletter-layout.png",
-                "alt": "Research digest signup capture for Theme Knowledge",
-                "caption": "Research digest signup"
-            },
-            {
-                "path": "docs/screenshots/knowledge-author-bench-layout.png",
-                "alt": "Author bench capture for Theme Knowledge",
-                "caption": "Author bench"
-            },
-            {
-                "path": "docs/screenshots/theme-preview-url-output.png",
-                "alt": "Signed admin preview route capture for Theme Knowledge",
-                "caption": "Signed admin preview route"
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Theme Knowledge marketplace card.",
+                "caption": "Theme Knowledge theme card."
             }
         ],
-        "categories": ["frontend", "themes"]
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "knowledge",

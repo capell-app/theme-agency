@@ -6,17 +6,17 @@
 
 `KnowledgeThemeServiceProvider` registers the `knowledge` theme key with a single Blade layout (`capell-theme-knowledge::page`, `src/KnowledgeThemeServiceProvider.php:100`) and one preset, extending `default` (the foundation theme — `FoundationThemeServiceProvider::THEME_KEY = 'default'`, so this is correct, not a mismatch). `definition()->includedSections` lists 16 keys; `navigation` and `footer` are explicitly delegated back to foundation via `isFoundationSection()`, leaving 14 theme-owned section views plus `page.blade.php`. The demo command `capell:theme-knowledge-demo` exists (`src/Console/Commands/DemoCommand.php`) and delegates to `InstallKnowledgeThemeDemoAction`, which just calls `ThemeDemoPageInstaller::run($data, 'knowledge', 'Knowledge')` — there are no bespoke demo layouts; demo content is the generic foundation page installer. The theme overrides hero/features/proof/content sections and the page shell; it inherits navigation, footer, and all chrome from foundation-theme.
 
-Marketplace and Composer copy are buyer-facing, and `capell.json` marketplace media now promotes the **9** committed route-backed PNG captures declared by `docs/screenshots.json`.
+Marketplace and Composer copy are buyer-facing, but `capell.json` now promotes only the extension card because the **9** committed route-backed PNG captures declared by `docs/screenshots.json` were generated from the generic Capell runner `theme-gallery` fixture instead of the actual Theme Knowledge shell.
 
 ## Completed Improvement Slices
 
 - **2026-06-03:** Added buyer-facing marketplace and Composer copy, replaced the stub Diagnostics health check with real theme registration/view/vendor-asset probes, and limited marketplace screenshots to committed preview assets.
-- **2026-06-06:** Captured all 9 `docs/screenshots.json` route-backed targets through the Capell runner and promoted the PNG gallery into marketplace media.
+- **2026-06-06:** Captured all 9 `docs/screenshots.json` route-backed targets through the Capell runner, then demoted the gallery after verifying the route renders the generic `theme-gallery` fixture rather than the package theme shell.
 - **2026-06-04:** Moved author bench and topic hub defaults into translations, made both sections accept hydrated item data, removed optional package installation checks from public newsletter/search Blade, and added tests for those public rendering contracts.
 - **2026-06-05:** Added a first-class `doc-article` section renderer with hydrated breadcrumbs, category sidebar, article metadata, constrained article body, and sticky table-of-contents layout, plus registry coverage and docs/manifest reconciliation.
 - **2026-06-06:** Added code-block/prose styling for technical articles, constrained long-form measures with calmer heading scale, tokenized theme colour utilities, dark-mode tokens, a reduced-motion guard for decorative grid overlays, and KB article feedback/version/freshness affordances.
 
-**Headline:** the package is positioned as a knowledge-base / documentation / help-site theme, the core documentation layout now exists, and the static screenshot gallery is reconciled. The remaining shipped-feature gaps are a real dark-mode screenshot fixture and render-budget coverage; the dark capture is blocked on a Capell runner fixture that renders the actual Theme Knowledge shell/CSS instead of the current generic theme-gallery route.
+**Headline:** the package is positioned as a knowledge-base / documentation / help-site theme, and the core documentation layout now exists. The remaining shipped-feature gaps are a real Theme Knowledge screenshot fixture, dark-mode capture, and render-budget coverage; the current light and dark captures are blocked on a Capell runner fixture that renders the actual Theme Knowledge shell/CSS instead of the generic `theme-gallery` route.
 
 ## 2. Improvements (existing functionality)
 
@@ -58,7 +58,7 @@ Prioritized. Real templates only.
 - **Author hard-coded copy fixed.** Author default cards now live in translations and the view accepts hydrated item data. — `resources/views/sections/authors.blade.php`, `resources/lang/en/generic.php`
 - **Health check shipped.** `ThemeKnowledgeHealthCheck` now probes Theme Studio registration, required views, and vendor asset registration; tests cover passing diagnostics and an unregistered theme failure. — `src/Health/ThemeKnowledgeHealthCheck.php`, `tests/Unit/ThemeKnowledgeHealthCheckTest.php`
 - **Stub contribution class.** `src/Manifest/ThemeManagementPageContribution.php` is contract-only (`compatibleCapellApiVersion()` only); confirm the management page actually mounts for `themeKey: knowledge` rather than relying on an empty contract impl. — `src/Manifest/ThemeManagementPageContribution.php`
-- **Manifest screenshot drift resolved.** `docs/screenshots.json` declares 9 render entries, every path now exists under `docs/screenshots/`, and `capell.json` marketplace media references the same committed route-backed PNG set. — `docs/screenshots.json`, `capell.json`, `docs/screenshots/`
+- **Screenshot contract reopened.** `docs/screenshots.json` declares 9 render entries and every path exists under `docs/screenshots/`, but those PNGs are generic `theme-gallery` fixture captures rather than real Theme Knowledge shell output. `capell.json` now promotes only the package card until a Capell runner route renders the actual Theme Knowledge shell. — `docs/screenshots.json`, `capell.json`, `docs/screenshots/`
 - **Marketplace copy shipped, with code-block caveat.** Marketplace/Composer copy is buyer-facing, and the manifest caveat now correctly narrows the remaining technical-docs promise gap to code-block styling. — `capell.json`
 - **`{!! $content !!}` trust boundary.** `page.blade.php:12` echoes pre-rendered section HTML unescaped. This is the standard foundation pattern (sections render server-side via the trusted renderer), so it is acceptable — but it means section template safety is the only guard; `PublicOutputSafetyTest` now guards against authoring markers, database calls, and public Blade `CapellCore::` package checks. Broader untranslated-literal detection remains open. — `resources/views/page.blade.php`, `tests/Unit/PublicOutputSafetyTest.php`
 - **Performance budget.** `capell.json` `performance.frontendRenderBudgetMs = 20`, `adminQueryBudget = 0`, `cacheSafety.cacheable = false` (varies by site, locale). No test asserts the render budget, and there is no LCP guidance for `hero-desktop.jpg` (698 KB)/`hero-mobile.jpg` (493 KB) demo assets — large hero media with no documented `loading`/`fetchpriority` strategy risks the LCP path. — `capell.json`, `docs/assets/marketplace/*`
@@ -66,7 +66,7 @@ Prioritized. Real templates only.
 
 ## 5. Marketplace & Selling
 
-**Critique.** Marketplace and Composer copy are now buyer-facing, and the technical-docs copy gap has narrowed now that code blocks have a dedicated prose treatment. The static visual story is backed by the 9 committed route-backed PNG captures; a real dark-mode capture still needs a runner fixture that loads the Theme Knowledge shell/CSS.
+**Critique.** Marketplace and Composer copy are now buyer-facing, and the technical-docs copy gap has narrowed now that code blocks have a dedicated prose treatment. The static visual story remains reopened because the 9 committed route-backed PNG captures show the generic runner `theme-gallery` fixture rather than the actual Theme Knowledge shell; real light and dark captures need a runner fixture that loads the Theme Knowledge shell/CSS.
 
 **Improved 1-sentence summary:**
 
@@ -76,7 +76,7 @@ Prioritized. Real templates only.
 
 > Theme Knowledge turns a Capell site into a polished documentation and help centre. It pairs a category sidebar, sticky table of contents, code-friendly prose, and breadcrumb trails with a prominent search experience and readable long-form typography, so visitors find answers fast. Resource libraries, author bios, topic hubs, and newsletter capture round out a full knowledge-marketing surface, with optional Blog, Search, and Newsletter integrations lighting up automatically when those packages are installed. Built on the Capell foundation theme with a configurable colour palette and accessible focus states.
 
-**Screenshot/media status.** The 9 light renders are committed to `docs/screenshots/` and promoted into marketplace media. The dark-mode homepage capture remains open until the Capell screenshot runner fixture can render the actual Theme Knowledge CSS instead of the generic theme-gallery CSS; the current package repo has no route-backed dark fixture to capture without changing the external runner app.
+**Screenshot/media status.** The 9 light renders are committed to `docs/screenshots/`, but they are demoted from marketplace media because they show the generic runner fixture rather than real Theme Knowledge output. Light and dark captures remain open until the Capell screenshot runner fixture can render the actual Theme Knowledge CSS instead of the generic theme-gallery CSS; the current package repo has no route-backed fixture to capture without changing the external runner app.
 
 **Differentiation / target buyer.** Today the theme is hard to distinguish from a generic editorial/marketing theme. Target buyer: documentation/help-centre owners, dev-tool/SaaS teams, and internal-knowledge-base operators who want a docs site without a separate static-site generator. The wedge is "docs site inside your CMS" — sidebar + TOC + search + versioning — which no sibling theme currently fills.
 
@@ -88,7 +88,7 @@ Prioritized. Real templates only.
 | -------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
 | Done/Shipped: Add doc/article layout (sidebar + TOC + breadcrumbs) backing `knowledge-docs-layout.svg`   | Done   | L      | High   | §3          |
 | Make `search-listing` a real, prominent search form (cross-sell `capell-app/search`)                     | Done   | M      | High   | §3, §2.6    |
-| Generate + commit the 9 `docs/screenshots.json` renders; replace placeholder SVGs                        | Done   | M      | High   | §4, §5      |
+| Replace generic `theme-gallery` fixture PNGs with real Theme Knowledge renderer captures                  | Next   | M      | High   | §4, §5      |
 | Done/Shipped: Add code-block / `pre`/`code` prose styling                                                | Done   | M      | High   | §3          |
 | Blocked by runner fixture: capture a real dark screenshot through a Theme Knowledge CSS fixture          | Next   | M      | High   | §2.3, §5    |
 | Done/Shipped: Tokenize hardcoded hex to preset `--site-theme-*` variables                                | Done   | L      | Med    | §2.4        |

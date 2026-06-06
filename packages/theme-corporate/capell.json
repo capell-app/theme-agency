@@ -13,9 +13,14 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\ThemeStudio\\Corporate",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/foundation-theme"
+        ],
         "supports": [],
         "conflicts": []
     },
@@ -48,19 +53,31 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-corporate-demo",
-        "demoParams": ["url", "languages", "sites"],
+        "demoParams": [
+            "url",
+            "languages",
+            "sites"
+        ],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-corporate", "theme-corporate-frontend"],
+    "capabilities": [
+        "theme-corporate",
+        "theme-corporate-frontend"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-corporate"],
+        "cacheTags": [
+            "theme-corporate"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -86,67 +103,15 @@
         "description": "Theme Corporate gives established businesses, advisory firms, and public bodies a polished, credibility-first site without a design project. Six curated presets — Boardroom, Civic, Advisory, Integrity, Enterprise Trust, and Public Ledger — span deep-navy formal through accessible civic and editorial advisory looks, each tuned for clarity and contrast. Structured proof carousels, capability bands, and a measured content hierarchy are built to read as authoritative on desktop and mobile alike, with full dark-mode support. Drop it on any Capell site, run the one-command demo, and pick a preset.",
         "screenshots": [
             {
-                "path": "docs/screenshots/theme-admin-list-showing-corporate.png",
-                "alt": "Themes admin list showing Corporate capture for Theme Corporate",
-                "caption": "Themes admin list showing Corporate"
-            },
-            {
-                "path": "docs/screenshots/theme-preview-url-output.png",
-                "alt": "Signed admin preview route capture for Theme Corporate",
-                "caption": "Signed admin preview route"
-            },
-            {
-                "path": "docs/screenshots/frontend-page-rendered-with-corporate-theme.png",
-                "alt": "Frontend page rendered with Corporate theme capture for Theme Corporate",
-                "caption": "Frontend page rendered with Corporate theme"
-            },
-            {
-                "path": "docs/screenshots/corporate-homepage-layout.png",
-                "alt": "Corporate homepage capture for Theme Corporate",
-                "caption": "Corporate homepage"
-            },
-            {
-                "path": "docs/screenshots/corporate-services-layout.png",
-                "alt": "Services page capture for Theme Corporate",
-                "caption": "Services page"
-            },
-            {
-                "path": "docs/screenshots/corporate-governance-layout.png",
-                "alt": "Governance page capture for Theme Corporate",
-                "caption": "Governance page"
-            },
-            {
-                "path": "docs/screenshots/corporate-resources-layout.png",
-                "alt": "Resources listing capture for Theme Corporate",
-                "caption": "Resources listing"
-            },
-            {
-                "path": "docs/screenshots/corporate-article-layout.png",
-                "alt": "Thought leadership article capture for Theme Corporate",
-                "caption": "Thought leadership article"
-            },
-            {
-                "path": "docs/screenshots/corporate-contact-layout.png",
-                "alt": "Contact form page capture for Theme Corporate",
-                "caption": "Contact form page"
-            },
-            {
-                "path": "docs/screenshots/corporate-locations-layout.png",
-                "alt": "Locations page capture for Theme Corporate",
-                "caption": "Locations page"
-            },
-            {
-                "path": "docs/screenshots/corporate-search-layout.png",
-                "alt": "Search results page capture for Theme Corporate",
-                "caption": "Search results page"
-            },
-            {
-                "path": "docs/screenshots/corporate-investor-event-layout.png",
-                "alt": "Event detail page capture for Theme Corporate",
-                "caption": "Event detail page"
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Theme Corporate marketplace card.",
+                "caption": "Theme Corporate theme card."
             }
         ],
-        "categories": ["frontend", "themes"]
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "corporate"

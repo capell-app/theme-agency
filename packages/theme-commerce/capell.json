@@ -13,9 +13,14 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Commerce",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/foundation-theme"
+        ],
         "supports": [
             "capell-app/blog",
             "capell-app/campaign-studio",
@@ -53,19 +58,31 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-commerce-demo",
-        "demoParams": ["url", "languages", "sites"],
+        "demoParams": [
+            "url",
+            "languages",
+            "sites"
+        ],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-commerce", "theme-commerce-frontend"],
+    "capabilities": [
+        "theme-commerce",
+        "theme-commerce-frontend"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-commerce"],
+        "cacheTags": [
+            "theme-commerce"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": false
@@ -91,67 +108,15 @@
         "description": "Editorial Commerce is a premium Capell theme built for retail and e-commerce storefronts that need to feel like a buying journey, not a styled brochure. It ships an image-led hero, product finder, collection and product grids, comparison and proof sections, buying-guide editorial, and conversion CTAs — all driven by hydrated render data with zero database access in public Blade. Pair it with Capell Shopify Commerce to light up connected-catalog merchandising panels, and with Blog for buying-guide content that supports purchase decisions. Warm editorial direction (deep ink, forest-green merchandising, coral action accents) and a token-driven design system keep every store on-brand while staying fast and accessible.",
         "screenshots": [
             {
-                "path": "docs/screenshots/theme-admin-list-showing-commerce.png",
-                "alt": "Theme admin list showing commerce capture for Theme Commerce",
-                "caption": "Theme admin list showing commerce"
-            },
-            {
-                "path": "docs/screenshots/theme-preview-url-output.png",
-                "alt": "Signed admin preview route capture for Theme Commerce",
-                "caption": "Signed admin preview route"
-            },
-            {
-                "path": "docs/screenshots/frontend-page-rendered-with-commerce-theme.png",
-                "alt": "Frontend page rendered with commerce theme capture for Theme Commerce",
-                "caption": "Frontend page rendered with commerce theme"
-            },
-            {
-                "path": "docs/screenshots/commerce-homepage-layout.png",
-                "alt": "Commerce homepage capture for Theme Commerce",
-                "caption": "Commerce homepage"
-            },
-            {
-                "path": "docs/screenshots/commerce-collection-layout.png",
-                "alt": "Collection listing capture for Theme Commerce",
-                "caption": "Collection listing"
-            },
-            {
-                "path": "docs/screenshots/commerce-product-layout.png",
-                "alt": "Product detail page capture for Theme Commerce",
-                "caption": "Product detail page"
-            },
-            {
-                "path": "docs/screenshots/commerce-lookbook-layout.png",
-                "alt": "Lookbook page capture for Theme Commerce",
-                "caption": "Lookbook page"
-            },
-            {
-                "path": "docs/screenshots/commerce-buying-guide-layout.png",
-                "alt": "Buying guide article capture for Theme Commerce",
-                "caption": "Buying guide article"
-            },
-            {
-                "path": "docs/screenshots/commerce-newsletter-layout.png",
-                "alt": "Newsletter capture page capture for Theme Commerce",
-                "caption": "Newsletter capture page"
-            },
-            {
-                "path": "docs/screenshots/commerce-store-event-layout.png",
-                "alt": "Retail event page capture for Theme Commerce",
-                "caption": "Retail event page"
-            },
-            {
-                "path": "docs/screenshots/commerce-search-layout.png",
-                "alt": "Product search page capture for Theme Commerce",
-                "caption": "Product search page"
-            },
-            {
-                "path": "docs/screenshots/commerce-campaign-layout.png",
-                "alt": "Promotion campaign page capture for Theme Commerce",
-                "caption": "Promotion campaign page"
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Theme Commerce marketplace card.",
+                "caption": "Theme Commerce theme card."
             }
         ],
-        "categories": ["frontend", "themes"]
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "commerce"

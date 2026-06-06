@@ -13,9 +13,14 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Healthcare",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/foundation-theme"
+        ],
         "supports": [
             "capell-app/blog",
             "capell-app/bookings",
@@ -53,19 +58,31 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-healthcare-demo",
-        "demoParams": ["url", "languages", "sites"],
+        "demoParams": [
+            "url",
+            "languages",
+            "sites"
+        ],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-healthcare", "theme-healthcare-frontend"],
+    "capabilities": [
+        "theme-healthcare",
+        "theme-healthcare-frontend"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-healthcare"],
+        "cacheTags": [
+            "theme-healthcare"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -91,47 +108,15 @@
         "description": "Theme Healthcare turns Capell into a conversion-focused clinical website. It ships nineteen care-oriented sections — an appointment hero, service finder, clinician carousel, care-pathway guidance, insurance/trust signals, locations, events, and a booking panel — that route patients toward the right enquiry with calm, clinical styling. The booking, events, and resource sections light up automatically when Capell Bookings/Form Builder, Events, and Blog are installed, with no theme reconfiguration. Built on Foundation Theme with accessible focus states and a skip link, it activates from the Themes screen and seeds a full demo via `capell:theme-healthcare-demo`.",
         "screenshots": [
             {
-                "path": "docs/screenshots/theme-admin-list-showing-healthcare.png",
-                "alt": "Theme admin list showing healthcare capture for Theme Healthcare",
-                "caption": "Theme admin list showing healthcare"
-            },
-            {
-                "path": "docs/screenshots/frontend-page-rendered-with-healthcare-theme.png",
-                "alt": "Frontend page rendered with healthcare theme capture for Theme Healthcare",
-                "caption": "Frontend page rendered with healthcare theme"
-            },
-            {
-                "path": "docs/screenshots/healthcare-homepage-desktop.png",
-                "alt": "Healthcare homepage desktop capture for Theme Healthcare",
-                "caption": "Healthcare homepage desktop"
-            },
-            {
-                "path": "docs/screenshots/healthcare-homepage-mobile.png",
-                "alt": "Healthcare homepage mobile capture for Theme Healthcare",
-                "caption": "Healthcare homepage mobile"
-            },
-            {
-                "path": "docs/screenshots/healthcare-services-listing.png",
-                "alt": "Healthcare services listing capture for Theme Healthcare",
-                "caption": "Healthcare services listing"
-            },
-            {
-                "path": "docs/screenshots/healthcare-clinician-detail.png",
-                "alt": "Healthcare clinician detail capture for Theme Healthcare",
-                "caption": "Healthcare clinician detail"
-            },
-            {
-                "path": "docs/screenshots/healthcare-contact-page.png",
-                "alt": "Healthcare contact page capture for Theme Healthcare",
-                "caption": "Healthcare contact page"
-            },
-            {
-                "path": "docs/screenshots/theme-preview-url-output.png",
-                "alt": "Signed admin preview route capture for Theme Healthcare",
-                "caption": "Signed admin preview route"
+                "path": "docs/assets/marketplace/extension-card.jpg",
+                "alt": "Theme Healthcare marketplace card.",
+                "caption": "Theme Healthcare theme card."
             }
         ],
-        "categories": ["frontend", "themes"]
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "healthcare"
