@@ -18,8 +18,7 @@
         "requires": [
             "capell-app/admin",
             "capell-app/core",
-            "capell-app/frontend",
-            "jdavidbakr/mail-tracker"
+            "capell-app/frontend"
         ],
         "supports": [
             "capell-app/campaign-studio",

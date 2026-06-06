@@ -34,7 +34,10 @@ it('declares mail tracker settings admin resource model and purge schedule contr
         $screenshots,
     );
 
-    expect(data_get($manifest, 'dependencies.requires'))->toContain('jdavidbakr/mail-tracker')
+    $composer = capell_json_file_array(dirname(__DIR__, 2) . '/composer.json');
+
+    expect(data_get($manifest, 'dependencies.requires'))->not->toContain('jdavidbakr/mail-tracker')
+        ->and(data_get($composer, 'require.jdavidbakr/mail-tracker'))->toBeString()
         ->and(data_get($manifest, 'commands.mailTrackerPurge'))->toBe(PurgeTrackedEmailsCommand::class)
         ->and(data_get($manifest, 'settings'))->toContain(EmailStudioSettings::class)
         ->and(data_get($manifest, 'contributes'))->toContain([
