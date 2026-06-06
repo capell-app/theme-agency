@@ -94,21 +94,6 @@
                 "path": "docs/assets/marketplace/hero-mobile.jpg",
                 "alt": "Filament Peek unsaved page preview on mobile",
                 "caption": "Review in-flight changes before publishing on mobile"
-            },
-            {
-                "path": "docs/screenshots/page-or-workspace-edit-screen-with-preview-action.png",
-                "alt": "Page edit header showing the Changes preview action",
-                "caption": "Launch a private preview of unsaved changes from the Page edit header"
-            },
-            {
-                "path": "docs/screenshots/peek-iframe-preview-panel.png",
-                "alt": "Filament Peek iframe preview panel",
-                "caption": "Unsaved edits render in the preview panel without touching saved content"
-            },
-            {
-                "path": "docs/screenshots/workspace-draft-review-screen-with-preview-action.png",
-                "alt": "Workspace draft review screen with a preview action",
-                "caption": "Review workspace drafts before they go live"
             }
         ],
         "categories": ["admin", "editorial"]

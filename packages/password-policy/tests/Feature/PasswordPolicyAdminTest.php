@@ -400,7 +400,7 @@ it('renders the forced password change page through Filament', function (): void
         ->assertSee(__('capell-password-policy::password_change.description'));
 });
 
-it('declares the built password policy marketplace screenshots', function (): void {
+it('does not promote mock password policy captures as marketplace screenshots', function (): void {
     /** @var array{marketplace: array{screenshots: list<array{path: string}>}} $manifest */
     $manifest = json_decode((string) file_get_contents(__DIR__ . '/../../capell.json'), true, 512, JSON_THROW_ON_ERROR);
 
@@ -410,9 +410,6 @@ it('declares the built password policy marketplace screenshots', function (): vo
 
     expect($paths)->toBe([
         'docs/assets/marketplace/extension-card.jpg',
-        'docs/screenshots/password-policy-settings.png',
-        'docs/screenshots/forced-password-change.png',
-        'docs/screenshots/user-password-policy-columns.png',
     ]);
 
     foreach ($paths as $path) {

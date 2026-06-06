@@ -4,6 +4,10 @@ All notable changes to `capell-app/filament-peek` will be documented in this fil
 
 ## Unreleased
 
+### 2026-06-06
+
+- Demoted and removed the broken product screenshots from `marketplace.screenshots`; real Capell runner captures are still required for the Page edit preview action, signed preview, and expired-preview states.
+
 ### 2026-06-05
 
 - Added the proprietary `LICENSE` file declared by the package Composer manifest.

@@ -67,7 +67,12 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Page SEO panel.
 - SEO audit page.
 - Broken links page.
-- Not-found URLs page.
+- Search Console insights panel.
+- AI Creator action modal.
+- Sitemap page.
+- Translation coverage page.
+
+AI Discovery, SEO settings, not-found URLs, and public text-output captures remain optional until the runner has the required seeded state and plain-text response support.
 - Translation coverage page.
 - AI Discovery page.
 - SEO Suite settings modal on the Extensions page.

@@ -34,7 +34,7 @@ Install core baseline packages, hard dependencies, and `capell-app/hero`. Run `c
 
 ## Screenshot Coverage
 
-The screenshot contract now has committed 1440×900 PNG captures for both declared targets under `docs/screenshots/`, and `capell.json` exposes both images in marketplace media alongside the extension card. There is no standalone admin screen to capture.
+The screenshot contract declares two public targets, but neither is currently promoted into marketplace media. Generate them with the Capell screenshot runner from a seeded public page after `capell:hero-setup`; the previous illustrative PNG/SVG captures were removed because they were not runner-backed Capell output. There is no standalone admin screen to capture.
 
 ## Known Risks
 

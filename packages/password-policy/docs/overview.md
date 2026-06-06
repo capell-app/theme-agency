@@ -73,6 +73,7 @@ vendor/bin/pest packages/password-policy/tests --configuration=phpunit.xml
 
 ## Screenshot Coverage
 
-The marketplace manifest now lists the extension card plus all three required
-1440x900 PNG captures from `docs/screenshots.json`: settings, forced password
-change, and Users-table password policy columns.
+The marketplace manifest currently lists only the extension card. The settings,
+forced-password-change, and Users-table policy-column targets remain declared in
+`docs/screenshots.json` and should be captured through the Capell screenshot
+runner before promotion.
