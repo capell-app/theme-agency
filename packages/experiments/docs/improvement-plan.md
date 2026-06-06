@@ -30,7 +30,7 @@ Mapped against `capabilities[]` and A/B-testing norms:
 - **Shipped 2026-06-07: Scheduled → Active / auto-end automation.** `SyncExperimentStatusesAction` now transitions due scheduled experiments to active and expired scheduled/active experiments to ended. `capell:experiments:sync-statuses` runs the Action and the provider schedules it every five minutes with overlap protection. `src/Actions/SyncExperimentStatusesAction.php`, `src/Console/Commands/SyncExperimentStatusesCommand.php`, `src/Providers/ExperimentsServiceProvider.php`. (Table-stakes.)
 - **Targeting depth** — `ExperimentContextData` exposes `path/query/utm/referrer/attributes/segments` but no `ipAddress`/`userAgent`, so no geo (core ships `torann/geoip`) or device/bot targeting, and no percentage-of-segment holdouts. (Differentiator.)
 - **Mutually-exclusive experiments / exclusion groups** — A visitor can be allocated into every overlapping active experiment independently; there is no exclusion-group concept to prevent interaction effects. (Differentiator.)
-- **Results dashboard** — Reporting exists only as a `WinnerReportData` value object; there is no Filament page/widget visualising allocations, conversion rates, lift, or significance over time. Operators currently can't _see_ results in-product. (Table-stakes for a premium tier.)
+- **Shipped 2026-06-07: Results dashboard.** Experiment records now expose a Filament results page and row/edit action backed by `BuildWinnerReportAction`, showing allocation totals, conversions, conversion rates, lift, p-values, sample readiness, and winner status in-product. `src/Filament/Resources/Experiments/Pages/ExperimentResultsPage.php`, `resources/views/filament/experiments/results.blade.php`, `src/Filament/Resources/Experiments/ExperimentResource.php`. (Table-stakes for a premium tier.)
 - **Multi-goal / revenue reporting** — `value_amount` is captured per goal event but `BuildWinnerReportAction` only counts events; no revenue-per-variant or multi-goal funnel rollup despite the `experiment_goal_events_rollup_index`. (Differentiator.)
 
 ## 4. Issues / Risks
@@ -66,7 +66,7 @@ Mapped against `capabilities[]` and A/B-testing norms:
 | Shipped 2026-06-04: Honour `allocation_strategy`                                                     | Done   | M      | Med    | §2          |
 | Shipped 2026-06-07: Goal-event idempotency guard + unique key                                        | Done   | M      | High   | §2, §3      |
 | Shipped 2026-06-07: Scheduled→Active / auto-end command + scheduler                                  | Done   | M      | Med    | §3          |
-| Results dashboard (Filament page/widget)                                                             | Next   | L      | High   | §3, §5      |
+| Shipped 2026-06-07: Results dashboard (Filament page/widget)                                         | Done   | L      | High   | §3, §5      |
 | Shipped 2026-06-07: Bounded candidate scan + query-count benchmark vs budget                         | Done   | M      | Med    | §2, §4      |
 | Shipped 2026-06-07: Add README + CHANGELOG + integration docs                                        | Done   | S      | Med    | §2, §5      |
 | Fix screenshot runner app requirement, then capture screenshots / GIF for marketplace listing         | Next   | S      | Med    | §5          |

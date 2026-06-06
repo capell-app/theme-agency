@@ -32,6 +32,7 @@ final class ExperimentsServiceProvider extends AbstractPackageServiceProvider
             ->name(self::$name)
             ->hasConfigFile('capell-experiments')
             ->hasTranslations()
+            ->hasViews(self::$name)
             ->hasCommand(SyncExperimentStatusesCommand::class)
             ->hasMigrations([
                 '2026_05_31_000001_create_experiments_table',
