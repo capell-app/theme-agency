@@ -48,10 +48,9 @@ instead of assumed.
 This package owns no database tables, settings, models, or routes. It reads
 Foundation Theme runtime data and Capell page content.
 
-## Screenshot Plan
+## Screenshot Coverage
 
-`docs/screenshots.json` describes marketplace screenshots for homepage,
-directory, detail, contact, conversion CTA, and section-suite states.
+`docs/screenshots.json` describes committed marketplace screenshots for the admin theme list, full frontend render, homepage, search, topic hubs, featured content, newsletter, author bench, and signed preview output. `capell.json` promotes the same route-backed PNG capture set.
 
 ## Verification
 

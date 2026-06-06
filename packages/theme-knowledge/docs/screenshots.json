@@ -15,7 +15,13 @@
             "required": true,
             "notes": "Capture with Foundation Theme, Layout Builder, and capell-app/theme-knowledge installed in the isolated demo harness.",
             "useCase": "An administrator confirms the Knowledge theme is available for an editorial, research, or resource site.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/theme-admin-list-showing-knowledge.png"
+            "screenshotPath": "packages/theme-knowledge/docs/screenshots/theme-admin-list-showing-knowledge.png",
+            "scenario": "theme-knowledge-admin-filament-resource",
+            "url": "/screenshot-fixtures/theme-gallery/knowledge/theme-admin-list-showing-knowledge",
+            "waitFor": ".theme-gallery-fixture",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "frontend-page-rendered-with-knowledge-theme",
@@ -27,7 +33,13 @@
             "required": true,
             "notes": "Capture a seeded resource hub with search-led hero, topic hubs, featured content, resource library, newsletter, authors, proof, and footer.",
             "useCase": "A publisher sees how the theme turns a content archive into a searchable reader journey.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/frontend-page-rendered-with-knowledge-theme.png"
+            "screenshotPath": "packages/theme-knowledge/docs/screenshots/frontend-page-rendered-with-knowledge-theme.png",
+            "scenario": "theme-knowledge-frontend-frontend-url",
+            "url": "/screenshot-fixtures/theme-gallery/knowledge/frontend-page-rendered-with-knowledge-theme",
+            "waitFor": ".theme-gallery-fixture",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "knowledge-homepage-layout",
@@ -39,7 +51,13 @@
             "required": true,
             "notes": "Capture the editorial command-centre hero, search box, queue cards, proof, and topic routing.",
             "useCase": "A resource-site buyer checks whether the first viewport feels like a serious library rather than a blog skin.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-homepage-layout.png"
+            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-homepage-layout.png",
+            "scenario": "theme-knowledge-frontend-frontend-url",
+            "url": "/screenshot-fixtures/theme-gallery/knowledge/knowledge-homepage-layout",
+            "waitFor": ".theme-gallery-fixture",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "knowledge-search-layout",
@@ -51,7 +69,13 @@
             "required": true,
             "notes": "Capture search results with relevance scoring, source-map indicators, facets, and no-results recovery.",
             "useCase": "A reader can find guides, research notes, and templates without the page collapsing into a plain listing.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-search-layout.png"
+            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-search-layout.png",
+            "scenario": "theme-knowledge-frontend-frontend-url",
+            "url": "/screenshot-fixtures/theme-gallery/knowledge/knowledge-search-layout",
+            "waitFor": ".theme-gallery-fixture",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "knowledge-topic-hubs-layout",
@@ -63,7 +87,13 @@
             "required": true,
             "notes": "Capture topic hub cards, guide/research/template groupings, and editorial pathway copy.",
             "useCase": "An editorial team reviews how the theme makes deep archives browseable by subject.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-topic-hubs-layout.png"
+            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-topic-hubs-layout.png",
+            "scenario": "theme-knowledge-frontend-frontend-url",
+            "url": "/screenshot-fixtures/theme-gallery/knowledge/knowledge-topic-hubs-layout",
+            "waitFor": ".theme-gallery-fixture",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "knowledge-featured-content-layout",
@@ -75,7 +105,13 @@
             "required": true,
             "notes": "Capture featured content with evidence labels, reading queue, author metadata, and related resources.",
             "useCase": "A publisher checks that high-value research can be promoted without looking like a standard news card.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-featured-content-layout.png"
+            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-featured-content-layout.png",
+            "scenario": "theme-knowledge-frontend-frontend-url",
+            "url": "/screenshot-fixtures/theme-gallery/knowledge/knowledge-featured-content-layout",
+            "waitFor": ".theme-gallery-fixture",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "knowledge-newsletter-layout",
@@ -87,7 +123,13 @@
             "required": true,
             "notes": "Capture newsletter CTA with digest copy, static fallback, and optional newsletter package state.",
             "useCase": "A publisher checks how the theme turns reading intent into an owned-audience signup.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-newsletter-layout.png"
+            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-newsletter-layout.png",
+            "scenario": "theme-knowledge-frontend-frontend-url",
+            "url": "/screenshot-fixtures/theme-gallery/knowledge/knowledge-newsletter-layout",
+            "waitFor": ".theme-gallery-fixture",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "knowledge-author-bench-layout",
@@ -99,7 +141,13 @@
             "required": true,
             "notes": "Capture editor and author cards with credibility signals and publication routes.",
             "useCase": "A research site can prove expertise without moving into portfolio or agency territory.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-author-bench-layout.png"
+            "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-author-bench-layout.png",
+            "scenario": "theme-knowledge-frontend-frontend-url",
+            "url": "/screenshot-fixtures/theme-gallery/knowledge/knowledge-author-bench-layout",
+            "waitFor": ".theme-gallery-fixture",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "theme-preview-url-output",
@@ -111,7 +159,13 @@
             "required": true,
             "notes": "Capture a signed preview URL generated for the seeded Knowledge theme, site, and page.",
             "useCase": "An administrator previews a resource page with the Knowledge theme applied before publishing the theme choice.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/theme-preview-url-output.png"
+            "screenshotPath": "packages/theme-knowledge/docs/screenshots/theme-preview-url-output.png",
+            "scenario": "theme-knowledge-admin-admin-url",
+            "url": "/screenshot-fixtures/theme-gallery/knowledge/theme-preview-url-output",
+            "waitFor": ".theme-gallery-fixture",
+            "colorSchemes": [
+                "light"
+            ]
         }
     ]
 }
