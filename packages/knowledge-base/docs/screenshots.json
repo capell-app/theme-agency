@@ -1,0 +1,65 @@
+{
+    "package": "knowledge-base",
+    "composerName": "capell-app/knowledge-base",
+    "generatedFor": "deployment-screenshot-runner",
+    "requiresInstalledPackage": true,
+    "outputDirectory": "packages/knowledge-base/docs/screenshots",
+    "entries": [
+        {
+            "id": "knowledge-base-articles-index",
+            "title": "Knowledge Base articles admin index.",
+            "package": "knowledge-base",
+            "surface": "admin",
+            "targetType": "admin-resource",
+            "target": "KnowledgeBaseArticleResource",
+            "url": "/knowledge-base-articles",
+            "waitFor": "table",
+            "required": false,
+            "notes": "Capture seeded published and draft help articles once the runner app requires capell-app/knowledge-base.",
+            "useCase": "An author reviews docs articles, publication status, collection, feedback, and version state from Capell admin.",
+            "screenshotPath": "packages/knowledge-base/docs/screenshots/knowledge-base-articles-index.png"
+        },
+        {
+            "id": "knowledge-base-article-edit-version-history",
+            "title": "Knowledge Base article edit and version history.",
+            "package": "knowledge-base",
+            "surface": "admin",
+            "targetType": "admin-resource-record",
+            "target": "KnowledgeBaseArticleResource.edit",
+            "url": "/knowledge-base-articles/1/edit",
+            "waitFor": "form",
+            "required": false,
+            "notes": "Capture the shipped article edit flow and version-history relation manager once seeded article ids are stable in the runner app.",
+            "useCase": "An author edits an article and reviews prior versions before publishing the next revision.",
+            "screenshotPath": "packages/knowledge-base/docs/screenshots/knowledge-base-article-edit-version-history.png"
+        },
+        {
+            "id": "knowledge-base-public-index",
+            "title": "Knowledge Base public docs index.",
+            "package": "knowledge-base",
+            "surface": "frontend",
+            "targetType": "frontend-route",
+            "target": "capell-knowledge-base.index",
+            "url": "/docs",
+            "waitFor": "body",
+            "required": false,
+            "notes": "Capture seeded public collections and article navigation once the runner app requires capell-app/knowledge-base.",
+            "useCase": "A visitor browses help-centre collections from the public docs landing page.",
+            "screenshotPath": "packages/knowledge-base/docs/screenshots/knowledge-base-public-index.png"
+        },
+        {
+            "id": "knowledge-base-public-article",
+            "title": "Knowledge Base public article.",
+            "package": "knowledge-base",
+            "surface": "frontend",
+            "targetType": "frontend-route",
+            "target": "capell-knowledge-base.article",
+            "url": "/docs/getting-started/installing-capell",
+            "waitFor": "article",
+            "required": false,
+            "notes": "Capture a seeded public article with related content and feedback controls once the runner app requires capell-app/knowledge-base.",
+            "useCase": "A visitor reads a help article and can submit whether the answer was helpful.",
+            "screenshotPath": "packages/knowledge-base/docs/screenshots/knowledge-base-public-article.png"
+        }
+    ]
+}
