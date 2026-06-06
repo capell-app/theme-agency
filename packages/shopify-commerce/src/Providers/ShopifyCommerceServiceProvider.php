@@ -18,6 +18,7 @@ use Capell\ShopifyCommerce\Models\ShopifyProduct;
 use Capell\ShopifyCommerce\Models\ShopifyProductVariant;
 use Capell\ShopifyCommerce\Settings\ShopifyCommerceSettings;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Console\Scheduling\Schedule;
 use Spatie\LaravelPackageTools\Package;
 
 final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvider
@@ -59,7 +60,8 @@ final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvide
 
             $this->registerModels()
                 ->registerSettings()
-                ->registerProtectedTables();
+                ->registerProtectedTables()
+                ->registerScheduledSync();
         });
     }
 
@@ -108,6 +110,22 @@ final class ShopifyCommerceServiceProvider extends AbstractPackageServiceProvide
         CapellCore::registerProtectedTable('shopify_products');
         CapellCore::registerProtectedTable('shopify_product_variants');
         CapellCore::registerProtectedTable('shopify_customers');
+
+        return $this;
+    }
+
+    private function registerScheduledSync(): self
+    {
+        if (config('capell-shopify-commerce.scheduled_sync_enabled', true) !== true) {
+            return $this;
+        }
+
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
+            $schedule->command('capell-shopify-commerce:sync', ['--all' => true])
+                ->everyFifteenMinutes()
+                ->withoutOverlapping()
+                ->onOneServer();
+        });
 
         return $this;
     }
