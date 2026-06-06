@@ -154,21 +154,25 @@
             {
                 "path": "docs/screenshots/experiments-index.png",
                 "label": "Experiments admin index",
+                "alt": "Capell admin Experiments table showing the Homepage hero offer test with status, subject type, variants, goals, and allocation counts.",
                 "caption": "Review active and scheduled experiments with variant, goal, and allocation counts in the Capell admin."
             },
             {
                 "path": "docs/screenshots/experiment-variants-index.png",
                 "label": "Experiment variants",
+                "alt": "Capell admin Experiment Variants table showing control and guided demo variants with weights and active state.",
                 "caption": "Compare control and challenger variants with allocation weights and active state."
             },
             {
                 "path": "docs/screenshots/experiment-goals-index.png",
                 "label": "Experiment goals",
+                "alt": "Capell admin Experiment Goals table showing the demo request conversion goal with target and primary status.",
                 "caption": "Track primary conversion goals used for winner reporting."
             },
             {
                 "path": "docs/screenshots/experiment-audience-rules-index.png",
                 "label": "Audience rules",
+                "alt": "Capell admin Experiment Audience Rules table showing a path rule using the Starts with operator.",
                 "caption": "Confirm which visitors qualify for an experiment before launch."
             }
         ],
