@@ -40,7 +40,7 @@ class UpdatePreferenceCenterAction
                 return null;
             }
 
-            $subscriber->segments()->sync($this->validSegmentIds((int) $subscriber->site_id, $data->segmentIds));
+            $subscriber->segments()->sync($this->validSegmentIds((int) $subscriber->site_id, $data->segmentHandles));
             $subscriber->unsetRelation('segments');
 
             return ResolvePreferenceCenterAction::make()->fromSubscriber($subscriber);
@@ -48,15 +48,15 @@ class UpdatePreferenceCenterAction
     }
 
     /**
-     * @param  list<int>  $segmentIds
+     * @param  list<string>  $segmentHandles
      * @return list<int>
      */
-    private function validSegmentIds(int $siteId, array $segmentIds): array
+    private function validSegmentIds(int $siteId, array $segmentHandles): array
     {
         $validSegmentIds = Segment::query()
             ->where('site_id', $siteId)
             ->where('is_active', true)
-            ->whereIn('id', $segmentIds)
+            ->whereIn('handle', $segmentHandles)
             ->pluck('id')
             ->map(static fn (mixed $segmentId): int => (int) $segmentId)
             ->values()

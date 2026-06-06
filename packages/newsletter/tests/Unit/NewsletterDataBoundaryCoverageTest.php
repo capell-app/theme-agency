@@ -45,7 +45,7 @@ it('keeps newsletter subscriber and provider data typed across boundaries', func
         canReceiveNewsletter: true,
         segments: [new PreferenceCenterSegmentData(5, 'Product updates', 'product-updates', true)],
     );
-    $preferenceUpdate = new PreferenceCenterUpdateData(segmentIds: [5]);
+    $preferenceUpdate = new PreferenceCenterUpdateData(segmentHandles: ['product-updates']);
 
     expect($subscriber->status->isSendable())->toBeTrue()
         ->and(SubscriberStatus::Pending->isSendable())->toBeFalse()
@@ -55,7 +55,7 @@ it('keeps newsletter subscriber and provider data typed across boundaries', func
         ->and(new ProviderAudienceData('aud-1', 'Main'))->remoteId->toBe('aud-1')
         ->and(new ProviderSyncResultData(false, errorMessage: 'No'))->errorMessage->toBe('No')
         ->and($preferenceCenter->segments[0]->selected)->toBeTrue()
-        ->and($preferenceUpdate->segmentIds)->toBe([5])
+        ->and($preferenceUpdate->segmentHandles)->toBe(['product-updates'])
         ->and(new ProviderWebhookEventData('ben@example.com', SubscriberStatus::Unsubscribed, 'unsubscribe'))->eventType
         ->toBe('unsubscribe');
 });

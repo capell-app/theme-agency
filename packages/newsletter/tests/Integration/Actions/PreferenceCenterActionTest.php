@@ -116,9 +116,9 @@ it('updates preference center segment selections without accepting inactive or c
 
     $token = CreatePreferenceCenterTokenAction::run($subscriber);
     $preferences = UpdatePreferenceCenterAction::run($token, new PreferenceCenterUpdateData([
-        (int) $allowedSegment->getKey(),
-        (int) $inactiveSegment->getKey(),
-        (int) $otherSiteSegment->getKey(),
+        (string) $allowedSegment->handle,
+        (string) $inactiveSegment->handle,
+        (string) $otherSiteSegment->handle,
     ]));
     $preferenceData = newsletterPreferenceData($preferences);
 
@@ -155,7 +155,7 @@ it('exposes a public preference center route for reusable newsletter tokens', fu
         ->assertDontSee('signed', false);
 
     $this->post(route('capell-newsletter.preferences.update', ['token' => $token]), [
-        'segments' => [$unselectedSegment->getKey()],
+        'segments' => [$unselectedSegment->handle],
     ])->assertRedirect(route('capell-newsletter.preferences.show', ['token' => $token]));
 
     expect($subscriber->refresh()->segments()->pluck('newsletter_segments.id')->all())->toBe([
