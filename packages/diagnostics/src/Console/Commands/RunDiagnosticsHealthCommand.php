@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Capell\Diagnostics\Console\Commands;
 
 use Capell\Diagnostics\Actions\Health\ExportExtensionHealthReportCsvAction;
+use Capell\Diagnostics\Actions\Health\BuildExtensionHealthTrendAction;
+use Capell\Diagnostics\Actions\Health\RecordExtensionHealthReportAction;
 use Capell\Diagnostics\Actions\Health\RunExtensionHealthChecksAction;
 use Capell\Diagnostics\Data\Health\ExtensionHealthReportData;
+use Capell\Diagnostics\Data\Health\ExtensionHealthTrendData;
 use Capell\Diagnostics\Data\Health\HealthCheckResultData;
 use Illuminate\Console\Command;
 use Override;
@@ -35,9 +38,11 @@ final class RunDiagnosticsHealthCommand extends Command
         }
 
         $report = RunExtensionHealthChecksAction::run();
+        $trend = BuildExtensionHealthTrendAction::run($report);
+        RecordExtensionHealthReportAction::run($report);
 
         if ((bool) $this->option('json')) {
-            $this->output->writeln(json_encode($this->payloadFor($report), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR));
+            $this->output->writeln(json_encode($this->payloadFor($report, $trend), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR));
 
             return $this->exitCodeFor($report);
         }
@@ -58,6 +63,14 @@ final class RunDiagnosticsHealthCommand extends Command
             'failed' => $report->failedCount,
         ]));
 
+        if ($trend->previousScore !== null) {
+            $this->components->info((string) __('capell-diagnostics::package.health_command_trend', [
+                'previousStatus' => $trend->previousStatus,
+                'previousScore' => $trend->previousScore,
+                'delta' => $trend->scoreDelta,
+            ]));
+        }
+
         if ($report->checks->count() > 0) {
             $this->table([
                 (string) __('capell-diagnostics::package.health_command_column_package'),
@@ -71,9 +84,9 @@ final class RunDiagnosticsHealthCommand extends Command
     }
 
     /**
-     * @return array{status: string, score: int, worstSeverity: string|null, declared: int, implemented: int, stub: int, broken: int, executed: int, passed: int, failed: int, checks: list<array{package: string, key: string, label: string, class: string, severity: string, implementation: string, passed: bool|null, message: string|null}>}
+     * @return array{status: string, score: int, worstSeverity: string|null, previousStatus: string|null, previousScore: int|null, scoreDelta: int|null, previousRecordedAt: string|null, declared: int, implemented: int, stub: int, broken: int, executed: int, passed: int, failed: int, checks: list<array{package: string, key: string, label: string, class: string, severity: string, implementation: string, passed: bool|null, message: string|null}>}
      */
-    private function payloadFor(ExtensionHealthReportData $report): array
+    private function payloadFor(ExtensionHealthReportData $report, ExtensionHealthTrendData $trend): array
     {
         /** @var list<array{package: string, key: string, label: string, class: string, severity: string, implementation: string, passed: bool|null, message: string|null}> $checks */
         $checks = $report->checks
@@ -95,6 +108,10 @@ final class RunDiagnosticsHealthCommand extends Command
             'status' => $report->overallStatus,
             'score' => $report->healthScore,
             'worstSeverity' => $report->worstSeverity,
+            'previousStatus' => $trend->previousStatus,
+            'previousScore' => $trend->previousScore,
+            'scoreDelta' => $trend->scoreDelta,
+            'previousRecordedAt' => $trend->recordedAt,
             'declared' => $report->declaredCount,
             'implemented' => $report->implementedCount,
             'stub' => $report->stubCount,

@@ -88,7 +88,11 @@
     "database": {
         "migrations": true,
         "settings": false,
-        "requiredTables": ["command_palette_runs", "queue_monitors"]
+        "requiredTables": [
+            "command_palette_runs",
+            "queue_monitors",
+            "diagnostics_health_snapshots"
+        ]
     },
     "commands": {
         "install": null,
@@ -110,6 +114,8 @@
         "buildQueueHealthQuery": "Capell\\Diagnostics\\Actions\\DashboardReports\\BuildQueueHealthQueryAction",
         "buildQueueOperationsStats": "Capell\\Diagnostics\\Actions\\DashboardReports\\BuildQueueOperationsStatsAction",
         "ensureDiagnosticsPermissions": "Capell\\Diagnostics\\Actions\\EnsureDiagnosticsPermissionsAction",
+        "buildExtensionHealthTrend": "Capell\\Diagnostics\\Actions\\Health\\BuildExtensionHealthTrendAction",
+        "recordExtensionHealthReport": "Capell\\Diagnostics\\Actions\\Health\\RecordExtensionHealthReportAction",
         "runExtensionHealthChecks": "Capell\\Diagnostics\\Actions\\Health\\RunExtensionHealthChecksAction",
         "inspectPackageOwnership": "Capell\\Diagnostics\\Actions\\InspectPackageOwnershipAction"
     },
@@ -130,7 +136,8 @@
         "diagnostics-public-output-safety",
         "diagnostics-infrastructure-status",
         "diagnostics-package-ownership",
-        "diagnostics-expensive-scan-cache"
+        "diagnostics-expensive-scan-cache",
+        "diagnostics-health-history"
     ],
     "performance": {
         "frontendRenderBudgetMs": 0,
