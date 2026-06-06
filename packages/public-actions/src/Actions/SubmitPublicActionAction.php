@@ -181,6 +181,12 @@ final class SubmitPublicActionAction
      */
     private function cappedUnschemedPayload(PublicAction $action, array $input): array
     {
+        if (config('capell-public-actions.allow_schemaless_payloads', false) !== true) {
+            throw ValidationException::withMessages([
+                'payload' => __('capell-public-actions::generic.schema_required'),
+            ]);
+        }
+
         $candidate = Arr::except($input, [
             '_token',
             '_method',

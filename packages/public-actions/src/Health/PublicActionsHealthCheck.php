@@ -52,6 +52,7 @@ final class PublicActionsHealthCheck implements ChecksExtensionHealth
             $check->webhookSecurityCheck(),
             $check->providerPresetsCheck(),
             $check->formBuilderIntegrationCheck(),
+            $check->schemalessPayloadCheck(),
         ]);
     }
 
@@ -138,6 +139,22 @@ final class PublicActionsHealthCheck implements ChecksExtensionHealth
             remediation: $passed
                 ? null
                 : 'Ensure the package config publishes form_builder.mappings and the bridge listener is autoloadable.',
+        );
+    }
+
+    public function schemalessPayloadCheck(): DoctorCheckResultData
+    {
+        $allowsSchemalessPayloads = config('capell-public-actions.allow_schemaless_payloads', false) === true;
+
+        return new DoctorCheckResultData(
+            label: 'Schemaless public submissions require explicit operator opt-in',
+            passed: ! $allowsSchemalessPayloads,
+            message: $allowsSchemalessPayloads
+                ? 'Schemaless public submissions are enabled and accepted up to the configured hard byte cap.'
+                : 'Public submissions without payload_schema.fields are rejected by default.',
+            remediation: $allowsSchemalessPayloads
+                ? 'Set capell-public-actions.allow_schemaless_payloads to false unless this public endpoint explicitly needs schemaless payload intake.'
+                : null,
         );
     }
 

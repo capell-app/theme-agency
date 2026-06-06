@@ -10,6 +10,7 @@ return [
     'webhook_timeout_seconds' => 10,
     'allow_insecure_webhook_urls' => false,
     'allow_private_webhook_urls' => false,
+    'allow_schemaless_payloads' => false,
     'submit_rate_limit' => 'public-actions-submit',
     'api_rate_limit' => 'public-actions-api',
     'form_builder' => [
