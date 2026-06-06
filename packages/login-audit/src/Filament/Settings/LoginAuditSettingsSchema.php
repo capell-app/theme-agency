@@ -49,6 +49,27 @@ final class LoginAuditSettingsSchema implements HasSchema
                         ->minValue(0)
                         ->suffix(__('capell-login-audit::settings.seconds')),
                     HelperText::apply(
+                        Toggle::make('enable_suspicious_detection')
+                            ->label(__('capell-login-audit::settings.enable_suspicious_detection')),
+                        'capell-login-audit::settings.enable_suspicious_detection_helper',
+                    ),
+                    TextInput::make('failed_login_threshold')
+                        ->label(__('capell-login-audit::settings.failed_login_threshold'))
+                        ->helperText(__('capell-login-audit::settings.failed_login_threshold_helper'))
+                        ->integer()
+                        ->minValue(2),
+                    TextInput::make('failed_login_window_minutes')
+                        ->label(__('capell-login-audit::settings.failed_login_window_minutes'))
+                        ->helperText(__('capell-login-audit::settings.failed_login_window_minutes_helper'))
+                        ->integer()
+                        ->minValue(1)
+                        ->suffix(__('capell-login-audit::settings.minutes')),
+                    HelperText::apply(
+                        Toggle::make('check_unusual_login_times')
+                            ->label(__('capell-login-audit::settings.check_unusual_login_times')),
+                        'capell-login-audit::settings.check_unusual_login_times_helper',
+                    ),
+                    HelperText::apply(
                         Toggle::make('enable_user_resource_bridge')
                             ->label(__('capell-login-audit::settings.enable_user_resource_bridge')),
                         'capell-login-audit::settings.enable_user_resource_bridge_helper',

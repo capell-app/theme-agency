@@ -12,6 +12,7 @@ use Rappasoft\LaravelAuthenticationLog\Listeners\LogoutListener;
 use Rappasoft\LaravelAuthenticationLog\Listeners\OtherDeviceLogoutListener;
 use Rappasoft\LaravelAuthenticationLog\Notifications\FailedLogin;
 use Rappasoft\LaravelAuthenticationLog\Notifications\NewDevice;
+use Rappasoft\LaravelAuthenticationLog\Notifications\SuspiciousActivity;
 
 return [
     // The database table name
@@ -57,6 +58,23 @@ return [
             // The Notification class to send
             'template' => FailedLogin::class,
         ],
+        'suspicious-activity' => [
+            // Send the SuspiciousActivity notification
+            'enabled' => false,
+
+            // The Notification class to send
+            'template' => SuspiciousActivity::class,
+        ],
+    ],
+
+    'suspicious' => [
+        'enabled' => true,
+        'failed_login_threshold' => 5,
+        'failed_login_window_minutes' => 60,
+        'failed_device_window_hours' => 24,
+        'location_window_minutes' => 60,
+        'check_unusual_times' => false,
+        'usual_hours' => [9, 10, 11, 12, 13, 14, 15, 16, 17],
     ],
 
     // When the clean-up command is run, delete old logs greater than `purge` days

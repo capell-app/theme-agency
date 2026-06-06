@@ -9,13 +9,18 @@ use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Core\Support\Settings\SettingsSchemaRegistry;
+use Capell\LoginAudit\Actions\ApplyLoginAuditSettingsAction;
 use Capell\LoginAudit\Filament\Settings\LoginAuditSettingsSchema;
+use Capell\LoginAudit\Listeners\DetectSuspiciousLoginFromAuthEvent;
 use Capell\LoginAudit\Http\Middleware\UserActivityMiddleware;
 use Capell\LoginAudit\Models\LoginAudit;
 use Capell\LoginAudit\Observers\LoginAuditObserver;
 use Capell\LoginAudit\Policies\LoginAuditPolicy;
 use Capell\LoginAudit\Settings\LoginAuditSettings;
+use Illuminate\Auth\Events\Failed;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Override;
@@ -56,6 +61,8 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
                 ->registerModels()
                 ->registerPolicies()
                 ->registerSettings()
+                ->syncSettings()
+                ->registerEventListeners()
                 ->registerProtectedTables()
                 ->registerMiddlewareAliases();
         });
@@ -110,6 +117,22 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
         return $this;
     }
 
+    private function syncSettings(): self
+    {
+        ApplyLoginAuditSettingsAction::run();
+        $this->syncVendorAuthenticationLogConfiguration();
+
+        return $this;
+    }
+
+    private function registerEventListeners(): self
+    {
+        Event::listen(Login::class, DetectSuspiciousLoginFromAuthEvent::class);
+        Event::listen(Failed::class, DetectSuspiciousLoginFromAuthEvent::class);
+
+        return $this;
+    }
+
     private function registerProtectedTables(): self
     {
         CapellCore::registerProtectedTable(fn (): string => config('login-audit.table_name', 'login_audit'));
@@ -131,6 +154,7 @@ class LoginAuditServiceProvider extends AbstractPackageServiceProvider
         Config::set('authentication-log.events', config('login-audit.events', []));
         Config::set('authentication-log.listeners', config('login-audit.listeners', []));
         Config::set('authentication-log.notifications', config('login-audit.notifications', []));
+        Config::set('authentication-log.suspicious', config('login-audit.suspicious', []));
         Config::set('authentication-log.purge', config('login-audit.purge', 365));
         Config::set('authentication-log.behind_cdn', config('login-audit.behind_cdn', false));
     }
