@@ -39,6 +39,10 @@ Register provider adapters through the package registries:
 
 Provider output is escaped in Blade. Keep labels, descriptions, URLs, and profile values customer-facing, and do not include internal ids, tokens, admin URLs, selectors, or authoring metadata.
 
+## Suite Boundaries
+
+Customer Portal aggregates self-service links and dashboard cards; owning packages keep their domain operations. Payments should issue invoice, payment-method, checkout, and subscription URLs through its portal providers. Document Lifecycle and gated-resource packages should issue signed download or entitlement URLs through their own providers. Customer Portal renders those customer-facing items without importing billing, document, or entitlement internals.
+
 ## Support Workflow
 
 Customers can submit support requests from the dashboard. The package stores request subject, message, requester email, context, status, and priority in encrypted columns where appropriate. Submissions emit `PortalSupportRequestSubmitted`; status transitions emit `PortalSupportRequestStatusChanged` only when the status changes.

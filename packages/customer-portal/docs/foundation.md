@@ -25,4 +25,6 @@ The Customer Portal package now includes authenticated frontend routes for a min
 
 Owning packages register provider adapters through the Customer Portal registries. Access Gate, Payments, Document Lifecycle, Events, and Newsletter expose their own portal feed adapters while Customer Portal owns authentication, account/profile/preference storage, dashboard aggregation, and support request workflows.
 
+Billing, subscription, invoice, entitlement, and signed-download operations stay with the owning package. Customer Portal renders their contributed dashboard or self-service items and does not import payment, document, or gated-resource internals.
+
 Public-output safety tests should expand as additional Blade or frontend assets are introduced.
