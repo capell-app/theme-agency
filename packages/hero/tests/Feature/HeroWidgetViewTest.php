@@ -83,6 +83,57 @@ it('renders page translation hero content while ignoring nested page variables',
         ->toContain('Build Platform Architecture for Capell without touching :page.');
 });
 
+it('sanitizes author-provided page hero html before public rendering', function (): void {
+    $language = Language::factory()->english()->create();
+    $theme = Theme::factory()->defaultMeta()->create();
+    $site = Site::factory()
+        ->language($language)
+        ->theme($theme)
+        ->withTranslations($language, ['title' => 'Capell'])
+        ->create();
+
+    $page = Page::factory()
+        ->site($site)
+        ->withTranslations($language, [
+            'title' => 'Safe Hero',
+            'content' => '<p>Body content.</p>',
+            'meta' => [
+                'hero' => '<p>Trusted <strong>formatting</strong>.</p><script>alert("xss")</script><img src=x onerror="alert(1)"><a href="javascript:alert(2)">Unsafe link</a>',
+                'hero_title' => 'Safe Hero',
+                'slug' => 'safe-hero',
+            ],
+        ])
+        ->create();
+
+    $page->load('translation');
+    $site->load('translation');
+
+    $widget = Widget::factory()->create([
+        'key' => 'hero',
+        'meta' => [
+            'component' => WidgetComponentEnum::Hero->value,
+            'color' => 'light',
+            'content_width' => 'balanced',
+        ],
+    ]);
+    $widget->setRelation('assets', new EloquentCollection);
+
+    resolve(FrontendState::class)
+        ->withLanguage($language)
+        ->withSite($site)
+        ->withTheme($theme)
+        ->withPage($page);
+
+    $html = renderHeroWidgetHtml($widget);
+
+    expect($html)
+        ->toContain('<strong>formatting</strong>')
+        ->toContain('Safe Hero')
+        ->not->toContain('<script')
+        ->not->toContain('onerror')
+        ->not->toContain('javascript:');
+});
+
 it('skips empty hero widgets before exposing public markup', function (): void {
     $language = Language::factory()->english()->create();
     $theme = Theme::factory()->defaultMeta()->create();
