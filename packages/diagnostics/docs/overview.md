@@ -159,4 +159,4 @@ Deployment should read [screenshots.json](screenshots.json), install the package
 - Queue health page.
 - Health widgets on the admin dashboard.
 
-The committed dummy-data screenshots live under `packages/diagnostics/docs/screenshots`; their HTML fixture lives at `packages/diagnostics/docs/assets/screenshots/diagnostics-dummy-screens.html`.
+The committed runner screenshots live under `packages/diagnostics/docs/screenshots`. Keep operational data synthetic so Marketplace media never exposes real job names, customer payloads, or exception details.
