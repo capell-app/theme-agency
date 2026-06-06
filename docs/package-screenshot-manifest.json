@@ -5093,6 +5093,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-agency"
         },
         {
@@ -5112,6 +5113,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-agency"
         },
         {
@@ -5131,6 +5133,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-agency"
         },
         {
@@ -5150,6 +5153,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-agency"
         },
         {
@@ -5169,6 +5173,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-agency"
         },
         {
@@ -5188,6 +5193,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-agency"
         },
         {
@@ -5207,6 +5213,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-agency"
         },
         {
@@ -5226,6 +5233,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-agency"
         },
         {
@@ -5245,6 +5253,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-agency"
         },
         {
@@ -5264,6 +5273,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-agency"
         },
         {
@@ -5321,6 +5331,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-commerce"
         },
         {
@@ -5340,6 +5351,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-commerce"
         },
         {
@@ -5359,6 +5371,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-commerce"
         },
         {
@@ -5378,6 +5391,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-commerce"
         },
         {
@@ -5397,6 +5411,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-commerce"
         },
         {
@@ -5416,6 +5431,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-commerce"
         },
         {
@@ -5435,6 +5451,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-commerce"
         },
         {
@@ -5454,6 +5471,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-commerce"
         },
         {
@@ -5473,6 +5491,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-commerce"
         },
         {
@@ -5492,6 +5511,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-commerce"
         },
         {
@@ -5549,6 +5569,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-corporate"
         },
         {
@@ -5568,6 +5589,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-corporate"
         },
         {
@@ -5587,6 +5609,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-corporate"
         },
         {
@@ -5606,6 +5629,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-corporate"
         },
         {
@@ -5625,6 +5649,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-corporate"
         },
         {
@@ -5644,6 +5669,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-corporate"
         },
         {
@@ -5663,6 +5689,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-corporate"
         },
         {
@@ -5682,6 +5709,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-corporate"
         },
         {
@@ -5701,6 +5729,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-corporate"
         },
         {
@@ -5720,6 +5749,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-corporate"
         },
         {
@@ -5758,6 +5788,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-education"
         },
         {
@@ -5777,6 +5808,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-education"
         },
         {
@@ -5796,6 +5828,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-education"
         },
         {
@@ -5815,6 +5848,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-education"
         },
         {
@@ -5834,6 +5868,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-education"
         },
         {
@@ -5853,6 +5888,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-education"
         },
         {
@@ -5872,6 +5908,7 @@
             "colorSchemes": [
                 "light"
             ],
+            "user": false,
             "composerName": "capell-app/theme-education"
         },
         {

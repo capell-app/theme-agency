@@ -39,7 +39,8 @@
             "waitFor": ".education-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "education-homepage-layout",
@@ -57,7 +58,8 @@
             "waitFor": ".education-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "education-course-catalogue-layout",
@@ -75,7 +77,8 @@
             "waitFor": ".education-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "education-instructors-layout",
@@ -93,7 +96,8 @@
             "waitFor": ".education-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "education-events-layout",
@@ -111,7 +115,8 @@
             "waitFor": ".education-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "education-enrolment-layout",
@@ -129,7 +134,8 @@
             "waitFor": ".education-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "education-resource-library-layout",
@@ -147,7 +153,8 @@
             "waitFor": ".education-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "theme-preview-url-output",

@@ -124,6 +124,17 @@ function selectedPackageNames(repoPath, only) {
         .sort()
 }
 
+function filtersForPackage(packageName, only) {
+    if (only.length === 0) {
+        return [packageName]
+    }
+
+    return only.filter(
+        (filter) =>
+            filter === packageName || filter.startsWith(`${packageName}:`),
+    )
+}
+
 function packageFrontendCssFiles(repoPath, packageName) {
     const cssPath = path.join(repoPath, 'packages', packageName, 'resources', 'css')
 
@@ -179,14 +190,14 @@ function injectPackageFrontendCss(repoPath, appPath, only) {
     )
 }
 
-function runPackageCommands(repoPath, appPath, only) {
+function runPackageCommands(repoPath, appPath, only, packages = null) {
     if (!appPath) {
         return
     }
 
     const packagesPath = path.join(repoPath, 'packages')
 
-    for (const packageName of selectedPackageNames(repoPath, only)) {
+    for (const packageName of packages ?? selectedPackageNames(repoPath, only)) {
         const manifestPath = path.join(packagesPath, packageName, 'capell.json')
 
         if (!fs.existsSync(manifestPath)) {
@@ -230,12 +241,32 @@ function runRunner(runnerPath, runnerArgs, repoPath) {
         cwd: runnerPath,
         env: {
             ...process.env,
+            CAPELL_INSIGHTS_CONSENT_BANNER_ENABLED:
+                process.env.CAPELL_INSIGHTS_CONSENT_BANNER_ENABLED ?? 'false',
             CAPELL_PACKAGES_REPO: repoPath,
         },
         stdio: 'inherit',
     })
 
     process.exitCode = result.status ?? 1
+}
+
+function runnerArgsForPackage(repoPath, appPath, only, packageName, skipBuild) {
+    const args = ['src/cli.mjs', '--repo', repoPath]
+
+    if (appPath) {
+        args.push('--app', path.resolve(appPath))
+    }
+
+    for (const filter of filtersForPackage(packageName, only)) {
+        args.push('--only', filter)
+    }
+
+    if (skipBuild) {
+        args.push('--skip-build')
+    }
+
+    return args
 }
 
 function preflightRunnerArgs(repoPath, appPath) {
@@ -291,26 +322,31 @@ function main() {
         return
     }
 
-    const runnerArgs = ['src/cli.mjs', '--repo', repoPath]
-
-    if (appPath) {
-        runnerArgs.push('--app', path.resolve(appPath))
-    }
-
-    for (const packageName of only) {
-        runnerArgs.push('--only', packageName)
-    }
-
     if (argv.includes('--dry-run')) {
-        runnerArgs.push('--dry-run')
-    }
+        const runnerArgs = ['src/cli.mjs', '--repo', repoPath]
 
-    if (argv.includes('--skip-build')) {
-        runnerArgs.push('--skip-build')
+        if (appPath) {
+            runnerArgs.push('--app', path.resolve(appPath))
+        }
+
+        for (const packageName of only) {
+            runnerArgs.push('--only', packageName)
+        }
+
+        runnerArgs.push('--dry-run')
+
+        if (argv.includes('--skip-build')) {
+            runnerArgs.push('--skip-build')
+        }
+
+        runRunner(runnerPath, runnerArgs, repoPath)
+
+        return
     }
 
     const resolvedAppPath = appPath ? path.resolve(appPath) : ''
     const shouldSkipBuild = argv.includes('--skip-build')
+    const packageNames = selectedPackageNames(repoPath, only)
 
     injectPackageFrontendCss(repoPath, resolvedAppPath, only)
 
@@ -326,17 +362,29 @@ function main() {
         }
     }
 
-    runPackageCommands(repoPath, resolvedAppPath, only)
+    for (const packageName of packageNames) {
+        runPackageCommands(repoPath, resolvedAppPath, only, [packageName])
 
-    if (process.exitCode) {
-        return
+        if (process.exitCode) {
+            return
+        }
+
+        runRunner(
+            runnerPath,
+            runnerArgsForPackage(
+                repoPath,
+                resolvedAppPath,
+                only,
+                packageName,
+                true,
+            ),
+            repoPath,
+        )
+
+        if (process.exitCode) {
+            return
+        }
     }
-
-    if (!shouldSkipBuild && resolvedAppPath) {
-        runnerArgs.push('--skip-build')
-    }
-
-    runRunner(runnerPath, runnerArgs, repoPath)
 }
 
 main()

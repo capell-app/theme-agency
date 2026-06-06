@@ -57,7 +57,8 @@
             "waitFor": ".retail-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "commerce-homepage-layout",
@@ -75,7 +76,8 @@
             "waitFor": ".retail-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "commerce-collection-layout",
@@ -93,7 +95,8 @@
             "waitFor": ".retail-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "commerce-product-layout",
@@ -111,7 +114,8 @@
             "waitFor": ".retail-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "commerce-lookbook-layout",
@@ -129,7 +133,8 @@
             "waitFor": ".retail-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "commerce-buying-guide-layout",
@@ -147,7 +152,8 @@
             "waitFor": ".retail-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "commerce-newsletter-layout",
@@ -165,7 +171,8 @@
             "waitFor": ".retail-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "commerce-store-event-layout",
@@ -183,7 +190,8 @@
             "waitFor": ".retail-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "commerce-search-layout",
@@ -201,7 +209,8 @@
             "waitFor": ".retail-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "commerce-campaign-layout",
@@ -219,7 +228,8 @@
             "waitFor": ".retail-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         }
     ]
 }

@@ -57,7 +57,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "agency-homepage-layout",
@@ -75,7 +76,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "agency-services-layout",
@@ -93,7 +95,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "agency-portfolio-layout",
@@ -111,7 +114,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "agency-case-study-layout",
@@ -129,7 +133,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "agency-insights-layout",
@@ -147,7 +152,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "agency-event-landing-layout",
@@ -165,7 +171,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "agency-lead-form-layout",
@@ -183,7 +190,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "agency-campaign-layout",
@@ -201,7 +209,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "agency-search-layout",
@@ -219,7 +228,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         }
     ]
 }

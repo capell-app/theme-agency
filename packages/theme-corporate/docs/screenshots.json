@@ -57,7 +57,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "corporate-homepage-layout",
@@ -75,7 +76,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "corporate-services-layout",
@@ -93,7 +95,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "corporate-governance-layout",
@@ -111,7 +114,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "corporate-resources-layout",
@@ -129,7 +133,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "corporate-article-layout",
@@ -147,7 +152,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "corporate-contact-layout",
@@ -165,7 +171,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "corporate-locations-layout",
@@ -183,7 +190,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "corporate-search-layout",
@@ -201,7 +209,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "corporate-investor-event-layout",
@@ -219,7 +228,8 @@
             "waitFor": ".site-theme-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         }
     ]
 }
