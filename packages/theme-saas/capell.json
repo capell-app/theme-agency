@@ -89,11 +89,6 @@
                 "caption": "Theme SaaS frontend render"
             },
             {
-                "path": "docs/screenshots/frontend-page-rendered-with-saas-theme-dark.png",
-                "alt": "Theme SaaS frontend page rendered with the SaaS theme dark capture",
-                "caption": "Theme SaaS frontend render dark"
-            },
-            {
                 "path": "docs/screenshots/theme-preset-selection-showing-saas.png",
                 "alt": "Theme SaaS preset selection showing SaaS presets",
                 "caption": "Theme SaaS preset selection"

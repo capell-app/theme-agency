@@ -217,11 +217,6 @@
                 "path": "docs/screenshots/campaign-dashboard-widgets.png",
                 "alt": "Campaign Studio dashboard reporting widgets",
                 "caption": "Track top campaigns and landing pages from the dashboard"
-            },
-            {
-                "path": "docs/screenshots/frontend-landing-page-with-campaign-widgets.png",
-                "alt": "Published campaign landing page rendered on the storefront",
-                "caption": "Campaign widgets render natively inside published pages"
             }
         ],
         "categories": ["admin", "frontend", "growth"]

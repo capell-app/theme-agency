@@ -93,16 +93,6 @@
                 "caption": "Foundation Theme settings screen, dark mode"
             },
             {
-                "path": "docs/screenshots/frontend-page-using-the-foundation-theme.png",
-                "alt": "Frontend page rendered with Foundation Theme in light mode.",
-                "caption": "Frontend page using Foundation Theme"
-            },
-            {
-                "path": "docs/screenshots/frontend-page-using-the-foundation-theme-dark.png",
-                "alt": "Frontend page rendered with Foundation Theme in dark mode.",
-                "caption": "Frontend page using Foundation Theme, dark mode"
-            },
-            {
                 "path": "docs/screenshots/generated-tailwind-asset-output-review.png",
                 "alt": "Generated Tailwind asset output review in light mode.",
                 "caption": "Generated Tailwind asset output review"
