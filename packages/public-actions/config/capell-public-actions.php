@@ -7,6 +7,8 @@ return [
     'api_route_prefix' => 'api/public-actions',
     'queue' => 'default',
     'dispatch_retry_seconds' => 60,
+    'dispatch_backoff_seconds' => [60, 300, 900],
+    'dispatch_retry_jitter_seconds' => 15,
     'webhook_timeout_seconds' => 10,
     'allow_insecure_webhook_urls' => false,
     'allow_private_webhook_urls' => false,

@@ -41,6 +41,32 @@ final class DispatchPublicActionDestinationJob implements ShouldQueue
 
     private function retryDelaySeconds(): int
     {
+        $baseDelay = $this->backoffDelaySeconds();
+        $jitter = config('capell-public-actions.dispatch_retry_jitter_seconds', 15);
+        $jitterSeconds = is_numeric($jitter) && (int) $jitter > 0
+            ? random_int(0, (int) $jitter)
+            : 0;
+
+        return $baseDelay + $jitterSeconds;
+    }
+
+    private function backoffDelaySeconds(): int
+    {
+        $curve = config('capell-public-actions.dispatch_backoff_seconds');
+
+        if (is_array($curve)) {
+            $delays = array_values(array_filter(
+                $curve,
+                static fn (mixed $delay): bool => is_numeric($delay) && (int) $delay > 0,
+            ));
+
+            if ($delays !== []) {
+                $index = min(max(0, $this->attempts() - 1), count($delays) - 1);
+
+                return (int) $delays[$index];
+            }
+        }
+
         $delay = config('capell-public-actions.dispatch_retry_seconds', 60);
 
         return is_numeric($delay) && (int) $delay > 0 ? (int) $delay : 60;
