@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 return [
+    'expensive_scan_cache_ttl_seconds' => 300,
+
     'queue_monitor' => [
         'retention_days' => 14,
         'queues' => [

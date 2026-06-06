@@ -129,12 +129,13 @@
         "diagnostics-cross-package-install-health",
         "diagnostics-public-output-safety",
         "diagnostics-infrastructure-status",
-        "diagnostics-package-ownership"
+        "diagnostics-package-ownership",
+        "diagnostics-expensive-scan-cache"
     ],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
-        "cacheTags": [],
+        "cacheTags": ["diagnostics"],
         "cacheSafety": {
             "cacheable": false,
             "variesBy": [],
