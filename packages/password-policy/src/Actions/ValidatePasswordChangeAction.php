@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Capell\PasswordPolicy\Actions;
 
+use Capell\Core\Support\Database\RuntimeSchemaState;
 use Capell\PasswordPolicy\Data\PasswordChangeData;
 use Capell\PasswordPolicy\Support\PasswordPolicySettingsResolver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
@@ -83,7 +83,7 @@ class ValidatePasswordChangeAction
 
         $passwordHashes = collect([(string) $user->getAttribute('password')]);
 
-        if (Schema::hasTable('password_policy_password_histories')) {
+        if (resolve(RuntimeSchemaState::class)->hasTable('password_policy_password_histories')) {
             $historyHashes = DB::table('password_policy_password_histories')
                 ->where('user_id', $user->getKey())
                 ->latest('id')

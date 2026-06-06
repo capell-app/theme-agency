@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Capell\PasswordPolicy\Actions;
 
+use Capell\Core\Support\Database\RuntimeSchemaState;
 use Capell\PasswordPolicy\Data\PasswordSecurityPostureReportData;
 use Capell\PasswordPolicy\Filament\Pages\ForcedPasswordChangePage;
 use Capell\PasswordPolicy\Settings\PasswordPolicySettings;
-use Illuminate\Support\Facades\Schema;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class BuildPasswordSecurityPostureReportAction
@@ -27,16 +27,18 @@ final class BuildPasswordSecurityPostureReportAction
             passwordHistoryEnabled: $settings->password_history_enabled,
             compromisedPasswordChecksEnabled: $settings->compromised_password_checks_enabled,
             userColumnsInstalled: $this->userColumnsInstalled(),
-            historyTableInstalled: Schema::hasTable('password_policy_password_histories'),
+            historyTableInstalled: resolve(RuntimeSchemaState::class)->hasTable('password_policy_password_histories'),
             forcedChangeUrls: $this->forcedChangeUrls($panelIds),
         );
     }
 
     private function userColumnsInstalled(): bool
     {
-        return Schema::hasTable('users')
-            && Schema::hasColumn('users', 'password_changed_at')
-            && Schema::hasColumn('users', 'must_change_password');
+        $schema = resolve(RuntimeSchemaState::class);
+
+        return $schema->hasTable('users')
+            && $schema->hasColumn('users', 'password_changed_at')
+            && $schema->hasColumn('users', 'must_change_password');
     }
 
     /**
