@@ -11,6 +11,10 @@ return [
     'route_prefix' => 'portal',
     'middleware' => ['web', 'auth'],
     'site_id' => null,
+    'dashboard_items_per_provider_limit' => 6,
+    'dashboard_items_limit' => 12,
+    'self_service_items_per_provider_limit' => 8,
+    'self_service_items_limit' => 20,
     'preferences' => [
         'email_updates' => [
             'label' => 'capell-customer-portal::generic.frontend.preference_email_updates',

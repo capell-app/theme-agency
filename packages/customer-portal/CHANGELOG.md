@@ -6,6 +6,7 @@ All notable changes to `capell-app/customer-portal` will be documented in this f
 
 ### 2026-06-06
 
+- Added configurable per-provider and global caps for dashboard and self-service provider fan-out.
 - Added the Customer Portal screenshot runner contract, captured four route-backed Capell PNGs plus dark variants, and promoted the light gallery into Marketplace media.
 
 ### 2026-06-04

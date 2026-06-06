@@ -8,6 +8,7 @@ Customer Portal turns a Capell site into an authenticated self-service hub. It g
 - Site-scoped `PortalAccount` records with encrypted email, display name, profile, and preference storage.
 - A profile surface powered by `ResolvePortalProfileAction` and `PortalProfileProviderRegistry`.
 - Dashboard and self-service item registries so packages such as payments, document lifecycle, events, newsletter, and access-gate can contribute cards and feed items without Customer Portal importing their internals.
+- Configurable per-provider and global caps for dashboard and self-service item fan-out.
 - Preference updates through `UpdatePortalPreferencesAction`, with option rendering and validation driven by the package preference schema.
 - Support request submission through `SubmitSupportRequestAction`, with encrypted request details and requester email hashing.
 - Support request submitted/status-changed events and queued requester mail notifications.
@@ -20,6 +21,8 @@ Customer Portal turns a Capell site into an authenticated self-service hub. It g
 The dashboard is a private customer surface. Responses send `no-store` and `noindex` headers, and tests assert the rendered output does not expose package names, signed editor URLs, Filament internals, account ids, or unsafe profile fields. Public Blade receives hydrated arrays from controllers and Actions; it should not query models directly.
 
 `capell.json` declares a 200ms frontend render budget and a 20-query frontend budget. Provider adapters should keep expensive lookups out of Blade and return already-hydrated `PortalDashboardItemData`, `PortalSelfServiceItemData`, and `PortalProfileData` objects.
+
+Provider fan-out is bounded by `dashboard_items_per_provider_limit`, `dashboard_items_limit`, `self_service_items_per_provider_limit`, and `self_service_items_limit` in `capell-customer-portal.php`.
 
 ## Extension Points
 
