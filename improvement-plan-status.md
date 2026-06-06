@@ -73,6 +73,7 @@ This file tracks the active package-improvement wave at a repository level. Pack
 - Payments now promotes five Capell runner captures for checkout sessions, webhook events, settings, customer portal billing, and Form Builder checkout.
 - Theme Agency now promotes all 12 route-backed Capell runner captures from its screenshot contract.
 - Theme Corporate now promotes all 12 route-backed Capell runner captures from its screenshot contract.
+- Theme Commerce now promotes all 12 route-backed Capell runner captures from its screenshot contract.
 - A full `COMPOSER=composer.local.json composer test` run reached 1470/1471 passing before exposing the Notes Blade type-hint issue; that issue has been fixed. A fresh full re-run was started and then stopped on request so the remaining changes could be committed without further tests.
 
 ## Commit Policy

@@ -41,7 +41,9 @@ Provides a Editorial Commerce visual option for product sites managed through th
 - This package does not own data.
 - It consumes theme runtime settings and core page content.
 
-## Screenshot Plan
+## Screenshot Coverage
+
+The committed Capell runner-backed gallery covers the full `docs/screenshots.json` contract:
 
 - Theme admin list showing Editorial Commerce.
 - Frontend page rendered with Editorial Commerce at `/theme-commerce-demo`.
