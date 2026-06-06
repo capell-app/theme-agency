@@ -243,6 +243,8 @@ function runRunner(runnerPath, runnerArgs, repoPath) {
             ...process.env,
             CAPELL_INSIGHTS_CONSENT_BANNER_ENABLED:
                 process.env.CAPELL_INSIGHTS_CONSENT_BANNER_ENABLED ?? 'false',
+            CAPELL_INSIGHTS_SCREENSHOT_FIXTURES_ENABLED:
+                process.env.CAPELL_INSIGHTS_SCREENSHOT_FIXTURES_ENABLED ?? 'true',
             CAPELL_PACKAGES_REPO: repoPath,
         },
         stdio: 'inherit',
