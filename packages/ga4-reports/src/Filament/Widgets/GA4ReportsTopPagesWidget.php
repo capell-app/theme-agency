@@ -47,6 +47,8 @@ final class GA4ReportsTopPagesWidget extends BaseWidget implements CapellWidgetC
                 TextColumn::make('screen_page_views')
                     ->label(__('capell-ga4-reports::widgets.screen_page_views'))
                     ->numeric(),
+                TextColumn::make('comparison')
+                    ->label(__('capell-ga4-reports::widgets.comparison')),
                 TextColumn::make('sessions')
                     ->label(__('capell-ga4-reports::widgets.sessions'))
                     ->numeric(),
@@ -64,7 +66,13 @@ final class GA4ReportsTopPagesWidget extends BaseWidget implements CapellWidgetC
      */
     private function getRecords(): Collection
     {
-        return collect(BuildTopGA4ReportsPagesAction::run($this->getGA4ReportsWindow(), 10))
+        $window = $this->getGA4ReportsWindow();
+        $previousPages = $window === null
+            ? collect()
+            : collect(BuildTopGA4ReportsPagesAction::run($this->getPreviousGA4ReportsWindow($window), 100))
+                ->keyBy(fn (GA4ReportsTopPageData $page): string => $page->pagePath);
+
+        return collect(BuildTopGA4ReportsPagesAction::run($window, 10))
             ->map(fn (GA4ReportsTopPageData $page, int $index): array => [
                 'id' => 'ga4-reports-page-' . $index,
                 'page_path' => $page->pagePath,
@@ -73,7 +81,21 @@ final class GA4ReportsTopPagesWidget extends BaseWidget implements CapellWidgetC
                 'sessions' => $page->sessions,
                 'total_users' => $page->totalUsers,
                 'conversions' => $page->conversions,
+                'comparison' => $this->formatDelta($page->screenPageViews, $previousPages->get($page->pagePath)?->screenPageViews ?? 0),
             ])
             ->values();
+    }
+
+    private function formatDelta(int $current, int $previous): string
+    {
+        if ($previous === 0) {
+            return $current === 0
+                ? (string) __('capell-ga4-reports::widgets.no_change')
+                : __('capell-ga4-reports::widgets.new_since_previous', ['value' => number_format($current)]);
+        }
+
+        $change = (($current - $previous) / $previous) * 100;
+
+        return sprintf('%+0.1f%%', $change);
     }
 }

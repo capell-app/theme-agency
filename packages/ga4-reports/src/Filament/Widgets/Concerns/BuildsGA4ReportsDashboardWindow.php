@@ -18,4 +18,13 @@ trait BuildsGA4ReportsDashboardWindow
 
         return BuildGA4ReportsWindowAction::run($rangeStart, $rangeEnd);
     }
+
+    private function getPreviousGA4ReportsWindow(GA4ReportsWindowData $window): ?GA4ReportsWindowData
+    {
+        $days = (int) $window->startsAt->startOfDay()->diffInDays($window->endsAt->startOfDay()) + 1;
+        $previousEnd = $window->startsAt->subDay()->endOfDay();
+        $previousStart = $previousEnd->subDays($days - 1)->startOfDay();
+
+        return BuildGA4ReportsWindowAction::run($previousStart, $previousEnd);
+    }
 }
