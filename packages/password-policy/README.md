@@ -98,9 +98,9 @@ This package makes its Composer dependencies visible because they are part of th
 - [screenshots.json](docs/screenshots.json)
 - [credits-and-acknowledgements.md](docs/credits-and-acknowledgements.md)
 
-The three required marketplace captures are declared in `docs/screenshots.json`
-but still need real Capell screenshot runner output. `capell.json` currently
-promotes only the extension card.
+The required marketplace captures are declared in `docs/screenshots.json`, and
+`capell.json` promotes the extension card plus real Capell runner captures for
+the settings page, forced-change form, and Users-table policy columns.
 
 ## Testing
 

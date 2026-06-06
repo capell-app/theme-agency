@@ -13,7 +13,7 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\PasswordPolicy",
-    "surfaces": ["admin"],
+    "surfaces": ["admin", "console"],
     "dependencies": {
         "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [],
@@ -40,11 +40,11 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": "capell:password-policy:doctor"
     },
     "settings": ["Capell\\PasswordPolicy\\Settings\\PasswordPolicySettings"],
     "permissions": [],
-    "capabilities": ["password-policy", "password-policy-admin"],
+    "capabilities": ["password-policy", "password-policy-admin", "password-policy-console"],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,

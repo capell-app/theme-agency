@@ -3,5 +3,5 @@
 declare(strict_types=1);
 
 return [
-    'description' => 'Opt-in password policy package for Capell CMS.',
+    'description' => 'Enforce admin password expiry, forced resets, reuse history, and breach checks across Capell panels.',
 ];

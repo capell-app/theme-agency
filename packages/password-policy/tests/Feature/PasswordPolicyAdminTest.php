@@ -410,6 +410,12 @@ it('does not promote mock password policy captures as marketplace screenshots', 
 
     expect($paths)->toBe([
         'docs/assets/marketplace/extension-card.jpg',
+        'docs/screenshots/password-policy-settings.png',
+        'docs/screenshots/password-policy-settings-dark.png',
+        'docs/screenshots/forced-password-change.png',
+        'docs/screenshots/forced-password-change-dark.png',
+        'docs/screenshots/user-password-policy-columns.png',
+        'docs/screenshots/user-password-policy-columns-dark.png',
     ]);
 
     foreach ($paths as $path) {

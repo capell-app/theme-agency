@@ -491,7 +491,7 @@
             "setupCommand": null,
             "demoCommand": null,
             "demoParams": [],
-            "doctorCommand": null,
+            "doctorCommand": "capell:password-policy:doctor",
             "entryCount": 3,
             "browserTestCount": 0
         },

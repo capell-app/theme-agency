@@ -16,6 +16,7 @@ Use it for Capell installs that need stronger admin account controls without put
 - Password history storage for recent-password reuse checks.
 - Actions for evaluation, validation, updates, forced changes, and history recording.
 - Admin settings and forced-password-change surfaces.
+- Console commands for stale expiry marking, forced-change marking, history pruning, and diagnostics.
 
 ## Policy Rules
 
@@ -57,6 +58,17 @@ Use the Actions directly when changing password behaviour:
 
 Keep validation and history rules in these Actions rather than duplicating them in Filament pages or controllers.
 
+## Console Commands
+
+Use the console commands for scheduled or operator-driven maintenance:
+
+| Command | Purpose |
+| ------- | ------- |
+| `capell:password-policy:expire-stale` | Marks users with passwords older than the configured or supplied `--days` value for password change. |
+| `capell:password-policy:require-change` | Marks one user with `--user-id` or every user with `--all`; supports `--dry-run`. |
+| `capell:password-policy:prune-history` | Prunes old password history rows, optionally scoped by `--user-id` or `--keep`. |
+| `capell:password-policy:doctor` | Runs the package health diagnostics, with optional `--json` output. |
+
 ## Lifecycle Events
 
 Password Policy notifies Capell Core subscribers when password state changes so
@@ -88,7 +100,6 @@ vendor/bin/pest packages/password-policy/tests --configuration=phpunit.xml
 
 ## Screenshot Coverage
 
-The marketplace manifest currently lists only the extension card. The settings,
-forced-password-change, and Users-table policy-column targets remain declared in
-`docs/screenshots.json` and should be captured through the Capell screenshot
-runner before promotion.
+The marketplace manifest lists the extension card plus Capell screenshot runner
+captures for the settings page, forced-password-change form, and Users-table
+policy-column surface in light and dark mode.
