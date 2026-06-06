@@ -109,6 +109,11 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Theme Education marketplace card.",
                 "caption": "Theme Education theme card."
+            },
+            {
+                "path": "docs/screenshots/education-homepage-layout.png",
+                "alt": "Theme Education homepage with enrolment-focused headline, programme proof cards, and campus learning media.",
+                "caption": "Route-backed Education homepage rendered through the package theme shell."
             }
         ],
         "categories": [
