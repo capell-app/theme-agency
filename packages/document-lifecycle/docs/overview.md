@@ -20,6 +20,7 @@ Document Lifecycle tracks controlled documents across publication and acceptance
 - Publish, archive, restore, and manual admin acceptance actions for moving controlled documents through the admin lifecycle without bypassing package Actions.
 - Publication and acceptance relation managers on each document.
 - CSV export for acceptance evidence, with optional per-publication/version filtering.
+- Re-acceptance detection and an outstanding acceptances CSV report when a newer publication supersedes prior acceptances.
 - Actions for registering documents, publishing versioned content, resolving the latest publication, and recording acceptances.
 - Publishing Studio revision listener that creates document publications when a matching registered document is published.
 - Protected table registration for document and acceptance audit tables.
@@ -32,7 +33,7 @@ Document Lifecycle tracks controlled documents across publication and acceptance
 | `CreateDocument`              | Registers a controlled document through `RegisterDocumentAction`, including key slugging and initial status.                                                  |
 | `EditDocument`                | Edits title, status, and metadata for a controlled document.                                                                                                  |
 | `PublicationsRelationManager` | Shows version labels, content hashes, publishing revision IDs, and publish times.                                                                             |
-| `AcceptancesRelationManager`  | Shows accepted versions, hashes, contexts, acceptors, and acceptance times, with CSV export for the full ledger or one publication.                           |
+| `AcceptancesRelationManager`  | Shows accepted versions, hashes, contexts, acceptors, and acceptance times, with CSV export for the full ledger, one publication, or outstanding stale acceptances. |
 
 Archived documents can be restored from the index. Restore returns documents with publications to `active`, and documents without publications to `draft`. Manual admin publishes call `PublishDocumentAction` with pasted content, an optional version label, the authenticated admin as publishing actor, and an optional admin note. Manual admin acceptances call `RecordDocumentAcceptanceAction` for the authenticated admin against the latest publication; documents without publications do not show the acceptance action.
 

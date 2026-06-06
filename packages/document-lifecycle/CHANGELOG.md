@@ -4,6 +4,7 @@ All notable changes to `capell-app/document-lifecycle` will be documented in thi
 
 ## Unreleased
 
+- Added re-acceptance detection and an outstanding acceptances CSV report for subjects whose latest known acceptance is stale.
 - Added CSV export for document acceptance evidence, including optional per-publication/version filtering from the acceptances relation manager.
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
 - Added real factories for documents, document publications, and document acceptances so tests, demos, and screenshot seeders can use `Model::factory()` without broken autoload promises.

@@ -6,6 +6,7 @@ namespace Capell\DocumentLifecycle\Filament\Resources\Documents\RelationManagers
 
 use BackedEnum;
 use Capell\DocumentLifecycle\Actions\BuildDocumentAcceptanceEvidenceCsvAction;
+use Capell\DocumentLifecycle\Actions\BuildOutstandingDocumentAcceptancesCsvAction;
 use Capell\DocumentLifecycle\Models\Document;
 use Capell\DocumentLifecycle\Models\DocumentPublication;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -45,6 +46,10 @@ final class AcceptancesRelationManager extends RelationManager
                             ->placeholder(__('capell-document-lifecycle::navigation.fields.all_versions')),
                     ])
                     ->action(fn (array $data): StreamedResponse => $this->downloadAcceptanceEvidence($data)),
+                Action::make('export_outstanding_acceptances')
+                    ->label(__('capell-document-lifecycle::navigation.actions.export_outstanding_acceptances'))
+                    ->icon('heroicon-o-exclamation-triangle')
+                    ->action(fn (): StreamedResponse => $this->downloadOutstandingAcceptances()),
             ])
             ->columns([
                 TextColumn::make('document_version')
@@ -123,5 +128,19 @@ final class AcceptancesRelationManager extends RelationManager
             : '';
 
         return 'document-acceptance-evidence-' . str($document->key)->slug()->toString() . $version . '-' . now()->format('Y-m-d-His') . '.csv';
+    }
+
+    private function downloadOutstandingAcceptances(): StreamedResponse
+    {
+        /** @var Document $document */
+        $document = $this->getOwnerRecord();
+
+        return response()->streamDownload(
+            function () use ($document): void {
+                echo BuildOutstandingDocumentAcceptancesCsvAction::run($document);
+            },
+            'document-outstanding-acceptances-' . str($document->key)->slug()->toString() . '-' . now()->format('Y-m-d-His') . '.csv',
+            ['Content-Type' => 'text/csv'],
+        );
     }
 }

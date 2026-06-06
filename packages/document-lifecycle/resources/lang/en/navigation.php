@@ -35,6 +35,7 @@ return [
         'archive_document' => 'Archive document',
         'restore_document' => 'Restore document',
         'export_acceptance_evidence' => 'Export evidence CSV',
+        'export_outstanding_acceptances' => 'Export outstanding CSV',
     ],
     'messages' => [
         'version_published' => 'Document version published.',
