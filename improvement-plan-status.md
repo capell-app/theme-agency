@@ -128,12 +128,9 @@ This file tracks the active package-improvement wave at a repository level. Pack
 - Notes registered subjects and participants now attach deletion hooks that prune subject notes, authored notes, assignment/mention rows, and nullable actor references.
 - Notes reminders now have an Add note form producer, persistence Action, scheduled command, due notification dispatcher, and recurrence advancement.
 - Block Library now promotes six committed Capell runner captures for the block registry list, editor form, asset settings, hero block, features block, and pricing block.
-- Theme Agency now promotes all 12 route-backed Capell runner captures from its screenshot contract.
-- Theme Corporate now promotes all 12 route-backed Capell runner captures from its screenshot contract.
-- Theme Commerce now promotes all 12 route-backed Capell runner captures from its screenshot contract.
-- Theme Education now promotes all 9 route-backed Capell runner captures from its screenshot contract.
+- Theme Agency, Corporate, Commerce, and Education remain reopened for screenshot promotion: seeded route attempts now use the Capell runner, but the captures still fail their real shell selectors, so `capell.json` continues to promote only the package card for those themes.
 - Theme Healthcare now promotes five styled route-backed Capell runner frontend captures after the package screenshot wrapper started injecting selected package CSS into the runner frontend build.
-- Theme Knowledge now promotes all 9 route-backed Capell runner captures from its screenshot contract.
+- Theme Knowledge now renders a styled real `.knowledge-shell` homepage through the Capell runner after package CSS fallback work, but its screenshots remain unpromoted because the first-viewport consent panel stays visible and inner-route demo captures are too generic.
 - Theme SaaS visible placeholder labels now use plain SaaS buyer language instead of internal jargon.
 - Campaign Studio now schedules `capell:campaign-studio-sync-statuses` every five minutes and exposes `SyncCampaignStatusesAction` for Scheduled→Active and Active→Ended campaign window transitions.
 - Diagnostics now wires `RunExtensionHealthChecksAction` and `capell:diagnostics:health` as the executable package-health runner, promotes six product PNGs into marketplace media, and reconciles the stale console/screenshot/test roadmap rows.

@@ -39,7 +39,8 @@
             "waitFor": ".knowledge-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "knowledge-homepage-layout",
@@ -57,7 +58,8 @@
             "waitFor": ".knowledge-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "knowledge-search-layout",
@@ -75,7 +77,8 @@
             "waitFor": ".knowledge-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "knowledge-topic-hubs-layout",
@@ -93,7 +96,8 @@
             "waitFor": ".knowledge-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "knowledge-featured-content-layout",
@@ -111,7 +115,8 @@
             "waitFor": ".knowledge-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "knowledge-newsletter-layout",
@@ -129,7 +134,8 @@
             "waitFor": ".knowledge-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "knowledge-author-bench-layout",
@@ -147,7 +153,8 @@
             "waitFor": ".knowledge-shell",
             "colorSchemes": [
                 "light"
-            ]
+            ],
+            "user": false
         },
         {
             "id": "theme-preview-url-output",

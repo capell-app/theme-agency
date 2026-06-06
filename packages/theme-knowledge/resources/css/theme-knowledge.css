@@ -64,6 +64,82 @@
     overflow: hidden;
 }
 
+.knowledge-shell .knowledge-hero {
+    background:
+        radial-gradient(circle at top right, rgba(56, 189, 248, 0.16), transparent 34rem),
+        linear-gradient(135deg, var(--site-theme-ink), var(--site-theme-ink-panel-raised));
+    color: #ffffff;
+}
+
+.knowledge-shell .knowledge-hero-grid {
+    display: grid;
+    gap: 2rem;
+    margin-inline: auto;
+    max-width: 72rem;
+    padding: clamp(4rem, 7vw, 5rem) 1.5rem;
+}
+
+.knowledge-shell .knowledge-hero h2 {
+    color: #ffffff;
+    font-size: clamp(2.75rem, 6vw, 4.75rem);
+    font-weight: 900;
+    line-height: 1.05;
+    max-width: 14ch;
+}
+
+.knowledge-shell .knowledge-hero p {
+    color: rgba(226, 232, 240, 0.88);
+}
+
+.knowledge-shell .knowledge-hero a {
+    border-radius: 6px;
+}
+
+.knowledge-shell .knowledge-hero-grid > div:first-child {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.knowledge-shell .knowledge-hero-grid > div:first-child > div:last-child {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.knowledge-shell .knowledge-hero-grid > div:first-child > div:last-child > div {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.knowledge-shell .knowledge-command-panel {
+    background: var(--site-theme-ink-panel);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    padding: 0.75rem;
+}
+
+.knowledge-shell .knowledge-command-panel > div {
+    background: var(--site-theme-ink-panel-raised);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 1rem;
+}
+
+.knowledge-shell .knowledge-command-panel img,
+.knowledge-shell .knowledge-command-panel [aria-hidden='true'] {
+    border-radius: 6px;
+}
+
+@media (min-width: 900px) {
+    .knowledge-shell .knowledge-hero-grid {
+        grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+        align-items: center;
+    }
+
+    .knowledge-shell .knowledge-hero-grid > div:first-child > div:last-child {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
 .knowledge-shell .knowledge-hero::before,
 .knowledge-shell .knowledge-search-console::before,
 .knowledge-shell .knowledge-cta::before {
