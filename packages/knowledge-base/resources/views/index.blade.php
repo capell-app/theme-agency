@@ -17,25 +17,10 @@
             </h1>
 
             @forelse ($navigation as $collection)
-                <section>
-                    <h2>{{ $collection['title'] }}</h2>
-                    @if ($collection['description'] !== null)
-                        <p>{{ $collection['description'] }}</p>
-                    @endif
-
-                    <ul>
-                        @foreach ($collection['articles'] as $article)
-                            <li>
-                                <a href="{{ $article['publicPath'] }}">
-                                    {{ $article['title'] }}
-                                </a>
-                                @if ($article['summary'] !== null)
-                                    <p>{{ $article['summary'] }}</p>
-                                @endif
-                            </li>
-                        @endforeach
-                    </ul>
-                </section>
+                @include('capell-knowledge-base::partials.collection-navigation', [
+                    'collection' => $collection,
+                    'headingLevel' => 2,
+                ])
             @empty
                 <p>
                     {{ __('capell-knowledge-base::generic.frontend.no_articles') }}

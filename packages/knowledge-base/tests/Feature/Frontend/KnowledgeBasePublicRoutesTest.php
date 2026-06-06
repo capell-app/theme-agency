@@ -40,12 +40,22 @@ it('renders public navigation and articles without authoring internals', functio
         title: 'Getting Started',
         description: 'Install and configure the product.',
     ));
+    $childCollection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Operations',
+        parent: $collection,
+    ));
 
     CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
         collection: $collection,
         title: 'Install Capell',
         body: '<h2>Install</h2><p>Run the installer.</p>',
         summary: 'Install safely.',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+    CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $childCollection,
+        title: 'Cache Checklist',
+        body: '<p>Review cache tags.</p>',
         status: KnowledgeBaseArticleStatus::Published,
     ));
 
@@ -66,6 +76,8 @@ it('renders public navigation and articles without authoring internals', functio
         ->assertSee('Knowledge base')
         ->assertSee('Getting Started')
         ->assertSee('Install Capell')
+        ->assertSee('Operations')
+        ->assertSee('Cache Checklist')
         ->assertDontSee('Draft Article');
 
     $articleResponse

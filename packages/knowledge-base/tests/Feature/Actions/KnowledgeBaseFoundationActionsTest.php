@@ -80,6 +80,11 @@ it('publishes new versions and keeps navigation, search, and ai output public on
         title: 'Private Docs',
         isPublic: false,
     ));
+    $childCollection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Child Docs',
+        parent: $publicCollection,
+        sortOrder: 2,
+    ));
 
     $publicArticle = CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
         collection: $publicCollection,
@@ -93,6 +98,12 @@ it('publishes new versions and keeps navigation, search, and ai output public on
         collection: $privateCollection,
         title: 'Hidden Article',
         body: '<p>Hidden body.</p>',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+    CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $childCollection,
+        title: 'Child Article',
+        body: '<p>Child body.</p>',
         status: KnowledgeBaseArticleStatus::Published,
     ));
 
@@ -116,6 +127,9 @@ it('publishes new versions and keeps navigation, search, and ai output public on
     expect($navigation)->toHaveCount(1)
         ->and($navigation->first()->articles)->toHaveCount(1)
         ->and($navigation->first()->articles[0]['title'])->toBe('Public Article Updated')
+        ->and($navigation->first()->children)->toHaveCount(1)
+        ->and($navigation->first()->children[0]->title)->toBe('Child Docs')
+        ->and($navigation->first()->children[0]->articles[0]['title'])->toBe('Child Article')
         ->and($searchDocuments)->toHaveCount(1)
         ->and($searchDocuments->first()->weight)->toBe(90)
         ->and($searchDocuments->first()->title)->toBe('Public Article Updated')

@@ -26,13 +26,8 @@ final class BuildPublicKnowledgeBaseNavigationAction
      */
     public function handle(): Collection
     {
-        return KnowledgeBaseCollection::query()
+        $collections = KnowledgeBaseCollection::query()
             ->public()
-            ->whereHas('articles', function (Builder $query): void {
-                $query->where('status', KnowledgeBaseArticleStatus::Published->value)
-                    ->whereNotNull('published_at')
-                    ->whereNotNull('current_version_id');
-            })
             ->with(['articles' => function (Relation $query): void {
                 $query->where('status', KnowledgeBaseArticleStatus::Published->value)
                     ->whereNotNull('published_at')
@@ -42,20 +37,62 @@ final class BuildPublicKnowledgeBaseNavigationAction
             }])
             ->orderBy('sort_order')
             ->orderBy('title')
-            ->get()
-            ->map(fn (KnowledgeBaseCollection $collection): PublicKnowledgeBaseNavigationItemData => new PublicKnowledgeBaseNavigationItemData(
-                title: $collection->title,
-                slug: $collection->slug,
-                description: $collection->description,
-                articles: array_values($collection->articles
-                    ->map(fn (KnowledgeBaseArticle $article): array => [
-                        'title' => $article->title,
-                        'slug' => $article->slug,
-                        'publicPath' => KnowledgeBasePublicPath::forArticle($article),
-                        'summary' => $article->summary,
-                    ])
-                    ->values()
-                    ->all()),
-            ));
+            ->get();
+
+        /** @var Collection<int|string, Collection<int, KnowledgeBaseCollection>> $collectionsByParent */
+        $collectionsByParent = $collections->groupBy(
+            static fn (KnowledgeBaseCollection $collection): int|string => $collection->parent_id ?? 0,
+        );
+
+        return $this->navigationItems($collectionsByParent, 0);
+    }
+
+    /**
+     * @param  Collection<int|string, Collection<int, KnowledgeBaseCollection>>  $collectionsByParent
+     * @return Collection<int, PublicKnowledgeBaseNavigationItemData>
+     */
+    private function navigationItems(Collection $collectionsByParent, int $parentId): Collection
+    {
+        return ($collectionsByParent->get($parentId) ?? collect())
+            ->map(fn (KnowledgeBaseCollection $collection): ?PublicKnowledgeBaseNavigationItemData => $this->navigationItem($collectionsByParent, $collection))
+            ->filter(static fn (?PublicKnowledgeBaseNavigationItemData $item): bool => $item instanceof PublicKnowledgeBaseNavigationItemData)
+            ->values();
+    }
+
+    /**
+     * @param  Collection<int|string, Collection<int, KnowledgeBaseCollection>>  $collectionsByParent
+     */
+    private function navigationItem(Collection $collectionsByParent, KnowledgeBaseCollection $collection): ?PublicKnowledgeBaseNavigationItemData
+    {
+        $articles = $this->articles($collection);
+        $children = $this->navigationItems($collectionsByParent, (int) $collection->getKey())->all();
+
+        if ($articles === [] && $children === []) {
+            return null;
+        }
+
+        return new PublicKnowledgeBaseNavigationItemData(
+            title: $collection->title,
+            slug: $collection->slug,
+            description: $collection->description,
+            articles: $articles,
+            children: $children,
+        );
+    }
+
+    /**
+     * @return list<array{title: string, slug: string, publicPath: string, summary: string|null}>
+     */
+    private function articles(KnowledgeBaseCollection $collection): array
+    {
+        return array_values($collection->articles
+            ->map(fn (KnowledgeBaseArticle $article): array => [
+                'title' => $article->title,
+                'slug' => $article->slug,
+                'publicPath' => KnowledgeBasePublicPath::forArticle($article),
+                'summary' => $article->summary,
+            ])
+            ->values()
+            ->all());
     }
 }
