@@ -69,7 +69,26 @@ function packageMatchesOnly(packageName, only) {
         return true
     }
 
-    return only.some((filter) => filter === packageName || filter.startsWith(`${packageName}:`))
+    return only.some(
+        (filter) =>
+            filter === packageName || filter.startsWith(`${packageName}:`),
+    )
+}
+
+function commandParamValue(param) {
+    if (param === 'url') {
+        return process.env.CAPELL_FRONTEND_URL ?? ''
+    }
+
+    if (param === 'languages') {
+        return process.env.CAPELL_SCREENSHOT_LANGUAGES ?? ''
+    }
+
+    if (param === 'sites') {
+        return process.env.CAPELL_SCREENSHOT_SITES ?? ''
+    }
+
+    return ''
 }
 
 function commandArgs(command, params) {
@@ -78,7 +97,11 @@ function commandArgs(command, params) {
     if (Array.isArray(params)) {
         for (const param of params) {
             if (typeof param === 'string' && param !== '') {
-                args.push(`--${param}`)
+                const value = commandParamValue(param)
+
+                if (value !== '') {
+                    args.push(`--${param}=${value}`)
+                }
             }
         }
     }
@@ -124,11 +147,15 @@ function runPackageCommands(repoPath, appPath, only) {
                 continue
             }
 
-            const result = spawnSync('php', commandArgs(command, commands[paramsKey]), {
-                cwd: appPath,
-                env: process.env,
-                stdio: 'inherit',
-            })
+            const result = spawnSync(
+                'php',
+                commandArgs(command, commands[paramsKey]),
+                {
+                    cwd: appPath,
+                    env: process.env,
+                    stdio: 'inherit',
+                },
+            )
 
             if (result.status !== 0) {
                 process.exitCode = result.status ?? 1

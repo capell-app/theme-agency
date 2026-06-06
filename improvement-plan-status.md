@@ -62,7 +62,7 @@ This file tracks the active package-improvement wave at a repository level. Pack
 
 ## Verification Snapshot
 
-- Focused verification has passed for the current blocker fixes: Notes inbox, Layout Builder stress coverage, and Healthcare theme demo screenshot capture.
+- Focused verification has passed for the current blocker fixes: Notes inbox and Layout Builder stress coverage. Healthcare route capture now reaches seeded routes, but marketplace promotion remains blocked because the runner frontend build omits the package theme CSS and produces under-styled screenshots.
 - Frontend Optimizer screenshot verification used the Capell package screenshot runner only: dry-run validation passed, then the real runner captured four 1440x900 PNGs without failures.
 - Record Switcher now uses the Capell screenshot runner contract and committed light/dark admin edit-page PNG captures instead of SVG-only marketplace previews.
 - Bookings now promotes route-backed PNG captures for the public booking form and Capell admin appointment queue instead of SVG-only workflow previews.
@@ -132,7 +132,7 @@ This file tracks the active package-improvement wave at a repository level. Pack
 - Theme Corporate now promotes all 12 route-backed Capell runner captures from its screenshot contract.
 - Theme Commerce now promotes all 12 route-backed Capell runner captures from its screenshot contract.
 - Theme Education now promotes all 9 route-backed Capell runner captures from its screenshot contract.
-- Theme Healthcare now promotes all 8 route-backed Capell runner captures from its screenshot contract.
+- Theme Healthcare no longer promotes the generic or under-styled route captures; `capell.json` keeps only the extension card until the runner frontend build imports `theme-healthcare.css` and styled route captures can be recaptured.
 - Theme Knowledge now promotes all 9 route-backed Capell runner captures from its screenshot contract.
 - Theme SaaS visible placeholder labels now use plain SaaS buyer language instead of internal jargon.
 - Campaign Studio now schedules `capell:campaign-studio-sync-statuses` every five minutes and exposes `SyncCampaignStatusesAction` for Scheduled→Active and Active→Ended campaign window transitions.
