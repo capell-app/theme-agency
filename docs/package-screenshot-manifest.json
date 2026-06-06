@@ -1570,6 +1570,12 @@
             "surface": "admin",
             "targetType": "admin-widget",
             "target": "PublishingTrendChartWidget",
+            "scenario": "frontend-page",
+            "url": "/screenshot-fixtures/dashboard-reports/dashboard",
+            "waitFor": ".trend",
+            "colorSchemes": [
+                "light"
+            ],
             "required": true,
             "notes": "Capture on the main admin dashboard with seeded published and scheduled page counts across the selected date window.",
             "screenshotPath": "packages/dashboard-reports/docs/screenshots/publishing-trend-dashboard-widget.png",
@@ -1583,6 +1589,12 @@
             "surface": "admin",
             "targetType": "admin-widget",
             "target": "ContentHealthWidget",
+            "scenario": "frontend-page",
+            "url": "/screenshot-fixtures/dashboard-reports/dashboard",
+            "waitFor": ".health",
+            "colorSchemes": [
+                "light"
+            ],
             "required": true,
             "notes": "Capture on the main admin dashboard with at least one scheduled, expired, URL-less, or stale page so canView() keeps the widget visible.",
             "screenshotPath": "packages/dashboard-reports/docs/screenshots/content-health-dashboard-widget.png",
@@ -1596,6 +1608,12 @@
             "surface": "admin",
             "targetType": "admin-settings-contributor",
             "target": "DashboardReportsDashboardSettingsContributor",
+            "scenario": "frontend-page",
+            "url": "/screenshot-fixtures/dashboard-reports/settings",
+            "waitFor": ".settings",
+            "colorSchemes": [
+                "light"
+            ],
             "required": true,
             "notes": "Capture the shared dashboard settings screen after this package contributes the publishing trend and content health visibility keys.",
             "screenshotPath": "packages/dashboard-reports/docs/screenshots/dashboard-report-settings.png",

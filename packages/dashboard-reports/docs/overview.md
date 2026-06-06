@@ -40,7 +40,7 @@ Dashboard Reports is admin-only. It does not register public frontend routes, pu
 
 ## Screenshot Coverage
 
-The screenshot contract is stored in [screenshots.json](screenshots.json). Final capture should seed enough page state to show both the publishing trend chart and content health widget on the admin dashboard.
+The screenshot contract is stored in [screenshots.json](screenshots.json). The committed runtime captures show seeded page state for the publishing trend chart, content health issues, and dashboard widget visibility settings.
 
 ## Data Sources
 
