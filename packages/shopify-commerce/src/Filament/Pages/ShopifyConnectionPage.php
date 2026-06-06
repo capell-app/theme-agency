@@ -12,6 +12,7 @@ use Capell\ShopifyCommerce\Actions\OAuth\DisconnectShopifyStoreAction;
 use Capell\ShopifyCommerce\Actions\OAuth\ValidateShopifyShopDomainAction;
 use Capell\ShopifyCommerce\Actions\OAuth\VerifyShopifyConnectionTokenAction;
 use Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus;
+use Capell\ShopifyCommerce\Enums\ShopifySyncStatus;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Capell\ShopifyCommerce\Models\ShopifyProduct;
 use Capell\ShopifyCommerce\Support\Permissions\ShopifyCommercePermission;
@@ -140,12 +141,12 @@ final class ShopifyConnectionPage extends Page
             return;
         }
 
-        if (in_array($connection->sync_status, ['queued', 'running', 'importing'], true)) {
+        if (in_array($connection->sync_status, ShopifySyncStatus::busyValues(), true)) {
             return;
         }
 
         $connection->forceFill([
-            'sync_status' => 'queued',
+            'sync_status' => ShopifySyncStatus::Queued->value,
             'last_sync_queued_at' => now(),
         ])->save();
 
@@ -294,7 +295,7 @@ final class ShopifyConnectionPage extends Page
 
     public function isSyncBusy(?ShopifyConnection $connection): bool
     {
-        return $connection instanceof ShopifyConnection && in_array($connection->sync_status, ['queued', 'running', 'importing'], true);
+        return $connection instanceof ShopifyConnection && in_array($connection->sync_status, ShopifySyncStatus::busyValues(), true);
     }
 
     public function getActiveConnection(): ?ShopifyConnection

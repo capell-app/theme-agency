@@ -6,6 +6,7 @@ namespace Capell\ShopifyCommerce\Actions\Catalog;
 
 use Capell\ShopifyCommerce\Actions\Graphql\ExecuteShopifyAdminGraphqlAction;
 use Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus;
+use Capell\ShopifyCommerce\Enums\ShopifySyncStatus;
 use Capell\ShopifyCommerce\Exceptions\ShopifyGraphqlException;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Illuminate\Support\Facades\Cache;
@@ -43,7 +44,7 @@ final class StartShopifyProductBulkSyncAction
                 }
 
                 $connection->forceFill([
-                    'sync_status' => 'running',
+                    'sync_status' => ShopifySyncStatus::Running->value,
                     'last_sync_started_at' => now(),
                     'bulk_operation_id' => $bulkOperation['id'],
                     'bulk_operation_url' => null,
@@ -53,7 +54,7 @@ final class StartShopifyProductBulkSyncAction
                 return $bulkOperation['id'];
             } catch (Throwable $throwable) {
                 $connection->forceFill([
-                    'sync_status' => 'failed',
+                    'sync_status' => ShopifySyncStatus::Failed->value,
                     'status' => $throwable instanceof ShopifyGraphqlException ? ShopifyConnectionStatus::Error : $connection->status,
                     'last_sync_error' => SanitizeShopifySyncErrorAction::run($throwable, $connection),
                 ])->save();

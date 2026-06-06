@@ -8,6 +8,7 @@ use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
 use Capell\ShopifyCommerce\Actions\OAuth\VerifyShopifyConnectionTokenAction;
 use Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus;
+use Capell\ShopifyCommerce\Enums\ShopifySyncStatus;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -244,7 +245,7 @@ final class ShopifyCommerceHealthCheck implements ChecksExtensionHealth
                 $query
                     ->where(static function (Builder $runningQuery) use ($staleBefore): void {
                         $runningQuery
-                            ->whereIn('sync_status', ['running', 'importing'])
+                            ->whereIn('sync_status', [ShopifySyncStatus::Running->value, ShopifySyncStatus::Importing->value])
                             ->where(function (Builder $timestampQuery) use ($staleBefore): void {
                                 $timestampQuery
                                     ->whereNull('last_sync_started_at')
@@ -253,7 +254,7 @@ final class ShopifyCommerceHealthCheck implements ChecksExtensionHealth
                     })
                     ->orWhere(static function (Builder $queuedQuery) use ($staleBefore): void {
                         $queuedQuery
-                            ->where('sync_status', 'queued')
+                            ->where('sync_status', ShopifySyncStatus::Queued->value)
                             ->where(function (Builder $timestampQuery) use ($staleBefore): void {
                                 $timestampQuery
                                     ->whereNull('last_sync_queued_at')
@@ -277,7 +278,7 @@ final class ShopifyCommerceHealthCheck implements ChecksExtensionHealth
             ->where(static function (Builder $query): void {
                 $query
                     ->whereNull('sync_status')
-                    ->orWhereNotIn('sync_status', ['queued', 'running', 'importing']);
+                    ->orWhereNotIn('sync_status', ShopifySyncStatus::busyValues());
             })
             ->where(static function (Builder $query) use ($staleBefore): void {
                 $query

@@ -8,6 +8,7 @@ use Capell\ShopifyCommerce\Data\ShopifyProductData;
 use Capell\ShopifyCommerce\Data\ShopifyProductOptionData;
 use Capell\ShopifyCommerce\Data\ShopifyProductVariantData;
 use Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus;
+use Capell\ShopifyCommerce\Enums\ShopifySyncStatus;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Capell\ShopifyCommerce\Models\ShopifyProduct;
 use Carbon\CarbonInterface;
@@ -43,7 +44,7 @@ final class ImportShopifyProductBulkSyncAction
             throw_if(! is_string($bulkOperationUrl) || $bulkOperationUrl === '', RuntimeException::class, 'Shopify bulk operation URL is missing.');
 
             try {
-                $connection->forceFill(['sync_status' => 'importing'])->save();
+                $connection->forceFill(['sync_status' => ShopifySyncStatus::Importing->value])->save();
 
                 $products = $this->downloadProducts($bulkOperationUrl);
                 $syncedAt = now();
@@ -70,7 +71,7 @@ final class ImportShopifyProductBulkSyncAction
                 if ($connection->status !== ShopifyConnectionStatus::Revoked) {
                     $connection->forceFill([
                         'status' => ShopifyConnectionStatus::Active,
-                        'sync_status' => 'idle',
+                        'sync_status' => ShopifySyncStatus::Idle->value,
                         'last_synced_at' => now(),
                         'bulk_operation_id' => null,
                         'bulk_operation_url' => null,
@@ -86,7 +87,7 @@ final class ImportShopifyProductBulkSyncAction
 
                 if ($connection->status !== ShopifyConnectionStatus::Revoked) {
                     $connection->forceFill([
-                        'sync_status' => 'failed',
+                        'sync_status' => ShopifySyncStatus::Failed->value,
                         'status' => ShopifyConnectionStatus::Error,
                         'last_sync_error' => SanitizeShopifySyncErrorAction::run($throwable, $connection),
                     ])->save();

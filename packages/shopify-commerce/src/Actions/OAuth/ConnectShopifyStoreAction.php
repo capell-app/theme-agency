@@ -7,6 +7,7 @@ namespace Capell\ShopifyCommerce\Actions\OAuth;
 use Capell\ShopifyCommerce\Actions\Catalog\SyncShopifyProductsAction;
 use Capell\ShopifyCommerce\Data\ShopifyTokenExchangeResponseData;
 use Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus;
+use Capell\ShopifyCommerce\Enums\ShopifySyncStatus;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -28,7 +29,7 @@ final class ConnectShopifyStoreAction
                 'access_token' => $tokenData->accessToken,
                 'scopes' => $tokenData->scopes,
                 'connected_by_user_id' => $user->getAuthIdentifier(),
-                'sync_status' => 'queued',
+                'sync_status' => ShopifySyncStatus::Queued->value,
                 'last_sync_queued_at' => now(),
                 'last_sync_error' => null,
             ],

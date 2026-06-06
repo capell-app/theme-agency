@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\ShopifyCommerce\Actions\Catalog;
 
 use Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus;
+use Capell\ShopifyCommerce\Enums\ShopifySyncStatus;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -26,12 +27,12 @@ final class SyncShopifyProductsAction
             return null;
         }
 
-        if (in_array($connection->sync_status, ['running', 'importing'], true)) {
+        if (in_array($connection->sync_status, ShopifySyncStatus::runningValues(), true)) {
             return is_string($connection->bulk_operation_id) ? $connection->bulk_operation_id : null;
         }
 
         $connection->forceFill([
-            'sync_status' => 'queued',
+            'sync_status' => ShopifySyncStatus::Queued->value,
             'last_sync_queued_at' => now(),
             'last_sync_error' => null,
         ])->save();

@@ -6,6 +6,7 @@ namespace Capell\ShopifyCommerce\Actions\Catalog;
 
 use Capell\ShopifyCommerce\Actions\Graphql\ExecuteShopifyAdminGraphqlAction;
 use Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus;
+use Capell\ShopifyCommerce\Enums\ShopifySyncStatus;
 use Capell\ShopifyCommerce\Models\ShopifyConnection;
 use Illuminate\Support\Facades\Cache;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -39,7 +40,7 @@ final class PollShopifyProductBulkSyncAction
 
             if ($status === 'COMPLETED' && is_string($operation['url'] ?? null)) {
                 $connection->forceFill([
-                    'sync_status' => 'completed',
+                    'sync_status' => ShopifySyncStatus::Completed->value,
                     'bulk_operation_id' => is_string($operation['id'] ?? null) ? $operation['id'] : $connection->bulk_operation_id,
                     'bulk_operation_url' => $operation['url'],
                     'last_sync_error' => null,
@@ -50,7 +51,7 @@ final class PollShopifyProductBulkSyncAction
 
             if (in_array($status, ['FAILED', 'CANCELED'], true)) {
                 $connection->forceFill([
-                    'sync_status' => mb_strtolower($status),
+                    'sync_status' => $status === 'CANCELED' ? ShopifySyncStatus::Canceled->value : ShopifySyncStatus::Failed->value,
                     'status' => ShopifyConnectionStatus::Error,
                     'last_sync_error' => is_string($operation['errorCode'] ?? null) ? $operation['errorCode'] : $status,
                 ])->save();
@@ -59,7 +60,7 @@ final class PollShopifyProductBulkSyncAction
             }
 
             $connection->forceFill([
-                'sync_status' => 'running',
+                'sync_status' => ShopifySyncStatus::Running->value,
                 'bulk_operation_id' => is_string($operation['id'] ?? null) ? $operation['id'] : $connection->bulk_operation_id,
             ])->save();
 
