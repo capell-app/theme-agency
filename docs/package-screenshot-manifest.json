@@ -1883,6 +1883,12 @@
             "notes": "Capture with at least three seeded events across public/private or scheduled states so event table columns and controls are meaningful.",
             "screenshotPath": "packages/events/docs/screenshots/events-index.png",
             "useCase": "An editor reviews upcoming event records before opening one for schedule or registration changes.",
+            "scenario": "events-admin-admin-resource",
+            "url": "/screenshot-fixtures/events/events-index",
+            "waitFor": ".events-fixture",
+            "colorSchemes": [
+                "light"
+            ],
             "composerName": "capell-app/events"
         },
         {
@@ -1896,6 +1902,12 @@
             "notes": "Capture after event publishing defaults are registered so blueprint and layout defaults are available on create.",
             "screenshotPath": "packages/events/docs/screenshots/events-create.png",
             "useCase": "An editor creates an event with schedule, recurrence, visibility, publishing, and registration settings.",
+            "scenario": "events-admin-admin-resource",
+            "url": "/screenshot-fixtures/events/events-create",
+            "waitFor": ".events-fixture",
+            "colorSchemes": [
+                "light"
+            ],
             "composerName": "capell-app/events"
         },
         {
@@ -1909,6 +1921,12 @@
             "notes": "Requires a seeded event with recurrence and at least one generated occurrence so event state is not blank.",
             "screenshotPath": "packages/events/docs/screenshots/events-edit.png",
             "useCase": "An editor adjusts an existing recurring event and checks registration or publication state before saving.",
+            "scenario": "events-admin-admin-resource",
+            "url": "/screenshot-fixtures/events/events-edit",
+            "waitFor": ".events-fixture",
+            "colorSchemes": [
+                "light"
+            ],
             "composerName": "capell-app/events"
         },
         {
@@ -1922,6 +1940,12 @@
             "notes": "Capture with at least one venue that has address fields and a map URL so the management table is populated.",
             "screenshotPath": "packages/events/docs/screenshots/event-venues.png",
             "useCase": "An administrator manages reusable venues for events and confirms address details are visible.",
+            "scenario": "events-admin-admin-resource",
+            "url": "/screenshot-fixtures/events/event-venues",
+            "waitFor": ".events-fixture",
+            "colorSchemes": [
+                "light"
+            ],
             "composerName": "capell-app/events"
         },
         {
@@ -1935,6 +1959,12 @@
             "notes": "Requires generated occurrences from SyncEventOccurrencesAction, including one override or cancelled occurrence when possible.",
             "screenshotPath": "packages/events/docs/screenshots/event-occurrences.png",
             "useCase": "An editor reviews materialized event dates, statuses, venues, and registration counts.",
+            "scenario": "events-admin-admin-resource",
+            "url": "/screenshot-fixtures/events/event-occurrences",
+            "waitFor": ".events-fixture",
+            "colorSchemes": [
+                "light"
+            ],
             "composerName": "capell-app/events"
         },
         {
@@ -1948,6 +1978,12 @@
             "notes": "Requires native RSVP demo data with at least one pending, confirmed, or waitlisted registration.",
             "screenshotPath": "packages/events/docs/screenshots/event-registrations.png",
             "useCase": "An administrator reviews event attendee registrations, quantities, statuses, and related occurrences.",
+            "scenario": "events-admin-admin-resource",
+            "url": "/screenshot-fixtures/events/event-registrations",
+            "waitFor": ".events-fixture",
+            "colorSchemes": [
+                "light"
+            ],
             "composerName": "capell-app/events"
         },
         {
@@ -1961,6 +1997,12 @@
             "notes": "Requires View:EventCalendarPage permission and seeded occurrences within the next 90 days so the header widget has visible dates.",
             "screenshotPath": "packages/events/docs/screenshots/event-calendar-admin-page.png",
             "useCase": "An editor opens the admin calendar to scan event occurrences across the next publishing window.",
+            "scenario": "events-admin-admin-page",
+            "url": "/screenshot-fixtures/events/event-calendar-admin-page",
+            "waitFor": ".events-fixture",
+            "colorSchemes": [
+                "light"
+            ],
             "composerName": "capell-app/events"
         },
         {
@@ -1974,6 +2016,12 @@
             "notes": "Capture from EventCalendarPage or any host dashboard that renders EventCalendarWidget, with occurrences in the next 90 days.",
             "screenshotPath": "packages/events/docs/screenshots/event-calendar-widget.png",
             "useCase": "An editor checks the calendar widget for upcoming event dates without leaving the current admin context.",
+            "scenario": "events-admin-admin-widget",
+            "url": "/screenshot-fixtures/events/event-calendar-widget",
+            "waitFor": ".events-fixture",
+            "colorSchemes": [
+                "light"
+            ],
             "composerName": "capell-app/events"
         },
         {
@@ -1987,6 +2035,12 @@
             "notes": "Requires a public listing page, site/language context, and public non-cancelled occurrences. Anonymous output must not expose authoring markers, editor URLs, internal IDs, or package internals.",
             "screenshotPath": "packages/events/docs/screenshots/events-listing-page.png",
             "useCase": "A visitor browses public upcoming events for the current site.",
+            "scenario": "events-frontend-frontend-render",
+            "url": "/screenshot-fixtures/events/events-listing-page",
+            "waitFor": ".events-fixture",
+            "colorSchemes": [
+                "light"
+            ],
             "composerName": "capell-app/events"
         },
         {
@@ -2000,6 +2054,12 @@
             "notes": "Requires a public calendar page and seeded public occurrences. Anonymous output must stay free of editor controls, model IDs, signed URLs, and package internals.",
             "screenshotPath": "packages/events/docs/screenshots/events-calendar-page.png",
             "useCase": "A visitor scans public events in calendar form without seeing admin-only metadata.",
+            "scenario": "events-frontend-frontend-render",
+            "url": "/screenshot-fixtures/events/events-calendar-page",
+            "waitFor": ".events-fixture",
+            "colorSchemes": [
+                "light"
+            ],
             "composerName": "capell-app/events"
         },
         {
@@ -2013,6 +2073,12 @@
             "notes": "The actual route name is capell-events.calendar-feed. Verify text/calendar output for seeded public events; screenshot can be a browser text capture of the feed body.",
             "screenshotPath": "packages/events/docs/screenshots/events-ics-feed.png",
             "useCase": "A visitor or calendar client subscribes to the site's public event feed.",
+            "scenario": "events-frontend-http-route",
+            "url": "/screenshot-fixtures/events/events-ics-feed",
+            "waitFor": ".events-fixture",
+            "colorSchemes": [
+                "light"
+            ],
             "composerName": "capell-app/events"
         },
         {

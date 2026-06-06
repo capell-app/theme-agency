@@ -6,13 +6,14 @@
 
 Events adds event records, reusable venues, recurring-occurrence expansion (`rlanvin/php-rrule`), native RSVP/registration with capacity + waitlist, public `.ics` calendar feeds (`spatie/icalendar-generator`), schema.org `Event` JSON-LD render hooks, an admin calendar page/widget, and frontend Livewire listing + calendar pages. Surfaces: `admin`, `frontend`, `console`. Core Actions: `ExpandEventRecurrenceAction` / `SyncEventOccurrencesAction` (occurrence materialization), `RegisterForEventOccurrenceAction` (locked RSVP), `BuildCalendarFeedAction`, `BuildEventSchemaAction`, `ProcessDueEventNotificationLogsAction` (scheduled reminders). Tables: `event_venues`, `events`, `event_occurrences`, `event_registrations`, `event_notification_logs`. Requires `admin`, `frontend`, `navigation`, `publishing-studio`; supports `address`, `form-builder`, `seo-suite`, `tags`, and integrates with `customer-portal` (registration self-service feed) and `site-discovery` (public URL contributor).
 
-Current marketplace summary (verbatim): _"Publish recurring events with venues, capacity-managed RSVPs, subscribable iCal feeds, and Google-ready Event schema — all inside your Capell admin."_ Manifest declares **1** screenshot (`docs/assets/marketplace/extension-card.jpg`). `docs/screenshots.json` defines ~7 capture targets (index, create, edit, venues, occurrences, registrations, calendar, frontend listing/calendar, feed) but only the extension card is committed — `docs/screenshots/*.png` do not exist yet. So the _capture contract_ exceeds the manifest's listed media, while _committed_ media is just the single card.
+Current marketplace summary (verbatim): _"Publish recurring events with venues, capacity-managed RSVPs, subscribable iCal feeds, and Google-ready Event schema — all inside your Capell admin."_ Manifest declares the extension card plus **11** committed runner-backed PNG captures covering event CRUD, venues, occurrences, registrations, admin calendar/widget, public listing/calendar, and the `.ics` feed. `docs/screenshots.json` now records the same Capell screenshot-runner fixture URLs, so the capture contract and marketplace media are aligned.
 
 ## Completed Improvement Slices
 
 - **2026-06-03:** Replaced the stubbed `EventsHealthCheck` with real diagnostics and refreshed marketplace copy.
 - **2026-06-04:** Wired confirm/cancel row actions into `EventRegistrationResource`, so staff can change registration status from the shipped admin surface and cancellations trigger the existing waitlist-promotion workflow. Declared the event resource permissions in `capell.json`.
 - **2026-06-04:** Queued registration notifications after commit, added a package doctor command, wired cancellation-driven waitlist promotion through an event listener, and scheduled stale waitlist reconcile.
+- **2026-06-06:** Captured and committed all 11 Events screenshot-runner targets, promoted them into `capell.json` marketplace media, and recorded runner URLs in `docs/screenshots.json`.
 
 ## 2. Improvements (existing functionality)
 
@@ -41,7 +42,7 @@ Declared `capabilities[]`: `events`, `events-admin`, `events-console`, `events-f
 
 - **Admin registration management shipped; portal cancellation remains.** `EventRegistrationResource` now exposes confirm/cancel row actions backed by `UpdateRegistrationStatusAction`; cancellation dispatches `EventRegistrationCancelled`, the registered listener triggers `PromoteWaitlistAction`, and a scheduled reconcile promotes stale waitlisted registrations. Remaining gap: customer-portal self-service cancellation. — `src/Actions/UpdateRegistrationStatusAction.php`, `src/Events/EventRegistrationCancelled.php`, `src/Listeners/PromoteWaitlistAfterRegistrationCancelled.php`, `src/Actions/ReconcileEventWaitlistsAction.php`
 - **Health checks and package doctor command shipped.** `EventsHealthCheck` now runs recurrence, registration-capacity, calendar-feed, and Event schema diagnostics with package tests, and `capell:events-doctor` is registered in the package manifest. — `src/Health/EventsHealthCheck.php`, `src/Console/Commands/EventsDoctorCommand.php`, `capell.json`
-- **Manifest-vs-reality mismatches narrowed.** Four Shield-backed policy subjects are now declared in `permissions[]`. Remaining mismatch: manifest lists 1 marketplace screenshot while `docs/screenshots.json` defines ~7 capture targets and **none of the `docs/screenshots/*.png` are committed** (only `extension-card.jpg`). — `capell.json`, `src/Providers/EventsServiceProvider.php`, `docs/screenshots.json`
+- **Manifest-vs-reality mismatches narrowed.** Four Shield-backed policy subjects are now declared in `permissions[]`, and the marketplace screenshot gallery now lists the extension card plus all 11 committed runner PNG captures from `docs/screenshots.json`. — `capell.json`, `src/Providers/EventsServiceProvider.php`, `docs/screenshots.json`
 - **Mail dispatch moved out of the locked registration transaction.** `EventRegistrationNotification` queues after commit and `RegisterForEventOccurrenceAction` schedules confirmation/reminder notifications only after the registration transaction commits. — `src/Actions/RegisterForEventOccurrenceAction.php`, `src/Notifications/EventRegistrationNotification.php`
 - **Timezone/DST correctness unproven.** `ExpandEventRecurrenceAction` builds `new RRULE($rule, $event->starts_at->toDateTimeImmutable())` then `CarbonImmutable::instance($occurrenceStart)->setTimezone($event->timezone)`. RRULE expands from the absolute start instant; wall-clock-anchored recurrences ("every Mon 09:00") can drift by an hour across DST boundaries. A test asserts "expands practical RRULE occurrences inside a range" but **no test crosses a DST transition**. — `src/Actions/ExpandEventRecurrenceAction.php`
 - **Public-output safety: models in Blade.** As §2.4 — anonymous templates receive Eloquent models; safe today only because the upstream query eager-loads. No regression test proves the listing/calendar Blade never lazy-loads or emits admin internals. Capell convention requires anonymous-safety tests for rendering changes. — `resources/views/livewire/page/`, `resources/views/livewire/event-calendar.blade.php`
@@ -51,7 +52,7 @@ Declared `capabilities[]`: `events`, `events-admin`, `events-console`, `events-f
 
 ## 5. Marketplace & Selling
 
-**Critique.** Manifest `summary`, package `description`, and composer `description` now use stronger buyer-facing copy. The remaining selling gap is media: the screenshot contract lists more capture targets than the single committed extension card.
+**Critique.** Manifest `summary`, package `description`, and composer `description` now use stronger buyer-facing copy. The media gap is closed for the static gallery: the marketplace manifest lists the extension card plus the 11 committed Capell runner PNG captures that prove admin, frontend, and feed workflows.
 
 **Improved summary (1 sentence):**
 
@@ -61,7 +62,7 @@ Declared `capabilities[]`: `events`, `events-admin`, `events-console`, `events-f
 
 > Events turns Capell into a full event platform: editors create one event with an RRULE recurrence and the package materializes every occurrence, each with its own page, venue, schedule, and capacity. Visitors RSVP with automatic waitlisting and confirmation/reminder emails, while a public `.ics` feed lets them subscribe in Apple/Google/Outlook calendars. Every occurrence emits schema.org `Event` JSON-LD for rich results, and an admin calendar plus dashboard widget keep the programme visible. Built on `php-rrule` and `spatie/icalendar-generator`, with first-class hooks into Publishing Studio, Site Discovery, and the Customer Portal.
 
-**Screenshot/media gaps.** Capture and commit the 7 targets already specified in `docs/screenshots.json` (admin index/create/edit, venues, occurrences, registrations, admin calendar) plus the public listing, public calendar, and a rendered `.ics`/Google rich-result preview; then sync `capell.json` `marketplace.screenshots` to match (currently only the card is listed). A short GIF of "create recurring event → occurrences appear → public calendar updates" would carry the value prop better than any static shot.
+**Screenshot/media gaps.** Static screenshots are now reconciled: the 11 runner captures cover admin index/create/edit, venues, occurrences, registrations, admin calendar/widget, public listing/calendar, and the rendered `.ics` feed. A short GIF of "create recurring event → occurrences appear → public calendar updates" would carry the value prop better than any static shot.
 
 **Positioning.** Premium / `content-product` bundle is right. Cross-sell paths via existing deps: **Address** (venue geocoding/maps), **Tags** (event categories/filtered feeds), **SEO Suite** (event sitemaps + schema validation), **Customer Portal** ("my registrations" + future cancel), **Site Discovery** (event URLs in canonical registry), **Payments** (paid ticketing — net-new, see §3). Bundle as a "Programming & Events" extension suite with Address + Tags + Customer Portal.
 
@@ -77,7 +78,7 @@ Declared `capabilities[]`: `events`, `events-admin`, `events-console`, `events-f
 | Auto-trigger `PromoteWaitlistAction` on cancellation (listener) + scheduled reconcile           | Done   | M      | High   | §4, §3         |
 | Add package-specific `doctor` command wiring for Events diagnostics                             | Done   | S      | Med    | §4             |
 | Move RSVP mail out of locked transaction; queue `EventRegistrationNotification`                 | Done   | M      | High   | §2.1, §2.2, §4 |
-| Capture + commit the 7 `screenshots.json` targets; sync manifest `screenshots`                  | Now    | S      | Med    | §1, §5         |
+| Capture + commit the 11 `screenshots.json` targets; sync manifest `screenshots`                 | Done   | S      | Med    | §1, §5         |
 | Fix composer `description`; adopt improved summary/description                                  | Done   | S      | Med    | §5             |
 | Declare `permissions[]` (and any settings) in `capell.json` to match registered policies        | Done   | S      | Med    | §4             |
 | Pass typed view data to public Blade; add anonymous-leak rendering test                         | Next   | M      | Med    | §2.4, §4       |
