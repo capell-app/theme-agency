@@ -7,6 +7,7 @@ namespace Capell\KnowledgeBase\Providers;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
 use Capell\Frontend\Support\Cache\CacheInvalidationRegistry;
+use Capell\KnowledgeBase\Console\Commands\DemoCommand;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticle;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticleFeedback;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticleVersion;
@@ -32,6 +33,7 @@ final class KnowledgeBaseServiceProvider extends AbstractPackageServiceProvider
             ->hasTranslations()
             ->hasViews()
             ->hasRoute('web')
+            ->hasCommand(DemoCommand::class)
             ->hasMigrations([
                 '2026_05_31_000001_create_knowledge_base_tables',
             ]);

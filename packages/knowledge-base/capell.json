@@ -71,7 +71,7 @@
     "commands": {
         "install": null,
         "setup": null,
-        "demo": null,
+        "demo": "capell:knowledge-base-demo",
         "doctor": null
     },
     "settings": [],

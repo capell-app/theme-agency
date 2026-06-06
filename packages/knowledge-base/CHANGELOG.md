@@ -4,6 +4,11 @@ All notable changes to `capell-app/knowledge-base` will be documented in this fi
 
 ## Unreleased
 
+- Added `capell:knowledge-base-demo` to seed public collections, articles, a related link, and sample feedback for demos and screenshot fixtures.
+- Registered Knowledge Base as an optional Capell Search source with public-safe article search payloads.
+- Added `/docs/llms.txt` AI-readable public output.
+- Added Article edit related-article management and feedback aggregate displays.
+- Corrected cache-safety metadata to the current global, single-locale content scope.
 - Added configurable throttle middleware to the anonymous article feedback endpoint.
 - Repeat feedback from the same visitor for the same article version now updates the existing feedback row instead of creating duplicate votes.
 - Updated package README text to describe the shipped admin resources, public `/docs` routes, and feedback safety behavior.
