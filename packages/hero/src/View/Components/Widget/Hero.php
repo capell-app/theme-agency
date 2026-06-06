@@ -15,6 +15,8 @@ use Capell\Frontend\Facades\Frontend;
 use Capell\Hero\Actions\ResolveHeroBackgroundDataAction;
 use Capell\Hero\Actions\ResolveHeroMediaDataAction;
 use Capell\Hero\Data\HeroAssetSlideData;
+use Capell\Hero\Data\HeroBackgroundData;
+use Capell\Hero\Data\HeroMediaData;
 use Capell\Hero\Data\HeroWidgetRenderData;
 use Capell\LayoutBuilder\Actions\GetWidgetContainerWidthAction;
 use Capell\LayoutBuilder\Actions\HeroWidgetHasPrimaryHeadingAction;
@@ -120,7 +122,11 @@ class Hero extends AbstractWidget
         $color = $this->stringMeta('color', $this->themeStringMeta($theme, 'color', 'dark') ?? 'dark') ?? 'dark';
         $contentAlign = $this->stringMeta('content_align', 'center');
         $contentWidth = $this->stringMeta('content_width', 'balanced');
-        $slides = $this->slides($page, $site, $theme, $color);
+        $heroBackgroundResolver = resolve(ResolveHeroBackgroundDataAction::class);
+        $heroMediaResolver = resolve(ResolveHeroMediaDataAction::class);
+        $baseHeroBackground = $heroBackgroundResolver->base($theme, $this->widget);
+        $baseHeroMedia = $heroMediaResolver->base($theme, $this->widget);
+        $slides = $this->slides($page, $site, $theme, $color, $baseHeroBackground, $baseHeroMedia);
         $pageHeroContentHtml = is_string($rawPageHero) && $rawPageHero !== ''
             ? RenderHtmlContentAction::run((string) __($rawPageHero, $pageVariables), array_filter(['page' => $page, 'site' => $site]))
             : null;
@@ -163,8 +169,8 @@ class Hero extends AbstractWidget
             pageBackgroundPosition: $this->stringMeta('background_position', 'center') ?? 'center',
             pageBackgroundAttachment: $this->stringMeta('background_attachment', 'scroll') ?? 'scroll',
             pageBackgroundRepeat: $this->stringMeta('background_repeat', 'no-repeat') ?? 'no-repeat',
-            pageHeroBackground: $hasFallbackSlide ? ResolveHeroBackgroundDataAction::run($theme, $this->widget) : null,
-            pageHeroMedia: $hasFallbackSlide ? ResolveHeroMediaDataAction::run($theme, $this->widget) : null,
+            pageHeroBackground: $hasFallbackSlide ? $baseHeroBackground : null,
+            pageHeroMedia: $hasFallbackSlide ? $baseHeroMedia : null,
             pageHeroContentHtml: $pageHeroContentHtml,
             pageHeroTitle: $pageHeroTitle,
             widgetFallbackTitle: $widgetFallbackTitle,
@@ -191,7 +197,14 @@ class Hero extends AbstractWidget
     /**
      * @return Collection<int, HeroAssetSlideData>
      */
-    private function slides(?Page $page, ?Site $site, ?Theme $theme, string $color): Collection
+    private function slides(
+        ?Page $page,
+        ?Site $site,
+        ?Theme $theme,
+        string $color,
+        HeroBackgroundData $baseHeroBackground,
+        HeroMediaData $baseHeroMedia,
+    ): Collection
     {
         $assets = $this->loadedRelation($this->widget, 'assets');
 
@@ -199,14 +212,26 @@ class Hero extends AbstractWidget
             return collect();
         }
 
+        $heroBackgroundResolver = resolve(ResolveHeroBackgroundDataAction::class);
+        $heroMediaResolver = resolve(ResolveHeroMediaDataAction::class);
+
         return $assets
             ->filter(fn (mixed $widgetAsset): bool => $widgetAsset instanceof WidgetAsset)
-            ->map(function (WidgetAsset $widgetAsset) use ($page, $site, $theme, $color): HeroAssetSlideData {
+            ->map(function (WidgetAsset $widgetAsset) use (
+                $baseHeroBackground,
+                $baseHeroMedia,
+                $heroBackgroundResolver,
+                $heroMediaResolver,
+                $page,
+                $site,
+                $theme,
+                $color,
+            ): HeroAssetSlideData {
                 $slide = HeroAssetSlideData::fromWidgetAsset($widgetAsset, $this->widget, $color, $page, $site);
 
                 return $slide->withResolvedLayers(
-                    heroBackground: ResolveHeroBackgroundDataAction::run($theme, $this->widget, $widgetAsset),
-                    heroMedia: ResolveHeroMediaDataAction::run($theme, $this->widget, $widgetAsset),
+                    heroBackground: $heroBackgroundResolver->forAsset($baseHeroBackground, $widgetAsset),
+                    heroMedia: $heroMediaResolver->forAsset($baseHeroMedia, $widgetAsset),
                     backgroundAttachment: $this->stringMeta('background_attachment', 'scroll'),
                     backgroundColor: $this->stringMeta('background_color', $this->themeStringMeta($theme, 'background_color')),
                     backgroundPosition: $this->stringMeta('background_position', 'center'),

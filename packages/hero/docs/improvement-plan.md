@@ -17,7 +17,7 @@ Hero ships the single default home-page hero widget (`capell::widget.hero`) plus
 
 ## 2. Improvements (existing functionality)
 
-1. **Memoize the per-slide background/media resolution** — `Hero::slides()` rebuilds each `HeroAssetSlideData` and calls `ResolveHeroBackgroundDataAction::run()` and `ResolveHeroMediaDataAction::run()` once _per asset_, then the page fallback calls both again. For a multi-slide carousel this is N×2 resolver passes per render, each iterating theme→widget→asset meta layers. The theme/widget layers are identical across slides; compute them once and only merge the asset layer per slide. Why: the manifest sets `frontendRenderBudgetMs: 20` and this is the dominant cost. — `src/View/Components/Widget/Hero.php` (lines 194–231) — M
+1. **Shipped 2026-06-06: memoized per-slide background/media resolution.** `ResolveHeroBackgroundDataAction` and `ResolveHeroMediaDataAction` now expose base theme+widget resolution plus asset-layer application, and `Hero::slides()` reuses the shared base data across all slides instead of recomputing theme/widget layers per asset. The page fallback also reuses the same base data. — `src/View/Components/Widget/Hero.php`, `src/Actions/ResolveHeroBackgroundDataAction.php`, `src/Actions/ResolveHeroMediaDataAction.php` — M
 
 2. **Shipped 2026-06-06: deduplicated `HeroAssetSlideData` construction** — `HeroAssetSlideData::withResolvedLayers()` now owns clone-with semantics for resolved background/media layers and fallback background properties, so `Hero::slides()` no longer re-instantiates the value object by copying every constructor field. Why: 18-arg re-instantiation was error-prone and obscured intent. — `src/View/Components/Widget/Hero.php`, `src/Data/HeroAssetSlideData.php` — S
 
@@ -97,7 +97,7 @@ Both are flat and describe plumbing ("setup", "rendering"), not the visitor-faci
 | Capture real Capell runner PNGs for `hero-home-widget` and optional `hero-slide-variant` | Done   | S      | Medium | §1, §5      |
 | Rewrite marketplace `summary` + composer `description`                             | Done   | S      | Medium | §5          |
 | Populate `capabilities[]` (video, overlay, carousel, inheritance)                  | Done   | S      | Medium | §3, §5      |
-| Memoize theme/widget resolver layers across slides (render budget)                 | Next   | M      | High   | §2.1        |
+| Shipped 2026-06-06: Memoize theme/widget resolver layers across slides (render budget) | Done   | M      | High   | §2.1        |
 | Shipped 2026-06-06: Extend `HeroHealthCheck` to verify seeded default-home layout state | Done   | S      | Low    | §4.3        |
 | Shipped 2026-06-06: Resolve cacheable/invalidationSources truth (cache safety)     | Done   | M      | Medium | §4.4, §4.5  |
 | Shipped 2026-06-06: Add render budget / zero-query render test                     | Done   | S      | Medium | §2.4, §4.6  |
