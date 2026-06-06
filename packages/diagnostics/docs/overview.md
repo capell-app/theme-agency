@@ -108,7 +108,7 @@ Helps operators and agencies see setup problems before they become publishing or
 - Explicitly mapped low-risk commands can run without confirmation.
 - Unknown dynamic `capell:*` commands require confirmation by default.
 - Install, setup, and upgrade commands are marked dangerous when mapped.
-- `capell:diagnostics:health`: runs declared extension health checks and supports `--json`.
+- `capell:diagnostics:health`: runs declared extension health checks and supports `--json` or `--csv` exports.
 
 ## Command Palette
 

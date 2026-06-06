@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Diagnostics\Console\Commands;
 
+use Capell\Diagnostics\Actions\Health\ExportExtensionHealthReportCsvAction;
 use Capell\Diagnostics\Actions\Health\RunExtensionHealthChecksAction;
 use Capell\Diagnostics\Data\Health\ExtensionHealthReportData;
 use Capell\Diagnostics\Data\Health\HealthCheckResultData;
@@ -14,7 +15,8 @@ use Symfony\Component\Console\Command\Command as SymfonyCommand;
 final class RunDiagnosticsHealthCommand extends Command
 {
     protected $signature = 'capell:diagnostics:health
-        {--json : Output health-check data as JSON}';
+        {--json : Output health-check data as JSON}
+        {--csv : Output health-check data as CSV}';
 
     protected $description = 'Run Diagnostics extension health checks.';
 
@@ -26,10 +28,22 @@ final class RunDiagnosticsHealthCommand extends Command
 
     public function handle(): int
     {
+        if ((bool) $this->option('json') && (bool) $this->option('csv')) {
+            $this->components->error((string) __('capell-diagnostics::package.health_command_single_export_format'));
+
+            return SymfonyCommand::FAILURE;
+        }
+
         $report = RunExtensionHealthChecksAction::run();
 
         if ((bool) $this->option('json')) {
             $this->output->writeln(json_encode($this->payloadFor($report), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR));
+
+            return $this->exitCodeFor($report);
+        }
+
+        if ((bool) $this->option('csv')) {
+            $this->output->writeln(ExportExtensionHealthReportCsvAction::run($report));
 
             return $this->exitCodeFor($report);
         }
