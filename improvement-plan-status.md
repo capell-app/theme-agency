@@ -88,6 +88,7 @@ This file tracks the active package-improvement wave at a repository level. Pack
 - Content Sections now promotes valid runner-backed admin index/create/edit captures; selector-modal and frontend widget-gallery captures still need dedicated fixture routes/states.
 - Shopify Commerce now promotes six Capell runner captures for the connected-store, catalog sync state, and cached product search workflows after seeding safe demo connection/product fixture data and fixing the real admin-page Blade namespace crash.
 - Notes now promotes runner-backed marketplace captures for the populated inbox, lifecycle controls, empty state, and dark-mode workflow after fixing the populated-inbox render crash.
+- Notes enums now implement Filament labels for status, visibility, and reminder recurrence, and the Add note action derives visibility options from those enum labels.
 - Block Library now promotes six committed Capell runner captures for the block registry list, editor form, asset settings, hero block, features block, and pricing block.
 - Theme Agency now promotes all 12 route-backed Capell runner captures from its screenshot contract.
 - Theme Corporate now promotes all 12 route-backed Capell runner captures from its screenshot contract.
