@@ -13,9 +13,14 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Portfolio",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/foundation-theme"
+        ],
         "supports": [
             "capell-app/layout-builder",
             "capell-app/frontend-authoring",
@@ -54,19 +59,31 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-portfolio-demo",
-        "demoParams": ["url", "languages", "sites"],
+        "demoParams": [
+            "url",
+            "languages",
+            "sites"
+        ],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-portfolio", "theme-portfolio-frontend"],
+    "capabilities": [
+        "theme-portfolio",
+        "theme-portfolio-frontend"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-portfolio"],
+        "cacheTags": [
+            "theme-portfolio"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -104,19 +121,12 @@
                 "path": "docs/screenshots/portfolio-homepage-layout.png",
                 "alt": "Theme Portfolio homepage with work-led hero, selected work, outcome proof, and enquiry path",
                 "caption": "Portfolio homepage"
-            },
-            {
-                "path": "docs/assets/marketplace/hero-desktop.jpg",
-                "alt": "Theme Portfolio Hero Desktop image",
-                "caption": "Theme Portfolio Hero Desktop"
-            },
-            {
-                "path": "docs/assets/marketplace/hero-mobile.jpg",
-                "alt": "Theme Portfolio Hero Mobile image",
-                "caption": "Theme Portfolio Hero Mobile"
             }
         ],
-        "categories": ["frontend", "themes"]
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "portfolio",

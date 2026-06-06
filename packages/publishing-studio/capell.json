@@ -13,7 +13,10 @@
         "bundle": "publishing-pro"
     },
     "namespace": "Capell\\PublishingStudio",
-    "surfaces": ["admin", "console"],
+    "surfaces": [
+        "admin",
+        "console"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -38,7 +41,9 @@
         "runtime": [
             "Capell\\PublishingStudio\\Providers\\PublishingStudioServiceProvider"
         ],
-        "admin": ["Capell\\PublishingStudio\\Providers\\AdminServiceProvider"],
+        "admin": [
+            "Capell\\PublishingStudio\\Providers\\AdminServiceProvider"
+        ],
         "frontend": []
     },
     "contributes": [
@@ -261,16 +266,6 @@
                 "caption": "Publishing Studio extension preview"
             },
             {
-                "path": "docs/assets/marketplace/hero-desktop.jpg",
-                "alt": "Publishing Studio editorial workflow on desktop",
-                "caption": "The Publishing Studio editorial workflow"
-            },
-            {
-                "path": "docs/assets/marketplace/hero-mobile.jpg",
-                "alt": "Publishing Studio editorial workflow on mobile",
-                "caption": "Publishing Studio on mobile"
-            },
-            {
                 "path": "docs/screenshots/editorial-timeline-dashboard.png",
                 "alt": "Editorial timeline dashboard with active drafts and review status",
                 "caption": "Editorial timeline dashboard"
@@ -301,7 +296,11 @@
                 "caption": "Stale draft management"
             }
         ],
-        "categories": ["admin", "console", "publishing-pro"]
+        "categories": [
+            "admin",
+            "console",
+            "publishing-pro"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": []
