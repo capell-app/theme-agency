@@ -107,9 +107,19 @@
         "cacheTags": ["knowledge-base"],
         "cacheSafety": {
             "cacheable": true,
-            "variesBy": ["site", "locale"],
+            "variesBy": [],
             "sensitiveOutput": false,
             "invalidationSources": [
+                {
+                    "model": "Capell\\KnowledgeBase\\Models\\KnowledgeBaseCollection",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                },
                 {
                     "model": "Capell\\KnowledgeBase\\Models\\KnowledgeBaseArticle",
                     "events": [

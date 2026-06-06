@@ -24,6 +24,7 @@ use Capell\KnowledgeBase\Manifest\KnowledgeBaseCollectionResourceContribution;
 use Capell\KnowledgeBase\Manifest\KnowledgeBaseFrontendRoutesContribution;
 use Capell\KnowledgeBase\Manifest\KnowledgeBaseModelsContribution;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticle;
+use Capell\KnowledgeBase\Models\KnowledgeBaseArticleVersion;
 use Capell\KnowledgeBase\Models\KnowledgeBaseCollection;
 use Capell\KnowledgeBase\Providers\AdminServiceProvider;
 use Capell\KnowledgeBase\Tests\KnowledgeBaseTestCase;
@@ -118,6 +119,12 @@ it('declares admin providers, resources, and owned tables in the manifest', func
         ->toBe(BuildKnowledgeBaseSearchDocumentsAction::class)
         ->and($manifest['actions']['buildAiReadableKnowledgeBaseOutput'])
         ->toBe(BuildAiReadableKnowledgeBaseOutputAction::class)
+        ->and($manifest['performance']['cacheSafety']['variesBy'])->toBe([])
+        ->and(array_column($manifest['performance']['cacheSafety']['invalidationSources'], 'model'))->toBe([
+            KnowledgeBaseCollection::class,
+            KnowledgeBaseArticle::class,
+            KnowledgeBaseArticleVersion::class,
+        ])
         ->and($manifest['capabilities'])->toContain(
             'knowledge-base-related-articles',
             'knowledge-base-versioned-articles',
