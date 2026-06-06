@@ -56,6 +56,16 @@ class ValidatePasswordChangeAction
             'password_confirmation' => $input->passwordConfirmation,
         ], [
             'password' => ['required', 'confirmed', $passwordRule],
+        ], [
+            'password.required' => __('capell-password-policy::validation.password_required'),
+            'password.confirmed' => __('capell-password-policy::validation.password_confirmed'),
+            'password.min.string' => __('capell-password-policy::validation.password_min', [
+                'min' => $settings->minimumPasswordLength,
+            ]),
+            'password.password.mixed' => __('capell-password-policy::validation.password_mixed'),
+            'password.password.numbers' => __('capell-password-policy::validation.password_numbers'),
+            'password.password.symbols' => __('capell-password-policy::validation.password_symbols'),
+            'password.password.uncompromised' => __('capell-password-policy::validation.password_uncompromised'),
         ])->validate();
 
         if ($user instanceof Model) {
