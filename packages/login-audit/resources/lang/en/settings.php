@@ -11,6 +11,7 @@ return [
     'device' => 'Device',
     'enable_user_resource_bridge' => 'Show Access Logs on Users',
     'enable_user_resource_bridge_helper' => 'Adds the access summary and authentication history relation to user editing when the host user model supports it.',
+    'export_csv' => 'Export CSV',
     'active_sessions' => 'Active sessions',
     'failed_attempts' => 'Failed attempts',
     'last_activity_at' => 'Last activity',

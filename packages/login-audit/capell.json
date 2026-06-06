@@ -41,7 +41,7 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["login-audit", "login-audit-admin", "login-audit-device-activity"],
+    "capabilities": ["login-audit", "login-audit-admin", "login-audit-device-activity", "login-audit-csv-export"],
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,

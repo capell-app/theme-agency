@@ -6,7 +6,9 @@ namespace Capell\LoginAudit\Filament\Resources\Users\RelationManagers;
 
 use BackedEnum;
 use Capell\Admin\Filament\Components\Tables\Columns\DateColumn;
+use Capell\LoginAudit\Actions\BuildLoginAuditsCsvAction;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
@@ -14,6 +16,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Override;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class LoginAuditsRelationManager extends RelationManager
 {
@@ -88,6 +91,12 @@ final class LoginAuditsRelationManager extends RelationManager
             ->filters([
                 TernaryFilter::make('is_trusted')
                     ->label(__('capell-login-audit::settings.trusted_device')),
+            ])
+            ->headerActions([
+                Action::make('exportLoginAuditsCsv')
+                    ->label(__('capell-login-audit::settings.export_csv'))
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(fn (): StreamedResponse => $this->downloadCsv()),
             ]);
     }
 
@@ -112,5 +121,18 @@ final class LoginAuditsRelationManager extends RelationManager
     private function loginSuccessful(mixed $state): bool
     {
         return in_array($state, [true, 1, '1'], true);
+    }
+
+    private function downloadCsv(): StreamedResponse
+    {
+        $ownerRecord = $this->getOwnerRecord();
+
+        return response()->streamDownload(
+            function () use ($ownerRecord): void {
+                echo BuildLoginAuditsCsvAction::run($ownerRecord);
+            },
+            'login-audits-' . $ownerRecord->getKey() . '-' . now()->format('Y-m-d-His') . '.csv',
+            ['Content-Type' => 'text/csv'],
+        );
     }
 }

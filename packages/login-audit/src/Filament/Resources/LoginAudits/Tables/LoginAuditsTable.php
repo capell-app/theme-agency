@@ -7,9 +7,11 @@ namespace Capell\LoginAudit\Filament\Resources\LoginAudits\Tables;
 use Capell\Admin\Filament\Components\Tables\Columns\DateColumn;
 use Capell\Admin\Filament\Components\Tables\Columns\IdentifierColumn;
 use Capell\Admin\Filament\Contracts\TableConfigurator;
+use Capell\LoginAudit\Actions\BuildLoginAuditsCsvAction;
 use Capell\LoginAudit\Models\LoginAudit;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -18,6 +20,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LoginAuditsTable implements TableConfigurator
 {
@@ -27,7 +30,10 @@ class LoginAuditsTable implements TableConfigurator
             ->modifyQueryUsing(fn (Builder $query) => $query->with(['authenticatable']))
             ->defaultSort('login_at', 'desc')
             ->columns(static::getTableColumns())
-            ->filters(self::getTableFilters());
+            ->filters(self::getTableFilters())
+            ->headerActions([
+                self::exportCsvAction(),
+            ]);
     }
 
     /**
@@ -121,6 +127,25 @@ class LoginAuditsTable implements TableConfigurator
             TernaryFilter::make('is_trusted')
                 ->label(__('capell-login-audit::settings.trusted_device')),
         ];
+    }
+
+    private static function exportCsvAction(): Action
+    {
+        return Action::make('exportLoginAuditsCsv')
+            ->label(__('capell-login-audit::settings.export_csv'))
+            ->icon('heroicon-o-arrow-down-tray')
+            ->action(fn (): StreamedResponse => self::downloadCsv());
+    }
+
+    private static function downloadCsv(?Model $authenticatable = null): StreamedResponse
+    {
+        return response()->streamDownload(
+            function () use ($authenticatable): void {
+                echo BuildLoginAuditsCsvAction::run($authenticatable);
+            },
+            'login-audits-' . now()->format('Y-m-d-His') . '.csv',
+            ['Content-Type' => 'text/csv'],
+        );
     }
 
     private static function getAuthenticatableName(LoginAudit $record): string
