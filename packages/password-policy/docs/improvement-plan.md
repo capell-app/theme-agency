@@ -28,7 +28,7 @@ Current marketplace `summary`: _"Enforce admin password expiry, forced resets, r
 Tied to `capabilities[]`: `password-policy`, `password-policy-admin`.
 
 - **Configurable complexity rules (closed in current slice).** The package now exposes minimum length, mixed-case, number, and symbol settings and wires them into `Password::min(...)->mixedCase()->numbers()->symbols()` in `ValidatePasswordChangeAction`. Keep future register/reset integration aligned with this same settings boundary. — **Differentiator-critical: this is the headline feature buyers expect.**
-- **Enforcement at non-admin auth entry points.** Rules only fire through the two Filament admin forms + the forced-change page. There is **no Fortify/registration/password-reset hook**: a password set via the host app's register or reset-password flow bypasses complexity, history, and compromised checks entirely. Provide a reusable `PasswordPolicyRule` (a single `ValidationRule` object built from settings) that host apps and Fortify `CreateNewUser` / `ResetUserPassword` can opt into. — **Table stakes for a "password policy" product.**
+- **Shipped 2026-06-06: reusable host-auth password rule.** `PasswordPolicyRule` now exposes the same settings-backed complexity, compromised-password, and optional user-history checks used by the admin action, and `docs/fortify.md` shows host Fortify `CreateNewUser` / `ResetUserPassword` opt-in snippets without adding a hard Fortify dependency. — **Table stakes boundary closed.**
 - **Account lockout / throttle on failed logins.** No brute-force protection (rate-limit, temporary lockout, lockout counter columns). A natural premium capability and a common compliance requirement. — **Differentiator.**
 - **Password expiry _notifications_.** Expiry only acts at request time (redirect). No "your password expires in N days" email/notification ahead of lockout. — **Differentiator.**
 - **HIBP hardening + admin toggle context.** The compromised check delegates to Laravel's `uncompromised()` (HIBP k-anonymity, range API). There is no timeout, failure fallback (fail-open vs fail-closed), result caching, or documentation of the privacy model. Add config for timeout + fail mode and document k-anonymity so security-conscious buyers trust it. — **Table stakes + trust.**
@@ -85,7 +85,7 @@ Tied to `capabilities[]`: `password-policy`, `password-policy-admin`.
 | Fix double/duplicate history write on admin edit; record once post-hash                      | Done   | M      | Medium | §2          |
 | De-duplicate extension-surface registration (bridge vs provider)                             | Done   | S      | Medium | §2          |
 | Prune `password_policy_password_histories` to configured count                               | Done   | S      | Medium | §2, §4      |
-| Ship reusable `PasswordPolicyRule` + Fortify register/reset hooks                            | Next   | M      | High   | §3          |
+| Ship reusable `PasswordPolicyRule` + Fortify register/reset hooks                            | Done   | M      | High   | §3          |
 | Route Action schema probes through `RuntimeSchemaState`; assert admin query budget           | Done   | M      | Medium | §2, §4      |
 | Translate core password validation failures into package i18n namespace                      | Done   | S      | Medium | §4          |
 | Emit password lifecycle events for login-audit / 2FA cross-sell                              | Next   | M      | Medium | §3, §5      |

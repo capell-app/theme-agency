@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Capell\PasswordPolicy\Actions;
 
-use Capell\Core\Support\Database\RuntimeSchemaState;
 use Capell\PasswordPolicy\Data\PasswordChangeData;
-use Capell\PasswordPolicy\Support\PasswordPolicySettingsResolver;
+use Capell\PasswordPolicy\Rules\PasswordPolicyRule;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use Lorisleiva\Actions\Concerns\AsObject;
 
@@ -31,74 +28,18 @@ class ValidatePasswordChangeAction
             ]);
         }
 
-        $settings = resolve(PasswordPolicySettingsResolver::class)->settings();
-
-        $passwordRule = Password::min($settings->minimumPasswordLength);
-
-        if ($settings->requireMixedCase) {
-            $passwordRule->mixedCase();
-        }
-
-        if ($settings->requireNumbers) {
-            $passwordRule->numbers();
-        }
-
-        if ($settings->requireSymbols) {
-            $passwordRule->symbols();
-        }
-
-        if ($checkCompromisedPasswords) {
-            $passwordRule->uncompromised();
-        }
-
         Validator::make([
             'password' => $input->password,
             'password_confirmation' => $input->passwordConfirmation,
         ], [
-            'password' => ['required', 'confirmed', $passwordRule],
+            'password' => [
+                'required',
+                'confirmed',
+                PasswordPolicyRule::forUser($user)->withCompromisedPasswordCheck($checkCompromisedPasswords),
+            ],
         ], [
             'password.required' => __('capell-password-policy::validation.password_required'),
             'password.confirmed' => __('capell-password-policy::validation.password_confirmed'),
-            'password.min.string' => __('capell-password-policy::validation.password_min', [
-                'min' => $settings->minimumPasswordLength,
-            ]),
-            'password.password.mixed' => __('capell-password-policy::validation.password_mixed'),
-            'password.password.numbers' => __('capell-password-policy::validation.password_numbers'),
-            'password.password.symbols' => __('capell-password-policy::validation.password_symbols'),
-            'password.password.uncompromised' => __('capell-password-policy::validation.password_uncompromised'),
         ])->validate();
-
-        if ($user instanceof Model) {
-            $this->ensurePasswordHasNotBeenUsed($user, $input->password);
-        }
-    }
-
-    private function ensurePasswordHasNotBeenUsed(Model $user, string $password): void
-    {
-        $settings = resolve(PasswordPolicySettingsResolver::class)->settings();
-
-        if (! $settings->passwordHistoryEnabled) {
-            return;
-        }
-
-        $passwordHashes = collect([(string) $user->getAttribute('password')]);
-
-        if (resolve(RuntimeSchemaState::class)->hasTable('password_policy_password_histories')) {
-            $historyHashes = DB::table('password_policy_password_histories')
-                ->where('user_id', $user->getKey())
-                ->latest('id')
-                ->limit(max(1, $settings->passwordHistoryCount))
-                ->pluck('password');
-
-            $passwordHashes = $passwordHashes->merge($historyHashes);
-        }
-
-        foreach ($passwordHashes as $passwordHash) {
-            if (Hash::check($password, $passwordHash)) {
-                throw ValidationException::withMessages([
-                    'password' => __('capell-password-policy::validation.password_reused'),
-                ]);
-            }
-        }
     }
 }
