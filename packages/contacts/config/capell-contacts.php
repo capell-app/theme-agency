@@ -11,4 +11,5 @@ return [
         'activities' => 'contact_activities',
     ],
     'hash_secret' => null,
+    'overview_stats_cache_ttl_seconds' => 300,
 ];

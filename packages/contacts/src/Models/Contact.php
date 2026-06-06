@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Contacts\Models;
 
 use Capell\Contacts\Enums\ContactStatus;
+use Capell\Contacts\Support\ContactsOverviewStatsCache;
 use Capell\Core\Models\Site;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
@@ -179,6 +180,16 @@ class Contact extends Model
             $contact->phone_hash = self::phoneHash($contact->phone);
             $contact->source_identifier_hash = self::sourceIdentifierHash($contact->source_identifier);
         });
+
+        static::saved(fn (Contact $contact): null => self::flushOverviewStats($contact));
+        static::deleted(fn (Contact $contact): null => self::flushOverviewStats($contact));
+    }
+
+    private static function flushOverviewStats(Contact $contact): null
+    {
+        ContactsOverviewStatsCache::flushForSite($contact->site_id);
+
+        return null;
     }
 
     /**

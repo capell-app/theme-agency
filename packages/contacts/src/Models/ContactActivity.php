@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Contacts\Models;
 
 use Capell\Contacts\Enums\ContactActivityType;
+use Capell\Contacts\Support\ContactsOverviewStatsCache;
 use Capell\Core\Models\Site;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -85,6 +86,20 @@ class ContactActivity extends Model
     public function subject(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    #[Override]
+    protected static function booted(): void
+    {
+        static::saved(fn (ContactActivity $activity): null => self::flushOverviewStats($activity));
+        static::deleted(fn (ContactActivity $activity): null => self::flushOverviewStats($activity));
+    }
+
+    private static function flushOverviewStats(ContactActivity $activity): null
+    {
+        ContactsOverviewStatsCache::flushForSite(is_int($activity->site_id) ? $activity->site_id : null);
+
+        return null;
     }
 
     /**
