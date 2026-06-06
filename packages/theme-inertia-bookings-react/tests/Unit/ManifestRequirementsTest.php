@@ -84,7 +84,8 @@ it('keeps the package manifest aligned with the react component pack', function 
 
         throw_unless(is_string($screenshotPath), RuntimeException::class, 'Required React component pack screenshot entries must have screenshot paths.');
 
-        expect($marketplaceScreenshotPaths)->toContain(str_replace('packages/theme-inertia-bookings-react/', '', $screenshotPath));
+        expect(file_exists(dirname(__DIR__, 4) . '/' . $screenshotPath))->toBeTrue()
+            ->and($marketplaceScreenshotPaths)->not->toContain(str_replace('packages/theme-inertia-bookings-react/', '', $screenshotPath));
     }
 
     expect($marketplaceScreenshotPaths)->toContain('docs/assets/marketplace/extension-card.svg');

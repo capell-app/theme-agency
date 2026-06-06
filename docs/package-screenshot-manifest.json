@@ -639,7 +639,7 @@
                 "sites"
             ],
             "doctorCommand": null,
-            "entryCount": 12,
+            "entryCount": 10,
             "browserTestCount": 0
         },
         {
@@ -654,7 +654,7 @@
                 "sites"
             ],
             "doctorCommand": null,
-            "entryCount": 12,
+            "entryCount": 10,
             "browserTestCount": 0
         },
         {
@@ -669,7 +669,7 @@
                 "sites"
             ],
             "doctorCommand": null,
-            "entryCount": 12,
+            "entryCount": 10,
             "browserTestCount": 0
         },
         {
@@ -684,7 +684,7 @@
                 "sites"
             ],
             "doctorCommand": null,
-            "entryCount": 9,
+            "entryCount": 7,
             "browserTestCount": 0
         },
         {
@@ -699,7 +699,7 @@
                 "sites"
             ],
             "doctorCommand": null,
-            "entryCount": 8,
+            "entryCount": 6,
             "browserTestCount": 0
         },
         {
@@ -747,7 +747,7 @@
                 "sites"
             ],
             "doctorCommand": null,
-            "entryCount": 9,
+            "entryCount": 7,
             "browserTestCount": 0
         },
         {
@@ -807,7 +807,7 @@
                 "sites"
             ],
             "doctorCommand": null,
-            "entryCount": 12,
+            "entryCount": 9,
             "browserTestCount": 0
         },
         {
@@ -997,6 +997,7 @@
             "notes": "Requires package migrations and seeded country rows with ISO2/ISO3 codes and language relationships.",
             "useCase": "An administrator reviews available countries before using country and address selectors elsewhere in Capell.",
             "screenshotPath": "packages/address/docs/screenshots/countries-admin-index.png",
+            "darkScreenshotPath": "packages/address/docs/screenshots/countries-admin-index-dark.png",
             "composerName": "capell-app/address"
         },
         {
@@ -1010,6 +1011,7 @@
             "notes": "Requires seeded addresses connected to seeded countries. Include at least one address with full line, city, state, postal code, and country data.",
             "useCase": "An administrator manages reusable postal addresses that other packages can reference instead of duplicating location fields.",
             "screenshotPath": "packages/address/docs/screenshots/addresses-admin-index.png",
+            "darkScreenshotPath": "packages/address/docs/screenshots/addresses-admin-index-dark.png",
             "composerName": "capell-app/address"
         },
         {
@@ -1027,6 +1029,7 @@
             "notes": "Open the create or edit modal from `CountryResource`; the current resource uses table actions rather than a separate create page.",
             "useCase": "An administrator adds or corrects a country name, ISO code, and language mapping.",
             "screenshotPath": "packages/address/docs/screenshots/create-edit-country-form.png",
+            "darkScreenshotPath": "packages/address/docs/screenshots/create-edit-country-form-dark.png",
             "composerName": "capell-app/address"
         },
         {
@@ -1044,6 +1047,7 @@
             "notes": "Open the create or edit modal from `AddressResource`; seed countries first so the country selector is meaningful.",
             "useCase": "An administrator creates a structured address with country, street, locality, region, and postal fields.",
             "screenshotPath": "packages/address/docs/screenshots/create-edit-address-form.png",
+            "darkScreenshotPath": "packages/address/docs/screenshots/create-edit-address-form-dark.png",
             "composerName": "capell-app/address"
         },
         {
@@ -1057,6 +1061,7 @@
             "notes": "Requires the host admin site form that consumes `SiteSchemaExtender` plus seeded countries and addresses.",
             "useCase": "A site administrator selects reusable address data while editing site-level settings.",
             "screenshotPath": "packages/address/docs/screenshots/site-settings-fields-where-address-data-is-injected.png",
+            "darkScreenshotPath": "packages/address/docs/screenshots/site-settings-fields-where-address-data-is-injected-dark.png",
             "composerName": "capell-app/address"
         },
         {
@@ -1070,6 +1075,7 @@
             "notes": "Requires `capell-app/agent-bridge` installed, settings migrated, and an admin session. This page is available at the Filament slug `capell-agent-bridge/prompt-builder`.",
             "useCase": "An administrator builds a scoped prompt for an external agent using the installed Capell package context.",
             "screenshotPath": "packages/agent-bridge/docs/screenshots/agent-bridge-prompt-builder-page.png",
+            "darkScreenshotPath": "packages/agent-bridge/docs/screenshots/agent-bridge-prompt-builder-page-dark.png",
             "composerName": "capell-app/agent-bridge"
         },
         {
@@ -1083,6 +1089,7 @@
             "notes": "The token UI is exposed through user-resource schema/relation manager integration, not a standalone resource. Capture from a host user edit screen after seeding an agent bridge token.",
             "useCase": "An administrator creates or reviews a token used by a trusted Agent Bridge client.",
             "screenshotPath": "packages/agent-bridge/docs/screenshots/token-management-or-setup-surface.png",
+            "darkScreenshotPath": "packages/agent-bridge/docs/screenshots/token-management-or-setup-surface-dark.png",
             "composerName": "capell-app/agent-bridge"
         },
         {
@@ -1096,6 +1103,7 @@
             "notes": "Requires a seeded capability provider and a pending `CapellAgentBridgeConfirmation`; the base page alone will not show a confirmation flow.",
             "useCase": "An administrator reviews a proposed capability run before confirming that an agent may execute it.",
             "screenshotPath": "packages/agent-bridge/docs/screenshots/capability-preview-and-confirmation-flow.png",
+            "darkScreenshotPath": "packages/agent-bridge/docs/screenshots/capability-preview-and-confirmation-flow-dark.png",
             "composerName": "capell-app/agent-bridge"
         },
         {
@@ -1109,6 +1117,7 @@
             "notes": "Capture from the user-resource audit relation manager after seeding capability invocation records.",
             "useCase": "An administrator reviews what an Agent Bridge client previewed, confirmed, or ran for a user.",
             "screenshotPath": "packages/agent-bridge/docs/screenshots/audit-entry-review.png",
+            "darkScreenshotPath": "packages/agent-bridge/docs/screenshots/audit-entry-review-dark.png",
             "composerName": "capell-app/agent-bridge"
         },
         {
@@ -1122,6 +1131,7 @@
             "notes": "Requires enabled Agent Bridge routes in `capell-agent-bridge.php`. Capture route/config health from the prompt builder or a harness health panel if the host app exposes one.",
             "useCase": "An operator confirms which Agent Bridge endpoints are enabled and whether token-authenticated requests can reach them.",
             "screenshotPath": "packages/agent-bridge/docs/screenshots/agent-bridge-server-health-output.png",
+            "darkScreenshotPath": "packages/agent-bridge/docs/screenshots/agent-bridge-server-health-output-dark.png",
             "composerName": "capell-app/agent-bridge"
         },
         {
@@ -1161,6 +1171,7 @@
             "notes": "Optional because this package registers services and actions but no standalone Filament UI. Capture only through a consuming package that renders registered `AIOrchestratorCapabilityData` entries.",
             "useCase": "A developer verifies that installed AI Orchestrator modules expose the expected capability labels and approval levels.",
             "screenshotPath": "packages/ai-orchestrator/docs/screenshots/capability-list-or-prompt-surface-where-provided-by-a-consuming-package.png",
+            "darkScreenshotPath": "packages/ai-orchestrator/docs/screenshots/capability-list-or-prompt-surface-where-provided-by-a-consuming-package-dark.png",
             "composerName": "capell-app/ai-orchestrator"
         },
         {
@@ -1174,6 +1185,7 @@
             "notes": "Optional and blocked until a Layout Builder consuming UI exposes `LayoutBuilderAIOrchestratorModule`; this package only provides the integration module and preview action.",
             "useCase": "An editor previews an AI-generated Layout Builder plan before any layout content is applied.",
             "screenshotPath": "packages/ai-orchestrator/docs/screenshots/layout-builder-layout-preview-workflow-if-layout-builder-integration-is-enabled.png",
+            "darkScreenshotPath": "packages/ai-orchestrator/docs/screenshots/layout-builder-layout-preview-workflow-if-layout-builder-integration-is-enabled-dark.png",
             "composerName": "capell-app/ai-orchestrator"
         },
         {
@@ -1187,6 +1199,7 @@
             "notes": "Optional and requires a consuming package that persists or displays review-required capability runs. AI Orchestrator itself keeps run state in data objects.",
             "useCase": "A reviewer sees that an AI capability result needs human approval before the consuming package acts on it.",
             "screenshotPath": "packages/ai-orchestrator/docs/screenshots/approval-state-where-a-capability-requires-review.png",
+            "darkScreenshotPath": "packages/ai-orchestrator/docs/screenshots/approval-state-where-a-capability-requires-review-dark.png",
             "composerName": "capell-app/ai-orchestrator"
         },
         {
@@ -1202,6 +1215,7 @@
             "notes": "Requires API installed, Layout Builder installed, and a seeded published page with a resolvable URL. Capture the JSON body plus `X-Capell-Api-Version` and `X-Capell-Cache-Tags` headers.",
             "useCase": "A frontend renderer resolves a published Capell page into public JSON for rendering outside the CMS.",
             "screenshotPath": "packages/api/docs/screenshots/page-resolve-success-json.png",
+            "darkScreenshotPath": "packages/api/docs/screenshots/page-resolve-success-json-dark.png",
             "composerName": "capell-app/api"
         },
         {
@@ -1247,6 +1261,7 @@
             "notes": "Requires Layout Builder and a seeded page with bounded layout content. Verify public JSON does not expose authoring metadata, field paths, or signed editor URLs.",
             "useCase": "A frontend renderer requests the bounded layout graph for a published page.",
             "screenshotPath": "packages/api/docs/screenshots/page-resolve-layout-json.png",
+            "darkScreenshotPath": "packages/api/docs/screenshots/page-resolve-layout-json-dark.png",
             "composerName": "capell-app/api"
         },
         {
@@ -1383,6 +1398,7 @@
             "notes": "Requires Blog plus its required Capell extensions installed, package migrations, and seeded draft/published articles with sites, layouts, URLs, translations, and tags.",
             "useCase": "An editor reviews the article queue, publish windows, language coverage, and article status before editing content.",
             "screenshotPath": "packages/blog/docs/screenshots/articles-admin-index.png",
+            "darkScreenshotPath": "packages/blog/docs/screenshots/articles-admin-index-dark.png",
             "composerName": "capell-app/blog"
         },
         {
@@ -1396,6 +1412,7 @@
             "notes": "Requires seeded sites, article type, layouts, and tags so relationship fields are populated. The batch harness could not complete extension install until required dependency extensions were marked installed.",
             "useCase": "An editor creates or updates an article with publishing windows, metadata, layout selection, media, and taxonomy.",
             "screenshotPath": "packages/blog/docs/screenshots/create-edit-article-form.png",
+            "darkScreenshotPath": "packages/blog/docs/screenshots/create-edit-article-form-dark.png",
             "composerName": "capell-app/blog"
         },
         {
@@ -1740,6 +1757,7 @@
             "notes": "Capture after installing content-sections with block-library and layout-builder, with at least three seeded sections across different blueprints so table filters, columns, and navigation state are visible.",
             "screenshotPath": "packages/content-sections/docs/screenshots/sections-index.png",
             "useCase": "An editor reviews reusable sections before choosing which shared content block to update.",
+            "darkScreenshotPath": "packages/content-sections/docs/screenshots/sections-index-dark.png",
             "composerName": "capell-app/content-sections"
         },
         {
@@ -1936,6 +1954,7 @@
             "notes": "Capture as an admin who can manage extensions, with the Insert example site data header action available. Opening the action modal is useful when the runner supports modal state.",
             "screenshotPath": "packages/demo-kit/docs/screenshots/demo-kit-admin-page.png",
             "useCase": "An administrator starts deterministic demo content generation from the package-owned admin page.",
+            "darkScreenshotPath": "packages/demo-kit/docs/screenshots/demo-kit-admin-page-dark.png",
             "composerName": "capell-app/demo-kit"
         },
         {
@@ -1968,6 +1987,7 @@
             "notes": "Requires Demo Kit generated page data with a layout widget using the demo-page-content renderable. Public output should show package Blade presentation, not stored Tailwind markup from database content.",
             "screenshotPath": "packages/demo-kit/docs/screenshots/demo-page-content-widget.png",
             "useCase": "A maintainer verifies generated demo pages render designed content through the package-owned Blade view.",
+            "darkScreenshotPath": "packages/demo-kit/docs/screenshots/demo-page-content-widget-dark.png",
             "composerName": "capell-app/demo-kit"
         },
         {
@@ -1982,6 +2002,7 @@
             "notes": "Requires a generated homepage layout that includes a homepage-section renderable such as the command-centre hero widget.",
             "screenshotPath": "packages/demo-kit/docs/screenshots/homepage-section-widget.png",
             "useCase": "A maintainer checks the generated homepage uses portable CMS data with presentation kept in package Blade.",
+            "darkScreenshotPath": "packages/demo-kit/docs/screenshots/homepage-section-widget-dark.png",
             "composerName": "capell-app/demo-kit"
         },
         {
@@ -1995,6 +2016,7 @@
             "notes": "Capture as a user with View:DeploymentConnectionPage. This committed capture shows the pre-connection state with GitHub, GitLab, and Bitbucket OAuth entry points.",
             "screenshotPath": "packages/deployments/docs/screenshots/deployment-connection-page.png",
             "useCase": "An operator starts the Git provider OAuth flow used to connect the repository for package install pull requests.",
+            "darkScreenshotPath": "packages/deployments/docs/screenshots/deployment-connection-page-dark.png",
             "composerName": "capell-app/deployments"
         },
         {
@@ -2189,6 +2211,7 @@
             "notes": "Capture after seeding MailTracker sent email rows with subjects, sender/recipient addresses, opens, clicks, and stored content state.",
             "useCase": "A support user reviews sent transactional emails and delivery engagement signals in the Capell admin.",
             "screenshotPath": "packages/email-studio/docs/screenshots/sent-emails-index.png",
+            "darkScreenshotPath": "packages/email-studio/docs/screenshots/sent-emails-index-dark.png",
             "composerName": "capell-app/email-studio"
         },
         {
@@ -2205,6 +2228,7 @@
             "notes": "Capture after seeding a MailTracker sent email record with headers, stored HTML content, and at least one tracked URL click row.",
             "useCase": "A support user opens an immutable sent email snapshot to inspect metadata, headers, tracked URLs, and stored HTML output.",
             "screenshotPath": "packages/email-studio/docs/screenshots/sent-email-view.png",
+            "darkScreenshotPath": "packages/email-studio/docs/screenshots/sent-email-view-dark.png",
             "composerName": "capell-app/email-studio"
         },
         {
@@ -2507,6 +2531,7 @@
             "notes": "Capture the Page edit header with the Preview group showing the separate `Changes` and `Live page` actions.",
             "useCase": "An editor chooses between a temporary unsaved preview and the saved public page.",
             "screenshotPath": "packages/filament-peek/docs/screenshots/page-edit-preview-actions.png",
+            "darkScreenshotPath": "packages/filament-peek/docs/screenshots/page-edit-preview-actions-dark.png",
             "composerName": "capell-app/filament-peek"
         },
         {
@@ -2553,6 +2578,7 @@
             "notes": "Capture after installing capell-app/form-builder in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "An administrator reviews form definitions and their publication/status state.",
             "screenshotPath": "packages/form-builder/docs/screenshots/form-builder-admin-index.png",
+            "darkScreenshotPath": "packages/form-builder/docs/screenshots/form-builder-admin-index-dark.png",
             "composerName": "capell-app/form-builder"
         },
         {
@@ -2566,6 +2592,7 @@
             "notes": "Capture after installing capell-app/form-builder in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "An editor builds or adjusts a form schema, field types, validation, and notification settings.",
             "screenshotPath": "packages/form-builder/docs/screenshots/create-edit-form-schema-screen.png",
+            "darkScreenshotPath": "packages/form-builder/docs/screenshots/create-edit-form-schema-screen-dark.png",
             "composerName": "capell-app/form-builder"
         },
         {
@@ -2579,6 +2606,7 @@
             "notes": "Capture after installing capell-app/form-builder in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "An administrator triages unread, spam, archived, and normal submissions.",
             "screenshotPath": "packages/form-builder/docs/screenshots/submissions-index.png",
+            "darkScreenshotPath": "packages/form-builder/docs/screenshots/submissions-index-dark.png",
             "composerName": "capell-app/form-builder"
         },
         {
@@ -2592,6 +2620,7 @@
             "notes": "Capture after installing capell-app/form-builder in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "A visitor completes a seeded public form rendered through the frontend component.",
             "screenshotPath": "packages/form-builder/docs/screenshots/frontend-form-output.png",
+            "darkScreenshotPath": "packages/form-builder/docs/screenshots/frontend-form-output-dark.png",
             "composerName": "capell-app/form-builder"
         },
         {
@@ -2605,6 +2634,7 @@
             "notes": "Capture after installing capell-app/form-builder in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "An administrator reads a submission payload and reply context without exposing encrypted raw storage.",
             "screenshotPath": "packages/form-builder/docs/screenshots/submission-detail-view.png",
+            "darkScreenshotPath": "packages/form-builder/docs/screenshots/submission-detail-view-dark.png",
             "composerName": "capell-app/form-builder"
         },
         {
@@ -2618,6 +2648,7 @@
             "notes": "Capture after installing capell-app/foundation-theme in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "A site owner adjusts Foundation Theme settings and reviews theme defaults.",
             "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-theme-settings-screen.png",
+            "darkScreenshotPath": "packages/foundation-theme/docs/screenshots/foundation-theme-settings-screen-dark.png",
             "composerName": "capell-app/foundation-theme"
         },
         {
@@ -2631,6 +2662,7 @@
             "notes": "Capture after installing capell-app/foundation-theme in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "A developer verifies the generated Tailwind entrypoint after package/theme asset registration.",
             "screenshotPath": "packages/foundation-theme/docs/screenshots/generated-tailwind-asset-output-review.png",
+            "darkScreenshotPath": "packages/foundation-theme/docs/screenshots/generated-tailwind-asset-output-review-dark.png",
             "composerName": "capell-app/foundation-theme"
         },
         {
@@ -2644,6 +2676,7 @@
             "notes": "Capture after installing capell-app/foundation-theme in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "A visitor sees a seeded page rendered by Foundation Theme with its header, footer, tokens, and components.",
             "screenshotPath": "packages/foundation-theme/docs/screenshots/frontend-page-using-the-foundation-theme.png",
+            "darkScreenshotPath": "packages/foundation-theme/docs/screenshots/frontend-page-using-the-foundation-theme-dark.png",
             "composerName": "capell-app/foundation-theme"
         },
         {
@@ -2920,6 +2953,7 @@
             "notes": "Capture a public page whose theme calls @frontendOptimizerAssets(...) and verify the emitted CSS and JavaScript tags match the seeded render profile.",
             "useCase": "A developer verifies a render profile emits the expected CSS and JavaScript assets.",
             "screenshotPath": "packages/frontend-optimizer/docs/screenshots/frontend-optimizer-profile-assets.png",
+            "darkScreenshotPath": "packages/frontend-optimizer/docs/screenshots/frontend-optimizer-profile-assets-dark.png",
             "composerName": "capell-app/frontend-optimizer"
         },
         {
@@ -2933,6 +2967,7 @@
             "notes": "Capture the generated critical CSS or manifest artifact for a seeded render profile after the optimizer has run.",
             "useCase": "A developer reviews generated critical CSS or its manifest artifact for a seeded render profile.",
             "screenshotPath": "packages/frontend-optimizer/docs/screenshots/frontend-optimizer-critical-css-output.png",
+            "darkScreenshotPath": "packages/frontend-optimizer/docs/screenshots/frontend-optimizer-critical-css-output-dark.png",
             "composerName": "capell-app/frontend-optimizer"
         },
         {
@@ -3224,10 +3259,11 @@
             "targetType": "frontend-url",
             "target": null,
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/foundation-theme/foundation-homepage-layout",
+            "url": "/screenshot-fixtures/insights/frontend-page-with-tracker-active",
             "waitFor": "script[data-capell-insights-tracker]",
+            "user": false,
             "required": false,
-            "notes": "Optional until the Capell screenshot runner has a route-backed public fixture that renders Capell frontend BodyEnd hooks with Insights enabled. The current Foundation fixture does not render the hook, so `script[data-capell-insights-tracker]` times out.",
+            "notes": "Capture through the Insights package-owned public fixture route, which is enabled only for screenshot runs and renders the real BodyEnd hook output.",
             "useCase": "A visitor loads a public page where the tracker script is active and consent rules are respected.",
             "screenshotPath": "packages/insights/docs/screenshots/frontend-page-with-tracker-active.png",
             "composerName": "capell-app/insights"
@@ -3240,10 +3276,11 @@
             "targetType": "frontend-url",
             "target": null,
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/foundation-theme/foundation-homepage-layout",
+            "url": "/screenshot-fixtures/insights/consent-banner-flow",
             "waitFor": "[data-capell-insights-consent-banner]:not([hidden])",
+            "user": false,
             "required": false,
-            "notes": "Optional until the Capell screenshot runner has a route-backed public fixture that renders Capell frontend BodyEnd hooks with Insights enabled in a fresh browser context with no capell_insights_consent localStorage entry and no capell_insights_visit cookie. The capture must show the packaged consent banner, not a plain demo page.",
+            "notes": "Capture through the Insights package-owned public fixture route in a fresh browser context with no capell_insights_consent localStorage entry and no capell_insights_visit cookie. The route forces the packaged consent banner on for this screen.",
             "useCase": "A first-time visitor reviews the packaged accept, reject, and manage choices before analytics tracking begins.",
             "screenshotPath": "packages/insights/docs/screenshots/consent-banner-flow.png",
             "composerName": "capell-app/insights"
@@ -3384,6 +3421,7 @@
             "notes": "Captured in the Laravel 13 demo harness after publishing the package migration and seeding three login audit rows.",
             "screenshotPath": "packages/login-audit/docs/screenshots/login-audits-admin-index.png",
             "useCase": "An administrator reviews successful and failed authentication events for the demo admin user.",
+            "darkScreenshotPath": "packages/login-audit/docs/screenshots/login-audits-admin-index-dark.png",
             "composerName": "capell-app/login-audit"
         },
         {
@@ -3397,6 +3435,7 @@
             "notes": "Captured with the table filter panel open on the Login Audit resource.",
             "screenshotPath": "packages/login-audit/docs/screenshots/login-audit-table-filters.png",
             "useCase": "An administrator filters authentication events by success state, login date range, or cleared-by-user state.",
+            "darkScreenshotPath": "packages/login-audit/docs/screenshots/login-audit-table-filters-dark.png",
             "composerName": "capell-app/login-audit"
         },
         {
@@ -3410,6 +3449,7 @@
             "notes": "The widget is registered through the Capell dashboard contribution system and is surfaced in dashboard configuration; it does not appear on the default main dashboard layout in the core-only harness.",
             "screenshotPath": "packages/login-audit/docs/screenshots/dashboard-widget.png",
             "useCase": "A site owner confirms that Access Logs is available in dashboard/widget configuration after the package is installed.",
+            "darkScreenshotPath": "packages/login-audit/docs/screenshots/dashboard-widget-dark.png",
             "composerName": "capell-app/login-audit"
         },
         {
@@ -3423,6 +3463,7 @@
             "notes": "Captured on the shared Capell settings page after the Login Audit settings schema was registered.",
             "screenshotPath": "packages/login-audit/docs/screenshots/login-audit-settings-screen.png",
             "useCase": "A site owner configures retention, IP tracking, visibility, and the user-resource bridge for login audit data.",
+            "darkScreenshotPath": "packages/login-audit/docs/screenshots/login-audit-settings-screen-dark.png",
             "composerName": "capell-app/login-audit"
         },
         {
@@ -3475,6 +3516,7 @@
             "notes": "Capture the media surface where the Doctor image action appears when an image doctor provider is bound.",
             "useCase": "An administrator opens an image media record and uses the Doctor image action when an image doctor provider is bound.",
             "screenshotPath": "packages/media-ai/docs/screenshots/media-ai-doctor-image.png",
+            "darkScreenshotPath": "packages/media-ai/docs/screenshots/media-ai-doctor-image-dark.png",
             "composerName": "capell-app/media-ai"
         },
         {
@@ -3488,6 +3530,7 @@
             "notes": "Capture after installing capell-app/media-library in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "An administrator reviews media health status for stale, missing, or incomplete assets.",
             "screenshotPath": "packages/media-library/docs/screenshots/media-health-page.png",
+            "darkScreenshotPath": "packages/media-library/docs/screenshots/media-health-page-dark.png",
             "composerName": "capell-app/media-library"
         },
         {
@@ -3501,6 +3544,7 @@
             "notes": "Capture the table inside MediaHealthPage after installing capell-app/media-library in the isolated demo harness and seeding missing-alt, stale, and unused Curator records.",
             "useCase": "An administrator scans individual media health rows and remediation state.",
             "screenshotPath": "packages/media-library/docs/screenshots/media-health-table.png",
+            "darkScreenshotPath": "packages/media-library/docs/screenshots/media-health-table-dark.png",
             "composerName": "capell-app/media-library"
         },
         {
@@ -3514,6 +3558,7 @@
             "notes": "Capture a host Capell form that resolves Capell\\Core\\Contracts\\Media\\MediaFieldFactory to CuratorMediaFieldFactory and renders Awcodes CuratorPicker for a media FK column.",
             "useCase": "An editor selects media through the Curator field embedded in a Capell form.",
             "screenshotPath": "packages/media-library/docs/screenshots/curator-media-field-inside-a-form.png",
+            "darkScreenshotPath": "packages/media-library/docs/screenshots/curator-media-field-inside-a-form-dark.png",
             "composerName": "capell-app/media-library"
         },
         {
@@ -3527,6 +3572,7 @@
             "notes": "Run the migration command with a seeded Spatie media fixture, preferably first with --dry-run, and capture the summary table and warning output.",
             "useCase": "A developer reviews the Spatie-to-Curator migration report before or after migration.",
             "screenshotPath": "packages/media-library/docs/screenshots/migration-command-output-or-report.png",
+            "darkScreenshotPath": "packages/media-library/docs/screenshots/migration-command-output-or-report-dark.png",
             "composerName": "capell-app/media-library"
         },
         {
@@ -3540,6 +3586,7 @@
             "notes": "Capture after installing capell-app/migration-assistant in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "An administrator reviews import sessions and their current migration state.",
             "screenshotPath": "packages/migration-assistant/docs/screenshots/import-session-index-or-host-admin-surface.png",
+            "darkScreenshotPath": "packages/migration-assistant/docs/screenshots/import-session-index-or-host-admin-surface-dark.png",
             "composerName": "capell-app/migration-assistant"
         },
         {
@@ -3553,6 +3600,7 @@
             "notes": "Capture after installing capell-app/migration-assistant in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "An operator reviews validation errors and warnings before executing an import.",
             "screenshotPath": "packages/migration-assistant/docs/screenshots/import-validation-summary.png",
+            "darkScreenshotPath": "packages/migration-assistant/docs/screenshots/import-validation-summary-dark.png",
             "composerName": "capell-app/migration-assistant"
         },
         {
@@ -3579,6 +3627,7 @@
             "notes": "Capture after installing capell-app/migration-assistant in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "An operator maps imported references to existing Capell records before execution.",
             "screenshotPath": "packages/migration-assistant/docs/screenshots/relation-resolution-review.png",
+            "darkScreenshotPath": "packages/migration-assistant/docs/screenshots/relation-resolution-review-dark.png",
             "composerName": "capell-app/migration-assistant"
         },
         {
@@ -3592,6 +3641,7 @@
             "notes": "Capture after installing capell-app/migration-assistant in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "An operator reviews what rollback changed and what manual cleanup remains.",
             "screenshotPath": "packages/migration-assistant/docs/screenshots/import-rollback-report-view.png",
+            "darkScreenshotPath": "packages/migration-assistant/docs/screenshots/import-rollback-report-view-dark.png",
             "composerName": "capell-app/migration-assistant"
         },
         {
@@ -3605,6 +3655,7 @@
             "notes": "Capture after installing capell-app/migration-assistant in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "An operator prepares an export package and confirms included resources before download.",
             "screenshotPath": "packages/migration-assistant/docs/screenshots/package-export-intent-screen.png",
+            "darkScreenshotPath": "packages/migration-assistant/docs/screenshots/package-export-intent-screen-dark.png",
             "composerName": "capell-app/migration-assistant"
         },
         {
@@ -3922,6 +3973,7 @@
             "notes": "Requires seeded notes covering assignment, mention, resolved, and open states.",
             "useCase": "An administrator reviews seeded assigned and mentioned notes with resolve, reopen, and complete-assignment controls.",
             "screenshotPath": "packages/notes/docs/screenshots/notes-attention-counts.png",
+            "darkScreenshotPath": "packages/notes/docs/screenshots/notes-attention-counts-dark.png",
             "composerName": "capell-app/notes"
         },
         {
@@ -3938,6 +3990,7 @@
             "notes": "Capture the package settings page after the package is installed and settings migrations have run.",
             "useCase": "An administrator configures password age, reuse, complexity, and enforcement rules.",
             "screenshotPath": "packages/password-policy/docs/screenshots/password-policy-settings.png",
+            "darkScreenshotPath": "packages/password-policy/docs/screenshots/password-policy-settings-dark.png",
             "composerName": "capell-app/password-policy"
         },
         {
@@ -3954,6 +4007,7 @@
             "notes": "Capture with a user flagged for password change so the form is visible.",
             "useCase": "A flagged administrator is forced through the password-change form before continuing in the admin panel.",
             "screenshotPath": "packages/password-policy/docs/screenshots/forced-password-change.png",
+            "darkScreenshotPath": "packages/password-policy/docs/screenshots/forced-password-change-dark.png",
             "composerName": "capell-app/password-policy"
         },
         {
@@ -3970,6 +4024,7 @@
             "notes": "Capture the core Users table with package-added password status columns, filters, and require-password-change action.",
             "useCase": "An administrator reviews password status columns, filters users by policy state, and triggers require-password-change actions.",
             "screenshotPath": "packages/password-policy/docs/screenshots/user-password-policy-columns.png",
+            "darkScreenshotPath": "packages/password-policy/docs/screenshots/user-password-policy-columns-dark.png",
             "composerName": "capell-app/password-policy"
         },
         {
@@ -4463,6 +4518,7 @@
             "notes": "Capture a Capell admin edit page heading with record-switcher page suggestions loaded.",
             "useCase": "An editor jumps between related editable records without returning to the table view.",
             "screenshotPath": "packages/record-switcher/docs/screenshots/admin-heading-switcher.png",
+            "darkScreenshotPath": "packages/record-switcher/docs/screenshots/admin-heading-switcher-dark.png",
             "composerName": "capell-app/record-switcher"
         },
         {
@@ -4476,6 +4532,7 @@
             "notes": "Capture after installing capell-app/search in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "A visitor searches seeded public content and sees ranked results and pagination.",
             "screenshotPath": "packages/search/docs/screenshots/frontend-search-results-page.png",
+            "darkScreenshotPath": "packages/search/docs/screenshots/frontend-search-results-page-dark.png",
             "composerName": "capell-app/search"
         },
         {
@@ -4489,6 +4546,7 @@
             "notes": "Capture with a compatible theme header slot. In a core-only harness, render the package form in a header slot without installing another frontend package.",
             "useCase": "A visitor uses the header search control supplied by the package frontend surface.",
             "screenshotPath": "packages/search/docs/screenshots/header-search-field.png",
+            "darkScreenshotPath": "packages/search/docs/screenshots/header-search-field-dark.png",
             "composerName": "capell-app/search"
         },
         {
@@ -4502,6 +4560,7 @@
             "notes": "Capture after installing capell-app/search in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "An administrator reviews top searched terms from seeded query logs.",
             "screenshotPath": "packages/search/docs/screenshots/top-searches-widget.png",
+            "darkScreenshotPath": "packages/search/docs/screenshots/top-searches-widget-dark.png",
             "composerName": "capell-app/search"
         },
         {
@@ -4515,6 +4574,7 @@
             "notes": "Capture after installing capell-app/search in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "An administrator reviews trending searches over the configured window.",
             "screenshotPath": "packages/search/docs/screenshots/trending-searches-widget.png",
+            "darkScreenshotPath": "packages/search/docs/screenshots/trending-searches-widget-dark.png",
             "composerName": "capell-app/search"
         },
         {
@@ -4528,6 +4588,7 @@
             "notes": "Capture after installing capell-app/search in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "An administrator identifies search terms with no matching content.",
             "screenshotPath": "packages/search/docs/screenshots/zero-result-searches-widget.png",
+            "darkScreenshotPath": "packages/search/docs/screenshots/zero-result-searches-widget-dark.png",
             "composerName": "capell-app/search"
         },
         {
@@ -4541,6 +4602,7 @@
             "notes": "Capture after installing capell-app/search in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "A site owner configures search settings, logging, retention, and result behavior.",
             "screenshotPath": "packages/search/docs/screenshots/search-settings-screen.png",
+            "darkScreenshotPath": "packages/search/docs/screenshots/search-settings-screen-dark.png",
             "composerName": "capell-app/search"
         },
         {
@@ -4554,6 +4616,7 @@
             "notes": "Committed Capell runner capture promoted in marketplace media. Open a seeded Page edit screen and capture the SEO tab/panel added by SEO Suite.",
             "useCase": "An editor edits page-level metadata, canonical state, social metadata, and SEO checks.",
             "screenshotPath": "packages/seo-suite/docs/screenshots/page-seo-panel.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/page-seo-panel-dark.png",
             "composerName": "capell-app/seo-suite"
         },
         {
@@ -4567,6 +4630,7 @@
             "notes": "Committed Capell runner capture promoted in marketplace media. Seed at least one page_seo_snapshots row so score, severity, and status columns are visible.",
             "useCase": "An administrator reviews SEO audit scores and remediation state for seeded pages.",
             "screenshotPath": "packages/seo-suite/docs/screenshots/seo-audit-page.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/seo-audit-page-dark.png",
             "composerName": "capell-app/seo-suite"
         },
         {
@@ -4580,6 +4644,7 @@
             "notes": "Committed Capell runner capture promoted in marketplace media. Seed search_console_url_metrics so dashboard widgets show clicks, impressions, movement, and opportunities.",
             "useCase": "An administrator reviews Search Console-style performance panels when metrics are seeded.",
             "screenshotPath": "packages/seo-suite/docs/screenshots/search-console-insights-panel.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/search-console-insights-panel-dark.png",
             "composerName": "capell-app/seo-suite"
         },
         {
@@ -4593,6 +4658,7 @@
             "notes": "Committed Capell runner capture promoted in marketplace media. Seed a broken_links row connected to a page so the source page, target URL, status, and redirect action are visible.",
             "useCase": "An administrator reviews broken link findings and their source pages.",
             "screenshotPath": "packages/seo-suite/docs/screenshots/broken-links-page.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/broken-links-page-dark.png",
             "composerName": "capell-app/seo-suite"
         },
         {
@@ -4606,6 +4672,7 @@
             "notes": "Committed Capell runner capture promoted in marketplace media. Open a seeded Page edit screen and capture the SEO Suite AI Creator action modal with safe fixture content.",
             "useCase": "An editor reviews AI-assisted metadata creation before accepting generated copy.",
             "screenshotPath": "packages/seo-suite/docs/screenshots/ai-creator-action-modal.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/ai-creator-action-modal-dark.png",
             "composerName": "capell-app/seo-suite"
         },
         {
@@ -4619,6 +4686,7 @@
             "notes": "Committed Capell runner capture promoted in marketplace media. Seed sitemap state through Site Discovery/SEO Suite integration so sitemap rows and status are visible.",
             "useCase": "An administrator reviews sitemap coverage and crawler-ready URL state.",
             "screenshotPath": "packages/seo-suite/docs/screenshots/sitemap-page.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/sitemap-page-dark.png",
             "composerName": "capell-app/seo-suite"
         },
         {
@@ -4632,6 +4700,7 @@
             "notes": "Committed Capell runner capture promoted in marketplace media. Seed at least one site/page/language combination so translation coverage rows are visible.",
             "useCase": "An administrator reviews missing or stale translation coverage for SEO-relevant content.",
             "screenshotPath": "packages/seo-suite/docs/screenshots/translation-coverage-page.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/translation-coverage-page-dark.png",
             "composerName": "capell-app/seo-suite"
         },
         {
@@ -4725,6 +4794,7 @@
             "notes": "Capture as an authorized admin with Shopify Commerce enabled. Use safe demo credentials/state; never expose real Shopify access tokens.",
             "useCase": "An administrator connects or reviews the Shopify store connection for a Capell site.",
             "screenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-connection-page.png",
+            "darkScreenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-connection-page-dark.png",
             "composerName": "capell-app/shopify-commerce"
         },
         {
@@ -4740,6 +4810,7 @@
             "notes": "Capture after seeding a demo connection with sync status, product count, and last sync timestamps.",
             "useCase": "An operator checks whether the local product catalog is connected and recently synced.",
             "screenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-catalog-sync-state.png",
+            "darkScreenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-catalog-sync-state-dark.png",
             "composerName": "capell-app/shopify-commerce"
         },
         {
@@ -4755,6 +4826,7 @@
             "notes": "Capture local catalog search with seeded demo products. Product data should be fake or fixture data, not a real merchant catalog.",
             "useCase": "An editor searches synced Shopify products from inside Capell Admin.",
             "screenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-product-search.png",
+            "darkScreenshotPath": "packages/shopify-commerce/docs/screenshots/shopify-product-search-dark.png",
             "composerName": "capell-app/shopify-commerce"
         },
         {
@@ -4997,6 +5069,7 @@
             "notes": "Capture the TagResource index after seeding several tags with different types, status values, and site scopes.",
             "useCase": "An editor reviews taxonomy tags and their usage state.",
             "screenshotPath": "packages/tags/docs/screenshots/tags-admin-index.png",
+            "darkScreenshotPath": "packages/tags/docs/screenshots/tags-admin-index-dark.png",
             "composerName": "capell-app/tags"
         },
         {
@@ -5010,6 +5083,7 @@
             "notes": "Capture the create form with name, slug, type, site, featured, and status fields visible.",
             "useCase": "An editor creates or updates a tag name, slug, locale, and taxonomy metadata.",
             "screenshotPath": "packages/tags/docs/screenshots/create-edit-tag-form.png",
+            "darkScreenshotPath": "packages/tags/docs/screenshots/create-edit-tag-form-dark.png",
             "composerName": "capell-app/tags"
         },
         {
@@ -5023,6 +5097,7 @@
             "notes": "Seed a taggable Page pivot row, then capture the Pages relation manager on the EditTag page.",
             "useCase": "An editor reviews pages or records attached to a tag before changing it.",
             "screenshotPath": "packages/tags/docs/screenshots/tag-relation-manager-showing-tagged-pages.png",
+            "darkScreenshotPath": "packages/tags/docs/screenshots/tag-relation-manager-showing-tagged-pages-dark.png",
             "composerName": "capell-app/tags"
         },
         {
@@ -5036,45 +5111,8 @@
             "notes": "TagsInput is a reusable component and is only screenshotable when a host package, such as Blog, mounts it in a concrete form.",
             "useCase": "An editor assigns tags from a host page or article form using the shared TagsInput field.",
             "screenshotPath": "packages/tags/docs/screenshots/article-or-page-form-using-tagsinput.png",
+            "darkScreenshotPath": "packages/tags/docs/screenshots/article-or-page-form-using-tagsinput-dark.png",
             "composerName": "capell-app/tags"
-        },
-        {
-            "id": "theme-admin-list-showing-agency",
-            "title": "Themes admin list showing Agency.",
-            "package": "theme-agency",
-            "surface": "admin",
-            "targetType": "admin-surface",
-            "target": "ThemeResource:index",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real Theme Studio admin or signed URL fixture for package theme records.",
-            "useCase": "An administrator sees the Agency theme record in the host Themes admin surface.",
-            "screenshotPath": "packages/theme-agency/docs/screenshots/theme-admin-list-showing-agency.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/agency/theme-admin-list-showing-agency",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ],
-            "composerName": "capell-app/theme-agency"
-        },
-        {
-            "id": "theme-preview-url-output",
-            "title": "Signed agency URL output.",
-            "package": "theme-agency",
-            "surface": "admin",
-            "targetType": "admin-url",
-            "target": "capell.admin.theme-preview",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real signed URL fixture for package theme records.",
-            "useCase": "An administrator opens a signed link to inspect a agency page before publishing the theme choice.",
-            "screenshotPath": "packages/theme-agency/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/agency/theme-preview-url-output",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ],
-            "composerName": "capell-app/theme-agency"
         },
         {
             "id": "frontend-page-rendered-with-agency-theme",
@@ -5277,44 +5315,6 @@
             "composerName": "capell-app/theme-agency"
         },
         {
-            "id": "theme-admin-list-showing-commerce",
-            "title": "Theme admin list showing commerce.",
-            "package": "theme-commerce",
-            "surface": "admin",
-            "targetType": "filament-resource",
-            "target": "ThemeResource:index",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real Theme Studio admin or signed URL fixture for package theme records.",
-            "useCase": "An administrator confirms the commerce theme is available through the core Themes resource without installing another theme package.",
-            "screenshotPath": "packages/theme-commerce/docs/screenshots/theme-admin-list-showing-commerce.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/commerce/theme-admin-list-showing-commerce",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ],
-            "composerName": "capell-app/theme-commerce"
-        },
-        {
-            "id": "theme-preview-url-output",
-            "title": "Signed commerce URL output.",
-            "package": "theme-commerce",
-            "surface": "admin",
-            "targetType": "admin-url",
-            "target": "capell.admin.theme-preview",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real signed URL fixture for package theme records.",
-            "useCase": "An administrator opens a signed link to inspect a commerce page before publishing the theme choice.",
-            "screenshotPath": "packages/theme-commerce/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/commerce/theme-preview-url-output",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ],
-            "composerName": "capell-app/theme-commerce"
-        },
-        {
             "id": "frontend-page-rendered-with-commerce-theme",
             "title": "Frontend page rendered with commerce theme.",
             "package": "theme-commerce",
@@ -5513,44 +5513,6 @@
             ],
             "user": false,
             "composerName": "capell-app/theme-commerce"
-        },
-        {
-            "id": "theme-admin-list-showing-corporate",
-            "title": "Themes admin list showing Corporate.",
-            "package": "theme-corporate",
-            "surface": "admin",
-            "targetType": "admin-surface",
-            "target": "ThemeResource:index",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real Theme Studio admin or signed URL fixture for package theme records.",
-            "useCase": "An administrator sees the Corporate theme record in the host Themes admin surface.",
-            "screenshotPath": "packages/theme-corporate/docs/screenshots/theme-admin-list-showing-corporate.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/corporate/theme-admin-list-showing-corporate",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ],
-            "composerName": "capell-app/theme-corporate"
-        },
-        {
-            "id": "theme-preview-url-output",
-            "title": "Signed corporate URL output.",
-            "package": "theme-corporate",
-            "surface": "admin",
-            "targetType": "admin-url",
-            "target": "capell.admin.theme-preview",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real signed URL fixture for package theme records.",
-            "useCase": "An administrator opens a signed link to inspect a corporate page before publishing the theme choice.",
-            "screenshotPath": "packages/theme-corporate/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/corporate/theme-preview-url-output",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ],
-            "composerName": "capell-app/theme-corporate"
         },
         {
             "id": "frontend-page-rendered-with-corporate-theme",
@@ -5753,25 +5715,6 @@
             "composerName": "capell-app/theme-corporate"
         },
         {
-            "id": "theme-admin-list-showing-education",
-            "title": "Theme admin list showing Education.",
-            "package": "theme-education",
-            "surface": "admin",
-            "targetType": "filament-resource",
-            "target": "ThemeResource:index",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real Theme Studio admin or signed URL fixture for package theme records.",
-            "useCase": "An administrator confirms the Education theme is available before applying it to a course or school site.",
-            "screenshotPath": "packages/theme-education/docs/screenshots/theme-admin-list-showing-education.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/education/theme-admin-list-showing-education",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ],
-            "composerName": "capell-app/theme-education"
-        },
-        {
             "id": "frontend-page-rendered-with-education-theme",
             "title": "Frontend page rendered with Education theme.",
             "package": "theme-education",
@@ -5912,44 +5855,6 @@
             "composerName": "capell-app/theme-education"
         },
         {
-            "id": "theme-preview-url-output",
-            "title": "Signed education URL output.",
-            "package": "theme-education",
-            "surface": "admin",
-            "targetType": "admin-url",
-            "target": "capell.admin.theme-preview",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real signed URL fixture for package theme records.",
-            "useCase": "An administrator opens a signed link to inspect a education page before publishing the theme choice.",
-            "screenshotPath": "packages/theme-education/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/education/theme-preview-url-output",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ],
-            "composerName": "capell-app/theme-education"
-        },
-        {
-            "id": "theme-admin-list-showing-healthcare",
-            "title": "Healthcare theme in the admin themes list.",
-            "package": "theme-healthcare",
-            "surface": "admin",
-            "targetType": "filament-resource",
-            "target": "ThemeResource:index",
-            "required": false,
-            "notes": "Capture with the core Capell stack, Foundation Theme, Layout Builder, and capell-app/theme-healthcare installed in the isolated demo harness. Optional until the Capell runner has a real Theme Studio admin fixture for package theme records.",
-            "useCase": "An administrator confirms the healthcare theme is available through the core Themes resource without installing another theme package.",
-            "screenshotPath": "packages/theme-healthcare/docs/screenshots/theme-admin-list-showing-healthcare.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/healthcare/theme-admin-list-showing-healthcare",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ],
-            "composerName": "capell-app/theme-healthcare"
-        },
-        {
             "id": "frontend-page-rendered-with-healthcare-theme",
             "title": "Frontend page rendered with healthcare theme.",
             "package": "theme-healthcare",
@@ -6066,25 +5971,6 @@
             "scenario": "frontend-page",
             "url": "/theme-healthcare-contact",
             "waitFor": ".healthcare-shell",
-            "colorSchemes": [
-                "light"
-            ],
-            "composerName": "capell-app/theme-healthcare"
-        },
-        {
-            "id": "theme-preview-url-output",
-            "title": "Signed Healthcare URL output.",
-            "package": "theme-healthcare",
-            "surface": "admin",
-            "targetType": "admin-url",
-            "target": "capell.admin.theme-preview",
-            "required": false,
-            "notes": "Capture a signed URL for the seeded healthcare site and page. Optional until the Capell runner has a real signed URL fixture for package theme records.",
-            "useCase": "An administrator opens a signed link to inspect a healthcare page before publishing the theme choice.",
-            "screenshotPath": "packages/theme-healthcare/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "admin-index",
-            "url": "/screenshot-fixtures/theme-gallery/healthcare/theme-preview-url-output",
-            "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
                 "light"
             ],
@@ -6379,25 +6265,6 @@
             "composerName": "capell-app/theme-inertia-bookings-vue"
         },
         {
-            "id": "theme-admin-list-showing-knowledge",
-            "title": "Theme admin list showing Knowledge.",
-            "package": "theme-knowledge",
-            "surface": "admin",
-            "targetType": "filament-resource",
-            "target": "ThemeResource:index",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real Theme Studio admin or signed URL fixture for package theme records.",
-            "useCase": "An administrator confirms the Knowledge theme is available for an editorial, research, or resource site.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/theme-admin-list-showing-knowledge.png",
-            "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/knowledge/theme-admin-list-showing-knowledge",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ],
-            "composerName": "capell-app/theme-knowledge"
-        },
-        {
             "id": "frontend-page-rendered-with-knowledge-theme",
             "title": "Frontend page rendered with Knowledge theme.",
             "package": "theme-knowledge",
@@ -6408,12 +6275,10 @@
             "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A publisher sees how the theme turns a content archive into a searchable reader journey.",
             "screenshotPath": "packages/theme-knowledge/docs/screenshots/frontend-page-rendered-with-knowledge-theme.png",
+            "darkScreenshotPath": "packages/theme-knowledge/docs/screenshots/frontend-page-rendered-with-knowledge-theme-dark.png",
             "scenario": "frontend-page",
             "url": "/theme-knowledge",
             "waitFor": ".knowledge-shell",
-            "colorSchemes": [
-                "light"
-            ],
             "user": false,
             "composerName": "capell-app/theme-knowledge"
         },
@@ -6428,12 +6293,10 @@
             "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A resource-site buyer checks whether the first viewport feels like a serious library rather than a blog skin.",
             "screenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-homepage-layout.png",
+            "darkScreenshotPath": "packages/theme-knowledge/docs/screenshots/knowledge-homepage-layout-dark.png",
             "scenario": "frontend-page",
             "url": "/theme-knowledge",
             "waitFor": ".knowledge-shell",
-            "colorSchemes": [
-                "light"
-            ],
             "user": false,
             "composerName": "capell-app/theme-knowledge"
         },
@@ -6535,25 +6398,6 @@
                 "light"
             ],
             "user": false,
-            "composerName": "capell-app/theme-knowledge"
-        },
-        {
-            "id": "theme-preview-url-output",
-            "title": "Signed knowledge URL output.",
-            "package": "theme-knowledge",
-            "surface": "admin",
-            "targetType": "admin-url",
-            "target": "capell.admin.theme-preview",
-            "required": false,
-            "notes": "Optional until the Capell runner has a real signed URL fixture for package theme records.",
-            "useCase": "An administrator opens a signed link to inspect a knowledge page before publishing the theme choice.",
-            "screenshotPath": "packages/theme-knowledge/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/knowledge/theme-preview-url-output",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ],
             "composerName": "capell-app/theme-knowledge"
         },
         {
@@ -7070,16 +6914,17 @@
             "composerName": "capell-app/theme-portfolio"
         },
         {
-            "id": "theme-admin-list-showing-saas",
-            "title": "Theme admin list showing SaaS.",
+            "id": "theme-preset-selection-showing-saas",
+            "title": "Theme preset selection showing SaaS.",
             "package": "theme-saas",
             "surface": "admin",
             "targetType": "filament-resource",
             "target": "ThemeResource:index",
             "required": true,
             "notes": "Capture with only the core Capell stack, Foundation Theme, Layout Builder, and capell-app/theme-saas installed in the isolated demo harness.",
-            "useCase": "An administrator confirms the SaaS theme is available through the core Themes resource without installing another theme package.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/theme-admin-list-showing-saas.png",
+            "useCase": "An administrator confirms the SaaS preset is available through the core Themes resource without installing another theme package.",
+            "screenshotPath": "packages/theme-saas/docs/screenshots/theme-preset-selection-showing-saas.png",
+            "darkScreenshotPath": "packages/theme-saas/docs/screenshots/theme-preset-selection-showing-saas-dark.png",
             "composerName": "capell-app/theme-saas"
         },
         {
@@ -7093,6 +6938,7 @@
             "notes": "Capture a signed preview URL generated with CreateThemePreviewUrlAction for the seeded SaaS theme, site, and page.",
             "useCase": "An administrator opens a signed preview URL to inspect a page with the SaaS theme applied before publishing the theme choice.",
             "screenshotPath": "packages/theme-saas/docs/screenshots/theme-preview-url-output.png",
+            "darkScreenshotPath": "packages/theme-saas/docs/screenshots/theme-preview-url-output-dark.png",
             "composerName": "capell-app/theme-saas"
         },
         {
@@ -7101,128 +6947,104 @@
             "package": "theme-saas",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/theme-saas-demo",
+            "target": "/theme-saas",
             "required": true,
             "notes": "Capture the seeded Launchdeck page after installing capell-app/theme-saas and building the Foundation Theme/frontend assets.",
             "useCase": "A visitor sees a seeded product page rendered through the SaaS navigation, hero, features, proof, content listing, CTA, and footer sections.",
             "screenshotPath": "packages/theme-saas/docs/screenshots/frontend-page-rendered-with-saas-theme.png",
+            "darkScreenshotPath": "packages/theme-saas/docs/screenshots/frontend-page-rendered-with-saas-theme-dark.png",
+            "user": false,
+            "url": "/theme-saas",
             "composerName": "capell-app/theme-saas"
         },
         {
             "id": "saas-homepage-layout",
             "title": "SaaS homepage.",
-            "package": "theme-saas",
-            "surface": "frontend",
-            "targetType": "frontend-url",
-            "target": "/saas-homepage-layout",
-            "required": true,
-            "notes": "Capture the product homepage with activation hero, feature proof, dashboard panels, workflow cards, and trial CTA.",
+            "target": "/theme-saas",
+            "notes": "Capture the seeded SaaS homepage with activation hero, feature proof, dashboard panels, workflow cards, and CTA.",
             "useCase": "A SaaS team checks that the theme sells product workflow and activation rather than broad startup marketing.",
             "screenshotPath": "packages/theme-saas/docs/screenshots/saas-homepage-layout.png",
-            "composerName": "capell-app/theme-saas"
-        },
-        {
-            "id": "saas-feature-layout",
-            "title": "Feature page.",
             "package": "theme-saas",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/saas-feature-layout",
             "required": true,
-            "notes": "Capture feature narrative, workflow steps, comparison blocks, proof, and demo CTA.",
-            "useCase": "A product team reviews whether feature pages explain jobs-to-be-done instead of becoming a services grid.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-feature-layout.png",
+            "user": false,
+            "url": "/theme-saas",
             "composerName": "capell-app/theme-saas"
         },
         {
-            "id": "saas-pricing-layout",
-            "title": "Pricing page.",
+            "id": "saas-directory-layout",
+            "title": "SaaS directory page.",
+            "target": "/theme-saas-directory",
+            "notes": "Capture the seeded SaaS directory surface with product pathways and resource cards.",
+            "useCase": "A product team reviews whether listing pages keep SaaS evaluation paths clear.",
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-directory-layout.png",
             "package": "theme-saas",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/saas-pricing-layout",
             "required": true,
-            "notes": "Capture pricing plan cards, feature comparison, FAQ, trial risk reducers, and CTA. Requires capell-app/content-sections; show this package note on the captured image.",
-            "useCase": "A SaaS buyer can compare plans and move toward a trial without the page feeling like Commerce merchandising.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-pricing-layout.png",
+            "user": false,
+            "url": "/theme-saas-directory",
             "composerName": "capell-app/theme-saas"
         },
         {
-            "id": "saas-docs-layout",
-            "title": "Documentation page.",
+            "id": "saas-detail-layout",
+            "title": "SaaS detail page.",
+            "target": "/theme-saas-detail",
+            "notes": "Capture the seeded SaaS detail surface with article-style product story content.",
+            "useCase": "A SaaS team can publish product stories or feature narratives inside the theme-owned product layout.",
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-detail-layout.png",
             "package": "theme-saas",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/saas-docs-layout",
             "required": true,
-            "notes": "Capture docs navigation, article content, related links, and product onboarding CTA. Requires capell-app/document-lifecycle; show this package note on the captured image.",
-            "useCase": "A product team checks that docs support activation without overlapping Knowledge's editorial archive.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-docs-layout.png",
+            "user": false,
+            "url": "/theme-saas-detail",
             "composerName": "capell-app/theme-saas"
         },
         {
-            "id": "saas-blog-layout",
-            "title": "Product blog article.",
+            "id": "saas-contact-layout",
+            "title": "SaaS contact page.",
+            "target": "/theme-saas-contact",
+            "notes": "Capture the seeded SaaS contact surface with enquiry routing and conversion copy.",
+            "useCase": "A sales team checks that demo/contact conversion stays tied to product workflow.",
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-contact-layout.png",
             "package": "theme-saas",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/saas-blog-layout",
             "required": true,
-            "notes": "Capture a product article with hero, author, related resources, feature links, and demo CTA. Requires capell-app/blog; show this package note on the captured image.",
-            "useCase": "A SaaS team can publish launches and education while keeping product activation visible.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-blog-layout.png",
+            "user": false,
+            "url": "/theme-saas-contact",
             "composerName": "capell-app/theme-saas"
         },
         {
-            "id": "saas-demo-request-layout",
-            "title": "Demo request page.",
+            "id": "saas-empty-state-layout",
+            "title": "SaaS empty state page.",
+            "target": "/theme-saas-empty",
+            "notes": "Capture the seeded SaaS empty-state surface for no-results and recovery flows.",
+            "useCase": "A user sees a useful recovery page when a product search or listing has no results.",
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-empty-state-layout.png",
             "package": "theme-saas",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/saas-demo-request-layout",
             "required": true,
-            "notes": "Capture demo request qualification, routing, success state, and product proof. Requires capell-app/form-builder; show this package note on the captured image.",
-            "useCase": "A sales team checks that demo conversion stays tied to product workflow rather than broad contact.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-demo-request-layout.png",
+            "user": false,
+            "url": "/theme-saas-empty",
             "composerName": "capell-app/theme-saas"
         },
         {
-            "id": "saas-webinar-layout",
-            "title": "Webinar landing page.",
+            "id": "saas-cta-layout",
+            "title": "SaaS CTA page.",
+            "target": "/theme-saas-cta",
+            "notes": "Capture the seeded SaaS CTA surface for focused conversion moments.",
+            "useCase": "A product team can direct high-intent visitors toward the next sales or trial action.",
+            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-cta-layout.png",
             "package": "theme-saas",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/saas-webinar-layout",
             "required": true,
-            "notes": "Capture webinar agenda, speakers, product takeaways, and registration CTA. Requires capell-app/events; show this package note on the captured image.",
-            "useCase": "A SaaS team can run product education events without drifting into Agency campaign pages.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-webinar-layout.png",
-            "composerName": "capell-app/theme-saas"
-        },
-        {
-            "id": "saas-search-layout",
-            "title": "Knowledge search page.",
-            "package": "theme-saas",
-            "surface": "frontend",
-            "targetType": "frontend-url",
-            "target": "/saas-search-layout",
-            "required": true,
-            "notes": "Capture product knowledge search with docs/blog results, snippets, and onboarding recovery. Requires capell-app/search; show this package note on the captured image.",
-            "useCase": "A user can find product help without the page becoming a general Knowledge theme search experience.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-search-layout.png",
-            "composerName": "capell-app/theme-saas"
-        },
-        {
-            "id": "saas-campaign-layout",
-            "title": "Launch campaign page.",
-            "package": "theme-saas",
-            "surface": "frontend",
-            "targetType": "frontend-url",
-            "target": "/saas-campaign-layout",
-            "required": true,
-            "notes": "Capture product launch campaign with variant hero, audience segments, activation proof, and campaign analytics. Requires capell-app/campaign-studio; show this package note on the captured image.",
-            "useCase": "A SaaS team can announce launches while keeping the page centred on product activation, not Agency creative delivery.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/saas-campaign-layout.png",
+            "user": false,
+            "url": "/theme-saas-cta",
             "composerName": "capell-app/theme-saas"
         },
         {
@@ -7303,6 +7125,7 @@
             "notes": "Capture the redirect rules admin page with the create or edit redirect form open, showing source URL, target URL, match type, status, query preservation, and notes fields.",
             "screenshotPath": "packages/url-manager/docs/screenshots/create-edit-redirect-form.png",
             "useCase": "An editor creates or updates redirect rules without touching server configuration.",
+            "darkScreenshotPath": "packages/url-manager/docs/screenshots/create-edit-redirect-form-dark.png",
             "composerName": "capell-app/url-manager"
         },
         {
@@ -7318,6 +7141,7 @@
             "notes": "Capture the redirect import action or resulting import preview state for CSV-based bulk redirect migrations.",
             "screenshotPath": "packages/url-manager/docs/screenshots/redirect-import-workflow.png",
             "useCase": "A migration team imports redirect mappings in bulk after a site restructure.",
+            "darkScreenshotPath": "packages/url-manager/docs/screenshots/redirect-import-workflow-dark.png",
             "composerName": "capell-app/url-manager"
         },
         {
@@ -7333,6 +7157,7 @@
             "notes": "Capture the redirect export action or CSV export state from the redirect rules table.",
             "screenshotPath": "packages/url-manager/docs/screenshots/redirect-export-workflow.png",
             "useCase": "An SEO manager exports redirect rules for review, migration handoff, or audit evidence.",
+            "darkScreenshotPath": "packages/url-manager/docs/screenshots/redirect-export-workflow-dark.png",
             "composerName": "capell-app/url-manager"
         },
         {
@@ -7348,6 +7173,7 @@
             "notes": "Capture the redirect rules table or package health snapshot showing active redirects, status, and recent hit evidence.",
             "screenshotPath": "packages/url-manager/docs/screenshots/redirect-health-snapshot-output.png",
             "useCase": "An operator verifies URL Manager is installed, tracking redirect health, and ready for SEO remediation work.",
+            "darkScreenshotPath": "packages/url-manager/docs/screenshots/redirect-health-snapshot-output-dark.png",
             "composerName": "capell-app/url-manager"
         },
         {
