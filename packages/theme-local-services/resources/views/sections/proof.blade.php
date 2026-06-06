@@ -1,9 +1,5 @@
 @php
-    $proofs = $section->items ?? [
-        ['metric' => '98%', 'label' => 'Satisfaction', 'summary' => 'Satisfied service outcomes across local accounts.'],
-        ['metric' => '24h', 'label' => 'Response', 'summary' => 'Median first-response time with escalation support.'],
-        ['metric' => '34', 'label' => 'Coverage', 'summary' => 'Communities with active local service workflows.'],
-    ];
+    $proofs = $section->items ?? __('capell-theme-local-services::generic.proof_defaults');
 @endphp
 
 <section class="theme-section theme-section-proof bg-[#06120f] text-white">

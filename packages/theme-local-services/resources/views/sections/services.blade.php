@@ -1,17 +1,12 @@
 @php
-    $services = $section->items ?? [
-        ['category' => 'Core', 'title' => 'Emergency Repair'],
-        ['category' => 'Growth', 'title' => 'Preventive Care'],
-        ['category' => 'Delivery', 'title' => 'Maintenance'],
-        ['category' => 'Support', 'title' => 'Support Plans'],
-    ];
+    $services = $section->items ?? __('capell-theme-local-services::generic.services_defaults');
 @endphp
 
 <section class="theme-section theme-section-services">
     <div class="mx-auto max-w-5xl px-6 py-14">
         @isset($heading)
             <p class="text-xs font-black tracking-[0.2em] text-slate-500">
-                Services
+                {{ __('capell-theme-local-services::generic.services_label') }}
             </p>
             <h2 class="mt-3 text-4xl font-black tracking-tight text-[#17211c]">
                 {{ $heading }}
@@ -36,7 +31,7 @@
                         <p
                             class="text-xs font-black tracking-widest text-[#17211c] sm:text-stone-500 dark:text-white"
                         >
-                            {{ $service['category'] ?? 'Service' }}
+                            {{ $service['category'] ?? __('capell-theme-local-services::generic.service_label') }}
                         </p>
                         <h3 class="mt-2 text-lg font-black">
                             {{ $service['title'] }}

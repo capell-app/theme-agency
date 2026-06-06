@@ -11,6 +11,24 @@ return [
     'carousel_next' => 'Next items',
     'carousel_previous' => 'Previous items',
     'case_studies_copy' => 'Showcasing practical wins across local teams, with case-driven proof points.',
+    'case_studies_defaults' => [
+        [
+            'title' => 'Community-first emergency response',
+            'summary' => 'Reduced downtime with one-day turnaround.',
+            'metric' => '2x',
+        ],
+        [
+            'title' => 'Property operations optimization',
+            'summary' => 'Standardized workflows across three service zones.',
+            'metric' => '36%',
+        ],
+        [
+            'title' => 'Local teams at scale',
+            'summary' => 'Built a shared operating rhythm across 34 accounts.',
+            'metric' => '34',
+        ],
+    ],
+    'case_study_metric_fallback' => 'Result',
     'contact_card_aftercare' => 'Aftercare',
     'contact_card_aftercare_summary' => 'Follow-up routes stay visible after the first job is complete.',
     'contact_card_calls' => 'Call routing',
@@ -55,6 +73,23 @@ return [
     'listing_empty_title' => 'No service routes yet',
     'locality_signal' => 'Local area',
     'route_board_signal' => 'Route board',
+    'proof_defaults' => [
+        [
+            'metric' => '98%',
+            'label' => 'Satisfaction',
+            'summary' => 'Satisfied service outcomes across local accounts.',
+        ],
+        [
+            'metric' => '24h',
+            'label' => 'Response',
+            'summary' => 'Median first-response time with escalation support.',
+        ],
+        [
+            'metric' => '34',
+            'label' => 'Coverage',
+            'summary' => 'Communities with active local service workflows.',
+        ],
+    ],
     'proof_label' => 'Local proof',
     'proof_signal' => 'Proof',
     'premium_layout_empty' => 'Add section content to populate this premium layout.',
@@ -80,11 +115,49 @@ return [
     'quote_signal' => 'Quote',
     'quote_submit_label' => 'Send quote request',
     'resources_connected' => 'Connected resource feed and dynamic content discovery.',
+    'resource_label' => 'Resource',
+    'resources_defaults' => [
+        [
+            'title' => 'Starter playbook',
+            'summary' => 'Guide to structuring your service catalog.',
+            'url' => '#',
+        ],
+        [
+            'title' => 'Workflow templates',
+            'summary' => 'Prebuilt automation workflows for local teams.',
+            'url' => '#',
+        ],
+        [
+            'title' => 'Field operations checklist',
+            'summary' => 'Simple checks for every site visit.',
+            'url' => '#',
+        ],
+    ],
     'resources_static' => 'Static resources are ready from current site content.',
     'response_signal' => 'Response window',
     'route_signal' => 'Route',
     'service_areas_copy' => 'Geographic service areas and operating capability are presented like active local coverage, not a generic list.',
     'service_areas_empty' => 'Add service areas to show local coverage and quote availability.',
+    'service_label' => 'Service',
+    'services_defaults' => [
+        [
+            'category' => 'Core',
+            'title' => 'Emergency Repair',
+        ],
+        [
+            'category' => 'Growth',
+            'title' => 'Preventive Care',
+        ],
+        [
+            'category' => 'Delivery',
+            'title' => 'Maintenance',
+        ],
+        [
+            'category' => 'Support',
+            'title' => 'Support Plans',
+        ],
+    ],
+    'services_label' => 'Services',
     'service_area_defaults' => [
         [
             'label' => 'Central service area',

@@ -1,9 +1,5 @@
 @php
-    $studies = $section->items ?? [
-        ['title' => 'Community-first emergency response', 'summary' => 'Reduced downtime with one-day turnaround.', 'metric' => '2x'],
-        ['title' => 'Property operations optimization', 'summary' => 'Standardized workflows across three service zones.', 'metric' => '36%'],
-        ['title' => 'Local teams at scale', 'summary' => 'Built a shared operating rhythm across 34 accounts.', 'metric' => '34'],
-    ];
+    $studies = $section->items ?? __('capell-theme-local-services::generic.case_studies_defaults');
 @endphp
 
 <section class="theme-section theme-section-case-studies">
@@ -32,7 +28,7 @@
                         <p
                             class="text-xs font-black tracking-[0.2em] text-[#17211c]"
                         >
-                            {{ $study['metric'] ?? 'Result' }}
+                            {{ $study['metric'] ?? __('capell-theme-local-services::generic.case_study_metric_fallback') }}
                         </p>
                         <h3 class="mt-2 text-lg font-black">
                             {{ $study['title'] }}
