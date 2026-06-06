@@ -93,7 +93,7 @@ it('renders the page shell from brand surface and foreground tokens', function (
     expect($html)
         ->toContain('--theme-surface:#fafaf5')
         ->toContain('--theme-foreground:#1a1c19')
-        ->toContain('class="site-theme-shell min-h-screen antialiased"')
+        ->toContain('class="agency-shell site-theme-shell min-h-screen antialiased"')
         ->not->toContain('bg-zinc-950 text-zinc-950');
 });
 

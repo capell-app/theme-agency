@@ -44,14 +44,12 @@
         transform: translateY(0);
     }
 
-    @media (prefers-color-scheme: dark) {
-        .site-theme-shell {
-            background: #020617;
-            color: #f8fafc;
-        }
+    .dark .site-theme-shell {
+        background: #020617;
+        color: #f8fafc;
+    }
 
-        .site-theme-shell img {
-            background: #111827;
-        }
+    .dark .site-theme-shell img {
+        background: #111827;
     }
 }
