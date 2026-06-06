@@ -1,10 +1,8 @@
 <section class="saas-final-cta bg-white">
     <div class="px-6">
-        <div
-            class="rounded-3xl bg-blue-600 p-2 text-white shadow-2xl shadow-blue-950/20"
-        >
+        <div class="saas-final-cta__frame rounded-3xl p-2 text-white shadow-2xl shadow-blue-950/20">
             <div
-                class="grid gap-8 rounded-[1.25rem] border border-white/15 bg-[radial-gradient(circle_at_top_right,rgba(103,232,249,0.28),transparent_32%),linear-gradient(135deg,#2563eb,#1d4ed8)] p-8 md:grid-cols-[1fr_0.9fr] md:items-center md:p-12"
+                class="saas-final-cta__panel grid gap-8 rounded-[1.25rem] border border-white/15 p-8 md:grid-cols-[1fr_0.9fr] md:items-center md:p-12"
             >
                 <div>
                     <p
@@ -43,17 +41,17 @@
                         class="mt-5 grid grid-cols-3 gap-2 text-center text-[0.65rem] font-black uppercase"
                     >
                         <span
-                            class="rounded-md bg-cyan-300 px-2 py-2 text-slate-950"
+                            class="saas-pipeline-stage saas-pipeline-stage--trial rounded-md px-2 py-2"
                         >
                             {{ __('capell-theme-saas::generic.trial_step_label') }}
                         </span>
                         <span
-                            class="rounded-md bg-emerald-300 px-2 py-2 text-slate-950"
+                            class="saas-pipeline-stage saas-pipeline-stage--activation rounded-md px-2 py-2"
                         >
                             {{ __('capell-theme-saas::generic.activation_label') }}
                         </span>
                         <span
-                            class="rounded-md bg-amber-300 px-2 py-2 text-slate-950"
+                            class="saas-pipeline-stage saas-pipeline-stage--expansion rounded-md px-2 py-2"
                         >
                             {{ __('capell-theme-saas::generic.expansion_step_label') }}
                         </span>

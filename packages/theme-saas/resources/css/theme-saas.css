@@ -198,6 +198,43 @@
         color: #f8fafc;
     }
 
+    .saas-final-cta__frame {
+        background: #2563eb;
+        box-shadow: 0 24px 70px rgb(30 64 175 / 20%);
+    }
+
+    .saas-final-cta__panel {
+        background:
+            radial-gradient(
+                circle at top right,
+                rgb(103 232 249 / 28%),
+                transparent 32%
+            ),
+            linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+
+    .saas-final-cta__panel,
+    .saas-final-cta__panel h2,
+    .saas-final-cta__panel p {
+        color: #ffffff;
+    }
+
+    .saas-pipeline-stage {
+        color: #0f172a;
+    }
+
+    .saas-pipeline-stage--trial {
+        background: #67e8f9;
+    }
+
+    .saas-pipeline-stage--activation {
+        background: #6ee7b7;
+    }
+
+    .saas-pipeline-stage--expansion {
+        background: #fcd34d;
+    }
+
     @media (max-width: 48rem) {
         .saas-shell h1 {
             font-size: 3rem;

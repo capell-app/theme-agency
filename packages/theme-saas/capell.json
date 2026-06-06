@@ -112,6 +112,21 @@
                 "path": "docs/screenshots/theme-preview-url-output-dark.png",
                 "alt": "Theme SaaS preview URL output dark capture",
                 "caption": "Theme SaaS preview URL output dark"
+            },
+            {
+                "path": "docs/screenshots/saas-homepage-layout.png",
+                "alt": "Theme SaaS homepage rendered through the seeded SaaS route.",
+                "caption": "Route-backed SaaS homepage with product-led hero and dashboard media."
+            },
+            {
+                "path": "docs/screenshots/saas-contact-layout.png",
+                "alt": "Theme SaaS contact page rendered through the seeded SaaS route.",
+                "caption": "Route-backed SaaS contact page for demo and sales conversations."
+            },
+            {
+                "path": "docs/screenshots/saas-cta-layout.png",
+                "alt": "Theme SaaS CTA page rendered through the seeded SaaS route.",
+                "caption": "Route-backed SaaS CTA page with pipeline stages and conversion actions."
             }
         ],
         "categories": ["frontend", "themes"]
