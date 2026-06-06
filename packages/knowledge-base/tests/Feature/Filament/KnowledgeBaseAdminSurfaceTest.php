@@ -178,6 +178,8 @@ it('builds knowledge base resource forms and tables with configured controls', f
             'status',
             'is_ai_readable',
             'search_weight',
+            'feedback_count',
+            'helpful_feedback_rate',
             'published_at',
         ])
         ->and(array_keys(KnowledgeBaseArticleResource::table(knowledgeBaseAdminTableForCoverage())->getFilters()))->toBe([

@@ -26,6 +26,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Override;
 
 final class KnowledgeBaseArticleResource extends Resource
@@ -94,6 +95,10 @@ final class KnowledgeBaseArticleResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->withCount([
+                'feedback',
+                'feedback as helpful_feedback_count' => fn (Builder $feedbackQuery): Builder => $feedbackQuery->where('helpful', true),
+            ]))
             ->columns([
                 TextColumn::make('title')
                     ->label(__('capell-knowledge-base::generic.admin.fields.title'))
@@ -115,6 +120,12 @@ final class KnowledgeBaseArticleResource extends Resource
                 TextColumn::make('search_weight')
                     ->label(__('capell-knowledge-base::generic.admin.fields.search_weight'))
                     ->sortable(),
+                TextColumn::make('feedback_count')
+                    ->label(__('capell-knowledge-base::generic.admin.fields.feedback_count'))
+                    ->sortable(),
+                TextColumn::make('helpful_feedback_rate')
+                    ->label(__('capell-knowledge-base::generic.admin.fields.helpful_feedback_rate'))
+                    ->state(fn (KnowledgeBaseArticle $record): string => self::helpfulFeedbackRate($record)),
                 TextColumn::make('published_at')
                     ->label(__('capell-knowledge-base::generic.admin.fields.published_at'))
                     ->dateTime()
@@ -214,5 +225,22 @@ final class KnowledgeBaseArticleResource extends Resource
         }
 
         return '';
+    }
+
+    private static function helpfulFeedbackRate(KnowledgeBaseArticle $record): string
+    {
+        $feedbackCount = (int) ($record->getAttribute('feedback_count') ?? 0);
+
+        if ($feedbackCount === 0) {
+            return __('capell-knowledge-base::generic.admin.feedback.no_votes');
+        }
+
+        $helpfulFeedbackCount = (int) ($record->getAttribute('helpful_feedback_count') ?? 0);
+        $percentage = (int) round(($helpfulFeedbackCount / $feedbackCount) * 100);
+
+        return __('capell-knowledge-base::generic.admin.feedback.helpful_rate', [
+            'percentage' => $percentage,
+            'count' => $feedbackCount,
+        ]);
     }
 }

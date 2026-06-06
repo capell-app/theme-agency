@@ -73,6 +73,7 @@ it('renders public navigation and articles without authoring internals', functio
         ->assertHeader('Cache-Control', 'max-age=300, public, stale-while-revalidate=300')
         ->assertSee('Install Capell')
         ->assertSee('Run the installer.', false)
+        ->assertDontSee('readers found this helpful')
         ->assertDontSee('Draft Article')
         ->assertDontSee('author_type', false)
         ->assertDontSee('author_id', false)

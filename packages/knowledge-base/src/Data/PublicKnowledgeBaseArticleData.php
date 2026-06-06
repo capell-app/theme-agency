@@ -22,6 +22,9 @@ final class PublicKnowledgeBaseArticleData extends Data
         public readonly string $body,
         public readonly string $version,
         public readonly ?CarbonImmutable $lastModified,
+        public readonly int $feedbackCount = 0,
+        public readonly int $helpfulFeedbackCount = 0,
+        public readonly ?int $helpfulFeedbackPercentage = null,
         public readonly array $relatedArticles = [],
     ) {}
 }

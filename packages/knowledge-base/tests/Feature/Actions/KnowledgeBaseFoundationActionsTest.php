@@ -282,6 +282,9 @@ it('records redacted feedback and related article links', function (): void {
         ->and($feedback->user_agent_hash)->not->toBe('Example Browser')
         ->and($feedback->visitor_hash)->toHaveLength(64)
         ->and($feedback->user_agent_hash)->toHaveLength(64)
+        ->and($publicArticle?->feedbackCount)->toBe(1)
+        ->and($publicArticle?->helpfulFeedbackCount)->toBe(0)
+        ->and($publicArticle?->helpfulFeedbackPercentage)->toBe(0)
         ->and($publicArticle?->relatedArticles)->toHaveCount(1)
         ->and($publicArticle?->relatedArticles[0]->title)->toBe('Check Logs')
         ->and($publicArticle?->relatedArticles[0]->body)->toBe('');
