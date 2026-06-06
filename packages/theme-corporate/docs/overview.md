@@ -39,7 +39,9 @@ Provides a corporate visual option for sites that need restrained, trust-focused
 - This package does not own data.
 - It consumes theme runtime settings and core page content.
 
-## Screenshot Plan
+## Screenshot Coverage
+
+The committed Capell runner-backed gallery covers the full `docs/screenshots.json` contract:
 
 - Themes admin list showing the Corporate theme record in the host `ThemeResource`.
 - Seeded frontend page at `/theme-corporate-demo` rendering navigation, hero, features, proof, content listing, CTA, and footer.
