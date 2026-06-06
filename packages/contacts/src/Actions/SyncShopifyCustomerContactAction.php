@@ -76,17 +76,7 @@ final class SyncShopifyCustomerContactAction
     {
         $loaded = $model->relationLoaded($relation) ? $model->getRelation($relation) : null;
 
-        if ($loaded instanceof Model) {
-            return $loaded;
-        }
-
-        if (! $model->exists || ! method_exists($model, $relation)) {
-            return null;
-        }
-
-        $related = $model->{$relation}()->first();
-
-        return $related instanceof Model ? $related : null;
+        return $loaded instanceof Model ? $loaded : null;
     }
 
     private function stringValue(mixed $value): ?string

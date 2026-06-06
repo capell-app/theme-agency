@@ -45,7 +45,9 @@ final class UpsertShopifyCustomerAction
             'synced_at' => $this->syncedAt($snapshot),
         ]);
 
-        event(new ShopifyCustomerSynced($customer->refresh()));
+        $customer->refresh()->load('connection');
+
+        event(new ShopifyCustomerSynced($customer));
 
         return $customer;
     }
