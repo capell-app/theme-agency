@@ -16,7 +16,7 @@
             "notes": "Capture with Foundation Theme, Layout Builder, and capell-app/theme-portfolio installed in the isolated demo harness.",
             "useCase": "An administrator confirms the Portfolio theme is available for a premium studio or case-study site.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/theme-admin-list-showing-portfolio.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-portfolio/theme-admin-list-showing-portfolio",
             "waitFor": ".theme-portfolio",
             "colorSchemes": ["light"]
@@ -32,7 +32,7 @@
             "notes": "Capture a seeded studio page with work grid, case studies, services, proof, testimonials, media kit, newsletter, CTA, and footer.",
             "useCase": "A studio, consultant, or creator sees how the theme sells work outcomes without overlapping Agency's campaign preset.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/frontend-page-rendered-with-portfolio-theme.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-portfolio/frontend-page-rendered-with-portfolio-theme",
             "waitFor": ".theme-portfolio",
             "colorSchemes": ["light"]
@@ -48,7 +48,7 @@
             "notes": "Capture work-led hero, case-file proof, selected work, audience path, and enquiry CTA.",
             "useCase": "A premium studio reviews whether the first viewport feels like a serious case-study product rather than a basic creative preset.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/portfolio-homepage-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-portfolio/portfolio-homepage-layout",
             "waitFor": ".theme-portfolio",
             "colorSchemes": ["light"]
@@ -64,7 +64,7 @@
             "notes": "Capture dense work cards with media treatment, role/scope metadata, outcome labels, and filtering rhythm.",
             "useCase": "A visitor can scan relevant work without the theme feeling like a blog, gallery, or Agency services grid.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/portfolio-work-grid-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-portfolio/portfolio-work-grid-layout",
             "waitFor": ".theme-portfolio",
             "colorSchemes": ["light"]
@@ -80,7 +80,7 @@
             "notes": "Capture outcome ledger, challenge/approach/result sections, scope cards, and next-project CTA.",
             "useCase": "A studio proves premium value through measurable work outcomes instead of broad testimonials.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/portfolio-case-study-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-portfolio/portfolio-case-study-layout",
             "waitFor": ".theme-portfolio",
             "colorSchemes": ["light"]
@@ -96,7 +96,7 @@
             "notes": "Capture studio service cards, engagement shape, process hints, and proof-linked capabilities.",
             "useCase": "A visitor understands what can be bought without the theme becoming a local-services page.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/portfolio-services-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-portfolio/portfolio-services-layout",
             "waitFor": ".theme-portfolio",
             "colorSchemes": ["light"]
@@ -112,7 +112,7 @@
             "notes": "Capture speaking, press, audience, and newsletter paths with compact credibility proof.",
             "useCase": "A creator or consultant can sell authority and audience-building without needing a separate knowledge theme.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/portfolio-media-kit-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-portfolio/portfolio-media-kit-layout",
             "waitFor": ".theme-portfolio",
             "colorSchemes": ["light"]
@@ -128,7 +128,7 @@
             "notes": "Capture newsletter CTA, audience proof, and work-to-subscriber conversion copy.",
             "useCase": "A studio checks that audience growth supports the portfolio lane without becoming Knowledge's resource archive.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/portfolio-newsletter-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-portfolio/portfolio-newsletter-layout",
             "waitFor": ".theme-portfolio",
             "colorSchemes": ["light"]
@@ -144,7 +144,7 @@
             "notes": "Capture a signed preview URL generated for the seeded Portfolio theme, site, and page.",
             "useCase": "An administrator previews a case-study page with the Portfolio theme applied before publishing the theme choice.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-portfolio/theme-preview-url-output",
             "waitFor": ".theme-portfolio",
             "colorSchemes": ["light"]

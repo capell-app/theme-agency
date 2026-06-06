@@ -16,7 +16,7 @@
             "notes": "Capture with Foundation Theme, Layout Builder, and capell-app/theme-local-services installed in the isolated demo harness.",
             "useCase": "An administrator confirms the Local Services theme is available for quote-led local operators.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/theme-admin-list-showing-local-services.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-local-services/theme-admin-list-showing-local-services",
             "waitFor": ".theme-local-services",
             "colorSchemes": ["light"]
@@ -32,7 +32,7 @@
             "notes": "Capture a seeded service business page with locality hero, services, service areas, quote form, case studies, resources, contact, proof, CTA, and footer.",
             "useCase": "A local operator sees how the theme drives visitors from service need to quote request.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/frontend-page-rendered-with-local-services-theme.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-local-services/frontend-page-rendered-with-local-services-theme",
             "waitFor": ".theme-local-services",
             "colorSchemes": ["light"]
@@ -48,7 +48,7 @@
             "notes": "Capture locality proof, availability signals, dispatch rhythm, and conversion-oriented hero content.",
             "useCase": "A trades, maintenance, or local service team reviews whether the homepage makes coverage and response clear.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-homepage-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-local-services/local-services-homepage-layout",
             "waitFor": ".theme-local-services",
             "colorSchemes": ["light"]
@@ -64,7 +64,7 @@
             "notes": "Capture service cards with urgency markers, pricing cues, eligibility notes, and quote actions.",
             "useCase": "A visitor can compare service calls without the page feeling like an agency services grid.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-services-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-local-services/local-services-services-layout",
             "waitFor": ".theme-local-services",
             "colorSchemes": ["light"]
@@ -80,7 +80,7 @@
             "notes": "Capture postcode/area cards, route proof, and coverage-focused CTA copy.",
             "useCase": "A local business proves it serves the visitor's area before asking for an enquiry.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-service-areas-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-local-services/local-services-service-areas-layout",
             "waitFor": ".theme-local-services",
             "colorSchemes": ["light"]
@@ -96,7 +96,7 @@
             "notes": "Capture the quote form section with static fallback and optional capell-app/form-builder state.",
             "useCase": "A local operator checks that quote conversion remains obvious after service discovery.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-quote-form-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-local-services/local-services-quote-form-layout",
             "waitFor": ".theme-local-services",
             "colorSchemes": ["light"]
@@ -112,7 +112,7 @@
             "notes": "Capture completed-job proof, before/after-style cards, local trust markers, and case study summaries.",
             "useCase": "A service business can show practical proof without overlapping Portfolio's studio case-study workflow.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-job-proof-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-local-services/local-services-job-proof-layout",
             "waitFor": ".theme-local-services",
             "colorSchemes": ["light"]
@@ -128,7 +128,7 @@
             "notes": "Capture advice/resource cards using static content or the optional blog integration when available.",
             "useCase": "A local business can answer common service questions while keeping the quote path visible.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-resources-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-local-services/local-services-resources-layout",
             "waitFor": ".theme-local-services",
             "colorSchemes": ["light"]
@@ -144,7 +144,7 @@
             "notes": "Capture a signed preview URL generated for the seeded Local Services theme, site, and page.",
             "useCase": "An administrator previews a local-service page with the theme applied before publishing the theme choice.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-local-services/theme-preview-url-output",
             "waitFor": ".theme-local-services",
             "colorSchemes": ["light"]

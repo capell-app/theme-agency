@@ -16,7 +16,7 @@
             "notes": "Capture with Foundation Theme, Layout Builder, and capell-app/theme-nonprofit installed in the isolated demo harness.",
             "useCase": "An administrator confirms the Nonprofit theme is available for charity, campaign, and civic sites.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/theme-admin-list-showing-nonprofit.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-nonprofit/theme-admin-list-showing-nonprofit",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": ["light"]
@@ -32,7 +32,7 @@
             "notes": "Capture a seeded cause page with campaigns, impact, volunteer/donate CTA, events, stories, contact, proof, and footer.",
             "useCase": "A charity or civic team sees how the theme moves visitors from understanding to support.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/frontend-page-rendered-with-nonprofit-theme.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-nonprofit/frontend-page-rendered-with-nonprofit-theme",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": ["light"]
@@ -48,7 +48,7 @@
             "notes": "Capture campaign hero, impact proof, donation/volunteer actions, and a calm civic visual rhythm.",
             "useCase": "A nonprofit buyer reviews whether the first viewport creates trust and a clear support path.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/nonprofit-homepage-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-homepage-layout",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": ["light"]
@@ -64,7 +64,7 @@
             "notes": "Capture appeal cards, progress indicators, urgency copy, and supporter CTAs.",
             "useCase": "A charity checks that campaign pages are more specific than broad landing pages.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/nonprofit-campaigns-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-campaigns-layout",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": ["light"]
@@ -80,7 +80,7 @@
             "notes": "Capture impact metrics, evidence cards, story links, and reporting-friendly proof sections.",
             "useCase": "A cause-led organisation can show outcomes without turning the theme into Corporate reporting.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/nonprofit-impact-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-impact-layout",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": ["light"]
@@ -96,7 +96,7 @@
             "notes": "Capture parallel donation and volunteer pathways with accessible CTAs and form-builder fallback state.",
             "useCase": "A visitor can choose a practical support route without losing the donation path.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/nonprofit-volunteer-donate-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-volunteer-donate-layout",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": ["light"]
@@ -112,7 +112,7 @@
             "notes": "Capture event cards using static fallback or capell-app/events integration when installed.",
             "useCase": "A civic team can promote events and volunteering opportunities with the same theme language.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/nonprofit-events-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-events-layout",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": ["light"]
@@ -128,7 +128,7 @@
             "notes": "Capture story cards, image treatment, campaign relationship, and next support actions.",
             "useCase": "A nonprofit can use human proof without drifting into Portfolio's case-study presentation.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/nonprofit-stories-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-stories-layout",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": ["light"]
@@ -144,7 +144,7 @@
             "notes": "Capture a signed preview URL generated for the seeded Nonprofit theme, site, and page.",
             "useCase": "An administrator previews a campaign page with the Nonprofit theme applied before publishing the theme choice.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-nonprofit/theme-preview-url-output",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": ["light"]

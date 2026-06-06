@@ -29,7 +29,7 @@
             "surface": "admin",
             "targetType": "admin-surface",
             "target": "MediaAIEditActionExtender",
-            "scenario": "admin-index-dark",
+            "scenario": "admin-index",
             "url": "/media",
             "waitFor": "table",
             "docsPage": "packages/media-ai/docs/overview.md",

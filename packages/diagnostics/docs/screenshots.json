@@ -35,7 +35,7 @@
             "surface": "admin",
             "targetType": "admin-surface",
             "target": "DiagnosticsPage",
-            "scenario": "admin-dashboard",
+            "scenario": "admin-index",
             "url": "/",
             "waitFor": "body",
             "required": true,

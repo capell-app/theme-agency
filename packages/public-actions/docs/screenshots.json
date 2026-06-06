@@ -16,7 +16,7 @@
             "notes": "Capture the configured actions list with at least one active action.",
             "useCase": "An administrator reviews configured public actions and their enabled/site state.",
             "screenshotPath": "packages/public-actions/docs/screenshots/public-actions-admin-index.png",
-            "scenario": "public-actions-admin-admin-surface",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/public-actions/public-actions-admin-index",
             "waitFor": ".public-actions-fixture",
             "colorSchemes": ["light"]
@@ -32,7 +32,7 @@
             "notes": "Show handler, site scope, redirect/messages, API/Zapier toggles, and payload schema fields.",
             "useCase": "An administrator configures handler, site scope, redirect/messages, API/Zapier toggles, and payload schema fields.",
             "screenshotPath": "packages/public-actions/docs/screenshots/public-action-form.png",
-            "scenario": "public-actions-admin-admin-surface",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/public-actions/public-action-form",
             "waitFor": ".public-actions-fixture",
             "colorSchemes": ["light"]
@@ -48,7 +48,7 @@
             "notes": "Capture the destination list or form with secrets redacted.",
             "useCase": "An administrator configures outbound destinations while secrets stay redacted.",
             "screenshotPath": "packages/public-actions/docs/screenshots/public-action-destinations.png",
-            "scenario": "public-actions-admin-admin-surface",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/public-actions/public-action-destinations",
             "waitFor": ".public-actions-fixture",
             "colorSchemes": ["light"]
@@ -64,7 +64,7 @@
             "notes": "Capture received submissions and status after demo data is prepared.",
             "useCase": "An administrator reviews received submissions and processing status.",
             "screenshotPath": "packages/public-actions/docs/screenshots/public-action-submissions.png",
-            "scenario": "public-actions-admin-admin-surface",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/public-actions/public-action-submissions",
             "waitFor": ".public-actions-fixture",
             "colorSchemes": ["light"]
@@ -80,7 +80,7 @@
             "notes": "Capture outbound dispatch status, adapter, response status, and dispatch time.",
             "useCase": "An operator reviews outbound dispatch status, adapter, response status, and dispatch timing.",
             "screenshotPath": "packages/public-actions/docs/screenshots/public-action-dispatch-attempts.png",
-            "scenario": "public-actions-admin-admin-surface",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/public-actions/public-action-dispatch-attempts",
             "waitFor": ".public-actions-fixture",
             "colorSchemes": ["light"]
@@ -96,7 +96,7 @@
             "notes": "Capture the token list and create-token modal without exposing token values.",
             "useCase": "An administrator creates or reviews integration tokens without exposing token values.",
             "screenshotPath": "packages/public-actions/docs/screenshots/public-action-integration-tokens.png",
-            "scenario": "public-actions-admin-admin-surface",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/public-actions/public-action-integration-tokens",
             "waitFor": ".public-actions-fixture",
             "colorSchemes": ["light"]
@@ -112,7 +112,7 @@
             "notes": "Capture the public form for an active action with no admin-only metadata visible.",
             "useCase": "A visitor submits an active public action form with no admin-only metadata visible.",
             "screenshotPath": "packages/public-actions/docs/screenshots/public-action-frontend-form.png",
-            "scenario": "public-actions-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/public-actions/public-action-frontend-form",
             "waitFor": ".public-actions-fixture",
             "colorSchemes": ["light"]
@@ -128,7 +128,7 @@
             "notes": "Capture or assert the authenticated API response shape using a demo token.",
             "useCase": "An integration client verifies the authenticated Zapier action discovery response shape with a demo token.",
             "screenshotPath": "packages/public-actions/docs/screenshots/public-action-zapier-discovery.png",
-            "scenario": "public-actions-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/public-actions/public-action-zapier-discovery",
             "waitFor": ".public-actions-fixture",
             "colorSchemes": ["light"]

@@ -1017,7 +1017,7 @@
             "surface": "admin",
             "targetType": "admin-surface",
             "target": "CountryResource",
-            "scenario": "admin-form",
+            "scenario": "admin-index",
             "url": "/countries",
             "click": "[wire\\:click*=\"mountAction('create')\"]",
             "waitFor": "[role=\"dialog\"] form, .fi-modal-window form",
@@ -1034,7 +1034,7 @@
             "surface": "admin",
             "targetType": "admin-surface",
             "target": "AddressResource",
-            "scenario": "admin-form",
+            "scenario": "admin-index",
             "url": "/addresses",
             "click": "[wire\\:click*=\"mountAction('create')\"]",
             "waitFor": "[role=\"dialog\"] form, .fi-modal-window form",
@@ -2032,7 +2032,7 @@
             "surface": "admin",
             "targetType": "admin-surface",
             "target": "DiagnosticsPage",
-            "scenario": "admin-dashboard",
+            "scenario": "admin-index",
             "url": "/",
             "waitFor": "body",
             "required": true,
@@ -2121,7 +2121,7 @@
             "notes": "Capture with at least one active document and one draft or archived document so status badges and publication counts are visible.",
             "screenshotPath": "packages/document-lifecycle/docs/screenshots/controlled-documents-index.png",
             "useCase": "An administrator reviews controlled documents and sees which policy or legal records have published versions.",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/document-lifecycle/controlled-documents-index",
             "waitFor": ".document-lifecycle",
             "colorSchemes": [
@@ -2140,7 +2140,7 @@
             "notes": "Requires a seeded Document record. The key field is disabled; title, status, metadata, and relation manager tabs should be visible.",
             "screenshotPath": "packages/document-lifecycle/docs/screenshots/controlled-document-edit.png",
             "useCase": "An administrator updates the title, lifecycle status, or metadata for a controlled document.",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/document-lifecycle/controlled-document-edit",
             "waitFor": ".document-lifecycle",
             "colorSchemes": [
@@ -2159,7 +2159,7 @@
             "notes": "Requires at least one DocumentPublication, ideally one created from a Publishing Studio revision so published_revision_id is populated.",
             "screenshotPath": "packages/document-lifecycle/docs/screenshots/controlled-document-publications.png",
             "useCase": "A compliance reviewer checks immutable publication versions, hashes, revision IDs, and publish timestamps for a document.",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/document-lifecycle/controlled-document-publications",
             "waitFor": ".document-lifecycle",
             "colorSchemes": [
@@ -2178,7 +2178,7 @@
             "notes": "Requires seeded DocumentAcceptance rows linked to the controlled document. Include at least one context such as registration or account_update.",
             "screenshotPath": "packages/document-lifecycle/docs/screenshots/controlled-document-acceptances.png",
             "useCase": "A compliance reviewer confirms which version a user or workflow accepted and when that acceptance was recorded.",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/document-lifecycle/controlled-document-acceptances",
             "waitFor": ".document-lifecycle",
             "colorSchemes": [
@@ -2246,7 +2246,7 @@
             "notes": "Capture with at least three seeded events across public/private or scheduled states so event table columns and controls are meaningful.",
             "screenshotPath": "packages/events/docs/screenshots/events-index.png",
             "useCase": "An editor reviews upcoming event records before opening one for schedule or registration changes.",
-            "scenario": "events-admin-admin-resource",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/events/events-index",
             "waitFor": ".events-fixture",
             "colorSchemes": [
@@ -2265,7 +2265,7 @@
             "notes": "Capture after event publishing defaults are registered so blueprint and layout defaults are available on create.",
             "screenshotPath": "packages/events/docs/screenshots/events-create.png",
             "useCase": "An editor creates an event with schedule, recurrence, visibility, publishing, and registration settings.",
-            "scenario": "events-admin-admin-resource",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/events/events-create",
             "waitFor": ".events-fixture",
             "colorSchemes": [
@@ -2284,7 +2284,7 @@
             "notes": "Requires a seeded event with recurrence and at least one generated occurrence so event state is not blank.",
             "screenshotPath": "packages/events/docs/screenshots/events-edit.png",
             "useCase": "An editor adjusts an existing recurring event and checks registration or publication state before saving.",
-            "scenario": "events-admin-admin-resource",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/events/events-edit",
             "waitFor": ".events-fixture",
             "colorSchemes": [
@@ -2303,7 +2303,7 @@
             "notes": "Capture with at least one venue that has address fields and a map URL so the management table is populated.",
             "screenshotPath": "packages/events/docs/screenshots/event-venues.png",
             "useCase": "An administrator manages reusable venues for events and confirms address details are visible.",
-            "scenario": "events-admin-admin-resource",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/events/event-venues",
             "waitFor": ".events-fixture",
             "colorSchemes": [
@@ -2322,7 +2322,7 @@
             "notes": "Requires generated occurrences from SyncEventOccurrencesAction, including one override or cancelled occurrence when possible.",
             "screenshotPath": "packages/events/docs/screenshots/event-occurrences.png",
             "useCase": "An editor reviews materialized event dates, statuses, venues, and registration counts.",
-            "scenario": "events-admin-admin-resource",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/events/event-occurrences",
             "waitFor": ".events-fixture",
             "colorSchemes": [
@@ -2341,7 +2341,7 @@
             "notes": "Requires native RSVP demo data with at least one pending, confirmed, or waitlisted registration.",
             "screenshotPath": "packages/events/docs/screenshots/event-registrations.png",
             "useCase": "An administrator reviews event attendee registrations, quantities, statuses, and related occurrences.",
-            "scenario": "events-admin-admin-resource",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/events/event-registrations",
             "waitFor": ".events-fixture",
             "colorSchemes": [
@@ -2360,7 +2360,7 @@
             "notes": "Requires View:EventCalendarPage permission and seeded occurrences within the next 90 days so the header widget has visible dates.",
             "screenshotPath": "packages/events/docs/screenshots/event-calendar-admin-page.png",
             "useCase": "An editor opens the admin calendar to scan event occurrences across the next publishing window.",
-            "scenario": "events-admin-admin-page",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/events/event-calendar-admin-page",
             "waitFor": ".events-fixture",
             "colorSchemes": [
@@ -2379,7 +2379,7 @@
             "notes": "Capture from EventCalendarPage or any host dashboard that renders EventCalendarWidget, with occurrences in the next 90 days.",
             "screenshotPath": "packages/events/docs/screenshots/event-calendar-widget.png",
             "useCase": "An editor checks the calendar widget for upcoming event dates without leaving the current admin context.",
-            "scenario": "events-admin-admin-widget",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/events/event-calendar-widget",
             "waitFor": ".events-fixture",
             "colorSchemes": [
@@ -2398,7 +2398,7 @@
             "notes": "Requires a public listing page, site/language context, and public non-cancelled occurrences. Anonymous output must not expose authoring markers, editor URLs, internal IDs, or package internals.",
             "screenshotPath": "packages/events/docs/screenshots/events-listing-page.png",
             "useCase": "A visitor browses public upcoming events for the current site.",
-            "scenario": "events-frontend-frontend-render",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/events/events-listing-page",
             "waitFor": ".events-fixture",
             "colorSchemes": [
@@ -2417,7 +2417,7 @@
             "notes": "Requires a public calendar page and seeded public occurrences. Anonymous output must stay free of editor controls, model IDs, signed URLs, and package internals.",
             "screenshotPath": "packages/events/docs/screenshots/events-calendar-page.png",
             "useCase": "A visitor scans public events in calendar form without seeing admin-only metadata.",
-            "scenario": "events-frontend-frontend-render",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/events/events-calendar-page",
             "waitFor": ".events-fixture",
             "colorSchemes": [
@@ -2436,7 +2436,7 @@
             "notes": "The actual route name is capell-events.calendar-feed. Verify text/calendar output for seeded public events; screenshot can be a browser text capture of the feed body.",
             "screenshotPath": "packages/events/docs/screenshots/events-ics-feed.png",
             "useCase": "A visitor or calendar client subscribes to the site's public event feed.",
-            "scenario": "events-frontend-http-route",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/events/events-ics-feed",
             "waitFor": ".events-fixture",
             "colorSchemes": [
@@ -2671,7 +2671,7 @@
             "notes": "Capture Foundation Theme homepage layout with hero, feature grid, content widgets, cta, footer. No additional package note required.",
             "useCase": "A buyer reviews how Foundation Theme handles the homepage layout page layout before installing the theme.",
             "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-homepage-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-homepage-layout",
             "waitFor": ".theme-foundation",
             "colorSchemes": [
@@ -2690,7 +2690,7 @@
             "notes": "Capture Foundation Theme standard content page with header, breadcrumbs, rich content, related links. No additional package note required.",
             "useCase": "A buyer reviews how Foundation Theme handles the standard content page page layout before installing the theme.",
             "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-standard-page-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-standard-page-layout",
             "waitFor": ".theme-foundation",
             "colorSchemes": [
@@ -2709,7 +2709,7 @@
             "notes": "Capture Foundation Theme blog article layout with article hero, author row, body, related posts. Requires capell-app/blog; show this package note on the captured image.",
             "useCase": "A buyer reviews how Foundation Theme handles the blog article layout page layout before installing the theme.",
             "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-blog-article-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-blog-article-layout",
             "waitFor": ".theme-foundation",
             "colorSchemes": [
@@ -2728,7 +2728,7 @@
             "notes": "Capture Foundation Theme listing page layout with card grid, filters, pagination, empty state. Requires capell-app/tags; show this package note on the captured image.",
             "useCase": "A buyer reviews how Foundation Theme handles the listing page layout page layout before installing the theme.",
             "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-listing-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-listing-layout",
             "waitFor": ".theme-foundation",
             "colorSchemes": [
@@ -2747,7 +2747,7 @@
             "notes": "Capture Foundation Theme contact form layout with intro copy, validated form, consent, confirmation. Requires capell-app/form-builder; show this package note on the captured image.",
             "useCase": "A buyer reviews how Foundation Theme handles the contact form layout page layout before installing the theme.",
             "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-contact-form-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-contact-form-layout",
             "waitFor": ".theme-foundation",
             "colorSchemes": [
@@ -2766,7 +2766,7 @@
             "notes": "Capture Foundation Theme search results layout with search box, result excerpts, highlighting, no-results state. Requires capell-app/search; show this package note on the captured image.",
             "useCase": "A buyer reviews how Foundation Theme handles the search results layout page layout before installing the theme.",
             "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-search-results-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-search-results-layout",
             "waitFor": ".theme-foundation",
             "colorSchemes": [
@@ -2785,7 +2785,7 @@
             "notes": "Capture Foundation Theme events listing layout with featured event, date cards, location metadata. Requires capell-app/events; show this package note on the captured image.",
             "useCase": "A buyer reviews how Foundation Theme handles the events listing layout page layout before installing the theme.",
             "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-events-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-events-layout",
             "waitFor": ".theme-foundation",
             "colorSchemes": [
@@ -2804,7 +2804,7 @@
             "notes": "Capture Foundation Theme access-gated page layout with teaser content, sign-in prompt, gated sections. Requires capell-app/access-gate; show this package note on the captured image.",
             "useCase": "A buyer reviews how Foundation Theme handles the access-gated page layout page layout before installing the theme.",
             "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-membership-gate-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-membership-gate-layout",
             "waitFor": ".theme-foundation",
             "colorSchemes": [
@@ -2947,7 +2947,7 @@
             "notes": "Capture the extension page with overview stats, traffic trend, top pages, and setup status widgets.",
             "useCase": "An administrator reviews GA4 overview stats, traffic trends, top pages, and setup status.",
             "screenshotPath": "packages/ga4-reports/docs/screenshots/ga4-reports-dashboard-page.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/ga4-reports/ga4-reports-dashboard-page",
             "waitFor": ".ga4-reports",
             "colorSchemes": [
@@ -2966,7 +2966,7 @@
             "notes": "Capture the not-configured and configured states if the screenshot runner can seed both.",
             "useCase": "A site owner distinguishes not-configured and configured GA4 states before enabling sync.",
             "screenshotPath": "packages/ga4-reports/docs/screenshots/ga4-reports-setup-status.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/ga4-reports/ga4-reports-setup-status",
             "waitFor": ".ga4-reports",
             "colorSchemes": [
@@ -2985,7 +2985,7 @@
             "notes": "Capture the settings section for property ID, credentials path, route slug, sync window, and enabled state.",
             "useCase": "A site owner configures property ID, credentials path, route slug, sync window, and enabled state.",
             "screenshotPath": "packages/ga4-reports/docs/screenshots/ga4-reports-settings.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/ga4-reports/ga4-reports-settings",
             "waitFor": ".ga4-reports",
             "colorSchemes": [
@@ -3030,7 +3030,7 @@
             "notes": "Capture the maintenance cache controls after at least one site exists.",
             "useCase": "An administrator clears, warms, or regenerates cached HTML for a site.",
             "screenshotPath": "packages/html-cache/docs/screenshots/html-cache-maintenance-cache-page.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/html-cache/html-cache-maintenance-cache-page",
             "waitFor": ".html-cache",
             "colorSchemes": [
@@ -3049,7 +3049,7 @@
             "notes": "Capture after warming a public page so cache map rows exist.",
             "useCase": "An administrator reviews model-to-URL cache map rows after a public page has been warmed.",
             "screenshotPath": "packages/html-cache/docs/screenshots/html-cache-cached-model-urls.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/html-cache/html-cache-cached-model-urls",
             "waitFor": ".html-cache",
             "colorSchemes": [
@@ -3068,7 +3068,7 @@
             "notes": "Capture cache overview, cache coverage URLs, and stale queue widgets.",
             "useCase": "An administrator checks cache overview, coverage, and stale queue widgets.",
             "screenshotPath": "packages/html-cache/docs/screenshots/html-cache-dashboard-widgets.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/html-cache/html-cache-dashboard-widgets",
             "waitFor": ".html-cache",
             "colorSchemes": [
@@ -3087,7 +3087,7 @@
             "notes": "Capture package diagnostics and public output safety checks on the core Site Health page.",
             "useCase": "An operator reviews cache-map diagnostics and public-output safety checks in Site Health.",
             "screenshotPath": "packages/html-cache/docs/screenshots/html-cache-site-health-cache-map.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/html-cache/html-cache-site-health-cache-map",
             "waitFor": ".html-cache",
             "colorSchemes": [
@@ -3106,7 +3106,7 @@
             "notes": "Capture the core Pages resource with the cache table extension visible.",
             "useCase": "An editor sees cache state indicators directly in the core Pages resource.",
             "screenshotPath": "packages/html-cache/docs/screenshots/html-cache-page-table-extension.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/html-cache/html-cache-page-table-extension",
             "waitFor": ".html-cache",
             "colorSchemes": [
@@ -3125,7 +3125,7 @@
             "notes": "Capture anonymous public output and verify no authoring markers, editor URLs, or session cookies are exposed.",
             "useCase": "An anonymous visitor receives cached public HTML with no authoring markers, editor URLs, or session cookies.",
             "screenshotPath": "packages/html-cache/docs/screenshots/html-cache-public-cache-hit.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/html-cache/html-cache-public-cache-hit",
             "waitFor": ".html-cache",
             "colorSchemes": [
@@ -3144,7 +3144,7 @@
             "notes": "Capture generated maintenance HTML for a site/domain after using the maintenance cache page.",
             "useCase": "An anonymous visitor sees the generated static maintenance page for a site/domain.",
             "screenshotPath": "packages/html-cache/docs/screenshots/html-cache-maintenance-page.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/html-cache/html-cache-maintenance-page",
             "waitFor": ".html-cache",
             "colorSchemes": [
@@ -3537,7 +3537,7 @@
             "surface": "admin",
             "targetType": "admin-surface",
             "target": "MediaAIEditActionExtender",
-            "scenario": "admin-index-dark",
+            "scenario": "admin-index",
             "url": "/media",
             "waitFor": "table",
             "docsPage": "packages/media-ai/docs/overview.md",
@@ -4027,7 +4027,7 @@
             "notes": "Capture the admin checkout sessions resource with paid, open, and expired statuses visible.",
             "useCase": "An administrator monitors checkout session status, mode, amount, and fulfillment state.",
             "screenshotPath": "packages/payments/docs/screenshots/payments-checkout-sessions.png",
-            "scenario": "payments-admin-admin-resource",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/payments/payments-checkout-sessions",
             "waitFor": ".payments-fixture",
             "colorSchemes": [
@@ -4046,7 +4046,7 @@
             "notes": "Capture webhook event processing state, freshness, and retry information.",
             "useCase": "An operator verifies Stripe webhook intake health and processing status.",
             "screenshotPath": "packages/payments/docs/screenshots/payments-webhook-events.png",
-            "scenario": "payments-admin-admin-resource",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/payments/payments-webhook-events",
             "waitFor": ".payments-fixture",
             "colorSchemes": [
@@ -4065,7 +4065,7 @@
             "notes": "Capture Stripe mode, publishable key, webhook secret state, checkout defaults, and allowed return hosts.",
             "useCase": "An administrator configures Stripe Checkout and webhook settings before launch.",
             "screenshotPath": "packages/payments/docs/screenshots/payments-settings.png",
-            "scenario": "payments-admin-settings-page",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/payments/payments-settings",
             "waitFor": ".payments-fixture",
             "colorSchemes": [
@@ -4084,7 +4084,7 @@
             "notes": "Capture billing portal state with subscriptions, completed payments, and paid downloads visible.",
             "useCase": "A customer reviews billing, subscriptions, payments, and paid-download entitlements.",
             "screenshotPath": "packages/payments/docs/screenshots/payments-customer-portal.png",
-            "scenario": "payments-frontend-frontend-render",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/payments/payments-customer-portal",
             "waitFor": ".payments-fixture",
             "colorSchemes": [
@@ -4103,7 +4103,7 @@
             "notes": "Capture a public form with payment field state and Stripe Checkout handoff copy.",
             "useCase": "A visitor submits a Form Builder payment field and is sent to Stripe Checkout.",
             "screenshotPath": "packages/payments/docs/screenshots/payments-form-builder-checkout.png",
-            "scenario": "payments-frontend-frontend-render",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/payments/payments-form-builder-checkout",
             "waitFor": ".payments-fixture",
             "colorSchemes": [
@@ -4182,7 +4182,7 @@
             "notes": "Capture the configured actions list with at least one active action.",
             "useCase": "An administrator reviews configured public actions and their enabled/site state.",
             "screenshotPath": "packages/public-actions/docs/screenshots/public-actions-admin-index.png",
-            "scenario": "public-actions-admin-admin-surface",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/public-actions/public-actions-admin-index",
             "waitFor": ".public-actions-fixture",
             "colorSchemes": [
@@ -4201,7 +4201,7 @@
             "notes": "Show handler, site scope, redirect/messages, API/Zapier toggles, and payload schema fields.",
             "useCase": "An administrator configures handler, site scope, redirect/messages, API/Zapier toggles, and payload schema fields.",
             "screenshotPath": "packages/public-actions/docs/screenshots/public-action-form.png",
-            "scenario": "public-actions-admin-admin-surface",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/public-actions/public-action-form",
             "waitFor": ".public-actions-fixture",
             "colorSchemes": [
@@ -4220,7 +4220,7 @@
             "notes": "Capture the destination list or form with secrets redacted.",
             "useCase": "An administrator configures outbound destinations while secrets stay redacted.",
             "screenshotPath": "packages/public-actions/docs/screenshots/public-action-destinations.png",
-            "scenario": "public-actions-admin-admin-surface",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/public-actions/public-action-destinations",
             "waitFor": ".public-actions-fixture",
             "colorSchemes": [
@@ -4239,7 +4239,7 @@
             "notes": "Capture received submissions and status after demo data is prepared.",
             "useCase": "An administrator reviews received submissions and processing status.",
             "screenshotPath": "packages/public-actions/docs/screenshots/public-action-submissions.png",
-            "scenario": "public-actions-admin-admin-surface",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/public-actions/public-action-submissions",
             "waitFor": ".public-actions-fixture",
             "colorSchemes": [
@@ -4258,7 +4258,7 @@
             "notes": "Capture outbound dispatch status, adapter, response status, and dispatch time.",
             "useCase": "An operator reviews outbound dispatch status, adapter, response status, and dispatch timing.",
             "screenshotPath": "packages/public-actions/docs/screenshots/public-action-dispatch-attempts.png",
-            "scenario": "public-actions-admin-admin-surface",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/public-actions/public-action-dispatch-attempts",
             "waitFor": ".public-actions-fixture",
             "colorSchemes": [
@@ -4277,7 +4277,7 @@
             "notes": "Capture the token list and create-token modal without exposing token values.",
             "useCase": "An administrator creates or reviews integration tokens without exposing token values.",
             "screenshotPath": "packages/public-actions/docs/screenshots/public-action-integration-tokens.png",
-            "scenario": "public-actions-admin-admin-surface",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/public-actions/public-action-integration-tokens",
             "waitFor": ".public-actions-fixture",
             "colorSchemes": [
@@ -4296,7 +4296,7 @@
             "notes": "Capture the public form for an active action with no admin-only metadata visible.",
             "useCase": "A visitor submits an active public action form with no admin-only metadata visible.",
             "screenshotPath": "packages/public-actions/docs/screenshots/public-action-frontend-form.png",
-            "scenario": "public-actions-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/public-actions/public-action-frontend-form",
             "waitFor": ".public-actions-fixture",
             "colorSchemes": [
@@ -4315,7 +4315,7 @@
             "notes": "Capture or assert the authenticated API response shape using a demo token.",
             "useCase": "An integration client verifies the authenticated Zapier action discovery response shape with a demo token.",
             "screenshotPath": "packages/public-actions/docs/screenshots/public-action-zapier-discovery.png",
-            "scenario": "public-actions-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/public-actions/public-action-zapier-discovery",
             "waitFor": ".public-actions-fixture",
             "colorSchemes": [
@@ -4499,7 +4499,7 @@
             "surface": "admin",
             "targetType": "admin-surface",
             "target": "RecordSwitcherHeadingExtender",
-            "scenario": "admin-form",
+            "scenario": "admin-index",
             "url": "/pages/{first-record}/edit",
             "click": ".filament-record-switcher .choices__inner",
             "waitFor": ".filament-record-switcher .choices__list--dropdown.is-active .choices__item[data-choice-selectable][data-value*=\"/pages/\"]",
@@ -5067,7 +5067,7 @@
             "notes": "Capture after installing capell-app/theme-agency with Foundation Theme and creating an Agency theme record in the isolated demo harness.",
             "useCase": "An administrator sees the Agency theme record in the host Themes admin surface.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/theme-admin-list-showing-agency.png",
-            "scenario": "theme-agency-admin-admin-surface",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/agency/theme-admin-list-showing-agency",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5086,7 +5086,7 @@
             "notes": "Capture a temporary signed preview URL generated from the host Themes table for the Agency theme.",
             "useCase": "An administrator opens a preview URL to inspect a page with the Agency theme applied.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "theme-agency-admin-admin-url",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/agency/theme-preview-url-output",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5105,7 +5105,7 @@
             "notes": "Capture the isolated demo route that renders navigation, hero, features, proof, content listing, CTA, and footer through the Agency renderer.",
             "useCase": "A visitor sees a seeded public page rendered through every Agency theme section.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/frontend-page-rendered-with-agency-theme.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/frontend-page-rendered-with-agency-theme",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5124,7 +5124,7 @@
             "notes": "Capture the basic creative campaign homepage with launch-room hero, campaign proof, work-in-progress cards, and conversion CTA.",
             "useCase": "A creative team reviews the premium Agency theme as a campaign launch surface, not a quiet creator portfolio.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-homepage-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-homepage-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5143,7 +5143,7 @@
             "notes": "Capture the campaign services page with creative routes, delivery steps, team proof, and launch CTA.",
             "useCase": "A studio or campaign team checks that services stay focused on campaign delivery rather than broad consulting.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-services-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-services-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5162,7 +5162,7 @@
             "notes": "Capture campaign work cards, channel filters, and a featured launch snapshot. Requires capell-app/content-sections; show this package note on the captured image.",
             "useCase": "A buyer sees recent campaign assets without Agency overlapping Portfolio's premium case-file workflow.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-portfolio-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-portfolio-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5181,7 +5181,7 @@
             "notes": "Capture a compact launch recap with brief, creative route, channel assets, and lightweight metrics. Requires capell-app/media-library; show this package note on the captured image.",
             "useCase": "A campaign team can show delivery proof while leaving deep outcome-led case studies to Portfolio.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-case-study-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-case-study-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5200,7 +5200,7 @@
             "notes": "Capture a campaign insight article with author details, related reads, and launch-room CTA. Requires capell-app/blog; show this package note on the captured image.",
             "useCase": "A creative team checks that editorial content supports campaigns instead of becoming a knowledge-base theme.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-insights-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-insights-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5219,7 +5219,7 @@
             "notes": "Capture a launch event page with agenda, speakers, creative assets, and registration CTA. Requires capell-app/events; show this package note on the captured image.",
             "useCase": "A campaign team can promote launches and webinars without requiring a premium SaaS or Events-specific layout.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-event-landing-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-event-landing-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5238,7 +5238,7 @@
             "notes": "Capture a campaign brief form with offer copy, qualification fields, and confirmation state. Requires capell-app/form-builder; show this package note on the captured image.",
             "useCase": "A creative team checks that the preset converts campaign interest into a usable brief.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-lead-form-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-lead-form-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5257,7 +5257,7 @@
             "notes": "Capture a campaign page with variant hero, launch sections, asset blocks, and analytics hooks. Requires capell-app/campaign-studio; show this package note on the captured image.",
             "useCase": "A buyer sees Agency's strongest lane: fast campaign and launch pages with basic creative polish.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-campaign-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-campaign-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5276,7 +5276,7 @@
             "notes": "Capture campaign search with grouped launch assets, highlighted terms, and recovery state. Requires capell-app/search; show this package note on the captured image.",
             "useCase": "A visitor can find campaigns, briefs, and resources without the page feeling like Knowledge's archive search.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-search-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-search-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5295,7 +5295,7 @@
             "notes": "Capture with only the core Capell stack, Foundation Theme, Layout Builder, and capell-app/theme-commerce installed in the isolated demo harness.",
             "useCase": "An administrator confirms the commerce theme is available through the core Themes resource without installing another theme package.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/theme-admin-list-showing-commerce.png",
-            "scenario": "theme-commerce-admin-filament-resource",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/commerce/theme-admin-list-showing-commerce",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5314,7 +5314,7 @@
             "notes": "Capture a signed preview URL generated with CreateThemePreviewUrlAction for the seeded commerce theme, site, and page.",
             "useCase": "An administrator opens a signed preview URL to inspect a page with the commerce theme applied before publishing the theme choice.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "theme-commerce-admin-admin-url",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/commerce/theme-preview-url-output",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5333,7 +5333,7 @@
             "notes": "Capture the seeded Stone & Loom page after installing capell-app/theme-commerce and building the Foundation Theme/frontend assets.",
             "useCase": "A visitor sees a seeded product page rendered through the commerce navigation, hero, product finder, collections, product grid, catalog, proof, blog teaser, CTA, and footer sections.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/frontend-page-rendered-with-commerce-theme.png",
-            "scenario": "theme-commerce-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/commerce/frontend-page-rendered-with-commerce-theme",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5352,7 +5352,7 @@
             "notes": "Capture the retail homepage with merchandising hero, collection tiles, buying-path proof, product rail, and conversion CTA.",
             "useCase": "A retailer checks that the theme feels like a buying journey rather than a plain catalogue wrapper.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-homepage-layout.png",
-            "scenario": "theme-commerce-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-homepage-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5371,7 +5371,7 @@
             "notes": "Capture collection filters, product grid density, merchandising banner, and buyer-intent cards. Requires capell-app/shopify-commerce; show this package note on the captured image.",
             "useCase": "A retailer reviews whether shoppers can scan ranges, campaigns, and stock signals quickly.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-collection-layout.png",
-            "scenario": "theme-commerce-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-collection-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5390,7 +5390,7 @@
             "notes": "Capture product detail with gallery, price, variants, stock proof, recommendations, and basket CTA. Requires capell-app/shopify-commerce; show this package note on the captured image.",
             "useCase": "A retailer checks that product pages keep purchase intent, proof, and merchandising context together.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-product-layout.png",
-            "scenario": "theme-commerce-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-product-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5409,7 +5409,7 @@
             "notes": "Capture an image-led lookbook with editorial groupings, shoppable cards, and collection pathways. Requires capell-app/media-library; show this package note on the captured image.",
             "useCase": "A retailer can sell a range visually without the page becoming Portfolio's work gallery.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-lookbook-layout.png",
-            "scenario": "theme-commerce-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-lookbook-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5428,7 +5428,7 @@
             "notes": "Capture a buying guide article with editorial copy, product recommendations, author details, and collection CTAs. Requires capell-app/blog; show this package note on the captured image.",
             "useCase": "A retailer checks that advice content supports purchase decisions instead of becoming a plain blog.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-buying-guide-layout.png",
-            "scenario": "theme-commerce-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-buying-guide-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5447,7 +5447,7 @@
             "notes": "Capture a retail newsletter page with incentive copy, consent messaging, product context, and signup block. Requires capell-app/newsletter; show this package note on the captured image.",
             "useCase": "A retailer reviews how the theme converts browsing intent into owned-audience growth.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-newsletter-layout.png",
-            "scenario": "theme-commerce-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-newsletter-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5466,7 +5466,7 @@
             "notes": "Capture a retail event page with event details, store location, featured products, and registration CTA. Requires capell-app/events; show this package note on the captured image.",
             "useCase": "A retailer can promote launches and in-store events without leaving the merchandising lane.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-store-event-layout.png",
-            "scenario": "theme-commerce-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-store-event-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5485,7 +5485,7 @@
             "notes": "Capture product search with filters, result grid, stock signals, and empty-state recovery. Requires capell-app/search; show this package note on the captured image.",
             "useCase": "A shopper can refine buying paths without the page looking like Knowledge search or a standard directory.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-search-layout.png",
-            "scenario": "theme-commerce-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-search-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5504,7 +5504,7 @@
             "notes": "Capture a promotion campaign with offer hero, countdown, product groups, and segmented CTAs. Requires capell-app/campaign-studio; show this package note on the captured image.",
             "useCase": "A retailer checks that campaigns stay tied to buying paths rather than becoming Agency launch pages.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-campaign-layout.png",
-            "scenario": "theme-commerce-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-campaign-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5523,7 +5523,7 @@
             "notes": "Capture after installing capell-app/theme-corporate with Foundation Theme and creating a Corporate theme record in the isolated demo harness.",
             "useCase": "An administrator sees the Corporate theme record in the host Themes admin surface.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/theme-admin-list-showing-corporate.png",
-            "scenario": "theme-corporate-admin-admin-surface",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/corporate/theme-admin-list-showing-corporate",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5542,7 +5542,7 @@
             "notes": "Capture a temporary signed preview URL generated from the host Themes table for the Corporate theme.",
             "useCase": "An administrator opens a preview URL to inspect a page with the Corporate theme applied.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "theme-corporate-admin-admin-url",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/corporate/theme-preview-url-output",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5561,7 +5561,7 @@
             "notes": "Capture the seeded Corporate Demo Homepage route that renders navigation, hero, features, proof, content listing, CTA, and footer through the Corporate renderer.",
             "useCase": "A visitor sees a seeded public page rendered through every Corporate theme section.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/frontend-page-rendered-with-corporate-theme.png",
-            "scenario": "theme-corporate-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/corporate/frontend-page-rendered-with-corporate-theme",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5580,7 +5580,7 @@
             "notes": "Capture the basic boardroom homepage with formal hero, decision proof, capability bands, and restrained CTA.",
             "useCase": "A business team reviews Corporate as a polished basic preset for board papers and formal service sites.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-homepage-layout.png",
-            "scenario": "theme-corporate-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-homepage-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5599,7 +5599,7 @@
             "notes": "Capture formal service cards, process notes, outcome proof, and contact CTA.",
             "useCase": "A business buyer checks that services read as boardroom-ready rather than SaaS features or local job cards.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-services-layout.png",
-            "scenario": "theme-corporate-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-services-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5618,7 +5618,7 @@
             "notes": "Capture governance content with policy sections, document cards, decision trail, and leadership proof. Requires capell-app/document-lifecycle; show this package note on the captured image.",
             "useCase": "A corporate team can publish formal decision material without the theme pretending to be a premium enterprise workflow.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-governance-layout.png",
-            "scenario": "theme-corporate-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-governance-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5637,7 +5637,7 @@
             "notes": "Capture board-paper and resource cards with filters, topic navigation, and formal metadata. Requires capell-app/tags; show this package note on the captured image.",
             "useCase": "A visitor can browse formal resources without the page becoming Knowledge's research archive.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-resources-layout.png",
-            "scenario": "theme-corporate-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-resources-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5656,7 +5656,7 @@
             "notes": "Capture a formal article with body copy, author details, related board papers, and contact route. Requires capell-app/blog; show this package note on the captured image.",
             "useCase": "A business site can publish leadership material while keeping a restrained corporate rhythm.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-article-layout.png",
-            "scenario": "theme-corporate-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-article-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5675,7 +5675,7 @@
             "notes": "Capture office details, procurement/investor/service routing notes, form fields, and confirmation state. Requires capell-app/form-builder; show this package note on the captured image.",
             "useCase": "A business team checks that enquiries route cleanly without becoming a broad lead-generation page.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-contact-layout.png",
-            "scenario": "theme-corporate-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-contact-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5694,7 +5694,7 @@
             "notes": "Capture office cards, address metadata, map-ready panels, and regional contact routing. Requires capell-app/address; show this package note on the captured image.",
             "useCase": "A formal organisation can show locations and contact routes without local-services styling.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-locations-layout.png",
-            "scenario": "theme-corporate-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-locations-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5713,7 +5713,7 @@
             "notes": "Capture search results with board-paper grouping, snippets, and conservative recovery state. Requires capell-app/search; show this package note on the captured image.",
             "useCase": "A visitor can find corporate material without the page looking like product search or an editorial archive.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-search-layout.png",
-            "scenario": "theme-corporate-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-search-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5732,7 +5732,7 @@
             "notes": "Capture an investor or stakeholder event with agenda, registration, related documents, and formal proof. Requires capell-app/events; show this package note on the captured image.",
             "useCase": "A corporate team can publish stakeholder events without overlapping SaaS webinars or nonprofit community events.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-investor-event-layout.png",
-            "scenario": "theme-corporate-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-investor-event-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5751,7 +5751,7 @@
             "notes": "Capture with Foundation Theme, Layout Builder, and capell-app/theme-education installed in the isolated demo harness.",
             "useCase": "An administrator confirms the Education theme is available before applying it to a course or school site.",
             "screenshotPath": "packages/theme-education/docs/screenshots/theme-admin-list-showing-education.png",
-            "scenario": "theme-education-admin-filament-resource",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/education/theme-admin-list-showing-education",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5770,7 +5770,7 @@
             "notes": "Capture a seeded learning-pathway page with navigation, hero, course catalogue, instructors, events, enrolment CTA, resources, FAQ, proof, CTA, and footer.",
             "useCase": "A course provider sees how the theme connects discovery, trust, and enrolment in one public page.",
             "screenshotPath": "packages/theme-education/docs/screenshots/frontend-page-rendered-with-education-theme.png",
-            "scenario": "theme-education-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/education/frontend-page-rendered-with-education-theme",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5789,7 +5789,7 @@
             "notes": "Capture the pathway-led homepage with cohort proof, course cards, mentor signals, and enrolment actions.",
             "useCase": "A school, academy, or training provider reviews the first-viewport learning journey before activating the theme.",
             "screenshotPath": "packages/theme-education/docs/screenshots/education-homepage-layout.png",
-            "scenario": "theme-education-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/education/education-homepage-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5808,7 +5808,7 @@
             "notes": "Capture course catalogue cards with learning outcomes, format markers, cohort readiness, and clear comparison rhythm.",
             "useCase": "A learner compares course paths without the page feeling like a plain resource grid.",
             "screenshotPath": "packages/theme-education/docs/screenshots/education-course-catalogue-layout.png",
-            "scenario": "theme-education-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/education/education-course-catalogue-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5827,7 +5827,7 @@
             "notes": "Capture instructor cards, teaching roles, mentor support copy, and learner-trust proof.",
             "useCase": "A learner or parent can see who teaches the programme and why the team is credible.",
             "screenshotPath": "packages/theme-education/docs/screenshots/education-instructors-layout.png",
-            "scenario": "theme-education-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/education/education-instructors-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5846,7 +5846,7 @@
             "notes": "Capture event cards using the static fallback or capell-app/events integration when installed.",
             "useCase": "A school can promote open days, workshops, and cohort deadlines without custom Blade.",
             "screenshotPath": "packages/theme-education/docs/screenshots/education-events-layout.png",
-            "scenario": "theme-education-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/education/education-events-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5865,7 +5865,7 @@
             "notes": "Capture the enrolment path with steps, form-builder fallback state, and clear application actions.",
             "useCase": "A training provider checks that the theme turns course interest into a confident application route.",
             "screenshotPath": "packages/theme-education/docs/screenshots/education-enrolment-layout.png",
-            "scenario": "theme-education-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/education/education-enrolment-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5884,7 +5884,7 @@
             "notes": "Capture guide, worksheet, replay, and FAQ cards with the blog/resource integration fallback visible.",
             "useCase": "A course provider reviews how support material stays tied to learning pathways instead of becoming a plain blog.",
             "screenshotPath": "packages/theme-education/docs/screenshots/education-resource-library-layout.png",
-            "scenario": "theme-education-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/education/education-resource-library-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5903,7 +5903,7 @@
             "notes": "Capture a signed preview URL generated for the seeded Education theme, site, and page.",
             "useCase": "An administrator previews a course page with the Education theme applied before publishing the theme choice.",
             "screenshotPath": "packages/theme-education/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "theme-education-admin-admin-url",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/education/theme-preview-url-output",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5922,7 +5922,7 @@
             "notes": "Capture with only the core Capell stack, Foundation Theme, Layout Builder, and capell-app/theme-healthcare installed in the isolated demo harness.",
             "useCase": "An administrator confirms the healthcare theme is available through the core Themes resource without installing another theme package.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/theme-admin-list-showing-healthcare.png",
-            "scenario": "theme-healthcare-admin-filament-resource",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/healthcare/theme-admin-list-showing-healthcare",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5941,7 +5941,7 @@
             "notes": "Capture a seeded clinic page after installing capell-app/theme-healthcare and building the Foundation Theme/frontend assets.",
             "useCase": "A patient sees an appointment-led journey through utility bar, hero, service finder, clinicians, booking, events, proof, resources, contact, CTA, and footer.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/frontend-page-rendered-with-healthcare-theme.png",
-            "scenario": "theme-healthcare-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/healthcare/frontend-page-rendered-with-healthcare-theme",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5960,7 +5960,7 @@
             "notes": "Capture the desktop care-pathway homepage with appointment hero, service finder, clinician proof, booking CTA, and footer.",
             "useCase": "A clinic owner reviews whether the first viewport builds trust and moves patients toward the right appointment route.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/healthcare-homepage-desktop.png",
-            "scenario": "theme-healthcare-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/healthcare/healthcare-homepage-desktop",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5979,7 +5979,7 @@
             "notes": "Capture the mobile care-pathway homepage with compact navigation, appointment CTA, service cards, and footer.",
             "useCase": "A clinic owner verifies mobile patient routing, tap targets, and clinical contrast before activating the theme.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/healthcare-homepage-mobile.png",
-            "scenario": "theme-healthcare-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/healthcare/healthcare-homepage-mobile",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -5998,7 +5998,7 @@
             "notes": "Capture a seeded service listing with finder controls, care-route cards, clinician hints, and booking prompts.",
             "useCase": "A patient browses care options and moves toward the right clinical enquiry path.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/healthcare-services-listing.png",
-            "scenario": "theme-healthcare-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/healthcare/healthcare-services-listing",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -6017,7 +6017,7 @@
             "notes": "Capture a seeded clinician or care-route detail page with image-led hero, body copy, proof, and related services.",
             "useCase": "A patient reviews clinician expertise, service context, and safe next steps.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/healthcare-clinician-detail.png",
-            "scenario": "theme-healthcare-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/healthcare/healthcare-clinician-detail",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -6036,7 +6036,7 @@
             "notes": "Capture the healthcare contact surface with locations, enquiry routing, appointment actions, and clinical support paths.",
             "useCase": "A patient finds the right contact route after browsing services without losing appointment clarity.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/healthcare-contact-page.png",
-            "scenario": "theme-healthcare-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/healthcare/healthcare-contact-page",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -6055,7 +6055,7 @@
             "notes": "Capture a signed preview URL generated with CreateThemePreviewUrlAction for the seeded healthcare theme, site, and page.",
             "useCase": "An administrator opens a signed preview URL to inspect a page with the healthcare theme applied before publishing the theme choice.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "theme-healthcare-admin-admin-url",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/healthcare/theme-preview-url-output",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": [
@@ -6533,7 +6533,7 @@
             "notes": "Capture with Foundation Theme, Layout Builder, and capell-app/theme-local-services installed in the isolated demo harness.",
             "useCase": "An administrator confirms the Local Services theme is available for quote-led local operators.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/theme-admin-list-showing-local-services.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-local-services/theme-admin-list-showing-local-services",
             "waitFor": ".theme-local-services",
             "colorSchemes": [
@@ -6552,7 +6552,7 @@
             "notes": "Capture a seeded service business page with locality hero, services, service areas, quote form, case studies, resources, contact, proof, CTA, and footer.",
             "useCase": "A local operator sees how the theme drives visitors from service need to quote request.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/frontend-page-rendered-with-local-services-theme.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-local-services/frontend-page-rendered-with-local-services-theme",
             "waitFor": ".theme-local-services",
             "colorSchemes": [
@@ -6571,7 +6571,7 @@
             "notes": "Capture locality proof, availability signals, dispatch rhythm, and conversion-oriented hero content.",
             "useCase": "A trades, maintenance, or local service team reviews whether the homepage makes coverage and response clear.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-homepage-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-local-services/local-services-homepage-layout",
             "waitFor": ".theme-local-services",
             "colorSchemes": [
@@ -6590,7 +6590,7 @@
             "notes": "Capture service cards with urgency markers, pricing cues, eligibility notes, and quote actions.",
             "useCase": "A visitor can compare service calls without the page feeling like an agency services grid.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-services-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-local-services/local-services-services-layout",
             "waitFor": ".theme-local-services",
             "colorSchemes": [
@@ -6609,7 +6609,7 @@
             "notes": "Capture postcode/area cards, route proof, and coverage-focused CTA copy.",
             "useCase": "A local business proves it serves the visitor's area before asking for an enquiry.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-service-areas-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-local-services/local-services-service-areas-layout",
             "waitFor": ".theme-local-services",
             "colorSchemes": [
@@ -6628,7 +6628,7 @@
             "notes": "Capture the quote form section with static fallback and optional capell-app/form-builder state.",
             "useCase": "A local operator checks that quote conversion remains obvious after service discovery.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-quote-form-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-local-services/local-services-quote-form-layout",
             "waitFor": ".theme-local-services",
             "colorSchemes": [
@@ -6647,7 +6647,7 @@
             "notes": "Capture completed-job proof, before/after-style cards, local trust markers, and case study summaries.",
             "useCase": "A service business can show practical proof without overlapping Portfolio's studio case-study workflow.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-job-proof-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-local-services/local-services-job-proof-layout",
             "waitFor": ".theme-local-services",
             "colorSchemes": [
@@ -6666,7 +6666,7 @@
             "notes": "Capture advice/resource cards using static content or the optional blog integration when available.",
             "useCase": "A local business can answer common service questions while keeping the quote path visible.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/local-services-resources-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-local-services/local-services-resources-layout",
             "waitFor": ".theme-local-services",
             "colorSchemes": [
@@ -6685,7 +6685,7 @@
             "notes": "Capture a signed preview URL generated for the seeded Local Services theme, site, and page.",
             "useCase": "An administrator previews a local-service page with the theme applied before publishing the theme choice.",
             "screenshotPath": "packages/theme-local-services/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-local-services/theme-preview-url-output",
             "waitFor": ".theme-local-services",
             "colorSchemes": [
@@ -6704,7 +6704,7 @@
             "notes": "Capture with Foundation Theme, Layout Builder, and capell-app/theme-nonprofit installed in the isolated demo harness.",
             "useCase": "An administrator confirms the Nonprofit theme is available for charity, campaign, and civic sites.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/theme-admin-list-showing-nonprofit.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-nonprofit/theme-admin-list-showing-nonprofit",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": [
@@ -6723,7 +6723,7 @@
             "notes": "Capture a seeded cause page with campaigns, impact, volunteer/donate CTA, events, stories, contact, proof, and footer.",
             "useCase": "A charity or civic team sees how the theme moves visitors from understanding to support.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/frontend-page-rendered-with-nonprofit-theme.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-nonprofit/frontend-page-rendered-with-nonprofit-theme",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": [
@@ -6742,7 +6742,7 @@
             "notes": "Capture campaign hero, impact proof, donation/volunteer actions, and a calm civic visual rhythm.",
             "useCase": "A nonprofit buyer reviews whether the first viewport creates trust and a clear support path.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/nonprofit-homepage-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-homepage-layout",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": [
@@ -6761,7 +6761,7 @@
             "notes": "Capture appeal cards, progress indicators, urgency copy, and supporter CTAs.",
             "useCase": "A charity checks that campaign pages are more specific than broad landing pages.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/nonprofit-campaigns-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-campaigns-layout",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": [
@@ -6780,7 +6780,7 @@
             "notes": "Capture impact metrics, evidence cards, story links, and reporting-friendly proof sections.",
             "useCase": "A cause-led organisation can show outcomes without turning the theme into Corporate reporting.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/nonprofit-impact-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-impact-layout",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": [
@@ -6799,7 +6799,7 @@
             "notes": "Capture parallel donation and volunteer pathways with accessible CTAs and form-builder fallback state.",
             "useCase": "A visitor can choose a practical support route without losing the donation path.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/nonprofit-volunteer-donate-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-volunteer-donate-layout",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": [
@@ -6818,7 +6818,7 @@
             "notes": "Capture event cards using static fallback or capell-app/events integration when installed.",
             "useCase": "A civic team can promote events and volunteering opportunities with the same theme language.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/nonprofit-events-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-events-layout",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": [
@@ -6837,7 +6837,7 @@
             "notes": "Capture story cards, image treatment, campaign relationship, and next support actions.",
             "useCase": "A nonprofit can use human proof without drifting into Portfolio's case-study presentation.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/nonprofit-stories-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-stories-layout",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": [
@@ -6856,7 +6856,7 @@
             "notes": "Capture a signed preview URL generated for the seeded Nonprofit theme, site, and page.",
             "useCase": "An administrator previews a campaign page with the Nonprofit theme applied before publishing the theme choice.",
             "screenshotPath": "packages/theme-nonprofit/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-nonprofit/theme-preview-url-output",
             "waitFor": ".theme-nonprofit",
             "colorSchemes": [
@@ -6875,7 +6875,7 @@
             "notes": "Capture with Foundation Theme, Layout Builder, and capell-app/theme-portfolio installed in the isolated demo harness.",
             "useCase": "An administrator confirms the Portfolio theme is available for a premium studio or case-study site.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/theme-admin-list-showing-portfolio.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-portfolio/theme-admin-list-showing-portfolio",
             "waitFor": ".theme-portfolio",
             "colorSchemes": [
@@ -6894,7 +6894,7 @@
             "notes": "Capture a seeded studio page with work grid, case studies, services, proof, testimonials, media kit, newsletter, CTA, and footer.",
             "useCase": "A studio, consultant, or creator sees how the theme sells work outcomes without overlapping Agency's campaign preset.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/frontend-page-rendered-with-portfolio-theme.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-portfolio/frontend-page-rendered-with-portfolio-theme",
             "waitFor": ".theme-portfolio",
             "colorSchemes": [
@@ -6913,7 +6913,7 @@
             "notes": "Capture work-led hero, case-file proof, selected work, audience path, and enquiry CTA.",
             "useCase": "A premium studio reviews whether the first viewport feels like a serious case-study product rather than a basic creative preset.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/portfolio-homepage-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-portfolio/portfolio-homepage-layout",
             "waitFor": ".theme-portfolio",
             "colorSchemes": [
@@ -6932,7 +6932,7 @@
             "notes": "Capture dense work cards with media treatment, role/scope metadata, outcome labels, and filtering rhythm.",
             "useCase": "A visitor can scan relevant work without the theme feeling like a blog, gallery, or Agency services grid.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/portfolio-work-grid-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-portfolio/portfolio-work-grid-layout",
             "waitFor": ".theme-portfolio",
             "colorSchemes": [
@@ -6951,7 +6951,7 @@
             "notes": "Capture outcome ledger, challenge/approach/result sections, scope cards, and next-project CTA.",
             "useCase": "A studio proves premium value through measurable work outcomes instead of broad testimonials.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/portfolio-case-study-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-portfolio/portfolio-case-study-layout",
             "waitFor": ".theme-portfolio",
             "colorSchemes": [
@@ -6970,7 +6970,7 @@
             "notes": "Capture studio service cards, engagement shape, process hints, and proof-linked capabilities.",
             "useCase": "A visitor understands what can be bought without the theme becoming a local-services page.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/portfolio-services-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-portfolio/portfolio-services-layout",
             "waitFor": ".theme-portfolio",
             "colorSchemes": [
@@ -6989,7 +6989,7 @@
             "notes": "Capture speaking, press, audience, and newsletter paths with compact credibility proof.",
             "useCase": "A creator or consultant can sell authority and audience-building without needing a separate knowledge theme.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/portfolio-media-kit-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-portfolio/portfolio-media-kit-layout",
             "waitFor": ".theme-portfolio",
             "colorSchemes": [
@@ -7008,7 +7008,7 @@
             "notes": "Capture newsletter CTA, audience proof, and work-to-subscriber conversion copy.",
             "useCase": "A studio checks that audience growth supports the portfolio lane without becoming Knowledge's resource archive.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/portfolio-newsletter-layout.png",
-            "scenario": "runner-fixture-frontend",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-portfolio/portfolio-newsletter-layout",
             "waitFor": ".theme-portfolio",
             "colorSchemes": [
@@ -7027,7 +7027,7 @@
             "notes": "Capture a signed preview URL generated for the seeded Portfolio theme, site, and page.",
             "useCase": "An administrator previews a case-study page with the Portfolio theme applied before publishing the theme choice.",
             "screenshotPath": "packages/theme-portfolio/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "runner-fixture-admin",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-portfolio/theme-preview-url-output",
             "waitFor": ".theme-portfolio",
             "colorSchemes": [

@@ -13,7 +13,7 @@
             "surface": "admin",
             "targetType": "admin-surface",
             "target": "RecordSwitcherHeadingExtender",
-            "scenario": "admin-form",
+            "scenario": "admin-index",
             "url": "/pages/{first-record}/edit",
             "click": ".filament-record-switcher .choices__inner",
             "waitFor": ".filament-record-switcher .choices__list--dropdown.is-active .choices__item[data-choice-selectable][data-value*=\"/pages/\"]",

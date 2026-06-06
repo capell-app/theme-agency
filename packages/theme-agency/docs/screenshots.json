@@ -16,7 +16,7 @@
             "notes": "Capture after installing capell-app/theme-agency with Foundation Theme and creating an Agency theme record in the isolated demo harness.",
             "useCase": "An administrator sees the Agency theme record in the host Themes admin surface.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/theme-admin-list-showing-agency.png",
-            "scenario": "theme-agency-admin-admin-surface",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/agency/theme-admin-list-showing-agency",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": ["light"]
@@ -32,7 +32,7 @@
             "notes": "Capture a temporary signed preview URL generated from the host Themes table for the Agency theme.",
             "useCase": "An administrator opens a preview URL to inspect a page with the Agency theme applied.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/theme-preview-url-output.png",
-            "scenario": "theme-agency-admin-admin-url",
+            "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/agency/theme-preview-url-output",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": ["light"]
@@ -48,7 +48,7 @@
             "notes": "Capture the isolated demo route that renders navigation, hero, features, proof, content listing, CTA, and footer through the Agency renderer.",
             "useCase": "A visitor sees a seeded public page rendered through every Agency theme section.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/frontend-page-rendered-with-agency-theme.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/frontend-page-rendered-with-agency-theme",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": ["light"]
@@ -64,7 +64,7 @@
             "notes": "Capture the basic creative campaign homepage with launch-room hero, campaign proof, work-in-progress cards, and conversion CTA.",
             "useCase": "A creative team reviews the premium Agency theme as a campaign launch surface, not a quiet creator portfolio.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-homepage-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-homepage-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": ["light"]
@@ -80,7 +80,7 @@
             "notes": "Capture the campaign services page with creative routes, delivery steps, team proof, and launch CTA.",
             "useCase": "A studio or campaign team checks that services stay focused on campaign delivery rather than broad consulting.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-services-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-services-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": ["light"]
@@ -96,7 +96,7 @@
             "notes": "Capture campaign work cards, channel filters, and a featured launch snapshot. Requires capell-app/content-sections; show this package note on the captured image.",
             "useCase": "A buyer sees recent campaign assets without Agency overlapping Portfolio's premium case-file workflow.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-portfolio-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-portfolio-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": ["light"]
@@ -112,7 +112,7 @@
             "notes": "Capture a compact launch recap with brief, creative route, channel assets, and lightweight metrics. Requires capell-app/media-library; show this package note on the captured image.",
             "useCase": "A campaign team can show delivery proof while leaving deep outcome-led case studies to Portfolio.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-case-study-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-case-study-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": ["light"]
@@ -128,7 +128,7 @@
             "notes": "Capture a campaign insight article with author details, related reads, and launch-room CTA. Requires capell-app/blog; show this package note on the captured image.",
             "useCase": "A creative team checks that editorial content supports campaigns instead of becoming a knowledge-base theme.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-insights-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-insights-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": ["light"]
@@ -144,7 +144,7 @@
             "notes": "Capture a launch event page with agenda, speakers, creative assets, and registration CTA. Requires capell-app/events; show this package note on the captured image.",
             "useCase": "A campaign team can promote launches and webinars without requiring a premium SaaS or Events-specific layout.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-event-landing-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-event-landing-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": ["light"]
@@ -160,7 +160,7 @@
             "notes": "Capture a campaign brief form with offer copy, qualification fields, and confirmation state. Requires capell-app/form-builder; show this package note on the captured image.",
             "useCase": "A creative team checks that the preset converts campaign interest into a usable brief.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-lead-form-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-lead-form-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": ["light"]
@@ -176,7 +176,7 @@
             "notes": "Capture a campaign page with variant hero, launch sections, asset blocks, and analytics hooks. Requires capell-app/campaign-studio; show this package note on the captured image.",
             "useCase": "A buyer sees Agency's strongest lane: fast campaign and launch pages with basic creative polish.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-campaign-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-campaign-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": ["light"]
@@ -192,7 +192,7 @@
             "notes": "Capture campaign search with grouped launch assets, highlighted terms, and recovery state. Requires capell-app/search; show this package note on the captured image.",
             "useCase": "A visitor can find campaigns, briefs, and resources without the page feeling like Knowledge's archive search.",
             "screenshotPath": "packages/theme-agency/docs/screenshots/agency-search-layout.png",
-            "scenario": "theme-agency-frontend-frontend-url",
+            "scenario": "frontend-page",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-search-layout",
             "waitFor": ".theme-gallery-fixture",
             "colorSchemes": ["light"]
