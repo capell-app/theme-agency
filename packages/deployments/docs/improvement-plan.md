@@ -30,7 +30,7 @@ Manifest `capabilities`: `["deployments", "deployments-admin"]`. Manifest `surfa
 - **Health gates before publish** — `getDeployStatus()` returns success/failure/pending but nothing consumes it. Blocking auto-merge until checks pass (a health gate) is a natural premium feature and would justify the `tier: premium` label. (M)
 - **Maintenance-mode / deploy-hook coordination** — for a CMS "Operations" bundle package, there are no deploy hooks (pre/post-publish callbacks), no maintenance-mode toggling around a direct-commit deploy, and no event emission (`subscriberManager`/`AdminEventRegistry`) when a publish succeeds or fails so other packages (Diagnostics, Insights) can react. (M)
 - **Changelog generation for published changes** — the PR body is a hard-coded one-liner (`PublishComposerRequirementAction`); generating a richer changelog/diff summary (what changed in `composer.json`, links to the extension) is a differentiator over a raw API commit. (S)
-- **Per-connection install policy in the UI** — `InstallPolicy` has three cases (`DirectCommit`, `PullRequestAutoMerge`, `PullRequestManual`) but `ConnectDeploymentAction` hard-codes `PullRequestAutoMerge` and the page offers no way to choose or change the policy. The third enum case (`PullRequestManual`) is effectively unreachable in production. (S)
+- **Shipped 2026-06-06: per-connection install policy is selectable before OAuth.** `DeploymentConnectionPage` now exposes the three `InstallPolicy` options beside repository owner/name, persists the selected policy in OAuth state, and the callback passes it to `ConnectDeploymentAction`. Existing behavior remains the default (`PullRequestAutoMerge`), while `DirectCommit` and `PullRequestManual` are now reachable from admin connection setup. — `src/Filament/Pages/DeploymentConnectionPage.php`, `src/Actions/OAuth/*`, `src/Actions/ConnectDeploymentAction.php`
 - **Webhook ingestion for deploy/PR status** — polling `getDeployStatus()` is the only model; a provider webhook receiver to update publish status asynchronously would round out the "deployments" story. (L)
 
 ## 4. Issues / Risks
@@ -81,7 +81,7 @@ Manifest `capabilities`: `["deployments", "deployments-admin"]`. Manifest `surfa
 | OAuth token refresh (`RefreshProviderTokenAction`, persist expiry/refresh token)              | Next    | M      | High   | §3, §2      |
 | Surface OAuth-misconfiguration in the page UI + test it                                       | Done    | S      | Med    | §2, §4      |
 | Make bound publisher connection-aware; handle >1 active connection                            | Done    | M      | Med    | §2, §4      |
-| Expose `InstallPolicy` choice in the UI (unlock `PullRequestManual`)                          | Next    | S      | Med    | §3          |
+| Shipped 2026-06-06: Expose `InstallPolicy` choice in the UI (unlock `PullRequestManual`)      | Done    | S      | Med    | §3          |
 | Publish-history table + "recent publishes/status" panel (consume `getDeployStatus`)           | Next    | L      | High   | §3, §4      |
 | Idempotency: dedupe open PRs for the same package; dry-run for `DirectCommit`                 | Next    | M      | Med    | §4          |
 | Rollback / cancel-pending-install (consume `closePullRequest`)                                | Later   | M      | Med    | §3, §4      |

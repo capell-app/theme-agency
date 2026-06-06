@@ -1,7 +1,7 @@
 <x-filament-panels::page>
     <div class="space-y-6">
         @if ($this::canManageConnections())
-            <div class="grid gap-4 md:grid-cols-2">
+            <div class="grid gap-4 md:grid-cols-3">
                 <label
                     class="grid gap-2 text-sm font-medium text-gray-950 dark:text-white"
                 >
@@ -21,6 +21,19 @@
                         wire:model.live.debounce.300ms="repoName"
                         class="fi-input focus:ring-primary-600 dark:focus:ring-primary-500 block w-full rounded-lg border-none bg-white px-3 py-2 text-base text-gray-950 shadow-sm ring-1 ring-gray-950/10 transition duration-75 outline-none placeholder:text-gray-400 focus:ring-2 sm:text-sm dark:bg-white/5 dark:text-white dark:ring-white/20"
                     />
+                </label>
+                <label
+                    class="grid gap-2 text-sm font-medium text-gray-950 dark:text-white"
+                >
+                    {{ __('capell-deployments::plugins.deployment_connection.install_policy_label') }}
+                    <select
+                        wire:model.live="installPolicy"
+                        class="fi-select-input focus:ring-primary-600 dark:focus:ring-primary-500 block w-full rounded-lg border-none bg-white px-3 py-2 text-base text-gray-950 shadow-sm ring-1 ring-gray-950/10 transition duration-75 outline-none focus:ring-2 sm:text-sm dark:bg-white/5 dark:text-white dark:ring-white/20"
+                    >
+                        @foreach ($this->getInstallPolicyOptions() as $value => $label)
+                            <option value="{{ $value }}">{{ $label }}</option>
+                        @endforeach
+                    </select>
                 </label>
             </div>
 

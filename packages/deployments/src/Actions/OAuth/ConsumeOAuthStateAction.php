@@ -6,6 +6,7 @@ namespace Capell\Deployments\Actions\OAuth;
 
 use Capell\Deployments\Data\OAuthConnectionData;
 use Capell\Deployments\Enums\GitProviderType;
+use Capell\Deployments\Enums\InstallPolicy;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class ConsumeOAuthStateAction
@@ -34,10 +35,14 @@ final class ConsumeOAuthStateAction
             return null;
         }
 
+        $installPolicy = InstallPolicy::tryFrom((string) ($payload['install_policy'] ?? ''))
+            ?? InstallPolicy::PullRequestAutoMerge;
+
         return new OAuthConnectionData(
             provider: $provider,
             repoOwner: trim($repoOwner),
             repoName: trim($repoName),
+            installPolicy: $installPolicy,
         );
     }
 

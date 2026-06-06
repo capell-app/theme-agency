@@ -83,6 +83,7 @@ final class BitbucketCallbackController
             repoName: $connectionData->repoName,
             accessToken: $accessToken,
             refreshToken: is_string($refreshToken) ? $refreshToken : null,
+            installPolicy: $connectionData->installPolicy,
         );
 
         return to_route('filament.admin.pages.deployment-connection')

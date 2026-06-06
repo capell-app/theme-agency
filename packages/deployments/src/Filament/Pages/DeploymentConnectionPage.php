@@ -7,6 +7,7 @@ namespace Capell\Deployments\Filament\Pages;
 use BackedEnum;
 use Capell\Deployments\Actions\OAuth\CreateOAuthStateAction;
 use Capell\Deployments\Enums\GitProviderType;
+use Capell\Deployments\Enums\InstallPolicy;
 use Capell\Deployments\Models\DeploymentConnection;
 use Closure;
 use Filament\Notifications\Notification;
@@ -22,6 +23,8 @@ final class DeploymentConnectionPage extends Page
     public string $repoOwner = '';
 
     public string $repoName = '';
+
+    public string $installPolicy = 'pr_auto_merge';
 
     protected string $view = 'capell-deployments::filament.pages.deployment-connection';
 
@@ -127,7 +130,12 @@ final class DeploymentConnectionPage extends Page
             'client_id' => $clientId,
             'redirect_uri' => route('capell-deployments.oauth.github'),
             'scope' => 'repo',
-            'state' => CreateOAuthStateAction::run(GitProviderType::GitHub, $this->normalizedRepoOwner(), $this->normalizedRepoName()),
+            'state' => CreateOAuthStateAction::run(
+                GitProviderType::GitHub,
+                $this->normalizedRepoOwner(),
+                $this->normalizedRepoName(),
+                $this->selectedInstallPolicy(),
+            ),
         ]);
     }
 
@@ -144,7 +152,12 @@ final class DeploymentConnectionPage extends Page
             'redirect_uri' => route('capell-deployments.oauth.gitlab'),
             'response_type' => 'code',
             'scope' => 'api',
-            'state' => CreateOAuthStateAction::run(GitProviderType::GitLab, $this->normalizedRepoOwner(), $this->normalizedRepoName()),
+            'state' => CreateOAuthStateAction::run(
+                GitProviderType::GitLab,
+                $this->normalizedRepoOwner(),
+                $this->normalizedRepoName(),
+                $this->selectedInstallPolicy(),
+            ),
         ]);
     }
 
@@ -160,8 +173,25 @@ final class DeploymentConnectionPage extends Page
             'client_id' => $clientId,
             'redirect_uri' => route('capell-deployments.oauth.bitbucket'),
             'response_type' => 'code',
-            'state' => CreateOAuthStateAction::run(GitProviderType::Bitbucket, $this->normalizedRepoOwner(), $this->normalizedRepoName()),
+            'state' => CreateOAuthStateAction::run(
+                GitProviderType::Bitbucket,
+                $this->normalizedRepoOwner(),
+                $this->normalizedRepoName(),
+                $this->selectedInstallPolicy(),
+            ),
         ]);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getInstallPolicyOptions(): array
+    {
+        return collect(InstallPolicy::cases())
+            ->mapWithKeys(static fn (InstallPolicy $installPolicy): array => [
+                $installPolicy->value => $installPolicy->getLabel(),
+            ])
+            ->all();
     }
 
     public function disconnect(int $connectionId): void
@@ -254,5 +284,10 @@ final class DeploymentConnectionPage extends Page
     private function normalizedRepoName(): string
     {
         return trim($this->repoName, " \t\n\r\0\x0B/");
+    }
+
+    private function selectedInstallPolicy(): InstallPolicy
+    {
+        return InstallPolicy::tryFrom($this->installPolicy) ?? InstallPolicy::PullRequestAutoMerge;
     }
 }

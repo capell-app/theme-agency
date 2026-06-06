@@ -20,6 +20,7 @@ final class ConnectDeploymentAction
         string $accessToken,
         ?string $refreshToken = null,
         ?string $defaultBranch = 'main',
+        InstallPolicy $installPolicy = InstallPolicy::PullRequestAutoMerge,
     ): DeploymentConnection {
         $connection = DeploymentConnection::query()->firstOrNew([
             'provider' => $provider->value,
@@ -33,7 +34,7 @@ final class ConnectDeploymentAction
         // required at the database layer.
         $connection->forceFill([
             'default_branch' => $defaultBranch ?? 'main',
-            'install_policy' => InstallPolicy::PullRequestAutoMerge,
+            'install_policy' => $installPolicy,
             'is_active' => true,
             'access_token_encrypted' => $accessToken,
             'refresh_token_encrypted' => $refreshToken,

@@ -11,6 +11,7 @@ return [
         'disconnect' => 'Disconnect',
         'disconnect_confirm' => 'Are you sure you want to disconnect this deployment repository?',
         'disconnected' => 'Deployment repository disconnected.',
+        'install_policy_label' => 'Install policy',
         'nav_label' => 'Deployment Repository',
         'none_connected' => 'No deployment repository is connected. Choose a Git provider above to connect the repository used for plugin deployments.',
         'not_connected' => 'No deployment repository configured.',
