@@ -13,6 +13,7 @@ return [
     'token_cache_store' => env('CAPELL_GA4_REPORTS_TOKEN_CACHE_STORE'),
     'sync_lock_seconds' => env('CAPELL_GA4_REPORTS_SYNC_LOCK_SECONDS', 3600),
     'sync_overlap_minutes' => env('CAPELL_GA4_REPORTS_SYNC_OVERLAP_MINUTES', 120),
+    'sync_cron' => env('CAPELL_GA4_REPORTS_SYNC_CRON', '0 2 * * *'),
     'sync_days' => 30,
     'route_slug' => 'ga4-reports',
     'health' => [

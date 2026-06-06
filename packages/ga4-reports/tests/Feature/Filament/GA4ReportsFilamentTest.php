@@ -31,6 +31,7 @@ function configureGA4ReportsFilamentSettings(): void
     $settings->property_id = '123456789';
     $settings->credentials_path = '/tmp/ga4-reports.json';
     $settings->sync_days = 30;
+    $settings->sync_cron = '0 2 * * *';
     $settings->route_slug = 'ga4-reports';
 
     app()->instance(GA4ReportsSettings::class, $settings);
@@ -72,6 +73,14 @@ it('registers GA4 dashboard widgets and settings contributor', function (): void
         ->toContain('ga4_reports_overview')
         ->toContain('ga4_reports_overview.sessions')
         ->toContain('ga4_reports_overview.engagement_rate');
+});
+
+it('uses the configurable cron expression for scheduled syncs', function (): void {
+    $providerSource = (string) file_get_contents(__DIR__ . '/../../../src/Providers/AdminServiceProvider.php');
+
+    expect($providerSource)
+        ->toContain('->cron($this->syncCronExpression())')
+        ->not->toContain('->daily()');
 });
 
 it('resolves registered overview stats against the dashboard default date range', function (): void {

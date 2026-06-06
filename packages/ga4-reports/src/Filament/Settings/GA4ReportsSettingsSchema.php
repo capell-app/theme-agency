@@ -35,6 +35,10 @@ final class GA4ReportsSettingsSchema implements HasSchema
                         ->integer()
                         ->minValue(1)
                         ->suffix(__('capell-admin::form.days')),
+                    TextInput::make('sync_cron')
+                        ->label(__('capell-ga4-reports::settings.sync_cron'))
+                        ->helperText(__('capell-ga4-reports::settings.sync_cron_helper'))
+                        ->required(),
                     TextInput::make('route_slug')
                         ->label(__('capell-ga4-reports::settings.route_slug'))
                         ->required(),

@@ -18,6 +18,8 @@ final class GA4ReportsSettings extends Settings implements SettingsContract
 
     public int $sync_days = 30;
 
+    public string $sync_cron = '0 2 * * *';
+
     public string $route_slug = 'ga4-reports';
 
     public static function group(): string
