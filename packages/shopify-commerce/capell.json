@@ -16,7 +16,11 @@
     "surfaces": ["admin", "console"],
     "dependencies": {
         "requires": ["capell-app/admin", "capell-app/core"],
-        "supports": [],
+        "supports": [
+            "capell-app/contacts",
+            "capell-app/search",
+            "capell-app/diagnostics"
+        ],
         "conflicts": []
     },
     "providers": {
