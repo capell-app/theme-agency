@@ -16,9 +16,16 @@ final class ShowKnowledgeBaseIndexController
             ->map(static fn (PublicKnowledgeBaseNavigationItemData $item): array => $item->toArray())
             ->all();
 
-        return $this->cacheable(response()->view('capell-knowledge-base::index', [
+        return $this->cacheable(response()->view($this->viewName(), [
             'navigation' => $navigation,
         ]));
+    }
+
+    private function viewName(): string
+    {
+        return view()->exists('capell-theme-knowledge::knowledge-base.index')
+            ? 'capell-theme-knowledge::knowledge-base.index'
+            : 'capell-knowledge-base::index';
     }
 
     private function cacheable(Response $response): Response

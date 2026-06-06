@@ -42,6 +42,8 @@ hubs, and content-led teams that need searchable, editorial frontend pages.
   content blocks.
 - Uses Core `ViewSectionRenderer` extra view data for optional Blog, Search, and Newsletter
   sections.
+- Provides standalone Knowledge Base index/article templates that consume
+  `capell-app/knowledge-base` public DTO arrays when that package is installed.
 - Keeps optional package availability checks in the service provider/renderer
   layer, while author and topic hub cards can come from page render data with
   translated defaults.
