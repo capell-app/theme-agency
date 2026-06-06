@@ -7,8 +7,10 @@ return [
         'actions' => [
             'create_article' => 'Create article',
             'create_collection' => 'Create collection',
+            'relate_article' => 'Relate article',
             'save_article' => 'Save article',
             'save_collection' => 'Save collection',
+            'update_relation' => 'Update relation',
         ],
         'fields' => [
             'ai_readable' => 'AI readable',
@@ -22,12 +24,15 @@ return [
             'parent_collection' => 'Parent collection',
             'public' => 'Public',
             'published_at' => 'Published at',
+            'related_article' => 'Related article',
+            'relation_type' => 'Relation type',
             'search_weight' => 'Search weight',
             'slug' => 'Slug',
             'sort_order' => 'Sort order',
             'status' => 'Status',
             'summary' => 'Summary',
             'title' => 'Title',
+            'updated_at' => 'Updated at',
             'version' => 'Version',
             'visibility' => 'Visibility',
         ],
@@ -43,6 +48,7 @@ return [
             'collections' => 'Collections',
         ],
         'relations' => [
+            'related_articles' => 'Related articles',
             'versions' => 'Version history',
         ],
         'sections' => [

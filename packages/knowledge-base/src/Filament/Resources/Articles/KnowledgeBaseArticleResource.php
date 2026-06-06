@@ -11,6 +11,7 @@ use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\CreateKnowledgeBaseAr
 use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\EditKnowledgeBaseArticle;
 use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\ListKnowledgeBaseArticles;
 use Capell\KnowledgeBase\Filament\Resources\Articles\RelationManagers\ArticleVersionsRelationManager;
+use Capell\KnowledgeBase\Filament\Resources\Articles\RelationManagers\RelatedArticlesRelationManager;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticle;
 use Capell\KnowledgeBase\Models\KnowledgeBaseCollection;
 use Capell\KnowledgeBase\Providers\KnowledgeBaseServiceProvider;
@@ -184,6 +185,7 @@ final class KnowledgeBaseArticleResource extends Resource
     {
         return [
             ArticleVersionsRelationManager::class,
+            RelatedArticlesRelationManager::class,
         ];
     }
 

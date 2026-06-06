@@ -14,6 +14,7 @@ use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\CreateKnowledgeBaseAr
 use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\EditKnowledgeBaseArticle;
 use Capell\KnowledgeBase\Filament\Resources\Articles\Pages\ListKnowledgeBaseArticles;
 use Capell\KnowledgeBase\Filament\Resources\Articles\RelationManagers\ArticleVersionsRelationManager;
+use Capell\KnowledgeBase\Filament\Resources\Articles\RelationManagers\RelatedArticlesRelationManager;
 use Capell\KnowledgeBase\Filament\Resources\Collections\KnowledgeBaseCollectionResource;
 use Capell\KnowledgeBase\Filament\Resources\Collections\Pages\CreateKnowledgeBaseCollection;
 use Capell\KnowledgeBase\Filament\Resources\Collections\Pages\EditKnowledgeBaseCollection;
@@ -66,7 +67,10 @@ it('exposes translated collection and article admin resources', function (): voi
         ->and($articlePages['index']->getPage())->toBe(ListKnowledgeBaseArticles::class)
         ->and($articlePages['create']->getPage())->toBe(CreateKnowledgeBaseArticle::class)
         ->and($articlePages['edit']->getPage())->toBe(EditKnowledgeBaseArticle::class)
-        ->and(KnowledgeBaseArticleResource::getRelations())->toBe([ArticleVersionsRelationManager::class])
+        ->and(KnowledgeBaseArticleResource::getRelations())->toBe([
+            ArticleVersionsRelationManager::class,
+            RelatedArticlesRelationManager::class,
+        ])
         ->and(ResourceEnum::Collections->value)->toBe(KnowledgeBaseCollectionResource::class)
         ->and(ResourceEnum::Articles->value)->toBe(KnowledgeBaseArticleResource::class);
 });
@@ -207,6 +211,33 @@ it('exposes article version history in the article edit surface', function (): v
             TextColumn::class,
             TextColumn::class,
         ]);
+});
+
+it('exposes related article editing in the article edit surface', function (): void {
+    $relationManager = new RelatedArticlesRelationManager;
+    $table = $relationManager->table(knowledgeBaseAdminTableForCoverage());
+
+    expect(RelatedArticlesRelationManager::getTitle(KnowledgeBaseArticle::factory()->make(), EditKnowledgeBaseArticle::class))
+        ->toBe(__('capell-knowledge-base::generic.admin.relations.related_articles'))
+        ->and(array_keys($table->getColumns()))->toBe([
+            'relatedArticle.title',
+            'relatedArticle.collection.title',
+            'relation_type',
+            'sort_order',
+            'updated_at',
+        ])
+        ->and(array_map(
+            static fn (object $column): string => $column::class,
+            array_values($table->getColumns()),
+        ))->toBe([
+            TextColumn::class,
+            TextColumn::class,
+            TextColumn::class,
+            TextColumn::class,
+            TextColumn::class,
+        ])
+        ->and(array_keys($table->getHeaderActions()))->toBe(['relate_article'])
+        ->and(array_keys($table->getRecordActions()))->toBe(['update_relation']);
 });
 
 it('saves article edits as published versions through the edit page adapter', function (): void {
