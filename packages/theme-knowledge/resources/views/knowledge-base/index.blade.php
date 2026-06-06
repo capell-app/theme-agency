@@ -13,18 +13,18 @@
     <body>
         <main
             id="main-content"
-            class="knowledge-shell min-h-screen bg-[#f8fafc] antialiased"
+            class="knowledge-shell min-h-screen bg-[var(--site-theme-surface)] antialiased"
         >
             <section class="theme-section theme-section-content-listing">
                 <div class="mx-auto max-w-6xl px-6">
                     <header class="max-w-3xl">
                         <p
-                            class="text-xs font-black tracking-[0.18em] text-[#1d4ed8] uppercase"
+                            class="text-xs font-black tracking-[0.18em] text-[var(--site-theme-primary)] uppercase"
                         >
                             {{ __('capell-theme-knowledge::generic.doc_sidebar_label') }}
                         </p>
                         <h1
-                            class="mt-4 text-4xl leading-tight font-black text-[#172033] md:text-5xl"
+                            class="mt-4 text-4xl leading-tight font-black text-[var(--site-theme-heading)] md:text-5xl"
                         >
                             {{ __('capell-knowledge-base::generic.frontend.index_title') }}
                         </h1>

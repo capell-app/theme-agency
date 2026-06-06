@@ -2,12 +2,12 @@
     $actions ??= $section->actions ?? [];
 @endphp
 
-<section class="theme-section theme-section-cta knowledge-cta bg-[#07111f]">
+<section class="theme-section theme-section-cta knowledge-cta bg-[var(--site-theme-ink)]">
     <div class="mx-auto max-w-5xl px-6 py-14">
         <div class="grid gap-8 lg:grid-cols-[0.8fr_1fr] lg:items-center">
             <div>
                 <p
-                    class="text-xs font-black tracking-[0.18em] text-[#f59e0b] uppercase"
+                    class="text-xs font-black tracking-[0.18em] text-[var(--site-theme-accent)] uppercase"
                 >
                     {{ __('capell-theme-knowledge::generic.cta_label') }}
                 </p>
@@ -20,7 +20,7 @@
             </div>
 
             <div
-                class="border border-white/10 bg-[#0f1b2f] p-5 shadow-xl shadow-black/20"
+                class="border border-white/10 bg-[var(--site-theme-ink-panel)] p-5 shadow-xl shadow-black/20"
             >
                 <div class="grid gap-3 sm:grid-cols-3">
                     @foreach ([
@@ -30,12 +30,12 @@
                               ] as $step)
                         <div class="border border-white/10 bg-white/5 p-4">
                             <p
-                                class="text-xs font-black tracking-[0.16em] text-[#bfdbfe] uppercase"
+                                class="text-xs font-black tracking-[0.16em] text-[var(--site-theme-primary-soft)] uppercase"
                             >
                                 {{ $step }}
                             </p>
                             <span
-                                class="mt-4 block h-1 bg-[#f59e0b]"
+                                class="mt-4 block h-1 bg-[var(--site-theme-accent)]"
                                 aria-hidden="true"
                             ></span>
                         </div>
@@ -47,7 +47,7 @@
                         @foreach ($actions as $action)
                             <a
                                 href="{{ $action['url'] ?? '#' }}"
-                                class="{{ ($action['style'] ?? 'primary') === 'primary' ? 'bg-[#f59e0b] text-[#07111f] hover:bg-[#fbbf24]' : 'border border-white/20 bg-white/5 text-white hover:border-[#f59e0b]' }} px-5 py-3 text-sm font-black transition"
+                                class="{{ ($action['style'] ?? 'primary') === 'primary' ? 'bg-[var(--site-theme-accent)] text-[var(--site-theme-ink)] hover:bg-[var(--site-theme-accent-strong)]' : 'border border-white/20 bg-white/5 text-white hover:border-[var(--site-theme-accent)]' }} px-5 py-3 text-sm font-black transition"
                             >
                                 {{ $action['label'] }}
                             </a>

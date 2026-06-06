@@ -14,7 +14,7 @@ Marketplace and Composer copy are buyer-facing, and `capell.json` marketplace me
 - **2026-06-06:** Captured all 9 `docs/screenshots.json` route-backed targets through the Capell runner and promoted the PNG gallery into marketplace media.
 - **2026-06-04:** Moved author bench and topic hub defaults into translations, made both sections accept hydrated item data, removed optional package installation checks from public newsletter/search Blade, and added tests for those public rendering contracts.
 - **2026-06-05:** Added a first-class `doc-article` section renderer with hydrated breadcrumbs, category sidebar, article metadata, constrained article body, and sticky table-of-contents layout, plus registry coverage and docs/manifest reconciliation.
-- **2026-06-06:** Added code-block/prose styling for technical articles, constrained long-form measures with calmer heading scale, a reduced-motion guard for decorative grid overlays, and KB article feedback/version/freshness affordances.
+- **2026-06-06:** Added code-block/prose styling for technical articles, constrained long-form measures with calmer heading scale, tokenized theme colour utilities, a reduced-motion guard for decorative grid overlays, and KB article feedback/version/freshness affordances.
 
 **Headline:** the package is positioned as a knowledge-base / documentation / help-site theme, the core documentation layout now exists, and the static screenshot gallery is reconciled. The remaining shipped-feature gaps are dark mode and tokenization.
 
@@ -28,7 +28,7 @@ Prioritized. Real templates only.
 
 3. **Add dark mode** — **What:** zero `dark:` utilities and no dark tokens anywhere (`resources/css/theme-knowledge.css` hardcodes `color: #111827` and re-declares the preset hexes as `--site-theme-*`). Sibling `theme-agency` ships dark screenshots. — why: docs/KB sites are heavily read in dark mode; absence is a competitive gap and undercuts the premium tier. — `resources/css/theme-knowledge.css` + all `resources/views/sections/*.blade.php` — **L**
 
-4. **Tokenize hardcoded hex colors** — **What:** section blades are saturated with inline arbitrary hex (`bg-[#07111f]`, `text-[#1d4ed8]`, `bg-[#f59e0b]`, `text-[#172033]`, `bg-[#f8fafc]`, etc.) repeated across 14 files; the preset exposes `primaryColor/accentColor/neutralColor/surfaceColor/foregroundColor` but the views ignore them. — why: changing the preset palette does not change the rendered theme, defeating Theme Studio customization; also makes dark mode (#3) far harder. — all `resources/views/sections/*.blade.php`, `resources/css/theme-knowledge.css` — **L**
+4. **Done/Shipped: tokenize hardcoded hex colors.** Theme views now use `.knowledge-shell` CSS custom properties such as `--site-theme-primary`, `--site-theme-accent`, `--site-theme-surface`, `--site-theme-heading`, and ink/code variants instead of inline arbitrary hex utilities. The literal hex values are centralized in `resources/css/theme-knowledge.css` token definitions so Theme Studio presets and future dark-mode overrides have one palette boundary. — `resources/views/**/*.blade.php`, `resources/css/theme-knowledge.css` — **L**
 
 5. **Done/Shipped: honor reduced motion on the animated grid.** `.knowledge-hero::before`, `.knowledge-search-console::before`, and `.knowledge-cta::before` now sit behind a `prefers-reduced-motion: reduce` guard that disables decorative grid backgrounds and shortens animation/transition durations inside the theme shell. — `resources/css/theme-knowledge.css` — **S**
 
@@ -91,7 +91,7 @@ Prioritized. Real templates only.
 | Generate + commit the 9 `docs/screenshots.json` renders; replace placeholder SVGs                        | Done   | M      | High   | §4, §5      |
 | Done/Shipped: Add code-block / `pre`/`code` prose styling                                                | Done   | M      | High   | §3          |
 | Add dark mode (tokens + `dark:` variants) and a dark screenshot                                          | Next   | L      | High   | §2.3, §5    |
-| Tokenize hardcoded hex to preset `--site-theme-*` variables                                              | Next   | L      | Med    | §2.4        |
+| Done/Shipped: Tokenize hardcoded hex to preset `--site-theme-*` variables                                | Done   | L      | Med    | §2.4        |
 | Done/Shipped: Constrained prose measure + heading-scale readability pass                                 | Done   | M      | Med    | §2.7        |
 | Done/Shipped: `prefers-reduced-motion` guard on animated grid `::before`                                 | Done   | S      | Low    | §2.5        |
 | Remove `CapellCore::isPackageInstalled` from `newsletter`/`search-listing` Blade; rely on renderer flags | Done   | S      | Med    | §4          |

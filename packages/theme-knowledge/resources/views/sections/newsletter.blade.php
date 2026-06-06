@@ -3,7 +3,7 @@
 @endphp
 
 <section
-    class="theme-section theme-section-newsletter bg-[#111827] px-6 py-14 text-white"
+    class="theme-section theme-section-newsletter bg-[var(--site-theme-foreground)] px-6 py-14 text-white"
 >
     @isset($heading)
         <div
@@ -11,7 +11,7 @@
         >
             <div>
                 <p
-                    class="text-xs font-black tracking-[0.2em] text-[#fbbf24] uppercase"
+                    class="text-xs font-black tracking-[0.2em] text-[var(--site-theme-accent-strong)] uppercase"
                 >
                     {{ __('capell-theme-knowledge::generic.newsletter_label') }}
                 </p>
@@ -23,20 +23,20 @@
                 </p>
             </div>
 
-            <div class="border border-white/15 bg-white p-5 text-[#111827]">
+            <div class="border border-white/15 bg-white p-5 text-[var(--site-theme-foreground)]">
                 <p
-                    class="text-xs font-black tracking-[0.18em] text-[#1d4ed8] uppercase"
+                    class="text-xs font-black tracking-[0.18em] text-[var(--site-theme-primary)] uppercase"
                 >
                     {{ __('capell-theme-knowledge::generic.digest_label') }}
                 </p>
                 <div class="mt-4 grid gap-3 sm:grid-cols-[1fr_auto]">
                     <div
-                        class="border border-[#dbeafe] bg-[#eff6ff] px-4 py-3 text-sm font-bold text-slate-500"
+                        class="border border-[var(--site-theme-primary-border)] bg-[var(--site-theme-primary-panel)] px-4 py-3 text-sm font-bold text-slate-500"
                     >
                         {{ __('capell-theme-knowledge::generic.email_placeholder') }}
                     </div>
                     <div
-                        class="bg-[#1d4ed8] px-5 py-3 text-sm font-black text-white"
+                        class="bg-[var(--site-theme-primary)] px-5 py-3 text-sm font-black text-white"
                     >
                         {{ __('capell-theme-knowledge::generic.subscribe_action') }}
                     </div>

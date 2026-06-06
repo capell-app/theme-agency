@@ -1,9 +1,9 @@
 @php
-    $offsetClass = $depth > 0 ? 'ml-6 border-l-2 border-[#dbeafe] pl-5' : '';
+    $offsetClass = $depth > 0 ? 'ml-6 border-l-2 border-[var(--site-theme-primary-border)] pl-5' : '';
 @endphp
 
 <section class="{{ $offsetClass }} border border-slate-200 bg-white p-5 shadow-sm">
-    <h2 class="text-2xl font-black text-[#172033]">
+    <h2 class="text-2xl font-black text-[var(--site-theme-heading)]">
         {{ $collection['title'] }}
     </h2>
     @if ($collection['description'] !== null)
@@ -18,7 +18,7 @@
                 <li>
                     <a
                         href="{{ $article['publicPath'] }}"
-                        class="text-lg font-black text-[#1d4ed8] hover:text-[#172033]"
+                        class="text-lg font-black text-[var(--site-theme-primary)] hover:text-[var(--site-theme-heading)]"
                     >
                         {{ $article['title'] }}
                     </a>

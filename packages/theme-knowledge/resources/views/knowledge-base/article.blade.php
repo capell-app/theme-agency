@@ -18,7 +18,7 @@
     <body>
         <main
             id="main-content"
-            class="knowledge-shell min-h-screen bg-[#f8fafc] antialiased"
+            class="knowledge-shell min-h-screen bg-[var(--site-theme-surface)] antialiased"
         >
             <section class="theme-section theme-section-doc-article">
                 <div
@@ -30,21 +30,21 @@
                     >
                         <div class="sticky top-8 border border-slate-200 bg-white p-4">
                             <p
-                                class="text-xs font-black tracking-[0.18em] text-[#1d4ed8] uppercase"
+                                class="text-xs font-black tracking-[0.18em] text-[var(--site-theme-primary)] uppercase"
                             >
                                 {{ __('capell-theme-knowledge::generic.doc_sidebar_label') }}
                             </p>
                             <nav class="mt-4 space-y-1">
                                 <a
                                     href="{{ route('capell-knowledge-base.index') }}"
-                                    class="block border-l-2 border-transparent px-3 py-2 text-sm font-bold text-slate-600 hover:border-[#93c5fd] hover:bg-slate-50 hover:text-[#172033]"
+                                    class="block border-l-2 border-transparent px-3 py-2 text-sm font-bold text-slate-600 hover:border-[var(--site-theme-primary-muted)] hover:bg-slate-50 hover:text-[var(--site-theme-heading)]"
                                 >
                                     {{ __('capell-knowledge-base::generic.frontend.index_title') }}
                                 </a>
                                 @foreach ($article['relatedArticles'] as $relatedArticle)
                                     <a
                                         href="{{ $relatedArticle['publicPath'] }}"
-                                        class="block border-l-2 border-transparent px-3 py-2 text-sm font-bold text-slate-600 hover:border-[#93c5fd] hover:bg-slate-50 hover:text-[#172033]"
+                                        class="block border-l-2 border-transparent px-3 py-2 text-sm font-bold text-slate-600 hover:border-[var(--site-theme-primary-muted)] hover:bg-slate-50 hover:text-[var(--site-theme-heading)]"
                                     >
                                         {{ $relatedArticle['title'] }}
                                     </a>
@@ -66,7 +66,7 @@
                                 <li>
                                     <a
                                         href="{{ route('capell-knowledge-base.index') }}"
-                                        class="hover:text-[#1d4ed8]"
+                                        class="hover:text-[var(--site-theme-primary)]"
                                     >
                                         {{ __('capell-knowledge-base::generic.frontend.index_title') }}
                                     </a>
@@ -80,12 +80,12 @@
 
                         <header class="max-w-3xl">
                             <p
-                                class="text-xs font-black tracking-[0.18em] text-[#1d4ed8] uppercase"
+                                class="text-xs font-black tracking-[0.18em] text-[var(--site-theme-primary)] uppercase"
                             >
                                 {{ $article['collectionTitle'] }}
                             </p>
                             <h1
-                                class="mt-4 text-4xl leading-tight font-black text-[#172033] md:text-5xl"
+                                class="mt-4 text-4xl leading-tight font-black text-[var(--site-theme-heading)] md:text-5xl"
                             >
                                 {{ $article['title'] }}
                             </h1>
@@ -129,12 +129,12 @@
                         </div>
 
                         <section class="mt-10 border-t border-slate-200 pt-8">
-                            <h2 class="text-2xl font-black text-[#172033]">
+                            <h2 class="text-2xl font-black text-[var(--site-theme-heading)]">
                                 {{ __('capell-knowledge-base::generic.frontend.feedback_title') }}
                             </h2>
 
                             @if (session('knowledge_base_feedback_status') !== null)
-                                <p class="mt-3 font-bold text-[#1d4ed8]">
+                                <p class="mt-3 font-bold text-[var(--site-theme-primary)]">
                                     {{ session('knowledge_base_feedback_status') }}
                                 </p>
                             @endif
@@ -167,7 +167,7 @@
                                         type="submit"
                                         name="helpful"
                                         value="1"
-                                        class="bg-[#1d4ed8] px-4 py-2 text-sm font-black text-white"
+                                        class="bg-[var(--site-theme-primary)] px-4 py-2 text-sm font-black text-white"
                                     >
                                         {{ __('capell-knowledge-base::generic.frontend.feedback_helpful') }}
                                     </button>

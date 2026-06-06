@@ -8,11 +8,11 @@
     <div class="mx-auto max-w-5xl px-6 py-14">
         @if ($sectionHeading)
             <p
-                class="text-xs font-black tracking-[0.18em] text-[#f59e0b] uppercase"
+                class="text-xs font-black tracking-[0.18em] text-[var(--site-theme-accent)] uppercase"
             >
                 {{ __('capell-theme-knowledge::generic.topic_hubs_label') }}
             </p>
-            <h2 class="mt-4 text-4xl font-black tracking-tight text-[#111827]">
+            <h2 class="mt-4 text-4xl font-black tracking-tight text-[var(--site-theme-foreground)]">
                 {{ $sectionHeading }}
             </h2>
         @endif
@@ -26,11 +26,11 @@
                 @endphp
 
                 @if ($topicTitle !== '')
-                    <article class="border border-[#dbeafe] bg-[#eff6ff] p-5">
-                        <p class="font-mono text-xs font-black text-[#1d4ed8]">
+                    <article class="border border-[var(--site-theme-primary-border)] bg-[var(--site-theme-primary-panel)] p-5">
+                        <p class="font-mono text-xs font-black text-[var(--site-theme-primary)]">
                             {{ __('capell-theme-knowledge::generic.topic_signal') }}
                         </p>
-                        <h3 class="mt-3 text-lg font-black text-[#111827]">
+                        <h3 class="mt-3 text-lg font-black text-[var(--site-theme-foreground)]">
                             {{ $topicTitle }}
                         </h3>
                         @if ($topicSummary !== '')
@@ -40,7 +40,7 @@
                         @endif
 
                         <span
-                            class="mt-5 block h-1 bg-[#f59e0b]"
+                            class="mt-5 block h-1 bg-[var(--site-theme-accent)]"
                             aria-hidden="true"
                         ></span>
                     </article>

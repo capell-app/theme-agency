@@ -7,12 +7,12 @@
         <div class="grid gap-5 md:grid-cols-[0.75fr_1fr] md:items-end">
             <div>
                 <p
-                    class="text-xs font-black tracking-[0.18em] text-[#f59e0b] uppercase"
+                    class="text-xs font-black tracking-[0.18em] text-[var(--site-theme-accent)] uppercase"
                 >
                     {{ __('capell-theme-knowledge::generic.archive_label') }}
                 </p>
                 <h2
-                    class="mt-4 text-4xl font-black tracking-tight text-[#111827]"
+                    class="mt-4 text-4xl font-black tracking-tight text-[var(--site-theme-foreground)]"
                 >
                     {{ $heading ?? $section->heading }}
                 </h2>
@@ -29,9 +29,9 @@
 
         @if ($listingItems === [])
             <div
-                class="mt-10 border border-dashed border-[#bfdbfe] bg-[#eff6ff] p-8"
+                class="mt-10 border border-dashed border-[var(--site-theme-primary-soft)] bg-[var(--site-theme-primary-panel)] p-8"
             >
-                <p class="text-sm font-black text-[#1e40af]">
+                <p class="text-sm font-black text-[var(--site-theme-primary-strong)]">
                     {{ __('capell-theme-knowledge::generic.listing_empty_title') }}
                 </p>
                 <p class="mt-2 max-w-2xl text-sm text-slate-600">
@@ -42,7 +42,7 @@
             <div class="mt-10 grid gap-5">
                 @foreach ($listingItems as $index => $item)
                     <article
-                        class="group grid overflow-hidden border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-[#1d4ed8] hover:shadow-xl lg:grid-cols-[0.72fr_1.35fr_0.62fr]"
+                        class="group grid overflow-hidden border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-[var(--site-theme-primary)] hover:shadow-xl lg:grid-cols-[0.72fr_1.35fr_0.62fr]"
                     >
                         @if ($item['image'] ?? $item['imageUrl'] ?? null)
                             <img
@@ -52,11 +52,11 @@
                             />
                         @else
                             <div
-                                class="min-h-48 bg-[#1e3a8a] p-5"
+                                class="min-h-48 bg-[var(--site-theme-primary-contrast)] p-5"
                                 aria-hidden="true"
                             >
                                 <span
-                                    class="block h-3 w-20 bg-[#f59e0b]"
+                                    class="block h-3 w-20 bg-[var(--site-theme-accent)]"
                                 ></span>
                                 <div class="mt-10 space-y-2">
                                     <span
@@ -74,15 +74,15 @@
 
                         <div class="flex flex-1 flex-col p-5">
                             <p
-                                class="text-xs font-black tracking-[0.16em] text-[#1d4ed8] uppercase"
+                                class="text-xs font-black tracking-[0.16em] text-[var(--site-theme-primary)] uppercase"
                             >
                                 {{ $item['type'] ?? __('capell-theme-knowledge::generic.article_signal') }}
                             </p>
-                            <h3 class="mt-3 text-xl font-black text-[#111827]">
+                            <h3 class="mt-3 text-xl font-black text-[var(--site-theme-foreground)]">
                                 @if ($item['url'] ?? null)
                                     <a
                                         href="{{ $item['url'] }}"
-                                        class="hover:text-[#1d4ed8]"
+                                        class="hover:text-[var(--site-theme-primary)]"
                                     >
                                         {{ $item['title'] }}
                                     </a>
@@ -98,7 +98,7 @@
                             >
                                 @foreach (($item['meta'] ?? []) ?: [__('capell-theme-knowledge::generic.library_signal')] as $meta)
                                     <span
-                                        class="bg-[#eff6ff] px-3 py-1 text-[#1e40af]"
+                                        class="bg-[var(--site-theme-primary-panel)] px-3 py-1 text-[var(--site-theme-primary-strong)]"
                                     >
                                         {{ $meta }}
                                     </span>
@@ -107,7 +107,7 @@
                         </div>
 
                         <div
-                            class="border-t border-slate-200 bg-[#f8fafc] p-5 lg:border-t-0 lg:border-l"
+                            class="border-t border-slate-200 bg-[var(--site-theme-surface)] p-5 lg:border-t-0 lg:border-l"
                         >
                             <p
                                 class="text-xs font-black tracking-[0.16em] text-slate-500 uppercase"
@@ -115,11 +115,11 @@
                                 {{ __('capell-theme-knowledge::generic.reading_queue_label') }}
                             </p>
                             <p
-                                class="mt-3 font-mono text-3xl font-black text-[#f59e0b]"
+                                class="mt-3 font-mono text-3xl font-black text-[var(--site-theme-accent)]"
                             >
                                 {{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}
                             </p>
-                            <p class="mt-3 text-sm font-bold text-[#111827]">
+                            <p class="mt-3 text-sm font-bold text-[var(--site-theme-foreground)]">
                                 {{ __('capell-theme-knowledge::generic.saved_signal') }}
                             </p>
                         </div>

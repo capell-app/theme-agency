@@ -14,7 +14,7 @@
     $contentHtml = $section->contentHtml ?? $contentHtml ?? null;
 @endphp
 
-<section class="theme-section theme-section-doc-article bg-[#f8fafc]">
+<section class="theme-section theme-section-doc-article bg-[var(--site-theme-surface)]">
     <div
         class="mx-auto grid max-w-7xl gap-8 px-6 lg:grid-cols-[17rem_minmax(0,1fr)_15rem]"
     >
@@ -24,7 +24,7 @@
         >
             <div class="sticky top-8 border border-slate-200 bg-white p-4">
                 <p
-                    class="text-xs font-black tracking-[0.18em] text-[#1d4ed8] uppercase"
+                    class="text-xs font-black tracking-[0.18em] text-[var(--site-theme-primary)] uppercase"
                 >
                     {{ __('capell-theme-knowledge::generic.doc_sidebar_label') }}
                 </p>
@@ -41,8 +41,8 @@
                                 href="{{ $sidebarUrl }}"
                                 @class([
                                     'block border-l-2 px-3 py-2 text-sm font-bold',
-                                    'border-[#1d4ed8] bg-[#eff6ff] text-[#172033]' => $sidebarActive,
-                                    'border-transparent text-slate-600 hover:border-[#93c5fd] hover:bg-slate-50 hover:text-[#172033]' => ! $sidebarActive,
+                                    'border-[var(--site-theme-primary)] bg-[var(--site-theme-primary-panel)] text-[var(--site-theme-heading)]' => $sidebarActive,
+                                    'border-transparent text-slate-600 hover:border-[var(--site-theme-primary-muted)] hover:bg-slate-50 hover:text-[var(--site-theme-heading)]' => ! $sidebarActive,
                                 ])
                             >
                                 {{ $sidebarLabel }}
@@ -84,7 +84,7 @@
                                     @if ($breadcrumbUrl !== null && ! $loop->last)
                                         <a
                                             href="{{ $breadcrumbUrl }}"
-                                            class="hover:text-[#1d4ed8]"
+                                            class="hover:text-[var(--site-theme-primary)]"
                                         >
                                             {{ $breadcrumbLabel }}
                                         </a>
@@ -102,12 +102,12 @@
 
             <header class="max-w-3xl">
                 <p
-                    class="text-xs font-black tracking-[0.18em] text-[#1d4ed8] uppercase"
+                    class="text-xs font-black tracking-[0.18em] text-[var(--site-theme-primary)] uppercase"
                 >
                     {{ $category }}
                 </p>
                 <h2
-                    class="mt-4 text-4xl leading-tight font-black text-[#172033] md:text-5xl"
+                    class="mt-4 text-4xl leading-tight font-black text-[var(--site-theme-heading)] md:text-5xl"
                 >
                     {{ $title }}
                 </h2>
@@ -170,7 +170,7 @@
         >
             <div class="sticky top-8 border border-slate-200 bg-white p-4">
                 <p
-                    class="text-xs font-black tracking-[0.18em] text-[#1d4ed8] uppercase"
+                    class="text-xs font-black tracking-[0.18em] text-[var(--site-theme-primary)] uppercase"
                 >
                     {{ __('capell-theme-knowledge::generic.doc_toc_label') }}
                 </p>
@@ -184,7 +184,7 @@
                         @if ($tocLabel !== '')
                             <a
                                 href="{{ $tocUrl }}"
-                                class="block border-l border-slate-200 pl-3 text-sm font-bold text-slate-600 hover:border-[#1d4ed8] hover:text-[#172033]"
+                                class="block border-l border-slate-200 pl-3 text-sm font-bold text-slate-600 hover:border-[var(--site-theme-primary)] hover:text-[var(--site-theme-heading)]"
                             >
                                 {{ $tocLabel }}
                             </a>

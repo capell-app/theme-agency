@@ -1,7 +1,7 @@
 <section class="theme-section theme-section-featured-content">
     @isset($heading)
         <div class="mx-auto max-w-5xl px-6 py-14">
-            <h2 class="text-4xl font-black tracking-tight text-[#4b5563]">
+            <h2 class="text-4xl font-black tracking-tight text-[var(--site-theme-muted)]">
                 {{ $heading }}
             </h2>
         </div>
@@ -10,7 +10,7 @@
     <div class="mx-auto grid max-w-5xl gap-4 px-6 pb-14 md:grid-cols-3">
         <article class="rounded-xl border border-slate-200 bg-white p-5">
             <p
-                class="text-xs font-black tracking-widest text-[#4b5563] uppercase"
+                class="text-xs font-black tracking-widest text-[var(--site-theme-muted)] uppercase"
             >
                 Featured
             </p>
@@ -21,7 +21,7 @@
         </article>
         <article class="rounded-xl border border-slate-200 bg-white p-5">
             <p
-                class="text-xs font-black tracking-widest text-[#4b5563] uppercase"
+                class="text-xs font-black tracking-widest text-[var(--site-theme-muted)] uppercase"
             >
                 Templates
             </p>
@@ -32,7 +32,7 @@
         </article>
         <article class="rounded-xl border border-slate-200 bg-white p-5">
             <p
-                class="text-xs font-black tracking-widest text-[#4b5563] uppercase"
+                class="text-xs font-black tracking-widest text-[var(--site-theme-muted)] uppercase"
             >
                 Signals
             </p>

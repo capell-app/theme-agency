@@ -1,7 +1,28 @@
 .knowledge-shell {
     --site-theme-primary: #1d4ed8;
+    --site-theme-primary-strong: #1e40af;
+    --site-theme-primary-contrast: #1e3a8a;
+    --site-theme-primary-panel: #eff6ff;
+    --site-theme-primary-border: #dbeafe;
+    --site-theme-primary-soft: #bfdbfe;
+    --site-theme-primary-muted: #93c5fd;
+    --site-theme-primary-canvas: #f8fbff;
     --site-theme-accent: #f59e0b;
-    color: #111827;
+    --site-theme-accent-strong: #fbbf24;
+    --site-theme-accent-panel: #fef3c7;
+    --site-theme-accent-contrast: #92400e;
+    --site-theme-foreground: #111827;
+    --site-theme-heading: #172033;
+    --site-theme-ink: #07111f;
+    --site-theme-ink-panel: #0f1b2f;
+    --site-theme-ink-panel-raised: #111f36;
+    --site-theme-ink-strong: #0f172a;
+    --site-theme-ink-accent: #172554;
+    --site-theme-surface: #f8fafc;
+    --site-theme-muted: #4b5563;
+    --site-theme-code-accent: #38bdf8;
+    --site-theme-code-foreground: #e2e8f0;
+    color: var(--site-theme-foreground);
     letter-spacing: 0;
 }
 
@@ -21,7 +42,7 @@
 }
 
 .knowledge-skip-link {
-    background: #0f172a;
+    background: var(--site-theme-ink-strong);
     color: #ffffff;
     font-weight: 800;
     left: 1rem;
@@ -111,7 +132,7 @@
 
 .knowledge-shell .knowledge-doc-prose h2,
 .knowledge-shell .knowledge-doc-prose h3 {
-    color: #172033;
+    color: var(--site-theme-heading);
     line-height: 1.25;
     margin-top: 2rem;
 }
@@ -131,17 +152,17 @@
 }
 
 .knowledge-shell .knowledge-doc-prose a {
-    color: #1d4ed8;
+    color: var(--site-theme-primary);
     font-weight: 800;
     text-decoration: underline;
     text-underline-offset: 0.18em;
 }
 
 .knowledge-shell .knowledge-doc-prose :not(pre) > code {
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
+    background: var(--site-theme-primary-panel);
+    border: 1px solid var(--site-theme-primary-soft);
     border-radius: 6px;
-    color: #1e3a8a;
+    color: var(--site-theme-primary-contrast);
     font-family:
         ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
         'Courier New', monospace;
@@ -153,11 +174,11 @@
 .knowledge-shell .knowledge-doc-prose pre {
     background:
         linear-gradient(135deg, rgba(29, 78, 216, 0.16), transparent 36%),
-        #07111f;
+        var(--site-theme-ink);
     border: 1px solid rgba(147, 197, 253, 0.24);
     border-radius: 8px;
     box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
-    color: #e2e8f0;
+    color: var(--site-theme-code-foreground);
     font-family:
         ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
         'Courier New', monospace;

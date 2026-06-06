@@ -4,12 +4,12 @@
     $summary ??= $section->summary ?? null;
 @endphp
 
-<section class="theme-section theme-section-source-map bg-[#172033] text-white">
+<section class="theme-section theme-section-source-map bg-[var(--site-theme-heading)] text-white">
     <div class="mx-auto max-w-6xl px-6 py-16">
         <div class="grid gap-8 md:grid-cols-[0.78fr_1.22fr]">
             <div>
                 <p
-                    class="text-xs font-black tracking-[0.16em] text-[#f59e0b] uppercase"
+                    class="text-xs font-black tracking-[0.16em] text-[var(--site-theme-accent)] uppercase"
                 >
                     {{ __('capell-theme-knowledge::generic.search_source_label') }}
                 </p>
@@ -23,7 +23,7 @@
             <div class="grid gap-3">
                 @forelse ($items as $item)
                     <article class="border border-white/10 bg-white/[0.06] p-5">
-                        <p class="text-xs font-black text-[#f59e0b] uppercase">
+                        <p class="text-xs font-black text-[var(--site-theme-accent)] uppercase">
                             {{ $item['type'] ?? __('capell-theme-knowledge::generic.review_signal') }}
                         </p>
                         <h3 class="mt-2 text-lg font-black">
