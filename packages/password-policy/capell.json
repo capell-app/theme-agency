@@ -79,6 +79,36 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Password Policy extension preview image",
                 "caption": "Password Policy extension preview"
+            },
+            {
+                "path": "docs/screenshots/password-policy-settings.png",
+                "alt": "Password Policy settings page with expiry, forced-change, complexity, compromised-password, and reuse controls",
+                "caption": "Configure password expiry, complexity, breach checks, and reuse policy from one admin page"
+            },
+            {
+                "path": "docs/screenshots/password-policy-settings-dark.png",
+                "alt": "Password Policy settings page in dark mode",
+                "caption": "Password Policy settings in dark mode"
+            },
+            {
+                "path": "docs/screenshots/forced-password-change.png",
+                "alt": "Forced password change form for flagged administrators",
+                "caption": "Require flagged administrators to change their password before continuing"
+            },
+            {
+                "path": "docs/screenshots/forced-password-change-dark.png",
+                "alt": "Forced password change form in dark mode",
+                "caption": "Forced password-change flow in dark mode"
+            },
+            {
+                "path": "docs/screenshots/user-password-policy-columns.png",
+                "alt": "Users table with Password Policy status column",
+                "caption": "Review password policy state directly from the Users table"
+            },
+            {
+                "path": "docs/screenshots/user-password-policy-columns-dark.png",
+                "alt": "Users table Password Policy status column in dark mode",
+                "caption": "Users table password policy status in dark mode"
             }
         ],
         "categories": ["admin", "operations"]

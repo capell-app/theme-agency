@@ -20,6 +20,7 @@ use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyPanelExtender;
 use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyUserFormExtender;
 use Capell\PasswordPolicy\Filament\Extenders\PasswordPolicyUserTableExtender;
 use Capell\PasswordPolicy\Filament\Pages\ForcedPasswordChangePage;
+use Capell\PasswordPolicy\Filament\Pages\PasswordPolicySettingsPage;
 use Capell\PasswordPolicy\Filament\Settings\PasswordPolicySettingsSchema;
 use Capell\PasswordPolicy\Settings\PasswordPolicySettings;
 use Filament\Support\Icons\Heroicon;
@@ -103,6 +104,7 @@ class PasswordPolicyServiceProvider extends AbstractPackageServiceProvider
 
         $this->registerPasswordPolicySettingsExtensionPage();
 
+        CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(PasswordPolicySettingsPage::class));
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(ForcedPasswordChangePage::class));
 
         $this->app->tag(PasswordPolicyPanelExtender::class, AdminPanelExtender::TAG);
