@@ -8,6 +8,7 @@ use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\Experiments\Console\Commands\SyncExperimentStatusesCommand;
 use Capell\Experiments\Enums\ResourceEnum;
 use Capell\Experiments\Models\Experiment;
 use Capell\Experiments\Models\ExperimentAllocation;
@@ -15,6 +16,7 @@ use Capell\Experiments\Models\ExperimentAudienceRule;
 use Capell\Experiments\Models\ExperimentGoal;
 use Capell\Experiments\Models\ExperimentGoalEvent;
 use Capell\Experiments\Models\ExperimentVariant;
+use Illuminate\Console\Scheduling\Schedule;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 
@@ -30,6 +32,7 @@ final class ExperimentsServiceProvider extends AbstractPackageServiceProvider
             ->name(self::$name)
             ->hasConfigFile('capell-experiments')
             ->hasTranslations()
+            ->hasCommand(SyncExperimentStatusesCommand::class)
             ->hasMigrations([
                 '2026_05_31_000001_create_experiments_table',
                 '2026_05_31_000002_create_experiment_variants_table',
@@ -51,7 +54,8 @@ final class ExperimentsServiceProvider extends AbstractPackageServiceProvider
             $this
                 ->registerModels()
                 ->registerProtectedTables()
-                ->registerAdminResources();
+                ->registerAdminResources()
+                ->registerSchedule();
         });
     }
 
@@ -99,6 +103,18 @@ final class ExperimentsServiceProvider extends AbstractPackageServiceProvider
                 group: $resource->name,
             ));
         }
+
+        return $this;
+    }
+
+    private function registerSchedule(): self
+    {
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
+            $schedule->command('capell:experiments:sync-statuses')
+                ->everyFiveMinutes()
+                ->withoutOverlapping()
+                ->onOneServer();
+        });
 
         return $this;
     }

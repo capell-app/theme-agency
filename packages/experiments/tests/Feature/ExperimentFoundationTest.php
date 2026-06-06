@@ -12,6 +12,7 @@ use Capell\Experiments\Actions\CreateExperimentAction;
 use Capell\Experiments\Actions\DeclareExperimentWinnerAction;
 use Capell\Experiments\Actions\RecordGoalEventAction;
 use Capell\Experiments\Actions\ResolveExperimentVariantForContextAction;
+use Capell\Experiments\Actions\SyncExperimentStatusesAction;
 use Capell\Experiments\Data\ExperimentAudienceRuleData;
 use Capell\Experiments\Data\ExperimentContextData;
 use Capell\Experiments\Data\ExperimentData;
@@ -143,6 +144,54 @@ it('records keyed goal events once per allocation and goal', function (): void {
         ->and($goal->events()->count())->toBe(2)
         ->and($secondEvent->value_amount)->toBe('25.00')
         ->and($secondEvent->metadata)->toBe(['source' => 'first']);
+});
+
+it('syncs scheduled and expired experiment statuses', function (): void {
+    $now = CarbonImmutable::parse('2026-06-07 12:00:00', 'UTC');
+    $scheduled = CreateExperimentAction::run(new ExperimentData(
+        name: 'Scheduled experiment',
+        status: ExperimentStatus::Scheduled,
+        startsAt: $now->subMinute(),
+        endsAt: $now->addDay(),
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+        ],
+    ));
+    $expiredActive = CreateExperimentAction::run(new ExperimentData(
+        name: 'Expired active experiment',
+        status: ExperimentStatus::Active,
+        startsAt: $now->subDays(2),
+        endsAt: $now->subMinute(),
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+        ],
+    ));
+    $expiredScheduled = CreateExperimentAction::run(new ExperimentData(
+        name: 'Expired scheduled experiment',
+        status: ExperimentStatus::Scheduled,
+        startsAt: $now->subDays(2),
+        endsAt: $now->subMinute(),
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+        ],
+    ));
+    $futureScheduled = CreateExperimentAction::run(new ExperimentData(
+        name: 'Future scheduled experiment',
+        status: ExperimentStatus::Scheduled,
+        startsAt: $now->addHour(),
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+        ],
+    ));
+
+    $result = SyncExperimentStatusesAction::run($now);
+
+    expect($result->scheduledToActive)->toBe(1)
+        ->and($result->expiredToEnded)->toBe(2)
+        ->and($scheduled->refresh()->status)->toBe(ExperimentStatus::Active)
+        ->and($expiredActive->refresh()->status)->toBe(ExperimentStatus::Ended)
+        ->and($expiredScheduled->refresh()->status)->toBe(ExperimentStatus::Ended)
+        ->and($futureScheduled->refresh()->status)->toBe(ExperimentStatus::Scheduled);
 });
 
 it('honours weighted allocation strategy without reusing a sticky visitor row', function (): void {
