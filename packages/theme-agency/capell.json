@@ -13,16 +13,23 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Agency",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/foundation-theme"
+        ],
         "supports": [],
         "conflicts": []
     },
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": ["Capell\\ThemeStudio\\Agency\\AgencyThemeServiceProvider"],
+        "runtime": [
+            "Capell\\ThemeStudio\\Agency\\AgencyThemeServiceProvider"
+        ],
         "admin": [],
         "frontend": []
     },
@@ -46,19 +53,31 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-agency-demo",
-        "demoParams": ["url", "languages", "sites"],
+        "demoParams": [
+            "url",
+            "languages",
+            "sites"
+        ],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-agency", "theme-agency-frontend"],
+    "capabilities": [
+        "theme-agency",
+        "theme-agency-frontend"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-agency"],
+        "cacheTags": [
+            "theme-agency"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -87,9 +106,22 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Theme Agency marketplace card.",
                 "caption": "Theme Agency premium theme card."
+            },
+            {
+                "path": "docs/screenshots/agency-homepage-layout.png",
+                "alt": "Agency theme homepage with bold campaign headline, dark gradient shell, and framed studio media.",
+                "caption": "Route-backed Agency homepage rendered through the package theme shell."
+            },
+            {
+                "path": "docs/screenshots/agency-lead-form-layout.png",
+                "alt": "Agency theme contact and lead-generation page with bold conversation copy and framed project media.",
+                "caption": "Agency lead-generation route captured from the seeded package demo."
             }
         ],
-        "categories": ["frontend", "themes"]
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "agency"

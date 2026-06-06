@@ -38,7 +38,6 @@
     .agency-shell h1,
     .agency-shell h2 {
         max-width: 12ch;
-        color: var(--site-foreground);
         font-family: var(--theme-heading-font, inherit);
         font-size: clamp(3rem, 8vw, 6.5rem);
         font-weight: 900;
@@ -48,9 +47,17 @@
 
     .agency-shell p {
         max-width: 42rem;
-        color: var(--site-muted);
         font-size: 1.125rem;
         line-height: 1.8;
+    }
+
+    .agency-shell section:not(.theme-hero) h1,
+    .agency-shell section:not(.theme-hero) h2 {
+        color: var(--site-card-ink);
+    }
+
+    .agency-shell section:not(.theme-hero) p {
+        color: var(--site-card-muted);
     }
 
     .agency-shell a {
