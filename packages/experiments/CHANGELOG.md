@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Added a package README documenting runtime variant resolution, goal-event recording, public-output boundaries, and current integration ownership.
 - `ExperimentsHealthCheck` now performs real diagnostics (`runDiagnostics()` / `passed()`), probing that every experiment storage table exists and that each experiment model resolves to a backing table. Previously the critical health check declared compatibility only and always passed.
 - `ExperimentContextData` now exposes a `subjectClass` field so request-context resolution can disambiguate experiments that share a `subject_type` and `subject_id` across different subject classes.
 - Winner reports now include minimum sample size, confidence level, baseline, lift, p-value, and statistical-significance metadata; declarations only persist a winner after the sample floor and confidence gate are satisfied.
