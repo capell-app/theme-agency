@@ -39,6 +39,11 @@ final class ShopifyConnectionPage extends Page
     /** @var EloquentCollection<int, ShopifyProduct> */
     public EloquentCollection $searchResults;
 
+    private ?ShopifyConnection $manageableConnection = null;
+
+    /** @var array<int, string>|null */
+    private ?array $siteOptions = null;
+
     protected string $view = 'capell-shopify-commerce::filament.pages.connection';
 
     protected static ?string $slug = 'shopify-commerce';
@@ -98,6 +103,8 @@ final class ShopifyConnectionPage extends Page
     {
         throw_unless(self::canAccess(), HttpException::class, 403);
 
+        $this->resetResolvedConnectionState();
+
         if (ValidateShopifyShopDomainAction::run($this->shop) !== true) {
             $this->addError('shop', __('capell-shopify-commerce::capell-shopify-commerce.connection.invalid_shop'));
 
@@ -123,6 +130,8 @@ final class ShopifyConnectionPage extends Page
     public function syncNow(): void
     {
         throw_unless(self::canAccess(), HttpException::class, 403);
+
+        $this->resetResolvedConnectionState();
 
         $connection = $this->getManageableConnection();
 
@@ -151,6 +160,8 @@ final class ShopifyConnectionPage extends Page
     {
         throw_unless(self::canAccess(), HttpException::class, 403);
 
+        $this->resetResolvedConnectionState();
+
         $connection = $this->getManageableConnection();
 
         if (! $connection instanceof ShopifyConnection) {
@@ -158,6 +169,7 @@ final class ShopifyConnectionPage extends Page
         }
 
         DisconnectShopifyStoreAction::run($connection);
+        $this->resetResolvedConnectionState();
 
         Notification::make()
             ->title(__('capell-shopify-commerce::capell-shopify-commerce.connection.disconnected'))
@@ -168,6 +180,8 @@ final class ShopifyConnectionPage extends Page
     public function search(): void
     {
         throw_unless(self::canAccess(), HttpException::class, 403);
+
+        $this->resetResolvedConnectionState();
 
         $connection = $this->getManageableConnection();
 
@@ -200,6 +214,10 @@ final class ShopifyConnectionPage extends Page
 
     public function getManageableConnection(): ?ShopifyConnection
     {
+        if ($this->manageableConnection instanceof ShopifyConnection) {
+            return $this->manageableConnection;
+        }
+
         if (! Schema::hasTable('shopify_connections')) {
             return null;
         }
@@ -228,7 +246,9 @@ final class ShopifyConnectionPage extends Page
             ->latest('id')
             ->first();
 
-        return $connection instanceof ShopifyConnection ? $connection : null;
+        $this->manageableConnection = $connection instanceof ShopifyConnection ? $connection : null;
+
+        return $this->manageableConnection;
     }
 
     /**
@@ -236,7 +256,13 @@ final class ShopifyConnectionPage extends Page
      */
     public function siteOptions(): array
     {
-        return ShopifySiteContext::options(auth()->user());
+        if (is_array($this->siteOptions)) {
+            return $this->siteOptions;
+        }
+
+        $this->siteOptions = ShopifySiteContext::options(auth()->user());
+
+        return $this->siteOptions;
     }
 
     public function isSyncBusy(?ShopifyConnection $connection): bool
@@ -251,8 +277,16 @@ final class ShopifyConnectionPage extends Page
         return $connection?->status === ShopifyConnectionStatus::Active ? $connection : null;
     }
 
+    public function updatedSelectedSiteId(): void
+    {
+        $this->resetResolvedConnectionState();
+        $this->loadCachedProductPreview();
+    }
+
     private function loadCachedProductPreview(): void
     {
+        $this->searchResults = new EloquentCollection;
+
         $connection = $this->getManageableConnection();
 
         if (! $connection instanceof ShopifyConnection) {
@@ -266,5 +300,11 @@ final class ShopifyConnectionPage extends Page
             ->latest('id')
             ->limit(20)
             ->get();
+    }
+
+    private function resetResolvedConnectionState(): void
+    {
+        $this->manageableConnection = null;
+        $this->siteOptions = null;
     }
 }
