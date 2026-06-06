@@ -244,3 +244,65 @@
         opacity: 0.12;
     }
 }
+
+@media (prefers-color-scheme: dark) {
+    .knowledge-shell {
+        --site-theme-primary: #60a5fa;
+        --site-theme-primary-strong: #93c5fd;
+        --site-theme-primary-contrast: #dbeafe;
+        --site-theme-primary-panel: rgba(37, 99, 235, 0.18);
+        --site-theme-primary-border: rgba(147, 197, 253, 0.28);
+        --site-theme-primary-soft: #bfdbfe;
+        --site-theme-primary-muted: #93c5fd;
+        --site-theme-primary-canvas: #0f1b2f;
+        --site-theme-accent: #fbbf24;
+        --site-theme-accent-strong: #fcd34d;
+        --site-theme-accent-panel: rgba(245, 158, 11, 0.18);
+        --site-theme-accent-contrast: #fde68a;
+        --site-theme-foreground: #e5e7eb;
+        --site-theme-heading: #f8fafc;
+        --site-theme-ink: #020617;
+        --site-theme-ink-panel: #0f172a;
+        --site-theme-ink-panel-raised: #111827;
+        --site-theme-ink-strong: #020617;
+        --site-theme-ink-accent: #1e3a8a;
+        --site-theme-surface: #0f172a;
+        --site-theme-muted: #cbd5e1;
+        --site-theme-code-accent: #7dd3fc;
+        --site-theme-code-foreground: #e0f2fe;
+        background: var(--site-theme-ink);
+        color: var(--site-theme-foreground);
+        color-scheme: dark;
+    }
+
+    .knowledge-shell .bg-white,
+    .knowledge-shell .bg-slate-50 {
+        background-color: rgba(15, 23, 42, 0.92);
+    }
+
+    .knowledge-shell .text-slate-300,
+    .knowledge-shell .text-slate-400,
+    .knowledge-shell .text-slate-500,
+    .knowledge-shell .text-slate-600,
+    .knowledge-shell .text-slate-700 {
+        color: #cbd5e1;
+    }
+
+    .knowledge-shell .border-slate-200,
+    .knowledge-shell .border-slate-300,
+    .knowledge-shell .border-white\/10,
+    .knowledge-shell .border-white\/15,
+    .knowledge-shell .border-white\/20 {
+        border-color: rgba(148, 163, 184, 0.28);
+    }
+
+    .knowledge-shell .hover\:bg-slate-50:hover {
+        background-color: rgba(30, 41, 59, 0.9);
+    }
+
+    .knowledge-shell input,
+    .knowledge-shell textarea {
+        background-color: rgba(15, 23, 42, 0.96);
+        color: var(--site-theme-foreground);
+    }
+}
