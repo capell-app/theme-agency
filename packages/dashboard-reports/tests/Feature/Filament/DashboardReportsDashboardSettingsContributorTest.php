@@ -19,6 +19,7 @@ it('exposes dashboard-dashboard_reports dashboard settings keys with translated 
     foreach ($entries as $entry) {
         expect($entry['label'])->toBeString()->not->toBe('')
             ->and(str_contains($entry['label'], 'capell-dashboard-reports::'))->toBeFalse()
+            ->and($entry['group'])->toBe('Dashboard Reports')
             ->and($entry['group'])->toBe(__('capell-dashboard-reports::dashboard.group_dashboard-dashboard_reports'));
     }
 });
