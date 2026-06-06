@@ -14,9 +14,7 @@ Social Feeds gives Capell sites a premium social-feed widget that renders from c
 
 ## Marketplace
 
-The marketplace gallery keeps the extension card artwork in `docs/assets/marketplace` and uses route-backed PNG captures from the deployment screenshot contract in [screenshots.json](screenshots.json). The screenshot runner installs the package, seeds an RSS connection with cached posts, renders the public block, and captures the required PNGs into `packages/social-feeds/docs/screenshots`.
-
-![Social Feeds extension card](assets/marketplace/extension-card.svg)
+The marketplace gallery uses route-backed PNG captures from the deployment screenshot contract in [screenshots.json](screenshots.json). The screenshot runner installs the package, seeds an RSS connection with cached posts, renders the public block, and captures the required PNGs into `packages/social-feeds/docs/screenshots`.
 
 ![Social Feeds carousel widget](screenshots/social-feed-carousel-widget.png)
 

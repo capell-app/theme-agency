@@ -25,7 +25,7 @@ Confirmed appointments can be exported through opaque staff calendar feed URLs.
 - the public booking request route with service, staff, location, timezone, and customer fields;
 - the appointment request admin queue showing request workflow state and audit context.
 
-The committed gallery keeps the extension card SVG and uses route-backed PNG captures for the public booking form and Capell admin appointment queue.
+The committed gallery uses route-backed PNG captures for the public booking form and Capell admin appointment queue.
 
 ## Traceability
 

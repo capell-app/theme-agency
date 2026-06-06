@@ -13,7 +13,10 @@
         "group": "Capell Growth"
     },
     "namespace": "Capell\\SocialFeeds",
-    "surfaces": ["admin", "frontend"],
+    "surfaces": [
+        "admin",
+        "frontend"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -84,10 +87,15 @@
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": ["social-feeds"],
+        "cacheTags": [
+            "social-feeds"
+        ],
         "cacheSafety": {
             "cacheable": true,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [
                 {
@@ -125,11 +133,6 @@
         "summary": "Place branded, cached social feeds anywhere in Capell with RSS, TikTok, YouTube, Bluesky, and custom provider support.",
         "screenshots": [
             {
-                "path": "docs/assets/marketplace/extension-card.svg",
-                "alt": "Social Feeds extension card showing cached social posts in a branded carousel.",
-                "caption": "Premium social feed widget preview"
-            },
-            {
                 "path": "docs/screenshots/social-feed-carousel-widget.png",
                 "alt": "Social Feeds public carousel widget rendered with seeded cached RSS posts.",
                 "caption": "Route-backed carousel widget with cached feed items"
@@ -145,7 +148,11 @@
                 "caption": "Provider registry extension surface"
             }
         ],
-        "categories": ["admin", "frontend", "growth"]
+        "categories": [
+            "admin",
+            "frontend",
+            "growth"
+        ]
     },
     "contributionTraceability": {
         "deferredContributions": [

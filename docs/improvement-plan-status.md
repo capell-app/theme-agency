@@ -92,10 +92,10 @@ No package should be marked `Complete` from commit history alone. Completion req
 
 2026-06-05 search results:
 
-- `record-switcher` is closed from the broken-runner-convention group: its contract now declares `generatedFor: deployment-screenshot-runner`, requires `capell-app/record-switcher`, and its marketplace gallery promotes real light/dark Capell admin PNG captures for the heading switcher workflow.
-- `bookings` is closed from the SVG-only marketplace group after committed route-backed PNG captures for the public booking request form and Capell admin appointment queue replaced the two workflow SVG previews.
-- `social-feeds` is closed from the SVG-only marketplace group after committed route-backed PNG captures for the seeded public carousel, cached RSS state, and provider registry diagnostics replaced the three workflow SVG previews.
-- `theme-inertia-bookings`, `theme-inertia-bookings-react`, and `theme-inertia-bookings-vue` are closed from the SVG-only marketplace group after committed route-backed PNG captures replaced homepage/request/services/locations/mobile, React state, and Vue state workflow previews.
+- `record-switcher` is closed from the broken-runner-convention group: its contract now declares `generatedFor: deployment-screenshot-runner`, requires `capell-app/record-switcher`, and its marketplace gallery promotes only real light/dark Capell admin PNG captures for the heading switcher workflow.
+- `bookings` is closed from the SVG-only marketplace group after committed route-backed PNG captures for the public booking request form and Capell admin appointment queue replaced the two workflow SVG previews; the remaining extension-card SVG is no longer promoted as marketplace screenshot media.
+- `social-feeds` is closed from the SVG-only marketplace group after committed route-backed PNG captures for the seeded public carousel, cached RSS state, and provider registry diagnostics replaced the three workflow SVG previews; the remaining extension-card SVG is no longer promoted as marketplace screenshot media.
+- `theme-inertia-bookings`, `theme-inertia-bookings-react`, and `theme-inertia-bookings-vue` are closed from the SVG-only marketplace group after committed route-backed PNG captures replaced homepage/request/services/locations/mobile, React state, and Vue state workflow previews; their remaining extension-card SVGs are no longer promoted as marketplace screenshot media.
 - `comments` is closed from the SVG-only marketplace group after committed Capell runner PNG captures replaced moderation inbox, comments resource, author resource, and public thread SVG previews.
 - `dashboard-reports` is closed from the SVG-only marketplace group after committed route-backed PNG captures replaced publishing trend, content health, and settings SVG previews.
 - `site-discovery` is closed from the SVG-only marketplace group after committed route-backed PNG captures replaced the seven sitemap/registry SVG previews.

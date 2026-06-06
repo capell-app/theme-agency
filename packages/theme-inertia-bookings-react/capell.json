@@ -13,7 +13,9 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\InertiaBookingsReact",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/theme-inertia-bookings",
@@ -53,14 +55,21 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-inertia-bookings-react"],
+    "capabilities": [
+        "theme-inertia-bookings-react"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-inertia-bookings-react"],
+        "cacheTags": [
+            "theme-inertia-bookings-react"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": false
@@ -85,11 +94,6 @@
         "summary": "React components for Theme Inertia Bookings.",
         "description": "Provides React source components that implement the shared Capell/Page and Capell/Bookings/Request server contract.",
         "screenshots": [
-            {
-                "path": "docs/assets/marketplace/extension-card.svg",
-                "alt": "Theme Inertia Bookings React component pack marketplace card.",
-                "caption": "React component pack for the Theme Inertia Bookings page and public booking request contracts."
-            },
             {
                 "path": "docs/screenshots/react-booking-components.png",
                 "alt": "React booking components showing the page shell, widgets, and labelled request form.",
@@ -116,6 +120,9 @@
                 "caption": "The mobile layout keeps the React booking request workflow usable on narrow phone screens."
             }
         ],
-        "categories": ["frontend", "themes"]
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     }
 }

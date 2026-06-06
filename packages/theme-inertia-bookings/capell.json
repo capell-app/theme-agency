@@ -13,7 +13,9 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\InertiaBookings",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/core",
@@ -61,14 +63,22 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-inertia-bookings", "inertia-bookings-frontend"],
+    "capabilities": [
+        "theme-inertia-bookings",
+        "inertia-bookings-frontend"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-inertia-bookings"],
+        "cacheTags": [
+            "theme-inertia-bookings"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -93,11 +103,6 @@
         "summary": "Premium Inertia booking-business theme for services, clinics, consultants, classes, and appointments.",
         "description": "Theme Inertia Bookings renders Capell marketing pages through Inertia and links into the real Bookings appointment request flow with lazy slot loading.",
         "screenshots": [
-            {
-                "path": "docs/assets/marketplace/extension-card.svg",
-                "alt": "Theme Inertia Bookings marketplace card with booking-first Inertia page and request flow.",
-                "caption": "A premium Inertia theme for appointment-led service websites that need fast public pages and real booking requests."
-            },
             {
                 "path": "docs/screenshots/inertia-bookings-homepage.png",
                 "alt": "Inertia bookings homepage with service proof, appointment action, and content sections.",
@@ -124,7 +129,11 @@
                 "caption": "The mobile request capture shows the appointment flow remains usable on narrow phone viewports."
             }
         ],
-        "categories": ["frontend", "themes", "bookings"]
+        "categories": [
+            "frontend",
+            "themes",
+            "bookings"
+        ]
     },
     "themeKey": "inertia-bookings"
 }
