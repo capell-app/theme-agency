@@ -14,6 +14,7 @@ The Customer Portal package now includes authenticated frontend routes for a min
 - `ResolvePortalProfileAction` merges stored account profile details with registered profile providers, then the dashboard renders only customer-facing fields.
 - `ResolvePortalPreferenceOptionsAction` reads the package preference schema so the dashboard and update controller use the same option set.
 - Authenticated frontend controllers resolve the current user into a portal account, render dashboard items, allow preference updates, and submit support requests.
+- Authentication is a deliberate host-app boundary: Customer Portal requires the configured authenticated middleware stack and resolves the current Laravel user into a portal account, but it does not ship login, registration, password reset, magic-link, or SSO screens.
 - The frontend route group requires authentication, and support submissions are throttled at 12 attempts per minute.
 - Suspended and archived portal accounts are blocked by `ResolveAuthenticatedPortalAccountAction` before frontend dashboard, preference, or support workflows run.
 - Support request submissions emit `PortalSupportRequestSubmitted`; status transitions emit `PortalSupportRequestStatusChanged`. Both customer-visible workflows queue requester mail notifications when the request has an email address.

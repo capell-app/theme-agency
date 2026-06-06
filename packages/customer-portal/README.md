@@ -24,6 +24,10 @@ The dashboard is a private customer surface. Responses send `no-store` and `noin
 
 Provider fan-out is bounded by `dashboard_items_per_provider_limit`, `dashboard_items_limit`, `self_service_items_per_provider_limit`, and `self_service_items_limit` in `capell-customer-portal.php`.
 
+## Authentication Boundary
+
+Customer Portal is intentionally a BYO-auth package. It mounts authenticated frontend routes behind the configured middleware stack and resolves the signed-in Laravel user into a site-scoped `PortalAccount`; it does not install login, registration, password reset, magic-link, or SSO screens. Pair it with the host app's auth stack, Fortify, Socialite, Access Gate, or another first-party auth package when a site needs a complete customer identity journey.
+
 ## Extension Points
 
 Register provider adapters through the package registries:
