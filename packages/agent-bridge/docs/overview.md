@@ -114,6 +114,8 @@ This package has no committed ERD excerpt. Use implementation notes and extensio
 
 Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each admin surface or frontend URL, and write images to `packages/agent-bridge/docs/screenshots`.
 
+Current marketplace media promotes only the prompt-builder light/dark pair. Token, capability, audit, and server-health entries need distinct recaptures; their previous promoted files duplicated the prompt-builder screen under different captions.
+
 - Agent Bridge prompt builder page.
 - Token management or setup surface.
 - Capability preview and confirmation flow.

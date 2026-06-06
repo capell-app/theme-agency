@@ -13,9 +13,15 @@
         "bundle": "commerce"
     },
     "namespace": "Capell\\ShopifyCommerce",
-    "surfaces": ["admin", "console"],
+    "surfaces": [
+        "admin",
+        "console"
+    ],
     "dependencies": {
-        "requires": ["capell-app/admin", "capell-app/core"],
+        "requires": [
+            "capell-app/admin",
+            "capell-app/core"
+        ],
         "supports": [
             "capell-app/contacts",
             "capell-app/search",
@@ -31,7 +37,9 @@
         "runtime": [
             "Capell\\ShopifyCommerce\\Providers\\ShopifyCommerceServiceProvider"
         ],
-        "admin": ["Capell\\ShopifyCommerce\\Providers\\AdminServiceProvider"],
+        "admin": [
+            "Capell\\ShopifyCommerce\\Providers\\AdminServiceProvider"
+        ],
         "frontend": []
     },
     "contributes": [],
@@ -67,8 +75,12 @@
         "syncShopifyCustomers": "Capell\\ShopifyCommerce\\Actions\\Customers\\SyncShopifyCustomersAction",
         "upsertShopifyCustomer": "Capell\\ShopifyCommerce\\Actions\\Customers\\UpsertShopifyCustomerAction"
     },
-    "settings": ["Capell\\ShopifyCommerce\\Settings\\ShopifyCommerceSettings"],
-    "permissions": ["shopify-commerce.manage"],
+    "settings": [
+        "Capell\\ShopifyCommerce\\Settings\\ShopifyCommerceSettings"
+    ],
+    "permissions": [
+        "shopify-commerce.manage"
+    ],
     "capabilities": [
         "shopify-commerce",
         "shopify-commerce-admin",
@@ -79,23 +91,39 @@
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
-        "cacheTags": ["shopify-commerce"],
+        "cacheTags": [
+            "shopify-commerce"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site"],
+            "variesBy": [
+                "site"
+            ],
             "sensitiveOutput": true,
             "invalidationSources": [
                 {
                     "model": "Capell\\ShopifyCommerce\\Models\\ShopifyProduct",
-                    "events": ["created", "updated", "deleted"]
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted"
+                    ]
                 },
                 {
                     "model": "Capell\\ShopifyCommerce\\Models\\ShopifyProductVariant",
-                    "events": ["created", "updated", "deleted"]
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted"
+                    ]
                 },
                 {
                     "model": "Capell\\ShopifyCommerce\\Models\\ShopifyCustomer",
-                    "events": ["created", "updated", "deleted"]
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted"
+                    ]
                 }
             ],
             "queueInvalidation": true
@@ -131,34 +159,22 @@
                 "caption": "Review the connected Shopify store, granted scopes, and latest sync timestamp"
             },
             {
-                "path": "docs/screenshots/shopify-catalog-sync-state.png",
-                "alt": "Shopify Commerce catalog sync state in Capell Admin",
-                "caption": "Confirm the local catalog cache is populated from a site-scoped Shopify connection"
-            },
-            {
-                "path": "docs/screenshots/shopify-product-search.png",
-                "alt": "Shopify Commerce cached product search in Capell Admin",
-                "caption": "Search synced Shopify products and variants without exposing storefront or token data"
-            },
-            {
                 "path": "docs/screenshots/shopify-connection-page-dark.png",
                 "alt": "Shopify Commerce connected store page in dark mode",
                 "caption": "Connected-store controls remain readable in dark mode"
-            },
-            {
-                "path": "docs/screenshots/shopify-catalog-sync-state-dark.png",
-                "alt": "Shopify Commerce catalog sync state in dark mode",
-                "caption": "Catalog sync status stays legible in Capell Admin dark mode"
-            },
-            {
-                "path": "docs/screenshots/shopify-product-search-dark.png",
-                "alt": "Shopify Commerce product search in dark mode",
-                "caption": "Cached catalog lookup supports Capell Admin dark mode"
             }
         ],
-        "categories": ["admin", "commerce", "integrations"]
+        "categories": [
+            "admin",
+            "commerce",
+            "integrations"
+        ]
     },
     "contributionTraceability": {
-        "deferredContributions": ["admin-page", "model", "route"]
+        "deferredContributions": [
+            "admin-page",
+            "model",
+            "route"
+        ]
     }
 }

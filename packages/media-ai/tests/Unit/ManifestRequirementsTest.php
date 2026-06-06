@@ -101,14 +101,8 @@ it('keeps marketplace screenshots backed by the committed media ai gallery asset
 
     expect($marketplaceScreenshotPaths)->toBe([
         'docs/assets/marketplace/extension-card.jpg',
-        'docs/images/screenshots/media-ai-doctor-image.png',
-        'docs/images/screenshots/media-ai-doctor-image-dark.png',
     ])->and($requiredScreenshotPaths)->toBe([
         'docs/images/screenshots/media-ai-doctor-image.png',
         'docs/images/screenshots/media-ai-doctor-image-dark.png',
     ]);
-
-    foreach ($requiredScreenshotPaths as $requiredScreenshotPath) {
-        expect($marketplaceScreenshotPaths)->toContain($requiredScreenshotPath);
-    }
 });

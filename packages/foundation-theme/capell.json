@@ -13,9 +13,15 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\FoundationTheme",
-    "surfaces": ["admin", "frontend"],
+    "surfaces": [
+        "admin",
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/frontend", "capell-app/layout-builder"],
+        "requires": [
+            "capell-app/frontend",
+            "capell-app/layout-builder"
+        ],
         "supports": [],
         "conflicts": []
     },
@@ -46,14 +52,22 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["frontend-assets", "cache-blocking"],
+    "capabilities": [
+        "frontend-assets",
+        "cache-blocking"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": ["foundation-theme"],
+        "cacheTags": [
+            "foundation-theme"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -91,16 +105,6 @@
                 "path": "docs/screenshots/foundation-theme-settings-screen-dark.png",
                 "alt": "Foundation Theme settings screen in dark mode.",
                 "caption": "Foundation Theme settings screen, dark mode"
-            },
-            {
-                "path": "docs/screenshots/generated-tailwind-asset-output-review.png",
-                "alt": "Generated Tailwind asset output review in light mode.",
-                "caption": "Generated Tailwind asset output review"
-            },
-            {
-                "path": "docs/screenshots/generated-tailwind-asset-output-review-dark.png",
-                "alt": "Generated Tailwind asset output review in dark mode.",
-                "caption": "Generated Tailwind asset output review, dark mode"
             },
             {
                 "path": "docs/screenshots/foundation-homepage-layout.png",
@@ -143,11 +147,17 @@
                 "caption": "Access-gated page layout"
             }
         ],
-        "categories": ["admin", "foundation", "frontend"]
+        "categories": [
+            "admin",
+            "foundation",
+            "frontend"
+        ]
     },
     "extends": null,
     "themeKey": "default",
     "contributionTraceability": {
-        "deferredContributions": ["route"]
+        "deferredContributions": [
+            "route"
+        ]
     }
 }

@@ -86,7 +86,7 @@ Differentiator vs table-stakes: minify/bundle, font/image optimization, and prel
 | Implement real health-check probes (it's `critical`-severity but a stub)                                                | Done   | M      | High   | §2.1, §4       |
 | Add anonymous/non-admin public-output safety integration test through real head render                                  | Done   | M      | High   | §4 (test gaps) |
 | Wire critical-CSS generation completion → html-cache invalidation source                                                | Done   | M      | High   | §4             |
-| Shipped 2026-06-05: generate the two required Capell runner captures plus dark variants and update marketplace manifest | Done   | S      | High   | §5             |
+| Recapture optimizer-specific profile asset and critical CSS screenshots before promoting marketplace media; generic Demo/consent-banner captures were demoted | Next   | S      | High   | §5             |
 | Remove or wire dead registries (`LayoutAssetRegistry`/`WidgetAssetRegistry`) + fix docs headline                        | Done   | S      | Med    | §4             |
 | Rewrite marketplace summary + composer description (benefit-led)                                                        | Done   | S      | High   | §5             |
 | Delete/implement dead `debug_query_support` setting                                                                     | Done   | S      | Med    | §2.3           |

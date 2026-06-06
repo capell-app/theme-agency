@@ -92,16 +92,12 @@ it('declares committed marketplace screenshots', function (): void {
         })
         ->values();
 
-    expect($paths)->toHaveCount(15)
-        ->and($paths->filter(fn (string $path): bool => str_starts_with($path, 'docs/screenshots/') && str_ends_with($path, '.png')))->toHaveCount(14)
+    expect($paths)->toHaveCount(11)
+        ->and($paths->filter(fn (string $path): bool => str_starts_with($path, 'docs/screenshots/') && str_ends_with($path, '.png')))->toHaveCount(10)
         ->and($paths->filter(fn (string $path): bool => str_starts_with($path, 'docs/assets/marketplace/') && str_ends_with($path, '.svg')))->toHaveCount(0)
         ->and($paths)->toContain(
             'docs/screenshots/foundation-theme-settings-screen.png',
             'docs/screenshots/foundation-theme-settings-screen-dark.png',
-            'docs/screenshots/frontend-page-using-the-foundation-theme.png',
-            'docs/screenshots/frontend-page-using-the-foundation-theme-dark.png',
-            'docs/screenshots/generated-tailwind-asset-output-review.png',
-            'docs/screenshots/generated-tailwind-asset-output-review-dark.png',
             'docs/screenshots/foundation-homepage-layout.png',
             'docs/screenshots/foundation-standard-page-layout.png',
             'docs/screenshots/foundation-blog-article-layout.png',

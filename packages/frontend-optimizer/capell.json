@@ -13,7 +13,10 @@
         "bundle": "foundation"
     },
     "namespace": "Capell\\FrontendOptimizer",
-    "surfaces": ["admin", "frontend"],
+    "surfaces": [
+        "admin",
+        "frontend"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -59,15 +62,22 @@
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["frontend-optimizer"],
+        "cacheTags": [
+            "frontend-optimizer"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [
                 {
                     "model": "Capell\\FrontendOptimizer\\Models\\FrontendRenderProfile",
-                    "events": ["updated"]
+                    "events": [
+                        "updated"
+                    ]
                 }
             ],
             "queueInvalidation": true
@@ -95,32 +105,19 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Frontend Optimizer extension preview image",
                 "caption": "Frontend Optimizer extension preview"
-            },
-            {
-                "path": "docs/screenshots/frontend-optimizer-profile-assets.png",
-                "alt": "Public Capell page rendered with Frontend Optimizer profile asset output in light mode.",
-                "caption": "Profile-aware asset output on a public Capell page"
-            },
-            {
-                "path": "docs/screenshots/frontend-optimizer-profile-assets-dark.png",
-                "alt": "Public Capell page rendered with Frontend Optimizer profile asset output in dark mode.",
-                "caption": "Profile-aware asset output in dark mode"
-            },
-            {
-                "path": "docs/screenshots/frontend-optimizer-critical-css-output.png",
-                "alt": "Frontend Optimizer critical CSS output captured from the Capell screenshot runner in light mode.",
-                "caption": "Critical CSS output generated from a seeded render profile"
-            },
-            {
-                "path": "docs/screenshots/frontend-optimizer-critical-css-output-dark.png",
-                "alt": "Frontend Optimizer critical CSS output captured from the Capell screenshot runner in dark mode.",
-                "caption": "Critical CSS output in dark mode"
             }
         ],
-        "categories": ["foundation", "frontend"]
+        "categories": [
+            "foundation",
+            "frontend"
+        ]
     },
-    "scopes": ["frontend"],
+    "scopes": [
+        "frontend"
+    ],
     "contributionTraceability": {
-        "deferredContributions": ["configurator"]
+        "deferredContributions": [
+            "configurator"
+        ]
     }
 }

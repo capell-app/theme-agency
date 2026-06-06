@@ -45,14 +45,13 @@ it('keeps marketplace screenshots aligned with the committed runner captures', f
         ->map(fn (string $screenshotPath): string => str_replace('packages/frontend-optimizer/', '', $screenshotPath))
         ->values();
 
-    $darkVariantPaths = $contractPaths
-        ->map(fn (string $screenshotPath): string => str_replace('.png', '-dark.png', $screenshotPath))
-        ->all();
-
     expect($marketplaceScreenshotPaths)->toBe([
         'docs/assets/marketplace/extension-card.jpg',
-        ...$contractPaths->all(),
-        ...$darkVariantPaths,
+    ]);
+
+    expect($contractPaths->all())->toBe([
+        'docs/screenshots/frontend-optimizer-profile-assets.png',
+        'docs/screenshots/frontend-optimizer-critical-css-output.png',
     ]);
 
     foreach ($marketplaceScreenshotPaths as $marketplaceScreenshotPath) {

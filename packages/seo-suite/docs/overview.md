@@ -99,6 +99,8 @@ SEO Suite contributes content graph edges from page SEO snapshots and broken-lin
 
 Optional follow-up captures remain declared in `docs/screenshots.json` but are not promoted until the runner has the needed fixture support: `not-found-urls-page.png`, `ai-discovery-page.png`, `seo-settings-page.png`, `llms-txt-output.png`, `robots-txt-output.png`, and `page-markdown-output.png`.
 
+Current marketplace media promotes only the strongest SEO audit and sitemap captures. Generic dashboard/settings captures and duplicate Site Health screens were demoted back to runner evidence until recaptured as their labelled SEO Suite workflows.
+
 ## Screenshots
 
 ![SEO audit page](screenshots/seo-audit-page.png)
