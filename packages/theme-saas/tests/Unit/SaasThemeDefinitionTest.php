@@ -150,6 +150,7 @@ it('renders new premium saas layouts through the registry', function (): void {
 
     $demoHtml = $demoRenderer->render(saasThemeSection('demo-request', [
         'heading' => 'Route the right demo',
+        'form_action' => '/contact',
         'items' => [
             ['title' => 'Product-led qualification', 'summary' => 'Conversion path for sales conversations.'],
         ],
@@ -170,6 +171,7 @@ it('renders new premium saas layouts through the registry', function (): void {
     expect($demoHtml)
         ->toContain('Route the right demo')
         ->toContain('Product-led qualification')
+        ->toContain('Request demo')
         ->not->toContain('capell-app/theme-saas');
 });
 
@@ -745,6 +747,7 @@ function renderSaasThemeAllSections(ThemeRegistry $registry): string
             saasThemeSection('demo-request', [
                 'heading' => 'Route the right demo',
                 'summary' => 'Qualify high-intent accounts.',
+                'form_action' => '/contact',
                 'items' => [
                     ['title' => 'Product-led qualification', 'summary' => 'Conversion path for sales conversations.'],
                 ],
