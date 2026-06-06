@@ -13,9 +13,15 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Education",
-    "surfaces": ["frontend", "console"],
+    "surfaces": [
+        "frontend",
+        "console"
+    ],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/foundation-theme"
+        ],
         "supports": [
             "capell-app/layout-builder",
             "capell-app/frontend-authoring",
@@ -56,19 +62,31 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-education-demo",
-        "demoParams": ["url", "languages", "sites"],
+        "demoParams": [
+            "url",
+            "languages",
+            "sites"
+        ],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-education", "theme-education-frontend"],
+    "capabilities": [
+        "theme-education",
+        "theme-education-frontend"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-education"],
+        "cacheTags": [
+            "theme-education"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -88,22 +106,55 @@
         "description": "Theme Education gives schools, course providers, and training teams a complete learning-pathway frontend without commissioning a custom build. Purpose-shaped sections cover course catalogues, instructor and mentor profiles, learning outcomes, open days, resources, FAQs, and a guided enrolment call-to-action. It integrates optionally with Capell Events for open-day calendars, Form Builder for applications and enquiries, and Blog for learning resources — degrading gracefully when those aren't installed. Built on Foundation Theme with brand-token theming, an accessible skip link and focus states, and zero database impact, so editors compose education pages through the normal Layout Builder workflow.",
         "screenshots": [
             {
-                "path": "docs/assets/marketplace/extension-card.jpg",
-                "alt": "Theme Education extension preview image",
-                "caption": "Theme Education extension preview"
+                "path": "docs/screenshots/theme-admin-list-showing-education.png",
+                "alt": "Theme admin list showing Education capture for Theme Education",
+                "caption": "Theme admin list showing Education"
             },
             {
-                "path": "docs/assets/marketplace/hero-desktop.jpg",
-                "alt": "Theme Education Hero Desktop image",
-                "caption": "Theme Education Hero Desktop"
+                "path": "docs/screenshots/frontend-page-rendered-with-education-theme.png",
+                "alt": "Frontend page rendered with Education theme capture for Theme Education",
+                "caption": "Frontend page rendered with Education theme"
             },
             {
-                "path": "docs/assets/marketplace/hero-mobile.jpg",
-                "alt": "Theme Education Hero Mobile image",
-                "caption": "Theme Education Hero Mobile"
+                "path": "docs/screenshots/education-homepage-layout.png",
+                "alt": "Education homepage capture for Theme Education",
+                "caption": "Education homepage"
+            },
+            {
+                "path": "docs/screenshots/education-course-catalogue-layout.png",
+                "alt": "Course catalogue capture for Theme Education",
+                "caption": "Course catalogue"
+            },
+            {
+                "path": "docs/screenshots/education-instructors-layout.png",
+                "alt": "Instructor and mentor profiles capture for Theme Education",
+                "caption": "Instructor and mentor profiles"
+            },
+            {
+                "path": "docs/screenshots/education-events-layout.png",
+                "alt": "Open days and workshops capture for Theme Education",
+                "caption": "Open days and workshops"
+            },
+            {
+                "path": "docs/screenshots/education-enrolment-layout.png",
+                "alt": "Enrolment CTA capture for Theme Education",
+                "caption": "Enrolment CTA"
+            },
+            {
+                "path": "docs/screenshots/education-resource-library-layout.png",
+                "alt": "Learning resources capture for Theme Education",
+                "caption": "Learning resources"
+            },
+            {
+                "path": "docs/screenshots/theme-preview-url-output.png",
+                "alt": "Signed admin preview route capture for Theme Education",
+                "caption": "Signed admin preview route"
             }
         ],
-        "categories": ["frontend", "themes"]
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "education",
