@@ -16,7 +16,12 @@
     "surfaces": ["admin"],
     "dependencies": {
         "requires": ["capell-app/admin"],
-        "supports": [],
+        "supports": [
+            "capell-app/password-policy",
+            "capell-app/privacy-center",
+            "capell-app/diagnostics",
+            "capell-app/access-gate"
+        ],
         "conflicts": []
     },
     "providers": {
