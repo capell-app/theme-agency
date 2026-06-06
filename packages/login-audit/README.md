@@ -97,6 +97,10 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Settings: `LoginAuditSettingsSchema`.
 - User resource bridge: `LoginAuditUserSchemaExtender` adds access summary state and `LoginAuditsRelationManager` when the host user model supports authentication logs.
 
+## Session Boundary
+
+Login Audit reports active sessions and device context from authentication-log rows. It does not terminate sessions directly: logout-other-devices and per-device revocation depend on the host app's session driver, guard setup, and remember-token policy. Pair this package with the host auth stack, Password Policy, Access Gate, or a session-management package when destructive session controls are required.
+
 ## Data And Persistence
 
 - login_audit stores authenticatable type/id, IP address, user agent, login time, and logout time.
