@@ -93,6 +93,7 @@ This file tracks the active package-improvement wave at a repository level. Pack
 - Theme Healthcare now promotes all 8 route-backed Capell runner captures from its screenshot contract.
 - Theme Knowledge now promotes all 9 route-backed Capell runner captures from its screenshot contract.
 - Campaign Studio now schedules `capell:campaign-studio-sync-statuses` every five minutes and exposes `SyncCampaignStatusesAction` for Scheduled→Active and Active→Ended campaign window transitions.
+- Diagnostics now wires `RunExtensionHealthChecksAction` and `capell:diagnostics:health` as the executable package-health runner, promotes six product PNGs into marketplace media, and reconciles the stale console/screenshot/test roadmap rows.
 - Insights now filters configured bot, crawler, monitor, headless-browser, and internal-IP traffic before creating visits or recording events.
 - Insights now rotates stale persistent visit cookies into new visit records after the configured session timeout, so journey timelines reset per browsing session.
 - Insights now rebuilds daily rollups for day-aligned popular/trending page dashboards, falling back to raw events until aggregate rows exist.
