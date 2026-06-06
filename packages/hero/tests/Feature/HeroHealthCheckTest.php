@@ -86,6 +86,24 @@ it('declares the hero feature capabilities exposed by the public renderer', func
     );
 });
 
+it('declares cacheable public output with concrete invalidation sources', function (): void {
+    /** @var array{performance: array{cacheSafety: array{cacheable: bool, variesBy: list<string>, sensitiveOutput: bool, invalidationSources: list<array{model: string}>}}} $manifest */
+    $manifest = json_decode((string) file_get_contents(__DIR__ . '/../../capell.json'), true, 512, JSON_THROW_ON_ERROR);
+    $cacheSafety = $manifest['performance']['cacheSafety'];
+
+    expect($cacheSafety['cacheable'])->toBeTrue()
+        ->and($cacheSafety['variesBy'])->toBe(['site', 'locale'])
+        ->and($cacheSafety['sensitiveOutput'])->toBeFalse()
+        ->and(collect($cacheSafety['invalidationSources'])->pluck('model')->all())->toContain(
+            'Capell\\Core\\Models\\Media',
+            'Capell\\Core\\Models\\Page',
+            'Capell\\Core\\Models\\Theme',
+            'Capell\\Core\\Models\\Translation',
+            'Capell\\LayoutBuilder\\Models\\Widget',
+            'Capell\\LayoutBuilder\\Models\\WidgetAsset',
+        );
+});
+
 it('does not promote mock hero captures as marketplace screenshots', function (): void {
     /** @var array{marketplace: array{screenshots: list<array{path: string}>}} $manifest */
     $manifest = json_decode((string) file_get_contents(__DIR__ . '/../../capell.json'), true, 512, JSON_THROW_ON_ERROR);
@@ -96,6 +114,7 @@ it('does not promote mock hero captures as marketplace screenshots', function ()
 
     expect($paths)->toBe([
         'docs/assets/marketplace/extension-card.jpg',
+        'docs/screenshots/hero-home-widget.png',
     ]);
 
     foreach ($paths as $path) {

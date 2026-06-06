@@ -52,9 +52,9 @@ Hero now declares public feature capabilities for the widget, video backgrounds,
 
 3. **Health check shipped.** `HeroHealthCheck` now verifies the `capell::widget.hero` component alias, the `capell-hero` view namespace, and the Hero-managed home layout defaults (`hero` + `page-content` containers) with remediation to run `capell:hero-setup --force` when seeded state drifts. — `src/Health/HeroHealthCheck.php`, `capell.json healthChecks[0]`
 
-4. **`cacheSafety.cacheable: false` but the widget is pure-render and could be cacheable.** The manifest marks hero output non-cacheable with `variesBy: ["site","locale"]`. The render is deterministic given hydrated relations (the test `expect($html)->toBe(renderHeroWidgetHtml($widget))` proves determinism, and the background hash uses `xxh128`, not `uniqid`). If hero is forced non-cacheable it may be defeating frontend HTML caching for the whole home page. Confirm whether `cacheable:false` is intentional or copy-paste; if the only variance is site+locale (already declared), it should be cacheable with those keys. — `capell.json performance.cacheSafety` — **Medium**
+4. **Shipped 2026-06-06: cache safety resolved.** The manifest now marks Hero public output cacheable with `variesBy: ["site","locale"]`, backed by deterministic rendering and the zero-query hydrated render guard. — `capell.json performance.cacheSafety`, `tests/Feature/HeroHealthCheckTest.php` — **Medium**
 
-5. **`invalidationSources: []` despite media/translation-driven output.** Hero output depends on `Theme.meta.hero_background`/`hero_media`, `Widget`/`WidgetAsset` meta + media, and page/widget translations. None are listed as invalidation sources, yet `queueInvalidation: true` is set. If hero output is ever cached (see §4.4), edits to theme hero settings or hero media would not bust the cache. Register the relevant cache dependencies (`CacheInvalidationRegistry::registerDependency()` per the skill) or document why none are needed. — `capell.json performance.cacheSafety.invalidationSources` — **Medium**
+5. **Shipped 2026-06-06: invalidation sources declared.** Hero now declares cache invalidation sources for Core media, pages, themes, translations, Layout Builder widgets, and widget assets so cached hero output can be invalidated when author-controlled hero state changes. — `capell.json performance.cacheSafety.invalidationSources`, `tests/Feature/HeroHealthCheckTest.php` — **Medium**
 
 6. **LCP risk narrowed.** The hero media poster now uses `fetchpriority="high"` with eager loading. Remaining opportunity: `<picture>` sources still do not provide width/density descriptors, so the browser cannot choose by resolution beyond breakpoint art direction. — `resources/views/components/hero/media.blade.php` — **Medium**
 
@@ -99,7 +99,7 @@ Both are flat and describe plumbing ("setup", "rendering"), not the visitor-faci
 | Populate `capabilities[]` (video, overlay, carousel, inheritance)                  | Done   | S      | Medium | §3, §5      |
 | Memoize theme/widget resolver layers across slides (render budget)                 | Next   | M      | High   | §2.1        |
 | Shipped 2026-06-06: Extend `HeroHealthCheck` to verify seeded default-home layout state | Done   | S      | Low    | §4.3        |
-| Resolve cacheable/invalidationSources truth (cache safety)                         | Next   | M      | Medium | §4.4, §4.5  |
+| Shipped 2026-06-06: Resolve cacheable/invalidationSources truth (cache safety)     | Done   | M      | Medium | §4.4, §4.5  |
 | Shipped 2026-06-06: Add render budget / zero-query render test                     | Done   | S      | Medium | §2.4, §4.6  |
 | Shipped 2026-06-06: Add XSS-boundary test for author hero HTML                     | Done   | S      | Medium | §4.7        |
 | Shipped 2026-06-06: Add carousel multi-slide + `data-carousel-*` render test       | Done   | S      | Medium | §4.9        |

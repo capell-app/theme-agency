@@ -58,10 +58,65 @@
         "adminQueryBudget": 0,
         "cacheTags": ["hero"],
         "cacheSafety": {
-            "cacheable": false,
+            "cacheable": true,
             "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
-            "invalidationSources": [],
+            "invalidationSources": [
+                {
+                    "model": "Capell\\Core\\Models\\Media",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                },
+                {
+                    "model": "Capell\\Core\\Models\\Page",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                },
+                {
+                    "model": "Capell\\Core\\Models\\Theme",
+                    "events": ["updated"]
+                },
+                {
+                    "model": "Capell\\Core\\Models\\Translation",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                },
+                {
+                    "model": "Capell\\LayoutBuilder\\Models\\Widget",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                },
+                {
+                    "model": "Capell\\LayoutBuilder\\Models\\WidgetAsset",
+                    "events": [
+                        "created",
+                        "updated",
+                        "deleted",
+                        "restored",
+                        "forceDeleted"
+                    ]
+                }
+            ],
             "queueInvalidation": true
         }
     },
