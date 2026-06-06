@@ -19,7 +19,6 @@ final class ThemeEducationHealthCheck implements ChecksExtensionHealth
      */
     private const array REQUIRED_VIEW_NAMES = [
         'capell-theme-education::page',
-        'capell-theme-education::sections.navigation',
         'capell-theme-education::sections.hero',
         'capell-theme-education::sections.features',
         'capell-theme-education::sections.proof',
@@ -34,7 +33,6 @@ final class ThemeEducationHealthCheck implements ChecksExtensionHealth
         'capell-theme-education::sections.resources',
         'capell-theme-education::sections.faq',
         'capell-theme-education::sections.cta',
-        'capell-theme-education::sections.footer',
     ];
 
     public static function compatibleCapellApiVersion(): string
