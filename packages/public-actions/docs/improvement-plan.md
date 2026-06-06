@@ -20,7 +20,7 @@ Public Actions is a framework package that lets Capell sites accept untrusted pu
 - **Add a configurable dispatch backoff curve** — `DispatchPublicActionDestinationJob` releases with a flat `dispatch_retry_seconds` (default 60) for all 3 tries. A misbehaving provider gets hammered at a constant rate. Use Laravel's `backoff()` array (e.g. `[60, 300, 900]`) and add jitter. — `src/Jobs/DispatchPublicActionDestinationJob.php` — S
 - **Stop hashing the body twice per dispatch** — `dispatch()` computes `hash('sha256', json_encode($body))` for `request_hash`, then `headers()` calls `json_encode($body)` _again_ for the HMAC signature, and `sendOptions()` re-encodes for the request. Encode once, reuse the canonical string for hash + signature + send. — `src/Support/Providers/HttpWebhookPublicActionAdapter.php:25-47,107-134` — S
 - **Tighten the unschemed-payload escape hatch** — When an action has no `payload_schema`, submissions are accepted up to a 16KB byte cap and only a `Log::warning` is emitted. This is a permanent silent-acceptance path on a public endpoint. Add a config flag (default deny) so operators must explicitly opt into schemaless actions, and surface the warning as a health-check/admin badge. — `src/Actions/SubmitPublicActionAction.php` (`UNSCHEMED_PAYLOAD_BYTE_LIMIT`) — S
-- **Fill in `docs/overview.md`** — The file contains only section headings; the indexed body is empty. — Buyers and integrators land on a hollow overview. — `docs/overview.md` — S
+- **Done/Shipped: filled in `docs/overview.md`.** — The overview now documents package positioning, installed surfaces, public and Zapier routes, admin resources, screenshot coverage, public safety notes, and package verification guidance. — `docs/overview.md` — S
 
 ## 3. Missing Features (gaps)
 
@@ -44,7 +44,7 @@ Public Actions is a framework package that lets Capell sites accept untrusted pu
 - **Performance budget unverified (low):** `capell.json` sets `frontendRenderBudgetMs:20` / `adminQueryBudget:40`. `ShowPublicActionController` reads only hydrated `payload_schema` (no N+1, safe), but no test asserts the budget; `dispatchAttempts`/submission admin lists over high-volume tables are the real query-budget risk and are unbenchmarked.
 - **i18n (low):** public/admin strings are translated (`generic.php`, `filament.php`), but webhook/SSRF `InvalidArgumentException` messages are hard-coded English. Acceptable (operator-facing, logged) but worth noting.
 - **Public-output safety (good):** verified clean. `ShowPublicActionController` passes only `{key,label,type,required}`; the Blade form leaks no model IDs, handler classes, selectors, or signed URLs; both controllers set `no-store, private`. Destination `secret`/`endpoint_url`/`headers` are `encrypted` at rest; tokens are stored hashed; webhook error/response summaries are redacted. This is the package's strongest area.
-- **Tech debt (low):** double/triple `json_encode` per dispatch; flat retry delay; empty `docs/overview.md`; `CHANGELOG.md` has only an "Unreleased" stub.
+- **Tech debt (low):** double/triple `json_encode` per dispatch; flat retry delay; `CHANGELOG.md` has only an "Unreleased" stub. The previously empty `docs/overview.md` is now filled with package surfaces, safety notes, and verification guidance.
 
 ## 5. Marketplace & Selling
 
@@ -83,4 +83,5 @@ Public Actions is a framework package that lets Capell sites accept untrusted pu
 | Form Builder → action binding admin UI                                      | Later  | M      | High   | 3                                                                                     |
 | Non-HTTP destination adapters (Slack, email-relay, SQS)                     | Later  | L      | High   | 3                                                                                     |
 | Inbound signed-webhook verification (trusted submission lane)               | Later  | M      | High   | 3                                                                                     |
-| Fill `docs/overview.md` + real `CHANGELOG` entries                          | Later  | S      | Low    | 2, 4                                                                                  |
+| Shipped: Fill `docs/overview.md`                                              | Done   | S      | Low    | 2, 4                                                                                  |
+| Add real `CHANGELOG` entries                                                  | Later  | S      | Low    | 4                                                                                     |
