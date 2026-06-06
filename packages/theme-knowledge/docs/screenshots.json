@@ -19,9 +19,7 @@
             "scenario": "theme-knowledge-admin-filament-resource",
             "url": "/screenshot-fixtures/theme-gallery/knowledge/theme-admin-list-showing-knowledge",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "frontend-page-rendered-with-knowledge-theme",
@@ -37,9 +35,7 @@
             "scenario": "theme-knowledge-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/knowledge/frontend-page-rendered-with-knowledge-theme",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "knowledge-homepage-layout",
@@ -55,9 +51,7 @@
             "scenario": "theme-knowledge-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/knowledge/knowledge-homepage-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "knowledge-search-layout",
@@ -73,9 +67,7 @@
             "scenario": "theme-knowledge-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/knowledge/knowledge-search-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "knowledge-topic-hubs-layout",
@@ -91,9 +83,7 @@
             "scenario": "theme-knowledge-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/knowledge/knowledge-topic-hubs-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "knowledge-featured-content-layout",
@@ -109,9 +99,7 @@
             "scenario": "theme-knowledge-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/knowledge/knowledge-featured-content-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "knowledge-newsletter-layout",
@@ -127,9 +115,7 @@
             "scenario": "theme-knowledge-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/knowledge/knowledge-newsletter-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "knowledge-author-bench-layout",
@@ -145,9 +131,7 @@
             "scenario": "theme-knowledge-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/knowledge/knowledge-author-bench-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "theme-preview-url-output",
@@ -163,9 +147,7 @@
             "scenario": "theme-knowledge-admin-admin-url",
             "url": "/screenshot-fixtures/theme-gallery/knowledge/theme-preview-url-output",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         }
     ]
 }

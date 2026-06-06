@@ -13,15 +13,9 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\LocalServices",
-    "surfaces": [
-        "frontend",
-        "console"
-    ],
+    "surfaces": ["frontend", "console"],
     "dependencies": {
-        "requires": [
-            "capell-app/core",
-            "capell-app/foundation-theme"
-        ],
+        "requires": ["capell-app/core", "capell-app/foundation-theme"],
         "supports": [
             "capell-app/layout-builder",
             "capell-app/frontend-authoring",
@@ -60,31 +54,19 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-local-services-demo",
-        "demoParams": [
-            "url",
-            "languages",
-            "sites"
-        ],
+        "demoParams": ["url", "languages", "sites"],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "theme-local-services",
-        "theme-local-services-frontend"
-    ],
+    "capabilities": ["theme-local-services", "theme-local-services-frontend"],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": [
-            "theme-local-services"
-        ],
+        "cacheTags": ["theme-local-services"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -134,10 +116,7 @@
                 "caption": "Theme Local Services Hero Mobile"
             }
         ],
-        "categories": [
-            "frontend",
-            "themes"
-        ]
+        "categories": ["frontend", "themes"]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "local-services",

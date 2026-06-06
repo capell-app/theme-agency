@@ -19,9 +19,7 @@
             "scenario": "runner-fixture-admin",
             "url": "/screenshot-fixtures/document-lifecycle/controlled-documents-index",
             "waitFor": ".document-lifecycle",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "controlled-document-edit",
@@ -37,9 +35,7 @@
             "scenario": "runner-fixture-admin",
             "url": "/screenshot-fixtures/document-lifecycle/controlled-document-edit",
             "waitFor": ".document-lifecycle",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "controlled-document-publications",
@@ -55,9 +51,7 @@
             "scenario": "runner-fixture-admin",
             "url": "/screenshot-fixtures/document-lifecycle/controlled-document-publications",
             "waitFor": ".document-lifecycle",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "controlled-document-acceptances",
@@ -73,9 +67,7 @@
             "scenario": "runner-fixture-admin",
             "url": "/screenshot-fixtures/document-lifecycle/controlled-document-acceptances",
             "waitFor": ".document-lifecycle",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         }
     ]
 }

@@ -19,9 +19,7 @@
             "scenario": "events-admin-admin-resource",
             "url": "/screenshot-fixtures/events/events-index",
             "waitFor": ".events-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "events-create",
@@ -37,9 +35,7 @@
             "scenario": "events-admin-admin-resource",
             "url": "/screenshot-fixtures/events/events-create",
             "waitFor": ".events-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "events-edit",
@@ -55,9 +51,7 @@
             "scenario": "events-admin-admin-resource",
             "url": "/screenshot-fixtures/events/events-edit",
             "waitFor": ".events-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "event-venues",
@@ -73,9 +67,7 @@
             "scenario": "events-admin-admin-resource",
             "url": "/screenshot-fixtures/events/event-venues",
             "waitFor": ".events-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "event-occurrences",
@@ -91,9 +83,7 @@
             "scenario": "events-admin-admin-resource",
             "url": "/screenshot-fixtures/events/event-occurrences",
             "waitFor": ".events-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "event-registrations",
@@ -109,9 +99,7 @@
             "scenario": "events-admin-admin-resource",
             "url": "/screenshot-fixtures/events/event-registrations",
             "waitFor": ".events-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "event-calendar-admin-page",
@@ -127,9 +115,7 @@
             "scenario": "events-admin-admin-page",
             "url": "/screenshot-fixtures/events/event-calendar-admin-page",
             "waitFor": ".events-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "event-calendar-widget",
@@ -145,9 +131,7 @@
             "scenario": "events-admin-admin-widget",
             "url": "/screenshot-fixtures/events/event-calendar-widget",
             "waitFor": ".events-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "events-listing-page",
@@ -163,9 +147,7 @@
             "scenario": "events-frontend-frontend-render",
             "url": "/screenshot-fixtures/events/events-listing-page",
             "waitFor": ".events-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "events-calendar-page",
@@ -181,9 +163,7 @@
             "scenario": "events-frontend-frontend-render",
             "url": "/screenshot-fixtures/events/events-calendar-page",
             "waitFor": ".events-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "events-ics-feed",
@@ -199,9 +179,7 @@
             "scenario": "events-frontend-http-route",
             "url": "/screenshot-fixtures/events/events-ics-feed",
             "waitFor": ".events-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         }
     ]
 }

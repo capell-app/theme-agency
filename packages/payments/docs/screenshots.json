@@ -19,9 +19,7 @@
             "scenario": "payments-admin-admin-resource",
             "url": "/screenshot-fixtures/payments/payments-checkout-sessions",
             "waitFor": ".payments-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "payments-webhook-events",
@@ -37,9 +35,7 @@
             "scenario": "payments-admin-admin-resource",
             "url": "/screenshot-fixtures/payments/payments-webhook-events",
             "waitFor": ".payments-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "payments-settings",
@@ -55,9 +51,7 @@
             "scenario": "payments-admin-settings-page",
             "url": "/screenshot-fixtures/payments/payments-settings",
             "waitFor": ".payments-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "payments-customer-portal",
@@ -73,9 +67,7 @@
             "scenario": "payments-frontend-frontend-render",
             "url": "/screenshot-fixtures/payments/payments-customer-portal",
             "waitFor": ".payments-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "payments-form-builder-checkout",
@@ -91,9 +83,7 @@
             "scenario": "payments-frontend-frontend-render",
             "url": "/screenshot-fixtures/payments/payments-form-builder-checkout",
             "waitFor": ".payments-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         }
     ]
 }

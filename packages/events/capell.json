@@ -13,11 +13,7 @@
         "bundle": "content-product"
     },
     "namespace": "Capell\\Events",
-    "surfaces": [
-        "admin",
-        "frontend",
-        "console"
-    ],
+    "surfaces": ["admin", "frontend", "console"],
     "dependencies": {
         "requires": [
             "capell-app/admin",
@@ -38,9 +34,7 @@
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": [
-            "Capell\\Events\\Providers\\EventsServiceProvider"
-        ],
+        "runtime": ["Capell\\Events\\Providers\\EventsServiceProvider"],
         "admin": [],
         "frontend": []
     },
@@ -127,15 +121,10 @@
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": [
-            "events"
-        ],
+        "cacheTags": ["events"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -241,12 +230,7 @@
                 "caption": "iCalendar feed route"
             }
         ],
-        "categories": [
-            "admin",
-            "console",
-            "content-product",
-            "frontend"
-        ]
+        "categories": ["admin", "console", "content-product", "frontend"]
     },
     "contributionTraceability": {
         "deferredContributions": [

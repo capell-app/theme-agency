@@ -19,9 +19,7 @@
             "scenario": "theme-education-admin-filament-resource",
             "url": "/screenshot-fixtures/theme-gallery/education/theme-admin-list-showing-education",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "frontend-page-rendered-with-education-theme",
@@ -37,9 +35,7 @@
             "scenario": "theme-education-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/education/frontend-page-rendered-with-education-theme",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "education-homepage-layout",
@@ -55,9 +51,7 @@
             "scenario": "theme-education-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/education/education-homepage-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "education-course-catalogue-layout",
@@ -73,9 +67,7 @@
             "scenario": "theme-education-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/education/education-course-catalogue-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "education-instructors-layout",
@@ -91,9 +83,7 @@
             "scenario": "theme-education-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/education/education-instructors-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "education-events-layout",
@@ -109,9 +99,7 @@
             "scenario": "theme-education-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/education/education-events-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "education-enrolment-layout",
@@ -127,9 +115,7 @@
             "scenario": "theme-education-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/education/education-enrolment-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "education-resource-library-layout",
@@ -145,9 +131,7 @@
             "scenario": "theme-education-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/education/education-resource-library-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "theme-preview-url-output",
@@ -163,9 +147,7 @@
             "scenario": "theme-education-admin-admin-url",
             "url": "/screenshot-fixtures/theme-gallery/education/theme-preview-url-output",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         }
     ]
 }

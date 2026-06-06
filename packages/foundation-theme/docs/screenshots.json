@@ -67,9 +67,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/foundation-theme/foundation-homepage-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "foundation-standard-page-layout",
@@ -85,9 +83,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/foundation-theme/foundation-standard-page-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "foundation-blog-article-layout",
@@ -103,9 +99,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/foundation-theme/foundation-blog-article-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "foundation-listing-layout",
@@ -121,9 +115,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/foundation-theme/foundation-listing-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "foundation-contact-form-layout",
@@ -139,9 +131,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/foundation-theme/foundation-contact-form-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "foundation-search-results-layout",
@@ -157,9 +147,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/foundation-theme/foundation-search-results-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "foundation-events-layout",
@@ -175,9 +163,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/foundation-theme/foundation-events-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "foundation-membership-gate-layout",
@@ -193,9 +179,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/foundation-theme/foundation-membership-gate-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         }
     ]
 }

@@ -79,24 +79,24 @@ Capabilities declared: `ga4-reports`, `ga4-reports-admin`, `ga4-reports-console`
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                              | Bucket  | Effort | Impact | Section |
-| ------------------------------------------------------------------------------------------------- | ------- | ------ | ------ | ------- |
-| Fix client binding to fall back to null client when unconfigured (or delete null client + claims) | Shipped | S      | High   | §4      |
-| Implement real `Ga4ReportsHealthCheck` (credentials, last-sync recency, API reachability)         | Shipped | M      | High   | §4      |
-| Add retry-with-backoff + 429/quota handling to GA4 HTTP calls                                     | Done    | M      | High   | §3, §4  |
-| Fix "GA4 Reports 4" typo across composer/README/lang/command                                      | Shipped | S      | Med    | §4      |
+| Item                                                                                              | Bucket  | Effort | Impact | Section                                                                                                     |
+| ------------------------------------------------------------------------------------------------- | ------- | ------ | ------ | ----------------------------------------------------------------------------------------------------------- |
+| Fix client binding to fall back to null client when unconfigured (or delete null client + claims) | Shipped | S      | High   | §4                                                                                                          |
+| Implement real `Ga4ReportsHealthCheck` (credentials, last-sync recency, API reachability)         | Shipped | M      | High   | §4                                                                                                          |
+| Add retry-with-backoff + 429/quota handling to GA4 HTTP calls                                     | Done    | M      | High   | §3, §4                                                                                                      |
+| Fix "GA4 Reports 4" typo across composer/README/lang/command                                      | Shipped | S      | Med    | §4                                                                                                          |
 | Generate & commit the 3 required screenshots                                                      | Done    | S      | High   | §5 — closed 2026-06-06: three Capell runner PNG captures are committed and promoted into marketplace media. |
-| Shipped: rewrite marketplace summary + description                                                | Done    | S      | High   | §5      |
-| Remove orphan `GA4ReportsSettingsPage` (or wire it)                                               | Shipped | S      | Med    | §4      |
-| Cache dashboard read aggregates; set `cacheTags` + revisit `cacheSafety` in manifest              | Next    | M      | High   | §2, §4  |
-| Make overview stats honour the dashboard date range                                               | Next    | S      | Med    | §2      |
-| Add period-over-period comparison (deltas) to widgets                                             | Next    | M      | High   | §3      |
-| Persisted/cross-process OAuth token cache                                                         | Next    | S      | Med    | §3      |
-| Add "Sync now" page action + surface last sync error                                              | Next    | M      | Med    | §2      |
-| Rename command to `capell:` convention; populate manifest `commands`                              | Next    | S      | Med    | §2      |
-| Configurable sync schedule (frequency/cron via settings)                                          | Next    | S      | Med    | §2      |
-| Multi-property support + property picker                                                          | Later   | L      | High   | §3      |
-| OAuth user-consent connect flow (alongside service account)                                       | Later   | L      | High   | §3      |
-| Events/conversions breakdown widget + CSV/PDF export & scheduled digest                           | Later   | L      | Med    | §3      |
-| Configurable report dimensions (channel, country, device)                                         | Later   | L      | Med    | §3      |
-| Test that the container binds the real client when configured                                     | Later   | S      | Med    | §4      |
+| Shipped: rewrite marketplace summary + description                                                | Done    | S      | High   | §5                                                                                                          |
+| Remove orphan `GA4ReportsSettingsPage` (or wire it)                                               | Shipped | S      | Med    | §4                                                                                                          |
+| Cache dashboard read aggregates; set `cacheTags` + revisit `cacheSafety` in manifest              | Next    | M      | High   | §2, §4                                                                                                      |
+| Make overview stats honour the dashboard date range                                               | Next    | S      | Med    | §2                                                                                                          |
+| Add period-over-period comparison (deltas) to widgets                                             | Next    | M      | High   | §3                                                                                                          |
+| Persisted/cross-process OAuth token cache                                                         | Next    | S      | Med    | §3                                                                                                          |
+| Add "Sync now" page action + surface last sync error                                              | Next    | M      | Med    | §2                                                                                                          |
+| Rename command to `capell:` convention; populate manifest `commands`                              | Next    | S      | Med    | §2                                                                                                          |
+| Configurable sync schedule (frequency/cron via settings)                                          | Next    | S      | Med    | §2                                                                                                          |
+| Multi-property support + property picker                                                          | Later   | L      | High   | §3                                                                                                          |
+| OAuth user-consent connect flow (alongside service account)                                       | Later   | L      | High   | §3                                                                                                          |
+| Events/conversions breakdown widget + CSV/PDF export & scheduled digest                           | Later   | L      | Med    | §3                                                                                                          |
+| Configurable report dimensions (channel, country, device)                                         | Later   | L      | Med    | §3                                                                                                          |
+| Test that the container binds the real client when configured                                     | Later   | S      | Med    | §4                                                                                                          |

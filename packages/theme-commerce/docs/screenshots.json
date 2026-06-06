@@ -19,9 +19,7 @@
             "scenario": "theme-commerce-admin-filament-resource",
             "url": "/screenshot-fixtures/theme-gallery/commerce/theme-admin-list-showing-commerce",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "theme-preview-url-output",
@@ -37,9 +35,7 @@
             "scenario": "theme-commerce-admin-admin-url",
             "url": "/screenshot-fixtures/theme-gallery/commerce/theme-preview-url-output",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "frontend-page-rendered-with-commerce-theme",
@@ -55,9 +51,7 @@
             "scenario": "theme-commerce-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/commerce/frontend-page-rendered-with-commerce-theme",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "commerce-homepage-layout",
@@ -73,9 +67,7 @@
             "scenario": "theme-commerce-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-homepage-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "commerce-collection-layout",
@@ -91,9 +83,7 @@
             "scenario": "theme-commerce-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-collection-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "commerce-product-layout",
@@ -109,9 +99,7 @@
             "scenario": "theme-commerce-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-product-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "commerce-lookbook-layout",
@@ -127,9 +115,7 @@
             "scenario": "theme-commerce-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-lookbook-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "commerce-buying-guide-layout",
@@ -145,9 +131,7 @@
             "scenario": "theme-commerce-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-buying-guide-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "commerce-newsletter-layout",
@@ -163,9 +147,7 @@
             "scenario": "theme-commerce-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-newsletter-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "commerce-store-event-layout",
@@ -181,9 +163,7 @@
             "scenario": "theme-commerce-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-store-event-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "commerce-search-layout",
@@ -199,9 +179,7 @@
             "scenario": "theme-commerce-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-search-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "commerce-campaign-layout",
@@ -217,9 +195,7 @@
             "scenario": "theme-commerce-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-campaign-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         }
     ]
 }

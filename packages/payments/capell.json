@@ -13,16 +13,9 @@
         "bundle": "commerce"
     },
     "namespace": "Capell\\Payments",
-    "surfaces": [
-        "admin",
-        "frontend",
-        "console"
-    ],
+    "surfaces": ["admin", "frontend", "console"],
     "dependencies": {
-        "requires": [
-            "capell-app/admin",
-            "capell-app/core"
-        ],
+        "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
             "capell-app/access-gate",
             "capell-app/customer-portal",
@@ -32,15 +25,9 @@
     },
     "providers": {
         "metadata": [],
-        "install": [
-            "Capell\\Payments\\Providers\\PaymentsServiceProvider"
-        ],
-        "runtime": [
-            "Capell\\Payments\\Providers\\PaymentsServiceProvider"
-        ],
-        "admin": [
-            "Capell\\Payments\\Providers\\AdminServiceProvider"
-        ],
+        "install": ["Capell\\Payments\\Providers\\PaymentsServiceProvider"],
+        "runtime": ["Capell\\Payments\\Providers\\PaymentsServiceProvider"],
+        "admin": ["Capell\\Payments\\Providers\\AdminServiceProvider"],
         "frontend": []
     },
     "contributes": [
@@ -126,9 +113,7 @@
         "paidDownloadUrl": "Capell\\Payments\\Actions\\CreatePaidDownloadUrlAction",
         "subscriptionEntitlement": "Capell\\Payments\\Actions\\ResolveSubscriptionEntitlementAction"
     },
-    "settings": [
-        "Capell\\Payments\\Settings\\PaymentsSettings"
-    ],
+    "settings": ["Capell\\Payments\\Settings\\PaymentsSettings"],
     "permissions": [
         "View:PaymentCustomer",
         "View:CheckoutSession",
@@ -159,15 +144,10 @@
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
-        "cacheTags": [
-            "payments"
-        ],
+        "cacheTags": ["payments"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "customer"
-            ],
+            "variesBy": ["site", "customer"],
             "sensitiveOutput": true,
             "invalidationSources": [],
             "queueInvalidation": false
@@ -217,10 +197,7 @@
                 "caption": "Payments Form Builder checkout"
             }
         ],
-        "categories": [
-            "commerce",
-            "integrations"
-        ]
+        "categories": ["commerce", "integrations"]
     },
     "contributionTraceability": {
         "deferredContributions": []

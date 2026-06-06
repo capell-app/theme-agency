@@ -19,9 +19,7 @@
             "scenario": "theme-agency-admin-admin-surface",
             "url": "/screenshot-fixtures/theme-gallery/agency/theme-admin-list-showing-agency",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "theme-preview-url-output",
@@ -37,9 +35,7 @@
             "scenario": "theme-agency-admin-admin-url",
             "url": "/screenshot-fixtures/theme-gallery/agency/theme-preview-url-output",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "frontend-page-rendered-with-agency-theme",
@@ -55,9 +51,7 @@
             "scenario": "theme-agency-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/agency/frontend-page-rendered-with-agency-theme",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "agency-homepage-layout",
@@ -73,9 +67,7 @@
             "scenario": "theme-agency-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-homepage-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "agency-services-layout",
@@ -91,9 +83,7 @@
             "scenario": "theme-agency-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-services-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "agency-portfolio-layout",
@@ -109,9 +99,7 @@
             "scenario": "theme-agency-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-portfolio-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "agency-case-study-layout",
@@ -127,9 +115,7 @@
             "scenario": "theme-agency-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-case-study-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "agency-insights-layout",
@@ -145,9 +131,7 @@
             "scenario": "theme-agency-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-insights-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "agency-event-landing-layout",
@@ -163,9 +147,7 @@
             "scenario": "theme-agency-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-event-landing-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "agency-lead-form-layout",
@@ -181,9 +163,7 @@
             "scenario": "theme-agency-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-lead-form-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "agency-campaign-layout",
@@ -199,9 +179,7 @@
             "scenario": "theme-agency-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-campaign-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "agency-search-layout",
@@ -217,9 +195,7 @@
             "scenario": "theme-agency-frontend-frontend-url",
             "url": "/screenshot-fixtures/theme-gallery/agency/agency-search-layout",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         }
     ]
 }

@@ -177,6 +177,7 @@ final class RebalanceEducationThemeDemoPagesAction
     }
 
     /**
+     * @param  EloquentCollection<int, Language>  $languages
      * @param  array<string, mixed>  $sourceRenderData
      */
     private function ensureFeaturePage(Site $site, EloquentCollection $languages, array $sourceRenderData): void

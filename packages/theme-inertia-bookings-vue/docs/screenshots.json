@@ -3,7 +3,11 @@
     "composerName": "capell-app/theme-inertia-bookings-vue",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "composerRequires": ["capell-app/theme-inertia-bookings-vue", "capell-app/theme-inertia-bookings", "capell-app/inertia-vue-adapter"],
+    "composerRequires": [
+        "capell-app/theme-inertia-bookings-vue",
+        "capell-app/theme-inertia-bookings",
+        "capell-app/inertia-vue-adapter"
+    ],
     "outputDirectory": "packages/theme-inertia-bookings-vue/docs/screenshots",
     "entries": [
         {

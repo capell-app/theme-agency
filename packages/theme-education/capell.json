@@ -13,15 +13,9 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Education",
-    "surfaces": [
-        "frontend",
-        "console"
-    ],
+    "surfaces": ["frontend", "console"],
     "dependencies": {
-        "requires": [
-            "capell-app/core",
-            "capell-app/foundation-theme"
-        ],
+        "requires": ["capell-app/core", "capell-app/foundation-theme"],
         "supports": [
             "capell-app/layout-builder",
             "capell-app/frontend-authoring",
@@ -62,31 +56,19 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-education-demo",
-        "demoParams": [
-            "url",
-            "languages",
-            "sites"
-        ],
+        "demoParams": ["url", "languages", "sites"],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "theme-education",
-        "theme-education-frontend"
-    ],
+    "capabilities": ["theme-education", "theme-education-frontend"],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": [
-            "theme-education"
-        ],
+        "cacheTags": ["theme-education"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -151,10 +133,7 @@
                 "caption": "Signed admin preview route"
             }
         ],
-        "categories": [
-            "frontend",
-            "themes"
-        ]
+        "categories": ["frontend", "themes"]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "education",

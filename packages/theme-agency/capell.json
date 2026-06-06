@@ -13,23 +13,16 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Agency",
-    "surfaces": [
-        "frontend"
-    ],
+    "surfaces": ["frontend"],
     "dependencies": {
-        "requires": [
-            "capell-app/core",
-            "capell-app/foundation-theme"
-        ],
+        "requires": ["capell-app/core", "capell-app/foundation-theme"],
         "supports": [],
         "conflicts": []
     },
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": [
-            "Capell\\ThemeStudio\\Agency\\AgencyThemeServiceProvider"
-        ],
+        "runtime": ["Capell\\ThemeStudio\\Agency\\AgencyThemeServiceProvider"],
         "admin": [],
         "frontend": []
     },
@@ -53,31 +46,19 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-agency-demo",
-        "demoParams": [
-            "url",
-            "languages",
-            "sites"
-        ],
+        "demoParams": ["url", "languages", "sites"],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "theme-agency",
-        "theme-agency-frontend"
-    ],
+    "capabilities": ["theme-agency", "theme-agency-frontend"],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": [
-            "theme-agency"
-        ],
+        "cacheTags": ["theme-agency"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -163,10 +144,7 @@
                 "caption": "Search results page"
             }
         ],
-        "categories": [
-            "frontend",
-            "themes"
-        ]
+        "categories": ["frontend", "themes"]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "agency"

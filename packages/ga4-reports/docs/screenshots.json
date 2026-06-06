@@ -19,9 +19,7 @@
             "scenario": "runner-fixture-admin",
             "url": "/screenshot-fixtures/ga4-reports/ga4-reports-dashboard-page",
             "waitFor": ".ga4-reports",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "ga4-reports-setup-status",
@@ -37,9 +35,7 @@
             "scenario": "runner-fixture-admin",
             "url": "/screenshot-fixtures/ga4-reports/ga4-reports-setup-status",
             "waitFor": ".ga4-reports",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "ga4-reports-settings",
@@ -55,9 +51,7 @@
             "scenario": "runner-fixture-admin",
             "url": "/screenshot-fixtures/ga4-reports/ga4-reports-settings",
             "waitFor": ".ga4-reports",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         }
     ]
 }

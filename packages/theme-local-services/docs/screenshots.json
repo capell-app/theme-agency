@@ -19,9 +19,7 @@
             "scenario": "runner-fixture-admin",
             "url": "/screenshot-fixtures/theme-local-services/theme-admin-list-showing-local-services",
             "waitFor": ".theme-local-services",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "frontend-page-rendered-with-local-services-theme",
@@ -37,9 +35,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/theme-local-services/frontend-page-rendered-with-local-services-theme",
             "waitFor": ".theme-local-services",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "local-services-homepage-layout",
@@ -55,9 +51,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/theme-local-services/local-services-homepage-layout",
             "waitFor": ".theme-local-services",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "local-services-services-layout",
@@ -73,9 +67,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/theme-local-services/local-services-services-layout",
             "waitFor": ".theme-local-services",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "local-services-service-areas-layout",
@@ -91,9 +83,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/theme-local-services/local-services-service-areas-layout",
             "waitFor": ".theme-local-services",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "local-services-quote-form-layout",
@@ -109,9 +99,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/theme-local-services/local-services-quote-form-layout",
             "waitFor": ".theme-local-services",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "local-services-job-proof-layout",
@@ -127,9 +115,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/theme-local-services/local-services-job-proof-layout",
             "waitFor": ".theme-local-services",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "local-services-resources-layout",
@@ -145,9 +131,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/theme-local-services/local-services-resources-layout",
             "waitFor": ".theme-local-services",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "theme-preview-url-output",
@@ -163,9 +147,7 @@
             "scenario": "runner-fixture-admin",
             "url": "/screenshot-fixtures/theme-local-services/theme-preview-url-output",
             "waitFor": ".theme-local-services",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         }
     ]
 }

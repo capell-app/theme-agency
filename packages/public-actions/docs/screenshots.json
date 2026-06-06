@@ -19,9 +19,7 @@
             "scenario": "public-actions-admin-admin-surface",
             "url": "/screenshot-fixtures/public-actions/public-actions-admin-index",
             "waitFor": ".public-actions-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "public-action-form",
@@ -37,9 +35,7 @@
             "scenario": "public-actions-admin-admin-surface",
             "url": "/screenshot-fixtures/public-actions/public-action-form",
             "waitFor": ".public-actions-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "public-action-destinations",
@@ -55,9 +51,7 @@
             "scenario": "public-actions-admin-admin-surface",
             "url": "/screenshot-fixtures/public-actions/public-action-destinations",
             "waitFor": ".public-actions-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "public-action-submissions",
@@ -73,9 +67,7 @@
             "scenario": "public-actions-admin-admin-surface",
             "url": "/screenshot-fixtures/public-actions/public-action-submissions",
             "waitFor": ".public-actions-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "public-action-dispatch-attempts",
@@ -91,9 +83,7 @@
             "scenario": "public-actions-admin-admin-surface",
             "url": "/screenshot-fixtures/public-actions/public-action-dispatch-attempts",
             "waitFor": ".public-actions-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "public-action-integration-tokens",
@@ -109,9 +99,7 @@
             "scenario": "public-actions-admin-admin-surface",
             "url": "/screenshot-fixtures/public-actions/public-action-integration-tokens",
             "waitFor": ".public-actions-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "public-action-frontend-form",
@@ -127,9 +115,7 @@
             "scenario": "public-actions-frontend-frontend-url",
             "url": "/screenshot-fixtures/public-actions/public-action-frontend-form",
             "waitFor": ".public-actions-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "public-action-zapier-discovery",
@@ -145,9 +131,7 @@
             "scenario": "public-actions-frontend-frontend-url",
             "url": "/screenshot-fixtures/public-actions/public-action-zapier-discovery",
             "waitFor": ".public-actions-fixture",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         }
     ]
 }
