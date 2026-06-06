@@ -4,6 +4,10 @@ All notable changes to `capell-app/customer-portal` will be documented in this f
 
 ## Unreleased
 
+### 2026-06-06
+
+- Added the Customer Portal screenshot runner contract, captured four route-backed Capell PNGs plus dark variants, and promoted the light gallery into Marketplace media.
+
 ### 2026-06-04
 
 - Added package model factories for `PortalAccount` and `PortalSupportRequest`, including site/account states for customer portal tests and demos.

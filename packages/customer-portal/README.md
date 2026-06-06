@@ -38,6 +38,10 @@ Customers can submit support requests from the dashboard. The package stores req
 
 Requester notifications are sent on demand through Laravel's notification system when a requester email address is available.
 
+## Marketplace Screenshots
+
+`docs/screenshots.json` defines the Capell runner capture contract for the frontend dashboard, preferences/support workflow, support triage list, and support triage detail screen. The light PNGs are promoted in `capell.json`; dark variants are committed alongside them for documentation and listing alternates.
+
 ## Testing
 
 Run the package tests directly from the monorepo root:
