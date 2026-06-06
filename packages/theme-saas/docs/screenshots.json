@@ -6,16 +6,17 @@
     "outputDirectory": "packages/theme-saas/docs/screenshots",
     "entries": [
         {
-            "id": "theme-admin-list-showing-saas",
-            "title": "Theme admin list showing SaaS.",
+            "id": "theme-preset-selection-showing-saas",
+            "title": "Theme preset selection showing SaaS.",
             "package": "theme-saas",
             "surface": "admin",
             "targetType": "filament-resource",
             "target": "ThemeResource:index",
             "required": true,
             "notes": "Capture with only the core Capell stack, Foundation Theme, Layout Builder, and capell-app/theme-saas installed in the isolated demo harness.",
-            "useCase": "An administrator confirms the SaaS theme is available through the core Themes resource without installing another theme package.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/theme-admin-list-showing-saas.png"
+            "useCase": "An administrator confirms the SaaS preset is available through the core Themes resource without installing another theme package.",
+            "screenshotPath": "packages/theme-saas/docs/screenshots/theme-preset-selection-showing-saas.png",
+            "darkScreenshotPath": "packages/theme-saas/docs/screenshots/theme-preset-selection-showing-saas-dark.png"
         },
         {
             "id": "theme-preview-url-output",
@@ -27,7 +28,8 @@
             "required": true,
             "notes": "Capture a signed preview URL generated with CreateThemePreviewUrlAction for the seeded SaaS theme, site, and page.",
             "useCase": "An administrator opens a signed preview URL to inspect a page with the SaaS theme applied before publishing the theme choice.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/theme-preview-url-output.png"
+            "screenshotPath": "packages/theme-saas/docs/screenshots/theme-preview-url-output.png",
+            "darkScreenshotPath": "packages/theme-saas/docs/screenshots/theme-preview-url-output-dark.png"
         },
         {
             "id": "frontend-page-rendered-with-saas-theme",
@@ -39,7 +41,8 @@
             "required": true,
             "notes": "Capture the seeded Launchdeck page after installing capell-app/theme-saas and building the Foundation Theme/frontend assets.",
             "useCase": "A visitor sees a seeded product page rendered through the SaaS navigation, hero, features, proof, content listing, CTA, and footer sections.",
-            "screenshotPath": "packages/theme-saas/docs/screenshots/frontend-page-rendered-with-saas-theme.png"
+            "screenshotPath": "packages/theme-saas/docs/screenshots/frontend-page-rendered-with-saas-theme.png",
+            "darkScreenshotPath": "packages/theme-saas/docs/screenshots/frontend-page-rendered-with-saas-theme-dark.png"
         },
         {
             "id": "saas-homepage-layout",
