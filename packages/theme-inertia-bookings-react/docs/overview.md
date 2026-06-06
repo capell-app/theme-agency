@@ -22,9 +22,10 @@ the server props supplied by `capell-app/theme-inertia-bookings` and
 
 ## Screenshot Plan
 
-`docs/screenshots.json` records the required component-pack capture. The
-committed SVG assets are interim Marketplace previews until the seeded harness
-can compile and capture the React runtime.
+`docs/screenshots.json` records the required component-pack captures. The
+marketplace gallery keeps the extension card artwork and promotes route-backed
+PNG captures from `docs/screenshots/` for the React request, services, loading,
+validation, and mobile states.
 
 ## Verification
 

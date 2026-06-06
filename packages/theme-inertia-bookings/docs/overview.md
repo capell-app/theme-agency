@@ -24,9 +24,9 @@ React/Vue implementations live in the optional component packs.
 ## Screenshot Plan
 
 `docs/screenshots.json` describes the required route-backed captures for the
-theme homepage and public booking request flow. The committed SVG files under
-`docs/assets/marketplace/` are interim gallery previews until a seeded demo
-harness can produce PNG captures.
+theme homepage, service sections, locations/FAQ, and public booking request
+flow. The marketplace gallery keeps the extension card artwork and promotes
+the committed PNG captures in `docs/screenshots/`.
 
 ## Verification
 

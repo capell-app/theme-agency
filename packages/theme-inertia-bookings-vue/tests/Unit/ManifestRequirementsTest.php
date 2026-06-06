@@ -61,7 +61,7 @@ it('keeps the package manifest aligned with the vue component pack', function ()
 
         $marketplaceScreenshotPaths[] = $path;
 
-        expect($path)->toStartWith('docs/assets/marketplace/')
+        expect(str_starts_with($path, 'docs/assets/marketplace/') || str_starts_with($path, 'docs/screenshots/'))->toBeTrue()
             ->and(file_exists($packagePath . '/' . $path))->toBeTrue()
             ->and(strlen(trim($alt)))->toBeGreaterThanOrEqual(12)
             ->and(strlen(trim($caption)))->toBeGreaterThanOrEqual(12);
@@ -80,11 +80,11 @@ it('keeps the package manifest aligned with the vue component pack', function ()
             continue;
         }
 
-        $id = $contractEntry['id'] ?? null;
+        $screenshotPath = $contractEntry['screenshotPath'] ?? null;
 
-        throw_unless(is_string($id), RuntimeException::class, 'Required Vue component pack screenshot entries must have string ids.');
+        throw_unless(is_string($screenshotPath), RuntimeException::class, 'Required Vue component pack screenshot entries must have screenshot paths.');
 
-        expect($marketplaceScreenshotPaths)->toContain('docs/assets/marketplace/' . $id . '.svg');
+        expect($marketplaceScreenshotPaths)->toContain(str_replace('packages/theme-inertia-bookings-vue/', '', $screenshotPath));
     }
 
     expect($marketplaceScreenshotPaths)->toContain('docs/assets/marketplace/extension-card.svg');

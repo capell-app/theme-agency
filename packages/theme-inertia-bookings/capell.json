@@ -99,14 +99,29 @@
                 "caption": "A premium Inertia theme for appointment-led service websites that need fast public pages and real booking requests."
             },
             {
-                "path": "docs/assets/marketplace/inertia-bookings-homepage.svg",
+                "path": "docs/screenshots/inertia-bookings-homepage.png",
                 "alt": "Inertia bookings homepage with service proof, appointment action, and content sections.",
                 "caption": "The theme gives booking businesses a focused homepage structure for services, proof, locations, FAQs, and calls to action."
             },
             {
-                "path": "docs/assets/marketplace/inertia-bookings-request-flow.svg",
+                "path": "docs/screenshots/inertia-bookings-request-flow.png",
                 "alt": "Inertia booking request flow with lazy slot loading and appointment form fields.",
                 "caption": "The public request route uses Capell Inertia and the Bookings package contract for live slot selection."
+            },
+            {
+                "path": "docs/screenshots/inertia-bookings-services.png",
+                "alt": "Inertia bookings services section with appointment-led cards, proof blocks, and calls to action.",
+                "caption": "Service sections frame consultations, classes, and clinics around the next available booking action."
+            },
+            {
+                "path": "docs/screenshots/inertia-bookings-locations.png",
+                "alt": "Inertia bookings locations and FAQ sections with local trust content and final booking prompt.",
+                "caption": "Location and FAQ sections help visitors confirm practical details before starting a booking request."
+            },
+            {
+                "path": "docs/screenshots/inertia-bookings-mobile-request.png",
+                "alt": "Mobile Inertia booking request flow with labelled fields, available slots, and submit action.",
+                "caption": "The mobile request capture shows the appointment flow remains usable on narrow phone viewports."
             }
         ],
         "categories": ["frontend", "themes", "bookings"]

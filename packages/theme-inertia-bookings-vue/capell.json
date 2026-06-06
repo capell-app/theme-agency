@@ -91,9 +91,29 @@
                 "caption": "Vue component pack for the Theme Inertia Bookings page and public booking request contracts."
             },
             {
-                "path": "docs/assets/marketplace/vue-booking-components.svg",
+                "path": "docs/screenshots/vue-booking-components.png",
                 "alt": "Vue booking components showing the page shell, widgets, and labelled request form.",
                 "caption": "The Vue pack ships a themed Inertia entrypoint plus labelled page, widget, and booking request components."
+            },
+            {
+                "path": "docs/screenshots/vue-booking-services.png",
+                "alt": "Vue booking services sections with reusable service cards, proof blocks, and appointment calls to action.",
+                "caption": "Vue service components show that the adapter covers appointment-led marketing sections as well as the form."
+            },
+            {
+                "path": "docs/screenshots/vue-booking-slot-loading.png",
+                "alt": "Vue booking request loading state while available appointment slots refresh.",
+                "caption": "The slot-loading capture documents the async state buyers see while service, staff, or location choices update."
+            },
+            {
+                "path": "docs/screenshots/vue-booking-validation.png",
+                "alt": "Vue booking validation state with required-field and slot-selection feedback.",
+                "caption": "Validation feedback remains visible and specific for service, slot, and customer detail errors."
+            },
+            {
+                "path": "docs/screenshots/vue-booking-mobile.png",
+                "alt": "Vue booking mobile layout with labelled fields, appointment slots, and booking CTA visible.",
+                "caption": "The mobile layout keeps the Vue booking request workflow usable on narrow phone screens."
             }
         ],
         "categories": ["frontend", "themes"]

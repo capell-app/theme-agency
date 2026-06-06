@@ -52,6 +52,7 @@ This file tracks the active package-improvement wave at a repository level. Pack
 - Record Switcher now uses the Capell screenshot runner contract and committed light/dark admin edit-page PNG captures instead of SVG-only marketplace previews.
 - Bookings now promotes route-backed PNG captures for the public booking form and Capell admin appointment queue instead of SVG-only workflow previews.
 - Social Feeds now promotes route-backed PNG captures for the seeded public carousel, cached RSS sync state, and provider registry diagnostics instead of SVG-only workflow previews.
+- Theme Inertia Bookings, React, and Vue now promote route-backed PNG captures for booking homepage/request/services/locations/mobile and component-pack loading/validation states instead of SVG-only workflow previews.
 - A full `COMPOSER=composer.local.json composer test` run reached 1470/1471 passing before exposing the Notes Blade type-hint issue; that issue has been fixed. A fresh full re-run was started and then stopped on request so the remaining changes could be committed without further tests.
 
 ## Commit Policy
