@@ -7,6 +7,7 @@ namespace Capell\Deployments\Actions;
 use Capell\Deployments\Enums\GitProviderType;
 use Capell\Deployments\Enums\InstallPolicy;
 use Capell\Deployments\Models\DeploymentConnection;
+use Carbon\CarbonImmutable;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class ConnectDeploymentAction
@@ -21,6 +22,7 @@ final class ConnectDeploymentAction
         ?string $refreshToken = null,
         ?string $defaultBranch = 'main',
         InstallPolicy $installPolicy = InstallPolicy::PullRequestAutoMerge,
+        ?int $expiresIn = null,
     ): DeploymentConnection {
         $connection = DeploymentConnection::query()->firstOrNew([
             'provider' => $provider->value,
@@ -38,6 +40,7 @@ final class ConnectDeploymentAction
             'is_active' => true,
             'access_token_encrypted' => $accessToken,
             'refresh_token_encrypted' => $refreshToken,
+            'token_expires_at' => $expiresIn === null ? null : CarbonImmutable::now()->addSeconds(max(1, $expiresIn)),
         ])->save();
 
         return $connection;

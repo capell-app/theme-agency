@@ -50,6 +50,7 @@ final class GitLabCallbackController
 
         $accessToken = $tokenResponse['access_token'] ?? null;
         $refreshToken = $tokenResponse['refresh_token'] ?? null;
+        $expiresIn = $tokenResponse['expires_in'] ?? null;
         if (! is_string($accessToken) || $accessToken === '') {
             Log::warning('capell-deployments: GitLab OAuth token exchange failed', $this->redactTokenResponse($tokenResponse));
 
@@ -81,6 +82,7 @@ final class GitLabCallbackController
             accessToken: $accessToken,
             refreshToken: is_string($refreshToken) ? $refreshToken : null,
             installPolicy: $connectionData->installPolicy,
+            expiresIn: is_numeric($expiresIn) ? (int) $expiresIn : null,
         );
 
         return to_route('filament.admin.pages.deployment-connection')

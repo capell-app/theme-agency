@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\Deployments\Services\GitProvider;
 
 use Capell\Deployments\Contracts\GitProviderContract;
+use Capell\Deployments\Actions\RefreshProviderTokenAction;
 use Capell\Deployments\Data\PullRequestData;
 use Capell\Deployments\Data\RepoFile;
 use Capell\Deployments\Models\DeploymentConnection;
@@ -195,6 +196,8 @@ final class GitLabProvider implements GitProviderContract
 
     private function client(DeploymentConnection $conn, bool $retry = false): PendingRequest
     {
+        $conn = RefreshProviderTokenAction::run($conn);
+
         $request = $this->http
             ->baseUrl('https://gitlab.com/api/v4')
             ->withHeader('PRIVATE-TOKEN', $conn->access_token_encrypted)

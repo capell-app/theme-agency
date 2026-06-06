@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\Deployments\Services\GitProvider;
 
+use Capell\Deployments\Actions\RefreshProviderTokenAction;
 use Capell\Deployments\Contracts\GitProviderContract;
 use Capell\Deployments\Data\PullRequestData;
 use Capell\Deployments\Data\RepoFile;
@@ -182,6 +183,8 @@ final class BitbucketProvider implements GitProviderContract
 
     private function client(DeploymentConnection $conn): PendingRequest
     {
+        $conn = RefreshProviderTokenAction::run($conn);
+
         return $this->http
             ->baseUrl('https://api.bitbucket.org/2.0')
             ->withToken($conn->access_token_encrypted)
