@@ -15,6 +15,7 @@ use Capell\LayoutBuilder\Models\Widget;
 use Capell\LayoutBuilder\Models\WidgetAsset;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Facades\DB;
 
 function renderHeroWidgetHtml(Widget $widget): string
 {
@@ -133,6 +134,64 @@ it('sanitizes author-provided page hero html before public rendering', function 
         ->not->toContain('<script')
         ->not->toContain('onerror')
         ->not->toContain('javascript:');
+});
+
+it('renders hydrated page hero state without database queries', function (): void {
+    $language = Language::factory()->english()->create();
+    $theme = Theme::factory()->defaultMeta()->create();
+    $site = Site::factory()
+        ->language($language)
+        ->theme($theme)
+        ->withTranslations($language, ['title' => 'Capell'])
+        ->create();
+
+    $page = Page::factory()
+        ->site($site)
+        ->withTranslations($language, [
+            'title' => 'Query Safe Hero',
+            'content' => '<p>Body content.</p>',
+            'meta' => [
+                'hero' => '<p>Preloaded hero copy.</p>',
+                'hero_title' => 'Query Safe Hero',
+                'slug' => 'query-safe-hero',
+            ],
+        ])
+        ->create();
+
+    $page->load('translation');
+    $site->load('translation');
+
+    $widget = Widget::factory()->create([
+        'key' => 'hero',
+        'meta' => [
+            'component' => WidgetComponentEnum::Hero->value,
+            'color' => 'light',
+            'content_width' => 'balanced',
+        ],
+    ]);
+    $widget->setRelation('assets', new EloquentCollection);
+    $widget->setRelation('media', new EloquentCollection);
+
+    resolve(FrontendState::class)
+        ->withLanguage($language)
+        ->withSite($site)
+        ->withTheme($theme)
+        ->withPage($page);
+
+    DB::flushQueryLog();
+    DB::enableQueryLog();
+
+    try {
+        $html = renderHeroWidgetHtml($widget);
+        $queries = DB::getQueryLog();
+    } finally {
+        DB::disableQueryLog();
+    }
+
+    expect($html)
+        ->toContain('Query Safe Hero')
+        ->toContain('Preloaded hero copy')
+        ->and($queries)->toBe([]);
 });
 
 it('skips empty hero widgets before exposing public markup', function (): void {
