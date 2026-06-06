@@ -16,7 +16,7 @@ Marketplace and Composer copy are buyer-facing, and `capell.json` marketplace me
 - **2026-06-05:** Added a first-class `doc-article` section renderer with hydrated breadcrumbs, category sidebar, article metadata, constrained article body, and sticky table-of-contents layout, plus registry coverage and docs/manifest reconciliation.
 - **2026-06-06:** Added code-block/prose styling for technical articles, constrained long-form measures with calmer heading scale, tokenized theme colour utilities, dark-mode tokens, a reduced-motion guard for decorative grid overlays, and KB article feedback/version/freshness affordances.
 
-**Headline:** the package is positioned as a knowledge-base / documentation / help-site theme, the core documentation layout now exists, and the static screenshot gallery is reconciled. The remaining shipped-feature gaps are a real dark-mode screenshot fixture and render-budget coverage.
+**Headline:** the package is positioned as a knowledge-base / documentation / help-site theme, the core documentation layout now exists, and the static screenshot gallery is reconciled. The remaining shipped-feature gaps are a real dark-mode screenshot fixture and render-budget coverage; the dark capture is blocked on a Capell runner fixture that renders the actual Theme Knowledge shell/CSS instead of the current generic theme-gallery route.
 
 ## 2. Improvements (existing functionality)
 
@@ -26,7 +26,7 @@ Prioritized. Real templates only.
 
 2. **Author bench is translated and data-driven.** — `authors` now reads `$section->items`/`$items` when supplied and falls back to translated author cards, removing hard-coded public English from the Blade. — `resources/views/sections/authors.blade.php`, `resources/lang/en/generic.php`, `tests/Unit/KnowledgeThemeDefinitionTest.php` — **M**
 
-3. **Partial: add dark mode.** Theme Knowledge now defines dark-mode token overrides under `prefers-color-scheme: dark` and normalizes white/slate utility surfaces inside `.knowledge-shell`. The dark screenshot remains open because the current Capell runner theme-gallery fixture renders generic fixture CSS rather than the package theme shell, so its attempted dark capture was light and was not promoted. — `resources/css/theme-knowledge.css`, `docs/screenshots.json` — **L**
+3. **Blocked by runner fixture: add dark mode screenshot.** Theme Knowledge now defines dark-mode token overrides under `prefers-color-scheme: dark` and normalizes white/slate utility surfaces inside `.knowledge-shell`. The dark screenshot remains open because the current Capell runner route `/screenshot-fixtures/theme-gallery/knowledge/*` returns hard-coded generic HTML/CSS rather than the package theme shell, so its attempted dark capture was light and was not promoted. — `resources/css/theme-knowledge.css`, `docs/screenshots.json` — **L**
 
 4. **Done/Shipped: tokenize hardcoded hex colors.** Theme views now use `.knowledge-shell` CSS custom properties such as `--site-theme-primary`, `--site-theme-accent`, `--site-theme-surface`, `--site-theme-heading`, and ink/code variants instead of inline arbitrary hex utilities. The literal hex values are centralized in `resources/css/theme-knowledge.css` token definitions so Theme Studio presets and future dark-mode overrides have one palette boundary. — `resources/views/**/*.blade.php`, `resources/css/theme-knowledge.css` — **L**
 
@@ -76,7 +76,7 @@ Prioritized. Real templates only.
 
 > Theme Knowledge turns a Capell site into a polished documentation and help centre. It pairs a category sidebar, sticky table of contents, code-friendly prose, and breadcrumb trails with a prominent search experience and readable long-form typography, so visitors find answers fast. Resource libraries, author bios, topic hubs, and newsletter capture round out a full knowledge-marketing surface, with optional Blog, Search, and Newsletter integrations lighting up automatically when those packages are installed. Built on the Capell foundation theme with a configurable colour palette and accessible focus states.
 
-**Screenshot/media status.** The 9 light renders are committed to `docs/screenshots/` and promoted into marketplace media. The dark-mode homepage capture remains open until the Capell screenshot runner fixture can render the actual Theme Knowledge CSS instead of the generic theme-gallery CSS.
+**Screenshot/media status.** The 9 light renders are committed to `docs/screenshots/` and promoted into marketplace media. The dark-mode homepage capture remains open until the Capell screenshot runner fixture can render the actual Theme Knowledge CSS instead of the generic theme-gallery CSS; the current package repo has no route-backed dark fixture to capture without changing the external runner app.
 
 **Differentiation / target buyer.** Today the theme is hard to distinguish from a generic editorial/marketing theme. Target buyer: documentation/help-centre owners, dev-tool/SaaS teams, and internal-knowledge-base operators who want a docs site without a separate static-site generator. The wedge is "docs site inside your CMS" — sidebar + TOC + search + versioning — which no sibling theme currently fills.
 
@@ -90,7 +90,7 @@ Prioritized. Real templates only.
 | Make `search-listing` a real, prominent search form (cross-sell `capell-app/search`)                     | Done   | M      | High   | §3, §2.6    |
 | Generate + commit the 9 `docs/screenshots.json` renders; replace placeholder SVGs                        | Done   | M      | High   | §4, §5      |
 | Done/Shipped: Add code-block / `pre`/`code` prose styling                                                | Done   | M      | High   | §3          |
-| Partial: Add dark mode tokens; capture a real dark screenshot through a Theme Knowledge CSS fixture       | Next   | L      | High   | §2.3, §5    |
+| Blocked by runner fixture: capture a real dark screenshot through a Theme Knowledge CSS fixture          | Next   | M      | High   | §2.3, §5    |
 | Done/Shipped: Tokenize hardcoded hex to preset `--site-theme-*` variables                                | Done   | L      | Med    | §2.4        |
 | Done/Shipped: Constrained prose measure + heading-scale readability pass                                 | Done   | M      | Med    | §2.7        |
 | Done/Shipped: `prefers-reduced-motion` guard on animated grid `::before`                                 | Done   | S      | Low    | §2.5        |
