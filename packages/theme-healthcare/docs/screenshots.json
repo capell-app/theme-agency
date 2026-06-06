@@ -7,19 +7,21 @@
     "entries": [
         {
             "id": "theme-admin-list-showing-healthcare",
-            "title": "Theme admin list showing healthcare.",
+            "title": "Healthcare theme in the admin themes list.",
             "package": "theme-healthcare",
             "surface": "admin",
             "targetType": "filament-resource",
             "target": "ThemeResource:index",
-            "required": true,
-            "notes": "Capture with only the core Capell stack, Foundation Theme, Layout Builder, and capell-app/theme-healthcare installed in the isolated demo harness.",
+            "required": false,
+            "notes": "Capture with the core Capell stack, Foundation Theme, Layout Builder, and capell-app/theme-healthcare installed in the isolated demo harness. Optional until the Capell runner has a real Theme Studio admin fixture for package theme records.",
             "useCase": "An administrator confirms the healthcare theme is available through the core Themes resource without installing another theme package.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/theme-admin-list-showing-healthcare.png",
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/healthcare/theme-admin-list-showing-healthcare",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "frontend-page-rendered-with-healthcare-theme",
@@ -27,15 +29,17 @@
             "package": "theme-healthcare",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/theme-healthcare-demo",
-            "required": true,
-            "notes": "Capture a seeded clinic page after installing capell-app/theme-healthcare and building the Foundation Theme/frontend assets.",
+            "target": "/theme-healthcare",
+            "required": false,
+            "notes": "Capture a seeded clinic page after installing capell-app/theme-healthcare and building the Foundation Theme/frontend assets. Capture the seeded Healthcare theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture the seeded Healthcare route; Laravel serves the route, but the runner currently reports ERR_NAME_NOT_RESOLVED during page.goto.",
             "useCase": "A patient sees an appointment-led journey through utility bar, hero, service finder, clinicians, booking, events, proof, resources, contact, CTA, and footer.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/frontend-page-rendered-with-healthcare-theme.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/healthcare/frontend-page-rendered-with-healthcare-theme",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-healthcare",
+            "waitFor": ".healthcare-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "healthcare-homepage-desktop",
@@ -43,15 +47,17 @@
             "package": "theme-healthcare",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/theme-healthcare-demo",
-            "required": true,
-            "notes": "Capture the desktop care-pathway homepage with appointment hero, service finder, clinician proof, booking CTA, and footer.",
+            "target": "/theme-healthcare",
+            "required": false,
+            "notes": "Capture the desktop care-pathway homepage with appointment hero, service finder, clinician proof, booking CTA, and footer. Capture the seeded Healthcare theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture the seeded Healthcare route; Laravel serves the route, but the runner currently reports ERR_NAME_NOT_RESOLVED during page.goto.",
             "useCase": "A clinic owner reviews whether the first viewport builds trust and moves patients toward the right appointment route.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/healthcare-homepage-desktop.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/healthcare/healthcare-homepage-desktop",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-healthcare",
+            "waitFor": ".healthcare-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "healthcare-homepage-mobile",
@@ -59,15 +65,17 @@
             "package": "theme-healthcare",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/theme-healthcare-demo",
-            "required": true,
-            "notes": "Capture the mobile care-pathway homepage with compact navigation, appointment CTA, service cards, and footer.",
+            "target": "/theme-healthcare",
+            "required": false,
+            "notes": "Capture the mobile care-pathway homepage with compact navigation, appointment CTA, service cards, and footer. Capture the seeded Healthcare theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture the seeded Healthcare route; Laravel serves the route, but the runner currently reports ERR_NAME_NOT_RESOLVED during page.goto.",
             "useCase": "A clinic owner verifies mobile patient routing, tap targets, and clinical contrast before activating the theme.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/healthcare-homepage-mobile.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/healthcare/healthcare-homepage-mobile",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-healthcare",
+            "waitFor": ".healthcare-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "healthcare-services-listing",
@@ -76,14 +84,16 @@
             "surface": "frontend",
             "targetType": "frontend-url",
             "target": "/theme-healthcare-directory",
-            "required": true,
-            "notes": "Capture a seeded service listing with finder controls, care-route cards, clinician hints, and booking prompts.",
+            "required": false,
+            "notes": "Capture a seeded service listing with finder controls, care-route cards, clinician hints, and booking prompts. Capture the seeded Healthcare theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture the seeded Healthcare route; Laravel serves the route, but the runner currently reports ERR_NAME_NOT_RESOLVED during page.goto.",
             "useCase": "A patient browses care options and moves toward the right clinical enquiry path.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/healthcare-services-listing.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/healthcare/healthcare-services-listing",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-healthcare-directory",
+            "waitFor": ".healthcare-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "healthcare-clinician-detail",
@@ -92,14 +102,16 @@
             "surface": "frontend",
             "targetType": "frontend-url",
             "target": "/theme-healthcare-detail",
-            "required": true,
-            "notes": "Capture a seeded clinician or care-route detail page with image-led hero, body copy, proof, and related services.",
+            "required": false,
+            "notes": "Capture a seeded clinician or care-route detail page with image-led hero, body copy, proof, and related services. Capture the seeded Healthcare theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture the seeded Healthcare route; Laravel serves the route, but the runner currently reports ERR_NAME_NOT_RESOLVED during page.goto.",
             "useCase": "A patient reviews clinician expertise, service context, and safe next steps.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/healthcare-clinician-detail.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/healthcare/healthcare-clinician-detail",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-healthcare-detail",
+            "waitFor": ".healthcare-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "healthcare-contact-page",
@@ -108,30 +120,34 @@
             "surface": "frontend",
             "targetType": "frontend-url",
             "target": "/theme-healthcare-contact",
-            "required": true,
-            "notes": "Capture the healthcare contact surface with locations, enquiry routing, appointment actions, and clinical support paths.",
+            "required": false,
+            "notes": "Capture the healthcare contact surface with locations, enquiry routing, appointment actions, and clinical support paths. Capture the seeded Healthcare theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture the seeded Healthcare route; Laravel serves the route, but the runner currently reports ERR_NAME_NOT_RESOLVED during page.goto.",
             "useCase": "A patient finds the right contact route after browsing services without losing appointment clarity.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/healthcare-contact-page.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/healthcare/healthcare-contact-page",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-healthcare-contact",
+            "waitFor": ".healthcare-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "theme-preview-url-output",
-            "title": "Signed admin preview route.",
+            "title": "Signed Healthcare URL output.",
             "package": "theme-healthcare",
             "surface": "admin",
             "targetType": "admin-url",
             "target": "capell.admin.theme-preview",
-            "required": true,
-            "notes": "Capture a signed preview URL generated with CreateThemePreviewUrlAction for the seeded healthcare theme, site, and page.",
-            "useCase": "An administrator opens a signed preview URL to inspect a page with the healthcare theme applied before publishing the theme choice.",
+            "required": false,
+            "notes": "Capture a signed URL for the seeded healthcare site and page. Optional until the Capell runner has a real signed URL fixture for package theme records.",
+            "useCase": "An administrator opens a signed link to inspect a healthcare page before publishing the theme choice.",
             "screenshotPath": "packages/theme-healthcare/docs/screenshots/theme-preview-url-output.png",
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/healthcare/theme-preview-url-output",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "colorSchemes": [
+                "light"
+            ]
         }
     ]
 }
