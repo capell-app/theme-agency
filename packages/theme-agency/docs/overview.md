@@ -38,7 +38,9 @@ Provides an agency-focused visual option for sites managed through the normal Th
 - This package does not own data.
 - It reads theme runtime data and core page content through Foundation Theme.
 
-## Screenshot Plan
+## Screenshot Coverage
+
+The committed Capell runner-backed gallery covers the full `docs/screenshots.json` contract:
 
 - Themes admin list showing the Agency theme record in the host `ThemeResource`.
 - Seeded frontend page at `/theme-agency-demo` rendering navigation, hero, features, proof, content listing, CTA, and footer.

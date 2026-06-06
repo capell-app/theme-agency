@@ -13,16 +13,23 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Agency",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/foundation-theme"
+        ],
         "supports": [],
         "conflicts": []
     },
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": ["Capell\\ThemeStudio\\Agency\\AgencyThemeServiceProvider"],
+        "runtime": [
+            "Capell\\ThemeStudio\\Agency\\AgencyThemeServiceProvider"
+        ],
         "admin": [],
         "frontend": []
     },
@@ -46,19 +53,31 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-agency-demo",
-        "demoParams": ["url", "languages", "sites"],
+        "demoParams": [
+            "url",
+            "languages",
+            "sites"
+        ],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-agency", "theme-agency-frontend"],
+    "capabilities": [
+        "theme-agency",
+        "theme-agency-frontend"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-agency"],
+        "cacheTags": [
+            "theme-agency"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -84,37 +103,70 @@
         "description": "Theme Agency turns a Capell site into a confident creative portfolio. It ships an expressive page system — full-bleed launch hero, animated proof wall, project showcase, and a conversion-focused brief CTA — built to make studio and agency work look like the work, not a template. Three presets (Signal, Gallery, Atelier) re-skin every section from energetic high-contrast to refined editorial neutrals, all driven by Theme Studio tokens with zero code. Built on Foundation Theme contracts, it stays fast, cache-aware, and safe for public output, so it drops into the standard Capell theme workflow.",
         "screenshots": [
             {
-                "path": "docs/screenshots/frontend-page-rendered-with-agency-theme.png",
-                "alt": "Theme Agency frontend page rendered with the agency theme",
-                "caption": "Theme Agency frontend render"
-            },
-            {
-                "path": "docs/screenshots/frontend-page-rendered-with-agency-theme-dark.png",
-                "alt": "Theme Agency frontend page rendered with the agency theme dark capture",
-                "caption": "Theme Agency frontend render dark"
-            },
-            {
-                "path": "docs/screenshots/theme-preset-selection-showing-agency.png",
-                "alt": "Theme Agency preset selection showing agency presets",
-                "caption": "Theme Agency preset selection"
-            },
-            {
-                "path": "docs/screenshots/theme-preset-selection-showing-agency-dark.png",
-                "alt": "Theme Agency preset selection dark capture",
-                "caption": "Theme Agency preset selection dark"
+                "path": "docs/screenshots/theme-admin-list-showing-agency.png",
+                "alt": "Themes admin list showing Agency capture for Theme Agency",
+                "caption": "Themes admin list showing Agency"
             },
             {
                 "path": "docs/screenshots/theme-preview-url-output.png",
-                "alt": "Theme Agency preview URL output",
-                "caption": "Theme Agency preview URL output"
+                "alt": "Signed admin preview route capture for Theme Agency",
+                "caption": "Signed admin preview route"
             },
             {
-                "path": "docs/screenshots/theme-preview-url-output-dark.png",
-                "alt": "Theme Agency preview URL output dark capture",
-                "caption": "Theme Agency preview URL output dark"
+                "path": "docs/screenshots/frontend-page-rendered-with-agency-theme.png",
+                "alt": "Frontend page rendered with Agency theme capture for Theme Agency",
+                "caption": "Frontend page rendered with Agency theme"
+            },
+            {
+                "path": "docs/screenshots/agency-homepage-layout.png",
+                "alt": "Agency homepage capture for Theme Agency",
+                "caption": "Agency homepage"
+            },
+            {
+                "path": "docs/screenshots/agency-services-layout.png",
+                "alt": "Services page capture for Theme Agency",
+                "caption": "Services page"
+            },
+            {
+                "path": "docs/screenshots/agency-portfolio-layout.png",
+                "alt": "Campaign work board capture for Theme Agency",
+                "caption": "Campaign work board"
+            },
+            {
+                "path": "docs/screenshots/agency-case-study-layout.png",
+                "alt": "Launch recap detail capture for Theme Agency",
+                "caption": "Launch recap detail"
+            },
+            {
+                "path": "docs/screenshots/agency-insights-layout.png",
+                "alt": "Insights article capture for Theme Agency",
+                "caption": "Insights article"
+            },
+            {
+                "path": "docs/screenshots/agency-event-landing-layout.png",
+                "alt": "Event landing page capture for Theme Agency",
+                "caption": "Event landing page"
+            },
+            {
+                "path": "docs/screenshots/agency-lead-form-layout.png",
+                "alt": "Lead generation page capture for Theme Agency",
+                "caption": "Lead generation page"
+            },
+            {
+                "path": "docs/screenshots/agency-campaign-layout.png",
+                "alt": "Campaign page capture for Theme Agency",
+                "caption": "Campaign page"
+            },
+            {
+                "path": "docs/screenshots/agency-search-layout.png",
+                "alt": "Search results page capture for Theme Agency",
+                "caption": "Search results page"
             }
         ],
-        "categories": ["frontend", "themes"]
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "agency"
