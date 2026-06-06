@@ -74,7 +74,7 @@ it('registers a Theme Studio definition that matches the manifest', function ():
         ->and($registered->extends)->toBe($manifest['extends']);
 });
 
-it('declares committed marketplace screenshots and labelled layout mockups', function (): void {
+it('declares committed marketplace screenshots', function (): void {
     $manifest = themePackageManifest('foundation-theme');
     $screenshots = data_get($manifest, 'marketplace.screenshots');
 
@@ -93,8 +93,8 @@ it('declares committed marketplace screenshots and labelled layout mockups', fun
         ->values();
 
     expect($paths)->toHaveCount(15)
-        ->and($paths->filter(fn (string $path): bool => str_starts_with($path, 'docs/screenshots/') && str_ends_with($path, '.png')))->toHaveCount(6)
-        ->and($paths->filter(fn (string $path): bool => str_starts_with($path, 'docs/assets/marketplace/') && str_ends_with($path, '.svg')))->toHaveCount(8)
+        ->and($paths->filter(fn (string $path): bool => str_starts_with($path, 'docs/screenshots/') && str_ends_with($path, '.png')))->toHaveCount(14)
+        ->and($paths->filter(fn (string $path): bool => str_starts_with($path, 'docs/assets/marketplace/') && str_ends_with($path, '.svg')))->toHaveCount(0)
         ->and($paths)->toContain(
             'docs/screenshots/foundation-theme-settings-screen.png',
             'docs/screenshots/foundation-theme-settings-screen-dark.png',
@@ -102,6 +102,14 @@ it('declares committed marketplace screenshots and labelled layout mockups', fun
             'docs/screenshots/frontend-page-using-the-foundation-theme-dark.png',
             'docs/screenshots/generated-tailwind-asset-output-review.png',
             'docs/screenshots/generated-tailwind-asset-output-review-dark.png',
+            'docs/screenshots/foundation-homepage-layout.png',
+            'docs/screenshots/foundation-standard-page-layout.png',
+            'docs/screenshots/foundation-blog-article-layout.png',
+            'docs/screenshots/foundation-listing-layout.png',
+            'docs/screenshots/foundation-contact-form-layout.png',
+            'docs/screenshots/foundation-search-results-layout.png',
+            'docs/screenshots/foundation-events-layout.png',
+            'docs/screenshots/foundation-membership-gate-layout.png',
         );
 
     foreach ($paths as $path) {

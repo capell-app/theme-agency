@@ -52,8 +52,8 @@ Gives each Capell installation a standard frontend foundation before a custom or
 ## Screenshot Plan
 
 - `docs/screenshots.json` defines 12 deployment capture targets across admin and frontend surfaces.
-- `capell.json` ships 15 marketplace media entries: one extension card image, six committed generated PNG captures, and eight visibly labelled layout mockups.
-- `docs/screenshots` contains 6 generated PNG screenshots for settings, frontend, and Tailwind output review in light and dark variants.
+- `capell.json` ships 15 marketplace media entries: one extension card image and 14 committed PNG captures.
+- `docs/screenshots` contains 14 generated PNG screenshots for settings, frontend, Tailwind output review, and eight route-backed layout workflows.
 
 ## Pitfalls
 

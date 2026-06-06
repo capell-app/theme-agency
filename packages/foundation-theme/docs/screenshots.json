@@ -63,7 +63,13 @@
             "required": true,
             "notes": "Capture Foundation Theme homepage layout with hero, feature grid, content widgets, cta, footer. No additional package note required.",
             "useCase": "A buyer reviews how Foundation Theme handles the homepage layout page layout before installing the theme.",
-            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-homepage-layout.png"
+            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-homepage-layout.png",
+            "scenario": "runner-fixture-frontend",
+            "url": "/screenshot-fixtures/foundation-theme/foundation-homepage-layout",
+            "waitFor": ".theme-foundation",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "foundation-standard-page-layout",
@@ -75,7 +81,13 @@
             "required": true,
             "notes": "Capture Foundation Theme standard content page with header, breadcrumbs, rich content, related links. No additional package note required.",
             "useCase": "A buyer reviews how Foundation Theme handles the standard content page page layout before installing the theme.",
-            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-standard-page-layout.png"
+            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-standard-page-layout.png",
+            "scenario": "runner-fixture-frontend",
+            "url": "/screenshot-fixtures/foundation-theme/foundation-standard-page-layout",
+            "waitFor": ".theme-foundation",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "foundation-blog-article-layout",
@@ -87,7 +99,13 @@
             "required": true,
             "notes": "Capture Foundation Theme blog article layout with article hero, author row, body, related posts. Requires capell-app/blog; show this package note on the captured image.",
             "useCase": "A buyer reviews how Foundation Theme handles the blog article layout page layout before installing the theme.",
-            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-blog-article-layout.png"
+            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-blog-article-layout.png",
+            "scenario": "runner-fixture-frontend",
+            "url": "/screenshot-fixtures/foundation-theme/foundation-blog-article-layout",
+            "waitFor": ".theme-foundation",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "foundation-listing-layout",
@@ -99,7 +117,13 @@
             "required": true,
             "notes": "Capture Foundation Theme listing page layout with card grid, filters, pagination, empty state. Requires capell-app/tags; show this package note on the captured image.",
             "useCase": "A buyer reviews how Foundation Theme handles the listing page layout page layout before installing the theme.",
-            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-listing-layout.png"
+            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-listing-layout.png",
+            "scenario": "runner-fixture-frontend",
+            "url": "/screenshot-fixtures/foundation-theme/foundation-listing-layout",
+            "waitFor": ".theme-foundation",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "foundation-contact-form-layout",
@@ -111,7 +135,13 @@
             "required": true,
             "notes": "Capture Foundation Theme contact form layout with intro copy, validated form, consent, confirmation. Requires capell-app/form-builder; show this package note on the captured image.",
             "useCase": "A buyer reviews how Foundation Theme handles the contact form layout page layout before installing the theme.",
-            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-contact-form-layout.png"
+            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-contact-form-layout.png",
+            "scenario": "runner-fixture-frontend",
+            "url": "/screenshot-fixtures/foundation-theme/foundation-contact-form-layout",
+            "waitFor": ".theme-foundation",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "foundation-search-results-layout",
@@ -123,7 +153,13 @@
             "required": true,
             "notes": "Capture Foundation Theme search results layout with search box, result excerpts, highlighting, no-results state. Requires capell-app/search; show this package note on the captured image.",
             "useCase": "A buyer reviews how Foundation Theme handles the search results layout page layout before installing the theme.",
-            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-search-results-layout.png"
+            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-search-results-layout.png",
+            "scenario": "runner-fixture-frontend",
+            "url": "/screenshot-fixtures/foundation-theme/foundation-search-results-layout",
+            "waitFor": ".theme-foundation",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "foundation-events-layout",
@@ -135,7 +171,13 @@
             "required": true,
             "notes": "Capture Foundation Theme events listing layout with featured event, date cards, location metadata. Requires capell-app/events; show this package note on the captured image.",
             "useCase": "A buyer reviews how Foundation Theme handles the events listing layout page layout before installing the theme.",
-            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-events-layout.png"
+            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-events-layout.png",
+            "scenario": "runner-fixture-frontend",
+            "url": "/screenshot-fixtures/foundation-theme/foundation-events-layout",
+            "waitFor": ".theme-foundation",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "foundation-membership-gate-layout",
@@ -147,7 +189,13 @@
             "required": true,
             "notes": "Capture Foundation Theme access-gated page layout with teaser content, sign-in prompt, gated sections. Requires capell-app/access-gate; show this package note on the captured image.",
             "useCase": "A buyer reviews how Foundation Theme handles the access-gated page layout page layout before installing the theme.",
-            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-membership-gate-layout.png"
+            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-membership-gate-layout.png",
+            "scenario": "runner-fixture-frontend",
+            "url": "/screenshot-fixtures/foundation-theme/foundation-membership-gate-layout",
+            "waitFor": ".theme-foundation",
+            "colorSchemes": [
+                "light"
+            ]
         }
     ]
 }
