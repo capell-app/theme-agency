@@ -99,3 +99,37 @@
     inset: 0 0 auto;
     position: absolute;
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .portfolio-shell,
+    .portfolio-shell *,
+    .portfolio-shell *::before,
+    .portfolio-shell *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+
+    .portfolio-shell :where(.theme-carousel [data-carousel-track]) {
+        scroll-snap-type: none !important;
+    }
+
+    .portfolio-shell
+        :where(
+            .hover\:-translate-y-1:hover,
+            .group:hover .group-hover\:scale-\[1\.025\],
+            .portfolio-skip-link
+        ) {
+        transform: none !important;
+    }
+
+    .portfolio-skip-link {
+        transform: translateY(-150%) !important;
+    }
+
+    .portfolio-skip-link:focus {
+        transform: translateY(0) !important;
+    }
+}
