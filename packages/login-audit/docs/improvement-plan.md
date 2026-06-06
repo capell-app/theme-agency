@@ -63,7 +63,7 @@ Manifest `capabilities`: `["login-audit", "login-audit-admin"]` — both are pre
 
 (Note: the device/suspicious/geo language is justified only once Section 3 features ship; until then, sell what's real — logging, retention, CDN-aware IP, read-only audit, per-user summary.)
 
-**Screenshot/media gaps.** The 8 existing PNGs are promoted into `marketplace.screenshots`. `docs/screenshots.json` still names two surfaces whose images aren't committed yet — `user-edit-access-summary.png` and `user-login-audits-relation-manager.png` (README keeps them as text placeholders). Capture those and add a short "spotting a suspicious login" GIF once detection lands.
+**Screenshot/media status.** The original 8 PNGs are promoted into `marketplace.screenshots`, and the two previously missing user-resource captures are now committed: `user-edit-access-summary.png` and `user-login-audits-relation-manager.png`. Add a short "spotting a suspicious login" GIF once detection lands.
 
 **Pricing / tier / bundle positioning.** Tier `premium`, bundle `operations`, group `Capell Operations`, `proposedLicense: paid`, `requestedCertification: first-party`, `supportPolicy: priority`. As shipped (a polished wrapper over a free OSS log) "premium/paid" is a stretch — the paid justification is the _operations/security_ layer, which today is thin (no detection, no export, no alerting). Either (a) build Section 3's detection + export + alerting to earn the premium tier, or (b) consider a standard tier until those land. Bundle fit is correct.
 
@@ -94,6 +94,6 @@ Manifest `capabilities`: `["login-audit", "login-audit-admin"]` — both are pre
 | Add CSV export action to resource + relation manager                                                                                                                                                        | Next   | M      | Med    | 3           |
 | Done/Shipped: Surface `is_trusted`/device columns + filters; populate `last_activity_at`                                                                                                                    | Done   | M      | Med    | 2.2, 2.8, 3 |
 | Done/Shipped: Extract shared `UpdateLastSeenForActorAction`; collapse duplicate middleware                                                                                                                  | Done   | M      | Med    | 2.3         |
-| Capture the two missing screenshots (access summary, relation manager)                                                                                                                                      | Next   | S      | Med    | 5           |
+| Done/Shipped: Capture the two missing screenshots (access summary, relation manager)                                                                                                                        | Done   | S      | Med    | 5           |
 | Geo resolution on login + impossible-travel check                                                                                                                                                           | Later  | L      | High   | 3           |
 | Active-session/device panel with logout-other-devices; populate `supports[]` for password-policy/privacy-center bundling                                                                                    | Later  | L      | Med    | 3, 5        |
