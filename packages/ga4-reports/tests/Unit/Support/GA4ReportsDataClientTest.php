@@ -9,10 +9,15 @@ use Capell\GA4Reports\Tests\GA4ReportsTestCase;
 use Carbon\CarbonImmutable;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
 
 uses(GA4ReportsTestCase::class);
+
+beforeEach(function (): void {
+    Cache::flush();
+});
 
 function createGA4ReportsCredentialsFile(): string
 {
@@ -184,6 +189,42 @@ it('retries transient token requests before syncing metrics', function (): void 
 
     expect($metrics)->toHaveCount(1)
         ->and($metrics[0]->screenPageViews)->toBe(45);
+});
+
+it('reuses cached access tokens across client instances', function (): void {
+    $credentialsPath = createGA4ReportsCredentialsFile();
+
+    Http::fake([
+        'https://oauth2.googleapis.com/token' => Http::response([
+            'access_token' => 'cached-token',
+            'expires_in' => 3600,
+        ], 200),
+        'https://analyticsdata.googleapis.com/*' => Http::sequence()
+            ->push([
+                'rows' => [createGA4ReportsDailyReportRow()],
+            ], 200)
+            ->push([
+                'rows' => [createGA4ReportsDailyReportRow()],
+            ], 200),
+    ]);
+
+    $config = [
+        'enabled' => true,
+        'property_id' => '123456789',
+        'credentials_path' => $credentialsPath,
+    ];
+    $window = new GA4ReportsWindowData(
+        startsAt: CarbonImmutable::parse('2026-05-04'),
+        endsAt: CarbonImmutable::parse('2026-05-04'),
+        propertyId: '123456789',
+    );
+
+    (new GA4ReportsDataClient($config))->dailyMetrics($window);
+    (new GA4ReportsDataClient($config))->dailyMetrics($window);
+
+    unlink($credentialsPath);
+
+    Http::assertSentCount(3);
 });
 
 it('retries quota limited GA4 report requests before returning rows', function (): void {

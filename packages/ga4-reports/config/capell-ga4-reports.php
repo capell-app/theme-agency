@@ -10,6 +10,7 @@ return [
     'http_retry_times' => env('CAPELL_GA4_REPORTS_HTTP_RETRY_TIMES', 3),
     'http_retry_delay_ms' => env('CAPELL_GA4_REPORTS_HTTP_RETRY_DELAY_MS', 250),
     'http_retry_max_delay_ms' => env('CAPELL_GA4_REPORTS_HTTP_RETRY_MAX_DELAY_MS', 5000),
+    'token_cache_store' => env('CAPELL_GA4_REPORTS_TOKEN_CACHE_STORE'),
     'sync_lock_seconds' => env('CAPELL_GA4_REPORTS_SYNC_LOCK_SECONDS', 3600),
     'sync_overlap_minutes' => env('CAPELL_GA4_REPORTS_SYNC_OVERLAP_MINUTES', 120),
     'sync_days' => 30,
