@@ -13,14 +13,21 @@
         "bundle": "automation"
     },
     "namespace": "Capell\\PublicActions",
-    "surfaces": ["admin", "frontend", "console"],
+    "surfaces": [
+        "admin",
+        "frontend",
+        "console"
+    ],
     "dependencies": {
         "requires": [
             "capell-app/admin",
             "capell-app/core",
             "capell-app/frontend"
         ],
-        "supports": ["capell-app/access-gate", "capell-app/form-builder"],
+        "supports": [
+            "capell-app/access-gate",
+            "capell-app/form-builder"
+        ],
         "conflicts": []
     },
     "providers": {
@@ -56,10 +63,15 @@
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 40,
-        "cacheTags": ["public-actions"],
+        "cacheTags": [
+            "public-actions"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -108,11 +120,60 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Public Actions extension preview image",
                 "caption": "Public Actions extension preview"
+            },
+            {
+                "path": "docs/screenshots/public-actions-admin-index.png",
+                "alt": "Public Actions admin index with active action rows",
+                "caption": "Public Actions admin index"
+            },
+            {
+                "path": "docs/screenshots/public-action-form.png",
+                "alt": "Public Action form showing handler, site scope, redirect, API, and schema settings",
+                "caption": "Public Action create/edit form"
+            },
+            {
+                "path": "docs/screenshots/public-action-destinations.png",
+                "alt": "Public Action destinations with signed webhooks and redacted secrets",
+                "caption": "Public Action destinations"
+            },
+            {
+                "path": "docs/screenshots/public-action-submissions.png",
+                "alt": "Public Action submissions table showing processed, queued, and duplicate requests",
+                "caption": "Public Action submissions"
+            },
+            {
+                "path": "docs/screenshots/public-action-dispatch-attempts.png",
+                "alt": "Public Action dispatch attempts audit table with response and retry state",
+                "caption": "Public Action dispatch attempts"
+            },
+            {
+                "path": "docs/screenshots/public-action-integration-tokens.png",
+                "alt": "Public Action integration token list without exposed token values",
+                "caption": "Public Action integration tokens"
+            },
+            {
+                "path": "docs/screenshots/public-action-frontend-form.png",
+                "alt": "Public-safe frontend form for an active Public Action",
+                "caption": "Public Action frontend form"
+            },
+            {
+                "path": "docs/screenshots/public-action-zapier-discovery.png",
+                "alt": "Zapier discovery API response shape for Public Actions",
+                "caption": "Zapier action discovery API"
             }
         ],
-        "categories": ["admin", "automation", "console", "frontend"]
+        "categories": [
+            "admin",
+            "automation",
+            "console",
+            "frontend"
+        ]
     },
     "contributionTraceability": {
-        "deferredContributions": ["admin-resource", "model", "route"]
+        "deferredContributions": [
+            "admin-resource",
+            "model",
+            "route"
+        ]
     }
 }

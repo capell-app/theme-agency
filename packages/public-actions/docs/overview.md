@@ -38,7 +38,9 @@ Run the host app's migration/package install flow, then seed at least one active
 - `GET /api/public-actions/zapier/me`, `/actions`, and `/submissions` expose Zapier discovery.
 - `POST /api/public-actions/zapier/actions/{action}/submissions` accepts authenticated Zapier submissions.
 
-## Screenshot Plan
+## Screenshot Coverage
+
+The committed Capell runner-backed screenshot gallery covers:
 
 - Public Actions admin index.
 - Public Action create/edit form.
