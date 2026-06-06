@@ -1,9 +1,10 @@
 .education-shell {
-    --site-theme-primary: #4338ca;
-    --site-theme-accent: #14b8a6;
-    --education-ink: #020617;
-    --education-paper: #f8fbff;
-    --education-line: #c7d2fe;
+    --site-theme-primary: var(--theme-primary, #4338ca);
+    --site-theme-accent: var(--theme-accent, #14b8a6);
+    --education-ink: var(--theme-foreground, #020617);
+    --education-muted: #475569;
+    --education-paper: var(--theme-surface, #f8fbff);
+    --education-line: color-mix(in srgb, var(--site-theme-primary) 22%, #ffffff);
     --education-blueprint: rgb(67 56 202 / 7%);
     background:
         linear-gradient(
@@ -22,6 +23,74 @@
 
 .education-shell :is(h1, h2, h3) {
     letter-spacing: 0;
+}
+
+.education-shell :where(
+    [class*='text-[#020617]'],
+    [class*='text-[#0f172a]'],
+    [class*='text-[#111827]']
+) {
+    color: var(--education-ink);
+}
+
+.education-shell :where(.text-slate-600, .text-stone-600) {
+    color: var(--education-muted);
+}
+
+.education-shell :where(
+    [class*='text-[#1d4ed8]'],
+    [class*='text-[#4338ca]']
+) {
+    color: var(--site-theme-primary);
+}
+
+.education-shell :where(
+    [class*='text-[#0f766e]'],
+    [class*='text-[#14b8a6]'],
+    [class*='text-[#5eead4]']
+) {
+    color: var(--site-theme-accent);
+}
+
+.education-shell :where(
+    [class*='bg-[#f8fbff]'],
+    [class*='bg-[#eef6ff]'],
+    [class*='bg-[#eef2ff]']
+) {
+    background-color: color-mix(in srgb, var(--site-theme-primary) 8%, #ffffff);
+}
+
+.education-shell :where([class*='bg-[#ecfeff]']) {
+    background-color: color-mix(in srgb, var(--site-theme-accent) 12%, #ffffff);
+}
+
+.education-shell :where(
+    [class*='bg-[#1d4ed8]'],
+    [class*='bg-[#4338ca]']
+) {
+    background-color: var(--site-theme-primary);
+}
+
+.education-shell :where([class*='bg-[#14b8a6]']) {
+    background-color: var(--site-theme-accent);
+}
+
+.education-shell :where(
+    [class*='border-[#c7d2fe]'],
+    [class*='border-[#dbeafe]'],
+    .border-indigo-100,
+    .border-indigo-200
+) {
+    border-color: var(--education-line);
+}
+
+.education-shell :where(
+    [class*='hover:border-[#4338ca]']:hover,
+    [class*='hover:text-[#4338ca]']:hover,
+    [class*='hover:text-[#1d4ed8]']:hover
+) {
+    border-color: var(--site-theme-primary);
+    color: var(--site-theme-primary);
 }
 
 .education-shell section {
