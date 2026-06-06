@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
+use Capell\Core\Contracts\Extensions\RunsScheduledExtensionJob;
 use Capell\DocumentLifecycle\Filament\Resources\Documents\DocumentResource;
+use Capell\DocumentLifecycle\Manifest\DocumentLifecycleRetentionScheduleContribution;
 use Capell\DocumentLifecycle\Manifest\DocumentResourceContribution;
 
 /**
@@ -65,6 +67,28 @@ it('declares only real package surfaces in the manifest', function (): void {
 
     expect($manifest['surfaces'] ?? null)->toBe(['admin', 'console'])
         ->and($manifest['providers']['frontend'] ?? null)->toBe([]);
+});
+
+it('declares the retention command as a scheduled job contribution', function (): void {
+    $manifest = documentLifecycleManifest();
+
+    $contribution = null;
+
+    foreach (($manifest['contributes'] ?? []) as $manifestContribution) {
+        if (is_array($manifestContribution) && ($manifestContribution['type'] ?? null) === 'scheduled-job') {
+            $contribution = $manifestContribution;
+
+            break;
+        }
+    }
+
+    expect($contribution)
+        ->toBeArray()
+        ->and($contribution['class'] ?? null)->toBe(DocumentLifecycleRetentionScheduleContribution::class)
+        ->and($contribution['command'] ?? null)->toBe('capell:document-lifecycle:archive-expired')
+        ->and($contribution['frequency'] ?? null)->toBe('daily')
+        ->and(DocumentLifecycleRetentionScheduleContribution::compatibleCapellApiVersion())->toBe('^4.0')
+        ->and(class_implements(DocumentLifecycleRetentionScheduleContribution::class))->toContain(RunsScheduledExtensionJob::class);
 });
 
 it('keeps manifest and composer package copy aligned with shipped capabilities', function (): void {

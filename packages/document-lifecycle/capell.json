@@ -43,6 +43,7 @@
         },
         {
             "type": "scheduled-job",
+            "class": "Capell\\DocumentLifecycle\\Manifest\\DocumentLifecycleRetentionScheduleContribution",
             "command": "capell:document-lifecycle:archive-expired",
             "frequency": "daily"
         }
