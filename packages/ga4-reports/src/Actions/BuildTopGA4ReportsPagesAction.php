@@ -7,6 +7,7 @@ namespace Capell\GA4Reports\Actions;
 use Capell\GA4Reports\Data\GA4ReportsTopPageData;
 use Capell\GA4Reports\Data\GA4ReportsWindowData;
 use Capell\GA4Reports\Models\GA4ReportsPageMetric;
+use Capell\GA4Reports\Support\GA4ReportsDashboardCache;
 use Illuminate\Support\Facades\DB;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -28,6 +29,18 @@ final class BuildTopGA4ReportsPagesAction
             return [];
         }
 
+        return GA4ReportsDashboardCache::rememberTopPages(
+            $resolvedWindow,
+            $limit,
+            fn (): array => $this->build($resolvedWindow, $limit),
+        );
+    }
+
+    /**
+     * @return list<GA4ReportsTopPageData>
+     */
+    private function build(GA4ReportsWindowData $window, int $limit): array
+    {
         return array_values(GA4ReportsPageMetric::query()
             ->select([
                 'page_path',
@@ -37,9 +50,9 @@ final class BuildTopGA4ReportsPagesAction
                 DB::raw('SUM(total_users) as total_users'),
                 DB::raw('SUM(conversions) as conversions'),
             ])
-            ->where('property_id', $resolvedWindow->propertyId)
-            ->whereDate('metric_date', '>=', $resolvedWindow->startsAt->toDateString())
-            ->whereDate('metric_date', '<=', $resolvedWindow->endsAt->toDateString())
+            ->where('property_id', $window->propertyId)
+            ->whereDate('metric_date', '>=', $window->startsAt->toDateString())
+            ->whereDate('metric_date', '<=', $window->endsAt->toDateString())
             ->groupBy('page_path')
             ->orderByDesc('screen_page_views')
             ->limit($limit)

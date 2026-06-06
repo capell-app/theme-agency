@@ -15,6 +15,7 @@ return [
     'sync_overlap_minutes' => env('CAPELL_GA4_REPORTS_SYNC_OVERLAP_MINUTES', 120),
     'sync_cron' => env('CAPELL_GA4_REPORTS_SYNC_CRON', '0 2 * * *'),
     'sync_days' => 30,
+    'dashboard_cache_ttl_seconds' => env('CAPELL_GA4_REPORTS_DASHBOARD_CACHE_TTL_SECONDS', 300),
     'route_slug' => 'ga4-reports',
     'health' => [
         'max_successful_sync_age_hours' => env('CAPELL_GA4_REPORTS_HEALTH_MAX_SUCCESSFUL_SYNC_AGE_HOURS', 48),

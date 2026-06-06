@@ -7,6 +7,7 @@ namespace Capell\GA4Reports\Actions;
 use Capell\GA4Reports\Data\GA4ReportsOverviewData;
 use Capell\GA4Reports\Data\GA4ReportsWindowData;
 use Capell\GA4Reports\Models\GA4ReportsDailyMetric;
+use Capell\GA4Reports\Support\GA4ReportsDashboardCache;
 use Illuminate\Database\Eloquent\Builder;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -22,10 +23,18 @@ final class BuildGA4ReportsOverviewAction
             return new GA4ReportsOverviewData(0, 0, 0, 0, 0.0, 0.0);
         }
 
+        return GA4ReportsDashboardCache::rememberOverview(
+            $resolvedWindow,
+            fn (): GA4ReportsOverviewData => $this->build($resolvedWindow),
+        );
+    }
+
+    private function build(GA4ReportsWindowData $window): GA4ReportsOverviewData
+    {
         $query = GA4ReportsDailyMetric::query()
-            ->where('property_id', $resolvedWindow->propertyId)
-            ->whereDate('metric_date', '>=', $resolvedWindow->startsAt->toDateString())
-            ->whereDate('metric_date', '<=', $resolvedWindow->endsAt->toDateString());
+            ->where('property_id', $window->propertyId)
+            ->whereDate('metric_date', '>=', $window->startsAt->toDateString())
+            ->whereDate('metric_date', '<=', $window->endsAt->toDateString());
 
         $sessions = (int) (clone $query)->sum('sessions');
         $engagedSessions = (int) (clone $query)->sum('engaged_sessions');

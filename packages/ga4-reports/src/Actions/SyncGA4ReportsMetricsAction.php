@@ -8,6 +8,7 @@ use Capell\GA4Reports\Contracts\GA4ReportsDataClientInterface;
 use Capell\GA4Reports\Data\GA4ReportsSyncResultData;
 use Capell\GA4Reports\Data\GA4ReportsWindowData;
 use Capell\GA4Reports\Models\GA4ReportsSyncRun;
+use Capell\GA4Reports\Support\GA4ReportsDashboardCache;
 use Illuminate\Contracts\Cache\Lock;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Date;
@@ -65,6 +66,8 @@ final class SyncGA4ReportsMetricsAction
                 'page_rows' => count($pageMetrics),
                 'finished_at' => Date::now(),
             ]);
+
+            GA4ReportsDashboardCache::flushForWindow($window);
 
             return new GA4ReportsSyncResultData(
                 synced: true,

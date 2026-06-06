@@ -7,6 +7,7 @@ namespace Capell\GA4Reports\Actions;
 use Capell\GA4Reports\Data\GA4ReportsTrendPointData;
 use Capell\GA4Reports\Data\GA4ReportsWindowData;
 use Capell\GA4Reports\Models\GA4ReportsDailyMetric;
+use Capell\GA4Reports\Support\GA4ReportsDashboardCache;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class BuildGA4ReportsTrendAction
@@ -24,10 +25,21 @@ final class BuildGA4ReportsTrendAction
             return [];
         }
 
+        return GA4ReportsDashboardCache::rememberTrend(
+            $resolvedWindow,
+            fn (): array => $this->build($resolvedWindow),
+        );
+    }
+
+    /**
+     * @return list<GA4ReportsTrendPointData>
+     */
+    private function build(GA4ReportsWindowData $window): array
+    {
         return array_values(GA4ReportsDailyMetric::query()
-            ->where('property_id', $resolvedWindow->propertyId)
-            ->whereDate('metric_date', '>=', $resolvedWindow->startsAt->toDateString())
-            ->whereDate('metric_date', '<=', $resolvedWindow->endsAt->toDateString())
+            ->where('property_id', $window->propertyId)
+            ->whereDate('metric_date', '>=', $window->startsAt->toDateString())
+            ->whereDate('metric_date', '<=', $window->endsAt->toDateString())
             ->oldest('metric_date')
             ->get()
             ->map(fn (GA4ReportsDailyMetric $metric): GA4ReportsTrendPointData => new GA4ReportsTrendPointData(

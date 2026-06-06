@@ -44,12 +44,12 @@
     "performance": {
         "frontendRenderBudgetMs": 0,
         "adminQueryBudget": 40,
-        "cacheTags": [],
+        "cacheTags": ["ga4-reports"],
         "cacheSafety": {
-            "cacheable": false,
-            "variesBy": [],
+            "cacheable": true,
+            "variesBy": ["property_id", "date_range", "limit"],
             "sensitiveOutput": false,
-            "invalidationSources": [],
+            "invalidationSources": ["scheduled_sync", "manual_sync", "local_metric_persistence"],
             "queueInvalidation": false
         }
     },
