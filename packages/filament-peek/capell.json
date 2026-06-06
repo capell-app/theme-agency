@@ -94,6 +94,16 @@
                 "path": "docs/assets/marketplace/hero-mobile.jpg",
                 "alt": "Filament Peek unsaved page preview on mobile",
                 "caption": "Review in-flight changes before publishing on mobile"
+            },
+            {
+                "path": "docs/screenshots/page-edit-preview-actions.png",
+                "alt": "Capell Page edit screen with the Filament Peek preview action group",
+                "caption": "Open the Preview action group from a real Capell Page edit screen before reviewing unsaved changes"
+            },
+            {
+                "path": "docs/screenshots/page-edit-preview-actions-dark.png",
+                "alt": "Capell Page edit screen in dark mode with the Filament Peek preview action group",
+                "caption": "Use the same unsaved preview action from Capell's dark admin theme"
             }
         ],
         "categories": ["admin", "editorial"]
