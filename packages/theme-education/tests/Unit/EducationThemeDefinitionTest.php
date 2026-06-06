@@ -275,6 +275,47 @@ it('renders translated education catalogue, event, and instructor defaults', fun
         ->toContain('Named educator profile');
 });
 
+it('renders editor-provided education catalogue and event items', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(EducationThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/events');
+
+    $registry = new ThemeRegistry;
+    (new EducationThemeServiceProvider($this->app))->boot($registry);
+
+    $catalogueRenderer = $registry->sectionRenderer('education', 'course-catalog');
+    $eventsRenderer = $registry->sectionRenderer('education', 'events');
+
+    assert($catalogueRenderer instanceof SectionRenderer);
+    assert($eventsRenderer instanceof SectionRenderer);
+
+    $catalogueHtml = $catalogueRenderer->render(educationThemeSection('course-catalog', [
+        'heading' => 'Find your course',
+        'items' => [
+            ['format' => 'Evening', 'title' => 'Laravel Academy', 'summary' => 'A practical cohort for working developers.', 'url' => '/courses/laravel-academy'],
+        ],
+    ]));
+
+    $eventsHtml = $eventsRenderer->render(educationThemeSection('events', [
+        'heading' => 'Open days',
+        'items' => [
+            ['signal' => 'Open day', 'title' => 'Campus preview', 'summary' => 'Meet mentors before applications close.', 'date' => '12 Sep', 'url' => '/events/campus-preview'],
+        ],
+    ]));
+
+    expect($catalogueHtml)
+        ->toContain('Laravel Academy')
+        ->toContain('/courses/laravel-academy')
+        ->not->toContain('Starter Path');
+
+    expect($eventsHtml)
+        ->toContain('Connected events calendar is live and ready.')
+        ->toContain('Campus preview')
+        ->toContain('12 Sep')
+        ->toContain('/events/campus-preview')
+        ->not->toContain('Live Workshops');
+});
+
 it('keeps education default card copy in translations instead of Blade literals', function (): void {
     $catalogueBlade = file_get_contents(__DIR__ . '/../../resources/views/sections/course-catalog.blade.php');
     $eventsBlade = file_get_contents(__DIR__ . '/../../resources/views/sections/events.blade.php');

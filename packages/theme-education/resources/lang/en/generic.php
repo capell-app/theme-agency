@@ -24,6 +24,8 @@ return [
             'summary' => 'Practical assessments with publish-ready outcomes.',
         ],
     ],
+    'course_catalog_empty_summary' => 'Add course cards to help learners compare formats, outcomes, and enrolment paths.',
+    'course_catalog_empty_title' => 'No courses yet',
     'enrolment_form_connected' => 'Connected enrolment workflow is available.',
     'enrolment_form_static' => 'Static enrolment CTA is ready.',
     'event_cards' => [
@@ -44,6 +46,8 @@ return [
         ],
     ],
     'events_connected' => 'Connected events calendar is live and ready.',
+    'events_empty_summary' => 'Add open days, workshops, or cohort events to make the learning calendar visible.',
+    'events_empty_title' => 'No events yet',
     'events_static' => 'Static events list is available.',
     'cta_blurb' => 'Move prospects from curiosity into action with clear, confident calls to learn.',
     'cohort_metric_label' => 'Cohort proof',
