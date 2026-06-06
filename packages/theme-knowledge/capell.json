@@ -108,6 +108,11 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Theme Knowledge marketplace card.",
                 "caption": "Theme Knowledge theme card."
+            },
+            {
+                "path": "docs/screenshots/knowledge-homepage-layout.png",
+                "alt": "Theme Knowledge homepage with dark documentation shell, search console, and expertise-led hero content.",
+                "caption": "Route-backed Knowledge homepage rendered through the package theme shell."
             }
         ],
         "categories": [
