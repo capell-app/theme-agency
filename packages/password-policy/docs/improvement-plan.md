@@ -35,7 +35,7 @@ Tied to `capabilities[]`: `password-policy`, `password-policy-admin`.
 - **Console capability drift is closed.** `capell.json` now declares the shipped admin surface/capabilities only. Console commands remain a future product row rather than an advertised surface. — **Manifest-vs-code gap closed.**
 - **Shipped 2026-06-06: password lifecycle subscriber hooks.** Password changes, expiry detection, and forced-change marking now notify `CapellCore::subscriberManager()` with package-scoped event names and typed context objects; `docs/overview.md` documents the listener contract for Login Audit, 2FA, and other security packages. — **Differentiator + cross-sell enabler closed.**
 - **Per-role / per-panel policy scoping.** Settings are global. Enterprises typically want stricter rules for admins than editors, or different rules per panel. — **Differentiator (enterprise tier).**
-- **Real health-check assertions.** `PasswordPolicyHealthCheck` implements only the marker `ChecksExtensionHealth` (returns `securityPosture()` data, no pass/fail). The manifest marks it `severity: critical` with a label claiming "install health are discoverable". Add an actual check that fails when a policy is enabled but its backing column/table is missing (e.g. `force_change_enabled` on without `must_change_password`). — **Closes the manifest claim.**
+- **Done/Shipped: real health-check assertions.** `PasswordPolicyHealthCheck::runDiagnostics()` now returns concrete install-health checks for forced-change, expiry, and history persistence, and `passed()` fails when an enabled control is missing its backing column/table. Existing tests cover installed, disabled, missing-history-table, missing-forced-change-column, and missing-expiry-column cases. — `src/Health/PasswordPolicyHealthCheck.php`, `tests/Unit/PasswordPolicyHealthCheckTest.php`
 
 ## 4. Issues / Risks
 
@@ -91,5 +91,5 @@ Tied to `capabilities[]`: `password-policy`, `password-policy-admin`.
 | Emit password lifecycle events for login-audit / 2FA cross-sell                              | Done   | M      | Medium | §3, §5      |
 | Account lockout / login throttle + expiry-warning notifications                              | Later  | L      | High   | §3          |
 | Per-role / per-panel policy scoping                                                          | Later  | L      | Medium | §3          |
-| Real health-check assertions (enabled-but-not-installed → fail)                              | Later  | M      | Medium | §3, §4      |
+| Done/Shipped: Real health-check assertions (enabled-but-not-installed → fail)                | Done   | M      | Medium | §3, §4      |
 | Add Artisan console commands (expire-stale, require-change, prune-history, doctor)           | Later  | M      | Medium | §3          |
