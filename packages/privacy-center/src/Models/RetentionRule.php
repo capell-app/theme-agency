@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\PrivacyCenter\Models;
 
 use Capell\PrivacyCenter\Enums\RetentionAction;
+use Capell\PrivacyCenter\Support\PrivacyCenterOverviewStatsCache;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -35,6 +36,20 @@ class RetentionRule extends Model
         $tableName = config('capell-privacy-center.tables.retention_rules');
 
         return is_string($tableName) ? $tableName : 'privacy_retention_rules';
+    }
+
+    #[Override]
+    protected static function booted(): void
+    {
+        static::saved(static fn (RetentionRule $retentionRule): null => self::flushOverviewStats());
+        static::deleted(static fn (RetentionRule $retentionRule): null => self::flushOverviewStats());
+    }
+
+    private static function flushOverviewStats(): null
+    {
+        PrivacyCenterOverviewStatsCache::flush();
+
+        return null;
     }
 
     /**
