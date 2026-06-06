@@ -12,7 +12,7 @@
         'url' => '#contact',
     ];
     $imageUrl = $section->mediaUrl ?? ($imageUrl ?? ($image ?? null));
-    $imageAlt = $section->mediaAlt ?? ($imageAlt ?? '');
+    $imageAlt = $section->mediaAlt ?? ($imageAlt ?? ($heading ?? __('capell-theme-portfolio::generic.hero_image_alt')));
 @endphp
 
 <section
@@ -91,6 +91,11 @@
                             <img
                                 src="{{ $imageUrl }}"
                                 alt="{{ $imageAlt }}"
+                                width="960"
+                                height="720"
+                                loading="eager"
+                                decoding="async"
+                                fetchpriority="high"
                                 class="aspect-[4/3] w-full object-cover"
                             />
                         @else

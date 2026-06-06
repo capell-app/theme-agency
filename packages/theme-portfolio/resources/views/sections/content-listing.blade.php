@@ -28,6 +28,7 @@
                 @foreach ($items as $item)
                     @php
                         $image = $item['image'] ?? $item['imageUrl'] ?? $item['mediaUrl'] ?? null;
+                        $imageAlt = $item['imageAlt'] ?? $item['mediaAlt'] ?? $item['alt'] ?? $item['title'] ?? $item['name'] ?? __('capell-theme-portfolio::generic.project_image_alt');
                     @endphp
 
                     <a
@@ -37,7 +38,11 @@
                         @if (is_string($image) && $image !== '')
                             <img
                                 src="{{ $image }}"
-                                alt=""
+                                alt="{{ $imageAlt }}"
+                                width="{{ $loop->first ? 1280 : 640 }}"
+                                height="{{ $loop->first ? 640 : 432 }}"
+                                loading="lazy"
+                                decoding="async"
                                 class="{{ $loop->first ? 'aspect-[16/8]' : 'aspect-[4/2.7]' }} w-full object-cover transition duration-300 group-hover:scale-[1.025]"
                             />
                         @else
