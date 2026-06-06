@@ -20,7 +20,11 @@
             "capell-app/core",
             "capell-app/frontend"
         ],
-        "supports": ["capell-app/blog", "capell-app/email-studio"],
+        "supports": [
+            "capell-app/blog",
+            "capell-app/email-studio",
+            "capell-app/html-cache"
+        ],
         "conflicts": []
     },
     "providers": {

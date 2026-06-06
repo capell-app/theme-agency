@@ -54,13 +54,13 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **Shipped 2026-06-04: Rate-limit hardening (anti-abuse).** The primary public submit throttle key now uses commentable type, commentable ID, and requester IP only, so changing `$this->authorEmail` cannot reset the primary bucket. Focused Livewire coverage proves a second submission to the same thread/IP is throttled even when the email changes. — `src/Livewire/CommentThreadComponent.php`, `tests/Integration/CommentThreadComponentTest.php`
 
-- **Moderator digests / richer templates.** Instant configured-address moderator notifications are shipped. A daily moderation digest, role-based moderator discovery, and Email Studio-backed templates remain natural premium differentiators and the `supports: capell-app/email-studio` dependency is the intended vehicle.
+- **Future upsell: moderator digests / richer templates.** Instant configured-address moderator notifications are shipped. A daily moderation digest, role-based moderator discovery, and Email Studio-backed templates remain natural premium differentiators outside the current package roadmap; `supports: capell-app/email-studio` is the intended vehicle.
 
 - **Shipped 2026-06-04: Reactions / voting (differentiator).** `comment_reactions` stores Like reactions keyed by authenticated user or hashed visitor request data. `ToggleCommentReactionAction` only accepts approved comments on the current commentable, and `PublicCommentData` exposes aggregate `reactionCount` without leaking actor identities.
 
 - **Shipped 2026-06-04: Author reply notifications (differentiator).** `RequestCommentReplyNotificationAction` runs when a reply becomes approved via trusted-author auto-publish or moderation transition, sends a queued parent-author email only for verified non-blocked authors, and creates a `ReplyNotificationOptOut` token consumed by `DisableCommentAuthorReplyNotificationsAction`.
 
-- **Edit / delete window for authors (table-stakes-ish).** Authenticated/verified authors cannot edit or soft-delete their own comments from the frontend; only admins transition status. A short author edit window is expected by most comment systems.
+- **Future upsell: edit / delete window for authors.** Authenticated/verified authors cannot edit or soft-delete their own comments from the frontend; only admins transition status. A short author edit window is useful product depth, but it is intentionally outside the completed moderation/cache-safety roadmap.
 
 - **Shipped 2026-06-04: Akismet / external spam provider hook (differentiator).** `CommentSpamProvider` lets host apps append Akismet, Turnstile, CAPTCHA, or reputation-service adapters through `capell-comments.spam.providers`. `ConfiguredCommentSpamProvider` combines provider scores, `LocalCommentSpamProvider` preserves built-in link/blocked-term checks, and `CreateCommentAction` passes sanitized body, site/commentable context, public author fields, IP/user-agent, and authenticated user context into the scorer.
 
@@ -84,7 +84,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 - **i18n shipped.** Strings are translated via `capell-comments::` namespaces ✔. Public timestamp labels are now produced by `BuildPublicThreadAction` with the commentable language locale, serialized through `PublicCommentData`, and rendered as preformatted labels in Blade so Livewire hydration does not fall back to the ambient app locale.
 
-- **Manifest/README mismatches (low sev).** README "Best Used With" lists `html-cache` but `capell.json`/`composer.json` `supports` lists only `blog` + `email-studio`.
+- **Done/Shipped: manifest pairing matches README.** README "Best Used With" lists Blog, Email Studio, and HTML Cache; `capell.json` now declares all three under `dependencies.supports`.
 
 ## 5. Marketplace & Selling
 
@@ -94,7 +94,7 @@ Manifest `capabilities[]` = `comments`, `comments-admin`, `comments-frontend`, `
 
 **Improved 3–4 sentence description:** "Comments lets site owners open public, threaded discussion on pages and Blog articles while editors keep full control from a dedicated moderation inbox with author records, status transitions, and dashboard widgets. Threads load after the page via a private, no-store endpoint, so they never contaminate cached HTML or leak moderation state to anonymous visitors. Author identities are encrypted at rest and matched by HMAC, with optional email verification, guest-vs-authenticated identity modes, and configurable approval, throttling, and depth limits per site or content type. Developers register a commentable type once and the package resolves public-safe thread data for the frontend."
 
-**Media gaps:** add a short GIF of the moderation approve/reject flow and a before/after of a cached page with comments loading in. The comments package contract is runner-readable, the marketplace gallery now points at committed PNG captures, and its dependency list uses the current `capell-app/block-library` package name.
+**Future media upsell:** a short GIF of the moderation approve/reject flow and a before/after of a cached page with comments loading in would improve the listing, but the required marketplace screenshot contract is complete. The comments package contract is runner-readable, the marketplace gallery points at committed PNG captures, and its dependency list uses the current `capell-app/block-library` package name.
 
 **Pricing / tier / bundle positioning:** `tier: premium`, `bundle: comments`, `proposedLicense: paid`, `requestedCertification: first-party`, `supportPolicy: priority`. The package now has the baseline premium moderation loop: spam scoring plus instant configured moderator notifications. Cross-sell paths already in deps/manifest: **Blog** (`supports`) for article discussion — lead with this in the listing; **Email Studio** (`supports`) for richer moderator/author notification templates and digests; **HTML Cache** (README "Best Used With") — position the no-store design as the reason these two coexist safely. Extension-suite angle: package with Blog + Email Studio as an "Engagement Suite."
 
