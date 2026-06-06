@@ -95,9 +95,19 @@
         "description": "Provides Vue source components that implement the shared Capell/Page and Capell/Bookings/Request server contract.",
         "screenshots": [
             {
-                "path": "docs/assets/marketplace/extension-card.svg",
-                "alt": "Theme Inertia Bookings Vue extension card artwork.",
-                "caption": "Theme Inertia Bookings Vue marketplace card"
+                "path": "docs/screenshots/vue-booking-components.png",
+                "alt": "Vue booking component pack rendering the public request workflow.",
+                "caption": "Vue booking request workflow"
+            },
+            {
+                "path": "docs/screenshots/vue-booking-services.png",
+                "alt": "Vue booking service sections with appointment CTAs.",
+                "caption": "Vue service sections"
+            },
+            {
+                "path": "docs/screenshots/vue-booking-mobile.png",
+                "alt": "Vue booking request workflow at a mobile viewport.",
+                "caption": "Vue mobile booking request"
             }
         ],
         "categories": [

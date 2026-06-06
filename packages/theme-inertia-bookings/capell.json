@@ -104,9 +104,19 @@
         "description": "Theme Inertia Bookings renders Capell marketing pages through Inertia and links into the real Bookings appointment request flow with lazy slot loading.",
         "screenshots": [
             {
-                "path": "docs/assets/marketplace/extension-card.svg",
-                "alt": "Theme Inertia Bookings extension card artwork.",
-                "caption": "Theme Inertia Bookings marketplace card"
+                "path": "docs/screenshots/inertia-bookings-homepage.png",
+                "alt": "Theme Inertia Bookings homepage with appointment request form.",
+                "caption": "Appointment-led Capell/Inertia homepage"
+            },
+            {
+                "path": "docs/screenshots/inertia-bookings-request-flow.png",
+                "alt": "Theme Inertia Bookings public request form.",
+                "caption": "Public booking request flow"
+            },
+            {
+                "path": "docs/screenshots/inertia-bookings-services.png",
+                "alt": "Theme Inertia Bookings service sections.",
+                "caption": "Service proof and appointment CTAs"
             }
         ],
         "categories": [
