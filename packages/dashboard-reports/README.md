@@ -27,6 +27,7 @@ At-a-glance content-health and publishing-activity widgets for Capell admin dash
 
 - Content Health and Publishing Trend widgets for Capell admin screens.
 - Filtered Content Health drill-downs into the Page resource for scheduled, expired, URL-less, and stale pages.
+- CSV exports for both dashboard widgets through `capell:dashboard-reports:export`.
 - Diagnostics checks for install state, dashboard widgets, settings contribution, provider binding, and page-list filters.
 - Service providers for package and admin registration.
 - Typed reporting Actions that other operations packages can build on.
@@ -75,6 +76,7 @@ This package makes its Composer dependencies visible because they are part of th
 
 - Widgets: `ContentHealthWidget`, `PublishingTrendChartWidget`.
 - Page table extender: `DashboardReportsPageTableExtender` adds a hidden-by-default Content Health filter target for widget deep links.
+- Command: `capell:dashboard-reports:export content-health|publishing-trend --path=storage/app/report.csv`.
 
 ## Data And Persistence
 

@@ -17,6 +17,7 @@ Use it when a project needs a package-owned reporting layer, but does not need a
 - Dashboard widgets registered into the main Capell admin dashboard.
 - A `ContentHealthDataProvider` implementation that can replace the admin package's null provider when the package is installed.
 - Dashboard settings contribution for report visibility, plus package config for the stale-page threshold.
+- CSV export for the content-health and publishing-trend widget data.
 - Diagnostics checks for package install state, provider binding, dashboard widget registration, dashboard settings contribution, and page-table filter registration.
 
 ## Admin Surface
@@ -55,6 +56,17 @@ The package reads Capell core `Page` records through `SiteScope::applyForCurrent
 | Publishing trend   | Published and scheduled page counts bucketed across the selected date range |
 
 Dashboard Reports does not create reporting tables. It computes the current dashboard state from the installed site's page records. The publishing trend Action receives the dashboard's resolved date range from the widget, so chart buckets and headline totals use the same selected window.
+
+## CSV Export
+
+Export the current widget data from a host Capell app with:
+
+```bash
+php artisan capell:dashboard-reports:export content-health --path=storage/app/dashboard-content-health.csv
+php artisan capell:dashboard-reports:export publishing-trend --from=2026-05-01 --to=2026-06-01 --path=storage/app/dashboard-publishing-trend.csv
+```
+
+Omit `--path` to write CSV to stdout. `content-health` accepts `--stale-days`; `publishing-trend` accepts `--from` and `--to`.
 
 ## Diagnostics
 

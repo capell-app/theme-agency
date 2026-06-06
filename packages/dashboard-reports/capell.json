@@ -38,7 +38,8 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "export": "capell:dashboard-reports:export"
     },
     "settings": [],
     "permissions": [],

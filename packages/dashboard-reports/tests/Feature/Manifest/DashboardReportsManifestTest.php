@@ -86,3 +86,10 @@ it('keeps marketplace and package descriptions focused on shipped dashboard repo
         ->and($packageTranslations['description'] ?? null)->not->toContain('Generic CMS reporting widgets')
         ->and($docsIndex)->not->toContain('generic CMS reporting widgets');
 });
+
+it('declares the dashboard report export command', function (): void {
+    $packagePath = dirname(__DIR__, 3);
+    $manifest = capell_json_file_array($packagePath . '/capell.json');
+
+    expect(data_get($manifest, 'commands.export'))->toBe('capell:dashboard-reports:export');
+});
