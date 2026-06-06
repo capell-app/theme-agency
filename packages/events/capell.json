@@ -223,11 +223,6 @@
                 "path": "docs/screenshots/events-calendar-page.png",
                 "alt": "Public events calendar page showing upcoming event dates",
                 "caption": "Frontend events calendar page"
-            },
-            {
-                "path": "docs/screenshots/events-ics-feed.png",
-                "alt": "Browser capture of the public iCalendar feed output",
-                "caption": "iCalendar feed route"
             }
         ],
         "categories": ["admin", "console", "content-product", "frontend"]

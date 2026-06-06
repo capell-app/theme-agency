@@ -49,7 +49,7 @@ The committed Capell runner-backed screenshot gallery covers:
 - Dispatch attempts admin index.
 - Integration token list and create-token modal.
 - Public action frontend form.
-- Zapier API discovery response.
+- Zapier API discovery response as runner evidence only; it is not promoted as buyer-facing marketplace media because it is raw JSON output.
 
 ## Public Safety Notes
 

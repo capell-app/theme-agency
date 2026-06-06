@@ -143,11 +143,6 @@
                 "path": "docs/screenshots/public-action-frontend-form.png",
                 "alt": "Public-safe frontend form for an active Public Action",
                 "caption": "Public Action frontend form"
-            },
-            {
-                "path": "docs/screenshots/public-action-zapier-discovery.png",
-                "alt": "Zapier discovery API response shape for Public Actions",
-                "caption": "Zapier action discovery API"
             }
         ],
         "categories": ["admin", "automation", "console", "frontend"]

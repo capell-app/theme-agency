@@ -56,7 +56,7 @@ Native RSVP registrations start as pending or waitlisted depending on occurrence
 
 ## Screenshot Coverage
 
-The screenshot contract is stored in [screenshots.json](screenshots.json). The committed runner-backed captures cover the admin resources, admin calendar, calendar widget, frontend listing/calendar pages, and feed route verification; the same files are promoted in `capell.json` marketplace media.
+The screenshot contract is stored in [screenshots.json](screenshots.json). The committed runner-backed captures cover the admin resources, admin calendar, calendar widget, frontend listing/calendar pages, and feed route verification. The styled admin/frontend captures are promoted in `capell.json` marketplace media; the raw feed output capture remains runner evidence only.
 
 ## Install And Verify
 
