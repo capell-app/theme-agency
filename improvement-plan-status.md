@@ -51,6 +51,7 @@ This file tracks the active package-improvement wave at a repository level. Pack
 - Frontend Optimizer screenshot verification used the Capell package screenshot runner only: dry-run validation passed, then the real runner captured four 1440x900 PNGs without failures.
 - Record Switcher now uses the Capell screenshot runner contract and committed light/dark admin edit-page PNG captures instead of SVG-only marketplace previews.
 - Bookings now promotes route-backed PNG captures for the public booking form and Capell admin appointment queue instead of SVG-only workflow previews.
+- Social Feeds now promotes route-backed PNG captures for the seeded public carousel, cached RSS sync state, and provider registry diagnostics instead of SVG-only workflow previews.
 - A full `COMPOSER=composer.local.json composer test` run reached 1470/1471 passing before exposing the Notes Blade type-hint issue; that issue has been fixed. A fresh full re-run was started and then stopped on request so the remaining changes could be committed without further tests.
 
 ## Commit Policy

@@ -3914,6 +3914,12 @@
             "surface": "frontend",
             "targetType": "frontend-block",
             "target": "social-feed",
+            "scenario": "frontend-page",
+            "url": "/screenshot-fixtures/social-feeds/carousel",
+            "waitFor": ".capell-social-feed",
+            "colorSchemes": [
+                "light"
+            ],
             "required": true,
             "notes": "Capture a public page with seeded cached feed items rendered through the social-feed block using the carousel layout.",
             "useCase": "A visitor sees a branded carousel of social posts without exposing feed connection internals.",
@@ -3927,6 +3933,12 @@
             "surface": "admin",
             "targetType": "package-state",
             "target": "social_feed_items",
+            "scenario": "frontend-page",
+            "url": "/screenshot-fixtures/social-feeds/rss-sync",
+            "waitFor": "table",
+            "colorSchemes": [
+                "light"
+            ],
             "required": true,
             "notes": "Capture after creating an RSS connection, running the sync action, and confirming cached items exist for render.",
             "useCase": "An administrator verifies an RSS feed is connected and producing cached social feed items.",
@@ -3940,6 +3952,12 @@
             "surface": "shared",
             "targetType": "extension-contract",
             "target": "SocialFeedProviderRegistry",
+            "scenario": "frontend-page",
+            "url": "/screenshot-fixtures/social-feeds/provider-registry",
+            "waitFor": ".registry",
+            "colorSchemes": [
+                "light"
+            ],
             "required": true,
             "notes": "Capture package documentation or diagnostics output showing built-in RSS, TikTok, YouTube, Bluesky, Instagram, Facebook, LinkedIn, X, and a custom provider.",
             "useCase": "A developer confirms social feeds can be extended without coupling their provider package to package internals.",

@@ -130,19 +130,19 @@
                 "caption": "Premium social feed widget preview"
             },
             {
-                "path": "docs/assets/marketplace/social-feed-carousel-widget.svg",
-                "alt": "Social Feeds carousel widget with provider badges captions and media cards.",
-                "caption": "Carousel widget with rich display controls"
+                "path": "docs/screenshots/social-feed-carousel-widget.png",
+                "alt": "Social Feeds public carousel widget rendered with seeded cached RSS posts.",
+                "caption": "Route-backed carousel widget with cached feed items"
             },
             {
-                "path": "docs/assets/marketplace/social-feed-rss-sync.svg",
-                "alt": "RSS sync pipeline showing provider fetch cached feed items and public rendering.",
-                "caption": "Cached RSS sync and public-safe rendering"
+                "path": "docs/screenshots/social-feed-rss-sync.png",
+                "alt": "Social Feeds RSS sync state showing cached feed item records ready for public rendering.",
+                "caption": "Cached RSS sync state from seeded package records"
             },
             {
-                "path": "docs/assets/marketplace/social-feed-provider-registry.svg",
-                "alt": "Provider registry diagram showing RSS TikTok YouTube Bluesky and custom providers.",
-                "caption": "Extendable provider registry"
+                "path": "docs/screenshots/social-feed-provider-registry.png",
+                "alt": "Social Feeds provider registry diagnostics showing RSS TikTok YouTube Bluesky and custom providers.",
+                "caption": "Provider registry extension surface"
             }
         ],
         "categories": ["admin", "frontend", "growth"]
