@@ -78,7 +78,7 @@ it('declares admin providers, resources, and owned tables in the manifest', func
         flags: JSON_THROW_ON_ERROR,
     );
 
-    expect($manifest['dependencies']['requires'])->toContain('capell-app/admin', 'capell-app/core')
+    expect($manifest['dependencies']['requires'])->toContain('capell-app/admin', 'capell-app/core', 'capell-app/frontend')
         ->and($manifest['providers']['admin'])->toContain(AdminServiceProvider::class)
         ->and($manifest['database']['requiredTables'])->toBe([
             'knowledge_base_collections',

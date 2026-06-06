@@ -6,6 +6,7 @@ namespace Capell\KnowledgeBase\Providers;
 
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\Frontend\Support\Cache\CacheInvalidationRegistry;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticle;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticleFeedback;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticleVersion;
@@ -46,6 +47,7 @@ final class KnowledgeBaseServiceProvider extends AbstractPackageServiceProvider
             $this
                 ->registerModels()
                 ->registerMorphMap()
+                ->registerCacheInvalidationDependencies()
                 ->registerProtectedTables();
         });
     }
@@ -87,6 +89,27 @@ final class KnowledgeBaseServiceProvider extends AbstractPackageServiceProvider
         CapellCore::registerProtectedTable('knowledge_base_article_versions');
         CapellCore::registerProtectedTable('knowledge_base_article_feedback');
         CapellCore::registerProtectedTable('knowledge_base_related_articles');
+
+        return $this;
+    }
+
+    private function registerCacheInvalidationDependencies(): self
+    {
+        $cacheInvalidationRegistryClass = CacheInvalidationRegistry::class;
+
+        if (! class_exists($cacheInvalidationRegistryClass) || ! $this->app->bound($cacheInvalidationRegistryClass)) {
+            return $this;
+        }
+
+        $registry = resolve($cacheInvalidationRegistryClass);
+
+        if (! is_object($registry) || ! method_exists($registry, 'registerDependency')) {
+            return $this;
+        }
+
+        $registry->registerDependency(KnowledgeBaseArticle::class, 'knowledge-base-*');
+        $registry->registerDependency(KnowledgeBaseArticleVersion::class, 'knowledge-base-*');
+        $registry->registerDependency(KnowledgeBaseCollection::class, 'knowledge-base-*');
 
         return $this;
     }

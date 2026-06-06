@@ -27,6 +27,13 @@ it('throttles the public article feedback route', function (): void {
     expect($route?->gatherMiddleware())->toContain('throttle:30,1');
 });
 
+it('can use the Capell frontend route middleware stack when frontend is available', function (): void {
+    $route = Route::getRoutes()->getByName('capell-knowledge-base.index');
+    $middleware = $route?->gatherMiddleware() ?? [];
+
+    expect($middleware)->toContain('web');
+});
+
 it('renders public navigation and articles without authoring internals', function (): void {
     $collection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
         title: 'Getting Started',

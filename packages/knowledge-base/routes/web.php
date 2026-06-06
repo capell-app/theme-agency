@@ -5,12 +5,18 @@ declare(strict_types=1);
 use Capell\KnowledgeBase\Http\Controllers\ShowKnowledgeBaseArticleController;
 use Capell\KnowledgeBase\Http\Controllers\ShowKnowledgeBaseIndexController;
 use Capell\KnowledgeBase\Http\Controllers\StoreKnowledgeBaseArticleFeedbackController;
+use Capell\Frontend\Support\Routing\FrontendRouteMiddlewareRegistry;
 use Illuminate\Support\Facades\Route;
 
 if (config('capell-knowledge-base.public_routes_enabled', true) === true) {
     $prefix = trim((string) config('capell-knowledge-base.public_path_prefix', 'docs'), '/');
+    $middleware = ['web'];
 
-    Route::middleware(['web'])
+    if (class_exists(FrontendRouteMiddlewareRegistry::class) && app()->bound(FrontendRouteMiddlewareRegistry::class)) {
+        $middleware = resolve(FrontendRouteMiddlewareRegistry::class)->all();
+    }
+
+    Route::middleware($middleware)
         ->prefix($prefix)
         ->as('capell-knowledge-base.')
         ->group(function (): void {
