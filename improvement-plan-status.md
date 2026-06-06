@@ -82,6 +82,7 @@ This file tracks the active package-improvement wave at a repository level. Pack
 - Filament Peek now has its snapshot-read and shared-preview-context roadmap rows reconciled against the shipped `FindPagePreviewSnapshotAction` and `ResolvesPreviewContext` implementation.
 - Public Actions now has its stale overview-docs row reconciled: `docs/overview.md` is no longer a hollow outline and documents package surfaces, screenshots, safety notes, and verification guidance.
 - Public Actions now has dated changelog entries for health diagnostics, webhook hardening, canonical payload encoding, overview docs, and screenshot-runner promotion.
+- URL Manager now has stale redirect-depth rows reconciled: regex bounds, loop/chain detection, frontend 404 capture middleware, priority ordering, bounded prefix/regex resolution, and package config are all shipped.
 - HTML Cache now promotes seven Capell runner captures across admin cache controls, diagnostics, page indicators, and public cached output.
 - Events now promotes 11 Capell runner captures across event CRUD, venues, occurrences, registrations, admin calendar/widget, public listing/calendar, and `.ics` feed output.
 - Public Actions now promotes eight Capell runner captures across configured actions, action form, destinations, submissions, dispatch attempts, integration tokens, frontend form, and Zapier discovery.
