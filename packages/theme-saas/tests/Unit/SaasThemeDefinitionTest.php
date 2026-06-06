@@ -44,6 +44,9 @@ it('defines the saas premium renderer contract', function (): void {
             'hero',
             'features',
             'proof',
+            'logos',
+            'testimonials',
+            'faq',
             'content-listing',
             'comparison',
             'calculator',
@@ -54,7 +57,7 @@ it('defines the saas premium renderer contract', function (): void {
             'footer',
             'blog',
         ])
-        ->and($definition->includedSections)->toContain('content-listing', 'comparison', 'calculator', 'blog')
+        ->and($definition->includedSections)->toContain('logos', 'testimonials', 'faq', 'content-listing', 'comparison', 'calculator', 'blog')
         ->and($definition->presets)->toHaveCount(1)
         ->and($definition->presets[0]->key)->toBe('saas')
         ->and($definition->runtime->value)->toBe('blade')
@@ -95,6 +98,9 @@ it('declares renderers for every included saas section', function (): void {
         'hero',
         'features',
         'proof',
+        'logos',
+        'testimonials',
+        'faq',
         'content-listing',
         'comparison',
         'calculator',
@@ -695,6 +701,26 @@ function renderSaasThemeAllSections(ThemeRegistry $registry): string
                     ['metric' => '2.4x', 'name' => 'Expansion signal', 'quote' => 'Stronger qualified pipeline.'],
                 ],
             ),
+            saasThemeSection('logos', [
+                'heading' => 'Trusted by product teams',
+                'items' => [
+                    ['name' => 'Northstar'],
+                    ['name' => 'SignalDesk'],
+                    ['name' => 'LaunchOps'],
+                ],
+            ]),
+            saasThemeSection('testimonials', [
+                'heading' => 'Teams launch faster',
+                'items' => [
+                    ['name' => 'Ava, Product Lead', 'quote' => 'The launch path stayed clear from first visit to demo.', 'metric' => '38%'],
+                ],
+            ]),
+            saasThemeSection('faq', [
+                'heading' => 'Launch questions',
+                'items' => [
+                    ['question' => 'Can we connect demo capture?', 'answer' => 'Yes, connect a Form Builder handle or use the static fallback.'],
+                ],
+            ]),
             new ContentListingSectionData(
                 heading: 'Resource pipeline',
                 summary: 'Guides and playbooks for SaaS teams.',

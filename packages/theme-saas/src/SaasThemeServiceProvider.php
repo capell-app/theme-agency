@@ -36,7 +36,7 @@ class SaasThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/saas.jpg',
             tags: ['Product', 'Conversion', 'Growth'],
             bestFit: ['Software products', 'Startups', 'Subscription services'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'comparison', 'calculator', 'pricing', 'docs-onboarding', 'demo-request', 'cta', 'footer', 'blog'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'logos', 'testimonials', 'faq', 'content-listing', 'comparison', 'calculator', 'pricing', 'docs-onboarding', 'demo-request', 'cta', 'footer', 'blog'],
             presets: [
                 new ThemePresetData(
                     key: 'saas',
@@ -128,6 +128,9 @@ class SaasThemeServiceProvider extends ServiceProvider
             'hero' => new ViewSectionRenderer(self::THEME_KEY, 'hero', 'capell-theme-saas::sections.hero', failLoudly: true),
             'features' => new ViewSectionRenderer(self::THEME_KEY, 'features', 'capell-theme-saas::sections.features', failLoudly: true),
             'proof' => new ViewSectionRenderer(self::THEME_KEY, 'proof', 'capell-theme-saas::sections.proof', failLoudly: true),
+            'logos' => new ViewSectionRenderer(self::THEME_KEY, 'logos', 'capell-theme-saas::sections.logos', failLoudly: true),
+            'testimonials' => new ViewSectionRenderer(self::THEME_KEY, 'testimonials', 'capell-theme-saas::sections.testimonials', failLoudly: true),
+            'faq' => new ViewSectionRenderer(self::THEME_KEY, 'faq', 'capell-theme-saas::sections.faq', failLoudly: true),
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-saas::sections.content-listing', failLoudly: true),
             'comparison' => new ViewSectionRenderer(self::THEME_KEY, 'comparison', 'capell-theme-saas::sections.comparison', failLoudly: true),
             'calculator' => new ViewSectionRenderer(self::THEME_KEY, 'calculator', 'capell-theme-saas::sections.calculator', failLoudly: true),
