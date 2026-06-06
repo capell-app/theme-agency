@@ -11,10 +11,12 @@ use Capell\Frontend\Data\FrontendAssetRequirementData;
 use Capell\Frontend\Support\Assets\DefaultFrontendAssetManifestRenderer;
 use Capell\FrontendOptimizer\Actions\PrepareRenderProfileAction;
 use Capell\FrontendOptimizer\Actions\RenderProfileAssetsAction;
+use Capell\FrontendOptimizer\Actions\ResolveOptimizationScopeAction;
 use Capell\FrontendOptimizer\Enums\AssetLoadingStrategy;
 use Capell\FrontendOptimizer\Enums\AssetSlot;
 use Capell\FrontendOptimizer\Enums\OptimizationScope;
 use Illuminate\Foundation\Vite;
+use Illuminate\Support\Arr;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
@@ -24,6 +26,7 @@ final class CapellFrontendAssetManifestRenderer implements FrontendAssetManifest
 {
     public function __construct(
         private readonly DefaultFrontendAssetManifestRenderer $fallbackRenderer,
+        private readonly CriticalCssSettings $criticalCssSettings,
         private readonly UrlGenerator $url,
         private readonly Vite $vite,
     ) {}
@@ -35,11 +38,14 @@ final class CapellFrontendAssetManifestRenderer implements FrontendAssetManifest
         }
 
         try {
+            $scope = ResolveOptimizationScopeAction::run(siteScope: $this->criticalCssSettings->scope());
+            $url = $this->url->current();
+
             $profile = PrepareRenderProfileAction::run(
-                scope: OptimizationScope::Layout,
-                context: $this->profileContext($context),
+                scope: $scope,
+                context: $this->profileContext($context, $scope, $url),
                 assetSets: [$this->assetSet($manifest)],
-                url: $this->url->current(),
+                url: $url,
                 label: $this->profileLabel($context),
             );
 
@@ -118,9 +124,9 @@ final class CapellFrontendAssetManifestRenderer implements FrontendAssetManifest
     }
 
     /** @return array<string, mixed> */
-    private function profileContext(FrontendAssetContextData $context): array
+    private function profileContext(FrontendAssetContextData $context, OptimizationScope $scope, string $url): array
     {
-        return [
+        $profileContext = [
             'layout' => [
                 'id' => $context->layout?->getKey(),
                 'key' => $context->layout?->key,
@@ -137,6 +143,16 @@ final class CapellFrontendAssetManifestRenderer implements FrontendAssetManifest
                 'updated_at' => $context->theme?->updated_at?->toISOString(),
             ],
         ];
+
+        if ($scope === OptimizationScope::Layout) {
+            return Arr::only($profileContext, ['layout', 'theme']);
+        }
+
+        if ($scope === OptimizationScope::PageUrl) {
+            $profileContext['url'] = $url;
+        }
+
+        return $profileContext;
     }
 
     private function profileLabel(FrontendAssetContextData $context): ?string
