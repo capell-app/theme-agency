@@ -86,16 +86,6 @@
                 "caption": "Filament Peek extension preview"
             },
             {
-                "path": "docs/assets/marketplace/hero-desktop.jpg",
-                "alt": "Filament Peek unsaved page preview on desktop",
-                "caption": "Preview unsaved edits rendered through your live theme on desktop"
-            },
-            {
-                "path": "docs/assets/marketplace/hero-mobile.jpg",
-                "alt": "Filament Peek unsaved page preview on mobile",
-                "caption": "Review in-flight changes before publishing on mobile"
-            },
-            {
                 "path": "docs/screenshots/page-edit-preview-actions.png",
                 "alt": "Capell Page edit screen with the Filament Peek preview action group",
                 "caption": "Open the Preview action group from a real Capell Page edit screen before reviewing unsaved changes"
