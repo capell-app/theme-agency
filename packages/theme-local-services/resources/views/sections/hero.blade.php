@@ -12,7 +12,10 @@
         'url' => '#areas',
     ];
     $imageUrl = $section->mediaUrl ?? ($imageUrl ?? ($image ?? null));
-    $imageAlt = $section->mediaAlt ?? ($imageAlt ?? '');
+    $imageAlt = $section->mediaAlt
+        ?? ($section->imageAlt ?? ($imageAlt ?? ($heading ?? __('capell-theme-local-services::generic.hero_image_alt'))));
+    $imageWidth = (int) ($section->mediaWidth ?? ($section->imageWidth ?? ($imageWidth ?? 1600)));
+    $imageHeight = (int) ($section->mediaHeight ?? ($section->imageHeight ?? ($imageHeight ?? 1000)));
 @endphp
 
 <section class="theme-section theme-section-hero overflow-hidden bg-[#ecfdf5]">
@@ -95,6 +98,11 @@
                             <img
                                 src="{{ $imageUrl }}"
                                 alt="{{ $imageAlt }}"
+                                width="{{ $imageWidth }}"
+                                height="{{ $imageHeight }}"
+                                loading="eager"
+                                decoding="async"
+                                fetchpriority="high"
                                 class="aspect-[16/10] w-full object-cover"
                             />
                         @else

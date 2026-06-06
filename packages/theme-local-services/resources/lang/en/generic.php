@@ -37,6 +37,7 @@ return [
     'completion_signal' => 'Completion proof',
     'coverage_signal' => 'Coverage checked',
     'hero_label' => 'Quote desk',
+    'hero_image_alt' => 'Local service team preparing a quote request',
     'hero_summary' => 'Show local visitors how quickly you can scope the job, match the area, and move a real enquiry into a confirmed service slot.',
     'hero_primary_action' => 'Request quote',
     'hero_secondary_action' => 'Check coverage',
