@@ -17,6 +17,7 @@ Diagnostics adds operational diagnostics for cache, configuration drift, migrati
 - Secure command palette discovery, execution, feedback, and audit logging for developer tools, system health, queue health, and trusted `capell:*` Artisan operations.
 - Health-check reflection that reports implemented, stub, and broken manifest declarations across installed packages.
 - `capell:diagnostics:health` for running declared extension health checks from the console.
+- Health-check exports include an overall status, 0-100 score, worst severity, and per-check implementation/pass-fail rows.
 
 ## Developer Notes
 

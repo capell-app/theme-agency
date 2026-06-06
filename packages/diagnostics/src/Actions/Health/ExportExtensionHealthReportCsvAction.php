@@ -21,6 +21,9 @@ final class ExportExtensionHealthReportCsvAction
 
         fputcsv($stream, [
             'type',
+            'status',
+            'score',
+            'worst_severity',
             'package',
             'key',
             'label',
@@ -40,6 +43,9 @@ final class ExportExtensionHealthReportCsvAction
 
         fputcsv($stream, [
             'summary',
+            $report->overallStatus,
+            (string) $report->healthScore,
+            $report->worstSeverity ?? '',
             '',
             '',
             '',
@@ -62,6 +68,9 @@ final class ExportExtensionHealthReportCsvAction
             ->each(function (HealthCheckResultData $check) use ($stream): void {
                 fputcsv($stream, [
                     'check',
+                    '',
+                    '',
+                    '',
                     $check->packageName,
                     $check->key,
                     $check->label,

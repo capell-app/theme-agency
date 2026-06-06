@@ -49,6 +49,8 @@ final class RunDiagnosticsHealthCommand extends Command
         }
 
         $this->components->info((string) __('capell-diagnostics::package.health_command_summary', [
+            'status' => $report->overallStatus,
+            'score' => $report->healthScore,
             'implemented' => $report->implementedCount,
             'declared' => $report->declaredCount,
             'stub' => $report->stubCount,
@@ -69,7 +71,7 @@ final class RunDiagnosticsHealthCommand extends Command
     }
 
     /**
-     * @return array{declared: int, implemented: int, stub: int, broken: int, executed: int, passed: int, failed: int, checks: list<array{package: string, key: string, label: string, class: string, severity: string, implementation: string, passed: bool|null, message: string|null}>}
+     * @return array{status: string, score: int, worstSeverity: string|null, declared: int, implemented: int, stub: int, broken: int, executed: int, passed: int, failed: int, checks: list<array{package: string, key: string, label: string, class: string, severity: string, implementation: string, passed: bool|null, message: string|null}>}
      */
     private function payloadFor(ExtensionHealthReportData $report): array
     {
@@ -90,6 +92,9 @@ final class RunDiagnosticsHealthCommand extends Command
             ->all();
 
         return [
+            'status' => $report->overallStatus,
+            'score' => $report->healthScore,
+            'worstSeverity' => $report->worstSeverity,
             'declared' => $report->declaredCount,
             'implemented' => $report->implementedCount,
             'stub' => $report->stubCount,

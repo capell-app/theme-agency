@@ -26,5 +26,8 @@ final class ExtensionHealthReportData extends Data
         public readonly int $passedCount,
         public readonly int $failedCount,
         public readonly DataCollection $checks,
+        public readonly string $overallStatus = 'healthy',
+        public readonly int $healthScore = 100,
+        public readonly ?string $worstSeverity = null,
     ) {}
 }

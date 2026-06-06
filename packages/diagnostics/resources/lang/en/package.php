@@ -82,7 +82,7 @@ return [
     'health_command_result_not_run' => 'not run',
     'health_command_result_passed' => 'passed',
     'health_command_single_export_format' => 'Choose either --json or --csv, not both.',
-    'health_command_summary' => ':implemented/:declared implemented, :stub stub, :broken broken, :failed failed.',
+    'health_command_summary' => 'Status: :status (:score/100). :implemented/:declared implemented, :stub stub, :broken broken, :failed failed.',
     'job' => 'Job',
     'job_class' => 'Job class',
     'infrastructure_cache' => 'Cache',

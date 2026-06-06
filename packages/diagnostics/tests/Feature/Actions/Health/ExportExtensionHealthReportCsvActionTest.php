@@ -39,12 +39,18 @@ it('exports a health report as support-friendly csv', function (): void {
                 message: 'Check only satisfies the contract and asserts nothing.',
             ),
         ]),
+        overallStatus: 'degraded',
+        healthScore: 95,
+        worstSeverity: null,
     );
 
     $rows = array_map(str_getcsv(...), explode(PHP_EOL, ExportExtensionHealthReportCsvAction::run($report)));
 
     expect($rows[0])->toBe([
         'type',
+        'status',
+        'score',
+        'worst_severity',
         'package',
         'key',
         'label',
@@ -61,11 +67,11 @@ it('exports a health report as support-friendly csv', function (): void {
         'passed_count',
         'failed_count',
     ])
-        ->and($rows[1])->toBe(['summary', '', '', '', '', '', '', '', '', '2', '1', '1', '0', '1', '1', '0'])
+        ->and($rows[1])->toBe(['summary', 'degraded', '95', '', '', '', '', '', '', '', '', '', '2', '1', '1', '0', '1', '1', '0'])
         ->and($rows[2][0])->toBe('check')
-        ->and($rows[2][1])->toBe('capell-app/diagnostics')
-        ->and($rows[2][7])->toBe('true')
-        ->and($rows[3][1])->toBe('capell-app/example')
-        ->and($rows[3][6])->toBe(HealthCheckImplementationStatus::Stub->value)
-        ->and($rows[3][7])->toBe('');
+        ->and($rows[2][4])->toBe('capell-app/diagnostics')
+        ->and($rows[2][10])->toBe('true')
+        ->and($rows[3][4])->toBe('capell-app/example')
+        ->and($rows[3][9])->toBe(HealthCheckImplementationStatus::Stub->value)
+        ->and($rows[3][10])->toBe('');
 });

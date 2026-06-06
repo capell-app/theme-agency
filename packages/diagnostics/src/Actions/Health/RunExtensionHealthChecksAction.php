@@ -290,7 +290,95 @@ final class RunExtensionHealthChecksAction
             passedCount: count($executed) - count($failed),
             failedCount: count($failed),
             checks: HealthCheckResultData::collect($results, DataCollection::class),
+            overallStatus: $this->overallStatus($results),
+            healthScore: $this->healthScore($results),
+            worstSeverity: $this->worstSeverity($results),
         );
+    }
+
+    /**
+     * @param  list<HealthCheckResultData>  $results
+     */
+    private function overallStatus(array $results): string
+    {
+        $worstSeverity = $this->worstSeverity($results);
+
+        if ($worstSeverity === 'critical') {
+            return 'critical';
+        }
+
+        if ($worstSeverity !== null || $this->stubCount($results) > 0) {
+            return 'degraded';
+        }
+
+        return 'healthy';
+    }
+
+    /**
+     * @param  list<HealthCheckResultData>  $results
+     */
+    private function healthScore(array $results): int
+    {
+        $penalty = 0;
+
+        foreach ($results as $result) {
+            $severity = strtolower($result->severity);
+
+            if ($result->implementationStatus === HealthCheckImplementationStatus::Broken) {
+                $penalty += $severity === 'critical' ? 40 : 25;
+
+                continue;
+            }
+
+            if ($result->failed()) {
+                $penalty += $severity === 'critical' ? 30 : 20;
+
+                continue;
+            }
+
+            if ($result->implementationStatus === HealthCheckImplementationStatus::Stub) {
+                $penalty += 5;
+            }
+        }
+
+        return max(0, 100 - $penalty);
+    }
+
+    /**
+     * @param  list<HealthCheckResultData>  $results
+     */
+    private function worstSeverity(array $results): ?string
+    {
+        $worst = null;
+
+        foreach ($results as $result) {
+            if (! $result->failed() && $result->implementationStatus !== HealthCheckImplementationStatus::Broken) {
+                continue;
+            }
+
+            $severity = strtolower($result->severity);
+
+            if ($severity === 'critical') {
+                return 'critical';
+            }
+
+            if ($worst === null && $severity !== '') {
+                $worst = $severity;
+            }
+        }
+
+        return $worst;
+    }
+
+    /**
+     * @param  list<HealthCheckResultData>  $results
+     */
+    private function stubCount(array $results): int
+    {
+        return count(array_filter(
+            $results,
+            static fn (HealthCheckResultData $result): bool => $result->implementationStatus === HealthCheckImplementationStatus::Stub,
+        ));
     }
 
     /**
