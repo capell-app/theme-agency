@@ -94,14 +94,14 @@ class PasswordPolicyServiceProvider extends AbstractPackageServiceProvider
 
     private function registerAdminSurface(): self
     {
-        $this->registerPasswordPolicySettingsExtensionPage();
-
         if ($this->supportsAdminBridges()) {
             CapellAdmin::registerAdminBridge(static::$packageName, PasswordPolicyAdminBridge::class);
             CapellAdmin::bootAdminBridges(static::$packageName);
 
             return $this;
         }
+
+        $this->registerPasswordPolicySettingsExtensionPage();
 
         CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::page(ForcedPasswordChangePage::class));
 
