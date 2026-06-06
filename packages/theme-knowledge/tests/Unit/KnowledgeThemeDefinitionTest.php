@@ -155,6 +155,7 @@ it('renders standard sections through Knowledge views', function (): void {
         ->toContain('knowledge-result-card')
         ->toContain('Facet filters')
         ->toContain('Source map')
+        ->toContain('Source signals summarize freshness')
         ->toContain('Research operations guide')
         ->toContain('Relevance')
         ->toContain('97%')

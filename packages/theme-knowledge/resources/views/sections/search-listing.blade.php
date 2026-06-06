@@ -133,6 +133,9 @@
                     >
                         {{ __('capell-theme-knowledge::generic.search_source_label') }}
                     </p>
+                    <p class="mt-3 text-sm leading-6 text-slate-300">
+                        {{ __('capell-theme-knowledge::generic.search_source_summary') }}
+                    </p>
                     <div
                         class="mt-4 space-y-3"
                         aria-hidden="true"

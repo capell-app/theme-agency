@@ -76,3 +76,14 @@ it('keeps optional package checks out of public Blade', function (): void {
         ->not->toContain('CapellCore::')
         ->not->toContain('isPackageInstalled(');
 });
+
+it('keeps visible public copy behind translations or hydrated data', function (): void {
+    $blade = preg_replace('/<\?php.*?\?>/s', '', knowledgeThemeBladeViews()) ?? '';
+    $blade = preg_replace('/@php.*?@endphp/s', '', $blade) ?? '';
+    $blade = preg_replace('/\{\{.*?\}\}/s', '', $blade) ?? '';
+    $blade = preg_replace('/\{!!.*?!!\}/s', '', $blade) ?? '';
+
+    preg_match_all('/>\s*([A-Z][A-Za-z0-9 ,.\'"&:;!?()-]{7,})\s*</', $blade, $matches);
+
+    expect($matches[1] ?? [])->toBe([]);
+});

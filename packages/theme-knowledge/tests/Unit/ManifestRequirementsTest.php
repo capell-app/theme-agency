@@ -20,6 +20,8 @@ it('declares the required first-party theme manifest boundaries', function (): v
 
     expect($manifest['themeKey'])->toBe('knowledge')
         ->and($manifest['extends'])->toBe('capell-app/foundation-theme')
+        ->and($manifest['performance']['frontendRenderBudgetMs'])->toBeLessThanOrEqual(20)
+        ->and($manifest['performance']['adminQueryBudget'])->toBe(0)
         ->and($database['migrations'])->toBeFalse()
         ->and($runtimeProviders)->toContain(KnowledgeThemeServiceProvider::class);
 });
@@ -43,11 +45,10 @@ it('uses buyer-facing marketplace copy and committed real preview assets', funct
     }
 
     expect($marketplace['summary'])->toBe('A premium knowledge-base and documentation theme for Capell — sidebar-navigated articles, in-page table of contents, prominent search, and readable long-form layouts out of the box.')
-        ->and($marketplace['description'])->toBe('Theme Knowledge turns a Capell site into a polished documentation and help centre. It pairs a category sidebar, sticky table of contents, and breadcrumb trails with a prominent search experience and readable long-form typography, so visitors find answers fast. Resource libraries, author bios, topic hubs, and newsletter capture round out a full knowledge-marketing surface, with optional Blog, Search, and Newsletter integrations lighting up automatically when those packages are installed. Built on the Capell foundation theme with a configurable colour palette and accessible focus states. (Note: code-block styling remains planned follow-up work before the full technical-docs promise is complete.)')
+        ->and($marketplace['description'])->toBe('Theme Knowledge turns a Capell site into a polished documentation and help centre. It pairs a category sidebar, sticky table of contents, code-friendly prose, and breadcrumb trails with a prominent search experience and readable long-form typography, so visitors find answers fast. Resource libraries, author bios, topic hubs, and newsletter capture round out a full knowledge-marketing surface, with optional Blog, Search, and Newsletter integrations lighting up automatically when those packages are installed. Built on the Capell foundation theme with configurable colour tokens, dark-mode support, and accessible focus states.')
         ->and($screenshotPaths)->toBe([
             'docs/assets/marketplace/extension-card.jpg',
-            'docs/assets/marketplace/hero-desktop.jpg',
-            'docs/assets/marketplace/hero-mobile.jpg',
+            'docs/screenshots/knowledge-homepage-layout.png',
         ]);
 
     foreach ($screenshotPaths as $screenshotPath) {

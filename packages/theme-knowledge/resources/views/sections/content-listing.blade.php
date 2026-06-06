@@ -52,21 +52,32 @@
                             />
                         @else
                             <div
-                                class="min-h-48 bg-[var(--site-theme-primary-contrast)] p-5"
-                                aria-hidden="true"
+                                class="min-h-48 bg-[var(--site-theme-primary-contrast)] p-5 text-white"
+                                role="img"
+                                aria-label="{{ __('capell-theme-knowledge::generic.listing_image_fallback_label') }}"
                             >
                                 <span
                                     class="block h-3 w-20 bg-[var(--site-theme-accent)]"
+                                    aria-hidden="true"
                                 ></span>
+                                <p class="mt-8 max-w-48 text-sm font-black leading-6">
+                                    {{ __('capell-theme-knowledge::generic.listing_image_fallback_title') }}
+                                </p>
+                                <p class="mt-2 max-w-48 text-xs leading-5 text-white/75">
+                                    {{ __('capell-theme-knowledge::generic.listing_image_fallback_summary') }}
+                                </p>
                                 <div class="mt-10 space-y-2">
                                     <span
                                         class="block h-2 w-full bg-white/35"
+                                        aria-hidden="true"
                                     ></span>
                                     <span
                                         class="block h-2 w-5/6 bg-white/25"
+                                        aria-hidden="true"
                                     ></span>
                                     <span
                                         class="block h-2 w-2/3 bg-white/25"
+                                        aria-hidden="true"
                                     ></span>
                                 </div>
                             </div>
