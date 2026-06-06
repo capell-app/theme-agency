@@ -28,6 +28,7 @@ Controlled document registration, publication history, and acceptance tracking f
 - Document registration and publication actions.
 - Publication records linked to Publishing Studio revisions.
 - Acceptance records stored in or extending the `legal_acceptances` table.
+- Signed JSON certificate downloads for individual acceptance records.
 - Protected table registration for document and acceptance audit data.
 
 Use this package when a site needs evidence that a controlled document was published and accepted. It is not a general file manager; media and downloadable assets stay in the media packages.

@@ -75,6 +75,7 @@
         "document-lifecycle-admin",
         "document-lifecycle-acceptance",
         "document-lifecycle-evidence-export",
+        "document-lifecycle-signed-evidence",
         "document-lifecycle-reacceptance-report",
         "document-lifecycle-customer-portal-document-feed"
     ],

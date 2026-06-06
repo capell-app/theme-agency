@@ -36,6 +36,7 @@ return [
         'restore_document' => 'Restore document',
         'export_acceptance_evidence' => 'Export evidence CSV',
         'export_outstanding_acceptances' => 'Export outstanding CSV',
+        'download_acceptance_certificate' => 'Download signed JSON',
     ],
     'messages' => [
         'version_published' => 'Document version published.',

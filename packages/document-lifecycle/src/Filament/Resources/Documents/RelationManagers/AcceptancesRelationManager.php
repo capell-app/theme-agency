@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace Capell\DocumentLifecycle\Filament\Resources\Documents\RelationManagers;
 
 use BackedEnum;
+use Capell\DocumentLifecycle\Actions\BuildDocumentAcceptanceCertificateAction;
 use Capell\DocumentLifecycle\Actions\BuildDocumentAcceptanceEvidenceCsvAction;
 use Capell\DocumentLifecycle\Actions\BuildOutstandingDocumentAcceptancesCsvAction;
+use Capell\DocumentLifecycle\Models\DocumentAcceptance;
 use Capell\DocumentLifecycle\Models\Document;
 use Capell\DocumentLifecycle\Models\DocumentPublication;
+use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Override;
@@ -50,6 +52,12 @@ final class AcceptancesRelationManager extends RelationManager
                     ->label(__('capell-document-lifecycle::navigation.actions.export_outstanding_acceptances'))
                     ->icon('heroicon-o-exclamation-triangle')
                     ->action(fn (): StreamedResponse => $this->downloadOutstandingAcceptances()),
+            ])
+            ->actions([
+                Action::make('download_acceptance_certificate')
+                    ->label(__('capell-document-lifecycle::navigation.actions.download_acceptance_certificate'))
+                    ->icon('heroicon-o-shield-check')
+                    ->action(fn (DocumentAcceptance $record): StreamedResponse => $this->downloadAcceptanceCertificate($record)),
             ])
             ->columns([
                 TextColumn::make('document_version')
@@ -141,6 +149,17 @@ final class AcceptancesRelationManager extends RelationManager
             },
             'document-outstanding-acceptances-' . str($document->key)->slug()->toString() . '-' . now()->format('Y-m-d-His') . '.csv',
             ['Content-Type' => 'text/csv'],
+        );
+    }
+
+    private function downloadAcceptanceCertificate(DocumentAcceptance $acceptance): StreamedResponse
+    {
+        return response()->streamDownload(
+            function () use ($acceptance): void {
+                echo BuildDocumentAcceptanceCertificateAction::run($acceptance);
+            },
+            'document-acceptance-certificate-' . $acceptance->getKey() . '-' . now()->format('Y-m-d-His') . '.json',
+            ['Content-Type' => 'application/json'],
         );
     }
 }
