@@ -1,6 +1,6 @@
 # Knowledge Base — Improvement & Growth Plan
 
-> Package: capell-app/knowledge-base · Kind: package · Tier: premium · Product group: Capell Content · Bundle: content-product · Status: Draft
+> Package: capell-app/knowledge-base · Kind: package · Tier: premium · Product group: Capell Content · Bundle: content-product · Status: Complete
 
 ## 1. Snapshot
 
@@ -45,7 +45,7 @@ Mapped to `capabilities[]` and KB-category norms. **Table-stakes** = expected of
 - **Done/Shipped: Manifest cache/invalidation is wired to Frontend where available.** `performance.cacheTags: ["knowledge-base"]`, `queueInvalidation: true`, `variesBy: []`, and the collection/article/version invalidation list now have a matching bootstrap hook: Knowledge Base registers article, version, and collection model dependencies with `CacheInvalidationRegistry` when Frontend is installed. Public responses still keep the short `Cache-Control: max-age=300` header for HTTP clients. — `capell.json`, `routes/web.php`, `src/Providers/KnowledgeBaseServiceProvider.php`
 - **Done/Shipped: dead capability surfaces have been reduced.** Version Actions are reachable through the Article Edit flow, related-article editing is reachable through the Article relation manager, AI output is reachable through `/docs/llms.txt`, Search can discover a `knowledge-base` source when installed, Site Discovery can discover `/docs/*` public URLs, and Theme Knowledge ships KB payload templates.
 - **Done/Shipped: policies use Shield permissions and opportunistic site checks.** `KnowledgeBaseArticlePolicy` and `KnowledgeBaseCollectionPolicy` now delegate to a shared base policy that uses `ResolvesShieldPermission`, denies ordinary users, allows global admins, and blocks record access when a `site_id` is present but outside the actor's assigned sites. Full persisted KB site scoping remains a schema/product gap because article and collection tables do not yet carry a site ownership field. — `src/Policies/AbstractKnowledgeBaseResourcePolicy.php`, `tests/Unit/Policies/KnowledgeBasePolicyTest.php`
-- **Done/Shipped: anonymous feedback endpoint is throttled and deduped.** The previous abuse/ballot-stuffing risk is mitigated through route throttle middleware plus visitor/article-version row updates. Feedback aggregates and public/admin rating displays remain missing feature work. — `routes/web.php`, `src/Actions/RecordKnowledgeBaseArticleFeedbackAction.php`
+- **Done/Shipped: anonymous feedback endpoint is throttled, deduped, and surfaced.** The previous abuse/ballot-stuffing risk is mitigated through route throttle middleware plus visitor/article-version row updates. Feedback aggregates now appear in both the public article DTO/view and the admin Article table. — `routes/web.php`, `src/Actions/RecordKnowledgeBaseArticleFeedbackAction.php`, `src/Actions/BuildPublicKnowledgeBaseArticleDataAction.php`, `src/Filament/Resources/Articles/KnowledgeBaseArticleResource.php`
 - **Test gaps.** Feature coverage includes public rendering safety (strong), AI-output route safety, public-safe search payloads, feedback redaction, feedback throttle/dedupe and aggregate DTO values, manifest shape, admin-resource registration, real health diagnostics, article slug-collision validation, and the Article Edit/version/related-article surfaces. **Not covered:** public related-article ordering edge cases and deeper AI-output Action filtering edge cases beyond the current public-route draft/private exclusion checks. No Unit suite. — `tests/Feature/`
 - **Performance budget unverifiable.** `frontendRenderBudgetMs: 20` / `adminQueryBudget: 40` are declared but no test or benchmark enforces them. `BuildPublicKnowledgeBaseNavigationAction` eager-loads `articles.currentVersion` (good), but the article controller eager-loads `relatedArticleLinks.relatedArticle.collection` + `.currentVersion` two levels deep on every hit with no cap on related count.
 - **i18n is partial by product scope.** All admin/frontend strings are translated (`resources/lang/en/generic.php`), but the content is single-locale (no translatable article bodies). The manifest now reflects this by not claiming a locale cache variant.
@@ -53,7 +53,7 @@ Mapped to `capabilities[]` and KB-category norms. **Table-stakes** = expected of
 
 ## 5. Marketplace & Selling
 
-**Critique.** The composer `description` ("Knowledge base collections, versioned articles, feedback, and public docs discovery for Capell") and the marketplace `summary` now broadly match shipped capability depth. Versioned article editing, related-article management, feedback aggregates, AI-readable output, Search source registration, demo content, and runner-backed screenshots are reconciled. Remaining commercial polish is deeper cross-package integrations and Later-row theme/SEO work.
+**Critique.** The composer `description` ("Knowledge base collections, versioned articles, feedback, and public docs discovery for Capell") and the marketplace `summary` now broadly match shipped capability depth. Versioned article editing, related-article management, feedback aggregates, AI-readable output, Search source registration, Site Discovery metadata, Theme Knowledge reference templates, demo content, and runner-backed screenshots are reconciled. Remaining commercial polish is accepted future product depth rather than an open roadmap row.
 
 **Improved 1-sentence summary:**
 
@@ -63,7 +63,7 @@ Mapped to `capabilities[]` and KB-category norms. **Table-stakes** = expected of
 
 > Knowledge Base turns your Capell install into a structured help centre. Authors group articles into nestable collections and publish them with full version history, while readers browse a fast, cacheable `/docs` site and tell you whether each article helped. Public navigation, article, and AI-readable payloads are emitted as typed data objects, so any theme can render them and assistants can consume them without leaking authoring internals. Pairs with the Search and SEO Suite extensions to make every article findable by humans and machines.
 
-(This copy now matches the shipped version, feedback, Search, and AI-output surfaces. Later SEO/theme work can strengthen the cross-sell language.)
+(This copy now matches the shipped version, feedback, Search, Site Discovery, Theme Knowledge, and AI-output surfaces.)
 
 **Screenshot/media status:** `docs/screenshots.json` documents four runner-backed captures: Articles index, article edit/version history, public `/docs`, and public article. `capell.json` promotes the two Capell admin PNGs into marketplace media and keeps public route captures as supporting evidence.
 
