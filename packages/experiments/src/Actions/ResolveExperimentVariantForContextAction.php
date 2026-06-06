@@ -12,6 +12,7 @@ use Capell\Experiments\Models\Experiment;
 use Capell\Experiments\Models\ExperimentVariant;
 use Capell\Frontend\Actions\Performance\RecordExtensionRenderContributionAction;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 final class ResolveExperimentVariantForContextAction
@@ -26,7 +27,7 @@ final class ResolveExperimentVariantForContextAction
         $context ??= new ExperimentContextData;
 
         /** @var iterable<int, Experiment> $experiments */
-        $experiments = $this->candidateQuery($context)->cursor();
+        $experiments = $this->candidateQuery($context)->get();
 
         foreach ($experiments as $experiment) {
             $allocation = AllocateVariantAction::run($experiment, $allocationKey, $context);
@@ -72,18 +73,39 @@ final class ResolveExperimentVariantForContextAction
                         ->orWhere('subject_id', $context->subjectId);
                 });
             })
+            ->whereHas('variants', function (Builder $query): void {
+                $query
+                    ->where('is_active', true)
+                    ->where('weight', '>', 0);
+            })
+            ->with([
+                'variants' => function (HasMany $query): void {
+                    $query
+                        ->where('is_active', true)
+                        ->where('weight', '>', 0)
+                        ->orderBy('sort_order');
+                },
+            ])
             ->orderByRaw('site_id is not null desc')
             ->orderByRaw('subject_id is not null desc')
-            ->orderBy('id');
+            ->orderBy('id')
+            ->limit($this->candidateLimit());
+    }
+
+    private function candidateLimit(): int
+    {
+        $configuredLimit = config('capell-experiments.resolution_candidate_limit', 25);
+
+        if (! is_numeric($configuredLimit)) {
+            return 25;
+        }
+
+        return max(1, (int) $configuredLimit);
     }
 
     private function resolvedData(Experiment $experiment, VariantAllocationData $allocation): ResolvedExperimentVariantData
     {
-        /** @var ExperimentVariant $variant */
-        $variant = $experiment
-            ->variants()
-            ->whereKey($allocation->variantId)
-            ->firstOrFail();
+        $variant = $this->resolvedVariant($experiment, $allocation);
 
         return new ResolvedExperimentVariantData(
             experimentId: $experiment->id,
@@ -99,6 +121,26 @@ final class ResolveExperimentVariantForContextAction
             ],
             variantPayload: $variant->payload ?? [],
         );
+    }
+
+    private function resolvedVariant(Experiment $experiment, VariantAllocationData $allocation): ExperimentVariant
+    {
+        if ($experiment->relationLoaded('variants')) {
+            /** @var ExperimentVariant|null $variant */
+            $variant = $experiment->variants->firstWhere('id', $allocation->variantId);
+
+            if ($variant instanceof ExperimentVariant) {
+                return $variant;
+            }
+        }
+
+        /** @var ExperimentVariant $variant */
+        $variant = $experiment
+            ->variants()
+            ->whereKey($allocation->variantId)
+            ->firstOrFail();
+
+        return $variant;
     }
 
     private function recordFrontendCacheSafetyContribution(ResolvedExperimentVariantData $resolved, float $startedAt): void

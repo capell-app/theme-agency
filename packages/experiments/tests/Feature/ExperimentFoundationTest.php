@@ -27,6 +27,8 @@ use Capell\Experiments\Enums\ExperimentStatus;
 use Capell\Experiments\Enums\ExperimentSubjectType;
 use Capell\Experiments\Models\ExperimentAllocation;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 it('creates an experiment aggregate with variants goals and audience rules', function (): void {
@@ -440,4 +442,44 @@ it('returns no resolved variant when request context misses active experiments',
     );
 
     expect($resolution)->toBeNull();
+});
+
+it('bounds request-context candidate resolution and ignores inactive variant-only experiments', function (): void {
+    Config::set('capell-experiments.resolution_candidate_limit', 1);
+
+    CreateExperimentAction::run(new ExperimentData(
+        name: 'Inactive variant experiment',
+        status: ExperimentStatus::Active,
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', weight: 0, isControl: true),
+        ],
+    ));
+    CreateExperimentAction::run(new ExperimentData(
+        name: 'First candidate experiment',
+        key: 'first-candidate',
+        status: ExperimentStatus::Active,
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+        ],
+    ));
+    CreateExperimentAction::run(new ExperimentData(
+        name: 'Beyond limit experiment',
+        key: 'beyond-limit',
+        status: ExperimentStatus::Active,
+        variants: [
+            new ExperimentVariantData(name: 'Control', key: 'control', isControl: true),
+        ],
+    ));
+
+    DB::flushQueryLog();
+    DB::enableQueryLog();
+
+    $resolution = ResolveExperimentVariantForContextAction::run('visitor-bounded');
+    $queryCount = count(DB::getQueryLog());
+
+    DB::disableQueryLog();
+
+    expect($resolution)->not->toBeNull()
+        ->and($resolution?->experimentKey)->toBe('first-candidate')
+        ->and($queryCount)->toBeLessThanOrEqual(5);
 });

@@ -45,13 +45,7 @@ final class AllocateVariantAction
             return null;
         }
 
-        /** @var Collection<int, ExperimentVariant> $variants */
-        $variants = $experiment
-            ->variants()
-            ->where('is_active', true)
-            ->where('weight', '>', 0)
-            ->orderBy('sort_order')
-            ->get();
+        $variants = $this->activeWeightedVariants($experiment);
 
         if ($variants->isEmpty()) {
             return null;
@@ -60,6 +54,32 @@ final class AllocateVariantAction
         $variant = $this->chooseVariant($experiment, $variants, $allocationKey);
 
         return $this->persistAllocation($experiment, $variant, $allocationKey, $context);
+    }
+
+    /**
+     * @return Collection<int, ExperimentVariant>
+     */
+    private function activeWeightedVariants(Experiment $experiment): Collection
+    {
+        if ($experiment->relationLoaded('variants')) {
+            /** @var Collection<int, ExperimentVariant> $variants */
+            $variants = $experiment->variants
+                ->filter(fn (ExperimentVariant $variant): bool => $variant->is_active && $variant->weight > 0)
+                ->sortBy('sort_order')
+                ->values();
+
+            return $variants;
+        }
+
+        /** @var Collection<int, ExperimentVariant> $variants */
+        $variants = $experiment
+            ->variants()
+            ->where('is_active', true)
+            ->where('weight', '>', 0)
+            ->orderBy('sort_order')
+            ->get();
+
+        return $variants;
     }
 
     private function existingStickyAllocation(Experiment $experiment, string $allocationKey): ?ExperimentAllocation

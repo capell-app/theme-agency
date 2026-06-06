@@ -22,5 +22,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `AllocateVariantAction` now honours `allocation_strategy`: `sticky_weighted` reuses an existing allocation for the same visitor hash, while `weighted` records a fresh weighted allocation without using the sticky lookup.
 - Manifest metadata no longer advertises a production frontend surface before the cache-safe frontend integration exists, and now declares the shipped `statistical-significance` capability.
 - Scheduled and expired experiments now transition through `capell:experiments:sync-statuses`, scheduled every five minutes with overlap protection.
+- Request-context variant resolution now uses a configurable candidate limit and preloads eligible active variants instead of streaming every active experiment on the frontend path.
 
 _Dated 2026-06-04._
