@@ -14,7 +14,7 @@ Marketplace and Composer copy are buyer-facing, and `capell.json` marketplace me
 - **2026-06-06:** Captured all 9 `docs/screenshots.json` route-backed targets through the Capell runner and promoted the PNG gallery into marketplace media.
 - **2026-06-04:** Moved author bench and topic hub defaults into translations, made both sections accept hydrated item data, removed optional package installation checks from public newsletter/search Blade, and added tests for those public rendering contracts.
 - **2026-06-05:** Added a first-class `doc-article` section renderer with hydrated breadcrumbs, category sidebar, article metadata, constrained article body, and sticky table-of-contents layout, plus registry coverage and docs/manifest reconciliation.
-- **2026-06-06:** Added code-block/prose styling for technical articles and a reduced-motion guard for decorative grid overlays.
+- **2026-06-06:** Added code-block/prose styling for technical articles, constrained long-form measures with calmer heading scale, and a reduced-motion guard for decorative grid overlays.
 
 **Headline:** the package is positioned as a knowledge-base / documentation / help-site theme, the core documentation layout now exists, and the static screenshot gallery is reconciled. The remaining shipped-feature gaps are dark mode, tokenization, and deeper differentiated affordances such as article feedback and versioning.
 
@@ -34,7 +34,7 @@ Prioritized. Real templates only.
 
 6. **Give skeleton/placeholder bars semantic fallback** — **What:** `content-listing`, `search-listing`, `topic-hubs` render decorative `<span>`/`<div>` bars (`h-3 bg-[#f59e0b]`, etc.) as filler. Most are `aria-hidden="true"` (good), but the `search-listing` "source" panel and the `content-listing` image fallback rely on coloured bars as the only content when no data is present. — why: empty-state polish; a docs theme with no content should still read as intentional. — `resources/views/sections/search-listing.blade.php`, `content-listing.blade.php` — **S**
 
-7. **Heading scale / readability pass for long-form** — **What:** body sections cap at `max-w-5xl`/`max-w-6xl` full-bleed grids; there is no constrained prose measure (~65ch) anywhere, and every heading is `font-black`. — why: documentation is long-form reading; `font-black` H2/H3 throughout fights legibility and the lack of a prose column hurts article comprehension. — `resources/views/sections/*.blade.php`, `resources/css/theme-knowledge.css` — **M**
+7. **Done/Shipped: heading scale / readability pass for long-form.** Long-form doc/article and content-listing surfaces now get a 68ch reading measure for prose/header text, balanced article headings, and a scoped heading weight override that calms the previous all-`font-black` treatment without rewriting section templates. — `resources/css/theme-knowledge.css` — **M**
 
 ## 3. Missing Features (gaps)
 
@@ -92,7 +92,7 @@ Prioritized. Real templates only.
 | Done/Shipped: Add code-block / `pre`/`code` prose styling                                                | Done   | M      | High   | §3          |
 | Add dark mode (tokens + `dark:` variants) and a dark screenshot                                          | Next   | L      | High   | §2.3, §5    |
 | Tokenize hardcoded hex to preset `--site-theme-*` variables                                              | Next   | L      | Med    | §2.4        |
-| Constrained prose measure + heading-scale readability pass                                               | Next   | M      | Med    | §2.7        |
+| Done/Shipped: Constrained prose measure + heading-scale readability pass                                 | Done   | M      | Med    | §2.7        |
 | Done/Shipped: `prefers-reduced-motion` guard on animated grid `::before`                                 | Done   | S      | Low    | §2.5        |
 | Remove `CapellCore::isPackageInstalled` from `newsletter`/`search-listing` Blade; rely on renderer flags | Done   | S      | Med    | §4          |
 | Fix untranslated/hardcoded copy in `authors` (and data-drive it)                                         | Done   | M      | Med    | §2.2, §4    |
