@@ -204,27 +204,14 @@ class Hero extends AbstractWidget
             ->map(function (WidgetAsset $widgetAsset) use ($page, $site, $theme, $color): HeroAssetSlideData {
                 $slide = HeroAssetSlideData::fromWidgetAsset($widgetAsset, $this->widget, $color, $page, $site);
 
-                return new HeroAssetSlideData(
-                    asset: $slide->asset,
-                    color: $slide->color,
-                    actions: $slide->actions,
-                    related: $slide->related,
+                return $slide->withResolvedLayers(
                     heroBackground: ResolveHeroBackgroundDataAction::run($theme, $this->widget, $widgetAsset),
                     heroMedia: ResolveHeroMediaDataAction::run($theme, $this->widget, $widgetAsset),
-                    backgroundAttachment: $slide->backgroundAttachment ?? $this->stringMeta('background_attachment', 'scroll'),
-                    backgroundColor: $slide->backgroundColor ?? $this->stringMeta('background_color', $this->themeStringMeta($theme, 'background_color')),
-                    backgroundPosition: $slide->backgroundPosition ?? $this->stringMeta('background_position', 'center'),
-                    backgroundRepeat: $slide->backgroundRepeat ?? $this->stringMeta('background_repeat', 'no-repeat'),
-                    backgroundSize: $slide->backgroundSize ?? $this->stringMeta('background_size', 'cover'),
-                    content: $slide->content,
-                    contentHtml: $slide->contentHtml,
-                    linkText: $slide->linkText,
-                    title: $slide->title,
-                    linkedPage: $slide->linkedPage,
-                    url: $slide->url,
-                    backgroundImage: $slide->backgroundImage,
-                    image: $slide->image,
-                    images: $slide->images,
+                    backgroundAttachment: $this->stringMeta('background_attachment', 'scroll'),
+                    backgroundColor: $this->stringMeta('background_color', $this->themeStringMeta($theme, 'background_color')),
+                    backgroundPosition: $this->stringMeta('background_position', 'center'),
+                    backgroundRepeat: $this->stringMeta('background_repeat', 'no-repeat'),
+                    backgroundSize: $this->stringMeta('background_size', 'cover'),
                 );
             })
             ->values();
