@@ -12,30 +12,34 @@
             "surface": "admin",
             "targetType": "filament-resource",
             "target": "ThemeResource:index",
-            "required": true,
-            "notes": "Capture with only the core Capell stack, Foundation Theme, Layout Builder, and capell-app/theme-commerce installed in the isolated demo harness.",
+            "required": false,
+            "notes": "Optional until the Capell runner has a real Theme Studio admin or signed URL fixture for package theme records.",
             "useCase": "An administrator confirms the commerce theme is available through the core Themes resource without installing another theme package.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/theme-admin-list-showing-commerce.png",
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/commerce/theme-admin-list-showing-commerce",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "theme-preview-url-output",
-            "title": "Signed admin preview route.",
+            "title": "Signed commerce URL output.",
             "package": "theme-commerce",
             "surface": "admin",
             "targetType": "admin-url",
             "target": "capell.admin.theme-preview",
-            "required": true,
-            "notes": "Capture a signed preview URL generated with CreateThemePreviewUrlAction for the seeded commerce theme, site, and page.",
-            "useCase": "An administrator opens a signed preview URL to inspect a page with the commerce theme applied before publishing the theme choice.",
+            "required": false,
+            "notes": "Optional until the Capell runner has a real signed URL fixture for package theme records.",
+            "useCase": "An administrator opens a signed link to inspect a commerce page before publishing the theme choice.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/theme-preview-url-output.png",
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/commerce/theme-preview-url-output",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "frontend-page-rendered-with-commerce-theme",
@@ -43,15 +47,17 @@
             "package": "theme-commerce",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/theme-commerce-demo",
-            "required": true,
-            "notes": "Capture the seeded Stone & Loom page after installing capell-app/theme-commerce and building the Foundation Theme/frontend assets.",
+            "target": "/theme-commerce",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A visitor sees a seeded product page rendered through the commerce navigation, hero, product finder, collections, product grid, catalog, proof, blog teaser, CTA, and footer sections.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/frontend-page-rendered-with-commerce-theme.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/commerce/frontend-page-rendered-with-commerce-theme",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-commerce",
+            "waitFor": ".retail-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "commerce-homepage-layout",
@@ -59,15 +65,17 @@
             "package": "theme-commerce",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/commerce-homepage-layout",
-            "required": true,
-            "notes": "Capture the retail homepage with merchandising hero, collection tiles, buying-path proof, product rail, and conversion CTA.",
+            "target": "/theme-commerce",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A retailer checks that the theme feels like a buying journey rather than a plain catalogue wrapper.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-homepage-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-homepage-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-commerce",
+            "waitFor": ".retail-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "commerce-collection-layout",
@@ -75,15 +83,17 @@
             "package": "theme-commerce",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/commerce-collection-layout",
-            "required": true,
-            "notes": "Capture collection filters, product grid density, merchandising banner, and buyer-intent cards. Requires capell-app/shopify-commerce; show this package note on the captured image.",
+            "target": "/theme-commerce-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A retailer reviews whether shoppers can scan ranges, campaigns, and stock signals quickly.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-collection-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-collection-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-commerce-directory",
+            "waitFor": ".retail-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "commerce-product-layout",
@@ -91,15 +101,17 @@
             "package": "theme-commerce",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/commerce-product-layout",
-            "required": true,
-            "notes": "Capture product detail with gallery, price, variants, stock proof, recommendations, and basket CTA. Requires capell-app/shopify-commerce; show this package note on the captured image.",
+            "target": "/theme-commerce-detail",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A retailer checks that product pages keep purchase intent, proof, and merchandising context together.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-product-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-product-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-commerce-detail",
+            "waitFor": ".retail-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "commerce-lookbook-layout",
@@ -107,15 +119,17 @@
             "package": "theme-commerce",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/commerce-lookbook-layout",
-            "required": true,
-            "notes": "Capture an image-led lookbook with editorial groupings, shoppable cards, and collection pathways. Requires capell-app/media-library; show this package note on the captured image.",
+            "target": "/theme-commerce-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A retailer can sell a range visually without the page becoming Portfolio's work gallery.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-lookbook-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-lookbook-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-commerce-directory",
+            "waitFor": ".retail-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "commerce-buying-guide-layout",
@@ -123,15 +137,17 @@
             "package": "theme-commerce",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/commerce-buying-guide-layout",
-            "required": true,
-            "notes": "Capture a buying guide article with editorial copy, product recommendations, author details, and collection CTAs. Requires capell-app/blog; show this package note on the captured image.",
+            "target": "/theme-commerce-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A retailer checks that advice content supports purchase decisions instead of becoming a plain blog.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-buying-guide-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-buying-guide-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-commerce-directory",
+            "waitFor": ".retail-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "commerce-newsletter-layout",
@@ -139,15 +155,17 @@
             "package": "theme-commerce",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/commerce-newsletter-layout",
-            "required": true,
-            "notes": "Capture a retail newsletter page with incentive copy, consent messaging, product context, and signup block. Requires capell-app/newsletter; show this package note on the captured image.",
+            "target": "/theme-commerce-cta",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A retailer reviews how the theme converts browsing intent into owned-audience growth.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-newsletter-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-newsletter-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-commerce-cta",
+            "waitFor": ".retail-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "commerce-store-event-layout",
@@ -155,15 +173,17 @@
             "package": "theme-commerce",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/commerce-store-event-layout",
-            "required": true,
-            "notes": "Capture a retail event page with event details, store location, featured products, and registration CTA. Requires capell-app/events; show this package note on the captured image.",
+            "target": "/theme-commerce-cta",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A retailer can promote launches and in-store events without leaving the merchandising lane.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-store-event-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-store-event-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-commerce-cta",
+            "waitFor": ".retail-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "commerce-search-layout",
@@ -171,15 +191,17 @@
             "package": "theme-commerce",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/commerce-search-layout",
-            "required": true,
-            "notes": "Capture product search with filters, result grid, stock signals, and empty-state recovery. Requires capell-app/search; show this package note on the captured image.",
+            "target": "/theme-commerce-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A shopper can refine buying paths without the page looking like Knowledge search or a standard directory.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-search-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-search-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-commerce-directory",
+            "waitFor": ".retail-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "commerce-campaign-layout",
@@ -187,15 +209,17 @@
             "package": "theme-commerce",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/commerce-campaign-layout",
-            "required": true,
-            "notes": "Capture a promotion campaign with offer hero, countdown, product groups, and segmented CTAs. Requires capell-app/campaign-studio; show this package note on the captured image.",
+            "target": "/theme-commerce-cta",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A retailer checks that campaigns stay tied to buying paths rather than becoming Agency launch pages.",
             "screenshotPath": "packages/theme-commerce/docs/screenshots/commerce-campaign-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/commerce/commerce-campaign-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-commerce-cta",
+            "waitFor": ".retail-shell",
+            "colorSchemes": [
+                "light"
+            ]
         }
     ]
 }

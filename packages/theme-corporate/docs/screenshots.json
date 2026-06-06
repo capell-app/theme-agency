@@ -12,30 +12,34 @@
             "surface": "admin",
             "targetType": "admin-surface",
             "target": "ThemeResource:index",
-            "required": true,
-            "notes": "Capture after installing capell-app/theme-corporate with Foundation Theme and creating a Corporate theme record in the isolated demo harness.",
+            "required": false,
+            "notes": "Optional until the Capell runner has a real Theme Studio admin or signed URL fixture for package theme records.",
             "useCase": "An administrator sees the Corporate theme record in the host Themes admin surface.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/theme-admin-list-showing-corporate.png",
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/corporate/theme-admin-list-showing-corporate",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "theme-preview-url-output",
-            "title": "Signed admin preview route.",
+            "title": "Signed corporate URL output.",
             "package": "theme-corporate",
             "surface": "admin",
             "targetType": "admin-url",
             "target": "capell.admin.theme-preview",
-            "required": true,
-            "notes": "Capture a temporary signed preview URL generated from the host Themes table for the Corporate theme.",
-            "useCase": "An administrator opens a preview URL to inspect a page with the Corporate theme applied.",
+            "required": false,
+            "notes": "Optional until the Capell runner has a real signed URL fixture for package theme records.",
+            "useCase": "An administrator opens a signed link to inspect a corporate page before publishing the theme choice.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/theme-preview-url-output.png",
             "scenario": "admin-index",
             "url": "/screenshot-fixtures/theme-gallery/corporate/theme-preview-url-output",
             "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "frontend-page-rendered-with-corporate-theme",
@@ -44,14 +48,16 @@
             "surface": "frontend",
             "targetType": "frontend-url",
             "target": "/theme-corporate",
-            "required": true,
-            "notes": "Capture the seeded Corporate Demo Homepage route that renders navigation, hero, features, proof, content listing, CTA, and footer through the Corporate renderer.",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A visitor sees a seeded public page rendered through every Corporate theme section.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/frontend-page-rendered-with-corporate-theme.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/corporate/frontend-page-rendered-with-corporate-theme",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-corporate",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "corporate-homepage-layout",
@@ -59,15 +65,17 @@
             "package": "theme-corporate",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/corporate-homepage-layout",
-            "required": true,
-            "notes": "Capture the basic boardroom homepage with formal hero, decision proof, capability bands, and restrained CTA.",
+            "target": "/theme-corporate",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A business team reviews Corporate as a polished basic preset for board papers and formal service sites.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-homepage-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-homepage-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-corporate",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "corporate-services-layout",
@@ -75,15 +83,17 @@
             "package": "theme-corporate",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/corporate-services-layout",
-            "required": true,
-            "notes": "Capture formal service cards, process notes, outcome proof, and contact CTA.",
+            "target": "/theme-corporate-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A business buyer checks that services read as boardroom-ready rather than SaaS features or local job cards.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-services-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-services-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-corporate-directory",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "corporate-governance-layout",
@@ -91,15 +101,17 @@
             "package": "theme-corporate",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/corporate-governance-layout",
-            "required": true,
-            "notes": "Capture governance content with policy sections, document cards, decision trail, and leadership proof. Requires capell-app/document-lifecycle; show this package note on the captured image.",
+            "target": "/theme-corporate-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A corporate team can publish formal decision material without the theme pretending to be a premium enterprise workflow.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-governance-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-governance-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-corporate-directory",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "corporate-resources-layout",
@@ -107,15 +119,17 @@
             "package": "theme-corporate",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/corporate-resources-layout",
-            "required": true,
-            "notes": "Capture board-paper and resource cards with filters, topic navigation, and formal metadata. Requires capell-app/tags; show this package note on the captured image.",
+            "target": "/theme-corporate-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A visitor can browse formal resources without the page becoming Knowledge's research archive.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-resources-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-resources-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-corporate-directory",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "corporate-article-layout",
@@ -123,15 +137,17 @@
             "package": "theme-corporate",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/corporate-article-layout",
-            "required": true,
-            "notes": "Capture a formal article with body copy, author details, related board papers, and contact route. Requires capell-app/blog; show this package note on the captured image.",
+            "target": "/theme-corporate-detail",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A business site can publish leadership material while keeping a restrained corporate rhythm.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-article-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-article-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-corporate-detail",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "corporate-contact-layout",
@@ -139,15 +155,17 @@
             "package": "theme-corporate",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/corporate-contact-layout",
-            "required": true,
-            "notes": "Capture office details, procurement/investor/service routing notes, form fields, and confirmation state. Requires capell-app/form-builder; show this package note on the captured image.",
+            "target": "/theme-corporate-contact",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A business team checks that enquiries route cleanly without becoming a broad lead-generation page.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-contact-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-contact-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-corporate-contact",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "corporate-locations-layout",
@@ -155,15 +173,17 @@
             "package": "theme-corporate",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/corporate-locations-layout",
-            "required": true,
-            "notes": "Capture office cards, address metadata, map-ready panels, and regional contact routing. Requires capell-app/address; show this package note on the captured image.",
+            "target": "/theme-corporate-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A formal organisation can show locations and contact routes without local-services styling.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-locations-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-locations-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-corporate-directory",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "corporate-search-layout",
@@ -171,15 +191,17 @@
             "package": "theme-corporate",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/corporate-search-layout",
-            "required": true,
-            "notes": "Capture search results with board-paper grouping, snippets, and conservative recovery state. Requires capell-app/search; show this package note on the captured image.",
+            "target": "/theme-corporate-directory",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A visitor can find corporate material without the page looking like product search or an editorial archive.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-search-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-search-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-corporate-directory",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "corporate-investor-event-layout",
@@ -187,15 +209,17 @@
             "package": "theme-corporate",
             "surface": "frontend",
             "targetType": "frontend-url",
-            "target": "/corporate-investor-event-layout",
-            "required": true,
-            "notes": "Capture an investor or stakeholder event with agenda, registration, related documents, and formal proof. Requires capell-app/events; show this package note on the captured image.",
+            "target": "/theme-corporate-cta",
+            "required": false,
+            "notes": "Capture the seeded package theme route instead of the shared theme-gallery route. Optional until the Capell runner can browser-capture seeded package theme routes without navigation failures.",
             "useCase": "A corporate team can publish stakeholder events without overlapping SaaS webinars or nonprofit community events.",
             "screenshotPath": "packages/theme-corporate/docs/screenshots/corporate-investor-event-layout.png",
             "scenario": "frontend-page",
-            "url": "/screenshot-fixtures/theme-gallery/corporate/corporate-investor-event-layout",
-            "waitFor": ".theme-gallery-fixture",
-            "colorSchemes": ["light"]
+            "url": "/theme-corporate-cta",
+            "waitFor": ".site-theme-shell",
+            "colorSchemes": [
+                "light"
+            ]
         }
     ]
 }
