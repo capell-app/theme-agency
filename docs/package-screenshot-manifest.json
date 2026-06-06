@@ -2396,8 +2396,8 @@
             "target": "ExperimentResource",
             "url": "/experiments",
             "waitFor": "table",
-            "required": false,
-            "notes": "Capture seeded server-side experiments with safe fake campaign/page labels. The current screenshot runner app does not require capell-app/experiments, so the package is not autoloaded or installed during capture.",
+            "required": true,
+            "notes": "Captured from the seeded Capell screenshot runner app after installing capell-app/experiments and migrating the package tables.",
             "useCase": "A growth operator reviews active and scheduled experiments from the Capell admin.",
             "screenshotPath": "packages/experiments/docs/screenshots/experiments-index.png",
             "composerName": "capell-app/experiments"
@@ -2411,8 +2411,8 @@
             "target": "ExperimentVariantResource",
             "url": "/experiment-variants",
             "waitFor": "table",
-            "required": false,
-            "notes": "Capture seeded control and challenger variants with allocation weights once the runner app requires capell-app/experiments.",
+            "required": true,
+            "notes": "Captured from the seeded Capell screenshot runner app with control and challenger variants plus allocation weights.",
             "useCase": "A growth operator compares variant weights and control state before launching a test.",
             "screenshotPath": "packages/experiments/docs/screenshots/experiment-variants-index.png",
             "composerName": "capell-app/experiments"
@@ -2426,8 +2426,8 @@
             "target": "ExperimentGoalResource",
             "url": "/experiment-goals",
             "waitFor": "table",
-            "required": false,
-            "notes": "Capture seeded conversion and revenue goals tied to fake experiments once the runner app requires capell-app/experiments.",
+            "required": true,
+            "notes": "Captured from the seeded Capell screenshot runner app with a primary demo-request conversion goal.",
             "useCase": "A growth operator verifies the primary conversion goals used for winner reporting.",
             "screenshotPath": "packages/experiments/docs/screenshots/experiment-goals-index.png",
             "composerName": "capell-app/experiments"
@@ -2441,8 +2441,8 @@
             "target": "ExperimentAudienceRuleResource",
             "url": "/experiment-audience-rules",
             "waitFor": "table",
-            "required": false,
-            "notes": "Capture seeded path, UTM, and segment rules once the runner app requires capell-app/experiments.",
+            "required": true,
+            "notes": "Captured from the seeded Capell screenshot runner app with a path-based audience rule.",
             "useCase": "A growth operator confirms which visitors are eligible for an experiment.",
             "screenshotPath": "packages/experiments/docs/screenshots/experiment-audience-rules-index.png",
             "composerName": "capell-app/experiments"

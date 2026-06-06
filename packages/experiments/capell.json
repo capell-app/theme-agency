@@ -150,7 +150,28 @@
     },
     "marketplace": {
         "summary": "Run statistically gated server-side A/B tests on Capell pages or campaigns — audience targeting, weighted allocation, and goal-tracked winner reports.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/screenshots/experiments-index.png",
+                "label": "Experiments admin index",
+                "caption": "Review active and scheduled experiments with variant, goal, and allocation counts in the Capell admin."
+            },
+            {
+                "path": "docs/screenshots/experiment-variants-index.png",
+                "label": "Experiment variants",
+                "caption": "Compare control and challenger variants with allocation weights and active state."
+            },
+            {
+                "path": "docs/screenshots/experiment-goals-index.png",
+                "label": "Experiment goals",
+                "caption": "Track primary conversion goals used for winner reporting."
+            },
+            {
+                "path": "docs/screenshots/experiment-audience-rules-index.png",
+                "label": "Audience rules",
+                "caption": "Confirm which visitors qualify for an experiment before launch."
+            }
+        ],
         "categories": ["growth", "analytics"]
     },
     "contributionTraceability": {
