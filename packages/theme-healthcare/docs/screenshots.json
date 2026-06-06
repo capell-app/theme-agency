@@ -36,6 +36,7 @@
             "scenario": "frontend-page",
             "url": "/theme-healthcare",
             "waitFor": ".healthcare-shell",
+            "click": "text=Reject non-essential",
             "colorSchemes": ["light"]
         },
         {
@@ -53,7 +54,6 @@
             "scenario": "frontend-page",
             "url": "/theme-healthcare",
             "waitFor": ".healthcare-shell",
-            "click": "text=Reject non-essential",
             "colorSchemes": ["light"]
         },
         {

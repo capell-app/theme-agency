@@ -109,6 +109,76 @@ function commandArgs(command, params) {
     return args
 }
 
+function selectedPackageNames(repoPath, only) {
+    const packagesPath = path.join(repoPath, 'packages')
+
+    if (!fs.existsSync(packagesPath)) {
+        return []
+    }
+
+    return fs
+        .readdirSync(packagesPath, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => entry.name)
+        .filter((packageName) => packageMatchesOnly(packageName, only))
+        .sort()
+}
+
+function packageFrontendCssFiles(repoPath, packageName) {
+    const cssPath = path.join(repoPath, 'packages', packageName, 'resources', 'css')
+
+    if (!fs.existsSync(cssPath)) {
+        return []
+    }
+
+    return fs
+        .readdirSync(cssPath, { withFileTypes: true })
+        .filter((entry) => entry.isFile() && entry.name.endsWith('.css'))
+        .map((entry) => path.join(cssPath, entry.name))
+        .sort()
+}
+
+function cssImportPath(fromFile, importedFile) {
+    const relativePath = path
+        .relative(path.dirname(fromFile), importedFile)
+        .split(path.sep)
+        .join('/')
+
+    return relativePath.startsWith('.') ? relativePath : `./${relativePath}`
+}
+
+function injectPackageFrontendCss(repoPath, appPath, only) {
+    if (!appPath) {
+        return
+    }
+
+    const frontendCssPath = path.join(appPath, 'resources', 'css', 'capell', 'frontend.css')
+
+    if (!fs.existsSync(frontendCssPath)) {
+        return
+    }
+
+    const imports = selectedPackageNames(repoPath, only)
+        .flatMap((packageName) => packageFrontendCssFiles(repoPath, packageName))
+        .map((cssFile) => `@import "${cssImportPath(frontendCssPath, cssFile)}";`)
+
+    if (imports.length === 0) {
+        return
+    }
+
+    const content = fs.readFileSync(frontendCssPath, 'utf8')
+    const missingImports = imports.filter((importLine) => !content.includes(importLine))
+
+    if (missingImports.length === 0) {
+        return
+    }
+
+    fs.writeFileSync(
+        frontendCssPath,
+        `${content.trimEnd()}\n\n${missingImports.join('\n')}\n`,
+    )
+}
+
 function runPackageCommands(repoPath, appPath, only) {
     if (!appPath) {
         return
@@ -116,18 +186,7 @@ function runPackageCommands(repoPath, appPath, only) {
 
     const packagesPath = path.join(repoPath, 'packages')
 
-    if (!fs.existsSync(packagesPath)) {
-        return
-    }
-
-    const packageNames = fs
-        .readdirSync(packagesPath, { withFileTypes: true })
-        .filter((entry) => entry.isDirectory())
-        .map((entry) => entry.name)
-        .filter((packageName) => packageMatchesOnly(packageName, only))
-        .sort()
-
-    for (const packageName of packageNames) {
+    for (const packageName of selectedPackageNames(repoPath, only)) {
         const manifestPath = path.join(packagesPath, packageName, 'capell.json')
 
         if (!fs.existsSync(manifestPath)) {
@@ -164,6 +223,31 @@ function runPackageCommands(repoPath, appPath, only) {
             }
         }
     }
+}
+
+function runRunner(runnerPath, runnerArgs, repoPath) {
+    const result = spawnSync('node', runnerArgs, {
+        cwd: runnerPath,
+        env: {
+            ...process.env,
+            CAPELL_PACKAGES_REPO: repoPath,
+        },
+        stdio: 'inherit',
+    })
+
+    process.exitCode = result.status ?? 1
+}
+
+function preflightRunnerArgs(repoPath, appPath) {
+    const args = ['src/cli.mjs', '--repo', repoPath]
+
+    if (appPath) {
+        args.push('--app', appPath)
+    }
+
+    args.push('--only', '__capell_preflight__')
+
+    return args
 }
 
 function main() {
@@ -225,22 +309,34 @@ function main() {
         runnerArgs.push('--skip-build')
     }
 
-    runPackageCommands(repoPath, appPath ? path.resolve(appPath) : '', only)
+    const resolvedAppPath = appPath ? path.resolve(appPath) : ''
+    const shouldSkipBuild = argv.includes('--skip-build')
+
+    injectPackageFrontendCss(repoPath, resolvedAppPath, only)
+
+    if (!shouldSkipBuild && resolvedAppPath) {
+        runRunner(
+            runnerPath,
+            preflightRunnerArgs(repoPath, resolvedAppPath),
+            repoPath,
+        )
+
+        if (process.exitCode) {
+            return
+        }
+    }
+
+    runPackageCommands(repoPath, resolvedAppPath, only)
 
     if (process.exitCode) {
         return
     }
 
-    const result = spawnSync('node', runnerArgs, {
-        cwd: runnerPath,
-        env: {
-            ...process.env,
-            CAPELL_PACKAGES_REPO: repoPath,
-        },
-        stdio: 'inherit',
-    })
+    if (!shouldSkipBuild && resolvedAppPath) {
+        runnerArgs.push('--skip-build')
+    }
 
-    process.exitCode = result.status ?? 1
+    runRunner(runnerPath, runnerArgs, repoPath)
 }
 
 main()

@@ -111,6 +111,31 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Theme Healthcare marketplace card.",
                 "caption": "Theme Healthcare theme card."
+            },
+            {
+                "path": "docs/screenshots/healthcare-homepage-desktop.png",
+                "alt": "Theme Healthcare desktop homepage rendered by the Capell screenshot runner.",
+                "caption": "Styled desktop homepage with appointment-led hero, clinical typography, and healthcare imagery."
+            },
+            {
+                "path": "docs/screenshots/healthcare-homepage-mobile.png",
+                "alt": "Theme Healthcare mobile homepage rendered by the Capell screenshot runner.",
+                "caption": "Styled mobile homepage with compact navigation and patient-focused appointment calls to action."
+            },
+            {
+                "path": "docs/screenshots/healthcare-services-listing.png",
+                "alt": "Theme Healthcare services listing rendered by the Capell screenshot runner.",
+                "caption": "Service listing route with styled healthcare cards, clinical imagery, and patient navigation."
+            },
+            {
+                "path": "docs/screenshots/healthcare-clinician-detail.png",
+                "alt": "Theme Healthcare detail page rendered by the Capell screenshot runner.",
+                "caption": "Detail route with styled healthcare image framing and long-form preview content."
+            },
+            {
+                "path": "docs/screenshots/healthcare-contact-page.png",
+                "alt": "Theme Healthcare contact page rendered by the Capell screenshot runner.",
+                "caption": "Contact route with styled clinical support positioning and patient-facing imagery."
             }
         ],
         "categories": [
