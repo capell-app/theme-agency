@@ -47,7 +47,7 @@ final class BuildPublishingTrendAction
 
         foreach ($buckets as $index => $bucket) {
             $points[] = new PublishingTrendPointData(
-                label: $bucket['start']->format('M j'),
+                label: $this->bucketLabel($bucket['start'], $bucket['end']),
                 publishedCount: $publishedCounts[$index] ?? 0,
                 scheduledCount: $scheduledCounts[$index] ?? 0,
             );
@@ -77,6 +77,21 @@ final class BuildPublishingTrendAction
         }
 
         return $buckets;
+    }
+
+    private function bucketLabel(CarbonImmutable $start, CarbonImmutable $end): string
+    {
+        $displayEnd = $end->subSecond();
+
+        if ($start->isSameDay($displayEnd)) {
+            return $start->format('M j');
+        }
+
+        if ($start->isSameMonth($displayEnd)) {
+            return sprintf('%s - %s', $start->format('M j'), $displayEnd->format('j'));
+        }
+
+        return sprintf('%s - %s', $start->format('M j'), $displayEnd->format('M j'));
     }
 
     /**

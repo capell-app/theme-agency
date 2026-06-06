@@ -162,6 +162,18 @@ it('keeps the scheduled total scoped to the selected dashboard range', function 
     expect($data->totalScheduled)->toBe(1);
 });
 
+it('labels long-range publishing trend buckets as date ranges', function (): void {
+    CarbonImmutable::setTestNow(CarbonImmutable::parse('2026-06-06 12:00:00'));
+
+    $data = BuildPublishingTrendAction::run(
+        CarbonImmutable::parse('2026-01-01 00:00:00'),
+        CarbonImmutable::parse('2027-01-01 00:00:00'),
+    );
+
+    expect($data->points[0]->label)->toBe('Jan 1 - Feb 22')
+        ->and($data->points[6]->label)->toBe('Nov 9 - Dec 31');
+});
+
 it('does not expose unscoped publishing trend counts without an authenticated actor', function (): void {
     auth()->logout();
 
