@@ -1928,6 +1928,79 @@ function themeDemoGenericReviewScreenshotEntries(string $themeKey): array
 }
 
 /**
+ * @param  array<int, array<string, string>>  $actions
+ * @param  array{proof: bool, features: int, listing: int, cta: bool}  $sectionDensity
+ * @return array<int, ThemeSection>
+ */
+function themeDemoGenericReviewSections(
+    string $themeKey,
+    string $surface,
+    string $title,
+    string $summary,
+    array $actions,
+    array $sectionDensity,
+): array {
+    $copy = themeDemoScreenshotThemeCopy($themeKey);
+    $sections = [
+        HeroSectionData::from([
+            'heading' => $title,
+            'summary' => $summary,
+            'actions' => $actions,
+        ]),
+    ];
+
+    if ($sectionDensity['proof']) {
+        $sections[] = ProofSectionData::from([
+            'heading' => $copy['proofHeading'],
+            'summary' => $copy['proofSummary'],
+            'items' => themeDemoScreenshotProofItems($themeKey),
+        ]);
+    }
+
+    if ($sectionDensity['features'] > 0) {
+        $sections[] = FeatureSectionData::from([
+            'heading' => $copy['featuresHeading'],
+            'summary' => $copy['featuresSummary'],
+            'features' => themeDemoScreenshotFeatures($surface, $sectionDensity['features'], $themeKey),
+        ]);
+    }
+
+    if ($sectionDensity['listing'] > 0) {
+        $sections[] = ContentListingSectionData::from([
+            'heading' => $copy['listingHeading'],
+            'summary' => $copy['listingSummary'],
+            'items' => themeDemoScreenshotListingItems([], $surface, $sectionDensity['listing'], $themeKey),
+        ]);
+    }
+
+    if ($sectionDensity['cta']) {
+        $sections[] = CtaSectionData::from([
+            'heading' => 'Move visitors through ' . $copy['plural'],
+            'summary' => 'CTA treatment should feel specific to this workflow while staying readable in every theme.',
+            'actions' => $actions,
+        ]);
+    }
+
+    return $sections;
+}
+
+/**
+ * @return array{proof: bool, features: int, listing: int, cta: bool}
+ */
+function themeDemoScreenshotSectionDensity(string $themeKey, string $surface): array
+{
+    if ($themeKey === 'education') {
+        return match ($surface) {
+            'visual-review' => ['proof' => true, 'features' => 2, 'listing' => 0, 'cta' => true],
+            'system-review' => ['proof' => false, 'features' => 2, 'listing' => 0, 'cta' => true],
+            default => ['proof' => true, 'features' => 4, 'listing' => 4, 'cta' => true],
+        };
+    }
+
+    return ['proof' => true, 'features' => 4, 'listing' => 4, 'cta' => true];
+}
+
+/**
  * @return array{surface: string, type: string, layout: string, html: string, expectedText: string}
  */
 function themeDemoGenericReviewScreenshotEntry(
@@ -1939,6 +2012,7 @@ function themeDemoGenericReviewScreenshotEntry(
     string $summary,
 ): array {
     $copy = themeDemoScreenshotThemeCopy($themeKey);
+    $sectionDensity = themeDemoScreenshotSectionDensity($themeKey, $surface);
     $actions = [
         ['label' => 'Open ' . $copy['singular'], 'url' => '#primary', 'style' => 'primary'],
         ['label' => 'Compare ' . $copy['plural'], 'url' => '#secondary', 'style' => 'secondary'],
@@ -1956,33 +2030,7 @@ function themeDemoGenericReviewScreenshotEntry(
     $page = new ThemePageData(
         title: $title,
         brand: new BrandProfileData,
-        sections: [
-            HeroSectionData::from([
-                'heading' => $title,
-                'summary' => $summary,
-                'actions' => $actions,
-            ]),
-            ProofSectionData::from([
-                'heading' => $copy['proofHeading'],
-                'summary' => $copy['proofSummary'],
-                'items' => themeDemoScreenshotProofItems($themeKey),
-            ]),
-            FeatureSectionData::from([
-                'heading' => $copy['featuresHeading'],
-                'summary' => $copy['featuresSummary'],
-                'features' => themeDemoScreenshotFeatures($surface, 4, $themeKey),
-            ]),
-            ContentListingSectionData::from([
-                'heading' => $copy['listingHeading'],
-                'summary' => $copy['listingSummary'],
-                'items' => themeDemoScreenshotListingItems([], $surface, 4, $themeKey),
-            ]),
-            CtaSectionData::from([
-                'heading' => 'Move visitors through ' . $copy['plural'],
-                'summary' => 'CTA treatment should feel specific to this workflow while staying readable in every theme.',
-                'actions' => $actions,
-            ]),
-        ],
+        sections: themeDemoGenericReviewSections($themeKey, $surface, $title, $summary, $actions, $sectionDensity),
         navigation: $navigation,
         footer: new FooterData(
             brandName: $navigation->brandName,
@@ -2298,29 +2346,40 @@ function themeDemoScreenshotEnrichedRenderData(string $themeKey, string $surface
  */
 function themeDemoScreenshotSurfaceRenderData(string $themeKey, string $surface, array $mediaUrls, array $actions): array
 {
+    if ($themeKey === 'education' && in_array($surface, [
+        'education-feature-review',
+        'education-listing-review',
+        'education-proof-review',
+    ], true)) {
+        return [];
+    }
+
     $copy = themeDemoScreenshotThemeCopy($themeKey);
+    $density = themeDemoScreenshotRouteSurfaceDensity($themeKey, $surface);
 
     return match ($surface) {
-        'homepage' => [
+        'homepage' => array_filter([
             'features_heading' => $copy['featuresHeading'],
             'features_summary' => $copy['featuresSummary'],
-            'features' => themeDemoScreenshotFeatures($surface, 9, $themeKey),
-            'proof' => [
+            'features' => themeDemoScreenshotFeatures($surface, $density['features'], $themeKey),
+            'proof' => $density['proof'] > 0 ? [
                 'heading' => $copy['proofHeading'],
                 'summary' => $copy['proofSummary'],
-                'items' => themeDemoScreenshotProofItems($themeKey),
-            ],
+                'items' => array_slice(themeDemoScreenshotProofItems($themeKey), 0, $density['proof']),
+            ] : null,
             'heading' => $copy['listingHeading'],
-            'items' => themeDemoScreenshotListingItems($mediaUrls, $surface, 6, $themeKey),
+            'items' => $density['listing'] > 0
+                ? themeDemoScreenshotListingItems($mediaUrls, $surface, $density['listing'], $themeKey)
+                : null,
             'cta' => [
                 'heading' => $copy['ctaHeading'],
                 'summary' => $copy['ctaSummary'],
                 'actions' => $actions,
             ],
-        ],
+        ], fn (mixed $value): bool => $value !== null),
         'directory' => [
             'heading' => $copy['directoryHeading'],
-            'items' => themeDemoScreenshotListingItems($mediaUrls, $surface, 8, $themeKey),
+            'items' => themeDemoScreenshotListingItems($mediaUrls, $surface, $density['listing'], $themeKey),
             'cta' => [
                 'heading' => $copy['directoryCtaHeading'],
                 'summary' => $copy['directorySummary'],
@@ -2412,6 +2471,26 @@ function themeDemoScreenshotSurfaceRenderData(string $themeKey, string $surface,
     };
 }
 
+/**
+ * @return array{features: int, listing: int, proof: int}
+ */
+function themeDemoScreenshotRouteSurfaceDensity(string $themeKey, string $surface): array
+{
+    if ($themeKey === 'education') {
+        return match ($surface) {
+            'homepage' => ['features' => 2, 'listing' => 0, 'proof' => 0],
+            'directory' => ['features' => 0, 'listing' => 5, 'proof' => 4],
+            default => ['features' => 4, 'listing' => 4, 'proof' => 4],
+        };
+    }
+
+    return match ($surface) {
+        'homepage' => ['features' => 9, 'listing' => 6, 'proof' => 4],
+        'directory' => ['features' => 0, 'listing' => 8, 'proof' => 4],
+        default => ['features' => 4, 'listing' => 4, 'proof' => 4],
+    };
+}
+
 function themeDemoScreenshotExpectedText(string $surface, ?string $themeKey = null): string
 {
     if ($themeKey !== null) {
@@ -2421,6 +2500,9 @@ function themeDemoScreenshotExpectedText(string $surface, ?string $themeKey = nu
         return match ($surface) {
             'homepage' => 'Featured ' . $copy['plural'],
             'directory' => 'Browse ' . $copy['plural'],
+            'education-proof-review' => 'Education learner proof review',
+            'education-listing-review' => 'Education pathway listing review',
+            'education-feature-review' => 'Education feature card review',
             'detail' => ucfirst((string) $copy['singular']) . ' detail preview',
             'contact' => 'Start the ' . $copy['singular'] . ' conversation',
             'empty' => 'No ' . $copy['plural'] . ' yet',
@@ -2473,6 +2555,9 @@ function themeDemoScreenshotSurfaceLabel(string $surface): string
     return match ($surface) {
         'homepage' => 'Homepage composition',
         'directory' => 'Directory layout',
+        'education-proof-review' => 'Learner proof layout',
+        'education-listing-review' => 'Pathway listing layout',
+        'education-feature-review' => 'Feature card layout',
         'detail' => 'Detail layout',
         'contact' => 'Contact route',
         'empty' => 'Empty-state recovery',

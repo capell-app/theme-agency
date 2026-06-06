@@ -15,6 +15,10 @@ final class InstallEducationThemeDemoAction implements InstallsThemeDemo
 
     public function handle(ThemeDemoInstallData $data): int
     {
-        return ThemeDemoPageInstaller::run($data, 'education', 'Education');
+        $exitCode = ThemeDemoPageInstaller::run($data, 'education', 'Education');
+
+        RebalanceEducationThemeDemoPagesAction::run();
+
+        return $exitCode;
     }
 }

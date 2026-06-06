@@ -19,9 +19,7 @@
             "scenario": "runner-fixture-admin",
             "url": "/screenshot-fixtures/theme-nonprofit/theme-admin-list-showing-nonprofit",
             "waitFor": ".theme-nonprofit",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "frontend-page-rendered-with-nonprofit-theme",
@@ -37,9 +35,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/theme-nonprofit/frontend-page-rendered-with-nonprofit-theme",
             "waitFor": ".theme-nonprofit",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "nonprofit-homepage-layout",
@@ -55,9 +51,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-homepage-layout",
             "waitFor": ".theme-nonprofit",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "nonprofit-campaigns-layout",
@@ -73,9 +67,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-campaigns-layout",
             "waitFor": ".theme-nonprofit",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "nonprofit-impact-layout",
@@ -91,9 +83,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-impact-layout",
             "waitFor": ".theme-nonprofit",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "nonprofit-volunteer-donate-layout",
@@ -109,9 +99,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-volunteer-donate-layout",
             "waitFor": ".theme-nonprofit",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "nonprofit-events-layout",
@@ -127,9 +115,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-events-layout",
             "waitFor": ".theme-nonprofit",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "nonprofit-stories-layout",
@@ -145,9 +131,7 @@
             "scenario": "runner-fixture-frontend",
             "url": "/screenshot-fixtures/theme-nonprofit/nonprofit-stories-layout",
             "waitFor": ".theme-nonprofit",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         },
         {
             "id": "theme-preview-url-output",
@@ -163,9 +147,7 @@
             "scenario": "runner-fixture-admin",
             "url": "/screenshot-fixtures/theme-nonprofit/theme-preview-url-output",
             "waitFor": ".theme-nonprofit",
-            "colorSchemes": [
-                "light"
-            ]
+            "colorSchemes": ["light"]
         }
     ]
 }

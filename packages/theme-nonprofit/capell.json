@@ -13,14 +13,9 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Nonprofit",
-    "surfaces": [
-        "frontend"
-    ],
+    "surfaces": ["frontend"],
     "dependencies": {
-        "requires": [
-            "capell-app/core",
-            "capell-app/foundation-theme"
-        ],
+        "requires": ["capell-app/core", "capell-app/foundation-theme"],
         "supports": [
             "capell-app/layout-builder",
             "capell-app/frontend-authoring",
@@ -59,31 +54,19 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-nonprofit-demo",
-        "demoParams": [
-            "url",
-            "languages",
-            "sites"
-        ],
+        "demoParams": ["url", "languages", "sites"],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "theme-nonprofit",
-        "theme-nonprofit-frontend"
-    ],
+    "capabilities": ["theme-nonprofit", "theme-nonprofit-frontend"],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": [
-            "theme-nonprofit"
-        ],
+        "cacheTags": ["theme-nonprofit"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -133,10 +116,7 @@
                 "caption": "Theme Nonprofit Hero Mobile"
             }
         ],
-        "categories": [
-            "frontend",
-            "themes"
-        ]
+        "categories": ["frontend", "themes"]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "nonprofit",

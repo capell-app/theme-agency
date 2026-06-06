@@ -15,7 +15,7 @@ final class SyncCampaignStatusesCommand extends Command
 
     public function handle(): int
     {
-        $result = SyncCampaignStatusesAction::run();
+        $result = app(SyncCampaignStatusesAction::class)->handle();
 
         $this->components->info(sprintf(
             'Campaign statuses synced. Activated: %d, ended: %d.',
