@@ -12,6 +12,7 @@ use Capell\Admin\Enums\MarketingStudioSectionEnum;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\GA4Reports\Actions\BuildGA4ReportsOverviewAction;
+use Capell\GA4Reports\Actions\BuildGA4ReportsWindowAction;
 use Capell\GA4Reports\Console\Commands\SyncGA4ReportsCommand;
 use Capell\GA4Reports\Data\GA4ReportsOverviewData;
 use Capell\GA4Reports\Filament\Pages\GA4ReportsPage;
@@ -19,6 +20,7 @@ use Capell\GA4Reports\Filament\Settings\Contributors\GA4ReportsDashboardSettings
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsSetupStatusWidget;
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsTopPagesWidget;
 use Capell\GA4Reports\Filament\Widgets\GA4ReportsTrafficTrendWidget;
+use Carbon\CarbonImmutable;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
 
@@ -141,7 +143,13 @@ final class AdminServiceProvider extends ServiceProvider
             return $overview;
         }
 
-        $overview = BuildGA4ReportsOverviewAction::run();
+        $now = CarbonImmutable::now();
+        $window = BuildGA4ReportsWindowAction::run(
+            startsAt: $now->startOfWeek(),
+            endsAt: $now->endOfWeek(),
+        );
+
+        $overview = BuildGA4ReportsOverviewAction::run($window);
 
         return $overview;
     }
