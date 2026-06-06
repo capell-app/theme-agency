@@ -17,7 +17,7 @@ return [
         'billing_description' => 'Manage payment methods, invoices, and billing details.',
         'billing_subscription_status' => ':status subscription billing is available.',
         'billing_subscription_period' => ':status subscription billing is available until :date.',
-        'checkout_amount_description' => 'Paid :amount :currency.',
+        'checkout_amount_description' => 'Paid :amount.',
         'checkout_description' => 'Completed payment.',
         'download_description' => 'Paid download is available.',
         'download_expired' => 'Expired',

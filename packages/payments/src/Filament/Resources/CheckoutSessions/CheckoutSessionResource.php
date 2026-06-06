@@ -6,6 +6,7 @@ namespace Capell\Payments\Filament\Resources\CheckoutSessions;
 
 use BackedEnum;
 use Capell\Core\Facades\CapellCore;
+use Capell\Payments\Actions\FormatPaymentMoneyAction;
 use Capell\Payments\Filament\Resources\CheckoutSessions\Pages\ListCheckoutSessions;
 use Capell\Payments\Models\CheckoutSession;
 use Capell\Payments\Providers\PaymentsServiceProvider;
@@ -29,7 +30,10 @@ final class CheckoutSessionResource extends Resource
             TextColumn::make('status')->label(__('capell-payments::generic.fields.status'))->badge()->sortable(),
             TextColumn::make('mode')->label(__('capell-payments::generic.fields.mode'))->badge()->sortable(),
             TextColumn::make('purpose')->label(__('capell-payments::generic.fields.purpose'))->badge()->sortable(),
-            TextColumn::make('amount_total')->label(__('capell-payments::generic.fields.amount_total'))->numeric()->sortable(),
+            TextColumn::make('amount_total')
+                ->label(__('capell-payments::generic.fields.amount_total'))
+                ->formatStateUsing(fn (?int $state, CheckoutSession $record): ?string => FormatPaymentMoneyAction::run($state, $record->currency))
+                ->sortable(),
             TextColumn::make('currency')->label(__('capell-payments::generic.fields.currency'))->searchable(),
             TextColumn::make('provider_customer_id')->label(__('capell-payments::generic.fields.provider_customer_id'))->searchable()->toggleable(),
             TextColumn::make('completed_at')->label(__('capell-payments::generic.fields.completed_at'))->dateTime()->sortable(),

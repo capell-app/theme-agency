@@ -6,6 +6,7 @@ namespace Capell\Payments\Filament\Resources\Refunds;
 
 use BackedEnum;
 use Capell\Core\Facades\CapellCore;
+use Capell\Payments\Actions\FormatPaymentMoneyAction;
 use Capell\Payments\Filament\Resources\Refunds\Pages\ListPaymentRefunds;
 use Capell\Payments\Models\PaymentRefund;
 use Capell\Payments\Providers\PaymentsServiceProvider;
@@ -27,7 +28,10 @@ final class PaymentRefundResource extends Resource
         return $table->columns([
             TextColumn::make('provider_refund_id')->label(__('capell-payments::generic.fields.provider_refund_id'))->searchable()->copyable(),
             TextColumn::make('status')->label(__('capell-payments::generic.fields.status'))->badge()->sortable(),
-            TextColumn::make('amount')->label(__('capell-payments::generic.fields.amount'))->numeric()->sortable(),
+            TextColumn::make('amount')
+                ->label(__('capell-payments::generic.fields.amount'))
+                ->formatStateUsing(fn (?int $state, PaymentRefund $record): ?string => FormatPaymentMoneyAction::run($state, $record->currency))
+                ->sortable(),
             TextColumn::make('currency')->label(__('capell-payments::generic.fields.currency'))->searchable(),
             TextColumn::make('reason')->label(__('capell-payments::generic.fields.reason'))->searchable()->toggleable(),
             TextColumn::make('provider_payment_intent_id')->label(__('capell-payments::generic.fields.provider_payment_intent_id'))->searchable()->toggleable(),

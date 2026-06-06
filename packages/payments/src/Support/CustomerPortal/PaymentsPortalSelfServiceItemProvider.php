@@ -8,6 +8,7 @@ use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
 use Capell\CustomerPortal\Data\PortalSelfServiceItemData;
 use Capell\CustomerPortal\Enums\PortalSelfServiceItemType;
 use Capell\CustomerPortal\Models\PortalAccount;
+use Capell\Payments\Actions\FormatPaymentMoneyAction;
 use Capell\Payments\Actions\ResolvePortalPaymentCustomerAction;
 use Capell\Payments\Enums\CheckoutSessionStatus;
 use Capell\Payments\Models\CheckoutSession;
@@ -152,8 +153,8 @@ final class PaymentsPortalSelfServiceItemProvider implements PortalSelfServiceIt
         }
 
         return __('capell-payments::generic.portal.checkout_amount_description', [
-            'amount' => number_format($checkoutSession->amount_total / 100, 2),
-            'currency' => strtoupper($checkoutSession->currency),
+            'amount' => FormatPaymentMoneyAction::run($checkoutSession->amount_total, $checkoutSession->currency),
+            'currency' => '',
         ]);
     }
 

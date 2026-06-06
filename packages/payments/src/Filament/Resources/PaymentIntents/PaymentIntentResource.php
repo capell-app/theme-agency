@@ -6,6 +6,7 @@ namespace Capell\Payments\Filament\Resources\PaymentIntents;
 
 use BackedEnum;
 use Capell\Core\Facades\CapellCore;
+use Capell\Payments\Actions\FormatPaymentMoneyAction;
 use Capell\Payments\Filament\Resources\PaymentIntents\Pages\ListPaymentIntents;
 use Capell\Payments\Models\PaymentIntent;
 use Capell\Payments\Providers\PaymentsServiceProvider;
@@ -27,7 +28,10 @@ final class PaymentIntentResource extends Resource
         return $table->columns([
             TextColumn::make('provider_payment_intent_id')->label(__('capell-payments::generic.fields.provider_payment_intent_id'))->searchable()->copyable(),
             TextColumn::make('status')->label(__('capell-payments::generic.fields.status'))->badge()->sortable(),
-            TextColumn::make('amount')->label(__('capell-payments::generic.fields.amount'))->numeric()->sortable(),
+            TextColumn::make('amount')
+                ->label(__('capell-payments::generic.fields.amount'))
+                ->formatStateUsing(fn (?int $state, PaymentIntent $record): ?string => FormatPaymentMoneyAction::run($state, $record->currency))
+                ->sortable(),
             TextColumn::make('currency')->label(__('capell-payments::generic.fields.currency'))->searchable(),
             TextColumn::make('provider_customer_id')->label(__('capell-payments::generic.fields.provider_customer_id'))->searchable()->toggleable(),
             TextColumn::make('provider_session_id')->label(__('capell-payments::generic.fields.provider_session_id'))->searchable()->toggleable(),
