@@ -85,18 +85,28 @@
 .knowledge-shell .knowledge-doc-prose {
     font-size: 1rem;
     line-height: 1.8;
+    max-width: 68ch;
 }
 
 .knowledge-shell .knowledge-doc-prose > * + * {
     margin-top: 1.25rem;
 }
 
+.knowledge-shell .knowledge-doc-prose h2,
 .knowledge-shell .knowledge-doc-prose h3 {
     color: #172033;
-    font-size: 1.35rem;
-    font-weight: 800;
     line-height: 1.25;
     margin-top: 2rem;
+}
+
+.knowledge-shell .knowledge-doc-prose h2 {
+    font-size: 1.65rem;
+    font-weight: 800;
+}
+
+.knowledge-shell .knowledge-doc-prose h3 {
+    font-size: 1.35rem;
+    font-weight: 800;
 }
 
 .knowledge-shell .knowledge-doc-prose p {
@@ -108,6 +118,55 @@
     font-weight: 800;
     text-decoration: underline;
     text-underline-offset: 0.18em;
+}
+
+.knowledge-shell .knowledge-doc-prose :not(pre) > code {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    color: #1e3a8a;
+    font-family:
+        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+        'Courier New', monospace;
+    font-size: 0.92em;
+    font-weight: 700;
+    padding: 0.1rem 0.32rem;
+}
+
+.knowledge-shell .knowledge-doc-prose pre {
+    background:
+        linear-gradient(135deg, rgba(29, 78, 216, 0.16), transparent 36%),
+        #07111f;
+    border: 1px solid rgba(147, 197, 253, 0.24);
+    border-radius: 8px;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+    color: #e2e8f0;
+    font-family:
+        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+        'Courier New', monospace;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 1rem;
+}
+
+.knowledge-shell .knowledge-doc-prose pre code {
+    background: transparent;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    padding: 0;
+}
+
+.knowledge-shell .knowledge-doc-prose ul,
+.knowledge-shell .knowledge-doc-prose ol {
+    max-width: 68ch;
+    padding-left: 1.35rem;
+}
+
+.knowledge-shell .knowledge-doc-prose li + li {
+    margin-top: 0.5rem;
 }
 
 .knowledge-shell .theme-section-content-listing article {
@@ -127,5 +186,23 @@
     .knowledge-shell .knowledge-hero h2 {
         font-size: clamp(2.5rem, 16vw, 3.5rem);
         line-height: 1.04;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .knowledge-shell *,
+    .knowledge-shell *::before,
+    .knowledge-shell *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+    }
+
+    .knowledge-shell .knowledge-hero::before,
+    .knowledge-shell .knowledge-search-console::before,
+    .knowledge-shell .knowledge-cta::before {
+        background-image: none;
+        opacity: 0.12;
     }
 }

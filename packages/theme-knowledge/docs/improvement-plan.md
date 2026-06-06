@@ -14,8 +14,9 @@ Marketplace and Composer copy are buyer-facing, and `capell.json` marketplace me
 - **2026-06-06:** Captured all 9 `docs/screenshots.json` route-backed targets through the Capell runner and promoted the PNG gallery into marketplace media.
 - **2026-06-04:** Moved author bench and topic hub defaults into translations, made both sections accept hydrated item data, removed optional package installation checks from public newsletter/search Blade, and added tests for those public rendering contracts.
 - **2026-06-05:** Added a first-class `doc-article` section renderer with hydrated breadcrumbs, category sidebar, article metadata, constrained article body, and sticky table-of-contents layout, plus registry coverage and docs/manifest reconciliation.
+- **2026-06-06:** Added code-block/prose styling for technical articles and a reduced-motion guard for decorative grid overlays.
 
-**Headline:** the package is positioned as a knowledge-base / documentation / help-site theme, the core documentation layout now exists, and the static screenshot gallery is reconciled. The remaining shipped-feature gaps are code-block styling, dark mode, tokenization, and deeper differentiated affordances such as article feedback and versioning.
+**Headline:** the package is positioned as a knowledge-base / documentation / help-site theme, the core documentation layout now exists, and the static screenshot gallery is reconciled. The remaining shipped-feature gaps are dark mode, tokenization, and deeper differentiated affordances such as article feedback and versioning.
 
 ## 2. Improvements (existing functionality)
 
@@ -29,7 +30,7 @@ Prioritized. Real templates only.
 
 4. **Tokenize hardcoded hex colors** — **What:** section blades are saturated with inline arbitrary hex (`bg-[#07111f]`, `text-[#1d4ed8]`, `bg-[#f59e0b]`, `text-[#172033]`, `bg-[#f8fafc]`, etc.) repeated across 14 files; the preset exposes `primaryColor/accentColor/neutralColor/surfaceColor/foregroundColor` but the views ignore them. — why: changing the preset palette does not change the rendered theme, defeating Theme Studio customization; also makes dark mode (#3) far harder. — all `resources/views/sections/*.blade.php`, `resources/css/theme-knowledge.css` — **L**
 
-5. **Honor reduced motion on the animated grid** — **What:** `.knowledge-hero::before / .knowledge-search-console::before / .knowledge-cta::before` paint an animated/overlay grid with no `@media (prefers-reduced-motion: reduce)` guard. — why: WCAG 2.3.3 / motion sensitivity; the preset advertises `motionIntensity: subtle`. — `resources/css/theme-knowledge.css` — **S**
+5. **Done/Shipped: honor reduced motion on the animated grid.** `.knowledge-hero::before`, `.knowledge-search-console::before`, and `.knowledge-cta::before` now sit behind a `prefers-reduced-motion: reduce` guard that disables decorative grid backgrounds and shortens animation/transition durations inside the theme shell. — `resources/css/theme-knowledge.css` — **S**
 
 6. **Give skeleton/placeholder bars semantic fallback** — **What:** `content-listing`, `search-listing`, `topic-hubs` render decorative `<span>`/`<div>` bars (`h-3 bg-[#f59e0b]`, etc.) as filler. Most are `aria-hidden="true"` (good), but the `search-listing` "source" panel and the `content-listing` image fallback rely on coloured bars as the only content when no data is present. — why: empty-state polish; a docs theme with no content should still read as intentional. — `resources/views/sections/search-listing.blade.php`, `content-listing.blade.php` — **S**
 
@@ -44,7 +45,7 @@ Prioritized. Real templates only.
 - **Table of contents (in-page anchor nav).** The shipped `doc-article` section renders hydrated sticky TOC links. Automatic heading extraction remains future work.
 - **Breadcrumbs.** The shipped `doc-article` section renders hydrated breadcrumb trails with translated fallbacks.
 - **Done/Shipped: Functional search surface.** `search-listing.blade.php` now renders a translated `GET` search form with renderer-supplied availability/action data and query input. Deeper Search package result-page integration remains follow-up work.
-- **Code-block / syntax styling.** No `pre`/`code` styling in CSS or any prose component — essential for developer docs.
+- **Done/Shipped: code-block / syntax styling.** `.knowledge-doc-prose` now styles inline code, scrollable `pre` blocks, lists, and H2/H3 rhythm for both section-rendered articles and Knowledge Base article views. Full syntax highlighting remains future package/app integration depth.
 - **Article feedback ("Was this helpful?").** No feedback widget/partial.
 - **Versioning / "last updated" / version switcher.** No version or freshness affordance.
 - **Doc-article hero/header partial** (title + category + reading time + updated date). The generic `hero` is marketing-shaped.
@@ -61,11 +62,11 @@ Prioritized. Real templates only.
 - **Marketplace copy shipped, with code-block caveat.** Marketplace/Composer copy is buyer-facing, and the manifest caveat now correctly narrows the remaining technical-docs promise gap to code-block styling. — `capell.json`
 - **`{!! $content !!}` trust boundary.** `page.blade.php:12` echoes pre-rendered section HTML unescaped. This is the standard foundation pattern (sections render server-side via the trusted renderer), so it is acceptable — but it means section template safety is the only guard; `PublicOutputSafetyTest` now guards against authoring markers, database calls, and public Blade `CapellCore::` package checks. Broader untranslated-literal detection remains open. — `resources/views/page.blade.php`, `tests/Unit/PublicOutputSafetyTest.php`
 - **Performance budget.** `capell.json` `performance.frontendRenderBudgetMs = 20`, `adminQueryBudget = 0`, `cacheSafety.cacheable = false` (varies by site, locale). No test asserts the render budget, and there is no LCP guidance for `hero-desktop.jpg` (698 KB)/`hero-mobile.jpg` (493 KB) demo assets — large hero media with no documented `loading`/`fetchpriority` strategy risks the LCP path. — `capell.json`, `docs/assets/marketplace/*`
-- **Test gaps.** `tests/` covers theme definition, manifest requirements, package-aware rendering, health diagnostics, translated/data-driven author and topic hub defaults, the doc/article layout renderer, and public-output leak strings including `CapellCore::` checks. Not covered: route-backed screenshot capture, code-block styling, dark mode, broader untranslated-literal detection, reduced motion, and render budget. — `tests/Unit/`, `tests/Feature/Commands/DemoCommandTest.php`
+- **Test gaps.** `tests/` covers theme definition, manifest requirements, package-aware rendering, health diagnostics, translated/data-driven author and topic hub defaults, the doc/article layout renderer, and public-output leak strings including `CapellCore::` checks. Not covered: route-backed screenshot capture, dark mode, broader untranslated-literal detection, CSS visual assertions for code blocks/reduced motion, and render budget. — `tests/Unit/`, `tests/Feature/Commands/DemoCommandTest.php`
 
 ## 5. Marketplace & Selling
 
-**Critique.** Marketplace and Composer copy are now buyer-facing, and the description intentionally notes code-block styling as the remaining technical-docs copy gap. The static visual story is now backed by the 9 committed route-backed PNG captures, though there is still no dark-mode shot.
+**Critique.** Marketplace and Composer copy are now buyer-facing, and the technical-docs copy gap has narrowed now that code blocks have a dedicated prose treatment. The static visual story is now backed by the 9 committed route-backed PNG captures, though there is still no dark-mode shot.
 
 **Improved 1-sentence summary:**
 
@@ -73,7 +74,7 @@ Prioritized. Real templates only.
 
 **Improved 3–4 sentence description:**
 
-> Theme Knowledge turns a Capell site into a polished documentation and help centre. It pairs a category sidebar, sticky table of contents, and breadcrumb trails with a prominent search experience and readable long-form typography, so visitors find answers fast. Resource libraries, author bios, topic hubs, and newsletter capture round out a full knowledge-marketing surface, with optional Blog, Search, and Newsletter integrations lighting up automatically when those packages are installed. Built on the Capell foundation theme with a configurable colour palette and accessible focus states. (Note: code-block styling remains planned follow-up work before the full technical-docs promise is complete.)
+> Theme Knowledge turns a Capell site into a polished documentation and help centre. It pairs a category sidebar, sticky table of contents, code-friendly prose, and breadcrumb trails with a prominent search experience and readable long-form typography, so visitors find answers fast. Resource libraries, author bios, topic hubs, and newsletter capture round out a full knowledge-marketing surface, with optional Blog, Search, and Newsletter integrations lighting up automatically when those packages are installed. Built on the Capell foundation theme with a configurable colour palette and accessible focus states.
 
 **Screenshot/media gaps.** The 9 declared renders are committed to `docs/screenshots/` and promoted into marketplace media. Add a dark-mode variant (parity with `theme-agency`) and a more specific doc-article capture once the technical-docs styling work lands.
 
@@ -88,11 +89,11 @@ Prioritized. Real templates only.
 | Done/Shipped: Add doc/article layout (sidebar + TOC + breadcrumbs) backing `knowledge-docs-layout.svg`   | Done   | L      | High   | §3          |
 | Make `search-listing` a real, prominent search form (cross-sell `capell-app/search`)                     | Done   | M      | High   | §3, §2.6    |
 | Generate + commit the 9 `docs/screenshots.json` renders; replace placeholder SVGs                        | Done   | M      | High   | §4, §5      |
-| Add code-block / `pre`/`code` prose styling                                                              | Next   | M      | High   | §3          |
+| Done/Shipped: Add code-block / `pre`/`code` prose styling                                                | Done   | M      | High   | §3          |
 | Add dark mode (tokens + `dark:` variants) and a dark screenshot                                          | Next   | L      | High   | §2.3, §5    |
 | Tokenize hardcoded hex to preset `--site-theme-*` variables                                              | Next   | L      | Med    | §2.4        |
 | Constrained prose measure + heading-scale readability pass                                               | Next   | M      | Med    | §2.7        |
-| `prefers-reduced-motion` guard on animated grid `::before`                                               | Next   | S      | Low    | §2.5        |
+| Done/Shipped: `prefers-reduced-motion` guard on animated grid `::before`                                 | Done   | S      | Low    | §2.5        |
 | Remove `CapellCore::isPackageInstalled` from `newsletter`/`search-listing` Blade; rely on renderer flags | Done   | S      | Med    | §4          |
 | Fix untranslated/hardcoded copy in `authors` (and data-drive it)                                         | Done   | M      | Med    | §2.2, §4    |
 | Data-drive `topic-hubs` instead of fixed 4 labels                                                        | Done   | M      | Med    | §2.1        |
