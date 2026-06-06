@@ -6,6 +6,7 @@ All notable changes to `capell-app/knowledge-base` will be documented in this fi
 
 - Added `capell:knowledge-base-demo` to seed public collections, articles, a related link, and sample feedback for demos and screenshot fixtures.
 - Registered Knowledge Base as an optional Capell Search source with public-safe article search payloads.
+- Registered published Knowledge Base articles as optional Site Discovery public URLs and added public-safe Article schema data output.
 - Added `/docs/llms.txt` AI-readable public output.
 - Added Article edit related-article management and feedback aggregate displays.
 - Corrected cache-safety metadata to the current global, single-locale content scope.

@@ -13,8 +13,10 @@ use Capell\KnowledgeBase\Models\KnowledgeBaseArticleFeedback;
 use Capell\KnowledgeBase\Models\KnowledgeBaseArticleVersion;
 use Capell\KnowledgeBase\Models\KnowledgeBaseCollection;
 use Capell\KnowledgeBase\Models\KnowledgeBaseRelatedArticle;
+use Capell\KnowledgeBase\Support\PublicUrls\KnowledgeBasePublicUrlContributor;
 use Capell\Search\Data\SearchableSourceData;
 use Capell\Search\Support\SearchableSourceRegistry;
+use Capell\SiteDiscovery\Contracts\PublicUrlContributor;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Override;
 use Spatie\LaravelPackageTools\Package;
@@ -53,6 +55,7 @@ final class KnowledgeBaseServiceProvider extends AbstractPackageServiceProvider
                 ->registerMorphMap()
                 ->registerCacheInvalidationDependencies()
                 ->registerSearchableSource()
+                ->registerPublicUrlContributors()
                 ->registerProtectedTables();
         });
     }
@@ -142,6 +145,18 @@ final class KnowledgeBaseServiceProvider extends AbstractPackageServiceProvider
         if ($this->app->bound(SearchableSourceRegistry::class)) {
             $registerSource($this->app->make(SearchableSourceRegistry::class));
         }
+
+        return $this;
+    }
+
+    private function registerPublicUrlContributors(): self
+    {
+        if (! interface_exists(PublicUrlContributor::class)) {
+            return $this;
+        }
+
+        $this->app->singleton(KnowledgeBasePublicUrlContributor::class);
+        $this->app->tag([KnowledgeBasePublicUrlContributor::class], PublicUrlContributor::TAG);
 
         return $this;
     }

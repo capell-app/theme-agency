@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Capell\KnowledgeBase\Actions\BuildAiReadableKnowledgeBaseOutputAction;
+use Capell\KnowledgeBase\Actions\BuildKnowledgeBaseArticleSchemaAction;
 use Capell\KnowledgeBase\Actions\BuildKnowledgeBaseSearchDocumentsAction;
 use Capell\KnowledgeBase\Actions\BuildPublicKnowledgeBaseArticleDataAction;
 use Capell\KnowledgeBase\Actions\BuildPublicKnowledgeBaseNavigationAction;
@@ -171,6 +172,34 @@ it('exposes a public-safe search payload for the search package', function (): v
         ])
         ->and($payload)->not->toHaveKey('author_id')
         ->and($payload)->not->toHaveKey('field_path');
+});
+
+it('builds article schema data for public knowledge base articles', function (): void {
+    $collection = CreateKnowledgeBaseCollectionAction::run(new CreateKnowledgeBaseCollectionData(
+        title: 'Getting Started',
+    ));
+
+    $article = CreateKnowledgeBaseArticleAction::run(new CreateKnowledgeBaseArticleData(
+        collection: $collection,
+        title: 'Install Capell',
+        body: '<h2>Install</h2><p>Run the installer.</p>',
+        summary: 'Install safely.',
+        status: KnowledgeBaseArticleStatus::Published,
+    ));
+
+    $schema = BuildKnowledgeBaseArticleSchemaAction::run($article, 'https://example.test/docs/getting-started/install-capell');
+
+    expect($schema)->toMatchArray([
+        '@context' => 'https://schema.org',
+        '@type' => 'Article',
+        '@id' => 'https://example.test/docs/getting-started/install-capell#article',
+        'url' => 'https://example.test/docs/getting-started/install-capell',
+        'headline' => 'Install Capell',
+        'description' => 'Install safely.',
+        'articleBody' => 'Install Run the installer.',
+    ])
+        ->and($schema)->not->toHaveKey('author_id')
+        ->and($schema)->not->toHaveKey('field_path');
 });
 
 it('updates an article by publishing a new version through the article update action', function (): void {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Contracts\Extensions\RegistersExtensionRoute;
 use Capell\KnowledgeBase\Actions\BuildAiReadableKnowledgeBaseOutputAction;
+use Capell\KnowledgeBase\Actions\BuildKnowledgeBaseArticleSchemaAction;
 use Capell\KnowledgeBase\Actions\BuildKnowledgeBaseSearchDocumentsAction;
 use Capell\KnowledgeBase\Actions\CreateKnowledgeBaseArticleAction;
 use Capell\KnowledgeBase\Data\CreateKnowledgeBaseArticleData;
@@ -119,6 +120,8 @@ it('declares admin providers, resources, and owned tables in the manifest', func
         ->toBe(BuildKnowledgeBaseSearchDocumentsAction::class)
         ->and($manifest['actions']['buildAiReadableKnowledgeBaseOutput'])
         ->toBe(BuildAiReadableKnowledgeBaseOutputAction::class)
+        ->and($manifest['actions']['buildKnowledgeBaseArticleSchema'])
+        ->toBe(BuildKnowledgeBaseArticleSchemaAction::class)
         ->and($manifest['commands']['demo'])->toBe('capell:knowledge-base-demo')
         ->and($manifest['performance']['cacheSafety']['variesBy'])->toBe([])
         ->and(array_column($manifest['performance']['cacheSafety']['invalidationSources'], 'model'))->toBe([
