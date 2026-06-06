@@ -1,8 +1,9 @@
 .education-shell {
     --site-theme-primary: var(--theme-primary, #4338ca);
     --site-theme-accent: var(--theme-accent, #14b8a6);
+    --education-accent-text: color-mix(in srgb, var(--site-theme-accent) 62%, #064e3b);
     --education-ink: var(--theme-foreground, #020617);
-    --education-muted: #475569;
+    --education-muted: #334155;
     --education-paper: var(--theme-surface, #f8fbff);
     --education-line: color-mix(in srgb, var(--site-theme-primary) 22%, #ffffff);
     --education-blueprint: rgb(67 56 202 / 7%);
@@ -49,7 +50,7 @@
     [class*='text-[#14b8a6]'],
     [class*='text-[#5eead4]']
 ) {
-    color: var(--site-theme-accent);
+    color: var(--education-accent-text);
 }
 
 .education-shell :where(
