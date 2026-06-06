@@ -4,6 +4,8 @@ All notable changes to `capell-app/document-lifecycle` will be documented in thi
 
 ## Unreleased
 
+- Added review-due and expiry dates for controlled documents, plus a daily `capell:document-lifecycle:archive-expired` command that archives active expired records.
+- Added signed JSON certificate downloads for individual acceptance records.
 - Added re-acceptance detection and an outstanding acceptances CSV report for subjects whose latest known acceptance is stale.
 - Added CSV export for document acceptance evidence, including optional per-publication/version filtering from the acceptances relation manager.
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.

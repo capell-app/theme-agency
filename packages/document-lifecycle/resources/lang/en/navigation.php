@@ -13,6 +13,8 @@ return [
         'metadata' => 'Metadata',
         'content' => 'Content',
         'metadata_note' => 'Admin note',
+        'review_due_at' => 'Review due',
+        'expires_at' => 'Expires',
         'publications' => 'Publications',
         'version' => 'Version',
         'hash' => 'Hash',
@@ -43,6 +45,11 @@ return [
         'acceptance_recorded' => 'Document acceptance recorded.',
         'document_archived' => 'Document archived.',
         'document_restored' => 'Document restored.',
+    ],
+    'commands' => [
+        'archive_expired' => [
+            'summary' => 'Archived :count expired controlled document(s).',
+        ],
     ],
     'portal' => [
         'accepted_status' => 'Accepted',

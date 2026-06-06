@@ -40,6 +40,11 @@
             "class": "Capell\\DocumentLifecycle\\Manifest\\DocumentResourceContribution",
             "resourceClass": "Capell\\DocumentLifecycle\\Filament\\Resources\\Documents\\DocumentResource",
             "group": "Document"
+        },
+        {
+            "type": "scheduled-job",
+            "command": "capell:document-lifecycle:archive-expired",
+            "frequency": "daily"
         }
     ],
     "database": {
@@ -55,7 +60,8 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "retention": "capell:document-lifecycle:archive-expired"
     },
     "settings": [],
     "permissions": [
@@ -77,6 +83,7 @@
         "document-lifecycle-evidence-export",
         "document-lifecycle-signed-evidence",
         "document-lifecycle-reacceptance-report",
+        "document-lifecycle-retention",
         "document-lifecycle-customer-portal-document-feed"
     ],
     "performance": {

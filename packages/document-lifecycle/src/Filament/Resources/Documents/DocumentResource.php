@@ -20,6 +20,7 @@ use Capell\DocumentLifecycle\Models\Document;
 use Capell\DocumentLifecycle\Providers\DocumentLifecycleServiceProvider;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -65,6 +66,10 @@ final class DocumentResource extends Resource
                 KeyValue::make('metadata')
                     ->label(__('capell-document-lifecycle::navigation.fields.metadata'))
                     ->columnSpanFull(),
+                DateTimePicker::make('review_due_at')
+                    ->label(__('capell-document-lifecycle::navigation.fields.review_due_at')),
+                DateTimePicker::make('expires_at')
+                    ->label(__('capell-document-lifecycle::navigation.fields.expires_at')),
             ]);
     }
 
@@ -89,6 +94,14 @@ final class DocumentResource extends Resource
                     ->sortable(),
                 TextColumn::make('publications_count')
                     ->label(__('capell-document-lifecycle::navigation.fields.publications'))
+                    ->sortable(),
+                TextColumn::make('review_due_at')
+                    ->label(__('capell-document-lifecycle::navigation.fields.review_due_at'))
+                    ->dateTime()
+                    ->sortable(),
+                TextColumn::make('expires_at')
+                    ->label(__('capell-document-lifecycle::navigation.fields.expires_at'))
+                    ->dateTime()
                     ->sortable(),
                 TextColumn::make('updated_at')
                     ->label(__('capell-document-lifecycle::navigation.fields.updated_at'))

@@ -22,6 +22,8 @@ use Override;
  * @property string|null $documentable_type
  * @property int|null $documentable_id
  * @property array<array-key, mixed>|null $metadata
+ * @property CarbonImmutable|null $review_due_at
+ * @property CarbonImmutable|null $expires_at
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
  * @property-read int|null $publications_count
@@ -40,6 +42,8 @@ class Document extends Model
         'documentable_type',
         'documentable_id',
         'metadata',
+        'review_due_at',
+        'expires_at',
     ];
 
     /**
@@ -88,6 +92,8 @@ class Document extends Model
         return [
             'status' => DocumentStatusEnum::class,
             'metadata' => 'array',
+            'review_due_at' => 'immutable_datetime',
+            'expires_at' => 'immutable_datetime',
         ];
     }
 }
