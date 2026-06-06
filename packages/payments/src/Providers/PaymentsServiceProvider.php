@@ -12,6 +12,8 @@ use Capell\CustomerPortal\Contracts\PortalDashboardItemProvider;
 use Capell\CustomerPortal\Contracts\PortalSelfServiceItemProvider;
 use Capell\CustomerPortal\Support\PortalDashboardItemRegistry;
 use Capell\CustomerPortal\Support\PortalSelfServiceItemRegistry;
+use Capell\Payments\Console\Commands\ReconcilePaymentWebhooksCommand;
+use Capell\Payments\Console\Commands\ReprocessPaymentWebhookEventsCommand;
 use Capell\Payments\Contracts\PaymentGateway;
 use Capell\Payments\Filament\Settings\PaymentsSettingsSchema;
 use Capell\Payments\Models\CheckoutSession;
@@ -43,6 +45,10 @@ final class PaymentsServiceProvider extends AbstractPackageServiceProvider
             ->name(self::$name)
             ->hasConfigFile()
             ->hasTranslations()
+            ->hasCommands([
+                ReconcilePaymentWebhooksCommand::class,
+                ReprocessPaymentWebhookEventsCommand::class,
+            ])
             ->hasMigrations([
                 '2026_05_31_000001_create_payment_customers_table',
                 '2026_05_31_000002_create_payment_checkout_sessions_table',

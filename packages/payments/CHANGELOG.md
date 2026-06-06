@@ -10,6 +10,7 @@ All notable changes to `capell-app/payments` will be documented in this file.
 - Made paid-download fulfillment replay-safe by preserving the original entitlement expiry and fulfilled timestamp on duplicate checkout-complete deliveries.
 - Generated deterministic Stripe idempotency keys for checkout sessions and billing portal sessions when callers do not supply one.
 - Added a money-formatting helper for decimal and zero-decimal currencies, and applied it to payment admin tables plus customer portal payment descriptions.
+- Added `capell:payments:webhooks:reprocess` and `capell:payments:webhooks:reconcile` console commands for stored webhook recovery and stale-event diagnostics.
 
 ## 2026-06-03
 
