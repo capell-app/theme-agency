@@ -19,7 +19,7 @@ it('declares URL Manager owned models and protected tables', function (): void {
         ->and(data_get($manifest, 'description'))->toContain("site's link equity")
         ->and(data_get($manifest, 'marketplace.summary'))->toBe('Stop losing traffic to broken links — manage redirects, auto-preserve moved page URLs, and turn repeated 404s into recovered SEO.')
         ->and(data_get($manifest, 'marketplace.description'))->toContain('CSV import/export for bulk migrations')
-        ->and(data_get($manifest, 'marketplace.screenshots'))->toHaveCount(8)
+        ->and(data_get($manifest, 'marketplace.screenshots'))->toHaveCount(0)
         ->and((new RedirectHit)->getTable())->toBe('url_manager_redirect_hits')
         ->and((new NotFoundOpportunity)->getTable())->toBe('url_manager_not_found_opportunities')
         ->and(data_get($manifest, 'database.requiredTables'))->toBe([
@@ -69,7 +69,7 @@ it('declares URL Manager owned models and protected tables', function (): void {
         ->and(data_get($manifest, 'contributionTraceability.deferredContributions'))->toBe([]);
 });
 
-it('references existing URL Manager marketplace screenshots', function (): void {
+it('keeps URL Manager marketplace screenshots empty until styled recapture', function (): void {
     $manifest = capell_json_file_array(__DIR__ . '/../../capell.json');
     $screenshots = data_get($manifest, 'marketplace.screenshots', []);
 
