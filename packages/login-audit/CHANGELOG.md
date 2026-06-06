@@ -4,6 +4,7 @@ All notable changes to `capell-app/login-audit` will be documented in this file.
 
 ## Unreleased
 
+- Added Capell admin alerts for new-device, failed-login, and suspicious-login audit events with settings-backed toggles.
 - Added suspicious-login detection for repeated failures, failed-device success, rapid country changes, and optional unusual login hours.
 - Added CSV export actions to the Login Audit resource and user authentication history relation manager.
 - Added route-backed Capell runner captures for the user edit access summary and user authentication history relation manager.

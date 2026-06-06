@@ -28,6 +28,12 @@ final class LoginAuditSettings extends Settings implements SettingsContract
 
     public bool $check_unusual_login_times = false;
 
+    public bool $alert_new_devices = true;
+
+    public bool $alert_failed_logins = false;
+
+    public bool $alert_suspicious_logins = true;
+
     public ?string $last_purged_at = null;
 
     public bool $enable_user_resource_bridge = true;

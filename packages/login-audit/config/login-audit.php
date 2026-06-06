@@ -67,6 +67,12 @@ return [
         ],
     ],
 
+    'admin_alerts' => [
+        'new_devices' => true,
+        'failed_logins' => false,
+        'suspicious_logins' => true,
+    ],
+
     'suspicious' => [
         'enabled' => true,
         'failed_login_threshold' => 5,

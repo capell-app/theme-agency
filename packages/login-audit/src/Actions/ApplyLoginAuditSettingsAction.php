@@ -23,6 +23,9 @@ final class ApplyLoginAuditSettingsAction
             $failedLoginThreshold = $settings->failed_login_threshold;
             $failedLoginWindowMinutes = $settings->failed_login_window_minutes;
             $checkUnusualLoginTimes = $settings->check_unusual_login_times;
+            $alertNewDevices = $settings->alert_new_devices;
+            $alertFailedLogins = $settings->alert_failed_logins;
+            $alertSuspiciousLogins = $settings->alert_suspicious_logins;
         } catch (Throwable) {
             return;
         }
@@ -36,9 +39,18 @@ final class ApplyLoginAuditSettingsAction
         Config::set('login-audit.suspicious.failed_login_threshold', $threshold);
         Config::set('login-audit.suspicious.failed_login_window_minutes', $windowMinutes);
         Config::set('login-audit.suspicious.check_unusual_times', $checkUnusualLoginTimes);
+        Config::set('login-audit.admin_alerts.new_devices', $alertNewDevices);
+        Config::set('login-audit.admin_alerts.failed_logins', $alertFailedLogins);
+        Config::set('login-audit.admin_alerts.suspicious_logins', $alertSuspiciousLogins);
+        Config::set('login-audit.notifications.new-device.enabled', $alertNewDevices);
+        Config::set('login-audit.notifications.failed-login.enabled', $alertFailedLogins);
+        Config::set('login-audit.notifications.suspicious-activity.enabled', $alertSuspiciousLogins);
         Config::set('authentication-log.purge', $purgeDays);
         Config::set('authentication-log.suspicious.enabled', $enableSuspiciousDetection);
         Config::set('authentication-log.suspicious.failed_login_threshold', $threshold);
         Config::set('authentication-log.suspicious.check_unusual_times', $checkUnusualLoginTimes);
+        Config::set('authentication-log.notifications.new-device.enabled', $alertNewDevices);
+        Config::set('authentication-log.notifications.failed-login.enabled', $alertFailedLogins);
+        Config::set('authentication-log.notifications.suspicious-activity.enabled', $alertSuspiciousLogins);
     }
 }

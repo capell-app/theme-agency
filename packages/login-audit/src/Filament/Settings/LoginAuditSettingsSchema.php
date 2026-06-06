@@ -70,6 +70,21 @@ final class LoginAuditSettingsSchema implements HasSchema
                         'capell-login-audit::settings.check_unusual_login_times_helper',
                     ),
                     HelperText::apply(
+                        Toggle::make('alert_new_devices')
+                            ->label(__('capell-login-audit::settings.alert_new_devices')),
+                        'capell-login-audit::settings.alert_new_devices_helper',
+                    ),
+                    HelperText::apply(
+                        Toggle::make('alert_failed_logins')
+                            ->label(__('capell-login-audit::settings.alert_failed_logins')),
+                        'capell-login-audit::settings.alert_failed_logins_helper',
+                    ),
+                    HelperText::apply(
+                        Toggle::make('alert_suspicious_logins')
+                            ->label(__('capell-login-audit::settings.alert_suspicious_logins')),
+                        'capell-login-audit::settings.alert_suspicious_logins_helper',
+                    ),
+                    HelperText::apply(
                         Toggle::make('enable_user_resource_bridge')
                             ->label(__('capell-login-audit::settings.enable_user_resource_bridge')),
                         'capell-login-audit::settings.enable_user_resource_bridge_helper',
