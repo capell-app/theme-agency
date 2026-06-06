@@ -74,6 +74,7 @@
         "document-lifecycle",
         "document-lifecycle-admin",
         "document-lifecycle-acceptance",
+        "document-lifecycle-evidence-export",
         "document-lifecycle-customer-portal-document-feed"
     ],
     "performance": {

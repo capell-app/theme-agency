@@ -22,6 +22,7 @@ return [
         'acceptor' => 'Acceptor',
         'accepted_at' => 'Accepted',
         'updated_at' => 'Updated',
+        'all_versions' => 'All versions',
     ],
     'relations' => [
         'publications' => 'Publications',
@@ -33,6 +34,7 @@ return [
         'record_acceptance' => 'Record acceptance',
         'archive_document' => 'Archive document',
         'restore_document' => 'Restore document',
+        'export_acceptance_evidence' => 'Export evidence CSV',
     ],
     'messages' => [
         'version_published' => 'Document version published.',

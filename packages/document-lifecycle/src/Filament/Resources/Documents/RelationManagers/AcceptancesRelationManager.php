@@ -5,12 +5,18 @@ declare(strict_types=1);
 namespace Capell\DocumentLifecycle\Filament\Resources\Documents\RelationManagers;
 
 use BackedEnum;
+use Capell\DocumentLifecycle\Actions\BuildDocumentAcceptanceEvidenceCsvAction;
+use Capell\DocumentLifecycle\Models\Document;
+use Capell\DocumentLifecycle\Models\DocumentPublication;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Override;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class AcceptancesRelationManager extends RelationManager
 {
@@ -28,6 +34,18 @@ final class AcceptancesRelationManager extends RelationManager
     {
         return $table
             ->modifyQueryUsing(fn (Builder $query): Builder => $query->latest('accepted_at')->latest('id'))
+            ->headerActions([
+                Action::make('export_acceptance_evidence')
+                    ->label(__('capell-document-lifecycle::navigation.actions.export_acceptance_evidence'))
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->schema([
+                        Select::make('publication_id')
+                            ->label(__('capell-document-lifecycle::navigation.fields.version'))
+                            ->options(fn (): array => $this->publicationOptions())
+                            ->placeholder(__('capell-document-lifecycle::navigation.fields.all_versions')),
+                    ])
+                    ->action(fn (array $data): StreamedResponse => $this->downloadAcceptanceEvidence($data)),
+            ])
             ->columns([
                 TextColumn::make('document_version')
                     ->label(__('capell-document-lifecycle::navigation.fields.version'))
@@ -56,5 +74,54 @@ final class AcceptancesRelationManager extends RelationManager
     protected static function getPluralModelLabel(): string
     {
         return __('capell-document-lifecycle::navigation.relations.acceptances');
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function publicationOptions(): array
+    {
+        /** @var Document $document */
+        $document = $this->getOwnerRecord();
+
+        return $document
+            ->publications()
+            ->latest('published_at')
+            ->latest('id')
+            ->get()
+            ->mapWithKeys(static fn (DocumentPublication $publication): array => [
+                $publication->getKey() => $publication->version_label . ' (' . $publication->content_hash . ')',
+            ])
+            ->all();
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    private function downloadAcceptanceEvidence(array $data): StreamedResponse
+    {
+        /** @var Document $document */
+        $document = $this->getOwnerRecord();
+        $publicationId = $data['publication_id'] ?? null;
+        $publication = filled($publicationId)
+            ? $document->publications()->find((int) $publicationId)
+            : null;
+
+        return response()->streamDownload(
+            function () use ($document, $publication): void {
+                echo BuildDocumentAcceptanceEvidenceCsvAction::run($document, $publication);
+            },
+            $this->filename($document, $publication),
+            ['Content-Type' => 'text/csv'],
+        );
+    }
+
+    private function filename(Document $document, ?DocumentPublication $publication): string
+    {
+        $version = $publication instanceof DocumentPublication
+            ? '-' . str($publication->version_label)->slug()->toString()
+            : '';
+
+        return 'document-acceptance-evidence-' . str($document->key)->slug()->toString() . $version . '-' . now()->format('Y-m-d-His') . '.csv';
     }
 }
