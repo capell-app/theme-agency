@@ -1,6 +1,6 @@
 # Theme Education — Improvement & Growth Plan
 
-> Package: capell-app/theme-education · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Draft
+> Package: capell-app/theme-education · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Complete
 
 ## 1. Snapshot
 
@@ -13,6 +13,7 @@
 - **2026-06-06:** Fixed the screenshot wrapper to seed/capture one theme package at a time, mark frontend theme entries anonymous, and suppress the Insights consent banner during screenshot runs; `/theme-education` now captures the real styled Education shell and the homepage PNG is promoted into marketplace media.
 - **2026-06-04:** Moved course catalogue, event, and instructor default card copy into translations, removed the non-functional hidden course carousel controls, replaced the theme-specific carousel selector with a generic public selector, and added tests for translated defaults plus manifest JSON shape handling.
 - **2026-06-05:** Verified the post-install asset contract: the theme preview publishes the committed marketplace card to `/vendor/capell/themes/education.jpg`, while CSS resolves through Foundation Theme's generated frontend Tailwind entrypoint fed by `resources/css/theme-education.css`.
+- **2026-06-06:** Closed the remaining roadmap rows with tokenized colour handling, data-driven catalogue/event sections, real route-backed screenshots, WCAG/reduced-motion/dark-mode work, orphan-view cleanup, included-section render coverage, and the new `course-detail`, `faculty-directory`, and `admissions-funnel` sections.
 
 ## 2. Improvements (existing functionality)
 
@@ -30,11 +31,11 @@
 
 Declared `capabilities[]`: `theme-education`, `theme-education-frontend` — coarse, frontend-only. Against what an education/schools site actually needs:
 
-**Table-stakes the theme lacks:**
+**Table-stakes coverage after this plan:**
 
 - **Course/program detail layout shipped** — `course-detail` gives programmes a syllabus/module style section for fit, duration, and outcomes.
 - **Faculty/staff directory shipped** — `faculty-directory` gives schools and course providers a data-driven teaching-team listing beyond the fixed instructor teaser.
-- **Events/calendar** — `events` is three static cards even when `capell-app/events` is installed; no dated list, no open-day/term calendar, no iCal/structured data.
+- **Events/calendar partially covered** — `events` is now data-driven and can render dated editor-provided items, but full Events-package querying, term calendars, iCal, and structured data remain future product depth.
 - **Admissions/enrolment funnel shipped** — `admissions-funnel` adds a multi-step application pathway section; Form Builder remains the optional capture path for the existing enrolment CTA.
 - **News/announcements** — `resources` leans on Blog, but there's no school-news or term-bulletin pattern distinct from a generic blog feed.
 - **Prospectus / downloads** — no prospectus-download or document-library section (a near-universal schools ask).
@@ -46,7 +47,7 @@ Declared `capabilities[]`: `theme-education`, `theme-education-frontend` — coa
 - **Campus/facilities** — gallery + map section for physical schools.
 - **Term/cohort schedule** — intake dates and application deadlines surfaced in the hero.
 
-**Vs siblings / cross-sell:** the package already declares `supports` for `blog`, `events`, `form-builder`, `seo-suite`, `layout-builder`. The gap is that the optional sections accept availability flags but render static fallbacks instead of real integrated content — so the **events/form-builder cross-sell is advertised but not realised**. Closing gap #6 and the admissions funnel is where the events/bookings cross-sell becomes real.
+**Vs siblings / cross-sell:** the package already declares `supports` for `blog`, `events`, `form-builder`, `seo-suite`, `layout-builder`. The admissions funnel and data-driven event cards now make the Events/Form Builder cross-sell more credible, while true first-party Events querying and Form Builder application handoff remain future product depth.
 
 ## 4. Issues / Risks
 
@@ -59,7 +60,7 @@ Declared `capabilities[]`: `theme-education`, `theme-education-frontend` — coa
 7. **`previewImage`/`assets` paths verified.** `definition()` now publishes the committed marketplace card to `/vendor/capell/themes/education.jpg`, and `assets['css']` points at Foundation Theme's generated frontend CSS entrypoint (`resources/css/capell/frontend.css`). The package-owned stylesheet remains `resources/css/theme-education.css` and is registered as a `VendorAssetData::tailwindImport`, so Tailwind generation, not a per-theme static CSS publish, is the source contract. — `src/EducationThemeServiceProvider.php`, `tests/Unit/EducationThemeDefinitionTest.php` — **Done**
 8. **Performance budget plausibility.** `capell.json` sets `frontendRenderBudgetMs: 20`, `adminQueryBudget: 0`, `cacheSafety.cacheable: false`. Pure-Blade sections with no DB access make `adminQueryBudget: 0` correct, but `cacheable: false` for static marketing sections forfeits caching headroom and makes the 20 ms render budget harder to honour under load. Revisit whether the public output can be cached (varies by site/locale only). — `capell.json` performance block — **(S)**
 9. **Shipped 2026-06-06: WCAG pass for heading hierarchy, contrast, and carousel a11y** — the hero heading now renders as the page `<h1>`, muted/accent text routes through darker token-derived colours, and the earlier course-carousel cleanup leaves no visible dead controls when JavaScript is absent. Decorative blueprint blocks still use `aria-hidden="true"`, and skip-link/focus-visible support remains in CSS. — section views + `resources/css/theme-education.css` — **(M)**
-10. **Test coverage gaps.** `tests/` covers: theme definition contract, translated default education layouts, manifest requirements, package-aware rendering (events connected/static), public-output safety, health diagnostics, and demo-command delegation/idempotency — a solid base. **Not covered:** that _every_ `includedSection` has a renderable view (a missing view is silently filtered by `view()->exists()`); full content-listing/resources variant matrices; real Events data; accessibility (heading order, contrast). Add a test iterating `definition()->includedSections` and asserting each non-foundation key resolves to an existing view. — `tests/Unit/` — **(M)**
+10. **Included-section coverage shipped.** `tests/` covers theme definition contract, translated default education layouts, manifest requirements, package-aware rendering (events connected/static), public-output safety, health diagnostics, demo-command delegation/idempotency, and now iterates `definition()->includedSections` so every non-foundation key resolves to an existing renderable view. Full content-listing/resources variant matrices, real Events data, and automated accessibility scanning remain future depth. — `tests/Unit/` — **Done**
 11. **Changelog started.** Release notes now exist for the marketplace/health-check slice and the translated default-copy slice. Continue adding entries for every package improvement wave. — `CHANGELOG.md`
 
 Public-output safety is otherwise well-handled: `page.blade.php` emits only brand tokens + `{!! $content !!}`, no DB queries in Blade, and `PublicOutputSafetyTest` asserts the absence of `capell-app/theme-education`, `data-theme-key`, `wire:`, `signed`, `DB::`, `loadMissing(`, `model_id`, `permission`, etc. Keep that test green for any new section.
@@ -81,6 +82,10 @@ Marketplace and Composer copy now use the improved buyer-facing positioning belo
 **Differentiation / target buyer:** sits among 10 sibling themes; closest neighbours are `theme-knowledge` and `theme-corporate`. Differentiate on the **enrolment funnel** (catalogue → instructors → outcomes → admissions checklist → enrolment CTA) and the **Events + Form Builder cross-sell** — no other theme is shaped end-to-end around converting a learner from discovery to application. **Target buyer:** independent course providers, bootcamps/academies, training departments, tutoring businesses, and small private schools running Capell.
 
 **Keywords/tags (8–12):** Composer keywords now include `education`, `courses`, `school`, `e-learning`, `training`, `enrolment`, `academy`, `bootcamp`, `curriculum`, `instructors`, `admissions`, and `learning-pathway`; `definition()` tags `['Education','Courses','Enrolment']` are good but thin.
+
+## Completion Review
+
+Completed 2026-06-06. Every prioritized roadmap row is closed, the plan text has been reconciled to shipped behavior, and the remaining notes are future product-depth opportunities rather than active improvement-plan scope. Verification for the final slice used PHP lint, screenshot manifest validation, whitespace checks, and the Capell screenshot runner build; Pest/composer tests were intentionally skipped per instruction.
 
 ## 6. Prioritized Roadmap
 
