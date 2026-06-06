@@ -75,6 +75,7 @@ This file tracks the active package-improvement wave at a repository level. Pack
 - Theme Corporate now promotes all 12 route-backed Capell runner captures from its screenshot contract.
 - Theme Commerce now promotes all 12 route-backed Capell runner captures from its screenshot contract.
 - Theme Education now promotes all 9 route-backed Capell runner captures from its screenshot contract.
+- Theme Healthcare now promotes all 8 route-backed Capell runner captures from its screenshot contract.
 - A full `COMPOSER=composer.local.json composer test` run reached 1470/1471 passing before exposing the Notes Blade type-hint issue; that issue has been fixed. A fresh full re-run was started and then stopped on request so the remaining changes could be committed without further tests.
 
 ## Commit Policy

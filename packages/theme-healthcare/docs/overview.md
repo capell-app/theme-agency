@@ -41,7 +41,9 @@ Provides an Editorial Healthcare visual option for clinic and service-line sites
 - This package does not own data.
 - It consumes theme runtime settings and core page content.
 
-## Screenshot Plan
+## Screenshot Coverage
+
+The committed Capell runner-backed gallery covers the full `docs/screenshots.json` contract:
 
 - Theme admin list showing Editorial Healthcare.
 - Frontend page rendered with Editorial Healthcare at `/theme-healthcare-demo`.
