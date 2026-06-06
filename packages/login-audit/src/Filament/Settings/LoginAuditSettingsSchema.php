@@ -53,6 +53,11 @@ final class LoginAuditSettingsSchema implements HasSchema
                             ->label(__('capell-login-audit::settings.enable_suspicious_detection')),
                         'capell-login-audit::settings.enable_suspicious_detection_helper',
                     ),
+                    HelperText::apply(
+                        Toggle::make('enable_geo_location')
+                            ->label(__('capell-login-audit::settings.enable_geo_location')),
+                        'capell-login-audit::settings.enable_geo_location_helper',
+                    ),
                     TextInput::make('failed_login_threshold')
                         ->label(__('capell-login-audit::settings.failed_login_threshold'))
                         ->helperText(__('capell-login-audit::settings.failed_login_threshold_helper'))

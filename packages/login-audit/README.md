@@ -109,6 +109,7 @@ Login Audit reports active sessions and device context from authentication-log r
 - `ApplyLoginAuditSettingsAction` applies retention and IP tracking settings before the scheduled purge runs.
 - `last_purged_at` records the last successful scheduled purge callback for operator visibility.
 - `ResolveLoginAuditIpAddressAction` reads the configured CDN header when `login-audit.behind_cdn` is enabled; otherwise it uses the request IP.
+- `enable_geo_location` controls the vendor geo lookup for new-device and failed-login events. Keep it disabled unless the host app has a configured geo provider and a lawful basis for storing location data.
 
 - Models: `LoginAudit`.
 - Migrations: `2026_05_10_190857_01_create_login_audit_table.php`.

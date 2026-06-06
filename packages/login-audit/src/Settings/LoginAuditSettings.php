@@ -22,6 +22,8 @@ final class LoginAuditSettings extends Settings implements SettingsContract
 
     public bool $enable_suspicious_detection = true;
 
+    public bool $enable_geo_location = false;
+
     public int $failed_login_threshold = 5;
 
     public int $failed_login_window_minutes = 60;

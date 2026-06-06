@@ -20,6 +20,7 @@ final class ApplyLoginAuditSettingsAction
             $settings = resolve(LoginAuditSettings::class);
             $retentionDays = $settings->retention_days;
             $enableSuspiciousDetection = $settings->enable_suspicious_detection;
+            $enableGeoLocation = $settings->enable_geo_location;
             $failedLoginThreshold = $settings->failed_login_threshold;
             $failedLoginWindowMinutes = $settings->failed_login_window_minutes;
             $checkUnusualLoginTimes = $settings->check_unusual_login_times;
@@ -36,6 +37,8 @@ final class ApplyLoginAuditSettingsAction
 
         Config::set('login-audit.purge', $purgeDays);
         Config::set('login-audit.suspicious.enabled', $enableSuspiciousDetection);
+        Config::set('login-audit.notifications.new-device.location', $enableGeoLocation);
+        Config::set('login-audit.notifications.failed-login.location', $enableGeoLocation);
         Config::set('login-audit.suspicious.failed_login_threshold', $threshold);
         Config::set('login-audit.suspicious.failed_login_window_minutes', $windowMinutes);
         Config::set('login-audit.suspicious.check_unusual_times', $checkUnusualLoginTimes);
@@ -47,6 +50,8 @@ final class ApplyLoginAuditSettingsAction
         Config::set('login-audit.notifications.suspicious-activity.enabled', $alertSuspiciousLogins);
         Config::set('authentication-log.purge', $purgeDays);
         Config::set('authentication-log.suspicious.enabled', $enableSuspiciousDetection);
+        Config::set('authentication-log.notifications.new-device.location', $enableGeoLocation);
+        Config::set('authentication-log.notifications.failed-login.location', $enableGeoLocation);
         Config::set('authentication-log.suspicious.failed_login_threshold', $threshold);
         Config::set('authentication-log.suspicious.check_unusual_times', $checkUnusualLoginTimes);
         Config::set('authentication-log.notifications.new-device.enabled', $alertNewDevices);

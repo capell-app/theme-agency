@@ -4,6 +4,8 @@ All notable changes to `capell-app/login-audit` will be documented in this file.
 
 ## Unreleased
 
+- Added a geo-location setting that syncs vendor location lookup for new-device and failed-login events.
+- Documented the host session-store boundary for destructive logout controls and reconciled the completed improvement plan.
 - Added Capell admin alerts for new-device, failed-login, and suspicious-login audit events with settings-backed toggles.
 - Added suspicious-login detection for repeated failures, failed-device success, rapid country changes, and optional unusual login hours.
 - Added CSV export actions to the Login Audit resource and user authentication history relation manager.

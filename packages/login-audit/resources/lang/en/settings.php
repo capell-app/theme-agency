@@ -28,6 +28,8 @@ return [
     'enable_user_resource_bridge_helper' => 'Adds the access summary and authentication history relation to user editing when the host user model supports it.',
     'enable_suspicious_detection' => 'Detect Suspicious Logins',
     'enable_suspicious_detection_helper' => 'Flags repeated failed attempts, rapid location changes, and successful logins after recent failed attempts from the same device.',
+    'enable_geo_location' => 'Resolve Geo Location',
+    'enable_geo_location_helper' => 'Enables the authentication-log geo lookup for new-device and failed-login events. Leave disabled unless the site has a configured geo provider and a lawful basis for location retention.',
     'export_csv' => 'Export CSV',
     'active_sessions' => 'Active sessions',
     'failed_login_threshold' => 'Failed Login Threshold',
