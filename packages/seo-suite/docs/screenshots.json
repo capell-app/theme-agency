@@ -15,7 +15,8 @@
             "required": true,
             "notes": "Committed Capell runner capture promoted in marketplace media. Open a seeded Page edit screen and capture the SEO tab/panel added by SEO Suite.",
             "useCase": "An editor edits page-level metadata, canonical state, social metadata, and SEO checks.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/page-seo-panel.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/page-seo-panel.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/page-seo-panel-dark.png"
         },
         {
             "id": "seo-audit-page",
@@ -27,7 +28,8 @@
             "required": true,
             "notes": "Committed Capell runner capture promoted in marketplace media. Seed at least one page_seo_snapshots row so score, severity, and status columns are visible.",
             "useCase": "An administrator reviews SEO audit scores and remediation state for seeded pages.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/seo-audit-page.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/seo-audit-page.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/seo-audit-page-dark.png"
         },
         {
             "id": "search-console-insights-panel",
@@ -39,7 +41,8 @@
             "required": true,
             "notes": "Committed Capell runner capture promoted in marketplace media. Seed search_console_url_metrics so dashboard widgets show clicks, impressions, movement, and opportunities.",
             "useCase": "An administrator reviews Search Console-style performance panels when metrics are seeded.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/search-console-insights-panel.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/search-console-insights-panel.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/search-console-insights-panel-dark.png"
         },
         {
             "id": "broken-links-page",
@@ -51,7 +54,8 @@
             "required": true,
             "notes": "Committed Capell runner capture promoted in marketplace media. Seed a broken_links row connected to a page so the source page, target URL, status, and redirect action are visible.",
             "useCase": "An administrator reviews broken link findings and their source pages.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/broken-links-page.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/broken-links-page.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/broken-links-page-dark.png"
         },
         {
             "id": "ai-creator-action-modal",
@@ -63,7 +67,8 @@
             "required": true,
             "notes": "Committed Capell runner capture promoted in marketplace media. Open a seeded Page edit screen and capture the SEO Suite AI Creator action modal with safe fixture content.",
             "useCase": "An editor reviews AI-assisted metadata creation before accepting generated copy.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/ai-creator-action-modal.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/ai-creator-action-modal.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/ai-creator-action-modal-dark.png"
         },
         {
             "id": "sitemap-page",
@@ -75,7 +80,8 @@
             "required": true,
             "notes": "Committed Capell runner capture promoted in marketplace media. Seed sitemap state through Site Discovery/SEO Suite integration so sitemap rows and status are visible.",
             "useCase": "An administrator reviews sitemap coverage and crawler-ready URL state.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/sitemap-page.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/sitemap-page.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/sitemap-page-dark.png"
         },
         {
             "id": "translation-coverage-page",
@@ -87,7 +93,8 @@
             "required": true,
             "notes": "Committed Capell runner capture promoted in marketplace media. Seed at least one site/page/language combination so translation coverage rows are visible.",
             "useCase": "An administrator reviews missing or stale translation coverage for SEO-relevant content.",
-            "screenshotPath": "packages/seo-suite/docs/screenshots/translation-coverage-page.png"
+            "screenshotPath": "packages/seo-suite/docs/screenshots/translation-coverage-page.png",
+            "darkScreenshotPath": "packages/seo-suite/docs/screenshots/translation-coverage-page-dark.png"
         },
         {
             "id": "not-found-urls-page",

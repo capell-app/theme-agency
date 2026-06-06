@@ -15,7 +15,8 @@
             "required": true,
             "notes": "Capture as a user with View:DeploymentConnectionPage. This committed capture shows the pre-connection state with GitHub, GitLab, and Bitbucket OAuth entry points.",
             "screenshotPath": "packages/deployments/docs/screenshots/deployment-connection-page.png",
-            "useCase": "An operator starts the Git provider OAuth flow used to connect the repository for package install pull requests."
+            "useCase": "An operator starts the Git provider OAuth flow used to connect the repository for package install pull requests.",
+            "darkScreenshotPath": "packages/deployments/docs/screenshots/deployment-connection-page-dark.png"
         }
     ]
 }

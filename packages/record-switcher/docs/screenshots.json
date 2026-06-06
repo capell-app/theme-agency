@@ -3,7 +3,9 @@
     "composerName": "capell-app/record-switcher",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
-    "composerRequires": ["capell-app/record-switcher"],
+    "composerRequires": [
+        "capell-app/record-switcher"
+    ],
     "outputDirectory": "packages/record-switcher/docs/screenshots",
     "entries": [
         {
@@ -20,7 +22,8 @@
             "required": true,
             "notes": "Capture a Capell admin edit page heading with record-switcher page suggestions loaded.",
             "useCase": "An editor jumps between related editable records without returning to the table view.",
-            "screenshotPath": "packages/record-switcher/docs/screenshots/admin-heading-switcher.png"
+            "screenshotPath": "packages/record-switcher/docs/screenshots/admin-heading-switcher.png",
+            "darkScreenshotPath": "packages/record-switcher/docs/screenshots/admin-heading-switcher-dark.png"
         }
     ]
 }

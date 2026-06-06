@@ -15,7 +15,8 @@
             "required": true,
             "notes": "Capture after installing capell-app/foundation-theme in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "A site owner adjusts Foundation Theme settings and reviews theme defaults.",
-            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-theme-settings-screen.png"
+            "screenshotPath": "packages/foundation-theme/docs/screenshots/foundation-theme-settings-screen.png",
+            "darkScreenshotPath": "packages/foundation-theme/docs/screenshots/foundation-theme-settings-screen-dark.png"
         },
         {
             "id": "generated-tailwind-asset-output-review",
@@ -27,7 +28,8 @@
             "required": true,
             "notes": "Capture after installing capell-app/foundation-theme in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "A developer verifies the generated Tailwind entrypoint after package/theme asset registration.",
-            "screenshotPath": "packages/foundation-theme/docs/screenshots/generated-tailwind-asset-output-review.png"
+            "screenshotPath": "packages/foundation-theme/docs/screenshots/generated-tailwind-asset-output-review.png",
+            "darkScreenshotPath": "packages/foundation-theme/docs/screenshots/generated-tailwind-asset-output-review-dark.png"
         },
         {
             "id": "frontend-page-using-the-foundation-theme",
@@ -39,7 +41,8 @@
             "required": true,
             "notes": "Capture after installing capell-app/foundation-theme in the isolated demo harness and seeding the data required for this use case.",
             "useCase": "A visitor sees a seeded page rendered by Foundation Theme with its header, footer, tokens, and components.",
-            "screenshotPath": "packages/foundation-theme/docs/screenshots/frontend-page-using-the-foundation-theme.png"
+            "screenshotPath": "packages/foundation-theme/docs/screenshots/frontend-page-using-the-foundation-theme.png",
+            "darkScreenshotPath": "packages/foundation-theme/docs/screenshots/frontend-page-using-the-foundation-theme-dark.png"
         },
         {
             "id": "foundation-theme-header-area",
@@ -67,7 +70,9 @@
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-homepage-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": ["light"]
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "foundation-standard-page-layout",
@@ -83,7 +88,9 @@
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-standard-page-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": ["light"]
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "foundation-blog-article-layout",
@@ -99,7 +106,9 @@
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-blog-article-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": ["light"]
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "foundation-listing-layout",
@@ -115,7 +124,9 @@
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-listing-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": ["light"]
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "foundation-contact-form-layout",
@@ -131,7 +142,9 @@
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-contact-form-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": ["light"]
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "foundation-search-results-layout",
@@ -147,7 +160,9 @@
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-search-results-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": ["light"]
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "foundation-events-layout",
@@ -163,7 +178,9 @@
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-events-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": ["light"]
+            "colorSchemes": [
+                "light"
+            ]
         },
         {
             "id": "foundation-membership-gate-layout",
@@ -179,7 +196,9 @@
             "scenario": "frontend-page",
             "url": "/screenshot-fixtures/foundation-theme/foundation-membership-gate-layout",
             "waitFor": ".theme-foundation",
-            "colorSchemes": ["light"]
+            "colorSchemes": [
+                "light"
+            ]
         }
     ]
 }

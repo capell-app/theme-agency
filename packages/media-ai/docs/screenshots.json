@@ -20,7 +20,8 @@
             "required": true,
             "notes": "Capture the media surface where the Doctor image action appears when an image doctor provider is bound.",
             "useCase": "An administrator opens an image media record and uses the Doctor image action when an image doctor provider is bound.",
-            "screenshotPath": "packages/media-ai/docs/screenshots/media-ai-doctor-image.png"
+            "screenshotPath": "packages/media-ai/docs/screenshots/media-ai-doctor-image.png",
+            "darkScreenshotPath": "packages/media-ai/docs/screenshots/media-ai-doctor-image-dark.png"
         }
     ]
 }

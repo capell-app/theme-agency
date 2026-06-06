@@ -20,7 +20,8 @@
             "required": true,
             "notes": "Capture after seeding MailTracker sent email rows with subjects, sender/recipient addresses, opens, clicks, and stored content state.",
             "useCase": "A support user reviews sent transactional emails and delivery engagement signals in the Capell admin.",
-            "screenshotPath": "packages/email-studio/docs/screenshots/sent-emails-index.png"
+            "screenshotPath": "packages/email-studio/docs/screenshots/sent-emails-index.png",
+            "darkScreenshotPath": "packages/email-studio/docs/screenshots/sent-emails-index-dark.png"
         },
         {
             "id": "sent-email-view",
@@ -35,7 +36,8 @@
             "required": true,
             "notes": "Capture after seeding a MailTracker sent email record with headers, stored HTML content, and at least one tracked URL click row.",
             "useCase": "A support user opens an immutable sent email snapshot to inspect metadata, headers, tracked URLs, and stored HTML output.",
-            "screenshotPath": "packages/email-studio/docs/screenshots/sent-email-view.png"
+            "screenshotPath": "packages/email-studio/docs/screenshots/sent-email-view.png",
+            "darkScreenshotPath": "packages/email-studio/docs/screenshots/sent-email-view-dark.png"
         },
         {
             "id": "email-studio-settings",

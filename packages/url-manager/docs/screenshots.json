@@ -17,7 +17,8 @@
             "required": true,
             "notes": "Capture the redirect rules admin page with the create or edit redirect form open, showing source URL, target URL, match type, status, query preservation, and notes fields.",
             "screenshotPath": "packages/url-manager/docs/screenshots/create-edit-redirect-form.png",
-            "useCase": "An editor creates or updates redirect rules without touching server configuration."
+            "useCase": "An editor creates or updates redirect rules without touching server configuration.",
+            "darkScreenshotPath": "packages/url-manager/docs/screenshots/create-edit-redirect-form-dark.png"
         },
         {
             "id": "redirect-import-workflow",
@@ -31,7 +32,8 @@
             "required": true,
             "notes": "Capture the redirect import action or resulting import preview state for CSV-based bulk redirect migrations.",
             "screenshotPath": "packages/url-manager/docs/screenshots/redirect-import-workflow.png",
-            "useCase": "A migration team imports redirect mappings in bulk after a site restructure."
+            "useCase": "A migration team imports redirect mappings in bulk after a site restructure.",
+            "darkScreenshotPath": "packages/url-manager/docs/screenshots/redirect-import-workflow-dark.png"
         },
         {
             "id": "redirect-export-workflow",
@@ -45,7 +47,8 @@
             "required": true,
             "notes": "Capture the redirect export action or CSV export state from the redirect rules table.",
             "screenshotPath": "packages/url-manager/docs/screenshots/redirect-export-workflow.png",
-            "useCase": "An SEO manager exports redirect rules for review, migration handoff, or audit evidence."
+            "useCase": "An SEO manager exports redirect rules for review, migration handoff, or audit evidence.",
+            "darkScreenshotPath": "packages/url-manager/docs/screenshots/redirect-export-workflow-dark.png"
         },
         {
             "id": "redirect-health-snapshot-output",
@@ -59,7 +62,8 @@
             "required": true,
             "notes": "Capture the redirect rules table or package health snapshot showing active redirects, status, and recent hit evidence.",
             "screenshotPath": "packages/url-manager/docs/screenshots/redirect-health-snapshot-output.png",
-            "useCase": "An operator verifies URL Manager is installed, tracking redirect health, and ready for SEO remediation work."
+            "useCase": "An operator verifies URL Manager is installed, tracking redirect health, and ready for SEO remediation work.",
+            "darkScreenshotPath": "packages/url-manager/docs/screenshots/redirect-health-snapshot-output-dark.png"
         }
     ]
 }

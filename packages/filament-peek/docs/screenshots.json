@@ -18,7 +18,8 @@
             "required": true,
             "notes": "Capture the Page edit header with the Preview group showing the separate `Changes` and `Live page` actions.",
             "useCase": "An editor chooses between a temporary unsaved preview and the saved public page.",
-            "screenshotPath": "packages/filament-peek/docs/screenshots/page-edit-preview-actions.png"
+            "screenshotPath": "packages/filament-peek/docs/screenshots/page-edit-preview-actions.png",
+            "darkScreenshotPath": "packages/filament-peek/docs/screenshots/page-edit-preview-actions-dark.png"
         },
         {
             "id": "signed-unsaved-page-preview-modal",
