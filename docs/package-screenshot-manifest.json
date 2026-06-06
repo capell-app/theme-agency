@@ -209,6 +209,8 @@
                 "page-count",
                 "theme",
                 "seed",
+                "quick",
+                "reset",
                 "allow-production",
                 "force"
             ],
