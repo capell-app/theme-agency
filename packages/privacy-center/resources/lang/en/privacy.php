@@ -68,6 +68,8 @@ return [
             'mark_fulfilled' => 'Mark fulfilled',
             'mark_verified' => 'Mark verified',
             'reject' => 'Reject',
+            'dry_run_retention' => 'Dry run',
+            'run_retention' => 'Run now',
         ],
         'fields' => [
             'accepted_at' => 'Accepted',
@@ -116,6 +118,9 @@ return [
             'privacy_request_fulfilled' => 'Privacy request marked fulfilled.',
             'privacy_request_rejected' => 'Privacy request rejected.',
             'privacy_request_verified' => 'Privacy request marked verified.',
+            'retention_dry_run' => 'Retention dry run complete.',
+            'retention_run' => 'Retention rule applied.',
+            'retention_result' => 'Matched :matched record(s); affected :affected record(s).',
         ],
         'widgets' => [
             'active_retention_rules' => 'Active retention rules',

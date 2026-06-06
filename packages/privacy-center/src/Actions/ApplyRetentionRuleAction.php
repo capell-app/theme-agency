@@ -18,20 +18,20 @@ use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 /**
- * @method static RetentionExecutionResultData run(RetentionRule $rule, ?CarbonInterface $now = null)
+ * @method static RetentionExecutionResultData run(RetentionRule $rule, ?CarbonInterface $now = null, bool $dryRun = false)
  */
 final class ApplyRetentionRuleAction
 {
     use AsAction;
 
-    public function handle(RetentionRule $rule, ?CarbonInterface $now = null): RetentionExecutionResultData
+    public function handle(RetentionRule $rule, ?CarbonInterface $now = null, bool $dryRun = false): RetentionExecutionResultData
     {
         $recordType = $this->recordType($rule);
         $now = $now instanceof CarbonInterface ? CarbonImmutable::instance($now) : CarbonImmutable::now();
         $cutoff = $now->subDays($rule->retention_days);
         $query = $this->expiredQuery($recordType, $rule, $cutoff);
         $matchedRecords = (clone $query)->count();
-        $affectedRecords = $this->applyAction($query, $rule);
+        $affectedRecords = $dryRun ? 0 : $this->applyAction($query, $rule);
 
         return new RetentionExecutionResultData(
             ruleId: (int) $rule->getKey(),
