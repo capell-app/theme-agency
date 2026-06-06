@@ -22,6 +22,23 @@
         2rem 2rem;
 }
 
+.dark .education-shell,
+.education-shell.dark {
+    --education-ink: var(--theme-dark-foreground, #e5e7eb);
+    --education-muted: var(--theme-dark-muted, #cbd5e1);
+    --education-paper: var(--theme-dark-surface, #020617);
+    --education-line: rgb(129 140 248 / 26%);
+    --education-accent-text: color-mix(in srgb, var(--site-theme-accent) 70%, #ffffff);
+    --education-blueprint: rgb(129 140 248 / 10%);
+
+    background:
+        linear-gradient(180deg, #020617 0%, #0f172a 52%, #020617 100%),
+        linear-gradient(90deg, var(--education-blueprint) 1px, transparent 1px),
+        linear-gradient(180deg, rgb(20 184 166 / 8%) 1px, transparent 1px);
+    color: var(--education-ink);
+    color-scheme: dark;
+}
+
 .education-shell :is(h1, h2, h3) {
     letter-spacing: 0;
 }
@@ -61,6 +78,26 @@
     background-color: color-mix(in srgb, var(--site-theme-primary) 8%, #ffffff);
 }
 
+.dark .education-shell :where(.bg-white),
+.education-shell.dark :where(.bg-white) {
+    background-color: #0f172a;
+}
+
+.dark .education-shell :where(
+    [class*='bg-[#f8fbff]'],
+    [class*='bg-[#eef6ff]'],
+    [class*='bg-[#eef2ff]'],
+    [class*='bg-[#ecfeff]']
+),
+.education-shell.dark :where(
+    [class*='bg-[#f8fbff]'],
+    [class*='bg-[#eef6ff]'],
+    [class*='bg-[#eef2ff]'],
+    [class*='bg-[#ecfeff]']
+) {
+    background-color: #111827;
+}
+
 .education-shell :where([class*='bg-[#ecfeff]']) {
     background-color: color-mix(in srgb, var(--site-theme-accent) 12%, #ffffff);
 }
@@ -81,6 +118,23 @@
     [class*='border-[#dbeafe]'],
     .border-indigo-100,
     .border-indigo-200
+) {
+    border-color: var(--education-line);
+}
+
+.dark .education-shell :where(
+    .border-slate-200,
+    .border-indigo-100,
+    .border-indigo-200,
+    [class*='border-[#c7d2fe]'],
+    [class*='border-[#dbeafe]']
+),
+.education-shell.dark :where(
+    .border-slate-200,
+    .border-indigo-100,
+    .border-indigo-200,
+    [class*='border-[#c7d2fe]'],
+    [class*='border-[#dbeafe]']
 ) {
     border-color: var(--education-line);
 }
