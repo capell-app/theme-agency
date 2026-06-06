@@ -197,7 +197,6 @@
                     :background-repeat="$hero->pageBackgroundRepeat"
                     :first="true"
                     :total="1"
-                    @lgguIOmFQ0gbqZ3dp2nB
                     container-class="container"
                 >
                     <div class="@lg:py-12 flex items-center py-12 select-text">

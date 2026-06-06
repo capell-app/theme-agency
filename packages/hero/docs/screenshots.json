@@ -6,28 +6,37 @@
     "outputDirectory": "packages/hero/docs/screenshots",
     "entries": [
         {
+            "id": "hero-consent-prime",
+            "title": "Insights consent priming capture.",
+            "package": "hero",
+            "surface": "frontend",
+            "user": false,
+            "colorSchemes": ["light"],
+            "targetType": "frontend-url",
+            "target": null,
+            "url": "/",
+            "click": "text=Reject non-essential",
+            "waitFor": "body",
+            "required": false,
+            "notes": "Runner-only warm-up capture that dismisses the Insights consent banner before marketplace-facing Hero screenshots are taken.",
+            "useCase": "The screenshot runner sets anonymous visitor consent state so Hero captures do not include analytics consent chrome.",
+            "screenshotPath": "packages/hero/docs/screenshots/hero-consent-prime.png"
+        },
+        {
             "id": "hero-home-widget",
             "title": "Hero home widget rendered on a public page.",
             "package": "hero",
             "surface": "frontend",
+            "user": false,
+            "colorSchemes": ["light"],
             "targetType": "frontend-url",
             "target": null,
+            "url": "/",
+            "waitFor": ".widget-hero",
             "required": true,
-            "notes": "Requires seeded layout content or the capell:hero-setup command plus a frontend theme that renders the hero widget.",
+            "notes": "Runs capell:hero-setup --force before capture and waits for the public home page to render the Hero widget.",
             "useCase": "A visitor sees the seeded hero widget rendered through Layout Builder and the active frontend theme.",
             "screenshotPath": "packages/hero/docs/screenshots/hero-home-widget.png"
-        },
-        {
-            "id": "hero-slide-variant",
-            "title": "Hero slide or related content variant.",
-            "package": "hero",
-            "surface": "frontend",
-            "targetType": "frontend-url",
-            "target": null,
-            "required": false,
-            "notes": "Capture when demo data includes slide or related hero content; omit for the minimal single-hero fixture.",
-            "useCase": "A visitor sees the optional seeded slide or related-content hero variation when demo content includes it.",
-            "screenshotPath": "packages/hero/docs/screenshots/hero-slide-variant.png"
         }
     ]
 }

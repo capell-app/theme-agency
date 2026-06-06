@@ -40,6 +40,7 @@
     "commands": {
         "install": null,
         "setup": "capell:hero-setup",
+        "setupParams": ["force"],
         "demo": null,
         "doctor": null
     },
@@ -86,6 +87,11 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Hero extension preview image",
                 "caption": "Hero extension preview"
+            },
+            {
+                "path": "docs/screenshots/hero-home-widget.png",
+                "alt": "Capell public homepage rendering the Hero widget",
+                "caption": "Render a clean public homepage hero with inherited theme styling and deterministic setup data."
             }
         ],
         "categories": ["admin", "console", "foundation", "frontend"]
