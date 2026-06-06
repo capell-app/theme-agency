@@ -9,8 +9,8 @@ The current repository contains 56 package improvement plans. Their roadmap rows
 | Bucket | Rows |
 | ------ | ---: |
 | Now    | 0 |
-| Next   | 257 |
-| Later  | 167 |
+| Next   | 253 |
+| Later  | 163 |
 
 The work is not complete until every package plan has been reviewed against current code, required features are implemented or intentionally deferred, new behavior is documented, and focused verification passes for each changed package.
 
@@ -85,7 +85,7 @@ No package should be marked `Complete` from commit history alone. Completion req
 | theme-saas | 0 | 7 | 3 | Now closed | Current follow-up adds rendered anonymous/non-admin public-output leak coverage across every SaaS section plus a zero-query assertion for the hydrated `SaasThemePageAdapter` path, after prior slices moved adapter fallback copy into translations and reconciled real health diagnostics, README/overview verification-command guidance, and cache-safety metadata. Continue with pricing/demo/docs connected depth, screenshot captures, copy cleanup, tokenization, and dark mode before completion review. |
 | translation-manager | 0 | 0 | 0 | Complete | Completion review reconciled all roadmap rows plus stale plan text: Translation Manager ships the Filament-native grid, CSV/XLIFF/PO workflows, publish readiness, missing-key scan, fallback/stale detection, reviewed AI/memory/glossary flows, safe override writes, request-local source discovery memoization, and explicit residual-risk notes for large exports, per-source write permissions, bundled locales, and concurrency hardening. No roadmap rows remain. |
 | url-manager | 0 | 7 | 4 | Now closed | Current follow-up adds the missing Capell runner screenshot contract for the eight already-promoted marketplace PNGs after the prior slice deferred public redirect hit writes until application termination and updated rule counters atomically when the callback runs. Continue with regex safety, loop detection, Core 404 capture, and completion review. |
-| welcome-tour | 0 | 4 | 5 | Now closed | Current follow-up removes the non-runner tour GIF from marketplace media and keeps the gallery aligned to the four Capell runner-backed PNG captures after package-owned `welcome_tour_user_states` persistence covered hosts without `users.dismissed_hints`. Continue with anchored default steps, marketplace copy, restart/resume, progress tracking, and Later rows before completion review. |
+| welcome-tour | 0 | 0 | 1 | Near complete | Current follow-up reconciles the plan against shipped code: anchored default admin steps, benefit-led marketplace/Composer copy and expanded keywords, dashboard restart/snooze, per-user resume, per-step progress, onboarding checklist widget, role/first-run targeting, lifecycle events, literal step copy, and runner-backed marketplace PNGs are all shipped. Continue with contextual resource/page tours beyond dashboard-level contributed steps before completion review. |
 | wordpress-importer | 0 | 5 | 3 | Now closed | `e1dcfeeb8` closes the remaining Now tracker rows after `701095d4a` reconciled marketplace metadata and recent slices added WXR execution through Migration Assistant, package reader selection, screenshot/copy reconciliation, health probes, PHP runtime metadata, keywords, and console preview. WordPress Importer has no Now rows left; continue with media download/rewrite, redirect preservation, idempotent re-import, streaming XML parsing, end-to-end integration coverage, and completion review. |
 
 ## Screenshot Runner Audit
