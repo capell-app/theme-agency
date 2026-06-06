@@ -91,12 +91,12 @@
                 "caption": "Media AI extension preview"
             },
             {
-                "path": "docs/images/screenshots/media-ai-doctor-image.png",
+                "path": "docs/screenshots/media-ai-doctor-image.png",
                 "alt": "Doctor image action on a media record in the Capell Admin media library",
                 "caption": "The Doctor image action on an image record in the media library"
             },
             {
-                "path": "docs/images/screenshots/media-ai-doctor-image-dark.png",
+                "path": "docs/screenshots/media-ai-doctor-image-dark.png",
                 "alt": "Doctor image action on a media record in dark mode",
                 "caption": "The Doctor image action shown in dark mode"
             }
