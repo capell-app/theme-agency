@@ -117,4 +117,4 @@ This package has no committed ERD excerpt. Use implementation notes and extensio
 Deployment should read [screenshots.json](screenshots.json), install the package with demo data, resolve each listed admin surface or frontend URL, and write images to `packages/foundation-theme/docs/screenshots`.
 
 - Required captures include the Foundation settings screen, generated Tailwind output review, a frontend page using the default theme, the Foundation header Layout Builder area, and the marketplace layout captures listed in `docs/screenshots.json`.
-- Marketplace media includes committed generated PNG captures for settings, frontend, and Tailwind output review plus labelled mockup assets under `docs/assets/marketplace` for the remaining layout targets.
+- Marketplace media includes committed generated PNG captures for settings, frontend, Tailwind output review, and route-backed layout targets.

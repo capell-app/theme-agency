@@ -62,11 +62,10 @@ This package makes its Composer dependencies visible because they are part of th
 Screenshot capture targets are defined in [docs/screenshots.json](docs/screenshots.json) during package deployment.
 
 - 12 deployment capture targets cover the Foundation settings screen, Tailwind asset output review, frontend render checks, the header Layout Builder area, and marketplace layout captures.
-- 15 marketplace media entries ship in `capell.json`: one extension card image,
-  six committed generated PNG captures, and eight visibly labelled layout
-  mockups.
-- The six generated PNG screenshots are committed under `docs/screenshots` for
-  settings, frontend, and Tailwind output review in light and dark variants.
+- 15 marketplace media entries ship in `capell.json`: one extension card image
+  and 14 committed runner PNG captures.
+- The generated PNG screenshots are committed under `docs/screenshots` for
+  settings, frontend, Tailwind output review, and route-backed layout workflows.
 
 ## Technical Shape
 

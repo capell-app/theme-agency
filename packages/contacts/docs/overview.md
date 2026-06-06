@@ -15,7 +15,7 @@ Contacts provides the shared CRM record layer for Capell package integrations, i
 - Contact tagging and activity recording actions.
 - Dashboard overview stats for contacts, organisations, open leads, and activities. Callers can pass a site id to `BuildContactsOverviewStatsAction` for site-scoped totals; omitting the site id intentionally returns global package totals.
 - Privacy export and anonymization workflows through domain actions, Contact admin row actions, and the `capell-contacts:privacy` command.
-- Optional Capell screenshot-runner contract for the Contacts index and dashboard stats surfaces. Marketplace screenshots remain blocked until the runner app autoloads/registers the Contacts admin provider and can capture real package resources.
+- Capell screenshot-runner captures are committed for the Contacts and Contact Activities admin indexes. The dashboard stats widget remains optional until the runner can target that widget reliably in the first viewport.
 
 ## Source Sync Boundary
 
