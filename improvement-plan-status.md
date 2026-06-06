@@ -82,6 +82,7 @@ This file tracks the active package-improvement wave at a repository level. Pack
 - Events now promotes 11 Capell runner captures across event CRUD, venues, occurrences, registrations, admin calendar/widget, public listing/calendar, and `.ics` feed output.
 - Public Actions now promotes eight Capell runner captures across configured actions, action form, destinations, submissions, dispatch attempts, integration tokens, frontend form, and Zapier discovery.
 - Payments now promotes five Capell runner captures for checkout sessions, webhook events, settings, customer portal billing, and Form Builder checkout.
+- Privacy Center now filters compliance resource tables by consent category/decision/jurisdiction, privacy request type/status/overdue due dates, and policy acceptance type/context.
 - API now promotes four Capell runner JSON response captures for successful page resolve and bounded layout output in light/dark mode; intentional 403/404 response captures remain optional until the runner supports non-2xx body screenshots.
 - Content Sections now promotes valid runner-backed admin index/create/edit captures; selector-modal and frontend widget-gallery captures still need dedicated fixture routes/states.
 - Shopify Commerce now promotes six Capell runner captures for the connected-store, catalog sync state, and cached product search workflows after seeding safe demo connection/product fixture data and fixing the real admin-page Blade namespace crash.

@@ -18,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Override;
 
@@ -44,13 +45,22 @@ final class PolicyAcceptanceResource extends Resource
     #[Override]
     public static function table(Table $table): Table
     {
-        return $table->columns([
-            TextColumn::make('policy_key')->label(__('capell-privacy-center::privacy.admin.fields.policy_key'))->searchable()->sortable(),
-            TextColumn::make('policy_version')->label(__('capell-privacy-center::privacy.admin.fields.policy_version'))->sortable(),
-            TextColumn::make('policy_type')->label(__('capell-privacy-center::privacy.admin.fields.policy_type'))->badge()->sortable(),
-            TextColumn::make('context')->label(__('capell-privacy-center::privacy.admin.fields.context'))->toggleable(),
-            TextColumn::make('accepted_at')->label(__('capell-privacy-center::privacy.admin.fields.accepted_at'))->dateTime()->sortable(),
-        ]);
+        return $table
+            ->columns([
+                TextColumn::make('policy_key')->label(__('capell-privacy-center::privacy.admin.fields.policy_key'))->searchable()->sortable(),
+                TextColumn::make('policy_version')->label(__('capell-privacy-center::privacy.admin.fields.policy_version'))->sortable(),
+                TextColumn::make('policy_type')->label(__('capell-privacy-center::privacy.admin.fields.policy_type'))->badge()->sortable(),
+                TextColumn::make('context')->label(__('capell-privacy-center::privacy.admin.fields.context'))->toggleable(),
+                TextColumn::make('accepted_at')->label(__('capell-privacy-center::privacy.admin.fields.accepted_at'))->dateTime()->sortable(),
+            ])
+            ->filters([
+                SelectFilter::make('policy_type')
+                    ->label(__('capell-privacy-center::privacy.admin.fields.policy_type'))
+                    ->options(self::policyTypeOptions()),
+                SelectFilter::make('context')
+                    ->label(__('capell-privacy-center::privacy.admin.fields.context'))
+                    ->options(fn (): array => self::contextOptions()),
+            ]);
     }
 
     #[Override]
@@ -92,5 +102,22 @@ final class PolicyAcceptanceResource extends Resource
     private static function policyTypeOptions(): array
     {
         return collect(PolicyType::cases())->mapWithKeys(fn (PolicyType $type): array => [$type->value => $type->getLabel()])->all();
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private static function contextOptions(): array
+    {
+        /** @var array<string, string> $options */
+        $options = PolicyAcceptance::query()
+            ->whereNotNull('context')
+            ->where('context', '!=', '')
+            ->distinct()
+            ->orderBy('context')
+            ->pluck('context', 'context')
+            ->all();
+
+        return $options;
     }
 }

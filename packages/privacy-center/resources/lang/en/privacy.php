@@ -88,6 +88,7 @@ return [
             'key' => 'Key',
             'legal_basis' => 'Legal basis',
             'metadata' => 'Metadata',
+            'overdue' => 'Overdue',
             'policy_key' => 'Policy key',
             'policy_type' => 'Policy type',
             'policy_version' => 'Policy version',
