@@ -54,9 +54,13 @@ final class StoreLayoutBuilderPreviewStateAction
             signature: $signature,
         );
 
+        $payload = $state->toArray();
+
+        $this->assertPreviewPayloadWithinLimit($payload, 'layout_builder_preview_state');
+
         $cache->put(
             $cacheKey,
-            $state->toArray(),
+            $payload,
             now()->addMinutes($this->previewTtlMinutes()),
         );
     }
