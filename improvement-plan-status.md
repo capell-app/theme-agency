@@ -86,6 +86,7 @@ This file tracks the active package-improvement wave at a repository level. Pack
 - Privacy Center now filters compliance resource tables by consent category/decision/jurisdiction, privacy request type/status/overdue due dates, and policy acceptance type/context.
 - API now promotes four Capell runner JSON response captures for successful page resolve and bounded layout output in light/dark mode; intentional 403/404 response captures remain optional until the runner supports non-2xx body screenshots.
 - Content Sections now promotes valid runner-backed admin index/create/edit captures; selector-modal and frontend widget-gallery captures still need dedicated fixture routes/states.
+- Content Sections now reconciles cache-invalidation metadata: `capell.json` declares `content-sections` tags and `Section` invalidation sources for create/update/delete/restore/force-delete events.
 - Shopify Commerce now promotes six Capell runner captures for the connected-store, catalog sync state, and cached product search workflows after seeding safe demo connection/product fixture data and fixing the real admin-page Blade namespace crash.
 - Notes now promotes runner-backed marketplace captures for the populated inbox, lifecycle controls, empty state, and dark-mode workflow after fixing the populated-inbox render crash.
 - Notes enums now implement Filament labels for status, visibility, and reminder recurrence, and the Add note action derives visibility options from those enum labels.
