@@ -84,6 +84,7 @@
         "document-lifecycle-signed-evidence",
         "document-lifecycle-reacceptance-report",
         "document-lifecycle-retention",
+        "document-lifecycle-publication-diff",
         "document-lifecycle-customer-portal-document-feed"
     ],
     "performance": {

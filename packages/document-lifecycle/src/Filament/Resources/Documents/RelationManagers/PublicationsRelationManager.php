@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace Capell\DocumentLifecycle\Filament\Resources\Documents\RelationManagers;
 
 use BackedEnum;
+use Capell\DocumentLifecycle\Actions\BuildDocumentPublicationDiffAction;
+use Capell\DocumentLifecycle\Models\DocumentPublication;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Override;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class PublicationsRelationManager extends RelationManager
 {
@@ -28,6 +32,18 @@ final class PublicationsRelationManager extends RelationManager
     {
         return $table
             ->modifyQueryUsing(fn (Builder $query): Builder => $query->latest('published_at')->latest('id'))
+            ->actions([
+                Action::make('download_publication_diff')
+                    ->label(__('capell-document-lifecycle::navigation.actions.download_publication_diff'))
+                    ->icon('heroicon-o-document-magnifying-glass')
+                    ->action(fn (DocumentPublication $record): StreamedResponse => response()->streamDownload(
+                        function () use ($record): void {
+                            echo BuildDocumentPublicationDiffAction::run($record);
+                        },
+                        'document-publication-diff-' . $record->getKey() . '-' . now()->format('Y-m-d-His') . '.json',
+                        ['Content-Type' => 'application/json'],
+                    )),
+            ])
             ->columns([
                 TextColumn::make('version_label')
                     ->label(__('capell-document-lifecycle::navigation.fields.version'))

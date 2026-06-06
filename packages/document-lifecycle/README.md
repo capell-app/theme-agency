@@ -27,6 +27,7 @@ Controlled document registration, publication history, and acceptance tracking f
 - A Controlled documents admin resource.
 - Document registration and publication actions.
 - Publication records linked to Publishing Studio revisions.
+- Stored publication content snapshots with JSON diff downloads between versions.
 - Acceptance records stored in or extending the `legal_acceptances` table.
 - Signed JSON certificate downloads for individual acceptance records.
 - Review-due and expiry dates for controlled documents, with a daily archive-expired command.
