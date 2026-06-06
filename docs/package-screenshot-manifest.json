@@ -158,7 +158,7 @@
             "demoCommand": null,
             "demoParams": [],
             "doctorCommand": null,
-            "entryCount": 2,
+            "entryCount": 3,
             "browserTestCount": 0
         },
         {
@@ -1687,10 +1687,25 @@
             "target": "ContactResource",
             "url": "/contacts",
             "waitFor": "table",
-            "required": false,
-            "notes": "Expected Capell admin route for safe fake contacts. The current screenshot runner app does not autoload the Contacts admin provider, so this remains optional until the runner package install is fixed.",
+            "required": true,
+            "notes": "Captured from the seeded Capell screenshot runner app after installing capell-app/contacts and migrating the package tables.",
             "useCase": "An operator reviews encrypted customer records captured from first-party Capell packages.",
             "screenshotPath": "packages/contacts/docs/screenshots/contacts-contact-index.png",
+            "composerName": "capell-app/contacts"
+        },
+        {
+            "id": "contacts-activity-index",
+            "title": "Contact activities admin index.",
+            "package": "contacts",
+            "surface": "admin",
+            "targetType": "admin-resource",
+            "target": "ContactActivityResource",
+            "url": "/activities/contact-activities",
+            "waitFor": "table",
+            "required": true,
+            "notes": "Captured from the seeded Capell screenshot runner app with package-specific contact, organisation, lead, and activity data.",
+            "useCase": "An operator reviews the CRM activity timeline created by package source adapters.",
+            "screenshotPath": "packages/contacts/docs/screenshots/contacts-activity-index.png",
             "composerName": "capell-app/contacts"
         },
         {
@@ -1703,7 +1718,7 @@
             "url": "/",
             "waitFor": "body",
             "required": false,
-            "notes": "Expected dashboard capture after seeding contact, organisation, lead, and activity counts. The current runner lands above the Contacts stats widget while the package provider is unavailable, so this remains optional until widget targeting or runner package install is fixed.",
+            "notes": "Expected dashboard capture after seeding contact, organisation, lead, and activity counts. The current runner dashboard does not reliably expose the Contacts stats widget in first-viewport capture, so this remains optional until widget targeting is fixed.",
             "useCase": "An operator sees CRM capture volume from the main Capell dashboard.",
             "screenshotPath": "packages/contacts/docs/screenshots/contacts-dashboard-stats.png",
             "composerName": "capell-app/contacts"

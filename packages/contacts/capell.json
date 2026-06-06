@@ -152,7 +152,20 @@
     },
     "marketplace": {
         "summary": "The unified CRM layer for Capell — automatically captures contacts, organisations, leads, and activity from your forms, newsletter, events, comments, and Shopify store into one privacy-safe, encrypted record.",
-        "screenshots": [],
+        "screenshots": [
+            {
+                "path": "docs/screenshots/contacts-contact-index.png",
+                "label": "Contacts admin index",
+                "alt": "Capell admin Contacts table showing Ava Morgan with email, phone, active status, and privacy export actions.",
+                "caption": "Review encrypted customer records and privacy-safe export or anonymization actions from the Capell admin."
+            },
+            {
+                "path": "docs/screenshots/contacts-activity-index.png",
+                "label": "Contact activities",
+                "alt": "Capell admin Contact Activities table showing form submission and newsletter subscription activity for Ava Morgan and Northstar Studio.",
+                "caption": "Trace CRM activity across contacts, organisations, and leads from package source adapters."
+            }
+        ],
         "categories": ["admin", "crm", "contacts"]
     },
     "contributionTraceability": {
