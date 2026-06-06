@@ -94,7 +94,7 @@ The manifest and Composer description now use this buyer-facing product story:
 | Deepen connected pricing/docs/demo-request states beyond guidance copy into real embeds/data                        | Next   | M      | High   | §2.1, §3    |
 | Done/Shipped: Rewrite marketplace `summary` + composer `description`; capture & commit the 12 PNG screenshots      | Done   | M      | High   | §5          |
 | Replace jargon placeholder copy in `generic.php` and visible eyebrows                                               | Done   | S      | Med    | §2.5        |
-| Tokenize hard-coded palette so the `saas` preset actually re-skins the theme                                        | Next   | L      | Med    | §2.3        |
+| Shipped 2026-06-06: Tokenize hard-coded palette so the `saas` preset actually re-skins the theme                    | Done   | L      | Med    | §2.3        |
 | Add genuine dark mode (token set + `dark:` variants) and a true dark screenshot                                     | Next   | L      | High   | §2.2        |
 | Add logos/integrations strip + testimonial cards + FAQ accordion sections                                           | Later  | M      | Med    | §3          |
 | Make calculator interactive (Alpine, cache-safe) or rename to value-summary                                         | Later  | M      | Med    | §2.6        |

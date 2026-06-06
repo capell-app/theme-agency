@@ -68,6 +68,62 @@
         line-height: 1.75;
     }
 
+    .saas-shell :where(.text-slate-950, .text-slate-900, .text-slate-800) {
+        color: var(--saas-ink);
+    }
+
+    .saas-shell :where(.text-slate-700, .text-slate-600, .text-slate-500) {
+        color: var(--saas-muted);
+    }
+
+    .saas-shell :where(.text-cyan-700, .text-blue-700) {
+        color: var(--saas-primary);
+    }
+
+    .saas-shell :where(.text-cyan-800) {
+        color: color-mix(in srgb, var(--saas-primary) 74%, #020617);
+    }
+
+    .saas-shell :where(.text-cyan-100, .text-cyan-200, .text-cyan-300) {
+        color: color-mix(in srgb, var(--saas-accent) 70%, #ffffff);
+    }
+
+    .saas-shell :where(.text-blue-50, .text-blue-100) {
+        color: color-mix(in srgb, var(--saas-primary) 18%, #ffffff);
+    }
+
+    .saas-shell :where(.bg-slate-50) {
+        background-color: var(--saas-surface);
+    }
+
+    .saas-shell :where(.bg-slate-950, .bg-slate-900) {
+        background-color: var(--saas-ink);
+    }
+
+    .saas-shell :where(.bg-cyan-50) {
+        background-color: color-mix(in srgb, var(--saas-accent) 12%, #ffffff);
+    }
+
+    .saas-shell :where(.bg-cyan-300, .bg-cyan-400, .bg-cyan-500) {
+        background-color: var(--saas-accent);
+    }
+
+    .saas-shell :where(.bg-blue-500, .bg-blue-700) {
+        background-color: var(--saas-primary);
+    }
+
+    .saas-shell :where(.border-slate-200, .border-slate-300) {
+        border-color: color-mix(in srgb, var(--saas-muted) 22%, #ffffff);
+    }
+
+    .saas-shell :where(.border-cyan-200, .border-cyan-700, .border-blue-300) {
+        border-color: color-mix(in srgb, var(--saas-primary) 42%, #ffffff);
+    }
+
+    .saas-shell :where(.ring-cyan-500) {
+        --tw-ring-color: var(--saas-accent);
+    }
+
     .saas-skip-link {
         background: #0f172a;
         color: #ffffff;
