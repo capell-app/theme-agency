@@ -6,6 +6,8 @@ namespace Capell\Hero\Health;
 
 use Capell\Core\Contracts\Extensions\ChecksExtensionHealth;
 use Capell\Core\Data\Diagnostics\DoctorCheckResultData;
+use Capell\Core\Enums\LayoutEnum;
+use Capell\Core\Models\Layout;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Blade;
@@ -33,6 +35,7 @@ final class HeroHealthCheck implements ChecksExtensionHealth
         return collect([
             $check->widgetComponentCheck(),
             $check->viewNamespaceCheck(),
+            $check->homeLayoutDefaultsCheck(),
         ]);
     }
 
@@ -88,5 +91,37 @@ final class HeroHealthCheck implements ChecksExtensionHealth
     public function viewNamespaceResolves(): bool
     {
         return resolve(ViewFactory::class)->exists(self::WidgetView);
+    }
+
+    public function homeLayoutDefaultsCheck(): DoctorCheckResultData
+    {
+        $isSeeded = $this->hasSeededHomeLayoutState();
+
+        return new DoctorCheckResultData(
+            label: 'Hero home layout defaults',
+            passed: $isSeeded,
+            message: $isSeeded
+                ? 'The home layout has the Hero and page-content default widgets.'
+                : 'The home layout is missing the Hero default widget state.',
+            remediation: $isSeeded
+                ? null
+                : 'Run capell:hero-setup --force to install the Hero-managed home layout defaults.',
+        );
+    }
+
+    public function hasSeededHomeLayoutState(): bool
+    {
+        $homeLayout = Layout::query()
+            ->where('key', LayoutEnum::Home->value)
+            ->first();
+
+        if (! $homeLayout instanceof Layout) {
+            return false;
+        }
+
+        $containers = is_array($homeLayout->containers) ? $homeLayout->containers : [];
+
+        return data_get($containers, 'hero.widgets.0.widget_key') === 'hero'
+            && data_get($containers, 'main.widgets.0.widget_key') === 'page-content';
     }
 }

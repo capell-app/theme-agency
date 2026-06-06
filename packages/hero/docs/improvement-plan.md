@@ -50,7 +50,7 @@ Hero now declares public feature capabilities for the widget, video backgrounds,
 
 2. **Admin surface declared.** `capell.json` now includes `"admin"` in `surfaces`, and docs describe the schema extenders instead of claiming Hero has no Filament classes. — `capell.json`, `docs/overview.md`
 
-3. **Health check shipped.** `HeroHealthCheck` now verifies the `capell::widget.hero` component alias and the `capell-hero` view namespace. Remaining opportunity: add install-layout/default-home checks if the package later treats seeded layout state as part of health. — `src/Health/HeroHealthCheck.php`, `capell.json healthChecks[0]`
+3. **Health check shipped.** `HeroHealthCheck` now verifies the `capell::widget.hero` component alias, the `capell-hero` view namespace, and the Hero-managed home layout defaults (`hero` + `page-content` containers) with remediation to run `capell:hero-setup --force` when seeded state drifts. — `src/Health/HeroHealthCheck.php`, `capell.json healthChecks[0]`
 
 4. **`cacheSafety.cacheable: false` but the widget is pure-render and could be cacheable.** The manifest marks hero output non-cacheable with `variesBy: ["site","locale"]`. The render is deterministic given hydrated relations (the test `expect($html)->toBe(renderHeroWidgetHtml($widget))` proves determinism, and the background hash uses `xxh128`, not `uniqid`). If hero is forced non-cacheable it may be defeating frontend HTML caching for the whole home page. Confirm whether `cacheable:false` is intentional or copy-paste; if the only variance is site+locale (already declared), it should be cacheable with those keys. — `capell.json performance.cacheSafety` — **Medium**
 
@@ -98,7 +98,7 @@ Both are flat and describe plumbing ("setup", "rendering"), not the visitor-faci
 | Rewrite marketplace `summary` + composer `description`                             | Done   | S      | Medium | §5          |
 | Populate `capabilities[]` (video, overlay, carousel, inheritance)                  | Done   | S      | Medium | §3, §5      |
 | Memoize theme/widget resolver layers across slides (render budget)                 | Next   | M      | High   | §2.1        |
-| Extend `HeroHealthCheck` to verify seeded default-home layout state if required    | Next   | S      | Low    | §4.3        |
+| Shipped 2026-06-06: Extend `HeroHealthCheck` to verify seeded default-home layout state | Done   | S      | Low    | §4.3        |
 | Resolve cacheable/invalidationSources truth (cache safety)                         | Next   | M      | Medium | §4.4, §4.5  |
 | Add render budget / zero-query render test                                         | Next   | S      | Medium | §2.4, §4.6  |
 | Shipped 2026-06-06: Add XSS-boundary test for author hero HTML                     | Done   | S      | Medium | §4.7        |
