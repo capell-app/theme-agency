@@ -8,6 +8,7 @@
     $title = $section->title ?? $section->heading ?? $title ?? __('capell-theme-knowledge::generic.doc_title');
     $summary = $section->summary ?? $summary ?? __('capell-theme-knowledge::generic.doc_summary');
     $category = $section->category ?? $category ?? __('capell-theme-knowledge::generic.doc_category');
+    $version = $section->version ?? $version ?? null;
     $updatedAt = $section->updatedAt ?? $updatedAt ?? __('capell-theme-knowledge::generic.doc_updated_at');
     $readingTime = $section->readingTime ?? $readingTime ?? __('capell-theme-knowledge::generic.doc_reading_time');
     $contentHtml = $section->contentHtml ?? $contentHtml ?? null;
@@ -119,6 +120,15 @@
                 <dl
                     class="mt-6 flex flex-wrap gap-4 text-sm font-bold text-slate-500"
                 >
+                    @if (is_scalar($version) && (string) $version !== '')
+                        <div class="flex gap-2">
+                            <dt>
+                                {{ __('capell-theme-knowledge::generic.doc_version_label') }}
+                            </dt>
+                            <dd class="text-slate-700">{{ $version }}</dd>
+                        </div>
+                    @endif
+
                     <div class="flex gap-2">
                         <dt>
                             {{ __('capell-theme-knowledge::generic.doc_updated_label') }}

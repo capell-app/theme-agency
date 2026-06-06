@@ -65,6 +65,7 @@ return [
     'doc_toc_label' => 'On this page',
     'doc_updated_at' => 'June 2026',
     'doc_updated_label' => 'Updated',
+    'doc_version_label' => 'Version',
     'review_signal' => 'Peer reviewed',
     'email_placeholder' => 'work@email.com',
     'guide_signal' => 'Guide',

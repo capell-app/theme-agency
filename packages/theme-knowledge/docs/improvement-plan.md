@@ -14,9 +14,9 @@ Marketplace and Composer copy are buyer-facing, and `capell.json` marketplace me
 - **2026-06-06:** Captured all 9 `docs/screenshots.json` route-backed targets through the Capell runner and promoted the PNG gallery into marketplace media.
 - **2026-06-04:** Moved author bench and topic hub defaults into translations, made both sections accept hydrated item data, removed optional package installation checks from public newsletter/search Blade, and added tests for those public rendering contracts.
 - **2026-06-05:** Added a first-class `doc-article` section renderer with hydrated breadcrumbs, category sidebar, article metadata, constrained article body, and sticky table-of-contents layout, plus registry coverage and docs/manifest reconciliation.
-- **2026-06-06:** Added code-block/prose styling for technical articles, constrained long-form measures with calmer heading scale, and a reduced-motion guard for decorative grid overlays.
+- **2026-06-06:** Added code-block/prose styling for technical articles, constrained long-form measures with calmer heading scale, a reduced-motion guard for decorative grid overlays, and KB article feedback/version/freshness affordances.
 
-**Headline:** the package is positioned as a knowledge-base / documentation / help-site theme, the core documentation layout now exists, and the static screenshot gallery is reconciled. The remaining shipped-feature gaps are dark mode, tokenization, and deeper differentiated affordances such as article feedback and versioning.
+**Headline:** the package is positioned as a knowledge-base / documentation / help-site theme, the core documentation layout now exists, and the static screenshot gallery is reconciled. The remaining shipped-feature gaps are dark mode and tokenization.
 
 ## 2. Improvements (existing functionality)
 
@@ -46,8 +46,8 @@ Prioritized. Real templates only.
 - **Breadcrumbs.** The shipped `doc-article` section renders hydrated breadcrumb trails with translated fallbacks.
 - **Done/Shipped: Functional search surface.** `search-listing.blade.php` now renders a translated `GET` search form with renderer-supplied availability/action data and query input. Deeper Search package result-page integration remains follow-up work.
 - **Done/Shipped: code-block / syntax styling.** `.knowledge-doc-prose` now styles inline code, scrollable `pre` blocks, lists, and H2/H3 rhythm for both section-rendered articles and Knowledge Base article views. Full syntax highlighting remains future package/app integration depth.
-- **Article feedback ("Was this helpful?").** No feedback widget/partial.
-- **Versioning / "last updated" / version switcher.** No version or freshness affordance.
+- **Done/Shipped: article feedback ("Was this helpful?").** The Theme Knowledge KB article view renders the package feedback form, submitted-state message, and helpfulness aggregate summary using the Knowledge Base public payload and translated KB strings. A reusable partial can remain future cleanup, but the buyer-facing affordance is present.
+- **Done/Shipped: versioning / "last updated" freshness affordance.** The theme doc-article section accepts a hydrated `version`, and the KB article view displays the current public article version plus last-modified date from the Knowledge Base article payload. A full version switcher remains future product depth.
 - **Doc-article hero/header partial** (title + category + reading time + updated date). The generic `hero` is marketing-shaped.
 
 **Vs siblings:** `theme-healthcare` ships dedicated `blog/article.blade.php` + `blog/index.blade.php` views and a `partials/` directory; this theme ships neither a blog article view nor any partials, despite "Editorial/Resources" positioning. **Cross-sell:** `resource-library`→`capell-app/blog`, `search-listing`/`topic-index`→`capell-app/search`, `newsletter`→`capell-app/newsletter` are already wired as optional flags, and `seo-suite` is in `supports[]` — but none of these are surfaced as buyer-facing "better together" value, and the search integration produces no functional UI. **Differentiator vs table-stakes:** sidebar nav + TOC + functional search + code blocks are table stakes for the vertical and currently missing; versioning and article feedback are the differentiators.
@@ -99,6 +99,6 @@ Prioritized. Real templates only.
 | Data-drive `topic-hubs` instead of fixed 4 labels                                                        | Done   | M      | Med    | §2.1        |
 | Rewrite marketplace `summary`; tighten `description`                                                     | Done   | S      | High   | §5          |
 | Implement real `ThemeKnowledgeHealthCheck` logic (views/renderer/assets)                                 | Done   | S      | Med    | §4          |
-| Article feedback ("Was this helpful?") partial                                                           | Later  | M      | Med    | §3          |
-| Versioning / "last updated" / version switcher                                                           | Later  | L      | Med    | §3          |
+| Done/Shipped: Article feedback ("Was this helpful?") affordance                                          | Done   | M      | Med    | §3          |
+| Done/Shipped: Versioning / "last updated" freshness affordance                                           | Done   | L      | Med    | §3          |
 | Extend `PublicOutputSafetyTest`: broader untranslated-literal detection; assert render budget            | Later  | M      | Med    | §4          |

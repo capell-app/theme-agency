@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+@php
+    $articleVersion = is_scalar($article['version'] ?? null) ? (string) $article['version'] : null;
+    $articleLastModified = $article['lastModified'] ?? null;
+    $articleLastModifiedLabel = $articleLastModified instanceof \DateTimeInterface
+        ? $articleLastModified->format('M j, Y')
+        : (is_scalar($articleLastModified) && (string) $articleLastModified !== '' ? substr((string) $articleLastModified, 0, 10) : null);
+@endphp
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8" />
@@ -86,6 +93,34 @@
                                 <p class="mt-5 text-lg leading-8 text-slate-600">
                                     {{ $article['summary'] }}
                                 </p>
+                            @endif
+
+                            @if ($articleVersion !== null || $articleLastModifiedLabel !== null)
+                                <dl
+                                    class="mt-6 flex flex-wrap gap-4 text-sm font-bold text-slate-500"
+                                >
+                                    @if ($articleVersion !== null)
+                                        <div class="flex gap-2">
+                                            <dt>
+                                                {{ __('capell-theme-knowledge::generic.doc_version_label') }}
+                                            </dt>
+                                            <dd class="text-slate-700">
+                                                {{ $articleVersion }}
+                                            </dd>
+                                        </div>
+                                    @endif
+
+                                    @if ($articleLastModifiedLabel !== null)
+                                        <div class="flex gap-2">
+                                            <dt>
+                                                {{ __('capell-theme-knowledge::generic.doc_updated_label') }}
+                                            </dt>
+                                            <dd class="text-slate-700">
+                                                {{ $articleLastModifiedLabel }}
+                                            </dd>
+                                        </div>
+                                    @endif
+                                </dl>
                             @endif
                         </header>
 
