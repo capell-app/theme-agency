@@ -118,6 +118,36 @@
                 "path": "docs/assets/marketplace/extension-card.jpg",
                 "alt": "Shopify Commerce extension preview image",
                 "caption": "Shopify Commerce extension preview"
+            },
+            {
+                "path": "docs/screenshots/shopify-connection-page.png",
+                "alt": "Shopify Commerce connected store page in Capell Admin",
+                "caption": "Review the connected Shopify store, granted scopes, and latest sync timestamp"
+            },
+            {
+                "path": "docs/screenshots/shopify-catalog-sync-state.png",
+                "alt": "Shopify Commerce catalog sync state in Capell Admin",
+                "caption": "Confirm the local catalog cache is populated from a site-scoped Shopify connection"
+            },
+            {
+                "path": "docs/screenshots/shopify-product-search.png",
+                "alt": "Shopify Commerce cached product search in Capell Admin",
+                "caption": "Search synced Shopify products and variants without exposing storefront or token data"
+            },
+            {
+                "path": "docs/screenshots/shopify-connection-page-dark.png",
+                "alt": "Shopify Commerce connected store page in dark mode",
+                "caption": "Connected-store controls remain readable in dark mode"
+            },
+            {
+                "path": "docs/screenshots/shopify-catalog-sync-state-dark.png",
+                "alt": "Shopify Commerce catalog sync state in dark mode",
+                "caption": "Catalog sync status stays legible in Capell Admin dark mode"
+            },
+            {
+                "path": "docs/screenshots/shopify-product-search-dark.png",
+                "alt": "Shopify Commerce product search in dark mode",
+                "caption": "Cached catalog lookup supports Capell Admin dark mode"
             }
         ],
         "categories": ["admin", "commerce", "integrations"]

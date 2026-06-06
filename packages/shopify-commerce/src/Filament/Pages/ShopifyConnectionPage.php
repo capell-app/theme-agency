@@ -85,6 +85,7 @@ final class ShopifyConnectionPage extends Page
     {
         $this->searchResults = new EloquentCollection;
         $this->selectedSiteId = ShopifySiteContext::selectedSiteId(auth()->user());
+        $this->loadCachedProductPreview();
     }
 
     #[Override]
@@ -248,5 +249,22 @@ final class ShopifyConnectionPage extends Page
         $connection = $this->getManageableConnection();
 
         return $connection?->status === ShopifyConnectionStatus::Active ? $connection : null;
+    }
+
+    private function loadCachedProductPreview(): void
+    {
+        $connection = $this->getManageableConnection();
+
+        if (! $connection instanceof ShopifyConnection) {
+            return;
+        }
+
+        $this->searchResults = ShopifyProduct::query()
+            ->withCount('variants')
+            ->where('connection_id', $connection->getKey())
+            ->latest('synced_at')
+            ->latest('id')
+            ->limit(20)
+            ->get();
     }
 }

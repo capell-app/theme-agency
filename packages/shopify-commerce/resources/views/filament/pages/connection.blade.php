@@ -99,14 +99,14 @@
                             {{ __('capell-shopify-commerce::capell-shopify-commerce.connection.last_sync') }}:
                             {{ $connection->last_synced_at?->toDayDateTimeString() ?? __('capell-shopify-commerce::capell-shopify-commerce.connection.never_synced') }}
                         </p>
-                        @if ($connection->status === ShopifyConnectionStatus::Error)
+                        @if ($connection->status === \Capell\ShopifyCommerce\Enums\ShopifyConnectionStatus::Error)
                             <p
                                 role="alert"
                                 class="text-danger-600 dark:text-danger-400 text-sm"
                             >
                                 {{ __('capell-shopify-commerce::capell-shopify-commerce.connection.sync_error') }}
                                 @if (filled($connection->last_sync_error))
-                                    {{ Str::limit(strip_tags((string) $connection->last_sync_error), 140) }}
+                                    {{ \Illuminate\Support\Str::limit(strip_tags((string) $connection->last_sync_error), 140) }}
                                 @endif
                             </p>
                         @endif
