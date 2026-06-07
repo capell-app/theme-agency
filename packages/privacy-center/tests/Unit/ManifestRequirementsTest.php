@@ -15,6 +15,7 @@ use Capell\PrivacyCenter\Actions\OpenPrivacyRequestAction;
 use Capell\PrivacyCenter\Actions\RecordConsentAction;
 use Capell\PrivacyCenter\Actions\RecordPolicyAcceptanceAction;
 use Capell\PrivacyCenter\Actions\RegisterConsentPolicyAction;
+use Capell\PrivacyCenter\Console\Commands\ApplyRetentionRulesCommand;
 use Capell\PrivacyCenter\Enums\CookieCategory;
 use Capell\PrivacyCenter\Filament\Resources\ConsentPolicies\ConsentPolicyResource;
 use Capell\PrivacyCenter\Filament\Resources\ConsentRecords\ConsentRecordResource;
@@ -98,6 +99,8 @@ it('declares privacy center manifest ownership and cache safety', function (): v
             'command' => 'privacy:apply-retention',
             'frequency' => 'daily',
         ])
+        ->and(data_get($manifest, 'commands.retention'))->toBe('privacy:apply-retention')
+        ->and((new ApplyRetentionRulesCommand)->getName())->toBe('privacy:apply-retention')
         ->and(class_implements(ConsentPolicyResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(ConsentRecordResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)
         ->and(class_implements(PolicyAcceptanceResourceContribution::class))->toContain(RegistersExtensionAdminResource::class)

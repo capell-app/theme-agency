@@ -4,6 +4,8 @@ All notable changes to `capell-app/privacy-center` will be documented in this fi
 
 ## Unreleased
 
+- Added focused admin/scheduled-retention coverage for Privacy Center workflow actions, retention rule table actions, and command manifest alignment.
+
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
 - Added the `privacy:apply-retention` console command, registered it with the package provider, scheduled it daily, and exposed the command/frequency in `capell.json` so retention execution is reachable outside tests.
 - Added Action-backed privacy request edit-page workflow actions for marking DSAR requests verified, fulfilled, or rejected without bypassing the audit timestamp fields.
