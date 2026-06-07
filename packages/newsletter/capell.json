@@ -69,6 +69,7 @@
             "routes": [
                 "capell-newsletter.confirm",
                 "capell-newsletter.unsubscribe",
+                "capell-newsletter.unsubscribe.one-click",
                 "capell-newsletter.preferences.show",
                 "capell-newsletter.preferences.update",
                 "capell-newsletter.provider-webhook"
@@ -129,6 +130,7 @@
         "applyNewsletterTags": "Capell\\Newsletter\\Actions\\ApplyNewsletterTagsAction",
         "buildDueNewsletterSends": "Capell\\Newsletter\\Actions\\BuildDueNewsletterSendsAction",
         "confirmSubscriber": "Capell\\Newsletter\\Actions\\ConfirmSubscriberAction",
+        "buildListUnsubscribeHeaders": "Capell\\Newsletter\\Actions\\BuildListUnsubscribeHeadersAction",
         "createPreferenceCenterToken": "Capell\\Newsletter\\Actions\\CreatePreferenceCenterTokenAction",
         "createUnsubscribeToken": "Capell\\Newsletter\\Actions\\CreateUnsubscribeTokenAction",
         "evaluateNewsletterSegment": "Capell\\Newsletter\\Actions\\EvaluateNewsletterSegmentAction",

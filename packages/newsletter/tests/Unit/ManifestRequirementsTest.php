@@ -48,6 +48,7 @@ it('declares implemented newsletter package contributions', function (): void {
     )
         ->and($routes['routes'])->toContain(
             'capell-newsletter.unsubscribe',
+            'capell-newsletter.unsubscribe.one-click',
             'capell-newsletter.preferences.show',
             'capell-newsletter.preferences.update',
             'capell-newsletter.provider-webhook',
@@ -59,6 +60,7 @@ it('declares newsletter segmentation, preference center, campaign send, and attr
     $manifest = newsletterManifest();
 
     expect($manifest['actions'])->toHaveKey('evaluateNewsletterSegment')
+        ->and($manifest['actions'])->toHaveKey('buildListUnsubscribeHeaders')
         ->and($manifest['actions'])->toHaveKey('scheduleNewsletterSend', ScheduleNewsletterSendAction::class)
         ->and($manifest['actions'])->toHaveKey('resolveUtmAttribution', ResolveUtmAttributionAction::class)
         ->and($manifest['actions'])->toHaveKey('updatePreferenceCenter', UpdatePreferenceCenterAction::class)
