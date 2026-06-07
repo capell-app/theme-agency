@@ -36,6 +36,17 @@ return [
         ],
     ],
 
+    'notifications' => [
+        /*
+         * Resolvers that return the recipients (Notifiables) to notify when a new
+         * access request is submitted. Each entry must be a class-string implementing
+         * Capell\AccessGate\Contracts\AdminNotificationRecipientResolver.
+         */
+        'new_request_recipients' => [
+            //
+        ],
+    ],
+
     'registration' => [
         'methods' => [
             'email' => [

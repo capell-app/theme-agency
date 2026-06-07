@@ -11,6 +11,7 @@ use Capell\AccessGate\Actions\ApproveRegistrationAction;
 use Capell\AccessGate\Actions\ExpireRegistrationAction;
 use Capell\AccessGate\Actions\RejectRegistrationAction;
 use Capell\AccessGate\Actions\ResendAccessGateClaimTokenAction;
+use Capell\AccessGate\Enums\AccessAreaStatus;
 use Capell\AccessGate\Enums\RegistrationStatus;
 use Capell\AccessGate\Filament\Resources\Concerns\AccessGateFilamentOptions;
 use Capell\AccessGate\Filament\Resources\Registrations\Pages\ListRegistrations;
@@ -114,7 +115,7 @@ final class RegistrationResource extends Resource
                     Action::make('approve')
                         ->label(__('capell-access-gate::filament.actions.approve'))
                         ->authorize('update')
-                        ->visible(fn (Registration $record): bool => $record->status === RegistrationStatus::Pending)
+                        ->visible(fn (Registration $record): bool => $record->status === RegistrationStatus::Pending && $record->area?->status === AccessAreaStatus::Active)
                         ->action(fn (Registration $record): mixed => ApproveRegistrationAction::run($record, approvedByUserId: auth()->id())),
                     Action::make('reject')
                         ->label(__('capell-access-gate::filament.actions.reject'))
@@ -181,6 +182,25 @@ final class RegistrationResource extends Resource
     public static function shouldRegisterNavigation(): bool
     {
         return CapellCore::getPackage(AccessGateServiceProvider::$packageName)->isInstalled();
+    }
+
+    #[Override]
+    public static function getNavigationBadge(): ?string
+    {
+        $count = AccessGateSiteScope::applyAreaScope(Registration::query())
+            ->where('status', RegistrationStatus::Pending)
+            ->count();
+
+        return $count > 0 ? (string) $count : null;
+    }
+
+    /**
+     * @return string|array<string>|null
+     */
+    #[Override]
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'warning';
     }
 
     #[Override]

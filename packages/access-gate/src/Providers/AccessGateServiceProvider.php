@@ -11,11 +11,13 @@ use Capell\AccessGate\Console\Commands\AccessGateSetupCommand;
 use Capell\AccessGate\Contracts\AccessRequestMethod;
 use Capell\AccessGate\Contracts\RegistrationField;
 use Capell\AccessGate\Enums\ResourceEnum;
+use Capell\AccessGate\Filament\Widgets\PendingAccessRequestsWidget;
 use Capell\AccessGate\Frontend\Rules\AccessGateAreaStatusCondition;
 use Capell\AccessGate\Frontend\Rules\AccessGateRegistrationStatusCondition;
 use Capell\AccessGate\Frontend\Rules\HasActiveAccessGateGrantCondition;
 use Capell\AccessGate\Frontend\Rules\MissingActiveAccessGateGrantCondition;
 use Capell\AccessGate\Http\Middleware\AccessGateMiddleware;
+use Capell\AccessGate\Listeners\NotifyAdminsOfAccessRequest;
 use Capell\AccessGate\Models\Area;
 use Capell\AccessGate\Models\BrowserToken;
 use Capell\AccessGate\Models\ClaimToken;
@@ -134,12 +136,23 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
             'browser_token' => BrowserToken::class,
             'event' => Event::class,
         ], merge: true);
+
+        $this->registerAccessRequestNotifications();
     }
 
     #[Override]
     protected function isPackageInstalled(): bool
     {
         return CapellCore::isPackageInstalled(static::$packageName);
+    }
+
+    private function registerAccessRequestNotifications(): self
+    {
+        Registration::created(function (Registration $registration): void {
+            $this->app->make(NotifyAdminsOfAccessRequest::class)->handle($registration);
+        });
+
+        return $this;
     }
 
     private function registerFrontendRuleConditions(): self
@@ -331,6 +344,10 @@ class AccessGateServiceProvider extends AbstractPackageServiceProvider
                 group: $resource->name,
             ));
         }
+
+        CapellAdmin::contributeToAdminSurface(AdminSurfaceContributionData::widget(
+            PendingAccessRequestsWidget::class,
+        ));
 
         return $this;
     }

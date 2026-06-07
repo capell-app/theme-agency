@@ -19,6 +19,11 @@ return [
         ],
         'subject' => 'Access expired for :area',
     ],
+    'new_request' => [
+        'title' => 'New access request',
+        'body' => ':email requested access to ":area".',
+        'review' => 'Review',
+    ],
     'request_received' => [
         'greeting' => 'Access request received',
         'lines' => [
