@@ -6,6 +6,7 @@ namespace Capell\FrontendAuthoring\Actions;
 
 use Capell\Core\Facades\CapellCore;
 use Capell\FrontendAuthoring\Data\EditableRegionPayloadData;
+use Capell\FrontendAuthoring\Enums\EditableRegionField;
 use Capell\FrontendAuthoring\Enums\EditableRegionSaveStatus;
 use Capell\PublishingStudio\Actions\CopyOnWriteAction;
 use Capell\PublishingStudio\Actions\GenerateWorkspacePreviewUrlAction;
@@ -48,7 +49,7 @@ class UpdateEditableRegionAction
             return $this->saveForApproval($record, $payload, $value, $urls);
         }
 
-        $this->applyValue($record, $payload, $value);
+        $this->applyValue($record, $payload, $this->valueForStorage($payload, $value));
         $record->save();
 
         $cleared = ClearAffectedCachedUrlsAction::run($record, $urls, $payload->currentUrl);
@@ -90,7 +91,7 @@ class UpdateEditableRegionAction
         ]);
 
         $workspaceContextClass::runWith($workspace, function () use ($copyOnWriteActionClass, $record, $payload, $value, $workspace): void {
-            $this->applyValue($record, $payload, $value);
+            $this->applyValue($record, $payload, $this->valueForStorage($payload, $value));
 
             if ((int) ($record->getAttribute('workspace_id') ?? 0) === 0 && class_exists($copyOnWriteActionClass)) {
                 (new $copyOnWriteActionClass)->cloneForEdit($record, $workspace);
@@ -159,5 +160,17 @@ class UpdateEditableRegionAction
         }
 
         abort(403);
+    }
+
+    private function valueForStorage(EditableRegionPayloadData $payload, string $value): string
+    {
+        if ($payload->fieldKind() !== EditableRegionField::Content) {
+            return $value;
+        }
+
+        // Frontend Authoring is an admin-only signed editor surface. Keep content
+        // HTML exactly as submitted; public output policy stays with Capell's
+        // normal rendering/theme layer.
+        return $value;
     }
 }

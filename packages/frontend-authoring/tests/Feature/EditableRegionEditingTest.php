@@ -348,6 +348,20 @@ it('saves text rich html and meta edits while clearing every affected cached pag
     ],
 ]);
 
+it('stores admin-authored content html exactly according to the trusted admin policy', function (): void {
+    $user = User::factory()->create();
+    actingAs($user);
+    allowEditableRegionEdits();
+
+    $translation = createEditableRegionTranslation();
+    $html = '<section data-test="trusted"><script>window.__adminHtml = true;</script><p>Admin-authored HTML</p></section>';
+
+    UpdateEditableRegionAction::run(editableRegionPayload($translation, 'content'), $html, $user);
+
+    expect($translation->refresh()->content)->toBe($html)
+        ->and(config('capell-frontend-authoring.html_policy'))->toBe('trusted_admin_raw');
+});
+
 it('saves inline edits into an approval workspace and returns a preview redirect when approval is required', function (): void {
     Config::set('capell-frontend-authoring.workflow.require_approval', true);
     CapellCore::forcePackageInstalled(PublishingStudioServiceProvider::$packageName);

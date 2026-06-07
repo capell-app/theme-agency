@@ -15,4 +15,6 @@ return [
         'page_title' => '#main h1:first-of-type',
         'page_content' => '#main .content-component:first-of-type',
     ],
+
+    'html_policy' => 'trusted_admin_raw',
 ];
