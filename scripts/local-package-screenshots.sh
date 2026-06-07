@@ -8,6 +8,8 @@ RUNNER_PATH="${CAPELL_SCREENSHOT_RUNNER_PATH:-/Users/ben/Sites/packages/capell/c
 CORE_REPO_PATH="${CAPELL_CORE_REPO_PATH:-/Users/ben/Sites/packages/capell/capell-4}"
 DRY_RUN=false
 SKIP_BUILD=false
+SKIP_PREPARE=false
+REUSE_APP=false
 ONLY_ARGS=()
 
 usage() {
@@ -22,6 +24,8 @@ Options:
   --env-file <path>      Env file. Defaults to .env.deploy.local.
   --dry-run              Validate manifests without browser capture.
   --skip-build           Pass --skip-build to the screenshot runner.
+  --skip-prepare         Do not run the runner app prepare step.
+  --reuse-app            Reuse a prepared app/database and skip setup/demo commands.
   -h, --help             Show this help.
 USAGE
 }
@@ -56,6 +60,16 @@ while [[ $# -gt 0 ]]; do
       SKIP_BUILD=true
       shift
       ;;
+    --skip-prepare)
+      SKIP_PREPARE=true
+      shift
+      ;;
+    --reuse-app)
+      REUSE_APP=true
+      SKIP_PREPARE=true
+      SKIP_BUILD=true
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
@@ -85,13 +99,18 @@ export CAPELL_PACKAGES_REPO_PATH="${ROOT}"
 export CAPELL_PACKAGES_REPO="${ROOT}"
 export CAPELL_REPO="${CORE_REPO_PATH}"
 export CAPELL_SCREENSHOT_APP_PATH="${RUNNER_PATH}"
-export CAPELL_ADMIN_URL="${CAPELL_ADMIN_URL:-http://127.0.0.1:8000/admin}"
-export CAPELL_FRONTEND_URL="${CAPELL_FRONTEND_URL:-http://127.0.0.1:8000}"
+export CAPELL_ADMIN_URL="${CAPELL_ADMIN_URL:-http://127.0.0.1:8145}"
+export CAPELL_FRONTEND_URL="${CAPELL_FRONTEND_URL:-http://127.0.0.1:8145}"
+export CAPELL_SCREENSHOT_ADMIN_EMAIL="${CAPELL_SCREENSHOT_ADMIN_EMAIL:-test@example.com}"
+export CAPELL_SCREENSHOT_ADMIN_PASSWORD="${CAPELL_SCREENSHOT_ADMIN_PASSWORD:-password}"
 export DB_CONNECTION="${DB_CONNECTION:-sqlite}"
 export DB_DATABASE="${DB_DATABASE:-${RUNNER_PATH}/database/database.sqlite}"
+export CACHE_STORE="${CACHE_STORE:-array}"
 export CAPELL_SCREENSHOT_SKIP_COMPOSER_UPDATE="${CAPELL_SCREENSHOT_SKIP_COMPOSER_UPDATE:-true}"
 
-npm ci --prefix "${RUNNER_PATH}"
+if [[ "${REUSE_APP}" != true || ! -d "${RUNNER_PATH}/node_modules/playwright" ]]; then
+  npm ci --prefix "${RUNNER_PATH}"
+fi
 
 if [[ "${DRY_RUN}" == true ]]; then
   npm run screenshots:validate -- "${ONLY_ARGS[@]}"
@@ -101,13 +120,27 @@ fi
 
 npm run screenshots:manifest
 npm run screenshots:validate -- "${ONLY_ARGS[@]}"
-npm run install:browsers --prefix "${RUNNER_PATH}"
-npm run prepare:app --prefix "${RUNNER_PATH}"
+
+if [[ "${REUSE_APP}" != true ]]; then
+  npm run install:browsers --prefix "${RUNNER_PATH}"
+fi
+
+if [[ "${SKIP_PREPARE}" != true ]]; then
+  npm run prepare:app --prefix "${RUNNER_PATH}"
+fi
+
+if [[ "${REUSE_APP}" == true ]]; then
+  find "${RUNNER_PATH}/storage/framework/cache/data" -type f ! -name '.gitignore' -delete
+fi
 
 SCREENSHOT_ARGS=(--runner "${RUNNER_PATH}" --repo "${ROOT}" "${ONLY_ARGS[@]}")
 
 if [[ "${SKIP_BUILD}" == true ]]; then
   SCREENSHOT_ARGS+=(--skip-build)
+fi
+
+if [[ "${REUSE_APP}" == true ]]; then
+  SCREENSHOT_ARGS+=(--reuse-app)
 fi
 
 npm run screenshots:capture -- "${SCREENSHOT_ARGS[@]}"

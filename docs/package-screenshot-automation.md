@@ -23,6 +23,7 @@ Deployment can generate package screenshots from the committed screenshot manife
 - `entries[].surface`: `admin` or `frontend`.
 - `entries[].targetType`: `admin-surface` or `frontend-url`.
 - `entries[].target`: resource/page class name when known, otherwise deployment resolves from seeded content.
+- `entries[].user`: optional screenshot actor. Set `false` for anonymous frontend captures; `null` is treated as the runner default user.
 - `entries[].docsPage`: optional markdown page where the screenshot is referenced.
 - `entries[].output`: optional concrete output file when the package commits a docs screenshot or requires a stable filename.
 - `browserTests`: optional browser scenario contracts the deployment runner must execute after package installation.
@@ -37,6 +38,49 @@ Package marketplace screenshots declared in `capell.json` must point at committe
 ## Notes
 
 The package repo does not need to run a browser during docs generation. It commits the contract that the demo/docs deployment can consume after package installation.
+
+## Local Persistent Prepared App
+
+For local package screenshot QA, reuse the prepared app at `/Users/ben/Sites/packages/capell/capell-screenshot-runner` instead of recreating it for every run. The runner app is intentionally persistent, so do not reset or rebuild it unless the task explicitly requires a fresh state.
+
+Use base URLs without `/admin`; the screenshot runner appends `/admin/login` when it authenticates:
+
+```bash
+export CAPELL_SCREENSHOT_RUNNER_PATH=/Users/ben/Sites/packages/capell/capell-screenshot-runner
+export CAPELL_ADMIN_URL=http://127.0.0.1:8145
+export CAPELL_FRONTEND_URL=http://127.0.0.1:8145
+export CAPELL_SCREENSHOT_ADMIN_EMAIL=test@example.com
+export CAPELL_SCREENSHOT_ADMIN_PASSWORD=password
+export CACHE_STORE=array
+```
+
+Start the prepared app once from the runner checkout:
+
+```bash
+cd /Users/ben/Sites/packages/capell/capell-screenshot-runner
+php artisan serve --host=127.0.0.1 --port=8145
+```
+
+Then capture a package from this repo without preparing, reseeding, or rebuilding the app:
+
+```bash
+scripts/local-package-screenshots.sh --package layout-builder --reuse-app
+```
+
+`--reuse-app` also clears `storage/framework/cache/data` in the prepared app before capture. That removes stale serialized DTOs from previous package/code revisions while preserving seeded content and compiled assets.
+
+If the persistent database is missing public page data, seed it once from the runner checkout before using `--reuse-app`:
+
+```bash
+php -d memory_limit=512M artisan capell:admin-demo \
+  --url=http://127.0.0.1:8145 \
+  --user=test@example.com \
+  --sites=capell-screenshots \
+  --languages=en \
+  --page-count=4 \
+  --seed=8145 \
+  --reset
+```
 
 ## GitHub Automation
 
