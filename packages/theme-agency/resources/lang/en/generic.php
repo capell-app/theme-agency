@@ -5,6 +5,13 @@ declare(strict_types=1);
 return [
     'campaign_system' => 'Campaign system',
     'case_signal' => 'Case',
+    'case_study_approach_label' => 'Approach',
+    'case_study_challenge_label' => 'Challenge',
+    'case_study_empty_summary' => 'Add the challenge, approach, result, metrics, and media to turn this into a complete case study.',
+    'case_study_empty_title' => 'Add case study details',
+    'case_study_gallery_label' => 'Project gallery',
+    'case_study_metric_label' => 'Result metric',
+    'case_study_result_label' => 'Result',
     'case_study_signal' => 'Case study',
     'channel_signal' => 'Channel',
     'concept_signal' => 'Concept',

@@ -29,7 +29,7 @@ it('defines the agency free renderer contract', function (): void {
         ->and($definition->key)->toBe(AgencyThemeServiceProvider::THEME_KEY)
         ->and($definition->previewImage)->toBe(AgencyThemeServiceProvider::PUBLIC_PREVIEW_IMAGE)
         ->and($definition->assets)->toBe(['css' => AgencyThemeServiceProvider::GENERATED_FRONTEND_CSS])
-        ->and($definition->includedSections)->toContain('hero', 'features', 'proof', 'project-showcase', 'cta')
+        ->and($definition->includedSections)->toContain('hero', 'features', 'proof', 'project-showcase', 'case-study', 'cta')
         ->and($definition->presets)->toHaveCount(6)
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->tags)->toContain('Expressive')
@@ -149,6 +149,7 @@ it('declares renderers for every included agency section', function (): void {
         'proof',
         'content-listing',
         'project-showcase',
+        'case-study',
         'cta',
         'footer',
     ]);
@@ -288,7 +289,8 @@ it('renders a dedicated agency project showcase section', function (): void {
         ->toContain('alt="Retail launch campaign wall"')
         ->toContain('loading="lazy"')
         ->toContain('Retail launch system')
-        ->toContain('Year 2026')
+        ->toContain('Year')
+        ->toContain('2026')
         ->toContain('Launched')
         ->toContain('B2B brand sprint')
         ->toContain('site-brand-gradient')
@@ -312,6 +314,78 @@ it('renders the agency project showcase empty state', function (): void {
     expect($html)
         ->toContain('Add project stories')
         ->toContain('Add selected work, campaign launches, or portfolio projects')
+        ->not->toContain('data-field')
+        ->not->toContain('model_id')
+        ->not->toContain('capell-app/theme-agency');
+});
+
+it('renders a dedicated agency case study section', function (): void {
+    View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/lang');
+
+    $provider = new AgencyThemeServiceProvider($this->app);
+    $method = new ReflectionMethod($provider, 'sectionRenderers');
+    $renderer = $method->invoke($provider)['case-study'] ?? null;
+
+    expect($renderer)->not->toBeNull();
+
+    $html = $renderer->render(agencyThemeSection('case-study', [
+        'heading' => 'Repositioning a national retail launch',
+        'summary' => 'A full-funnel campaign system for a new seasonal range.',
+        'client' => 'Northline Retail',
+        'discipline' => 'Campaign',
+        'year' => '2026',
+        'mediaUrl' => '/images/case-hero.jpg',
+        'mediaAlt' => 'Retail launch case study hero',
+        'challenge' => 'The team needed one launch idea across retail, social, and partner channels.',
+        'approach' => 'We built a modular campaign system with channel-specific creative rules.',
+        'result' => 'The launch exceeded paid media benchmarks and improved store team adoption.',
+        'metrics' => [
+            ['label' => 'Lift', 'value' => '+38%'],
+            ['label' => 'Assets', 'value' => '72'],
+        ],
+        'gallery' => [
+            ['url' => '/images/case-gallery-1.jpg', 'alt' => 'Campaign poster system'],
+            ['url' => '/images/case-gallery-2.jpg', 'alt' => 'Social launch frames'],
+        ],
+    ]));
+
+    expect($html)
+        ->toContain('Case study')
+        ->toContain('Repositioning a national retail launch')
+        ->toContain('Northline Retail')
+        ->toContain('Campaign')
+        ->toContain('2026')
+        ->toContain('src="/images/case-hero.jpg"')
+        ->toContain('alt="Retail launch case study hero"')
+        ->toContain('Challenge')
+        ->toContain('Approach')
+        ->toContain('Result')
+        ->toContain('The team needed one launch idea')
+        ->toContain('+38%')
+        ->toContain('Project gallery')
+        ->toContain('src="/images/case-gallery-1.jpg"')
+        ->toContain('loading="lazy"')
+        ->not->toContain('capell-app/theme-agency')
+        ->not->toContain('capell-theme-agency');
+});
+
+it('renders the agency case study empty state', function (): void {
+    View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-agency::sections.case-study', [
+        'section' => (object) [
+            'heading' => 'Case study',
+            'summary' => null,
+            'metrics' => [],
+            'gallery' => [],
+        ],
+    ])->render();
+
+    expect($html)
+        ->toContain('Add case study details')
+        ->toContain('Add the challenge, approach, result, metrics, and media')
         ->not->toContain('data-field')
         ->not->toContain('model_id')
         ->not->toContain('capell-app/theme-agency');
