@@ -9,6 +9,7 @@ return [
     'dispatch_retry_seconds' => 60,
     'dispatch_backoff_seconds' => [60, 300, 900],
     'dispatch_retry_jitter_seconds' => 15,
+    'submission_retention_days' => 365,
     'webhook_timeout_seconds' => 10,
     'allow_insecure_webhook_urls' => false,
     'allow_private_webhook_urls' => false,

@@ -8,6 +8,7 @@ use Capell\Admin\Data\AdminSurfaceContributionData;
 use Capell\Admin\Facades\CapellAdmin;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Packages\AbstractPackageServiceProvider;
+use Capell\PublicActions\Console\Commands\PrunePublicActionSubmissionsCommand;
 use Capell\PublicActions\Contracts\PublicActionWebhookHostResolver;
 use Capell\PublicActions\Enums\ResourceEnum;
 use Capell\PublicActions\Listeners\SubmitPublicActionFromFormSubmission;
@@ -54,6 +55,7 @@ class PublicActionsServiceProvider extends AbstractPackageServiceProvider
             ->hasTranslations()
             ->hasViews(self::$name)
             ->hasRoute('web')
+            ->hasCommand(PrunePublicActionSubmissionsCommand::class)
             ->hasMigrations([
                 '2026_05_10_190865_01_create_public_actions_table',
                 '2026_05_10_190865_02_create_public_action_destinations_table',

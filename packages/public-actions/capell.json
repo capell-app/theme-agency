@@ -42,13 +42,15 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "prune": "capell:public-actions:prune-submissions"
     },
     "settings": [],
     "permissions": [],
     "capabilities": [
         "automation-webhooks",
         "durable-dispatch-fanout",
+        "submission-retention-pruning",
         "public-form",
         "public-actions",
         "submit-actions",

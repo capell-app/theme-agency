@@ -338,6 +338,40 @@ it('queues asynchronous destination dispatches after successful submissions', fu
         ->and($attempt->destination)->toBeInstanceOf(PublicActionDestination::class);
 });
 
+it('prunes submissions older than the configured retention window', function (): void {
+    $action = PublicAction::factory()->create();
+    $destination = PublicActionDestination::factory()->for($action, 'action')->create();
+    $oldSubmission = PublicActionSubmission::factory()->for($action, 'action')->create([
+        'submitted_at' => now()->subDays(45),
+    ]);
+    $recentSubmission = PublicActionSubmission::factory()->for($action, 'action')->create([
+        'submitted_at' => now()->subDays(5),
+    ]);
+
+    PublicActionDispatchAttempt::factory()
+        ->for($oldSubmission, 'submission')
+        ->for($destination, 'destination')
+        ->create();
+    PublicActionDispatchAttempt::factory()
+        ->for($recentSubmission, 'submission')
+        ->for($destination, 'destination')
+        ->create();
+
+    $this
+        ->artisan('capell:public-actions:prune-submissions', ['--days' => 30, '--dry-run' => true])
+        ->assertSuccessful();
+
+    expect(PublicActionSubmission::query()->count())->toBe(2)
+        ->and(PublicActionDispatchAttempt::query()->count())->toBe(2);
+
+    $this
+        ->artisan('capell:public-actions:prune-submissions', ['--days' => 30])
+        ->assertSuccessful();
+
+    expect(PublicActionSubmission::query()->pluck('id')->all())->toBe([(int) $recentSubmission->getKey()])
+        ->and(PublicActionDispatchAttempt::query()->count())->toBe(1);
+});
+
 it('marks submissions failed when no handler is registered for the action', function (): void {
     PublicAction::factory()->create([
         'key' => 'missing-handler-action',
