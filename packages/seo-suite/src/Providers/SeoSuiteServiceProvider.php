@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\SeoSuite\Providers;
 
 use Capell\Admin\Contracts\DashboardSettingsContributor;
+use Capell\Admin\Contracts\Extenders\PageAuthoringValidator;
 use Capell\Admin\Contracts\Extenders\PageHeaderActionExtender;
 use Capell\Admin\Contracts\Extenders\PageResourceWidgetExtender;
 use Capell\Admin\Contracts\Extenders\PageSchemaExtender;
@@ -111,6 +112,7 @@ use Capell\SeoSuite\Support\Admin\PageContentEditorConfigurator;
 use Capell\SeoSuite\Support\Admin\PageSeoAuditPageResourceWidgetExtender;
 use Capell\SeoSuite\Support\Admin\PageTitleWithSlugInputExtender;
 use Capell\SeoSuite\Support\Admin\RemoveInlineSeoTranslationComponents;
+use Capell\SeoSuite\Support\Admin\SeoAuthoringQualityGateValidator;
 use Capell\SeoSuite\Support\AiDiscovery\AiDiscoveryDiscoveryOutputSource;
 use Capell\SeoSuite\Support\AiFeatureRegistry;
 use Capell\SeoSuite\Support\AiRateLimiter;
@@ -347,6 +349,10 @@ class SeoSuiteServiceProvider extends AbstractPackageServiceProvider
         $this->app->tag([
             PageSpeedPageTableExtender::class,
         ], PageTableExtender::TAG);
+
+        $this->app->tag([
+            SeoAuthoringQualityGateValidator::class,
+        ], PageAuthoringValidator::TAG);
 
         return $this;
     }

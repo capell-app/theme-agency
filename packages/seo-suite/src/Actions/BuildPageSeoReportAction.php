@@ -74,11 +74,11 @@ final class BuildPageSeoReportAction
                 issues: $issues,
                 key: SeoCheckKeyEnum::MetaDescription,
                 value: $metaDescription,
-                minimum: 50,
-                maximum: 160,
+                minimum: $settings->metaDescriptionMinimumLength(),
+                maximum: $settings->metaDescriptionMaximumLength(),
                 missingMessage: __('capell-seo-suite::generic.seo_issue_meta_description_missing'),
-                shortMessage: __('capell-seo-suite::generic.seo_issue_meta_description_short'),
-                longMessage: __('capell-seo-suite::generic.seo_issue_meta_description_long'),
+                shortMessage: __('capell-seo-suite::generic.seo_issue_meta_description_short', ['min' => $settings->metaDescriptionMinimumLength()]),
+                longMessage: __('capell-seo-suite::generic.seo_issue_meta_description_long', ['max' => $settings->metaDescriptionMaximumLength()]),
             );
         }
 

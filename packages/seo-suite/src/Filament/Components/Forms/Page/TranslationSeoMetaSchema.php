@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\SeoSuite\Filament\Components\Forms\Page;
 
 use Capell\Admin\Filament\Support\HelperText;
+use Capell\SeoSuite\Settings\SeoSuiteSettings;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -30,7 +31,7 @@ class TranslationSeoMetaSchema
             HelperText::apply(
                 Textarea::make('description')
                     ->label(__('capell-admin::form.meta_description.label'))
-                    ->maxLength(400)
+                    ->maxLength(fn (): int => resolve(SeoSuiteSettings::class)->metaDescriptionMaximumLength())
                     ->rows(5)
                     ->columnSpanFull()
                     ->helperCountText(),
