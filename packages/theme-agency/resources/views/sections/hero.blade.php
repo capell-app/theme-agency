@@ -17,7 +17,7 @@
                 {{ $section->heading }}
             </h1>
             @if ($section->summary)
-                <p class="mt-6 max-w-xl text-lg leading-8 text-white/70">
+                <p class="mt-6 max-w-xl text-lg leading-8 text-white/85">
                     {{ $section->summary }}
                 </p>
             @endif
@@ -37,7 +37,7 @@
                 class="mt-10 grid max-w-xl grid-cols-3 gap-3 text-xs font-black uppercase"
             >
                 <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p class="text-white/45">
+                    <p class="text-white/75">
                         {{ __('capell-theme-agency::generic.hero_status_label') }}
                     </p>
                     <p class="mt-2 text-[var(--theme-accent)]">
@@ -45,16 +45,20 @@
                     </p>
                 </div>
                 <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p class="text-white/45">
+                    <p class="text-white/75">
                         {{ __('capell-theme-agency::generic.hero_channels_label') }}
                     </p>
-                    <p class="mt-2 text-white">08</p>
+                    <p class="mt-2 text-white">
+                        {{ __('capell-theme-agency::generic.hero_channels_value') }}
+                    </p>
                 </div>
                 <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p class="text-white/45">
+                    <p class="text-white/75">
                         {{ __('capell-theme-agency::generic.hero_calendar_label') }}
                     </p>
-                    <p class="mt-2 text-white">14d</p>
+                    <p class="mt-2 text-white">
+                        {{ __('capell-theme-agency::generic.hero_calendar_value') }}
+                    </p>
                 </div>
             </div>
         </div>
@@ -91,9 +95,9 @@
                                             {{ __('capell-theme-agency::generic.hero_scene_label') }}
                                         </span>
                                         <span
-                                            class="font-mono text-xs font-black text-white/55"
+                                            class="font-mono text-xs font-black text-white/75"
                                         >
-                                            01
+                                            {{ __('capell-theme-agency::generic.hero_scene_value') }}
                                         </span>
                                     </div>
                                     <div class="mt-20 space-y-3">
@@ -125,7 +129,7 @@
                             class="rounded-[1.25rem] border border-white/10 bg-white/10 p-4"
                         >
                             <p
-                                class="text-xs font-black tracking-[0.18em] text-white/60 uppercase"
+                                class="text-xs font-black tracking-[0.18em] text-white/75 uppercase"
                             >
                                 {{ __('capell-theme-agency::generic.hero_asset_label') }}
                             </p>
@@ -173,7 +177,7 @@
                             class="rounded-[1.25rem] border border-white/10 bg-white/10 p-4"
                         >
                             <p
-                                class="text-xs font-black tracking-[0.18em] text-white/60 uppercase"
+                                class="text-xs font-black tracking-[0.18em] text-white/75 uppercase"
                             >
                                 {{ __('capell-theme-agency::generic.launch_room') }}
                             </p>

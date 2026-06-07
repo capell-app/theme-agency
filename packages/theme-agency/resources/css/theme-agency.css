@@ -40,8 +40,8 @@
         max-width: 12ch;
         font-family: var(--theme-heading-font, inherit);
         font-size: clamp(3rem, 8vw, 6.5rem);
-        font-weight: 900;
-        line-height: 0.92;
+        font-weight: 850;
+        line-height: 1;
         letter-spacing: 0;
     }
 
@@ -123,7 +123,7 @@
     }
 
     .agency-shell .theme-hero p {
-        color: rgba(255, 255, 255, 0.72);
+        color: rgba(255, 255, 255, 0.82);
     }
 
     .agency-shell .theme-hero a {

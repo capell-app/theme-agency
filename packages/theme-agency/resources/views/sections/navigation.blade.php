@@ -10,7 +10,7 @@
             {{ $section->brandName }}
         </a>
         <div
-            class="hidden items-center gap-6 text-sm font-semibold tracking-wide text-white/70 uppercase md:flex"
+            class="hidden items-center gap-6 text-sm font-semibold tracking-wide text-white/80 uppercase md:flex"
         >
             @foreach ($section->items as $item)
                 <a

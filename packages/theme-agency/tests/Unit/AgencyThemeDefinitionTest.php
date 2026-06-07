@@ -80,6 +80,40 @@ it('declares surface and foreground tokens for every agency preset', function ()
         });
 });
 
+it('keeps agency preset shell contrast at WCAG AA levels', function (): void {
+    $definition = AgencyThemeServiceProvider::definition();
+
+    collect($definition->presets)
+        ->each(function (ThemePresetData $preset): void {
+            expect(agencyThemeContrastRatio(
+                $preset->values['surfaceColor'],
+                $preset->values['foregroundColor'],
+            ))->toBeGreaterThanOrEqual(4.5, sprintf(
+                'Preset [%s] surface/foreground contrast must be at least 4.5:1.',
+                $preset->key,
+            ));
+        });
+});
+
+it('guards against low contrast agency public copy classes', function (): void {
+    $css = file_get_contents(__DIR__ . '/../../resources/css/theme-agency.css') ?: '';
+    $sectionViews = implode("\n", array_map(
+        static fn (string $path): string => file_get_contents($path) ?: '',
+        glob(__DIR__ . '/../../resources/views/sections/*.blade.php') ?: [],
+    ));
+
+    expect($css)
+        ->not->toContain('line-height: 0.92')
+        ->and($sectionViews)->not->toContain('text-white/45')
+        ->and($sectionViews)->not->toContain('text-white/55')
+        ->and($sectionViews)->not->toContain('text-white/60')
+        ->and($sectionViews)->not->toContain('text-white/65')
+        ->and($sectionViews)->not->toContain('text-white/70')
+        ->and($sectionViews)->not->toContain('>08<')
+        ->and($sectionViews)->not->toContain('>14d<')
+        ->and($sectionViews)->not->toContain('>01<');
+});
+
 it('renders the page shell from brand surface and foreground tokens', function (): void {
     View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
 
@@ -443,6 +477,37 @@ function agencyThemeSection(string $key, array $viewData): ThemeSection
             return ['section' => (object) $this->viewData];
         }
     };
+}
+
+function agencyThemeContrastRatio(string $backgroundHex, string $foregroundHex): float
+{
+    $background = agencyThemeRelativeLuminance($backgroundHex);
+    $foreground = agencyThemeRelativeLuminance($foregroundHex);
+
+    $lighter = max($background, $foreground);
+    $darker = min($background, $foreground);
+
+    return ($lighter + 0.05) / ($darker + 0.05);
+}
+
+function agencyThemeRelativeLuminance(string $hex): float
+{
+    $normalizedHex = ltrim($hex, '#');
+
+    $channels = [
+        hexdec(substr($normalizedHex, 0, 2)) / 255,
+        hexdec(substr($normalizedHex, 2, 2)) / 255,
+        hexdec(substr($normalizedHex, 4, 2)) / 255,
+    ];
+
+    [$red, $green, $blue] = array_map(
+        static fn (float $channel): float => $channel <= 0.03928
+            ? $channel / 12.92
+            : (($channel + 0.055) / 1.055) ** 2.4,
+        $channels,
+    );
+
+    return (0.2126 * $red) + (0.7152 * $green) + (0.0722 * $blue);
 }
 
 it('registers agency tailwind imports and blade sources when installed', function (): void {
