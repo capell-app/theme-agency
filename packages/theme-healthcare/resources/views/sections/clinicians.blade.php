@@ -19,7 +19,7 @@
                 class="flex snap-x snap-mandatory [scrollbar-width:none] gap-5 overflow-x-auto pr-6 pb-2 lg:grid lg:grid-cols-4 lg:overflow-visible lg:pr-0 [&::-webkit-scrollbar]:hidden"
                 data-carousel-track
             >
-                @foreach (($section->items ?? []) as $item)
+                @forelse (($section->items ?? []) as $item)
                     <a
                         href="{{ $item['url'] ?? '#' }}"
                         class="group min-w-[240px] snap-start overflow-hidden rounded-xl border border-stone-200 bg-white transition hover:-translate-y-1 hover:border-[#0f766e] hover:shadow-lg lg:min-w-0"
@@ -55,7 +55,20 @@
                             </p>
                         </div>
                     </a>
-                @endforeach
+                @empty
+                    <article
+                        class="min-w-[240px] snap-start rounded-xl border border-dashed border-stone-200 bg-white p-6 lg:min-w-0"
+                    >
+                        <p
+                            class="text-xs font-black tracking-widest text-[#0f766e] uppercase"
+                        >
+                            {{ __('capell-theme-healthcare::generic.clinical_trust_label') }}
+                        </p>
+                        <h3 class="mt-3 text-xl font-black text-[#14323a]">
+                            {{ __('capell-theme-healthcare::generic.team_ready') }}
+                        </h3>
+                    </article>
+                @endforelse
             </div>
 
             <button

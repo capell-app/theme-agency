@@ -17,7 +17,7 @@
 
         <div class="healthcare-frame bg-[#f6fbfd] p-5">
             <div class="grid gap-3">
-                @foreach ($filters as $filter)
+                @forelse ($filters as $filter)
                     <div
                         class="rounded-xl border border-stone-200 bg-white p-4"
                     >
@@ -34,7 +34,18 @@
                             @endforeach
                         </div>
                     </div>
-                @endforeach
+                @empty
+                    <div
+                        class="rounded-xl border border-dashed border-stone-200 bg-white p-4"
+                    >
+                        <p class="text-xs font-black text-[#0f766e] uppercase">
+                            {{ __('capell-theme-healthcare::generic.finder_filter') }}
+                        </p>
+                        <h3 class="mt-3 text-lg font-black text-[#14323a]">
+                            {{ __('capell-theme-healthcare::generic.finder_ready') }}
+                        </h3>
+                    </div>
+                @endforelse
             </div>
         </div>
     </div>

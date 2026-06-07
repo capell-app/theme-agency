@@ -44,6 +44,14 @@ it('keeps public Blade free of authoring or package metadata', function (): void
         ->not->toContain('permission');
 });
 
+it('keeps public Blade free of inline scripts', function (): void {
+    $blade = healthcareThemeBladeViews();
+
+    expect($blade)
+        ->not->toContain('<script')
+        ->not->toContain('</script>');
+});
+
 it('keeps public Blade free of database query calls', function (): void {
     $blade = healthcareThemeBladeViews();
 

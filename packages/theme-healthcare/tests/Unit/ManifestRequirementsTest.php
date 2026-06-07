@@ -37,8 +37,11 @@ describe('theme healthcare capell.json manifest', function (): void {
             ->and($marketplace['description'])->toBe('Theme Healthcare turns Capell into a conversion-focused clinical website. It ships nineteen care-oriented sections — an appointment hero, service finder, clinician carousel, care-pathway guidance, insurance/trust signals, locations, events, and a booking panel — that route patients toward the right enquiry with calm, clinical styling. The booking, events, and resource sections light up automatically when Capell Bookings/Form Builder, Events, and Blog are installed, with no theme reconfiguration. Built on Foundation Theme with accessible focus states and a skip link, it activates from the Themes screen and seeds a full demo via `capell:theme-healthcare-demo`.')
             ->and($screenshotPaths)->toBe([
                 'docs/assets/marketplace/extension-card.jpg',
-                'docs/assets/marketplace/hero-desktop.jpg',
-                'docs/assets/marketplace/hero-mobile.jpg',
+                'docs/screenshots/healthcare-homepage-desktop.png',
+                'docs/screenshots/healthcare-homepage-mobile.png',
+                'docs/screenshots/healthcare-services-listing.png',
+                'docs/screenshots/healthcare-clinician-detail.png',
+                'docs/screenshots/healthcare-contact-page.png',
             ]);
 
         foreach ($screenshotPaths as $screenshotPath) {

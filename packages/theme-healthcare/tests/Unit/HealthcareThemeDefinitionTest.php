@@ -195,7 +195,7 @@ it('renders public healthcare markup without forbidden package or authoring toke
             ]),
             healthcareThemeSection('contact', [
                 'heading' => 'Locations',
-                'items' => [['title' => 'Cardiff clinic', 'address' => 'Central Cardiff', 'phone' => '02920 000000']],
+                'items' => [['title' => 'Cardiff clinic', 'address' => 'Central Cardiff', 'phone' => '02920 000000', 'hours' => 'Mon-Fri 08:00-18:00', 'mapUrl' => 'https://maps.example/cardiff']],
             ]),
             new CtaSectionData(
                 heading: 'Start with the right appointment',
@@ -227,6 +227,9 @@ it('renders public healthcare markup without forbidden package or authoring toke
         ->toContain('width="800"')
         ->toContain('Previous items')
         ->toContain('Next items')
+        ->toContain('href="tel:02920000000"')
+        ->toContain('Mon-Fri 08:00-18:00')
+        ->toContain('https://maps.example/cardiff')
         ->toContain('Clinical trust')
         ->toContain('Safety review')
         ->toContain('Escalation route')
@@ -368,6 +371,8 @@ it('passes optional Form Builder availability through the registered booking ren
     $html = $renderer->render(healthcareThemeSection('booking', [
         'heading' => 'Request an appointment',
         'items' => [['title' => 'Same-week triage']],
+        'formHtml' => '<form action="/appointments" method="post"><button type="submit">Send request</button></form>',
+        'phone' => '02920 000000',
     ]));
 
     expect($html)
@@ -377,8 +382,8 @@ it('passes optional Form Builder availability through the registered booking ren
         ->not->toContain('form-builder')
         ->not->toContain('capell-app/');
 })->with([
-    'form builder installed' => [true, 'Appointment request ready', 'Contact route ready'],
-    'form builder not installed' => [false, 'Contact route ready', 'Appointment request ready'],
+    'form builder installed' => [true, '<form action="/appointments" method="post">', 'Call the clinic'],
+    'form builder not installed' => [false, 'Call the clinic', '<form action="/appointments" method="post">'],
 ]);
 
 it('passes optional Events availability through the registered events renderer', function (bool $eventsInstalled, string $expectedMarkup, string $missingMarkup): void {
@@ -404,11 +409,58 @@ it('passes optional Events availability through the registered events renderer',
 
     expect($html)
         ->toContain($expectedMarkup)
+        ->toContain('data-carousel="healthcare-events"')
+        ->toContain('data-carousel-track')
+        ->not->toContain('<script>')
         ->not->toContain($missingMarkup);
 })->with([
-    'events installed' => [true, 'href="/events/heart-health"', 'grid gap-4 rounded-lg border border-[#d9e8ee] bg-[#f6fbfd] p-5 md:grid-cols-[8rem_1fr]"'],
-    'events not installed' => [false, 'grid gap-4 rounded-lg border border-[#d9e8ee] bg-[#f6fbfd] p-5 md:grid-cols-[8rem_1fr]"', 'href="/events/heart-health"'],
+    'events installed' => [true, 'href="/events/heart-health"', '<article'],
+    'events not installed' => [false, '<article', 'href="/events/heart-health"'],
 ]);
+
+it('renders healthcare item-driven empty states and location contact fields', function (): void {
+    View::addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
+
+    $serviceFinderHtml = view('capell-theme-healthcare::sections.service-finder', [
+        'section' => (object) ['heading' => 'Find care', 'items' => []],
+    ])->render();
+
+    $servicesHtml = view('capell-theme-healthcare::sections.services', [
+        'section' => (object) ['heading' => 'Services', 'items' => []],
+    ])->render();
+
+    $cliniciansHtml = view('capell-theme-healthcare::sections.clinicians', [
+        'section' => (object) ['heading' => 'Clinicians', 'items' => []],
+    ])->render();
+
+    $contactHtml = view('capell-theme-healthcare::sections.contact', [
+        'section' => (object) ['heading' => 'Contact', 'items' => []],
+    ])->render();
+
+    $locationsHtml = view('capell-theme-healthcare::sections.locations', [
+        'section' => (object) [
+            'heading' => 'Locations',
+            'items' => [[
+                'title' => 'North clinic',
+                'address' => '12 High Street',
+                'hours' => 'Mon-Fri 08:00-18:00',
+                'phone' => '02920 000000',
+                'mapUrl' => 'https://maps.example/north',
+            ]],
+        ],
+    ])->render();
+
+    expect($serviceFinderHtml)
+        ->toContain('Service finder filters are ready for patient pathway planning.')
+        ->and($servicesHtml)->toContain('Clinical service cards are ready for publication.')
+        ->and($cliniciansHtml)->toContain('Clinician profiles are ready for publication.')
+        ->and($contactHtml)->toContain('Clinic access details are ready for contact and visit planning.')
+        ->and($locationsHtml)->toContain('12 High Street')
+        ->and($locationsHtml)->toContain('Mon-Fri 08:00-18:00')
+        ->and($locationsHtml)->toContain('href="tel:02920000000"')
+        ->and($locationsHtml)->toContain('https://maps.example/north');
+});
 
 it('passes optional Blog availability through the registered blog teaser renderer', function (bool $blogInstalled, string $expectedMarkup, string $missingMarkup): void {
     View::addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/views');

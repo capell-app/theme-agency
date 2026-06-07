@@ -35,7 +35,7 @@
                 class="{{ $usesCarousel ? 'flex max-w-full snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 md:grid md:grid-cols-3 md:overflow-visible md:pr-0 lg:grid-cols-4 [&::-webkit-scrollbar]:hidden' : $gridClass }}"
                 data-carousel-track
             >
-                @foreach ($services as $service)
+                @forelse ($services as $service)
                     <article
                         class="{{ $usesCarousel ? 'min-w-[250px] snap-start sm:min-w-[270px] md:min-w-0' : '' }} rounded-xl border border-stone-200 bg-[#f6fbfd] p-3 transition hover:-translate-y-1 hover:border-[#0f766e] hover:shadow-lg"
                     >
@@ -83,7 +83,18 @@
                             @endif
                         </div>
                     </article>
-                @endforeach
+                @empty
+                    <article
+                        class="rounded-xl border border-dashed border-stone-200 bg-[#f6fbfd] p-6"
+                    >
+                        <p class="text-xs font-black text-[#0f766e] uppercase">
+                            {{ __('capell-theme-healthcare::generic.service_label') }}
+                        </p>
+                        <h3 class="mt-3 text-lg font-black text-[#14323a]">
+                            {{ __('capell-theme-healthcare::generic.services_ready') }}
+                        </h3>
+                    </article>
+                @endforelse
             </div>
 
             <button

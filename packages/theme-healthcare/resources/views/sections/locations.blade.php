@@ -37,6 +37,47 @@
                         <p class="text-sm leading-6 text-slate-600">
                             {{ $item['summary'] ?? __('capell-theme-healthcare::generic.locations_ready') }}
                         </p>
+                        @if ($item['address'] ?? null)
+                            <p
+                                class="mt-2 text-xs font-black text-[#14323a] uppercase"
+                            >
+                                {{ __('capell-theme-healthcare::generic.location_address') }}
+                            </p>
+                            <p class="text-sm leading-6 text-slate-600">
+                                {{ $item['address'] }}
+                            </p>
+                        @endif
+
+                        @if ($item['hours'] ?? $item['openingHours'] ?? null)
+                            <p
+                                class="mt-2 text-xs font-black text-[#14323a] uppercase"
+                            >
+                                {{ __('capell-theme-healthcare::generic.location_hours') }}
+                            </p>
+                            <p class="text-sm leading-6 text-slate-600">
+                                {{ $item['hours'] ?? $item['openingHours'] }}
+                            </p>
+                        @endif
+
+                        <div class="mt-3 flex flex-wrap gap-3">
+                            @if ($item['phone'] ?? null)
+                                <a
+                                    href="tel:{{ preg_replace('/[^0-9+]/', '', (string) $item['phone']) }}"
+                                    class="text-sm font-black text-[#0f766e]"
+                                >
+                                    {{ __('capell-theme-healthcare::generic.location_phone') }}
+                                </a>
+                            @endif
+
+                            @if ($item['mapUrl'] ?? null)
+                                <a
+                                    href="{{ $item['mapUrl'] }}"
+                                    class="text-sm font-black text-[#2563eb]"
+                                >
+                                    {{ __('capell-theme-healthcare::generic.location_map') }}
+                                </a>
+                            @endif
+                        </div>
                     </article>
                 @empty
                     <article
