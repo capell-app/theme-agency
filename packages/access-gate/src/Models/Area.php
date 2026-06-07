@@ -35,6 +35,7 @@ use Override;
  * @property array<int, string|array{url?: string, host?: string, path?: string}>|null $public_allowlist
  * @property array<int, string>|null $claim_url_hosts
  * @property string|null $gate_view
+ * @property string|null $claim_landing_url
  * @property array<array-key, mixed>|null $metadata
  * @property string|null $discount_label
  * @property string|null $discount_code
@@ -63,6 +64,7 @@ class Area extends AccessGateModel
         'public_allowlist',
         'claim_url_hosts',
         'gate_view',
+        'claim_landing_url',
         'metadata',
         'discount_label',
         'discount_code',

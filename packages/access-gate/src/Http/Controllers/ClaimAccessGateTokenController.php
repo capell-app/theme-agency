@@ -10,7 +10,6 @@ use Capell\AccessGate\Models\Area;
 use Capell\AccessGate\Models\BrowserToken;
 use Capell\AccessGate\Support\AccessGateResponseHeaders;
 use Capell\AccessGate\Support\RequestedUrlGuard;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cookie;
@@ -22,7 +21,7 @@ final class ClaimAccessGateTokenController
         private readonly RequestedUrlGuard $requestedUrls,
     ) {}
 
-    public function __invoke(Request $request, string $token): RedirectResponse|Response
+    public function __invoke(Request $request, string $token): Response
     {
         $issuedBrowserToken = $this->consumeClaimToken->handle($token, [
             'ip_hash' => hash('sha256', (string) $request->ip()),
@@ -42,12 +41,16 @@ final class ClaimAccessGateTokenController
 
         $browserToken = $issuedBrowserToken->token->loadMissing('grant.registration', 'area');
         $area = $browserToken->area;
-        $redirectUrl = $area instanceof Area
-            ? $this->requestedUrls->redirectUrl($request, $area, $browserToken->grant?->registration?->requested_url)
+        $continueUrl = $area instanceof Area
+            ? $this->requestedUrls->claimLandingUrl($request, $area, $browserToken->grant?->registration?->requested_url)
             : url('/');
 
-        $response = redirect($redirectUrl)
-            ->withCookie($this->browserCookie($request, $issuedBrowserToken->plainTextToken));
+        $response = response()->view('capell-access-gate::claimed', [
+            'title' => __('capell-access-gate::public.claim_succeeded.title'),
+            'message' => __('capell-access-gate::public.claim_succeeded.message'),
+            'continueUrl' => $continueUrl,
+            'continueLabel' => __('capell-access-gate::public.claim_succeeded.continue'),
+        ])->withCookie($this->browserCookie($request, $issuedBrowserToken->plainTextToken));
 
         AccessGateResponseHeaders::noStore($response);
 

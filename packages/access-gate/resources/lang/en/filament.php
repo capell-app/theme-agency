@@ -22,6 +22,8 @@ return [
         'approval_strategy' => 'Approval strategy',
         'approved_at' => 'Approved',
         'area' => 'Area',
+        'claim_landing_url' => 'Claim landing URL',
+        'claim_landing_url_help' => 'Where users land after claiming access. Use a relative path (e.g. /account) for this site, or a full URL on an allowed claim host. Leave empty to return them to the page they requested access from.',
         'claim_url_hosts' => 'Claim URL hosts',
         'claimed_at' => 'Claimed',
         'closes_at' => 'Gate closes at',

@@ -566,7 +566,9 @@ it('claims access with a one-time token and stores the browser token cookie', fu
     $this
         ->withHeader('User-Agent', 'AccessGateTest/1.0')
         ->get(route('capell-access-gate.claim', ['token' => $issuedClaimToken->plainTextToken]))
-        ->assertRedirect('https://example.test/preview')
+        ->assertOk()
+        ->assertSee(__('capell-access-gate::public.claim_succeeded.title'))
+        ->assertSee('href="https://example.test/preview"', false)
         ->assertCookie(config('access-gate.cookies.browser_token.name'));
 
     $browserToken = BrowserToken::query()->firstOrFail();
@@ -575,7 +577,27 @@ it('claims access with a one-time token and stores the browser token cookie', fu
         ->and($browserToken->user_agent)->toBe('AccessGateTest/1.0');
 });
 
-it('does not redirect claimed users to untrusted requested urls', function (): void {
+it('lands claimed users on the configured area landing url', function (): void {
+    $area = Area::factory()->create([
+        'claim_url_hosts' => ['example.test'],
+        'claim_landing_url' => '/account',
+    ]);
+    $registration = Registration::factory()
+        ->for($area, 'area')
+        ->create(['requested_url' => 'https://example.test/preview']);
+    $grant = Grant::factory()
+        ->for($area, 'area')
+        ->for($registration, 'registration')
+        ->create();
+    $issuedClaimToken = resolve(CreateAccessGateClaimTokenAction::class)->handle($grant);
+
+    $this->get(route('capell-access-gate.claim', ['token' => $issuedClaimToken->plainTextToken]))
+        ->assertOk()
+        ->assertSee('href="' . url('/account') . '"', false)
+        ->assertCookie(config('access-gate.cookies.browser_token.name'));
+});
+
+it('does not send claimed users to untrusted requested urls', function (): void {
     $area = Area::factory()->create([
         'claim_url_hosts' => ['example.test'],
     ]);
@@ -589,10 +611,12 @@ it('does not redirect claimed users to untrusted requested urls', function (): v
     $issuedClaimToken = resolve(CreateAccessGateClaimTokenAction::class)->handle($grant);
 
     $this->get(route('capell-access-gate.claim', ['token' => $issuedClaimToken->plainTextToken]))
-        ->assertRedirect(url('/'));
+        ->assertOk()
+        ->assertSee('href="' . url('/') . '"', false)
+        ->assertDontSee('attacker.test');
 });
 
-it('does not redirect claimed users to non-http requested urls on trusted hosts', function (): void {
+it('does not send claimed users to non-http requested urls on trusted hosts', function (): void {
     $area = Area::factory()->create([
         'claim_url_hosts' => ['localhost'],
     ]);
@@ -606,7 +630,9 @@ it('does not redirect claimed users to non-http requested urls on trusted hosts'
     $issuedClaimToken = resolve(CreateAccessGateClaimTokenAction::class)->handle($grant);
 
     $this->get(route('capell-access-gate.claim', ['token' => $issuedClaimToken->plainTextToken]))
-        ->assertRedirect(url('/'));
+        ->assertOk()
+        ->assertSee('href="' . url('/') . '"', false)
+        ->assertDontSee('javascript:', false);
 });
 
 it('revokes the local browser token on access gate logout', function (): void {
