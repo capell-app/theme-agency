@@ -282,6 +282,20 @@ it('routes commerce section palette utilities through retail tokens', function (
     expect($offendingViews)->toBe([]);
 });
 
+it('ships token-driven dark mode for commerce shell surfaces', function (): void {
+    $css = file_get_contents(__DIR__ . '/../../resources/css/theme-commerce.css') ?: '';
+
+    expect($css)
+        ->toContain(':where(.dark .retail-shell, .retail-shell.dark)')
+        ->toContain('--retail-surface: #101913')
+        ->toContain('--retail-panel: #1c2a22')
+        ->toContain('--retail-deep: #07100b')
+        ->toContain(':is(.bg-white, .bg-zinc-50)')
+        ->toContain(':is(.border-stone-200, .border-stone-300, .border-zinc-200)')
+        ->toContain('.text-\\[var\\(--retail-ink\\)\\]')
+        ->toContain('input, textarea, select');
+});
+
 it('renders translated fallback and data-driven hero trust badges', function (): void {
     View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
     resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');

@@ -26,6 +26,77 @@
         );
     }
 
+    :where(.dark .retail-shell, .retail-shell.dark) {
+        --retail-ink: #f8fafc;
+        --retail-muted: #cbd5c8;
+        --retail-line: #314239;
+        --retail-primary: color-mix(
+            in srgb,
+            var(--theme-primary, #1f5f4a) 78%,
+            white
+        );
+        --retail-accent: color-mix(
+            in srgb,
+            var(--theme-accent, #e86f5c) 84%,
+            white
+        );
+        --retail-surface: #101913;
+        --retail-warm: #17251d;
+        --retail-panel: #1c2a22;
+        --retail-deep: #07100b;
+
+        background: linear-gradient(
+            180deg,
+            var(--retail-deep) 0%,
+            var(--retail-surface) 44%,
+            #0b130e 100%
+        );
+        color: var(--retail-ink);
+    }
+
+    :where(.dark .retail-shell, .retail-shell.dark)
+        :is(.bg-white, .bg-zinc-50) {
+        background-color: var(--retail-panel) !important;
+    }
+
+    :where(.dark .retail-shell, .retail-shell.dark)
+        :is(.border-stone-200, .border-stone-300, .border-zinc-200) {
+        border-color: var(--retail-line) !important;
+    }
+
+    :where(.dark .retail-shell, .retail-shell.dark)
+        :is(
+            .text-stone-500,
+            .text-stone-600,
+            .text-stone-700,
+            .text-zinc-500,
+            .text-zinc-600
+        ) {
+        color: var(--retail-muted) !important;
+    }
+
+    :where(.dark .retail-shell, .retail-shell.dark)
+        :is(.text-\[var\(--retail-ink\)\], .text-zinc-950, .text-black) {
+        color: var(--retail-ink) !important;
+    }
+
+    :where(.dark .retail-shell, .retail-shell.dark)
+        :is(.bg-\[var\(--retail-surface\)\], .bg-stone-50) {
+        background-color: var(--retail-surface) !important;
+    }
+
+    :where(.dark .retail-shell, .retail-shell.dark) .retail-frame {
+        border-color: var(--retail-line);
+        box-shadow: 0 24px 70px rgb(0 0 0 / 34%);
+    }
+
+    :where(.dark .retail-shell, .retail-shell.dark)
+        :is(input, textarea, select) {
+        background-color: var(--retail-deep);
+        border-color: var(--retail-line);
+        color: var(--retail-ink);
+    }
+
     .retail-shell section {
         padding: clamp(4.5rem, 8vw, 7.5rem) 1.5rem;
     }
