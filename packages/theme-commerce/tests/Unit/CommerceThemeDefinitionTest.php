@@ -134,8 +134,15 @@ it('registers commerce tailwind imports and blade sources when installed', funct
         ->pluck('value')
         ->all();
 
+    $packageBuildAssets = CapellCore::getVendorAssetsForType(VendorAssetEnum::BuildAsset)
+        ->filter(fn (mixed $asset): bool => $asset->packageName === CommerceThemeServiceProvider::$packageName)
+        ->map(fn (mixed $asset): string => $asset->path() . '/' . $asset->file())
+        ->all();
+
     expect($packageImports)->toContain('resources/css/theme-commerce.css')
-        ->and($packageSources)->toContain('resources/views/**/*.blade.php');
+        ->and($packageSources)->toContain('resources/views/**/*.blade.php')
+        ->and($packageBuildAssets)->toContain('vendor/capell-theme-commerce/resources/js/theme-commerce.js')
+        ->and(file_exists(__DIR__ . '/../../resources/js/theme-commerce.js'))->toBeTrue();
 });
 
 it('renders public theme markup without forbidden package or authoring tokens', function (): void {
@@ -727,6 +734,93 @@ it('renders core commerce sections directly', function (string $view, object $se
         'New arrivals',
     ],
 ]);
+
+it('renders a real commerce comparison table', function (): void {
+    View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-commerce::sections.comparison', [
+        'section' => (object) [
+            'heading' => 'Compare kits',
+            'summary' => 'Choose the right bundle.',
+            'criteria' => [
+                ['label' => 'Materials'],
+                ['label' => 'Best for'],
+            ],
+            'items' => [
+                [
+                    'title' => 'Field kit',
+                    'price' => '$148',
+                    'specs' => [
+                        ['label' => 'Materials', 'value' => 'Waxed canvas'],
+                        ['label' => 'Best for', 'value' => 'Daily carry'],
+                    ],
+                ],
+                [
+                    'title' => 'Travel kit',
+                    'price' => '$224',
+                    'specs' => [
+                        ['label' => 'Materials', 'value' => 'Ripstop nylon'],
+                        ['label' => 'Best for', 'value' => 'Long trips'],
+                    ],
+                ],
+            ],
+        ],
+    ])->render();
+
+    expect($html)
+        ->toContain('<table')
+        ->toContain('Retail product comparison')
+        ->toContain('Feature')
+        ->toContain('Field kit')
+        ->toContain('$148')
+        ->toContain('Travel kit')
+        ->toContain('Materials')
+        ->toContain('Waxed canvas')
+        ->toContain('Long trips')
+        ->not->toContain('model_id')
+        ->not->toContain('field_path');
+});
+
+it('renders catalog carousel controls as visible stateful controls', function (): void {
+    View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-commerce::sections.catalog', [
+        'section' => (object) [
+            'heading' => 'Catalog',
+            'summary' => 'Browse ranges.',
+            'items' => [
+                ['title' => 'Outdoor'],
+                ['title' => 'Kitchen'],
+                ['title' => 'Travel'],
+            ],
+        ],
+    ])->render();
+
+    expect($html)
+        ->toContain('aria-live="polite"')
+        ->toContain('data-carousel-status')
+        ->toContain('aria-disabled="true"')
+        ->toContain('Previous items')
+        ->toContain('Next items')
+        ->toContain('→')
+        ->not->toContain('carousel-prev absolute top-1/2 left-2 hidden')
+        ->not->toContain('carousel-next absolute top-1/2 right-2 hidden')
+        ->not->toContain('‹')
+        ->not->toContain('›');
+});
+
+it('ships generic reduced-motion carousel behavior for commerce', function (): void {
+    $script = file_get_contents(__DIR__ . '/../../resources/js/theme-commerce.js') ?: '';
+
+    expect($script)
+        ->toContain("querySelectorAll('[data-carousel]')")
+        ->toContain('prefers-reduced-motion: reduce')
+        ->toContain('aria-disabled')
+        ->toContain('data-carousel-status')
+        ->toContain('scrollBy');
+});
 
 it('renders catalog highlight copy through translations with generic public selectors', function (): void {
     View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');

@@ -1,5 +1,43 @@
 @php
-    $items = $section->items ?? $section->features ?? [];
+    $columns = $section->columns ?? $section->items ?? $section->features ?? [];
+    $criteria = collect($section->criteria ?? [])
+        ->map(static fn (mixed $criterion): array => is_array($criterion) ? $criterion : ['label' => (string) $criterion])
+        ->values();
+
+    if ($criteria->isEmpty()) {
+        $criteria = collect($columns)
+            ->flatMap(static fn (array $column): array => $column['specs'] ?? $column['criteria'] ?? [])
+            ->map(static fn (mixed $criterion): array => is_array($criterion) ? $criterion : ['label' => (string) $criterion])
+            ->filter(static fn (array $criterion): bool => ($criterion['label'] ?? '') !== '')
+            ->unique('label')
+            ->values();
+    }
+
+    if ($criteria->isEmpty()) {
+        $criteria = collect([
+            ['label' => __('capell-theme-commerce::generic.comparison_summary_label'), 'key' => 'summary'],
+        ]);
+    }
+
+    $comparisonValue = static function (array $column, array $criterion): string {
+        $key = $criterion['key'] ?? null;
+
+        if (is_string($key) && isset($column[$key]) && is_scalar($column[$key])) {
+            return (string) $column[$key];
+        }
+
+        foreach (($column['specs'] ?? $column['criteria'] ?? []) as $spec) {
+            if (! is_array($spec)) {
+                continue;
+            }
+
+            if (($spec['label'] ?? null) === ($criterion['label'] ?? null)) {
+                return (string) ($spec['value'] ?? $spec['summary'] ?? '');
+            }
+        }
+
+        return '';
+    };
 @endphp
 
 <section class="retail-comparison bg-[var(--retail-surface)]">
@@ -18,20 +56,59 @@
         </div>
 
         <div
-            class="mt-10 overflow-hidden rounded-xl border border-stone-200 bg-white"
+            class="mt-10 overflow-x-auto rounded-xl border border-stone-200 bg-white"
         >
-            @foreach ($items as $item)
-                <div
-                    class="grid gap-4 border-b border-stone-200 p-5 last:border-b-0 md:grid-cols-[0.45fr_1fr] md:items-center"
-                >
-                    <h3 class="text-lg font-black">
-                        {{ $item['title'] ?? $item['label'] ?? '' }}
-                    </h3>
-                    <p class="text-sm">
-                        {{ $item['description'] ?? $item['summary'] ?? '' }}
-                    </p>
-                </div>
-            @endforeach
+            <table class="min-w-full border-collapse text-left text-sm">
+                <caption class="sr-only">
+                    {{ __('capell-theme-commerce::generic.comparison_caption') }}
+                </caption>
+                <thead>
+                    <tr
+                        class="border-b border-stone-200 bg-[var(--retail-panel)]"
+                    >
+                        <th
+                            scope="col"
+                            class="w-48 p-4 text-xs font-black tracking-[0.14em] text-[var(--retail-primary)] uppercase"
+                        >
+                            {{ __('capell-theme-commerce::generic.comparison_feature_label') }}
+                        </th>
+                        @foreach ($columns as $column)
+                            <th
+                                scope="col"
+                                class="min-w-48 p-4 text-base font-black text-[var(--retail-ink)]"
+                            >
+                                {{ $column['title'] ?? $column['label'] ?? '' }}
+                                @if (! empty($column['price']))
+                                    <span
+                                        class="mt-1 block text-sm font-black text-[var(--retail-accent)]"
+                                    >
+                                        {{ $column['price'] }}
+                                    </span>
+                                @endif
+                            </th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($criteria as $criterion)
+                        <tr class="border-b border-stone-200 last:border-b-0">
+                            <th
+                                scope="row"
+                                class="p-4 text-xs font-black tracking-[0.14em] text-[var(--retail-primary)] uppercase"
+                            >
+                                {{ $criterion['label'] ?? '' }}
+                            </th>
+                            @foreach ($columns as $column)
+                                <td
+                                    class="p-4 text-sm leading-6 text-stone-600"
+                                >
+                                    {{ $comparisonValue($column, $criterion) }}
+                                </td>
+                            @endforeach
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </section>

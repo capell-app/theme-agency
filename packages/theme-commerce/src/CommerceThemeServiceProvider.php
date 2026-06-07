@@ -23,6 +23,10 @@ class CommerceThemeServiceProvider extends ServiceProvider
 {
     public const string THEME_KEY = 'commerce';
 
+    public const string BUILD_ASSET_PATH = 'vendor/capell-theme-commerce';
+
+    public const string BUILD_ASSET_FILE = 'resources/js/theme-commerce.js';
+
     public static string $packageName = 'capell-app/theme-commerce';
 
     public static function definition(): ThemeDefinitionData
@@ -101,6 +105,14 @@ class CommerceThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
+        CapellCore::registerVendorAsset(
+            VendorAssetData::buildAsset(
+                path: self::BUILD_ASSET_PATH,
+                file: self::BUILD_ASSET_FILE,
+                packageName: self::$packageName,
+            ),
+        );
+
         CapellCore::registerVendorAsset(
             VendorAssetData::tailwindImport('resources/css/theme-commerce.css', self::$packageName),
         );

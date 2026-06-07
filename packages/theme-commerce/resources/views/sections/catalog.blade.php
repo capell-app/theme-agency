@@ -23,6 +23,16 @@
                 class="theme-carousel relative mt-8 max-w-full min-w-0 overflow-hidden"
                 data-carousel="catalog"
             >
+                <p
+                    class="sr-only"
+                    aria-live="polite"
+                    data-carousel-status
+                    data-carousel-scrollable-label="{{ __('capell-theme-commerce::generic.carousel_scrollable') }}"
+                    data-carousel-static-label="{{ __('capell-theme-commerce::generic.carousel_static') }}"
+                >
+                    {{ __('capell-theme-commerce::generic.carousel_static') }}
+                </p>
+
                 <div
                     class="flex max-w-full snap-x snap-mandatory [scrollbar-width:none] gap-3 overflow-x-auto pr-6 pb-2 sm:grid sm:grid-cols-3 [&::-webkit-scrollbar]:hidden"
                     data-carousel-track
@@ -38,19 +48,27 @@
 
                 <button
                     type="button"
-                    class="theme-carousel-button carousel-prev absolute top-1/2 left-2 hidden -translate-y-1/2 rounded-full border border-stone-200 bg-white p-2 text-sm font-semibold shadow-md"
+                    class="theme-carousel-button carousel-prev absolute top-1/2 left-2 -translate-y-1/2 rounded-full border border-stone-200 bg-white p-2 text-sm font-semibold shadow-md"
                     aria-label="{{ __('capell-theme-commerce::generic.carousel_previous') }}"
+                    aria-disabled="true"
                     data-carousel-prev
                 >
-                    ‹
+                    <span aria-hidden="true">←</span>
+                    <span class="sr-only">
+                        {{ __('capell-theme-commerce::generic.carousel_previous') }}
+                    </span>
                 </button>
                 <button
                     type="button"
-                    class="theme-carousel-button carousel-next absolute top-1/2 right-2 hidden -translate-y-1/2 rounded-full border border-stone-200 bg-white p-2 text-sm font-semibold shadow-md"
+                    class="theme-carousel-button carousel-next absolute top-1/2 right-2 -translate-y-1/2 rounded-full border border-stone-200 bg-white p-2 text-sm font-semibold shadow-md"
                     aria-label="{{ __('capell-theme-commerce::generic.carousel_next') }}"
+                    aria-disabled="true"
                     data-carousel-next
                 >
-                    ›
+                    <span aria-hidden="true">→</span>
+                    <span class="sr-only">
+                        {{ __('capell-theme-commerce::generic.carousel_next') }}
+                    </span>
                 </button>
             </div>
 
