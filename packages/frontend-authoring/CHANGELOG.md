@@ -4,6 +4,7 @@ All notable changes to `capell-app/frontend-authoring` will be documented in thi
 
 ## Unreleased
 
+- Added a built-in `media` editor surface and registered it beside the existing field surface, with manifest/controller coverage for package-supplied media regions.
 - Documented and covered the admin-only content HTML policy: frontend authoring stores trusted admin `content` HTML exactly as submitted.
 - Replaced editable-region field/type/surface/status string comparisons with backed enums while preserving the public payload values used by signed editor URLs.
 - Extracted beacon response assembly into `BuildBeaconResponseAction` so the controller delegates admin manifest, page resolution, origin checks, and script rendering to an Action.

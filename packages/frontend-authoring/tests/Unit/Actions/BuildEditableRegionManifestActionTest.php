@@ -11,6 +11,7 @@ use Capell\Core\Models\Translation;
 use Capell\FrontendAuthoring\Actions\BuildEditableRegionManifestAction;
 use Capell\FrontendAuthoring\Data\EditableRegionPayloadData;
 use Capell\FrontendAuthoring\Enums\EditableRegionInputType;
+use Capell\FrontendAuthoring\Enums\EditableRegionSurface;
 use Capell\FrontendAuthoring\Support\EditableRegionSigner;
 use Illuminate\Support\Facades\Config;
 
@@ -139,6 +140,80 @@ it('includes package supplied editable region extenders', function (): void {
             'selector' => '[data-edit-summary]',
             'surface' => 'field',
         ]);
+});
+
+it('includes package supplied media editor regions without changing field defaults', function (): void {
+    $language = Language::factory()->create();
+    $site = Site::factory()->create(['language_id' => $language->getKey()]);
+    $siteDomain = SiteDomain::factory()
+        ->for($site)
+        ->for($language)
+        ->create([
+            'scheme' => 'https',
+            'domain' => 'example.test',
+            'path' => '/',
+            'status' => true,
+        ]);
+    $page = Page::factory()->site($site)->create();
+    $translation = Translation::factory()
+        ->translatable($page)
+        ->language($language)
+        ->create();
+    $pageUrl = PageUrl::factory()
+        ->site($site)
+        ->language($language)
+        ->page($page)
+        ->create(['url' => '/media-editor-page']);
+
+    $page->setRelation('translation', $translation);
+    $pageUrl->setRelation('pageable', $page);
+    $pageUrl->setRelation('siteDomain', $siteDomain);
+
+    app()->bind('frontend-authoring-test.media-region', fn (): callable => fn (PageUrl $resolvedPageUrl): array => [
+        new EditableRegionPayloadData(
+            model: PageUrl::class,
+            recordKey: (int) $resolvedPageUrl->getKey(),
+            field: 'meta.hero_image',
+            label: 'Hero image',
+            type: EditableRegionInputType::Text,
+            selector: '[data-edit-hero-image]',
+            currentUrl: $resolvedPageUrl->full_url,
+            pageUrlId: (int) $resolvedPageUrl->getKey(),
+            siteId: (int) $resolvedPageUrl->site_id,
+            languageId: (int) $resolvedPageUrl->language_id,
+            regionKey: 'test.hero-image',
+            surface: EditableRegionSurface::Media,
+            target: 'hero-image',
+            description: 'Replace the hero image.',
+            context: ['collection' => 'hero'],
+        ),
+    ]);
+    app()->tag('frontend-authoring-test.media-region', 'capell-frontend-authoring:editable-regions');
+
+    $manifest = BuildEditableRegionManifestAction::run($pageUrl);
+
+    $defaultTitleRegion = editableRegionByField(array_values($manifest), 'title');
+    $mediaRegion = collect(array_values($manifest))
+        ->first(fn (array $editableRegion): bool => $editableRegion['label'] === 'Hero image');
+
+    expect($mediaRegion)->toBeArray();
+    assert(is_array($mediaRegion));
+
+    $payload = editableRegionPayloadFromEditUrl((string) $mediaRegion['edit_url']);
+
+    expect($defaultTitleRegion)->toMatchArray([
+        'surface' => 'field',
+    ])
+        ->and($mediaRegion)->toMatchArray([
+            'label' => 'Hero image',
+            'type' => 'text',
+            'selector' => '[data-edit-hero-image]',
+            'surface' => 'media',
+            'target' => 'hero-image',
+            'description' => 'Replace the hero image.',
+            'context' => ['collection' => 'hero'],
+        ])
+        ->and($payload->surface)->toBe(EditableRegionSurface::Media);
 });
 
 function editableRegionPayloadFromEditUrl(string $editUrl): EditableRegionPayloadData

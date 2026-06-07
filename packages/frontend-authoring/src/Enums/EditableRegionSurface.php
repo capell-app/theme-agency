@@ -9,6 +9,7 @@ use Filament\Support\Contracts\HasLabel;
 enum EditableRegionSurface: string implements HasLabel
 {
     case Field = 'field';
+    case Media = 'media';
 
     public function getLabel(): string
     {

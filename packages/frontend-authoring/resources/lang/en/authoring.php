@@ -52,6 +52,7 @@ return [
         ],
     ],
     'inline_editor' => 'Inline editor',
+    'media_editor_description' => 'Review or replace the selected media field without leaving the current page.',
     'meta_description' => 'Page description',
     'page_content' => 'Page content',
     'page_title' => 'Page title',
@@ -71,6 +72,7 @@ return [
     'show_edit_areas' => 'Show edit areas',
     'surfaces' => [
         'field' => 'Field',
+        'media' => 'Media',
     ],
     'toggle_edit_mode' => 'Toggle edit mode',
     'updated' => 'Updated',
