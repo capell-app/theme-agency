@@ -73,6 +73,7 @@ final class EventsPublicUrlContributor implements PublicUrlContributor
             isSitemapEligible: true,
             isAiDiscoveryEligible: true,
             changeFrequency: 'daily',
+            title: $occurrence->event->name,
         );
     }
 }

@@ -68,6 +68,7 @@ final class KnowledgeBasePublicUrlContributor implements PublicUrlContributor
                 isAiDiscoveryEligible: true,
                 priority: '0.7',
                 changeFrequency: 'weekly',
+                title: $article->currentVersion?->title ?? $article->title,
             ))
             ->values();
     }

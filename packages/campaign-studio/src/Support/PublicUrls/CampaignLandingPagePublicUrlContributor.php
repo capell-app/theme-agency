@@ -22,7 +22,7 @@ final class CampaignLandingPagePublicUrlContributor implements PublicUrlContribu
     public function publicUrls(): Collection
     {
         return CampaignLandingPage::query()
-            ->with(['page.pageUrls.siteDomain', 'page.pageUrls.language', 'page.site'])
+            ->with(['page.pageUrls.siteDomain', 'page.pageUrls.language', 'page.site', 'page.translation'])
             ->get()
             ->flatMap(fn (CampaignLandingPage $landingPage): Collection => $this->publicUrlsForLandingPage($landingPage))
             ->unique(fn (PublicUrlData $url): string => $url->site->getKey() . '|' . $url->language->getKey() . '|' . $url->canonicalUrl)
@@ -58,6 +58,7 @@ final class CampaignLandingPagePublicUrlContributor implements PublicUrlContribu
                     isAiDiscoveryEligible: true,
                     priority: is_numeric($page->meta['priority'] ?? null) ? number_format((float) $page->meta['priority'], 1, '.', '') : null,
                     changeFrequency: is_string($page->meta['changefreq'] ?? null) ? $page->meta['changefreq'] : null,
+                    title: $page->translation->label ?? $page->name,
                 );
             })
             ->filter(fn (?PublicUrlData $url): bool => $url instanceof PublicUrlData)
