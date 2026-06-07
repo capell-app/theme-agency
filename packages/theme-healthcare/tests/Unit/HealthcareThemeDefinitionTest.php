@@ -292,13 +292,33 @@ it('routes healthcare section colours through theme tokens', function (): void {
         ->toContain('font-weight: 760');
 });
 
+it('ships dark-mode healthcare tokens through class and media strategies', function (): void {
+    $css = file_get_contents(__DIR__ . '/../../resources/css/theme-healthcare.css') ?: '';
+
+    expect($css)
+        ->toContain(':where(.dark .healthcare-shell, .healthcare-shell.dark)')
+        ->toContain('@media (prefers-color-scheme: dark)')
+        ->toContain('--healthcare-ink: var(--theme-foreground-dark, #e5f3f2)')
+        ->toContain('--healthcare-surface: var(--theme-surface-dark, #0f1f24)')
+        ->toContain('--healthcare-primary: var(--theme-primary-dark, #5eead4)')
+        ->toContain('--healthcare-accent: var(--theme-accent-dark, #fbbf24)')
+        ->toContain('.bg-white')
+        ->toContain('.text-stone-600')
+        ->toContain('box-shadow: 0 24px 70px rgb(0 0 0 / 32%)');
+});
+
 it('keeps default healthcare token contrast at WCAG AA levels', function (): void {
     expect(healthcareContrastRatio('#14323a', '#f6fbfd'))->toBeGreaterThanOrEqual(9.0)
         ->and(healthcareContrastRatio('#425866', '#f6fbfd'))->toBeGreaterThanOrEqual(6.0)
         ->and(healthcareContrastRatio('#0f766e', '#ffffff'))->toBeGreaterThanOrEqual(4.5)
         ->and(healthcareContrastRatio('#1d4ed8', '#ffffff'))->toBeGreaterThanOrEqual(4.5)
         ->and(healthcareContrastRatio('#f59e0b', '#14323a'))->toBeGreaterThanOrEqual(4.5)
-        ->and(healthcareContrastRatio('#ffffff', '#14323a'))->toBeGreaterThanOrEqual(9.0);
+        ->and(healthcareContrastRatio('#ffffff', '#14323a'))->toBeGreaterThanOrEqual(9.0)
+        ->and(healthcareContrastRatio('#e5f3f2', '#0f1f24'))->toBeGreaterThanOrEqual(9.0)
+        ->and(healthcareContrastRatio('#b8c8cf', '#0f1f24'))->toBeGreaterThanOrEqual(6.0)
+        ->and(healthcareContrastRatio('#5eead4', '#0f1f24'))->toBeGreaterThanOrEqual(7.0)
+        ->and(healthcareContrastRatio('#fbbf24', '#0f1f24'))->toBeGreaterThanOrEqual(8.0)
+        ->and(healthcareContrastRatio('#93c5fd', '#0f1f24'))->toBeGreaterThanOrEqual(7.0);
 });
 
 it('renders standard feature and content listing sections through healthcare registry fallbacks', function (): void {

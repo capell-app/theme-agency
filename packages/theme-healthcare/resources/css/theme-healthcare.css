@@ -144,4 +144,111 @@
     .healthcare-shell :is(.healthcare-proof, .healthcare-final-cta) p {
         color: #f5f5f4;
     }
+
+    :where(.dark .healthcare-shell, .healthcare-shell.dark) {
+        --healthcare-ink: var(--theme-foreground-dark, #e5f3f2);
+        --healthcare-ink-strong: #f8fafc;
+        --healthcare-muted: #b8c8cf;
+        --healthcare-line: rgb(226 244 242 / 16%);
+        --healthcare-primary: var(--theme-primary-dark, #5eead4);
+        --healthcare-primary-soft: rgb(94 234 212 / 14%);
+        --healthcare-primary-bright: #99f6e4;
+        --healthcare-link: var(--theme-link-dark, #93c5fd);
+        --healthcare-accent: var(--theme-accent-dark, #fbbf24);
+        --healthcare-surface: var(--theme-surface-dark, #0f1f24);
+
+        background: linear-gradient(
+            180deg,
+            #081417 0%,
+            #10242a 52%,
+            #081417 100%
+        );
+        color: var(--healthcare-ink);
+    }
+
+    :where(.dark .healthcare-shell, .healthcare-shell.dark)
+        :is(
+            .bg-white,
+            .bg-\[var\(--healthcare-surface\)\],
+            .healthcare-frame,
+            .healthcare-resource-card,
+            [class*='bg-white '],
+            [class$='bg-white']
+        ) {
+        background-color: color-mix(
+            in srgb,
+            var(--healthcare-surface) 88%,
+            #ffffff 4%
+        ) !important;
+    }
+
+    :where(.dark .healthcare-shell, .healthcare-shell.dark)
+        :is(
+            .border-stone-200,
+            .border-stone-300,
+            .border-\[var\(--healthcare-line\)\],
+            .border-dashed
+        ) {
+        border-color: var(--healthcare-line) !important;
+    }
+
+    :where(.dark .healthcare-shell, .healthcare-shell.dark)
+        :is(
+            .text-stone-600,
+            .text-stone-700,
+            .text-stone-300,
+            .text-stone-200,
+            .text-slate-600,
+            .text-slate-700
+        ) {
+        color: var(--healthcare-muted) !important;
+    }
+
+    :where(.dark .healthcare-shell, .healthcare-shell.dark)
+        :is(
+            .text-\[var\(--healthcare-ink\)\],
+            .text-\[var\(--healthcare-primary\)\]
+        ) {
+        color: var(--healthcare-ink) !important;
+    }
+
+    :where(.dark .healthcare-shell, .healthcare-shell.dark)
+        .healthcare-cta-primary {
+        color: #06201e;
+    }
+
+    :where(.dark .healthcare-shell, .healthcare-shell.dark)
+        .healthcare-cta-secondary {
+        border-color: var(--healthcare-line);
+        color: var(--healthcare-ink);
+    }
+
+    :where(.dark .healthcare-shell, .healthcare-shell.dark) .shadow-md,
+    :where(.dark .healthcare-shell, .healthcare-shell.dark) .shadow-lg,
+    :where(.dark .healthcare-shell, .healthcare-shell.dark) .shadow-xl {
+        box-shadow: 0 24px 70px rgb(0 0 0 / 32%) !important;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .healthcare-shell {
+            --healthcare-ink: var(--theme-foreground-dark, #e5f3f2);
+            --healthcare-ink-strong: #f8fafc;
+            --healthcare-muted: #b8c8cf;
+            --healthcare-line: rgb(226 244 242 / 16%);
+            --healthcare-primary: var(--theme-primary-dark, #5eead4);
+            --healthcare-primary-soft: rgb(94 234 212 / 14%);
+            --healthcare-primary-bright: #99f6e4;
+            --healthcare-link: var(--theme-link-dark, #93c5fd);
+            --healthcare-accent: var(--theme-accent-dark, #fbbf24);
+            --healthcare-surface: var(--theme-surface-dark, #0f1f24);
+
+            background: linear-gradient(
+                180deg,
+                #081417 0%,
+                #10242a 52%,
+                #081417 100%
+            );
+            color: var(--healthcare-ink);
+        }
+    }
 }
