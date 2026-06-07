@@ -72,6 +72,7 @@ return [
             'grant_duration_days' => env('ACCESS_GATE_DEFAULT_GRANT_DURATION_DAYS'),
             'registration_policy' => env('ACCESS_GATE_DEFAULT_REGISTRATION_POLICY', 'single_per_email'),
             'token_policy' => env('ACCESS_GATE_DEFAULT_TOKEN_POLICY', 'single_active_browser_token'),
+            'claim_landing_url' => env('ACCESS_GATE_DEFAULT_CLAIM_LANDING_URL', '/welcome'),
         ],
     ],
 ];

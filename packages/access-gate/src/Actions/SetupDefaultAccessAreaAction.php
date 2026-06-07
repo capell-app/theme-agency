@@ -33,6 +33,7 @@ final class SetupDefaultAccessAreaAction
             'grant_duration_days' => $this->nullableInteger(Arr::get($areaConfig, 'grant_duration_days')),
             'registration_policy' => (string) Arr::get($areaConfig, 'registration_policy', 'single_per_email'),
             'token_policy' => (string) Arr::get($areaConfig, 'token_policy', 'single_active_browser_token'),
+            'claim_landing_url' => $this->nullableString(Arr::get($areaConfig, 'claim_landing_url', '/welcome')),
         ]);
     }
 
@@ -43,5 +44,14 @@ final class SetupDefaultAccessAreaAction
         }
 
         return (int) $value;
+    }
+
+    private function nullableString(mixed $value): ?string
+    {
+        if (! is_string($value) || $value === '') {
+            return null;
+        }
+
+        return $value;
     }
 }
