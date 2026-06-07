@@ -46,7 +46,9 @@
         "doctor": null
     },
     "settings": [],
-    "permissions": [],
+    "permissions": [
+        "frontend-authoring.edit"
+    ],
     "capabilities": [
         "authoring-surface",
         "preview-only",

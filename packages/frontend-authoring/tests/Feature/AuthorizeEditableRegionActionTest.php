@@ -14,7 +14,10 @@ use Capell\Tests\Fixtures\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Gate;
 
-function frontendAuthoringAuthorizationPayload(?PageUrl $pageUrl = null): EditableRegionPayloadData
+/**
+ * @param  list<string>  $permissions
+ */
+function frontendAuthoringAuthorizationPayload(?PageUrl $pageUrl = null, array $permissions = []): EditableRegionPayloadData
 {
     return new EditableRegionPayloadData(
         model: Page::class,
@@ -28,6 +31,7 @@ function frontendAuthoringAuthorizationPayload(?PageUrl $pageUrl = null): Editab
         siteId: $pageUrl instanceof PageUrl ? (int) $pageUrl->site_id : 1,
         languageId: $pageUrl instanceof PageUrl ? (int) $pageUrl->language_id : 1,
         regionKey: 'page.title',
+        permissions: $permissions,
     );
 }
 
@@ -78,4 +82,38 @@ it('keeps pageable policy fallbacks active when the package gate denies by defau
 
     expect(Gate::forUser($user)->allows('frontend-authoring.edit', [$pageUrl, $payload]))->toBeFalse()
         ->and(AuthorizeEditableRegionAction::run($user, $payload, $pageUrl))->toBeTrue();
+});
+
+it('requires package supplied region permissions before coarse edit access', function (): void {
+    $user = User::factory()->create();
+    $pageUrl = frontendAuthoringAuthorizationPageUrl();
+    $payload = frontendAuthoringAuthorizationPayload($pageUrl, ['frontend-authoring.edit-page-title']);
+
+    Gate::define(
+        'frontend-authoring.edit',
+        static fn (Authenticatable $actor, ?PageUrl $resolvedPageUrl, EditableRegionPayloadData $region): bool => true,
+    );
+    Gate::define(
+        'frontend-authoring.edit-page-title',
+        static fn (Authenticatable $actor, ?PageUrl $resolvedPageUrl, EditableRegionPayloadData $region): bool => false,
+    );
+
+    expect(AuthorizeEditableRegionAction::run($user, $payload, $pageUrl))->toBeFalse();
+});
+
+it('allows package supplied region permissions when the specific ability passes', function (): void {
+    $user = User::factory()->create();
+    $pageUrl = frontendAuthoringAuthorizationPageUrl();
+    $payload = frontendAuthoringAuthorizationPayload($pageUrl, ['frontend-authoring.edit-page-title']);
+
+    Gate::define(
+        'frontend-authoring.edit',
+        static fn (Authenticatable $actor, ?PageUrl $resolvedPageUrl, EditableRegionPayloadData $region): bool => true,
+    );
+    Gate::define(
+        'frontend-authoring.edit-page-title',
+        static fn (Authenticatable $actor, ?PageUrl $resolvedPageUrl, EditableRegionPayloadData $region): bool => $region->regionKey === 'page.title',
+    );
+
+    expect(AuthorizeEditableRegionAction::run($user, $payload, $pageUrl))->toBeTrue();
 });

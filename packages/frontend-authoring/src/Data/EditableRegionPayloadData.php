@@ -27,6 +27,8 @@ final class EditableRegionPayloadData
         public ?string $description = null,
         /** @var array<string, mixed> */
         public array $context = [],
+        /** @var list<string> */
+        public array $permissions = [],
     ) {}
 
     /**
@@ -50,6 +52,7 @@ final class EditableRegionPayloadData
             target: isset($payload['target']) ? (string) $payload['target'] : null,
             description: isset($payload['description']) ? (string) $payload['description'] : null,
             context: is_array($payload['context'] ?? null) ? $payload['context'] : [],
+            permissions: self::stringList($payload['permissions'] ?? []),
         );
     }
 
@@ -74,11 +77,27 @@ final class EditableRegionPayloadData
             'target' => $this->target,
             'description' => $this->description,
             'context' => $this->context,
+            'permissions' => $this->permissions,
         ];
     }
 
     public function fieldKind(): EditableRegionField
     {
         return EditableRegionField::fromValue($this->field);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private static function stringList(mixed $value): array
+    {
+        if (! is_array($value)) {
+            return [];
+        }
+
+        return array_values(array_filter(
+            array_map(static fn (mixed $item): string => trim((string) $item), $value),
+            static fn (string $item): bool => $item !== '',
+        ));
     }
 }

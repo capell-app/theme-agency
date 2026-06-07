@@ -20,6 +20,8 @@ final class EditableRegionData
         public ?string $description = null,
         /** @var array<string, mixed> */
         public array $context = [],
+        /** @var list<string> */
+        public array $permissions = [],
     ) {}
 
     /**
@@ -37,6 +39,7 @@ final class EditableRegionData
             'target' => $this->target,
             'description' => $this->description,
             'context' => $this->context,
+            'permissions' => $this->permissions,
         ];
     }
 }
