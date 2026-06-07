@@ -13,6 +13,8 @@ use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\Tests\Packages\PackagesTestCase;
 use Capell\ThemeStudio\Portfolio\PortfolioThemeServiceProvider;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
 
 uses(PackagesTestCase::class);
 
@@ -434,6 +436,48 @@ it('uses the shared placeholder for empty portfolio-owned content sections', fun
     'speaking-media-kit',
 ]);
 
+it('renders every Portfolio-owned section anonymously inside the budget without database queries', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(PortfolioThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/content-sections', false);
+    CapellCore::forcePackageInstalled('capell-app/media-library', false);
+    CapellCore::forcePackageInstalled('capell-app/newsletter', false);
+
+    $registry = new ThemeRegistry;
+    (new PortfolioThemeServiceProvider($this->app))->boot($registry);
+
+    $manifest = portfolioThemeTestManifest();
+    $budgetMilliseconds = (float) data_get($manifest, 'performance.frontendRenderBudgetMs', 20);
+    $queryCount = 0;
+
+    DB::listen(static function (QueryExecuted $query) use (&$queryCount): void {
+        if (str_starts_with(strtolower($query->sql), 'select')) {
+            $queryCount++;
+        }
+    });
+
+    foreach (portfolioOwnedSectionKeys() as $sectionKey) {
+        $renderer = $registry->sectionRenderer('portfolio', $sectionKey);
+
+        assert($renderer instanceof SectionRenderer);
+
+        $section = portfolioThemeSection($sectionKey, portfolioRenderPayload($sectionKey));
+
+        $renderer->render($section);
+
+        $startedAt = hrtime(true);
+        $html = $renderer->render($section);
+        $elapsedMilliseconds = (hrtime(true) - $startedAt) / 1_000_000;
+
+        expect($elapsedMilliseconds)->toBeLessThanOrEqual($budgetMilliseconds)
+            ->and($html)->not->toContain('capell-app/theme-portfolio')
+            ->and($html)->not->toContain('Filament')
+            ->and($html)->not->toContain('wire:');
+    }
+
+    expect($queryCount)->toBe(0);
+});
+
 /**
  * @param  array<string, mixed>  $viewData
  */
@@ -467,4 +511,66 @@ function portfolioThemeSection(string $key, array $viewData): ThemeSection
             return array_merge($this->viewData, ['section' => (object) $this->viewData]);
         }
     };
+}
+
+/**
+ * @return array<int, string>
+ */
+function portfolioOwnedSectionKeys(): array
+{
+    return array_values(array_filter(
+        PortfolioThemeServiceProvider::definition()->includedSections,
+        static fn (string $sectionKey): bool => $sectionKey !== 'navigation',
+    ));
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function portfolioRenderPayload(string $sectionKey): array
+{
+    $payload = [
+        'heading' => 'Anonymous ' . $sectionKey,
+        'summary' => 'Anonymous public render summary.',
+        'items' => [
+            ['title' => 'Anonymous portfolio item', 'summary' => 'Anonymous portfolio item summary.'],
+        ],
+        'actions' => [
+            ['label' => 'Anonymous action', 'url' => '#action'],
+        ],
+    ];
+
+    if ($sectionKey === 'hero') {
+        return [
+            ...$payload,
+            'mediaUrl' => 'https://cdn.example.test/portfolio-hero.jpg',
+            'mediaAlt' => 'Anonymous portfolio hero',
+        ];
+    }
+
+    if ($sectionKey === 'newsletter') {
+        return [
+            ...$payload,
+            'formAction' => '/newsletter/subscribe',
+            'formMethod' => 'post',
+        ];
+    }
+
+    return $payload;
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function portfolioThemeTestManifest(): array
+{
+    $manifest = json_decode(
+        (string) file_get_contents(dirname(__DIR__, 2) . '/capell.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    throw_unless(is_array($manifest), RuntimeException::class, 'Theme Portfolio manifest must decode to an array.');
+
+    return $manifest;
 }
