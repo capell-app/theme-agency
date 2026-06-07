@@ -71,6 +71,7 @@
     },
     "actions": {
         "install": "Capell\\ShopifyCommerce\\Actions\\InstallShopifyCommercePackageAction",
+        "ingestShopifyWebhook": "Capell\\ShopifyCommerce\\Actions\\Webhooks\\IngestShopifyWebhookAction",
         "persistShopifyProduct": "Capell\\ShopifyCommerce\\Actions\\Catalog\\PersistShopifyProductAction",
         "pruneExpiredShopifyOAuthStates": "Capell\\ShopifyCommerce\\Actions\\OAuth\\PruneExpiredShopifyOAuthStatesAction",
         "syncShopifyCustomers": "Capell\\ShopifyCommerce\\Actions\\Customers\\SyncShopifyCustomersAction",
@@ -87,7 +88,8 @@
         "shopify-commerce-admin",
         "shopify-commerce-catalog-sync",
         "shopify-commerce-customer-cache",
-        "shopify-commerce-customer-synced-event"
+        "shopify-commerce-customer-synced-event",
+        "shopify-commerce-webhooks"
     ],
     "performance": {
         "frontendRenderBudgetMs": 0,

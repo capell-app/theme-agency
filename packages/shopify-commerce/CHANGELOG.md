@@ -4,6 +4,7 @@ All notable changes to `capell-app/shopify-commerce` will be documented in this 
 
 ## Unreleased
 
+- Added Shopify webhook ingestion for product create/update/delete, customer create/update, and app uninstall revocation with Shopify header HMAC validation.
 - Unified live search and bulk import product persistence through `PersistShopifyProductAction`, so cached search results now store options, raw snapshots, variants, synced timestamps, and prune stale variants consistently.
 - Scrub Shopify sync failure messages before persisting `last_sync_error`, removing raw Shopify URLs, shop domains, Admin API tokens, and token headers from stored admin diagnostics.
 
