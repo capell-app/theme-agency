@@ -6,6 +6,7 @@ namespace Capell\FrontendAuthoring\Actions;
 
 use Capell\Core\Facades\CapellCore;
 use Capell\FrontendAuthoring\Data\EditableRegionPayloadData;
+use Capell\FrontendAuthoring\Enums\EditableRegionSaveStatus;
 use Capell\PublishingStudio\Actions\CopyOnWriteAction;
 use Capell\PublishingStudio\Actions\GenerateWorkspacePreviewUrlAction;
 use Capell\PublishingStudio\Models\Workspace;
@@ -47,7 +48,7 @@ class UpdateEditableRegionAction
             return $this->saveForApproval($record, $payload, $value, $urls);
         }
 
-        $this->applyValue($record, $payload->field, $value);
+        $this->applyValue($record, $payload, $value);
         $record->save();
 
         $cleared = ClearAffectedCachedUrlsAction::run($record, $urls, $payload->currentUrl);
@@ -55,7 +56,7 @@ class UpdateEditableRegionAction
         return [
             'cleared' => $cleared,
             'urls' => $urls,
-            'status' => 'published',
+            'status' => EditableRegionSaveStatus::Published->value,
             'redirect_url' => null,
         ];
     }
@@ -89,7 +90,7 @@ class UpdateEditableRegionAction
         ]);
 
         $workspaceContextClass::runWith($workspace, function () use ($copyOnWriteActionClass, $record, $payload, $value, $workspace): void {
-            $this->applyValue($record, $payload->field, $value);
+            $this->applyValue($record, $payload, $value);
 
             if ((int) ($record->getAttribute('workspace_id') ?? 0) === 0 && class_exists($copyOnWriteActionClass)) {
                 (new $copyOnWriteActionClass)->cloneForEdit($record, $workspace);
@@ -116,7 +117,7 @@ class UpdateEditableRegionAction
         return [
             'cleared' => 0,
             'urls' => $urls,
-            'status' => 'pending_approval',
+            'status' => EditableRegionSaveStatus::PendingApproval->value,
             'redirect_url' => $previewUrl,
         ];
     }
@@ -139,17 +140,19 @@ class UpdateEditableRegionAction
             || in_array('workspace_id', $record->getFillable(), true);
     }
 
-    private function applyValue(Model $record, string $field, string $value): void
+    private function applyValue(Model $record, EditableRegionPayloadData $payload, string $value): void
     {
-        if ($field === 'title' || $field === 'content') {
-            $record->setAttribute($field, $value);
+        $field = $payload->fieldKind();
+
+        if ($field->isDirectAttribute()) {
+            $record->setAttribute($payload->field, $value);
 
             return;
         }
 
-        if (str_starts_with($field, 'meta.')) {
+        if ($field->isMetaAttribute()) {
             $meta = (array) $record->getAttribute('meta');
-            Arr::set($meta, substr($field, 5), $value);
+            Arr::set($meta, substr($payload->field, 5), $value);
             $record->setAttribute('meta', $meta);
 
             return;

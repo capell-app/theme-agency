@@ -10,6 +10,7 @@ use Capell\Core\Models\SiteDomain;
 use Capell\Core\Models\Translation;
 use Capell\FrontendAuthoring\Actions\BuildEditableRegionManifestAction;
 use Capell\FrontendAuthoring\Data\EditableRegionPayloadData;
+use Capell\FrontendAuthoring\Enums\EditableRegionInputType;
 use Capell\FrontendAuthoring\Support\EditableRegionSigner;
 use Illuminate\Support\Facades\Config;
 
@@ -110,7 +111,7 @@ it('includes package supplied editable region extenders', function (): void {
             recordKey: (int) $resolvedPageUrl->getKey(),
             field: 'meta.summary',
             label: 'Summary',
-            type: 'textarea',
+            type: EditableRegionInputType::Textarea,
             selector: '[data-edit-summary]',
             currentUrl: $resolvedPageUrl->full_url,
             pageUrlId: (int) $resolvedPageUrl->getKey(),

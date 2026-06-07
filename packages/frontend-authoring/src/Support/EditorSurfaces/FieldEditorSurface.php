@@ -6,6 +6,7 @@ namespace Capell\FrontendAuthoring\Support\EditorSurfaces;
 
 use Capell\FrontendAuthoring\Contracts\EditableRegionEditorSurface;
 use Capell\FrontendAuthoring\Data\EditableRegionPayloadData;
+use Capell\FrontendAuthoring\Enums\EditableRegionSurface;
 use Capell\FrontendAuthoring\Support\EditableRegionSigner;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\View\Factory;
@@ -13,9 +14,9 @@ use Illuminate\Contracts\View\View;
 
 final class FieldEditorSurface implements EditableRegionEditorSurface
 {
-    public function surface(): string
+    public function surface(): EditableRegionSurface
     {
-        return 'field';
+        return EditableRegionSurface::Field;
     }
 
     public function render(EditableRegionPayloadData $payload, AuthenticatableContract $user): View

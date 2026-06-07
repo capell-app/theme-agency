@@ -14,6 +14,7 @@ use Capell\FrontendAuthoring\Actions\ClearAffectedCachedUrlsAction;
 use Capell\FrontendAuthoring\Actions\CollectAffectedCachedUrlsAction;
 use Capell\FrontendAuthoring\Actions\UpdateEditableRegionAction;
 use Capell\FrontendAuthoring\Data\EditableRegionPayloadData;
+use Capell\FrontendAuthoring\Enums\EditableRegionInputType;
 use Capell\FrontendAuthoring\Http\Controllers\EditRegionController;
 use Capell\FrontendAuthoring\Support\EditableRegionSigner;
 use Capell\HtmlCache\Models\CachedModelUrl;
@@ -126,7 +127,11 @@ function editableRegionPayload(Translation $translation, string $field = 'title'
         recordKey: (int) $translation->getKey(),
         field: $field,
         label: $field === 'content' ? 'Page content' : ($field === 'title' ? 'Page title' : 'Page description'),
-        type: $field === 'content' ? 'html' : ($field === 'title' ? 'text' : 'textarea'),
+        type: match ($field) {
+            'content' => EditableRegionInputType::Html,
+            'title' => EditableRegionInputType::Text,
+            default => EditableRegionInputType::Textarea,
+        },
         selector: $field === 'content'
             ? config('capell-frontend-authoring.selectors.page_content', '#main .content-component:first-of-type')
             : config('capell-frontend-authoring.selectors.page_title', '#main h1:first-of-type'),

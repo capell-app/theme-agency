@@ -9,6 +9,7 @@ use Capell\Core\Models\Site;
 use Capell\Core\Models\SiteDomain;
 use Capell\FrontendAuthoring\Actions\AuthorizeEditableRegionAction;
 use Capell\FrontendAuthoring\Data\EditableRegionPayloadData;
+use Capell\FrontendAuthoring\Enums\EditableRegionInputType;
 use Capell\Tests\Fixtures\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Gate;
@@ -20,7 +21,7 @@ function frontendAuthoringAuthorizationPayload(?PageUrl $pageUrl = null): Editab
         recordKey: $pageUrl instanceof PageUrl ? (int) $pageUrl->pageable_id : 1,
         field: 'title',
         label: 'Page title',
-        type: 'text',
+        type: EditableRegionInputType::Text,
         selector: '#main h1:first-of-type',
         currentUrl: $pageUrl instanceof PageUrl ? $pageUrl->full_url : 'https://example.test/current',
         pageUrlId: $pageUrl instanceof PageUrl ? (int) $pageUrl->getKey() : 1,
