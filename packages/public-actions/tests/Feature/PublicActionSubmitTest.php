@@ -329,6 +329,13 @@ it('queues asynchronous destination dispatches after successful submissions', fu
     ])->assertRedirect();
 
     Queue::assertPushed(DispatchPublicActionDestinationJob::class);
+
+    $attempt = PublicActionDispatchAttempt::query()->firstOrFail();
+
+    expect($attempt->status)->toBe(PublicActionDispatchStatus::Pending)
+        ->and($attempt->dispatched_at)->toBeNull()
+        ->and($attempt->submission)->toBeInstanceOf(PublicActionSubmission::class)
+        ->and($attempt->destination)->toBeInstanceOf(PublicActionDestination::class);
 });
 
 it('marks submissions failed when no handler is registered for the action', function (): void {

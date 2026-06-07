@@ -7,6 +7,7 @@ namespace Capell\PublicActions\Tests\Fakes;
 use Capell\PublicActions\Contracts\PublicActionDestinationAdapter;
 use Capell\PublicActions\Data\PublicActionDispatchResultData;
 use Capell\PublicActions\Models\PublicActionDestination;
+use Capell\PublicActions\Models\PublicActionDispatchAttempt;
 use Capell\PublicActions\Models\PublicActionSubmission;
 
 final class FakePublicActionDestinationAdapter implements PublicActionDestinationAdapter
@@ -14,6 +15,7 @@ final class FakePublicActionDestinationAdapter implements PublicActionDestinatio
     public function dispatch(
         PublicActionDestination $destination,
         PublicActionSubmission $submission,
+        ?PublicActionDispatchAttempt $attempt = null,
     ): PublicActionDispatchResultData {
         return new PublicActionDispatchResultData(
             success: true,

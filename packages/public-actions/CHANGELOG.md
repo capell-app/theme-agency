@@ -4,6 +4,7 @@ All notable changes to `capell-app/public-actions` will be documented in this fi
 
 ## Unreleased
 
+- Added durable destination fan-out preparation so successful submissions create pending dispatch-attempt rows before sync or queued delivery begins.
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
 
 ## 2026-06-06

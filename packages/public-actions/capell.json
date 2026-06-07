@@ -48,6 +48,7 @@
     "permissions": [],
     "capabilities": [
         "automation-webhooks",
+        "durable-dispatch-fanout",
         "public-form",
         "public-actions",
         "submit-actions",
