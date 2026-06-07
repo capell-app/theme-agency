@@ -5,9 +5,18 @@
     {{ __('capell-foundation-theme::generic.skip_to_content') }}
 </a>
 
-<div
-    style="{{ collect($brand->tokens())->map(fn ($value, $token) => $token . ':' . $value)->implode(';') }}"
+<main
+    id="main-content"
+    style="{{ collect($brand->tokens())->map(fn (mixed $value, string $token): string => $token . ':' . $value)->implode(';') }}"
     class="site-theme-shell min-h-screen bg-[var(--theme-surface)] font-[var(--theme-body-font)] text-[var(--theme-foreground)] antialiased"
 >
+    <div
+        id="theme-status"
+        class="sr-only"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+    ></div>
+
     {!! $content !!}
-</div>
+</main>

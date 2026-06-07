@@ -225,11 +225,13 @@ it('declares foundation settings schema and settings migrations', function (): v
     $components = FoundationThemeSettingsSchema::make(Schema::make());
     $performanceComponents = foundationThemeCoverageChildComponents(foundationThemeCoverageChildComponents($components[0])[0]);
     $designTokenComponents = foundationThemeCoverageChildComponents(foundationThemeCoverageChildComponents($components[1])[0]);
+    $darkDesignTokenComponents = foundationThemeCoverageChildComponents(foundationThemeCoverageChildComponents($components[2])[0]);
     $provider = new FoundationThemeSettingsMigrationProvider;
 
-    capell_expect($components)->toHaveCount(2)
+    capell_expect($components)->toHaveCount(3)
         ->and($components[0])->toBeInstanceOf(Section::class)
         ->and($components[1])->toBeInstanceOf(Section::class)
+        ->and($components[2])->toBeInstanceOf(Section::class)
         ->and($performanceComponents)->toHaveCount(2)
         ->and($performanceComponents[0])->toBeInstanceOf(Checkbox::class)
         ->and($performanceComponents[1])->toBeInstanceOf(Checkbox::class)
@@ -239,6 +241,9 @@ it('declares foundation settings schema and settings migrations', function (): v
         ->and($designTokenComponents[13])->toBeInstanceOf(Select::class)
         ->and($designTokenComponents[14])->toBeInstanceOf(Select::class)
         ->and($designTokenComponents[15])->toBeInstanceOf(Select::class)
+        ->and($darkDesignTokenComponents)->toHaveCount(13)
+        ->and($darkDesignTokenComponents[0])->toBeInstanceOf(ColorPicker::class)
+        ->and($darkDesignTokenComponents[12])->toBeInstanceOf(ColorPicker::class)
         ->and($provider->getSettingMigrations())->toBe([
             '2026_05_10_190850_01_create_foundation_theme_settings',
             '2026_05_23_160819_add_foundation_theme_design_tokens',
@@ -246,6 +251,7 @@ it('declares foundation settings schema and settings migrations', function (): v
             '2026_05_23_170001_add_foundation_theme_composition_tokens',
             '2026_05_23_171201_quiet_foundation_theme_composition_palette',
             '2026_05_23_180101_add_foundation_theme_image_tokens',
+            '2026_06_07_000001_add_foundation_theme_dark_design_tokens',
         ])
         ->and($provider->migrations())->toBe([
             '2026_05_10_190850_01_create_foundation_theme_settings',
@@ -254,6 +260,7 @@ it('declares foundation settings schema and settings migrations', function (): v
             '2026_05_23_170001_add_foundation_theme_composition_tokens',
             '2026_05_23_171201_quiet_foundation_theme_composition_palette',
             '2026_05_23_180101_add_foundation_theme_image_tokens',
+            '2026_06_07_000001_add_foundation_theme_dark_design_tokens',
         ])
         ->and(FoundationThemeSettings::group())->toBe('foundation_theme')
         ->and(FoundationThemeSettings::schema())->toBe(FoundationThemeSettingsSchema::class)

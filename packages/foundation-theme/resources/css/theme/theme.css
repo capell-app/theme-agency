@@ -29,7 +29,7 @@
 
     body.site-app-body {
         background: var(--foundation-page-bg);
-        color: color-mix(in srgb, var(--color-brand) 82%, #111827);
+        color: var(--foundation-body-fg);
     }
 
     @media (prefers-reduced-motion: reduce) {

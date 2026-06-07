@@ -94,6 +94,7 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
         $formBuilderAvailable = CapellCore::isPackageInstalled('capell-app/form-builder');
         $eventsAvailable = CapellCore::isPackageInstalled('capell-app/events');
         $blogAvailable = CapellCore::isPackageInstalled('capell-app/blog');
+        $paymentsAvailable = CapellCore::isPackageInstalled('capell-app/payments');
 
         $registry->register(
             definition: self::definition(),
@@ -105,7 +106,7 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
             sectionRenderers: collect(self::definition()->includedSections)
                 ->map(fn (string $sectionKey): ?ViewSectionRenderer => $this->sectionRenderer(
                     $sectionKey,
-                    $this->optionalSectionIntegrations($campaignStudioAvailable, $formBuilderAvailable, $eventsAvailable, $blogAvailable),
+                    $this->optionalSectionIntegrations($campaignStudioAvailable, $formBuilderAvailable, $eventsAvailable, $blogAvailable, $paymentsAvailable),
                 ))
                 ->filter()
                 ->values()
@@ -154,12 +155,12 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
     /**
      * @return array<string, array<string, bool>>
      */
-    private function optionalSectionIntegrations(bool $campaignStudioAvailable, bool $formBuilderAvailable, bool $eventsAvailable, bool $blogAvailable): array
+    private function optionalSectionIntegrations(bool $campaignStudioAvailable, bool $formBuilderAvailable, bool $eventsAvailable, bool $blogAvailable, bool $paymentsAvailable): array
     {
         return [
             'campaigns' => ['campaignStudioAvailable' => $campaignStudioAvailable],
-            'donation-impact' => ['campaignStudioAvailable' => $campaignStudioAvailable],
-            'volunteer-donate' => ['formBuilderAvailable' => $formBuilderAvailable],
+            'donation-impact' => ['campaignStudioAvailable' => $campaignStudioAvailable, 'paymentsAvailable' => $paymentsAvailable],
+            'volunteer-donate' => ['formBuilderAvailable' => $formBuilderAvailable, 'paymentsAvailable' => $paymentsAvailable],
             'volunteer-shifts' => ['formBuilderAvailable' => $formBuilderAvailable, 'eventsAvailable' => $eventsAvailable],
             'events' => ['eventsAvailable' => $eventsAvailable],
             'stories' => ['blogAvailable' => $blogAvailable],

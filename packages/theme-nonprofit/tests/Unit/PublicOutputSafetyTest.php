@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Capell\ThemeStudio\Nonprofit\NonprofitThemeServiceProvider;
+
 function nonprofitThemeBladeViews(): string
 {
     $rootViews = glob(__DIR__ . '/../../resources/views/*.blade.php') ?: [];
@@ -10,6 +12,16 @@ function nonprofitThemeBladeViews(): string
     return implode("\n", array_map(
         static fn (string $path): string => file_get_contents($path) ?: '',
         [...$rootViews, ...$sectionViews],
+    ));
+}
+
+function nonprofitThemeSectionBladeViews(): string
+{
+    $sectionViews = glob(__DIR__ . '/../../resources/views/sections/*.blade.php') ?: [];
+
+    return implode("\n", array_map(
+        static fn (string $path): string => file_get_contents($path) ?: '',
+        $sectionViews,
     ));
 }
 
@@ -28,11 +40,77 @@ it('uses the premium page wrapper with brand tokens and skip link', function ():
 
     expect($blade)
         ->toContain('$brand->tokens()')
+        ->toContain('$token . \':\' . $value')
         ->toContain('skip_to_content')
         ->toContain('id="main-content"')
         ->toContain('<main')
         ->toContain('nonprofit-shell');
 });
+
+it('keeps section palette colours behind semantic token classes', function (): void {
+    $sectionBlade = nonprofitThemeSectionBladeViews();
+
+    expect($sectionBlade)
+        ->toContain('nonprofit-bg-surface-warm')
+        ->toContain('nonprofit-bg-primary-deep')
+        ->toContain('nonprofit-text-accent')
+        ->toContain('nonprofit-border-accent')
+        ->not->toMatch('/#[0-9a-fA-F]{6}\b/')
+        ->not->toMatch('/(?:bg|text|border|from|to|shadow|hover:border)-(?:emerald|green|amber|yellow|orange)-[0-9]{2,3}(?:\/[0-9]+)?/');
+});
+
+it('ships default theme tokens with WCAG AA contrast for dark, emerald, and amber pairings', function (): void {
+    $values = NonprofitThemeServiceProvider::definition()->presets[0]->values;
+
+    expect(nonprofitContrastRatio('#ffffff', (string) $values['primaryColor']))->toBeGreaterThanOrEqual(4.5)
+        ->and(nonprofitContrastRatio('#ffffff', (string) $values['neutralColor']))->toBeGreaterThanOrEqual(4.5)
+        ->and(nonprofitContrastRatio((string) $values['accentColor'], (string) $values['neutralColor']))->toBeGreaterThanOrEqual(4.5)
+        ->and(nonprofitContrastRatio((string) $values['primaryColor'], (string) $values['surfaceColor']))->toBeGreaterThanOrEqual(4.5)
+        ->and(nonprofitContrastRatio((string) $values['neutralColor'], (string) $values['surfaceColor']))->toBeGreaterThanOrEqual(4.5)
+        ->and(nonprofitContrastRatio('#7c2d12', (string) $values['surfaceColor']))->toBeGreaterThanOrEqual(4.5);
+});
+
+function nonprofitContrastRatio(string $foreground, string $background): float
+{
+    $foregroundLuminance = nonprofitRelativeLuminance($foreground);
+    $backgroundLuminance = nonprofitRelativeLuminance($background);
+
+    return (max($foregroundLuminance, $backgroundLuminance) + 0.05) / (min($foregroundLuminance, $backgroundLuminance) + 0.05);
+}
+
+function nonprofitRelativeLuminance(string $hex): float
+{
+    $channels = nonprofitRgbChannels($hex);
+    $linearChannels = array_map(
+        static fn (int $channel): float => nonprofitLinearChannel($channel / 255),
+        $channels,
+    );
+
+    return (0.2126 * $linearChannels[0]) + (0.7152 * $linearChannels[1]) + (0.0722 * $linearChannels[2]);
+}
+
+/**
+ * @return array{0: int, 1: int, 2: int}
+ */
+function nonprofitRgbChannels(string $hex): array
+{
+    $normalized = ltrim($hex, '#');
+
+    return [
+        hexdec(substr($normalized, 0, 2)),
+        hexdec(substr($normalized, 2, 2)),
+        hexdec(substr($normalized, 4, 2)),
+    ];
+}
+
+function nonprofitLinearChannel(float $channel): float
+{
+    if ($channel <= 0.03928) {
+        return $channel / 12.92;
+    }
+
+    return (($channel + 0.055) / 1.055) ** 2.4;
+}
 
 it('keeps public Blade free of authoring or package metadata', function (): void {
     $publicOutput = nonprofitThemePublicOutputAssets();

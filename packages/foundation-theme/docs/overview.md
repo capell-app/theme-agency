@@ -33,6 +33,17 @@ Provides the baseline Laravel view and asset pipeline that child themes and fron
 - BladeDirectives and CapellUrlGenerator support rendering.
 - The beacon client is generic. It must not ship authoring controls or authoring metadata in theme HTML; `capell-app/frontend-authoring` owns the admin-only response that decorates the page.
 
+## Child Theme Override Contract
+
+Child themes extend the Foundation package in `capell.json` and use runtime `extends: 'default'` in `ThemeDefinitionData`. The supported override surface is intentionally small:
+
+- Section keys: `navigation`, `hero`, `features`, `proof`, `content-listing`, `cta`, `footer`.
+- Shared component views: `capell::theme.page`, `capell::theme.sections.*`, `capell::header.index`, `capell::footer`, `capell::layout.index`, `capell::layout.main`, `capell::layout.area`, `capell::content`, `capell::button.index`, `capell::media.background`, `capell::media.svg`.
+- Runtime CSS tokens: `--color-brand`, `--color-link`, `--color-link-active`, `--color-divider`, `--foundation-page-bg`, `--foundation-surface-bg`, `--foundation-muted-bg`, `--foundation-header-bg`, `--foundation-border`, `--foundation-border-strong`, `--foundation-card-bg`, `--foundation-primary-action`, `--foundation-band-bg`, `--foundation-band-alt-bg`, `--foundation-band-accent-bg`, `--foundation-band-border`, `--foundation-image-border`, `--foundation-image-radius`, `--foundation-section-spacing`, `--foundation-widget-gap`, and `--foundation-radius`.
+- Theme chrome areas: `header` is the supported Layout Builder area for editable chrome.
+
+Child themes should override presentation in package-owned page wrappers and section views. They must not add authoring controls, signed URLs, admin routes, package internals, database queries, or lazy-loading to public output.
+
 ## Operational Notes
 
 Gives each Capell installation a standard frontend foundation before a custom or theme renderer is added.

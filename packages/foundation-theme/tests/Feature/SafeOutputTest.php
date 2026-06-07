@@ -393,12 +393,22 @@ test('reviewed foundation chrome avoids accessibility regressions', function ():
 test('public blade style tokens use css color safety resolver', function (): void {
     $themePath = dirname(__DIR__, 2);
     $files = [
-        'resources/views/components/app/head/tokens.blade.php',
         'resources/views/components/footer/index.blade.php',
         'resources/views/components/header/index.blade.php',
         'resources/views/components/layout/main.blade.php',
     ];
     $violations = [];
+
+    $headTokens = file_get_contents($themePath . '/resources/views/components/app/head/tokens.blade.php');
+    $tokenAction = file_get_contents($themePath . '/src/Actions/ResolveFoundationThemeTokensAction.php');
+
+    if (! is_string($headTokens) || ! str_contains($headTokens, 'ResolveFoundationThemeTokensAction::run')) {
+        $violations[] = 'resources/views/components/app/head/tokens.blade.php does not use ResolveFoundationThemeTokensAction::run';
+    }
+
+    if (! is_string($tokenAction) || ! str_contains($tokenAction, 'ResolveSafeCssColorTokenAction::run')) {
+        $violations[] = 'src/Actions/ResolveFoundationThemeTokensAction.php does not use ResolveSafeCssColorTokenAction::run';
+    }
 
     foreach ($files as $file) {
         $contents = file_get_contents($themePath . '/' . $file);

@@ -109,6 +109,20 @@ Screenshot capture targets are defined in [docs/screenshots.json](docs/screensho
 - Conditional frontend asset registration for CSS, runtime JavaScript, Tailwind imports, and Tailwind sources.
 - Livewire helpers: `AbstractAssets`, `AbstractWidget`, `PageAssets`, `Pages`.
 
+## Child Theme Override Contract
+
+Child themes should extend the Foundation package in `capell.json` and use runtime `extends: 'default'` in `ThemeDefinitionData`. Foundation owns the stable base contract below; child themes may override these presentation surfaces without changing persisted content or leaking authoring metadata.
+
+**Section keys:** `navigation`, `hero`, `features`, `proof`, `content-listing`, `cta`, `footer`.
+
+**Shared component views:** `capell::theme.page`, `capell::theme.sections.*`, `capell::header.index`, `capell::footer`, `capell::layout.index`, `capell::layout.main`, `capell::layout.area`, `capell::content`, `capell::button.index`, `capell::media.background`, `capell::media.svg`.
+
+**Runtime CSS tokens:** `--color-brand`, `--color-link`, `--color-link-active`, `--color-divider`, `--foundation-page-bg`, `--foundation-surface-bg`, `--foundation-muted-bg`, `--foundation-header-bg`, `--foundation-border`, `--foundation-border-strong`, `--foundation-card-bg`, `--foundation-primary-action`, `--foundation-band-bg`, `--foundation-band-alt-bg`, `--foundation-band-accent-bg`, `--foundation-band-border`, `--foundation-image-border`, `--foundation-image-radius`, `--foundation-section-spacing`, `--foundation-widget-gap`, `--foundation-radius`.
+
+**Theme chrome areas:** `header` is the supported Layout Builder area for editable chrome. Future chrome areas should follow the same registry + explicit render pattern.
+
+Do not override Foundation internals to add editor controls, query data in public Blade, or move presentation HTML into database content. Add theme-specific markup in child package section views, and keep shared runtime behavior in Foundation.
+
 ## Commands
 
 - `capell:foundation-theme-setup {--force : Rebuild Foundation-managed layout defaults}` (packages/foundation-theme/src/Console/Commands/SetupCommand.php)

@@ -112,6 +112,52 @@ class FoundationThemeSettingsSchema implements HasSchema
                                 ->required(),
                         ]),
                 ]),
+            Section::make(self::translate('capell-foundation-theme::form.dark_design_tokens'))
+                ->columnSpanFull()
+                ->schema([
+                    Grid::make(3)
+                        ->schema([
+                            ColorPicker::make('dark_page_background_color')
+                                ->label(self::translate('capell-foundation-theme::form.dark_page_background_color'))
+                                ->required(),
+                            ColorPicker::make('dark_surface_background_color')
+                                ->label(self::translate('capell-foundation-theme::form.dark_surface_background_color'))
+                                ->required(),
+                            ColorPicker::make('dark_muted_background_color')
+                                ->label(self::translate('capell-foundation-theme::form.dark_muted_background_color'))
+                                ->required(),
+                            ColorPicker::make('dark_header_background_color')
+                                ->label(self::translate('capell-foundation-theme::form.dark_header_background_color'))
+                                ->required(),
+                            ColorPicker::make('dark_border_color')
+                                ->label(self::translate('capell-foundation-theme::form.dark_border_color'))
+                                ->required(),
+                            ColorPicker::make('dark_border_strong_color')
+                                ->label(self::translate('capell-foundation-theme::form.dark_border_strong_color'))
+                                ->required(),
+                            ColorPicker::make('dark_card_background_color')
+                                ->label(self::translate('capell-foundation-theme::form.dark_card_background_color'))
+                                ->required(),
+                            ColorPicker::make('dark_primary_action_color')
+                                ->label(self::translate('capell-foundation-theme::form.dark_primary_action_color'))
+                                ->required(),
+                            ColorPicker::make('dark_band_background_color')
+                                ->label(self::translate('capell-foundation-theme::form.dark_band_background_color'))
+                                ->required(),
+                            ColorPicker::make('dark_band_alternate_background_color')
+                                ->label(self::translate('capell-foundation-theme::form.dark_band_alternate_background_color'))
+                                ->required(),
+                            ColorPicker::make('dark_band_accent_background_color')
+                                ->label(self::translate('capell-foundation-theme::form.dark_band_accent_background_color'))
+                                ->required(),
+                            ColorPicker::make('dark_band_border_color')
+                                ->label(self::translate('capell-foundation-theme::form.dark_band_border_color'))
+                                ->required(),
+                            ColorPicker::make('dark_image_border_color')
+                                ->label(self::translate('capell-foundation-theme::form.dark_image_border_color'))
+                                ->required(),
+                        ]),
+                ]),
         ];
     }
 

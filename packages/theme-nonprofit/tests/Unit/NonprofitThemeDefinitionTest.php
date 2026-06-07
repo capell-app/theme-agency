@@ -115,9 +115,14 @@ it('renders hydrated hero data through the Nonprofit hero view', function (): vo
     expect($renderer)->not->toBeNull();
     assert($renderer instanceof SectionRenderer);
 
-    $html = $renderer->render(HeroSectionData::from([
+    $html = $renderer->render(nonprofitThemeSection('hero', [
         'heading' => 'Fund the next community appeal',
         'summary' => 'Hydrated nonprofit hero summary.',
+        'mediaUrl' => 'https://example.test/nonprofit-hero.jpg',
+        'mediaAlt' => 'Volunteers sorting winter support supplies',
+        'campaignTitle' => 'Emergency food fund',
+        'campaignValue' => '63%',
+        'campaignProgress' => 63,
         'actions' => [
             ['label' => 'Donate today', 'url' => '#donate'],
             ['label' => 'Join the team', 'url' => '#volunteer'],
@@ -131,7 +136,17 @@ it('renders hydrated hero data through the Nonprofit hero view', function (): vo
         ->toContain('Hydrated nonprofit hero summary.')
         ->toContain('Donate today')
         ->toContain('Join the team')
-        ->toContain('Winter support fund')
+        ->toContain('https://example.test/nonprofit-hero.jpg')
+        ->toContain('alt="Volunteers sorting winter support supplies"')
+        ->toContain('width="1200"')
+        ->toContain('height="675"')
+        ->toContain('loading="eager"')
+        ->toContain('fetchpriority="high"')
+        ->toContain('Emergency food fund')
+        ->toContain('63%')
+        ->toContain('role="progressbar"')
+        ->toContain('aria-valuenow="63"')
+        ->toContain('style="width: 63%"')
         ->not->toContain('capell-app/theme-nonprofit');
 });
 
@@ -232,6 +247,7 @@ it('renders new premium nonprofit layouts through the registry', function (): vo
     expect($donationImpactHtml)
         ->toContain('Fund measurable impact')
         ->toContain('Meals for a week')
+        ->not->toContain('Donate now')
         ->not->toContain('capell-app/theme-nonprofit');
 
     expect($volunteerShiftsHtml)
@@ -242,6 +258,34 @@ it('renders new premium nonprofit layouts through the registry', function (): vo
     expect($annualReportHtml)
         ->toContain('Report the outcomes')
         ->toContain('Transparent spend')
+        ->not->toContain('capell-app/theme-nonprofit');
+});
+
+it('renders Payments-aware donation actions from hydrated section data', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(NonprofitThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/payments');
+
+    $registry = new ThemeRegistry;
+    (new NonprofitThemeServiceProvider($this->app))->boot($registry);
+
+    $renderer = $registry->sectionRenderer('nonprofit', 'donation-impact');
+
+    assert($renderer instanceof SectionRenderer);
+
+    $html = $renderer->render(nonprofitThemeSection('donation-impact', [
+        'heading' => 'Give where it matters',
+        'primaryAction' => ['label' => 'Give monthly', 'url' => '/give/monthly'],
+        'secondaryAction' => ['label' => 'View outcomes', 'url' => '/impact'],
+    ]));
+
+    expect($html)
+        ->toContain('Give where it matters')
+        ->toContain('Payments-powered giving routes')
+        ->toContain('href="/give/monthly"')
+        ->toContain('Give monthly')
+        ->toContain('href="/impact"')
+        ->toContain('View outcomes')
         ->not->toContain('capell-app/theme-nonprofit');
 });
 
@@ -286,6 +330,109 @@ it('renders translated event labels and the skip-link target', function (): void
         ->toContain('<main');
 });
 
+it('renders campaign story and contact cards from section items before fallbacks', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(NonprofitThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new NonprofitThemeServiceProvider($this->app))->boot($registry);
+
+    $campaignRenderer = $registry->sectionRenderer('nonprofit', 'campaigns');
+    $storiesRenderer = $registry->sectionRenderer('nonprofit', 'stories');
+    $contactRenderer = $registry->sectionRenderer('nonprofit', 'contact');
+
+    assert($campaignRenderer instanceof SectionRenderer);
+    assert($storiesRenderer instanceof SectionRenderer);
+    assert($contactRenderer instanceof SectionRenderer);
+
+    $campaignHtml = $campaignRenderer->render(nonprofitThemeSection('campaigns', [
+        'heading' => 'Appeals in motion',
+        'items' => [
+            [
+                'label' => 'Urgent appeal',
+                'title' => 'Food-bank winter fund',
+                'summary' => 'A hydrated campaign card with live appeal copy.',
+            ],
+        ],
+    ]));
+
+    $storiesHtml = $storiesRenderer->render(nonprofitThemeSection('stories', [
+        'heading' => 'Supporter stories',
+        'items' => [
+            [
+                'type' => 'Volunteer update',
+                'title' => 'Community kitchen rota',
+                'summary' => 'A hydrated story summary from section content.',
+                'meta' => 'Three shifts covered',
+            ],
+        ],
+    ]));
+
+    $contactHtml = $contactRenderer->render(nonprofitThemeSection('contact', [
+        'heading' => 'Route supporters clearly',
+        'items' => [
+            [
+                'label' => 'Partnership route',
+                'title' => 'Corporate giving team',
+                'summary' => 'A hydrated contact card for partnership enquiries.',
+            ],
+        ],
+    ]));
+
+    expect($campaignHtml)
+        ->toContain('Appeals in motion')
+        ->toContain('Urgent appeal')
+        ->toContain('Food-bank winter fund')
+        ->toContain('A hydrated campaign card with live appeal copy.')
+        ->not->toContain('Awareness')
+        ->not->toContain('capell-app/theme-nonprofit');
+
+    expect($storiesHtml)
+        ->toContain('Supporter stories')
+        ->toContain('Volunteer update')
+        ->toContain('Community kitchen rota')
+        ->toContain('A hydrated story summary from section content.')
+        ->toContain('Three shifts covered')
+        ->not->toContain('Community impact story')
+        ->not->toContain('capell-app/theme-nonprofit');
+
+    expect($contactHtml)
+        ->toContain('Route supporters clearly')
+        ->toContain('Partnership route')
+        ->toContain('Corporate giving team')
+        ->toContain('A hydrated contact card for partnership enquiries.')
+        ->not->toContain('Donation questions')
+        ->not->toContain('capell-app/theme-nonprofit');
+});
+
+it('renders every Nonprofit-owned section with empty or partial section data', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(NonprofitThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new NonprofitThemeServiceProvider($this->app))->boot($registry);
+
+    foreach (nonprofitOwnedSectionKeys() as $sectionKey) {
+        $renderer = $registry->sectionRenderer('nonprofit', $sectionKey);
+
+        assert($renderer instanceof SectionRenderer);
+
+        $html = $renderer->render(nonprofitThemeSection($sectionKey, [
+            'heading' => 'Partial ' . $sectionKey,
+            'items' => [],
+            'features' => [],
+            'actions' => [],
+        ]));
+
+        expect($html)
+            ->toContain('theme-section-' . $sectionKey)
+            ->toContain('Partial ' . $sectionKey)
+            ->not->toContain('capell-app/theme-nonprofit')
+            ->not->toContain('Filament')
+            ->not->toContain('wire:');
+    }
+});
+
 /**
  * @param  array<string, mixed>  $viewData
  */
@@ -319,4 +466,15 @@ function nonprofitThemeSection(string $key, array $viewData): ThemeSection
             return ['section' => (object) $this->viewData];
         }
     };
+}
+
+/**
+ * @return array<int, string>
+ */
+function nonprofitOwnedSectionKeys(): array
+{
+    return array_values(array_filter(
+        NonprofitThemeServiceProvider::definition()->includedSections,
+        static fn (string $sectionKey): bool => ! in_array($sectionKey, ['navigation', 'footer'], true),
+    ));
 }

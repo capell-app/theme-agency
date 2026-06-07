@@ -36,8 +36,8 @@ test('default color keys and values are validated before registration', function
     invokeFoundationThemeTailwindGeneratorMethod($generator, 'registerDefaultThemeColors', [$registry]);
 
     expect($registry->themeColors()->all())->toBe([
-        'primary' => '#123abc',
-        'secondary' => 'rgb(12 34 56 / 50%)',
+        'primary' => 'rgb(18, 58, 188)',
+        'secondary' => 'rgba(12, 34, 56, 0.5)',
     ]);
 });
 

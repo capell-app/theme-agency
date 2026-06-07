@@ -12,24 +12,31 @@
         'url' => '#volunteer',
     ];
     $imageUrl = $section->mediaUrl ?? ($imageUrl ?? ($image ?? null));
-    $imageAlt = $section->mediaAlt ?? ($imageAlt ?? '');
+    $imageAlt = $section->mediaAlt ?? ($imageAlt ?? ($heading ?? __('capell-theme-nonprofit::generic.hero_image_alt')));
+    $campaignTitle = $section->campaignTitle ?? __('capell-theme-nonprofit::generic.hero_campaign_title');
+    $campaignValue = $section->campaignValue ?? __('capell-theme-nonprofit::generic.hero_campaign_value');
+    $campaignProgressValue = $section->campaignProgress ?? (int) preg_replace('/[^0-9]/', '', (string) $campaignValue);
+    $campaignProgress = max(0, min(100, (int) $campaignProgressValue));
+    $campaignDisplayValue = is_string($campaignValue) && $campaignValue !== '' ? $campaignValue : $campaignProgress . '%';
 @endphp
 
-<section class="theme-section theme-section-hero overflow-hidden bg-[#fff7e6]">
+<section
+    class="theme-section theme-section-hero nonprofit-bg-surface-warm overflow-hidden"
+>
     @isset($heading)
         <div
             class="mx-auto grid max-w-6xl gap-0 px-6 py-16 lg:grid-cols-[0.92fr_1.08fr] lg:py-20"
         >
             <div
-                class="bg-white px-6 py-8 shadow-xl shadow-emerald-950/5 md:px-8 md:py-10 lg:relative lg:z-10 lg:self-center"
+                class="bg-white px-6 py-8 shadow-xl md:px-8 md:py-10 lg:relative lg:z-10 lg:self-center"
             >
                 <p
-                    class="text-xs font-black tracking-[0.18em] text-[#b45309] uppercase"
+                    class="nonprofit-text-accent-strong text-xs font-black tracking-[0.18em] uppercase"
                 >
                     {{ $eyebrow }}
                 </p>
                 <h1
-                    class="mt-5 max-w-3xl text-5xl leading-tight font-black tracking-normal text-[#07110b]"
+                    class="nonprofit-text-ink mt-5 max-w-3xl text-5xl leading-tight font-black tracking-normal"
                 >
                     {{ $heading }}
                 </h1>
@@ -42,50 +49,52 @@
                 <div class="mt-7 flex flex-wrap gap-3">
                     <a
                         href="{{ $primaryAction['url'] ?? '#donate' }}"
-                        class="inline-flex bg-[#052e16] px-5 py-3 text-sm font-black text-white"
+                        class="nonprofit-bg-primary-deep inline-flex px-5 py-3 text-sm font-black text-white"
                     >
                         {{ $primaryAction['label'] ?? __('capell-theme-nonprofit::generic.hero_primary_action') }}
                     </a>
                     <a
                         href="{{ $secondaryAction['url'] ?? '#volunteer' }}"
-                        class="inline-flex border border-[#facc15] bg-[#fef9c3] px-5 py-3 text-sm font-black text-[#052e16]"
+                        class="nonprofit-border-accent nonprofit-bg-accent-soft nonprofit-text-ink inline-flex border px-5 py-3 text-sm font-black"
                     >
                         {{ $secondaryAction['label'] ?? __('capell-theme-nonprofit::generic.hero_secondary_action') }}
                     </a>
                 </div>
 
-                <div class="mt-8 grid border-y border-[#fde68a] sm:grid-cols-3">
+                <div
+                    class="nonprofit-border-accent-soft mt-8 grid border-y sm:grid-cols-3"
+                >
                     <div class="py-4 sm:pr-4">
                         <p
-                            class="text-xs font-black tracking-[0.14em] text-[#b45309] uppercase"
+                            class="nonprofit-text-accent-strong text-xs font-black tracking-[0.14em] uppercase"
                         >
                             {{ __('capell-theme-nonprofit::generic.hero_metric_reach_label') }}
                         </p>
-                        <p class="mt-2 text-3xl font-black text-[#052e16]">
+                        <p class="nonprofit-text-ink mt-2 text-3xl font-black">
                             {{ __('capell-theme-nonprofit::generic.hero_metric_reach_value') }}
                         </p>
                     </div>
                     <div
-                        class="border-t border-[#fde68a] py-4 sm:border-t-0 sm:border-l sm:px-4"
+                        class="nonprofit-border-accent-soft border-t py-4 sm:border-t-0 sm:border-l sm:px-4"
                     >
                         <p
-                            class="text-xs font-black tracking-[0.14em] text-[#b45309] uppercase"
+                            class="nonprofit-text-accent-strong text-xs font-black tracking-[0.14em] uppercase"
                         >
                             {{ __('capell-theme-nonprofit::generic.hero_metric_action_label') }}
                         </p>
-                        <p class="mt-2 text-3xl font-black text-[#052e16]">
+                        <p class="nonprofit-text-ink mt-2 text-3xl font-black">
                             {{ __('capell-theme-nonprofit::generic.hero_metric_action_value') }}
                         </p>
                     </div>
                     <div
-                        class="border-t border-[#fde68a] py-4 sm:border-t-0 sm:border-l sm:pl-4"
+                        class="nonprofit-border-accent-soft border-t py-4 sm:border-t-0 sm:border-l sm:pl-4"
                     >
                         <p
-                            class="text-xs font-black tracking-[0.14em] text-[#b45309] uppercase"
+                            class="nonprofit-text-accent-strong text-xs font-black tracking-[0.14em] uppercase"
                         >
                             {{ __('capell-theme-nonprofit::generic.hero_metric_trust_label') }}
                         </p>
-                        <p class="mt-2 text-3xl font-black text-[#052e16]">
+                        <p class="nonprofit-text-ink mt-2 text-3xl font-black">
                             {{ __('capell-theme-nonprofit::generic.hero_metric_trust_value') }}
                         </p>
                     </div>
@@ -93,10 +102,10 @@
             </div>
 
             <div
-                class="relative overflow-hidden bg-[#052e16] p-5 text-white md:p-7 lg:-ml-6"
+                class="nonprofit-bg-primary-deep relative overflow-hidden p-5 text-white md:p-7 lg:-ml-6"
             >
                 <div
-                    class="absolute -top-12 -right-12 h-40 w-40 rounded-full border-[28px] border-[#facc15]"
+                    class="nonprofit-border-accent absolute -top-12 -right-12 h-40 w-40 rounded-full border-[28px]"
                     aria-hidden="true"
                 ></div>
 
@@ -105,16 +114,21 @@
                         <img
                             src="{{ $imageUrl }}"
                             alt="{{ $imageAlt }}"
+                            width="1200"
+                            height="675"
+                            loading="eager"
+                            decoding="async"
+                            fetchpriority="high"
                             class="aspect-[16/9] w-full object-cover"
                         />
                     @else
                         <div
-                            class="grid aspect-[16/9] content-end bg-[#0f3f23] p-5"
+                            class="nonprofit-bg-primary-dark grid aspect-[16/9] content-end p-5"
                             aria-hidden="true"
                         >
                             <div class="flex items-end justify-between gap-4">
                                 <span
-                                    class="block h-20 w-20 rounded-full bg-[#facc15]"
+                                    class="nonprofit-bg-accent block h-20 w-20 rounded-full"
                                 ></span>
                                 <span
                                     class="block h-28 w-28 rounded-full border-[18px] border-white/20"
@@ -131,23 +145,35 @@
                         >
                             <div>
                                 <p
-                                    class="text-xs font-black tracking-[0.18em] text-[#fde047] uppercase"
+                                    class="nonprofit-text-accent text-xs font-black tracking-[0.18em] uppercase"
                                 >
                                     {{ __('capell-theme-nonprofit::generic.hero_campaign_label') }}
                                 </p>
                                 <p class="mt-2 text-2xl font-black">
-                                    {{ __('capell-theme-nonprofit::generic.hero_campaign_title') }}
+                                    {{ $campaignTitle }}
                                 </p>
                             </div>
-                            <p class="text-4xl font-black text-[#facc15]">
-                                {{ __('capell-theme-nonprofit::generic.hero_campaign_value') }}
+                            <p
+                                class="nonprofit-text-accent text-4xl font-black"
+                            >
+                                {{ $campaignDisplayValue }}
                             </p>
                         </div>
-                        <div class="mt-5 h-3 bg-white/15">
-                            <div class="h-full w-[84%] bg-[#facc15]"></div>
+                        <div
+                            class="mt-5 h-3 bg-white/15"
+                            role="progressbar"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            aria-valuenow="{{ $campaignProgress }}"
+                            aria-label="{{ $campaignTitle }}"
+                        >
+                            <div
+                                class="nonprofit-bg-accent h-full"
+                                style="width: {{ $campaignProgress }}%"
+                            ></div>
                         </div>
                         <div
-                            class="mt-5 grid gap-3 text-sm font-bold text-emerald-50 sm:grid-cols-3"
+                            class="nonprofit-text-on-dark-muted mt-5 grid gap-3 text-sm font-bold sm:grid-cols-3"
                         >
                             <span class="bg-white/10 px-3 py-2">
                                 {{ __('capell-theme-nonprofit::generic.supporter_step_one') }}

@@ -6,10 +6,10 @@ namespace Capell\FoundationTheme\Support\Tailwind;
 
 use Capell\Core\Contracts\RegistersTailwindAssets;
 use Capell\Core\Data\VendorAssetData;
-use Capell\Core\Enums\DefaultColorEnum;
 use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
 use Capell\Core\Support\Tailwind\TailwindAssetsRegistry;
+use Capell\FoundationTheme\Actions\ResolveFoundationThemeTokensAction;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -227,29 +227,10 @@ class TailwindAssetsGenerator
 
     private function registerDefaultThemeColors(TailwindAssetsRegistry $registry): void
     {
-        $colors = [];
-
-        foreach (DefaultColorEnum::getKeyValues() as $name => $value) {
-            if (! is_string($name)) {
-                continue;
-            }
-
-            if (! is_string($value)) {
-                continue;
-            }
-
-            if ($value === '') {
-                continue;
-            }
-
-            if (! $this->isSafeThemeColor($name, $value)) {
-                $this->logInvalidThemeColor($name, $value, 'default-colors');
-
-                continue;
-            }
-
-            $colors[$name] = trim($value);
-        }
+        $colors = (new ResolveFoundationThemeTokensAction)
+            ->defaultPaletteColors()
+            ->mapWithKeys(fn (array $color): array => [$color['name'] => $color['value']])
+            ->all();
 
         if ($colors === []) {
             return;

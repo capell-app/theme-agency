@@ -52,6 +52,32 @@ class FoundationThemeSettings extends Settings implements SettingsContract
 
     public string $image_border_color = '#e1e5eb';
 
+    public string $dark_page_background_color = '#0f172a';
+
+    public string $dark_surface_background_color = '#111827';
+
+    public string $dark_muted_background_color = '#1f2937';
+
+    public string $dark_header_background_color = '#111827';
+
+    public string $dark_border_color = '#334155';
+
+    public string $dark_border_strong_color = '#475569';
+
+    public string $dark_card_background_color = '#111827';
+
+    public string $dark_primary_action_color = '#93c5fd';
+
+    public string $dark_band_background_color = '#0f172a';
+
+    public string $dark_band_alternate_background_color = '#111827';
+
+    public string $dark_band_accent_background_color = '#1e293b';
+
+    public string $dark_band_border_color = '#334155';
+
+    public string $dark_image_border_color = '#334155';
+
     public string $image_radius = '0.5rem';
 
     public string $section_spacing = 'relaxed';
