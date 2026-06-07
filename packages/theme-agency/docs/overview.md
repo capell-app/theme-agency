@@ -43,7 +43,7 @@ Provides an agency-focused visual option for sites managed through the normal Th
 The committed Capell runner-backed gallery covers the full `docs/screenshots.json` contract:
 
 - Themes admin list showing the Agency theme record in the host `ThemeResource`.
-- Seeded frontend page at `/theme-agency-demo` rendering navigation, hero, features, proof, content listing, CTA, and footer.
+- Seeded frontend page at `/theme-agency-demo` rendering navigation, hero, features, proof, content listing, project showcase, CTA, and footer.
 - Temporary signed `capell.admin.theme-preview` output for an authenticated administrator.
 
 ## Pitfalls

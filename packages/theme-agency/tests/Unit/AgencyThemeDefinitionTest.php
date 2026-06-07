@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
@@ -28,7 +29,7 @@ it('defines the agency free renderer contract', function (): void {
         ->and($definition->key)->toBe(AgencyThemeServiceProvider::THEME_KEY)
         ->and($definition->previewImage)->toBe(AgencyThemeServiceProvider::PUBLIC_PREVIEW_IMAGE)
         ->and($definition->assets)->toBe(['css' => AgencyThemeServiceProvider::GENERATED_FRONTEND_CSS])
-        ->and($definition->includedSections)->toContain('hero', 'features', 'proof', 'cta')
+        ->and($definition->includedSections)->toContain('hero', 'features', 'proof', 'project-showcase', 'cta')
         ->and($definition->presets)->toHaveCount(6)
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->tags)->toContain('Expressive')
@@ -147,6 +148,7 @@ it('declares renderers for every included agency section', function (): void {
         'features',
         'proof',
         'content-listing',
+        'project-showcase',
         'cta',
         'footer',
     ]);
@@ -243,6 +245,78 @@ it('renders agency content listing images with lazy loading attributes', functio
         ->toContain('decoding="async"');
 });
 
+it('renders a dedicated agency project showcase section', function (): void {
+    View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/lang');
+
+    $provider = new AgencyThemeServiceProvider($this->app);
+    $method = new ReflectionMethod($provider, 'sectionRenderers');
+    $renderer = $method->invoke($provider)['project-showcase'] ?? null;
+
+    expect($renderer)->not->toBeNull();
+
+    $html = $renderer->render(agencyThemeSection('project-showcase', [
+        'heading' => 'Launch work that moved markets',
+        'summary' => 'Selected campaign, brand, and product systems.',
+        'filters' => ['Brand', 'Campaign'],
+        'items' => [
+            [
+                'title' => 'Retail launch system',
+                'summary' => 'A multi-channel launch for a national retail team.',
+                'url' => '/work/retail-launch',
+                'image' => '/images/retail-launch.jpg',
+                'imageAlt' => 'Retail launch campaign wall',
+                'discipline' => 'Campaign',
+                'year' => '2026',
+                'stage' => 'Launched',
+            ],
+            [
+                'title' => 'B2B brand sprint',
+                'summary' => 'A compact identity system for a SaaS team.',
+                'type' => 'Brand',
+            ],
+        ],
+    ]));
+
+    expect($html)
+        ->toContain('Project showcase')
+        ->toContain('Launch work that moved markets')
+        ->toContain('Selected campaign, brand, and product systems.')
+        ->toContain('All work')
+        ->toContain('Campaign')
+        ->toContain('src="/images/retail-launch.jpg"')
+        ->toContain('alt="Retail launch campaign wall"')
+        ->toContain('loading="lazy"')
+        ->toContain('Retail launch system')
+        ->toContain('Year 2026')
+        ->toContain('Launched')
+        ->toContain('B2B brand sprint')
+        ->toContain('site-brand-gradient')
+        ->not->toContain('capell-app/theme-agency')
+        ->not->toContain('capell-theme-agency');
+});
+
+it('renders the agency project showcase empty state', function (): void {
+    View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-agency::sections.project-showcase', [
+        'section' => (object) [
+            'heading' => 'Selected work',
+            'summary' => null,
+            'items' => [],
+            'filters' => [],
+        ],
+    ])->render();
+
+    expect($html)
+        ->toContain('Add project stories')
+        ->toContain('Add selected work, campaign launches, or portfolio projects')
+        ->not->toContain('data-field')
+        ->not->toContain('model_id')
+        ->not->toContain('capell-app/theme-agency');
+});
+
 it('registers agency only when the theme package is installed', function (): void {
     CapellCore::clearPackages();
 
@@ -261,6 +335,41 @@ it('registers agency only when the theme package is installed', function (): voi
     expect($registry->has('agency'))->toBeTrue()
         ->and($registry->definition('agency')->package)->toBe(AgencyThemeServiceProvider::$packageName);
 });
+
+/**
+ * @param  array<string, mixed>  $viewData
+ */
+function agencyThemeSection(string $key, array $viewData): ThemeSection
+{
+    return new readonly class($key, $viewData) implements ThemeSection
+    {
+        /**
+         * @param  array<string, mixed>  $viewData
+         */
+        public function __construct(
+            private string $sectionKey,
+            private array $viewData,
+        ) {}
+
+        public function key(): string
+        {
+            return $this->sectionKey;
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return ['section' => (object) $this->viewData];
+        }
+    };
+}
 
 it('registers agency tailwind imports and blade sources when installed', function (): void {
     CapellCore::clearPackages();
