@@ -9,6 +9,7 @@ use Capell\EmailStudio\Models\EmailEvent;
 use Capell\EmailStudio\Models\EmailMessage;
 use Capell\EmailStudio\Models\EmailProfile;
 use Capell\EmailStudio\Models\EmailRecipient;
+use Capell\EmailStudio\Models\EmailSuppression;
 
 it('records provider webhooks and updates matching recipients', function (): void {
     $token = 'provider-token';
@@ -63,6 +64,35 @@ it('keeps provider webhook event ingestion idempotent per profile', function ():
     $this->postJson(route('capell-email-studio.provider-events', ['token' => $token]), $payload)->assertOk();
 
     expect(EmailEvent::query()->where('email_profile_id', $profile->getKey())->count())->toBe(1);
+});
+
+it('suppresses recipients automatically after provider bounce events', function (): void {
+    $token = 'bounce-provider-token';
+    $profile = EmailProfile::factory()->create([
+        'provider' => EmailProviderType::Fake,
+        'webhook_endpoint_token_hash' => hash('sha256', $token),
+    ]);
+    $message = EmailMessage::factory()->for($profile, 'profile')->create([
+        'site_scope_key' => 'global',
+    ]);
+    $recipient = EmailRecipient::factory()->for($message, 'message')->create([
+        'email' => 'bounce@example.test',
+        'normalized_email' => 'bounce@example.test',
+        'email_hash' => hash('sha256', 'bounce@example.test'),
+        'provider_message_id' => 'provider-message-3',
+        'site_scope_key' => 'global',
+    ]);
+
+    $this->postJson(route('capell-email-studio.provider-events', ['token' => $token]), [
+        'id' => 'provider-event-bounce',
+        'event' => 'bounce',
+        'message_id' => 'provider-message-3',
+    ])->assertOk();
+
+    $recipient->refresh();
+
+    expect($recipient->status)->toBe(EmailRecipientStatus::Bounced)
+        ->and(EmailSuppression::query()->where('email_hash', hash('sha256', 'bounce@example.test'))->exists())->toBeTrue();
 });
 
 it('rejects provider webhooks with unknown endpoint tokens', function (): void {

@@ -6,7 +6,7 @@ All notable changes to `capell-app/email-studio` will be documented in this file
 
 ### Changed - 2026-06-07
 
-- Added tokenized provider-event webhook ingestion that normalizes adapter payloads, writes `email_events`, and updates matching recipient delivery status/timestamps idempotently.
+- Added tokenized provider-event webhook ingestion that normalizes adapter payloads, writes `email_events`, updates matching recipient delivery status/timestamps idempotently, and automatically suppresses hard-bounced or complained recipients.
 
 ### Changed - 2026-06-03
 

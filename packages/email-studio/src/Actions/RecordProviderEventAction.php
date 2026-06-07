@@ -7,6 +7,7 @@ namespace Capell\EmailStudio\Actions;
 use Capell\EmailStudio\Data\ProviderWebhookEventData;
 use Capell\EmailStudio\Enums\EmailEventType;
 use Capell\EmailStudio\Enums\EmailRecipientStatus;
+use Capell\EmailStudio\Enums\SuppressionReason;
 use Capell\EmailStudio\Models\EmailEvent;
 use Capell\EmailStudio\Models\EmailProfile;
 use Capell\EmailStudio\Models\EmailRecipient;
@@ -42,6 +43,7 @@ final class RecordProviderEventAction
 
         if ($event->wasRecentlyCreated && $recipient instanceof EmailRecipient) {
             $this->applyRecipientStatus($recipient, $eventType);
+            $this->applySuppression($recipient, $eventType);
         }
 
         return $event;
@@ -131,5 +133,23 @@ final class RecordProviderEventAction
             $eventData->recipientEmail ?? '',
             json_encode($eventData->payload, JSON_THROW_ON_ERROR),
         ]));
+    }
+
+    private function applySuppression(EmailRecipient $recipient, EmailEventType $eventType): void
+    {
+        if (! in_array($eventType, [EmailEventType::Bounced, EmailEventType::Complained], true)) {
+            return;
+        }
+
+        SuppressEmailAddressAction::run(
+            email: $recipient->email,
+            reason: $eventType === EmailEventType::Bounced
+                ? SuppressionReason::Bounce
+                : SuppressionReason::Complaint,
+            siteId: $recipient->site_id,
+            siteScopeKey: $recipient->site_scope_key,
+            source: 'provider-event',
+            notes: sprintf('Automatically suppressed from provider %s event.', $eventType->value),
+        );
     }
 }
