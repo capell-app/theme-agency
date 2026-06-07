@@ -10,6 +10,7 @@ All notable changes to `capell-app/frontend-optimizer` will be documented in thi
 - Removed the unused `debug_query_support` setting from active settings, admin UI, translations, and docs.
 - Clarified that marketplace screenshots only list committed `docs/assets/marketplace` assets while required runner captures remain pending in `docs/screenshots.json`.
 - Wired successful critical-CSS generation to the frontend cache invalidation registry without importing HTML Cache internals.
+- Moved render-profile manifest writes off the normal public render path so synchronous queue renders and already-queued profiles do not write local manifest files.
 
 ## 2026-06-03
 

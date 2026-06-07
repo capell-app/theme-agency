@@ -40,10 +40,12 @@ class PrepareRenderProfileAction
             label: $label,
         );
 
-        $manifestPath = StoreRenderProfileManifestAction::run($profileData);
-        $profile = PersistRenderProfileAction::run($profileData, $manifestPath);
+        $profile = PersistRenderProfileAction::run($profileData);
 
         if ($this->shouldDispatchGeneration($profile) && $this->claimGeneration($profile)) {
+            $manifestPath = StoreRenderProfileManifestAction::run($profileData);
+            $profile->forceFill(['manifest' => ['path' => $manifestPath]])->save();
+
             dispatch(new GenerateCriticalCssJob((int) $profile->getKey(), $url));
         }
 

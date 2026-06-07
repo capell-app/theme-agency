@@ -54,10 +54,14 @@ it('does not dispatch duplicate critical css jobs while a profile is already que
         'label' => 'Landing',
     ];
 
-    PrepareRenderProfileAction::run(...$arguments);
+    $profile = PrepareRenderProfileAction::run(...$arguments);
+    $manifestPath = $profile->manifest['path'];
+    Storage::disk('local')->delete($manifestPath);
+
     PrepareRenderProfileAction::run(...$arguments);
 
     Bus::assertDispatchedTimes(GenerateCriticalCssJob::class, 1);
+    Storage::disk('local')->assertMissing($manifestPath);
 });
 
 it('does not dispatch generation from public rendering when the queue is synchronous', function (): void {
@@ -76,7 +80,8 @@ it('does not dispatch generation from public rendering when the queue is synchro
         label: 'Landing',
     );
 
-    Storage::disk('local')->assertExists($profile->manifest['path']);
+    expect($profile->manifest)->toBeNull();
+    Storage::disk('local')->assertMissing('capell/frontend-optimizer/manifests/' . $profile->hash . '.json');
     Bus::assertNotDispatched(GenerateCriticalCssJob::class);
 });
 
