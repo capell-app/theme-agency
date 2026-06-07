@@ -163,3 +163,13 @@ it('ships a scoped dark-mode layer for the Nonprofit shell', function (): void {
         ->toContain('.text-slate-600')
         ->toContain('.border-slate-200');
 });
+
+it('keeps theme Tailwind classes unprefixed because package assets are isolated', function (): void {
+    $provider = file_get_contents(__DIR__ . '/../../src/NonprofitThemeServiceProvider.php') ?: '';
+    $blade = nonprofitThemeBladeViews();
+
+    expect($provider)
+        ->toContain("VendorAssetData::tailwindImport('resources/css/theme-nonprofit.css'")
+        ->toContain("VendorAssetData::tailwindSource('resources/views/**/*.blade.php'")
+        ->and($blade)->not->toContain('tw:');
+});
