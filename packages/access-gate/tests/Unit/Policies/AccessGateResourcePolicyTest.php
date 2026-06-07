@@ -116,6 +116,7 @@ it('requires explicit permissions for access gate admin resources', function (st
         ->and($policy->viewAny(accessGatePolicyActor(['ViewAny:' . $subject])))->toBeTrue()
         ->and($policy->viewAny(accessGatePolicyActor(['View:' . $subject])))->toBeTrue()
         ->and($policy->update(accessGatePolicyActor(['ViewAny:' . $subject]), $record))->toBeFalse()
+        ->and($policy->update(accessGatePolicyActor(['Update:' . $subject])))->toBeTrue()
         ->and($policy->update(accessGatePolicyActor(['Update:' . $subject]), $record))->toBeTrue();
 })->with([
     'access areas' => [AccessAreaPolicy::class, Area::class, 'AccessArea'],

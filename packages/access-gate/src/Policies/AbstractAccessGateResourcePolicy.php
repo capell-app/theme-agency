@@ -32,10 +32,17 @@ abstract class AbstractAccessGateResourcePolicy
         return $this->hasPermission($user, 'create');
     }
 
-    public function update(User $user, Model $record): bool
+    public function update(User $user, ?Model $record = null): bool
     {
-        return $this->hasPermission($user, 'update')
-            && AccessGateSiteScope::actorCanUseRecord($user, $record);
+        if (! $this->hasPermission($user, 'update')) {
+            return false;
+        }
+
+        if (! $record instanceof Model) {
+            return true;
+        }
+
+        return AccessGateSiteScope::actorCanUseRecord($user, $record);
     }
 
     public function delete(User $user, Model $record): bool
