@@ -55,6 +55,26 @@ return [
         ],
     ],
 
+    'public' => [
+        'banner' => [
+            'copy' => 'Choose which optional cookies this site can use.',
+            'manage' => 'Manage privacy preferences',
+        ],
+        'categories' => [
+            'essential' => 'Required for security and core site functionality.',
+            'analytics' => 'Helps us understand visits and improve the site.',
+            'marketing' => 'Supports campaign measurement and personalised marketing.',
+            'preferences' => 'Remembers choices such as display and language preferences.',
+            'functional' => 'Enables enhanced site features requested by visitors.',
+        ],
+        'preferences' => [
+            'intro' => 'Essential cookies are always on. You can grant or deny optional categories at any time.',
+            'save' => 'Save preferences',
+            'saved' => 'Your privacy preferences have been saved.',
+            'title' => 'Privacy preferences',
+        ],
+    ],
+
     'admin' => [
         'navigation_group' => 'Privacy center',
         'resources' => [

@@ -4,6 +4,7 @@ All notable changes to `capell-app/privacy-center` will be documented in this fi
 
 ## Unreleased
 
+- Added a public cookie consent preference center and embeddable banner partial that record granular cookie-category decisions through `RecordConsentAction` without exposing policy model IDs or admin internals.
 - Added focused admin/scheduled-retention coverage for Privacy Center workflow actions, retention rule table actions, and command manifest alignment.
 
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.

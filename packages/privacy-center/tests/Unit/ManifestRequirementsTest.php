@@ -45,11 +45,13 @@ it('declares privacy center manifest ownership and cache safety', function (): v
         ->and($manifest['name'])->toBe('capell-app/privacy-center')
         ->and($manifest['namespace'])->toBe('Capell\\PrivacyCenter')
         ->and(data_get($manifest, 'database.requiredTables'))->toContain('privacy_consent_records')
+        ->and(data_get($manifest, 'performance.frontendRenderBudgetMs'))->toBe(40)
         ->and(data_get($manifest, 'performance.cacheSafety.sensitiveOutput'))->toBeTrue()
         ->and(data_get($manifest, 'dependencies.requires'))->toContain('capell-app/admin')
         ->and(data_get($manifest, 'providers.admin'))->toBe([AdminServiceProvider::class])
         ->and(data_get($manifest, 'commands.retention'))->toBe('privacy:apply-retention')
-        ->and(data_get($manifest, 'capabilities'))->not->toContain('privacy-center-cookie-categories')
+        ->and(data_get($manifest, 'surfaces'))->toContain('public')
+        ->and(data_get($manifest, 'capabilities'))->toContain('privacy-center-cookie-categories')
         ->and(data_get($manifest, 'capabilities'))->toContain(
             'privacy-center-consent',
             'privacy-center-retention',
@@ -136,25 +138,25 @@ it('declares cookie consent categories', function (): void {
     ]);
 });
 
-it('documents shipped privacy center surfaces without overclaiming public workflows', function (): void {
+it('documents shipped privacy center surfaces without overclaiming deferred workflows', function (): void {
     $packagePath = dirname(__DIR__, 2);
     $readme = (string) file_get_contents($packagePath . '/README.md');
     $overview = (string) file_get_contents($packagePath . '/docs/overview.md');
     $changelog = (string) file_get_contents($packagePath . '/CHANGELOG.md');
 
     expect($readme)
-        ->toContain('Privacy Center currently ships admin and console surfaces only')
-        ->toContain('does not ship a public cookie banner')
-        ->toContain('does not ship a public cookie banner, a public DSAR intake form')
+        ->toContain('Privacy Center currently ships admin and console surfaces')
+        ->toContain('public cookie consent preference center')
+        ->toContain('does not ship a public DSAR intake form')
         ->toContain('BuildPrivacyExportAction')
         ->toContain('AnonymizePrivacySubjectAction')
         ->toContain('CAPELL_PRIVACY_CENTER_HASH_SECRET')
         ->toContain('The admin provider contributes these Filament surfaces')
         ->and($overview)
-        ->toContain('It does not ship a public cookie banner')
+        ->toContain('public cookie consent preference center')
         ->toContain('cross-package subject-data export/erasure registry')
         ->toContain('`RecordConsentAction` can infer a subject from a source model')
-        ->toContain('frontendRenderBudgetMs: 0')
+        ->toContain('cache-safe public preference center')
         ->and($changelog)
         ->toContain('Expanded README and overview documentation')
         ->and($readme)

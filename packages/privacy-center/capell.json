@@ -13,7 +13,7 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\PrivacyCenter",
-    "surfaces": ["admin", "console"],
+    "surfaces": ["admin", "console", "public"],
     "dependencies": {
         "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [
@@ -111,6 +111,7 @@
     "capabilities": [
         "privacy-center",
         "privacy-center-consent",
+        "privacy-center-cookie-categories",
         "privacy-center-insights-consent-mirror",
         "privacy-center-retention",
         "privacy-center-retention-execution",
@@ -121,7 +122,7 @@
         "privacy-center-subject-requests"
     ],
     "performance": {
-        "frontendRenderBudgetMs": 0,
+        "frontendRenderBudgetMs": 40,
         "adminQueryBudget": 40,
         "cacheTags": ["privacy-center"],
         "cacheSafety": {
