@@ -15,6 +15,7 @@
     "namespace": "Capell\\FrontendOptimizer",
     "surfaces": [
         "admin",
+        "console",
         "frontend"
     ],
     "dependencies": {
@@ -47,7 +48,8 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": null,
+        "prune": "capell:frontend-optimizer:prune-profiles"
     },
     "settings": [
         "Capell\\FrontendOptimizer\\Settings\\FrontendOptimizerSettings"
@@ -56,6 +58,7 @@
     "capabilities": [
         "frontend-optimizer",
         "frontend-optimizer-frontend",
+        "frontend-optimizer-console",
         "frontend-assets",
         "cache-blocking"
     ],
