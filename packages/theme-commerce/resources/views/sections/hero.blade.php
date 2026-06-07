@@ -68,6 +68,12 @@
                 <img
                     src="{{ $section->mediaUrl }}"
                     alt="{{ $section->mediaAlt ?? '' }}"
+                    width="1200"
+                    height="900"
+                    loading="eager"
+                    decoding="async"
+                    fetchpriority="high"
+                    sizes="(min-width: 1024px) 48vw, 100vw"
                     class="aspect-[4/3] w-full rounded-xl object-cover"
                 />
             @else

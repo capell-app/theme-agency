@@ -266,6 +266,122 @@ it('renders translated fallback and data-driven hero trust badges', function ():
         ->not->toContain('Premium stock visuals');
 });
 
+it('renders commerce hero media with LCP image attributes', function (): void {
+    View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-commerce::sections.hero', [
+        'section' => new HeroSectionData(
+            heading: 'Browse the new range',
+            summary: 'Durable retail storytelling.',
+            mediaUrl: '/images/commerce-hero.jpg',
+            mediaAlt: 'Editorial product table',
+        ),
+    ])->render();
+
+    expect($html)
+        ->toContain('src="/images/commerce-hero.jpg"')
+        ->toContain('alt="Editorial product table"')
+        ->toContain('width="1200"')
+        ->toContain('height="900"')
+        ->toContain('loading="eager"')
+        ->toContain('decoding="async"')
+        ->toContain('fetchpriority="high"')
+        ->toContain('sizes="(min-width: 1024px) 48vw, 100vw"');
+});
+
+it('renders commerce product grid images with lazy loading attributes', function (): void {
+    View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-commerce::sections.product-grid', [
+        'section' => (object) [
+            'heading' => 'Featured products',
+            'items' => [
+                [
+                    'title' => 'Canvas tote',
+                    'summary' => 'Heavy cotton with brass hardware.',
+                    'image' => '/images/canvas-tote.jpg',
+                    'imageAlt' => 'Canvas tote on a table',
+                ],
+            ],
+        ],
+    ])->render();
+
+    expect($html)
+        ->toContain('src="/images/canvas-tote.jpg"')
+        ->toContain('alt="Canvas tote on a table"')
+        ->toContain('width="800"')
+        ->toContain('height="800"')
+        ->toContain('loading="lazy"')
+        ->toContain('decoding="async"')
+        ->toContain('sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 80vw"');
+});
+
+it('renders core commerce sections directly', function (string $view, object $section, string $expectedMarkup): void {
+    View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+
+    $html = view("capell-theme-commerce::sections.{$view}", [
+        'section' => $section,
+    ])->render();
+
+    expect($html)
+        ->toContain($expectedMarkup)
+        ->not->toContain('capell-app/theme-commerce')
+        ->not->toContain('model_id')
+        ->not->toContain('field_path');
+})->with([
+    'navigation' => [
+        'navigation',
+        new NavigationData(
+            brandName: 'Stone & Loom',
+            items: [['label' => 'Catalog', 'url' => '/catalog']],
+            ctaLabel: 'Shop',
+            ctaUrl: '/catalog',
+        ),
+        '[&::-webkit-details-marker]:hidden',
+    ],
+    'comparison' => [
+        'comparison',
+        (object) [
+            'heading' => 'Compare materials',
+            'summary' => 'Choose the right buying path.',
+            'items' => [
+                ['title' => 'Waxed canvas', 'summary' => 'Weather-ready and repairable.'],
+            ],
+        ],
+        'Waxed canvas',
+    ],
+    'proof' => [
+        'proof',
+        new ProofSectionData(
+            heading: 'Trusted by buyers',
+            items: [['metric' => '94%', 'name' => 'Repeat buyer rate', 'summary' => 'Built for confident repeat purchase.']],
+        ),
+        'Retail proof ledger',
+    ],
+    'cta' => [
+        'cta',
+        new CtaSectionData(
+            heading: 'Build the next basket',
+            summary: 'Move shoppers from browsing to checkout.',
+            actions: [['label' => 'Open catalog', 'url' => '/catalog']],
+        ),
+        'Build the next basket',
+    ],
+    'footer' => [
+        'footer',
+        new FooterData(
+            brandName: 'Stone & Loom',
+            columns: [
+                ['heading' => 'Shop', 'links' => [['label' => 'New arrivals', 'url' => '/collections/new']]],
+            ],
+        ),
+        'New arrivals',
+    ],
+]);
+
 it('renders catalog highlight copy through translations with generic public selectors', function (): void {
     View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
     resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
@@ -325,6 +441,96 @@ it('renders standard feature and content listing sections through commerce regis
         ->toContain('Canvas care guide')
         ->not->toContain('model_id')
         ->not->toContain('field_path');
+});
+
+it('renders a hydrated commerce page within the declared frontend render budget', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(CommerceThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new CommerceThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $page = new ThemePageData(
+        title: 'Stone & Loom',
+        brand: new BrandProfileData,
+        sections: [
+            new HeroSectionData(
+                heading: 'Outdoor goods selected by careful product notes',
+                eyebrow: 'New season',
+                summary: 'A warmer catalog page for browsing durable home and travel products.',
+                actions: [['label' => 'Shop arrivals', 'url' => '/collections/new']],
+                mediaUrl: '/images/commerce-hero.jpg',
+                mediaAlt: 'Editorial product table',
+            ),
+            commerceThemeSection('product-finder', [
+                'heading' => 'Find the right kit',
+                'items' => [['group' => 'Use', 'options' => ['Travel', 'Garden', 'Kitchen']]],
+            ]),
+            commerceThemeSection('collections', [
+                'heading' => 'Shop by collection',
+                'items' => [['title' => 'Weekend table', 'summary' => 'Serveware and linens.', 'url' => '/collections/table']],
+            ]),
+            commerceThemeSection('product-grid', [
+                'heading' => 'Featured products',
+                'items' => [['title' => 'Canvas tote', 'summary' => 'Heavy cotton with brass hardware.', 'price' => '$84', 'image' => '/images/canvas-tote.jpg']],
+            ]),
+            commerceThemeSection('comparison', [
+                'heading' => 'Compare materials',
+                'items' => [['title' => 'Waxed canvas', 'summary' => 'Weather-ready and repairable.']],
+            ]),
+            commerceThemeSection('catalog', [
+                'heading' => 'Catalog connection',
+                'items' => [['title' => 'Live inventory']],
+            ]),
+            commerceThemeSection('lookbook', [
+                'heading' => 'Autumn material stories',
+                'items' => [['title' => 'Waxed cotton', 'summary' => 'Weather-ready product story.']],
+            ]),
+            commerceThemeSection('promotion', [
+                'heading' => 'Spring offer board',
+                'items' => [['title' => 'Member preview', 'summary' => 'Segmented offer for early access buyers.']],
+            ]),
+            commerceThemeSection('buying-guide', [
+                'heading' => 'Choose the right field jacket',
+                'items' => [['title' => 'Canvas weight guide', 'summary' => 'Advice content for purchase confidence.']],
+            ]),
+            new ProofSectionData(
+                heading: 'Trusted by buyers',
+                items: [['metric' => '94%', 'name' => 'Repeat buyer rate', 'summary' => 'Built for confident repeat purchase.']],
+            ),
+            commerceThemeSection('blog-teaser', [
+                'heading' => 'Buying guides',
+                'items' => [['title' => 'Canvas care guide', 'summary' => 'Keep products in rotation longer.', 'url' => '/guides/canvas-care']],
+            ]),
+            new CtaSectionData(
+                heading: 'Build the next basket',
+                actions: [['label' => 'Open catalog', 'url' => '/catalog']],
+            ),
+        ],
+        navigation: new NavigationData(
+            brandName: 'Stone & Loom',
+            items: [['label' => 'Catalog', 'url' => '/catalog']],
+            ctaLabel: 'Shop',
+            ctaUrl: '/catalog',
+        ),
+        footer: new FooterData(
+            brandName: 'Stone & Loom',
+            columns: [
+                ['heading' => 'Shop', 'links' => [['label' => 'New arrivals', 'url' => '/collections/new']]],
+            ],
+        ),
+    );
+
+    $renderer = $registry->renderer('commerce');
+    $renderer->render($page);
+
+    $startedAt = hrtime(true);
+    $html = $renderer->render($page);
+    $durationMs = (hrtime(true) - $startedAt) / 1_000_000;
+
+    expect($html)->toContain('Stone &amp; Loom')
+        ->and($durationMs)->toBeLessThan(20.0);
 });
 
 it('renders new premium commerce layouts through the registry', function (): void {

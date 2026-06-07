@@ -35,7 +35,7 @@
 
             <details class="relative md:hidden">
                 <summary
-                    class="cursor-pointer list-none rounded-full border border-stone-300 px-3 py-2 text-sm font-bold text-stone-700 marker:hidden"
+                    class="cursor-pointer list-none rounded-full border border-stone-300 px-3 py-2 text-sm font-bold text-stone-700 [&::-webkit-details-marker]:hidden"
                 >
                     {{ __('capell-theme-commerce::generic.menu') }}
                 </summary>

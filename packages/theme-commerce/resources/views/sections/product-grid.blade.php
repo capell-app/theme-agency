@@ -38,6 +38,11 @@
                                 <img
                                     src="{{ $product['image'] ?? $product['imageUrl'] }}"
                                     alt="{{ $product['imageAlt'] ?? '' }}"
+                                    width="800"
+                                    height="800"
+                                    loading="lazy"
+                                    decoding="async"
+                                    sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 80vw"
                                     class="aspect-square w-full object-cover transition duration-500 group-hover:scale-105"
                                 />
                             </div>
