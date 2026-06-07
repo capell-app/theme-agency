@@ -24,12 +24,12 @@
         >
             <div>
                 <p
-                    class="portfolio-text-secondary text-xs font-black uppercase"
+                    class="portfolio-text-secondary text-xs font-semibold tracking-[0.08em] uppercase"
                 >
                     {{ $eyebrow }}
                 </p>
                 <h2
-                    class="portfolio-text-ink mt-5 max-w-3xl text-5xl font-black tracking-normal lg:text-6xl"
+                    class="portfolio-text-ink mt-5 max-w-3xl text-4xl leading-tight font-extrabold tracking-normal sm:text-5xl"
                 >
                     {{ $heading }}
                 </h2>
@@ -98,6 +98,7 @@
                                 loading="eager"
                                 decoding="async"
                                 fetchpriority="high"
+                                sizes="(min-width: 1024px) 48vw, 100vw"
                                 class="aspect-[4/3] w-full object-cover"
                             />
                         @else

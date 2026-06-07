@@ -178,6 +178,8 @@ it('renders hydrated hero data through the Education hero view', function (): vo
     $html = $renderer->render(HeroSectionData::from([
         'heading' => 'Launch a cohort pathway',
         'summary' => 'Hydrated education hero summary.',
+        'mediaUrl' => '/images/education-hero.jpg',
+        'mediaAlt' => 'Learners reviewing a pathway board',
         'actions' => [
             ['label' => 'View courses', 'url' => '#courses'],
             ['label' => 'Talk to admissions', 'url' => '#admissions'],
@@ -189,6 +191,13 @@ it('renders hydrated hero data through the Education hero view', function (): vo
         ->toContain('Launch a cohort pathway')
         ->toContain('Hydrated education hero summary.')
         ->toContain('education-learning-board')
+        ->toContain('src="/images/education-hero.jpg"')
+        ->toContain('alt="Learners reviewing a pathway board"')
+        ->toContain('width="1200"')
+        ->toContain('height="750"')
+        ->toContain('loading="eager"')
+        ->toContain('fetchpriority="high"')
+        ->toContain('sizes="(min-width: 1024px) 52vw, 100vw"')
         ->toContain('Interview-ready path')
         ->toContain('View courses')
         ->toContain('Talk to admissions')

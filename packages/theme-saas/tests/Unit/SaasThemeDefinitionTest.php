@@ -189,6 +189,30 @@ it('renders new premium saas layouts through the registry', function (): void {
         ->not->toContain('capell-app/theme-saas');
 });
 
+it('renders saas hero media with LCP image attributes', function (): void {
+    View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-saas::sections.hero', [
+        'section' => new HeroSectionData(
+            heading: 'Activate the product-led journey',
+            summary: 'A proof-first hero for SaaS teams.',
+            mediaUrl: '/images/saas-hero.jpg',
+            mediaAlt: 'Product activation workspace',
+        ),
+    ])->render();
+
+    expect($html)
+        ->toContain('src="/images/saas-hero.jpg"')
+        ->toContain('alt="Product activation workspace"')
+        ->toContain('width="1200"')
+        ->toContain('height="900"')
+        ->toContain('loading="eager"')
+        ->toContain('decoding="async"')
+        ->toContain('fetchpriority="high"')
+        ->toContain('sizes="(min-width: 1024px) 48vw, 100vw"');
+});
+
 it('passes optional availability flags into saas conversion sections', function (string $package, string $sectionKey, string $connectedCopy, string $staticCopy): void {
     View::addNamespace('capell-theme-saas', __DIR__ . '/../../resources/views');
     resolve(Translator::class)->addNamespace('capell-theme-saas', __DIR__ . '/../../resources/lang');
@@ -445,16 +469,16 @@ it('renders public theme markup without package identifiers', function (): void 
 
     expect($html)
         ->toContain('Launchdeck')
-        ->toContain('Growth ledger')
-        ->toContain('Resource pipeline')
-        ->toContain('Conversion command')
-        ->toContain('Product signal')
-        ->toContain('Workflow signal')
+        ->toContain('Growth plan')
+        ->toContain('Customer journey')
+        ->toContain('Model the lift')
+        ->toContain('Product')
+        ->toContain('Workflow')
         ->toContain('Activation flow')
         ->toContain('Live workspace')
-        ->toContain('Activation stage')
+        ->toContain('First value')
         ->toContain('Activation')
-        ->toContain('Cohort')
+        ->toContain('Additional accounts')
         ->not->toContain('data-capell-theme')
         ->not->toContain('capell-theme')
         ->not->toContain('capell-app/theme-saas')
@@ -555,7 +579,7 @@ it('renders marketing-safe blog fallbacks when Blog is not installed', function 
         ->toContain('saas-insights-index')
         ->toContain('Growth resources')
         ->toContain('Activation forecast')
-        ->toContain('Resource brief')
+        ->toContain('Resource summary')
         ->not->toContain('href="/blog/activation-forecast"')
         ->not->toContain('capell-app/theme-saas')
         ->not->toContain('capell-theme-saas')

@@ -102,6 +102,30 @@ it('renders the corporate hero with a board briefing fallback', function (): voi
         ->not->toContain('capell-app/theme-corporate');
 });
 
+it('renders corporate hero media with LCP image attributes', function (): void {
+    View::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-corporate::sections.hero', [
+        'section' => new HeroSectionData(
+            heading: 'Governance for growing teams',
+            summary: 'Practical strategy, compliance, and delivery support.',
+            mediaUrl: '/images/corporate-hero.jpg',
+            mediaAlt: 'Board briefing dashboard',
+        ),
+    ])->render();
+
+    expect($html)
+        ->toContain('src="/images/corporate-hero.jpg"')
+        ->toContain('alt="Board briefing dashboard"')
+        ->toContain('width="1200"')
+        ->toContain('height="900"')
+        ->toContain('loading="eager"')
+        ->toContain('decoding="async"')
+        ->toContain('fetchpriority="high"')
+        ->toContain('sizes="(min-width: 1024px) 52vw, 100vw"');
+});
+
 it('renders translated fallback and custom corporate hero stats', function (): void {
     View::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/views');
     Lang::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/lang');

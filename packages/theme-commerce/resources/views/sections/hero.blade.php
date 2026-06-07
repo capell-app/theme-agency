@@ -17,14 +17,14 @@
         <div>
             @if ($section->eyebrow ?? null)
                 <p
-                    class="mb-5 inline-flex rounded-full border border-[var(--retail-accent)]/25 bg-white px-3 py-1 text-xs font-black tracking-widest text-[var(--retail-primary)] uppercase"
+                    class="mb-5 inline-flex rounded-full border border-[var(--retail-accent)]/25 bg-white px-3 py-1 text-xs font-semibold tracking-[0.12em] text-[var(--retail-primary)] uppercase"
                 >
                     {{ $section->eyebrow }}
                 </p>
             @endif
 
             <h1
-                class="max-w-2xl text-4xl font-black tracking-tight text-[var(--retail-ink)] lg:text-5xl"
+                class="max-w-2xl text-4xl leading-tight font-extrabold tracking-tight text-[var(--retail-ink)] lg:text-5xl"
             >
                 {{ $section->heading }}
             </h1>
@@ -54,7 +54,7 @@
 
                     @if ($badgeLabel !== '')
                         <div
-                            class="{{ $badgeIndex === 0 ? 'bg-[var(--retail-ink)] text-white' : 'border border-stone-300 bg-white text-[var(--retail-ink)]' }} rounded-full px-3 py-2 text-center text-xs font-black tracking-[0.12em] uppercase"
+                            class="{{ $badgeIndex === 0 ? 'bg-[var(--retail-ink)] text-white' : 'border border-stone-300 bg-white text-[var(--retail-ink)]' }} rounded-full px-3 py-2 text-center text-xs font-semibold tracking-[0.08em] uppercase"
                         >
                             {{ $badgeLabel }}
                         </div>

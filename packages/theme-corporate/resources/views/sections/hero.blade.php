@@ -29,7 +29,7 @@
     >
         <div class="space-y-4 sm:space-y-5">
             <div
-                class="flex flex-wrap items-center gap-2 text-[0.68rem] font-semibold tracking-[0.16em] text-slate-500 uppercase dark:text-slate-400"
+                class="flex flex-wrap items-center gap-2 text-[0.68rem] font-semibold tracking-[0.12em] text-slate-500 uppercase dark:text-slate-400"
             >
                 <span
                     class="text-[var(--theme-primary)] dark:text-[var(--theme-accent)]"
@@ -44,7 +44,7 @@
             </div>
 
             <h1
-                class="max-w-4xl text-4xl leading-none font-semibold text-slate-950 sm:text-5xl lg:text-7xl dark:text-white"
+                class="max-w-4xl text-4xl leading-tight font-semibold text-slate-950 sm:text-5xl lg:text-6xl dark:text-white"
             >
                 {{ $section->heading }}
             </h1>
@@ -80,7 +80,7 @@
                     @if ($statLabel !== '' && $statValue !== '')
                         <div>
                             <dt
-                                class="font-semibold tracking-[0.12em] text-slate-400 uppercase dark:text-slate-500"
+                                class="font-semibold tracking-[0.08em] text-slate-400 uppercase dark:text-slate-500"
                             >
                                 {{ $statLabel }}
                             </dt>
@@ -101,6 +101,12 @@
                     <img
                         src="{{ $section->mediaUrl }}"
                         alt="{{ $section->mediaAlt ?? '' }}"
+                        width="1200"
+                        height="900"
+                        loading="eager"
+                        decoding="async"
+                        fetchpriority="high"
+                        sizes="(min-width: 1024px) 52vw, 100vw"
                         class="aspect-[16/10] max-h-[18rem] w-full rounded-[var(--corporate-card-radius)] object-cover sm:aspect-[5/4] sm:max-h-none"
                     />
                 @else

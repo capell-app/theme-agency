@@ -178,6 +178,8 @@ it('renders hydrated hero data through the Knowledge hero view', function (): vo
     $html = $renderer->render(HeroSectionData::from([
         'heading' => 'Open the research library',
         'summary' => 'Hydrated knowledge hero summary.',
+        'mediaUrl' => '/images/knowledge-hero.jpg',
+        'mediaAlt' => 'Editorial research dashboard',
         'actions' => [
             ['label' => 'Search resources', 'url' => '#search'],
             ['label' => 'Subscribe to digest', 'url' => '#digest'],
@@ -190,6 +192,13 @@ it('renders hydrated hero data through the Knowledge hero view', function (): vo
         ->toContain('Hydrated knowledge hero summary.')
         ->toContain('knowledge-hero')
         ->toContain('knowledge-command-panel')
+        ->toContain('src="/images/knowledge-hero.jpg"')
+        ->toContain('alt="Editorial research dashboard"')
+        ->toContain('width="1200"')
+        ->toContain('height="750"')
+        ->toContain('loading="eager"')
+        ->toContain('fetchpriority="high"')
+        ->toContain('sizes="(min-width: 1024px) 52vw, 100vw"')
         ->toContain('Search resources')
         ->toContain('Subscribe to digest')
         ->toContain('Reading queue')

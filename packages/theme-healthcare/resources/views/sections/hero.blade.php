@@ -9,14 +9,14 @@
         <div>
             @if ($section->eyebrow ?? null)
                 <p
-                    class="mb-5 inline-flex rounded-full border border-[var(--healthcare-accent)]/25 bg-white px-3 py-1 text-xs font-black tracking-widest text-[var(--healthcare-primary)] uppercase"
+                    class="mb-5 inline-flex rounded-full border border-[var(--healthcare-accent)]/25 bg-white px-3 py-1 text-xs font-semibold tracking-[0.12em] text-[var(--healthcare-primary)] uppercase"
                 >
                     {{ $section->eyebrow }}
                 </p>
             @endif
 
             <h1
-                class="max-w-2xl text-4xl leading-none font-black tracking-tight text-[var(--healthcare-ink)] lg:text-5xl"
+                class="max-w-2xl text-4xl leading-tight font-extrabold tracking-tight text-[var(--healthcare-ink)] lg:text-5xl"
             >
                 {{ $section->heading }}
             </h1>
@@ -46,8 +46,10 @@
                     alt="{{ $section->mediaAlt ?? '' }}"
                     width="1200"
                     height="900"
+                    loading="eager"
                     fetchpriority="high"
                     decoding="async"
+                    sizes="(min-width: 1024px) 48vw, 100vw"
                     class="aspect-[4/3] w-full rounded-xl object-cover"
                 />
             @else

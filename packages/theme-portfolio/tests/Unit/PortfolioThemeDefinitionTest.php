@@ -79,6 +79,8 @@ it('renders hydrated hero data through the Portfolio hero view', function (): vo
     $html = $renderer->render(HeroSectionData::from([
         'heading' => 'Editorial portfolio system',
         'summary' => 'Hydrated summary copy should shape the hero.',
+        'mediaUrl' => '/images/portfolio-hero.jpg',
+        'mediaAlt' => 'Portfolio case study wall',
         'actions' => [
             ['label' => 'Open case study', 'url' => '#case'],
             ['label' => 'Request deck', 'url' => '#deck'],
@@ -89,6 +91,13 @@ it('renders hydrated hero data through the Portfolio hero view', function (): vo
         ->toContain('Portfolio signal')
         ->toContain('Editorial portfolio system')
         ->toContain('Hydrated summary copy should shape the hero.')
+        ->toContain('src="/images/portfolio-hero.jpg"')
+        ->toContain('alt="Portfolio case study wall"')
+        ->toContain('width="960"')
+        ->toContain('height="720"')
+        ->toContain('loading="eager"')
+        ->toContain('fetchpriority="high"')
+        ->toContain('sizes="(min-width: 1024px) 48vw, 100vw"')
         ->toContain('+42%')
         ->toContain('120+')
         ->toContain('6h')

@@ -250,6 +250,8 @@ it('renders hydrated hero data through the Local Services hero view', function (
     $html = $renderer->render(HeroSectionData::from([
         'heading' => 'Book a service team this week',
         'summary' => 'Hydrated local services hero summary.',
+        'mediaUrl' => '/images/local-services-hero.jpg',
+        'mediaAlt' => 'Service team planning local routes',
         'actions' => [
             ['label' => 'Request a quote', 'url' => '#quote'],
             ['label' => 'View service areas', 'url' => '#areas'],
@@ -260,6 +262,13 @@ it('renders hydrated hero data through the Local Services hero view', function (
         ->toContain('Quote desk')
         ->toContain('Book a service team this week')
         ->toContain('Hydrated local services hero summary.')
+        ->toContain('src="/images/local-services-hero.jpg"')
+        ->toContain('alt="Service team planning local routes"')
+        ->toContain('width="1600"')
+        ->toContain('height="1000"')
+        ->toContain('loading="eager"')
+        ->toContain('fetchpriority="high"')
+        ->toContain('sizes="(min-width: 1024px) 50vw, 100vw"')
         ->toContain('Request a quote')
         ->toContain('View service areas')
         ->toContain('Live route board')

@@ -25,14 +25,14 @@
         <div>
             @if ($section->eyebrow)
                 <p
-                    class="mb-6 text-sm font-bold tracking-[0.25em] text-[var(--theme-accent)] uppercase"
+                    class="mb-6 text-sm font-semibold tracking-[0.14em] text-[var(--theme-accent)] uppercase"
                 >
                     {{ $section->eyebrow }}
                 </p>
             @endif
 
             <h1
-                class="max-w-4xl text-6xl font-black tracking-tight md:text-7xl"
+                class="max-w-4xl text-5xl leading-[1.02] font-extrabold tracking-tight md:text-6xl"
             >
                 {{ $section->heading }}
             </h1>
@@ -54,7 +54,7 @@
             </div>
 
             <div
-                class="mt-10 grid max-w-xl grid-cols-3 gap-3 text-xs font-black uppercase"
+                class="mt-10 grid max-w-xl grid-cols-3 gap-3 text-xs font-semibold tracking-[0.08em] uppercase"
             >
                 @foreach ($heroStats as $stat)
                     <div

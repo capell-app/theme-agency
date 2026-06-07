@@ -31,12 +31,12 @@
                 class="bg-white px-6 py-8 shadow-xl md:px-8 md:py-10 lg:relative lg:z-10 lg:self-center"
             >
                 <p
-                    class="nonprofit-text-accent-strong text-xs font-black tracking-[0.18em] uppercase"
+                    class="nonprofit-text-accent-strong text-xs font-semibold tracking-[0.12em] uppercase"
                 >
                     {{ $eyebrow }}
                 </p>
                 <h1
-                    class="nonprofit-text-ink mt-5 max-w-3xl text-5xl leading-tight font-black tracking-normal"
+                    class="nonprofit-text-ink mt-5 max-w-3xl text-4xl leading-tight font-extrabold tracking-normal sm:text-5xl"
                 >
                     {{ $heading }}
                 </h1>
@@ -119,6 +119,7 @@
                             loading="eager"
                             decoding="async"
                             fetchpriority="high"
+                            sizes="(min-width: 1024px) 52vw, 100vw"
                             class="aspect-[16/9] w-full object-cover"
                         />
                     @else
