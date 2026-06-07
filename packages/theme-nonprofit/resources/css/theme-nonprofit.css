@@ -78,6 +78,142 @@
     color: var(--nonprofit-ink);
 }
 
+.dark .nonprofit-shell,
+.nonprofit-shell.dark {
+    --nonprofit-ink: var(--theme-dark-foreground, #e5f2e7);
+    --nonprofit-primary: var(--theme-primary, #4ade80);
+    --nonprofit-accent: var(--theme-accent, #facc15);
+    --nonprofit-surface: var(--theme-dark-surface, #06120a);
+    --nonprofit-muted: var(--theme-dark-muted, #b5c8b8);
+    --nonprofit-on-dark: #ffffff;
+    --nonprofit-on-dark-muted: color-mix(
+        in oklab,
+        var(--nonprofit-on-dark) 78%,
+        transparent
+    );
+    --nonprofit-primary-deep: color-mix(
+        in oklab,
+        var(--nonprofit-primary) 32%,
+        #020403
+    );
+    --nonprofit-primary-dark: color-mix(
+        in oklab,
+        var(--nonprofit-primary) 24%,
+        #020403
+    );
+    --nonprofit-primary-soft: color-mix(
+        in oklab,
+        var(--nonprofit-primary) 18%,
+        #0f1f12
+    );
+    --nonprofit-surface-warm: color-mix(
+        in oklab,
+        var(--nonprofit-surface) 82%,
+        var(--nonprofit-accent)
+    );
+    --nonprofit-surface-tint: color-mix(
+        in oklab,
+        var(--nonprofit-surface) 86%,
+        white
+    );
+    --nonprofit-accent-soft: color-mix(
+        in oklab,
+        var(--nonprofit-accent) 24%,
+        #0f1f12
+    );
+    --nonprofit-accent-muted: color-mix(
+        in oklab,
+        var(--nonprofit-accent) 72%,
+        white
+    );
+    --nonprofit-accent-strong: var(--theme-accent-strong, #facc15);
+    --nonprofit-on-accent: #132016;
+
+    background:
+        linear-gradient(180deg, #06120a 0%, #132016 48%, #06120a 100%),
+        linear-gradient(
+            90deg,
+            color-mix(in oklab, var(--nonprofit-primary) 8%, transparent) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            180deg,
+            color-mix(in oklab, var(--nonprofit-accent) 7%, transparent) 1px,
+            transparent 1px
+        );
+    color: var(--nonprofit-ink);
+    color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+    .nonprofit-shell {
+        --nonprofit-ink: var(--theme-dark-foreground, #e5f2e7);
+        --nonprofit-primary: var(--theme-primary, #4ade80);
+        --nonprofit-accent: var(--theme-accent, #facc15);
+        --nonprofit-surface: var(--theme-dark-surface, #06120a);
+        --nonprofit-muted: var(--theme-dark-muted, #b5c8b8);
+        --nonprofit-on-dark: #ffffff;
+        --nonprofit-on-dark-muted: color-mix(
+            in oklab,
+            var(--nonprofit-on-dark) 78%,
+            transparent
+        );
+        --nonprofit-primary-deep: color-mix(
+            in oklab,
+            var(--nonprofit-primary) 32%,
+            #020403
+        );
+        --nonprofit-primary-dark: color-mix(
+            in oklab,
+            var(--nonprofit-primary) 24%,
+            #020403
+        );
+        --nonprofit-primary-soft: color-mix(
+            in oklab,
+            var(--nonprofit-primary) 18%,
+            #0f1f12
+        );
+        --nonprofit-surface-warm: color-mix(
+            in oklab,
+            var(--nonprofit-surface) 82%,
+            var(--nonprofit-accent)
+        );
+        --nonprofit-surface-tint: color-mix(
+            in oklab,
+            var(--nonprofit-surface) 86%,
+            white
+        );
+        --nonprofit-accent-soft: color-mix(
+            in oklab,
+            var(--nonprofit-accent) 24%,
+            #0f1f12
+        );
+        --nonprofit-accent-muted: color-mix(
+            in oklab,
+            var(--nonprofit-accent) 72%,
+            white
+        );
+        --nonprofit-accent-strong: var(--theme-accent-strong, #facc15);
+        --nonprofit-on-accent: #132016;
+
+        background:
+            linear-gradient(180deg, #06120a 0%, #132016 48%, #06120a 100%),
+            linear-gradient(
+                90deg,
+                color-mix(in oklab, var(--nonprofit-primary) 8%, transparent)
+                    1px,
+                transparent 1px
+            ),
+            linear-gradient(
+                180deg,
+                color-mix(in oklab, var(--nonprofit-accent) 7%, transparent) 1px,
+                transparent 1px
+            );
+        color: var(--nonprofit-ink);
+        color-scheme: dark;
+    }
+}
+
 .nonprofit-shell section {
     padding-block: clamp(4rem, 7vw, 7rem);
 }
@@ -238,6 +374,33 @@
 
 .nonprofit-link-primary-hover:hover {
     color: var(--nonprofit-primary);
+}
+
+.dark .nonprofit-shell :where(.bg-white),
+.nonprofit-shell.dark :where(.bg-white) {
+    background: var(--nonprofit-surface-tint);
+}
+
+.dark .nonprofit-shell :where(.text-white),
+.nonprofit-shell.dark :where(.text-white) {
+    color: #ffffff;
+}
+
+.dark
+    .nonprofit-shell
+    :where(.text-slate-600, .text-slate-700, .text-stone-600),
+.nonprofit-shell.dark
+    :where(.text-slate-600, .text-slate-700, .text-stone-600) {
+    color: var(--nonprofit-muted);
+}
+
+.dark .nonprofit-shell :where(.border-slate-200, .border-slate-300),
+.nonprofit-shell.dark :where(.border-slate-200, .border-slate-300) {
+    border-color: color-mix(
+        in oklab,
+        var(--nonprofit-primary) 24%,
+        transparent
+    );
 }
 
 .nonprofit-shell :where(.theme-section-impact, .theme-section-donation-impact) {

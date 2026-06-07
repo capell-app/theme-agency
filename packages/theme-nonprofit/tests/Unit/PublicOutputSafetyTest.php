@@ -149,3 +149,17 @@ it('keeps public Blade free of database query calls', function (): void {
         ->not->toContain('->media->')
         ->not->toContain('find(');
 });
+
+it('ships a scoped dark-mode layer for the Nonprofit shell', function (): void {
+    $css = file_get_contents(__DIR__ . '/../../resources/css/theme-nonprofit.css') ?: '';
+
+    expect($css)
+        ->toContain('.dark .nonprofit-shell')
+        ->toContain('.nonprofit-shell.dark')
+        ->toContain('@media (prefers-color-scheme: dark)')
+        ->toContain('--nonprofit-surface-warm')
+        ->toContain('--nonprofit-on-dark-muted')
+        ->toContain('color-scheme: dark')
+        ->toContain('.text-slate-600')
+        ->toContain('.border-slate-200');
+});

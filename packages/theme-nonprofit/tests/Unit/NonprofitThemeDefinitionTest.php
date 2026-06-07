@@ -13,6 +13,8 @@ use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\Tests\Packages\PackagesTestCase;
 use Capell\ThemeStudio\Nonprofit\NonprofitThemeServiceProvider;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 uses(PackagesTestCase::class);
@@ -502,6 +504,51 @@ it('renders every Nonprofit-owned section with empty or partial section data', f
     }
 });
 
+it('renders every Nonprofit-owned section anonymously inside the budget without database queries', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(NonprofitThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/blog', false);
+    CapellCore::forcePackageInstalled('capell-app/campaign-studio', false);
+    CapellCore::forcePackageInstalled('capell-app/events', false);
+    CapellCore::forcePackageInstalled('capell-app/form-builder', false);
+    CapellCore::forcePackageInstalled('capell-app/newsletter', false);
+    CapellCore::forcePackageInstalled('capell-app/payments', false);
+
+    $registry = new ThemeRegistry;
+    (new NonprofitThemeServiceProvider($this->app))->boot($registry);
+
+    $manifest = nonprofitThemeTestManifest();
+    $budgetMilliseconds = (float) data_get($manifest, 'performance.frontendRenderBudgetMs', 20);
+    $queryCount = 0;
+
+    DB::listen(static function (QueryExecuted $query) use (&$queryCount): void {
+        if (str_starts_with(strtolower($query->sql), 'select')) {
+            $queryCount++;
+        }
+    });
+
+    foreach (nonprofitOwnedSectionKeys() as $sectionKey) {
+        $renderer = $registry->sectionRenderer('nonprofit', $sectionKey);
+
+        assert($renderer instanceof SectionRenderer);
+
+        $section = nonprofitThemeSection($sectionKey, nonprofitRenderPayload($sectionKey));
+
+        $renderer->render($section);
+
+        $startedAt = hrtime(true);
+        $html = $renderer->render($section);
+        $elapsedMilliseconds = (hrtime(true) - $startedAt) / 1_000_000;
+
+        expect($elapsedMilliseconds)->toBeLessThanOrEqual($budgetMilliseconds)
+            ->and($html)->not->toContain('capell-app/theme-nonprofit')
+            ->and($html)->not->toContain('Filament')
+            ->and($html)->not->toContain('wire:');
+    }
+
+    expect($queryCount)->toBe(0);
+});
+
 /**
  * @param  array<string, mixed>  $viewData
  */
@@ -546,4 +593,80 @@ function nonprofitOwnedSectionKeys(): array
         NonprofitThemeServiceProvider::definition()->includedSections,
         static fn (string $sectionKey): bool => ! in_array($sectionKey, ['navigation', 'footer'], true),
     ));
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function nonprofitRenderPayload(string $sectionKey): array
+{
+    $payload = [
+        'heading' => 'Anonymous ' . $sectionKey,
+        'summary' => 'Anonymous public render summary.',
+        'items' => [
+            [
+                'label' => 'Anonymous label',
+                'title' => 'Anonymous nonprofit item',
+                'summary' => 'Anonymous nonprofit item summary.',
+                'metric' => '42%',
+                'meta' => 'Anonymous meta',
+            ],
+        ],
+        'features' => [
+            ['title' => 'Anonymous feature', 'description' => 'Anonymous feature summary.'],
+        ],
+        'actions' => [
+            ['label' => 'Anonymous action', 'url' => '#action'],
+        ],
+    ];
+
+    if ($sectionKey === 'hero') {
+        return [
+            ...$payload,
+            'campaignProgress' => 64,
+            'mediaUrl' => 'https://cdn.example.test/nonprofit-hero.jpg',
+            'mediaAlt' => 'Anonymous nonprofit hero',
+        ];
+    }
+
+    if ($sectionKey === 'content-listing') {
+        return [
+            ...$payload,
+            'items' => [
+                [
+                    'label' => 'Anonymous label',
+                    'title' => 'Anonymous nonprofit item',
+                    'summary' => 'Anonymous nonprofit item summary.',
+                    'metric' => '42%',
+                    'meta' => ['Anonymous meta'],
+                ],
+            ],
+        ];
+    }
+
+    if ($sectionKey === 'newsletter') {
+        return [
+            ...$payload,
+            'formAction' => '/supporter-updates',
+            'formMethod' => 'post',
+        ];
+    }
+
+    return $payload;
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function nonprofitThemeTestManifest(): array
+{
+    $manifest = json_decode(
+        (string) file_get_contents(dirname(__DIR__, 2) . '/capell.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    throw_unless(is_array($manifest), RuntimeException::class, 'Theme Nonprofit manifest must decode to an array.');
+
+    return $manifest;
 }
