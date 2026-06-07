@@ -9,6 +9,8 @@ use Capell\AgentBridge\Filament\Pages\CapellAgentBridgePromptBuilderPage;
 use Capell\AgentBridge\Livewire\PromptBuilderToolbarAction;
 use Capell\AgentBridge\Models\CapellAgentBridgeSavedPrompt;
 use Capell\AgentBridge\Tests\Fixtures\User;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Blade;
 use Livewire\Livewire;
@@ -150,13 +152,17 @@ it('rejects direct saved prompt updates for another admin user', function (): vo
 });
 
 it('registers the toolbar Livewire component used by the global search render hook', function (): void {
+    expect(FilamentView::hasRenderHook(PanelsRenderHook::GLOBAL_SEARCH_BEFORE))->toBeTrue();
+
     $html = Blade::render('@livewire($component)', [
         'component' => 'capell-agent-bridge.prompt-builder-toolbar-action',
     ]);
 
     expect($html)
         ->toContain(__('capell-agent-bridge::admin.prompt_builder_tooltip'))
+        ->toContain(__('capell-agent-bridge::admin.prompt_builder_tool'))
         ->toContain('wire:click="openBuilder"')
+        ->toContain('M7.5 8.25h9')
         ->not->toContain('agent-bridge-prompt-builder-title');
 });
 
