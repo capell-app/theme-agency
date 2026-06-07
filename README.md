@@ -126,6 +126,22 @@ composer require capell-app/<package>
 
 Then run the package install command listed in that package README when it owns migrations, settings, generated pages, demo data, or external setup.
 
+## Package Screenshots
+
+Use the full capture path when the screenshot demo app needs to be prepared or refreshed:
+
+```bash
+npm run screenshots:capture -- --only layout-builder --runner /path/to/capell-screenshot-runner --app /path/to/prepared-demo-app
+```
+
+For day-to-day recaptures against an already installed, migrated, seeded, compiled, and running demo app, use reuse mode:
+
+```bash
+npm run screenshots:capture:reuse -- --only layout-builder --runner /path/to/capell-screenshot-runner --app /path/to/prepared-demo-app
+```
+
+`--reuse-app` skips package setup commands, frontend CSS injection, and the runner preflight so captures do not spend time rebuilding or reseeding the app.
+
 ### Install Ordering Notes
 
 - Install `capell-app/layout-builder` before `capell-app/blog`.

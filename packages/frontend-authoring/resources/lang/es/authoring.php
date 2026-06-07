@@ -72,6 +72,7 @@ return [
     'show_edit_areas' => 'Mostrar areas de edicion',
     'surfaces' => [
         'field' => 'Campo',
+        'layout-builder' => 'Constructor de disenos',
         'media' => 'Multimedia',
     ],
     'toggle_edit_mode' => 'Alternar modo de edicion',

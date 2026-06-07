@@ -72,6 +72,7 @@ return [
     'show_edit_areas' => 'Show edit areas',
     'surfaces' => [
         'field' => 'Field',
+        'layout-builder' => 'Layout builder',
         'media' => 'Media',
     ],
     'toggle_edit_mode' => 'Toggle edit mode',

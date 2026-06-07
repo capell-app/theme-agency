@@ -136,7 +136,13 @@ function filtersForPackage(packageName, only) {
 }
 
 function packageFrontendCssFiles(repoPath, packageName) {
-    const cssPath = path.join(repoPath, 'packages', packageName, 'resources', 'css')
+    const cssPath = path.join(
+        repoPath,
+        'packages',
+        packageName,
+        'resources',
+        'css',
+    )
 
     if (!fs.existsSync(cssPath)) {
         return []
@@ -163,22 +169,35 @@ function injectPackageFrontendCss(repoPath, appPath, only) {
         return
     }
 
-    const frontendCssPath = path.join(appPath, 'resources', 'css', 'capell', 'frontend.css')
+    const frontendCssPath = path.join(
+        appPath,
+        'resources',
+        'css',
+        'capell',
+        'frontend.css',
+    )
 
     if (!fs.existsSync(frontendCssPath)) {
         return
     }
 
     const imports = selectedPackageNames(repoPath, only)
-        .flatMap((packageName) => packageFrontendCssFiles(repoPath, packageName))
-        .map((cssFile) => `@import "${cssImportPath(frontendCssPath, cssFile)}";`)
+        .flatMap((packageName) =>
+            packageFrontendCssFiles(repoPath, packageName),
+        )
+        .map(
+            (cssFile) =>
+                `@import "${cssImportPath(frontendCssPath, cssFile)}";`,
+        )
 
     if (imports.length === 0) {
         return
     }
 
     const content = fs.readFileSync(frontendCssPath, 'utf8')
-    const missingImports = imports.filter((importLine) => !content.includes(importLine))
+    const missingImports = imports.filter(
+        (importLine) => !content.includes(importLine),
+    )
 
     if (missingImports.length === 0) {
         return
@@ -197,7 +216,8 @@ function runPackageCommands(repoPath, appPath, only, packages = null) {
 
     const packagesPath = path.join(repoPath, 'packages')
 
-    for (const packageName of packages ?? selectedPackageNames(repoPath, only)) {
+    for (const packageName of packages ??
+        selectedPackageNames(repoPath, only)) {
         const manifestPath = path.join(packagesPath, packageName, 'capell.json')
 
         if (!fs.existsSync(manifestPath)) {
@@ -244,7 +264,8 @@ function runRunner(runnerPath, runnerArgs, repoPath) {
             CAPELL_INSIGHTS_CONSENT_BANNER_ENABLED:
                 process.env.CAPELL_INSIGHTS_CONSENT_BANNER_ENABLED ?? 'false',
             CAPELL_INSIGHTS_SCREENSHOT_FIXTURES_ENABLED:
-                process.env.CAPELL_INSIGHTS_SCREENSHOT_FIXTURES_ENABLED ?? 'true',
+                process.env.CAPELL_INSIGHTS_SCREENSHOT_FIXTURES_ENABLED ??
+                'true',
             CAPELL_PACKAGES_REPO: repoPath,
         },
         stdio: 'inherit',
@@ -348,11 +369,23 @@ function main() {
 
     const resolvedAppPath = appPath ? path.resolve(appPath) : ''
     const shouldSkipBuild = argv.includes('--skip-build')
+    const shouldReuseApp = argv.includes('--reuse-app')
     const packageNames = selectedPackageNames(repoPath, only)
 
-    injectPackageFrontendCss(repoPath, resolvedAppPath, only)
+    if (shouldReuseApp && !resolvedAppPath) {
+        console.error(
+            'Pass --app or set CAPELL_SCREENSHOT_APP_PATH when using --reuse-app.',
+        )
+        process.exitCode = 1
 
-    if (!shouldSkipBuild && resolvedAppPath) {
+        return
+    }
+
+    if (!shouldReuseApp) {
+        injectPackageFrontendCss(repoPath, resolvedAppPath, only)
+    }
+
+    if (!shouldReuseApp && !shouldSkipBuild && resolvedAppPath) {
         runRunner(
             runnerPath,
             preflightRunnerArgs(repoPath, resolvedAppPath),
@@ -365,10 +398,12 @@ function main() {
     }
 
     for (const packageName of packageNames) {
-        runPackageCommands(repoPath, resolvedAppPath, only, [packageName])
+        if (!shouldReuseApp) {
+            runPackageCommands(repoPath, resolvedAppPath, only, [packageName])
 
-        if (process.exitCode) {
-            return
+            if (process.exitCode) {
+                return
+            }
         }
 
         runRunner(
