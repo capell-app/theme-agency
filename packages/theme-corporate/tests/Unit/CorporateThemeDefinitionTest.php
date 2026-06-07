@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\Core\Enums\VendorAssetEnum;
 use Capell\Core\Facades\CapellCore;
+use Capell\Core\ThemeStudio\Contracts\ThemeSection;
 use Capell\Core\ThemeStudio\Data\BrandProfileData;
 use Capell\Core\ThemeStudio\Data\ContentListingSectionData;
 use Capell\Core\ThemeStudio\Data\CtaSectionData;
@@ -25,7 +26,7 @@ it('defines the corporate free renderer contract', function (): void {
     expect($definition->package)->toBe('capell-app/theme-corporate')
         ->and($definition->key)->toBe(CorporateThemeServiceProvider::THEME_KEY)
         ->and($definition->assets)->toBe(['css' => 'vendor/capell/themes/corporate.css'])
-        ->and($definition->includedSections)->toContain('hero', 'features', 'proof', 'cta')
+        ->and($definition->includedSections)->toContain('hero', 'features', 'proof', 'locations', 'cta')
         ->and($definition->presets)->toHaveCount(6)
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->tags)->toContain('Trust')
@@ -66,6 +67,7 @@ it('declares renderers for every included corporate section', function (): void 
         'features',
         'proof',
         'content-listing',
+        'locations',
         'cta',
         'footer',
     ]);
@@ -231,6 +233,72 @@ it('renders content listing variant labels from translations', function (): void
         ->not->toContain('Question {{ $loop->iteration }}');
 });
 
+it('renders a corporate office locations section', function (): void {
+    View::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/lang');
+
+    $provider = new CorporateThemeServiceProvider($this->app);
+    $method = new ReflectionMethod($provider, 'sectionRenderers');
+    $renderer = $method->invoke($provider)['locations'] ?? null;
+
+    expect($renderer)->not->toBeNull();
+
+    $html = $renderer->render(corporateThemeSection('locations', [
+        'heading' => 'Global advisory offices',
+        'summary' => 'Regional teams for board, policy, and delivery support.',
+        'items' => [
+            [
+                'type' => 'Head office',
+                'title' => 'London',
+                'summary' => 'Executive advisory and investor relations.',
+                'addressLines' => ['10 King Street', 'London SW1A 1AA'],
+                'phone' => '+44 20 7946 0100',
+                'email' => 'london@example.test',
+                'hours' => ['Mon-Fri 09:00-17:30'],
+            ],
+            [
+                'type' => 'Regional office',
+                'title' => 'Manchester',
+                'address' => "2 Bridge Street\nManchester M1 1AA",
+                'openingHours' => "Mon-Thu 09:00-17:00\nFri 09:00-16:00",
+            ],
+        ],
+    ]));
+
+    expect($html)
+        ->toContain('Global advisory offices')
+        ->toContain('Regional teams for board, policy, and delivery support.')
+        ->toContain('London')
+        ->toContain('10 King Street')
+        ->toContain('+44 20 7946 0100')
+        ->toContain('london@example.test')
+        ->toContain('Manchester M1 1AA')
+        ->toContain('Fri 09:00-16:00')
+        ->toContain('corporate-card-muted')
+        ->not->toContain('capell-app/theme-corporate')
+        ->not->toContain('capell-theme-corporate');
+});
+
+it('renders the corporate office empty state without authoring metadata', function (): void {
+    View::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-corporate::sections.locations', [
+        'section' => (object) [
+            'heading' => 'Corporate offices',
+            'summary' => null,
+            'items' => [],
+        ],
+    ])->render();
+
+    expect($html)
+        ->toContain('Add office details')
+        ->toContain('Provide regional offices')
+        ->not->toContain('data-field')
+        ->not->toContain('model_id')
+        ->not->toContain('capell-app/theme-corporate');
+});
+
 it('registers corporate only when the theme package is installed', function (): void {
     CapellCore::clearPackages();
 
@@ -380,3 +448,38 @@ it('renders the corporate content listing variant matrix', function (string $var
     'pathways fallback' => ['pathways', 'Board reporting model'],
     'spotlight fallback' => ['spotlight', 'Board reporting model'],
 ]);
+
+/**
+ * @param  array<string, mixed>  $viewData
+ */
+function corporateThemeSection(string $key, array $viewData): ThemeSection
+{
+    return new readonly class($key, $viewData) implements ThemeSection
+    {
+        /**
+         * @param  array<string, mixed>  $viewData
+         */
+        public function __construct(
+            private string $sectionKey,
+            private array $viewData,
+        ) {}
+
+        public function key(): string
+        {
+            return $this->sectionKey;
+        }
+
+        public function fallbackKey(): ?string
+        {
+            return null;
+        }
+
+        /**
+         * @return array<string, mixed>
+         */
+        public function toViewData(): array
+        {
+            return ['section' => (object) $this->viewData];
+        }
+    };
+}
