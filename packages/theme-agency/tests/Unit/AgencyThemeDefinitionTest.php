@@ -29,7 +29,7 @@ it('defines the agency free renderer contract', function (): void {
         ->and($definition->key)->toBe(AgencyThemeServiceProvider::THEME_KEY)
         ->and($definition->previewImage)->toBe(AgencyThemeServiceProvider::PUBLIC_PREVIEW_IMAGE)
         ->and($definition->assets)->toBe(['css' => AgencyThemeServiceProvider::GENERATED_FRONTEND_CSS])
-        ->and($definition->includedSections)->toContain('hero', 'features', 'proof', 'project-showcase', 'case-study', 'cta')
+        ->and($definition->includedSections)->toContain('hero', 'features', 'proof', 'project-showcase', 'case-study', 'team', 'services', 'client-logos', 'cta')
         ->and($definition->presets)->toHaveCount(6)
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->tags)->toContain('Expressive')
@@ -191,6 +191,9 @@ it('declares renderers for every included agency section', function (): void {
         'content-listing',
         'project-showcase',
         'case-study',
+        'team',
+        'services',
+        'client-logos',
         'cta',
         'footer',
     ]);
@@ -482,6 +485,98 @@ it('renders the agency case study empty state', function (): void {
         ->not->toContain('data-field')
         ->not->toContain('model_id')
         ->not->toContain('capell-app/theme-agency');
+});
+
+it('renders agency team, services, and client logo sections', function (): void {
+    View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/lang');
+
+    $provider = new AgencyThemeServiceProvider($this->app);
+    $method = new ReflectionMethod($provider, 'sectionRenderers');
+    $renderers = $method->invoke($provider);
+
+    $teamHtml = $renderers['team']->render(agencyThemeSection('team', [
+        'heading' => 'Studio team',
+        'summary' => 'Senior people who shape the work.',
+        'people' => [
+            [
+                'name' => 'Maya Chen',
+                'role' => 'Creative director',
+                'summary' => 'Leads brand systems and campaign direction.',
+                'image' => '/images/maya.jpg',
+                'imageAlt' => 'Maya in the studio',
+            ],
+        ],
+    ]));
+
+    $servicesHtml = $renderers['services']->render(agencyThemeSection('services', [
+        'heading' => 'Capabilities',
+        'summary' => 'Strategy through launch.',
+        'services' => [
+            [
+                'title' => 'Launch strategy',
+                'discipline' => 'Strategy',
+                'summary' => 'Positioning, messaging, and rollout planning.',
+                'deliverables' => ['Narrative platform', 'Launch plan'],
+            ],
+        ],
+    ]));
+
+    $logosHtml = $renderers['client-logos']->render(agencyThemeSection('client-logos', [
+        'heading' => 'Trusted by teams launching new things',
+        'summary' => 'Client and partner proof.',
+        'logos' => [
+            ['name' => 'Northline'],
+            ['image' => '/logos/summit.svg', 'alt' => 'Summit logo'],
+        ],
+    ]));
+
+    expect($teamHtml)
+        ->toContain('Team')
+        ->toContain('Studio team')
+        ->toContain('Maya Chen')
+        ->toContain('Creative director')
+        ->toContain('src="/images/maya.jpg"')
+        ->toContain('loading="lazy"')
+        ->not->toContain('capell-app/theme-agency')
+        ->and($servicesHtml)->toContain('Services')
+        ->and($servicesHtml)->toContain('Launch strategy')
+        ->and($servicesHtml)->toContain('Narrative platform')
+        ->and($servicesHtml)->toContain('Launch plan')
+        ->and($servicesHtml)->not->toContain('data-field')
+        ->and($logosHtml)->toContain('Client wall')
+        ->and($logosHtml)->toContain('Northline')
+        ->and($logosHtml)->toContain('src="/logos/summit.svg"')
+        ->and($logosHtml)->toContain('alt="Summit logo"')
+        ->and($logosHtml)->not->toContain('model_id');
+});
+
+it('renders empty states for agency team, services, and client logo sections', function (): void {
+    View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/lang');
+
+    $teamHtml = view('capell-theme-agency::sections.team', [
+        'section' => (object) ['heading' => 'Team', 'summary' => null, 'people' => []],
+    ])->render();
+
+    $servicesHtml = view('capell-theme-agency::sections.services', [
+        'section' => (object) ['heading' => 'Services', 'summary' => null, 'services' => []],
+    ])->render();
+
+    $logosHtml = view('capell-theme-agency::sections.client-logos', [
+        'section' => (object) ['heading' => 'Clients', 'summary' => null, 'logos' => []],
+    ])->render();
+
+    expect($teamHtml)
+        ->toContain('Add team profiles')
+        ->toContain('Add studio leads, collaborators, or delivery partners')
+        ->and($servicesHtml)->toContain('Add service offers')
+        ->and($servicesHtml)->toContain('Add strategy, creative, production, or growth services')
+        ->and($logosHtml)->toContain('Add client logos')
+        ->and($logosHtml)->toContain('Add client names or logo images')
+        ->and($teamHtml . $servicesHtml . $logosHtml)->not->toContain('capell-app/theme-agency')
+        ->and($teamHtml . $servicesHtml . $logosHtml)->not->toContain('data-field')
+        ->and($teamHtml . $servicesHtml . $logosHtml)->not->toContain('model_id');
 });
 
 it('registers agency only when the theme package is installed', function (): void {

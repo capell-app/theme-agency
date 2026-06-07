@@ -44,7 +44,7 @@ class AgencyThemeServiceProvider extends ServiceProvider
             previewImage: self::PUBLIC_PREVIEW_IMAGE,
             tags: ['Expressive', 'Portfolio', 'Creative'],
             bestFit: ['Studios', 'Agencies', 'Brand-led teams'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'project-showcase', 'case-study', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'project-showcase', 'case-study', 'team', 'services', 'client-logos', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'signal',
@@ -249,6 +249,9 @@ class AgencyThemeServiceProvider extends ServiceProvider
             'content-listing' => new ViewSectionRenderer(self::THEME_KEY, 'content-listing', 'capell-theme-agency::sections.content-listing', failLoudly: true),
             'project-showcase' => new ViewSectionRenderer(self::THEME_KEY, 'project-showcase', 'capell-theme-agency::sections.project-showcase', failLoudly: true),
             'case-study' => new ViewSectionRenderer(self::THEME_KEY, 'case-study', 'capell-theme-agency::sections.case-study', failLoudly: true),
+            'team' => new ViewSectionRenderer(self::THEME_KEY, 'team', 'capell-theme-agency::sections.team', failLoudly: true),
+            'services' => new ViewSectionRenderer(self::THEME_KEY, 'services', 'capell-theme-agency::sections.services', failLoudly: true),
+            'client-logos' => new ViewSectionRenderer(self::THEME_KEY, 'client-logos', 'capell-theme-agency::sections.client-logos', failLoudly: true),
             'cta' => new ViewSectionRenderer(self::THEME_KEY, 'cta', 'capell-theme-agency::sections.cta', failLoudly: true),
             'footer' => new ViewSectionRenderer(self::THEME_KEY, 'footer', 'capell-theme-agency::sections.footer', failLoudly: true),
         ];
