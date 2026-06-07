@@ -15,6 +15,7 @@ use Capell\Frontend\Enums\RenderingStrategyEnum;
 use Capell\FrontendOptimizer\Jobs\GenerateCriticalCssJob;
 use Capell\FrontendOptimizer\Models\FrontendRenderProfile;
 use Capell\FrontendOptimizer\Support\CapellFrontendAssetManifestRenderer;
+use Capell\FrontendOptimizer\Tests\Fixtures\HintedFrontendAssetRequirementData;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Storage;
 
@@ -92,6 +93,59 @@ it('inlines generated critical css and defers the full Foundation stylesheet', f
         ->toContain('<noscript><link rel="stylesheet" href="http://localhost/build/resources/css/capell/frontend.css"></noscript>')
         ->not->toContain('editor')
         ->not->toContain('signed');
+});
+
+it('uses manifest optimizer hints for critical eligibility and javascript loading', function (): void {
+    Storage::fake('local');
+    Bus::fake();
+    config()->set('capell-frontend.asset_build_tool', 'public');
+    config()->set('queue.default', 'database');
+
+    $context = optimizerRendererContext();
+    $manifest = new FrontendAssetManifestData(
+        css: [
+            new HintedFrontendAssetRequirementData(
+                handle: 'theme-commerce:css',
+                kind: FrontendAssetRequirementData::KIND_CSS,
+                source: 'vendor/theme-commerce/frontend.css',
+                criticalEligible: true,
+                frontendOptimizerLoadingStrategy: 'deferred',
+                packageName: 'capell-app/theme-commerce',
+            ),
+        ],
+        js: [
+            new HintedFrontendAssetRequirementData(
+                handle: 'theme-commerce:runtime',
+                kind: FrontendAssetRequirementData::KIND_JS,
+                source: 'vendor/theme-commerce/runtime.js',
+                frontendOptimizerLoadingStrategy: 'idle',
+                packageName: 'capell-app/theme-commerce',
+            ),
+        ],
+        inline: [],
+        preloads: [],
+        runtime: FrontendRuntimeManifestData::forRenderingStrategy(RenderingStrategyEnum::BladeOnly),
+    );
+
+    $html = resolve(CapellFrontendAssetManifestRenderer::class)->render($manifest, $context)->toHtml();
+
+    $profile = FrontendRenderProfile::query()->sole();
+    /** @var list<array{handle: string, critical_eligible?: bool, loading_strategy?: string, package_name?: string}> $assets */
+    $assets = $profile->signature['assets'];
+    $stylesheet = collect($assets)->firstWhere('handle', 'theme-commerce:css');
+    $runtime = collect($assets)->firstWhere('handle', 'theme-commerce:runtime');
+
+    expect($stylesheet)
+        ->toBeArray()
+        ->and($stylesheet['critical_eligible'] ?? null)->toBeTrue()
+        ->and($stylesheet['loading_strategy'] ?? null)->toBe('deferred')
+        ->and($stylesheet['package_name'] ?? null)->toBe('capell-app/theme-commerce')
+        ->and($runtime)->toBeArray()
+        ->and($runtime['loading_strategy'] ?? null)->toBe('idle')
+        ->and($runtime['package_name'] ?? null)->toBe('capell-app/theme-commerce')
+        ->and($html)->toContain('requestIdleCallback');
+
+    Bus::assertDispatched(GenerateCriticalCssJob::class);
 });
 
 it('reuses the profile hash for equivalent layout and theme asset graphs', function (): void {
