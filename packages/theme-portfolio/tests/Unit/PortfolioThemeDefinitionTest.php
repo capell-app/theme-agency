@@ -26,6 +26,9 @@ it('defines the Portfolio theme contract', function (): void {
         ->and($definition->extends)->toBe('default')
         ->and($definition->includedSections)->toContain('hero')
         ->and($definition->includedSections)->toContain('features')
+        ->and($definition->includedSections)->toContain('gallery-lightbox')
+        ->and($definition->includedSections)->toContain('resume-cv')
+        ->and($definition->includedSections)->toContain('client-logos')
         ->and($definition->includedSections)->toContain('footer')
         ->and($definition->presets)->toHaveCount(2)
         ->and($definition->presets[1]->key)->toBe('portfolio-dark')
@@ -407,6 +410,103 @@ it('renders footer services testimonials speaking and newsletter sections with h
         ->not->toContain('capell-app/theme-portfolio');
 });
 
+it('renders gallery resume and client-logo sections with hydrated or empty data', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(PortfolioThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new PortfolioThemeServiceProvider($this->app))->boot($registry);
+
+    $galleryRenderer = $registry->sectionRenderer('portfolio', 'gallery-lightbox');
+    $resumeRenderer = $registry->sectionRenderer('portfolio', 'resume-cv');
+    $logosRenderer = $registry->sectionRenderer('portfolio', 'client-logos');
+
+    assert($galleryRenderer instanceof SectionRenderer);
+    assert($resumeRenderer instanceof SectionRenderer);
+    assert($logosRenderer instanceof SectionRenderer);
+
+    $galleryHtml = $galleryRenderer->render(portfolioThemeSection('gallery-lightbox', [
+        'heading' => 'Visual proof library',
+        'items' => [
+            [
+                'type' => 'Campaign image',
+                'title' => 'Launch visual system',
+                'summary' => 'Gallery item with inspectable imagery.',
+                'imageUrl' => 'https://cdn.example.test/gallery.jpg',
+                'imageAlt' => 'Launch visual system preview',
+                'url' => '/work/launch-visual-system',
+            ],
+        ],
+    ]));
+
+    $resumeHtml = $resumeRenderer->render(portfolioThemeSection('resume-cv', [
+        'heading' => 'Selected credentials',
+        'downloadAction' => ['label' => 'Download CV', 'url' => '/resume.pdf'],
+        'items' => [
+            [
+                'period' => '2022-present',
+                'title' => 'Principal consultant',
+                'organization' => 'Studio Practice',
+                'summary' => 'Led creator-positioning and case-study systems.',
+            ],
+        ],
+    ]));
+
+    $logosHtml = $logosRenderer->render(portfolioThemeSection('client-logos', [
+        'heading' => 'Trusted by focused teams',
+        'items' => [
+            [
+                'name' => 'Northstar Labs',
+                'logo' => 'https://cdn.example.test/northstar.svg',
+                'alt' => 'Northstar Labs logo',
+            ],
+            [
+                'name' => 'Plain text client',
+            ],
+        ],
+    ]));
+
+    $emptyGalleryHtml = $galleryRenderer->render(portfolioThemeSection('gallery-lightbox', [
+        'heading' => 'Empty gallery',
+        'items' => [],
+    ]));
+
+    expect($galleryHtml)
+        ->toContain('Visual proof library')
+        ->toContain('Launch visual system')
+        ->toContain('Gallery item with inspectable imagery.')
+        ->toContain('src="https://cdn.example.test/gallery.jpg"')
+        ->toContain('alt="Launch visual system preview"')
+        ->toContain('href="/work/launch-visual-system"')
+        ->toContain('loading="lazy"')
+        ->not->toContain('capell-app/theme-portfolio')
+        ->not->toContain('Filament')
+        ->not->toContain('wire:');
+
+    expect($resumeHtml)
+        ->toContain('Selected credentials')
+        ->toContain('href="/resume.pdf"')
+        ->toContain('Download CV')
+        ->toContain('2022-present')
+        ->toContain('Principal consultant')
+        ->toContain('Studio Practice')
+        ->toContain('Led creator-positioning and case-study systems.')
+        ->not->toContain('capell-app/theme-portfolio');
+
+    expect($logosHtml)
+        ->toContain('Trusted by focused teams')
+        ->toContain('src="https://cdn.example.test/northstar.svg"')
+        ->toContain('alt="Northstar Labs logo"')
+        ->toContain('Plain text client')
+        ->not->toContain('capell-app/theme-portfolio');
+
+    expect($emptyGalleryHtml)
+        ->toContain('Empty gallery')
+        ->toContain('Premium layout ready')
+        ->toContain('Add section content to populate this premium layout.')
+        ->not->toContain('capell-app/theme-portfolio');
+});
+
 it('uses the shared placeholder for empty portfolio-owned content sections', function (string $sectionKey): void {
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(PortfolioThemeServiceProvider::$packageName);
@@ -432,6 +532,9 @@ it('uses the shared placeholder for empty portfolio-owned content sections', fun
     'case-studies',
     'work-grid',
     'services',
+    'gallery-lightbox',
+    'resume-cv',
+    'client-logos',
     'testimonials',
     'speaking-media-kit',
 ]);
