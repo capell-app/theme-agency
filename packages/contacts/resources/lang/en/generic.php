@@ -8,8 +8,10 @@ return [
         'display_name' => 'Display name',
         'domain' => 'Domain',
         'email' => 'Email',
+        'first_seen_at' => 'First seen at',
         'last_seen_at' => 'Last seen at',
         'name' => 'Name',
+        'note' => 'Note',
         'occurred_at' => 'Occurred at',
         'phone' => 'Phone',
         'status' => 'Status',
@@ -22,8 +24,11 @@ return [
         'website' => 'Website',
     ],
     'actions' => [
+        'add_note' => 'Add note',
+        'change_status' => 'Change status',
         'privacy_anonymize' => 'Anonymize contact',
         'privacy_export' => 'Export privacy data',
+        'view' => 'View',
     ],
     'filters' => [
         'tag' => 'Tag',
@@ -36,6 +41,18 @@ return [
         'leads' => 'Leads',
         'organisation' => 'Organisation',
         'organisations' => 'Organisations',
+    ],
+    'notifications' => [
+        'lead_status_updated' => 'Lead status updated.',
+        'note_added' => 'Contact note added.',
+    ],
+    'placeholders' => [
+        'empty' => 'Not set',
+        'no_activity' => 'No activity has been recorded for this contact yet.',
+    ],
+    'sections' => [
+        'activity_timeline' => 'Activity timeline',
+        'contact_overview' => 'Contact overview',
     ],
     'form_builder' => [
         'activity_summary' => 'Submitted :form form',

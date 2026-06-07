@@ -8,6 +8,7 @@ use BackedEnum;
 use Capell\Contacts\Actions\AnonymizeContactWithAuditAction;
 use Capell\Contacts\Actions\AuditContactPrivacyExportAction;
 use Capell\Contacts\Filament\Resources\Contacts\Pages\ListContacts;
+use Capell\Contacts\Filament\Resources\Contacts\Pages\ViewContact;
 use Capell\Contacts\Models\Contact;
 use Capell\Contacts\Models\ContactTag;
 use Capell\Contacts\Providers\ContactsServiceProvider;
@@ -52,6 +53,10 @@ final class ContactResource extends Resource
                     ? $query->withTag($data['value'])
                     : $query),
         ])->recordActions([
+            Action::make('view')
+                ->label(__('capell-contacts::generic.actions.view'))
+                ->icon('heroicon-o-eye')
+                ->url(fn (Contact $record): string => self::getUrl('view', ['record' => $record])),
             Action::make('privacy_export')
                 ->label(__('capell-contacts::generic.actions.privacy_export'))
                 ->icon('heroicon-o-arrow-down-tray')
@@ -121,6 +126,7 @@ final class ContactResource extends Resource
     {
         return [
             'index' => ListContacts::route('/'),
+            'view' => ViewContact::route('/{record}'),
         ];
     }
 
