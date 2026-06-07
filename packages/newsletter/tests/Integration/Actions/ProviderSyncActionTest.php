@@ -3,9 +3,14 @@
 declare(strict_types=1);
 
 use Capell\Core\Models\Site;
+use Capell\Newsletter\Actions\QueueProviderSyncAction;
 use Capell\Newsletter\Actions\RequeueDueProviderSyncAttemptsAction;
 use Capell\Newsletter\Actions\SyncSubscriberToProviderAction;
+use Capell\Newsletter\Actions\UpsertSubscriberAction;
+use Capell\Newsletter\Data\ConsentEvidenceData;
+use Capell\Newsletter\Data\SubscriberData;
 use Capell\Newsletter\Enums\AuthType;
+use Capell\Newsletter\Enums\ConsentEventType;
 use Capell\Newsletter\Enums\ProviderType;
 use Capell\Newsletter\Enums\SubscriberStatus;
 use Capell\Newsletter\Enums\SyncStatus;
@@ -242,6 +247,100 @@ it('acknowledges duplicate provider webhook retries without re-recording consent
 
     expect($subscriber)->not->toBeNull()
         ->and($subscriber?->refresh()->consentEvents()->count())->toBe($consentEventsCount);
+});
+
+it('blocks suppressed provider webhook addresses from later re-subscribe attempts', function (): void {
+    $site = $this->createNewsletterSite();
+    $connection = ProviderConnection::query()->create([
+        'site_id' => $site->getKey(),
+        'name' => 'Fake',
+        'provider' => ProviderType::Fake,
+        'auth_type' => AuthType::ApiKey,
+        'credentials' => ['api_key' => 'fake'],
+        'is_enabled' => true,
+    ]);
+
+    $this->postJson(route('capell-newsletter.provider-webhook', ['providerConnection' => $connection]), [
+        'email' => 'complained@example.com',
+        'status' => SubscriberStatus::Complained->value,
+        'event_type' => 'abuse',
+    ])->assertOk();
+
+    $subscriber = UpsertSubscriberAction::run(new SubscriberData(
+        siteId: newsletterProviderSyncSiteId($site),
+        email: 'complained@example.com',
+        status: SubscriberStatus::Subscribed,
+    ), new ConsentEvidenceData(sourceType: 'form', sourceId: 'resubscribe'), ConsentEventType::FormCapture);
+
+    expect($subscriber->status)->toBe(SubscriberStatus::Complained)
+        ->and($subscriber->complained_at)->not->toBeNull();
+});
+
+it('does not queue provider sync attempts for globally suppressed subscribers', function (): void {
+    $site = $this->createNewsletterSite();
+    $subscriber = Subscriber::factory()->create([
+        'site_id' => $site->getKey(),
+        'status' => SubscriberStatus::Bounced,
+        'bounced_at' => now(),
+    ]);
+    $connection = ProviderConnection::query()->create([
+        'site_id' => $site->getKey(),
+        'name' => 'Fake',
+        'provider' => ProviderType::Fake,
+        'auth_type' => AuthType::ApiKey,
+        'credentials' => ['api_key' => 'fake'],
+        'is_enabled' => true,
+    ]);
+    ProviderAudience::query()->create([
+        'provider_connection_id' => $connection->getKey(),
+        'name' => 'Default',
+        'remote_id' => 'fake-audience',
+        'is_default' => true,
+        'sync_subscribed_only' => true,
+    ]);
+
+    QueueProviderSyncAction::run($subscriber, dispatchJobs: false);
+
+    expect(SyncAttempt::query()->where('subscriber_id', $subscriber->getKey())->exists())->toBeFalse();
+});
+
+it('permanently fails already queued provider sync attempts for globally suppressed subscribers', function (): void {
+    $site = $this->createNewsletterSite();
+    $subscriber = Subscriber::factory()->create([
+        'site_id' => $site->getKey(),
+        'status' => SubscriberStatus::Complained,
+        'complained_at' => now(),
+    ]);
+    $connection = ProviderConnection::query()->create([
+        'site_id' => $site->getKey(),
+        'name' => 'Fake',
+        'provider' => ProviderType::Fake,
+        'auth_type' => AuthType::ApiKey,
+        'credentials' => ['api_key' => 'fake'],
+        'is_enabled' => true,
+    ]);
+    $audience = ProviderAudience::query()->create([
+        'provider_connection_id' => $connection->getKey(),
+        'name' => 'Default',
+        'remote_id' => 'fake-audience',
+        'is_default' => true,
+        'sync_subscribed_only' => true,
+    ]);
+    $syncAttempt = SyncAttempt::query()->create([
+        'subscriber_id' => $subscriber->getKey(),
+        'provider_connection_id' => $connection->getKey(),
+        'provider_audience_id' => $audience->getKey(),
+        'operation' => 'sync_subscriber',
+        'sync_status' => SyncStatus::Pending,
+        'attempts' => 0,
+    ]);
+
+    SyncSubscriberToProviderAction::run($syncAttempt);
+
+    expect($syncAttempt->refresh()->sync_status)->toBe(SyncStatus::Failed)
+        ->and($syncAttempt->error_message)->toBe('Subscriber is globally suppressed.')
+        ->and($syncAttempt->next_retry_at)->toBeNull()
+        ->and(ProviderSubscriber::query()->where('subscriber_id', $subscriber->getKey())->exists())->toBeFalse();
 });
 
 it('requeues due provider sync attempts without touching future attempts', function (): void {

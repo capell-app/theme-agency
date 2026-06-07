@@ -165,6 +165,7 @@
         "newsletter-utm-attribution",
         "newsletter-unsubscribe-routes",
         "newsletter-automation-hooks",
+        "newsletter-global-suppression",
         "newsletter-contacts-source-adapter",
         "newsletter-customer-portal-preferences-feed",
         "newsletter-public-preference-center"

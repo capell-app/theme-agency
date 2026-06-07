@@ -19,6 +19,10 @@ class QueueProviderSyncAction
 
     public function handle(Subscriber $subscriber, string $operation = 'sync_subscriber', bool $dispatchJobs = true): void
     {
+        if ($subscriber->status->isGloballySuppressed()) {
+            return;
+        }
+
         ProviderAudience::query()
             ->whereHas('providerConnection', function (Builder $query) use ($subscriber): void {
                 $query

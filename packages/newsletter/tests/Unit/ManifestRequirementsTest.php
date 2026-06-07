@@ -71,6 +71,7 @@ it('declares newsletter segmentation, preference center, campaign send, and attr
             'newsletter-utm-attribution',
             'newsletter-unsubscribe-routes',
             'newsletter-automation-hooks',
+            'newsletter-global-suppression',
         );
 });
 
