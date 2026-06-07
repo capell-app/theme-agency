@@ -3,10 +3,14 @@
 declare(strict_types=1);
 
 use Capell\Payments\Actions\BuildPaymentsHealthReportAction;
+use Capell\Payments\Enums\CheckoutMode;
+use Capell\Payments\Enums\CheckoutSessionStatus;
 use Capell\Payments\Enums\PaymentDisputeStatus;
 use Capell\Payments\Enums\PaymentProvider;
+use Capell\Payments\Enums\PaymentPurpose;
 use Capell\Payments\Enums\PaymentWebhookEventStatus;
 use Capell\Payments\Health\PaymentsHealthCheck;
+use Capell\Payments\Models\CheckoutSession;
 use Capell\Payments\Models\PaymentDispute;
 use Capell\Payments\Models\PaymentWebhookEvent;
 use Capell\Payments\Tests\TestCase;
@@ -95,4 +99,29 @@ it('fails when webhook processing failed or disputes need a response', function 
         ->and($report->unresolvedDisputes)->toBe(1)
         ->and($report->issues)->toContain('1 Stripe webhook event(s) failed processing.')
         ->and($report->issues)->toContain('1 payment dispute(s) need a response.');
+});
+it('surfaces failed checkout fulfilment results in the health report', function (): void {
+    CheckoutSession::query()->create([
+        'provider' => PaymentProvider::Stripe->value,
+        'provider_session_id' => 'cs_failed_fulfilment',
+        'mode' => CheckoutMode::Payment->value,
+        'purpose' => PaymentPurpose::PaidDownload->value,
+        'status' => CheckoutSessionStatus::Complete->value,
+        'metadata' => [
+            'fulfillment_failed' => true,
+            'fulfillment_results' => [
+                [
+                    'handler' => 'paid-download',
+                    'fulfilled' => false,
+                    'message' => 'missing_download_reference',
+                ],
+            ],
+        ],
+    ]);
+
+    $report = BuildPaymentsHealthReportAction::run();
+
+    expect($report->failedFulfillmentResults)->toBe(1)
+        ->and($report->status)->toBe('failed')
+        ->and($report->issues)->toContain('Payment checkout fulfilment failures need review.');
 });

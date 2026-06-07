@@ -7,6 +7,7 @@ namespace Capell\Payments\Actions;
 use Capell\Payments\Data\PaymentsHealthReportData;
 use Capell\Payments\Enums\PaymentDisputeStatus;
 use Capell\Payments\Enums\PaymentWebhookEventStatus;
+use Capell\Payments\Models\CheckoutSession;
 use Capell\Payments\Models\PaymentDispute;
 use Capell\Payments\Models\PaymentWebhookEvent;
 use Carbon\CarbonImmutable;
@@ -24,6 +25,7 @@ final class BuildPaymentsHealthReportAction
         $stripeWebhookSecretConfigured = $this->configured('capell-payments.stripe.webhook_secret', 'stripe_webhook_secret');
         $recordedWebhookEvents = 0;
         $failedWebhookEvents = 0;
+        $failedFulfillmentResults = 0;
         $unresolvedDisputes = 0;
         $latestWebhookReceivedAt = null;
         $webhooksFresh = false;
@@ -52,6 +54,17 @@ final class BuildPaymentsHealthReportAction
             $issues[] = 'Payments webhook event table has not been migrated.';
         }
 
+        if ($this->checkoutSessionsTableExists()) {
+            $failedFulfillmentResults = CheckoutSession::query()
+                ->get()
+                ->filter(fn (CheckoutSession $checkoutSession): bool => (bool) data_get($checkoutSession->metadata, 'fulfillment_failed', false))
+                ->count();
+
+            if ($failedFulfillmentResults > 0) {
+                $issues[] = 'Payment checkout fulfilment failures need review.';
+            }
+        }
+
         if ($this->disputesTableExists()) {
             $unresolvedDisputes = PaymentDispute::query()
                 ->whereIn('status', [
@@ -78,11 +91,12 @@ final class BuildPaymentsHealthReportAction
         }
 
         return new PaymentsHealthReportData(
-            status: $this->status($stripeSecretConfigured, $stripeWebhookSecretConfigured, $failedWebhookEvents, $unresolvedDisputes, $issues),
+            status: $this->status($stripeSecretConfigured, $stripeWebhookSecretConfigured, $failedWebhookEvents, $failedFulfillmentResults, $unresolvedDisputes, $issues),
             stripeSecretConfigured: $stripeSecretConfigured,
             stripeWebhookSecretConfigured: $stripeWebhookSecretConfigured,
             recordedWebhookEvents: $recordedWebhookEvents,
             failedWebhookEvents: $failedWebhookEvents,
+            failedFulfillmentResults: $failedFulfillmentResults,
             unresolvedDisputes: $unresolvedDisputes,
             latestWebhookReceivedAt: $latestWebhookReceivedAt === null ? null : CarbonImmutable::parse($latestWebhookReceivedAt),
             webhooksFresh: $webhooksFresh,
@@ -104,6 +118,13 @@ final class BuildPaymentsHealthReportAction
         return is_string($tableName) && Schema::hasTable($tableName);
     }
 
+    private function checkoutSessionsTableExists(): bool
+    {
+        $tableName = config('capell-payments.tables.checkout_sessions', 'payment_checkout_sessions');
+
+        return is_string($tableName) && Schema::hasTable($tableName);
+    }
+
     private function disputesTableExists(): bool
     {
         $tableName = config('capell-payments.tables.disputes', 'payment_disputes');
@@ -118,10 +139,11 @@ final class BuildPaymentsHealthReportAction
         bool $stripeSecretConfigured,
         bool $stripeWebhookSecretConfigured,
         int $failedWebhookEvents,
+        int $failedFulfillmentResults,
         int $unresolvedDisputes,
         array $issues,
     ): string {
-        if (! $stripeSecretConfigured || ! $stripeWebhookSecretConfigured || $failedWebhookEvents > 0 || $unresolvedDisputes > 0) {
+        if (! $stripeSecretConfigured || ! $stripeWebhookSecretConfigured || $failedWebhookEvents > 0 || $failedFulfillmentResults > 0 || $unresolvedDisputes > 0) {
             return 'failed';
         }
 
