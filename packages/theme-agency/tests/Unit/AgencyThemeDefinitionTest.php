@@ -258,6 +258,38 @@ it('renders the agency hero with a campaign launch board fallback', function ():
         ->not->toContain('capell-app/theme-agency');
 });
 
+it('renders agency hero stats from section data and keeps the canvas in a partial', function (): void {
+    View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/lang');
+
+    $heroView = file_get_contents(__DIR__ . '/../../resources/views/sections/hero.blade.php') ?: '';
+    $heroCanvasPartial = __DIR__ . '/../../resources/views/sections/partials/hero-canvas.blade.php';
+
+    $html = view('capell-theme-agency::sections.hero', [
+        'section' => (object) [
+            'heading' => 'Focused launch systems',
+            'eyebrow' => 'Studio',
+            'summary' => 'Strategy, identity, and delivery for growing teams.',
+            'actions' => [],
+            'mediaUrl' => null,
+            'stats' => [
+                ['label' => 'Launches', 'value' => '24', 'accent' => true],
+                ['label' => 'Channels', 'value' => '06'],
+                ['label' => 'Weeks', 'value' => '03'],
+            ],
+        ],
+    ])->render();
+
+    expect($heroView)
+        ->toContain('sections.partials.hero-canvas')
+        ->not->toContain('hero_asset_label')
+        ->and(file_exists($heroCanvasPartial))->toBeTrue()
+        ->and($html)->toContain('Launches')
+        ->and($html)->toContain('24')
+        ->and($html)->toContain('Weeks')
+        ->and($html)->not->toContain('14d');
+});
+
 it('renders agency hero media with LCP image attributes', function (): void {
     View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
     Lang::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/lang');

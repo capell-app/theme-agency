@@ -17,6 +17,7 @@
 - **2026-06-07:** Closed the Agency contrast/WCAG slice by softening shell heading rhythm, raising weak dark-panel copy opacity, translating hero stat values, and adding WCAG AA preset contrast plus low-opacity class regression coverage.
 - **2026-06-07:** Recaptured all 10 light frontend screenshot targets through the Capell runner with the real Agency renderer and visually reviewed the contact sheet; marketplace promotion remains intentionally limited to the strongest homepage/lead-generation captures.
 - **2026-06-07:** Moved the proof carousel behavior out of public Blade into a registered package build asset, added reduced-motion-aware scrolling, translated button labels, and an `aria-live` status region.
+- **2026-06-07:** Extracted the hero's decorative canvas into a partial and made the hero stat cards render from optional section data with translated fallbacks.
 
 ## 2. Improvements (existing functionality)
 
@@ -32,7 +33,7 @@
 
 6. **Definition asset contract reconciled.** — `definition()` now publishes the committed marketplace card to `/vendor/capell/themes/agency.jpg`, all presets use that declared public preview image, and `assets['css']` points at Foundation Theme's generated frontend CSS entrypoint while the package stylesheet is registered as a Tailwind import. `src/AgencyThemeServiceProvider.php`, `tests/Unit/AgencyThemeDefinitionTest.php` — **Done**
 
-7. **Decompose the hero's decorative mock-up** — the hero's right column is ~120 lines of nested decorative divs (fake "scene", "launch board", channel bars) marked `aria-hidden`. It is impressive but unmaintainable inline and repeats token references. Extract to a partial (`sections/partials/hero-canvas.blade.php`) so the hero stays readable and the decoration is reusable. `resources/views/sections/hero.blade.php` — **S**
+7. **Hero canvas extracted and stats data-driven.** — The hero's decorative right column now lives in `sections/partials/hero-canvas.blade.php`, keeping the main hero view focused on content flow. The hero stat cards read optional `$section->stats` data and fall back to translated defaults, so seeded/demo pages can replace `Live`/`08`/`14d` without editing Blade. `resources/views/sections/hero.blade.php`, `resources/views/sections/partials/hero-canvas.blade.php`, `tests/Unit/AgencyThemeDefinitionTest.php` — **Done**
 
 ## 3. Missing Features (gaps)
 
@@ -60,6 +61,7 @@ Versus siblings (10 themes exist: foundation-theme, theme-commerce, theme-corpor
 - **LCP / image performance partially closed.** Hero media now includes explicit dimensions, eager loading, async decoding, and `fetchpriority="high"`; content-listing media now includes explicit dimensions, lazy loading, and async decoding. Remaining opportunity: add a render-budget smoke test for the declared 20 ms frontend budget. `resources/views/sections/hero.blade.php`, `resources/views/sections/content-listing.blade.php`, `tests/Unit/AgencyThemeDefinitionTest.php`, `capell.json`.
 - **Cache safety (low, verify).** `performance.cacheSafety.cacheable: false`, `variesBy: ["site","locale"]`, `queueInvalidation: true`. The inline proof `<script>` and `<details>` are static markup, so `cacheable: false` may be more conservative than needed; confirm whether the theme genuinely can't be cached or whether this is a default left unset. `capell.json`.
 - **Hero stat literals translated.** Hero stats still use package defaults, but the visible `08`, `14d`, and `01` values now come through translations and are guarded from returning as raw Blade literals. Future work can expose them as section data if editors need per-page values. `resources/views/sections/hero.blade.php`, `resources/lang/en/generic.php`.
+- **Hero structure simplified.** The decorative canvas is extracted to a package partial and hero stat cards are now hydrated-data capable with translated fallback values. `AgencyThemeDefinitionTest` guards the partial boundary and custom stat rendering. `resources/views/sections/hero.blade.php`, `resources/views/sections/partials/hero-canvas.blade.php`, `tests/Unit/AgencyThemeDefinitionTest.php`.
 
 ## 5. Marketplace & Selling
 
@@ -97,4 +99,4 @@ Versus siblings (10 themes exist: foundation-theme, theme-commerce, theme-corpor
 | Implement real `ThemeAgencyHealthCheck` probes (or downgrade severity)                                                           | Done   | M      | Med    | §4 — reconciled 2026-06-07: the health check already probes registry, required views, and marketplace media with feature coverage.                                                                   |
 | Add team + services + client-logo renderers                                                                                      | Later  | L      | Med    | §3                                                                                                                                                                                                   |
 | Ship a light-mode preset and `prefers-reduced-motion` handling                                                                   | Done   | M      | Med    | §2.1, §2.5 — closed 2026-06-07: light-surface presets exist and proof carousel scrolling now respects reduced motion through a registered build asset.                                               |
-| Extract hero decorative canvas to a partial; data-drive hero stats                                                               | Later  | S      | Low    | §2.7, §4                                                                                                                                                                                             |
+| Extract hero decorative canvas to a partial; data-drive hero stats                                                               | Done   | S      | Low    | §2.7, §4 — closed 2026-06-07: the decorative canvas now lives in `sections/partials/hero-canvas.blade.php`, and hero stat cards accept section data with translated fallbacks.                       |
