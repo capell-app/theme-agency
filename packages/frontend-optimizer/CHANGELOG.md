@@ -13,6 +13,7 @@ All notable changes to `capell-app/frontend-optimizer` will be documented in thi
 - Moved render-profile manifest writes off the normal public render path so synchronous queue renders and already-queued profiles do not write local manifest files.
 - Taught the optimizer renderer to use manifest-level critical CSS, package-name, and JavaScript loading-strategy hints for non-Foundation assets while preserving Foundation fallbacks.
 - Added stale render-profile pruning through `PruneRenderProfilesAction` and `capell:frontend-optimizer:prune-profiles`, including dry-run and JSON output.
+- Reconciled the improvement plan's listener, job, settings, health, and public head-output test gap against existing focused coverage.
 
 ## 2026-06-03
 
