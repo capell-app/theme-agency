@@ -68,3 +68,13 @@ it('keeps public Blade free of database query calls', function (): void {
         ->not->toContain('->media->')
         ->not->toContain('find(');
 });
+
+it('keeps theme Tailwind classes unprefixed because package assets are isolated', function (): void {
+    $provider = file_get_contents(__DIR__ . '/../../src/LocalServicesThemeServiceProvider.php') ?: '';
+    $blade = localServicesThemeBladeViews();
+
+    expect($provider)
+        ->toContain("VendorAssetData::tailwindImport('resources/css/theme-local-services.css'")
+        ->toContain("VendorAssetData::tailwindSource('resources/views/**/*.blade.php'")
+        ->and($blade)->not->toContain('tw:');
+});

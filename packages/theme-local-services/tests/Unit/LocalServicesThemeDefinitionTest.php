@@ -13,6 +13,8 @@ use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\Tests\Packages\PackagesTestCase;
 use Capell\ThemeStudio\LocalServices\LocalServicesThemeServiceProvider;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
 
 uses(PackagesTestCase::class);
 
@@ -25,10 +27,134 @@ it('defines the Local Services theme contract', function (): void {
         ->and($definition->includedSections)->toContain('hero')
         ->and($definition->includedSections)->toContain('features')
         ->and($definition->includedSections)->toContain('proof')
+        ->and($definition->includedSections)->toContain('reviews-testimonials')
+        ->and($definition->includedSections)->toContain('opening-hours')
+        ->and($definition->includedSections)->toContain('structured-data')
         ->and($definition->includedSections)->toContain('content-listing')
         ->and($definition->includedSections)->toContain('cta')
         ->and($definition->includedSections)->toContain('footer')
         ->and($definition->presets)->toHaveCount(1);
+});
+
+it('renders local SEO structured data reviews and opening hours sections', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(LocalServicesThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new LocalServicesThemeServiceProvider($this->app))->boot($registry);
+
+    $structuredDataRenderer = $registry->sectionRenderer('local-services', 'structured-data');
+    $reviewsRenderer = $registry->sectionRenderer('local-services', 'reviews-testimonials');
+    $openingHoursRenderer = $registry->sectionRenderer('local-services', 'opening-hours');
+
+    assert($structuredDataRenderer instanceof SectionRenderer);
+    assert($reviewsRenderer instanceof SectionRenderer);
+    assert($openingHoursRenderer instanceof SectionRenderer);
+
+    $structuredDataHtml = $structuredDataRenderer->render(localServicesThemeSection('structured-data', [
+        'business' => [
+            'name' => 'Cardiff Boiler Care',
+            'url' => 'https://local.example.test',
+            'phone' => '+44 29 2000 1234',
+            'address' => '12 High Street, Cardiff CF10 1AA',
+        ],
+        'serviceName' => 'Emergency boiler repair',
+        'areaServed' => 'Cardiff',
+        'services' => [
+            ['title' => 'Boiler repair', 'summary' => 'Emergency heating repairs.'],
+        ],
+        'faqs' => [
+            ['question' => 'Do you offer same-day repairs?', 'answer' => 'Yes, where local route capacity allows.'],
+        ],
+        'openingHours' => [
+            ['dayOfWeek' => 'Monday', 'opens' => '08:00', 'closes' => '18:00'],
+        ],
+    ]));
+
+    $reviewsHtml = $reviewsRenderer->render(localServicesThemeSection('reviews-testimonials', [
+        'heading' => 'What local customers say',
+        'items' => [
+            ['quote' => 'Arrived inside the promised slot.', 'name' => 'Pontcanna homeowner', 'rating' => 5],
+        ],
+    ]));
+
+    $hoursHtml = $openingHoursRenderer->render(localServicesThemeSection('opening-hours', [
+        'heading' => 'When the quote desk is open',
+        'openNow' => true,
+        'items' => [
+            ['day' => 'Monday to Friday', 'opens' => '08:00', 'closes' => '18:00'],
+            ['day' => 'Saturday', 'hours' => 'Emergency callouts'],
+        ],
+    ]));
+
+    expect($structuredDataHtml)
+        ->toContain('application/ld+json')
+        ->toContain('"@context":"https://schema.org"')
+        ->toContain('"@type":"LocalBusiness"')
+        ->toContain('"@type":"Service"')
+        ->toContain('"@type":"FAQPage"')
+        ->toContain('Cardiff Boiler Care')
+        ->toContain('Emergency boiler repair')
+        ->toContain('Do you offer same-day repairs?')
+        ->not->toContain('capell-app/theme-local-services')
+        ->not->toContain('Filament');
+
+    expect($reviewsHtml)
+        ->toContain('What local customers say')
+        ->toContain('Arrived inside the promised slot.')
+        ->toContain('Pontcanna homeowner')
+        ->toContain('5 out of 5 stars')
+        ->not->toContain('capell-app/theme-local-services');
+
+    expect($hoursHtml)
+        ->toContain('When the quote desk is open')
+        ->toContain('Open now')
+        ->toContain('Monday to Friday')
+        ->toContain('08:00–18:00')
+        ->toContain('Saturday')
+        ->toContain('Emergency callouts')
+        ->not->toContain('capell-app/theme-local-services');
+});
+
+it('renders every Local Services-owned section anonymously inside the budget without database queries', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(LocalServicesThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/form-builder', false);
+    CapellCore::forcePackageInstalled('capell-app/blog', false);
+
+    $registry = new ThemeRegistry;
+    (new LocalServicesThemeServiceProvider($this->app))->boot($registry);
+
+    $manifest = localServicesThemeTestManifest();
+    $budgetMilliseconds = (float) data_get($manifest, 'performance.frontendRenderBudgetMs', 20);
+    $queryCount = 0;
+
+    DB::listen(static function (QueryExecuted $query) use (&$queryCount): void {
+        if (str_starts_with(strtolower($query->sql), 'select')) {
+            $queryCount++;
+        }
+    });
+
+    foreach (localServicesOwnedSectionKeys() as $sectionKey) {
+        $renderer = $registry->sectionRenderer('local-services', $sectionKey);
+
+        assert($renderer instanceof SectionRenderer);
+
+        $section = localServicesThemeSection($sectionKey, localServicesRenderPayload($sectionKey));
+
+        $renderer->render($section);
+
+        $startedAt = hrtime(true);
+        $html = $renderer->render($section);
+        $elapsedMilliseconds = (hrtime(true) - $startedAt) / 1_000_000;
+
+        expect($elapsedMilliseconds)->toBeLessThanOrEqual($budgetMilliseconds)
+            ->and($html)->not->toContain('capell-app/theme-local-services')
+            ->and($html)->not->toContain('Filament')
+            ->and($html)->not->toContain('wire:');
+    }
+
+    expect($queryCount)->toBe(0);
 });
 
 it('renders standard sections through Local Services views', function (): void {
@@ -393,4 +519,72 @@ function localServicesThemeSection(string $key, array $viewData): ThemeSection
             return ['section' => (object) $this->viewData];
         }
     };
+}
+
+/**
+ * @return array<int, string>
+ */
+function localServicesOwnedSectionKeys(): array
+{
+    return array_values(array_filter(
+        LocalServicesThemeServiceProvider::definition()->includedSections,
+        static fn (string $sectionKey): bool => ! in_array($sectionKey, ['navigation', 'footer'], true),
+    ));
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function localServicesRenderPayload(string $sectionKey): array
+{
+    $payload = [
+        'heading' => 'Anonymous ' . $sectionKey,
+        'summary' => 'Anonymous public render summary.',
+        'items' => [],
+        'actions' => [],
+        'features' => [],
+    ];
+
+    if ($sectionKey === 'structured-data') {
+        return [
+            ...$payload,
+            'business' => ['name' => 'Anonymous Local Business'],
+            'services' => [['title' => 'Anonymous service']],
+            'faqs' => [['question' => 'Anonymous question?', 'answer' => 'Anonymous answer.']],
+            'openingHours' => [['dayOfWeek' => 'Monday', 'opens' => '09:00', 'closes' => '17:00']],
+        ];
+    }
+
+    if ($sectionKey === 'opening-hours') {
+        return [
+            ...$payload,
+            'openNow' => false,
+            'items' => [['day' => 'Monday', 'opens' => '09:00', 'closes' => '17:00']],
+        ];
+    }
+
+    if ($sectionKey === 'reviews-testimonials') {
+        return [
+            ...$payload,
+            'items' => [['quote' => 'Anonymous review.', 'name' => 'Local customer']],
+        ];
+    }
+
+    return $payload;
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function localServicesThemeTestManifest(): array
+{
+    $manifest = json_decode(
+        (string) file_get_contents(dirname(__DIR__, 2) . '/capell.json'),
+        true,
+        flags: JSON_THROW_ON_ERROR,
+    );
+
+    throw_unless(is_array($manifest), RuntimeException::class, 'Theme Local Services manifest must decode to an array.');
+
+    return $manifest;
 }
