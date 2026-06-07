@@ -58,8 +58,9 @@ final class AIOrchestratorImageDoctor implements ImageDoctor
     private function prompt(ImageDoctorRequest $request): string
     {
         return trim(sprintf(
-            'Perform the Media AI image doctor operation [%s]. Instructions: %s',
+            'Perform the Media AI image doctor operation [%s] for locale [%s]. Instructions: %s',
             $request->operation,
+            $request->locale ?? 'default',
             $request->instructions,
         ));
     }
@@ -72,6 +73,7 @@ final class AIOrchestratorImageDoctor implements ImageDoctor
         return [
             'operation' => $request->operation,
             'instructions' => $request->instructions,
+            'locale' => $request->locale,
             'media' => [
                 'id' => $media->getKey(),
                 'model_type' => $media->model_type,

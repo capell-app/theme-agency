@@ -195,6 +195,8 @@ it('returns a localized failure result from the null image doctor', function ():
 });
 
 it('passes image doctor requests to the configured ai-orchestrator implementation', function (): void {
+    app()->setLocale('cy');
+
     $doctor = new RecordingImageDoctor;
     app()->instance(ImageDoctor::class, $doctor);
 
@@ -213,7 +215,8 @@ it('passes image doctor requests to the configured ai-orchestrator implementatio
 
     expect($doctor->media?->is($media))->toBeTrue()
         ->and($doctor->request?->operation)->toBe('remove_background')
-        ->and($doctor->request?->instructions)->toBe('Remove the background and keep the subject sharp.');
+        ->and($doctor->request?->instructions)->toBe('Remove the background and keep the subject sharp.')
+        ->and($doctor->request?->locale)->toBe('cy');
 });
 
 it('runs image doctor requests through the configured ai-orchestrator capability', function (): void {
@@ -231,6 +234,7 @@ it('runs image doctor requests through the configured ai-orchestrator capability
         new ImageDoctorRequest(
             operation: 'restore',
             instructions: 'Restore scratches while preserving the original crop.',
+            locale: 'fr',
         ),
     );
     $lastRun = AIOrchestratorImageDoctorAction::lastRun();
@@ -246,6 +250,7 @@ it('runs image doctor requests through the configured ai-orchestrator capability
         ->and($lastRun->capabilityKey)->toBe('doctor-image')
         ->and($lastRun->context['operation'])->toBe('restore')
         ->and($lastRun->context['instructions'])->toBe('Restore scratches while preserving the original crop.')
+        ->and($lastRun->context['locale'])->toBe('fr')
         ->and($mediaContext['id'])->toBe($media->getKey());
 });
 

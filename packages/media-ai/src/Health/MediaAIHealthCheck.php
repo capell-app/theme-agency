@@ -152,6 +152,7 @@ final class MediaAIHealthCheck implements ChecksExtensionHealth
             new ImageDoctorRequest(
                 operation: ImageDoctorRequest::OPERATIONS[0],
                 instructions: 'Diagnostic structured-request probe.',
+                locale: app()->getLocale(),
             );
 
             return true;

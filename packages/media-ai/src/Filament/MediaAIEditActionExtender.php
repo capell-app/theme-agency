@@ -49,6 +49,7 @@ final class MediaAIEditActionExtender implements MediaEditActionExtender
                         new ImageDoctorRequest(
                             operation: (string) $data['operation'],
                             instructions: (string) $data['instructions'],
+                            locale: app()->getLocale(),
                         ),
                     );
 
