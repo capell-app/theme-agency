@@ -42,6 +42,7 @@ it('defines the commerce premium renderer contract', function (): void {
             'collections',
             'product-grid',
             'product-detail',
+            'mini-basket',
             'comparison',
             'catalog',
             'lookbook',
@@ -75,6 +76,7 @@ it('declares renderers for every commerce section', function (): void {
         'collections',
         'product-grid',
         'product-detail',
+        'mini-basket',
         'comparison',
         'catalog',
         'lookbook',
@@ -172,6 +174,15 @@ it('renders public theme markup without forbidden package or authoring tokens', 
                 'price' => '$148',
                 'variants' => [['label' => 'Forest'], ['label' => 'Clay']],
                 'stockStatus' => 'Ships this week',
+            ]),
+            commerceThemeSection('mini-basket', [
+                'heading' => 'Basket preview',
+                'summary' => 'Checkout-ready basket state.',
+                'items' => [
+                    ['title' => 'Canvas tote', 'quantity' => 2, 'price' => '$296'],
+                ],
+                'subtotal' => '$296',
+                'checkoutUrl' => '/checkout',
             ]),
             commerceThemeSection('comparison', [
                 'heading' => 'Compare materials',
@@ -394,6 +405,106 @@ it('renders a dedicated commerce product detail section', function (): void {
         ->not->toContain('capell-app/theme-commerce')
         ->not->toContain('model_id')
         ->not->toContain('field_path');
+});
+
+it('renders commerce cart, promotion countdown, and review primitives', function (): void {
+    View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(CommerceThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new CommerceThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $basketRenderer = $registry->sectionRenderer('commerce', 'mini-basket');
+    $promotionRenderer = $registry->sectionRenderer('commerce', 'promotion');
+    $proofRenderer = $registry->sectionRenderer('commerce', 'proof');
+
+    assert($basketRenderer instanceof SectionRenderer);
+    assert($promotionRenderer instanceof SectionRenderer);
+    assert($proofRenderer instanceof SectionRenderer);
+
+    $basketHtml = $basketRenderer->render(commerceThemeSection('mini-basket', [
+        'heading' => 'Basket preview',
+        'summary' => 'Checkout-ready basket state.',
+        'items' => [
+            [
+                'title' => 'Canvas tote',
+                'quantity' => 2,
+                'price' => '$296',
+                'image' => '/images/canvas-tote.jpg',
+                'imageAlt' => 'Canvas tote on a table',
+            ],
+        ],
+        'subtotal' => '$296',
+        'delivery' => 'Free delivery',
+        'checkoutUrl' => '/checkout',
+    ]));
+
+    $promotionHtml = $promotionRenderer->render(commerceThemeSection('promotion', [
+        'heading' => 'Member preview',
+        'summary' => 'Segmented offer for early access buyers.',
+        'countdown' => [
+            ['label' => 'Days', 'value' => '03'],
+            ['label' => 'Hours', 'value' => '18'],
+            ['label' => 'Minutes', 'value' => '42'],
+        ],
+        'items' => [
+            ['title' => 'Early access', 'summary' => 'Save on the field kit.', 'code' => 'FIELD20'],
+        ],
+    ]));
+
+    $proofHtml = $proofRenderer->render(commerceThemeSection('proof', [
+        'heading' => 'Trusted by buyers',
+        'items' => [
+            [
+                'metric' => '4.8',
+                'name' => 'Field kit rating',
+                'summary' => 'Buyers mention durable fabric and clear fulfilment.',
+                'rating' => '4.8',
+                'reviewCount' => '128',
+            ],
+        ],
+    ]));
+
+    $navigationHtml = view('capell-theme-commerce::sections.navigation', [
+        'section' => (object) [
+            'brandName' => 'Stone & Loom',
+            'items' => [['label' => 'Catalog', 'url' => '/catalog']],
+            'basketUrl' => '/cart',
+            'basketCount' => 3,
+        ],
+    ])->render();
+
+    expect($basketHtml)
+        ->toContain('Basket preview')
+        ->toContain('Canvas tote')
+        ->toContain('$296')
+        ->toContain('Free delivery')
+        ->toContain('href="/checkout"')
+        ->not->toContain('capell-app/theme-commerce')
+        ->not->toContain('model_id')
+        ->not->toContain('field_path');
+
+    expect($promotionHtml)
+        ->toContain('Offer ends in')
+        ->toContain('03')
+        ->toContain('FIELD20')
+        ->not->toContain('capell-app/theme-commerce');
+
+    expect($proofHtml)
+        ->toContain('Trusted by buyers')
+        ->toContain('4.8 / 5')
+        ->toContain('128')
+        ->toContain('Reviews')
+        ->not->toContain('capell-app/theme-commerce');
+
+    expect($navigationHtml)
+        ->toContain('href="/cart"')
+        ->toContain('Basket')
+        ->toContain('3')
+        ->not->toContain('capell-app/theme-commerce');
 });
 
 it('renders core commerce sections directly', function (string $view, object $section, string $expectedMarkup): void {

@@ -33,6 +33,25 @@
                 </a>
             @endif
 
+            @if ($section->basketUrl ?? null)
+                <a
+                    href="{{ $section->basketUrl }}"
+                    class="inline-flex items-center gap-2 rounded-full border border-stone-300 px-3 py-2 text-sm font-black text-[#17211c]"
+                    aria-label="{{ __('capell-theme-commerce::generic.basket_label') }}"
+                >
+                    <span>
+                        {{ __('capell-theme-commerce::generic.basket_label') }}
+                    </span>
+                    @if ($section->basketCount ?? null)
+                        <span
+                            class="rounded-full bg-[#e86f5c] px-2 py-0.5 text-xs text-white"
+                        >
+                            {{ $section->basketCount }}
+                        </span>
+                    @endif
+                </a>
+            @endif
+
             <details class="relative md:hidden">
                 <summary
                     class="cursor-pointer list-none rounded-full border border-stone-300 px-3 py-2 text-sm font-bold text-stone-700 [&::-webkit-details-marker]:hidden"

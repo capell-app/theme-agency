@@ -82,6 +82,26 @@
                                 >
                                     {{ $item['excerpt'] ?? $item['summary'] ?? '' }}
                                 </p>
+                                @if (($item['rating'] ?? $item['stars'] ?? null) || ($item['reviewCount'] ?? $item['reviews'] ?? null))
+                                    <div
+                                        class="mt-4 flex flex-wrap items-center gap-2 text-sm font-black text-[#1f5f4a]"
+                                        aria-label="{{ __('capell-theme-commerce::generic.rating_label') }}"
+                                    >
+                                        @if ($item['rating'] ?? $item['stars'] ?? null)
+                                            <span>
+                                                {{ ($item['rating'] ?? $item['stars']) . ' / 5' }}
+                                            </span>
+                                        @endif
+
+                                        @if ($item['reviewCount'] ?? $item['reviews'] ?? null)
+                                            <span class="text-stone-500">
+                                                {{ $item['reviewCount'] ?? $item['reviews'] }}
+                                                {{ __('capell-theme-commerce::generic.reviews_label') }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                @endif
+
                                 @if ($item['role'] ?? null)
                                     <p
                                         class="mt-3 text-xs font-semibold text-stone-500"
