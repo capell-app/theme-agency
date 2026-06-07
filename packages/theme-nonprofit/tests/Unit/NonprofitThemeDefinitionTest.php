@@ -13,6 +13,7 @@ use Capell\Core\ThemeStudio\Data\ProofSectionData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\Tests\Packages\PackagesTestCase;
 use Capell\ThemeStudio\Nonprofit\NonprofitThemeServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 uses(PackagesTestCase::class);
 
@@ -25,6 +26,7 @@ it('defines the Nonprofit theme contract', function (): void {
         ->and($definition->includedSections)->toContain('hero')
         ->and($definition->includedSections)->toContain('features')
         ->and($definition->includedSections)->toContain('content-listing')
+        ->and($definition->includedSections)->toContain('newsletter')
         ->and($definition->includedSections)->toContain('cta')
         ->and($definition->includedSections)->toContain('footer')
         ->and($definition->presets)->toHaveCount(1);
@@ -287,6 +289,73 @@ it('renders Payments-aware donation actions from hydrated section data', functio
         ->toContain('href="/impact"')
         ->toContain('View outcomes')
         ->not->toContain('capell-app/theme-nonprofit');
+});
+
+it('renders Newsletter-aware supporter capture with static and connected actions', function (): void {
+    Route::post('/supporter-updates', static fn (): string => 'ok')->name('capell-newsletter.subscribe');
+
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(NonprofitThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/newsletter', false);
+
+    $registry = new ThemeRegistry;
+    (new NonprofitThemeServiceProvider($this->app))->boot($registry);
+
+    $renderer = $registry->sectionRenderer('nonprofit', 'newsletter');
+
+    assert($renderer instanceof SectionRenderer);
+
+    $staticHtml = $renderer->render(nonprofitThemeSection('newsletter', [
+        'heading' => 'Follow the campaign',
+    ]));
+
+    $customHtml = $renderer->render(nonprofitThemeSection('newsletter', [
+        'heading' => 'Follow the campaign',
+        'formAction' => '/updates',
+        'formMethod' => 'post',
+    ]));
+
+    CapellCore::forcePackageInstalled('capell-app/newsletter');
+
+    $connectedRegistry = new ThemeRegistry;
+    (new NonprofitThemeServiceProvider($this->app))->boot($connectedRegistry);
+
+    $connectedRenderer = $connectedRegistry->sectionRenderer('nonprofit', 'newsletter');
+
+    assert($connectedRenderer instanceof SectionRenderer);
+
+    $connectedHtml = $connectedRenderer->render(nonprofitThemeSection('newsletter', [
+        'heading' => 'Supporter briefings',
+    ]));
+
+    expect($staticHtml)
+        ->toContain('Follow the campaign')
+        ->toContain('Static supporter update content is ready.')
+        ->toContain('Connect Newsletter or provide a form action to capture supporter updates.')
+        ->not->toContain('action="#"')
+        ->not->toContain('Subscribe</button>')
+        ->not->toContain('capell-app/theme-nonprofit');
+
+    expect($customHtml)
+        ->toContain('action="/updates"')
+        ->toContain('method="POST"')
+        ->toContain('aria-label="Supporter newsletter signup"')
+        ->toContain('name="source"')
+        ->toContain('theme_nonprofit_newsletter')
+        ->toContain('supporter@example.org')
+        ->toContain('Subscribe')
+        ->not->toContain('action="#"')
+        ->not->toContain('capell-app/theme-nonprofit');
+
+    expect($connectedHtml)
+        ->toContain('Supporter briefings')
+        ->toContain('Connected newsletter capture is ready')
+        ->toContain('action="http://localhost/supporter-updates"')
+        ->toContain('method="POST"')
+        ->toContain('Subscribe')
+        ->not->toContain('capell-app/theme-nonprofit')
+        ->not->toContain('Filament')
+        ->not->toContain('wire:');
 });
 
 it('renders translated event labels and the skip-link target', function (): void {

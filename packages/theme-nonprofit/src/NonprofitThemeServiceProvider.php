@@ -32,7 +32,7 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/nonprofit.jpg',
             tags: ['Impact', 'Campaigns', 'Donations'],
             bestFit: ['Charities', 'Civic organisations', 'Campaign teams'],
-            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'impact', 'donation-impact', 'campaigns', 'volunteer-donate', 'volunteer-shifts', 'annual-report-proof', 'events', 'stories', 'contact', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'proof', 'content-listing', 'impact', 'donation-impact', 'campaigns', 'volunteer-donate', 'volunteer-shifts', 'annual-report-proof', 'events', 'stories', 'contact', 'newsletter', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'nonprofit',
@@ -94,6 +94,7 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
         $formBuilderAvailable = CapellCore::isPackageInstalled('capell-app/form-builder');
         $eventsAvailable = CapellCore::isPackageInstalled('capell-app/events');
         $blogAvailable = CapellCore::isPackageInstalled('capell-app/blog');
+        $newsletterAvailable = CapellCore::isPackageInstalled('capell-app/newsletter');
         $paymentsAvailable = CapellCore::isPackageInstalled('capell-app/payments');
 
         $registry->register(
@@ -106,7 +107,7 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
             sectionRenderers: collect(self::definition()->includedSections)
                 ->map(fn (string $sectionKey): ?ViewSectionRenderer => $this->sectionRenderer(
                     $sectionKey,
-                    $this->optionalSectionIntegrations($campaignStudioAvailable, $formBuilderAvailable, $eventsAvailable, $blogAvailable, $paymentsAvailable),
+                    $this->optionalSectionIntegrations($campaignStudioAvailable, $formBuilderAvailable, $eventsAvailable, $blogAvailable, $newsletterAvailable, $paymentsAvailable),
                 ))
                 ->filter()
                 ->values()
@@ -115,7 +116,7 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
     }
 
     /**
-     * @param  array<string, array<string, bool>>  $optionalIntegrations
+     * @param  array<string, array<string, bool|string|null>>  $optionalIntegrations
      */
     private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ?ViewSectionRenderer
     {
@@ -153,9 +154,9 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
     }
 
     /**
-     * @return array<string, array<string, bool>>
+     * @return array<string, array<string, bool|string|null>>
      */
-    private function optionalSectionIntegrations(bool $campaignStudioAvailable, bool $formBuilderAvailable, bool $eventsAvailable, bool $blogAvailable, bool $paymentsAvailable): array
+    private function optionalSectionIntegrations(bool $campaignStudioAvailable, bool $formBuilderAvailable, bool $eventsAvailable, bool $blogAvailable, bool $newsletterAvailable, bool $paymentsAvailable): array
     {
         return [
             'campaigns' => ['campaignStudioAvailable' => $campaignStudioAvailable],
@@ -163,6 +164,11 @@ final class NonprofitThemeServiceProvider extends ServiceProvider
             'volunteer-donate' => ['formBuilderAvailable' => $formBuilderAvailable, 'paymentsAvailable' => $paymentsAvailable],
             'volunteer-shifts' => ['formBuilderAvailable' => $formBuilderAvailable, 'eventsAvailable' => $eventsAvailable],
             'events' => ['eventsAvailable' => $eventsAvailable],
+            'newsletter' => [
+                'newsletterAvailable' => $newsletterAvailable,
+                'newsletterFormRoute' => $newsletterAvailable ? 'capell-newsletter.subscribe' : null,
+                'newsletterFormMethod' => 'POST',
+            ],
             'stories' => ['blogAvailable' => $blogAvailable],
         ];
     }
