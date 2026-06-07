@@ -28,7 +28,7 @@ it('defines the corporate free renderer contract', function (): void {
     expect($definition->package)->toBe('capell-app/theme-corporate')
         ->and($definition->key)->toBe(CorporateThemeServiceProvider::THEME_KEY)
         ->and($definition->assets)->toBe(['css' => 'vendor/capell/themes/corporate.css'])
-        ->and($definition->includedSections)->toContain('hero', 'features', 'proof', 'locations', 'cta')
+        ->and($definition->includedSections)->toContain('hero', 'features', 'proof', 'locations', 'investor-relations', 'careers', 'cta')
         ->and($definition->presets)->toHaveCount(6)
         ->and($definition->runtime->value)->toBe('blade')
         ->and($definition->tags)->toContain('Trust')
@@ -72,6 +72,8 @@ it('declares renderers for every included corporate section', function (): void 
         'proof',
         'content-listing',
         'locations',
+        'investor-relations',
+        'careers',
         'cta',
         'footer',
     ]);
@@ -318,6 +320,115 @@ it('renders the corporate office empty state without authoring metadata', functi
     expect($html)
         ->toContain('Add office details')
         ->toContain('Provide regional offices')
+        ->not->toContain('data-field')
+        ->not->toContain('model_id')
+        ->not->toContain('capell-app/theme-corporate');
+});
+
+it('renders corporate investor relations and careers patterns', function (): void {
+    View::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/lang');
+
+    $provider = new CorporateThemeServiceProvider($this->app);
+    $method = new ReflectionMethod($provider, 'sectionRenderers');
+    $renderers = $method->invoke($provider);
+
+    expect($renderers)->toHaveKeys(['investor-relations', 'careers']);
+
+    $investorHtml = $renderers['investor-relations']->render(corporateThemeSection('investor-relations', [
+        'heading' => 'Investor centre',
+        'summary' => 'Regulated updates and financial reporting.',
+        'items' => [
+            [
+                'period' => 'FY26',
+                'title' => 'Annual report',
+                'summary' => 'Audited results and governance statement.',
+                'type' => 'Report',
+                'url' => '/investors/annual-report',
+            ],
+        ],
+        'events' => [
+            ['title' => 'Capital markets day', 'date' => '12 September 2026'],
+        ],
+        'documents' => [
+            ['title' => 'Trading update', 'url' => '/investors/trading-update'],
+        ],
+    ]));
+
+    $careersHtml = $renderers['careers']->render(corporateThemeSection('careers', [
+        'heading' => 'Open roles',
+        'summary' => 'Join a board advisory team.',
+        'benefits' => ['Hybrid working', 'Learning budget'],
+        'items' => [
+            [
+                'team' => 'Advisory',
+                'title' => 'Governance consultant',
+                'summary' => 'Support client boards with structured reporting.',
+                'location' => 'London / hybrid',
+                'type' => 'Full time',
+                'url' => '/careers/governance-consultant',
+                'ctaLabel' => 'Apply now',
+            ],
+        ],
+    ]));
+
+    expect($investorHtml)
+        ->toContain('Investor centre')
+        ->toContain('Regulated updates and financial reporting.')
+        ->toContain('FY26')
+        ->toContain('Annual report')
+        ->toContain('Capital markets day')
+        ->toContain('Trading update')
+        ->not->toContain('capell-app/theme-corporate')
+        ->not->toContain('capell-theme-corporate')
+        ->not->toContain('model_id')
+        ->not->toContain('field_path')
+        ->and($careersHtml)
+        ->toContain('Open roles')
+        ->toContain('Join a board advisory team.')
+        ->toContain('Hybrid working')
+        ->toContain('Governance consultant')
+        ->toContain('London / hybrid')
+        ->toContain('Full time')
+        ->toContain('Apply now')
+        ->not->toContain('capell-app/theme-corporate')
+        ->not->toContain('capell-theme-corporate')
+        ->not->toContain('model_id')
+        ->not->toContain('field_path');
+});
+
+it('renders corporate investor and careers empty states without authoring metadata', function (): void {
+    View::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/lang');
+
+    $investorHtml = view('capell-theme-corporate::sections.investor-relations', [
+        'section' => (object) [
+            'heading' => null,
+            'summary' => null,
+            'items' => [],
+            'events' => [],
+            'documents' => [],
+        ],
+    ])->render();
+
+    $careersHtml = view('capell-theme-corporate::sections.careers', [
+        'section' => (object) [
+            'heading' => null,
+            'summary' => null,
+            'items' => [],
+            'benefits' => [],
+        ],
+    ])->render();
+
+    expect($investorHtml)
+        ->toContain('Add investor updates')
+        ->toContain('Add annual reports')
+        ->not->toContain('data-field')
+        ->not->toContain('model_id')
+        ->not->toContain('capell-app/theme-corporate')
+        ->and($careersHtml)
+        ->toContain('Add open roles')
+        ->toContain('Add open roles, locations')
         ->not->toContain('data-field')
         ->not->toContain('model_id')
         ->not->toContain('capell-app/theme-corporate');
