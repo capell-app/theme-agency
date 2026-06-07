@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\AccessGate\Actions;
 
 use Capell\AccessGate\Enums\EventType;
+use Capell\AccessGate\Enums\GrantStatus;
 use Capell\AccessGate\Enums\GrantSubjectType;
 use Capell\AccessGate\Enums\RegistrationStatus;
 use Capell\AccessGate\Events\RegistrationApproved;
@@ -12,6 +13,7 @@ use Capell\AccessGate\Models\Grant;
 use Capell\AccessGate\Models\Registration;
 use Capell\AccessGate\Support\AccessGateDatabase;
 use Carbon\CarbonInterface;
+use Illuminate\Database\Eloquent\Builder;
 use LogicException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -29,11 +31,15 @@ final class ApproveRegistrationAction
     {
         return AccessGateDatabase::transaction(function () use ($registration, $approvedByUserId): Registration {
             $lockedRegistration = Registration::query()
+                ->with('area')
                 ->whereKey($registration->getKey())
                 ->lockForUpdate()
                 ->firstOrFail();
 
             if ($lockedRegistration->status === RegistrationStatus::Approved) {
+                $grant = $this->activeGrantFor($lockedRegistration) ?? $this->grantFor($lockedRegistration);
+                $this->sendApprovedNotification->handle($lockedRegistration, $grant);
+
                 return $lockedRegistration;
             }
 
@@ -78,6 +84,21 @@ final class ApproveRegistrationAction
             email: $registration->email,
             expiresAt: $this->expiresAt($registration),
         );
+    }
+
+    private function activeGrantFor(Registration $registration): ?Grant
+    {
+        return $registration->grants()
+            ->where('status', GrantStatus::Active->value)
+            ->whereNull('revoked_at')
+            ->where(function (Builder $query): void {
+                $query->whereNull('starts_at')->orWhere('starts_at', '<=', now());
+            })
+            ->where(function (Builder $query): void {
+                $query->whereNull('expires_at')->orWhere('expires_at', '>', now());
+            })
+            ->latest('id')
+            ->first();
     }
 
     private function expiresAt(Registration $registration): ?CarbonInterface

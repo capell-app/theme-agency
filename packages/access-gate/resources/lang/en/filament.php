@@ -6,6 +6,7 @@ return [
     'actions' => [
         'approve' => 'Approve',
         'approve_next' => 'Approve next',
+        'approve_selected' => 'Approve selected',
         'expire' => 'Expire',
         'pause' => 'Pause',
         'reject' => 'Reject',

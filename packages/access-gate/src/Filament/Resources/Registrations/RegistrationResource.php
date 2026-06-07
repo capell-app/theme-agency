@@ -21,6 +21,7 @@ use Capell\AccessGate\Support\AccessGateSiteScope;
 use Capell\Core\Facades\CapellCore;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
+use Filament\Actions\BulkAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -29,6 +30,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Override;
 
 final class RegistrationResource extends Resource
@@ -144,6 +146,18 @@ final class RegistrationResource extends Resource
                         ->visible(fn (Registration $record): bool => ! in_array($record->status, [RegistrationStatus::Claimed, RegistrationStatus::Expired], true))
                         ->action(fn (Registration $record): mixed => ExpireRegistrationAction::run($record, expiredByUserId: auth()->id())),
                 ]),
+            ])
+            ->toolbarActions([
+                BulkAction::make('approveSelected')
+                    ->label(__('capell-access-gate::filament.actions.approve_selected'))
+                    ->icon(Heroicon::Check)
+                    ->authorize('update')
+                    ->requiresConfirmation()
+                    ->action(function (Collection $records): void {
+                        $records
+                            ->filter(fn (Registration $registration): bool => $registration->status === RegistrationStatus::Pending && $registration->area?->status === AccessAreaStatus::Active)
+                            ->each(fn (Registration $registration): mixed => ApproveRegistrationAction::run($registration, approvedByUserId: auth()->id()));
+                    }),
             ]);
     }
 

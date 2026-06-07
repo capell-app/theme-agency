@@ -94,6 +94,54 @@ it('approves a registration, creates a grant, records the event, and dispatches 
     Notification::assertSentOnDemand(AccessApprovedNotification::class);
 });
 
+it('rolls back approval when approval notification delivery fails', function (): void {
+    Notification::fake();
+
+    $registration = resolve(CreateRegistrationAction::class)->handle(Area::factory()->create(), [
+        'email' => 'mona@example.test',
+    ]);
+
+    $dispatcher = Mockery::mock(Dispatcher::class);
+    $dispatcher
+        ->shouldReceive('send')
+        ->once()
+        ->andThrow(new RuntimeException('Mail transport unavailable.'));
+
+    $this->app->instance(Dispatcher::class, $dispatcher);
+
+    expect(fn (): mixed => resolve(ApproveRegistrationAction::class)->handle($registration))
+        ->toThrow(RuntimeException::class, 'Mail transport unavailable.');
+
+    $registration->refresh();
+
+    expect($registration->status)->toBe(RegistrationStatus::Pending)
+        ->and($registration->approved_at)->toBeNull()
+        ->and(Grant::query()->where('registration_id', $registration->getKey())->exists())->toBeFalse()
+        ->and(ClaimToken::query()->where('registration_id', $registration->getKey())->exists())->toBeFalse()
+        ->and(Event::query()->where('registration_id', $registration->getKey())->where('type', EventType::RegistrationApproved)->exists())->toBeFalse();
+});
+
+it('resends approval notifications when approving an already approved registration', function (): void {
+    Notification::fake();
+
+    $registration = resolve(CreateRegistrationAction::class)->handle(Area::factory()->create(), [
+        'email' => 'mona@example.test',
+    ]);
+
+    resolve(ApproveRegistrationAction::class)->handle($registration);
+    $claimTokenCount = ClaimToken::query()->where('registration_id', $registration->getKey())->count();
+
+    Notification::fake();
+
+    $approvedAgain = resolve(ApproveRegistrationAction::class)->handle($registration->refresh());
+
+    expect($approvedAgain->status)->toBe(RegistrationStatus::Approved)
+        ->and(Grant::query()->where('registration_id', $registration->getKey())->count())->toBe(1)
+        ->and(ClaimToken::query()->where('registration_id', $registration->getKey())->count())->toBe($claimTokenCount + 1);
+
+    Notification::assertSentOnDemand(AccessApprovedNotification::class);
+});
+
 it('uses the trusted requested host when sending claim links', function (): void {
     Notification::fake();
 
