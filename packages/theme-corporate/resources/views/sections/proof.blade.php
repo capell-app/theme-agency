@@ -33,7 +33,7 @@
                 >
                     @foreach ($section->items as $item)
                         <figure
-                            class="min-w-[260px] snap-start border border-white/10 bg-white/[0.03] p-5 sm:p-6 md:min-w-0"
+                            class="corporate-card-on-dark min-w-[260px] snap-start p-5 sm:p-6 md:min-w-0"
                         >
                             @if (! empty($item['image']))
                                 <button

@@ -1,7 +1,23 @@
 @layer components {
     .site-theme-shell {
-        background: #f7f8f6;
-        color: #0f172a;
+        --corporate-surface: var(--theme-surface, #f7f8f6);
+        --corporate-foreground: var(--theme-foreground, #0f172a);
+        --corporate-card-background: var(--theme-card-background, #ffffff);
+        --corporate-card-muted-background: color-mix(
+            in srgb,
+            var(--corporate-surface) 82%,
+            #ffffff
+        );
+        --corporate-card-border: var(--theme-card-border, #e2e8f0);
+        --corporate-card-radius: var(--theme-radius-value, 0.35rem);
+        --corporate-card-padding: var(--theme-card-padding, 1.25rem);
+        --corporate-card-shadow: var(
+            --theme-card-shadow,
+            0 18px 42px
+                color-mix(in srgb, var(--corporate-foreground) 8%, transparent)
+        );
+        background: var(--corporate-surface);
+        color: var(--corporate-foreground);
         font-family: var(--theme-body-font, Inter, system-ui, sans-serif);
     }
 
@@ -28,6 +44,37 @@
         background: #e5e7eb;
     }
 
+    .corporate-surface {
+        background: var(--corporate-surface);
+        color: var(--corporate-foreground);
+    }
+
+    .corporate-card {
+        background: var(--corporate-card-background);
+        border: 1px solid var(--corporate-card-border);
+        border-radius: var(--corporate-card-radius);
+        padding: var(--corporate-card-padding);
+    }
+
+    .corporate-card-muted {
+        background: var(--corporate-card-muted-background);
+        border: 1px solid var(--corporate-card-border);
+        border-radius: var(--corporate-card-radius);
+    }
+
+    .corporate-card-elevated {
+        background: var(--corporate-card-background);
+        border: 1px solid var(--corporate-card-border);
+        border-radius: var(--corporate-card-radius);
+        box-shadow: var(--corporate-card-shadow);
+    }
+
+    .corporate-card-on-dark {
+        background: color-mix(in srgb, #ffffff 4%, transparent);
+        border: 1px solid color-mix(in srgb, #ffffff 12%, transparent);
+        border-radius: var(--corporate-card-radius);
+    }
+
     .site-theme-skip-link {
         background: #ffffff;
         color: #0f172a;
@@ -45,8 +92,17 @@
     }
 
     .dark .site-theme-shell {
-        background: #020617;
-        color: #f8fafc;
+        --corporate-surface: #020617;
+        --corporate-foreground: #f8fafc;
+        --corporate-card-background: color-mix(in srgb, #ffffff 4%, #020617);
+        --corporate-card-muted-background: color-mix(
+            in srgb,
+            #ffffff 6%,
+            #020617
+        );
+        --corporate-card-border: color-mix(in srgb, #ffffff 12%, transparent);
+        background: var(--corporate-surface);
+        color: var(--corporate-foreground);
     }
 
     .dark .site-theme-shell img {

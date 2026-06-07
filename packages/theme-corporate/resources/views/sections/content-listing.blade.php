@@ -15,7 +15,7 @@
 @else
     <section
         id="{{ $sectionId }}"
-        class="theme-content-listing border-b border-slate-200/80 bg-[#f7f8f6] dark:border-white/10 dark:bg-slate-950"
+        class="theme-content-listing corporate-surface border-b border-slate-200/80 dark:border-white/10"
     >
         <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:py-16">
             <div
@@ -47,7 +47,7 @@
                     @foreach ($section->items as $item)
                         <a
                             href="{{ $item['url'] ?? '#' }}"
-                            class="{{ $loop->first ? 'sm:col-span-2 sm:row-span-2' : '' }} group relative block overflow-hidden rounded-[0.35rem] bg-slate-200 dark:bg-slate-800"
+                            class="{{ $loop->first ? 'sm:col-span-2 sm:row-span-2' : '' }} group corporate-card-muted relative block overflow-hidden p-0 dark:bg-slate-800"
                         >
                             @if (! empty($item['image']))
                                 <img
@@ -80,7 +80,7 @@
                     @foreach ($section->items as $item)
                         <a
                             href="{{ $item['url'] ?? '#' }}"
-                            class="group block overflow-hidden rounded-[0.35rem] border border-slate-200 bg-white dark:border-white/10 dark:bg-white/[0.03]"
+                            class="group corporate-card overflow-hidden p-0 dark:bg-white/[0.03]"
                         >
                             @if (! empty($item['image']))
                                 <img
@@ -116,7 +116,7 @@
                 </div>
             @elseif ($variant === 'faq')
                 <div
-                    class="divide-y divide-slate-200 rounded-[0.35rem] border border-slate-200 bg-white dark:divide-white/10 dark:border-white/10 dark:bg-white/[0.03]"
+                    class="corporate-card divide-y divide-slate-200 p-0 dark:divide-white/10 dark:bg-white/[0.03]"
                 >
                     @foreach ($section->items as $item)
                         <a
@@ -150,7 +150,7 @@
                     @foreach ($section->items as $item)
                         <a
                             href="{{ $item['url'] ?? '#' }}"
-                            class="flex gap-3 rounded-[0.35rem] border border-slate-200 bg-white p-3.5 transition hover:border-slate-950 sm:gap-4 sm:p-4 dark:border-white/10 dark:bg-white/[0.03] dark:hover:border-white"
+                            class="corporate-card flex gap-3 transition hover:border-slate-950 sm:gap-4 dark:bg-white/[0.03] dark:hover:border-white"
                         >
                             @if (! empty($item['image']))
                                 <img
@@ -187,7 +187,7 @@
                     @foreach ($section->items as $item)
                         <a
                             href="{{ $item['url'] ?? '#' }}"
-                            class="block rounded-[0.35rem] border border-slate-200 bg-white p-5 sm:p-6 dark:border-white/10 dark:bg-white/[0.03]"
+                            class="corporate-card block sm:p-6 dark:bg-white/[0.03]"
                         >
                             <span
                                 class="text-3xl font-semibold text-slate-950 sm:text-4xl dark:text-white"
@@ -214,7 +214,7 @@
                     @foreach ($section->items as $item)
                         <a
                             href="{{ $item['url'] ?? '#' }}"
-                            class="group grid overflow-hidden border border-slate-200 bg-white transition hover:border-slate-950 md:grid-cols-[0.75fr_1.45fr_0.55fr] dark:border-white/10 dark:bg-white/[0.03] dark:hover:border-white"
+                            class="group corporate-card grid overflow-hidden p-0 transition hover:border-slate-950 md:grid-cols-[0.75fr_1.45fr_0.55fr] dark:bg-white/[0.03] dark:hover:border-white"
                         >
                             @if (! empty($item['image']))
                                 <img
@@ -294,7 +294,7 @@
                                 @endif
                             </span>
                             <span
-                                class="border-t border-slate-200 bg-[#f7f8f6] p-4 text-sm md:border-t-0 md:border-l dark:border-white/10 dark:bg-white/[0.03]"
+                                class="corporate-card-muted border-t border-slate-200 p-4 text-sm md:border-t-0 md:border-l dark:border-white/10 dark:bg-white/[0.03]"
                             >
                                 <span
                                     class="block text-xs font-semibold tracking-[0.16em] text-slate-500 uppercase dark:text-slate-400"

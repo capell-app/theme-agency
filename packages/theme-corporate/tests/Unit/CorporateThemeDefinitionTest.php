@@ -140,6 +140,46 @@ it('renders translated fallback and custom corporate hero stats', function (): v
         ->not->toContain('Clear signals');
 });
 
+it('drives the corporate shell and card surfaces from theme tokens', function (): void {
+    View::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/views');
+
+    $pageHtml = view('capell-theme-corporate::page', [
+        'brand' => new BrandProfileData(
+            surfaceColor: '#fbfaf7',
+            foregroundColor: '#18201f',
+        ),
+        'content' => '<main id="main-content">Preview</main>',
+    ])->render();
+
+    $css = file_get_contents(__DIR__ . '/../../resources/css/theme-corporate.css') ?: '';
+    $views = implode("\n", array_map(
+        static fn (string $path): string => file_get_contents($path) ?: '',
+        glob(__DIR__ . '/../../resources/views/sections/*.blade.php') ?: [],
+    ));
+
+    expect($pageHtml)
+        ->toContain('--theme-surface:#fbfaf7')
+        ->toContain('--theme-foreground:#18201f')
+        ->toContain('class="site-theme-shell min-h-screen antialiased"')
+        ->not->toContain('bg-[#f7f8f6]')
+        ->not->toContain('text-slate-950 antialiased');
+
+    expect($css)
+        ->toContain('--corporate-surface: var(--theme-surface, #f7f8f6)')
+        ->toContain('--corporate-card-radius: var(--theme-radius-value, 0.35rem)')
+        ->toContain('--corporate-card-padding: var(--theme-card-padding, 1.25rem)')
+        ->toContain('.corporate-card')
+        ->toContain('.corporate-card-muted')
+        ->toContain('.corporate-card-elevated');
+
+    expect($views)
+        ->toContain('corporate-surface')
+        ->toContain('corporate-card')
+        ->toContain('corporate-card-muted')
+        ->toContain('corporate-card-elevated')
+        ->not->toContain('bg-[#f7f8f6]');
+});
+
 it('renders translated corporate proof aria labels with generic public selectors', function (): void {
     View::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/views');
     Lang::addNamespace('capell-theme-corporate', __DIR__ . '/../../resources/lang');

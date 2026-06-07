@@ -22,7 +22,7 @@
 @endphp
 
 <section
-    class="theme-hero border-b border-slate-200/80 bg-[#f7f8f6] dark:border-white/10 dark:bg-slate-950"
+    class="theme-hero corporate-surface border-b border-slate-200/80 dark:border-white/10"
 >
     <div
         class="mx-auto grid max-w-7xl items-end gap-5 px-4 py-6 sm:px-6 sm:py-10 md:py-14 lg:grid-cols-[0.88fr_1.12fr] lg:gap-10 lg:py-18"
@@ -96,14 +96,12 @@
         </div>
 
         <figure class="relative">
-            <div
-                class="border border-slate-200 bg-white p-3 shadow-xl shadow-slate-950/5 dark:border-white/10 dark:bg-white/[0.04]"
-            >
+            <div class="corporate-card-elevated p-3 dark:bg-white/[0.04]">
                 @if ($section->mediaUrl)
                     <img
                         src="{{ $section->mediaUrl }}"
                         alt="{{ $section->mediaAlt ?? '' }}"
-                        class="aspect-[16/10] max-h-[18rem] w-full rounded-[0.35rem] object-cover sm:aspect-[5/4] sm:max-h-none"
+                        class="aspect-[16/10] max-h-[18rem] w-full rounded-[var(--corporate-card-radius)] object-cover sm:aspect-[5/4] sm:max-h-none"
                     />
                 @else
                     <div
