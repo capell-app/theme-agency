@@ -14,7 +14,8 @@
     },
     "namespace": "Capell\\MediaAI",
     "surfaces": [
-        "admin"
+        "admin",
+        "console"
     ],
     "dependencies": {
         "requires": [
@@ -45,13 +46,15 @@
         "install": null,
         "setup": null,
         "demo": null,
-        "doctor": null
+        "doctor": "media-ai:doctor-batch"
     },
     "settings": [],
     "permissions": [],
     "capabilities": [
         "media-ai",
-        "media-ai-admin"
+        "media-ai-admin",
+        "media-ai-console",
+        "media-ai-batch"
     ],
     "performance": {
         "frontendRenderBudgetMs": 0,

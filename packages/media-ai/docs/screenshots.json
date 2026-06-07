@@ -3,6 +3,7 @@
     "composerName": "capell-app/media-ai",
     "generatedFor": "deployment-screenshot-runner",
     "requiresInstalledPackage": true,
+    "doctorCommand": "media-ai:doctor-batch",
     "outputDirectory": "packages/media-ai/docs/screenshots",
     "entries": [
         {

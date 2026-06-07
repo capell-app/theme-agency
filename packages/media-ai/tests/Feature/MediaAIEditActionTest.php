@@ -7,8 +7,10 @@ use Capell\Admin\Filament\Resources\Media\Pages\EditMedia;
 use Capell\AIOrchestrator\Actions\RegisterAIOrchestratorModuleAction;
 use Capell\AIOrchestrator\Data\AIOrchestratorRunData;
 use Capell\AIOrchestrator\Support\AIOrchestratorModuleRegistry;
+use Capell\Core\Models\Language;
 use Capell\Core\Models\Media as CapellMedia;
 use Capell\Core\Models\Page;
+use Capell\MediaAI\Actions\QueueBatchImageDoctorRequestsAction;
 use Capell\MediaAI\Contracts\ImageDoctor;
 use Capell\MediaAI\Data\ImageDoctorRequest;
 use Capell\MediaAI\Data\ImageDoctorResult;
@@ -227,6 +229,66 @@ it('queues image doctor requests for the configured ai-orchestrator implementati
     expect($doctor->media)->toBeNull()
         ->and($doctor->request)->toBeNull();
 });
+
+it('queues batch doctor requests for image records missing localized alt text', function (): void {
+    $language = Language::factory()->english()->create();
+    $missingAltImage = createMediaAIImage();
+    $existingAltImage = createMediaAIImage();
+
+    $existingAltImage->translations()->create([
+        'language_id' => $language->getKey(),
+        'meta' => [
+            'alt' => 'Existing localized alt text.',
+        ],
+    ]);
+
+    $page = Page::factory()->create();
+    $page
+        ->addMedia(UploadedFile::fake()->create('document.pdf', 64, 'application/pdf'))
+        ->toMediaCollection('documents');
+
+    $queued = QueueBatchImageDoctorRequestsAction::run(
+        operation: 'improve',
+        instructions: 'Generate accessible alt text.',
+        locale: 'en',
+        limit: 10,
+        missingAltOnly: true,
+        budgetCents: 125,
+        model: 'batch-model',
+    );
+
+    expect($queued)->toBe(1);
+
+    Queue::assertPushed(RunImageDoctorJob::class, fn (RunImageDoctorJob $job): bool => $job->mediaId === $missingAltImage->getKey()
+        && $job->operation === 'improve'
+        && $job->instructions === 'Generate accessible alt text.'
+        && $job->locale === 'en'
+        && $job->budgetCents === 125
+        && $job->model === 'batch-model');
+
+    Queue::assertNotPushed(RunImageDoctorJob::class, fn (RunImageDoctorJob $job): bool => $job->mediaId === $existingAltImage->getKey());
+});
+
+it('can queue batch doctor requests for every image record when requested', function (): void {
+    $firstImage = createMediaAIImage();
+    $secondImage = createMediaAIImage();
+
+    $queued = QueueBatchImageDoctorRequestsAction::run(
+        operation: 'upscale',
+        instructions: 'Upscale catalogue images.',
+        locale: null,
+        limit: 1,
+        missingAltOnly: false,
+    );
+
+    expect($queued)->toBe(1);
+
+    Queue::assertPushed(RunImageDoctorJob::class, fn (RunImageDoctorJob $job): bool => $job->mediaId === $firstImage->getKey()
+        && $job->operation === 'upscale');
+
+    Queue::assertNotPushed(RunImageDoctorJob::class, fn (RunImageDoctorJob $job): bool => $job->mediaId === $secondImage->getKey());
+});
+
 it('runs image doctor requests through the configured ai-orchestrator capability', function (): void {
     if (! class_exists(AIOrchestratorModuleRegistry::class)) {
         test()->markTestSkipped('AI Orchestrator is not available in this checkout.');

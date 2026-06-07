@@ -423,7 +423,7 @@
             "setupCommand": null,
             "demoCommand": null,
             "demoParams": [],
-            "doctorCommand": null,
+            "doctorCommand": "media-ai:doctor-batch",
             "entryCount": 1,
             "browserTestCount": 0
         },

@@ -53,6 +53,20 @@ it('keeps marketplace copy aligned with shipped image doctor capabilities', func
         ->and($composerManifest['description'] ?? null)->not->toContain('alt text');
 });
 
+it('declares the shipped media ai console batch command in the package manifest', function (): void {
+    $manifest = mediaAIManifest();
+
+    expect($manifest['surfaces'] ?? null)->toBe([
+        'admin',
+        'console',
+    ])
+        ->and($manifest['commands']['doctor'] ?? null)->toBe('media-ai:doctor-batch')
+        ->and($manifest['capabilities'] ?? null)->toContain('media-ai')
+        ->and($manifest['capabilities'] ?? null)->toContain('media-ai-admin')
+        ->and($manifest['capabilities'] ?? null)->toContain('media-ai-console')
+        ->and($manifest['capabilities'] ?? null)->toContain('media-ai-batch');
+});
+
 it('keeps marketplace screenshots backed by the committed media ai gallery assets', function (): void {
     $packagePath = dirname(__DIR__, 2);
     $manifest = mediaAIManifest();

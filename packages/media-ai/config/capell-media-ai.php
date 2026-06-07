@@ -14,6 +14,9 @@ return [
             ? null
             : (int) env('CAPELL_MEDIA_AI_IMAGE_DOCTOR_BUDGET_CENTS'),
         'model' => env('CAPELL_MEDIA_AI_IMAGE_DOCTOR_MODEL'),
+        'batch' => [
+            'limit' => (int) env('CAPELL_MEDIA_AI_IMAGE_DOCTOR_BATCH_LIMIT', 50),
+        ],
         'ai_orchestrator' => [
             'module' => env('CAPELL_MEDIA_AI_ORCHESTRATOR_MODULE', 'media-ai'),
             'capability' => env('CAPELL_MEDIA_AI_ORCHESTRATOR_CAPABILITY', 'doctor-image'),
