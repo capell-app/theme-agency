@@ -13,6 +13,7 @@ use Capell\Frontend\Support\Assets\DefaultFrontendAssetManifestRenderer;
 use Capell\FrontendOptimizer\Actions\PrepareRenderProfileAction;
 use Capell\FrontendOptimizer\Actions\RenderProfileAssetsAction;
 use Capell\FrontendOptimizer\Actions\ResolveOptimizationScopeAction;
+use Capell\FrontendOptimizer\Data\FrontendResourceHintData;
 use Capell\FrontendOptimizer\Enums\AssetLoadingStrategy;
 use Capell\FrontendOptimizer\Enums\AssetSlot;
 use Capell\FrontendOptimizer\Enums\OptimizationScope;
@@ -47,6 +48,7 @@ final class CapellFrontendAssetManifestRenderer implements FrontendAssetManifest
                 context: $this->profileContext($context, $scope, $url),
                 assetSets: [$this->assetSet($manifest)],
                 url: $url,
+                resourceHints: $this->resourceHints($manifest),
                 label: $this->profileLabel($context),
             );
 
@@ -178,6 +180,52 @@ final class CapellFrontendAssetManifestRenderer implements FrontendAssetManifest
         }
 
         return null;
+    }
+
+    /**
+     * @return array<int, FrontendResourceHintData>
+     */
+    private function resourceHints(FrontendAssetManifestData $manifest): array
+    {
+        $hints = [];
+
+        foreach ($manifest->preloads as $assetRequirement) {
+            if (! $assetRequirement instanceof FrontendAssetRequirementData) {
+                continue;
+            }
+
+            $hints[] = new FrontendResourceHintData(
+                rel: $assetRequirement->kind === FrontendAssetRequirementData::KIND_MODULEPRELOAD ? 'modulepreload' : 'preload',
+                href: $this->assetUrl($assetRequirement),
+                as: $this->stringHint($assetRequirement, ['resourceAs', 'as']) ?? $this->preloadAs($assetRequirement),
+                type: $this->stringHint($assetRequirement, ['resourceType', 'type']),
+                crossorigin: $this->stringHint($assetRequirement, ['crossorigin', 'crossOrigin']),
+                fetchpriority: $this->stringHint($assetRequirement, ['fetchpriority', 'fetchPriority']),
+            );
+        }
+
+        return $hints;
+    }
+
+    private function preloadAs(FrontendAssetRequirementData $assetRequirement): ?string
+    {
+        if ($assetRequirement->kind === FrontendAssetRequirementData::KIND_MODULEPRELOAD) {
+            return null;
+        }
+
+        if ($assetRequirement->isCss()) {
+            return 'style';
+        }
+
+        if ($assetRequirement->isJavaScript()) {
+            return 'script';
+        }
+
+        return match (strtolower(pathinfo(parse_url($assetRequirement->source, PHP_URL_PATH) ?: $assetRequirement->source, PATHINFO_EXTENSION))) {
+            'avif', 'gif', 'jpg', 'jpeg', 'png', 'webp' => 'image',
+            'otf', 'ttf', 'woff', 'woff2' => 'font',
+            default => null,
+        };
     }
 
     /** @param array<int, string> $keys */

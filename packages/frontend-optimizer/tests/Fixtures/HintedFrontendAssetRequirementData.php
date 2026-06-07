@@ -16,6 +16,10 @@ final class HintedFrontendAssetRequirementData extends FrontendAssetRequirementD
         public ?bool $criticalEligible = null,
         public ?string $frontendOptimizerLoadingStrategy = null,
         public ?string $packageName = null,
+        public ?string $resourceAs = null,
+        public ?string $resourceType = null,
+        public ?string $crossorigin = null,
+        public ?string $fetchpriority = null,
     ) {
         parent::__construct(
             handle: $handle,

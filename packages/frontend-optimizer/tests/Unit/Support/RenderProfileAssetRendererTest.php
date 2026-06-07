@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Capell\FrontendOptimizer\Actions\PersistRenderProfileAction;
 use Capell\FrontendOptimizer\Actions\ResolveRenderProfileAction;
+use Capell\FrontendOptimizer\Data\FrontendResourceHintData;
 use Capell\FrontendOptimizer\Enums\AssetLoadingStrategy;
 use Capell\FrontendOptimizer\Enums\AssetSlot;
 use Capell\FrontendOptimizer\Enums\OptimizationScope;
@@ -43,6 +44,32 @@ it('renders only profile assets and inline critical css when available', functio
         ->and($html)->not->toContain('capell')
         ->and($html)->not->toContain('editor')
         ->and($html)->not->toContain('signed');
+});
+
+it('renders resource hints before optimized assets', function (): void {
+    $profileData = ResolveRenderProfileAction::run(
+        scope: OptimizationScope::Layout,
+        context: ['layout' => 'landing'],
+        assetSets: [FrontendAssetSet::make()->css('base', '/build/base.css', AssetLoadingStrategy::Blocking)],
+        resourceHints: [
+            new FrontendResourceHintData(
+                rel: 'preload',
+                href: '/fonts/inter.woff2',
+                as: 'font',
+                type: 'font/woff2',
+                crossorigin: 'anonymous',
+                fetchpriority: 'high',
+            ),
+        ],
+    );
+
+    $profile = PersistRenderProfileAction::run($profileData);
+
+    $html = resolve(RenderProfileAssetRenderer::class)->render($profile->hash)->toHtml();
+
+    expect($html)
+        ->toStartWith('<link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin="anonymous" fetchpriority="high">')
+        ->toContain('<link rel="stylesheet" href="/build/base.css">');
 });
 
 it('renders normal stylesheet output when critical css is disabled globally', function (): void {

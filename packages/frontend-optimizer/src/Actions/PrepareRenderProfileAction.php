@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\FrontendOptimizer\Actions;
 
+use Capell\FrontendOptimizer\Data\FrontendResourceHintData;
 use Capell\FrontendOptimizer\Enums\OptimizationScope;
 use Capell\FrontendOptimizer\Enums\OptimizationStatus;
 use Capell\FrontendOptimizer\Jobs\GenerateCriticalCssJob;
@@ -25,18 +26,21 @@ class PrepareRenderProfileAction
     /**
      * @param  array<string, mixed>  $context
      * @param  array<int, FrontendAssetSet>  $assetSets
+     * @param  array<int, FrontendResourceHintData>  $resourceHints
      */
     public function handle(
         OptimizationScope $scope,
         array $context,
         array $assetSets,
         string $url,
+        array $resourceHints = [],
         ?string $label = null,
     ): FrontendRenderProfile {
         $profileData = ResolveRenderProfileAction::run(
             scope: $scope,
             context: $context,
             assetSets: $assetSets,
+            resourceHints: $resourceHints,
             label: $label,
         );
 

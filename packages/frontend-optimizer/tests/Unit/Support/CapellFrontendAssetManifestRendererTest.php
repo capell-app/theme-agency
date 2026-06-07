@@ -148,6 +148,65 @@ it('uses manifest optimizer hints for critical eligibility and javascript loadin
     Bus::assertDispatched(GenerateCriticalCssJob::class);
 });
 
+it('renders manifest preload resource hints through the optimizer profile', function (): void {
+    Storage::fake('local');
+    Bus::fake();
+    config()->set('capell-frontend.asset_build_tool', 'public');
+    config()->set('queue.default', 'database');
+
+    $context = optimizerRendererContext();
+    $manifest = new FrontendAssetManifestData(
+        css: [
+            new FrontendAssetRequirementData(
+                handle: 'foundation-theme:css',
+                kind: FrontendAssetRequirementData::KIND_CSS,
+                source: 'resources/css/capell/frontend.css',
+                buildPath: 'build',
+            ),
+        ],
+        js: [],
+        inline: [],
+        preloads: [
+            new HintedFrontendAssetRequirementData(
+                handle: 'font:inter',
+                kind: FrontendAssetRequirementData::KIND_PRELOAD,
+                source: 'vendor/fonts/inter.woff2',
+                resourceAs: 'font',
+                resourceType: 'font/woff2',
+                crossorigin: 'anonymous',
+            ),
+            new HintedFrontendAssetRequirementData(
+                handle: 'hero:image',
+                kind: FrontendAssetRequirementData::KIND_PRELOAD,
+                source: 'images/hero.webp',
+                fetchpriority: 'high',
+            ),
+        ],
+        runtime: FrontendRuntimeManifestData::forRenderingStrategy(RenderingStrategyEnum::BladeOnly),
+    );
+
+    $html = resolve(CapellFrontendAssetManifestRenderer::class)->render($manifest, $context)->toHtml();
+    $profile = FrontendRenderProfile::query()->sole();
+
+    expect($profile->signature['resource_hints'])->toBe([
+        [
+            'as' => 'font',
+            'crossorigin' => 'anonymous',
+            'href' => 'http://localhost/vendor/fonts/inter.woff2',
+            'rel' => 'preload',
+            'type' => 'font/woff2',
+        ],
+        [
+            'as' => 'image',
+            'fetchpriority' => 'high',
+            'href' => 'http://localhost/images/hero.webp',
+            'rel' => 'preload',
+        ],
+    ])
+        ->and($html)->toContain('<link rel="preload" href="http://localhost/vendor/fonts/inter.woff2" as="font" type="font/woff2" crossorigin="anonymous">')
+        ->and($html)->toContain('<link rel="preload" href="http://localhost/images/hero.webp" as="image" fetchpriority="high">');
+});
+
 it('reuses the profile hash for equivalent layout and theme asset graphs', function (): void {
     Storage::fake('local');
     Bus::fake();
