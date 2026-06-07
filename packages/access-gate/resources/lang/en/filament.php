@@ -22,6 +22,8 @@ return [
         'approval_strategy' => 'Approval strategy',
         'approved_at' => 'Approved',
         'area' => 'Area',
+        'claim_landing_url' => 'Claim landing URL',
+        'claim_landing_url_help' => 'Where users land after claiming access. Use a relative path (e.g. /account) for this site, or a full URL on an allowed claim host. Leave empty to return them to the page they requested access from.',
         'claim_url_hosts' => 'Claim URL hosts',
         'claimed_at' => 'Claimed',
         'closes_at' => 'Gate closes at',
@@ -66,6 +68,8 @@ return [
     'messages' => [
         'github_invites_retried' => 'GitHub repository invites retried.',
         'github_invites_unavailable' => 'GitHub repository invites are not configured for this application.',
+        'resend_claim_sent' => 'Approval email re-sent.',
+        'resend_claim_unavailable' => 'No active grant to re-send. Re-approve this registration to issue a new claim link.',
     ],
     'navigation_group' => 'Access Gate',
     'resources' => [

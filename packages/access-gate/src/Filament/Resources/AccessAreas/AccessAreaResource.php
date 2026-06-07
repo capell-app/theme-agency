@@ -111,6 +111,10 @@ final class AccessAreaResource extends Resource
                     ->label(__('capell-access-gate::filament.fields.public_allowlist')),
                 TextInput::make('gate_view')
                     ->label(__('capell-access-gate::filament.fields.gate_view')),
+                TextInput::make('claim_landing_url')
+                    ->label(__('capell-access-gate::filament.fields.claim_landing_url'))
+                    ->helperText(__('capell-access-gate::filament.fields.claim_landing_url_help'))
+                    ->maxLength(2048),
                 TextInput::make('discount_label')
                     ->label(__('capell-access-gate::filament.fields.discount_label')),
                 TextInput::make('discount_code')

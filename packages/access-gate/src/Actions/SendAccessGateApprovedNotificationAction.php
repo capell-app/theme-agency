@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Capell\AccessGate\Actions;
 
+use Capell\AccessGate\Enums\EventType;
 use Capell\AccessGate\Enums\IdentityMode;
 use Capell\AccessGate\Models\Area;
 use Capell\AccessGate\Models\Grant;
@@ -18,6 +19,7 @@ final class SendAccessGateApprovedNotificationAction
 
     public function __construct(
         private readonly CreateAccessGateClaimTokenAction $createClaimToken,
+        private readonly RecordEventAction $recordEvent,
     ) {}
 
     public function handle(Registration $registration, Grant $grant): void
@@ -40,6 +42,15 @@ final class SendAccessGateApprovedNotificationAction
 
         Notification::route('mail', $registration->email)
             ->notify(new AccessApprovedNotification($area, $claimUrl));
+
+        $this->recordEvent->handle(
+            type: EventType::ApprovalNotificationSent,
+            registration: $registration,
+            grant: $grant,
+            payload: [
+                'has_claim_url' => $claimUrl !== null,
+            ],
+        );
     }
 
     private function claimUrl(Registration $registration, Area $area, string $plainTextToken): string

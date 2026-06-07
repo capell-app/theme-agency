@@ -37,6 +37,30 @@ final class RequestedUrlGuard
         return $this->allowed($request, $area, $requestedUrl) ?? url('/');
     }
 
+    /**
+     * Resolve where a claimed user should land: a configured per-area landing
+     * URL when present and safe, otherwise the originally requested URL, then
+     * the site root. Never returns an untrusted destination.
+     */
+    public function claimLandingUrl(Request $request, Area $area, mixed $requestedUrl): string
+    {
+        $landing = $area->claim_landing_url;
+
+        if (is_string($landing) && $landing !== '') {
+            if (str_starts_with($landing, '/') && ! str_starts_with($landing, '//')) {
+                return url($landing);
+            }
+
+            $allowed = $this->allowed($request, $area, $landing);
+
+            if ($allowed !== null) {
+                return $allowed;
+            }
+        }
+
+        return $this->redirectUrl($request, $area, $requestedUrl);
+    }
+
     private function hasHttpScheme(string $url): bool
     {
         $scheme = parse_url($url, PHP_URL_SCHEME);

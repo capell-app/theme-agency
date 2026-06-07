@@ -7,6 +7,11 @@ return [
         'message' => 'The link may have expired or already been used. Request access again with the same email address.',
         'title' => 'This access link is not available',
     ],
+    'claim_succeeded' => [
+        'continue' => 'Continue',
+        'message' => 'Your access is now active on this device. Continue to pick up where you left off.',
+        'title' => "You're in",
+    ],
     'message' => [
         'back' => 'Request a new link',
     ],
