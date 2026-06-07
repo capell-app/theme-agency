@@ -7,6 +7,7 @@ All notable changes to `capell-app/events` will be documented in this file.
 - Added configurable recurrence sync window bounds and DST-crossing recurrence coverage.
 - Switched public event listing/calendar views to hydrated view data and separated the public calendar label from the admin calendar label.
 - Added listing-page scoped `.ics` feeds using page metadata filters for venues and events.
+- Added configurable multi-reminder notification cadence with per-event opt-out.
 
 ### 2026-06-04
 

@@ -36,7 +36,7 @@ Declared `capabilities[]`: `events`, `events-admin`, `events-console`, `events-f
 - **Capacity/waitlist UI + automatic promotion** _(table-stakes)_ — capacity & waitlist logic is correct in `RegisterForEventOccurrenceAction`/`PromoteWaitlistAction`/`EventOccurrence`; cancellation now dispatches `EventRegistrationCancelled` and a scheduled reconcile promotes stale waitlisted registrations. Remaining gap: richer public/admin waitlist UI.
 - **Ticketing / paid registration** _(differentiator)_ — `booking_mode`/`booking_url` support external booking links only; no integration with `capell-app/payments` for paid tickets despite `payments` being in customer-portal's support graph.
 - **Shipped 2026-06-07: recurring-event exception editing is reachable in the occurrence UI.** `EventOccurrenceResource` now exposes cancel and reschedule row actions backed by `CancelOccurrenceAction` and `RescheduleOccurrenceAction`, with translated notifications and Livewire table-action coverage. — `src/Filament/Resources/Occurrences/EventOccurrenceResource.php`, `tests/Integration/EventRegistrationResourceWorkflowTest.php`
-- **Reminder cadence configuration** _(table-stakes)_ — reminder is hard-coded to `starts_at->subDay()` in `ScheduleEventNotificationsAction`; no multi-reminder schedule (e.g. 1 week + 1 day + 1 hour) and no per-event opt-out.
+- **Reminder cadence configuration shipped.** `ScheduleEventNotificationsAction` now reads configurable reminder offsets from event `notification_settings` or `capell-events.notifications.reminder_offsets_minutes`, supports multiple reminder rows per registration via `notification_key`, and honors per-event reminder opt-out. — `src/Actions/ScheduleEventNotificationsAction.php`, `database/migrations/2026_06_07_000000_07_add_notification_keys_to_event_notification_logs_table.php`
 
 ## 4. Issues / Risks
 
@@ -85,7 +85,7 @@ Declared `capabilities[]`: `events`, `events-admin`, `events-console`, `events-f
 | Done/Shipped: Add DST-crossing recurrence test; bound recurrence horizon explicitly             | Done   | M      | Med    | §2.3, §4       |
 | Done/Shipped: Per-listing-page filtered `.ics` feed (honor `{listingPage}`)                     | Done   | M      | Med    | §2.8, §3       |
 | Viewer-timezone display + per-site default-tz setting                                           | Next   | M      | Med    | §3, §4         |
-| Configurable multi-reminder cadence + per-event opt-out                                         | Next   | M      | Low    | §3             |
+| Done/Shipped: Configurable multi-reminder cadence + per-event opt-out                           | Done   | M      | Low    | §3             |
 | Shipped 2026-06-07: Verify/expose `CancelOccurrenceAction`/`RescheduleOccurrenceAction` in occurrence UI | Done   | S      | Med    | §3             |
 | Paid ticketing via `capell-app/payments` integration                                            | Later  | L      | High   | §3             |
 | Customer-portal self-service RSVP cancellation                                                  | Later  | M      | Med    | §3             |
