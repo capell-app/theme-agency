@@ -476,6 +476,81 @@ it('renders campaign story and contact cards from section items before fallbacks
         ->not->toContain('capell-app/theme-nonprofit');
 });
 
+it('renders connected campaign progress and event cards from hydrated data', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(NonprofitThemeServiceProvider::$packageName);
+    CapellCore::forcePackageInstalled('capell-app/campaign-studio');
+    CapellCore::forcePackageInstalled('capell-app/events');
+
+    $registry = new ThemeRegistry;
+    (new NonprofitThemeServiceProvider($this->app))->boot($registry);
+
+    $campaignRenderer = $registry->sectionRenderer('nonprofit', 'campaigns');
+    $eventRenderer = $registry->sectionRenderer('nonprofit', 'events');
+
+    assert($campaignRenderer instanceof SectionRenderer);
+    assert($eventRenderer instanceof SectionRenderer);
+
+    $campaignHtml = $campaignRenderer->render(nonprofitThemeSection('campaigns', [
+        'heading' => 'Live appeals',
+        'items' => [
+            [
+                'label' => 'Active appeal',
+                'title' => 'Winter food fund',
+                'summary' => 'Hydrated appeal pulled from connected campaign data.',
+                'progress' => 72,
+                'raised' => '£72k raised',
+                'goal' => '£100k goal',
+                'action' => ['label' => 'Fund this appeal', 'url' => '/campaigns/winter-food-fund'],
+            ],
+        ],
+    ]));
+
+    $eventHtml = $eventRenderer->render(nonprofitThemeSection('events', [
+        'heading' => 'Campaign events',
+        'items' => [
+            [
+                'date' => '12 June',
+                'title' => 'Community kitchen day',
+                'summary' => 'Connected event listing for supporters.',
+                'location' => 'Civic Hall',
+                'type' => 'Volunteer',
+                'label' => 'Reserve place',
+                'url' => '/events/community-kitchen-day',
+            ],
+        ],
+    ]));
+
+    expect($campaignHtml)
+        ->toContain('Live appeals')
+        ->toContain('Connected campaign workflow is ready.')
+        ->toContain('Winter food fund')
+        ->toContain('Hydrated appeal pulled from connected campaign data.')
+        ->toContain('role="progressbar"')
+        ->toContain('aria-valuenow="72"')
+        ->toContain('style="width: 72%"')
+        ->toContain('£72k raised / £100k goal')
+        ->toContain('href="/campaigns/winter-food-fund"')
+        ->toContain('Fund this appeal')
+        ->not->toContain('capell-app/theme-nonprofit')
+        ->not->toContain('Filament')
+        ->not->toContain('wire:');
+
+    expect($eventHtml)
+        ->toContain('Campaign events')
+        ->toContain('Connected events calendar is available.')
+        ->toContain('12 June')
+        ->toContain('Community kitchen day')
+        ->toContain('Connected event listing for supporters.')
+        ->toContain('Civic Hall')
+        ->toContain('Volunteer')
+        ->toContain('href="/events/community-kitchen-day"')
+        ->toContain('Reserve place')
+        ->not->toContain('capell-app/theme-nonprofit')
+        ->not->toContain('Filament')
+        ->not->toContain('wire:');
+});
+
 it('renders every Nonprofit-owned section with empty or partial section data', function (): void {
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(NonprofitThemeServiceProvider::$packageName);
