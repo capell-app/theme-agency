@@ -48,6 +48,7 @@ Public routes should expose only confirmation/unsubscribe/webhook outcomes and m
 
 - `ScheduleNewsletterSendAction` creates scheduled campaign send records with segment/provider audience and UTM metadata.
 - `BuildDueNewsletterSendsAction` returns due scheduled sends in deterministic schedule order for ESP, Email Studio, Campaign Studio, or Automation Studio delivery workers.
+- `BuildNewsletterSendHandoffPayloadAction` turns a scheduled send into an explicit `external_handoff` payload containing the send, segment, provider audience, UTM, and metadata contract for downstream delivery workers.
 - `UpdateNewsletterSendStatusAction` records lifecycle transitions for sending, sent, failed, and cancelled states with timestamps and delivery metadata.
 - Scheduled sends contribute to Publishing Studio's editorial calendar as `newsletter.send` events when Publishing Studio is installed.
 

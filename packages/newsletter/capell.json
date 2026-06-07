@@ -129,6 +129,7 @@
     "actions": {
         "applyNewsletterTags": "Capell\\Newsletter\\Actions\\ApplyNewsletterTagsAction",
         "buildDueNewsletterSends": "Capell\\Newsletter\\Actions\\BuildDueNewsletterSendsAction",
+        "buildNewsletterSendHandoffPayload": "Capell\\Newsletter\\Actions\\BuildNewsletterSendHandoffPayloadAction",
         "confirmSubscriber": "Capell\\Newsletter\\Actions\\ConfirmSubscriberAction",
         "buildListUnsubscribeHeaders": "Capell\\Newsletter\\Actions\\BuildListUnsubscribeHeadersAction",
         "createPreferenceCenterToken": "Capell\\Newsletter\\Actions\\CreatePreferenceCenterTokenAction",
@@ -161,6 +162,7 @@
         "newsletter-segments",
         "newsletter-preference-center",
         "newsletter-campaign-sends",
+        "newsletter-send-handoff",
         "newsletter-send-lifecycle",
         "newsletter-utm-attribution",
         "newsletter-unsubscribe-routes",

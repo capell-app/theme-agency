@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\Newsletter\Actions\BuildNewsletterSendHandoffPayloadAction;
 use Capell\Newsletter\Actions\ResolveUtmAttributionAction;
 use Capell\Newsletter\Actions\ScheduleNewsletterSendAction;
 use Capell\Newsletter\Actions\UpdatePreferenceCenterAction;
@@ -61,6 +62,7 @@ it('declares newsletter segmentation, preference center, campaign send, and attr
 
     expect($manifest['actions'])->toHaveKey('evaluateNewsletterSegment')
         ->and($manifest['actions'])->toHaveKey('buildListUnsubscribeHeaders')
+        ->and($manifest['actions'])->toHaveKey('buildNewsletterSendHandoffPayload', BuildNewsletterSendHandoffPayloadAction::class)
         ->and($manifest['actions'])->toHaveKey('scheduleNewsletterSend', ScheduleNewsletterSendAction::class)
         ->and($manifest['actions'])->toHaveKey('resolveUtmAttribution', ResolveUtmAttributionAction::class)
         ->and($manifest['actions'])->toHaveKey('updatePreferenceCenter', UpdatePreferenceCenterAction::class)
@@ -68,6 +70,7 @@ it('declares newsletter segmentation, preference center, campaign send, and attr
             'newsletter-segments',
             'newsletter-preference-center',
             'newsletter-campaign-sends',
+            'newsletter-send-handoff',
             'newsletter-utm-attribution',
             'newsletter-unsubscribe-routes',
             'newsletter-automation-hooks',
