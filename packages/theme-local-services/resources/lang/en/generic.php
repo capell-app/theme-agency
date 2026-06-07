@@ -144,6 +144,8 @@ return [
     'quote_field_postcode' => 'Postcode',
     'quote_field_service' => 'Service',
     'quote_field_urgency' => 'Urgency',
+    'quote_booking_action' => 'View booking slots',
+    'quote_booking_ready' => 'Booking slots can be connected for service teams that schedule appointments directly.',
     'quote_form_aria_label' => 'Quote request',
     'quote_form_copy' => 'Connected enquiry workflow is available for routed estimates, service windows, and team handoff.',
     'quote_form_copy_fallback' => 'Send a quote request with your contact details, postcode, service need, and project notes.',

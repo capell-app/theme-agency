@@ -91,6 +91,7 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
         );
 
         $blogAvailable = CapellCore::isPackageInstalled('capell-app/blog');
+        $bookingsAvailable = CapellCore::isPackageInstalled('capell-app/bookings');
         $formBuilderAvailable = CapellCore::isPackageInstalled('capell-app/form-builder');
 
         $registry->register(
@@ -103,7 +104,7 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
             sectionRenderers: collect(self::definition()->includedSections)
                 ->map(fn (string $sectionKey): ?ViewSectionRenderer => $this->sectionRenderer(
                     $sectionKey,
-                    $this->optionalSectionIntegrations($blogAvailable, $formBuilderAvailable),
+                    $this->optionalSectionIntegrations($blogAvailable, $bookingsAvailable, $formBuilderAvailable),
                 ))
                 ->filter()
                 ->values()
@@ -152,10 +153,10 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
     /**
      * @return array<string, array<string, bool>>
      */
-    private function optionalSectionIntegrations(bool $blogAvailable, bool $formBuilderAvailable): array
+    private function optionalSectionIntegrations(bool $blogAvailable, bool $bookingsAvailable, bool $formBuilderAvailable): array
     {
         return [
-            'quote-form' => ['formBuilderAvailable' => $formBuilderAvailable],
+            'quote-form' => ['bookingsAvailable' => $bookingsAvailable, 'formBuilderAvailable' => $formBuilderAvailable],
             'quote-estimator' => ['formBuilderAvailable' => $formBuilderAvailable],
             'resources' => ['blogAvailable' => $blogAvailable],
         ];

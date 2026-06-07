@@ -78,3 +78,18 @@ it('keeps theme Tailwind classes unprefixed because package assets are isolated'
         ->toContain("VendorAssetData::tailwindSource('resources/views/**/*.blade.php'")
         ->and($blade)->not->toContain('tw:');
 });
+
+it('ships a scoped dark-mode layer for the Local Services shell', function (): void {
+    $css = file_get_contents(__DIR__ . '/../../resources/css/theme-local-services.css') ?: '';
+
+    expect($css)
+        ->toContain('.dark .local-services-shell')
+        ->toContain('.local-services-shell.dark')
+        ->toContain('@media (prefers-color-scheme: dark)')
+        ->toContain('--local-services-card')
+        ->toContain('--local-services-field')
+        ->toContain('color-scheme: dark')
+        ->toContain('.text-\\[\\#13231f\\]')
+        ->toContain('.bg-\\[\\#f8fafc\\]')
+        ->toContain('.border-\\[\\#99f6e4\\]');
+});
