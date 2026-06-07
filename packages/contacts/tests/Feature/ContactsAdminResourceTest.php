@@ -52,7 +52,7 @@ it('exposes operator privacy actions for contact records', function (): void {
     $user = new User;
     $contact = new Contact;
 
-    expect(contactsResourceTestActionNames($actions))->toContain('view', 'privacy_export', 'privacy_anonymize')
+    expect(contactsResourceTestActionNames($actions))->toContain('view', 'merge', 'privacy_export', 'privacy_anonymize')
         ->and((new ContactPolicy)->exportPrivacy($user, $contact))->toBeTrue()
         ->and((new ContactPolicy)->anonymizePrivacy($user, $contact))->toBeTrue();
 });

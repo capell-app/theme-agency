@@ -14,9 +14,11 @@ return [
         'note' => 'Note',
         'occurred_at' => 'Occurred at',
         'phone' => 'Phone',
+        'reason' => 'Reason',
         'status' => 'Status',
         'summary' => 'Summary',
         'tags' => 'Tags',
+        'target_contact' => 'Target contact',
         'title' => 'Title',
         'type' => 'Type',
         'updated_at' => 'Updated at',
@@ -26,6 +28,7 @@ return [
     'actions' => [
         'add_note' => 'Add note',
         'change_status' => 'Change status',
+        'merge' => 'Merge',
         'privacy_anonymize' => 'Anonymize contact',
         'privacy_export' => 'Export privacy data',
         'view' => 'View',
@@ -120,6 +123,13 @@ return [
         'command_valid_contact' => 'The contact argument must be a positive integer ID.',
         'command_valid_email' => 'The --email option must be a valid email address.',
         'export_activity_summary' => 'Contact privacy export generated',
+    ],
+    'merge' => [
+        'activity_summary' => 'Contact merged into this record',
+        'completed_notification' => 'Contact merged.',
+        'cross_site' => 'Contacts can only be merged within the same site.',
+        'same_contact' => 'Choose two different contacts to merge.',
+        'target_not_found' => 'The selected target contact could not be found.',
     ],
     'widgets' => [
         'activities' => 'Activities',
