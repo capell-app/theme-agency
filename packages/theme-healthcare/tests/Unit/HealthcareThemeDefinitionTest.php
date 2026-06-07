@@ -44,6 +44,8 @@ it('defines the healthcare premium renderer contract', function (): void {
             'services',
             'care-pathway',
             'clinicians',
+            'clinician-profile',
+            'conditions-directory',
             'booking',
             'emergency-escalation',
             'locations',
@@ -84,6 +86,8 @@ it('declares renderers for every healthcare and fallback section', function (): 
         'services',
         'care-pathway',
         'clinicians',
+        'clinician-profile',
+        'conditions-directory',
         'booking',
         'emergency-escalation',
         'locations',
@@ -175,6 +179,26 @@ it('renders public healthcare markup without forbidden package or authoring toke
                 'heading' => 'Meet the clinicians',
                 'items' => [['title' => 'Dr Amara Patel', 'summary' => 'Consultant physician.', 'image' => '/images/clinician.jpg', 'imageAlt' => 'Dr Amara Patel']],
             ]),
+            healthcareThemeSection('clinician-profile', [
+                'clinician' => [
+                    'name' => 'Dr Amara Patel',
+                    'summary' => 'Consultant physician focused on complex diagnostics.',
+                    'credentials' => ['GMC registered', 'FRCP'],
+                    'specialties' => ['Diagnostics', 'Cardiology'],
+                    'languages' => ['English', 'Gujarati'],
+                    'acceptingPatients' => true,
+                ],
+            ]),
+            healthcareThemeSection('conditions-directory', [
+                'heading' => 'Conditions and treatments',
+                'items' => [
+                    [
+                        'title' => 'Chest pain assessment',
+                        'summary' => 'Rapid triage routes for urgent symptoms.',
+                        'services' => [['label' => 'Cardiology', 'url' => '/services/cardiology']],
+                    ],
+                ],
+            ]),
             healthcareThemeSection('booking', [
                 'heading' => 'Request an appointment',
                 'items' => [['title' => 'Same-week triage']],
@@ -239,6 +263,10 @@ it('renders public healthcare markup without forbidden package or authoring toke
         ->toContain('width="800"')
         ->toContain('Previous items')
         ->toContain('Next items')
+        ->toContain('GMC registered')
+        ->toContain('Accepting new patients')
+        ->toContain('Chest pain assessment')
+        ->toContain('href="/services/cardiology"')
         ->toContain('href="tel:02920000000"')
         ->toContain('Mon-Fri 08:00-18:00')
         ->toContain('https://maps.example/cardiff')
@@ -465,6 +493,89 @@ it('renders the healthcare emergency escalation section with safe urgent contact
         ->and($emptyHtml)
         ->toContain('Know when to seek urgent help')
         ->toContain('Call emergency services')
+        ->not->toContain('data-field')
+        ->not->toContain('model_id');
+});
+
+it('renders healthcare clinician detail and conditions directory surfaces', function (): void {
+    View::addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-healthcare', __DIR__ . '/../../resources/lang');
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(HealthcareThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new HealthcareThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $clinicianRenderer = $registry->sectionRenderer('healthcare', 'clinician-profile');
+    $conditionsRenderer = $registry->sectionRenderer('healthcare', 'conditions-directory');
+
+    expect($clinicianRenderer)->not->toBeNull()
+        ->and($conditionsRenderer)->not->toBeNull();
+    assert($clinicianRenderer instanceof SectionRenderer);
+    assert($conditionsRenderer instanceof SectionRenderer);
+
+    $clinicianHtml = $clinicianRenderer->render(healthcareThemeSection('clinician-profile', [
+        'clinician' => [
+            'name' => 'Dr Lena Morris',
+            'bio' => 'Consultant dermatologist supporting complex skin pathways.',
+            'image' => '/images/dr-lena.jpg',
+            'imageAlt' => 'Dr Lena Morris',
+            'credentials' => ['GMC registered', 'FRCP'],
+            'specialties' => ['Dermatology', 'Skin cancer screening'],
+            'languages' => ['English', 'Welsh'],
+            'accepting_new_patients' => true,
+        ],
+    ]));
+
+    $conditionsHtml = $conditionsRenderer->render(healthcareThemeSection('conditions-directory', [
+        'heading' => 'Conditions and treatments',
+        'summary' => 'Find the right clinical route.',
+        'items' => [
+            [
+                'type' => 'Treatment',
+                'title' => 'Mole assessment',
+                'summary' => 'Rapid dermatology checks and onward care.',
+                'services' => [
+                    ['label' => 'Dermatology', 'url' => '/services/dermatology'],
+                    ['label' => 'Skin screening', 'url' => '/services/skin-screening'],
+                ],
+            ],
+        ],
+    ]));
+
+    $emptyConditionsHtml = $conditionsRenderer->render(healthcareThemeSection('conditions-directory', [
+        'heading' => null,
+        'summary' => null,
+        'items' => [],
+    ]));
+
+    expect($clinicianHtml)
+        ->toContain('Dr Lena Morris')
+        ->toContain('Consultant dermatologist supporting complex skin pathways.')
+        ->toContain('src="/images/dr-lena.jpg"')
+        ->toContain('alt="Dr Lena Morris"')
+        ->toContain('GMC registered')
+        ->toContain('Skin cancer screening')
+        ->toContain('English, Welsh')
+        ->toContain('Accepting new patients')
+        ->not->toContain('capell-app/theme-healthcare')
+        ->not->toContain('theme-healthcare')
+        ->not->toContain('model_id')
+        ->not->toContain('field_path')
+        ->and($conditionsHtml)
+        ->toContain('Conditions and treatments')
+        ->toContain('Find the right clinical route.')
+        ->toContain('Mole assessment')
+        ->toContain('href="/services/dermatology"')
+        ->toContain('Skin screening')
+        ->not->toContain('capell-app/theme-healthcare')
+        ->not->toContain('theme-healthcare')
+        ->not->toContain('model_id')
+        ->not->toContain('field_path')
+        ->and($emptyConditionsHtml)
+        ->toContain('Add condition and treatment entries')
+        ->toContain('Add conditions, treatments')
         ->not->toContain('data-field')
         ->not->toContain('model_id');
 });
