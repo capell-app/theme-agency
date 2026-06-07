@@ -126,7 +126,7 @@ class TailwindAssetsGenerator
                     return;
                 }
 
-                if ($this->isNodeModuleImport($import)) {
+                if ($this->isNodeModuleImport($import, $asset)) {
                     $registry->registerImport($import, $this->originForAsset($asset));
 
                     return;
@@ -239,7 +239,7 @@ class TailwindAssetsGenerator
         $registry->registerThemeColors($colors, 'default-colors');
     }
 
-    private function isNodeModuleImport(string $import): bool
+    private function isNodeModuleImport(string $import, ?VendorAssetData $asset = null): bool
     {
         $import = ltrim($import);
 
@@ -251,17 +251,14 @@ class TailwindAssetsGenerator
             return false;
         }
 
-        // Scoped or bare package names (e.g., @scope/pkg, tippy.js, tailwindcss/base)
-        if (str_starts_with($import, '@')) {
+        if ($asset instanceof VendorAssetData && $asset->packageName !== null && $asset->packageName !== '') {
             return true;
         }
 
-        // Known packages
-        if (str_starts_with($import, 'tippy.js') || str_starts_with($import, 'tailwindcss')) {
+        if (preg_match('~^@[a-z0-9_.-]+/[a-z0-9_.-]+(?:/.*)?$~i', $import) === 1) {
             return true;
         }
 
-        // Heuristic: no leading dot or slash, first segment contains only package chars
         return preg_match('~^[a-z0-9_.-]+(?:/.*)?$~i', $import) === 1;
     }
 

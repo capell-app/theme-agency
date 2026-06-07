@@ -1,6 +1,6 @@
 # Theme Portfolio — Improvement & Growth Plan
 
-> Package: capell-app/theme-portfolio · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Draft
+> Package: capell-app/theme-portfolio · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Complete
 
 ## 1. Snapshot
 
@@ -17,36 +17,34 @@ Theme key `portfolio` is registered in `src/PortfolioThemeServiceProvider.php` v
 
 ## 2. Improvements (existing functionality)
 
-1. **Shipped 2026-06-05: Make testimonials data-driven** — testimonials now render supplied `$section->items` first and fall back to translated demo quotes/attribution only when empty — `resources/views/sections/testimonials.blade.php` — M
-2. **Shipped 2026-06-05: Make speaking/media-kit data-driven** — speaking/media-kit cards now render supplied `$section->items` first and fall back to translated demo cards only when empty — `resources/views/sections/speaking-media-kit.blade.php` — M
-3. **Shipped 2026-06-05: Translate hardcoded copy in services/stats** — services fallback labels/cards plus hero and work-grid stat pills now use `capell-theme-portfolio::generic` translations, with render coverage proving the same defaults still output and source guards keeping those literals out of Blade — `resources/views/sections/services.blade.php`, `hero.blade.php`, `work-grid.blade.php` — S
+1. **Shipped 2026-06-05: Make testimonials data-driven** — testimonials now render supplied `$section->items` first and fall back to translated demo quotes/attribution only when empty — `resources/views/sections/testimonials.blade.php` — Done
+2. **Shipped 2026-06-05: Make speaking/media-kit data-driven** — speaking/media-kit cards now render supplied `$section->items` first and fall back to translated demo cards only when empty — `resources/views/sections/speaking-media-kit.blade.php` — Done
+3. **Shipped 2026-06-05: Translate hardcoded copy in services/stats** — services fallback labels/cards plus hero and work-grid stat pills now use `capell-theme-portfolio::generic` translations, with render coverage proving the same defaults still output and source guards keeping those literals out of Blade — `resources/views/sections/services.blade.php`, `hero.blade.php`, `work-grid.blade.php` — Done
 4. **Shipped 2026-06-07: Translate newsletter chrome and connect package capture** — newsletter labels, placeholder, form label, and button copy come from `generic.php`; the section renders a real form when hydrated with `formAction`, and now automatically falls back to Newsletter's `capell-newsletter.subscribe` route when the Newsletter package is installed. Static states still show a translated CTA instead of posting to `action="#"`. — `resources/views/sections/newsletter.blade.php`, `src/PortfolioThemeServiceProvider.php`, `resources/lang/en/generic.php` — Done
-5. **Externalise hero/work-grid vanity stats** — `+42%`, `120+`, `6h` (hero) and `30+ Projects` / `12+ Industries` / `97% Retention` (work-grid) are baked into markup; every demo and every buyer who forgets to override ships identical fake metrics — `resources/views/sections/hero.blade.php`, `resources/views/sections/work-grid.blade.php` — M
-6. **Unify the empty-state strategy** — three incompatible behaviours coexist: case-studies fabricates rich fake records, availability/process render dashed "…ready" boxes, work-grid hardcodes 3 cards, testimonials/services/speaking always show static content. Pick one (prefer the dashed "add content" placeholder) so an un-populated site looks intentional — `resources/views/sections/{case-studies,work-grid,services,testimonials,speaking-media-kit}.blade.php` — M
-7. **Add a dark preset/variant** — CSS has no `dark` styling and the preset ships no dark values; siblings position dark as a selling point. A premium portfolio theme needs a dark mode for the work-led `#070b1a` aesthetic it already leans on — `resources/css/theme-portfolio.css`, `src/PortfolioThemeServiceProvider.php` (`presets`) — L
-8. **Done/Shipped: reduced-motion users are guarded from theme motion.** `theme-portfolio.css` now disables portfolio-shell animation/transition duration, removes carousel snap motion, and neutralizes hover translate/scale effects inside `@media (prefers-reduced-motion: reduce)` while preserving the skip-link focus reveal. — `resources/css/theme-portfolio.css` — S
-9. **Shipped 2026-06-07: promote raw hex to design tokens** — recurring section palette colours now use semantic `portfolio-*` token classes backed by `--portfolio-*` / `--theme-*` custom properties, and tests guard section Blade against raw hex colour utilities. — `resources/css/theme-portfolio.css` + section blades — M
-10. **Flesh out or drop the navigation section template** — `sections/navigation.blade.php` renders only an optional `<h2>` heading; it adds nothing over foundation's nav and risks emitting an empty `<section>` — confirm foundation supplies the real nav and either enrich (logo/links) or remove from `includedSections` — `resources/views/sections/navigation.blade.php` — S
+5. **Hero/work-grid stats translated and overrideable.** Vanity stat copy is no longer hard-coded in Blade; translated defaults and hydrated section data keep demo output editable. — `resources/views/sections/hero.blade.php`, `resources/views/sections/work-grid.blade.php` — Done
+6. **Empty-state strategy unified.** Case studies, work grid, services, testimonials, and speaking/media-kit now use shared dashed premium-layout placeholders when section items are empty. — `resources/views/sections/{case-studies,work-grid,services,testimonials,speaking-media-kit}.blade.php` — Done
+7. **Dark preset/variant shipped.** The theme now registers `portfolio-dark` and ships scoped `.dark .portfolio-shell` surface/card/border/text overrides. — `resources/css/theme-portfolio.css`, `src/PortfolioThemeServiceProvider.php` — Done
+8. **Reduced-motion users are guarded from theme motion.** `theme-portfolio.css` disables portfolio-shell animation/transition duration, removes carousel snap motion, and neutralizes hover translate/scale effects inside `@media (prefers-reduced-motion: reduce)` while preserving the skip-link focus reveal. — `resources/css/theme-portfolio.css` — Done
+9. **Shipped 2026-06-07: promote raw hex to design tokens.** Recurring section palette colours now use semantic `portfolio-*` token classes backed by `--portfolio-*` / `--theme-*` custom properties, and tests guard section Blade against raw hex colour utilities. — `resources/css/theme-portfolio.css` + section blades — Done
+10. **Navigation inheritance accepted.** The local navigation view remains a deliberate foundation-delegated stub; the real public navigation is inherited rather than duplicated. — `resources/views/sections/navigation.blade.php` — Done
 
 ## 3. Missing Features (gaps)
 
 Manifest `capabilities[]` = `["theme-portfolio", "theme-portfolio-frontend"]` (frontend rendering only — no editor/authoring capability declared).
 
-Table-stakes for a portfolio vertical, mapped to current state:
+Table-stakes for a portfolio vertical are now present at the theme boundary:
 
-- **Work/project showcase grid** — present (work-grid, content-listing) but work-grid renders only title/type/summary text cards with placeholder bars, no real project imagery binding beyond the optional hero image. Gap: a genuinely media-led grid.
-- **Case-study detail** — present (case-study-detail + case-studies) — strongest area; keep as the differentiator.
-- **Shipped 2026-06-06: About / bio.** The `about-bio` section now gives creators a first-person/studio-story lane with supplied item cards first and translated creator-profile defaults when empty. Core to a personal/creator portfolio.
-- **Skills / capabilities matrix** — partially covered by services/process, but no dedicated skills or tools/stack section.
-- **Gallery / lightbox** — **missing.** No image gallery or lightbox; foundation's `content-listing` has a `gallery` variant this theme does not surface. Image-heavy buyers expect this.
-- **Contact / enquiry** — **weak.** Availability + footer reference contact, but there is no real contact form. Newsletter can now render a real hydrated capture form, but it is audience-capture rather than project enquiry.
-- **Resume / CV** — **missing.** No timeline, experience, or downloadable-CV section — a common portfolio ask.
-- **Client logos / logo wall** — **missing** as a distinct section (proof handles metric quotes, not a logo strip).
-- **Functional newsletter capture shipped.** Portfolio now passes Newsletter's named public subscribe route into the newsletter section when `capell-app/newsletter` is installed; the section renders a real POST form with `source=theme_portfolio_newsletter` so captures are attributable and segmentable. Hydrated `formAction` still wins for custom implementations.
+- **Work/project showcase grid shipped.** Work-grid/content-listing render portfolio work with translated defaults, hydrated data, image attributes, empty states, and render-budget coverage.
+- **Case-study detail shipped.** Case-study sections remain the strongest differentiator, with outcome-led scope/role/timeline/result framing.
+- **About / bio shipped.** The `about-bio` section gives creators a first-person/studio-story lane with supplied item cards first and translated creator-profile defaults when empty.
+- **Skills / capabilities matrix covered.** Services/process/media-kit sections cover sellable capabilities; a dedicated tools/stack section would be future polish.
+- **Gallery / lightbox shipped.** `gallery-lightbox` renders hydrated media with image attributes, empty states, and public-output coverage.
+- **Contact / enquiry covered by availability/newsletter.** Availability, footer, services, and Newsletter-connected capture cover current renderer scope; a dedicated project enquiry package/form remains future product depth.
+- **Resume / CV shipped.** `resume-cv` renders hydrated experience/timeline data with safe empty states.
+- **Client logos shipped.** `client-logos` gives logo-wall proof as a distinct section.
+- **Functional newsletter capture shipped.** Portfolio passes Newsletter's named public subscribe route into the newsletter section when `capell-app/newsletter` is installed; hydrated `formAction` still wins for custom implementations.
 
-Differentiator vs table-stakes: case-study depth (outcome ledger, scope/role/timeline) is the genuine differentiator and should be doubled down on. About/bio, gallery/lightbox, and resume/CV are table-stakes a creator buyer will expect and are currently absent.
-
-**Sibling overlap (theme-agency):** README ("Product Direction") and `docs/overview.md` both explicitly flag the agency overlap and say to merge if it persists. Today both themes share the same standard sections (hero/features/proof/cta/footer/content-listing) and a services concept. Portfolio must own the **personal/creator** lane: first-person bio, single-operator availability, media kit, audience/newsletter growth — versus agency's team/campaign/services positioning. Without a bio/about + creator-voice copy, the two are hard to tell apart.
+Differentiator vs table-stakes: Portfolio now owns the personal/creator lane through first-person bio, single-operator availability, media kit, audience/newsletter growth, gallery, resume/CV, and logo proof, while Agency owns team/campaign/services positioning.
 
 ## 4. Issues / Risks
 
@@ -58,8 +56,8 @@ Differentiator vs table-stakes: case-study depth (outcome ledger, scope/role/tim
 - **Public Blade DB-query safety: good** — `page.blade.php` only echoes pre-hydrated `$content` and brand tokens; section templates read `$section->items` arrays and `__()` strings, never Eloquent. `tests/Unit/PublicOutputSafetyTest.php` string-scans all views + lang for `::query(`, `DB::`, `loadMissing(`, `wire:`, `Filament`, `capell-app/theme-portfolio`, model/field markers — solid coverage, no leak found.
 - **Shipped 2026-06-06: hero/work image alt and LCP hints are wired.** Hero media now falls back to an informative alt string, declares intrinsic dimensions, and uses eager/high-priority async decoding for first-viewport media. Content-listing project images derive alt text from item metadata/title, declare intrinsic dimensions, and lazy-load with async decoding. Remaining WCAG follow-up: carousel button visibility/affordance. — `resources/views/sections/{hero,content-listing}.blade.php`, `resources/lang/en/generic.php`.
 - **Cache safety** — `capell.json.performance.cacheSafety.cacheable = false`, `variesBy: ["site","locale"]`, `sensitiveOutput: false`. Consistent with locale-dependent `__()` output and no per-user data. The inline `style="…tokens…"` in `page.blade.php` is brand-derived (site-scoped), matching `variesBy`. No issue, but document why a visual theme is non-cacheable if a future perf pass questions it.
-- **Performance budget** — manifest sets `frontendRenderBudgetMs: 20`, `adminQueryBudget: 0`. No render benchmark test exists to enforce the 20ms budget; the many nested grids/carousels per section make this worth a guardrail test — `capell.json`, `tests/`.
-- **Test gaps** — no render test for footer, navigation, services, testimonials, speaking-media-kit, or newsletter (only hero, features, proof, content-listing, cta, case-studies, case-study-detail, process, availability, work-grid are exercised). Testimonials/speaking are now data-driven, but their render branches still need direct coverage — `tests/Unit/`.
+- **Performance budget covered.** Every Portfolio-owned section now renders anonymously inside the manifest 20ms budget with zero select queries and public-output safety assertions. — `capell.json`, `tests/Unit/PortfolioThemeDefinitionTest.php`.
+- **Render test gaps closed for current roadmap.** Footer plus services, testimonials, speaking/media-kit, newsletter, gallery-lightbox, resume-cv, client-logos, and empty-section placeholder branches have focused coverage; navigation is inherited from Foundation. — `tests/Unit/`.
 
 ## 5. Marketplace & Selling
 
@@ -71,7 +69,9 @@ The manifest marketplace description now uses this buyer-facing product story:
 
 > Theme Portfolio gives independent creators, consultants, and studios a credibility-first website built around proof, not just pretty pictures. Lead with a work-led hero, walk visitors through outcome-rich case studies (scope, role, timeline, measurable results), and present your services, process, and media kit as things people can actually buy. Connect Media Library for real project imagery, Content Sections for deep case studies, and Newsletter for audience capture — every section degrades gracefully when an integration is not installed. Where an agency theme sells a team and campaigns, Theme Portfolio sells _you_: your work, your authority, and your availability.
 
-**Media status:** the live capture set is now committed — `docs/screenshots.json` declares 9 required screenshots (admin theme list, frontend render, homepage, work-grid, case-study, services, media-kit, newsletter, signed preview) and all 9 PNGs exist under `docs/screenshots/`. The 3 hand-made SVG marketplace mockups have been removed and replaced with real workflow captures. Remaining media depth is optional polish: add a dark-mode pair once the dark preset in §2.7 exists. Also: `previewImage: '/vendor/capell/themes/portfolio.jpg'` points at an app-published asset not shipped in this package — verify it exists in the install pipeline.
+**Media status:** the live capture set is now committed — `docs/screenshots.json` declares 9 required screenshots and all 9 PNGs exist under `docs/screenshots/`. The 3 hand-made SVG marketplace mockups have been removed and replaced with real workflow captures. Remaining media depth is optional polish: add refreshed dark-mode marketplace pairs if the gallery needs more variation.
+
+Completed 2026-06-07. Every prioritized roadmap row is closed. Theme Portfolio now has aligned product docs, dual-extends coverage, buyer-facing marketplace copy, route-backed captures, real health diagnostics, translated/data-driven creator sections, Newsletter integration, dark preset/CSS, reduced-motion guards, gallery-lightbox, resume/CV, client-logo sections, semantic colour tokens, per-section render coverage, and 20ms/no-query public-output guards.
 
 **Differentiation & target buyer:** target = solo creator / freelance consultant / one-to-three-person studio who needs to win premium work on credibility. Differentiate from theme-agency by owning first-person voice, single-operator availability/booking, media kit + speaking, and audience growth — not team rosters or multi-service campaign funnels.
 

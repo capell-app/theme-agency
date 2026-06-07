@@ -32,6 +32,21 @@
         color: var(--foundation-body-fg);
     }
 
+    :where(.site-theme-shell, .site-app-body) h1 {
+        font-size: var(--foundation-heading-size-h1);
+        line-height: var(--foundation-heading-line-height);
+    }
+
+    :where(.site-theme-shell, .site-app-body) h2 {
+        font-size: var(--foundation-heading-size-h2);
+        line-height: var(--foundation-heading-line-height);
+    }
+
+    :where(.site-theme-shell, .site-app-body) h3 {
+        font-size: var(--foundation-heading-size-h3);
+        line-height: calc(var(--foundation-heading-line-height) + 0.08);
+    }
+
     @media (prefers-reduced-motion: reduce) {
         *,
         *::before,

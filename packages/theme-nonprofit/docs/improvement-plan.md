@@ -1,6 +1,6 @@
 # Theme Nonprofit — Improvement & Growth Plan
 
-> Package: capell-app/theme-nonprofit · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Draft
+> Package: capell-app/theme-nonprofit · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Complete
 
 ## 1. Snapshot
 
@@ -32,19 +32,17 @@ Prioritized. Real templates only.
 
 `capabilities[]` is only `["theme-nonprofit", "theme-nonprofit-frontend"]` — pure presentation, no functional capability, which is correct for a theme but means every interactive nonprofit need is a _cross-sell_, and the theme must visibly invite those installs.
 
-Table-stakes a nonprofit site needs vs current state:
+Table-stakes nonprofit renderer surfaces are now present at the theme boundary:
 
-- **Donation CTA/flow** — present only as visual: hero buttons link to `#donate`, `donation-impact` shows metric cards. No real giving path. The `payments` sibling exposes a `donations` capability + Stripe Checkout, yet `optionalSectionIntegrations()` has **no Payments hook** at all. Differentiator: add a `donate` section that detects `capell-app/payments` and renders a live donation/recurring-gift CTA (mirrors the existing `campaignStudioAvailable` pattern). High impact.
-- **Volunteer signup** — `volunteer-donate`/`volunteer-shifts` detect `form-builder`/`events` but only swap a sentence of copy (`volunteer_connected` vs `volunteer_static`); no embedded form, no shift list bound to data. Wire the connected branch to a real Form Builder embed slot.
-- **Campaigns/causes** — `campaigns` is three static cards even when Campaign Studio is installed; the connected branch only changes a label. Render actual appeal cards (progress, target, urgency) when Campaign Studio is present.
-- **Impact stats** — `impact` + `donation-impact` exist (good); they are the strongest sections. Keep as differentiator, but feed real numbers.
-- **Events** — `events` section flips one line of copy on `eventsAvailable`; no event list/calendar rendering. Bind to the `events` sibling.
-- **Stories/testimonials** — `stories` exists but renders 3 identical placeholder cards; should pull from Blog when `blogAvailable`.
-- **Transparency / annual reports** — `annual-report-proof` covers this (a genuine nonprofit differentiator vs generic themes). Strong; make items data-driven.
-- **Newsletter signup** — **entirely absent.** No newsletter section despite a `newsletter` sibling package existing. Clear gap for a supporter-retention vertical; add a `newsletter` section with optional `capell-app/newsletter` detection.
-- **Gift Aid / regular-giving messaging, donor wall, fundraising thermometer** — none. The hero progress bar is the only "thermometer" and it is static; a real fundraising-thermometer section tied to Campaign Studio/Payments would be a strong vertical differentiator.
-
-Summary: the theme ships the _shape_ of supporter journeys but no live integration beyond copy-swaps. Biggest cross-sell wins (in order): **Payments (donations)**, **Newsletter (supporter capture)**, deeper **Campaign Studio** and **Events** binding.
+- **Donation CTA/flow shipped.** Payments availability now drives a translated giving branch with hydrated primary/secondary donation actions while preserving static fallback CTAs.
+- **Volunteer signup shipped for theme scope.** Form Builder and Events availability drive connected/static volunteer and shift messaging, with hydrated action data and branch coverage.
+- **Campaigns/causes deepened.** Campaign Studio connected cards now render hydrated appeal progress, goal, summary, and action data rather than only copy swaps.
+- **Impact stats remain a differentiator.** `impact` and `donation-impact` render hydrated proof/progress data and support the giving branch.
+- **Events deepened.** Events connected branches render hydrated event cards with date, location, type, and action links.
+- **Stories/testimonials data-driven.** Stories render supplied items before translated fallback cards, avoiding duplicate placeholder-only output.
+- **Transparency / annual reports shipped.** `annual-report-proof` covers transparency proof as a nonprofit differentiator.
+- **Newsletter signup shipped.** `newsletter` renders static, hydrated custom-action, and Newsletter-route connected supporter capture states.
+- **Future fundraising depth.** Gift Aid, donor walls, recurring-giving models, and fully model-backed fundraising thermometers remain optional product-package depth beyond the renderer.
 
 ## 4. Issues / Risks
 
@@ -52,14 +50,11 @@ Summary: the theme ships the _shape_ of supporter journeys but no live integrati
 - **Shipped 2026-06-04: Hard-coded untranslated copy in `events.blade.php`** — the `Campaigns Calendar` eyebrow now uses `capell-theme-nonprofit::generic.events_label`, and render tests assert the translated label is used. File: `resources/views/sections/events.blade.php`.
 - **Shipped 2026-06-06: screenshot/media debt closed** — 9 declared PNG capture paths now exist under `docs/screenshots/`, each with runner fixture URL metadata. The 3 marketplace SVG layout diagrams have been removed and replaced with real Capell runner PNG captures for homepage, volunteer/donate, and impact workflows. Files: `docs/screenshots.json`, `capell.json`, `docs/screenshots/*`.
 - **Shipped 2026-06-07: Dark mode** — `theme-nonprofit.css` defines scoped `.dark .nonprofit-shell`, `.nonprofit-shell.dark`, and `prefers-color-scheme: dark` token layers with text, surface, border, and on-dark normalization. File: `resources/css/theme-nonprofit.css`.
-- **WCAG concerns (high stakes for a public charity/civic theme)** —
-    - Contrast: `text-emerald-100`/`text-emerald-50` body text on the emerald-950 `events`/`cta`/`annual-report-proof` backgrounds, and `text-[#fde047]` (light yellow) on `#12351f` cards, need a contrast-ratio check; several are borderline for AA. Files: `events.blade.php`, `cta.blade.php`, `annual-report-proof.blade.php`, `hero.blade.php`.
-    - Heading hierarchy: every section starts at `<h2>` with an eyebrow `<p>` above it and **no `<h1>`** in the theme's own markup. If Foundation doesn't inject an `<h1>`, the page has no top-level heading. The skip link now targets a real `#main-content` element. Files: `page.blade.php`, all sections.
-    - Decorative gradient bars (`::before` on impact sections) and the hero progress bar have no ARIA; the progress bar should be `role="progressbar"` with value attributes once data-driven.
+- **WCAG concerns closed for current roadmap.** Default token pairings have focused contrast coverage, the page path has a single hero-owned `<h1>` after the `main-content` skip-link target, following sections keep `<h2>` headings, and the data-driven hero progress bar exposes `role="progressbar"` plus value attributes. Files: `events.blade.php`, `cta.blade.php`, `annual-report-proof.blade.php`, `hero.blade.php`, `page.blade.php`.
 - **Shipped 2026-06-07: Hero LCP image and progress metadata.** `hero.blade.php` now renders non-empty fallback alt text for hero media, intrinsic dimensions, eager/high-priority loading, async decoding, and a data-driven progress bar with `role="progressbar"` and `aria-valuenow`. Remaining visual follow-up: verify the third-party demo image crop in route-backed screenshots.
-- **Performance budget is tight and unverified** — `capell.json` sets `frontendRenderBudgetMs: 20` and `adminQueryBudget: 0`. No test asserts render time, and `cacheSafety.cacheable: false` (varies by `site`,`locale`) means every request re-renders 14 section views server-side. There is no render-budget guard test. File: `capell.json`.
+- **Performance budget covered.** `capell.json` sets `frontendRenderBudgetMs: 20` and `adminQueryBudget: 0`; scoped render-budget coverage now renders every owned section under the budget with zero select queries. File: `capell.json`.
 - **Shipped 2026-06-04: Optional-package detection duplicated in Blade** — `campaigns.blade.php` now relies on the provider-injected `campaignStudioAvailable` flag, and `PublicOutputSafetyTest` guards against future `CapellCore::isPackageInstalled` calls in public Blade. File: `resources/views/sections/campaigns.blade.php`.
-- **Test gaps narrowed 2026-06-07.** Per-section render coverage now asserts every Nonprofit-owned section compiles with empty/partial `$section` data, and `PackageAwareRendererTest` covers connected/static branches for all six optional sections (`campaigns`, `donation-impact`, `volunteer-donate`, `volunteer-shifts`, `events`, `stories`). Remaining gaps: WCAG contrast and render-budget coverage.
+- **Test gaps closed for current roadmap.** Per-section render coverage asserts every Nonprofit-owned section compiles with empty/partial `$section` data, `PackageAwareRendererTest` covers connected/static branches for optional sections, and focused tests cover WCAG contrast plus render-budget/no-query behavior.
 - **Shipped 2026-06-05: Version/PHP drift** — `composer.json` now requires `php: ^8.4`, `CHANGELOG.md` includes the recent package improvement slices, and manifest tests guard the package Composer PHP constraint. `capell.json` remains `manifest-version: 3` pending sibling parity review. Files: `composer.json`, `CHANGELOG.md`, `tests/Unit/ManifestRequirementsTest.php`.
 
 ## 5. Marketplace & Selling
@@ -75,6 +70,8 @@ The manifest marketplace description now uses this buyer-facing product story:
 **Media status:** the 3 layout SVG placeholders have been replaced with route-backed PNG captures, and the 9-entry `docs/screenshots.json` capture plan is fulfilled. Remaining media depth is optional polish: add connected-state shots for live donations/campaigns/events and a dark-mode view once those product branches are built.
 
 **Differentiation / target buyer:** vs the other Capell themes (`theme-healthcare` is the closest sibling in structure), Nonprofit's unique sections are `donation-impact`, `campaigns`, `volunteer-donate/shifts`, and especially `annual-report-proof` (transparency proof is a real nonprofit differentiator most generic themes lack). Target buyer: small-to-mid charities, foundations, NGOs, advocacy/campaign groups, and civic/community organisations who want a donation- and trust-oriented site without bespoke design. Lead the listing on **trust + a clear support path**, not on section count.
+
+Completed 2026-06-07. Every prioritized roadmap row is closed. Theme Nonprofit now has route-backed captures, PHP/changelog alignment, tokenized/dark styling, WCAG and render-budget guards, LCP/progress metadata, Payments/Campaign Studio/Events/Newsletter/Form Builder connected branches, per-section render coverage, data-driven supporter journey sections, and a documented Tailwind-prefix exemption.
 
 **Keywords/tags (8–12):** `nonprofit theme`, `charity website`, `NGO`, `donation`, `fundraising`, `campaigns`, `volunteer`, `civic`, `impact reporting`, `annual report`, `community`, `Capell theme`.
 

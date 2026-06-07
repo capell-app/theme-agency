@@ -79,7 +79,7 @@
                         <button
                             type="button"
                             id="{{ $spotlightId }}-tab-{{ $loop->index }}"
-                            class="min-w-[17rem] rounded-[var(--theme-radius-value)] border border-slate-200 p-4 text-left transition hover:border-slate-950 focus:ring-2 focus:ring-[var(--theme-primary)] focus:ring-offset-2 focus:outline-none lg:min-w-0 lg:p-5"
+                            class="min-w-[17rem] rounded-[var(--theme-radius-value)] border border-slate-200 p-4 text-start transition hover:border-slate-950 focus:ring-2 focus:ring-[var(--theme-primary)] focus:ring-offset-2 focus:outline-none lg:min-w-0 lg:p-5"
                             role="tab"
                             aria-controls="{{ $spotlightId }}-panel-{{ $loop->index }}"
                             aria-selected="{{ $loop->first ? 'true' : 'false' }}"
@@ -211,7 +211,7 @@
                 >
                     <div class="swiper-wrapper">
                         @foreach ($section->items as $item)
-                            <article class="swiper-slide h-auto pr-4">
+                            <article class="swiper-slide h-auto pe-4">
                                 <a
                                     href="{{ $item['url'] ?? '#' }}"
                                     class="group grid h-full overflow-hidden rounded-[var(--theme-radius-value)] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-slate-950 hover:shadow-xl"

@@ -22,6 +22,27 @@ class FoundationThemeSettings extends Settings implements SettingsContract
         'airy' => 'clamp(1.75rem, 3vw, 2.75rem)',
     ];
 
+    public const array HEADING_SCALE_OPTIONS = [
+        'compact' => [
+            'h1' => 'clamp(2rem, 4vw, 3.25rem)',
+            'h2' => 'clamp(1.65rem, 3vw, 2.35rem)',
+            'h3' => 'clamp(1.35rem, 2vw, 1.65rem)',
+            'lineHeight' => '1.12',
+        ],
+        'balanced' => [
+            'h1' => 'clamp(2.25rem, 5vw, 4rem)',
+            'h2' => 'clamp(1.85rem, 3.5vw, 2.75rem)',
+            'h3' => 'clamp(1.45rem, 2.25vw, 1.85rem)',
+            'lineHeight' => '1.1',
+        ],
+        'expressive' => [
+            'h1' => 'clamp(2.6rem, 6vw, 4.75rem)',
+            'h2' => 'clamp(2rem, 4vw, 3.25rem)',
+            'h3' => 'clamp(1.55rem, 2.5vw, 2rem)',
+            'lineHeight' => '1.06',
+        ],
+    ];
+
     public bool $enable_lazy_loading = true;
 
     public bool $minify_assets = true;
@@ -84,6 +105,8 @@ class FoundationThemeSettings extends Settings implements SettingsContract
 
     public string $widget_gap = 'balanced';
 
+    public string $heading_scale = 'balanced';
+
     public static function group(): string
     {
         return 'foundation_theme';
@@ -106,6 +129,15 @@ class FoundationThemeSettings extends Settings implements SettingsContract
             ?? self::WIDGET_GAP_OPTIONS['balanced'];
     }
 
+    /**
+     * @return array{h1: string, h2: string, h3: string, lineHeight: string}
+     */
+    public static function headingScaleCssValuesFor(?string $headingScale): array
+    {
+        return self::HEADING_SCALE_OPTIONS[$headingScale ?? 'balanced']
+            ?? self::HEADING_SCALE_OPTIONS['balanced'];
+    }
+
     public function sectionSpacingCssValue(): string
     {
         return self::sectionSpacingCssValueFor($this->section_spacing);
@@ -114,5 +146,13 @@ class FoundationThemeSettings extends Settings implements SettingsContract
     public function widgetGapCssValue(): string
     {
         return self::widgetGapCssValueFor($this->widget_gap);
+    }
+
+    /**
+     * @return array{h1: string, h2: string, h3: string, lineHeight: string}
+     */
+    public function headingScaleCssValues(): array
+    {
+        return self::headingScaleCssValuesFor($this->heading_scale);
     }
 }

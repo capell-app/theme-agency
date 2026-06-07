@@ -32,6 +32,10 @@ $tokens = ResolveFoundationThemeTokensAction::run();
         --foundation-image-radius: {{ $tokens->imageRadius }};
         --foundation-section-spacing: {{ $tokens->sectionSpacing }};
         --foundation-widget-gap: {{ $tokens->widgetGap }};
+        --foundation-heading-size-h1: {{ $tokens->headingSizeH1 }};
+        --foundation-heading-size-h2: {{ $tokens->headingSizeH2 }};
+        --foundation-heading-size-h3: {{ $tokens->headingSizeH3 }};
+        --foundation-heading-line-height: {{ $tokens->headingLineHeight }};
         --foundation-radius: 0.5rem;
     }
 

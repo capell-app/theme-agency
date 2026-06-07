@@ -110,6 +110,16 @@ class FoundationThemeSettingsSchema implements HasSchema
                                 ->default('balanced')
                                 ->in(array_keys(FoundationThemeSettings::WIDGET_GAP_OPTIONS))
                                 ->required(),
+                            Select::make('heading_scale')
+                                ->label(self::translate('capell-foundation-theme::form.heading_scale'))
+                                ->options([
+                                    'compact' => self::translate('capell-foundation-theme::form.heading_scale_options.compact'),
+                                    'balanced' => self::translate('capell-foundation-theme::form.heading_scale_options.balanced'),
+                                    'expressive' => self::translate('capell-foundation-theme::form.heading_scale_options.expressive'),
+                                ])
+                                ->default('balanced')
+                                ->in(array_keys(FoundationThemeSettings::HEADING_SCALE_OPTIONS))
+                                ->required(),
                         ]),
                 ]),
             Section::make(self::translate('capell-foundation-theme::form.dark_design_tokens'))

@@ -26,6 +26,12 @@ return [
     'dark_surface_background_color' => 'Dark surface background colour',
     'design_tokens' => 'Design tokens',
     'header_background_color' => 'Header background colour',
+    'heading_scale' => 'Heading scale',
+    'heading_scale_options' => [
+        'balanced' => 'Balanced',
+        'compact' => 'Compact',
+        'expressive' => 'Expressive',
+    ],
     'image_border_color' => 'Image border colour',
     'image_radius' => 'Image radius',
     'image_radius_options' => [

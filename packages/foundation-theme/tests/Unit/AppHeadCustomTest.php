@@ -23,7 +23,9 @@ it('owns the opinionated public head behavior', function (): void {
         ->and($tokens)->toContain('--foundation-band-bg')
         ->and($tokens)->toContain('--foundation-image-border')
         ->and($tokens)->toContain('--foundation-image-radius')
-        ->and($tokens)->toContain('--foundation-widget-gap');
+        ->and($tokens)->toContain('--foundation-widget-gap')
+        ->and($tokens)->toContain('--foundation-heading-size-h1')
+        ->and($tokens)->toContain('--foundation-heading-line-height');
 });
 
 it('maps foundation design settings into public CSS hooks', function (): void {
@@ -43,6 +45,8 @@ it('maps foundation design settings into public CSS hooks', function (): void {
         ->and($settings)->toContain('public string $image_radius')
         ->and($settings)->toContain('SECTION_SPACING_OPTIONS')
         ->and($settings)->toContain('WIDGET_GAP_OPTIONS')
+        ->and($settings)->toContain('HEADING_SCALE_OPTIONS')
+        ->and($settings)->toContain('public string $heading_scale')
         ->and($schema)->toContain("ColorPicker::make('page_background_color')")
         ->and($schema)->toContain("ColorPicker::make('border_color')")
         ->and($schema)->toContain("ColorPicker::make('band_background_color')")
@@ -53,7 +57,9 @@ it('maps foundation design settings into public CSS hooks', function (): void {
         ->and($schema)->toContain("Select::make('image_radius')")
         ->and($schema)->toContain("Select::make('section_spacing')")
         ->and($schema)->toContain("Select::make('widget_gap')")
+        ->and($schema)->toContain("Select::make('heading_scale')")
         ->and($tokenAction)->toContain('sectionSpacingCssValue()')
+        ->and($tokenAction)->toContain('headingScaleCssValues()')
         ->and($tokenAction)->toContain("darkPageBackground: \$this->settingColor(\$settings, 'dark_page_background_color', '#0f172a')")
         ->and($tokenAction)->toContain("darkPrimaryAction: \$this->settingColor(\$settings, 'dark_primary_action_color', '#93c5fd')")
         ->and($tokenAction)->toContain('widgetGapCssValue()')
@@ -62,9 +68,14 @@ it('maps foundation design settings into public CSS hooks', function (): void {
         ->and($tokens)->toContain('--foundation-page-bg: {{ $tokens->darkPageBackground }}')
         ->and($tokens)->toContain('--foundation-band-alt-bg')
         ->and($tokens)->toContain('--foundation-widget-gap')
+        ->and($tokens)->toContain('--foundation-heading-size-h1')
+        ->and($tokens)->toContain('--foundation-heading-size-h2')
+        ->and($tokens)->toContain('--foundation-heading-size-h3')
+        ->and($tokens)->toContain('--foundation-heading-line-height')
         ->and($styles)->toContain('background: var(--foundation-page-bg)')
         ->and($styles)->toContain('color: var(--foundation-body-fg)')
         ->and($styles)->toContain('var(--foundation-section-spacing)')
+        ->and($styles)->toContain('var(--foundation-heading-size-h1)')
         ->and($styles)->toContain('var(--foundation-card-bg)')
         ->and($styles)->toContain('var(--foundation-primary-action)')
         ->and($styles)->toContain('var(--foundation-image-border)')
@@ -88,4 +99,39 @@ it('ships additive settings defaults for the dark foundation token layer', funct
         ->and($tokenData)->toContain('public string $darkPageBackground')
         ->and($tokenData)->toContain('public string $darkPrimaryAction')
         ->and($tokenData)->toContain('public string $darkImageBorder');
+});
+
+it('ships additive settings defaults for the foundation typography token layer', function (): void {
+    $migration = file_get_contents(dirname(__DIR__, 2) . '/database/settings/2026_06_07_000002_add_foundation_theme_typography_tokens.php');
+    $migrationProvider = file_get_contents(dirname(__DIR__, 2) . '/src/Settings/FoundationThemeSettingsMigrationProvider.php');
+    $translations = file_get_contents(dirname(__DIR__, 2) . '/resources/lang/en/form.php');
+    $tokenData = file_get_contents(dirname(__DIR__, 2) . '/src/Data/FoundationThemeTokensData.php');
+
+    expect($migration)
+        ->toContain('foundation_theme.heading_scale')
+        ->toContain('$this->migrator->exists')
+        ->and($migrationProvider)->toContain('2026_06_07_000002_add_foundation_theme_typography_tokens')
+        ->and($translations)->toContain('heading_scale')
+        ->and($translations)->toContain('Expressive')
+        ->and($tokenData)->toContain('public string $headingSizeH1')
+        ->and($tokenData)->toContain('public string $headingLineHeight');
+});
+
+it('emits document direction and logical shell utilities for RTL support', function (): void {
+    $appShell = file_get_contents(dirname(__DIR__, 2) . '/resources/views/app.blade.php');
+    $themePage = file_get_contents(dirname(__DIR__, 2) . '/resources/views/theme/page.blade.php');
+    $navigation = file_get_contents(dirname(__DIR__, 2) . '/resources/views/theme/sections/navigation.blade.php');
+    $contentListing = file_get_contents(dirname(__DIR__, 2) . '/resources/views/theme/sections/content-listing.blade.php');
+
+    expect($appShell)
+        ->toContain('Frontend::language()')
+        ->toContain('$textDirection')
+        ->toContain('dir="{{ $textDirection }}"')
+        ->and($themePage)->toContain('focus:start-4')
+        ->and($navigation)->toContain('end-0')
+        ->and($navigation)->not->toContain('right-0')
+        ->and($contentListing)->toContain('text-start')
+        ->and($contentListing)->toContain('pe-4')
+        ->and($contentListing)->not->toContain('text-left')
+        ->and($contentListing)->not->toContain('pr-4');
 });

@@ -29,6 +29,10 @@ final class ResolveFoundationThemeTokensAction
         $linkColorActiveMeta = $theme instanceof Theme ? $theme->getMeta('link_color_active') : null;
         $dividerColorMeta = $theme instanceof Theme ? $theme->getMeta('divider_color') : null;
 
+        $headingScale = $settings instanceof FoundationThemeSettings
+            ? $settings->headingScaleCssValues()
+            : FoundationThemeSettings::headingScaleCssValuesFor(null);
+
         return new FoundationThemeTokensData(
             paletteColors: $this->paletteColors($theme)->values()->all(),
             brandColor: $this->safeColor($brandColorMeta, '#111827'),
@@ -70,6 +74,10 @@ final class ResolveFoundationThemeTokensAction
             widgetGap: $settings instanceof FoundationThemeSettings
                 ? $settings->widgetGapCssValue()
                 : FoundationThemeSettings::widgetGapCssValueFor(null),
+            headingSizeH1: $headingScale['h1'],
+            headingSizeH2: $headingScale['h2'],
+            headingSizeH3: $headingScale['h3'],
+            headingLineHeight: $headingScale['lineHeight'],
         );
     }
 

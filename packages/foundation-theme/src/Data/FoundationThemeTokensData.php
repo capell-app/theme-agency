@@ -44,5 +44,9 @@ final readonly class FoundationThemeTokensData
         public string $imageRadius,
         public string $sectionSpacing,
         public string $widgetGap,
+        public string $headingSizeH1,
+        public string $headingSizeH2,
+        public string $headingSizeH3,
+        public string $headingLineHeight,
     ) {}
 }

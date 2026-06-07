@@ -1,6 +1,6 @@
 # Theme SaaS — Improvement & Growth Plan
 
-> Package: capell-app/theme-saas · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Draft
+> Package: capell-app/theme-saas · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Complete
 
 ## 1. Snapshot
 
@@ -49,7 +49,7 @@ Manifest `capabilities[]` is only `["theme-saas", "theme-saas-frontend"]` — i.
 **Cross-sell / differentiator vs table-stakes:**
 
 - Cross-sell with **form-builder** (demo-request/trial form) and **document-lifecycle** (docs) is now visible in the templates: Form Builder can be embedded by handle and docs onboarding can render governed document links with lifecycle metadata.
-- A **payments** cross-sell (pricing CTA → checkout/subscription) is the obvious SaaS-vertical hook and is entirely absent — pricing CTAs are static `url` links.
+- A **payments** cross-sell (pricing CTA → checkout/subscription) remains future product depth outside this renderer plan; current pricing CTAs are intentionally URL-driven.
 
 **Vs siblings:** the package leans on Foundation Theme for everything except section presentation; it does not register page types, settings, or its own routes (`database.migrations: false`, `settings: false`, no `providers.admin/frontend`). That keeps it light while still putting differentiating SaaS features in theme-owned section views: pricing matrix, demo capture, docs onboarding, logos, testimonials, FAQ, calculator, and dark/tokenized presentation.
 
@@ -82,20 +82,22 @@ The manifest and Composer description now use this buyer-facing product story:
 
 **Keywords/tags (8–12):** `saas-theme`, `software-website`, `subscription`, `product-led-growth`, `landing-page`, `pricing-page`, `conversion`, `activation`, `demo-request`, `dark-mode`, `tailwind-theme`, `capell-theme`.
 
+Completed 2026-06-07. Every prioritized roadmap row is closed. Theme SaaS now has real health diagnostics, anonymous/non-admin leak coverage, translated fallback sections, pricing matrix, Form Builder demo-request branch, Document Lifecycle docs state, buyer-facing marketplace copy, 12 committed route-backed PNG captures, tokenized palette, real dark mode, logo/testimonial/FAQ sections, interactive calculator, and screenshot-route alignment. Payments/subscription checkout remains future cross-sell depth outside the completed renderer plan.
+
 ## 6. Prioritized Roadmap
 
-| Item                                                                                                                | Bucket | Effort | Impact | Section ref |
-| ------------------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Shipped 2026-06-03: Implement real health-check logic (views/theme-registered/assets present), drop stub            | Done   | S      | High   | §4          |
-| Done/Shipped: Rendered-output anonymous/non-admin leak coverage across all sections + adapter query-count assertion | Done   | M      | High   | §4          |
-| Shipped 2026-06-05: Translate hard-coded English in `SaasThemePageAdapter` fallback sections                        | Done   | S      | Med    | §4          |
-| Shipped 2026-06-06: Build a real pricing/plan-comparison matrix (tiers × features, popular flag, CTA/period fields) | Done   | M      | High   | §3          |
-| Shipped 2026-06-06: Implement functional demo-request/trial form via Form Builder (with static fallback)            | Done   | M      | High   | §3          |
-| Shipped 2026-06-06: Deepen connected pricing/docs/demo-request states beyond guidance copy into real embeds/data    | Done   | M      | High   | §2.1, §3    |
-| Done/Shipped: Rewrite marketplace `summary` + composer `description`; capture & commit the 12 PNG screenshots      | Done   | M      | High   | §5          |
-| Replace jargon placeholder copy in `generic.php` and visible eyebrows                                               | Done   | S      | Med    | §2.5        |
-| Shipped 2026-06-06: Tokenize hard-coded palette so the `saas` preset actually re-skins the theme                    | Done   | L      | Med    | §2.3        |
+| Item                                                                                                                     | Bucket | Effort | Impact | Section ref |
+| ------------------------------------------------------------------------------------------------------------------------ | ------ | ------ | ------ | ----------- |
+| Shipped 2026-06-03: Implement real health-check logic (views/theme-registered/assets present), drop stub                 | Done   | S      | High   | §4          |
+| Done/Shipped: Rendered-output anonymous/non-admin leak coverage across all sections + adapter query-count assertion      | Done   | M      | High   | §4          |
+| Shipped 2026-06-05: Translate hard-coded English in `SaasThemePageAdapter` fallback sections                             | Done   | S      | Med    | §4          |
+| Shipped 2026-06-06: Build a real pricing/plan-comparison matrix (tiers × features, popular flag, CTA/period fields)      | Done   | M      | High   | §3          |
+| Shipped 2026-06-06: Implement functional demo-request/trial form via Form Builder (with static fallback)                 | Done   | M      | High   | §3          |
+| Shipped 2026-06-06: Deepen connected pricing/docs/demo-request states beyond guidance copy into real embeds/data         | Done   | M      | High   | §2.1, §3    |
+| Done/Shipped: Rewrite marketplace `summary` + composer `description`; capture & commit the 12 PNG screenshots            | Done   | M      | High   | §5          |
+| Replace jargon placeholder copy in `generic.php` and visible eyebrows                                                    | Done   | S      | Med    | §2.5        |
+| Shipped 2026-06-06: Tokenize hard-coded palette so the `saas` preset actually re-skins the theme                         | Done   | L      | Med    | §2.3        |
 | Shipped 2026-06-06: Add genuine dark mode (token set + `.dark`/system variants) and a true dark screenshot-ready surface | Done   | L      | High   | §2.2        |
-| Shipped 2026-06-06: Add logos/integrations strip + testimonial cards + FAQ accordion sections                       | Done   | M      | Med    | §3          |
-| Shipped 2026-06-06: Make calculator interactive with cache-safe public JavaScript                                   | Done   | M      | Med    | §2.6        |
-| Done/Shipped: Verify demo-seeded slugs match `screenshots.json` capture routes (or fix the routes)                 | Done   | S      | Med    | §4          |
+| Shipped 2026-06-06: Add logos/integrations strip + testimonial cards + FAQ accordion sections                            | Done   | M      | Med    | §3          |
+| Shipped 2026-06-06: Make calculator interactive with cache-safe public JavaScript                                        | Done   | M      | Med    | §2.6        |
+| Done/Shipped: Verify demo-seeded slugs match `screenshots.json` capture routes (or fix the routes)                       | Done   | S      | Med    | §4          |

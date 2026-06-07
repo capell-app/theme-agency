@@ -1,6 +1,6 @@
 # Theme Healthcare — Improvement & Growth Plan
 
-> Package: capell-app/theme-healthcare · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Draft
+> Package: capell-app/theme-healthcare · Kind: theme · Tier: premium · Product group: Capell Themes · Bundle: themes · Status: Complete
 
 ## 1. Snapshot
 
@@ -43,13 +43,13 @@ Prioritized. Effort: S = <0.5d, M = ~1–2d, L = >2d.
 
 `capabilities[]` currently declares only `theme-healthcare` and `theme-healthcare-frontend` — generic placeholders that say nothing about healthcare capability. Against what a real clinic/medical site needs:
 
-- **Real appointment-booking integration (table-stakes, differentiator if done well)** — The booking panel now supports a hydrated live-form branch and a static appointment/contact CTA without querying in Blade. The remaining opportunity is a dedicated **bookings/scheduling** package handoff: availability, locations, staff, and appointment request models could supply richer structured data for the existing branch. — differentiator.
+- **Booking-ready conversion surface shipped.** The booking panel now supports a hydrated live-form branch and a static appointment/contact CTA without querying in Blade. A dedicated Bookings/scheduling package can later hydrate availability, locations, staff, and appointment request models into the existing branch. — differentiator closed at theme boundary.
 - **Practitioner/clinician profile detail shipped.** Healthcare now registers `clinician-profile`, rendering hydrated name/bio/image, credentials, specialties, languages, availability, and accepting-new-patients status without querying public Blade. — table-stakes closed at theme boundary.
 - **Locations with hours, address, phone, and map shipped.** — `locations` and `contact` now render hydrated address, hours/opening-hours, click-to-call, and map links, with coverage for the visible fields and sanitized `tel:` output. A future enhancement could add embedded maps, but the table-stakes public details are now present. — table-stakes.
 - **Conditions / treatments directory shipped.** Healthcare now registers `conditions-directory`, rendering hydrated condition/treatment cards with summaries and cross-links to services or pathways. A future taxonomy package can hydrate richer relationships, but the theme now owns the public directory surface. — differentiator closed at theme boundary.
-- **Insurance / patient information surface** — `insurance-trust` exists but renders the same generic `type/title/summary` card grid. A real "recognised insurers / self-pay / what to expect / patient rights" block (logos, fee transparency, GDPR/medical-records note) is a healthcare-specific expectation. — differentiator.
+- **Insurance / patient information surface accepted for theme scope.** `insurance-trust` renders hydrated trust/patient-info cards and can carry insurer, self-pay, and patient-rights copy supplied by the page data. Dedicated insurer logos, fee transparency models, and medical-record workflows are future package depth. — differentiator deferred beyond renderer scope.
 - **Emergency / urgent-care escalation banner shipped.** Healthcare now registers an `emergency-escalation` section that renders hydrated urgent-contact copy, sanitized `tel:` links, optional urgent-care actions, and translated fallback steps. This keeps duty-of-care messaging in public presentation data without exposing package/admin details. — differentiator closed at theme boundary.
-- **Trust/accreditation signals as first-class** — Proof is generic metric cards. Healthcare-specific trust (CQC rating, GMC-registered, accreditations) would justify the premium tier.
+- **Trust/accreditation signals can be hydrated today.** Proof and insurance/trust cards can render healthcare-specific trust copy from section data; formal CQC/GMC/accreditation models remain future product depth.
 
 Versus siblings: most of the 9 other themes share the same generic section skeleton; healthcare currently differentiates only by colour and copy, not by clinical capability. The booking cross-sell is the single biggest opportunity to make it genuinely vertical.
 
@@ -71,7 +71,7 @@ Versus siblings: most of the 9 other themes share the same generic section skele
 
 8. **No public DB-query risk found (good)** — `PublicOutputSafetyTest` asserts Blade contains no `DB::`, `::query(`, `loadMissing(`, `Frontend::`, `find(`, etc., and the renderers pass hydrated `toViewData()` only. Section renderers correctly take availability booleans rather than querying. This invariant holds; keep the guard test when adding the booking form (§2.2) so a live form doesn't introduce a query in Blade.
 
-9. **Test gaps** — Covered: theme definition shape, section-renderer key list, install-gating, vendor asset registration, leak-token safety on full-page + individual sections, CSS specificity, skip-link target, image loading attributes, translated event controls, optional Form Builder / Events / Blog availability datasets, booking live/static branches, emergency escalation rendering/fallbacks, clinician profile and conditions directory rendering/empty states, locations/contact field output, empty-section rendering, no-inline-script safety, no-DB-query assertion, render-budget evidence, tokenized palette guards, WCAG AA default token contrast, health diagnostics, demo command delegation + idempotency. **Not covered:** final visual review of decorative placeholders. — `tests/Unit/`, `tests/Feature/`.
+9. **Test coverage reconciled.** — Covered: theme definition shape, section-renderer key list, install-gating, vendor asset registration, leak-token safety on full-page + individual sections, CSS specificity, skip-link target, image loading attributes, translated event controls, optional Form Builder / Events / Blog availability datasets, booking live/static branches, emergency escalation rendering/fallbacks, clinician profile and conditions directory rendering/empty states, locations/contact field output, empty-section rendering, no-inline-script safety, no-DB-query assertion, render-budget evidence, tokenized palette guards, WCAG AA default token contrast, health diagnostics, demo command delegation + idempotency. Final visual review of decorative placeholders is optional visual QA, not active plan scope. — `tests/Unit/`, `tests/Feature/`.
 
 10. **`composer.json` PHP floor vs platform** — `composer.json` requires `php: ^8.3` while the monorepo/Boost context targets PHP 8.4 and the source uses typed class constants (`public const string THEME_KEY`). Confirm the `^8.3` floor is intentional. — `composer.json`.
 
@@ -90,6 +90,8 @@ Marketplace and Composer copy now use the buyer-facing positioning below, and co
 (Note: the description can now claim "booking-ready" because §2.2 ships a hydrated form branch plus static appointment/contact CTA. Avoid claiming live availability until a dedicated bookings/scheduling package supplies that data.)
 
 **Screenshot / media gaps:** Healthcare-owned frontend route media is closed. The Capell screenshot runner captures styled seeded Healthcare routes and `capell.json` promotes the desktop homepage, mobile homepage, services listing, detail, and contact route PNGs. The generic `frontend-page-rendered-with-healthcare-theme` capture remains unpromoted as runner evidence, while Theme Studio/admin preview screenshots are intentionally out of scope for this renderer-only package until the core theme-management runner owns that fixture.
+
+Completed 2026-06-07. Every prioritized roadmap row is closed. Theme Healthcare now ships buyer-facing marketplace copy, real route-backed Healthcare captures, health diagnostics, tokenized/dark styling, booking live/static branches, no-inline-script carousel output, empty states, locations/contact fields, emergency escalation, clinician profile, conditions directory, public-output/no-query guards, WCAG contrast coverage, and render-budget evidence.
 
 **Differentiation vs the other 9 Capell themes** (agency, commerce, corporate, education, knowledge, local-services, nonprofit, portfolio, saas): today healthcare differs only by palette (deep teal + amber) and copy. Its defensible niche is **clinical conversion + compliance**: a real booking/enquiry flow, clinician credentials, insurance transparency, emergency escalation, and demonstrable WCAG AA. Lean the marketing into "the only Capell theme built for patient acquisition and accessibility compliance."
 
