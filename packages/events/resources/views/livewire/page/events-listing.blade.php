@@ -8,8 +8,14 @@
             @endif
 
             <time datetime="{{ $occurrence->isoStartsAt }}">
-                {{ $occurrence->displayStartsAt }}
+                {{ $occurrence->displayStartsAt }} {{ $occurrence->eventTimezone }}
             </time>
+
+            @if ($occurrence->viewerDisplayStartsAt && $occurrence->viewerTimezone !== $occurrence->eventTimezone)
+                <time datetime="{{ $occurrence->isoStartsAt }}">
+                    {{ __('capell-events::generic.your_time') }}: {{ $occurrence->viewerDisplayStartsAt }} {{ $occurrence->viewerTimezone }}
+                </time>
+            @endif
 
             @if ($occurrence->venueName)
                 <span>{{ $occurrence->venueName }}</span>

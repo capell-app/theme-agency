@@ -8,6 +8,7 @@ All notable changes to `capell-app/events` will be documented in this file.
 - Switched public event listing/calendar views to hydrated view data and separated the public calendar label from the admin calendar label.
 - Added listing-page scoped `.ics` feeds using page metadata filters for venues and events.
 - Added configurable multi-reminder notification cadence with per-event opt-out.
+- Added event-time/viewer-time display data for public listing and calendar surfaces.
 
 ### 2026-06-04
 

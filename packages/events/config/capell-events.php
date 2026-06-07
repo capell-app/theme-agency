@@ -10,4 +10,7 @@ return [
     'notifications' => [
         'reminder_offsets_minutes' => [1440],
     ],
+    'display' => [
+        'default_timezone' => env('CAPELL_EVENTS_DEFAULT_TIMEZONE', 'UTC'),
+    ],
 ];

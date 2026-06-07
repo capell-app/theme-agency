@@ -33,4 +33,5 @@ return [
         'registration_description' => ':quantity registered for :date.',
     ],
     'upcoming_occurrences' => 'Upcoming occurrences',
+    'your_time' => 'Your time',
 ];

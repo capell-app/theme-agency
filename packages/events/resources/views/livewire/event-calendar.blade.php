@@ -14,7 +14,7 @@
     <div role="grid" aria-label="{{ __('capell-events::generic.event_calendar') }}">
         @foreach ($weeks as $week)
             <div role="row">
-                @foreach ($week as $day)
+                @foreach ($week->days as $day)
                     <section role="gridcell" aria-label="{{ $day->format('j F Y') }}">
                         <time datetime="{{ $day->toDateString() }}">{{ $day->day }}</time>
 
@@ -26,7 +26,15 @@
                                     <span>{{ $occurrence->title }}</span>
                                 @endif
 
-                                <time datetime="{{ $occurrence->isoStartsAt }}">{{ $occurrence->displayStartsAt }}</time>
+                                <time datetime="{{ $occurrence->isoStartsAt }}">
+                                    {{ $occurrence->displayStartsAt }} {{ $occurrence->eventTimezone }}
+                                </time>
+
+                                @if ($occurrence->viewerDisplayStartsAt && $occurrence->viewerTimezone !== $occurrence->eventTimezone)
+                                    <time datetime="{{ $occurrence->isoStartsAt }}">
+                                        {{ __('capell-events::generic.your_time') }}: {{ $occurrence->viewerDisplayStartsAt }} {{ $occurrence->viewerTimezone }}
+                                    </time>
+                                @endif
                             </article>
                         @endforeach
                     </section>
