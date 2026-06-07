@@ -1,14 +1,19 @@
 <div class="capell-page-events-listing">
     @foreach ($results ?? [] as $occurrence)
         <article>
-            <h2>
-                <a href="{{ $occurrence->occurrenceUrl() }}">
-                    {{ $occurrence->event->translation?->title ?? $occurrence->event->name }}
-                </a>
-            </h2>
-            <time datetime="{{ $occurrence->starts_at->toIso8601String() }}">
-                {{ $occurrence->starts_at->setTimezone($occurrence->timezone)->format('j F Y H:i') }}
+            @if ($occurrence->url)
+                <a href="{{ $occurrence->url }}">{{ $occurrence->title }}</a>
+            @else
+                <span>{{ $occurrence->title }}</span>
+            @endif
+
+            <time datetime="{{ $occurrence->isoStartsAt }}">
+                {{ $occurrence->displayStartsAt }}
             </time>
+
+            @if ($occurrence->venueName)
+                <span>{{ $occurrence->venueName }}</span>
+            @endif
         </article>
     @endforeach
 </div>

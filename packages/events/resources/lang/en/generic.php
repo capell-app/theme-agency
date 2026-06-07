@@ -5,6 +5,9 @@ declare(strict_types=1);
 return [
     'admin_calendar' => 'Event calendar',
     'admin_calendar_subheading' => 'Event calendar shows upcoming event occurrences.',
+    'event_calendar' => 'Public event calendar',
+    'previous_month' => 'Previous month',
+    'next_month' => 'Next month',
     'event' => 'Event',
     'event_occurrences' => 'Event occurrences',
     'event_registrations' => 'Event registrations',

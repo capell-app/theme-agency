@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Capell\Events\Livewire;
 
 use Capell\Core\Models\Site;
+use Capell\Events\Actions\BuildEventOccurrenceViewDataAction;
 use Capell\Events\Actions\QueryPublicEventOccurrencesAction;
+use Capell\Events\Data\EventOccurrenceViewData;
 use Capell\Events\Models\EventOccurrence;
 use Capell\Events\Support\Calendar\CalendarMonth;
 use Capell\Frontend\Facades\Frontend;
@@ -37,7 +39,9 @@ class EventCalendar extends Component
     public function render(): mixed
     {
         $month = $this->calendarMonth();
-        $occurrences = QueryPublicEventOccurrencesAction::run($this->site(), $month->startOfMonth()->startOfWeek(), $month->endOfMonth()->endOfWeek());
+        $occurrences = QueryPublicEventOccurrencesAction::run($this->site(), $month->startOfMonth()->startOfWeek(), $month->endOfMonth()->endOfWeek())
+            ->map(fn (EventOccurrence $occurrence): EventOccurrenceViewData => BuildEventOccurrenceViewDataAction::run($occurrence))
+            ->values();
 
         return view('capell-events::livewire.event-calendar', [
             'monthDate' => $month,

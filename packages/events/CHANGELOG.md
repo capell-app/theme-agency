@@ -5,6 +5,7 @@ All notable changes to `capell-app/events` will be documented in this file.
 ## Unreleased
 
 - Added configurable recurrence sync window bounds and DST-crossing recurrence coverage.
+- Switched public event listing/calendar views to hydrated view data and separated the public calendar label from the admin calendar label.
 
 ### 2026-06-04
 

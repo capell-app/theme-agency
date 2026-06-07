@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Capell\Events\Livewire\Page;
 
 use Capell\Core\Models\Site;
+use Capell\Events\Actions\BuildEventOccurrenceViewDataAction;
 use Capell\Events\Actions\QueryPublicEventOccurrencesAction;
+use Capell\Events\Data\EventOccurrenceViewData;
+use Capell\Events\Models\EventOccurrence;
 use Capell\Frontend\Facades\Frontend;
 use Capell\Frontend\Livewire\Page\AbstractPage;
 use Carbon\CarbonImmutable;
@@ -27,6 +30,8 @@ class EventsListingPage extends AbstractPage
             $now->subDay(),
             $now->addYear(),
             (int) (Frontend::page()->meta['limit'] ?? config('capell-frontend.pagination_limit', 12)),
-        );
+        )
+            ->map(fn (EventOccurrence $occurrence): EventOccurrenceViewData => BuildEventOccurrenceViewDataAction::run($occurrence))
+            ->values();
     }
 }
