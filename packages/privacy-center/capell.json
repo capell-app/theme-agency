@@ -13,7 +13,7 @@
         "bundle": "operations"
     },
     "namespace": "Capell\\PrivacyCenter",
-    "surfaces": ["admin", "console", "public"],
+    "surfaces": ["admin", "console", "frontend"],
     "dependencies": {
         "requires": ["capell-app/admin", "capell-app/core"],
         "supports": [

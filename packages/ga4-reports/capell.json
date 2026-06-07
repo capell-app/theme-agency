@@ -49,7 +49,20 @@
             "cacheable": true,
             "variesBy": ["property_id", "date_range", "limit"],
             "sensitiveOutput": false,
-            "invalidationSources": ["scheduled_sync", "manual_sync", "local_metric_persistence"],
+            "invalidationSources": [
+                {
+                    "model": "Capell\\GA4Reports\\Models\\GA4ReportsDailyMetric",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\GA4Reports\\Models\\GA4ReportsPageMetric",
+                    "events": ["created", "updated", "deleted"]
+                },
+                {
+                    "model": "Capell\\GA4Reports\\Models\\GA4ReportsSyncRun",
+                    "events": ["created", "updated", "deleted"]
+                }
+            ],
             "queueInvalidation": false
         }
     },
