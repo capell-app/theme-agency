@@ -47,6 +47,10 @@ it('defines the commerce premium renderer contract', function (): void {
             'catalog',
             'lookbook',
             'promotion',
+            'campaign',
+            'search',
+            'store-event',
+            'newsletter',
             'buying-guide',
             'proof',
             'blog-teaser',
@@ -81,6 +85,10 @@ it('declares renderers for every commerce section', function (): void {
         'catalog',
         'lookbook',
         'promotion',
+        'campaign',
+        'search',
+        'store-event',
+        'newsletter',
         'buying-guide',
         'proof',
         'blog-teaser',
@@ -528,6 +536,119 @@ it('renders commerce cart, promotion countdown, and review primitives', function
         ->toContain('3')
         ->not->toContain('capell-app/theme-commerce');
 });
+
+it('renders advertised commerce search event newsletter and campaign layouts', function (): void {
+    View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(CommerceThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    $provider = new CommerceThemeServiceProvider($this->app);
+    $provider->boot($registry);
+
+    $searchRenderer = $registry->sectionRenderer('commerce', 'search');
+    $eventRenderer = $registry->sectionRenderer('commerce', 'store-event');
+    $newsletterRenderer = $registry->sectionRenderer('commerce', 'newsletter');
+    $campaignRenderer = $registry->sectionRenderer('commerce', 'campaign');
+
+    assert($searchRenderer instanceof SectionRenderer);
+    assert($eventRenderer instanceof SectionRenderer);
+    assert($newsletterRenderer instanceof SectionRenderer);
+    assert($campaignRenderer instanceof SectionRenderer);
+
+    $searchHtml = $searchRenderer->render(commerceThemeSection('search', [
+        'heading' => 'Search the range',
+        'summary' => 'Curated search result cards.',
+        'items' => [
+            [
+                'title' => 'Waxed canvas field tote',
+                'summary' => 'Repairable carry-all.',
+                'type' => 'Product',
+                'price' => '$148',
+                'image' => '/images/tote.jpg',
+                'imageAlt' => 'Waxed canvas tote',
+                'url' => '/products/tote',
+            ],
+        ],
+    ]));
+
+    $eventHtml = $eventRenderer->render(commerceThemeSection('store-event', [
+        'heading' => 'Launch weekend',
+        'summary' => 'In-store buying event.',
+        'items' => [
+            [
+                'title' => 'Material care workshop',
+                'date' => '12 Jun',
+                'location' => 'London showroom',
+                'summary' => 'Learn how to care for waxed canvas.',
+                'url' => '/events/material-care',
+            ],
+        ],
+    ]));
+
+    $newsletterHtml = $newsletterRenderer->render(commerceThemeSection('newsletter', [
+        'heading' => 'Get buying notes',
+        'summary' => 'Range drops and material guides.',
+        'formAction' => '/newsletter',
+        'buttonLabel' => 'Subscribe',
+    ]));
+
+    $campaignHtml = $campaignRenderer->render(commerceThemeSection('campaign', [
+        'heading' => 'Field kit launch',
+        'summary' => 'Segmented launch campaign.',
+        'items' => [
+            [
+                'phase' => 'Early access',
+                'title' => 'Members first',
+                'summary' => 'Early access to the full kit.',
+                'code' => 'FIELD20',
+            ],
+        ],
+    ]));
+
+    expect($searchHtml)
+        ->toContain('Search')
+        ->toContain('Waxed canvas field tote')
+        ->toContain('src="/images/tote.jpg"')
+        ->toContain('loading="lazy"')
+        ->not->toContain('capell-app/theme-commerce')
+        ->and($eventHtml)->toContain('Store event')
+        ->and($eventHtml)->toContain('Material care workshop')
+        ->and($eventHtml)->toContain('London showroom')
+        ->and($eventHtml)->toContain('href="/events/material-care"')
+        ->and($newsletterHtml)->toContain('Newsletter')
+        ->and($newsletterHtml)->toContain('action="/newsletter"')
+        ->and($newsletterHtml)->toContain('Subscribe')
+        ->and($campaignHtml)->toContain('Campaign')
+        ->and($campaignHtml)->toContain('Members first')
+        ->and($campaignHtml)->toContain('FIELD20')
+        ->and($searchHtml . $eventHtml . $newsletterHtml . $campaignHtml)->not->toContain('model_id')
+        ->and($searchHtml . $eventHtml . $newsletterHtml . $campaignHtml)->not->toContain('field_path');
+});
+
+it('renders empty states for advertised commerce layouts', function (string $view, string $expectedTitle): void {
+    View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
+    resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');
+
+    $html = view("capell-theme-commerce::sections.{$view}", [
+        'section' => (object) [
+            'heading' => 'Empty layout',
+            'summary' => null,
+            'items' => [],
+        ],
+    ])->render();
+
+    expect($html)
+        ->toContain($expectedTitle)
+        ->not->toContain('capell-app/theme-commerce')
+        ->not->toContain('model_id')
+        ->not->toContain('field_path');
+})->with([
+    'search' => ['search', 'Add search results'],
+    'store-event' => ['store-event', 'Add store events'],
+    'campaign' => ['campaign', 'Add campaign content'],
+]);
 
 it('renders core commerce sections directly', function (string $view, object $section, string $expectedMarkup): void {
     View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
