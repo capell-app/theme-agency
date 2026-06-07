@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Capell\PublicActions\Actions\ReplayPublicActionDispatchAttemptAction;
 use Capell\PublicActions\Enums\PublicActionDispatchStatus;
 use Capell\PublicActions\Enums\PublicActionStatus;
 use Capell\PublicActions\Enums\PublicActionSubmissionStatus;
@@ -390,6 +391,39 @@ it('prunes submissions older than the configured retention window', function ():
 
     expect(PublicActionSubmission::query()->pluck('id')->all())->toBe([(int) $recentSubmission->getKey()])
         ->and(PublicActionDispatchAttempt::query()->count())->toBe(1);
+});
+
+it('replays failed dispatch attempts manually', function (): void {
+    Http::fake([
+        'https://hooks.example.test/replay' => Http::response('', 204),
+    ]);
+
+    $action = PublicAction::factory()->create();
+    $destination = PublicActionDestination::factory()->for($action, 'action')->create([
+        'endpoint_url' => 'https://hooks.example.test/replay',
+    ]);
+    $submission = PublicActionSubmission::factory()->for($action, 'action')->create();
+    $failedAttempt = PublicActionDispatchAttempt::factory()
+        ->for($submission, 'submission')
+        ->for($destination, 'destination')
+        ->create([
+            'status' => PublicActionDispatchStatus::Failed,
+        ]);
+
+    $result = ReplayPublicActionDispatchAttemptAction::run($failedAttempt);
+
+    expect($result->success)->toBeTrue()
+        ->and(PublicActionDispatchAttempt::query()->count())->toBe(2)
+        ->and(PublicActionDispatchAttempt::query()->latest('id')->first()?->status)->toBe(PublicActionDispatchStatus::Succeeded);
+});
+
+it('does not replay successful dispatch attempts', function (): void {
+    $attempt = PublicActionDispatchAttempt::factory()->create([
+        'status' => PublicActionDispatchStatus::Succeeded,
+    ]);
+
+    expect(fn (): mixed => ReplayPublicActionDispatchAttemptAction::run($attempt))
+        ->toThrow(RuntimeException::class);
 });
 
 it('marks submissions failed when no handler is registered for the action', function (): void {

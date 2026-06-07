@@ -7,11 +7,14 @@ namespace Capell\PublicActions\Filament\Resources\DispatchAttempts;
 use BackedEnum;
 use Capell\Admin\Support\SiteScope;
 use Capell\Core\Facades\CapellCore;
+use Capell\PublicActions\Actions\ReplayPublicActionDispatchAttemptAction;
 use Capell\PublicActions\Enums\PublicActionDispatchStatus;
 use Capell\PublicActions\Filament\Resources\Concerns\PublicActionFilamentOptions;
 use Capell\PublicActions\Filament\Resources\DispatchAttempts\Pages\ListPublicActionDispatchAttempts;
 use Capell\PublicActions\Models\PublicActionDispatchAttempt;
 use Capell\PublicActions\Providers\PublicActionsServiceProvider;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -52,6 +55,28 @@ final class PublicActionDispatchAttemptResource extends Resource
                 SelectFilter::make('status')
                     ->label(__('capell-public-actions::filament.fields.status'))
                     ->options(self::enumOptions(PublicActionDispatchStatus::class)),
+            ])
+            ->recordActions([
+                Action::make('replay')
+                    ->label(__('capell-public-actions::filament.actions.replay'))
+                    ->icon(Heroicon::ArrowPath)
+                    ->authorize('update')
+                    ->visible(fn (PublicActionDispatchAttempt $record): bool => in_array($record->status, [
+                        PublicActionDispatchStatus::Pending,
+                        PublicActionDispatchStatus::Retryable,
+                        PublicActionDispatchStatus::Failed,
+                    ], true))
+                    ->requiresConfirmation()
+                    ->action(function (PublicActionDispatchAttempt $record): void {
+                        $result = ReplayPublicActionDispatchAttemptAction::run($record);
+                        $notification = Notification::make('public-actions-dispatch-replayed')
+                            ->title($result->success
+                                ? __('capell-public-actions::filament.notifications.dispatch_replayed_title')
+                                : __('capell-public-actions::filament.notifications.dispatch_replay_failed_title'))
+                            ->body($result->responseSummary ?? $result->errorMessage);
+
+                        ($result->success ? $notification->success() : $notification->danger())->send();
+                    }),
             ]);
     }
 

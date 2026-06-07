@@ -51,6 +51,7 @@
         "automation-webhooks",
         "durable-dispatch-fanout",
         "configurable-rate-limits",
+        "manual-dispatch-replay",
         "submission-retention-pruning",
         "public-form",
         "public-actions",
