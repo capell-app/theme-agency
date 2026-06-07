@@ -30,6 +30,10 @@
                         <img
                             src="{{ $item['image'] ?? $item['imageUrl'] }}"
                             alt=""
+                            width="800"
+                            height="600"
+                            loading="lazy"
+                            decoding="async"
                             class="aspect-[4/3] w-full rounded-[1.1rem] object-cover transition duration-300 group-hover:scale-[1.025]"
                         />
                     @else

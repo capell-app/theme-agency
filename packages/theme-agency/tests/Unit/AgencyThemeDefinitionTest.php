@@ -194,6 +194,55 @@ it('renders the agency hero with a campaign launch board fallback', function ():
         ->not->toContain('capell-app/theme-agency');
 });
 
+it('renders agency hero media with LCP image attributes', function (): void {
+    View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-agency::sections.hero', [
+        'section' => new HeroSectionData(
+            heading: 'Focused launch systems',
+            summary: 'Strategy, identity, and delivery for growing teams.',
+            mediaUrl: '/images/agency-hero.jpg',
+            mediaAlt: 'Studio launch wall',
+        ),
+    ])->render();
+
+    expect($html)
+        ->toContain('src="/images/agency-hero.jpg"')
+        ->toContain('alt="Studio launch wall"')
+        ->toContain('width="1200"')
+        ->toContain('height="900"')
+        ->toContain('loading="eager"')
+        ->toContain('decoding="async"')
+        ->toContain('fetchpriority="high"');
+});
+
+it('renders agency content listing images with lazy loading attributes', function (): void {
+    View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/lang');
+
+    $html = view('capell-theme-agency::sections.content-listing', [
+        'section' => new ContentListingSectionData(
+            heading: 'Selected work',
+            items: [
+                [
+                    'title' => 'Product launch',
+                    'summary' => 'A focused campaign.',
+                    'url' => '/work/product-launch',
+                    'image' => '/images/project.jpg',
+                ],
+            ],
+        ),
+    ])->render();
+
+    expect($html)
+        ->toContain('src="/images/project.jpg"')
+        ->toContain('width="800"')
+        ->toContain('height="600"')
+        ->toContain('loading="lazy"')
+        ->toContain('decoding="async"');
+});
+
 it('registers agency only when the theme package is installed', function (): void {
     CapellCore::clearPackages();
 
