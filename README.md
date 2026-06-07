@@ -155,6 +155,14 @@ Use broader checks before integration:
 ```bash
 composer test
 composer preflight
+composer preflight:all
+```
+
+Run coverage and mutation testing as explicit deep checks:
+
+```bash
+composer coverage
+composer test:mutate
 ```
 
 Do not run `php artisan` in this repository. Testbench provides the Laravel context for package tests.
