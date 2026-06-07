@@ -22,6 +22,16 @@
             class="theme-carousel relative mt-8"
             data-carousel="proof"
         >
+            <p
+                class="sr-only"
+                aria-live="polite"
+                data-carousel-status
+                data-carousel-scrollable-label="{{ __('capell-theme-agency::generic.carousel_scrollable') }}"
+                data-carousel-static-label="{{ __('capell-theme-agency::generic.carousel_static') }}"
+            >
+                {{ __('capell-theme-agency::generic.carousel_static') }}
+            </p>
+
             <div
                 class="flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 md:grid md:grid-cols-3 [&::-webkit-scrollbar]:hidden"
                 data-carousel-track
@@ -58,54 +68,27 @@
             <button
                 type="button"
                 class="theme-carousel-button carousel-prev absolute top-1/2 left-2 hidden -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-2 text-sm font-semibold text-white shadow-md"
-                aria-label="Previous proof"
+                aria-label="{{ __('capell-theme-agency::generic.carousel_previous_proof') }}"
+                aria-disabled="true"
                 data-carousel-prev
             >
-                ‹
+                <span aria-hidden="true">←</span>
+                <span class="sr-only">
+                    {{ __('capell-theme-agency::generic.carousel_previous_proof') }}
+                </span>
             </button>
             <button
                 type="button"
                 class="theme-carousel-button carousel-next absolute top-1/2 right-2 hidden -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-2 text-sm font-semibold text-white shadow-md"
-                aria-label="Next proof"
+                aria-label="{{ __('capell-theme-agency::generic.carousel_next_proof') }}"
+                aria-disabled="true"
                 data-carousel-next
             >
-                ›
+                <span aria-hidden="true">→</span>
+                <span class="sr-only">
+                    {{ __('capell-theme-agency::generic.carousel_next_proof') }}
+                </span>
             </button>
         </div>
     </div>
 </section>
-
-<script>
-    document.querySelectorAll('[data-carousel="proof"]').forEach((carousel) => {
-        const track = carousel.querySelector('[data-carousel-track]')
-        const prev = carousel.querySelector('[data-carousel-prev]')
-        const next = carousel.querySelector('[data-carousel-next]')
-
-        if (!track || !prev || !next) {
-            return
-        }
-
-        const step = () => Math.max(260, Math.floor(track.clientWidth * 0.82))
-
-        const updateButtons = () => {
-            const canScroll = track.scrollWidth > track.clientWidth + 1
-            prev.classList.toggle('hidden', !canScroll || track.scrollLeft <= 2)
-            next.classList.toggle(
-                'hidden',
-                !canScroll ||
-                    track.scrollLeft >=
-                        track.scrollWidth - track.clientWidth - 2,
-            )
-        }
-
-        prev.addEventListener('click', () => {
-            track.scrollBy({ left: -step(), behavior: 'smooth' })
-        })
-        next.addEventListener('click', () => {
-            track.scrollBy({ left: step(), behavior: 'smooth' })
-        })
-        track.addEventListener('scroll', updateButtons, { passive: true })
-        window.addEventListener('resize', updateButtons)
-        updateButtons()
-    })
-</script>

@@ -61,10 +61,17 @@ it('publishes the declared preview image and registers css through the tailwind 
         ->pluck('value')
         ->all();
 
+    $packageBuildAssets = CapellCore::getVendorAssetsForType(VendorAssetEnum::BuildAsset)
+        ->filter(static fn (mixed $asset): bool => $asset->packageName === AgencyThemeServiceProvider::$packageName)
+        ->map(static fn (mixed $asset): string => $asset->path() . '/' . $asset->file())
+        ->all();
+
     expect($packageImports)->toContain(AgencyThemeServiceProvider::TAILWIND_IMPORT)
         ->and($packageSources)->toContain(AgencyThemeServiceProvider::TAILWIND_SOURCE)
+        ->and($packageBuildAssets)->toContain('vendor/capell-theme-agency/resources/js/theme-agency.js')
         ->and($packageImports)->not->toContain('vendor/capell/themes/agency.css')
-        ->and(file_exists(__DIR__ . '/../../' . AgencyThemeServiceProvider::TAILWIND_IMPORT))->toBeTrue();
+        ->and(file_exists(__DIR__ . '/../../' . AgencyThemeServiceProvider::TAILWIND_IMPORT))->toBeTrue()
+        ->and(file_exists(__DIR__ . '/../../resources/js/theme-agency.js'))->toBeTrue();
 });
 
 it('declares surface and foreground tokens for every agency preset', function (): void {
@@ -191,6 +198,7 @@ it('declares renderers for every included agency section', function (): void {
 
 it('renders proof headings readably inside the white proof panel', function (): void {
     View::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/views');
+    Lang::addNamespace('capell-theme-agency', __DIR__ . '/../../resources/lang');
 
     $html = view('capell-theme-agency::sections.proof', [
         'section' => new ProofSectionData(
@@ -202,7 +210,26 @@ it('renders proof headings readably inside the white proof panel', function (): 
 
     expect($html)
         ->toContain('Proof that the theme can carry real pages')
-        ->toContain('text-zinc-950');
+        ->toContain('text-zinc-950')
+        ->toContain('aria-live="polite"')
+        ->toContain('data-carousel-status')
+        ->toContain('Previous proof item')
+        ->toContain('Next proof item')
+        ->toContain('sr-only')
+        ->not->toContain('<script>')
+        ->not->toContain('‹')
+        ->not->toContain('›');
+});
+
+it('ships reduced-motion proof carousel behavior outside public Blade', function (): void {
+    $script = file_get_contents(__DIR__ . '/../../resources/js/theme-agency.js') ?: '';
+
+    expect($script)
+        ->toContain('prefers-reduced-motion: reduce')
+        ->toContain('aria-disabled')
+        ->toContain('data-carousel-status')
+        ->toContain('textContent')
+        ->toContain('scrollBy');
 });
 
 it('renders the agency hero with a campaign launch board fallback', function (): void {

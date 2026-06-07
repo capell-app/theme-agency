@@ -28,6 +28,10 @@ class AgencyThemeServiceProvider extends ServiceProvider
 
     public const string TAILWIND_SOURCE = 'resources/views/**/*.blade.php';
 
+    public const string BUILD_ASSET_PATH = 'vendor/capell-theme-agency';
+
+    public const string BUILD_ASSET_FILE = 'resources/js/theme-agency.js';
+
     public static string $packageName = 'capell-app/theme-agency';
 
     public static function definition(): ThemeDefinitionData
@@ -215,6 +219,14 @@ class AgencyThemeServiceProvider extends ServiceProvider
 
     private function registerVendorCssAssets(): void
     {
+        CapellCore::registerVendorAsset(
+            VendorAssetData::buildAsset(
+                path: self::BUILD_ASSET_PATH,
+                file: self::BUILD_ASSET_FILE,
+                packageName: self::$packageName,
+            ),
+        );
+
         CapellCore::registerVendorAsset(
             VendorAssetData::tailwindImport(self::TAILWIND_IMPORT, self::$packageName),
         );
