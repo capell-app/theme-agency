@@ -8,6 +8,7 @@ use Capell\Newsletter\Data\ConsentEvidenceData;
 use Capell\Newsletter\Enums\ConsentEventType;
 use Capell\Newsletter\Enums\PublicTokenType;
 use Capell\Newsletter\Enums\SubscriberStatus;
+use Capell\Newsletter\Events\SubscriberConfirmed;
 use Capell\Newsletter\Models\PublicToken;
 use Capell\Newsletter\Models\Subscriber;
 use Illuminate\Support\Facades\DB;
@@ -56,6 +57,8 @@ class ConfirmSubscriberAction
             $subscriber->refresh();
 
             SyncNewsletterSubscriberContactAction::run($subscriber);
+
+            SubscriberConfirmed::dispatch($subscriber);
 
             return $subscriber;
         });

@@ -8,6 +8,7 @@ use Capell\Newsletter\Data\ConsentEvidenceData;
 use Capell\Newsletter\Enums\ConsentEventType;
 use Capell\Newsletter\Enums\PublicTokenType;
 use Capell\Newsletter\Enums\SubscriberStatus;
+use Capell\Newsletter\Events\SubscriberUnsubscribed;
 use Capell\Newsletter\Models\PublicToken;
 use Capell\Newsletter\Models\Subscriber;
 use Illuminate\Support\Facades\DB;
@@ -55,6 +56,8 @@ class UnsubscribeSubscriberAction
             $subscriber->refresh();
 
             SyncNewsletterSubscriberContactAction::run($subscriber);
+
+            SubscriberUnsubscribed::dispatch($subscriber);
 
             return $subscriber;
         });
