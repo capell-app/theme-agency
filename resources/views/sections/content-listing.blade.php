@@ -30,11 +30,15 @@
                         <img
                             src="{{ $item['image'] ?? $item['imageUrl'] }}"
                             alt=""
+                            width="800"
+                            height="600"
+                            loading="lazy"
+                            decoding="async"
                             class="aspect-[4/3] w-full rounded-[1.1rem] object-cover transition duration-300 group-hover:scale-[1.025]"
                         />
                     @else
                         <div
-                            class="aspect-[4/3] rounded-[1.1rem] bg-gradient-to-br from-[var(--theme-primary)] via-fuchsia-500 to-[var(--theme-accent)] p-4"
+                            class="site-brand-gradient aspect-[4/3] rounded-[1.1rem] p-4"
                             aria-hidden="true"
                         >
                             <div

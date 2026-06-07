@@ -12,6 +12,7 @@ Expressive agency theme for Capell.
 
 - Provides expressive renderer views for studio, portfolio, and brand-led sites that need stronger visual storytelling.
 - Helps owners launch an agency-style Capell site faster by building on Foundation Theme and Layout Builder conventions.
+- Lets each Agency preset control the public shell surface, foreground, and brand gradient through Theme Studio tokens.
 - Gives developers a focused theme package to extend without changing the baseline Foundation Theme.
 
 ## Best Used With
@@ -57,6 +58,7 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - `capell.json` declares `themeKey: "agency"` and `extends: "capell-app/foundation-theme"`.
 - Uses Foundation Theme runtime data and standard section keys, while rendering its own page and section Blade views.
 - Ships Blade resources for the page wrapper and standard theme sections.
+- Defines six Agency presets, each with primary, accent, neutral, surface, and foreground tokens.
 - No migrations, config, routes, models, admin navigation, or package-owned settings are present.
 
 ## Code Map
@@ -94,7 +96,8 @@ Screenshots are generated from [docs/screenshots.json](docs/screenshots.json) du
 - Install Foundation Theme before using this renderer.
 - Install Layout Builder before running `capell:foundation-theme-setup`; Foundation Theme layout defaults need `blocks`.
 - Build frontend and Filament assets in demo apps. Foundation Theme frontend CSS needs the npm dependencies published by the theme stack.
-- Keep Theme Studio's active preset aligned with this theme (`signal`, `gallery`, or `atelier`). A preset from another theme will fail when Agency renders.
+- Keep Theme Studio's active preset aligned with this theme (`signal`, `gallery`, `atelier`, `zenith`, `northstar`, or `motion-studio`). A preset from another theme will fail when Agency renders.
+- Use Theme Studio surface and foreground tokens for page-level colour changes instead of editing the Agency page wrapper.
 - Public output must not expose package/theme identifiers. Token CSS filenames are intentionally opaque.
 - Do not install a Studio metapackage; this package installs independently.
 

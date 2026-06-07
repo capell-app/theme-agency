@@ -6,23 +6,30 @@
     "kind": "theme",
     "capellApiVersion": "^4.0",
     "version": "4.x-dev",
-    "description": "Theme Agency registers the agency theme key and expressive renderer views for studio, portfolio, and brand-led sites.",
+    "description": "Theme Agency turns a Capell site into a confident creative portfolio. It ships an expressive page system — full-bleed launch hero, animated proof wall, project showcase, and a conversion-focused brief CTA — built to make studio and agency work look like the work, not a template. Three presets (Signal, Gallery, Atelier) re-skin every section from energetic high-contrast to refined editorial neutrals, all driven by Theme Studio tokens with zero code. Built on Foundation Theme contracts, it stays fast, cache-aware, and safe for public output, so it drops into the standard Capell theme workflow.",
     "product": {
-        "group": "Capell Foundation",
-        "tier": "free",
-        "bundle": "foundation"
+        "group": "Capell Themes",
+        "tier": "premium",
+        "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\Agency",
-    "surfaces": ["frontend"],
+    "surfaces": [
+        "frontend"
+    ],
     "dependencies": {
-        "requires": ["capell-app/core", "capell-app/foundation-theme"],
+        "requires": [
+            "capell-app/core",
+            "capell-app/foundation-theme"
+        ],
         "supports": [],
         "conflicts": []
     },
     "providers": {
         "metadata": [],
         "install": [],
-        "runtime": ["Capell\\ThemeStudio\\Agency\\AgencyThemeServiceProvider"],
+        "runtime": [
+            "Capell\\ThemeStudio\\Agency\\AgencyThemeServiceProvider"
+        ],
         "admin": [],
         "frontend": []
     },
@@ -46,19 +53,31 @@
         "install": null,
         "setup": null,
         "demo": "capell:theme-agency-demo",
-        "demoParams": ["url", "languages", "sites"],
+        "demoParams": [
+            "url",
+            "languages",
+            "sites"
+        ],
         "doctor": null
     },
     "settings": [],
     "permissions": [],
-    "capabilities": ["theme-agency", "theme-agency-frontend"],
+    "capabilities": [
+        "theme-agency",
+        "theme-agency-frontend"
+    ],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": ["theme-agency"],
+        "cacheTags": [
+            "theme-agency"
+        ],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": ["site", "locale"],
+            "variesBy": [
+                "site",
+                "locale"
+            ],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -80,40 +99,29 @@
         "privateDocsRequested": true
     },
     "marketplace": {
-        "summary": "Creative campaign and studio theme screenshots from route-backed demo layouts.",
+        "summary": "A bold, motion-led theme for creative studios and marketing agencies — campaign hero, case-study proof, and a filterable work showcase, with three presets from high-contrast Signal to editorial Atelier.",
+        "description": "Theme Agency turns a Capell site into a confident creative portfolio. It ships an expressive page system — full-bleed launch hero, animated proof wall, project showcase, and a conversion-focused brief CTA — built to make studio and agency work look like the work, not a template. Three presets (Signal, Gallery, Atelier) re-skin every section from energetic high-contrast to refined editorial neutrals, all driven by Theme Studio tokens with zero code. Built on Foundation Theme contracts, it stays fast, cache-aware, and safe for public output, so it drops into the standard Capell theme workflow.",
         "screenshots": [
             {
                 "path": "docs/assets/marketplace/extension-card.jpg",
-                "alt": "Theme Agency extension preview image",
-                "caption": "Theme Agency extension preview"
+                "alt": "Theme Agency marketplace card.",
+                "caption": "Theme Agency premium theme card."
             },
             {
-                "path": "docs/assets/marketplace/agency-campaign-layout.svg",
-                "alt": "Theme Agency Campaign Layout image",
-                "caption": "Theme Agency Campaign Layout"
+                "path": "docs/screenshots/agency-homepage-layout.png",
+                "alt": "Agency theme homepage with bold campaign headline, dark gradient shell, and framed studio media.",
+                "caption": "Route-backed Agency homepage rendered through the package theme shell."
             },
             {
-                "path": "docs/assets/marketplace/agency-case-study-layout.svg",
-                "alt": "Theme Agency Case Study Layout image",
-                "caption": "Theme Agency Case Study Layout"
-            },
-            {
-                "path": "docs/assets/marketplace/agency-event-landing-layout.svg",
-                "alt": "Theme Agency Event Landing Layout image",
-                "caption": "Theme Agency Event Landing Layout"
-            },
-            {
-                "path": "docs/assets/marketplace/agency-homepage-layout.svg",
-                "alt": "Theme Agency Homepage Layout image",
-                "caption": "Theme Agency Homepage Layout"
-            },
-            {
-                "path": "docs/assets/marketplace/agency-insights-layout.svg",
-                "alt": "Theme Agency Insights Layout image",
-                "caption": "Theme Agency Insights Layout"
+                "path": "docs/screenshots/agency-lead-form-layout.png",
+                "alt": "Agency theme contact and lead-generation page with bold conversation copy and framed project media.",
+                "caption": "Agency lead-generation route captured from the seeded package demo."
             }
         ],
-        "categories": ["frontend", "themes"]
+        "categories": [
+            "frontend",
+            "themes"
+        ]
     },
     "extends": "capell-app/foundation-theme",
     "themeKey": "agency"

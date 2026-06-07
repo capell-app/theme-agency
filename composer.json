@@ -1,6 +1,6 @@
 {
     "name": "capell-app/theme-agency",
-    "description": "Expressive agency theme for Capell",
+    "description": "A bold, motion-led theme for creative studios and marketing agencies — campaign hero, case-study proof, and a filterable work showcase, with three presets from high-contrast Signal to editorial Atelier.",
     "type": "library",
     "license": "MIT",
     "require": {

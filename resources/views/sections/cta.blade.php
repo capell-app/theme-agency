@@ -1,6 +1,6 @@
 <section class="theme-cta px-6 py-20">
     <div
-        class="mx-auto grid max-w-7xl gap-8 rounded-[2rem] bg-gradient-to-br from-[var(--theme-primary)] via-fuchsia-500 to-[var(--theme-accent)] p-10 text-white lg:grid-cols-[0.85fr_1.15fr] lg:items-center"
+        class="site-brand-gradient mx-auto grid max-w-7xl gap-8 rounded-[2rem] p-10 text-white lg:grid-cols-[0.85fr_1.15fr] lg:items-center"
     >
         <div>
             <p

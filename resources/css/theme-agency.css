@@ -1,44 +1,177 @@
 @layer components {
-    .site-theme-shell {
-        background: #09090b;
-        color: #f8fafc;
+    .agency-shell {
+        --site-primary: var(--theme-primary, #ff5a7e);
+        --site-accent: var(--theme-accent, #3b82f6);
+        --site-surface: var(--theme-surface, #09090b);
+        --site-foreground: var(--theme-foreground, #f8fafc);
+        --site-muted: color-mix(
+            in srgb,
+            var(--site-foreground) 72%,
+            var(--site-surface)
+        );
+        --site-card-ink: #09090b;
+        --site-card-muted: #52525b;
+
+        background: var(--site-surface);
+        color: var(--site-foreground);
         font-family: var(--theme-body-font, Inter, system-ui, sans-serif);
     }
 
-    .site-theme-shell section {
+    .site-brand-gradient {
+        background: linear-gradient(
+            135deg,
+            var(--site-primary) 0%,
+            color-mix(in srgb, var(--site-primary) 42%, var(--site-accent)) 52%,
+            var(--site-accent) 100%
+        );
+    }
+
+    .agency-shell section {
         padding: clamp(4rem, 8vw, 8rem) 1.5rem;
     }
 
-    .site-theme-shell section > div {
+    .agency-shell section > div {
         max-width: 76rem;
         margin-inline: auto;
     }
 
-    .site-theme-shell h1,
-    .site-theme-shell h2 {
+    .agency-shell h1,
+    .agency-shell h2 {
         max-width: 12ch;
-        color: #fff;
         font-family: var(--theme-heading-font, inherit);
         font-size: clamp(3rem, 8vw, 6.5rem);
-        font-weight: 900;
-        line-height: 0.92;
+        font-weight: 850;
+        line-height: 1;
         letter-spacing: 0;
     }
 
-    .site-theme-shell p {
+    .agency-shell p {
         max-width: 42rem;
-        color: rgb(255 255 255 / 72%);
         font-size: 1.125rem;
         line-height: 1.8;
     }
 
-    .site-theme-shell a {
+    .agency-shell section:not(.theme-hero) h1,
+    .agency-shell section:not(.theme-hero) h2 {
+        color: var(--site-card-ink);
+    }
+
+    .agency-shell section:not(.theme-hero) p {
+        color: var(--site-card-muted);
+    }
+
+    .agency-shell a {
         color: inherit;
     }
 
+    .agency-shell .theme-navigation,
+    .agency-shell .theme-hero {
+        background:
+            radial-gradient(
+                circle at 72% 14%,
+                color-mix(in srgb, var(--site-accent) 26%, transparent),
+                transparent 34rem
+            ),
+            radial-gradient(
+                circle at 18% 24%,
+                color-mix(in srgb, var(--site-primary) 24%, transparent),
+                transparent 30rem
+            ),
+            #09090b;
+        color: #ffffff;
+    }
+
+    .agency-shell .theme-navigation > div {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        gap: 1.5rem;
+        max-width: 76rem;
+        margin-inline: auto;
+        padding: 1.25rem 1.5rem;
+    }
+
+    .agency-shell .theme-navigation a {
+        text-decoration: none;
+    }
+
+    .agency-shell .theme-navigation a:first-child {
+        font-size: 1.25rem;
+        font-weight: 900;
+    }
+
+    .agency-shell .theme-navigation a:last-child {
+        background: var(--site-primary);
+        border-radius: 999px;
+        color: #ffffff;
+        font-weight: 800;
+        padding: 0.65rem 1.2rem;
+    }
+
+    .agency-shell .theme-hero > div {
+        display: grid;
+        gap: clamp(2rem, 5vw, 4rem);
+        grid-template-columns: minmax(0, 0.9fr) minmax(22rem, 1.1fr);
+        max-width: 76rem;
+        padding-block: clamp(4rem, 8vw, 7rem);
+    }
+
+    .agency-shell .theme-hero h1 {
+        color: #ffffff;
+        max-width: 10ch;
+        text-shadow: 0 18px 60px rgba(0, 0, 0, 0.48);
+    }
+
+    .agency-shell .theme-hero p {
+        color: rgba(255, 255, 255, 0.82);
+    }
+
+    .agency-shell .theme-hero a {
+        border-radius: 999px;
+        display: inline-flex;
+        font-weight: 800;
+        justify-content: center;
+        margin-right: 0.5rem;
+        margin-top: 0.5rem;
+        min-width: 8.5rem;
+        padding: 0.85rem 1.25rem;
+        text-decoration: none;
+    }
+
+    .agency-shell .theme-hero a:first-child {
+        background: var(--site-primary);
+        color: #ffffff;
+    }
+
+    .agency-shell .theme-hero a:not(:first-child) {
+        border: 1px solid rgba(255, 255, 255, 0.26);
+        color: #ffffff;
+    }
+
+    .agency-shell .theme-hero img {
+        display: block;
+        min-height: 24rem;
+        object-fit: cover;
+        width: 100%;
+    }
+
+    .agency-shell .theme-hero [aria-hidden='true'] span,
+    .agency-shell .theme-hero .site-brand-gradient {
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+    }
+
+    .agency-shell .theme-hero .grid {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .agency-shell .theme-hero .grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
     .site-theme-skip-link {
-        background: #ffffff;
-        color: #09090b;
+        background: var(--theme-foreground, #ffffff);
+        color: var(--theme-surface, #09090b);
         font-weight: 800;
         left: 1rem;
         padding: 0.75rem 1rem;
@@ -52,18 +185,24 @@
         transform: translateY(0);
     }
 
-    .site-theme-shell img,
-    .site-theme-shell section div:empty {
+    .agency-shell img,
+    .agency-shell section div:empty {
         border-radius: 1.5rem;
     }
 
-    .site-theme-shell :is(.theme-features, .theme-content-listing) article h3,
-    .site-theme-shell .theme-content-listing a h3 {
-        color: #09090b;
+    .agency-shell :is(.theme-features, .theme-content-listing) article h3,
+    .agency-shell .theme-content-listing a h3 {
+        color: var(--site-card-ink);
     }
 
-    .site-theme-shell :is(.theme-features, .theme-content-listing) article p,
-    .site-theme-shell .theme-content-listing a p {
-        color: #52525b;
+    .agency-shell :is(.theme-features, .theme-content-listing) article p,
+    .agency-shell .theme-content-listing a p {
+        color: var(--site-card-muted);
+    }
+
+    @media (max-width: 900px) {
+        .agency-shell .theme-hero > div {
+            grid-template-columns: 1fr;
+        }
     }
 }

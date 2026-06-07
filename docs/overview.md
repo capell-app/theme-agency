@@ -1,12 +1,12 @@
 # Theme Agency
 
-Status: **Available, no schema impact** · Kind: **theme** · Tier: **free** · Bundle: **themes** · Contexts: **frontend** · Product group: **Capell Themes**
+Status: **Available, no schema impact** · Kind: **theme** · Tier: **premium** · Bundle: **themes** · Contexts: **frontend** · Product group: **Capell Themes**
 
 This page is the consolidated implementation overview for the Theme Agency package. It is extracted from the package README, service providers, migrations, config files, routes, resources, models, actions, and the shared Capell ERD notes where available.
 
 ## What This Package Adds
 
-Theme Agency is a standalone Capell theme package. It registers the `agency` theme key, extends Foundation Theme, and adds expressive renderer views for studio, portfolio, and brand-led sites. Treat it as a free/basic creative preset unless a future rewrite makes it the stronger studio sales theme and absorbs Portfolio.
+Theme Agency is a standalone premium Capell theme package. It registers the `agency` theme key, extends Foundation Theme, and adds expressive renderer views for studio, portfolio, and brand-led sites. Treat it as the expressive campaign-and-case-study theme while Portfolio owns the quieter creator lane.
 
 - Agency theme service provider.
 - Theme renderer/views for agency-style theme output.
@@ -20,6 +20,8 @@ Adds a renderer package that plugs into Foundation Theme rather than changing Ca
 - `capell.json` declares `themeKey: "agency"` and `extends: "capell-app/foundation-theme"`.
 - Uses Foundation Theme runtime data and standard section keys, while rendering its own page and section Blade views.
 - Ships Blade resources for the page wrapper and standard theme sections.
+- Six Agency presets provide primary, accent, neutral, surface, and foreground tokens, and the page shell reads those tokens at render time.
+- The public preview image publishes the committed marketplace card to `/vendor/capell/themes/agency.jpg`, while CSS resolves through the generated frontend Tailwind entrypoint fed by `resources/css/theme-agency.css`.
 - No migrations, config, routes, models, admin navigation, or package-owned settings are present.
 
 ## Operational Notes
@@ -36,10 +38,12 @@ Provides an agency-focused visual option for sites managed through the normal Th
 - This package does not own data.
 - It reads theme runtime data and core page content through Foundation Theme.
 
-## Screenshot Plan
+## Screenshot Coverage
+
+The committed Capell runner-backed gallery covers the full `docs/screenshots.json` contract:
 
 - Themes admin list showing the Agency theme record in the host `ThemeResource`.
-- Seeded frontend page at `/theme-agency-demo` rendering navigation, hero, features, proof, content listing, CTA, and footer.
+- Seeded frontend page at `/theme-agency-demo` rendering navigation, hero, features, proof, content listing, project showcase, case study, CTA, and footer.
 - Temporary signed `capell.admin.theme-preview` output for an authenticated administrator.
 
 ## Pitfalls
@@ -47,7 +51,8 @@ Provides an agency-focused visual option for sites managed through the normal Th
 - Install Foundation Theme before using this renderer.
 - Install Layout Builder before running `capell:foundation-theme-setup`; Foundation Theme layout defaults need the `blocks` table.
 - Build both frontend and Filament assets in demo apps. The frontend build needs Foundation Theme npm dependencies such as `swiper`, `tippy.js`, `@tailwindcss/typography`, `@awcodes/alpine-floating-ui`, and `@ryangjchandler/alpine-tooltip`.
-- Theme Studio settings must use an Agency preset such as `signal`, `gallery`, or `atelier`. A stale preset from another theme, such as `boardroom`, fails at render time.
+- Theme Studio settings must use an Agency preset such as `signal`, `gallery`, `atelier`, `zenith`, `northstar`, or `motion-studio`. A stale preset from another theme, such as `boardroom`, fails at render time.
+- Page-level surface and foreground colours should come from Theme Studio tokens, not hardcoded wrapper classes.
 - Public theme token CSS filenames must stay opaque. Do not expose theme keys or preset keys in cached public HTML.
 - Do not install a Studio metapackage; this package installs independently.
 
@@ -64,7 +69,7 @@ Provides an agency-focused visual option for sites managed through the normal Th
 - Theme key: `agency`
 - Product group: Capell Themes
 - Kind: theme
-- Tier: free
+- Tier: premium
 - Bundle: themes
 - Contexts: `frontend`
 - Requires: `capell-app/foundation-theme`
