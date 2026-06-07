@@ -5,13 +5,13 @@
 @endphp
 
 <section
-    class="theme-section theme-section-insurance-trust bg-[#14323a] text-white"
+    class="theme-section theme-section-insurance-trust bg-[var(--healthcare-ink)] text-white"
 >
     <div class="mx-auto max-w-6xl px-6 py-16">
         <div class="grid gap-8 md:grid-cols-[0.8fr_1.2fr]">
             <div>
                 <p
-                    class="text-xs font-black tracking-[0.16em] text-[#f59e0b] uppercase"
+                    class="text-xs font-black tracking-[0.16em] text-[var(--healthcare-accent)] uppercase"
                 >
                     {{ __('capell-theme-healthcare::generic.trust_label') }}
                 </p>
@@ -26,7 +26,9 @@
             <div class="grid gap-3">
                 @forelse ($items as $item)
                     <article class="border border-white/15 bg-white/8 p-5">
-                        <p class="text-xs font-black text-[#f59e0b] uppercase">
+                        <p
+                            class="text-xs font-black text-[var(--healthcare-accent)] uppercase"
+                        >
                             {{ $item['type'] ?? __('capell-theme-healthcare::generic.clinical_trust_label') }}
                         </p>
                         <h3 class="mt-2 text-lg font-black">

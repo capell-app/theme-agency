@@ -7,11 +7,13 @@
     <div class="grid gap-8 px-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
         <div>
             <p
-                class="mb-4 text-xs font-black tracking-widest text-[#2563eb] uppercase"
+                class="mb-4 text-xs font-black tracking-widest text-[var(--healthcare-link)] uppercase"
             >
                 {{ $eventsAvailable ? __('capell-theme-healthcare::generic.events_live') : __('capell-theme-healthcare::generic.events_static') }}
             </p>
-            <h2 class="text-4xl font-black tracking-tight text-[#14323a]">
+            <h2
+                class="text-4xl font-black tracking-tight text-[var(--healthcare-ink)]"
+            >
                 {{ $section->heading }}
             </h2>
             @if ($section->summary ?? null)
@@ -30,7 +32,7 @@
                     <div class="flex items-center gap-3">
                         <button
                             type="button"
-                            class="rounded-full border border-[#d9e8ee] px-3 py-1 text-xs font-bold text-[#0f766e] transition hover:bg-[#f6fbfd]"
+                            class="rounded-full border border-[var(--healthcare-line)] px-3 py-1 text-xs font-bold text-[var(--healthcare-primary)] transition hover:bg-[var(--healthcare-surface)]"
                             aria-label="{{ __('capell-theme-healthcare::generic.carousel_previous') }}"
                             data-carousel-prev
                         >
@@ -38,7 +40,7 @@
                         </button>
                         <button
                             type="button"
-                            class="rounded-full border border-[#d9e8ee] px-3 py-1 text-xs font-bold text-[#0f766e] transition hover:bg-[#f6fbfd]"
+                            class="rounded-full border border-[var(--healthcare-line)] px-3 py-1 text-xs font-bold text-[var(--healthcare-primary)] transition hover:bg-[var(--healthcare-surface)]"
                             aria-label="{{ __('capell-theme-healthcare::generic.carousel_next') }}"
                             data-carousel-next
                         >
@@ -56,10 +58,10 @@
                             @if ($eventsAvailable)
                                 <a
                                     href="{{ $item['url'] ?? '#' }}"
-                                    class="grid gap-4 rounded-lg border border-[#d9e8ee] bg-[#f6fbfd] p-5 transition hover:-translate-y-1 hover:border-[#2563eb] hover:shadow-sm md:grid-cols-[8rem_1fr] xl:min-w-[22rem] xl:flex-shrink-0 xl:snap-start xl:rounded-xl xl:px-6"
+                                    class="grid gap-4 rounded-lg border border-[var(--healthcare-line)] bg-[var(--healthcare-surface)] p-5 transition hover:-translate-y-1 hover:border-[var(--healthcare-link)] hover:shadow-sm md:grid-cols-[8rem_1fr] xl:min-w-[22rem] xl:flex-shrink-0 xl:snap-start xl:rounded-xl xl:px-6"
                                 >
                                     <p
-                                        class="text-sm font-black text-[#0f766e]"
+                                        class="text-sm font-black text-[var(--healthcare-primary)]"
                                     >
                                         {{ $item['date'] ?? __('capell-theme-healthcare::generic.next_available') }}
                                     </p>
@@ -74,10 +76,10 @@
                                 </a>
                             @else
                                 <article
-                                    class="grid gap-4 rounded-lg border border-[#d9e8ee] bg-[#f6fbfd] p-5 md:grid-cols-[8rem_1fr]"
+                                    class="grid gap-4 rounded-lg border border-[var(--healthcare-line)] bg-[var(--healthcare-surface)] p-5 md:grid-cols-[8rem_1fr]"
                                 >
                                     <p
-                                        class="text-sm font-black text-[#0f766e]"
+                                        class="text-sm font-black text-[var(--healthcare-primary)]"
                                     >
                                         {{ $item['date'] ?? __('capell-theme-healthcare::generic.next_available') }}
                                     </p>
@@ -93,9 +95,11 @@
                             @endif
                         @empty
                             <article
-                                class="grid gap-4 rounded-lg border border-dashed border-[#d9e8ee] bg-[#f6fbfd] p-5 md:grid-cols-[8rem_1fr]"
+                                class="grid gap-4 rounded-lg border border-dashed border-[var(--healthcare-line)] bg-[var(--healthcare-surface)] p-5 md:grid-cols-[8rem_1fr]"
                             >
-                                <p class="text-sm font-black text-[#0f766e]">
+                                <p
+                                    class="text-sm font-black text-[var(--healthcare-primary)]"
+                                >
                                     {{ __('capell-theme-healthcare::generic.next_available') }}
                                 </p>
                                 <div>

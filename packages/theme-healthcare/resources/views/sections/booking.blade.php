@@ -9,7 +9,9 @@
 <section class="healthcare-care bg-white">
     <div class="grid gap-8 px-6 lg:grid-cols-[1fr_0.9fr] lg:items-center">
         <div>
-            <h2 class="text-4xl font-black tracking-tight text-[#14323a]">
+            <h2
+                class="text-4xl font-black tracking-tight text-[var(--healthcare-ink)]"
+            >
                 {{ $section->heading }}
             </h2>
             @if ($section->summary ?? null)
@@ -21,7 +23,7 @@
             <div class="mt-8 flex flex-wrap gap-3">
                 @foreach ($items as $item)
                     <span
-                        class="rounded-full border border-stone-200 bg-[#f6fbfd] px-4 py-2 text-sm font-bold text-[#14323a]"
+                        class="rounded-full border border-stone-200 bg-[var(--healthcare-surface)] px-4 py-2 text-sm font-bold text-[var(--healthcare-ink)]"
                     >
                         {{ $item['title'] ?? $item['label'] ?? '' }}
                     </span>
@@ -29,9 +31,9 @@
             </div>
         </div>
 
-        <div class="healthcare-frame bg-[#14323a] p-6 text-white">
+        <div class="healthcare-frame bg-[var(--healthcare-ink)] p-6 text-white">
             <p
-                class="text-xs font-black tracking-widest text-[#f59e0b] uppercase"
+                class="text-xs font-black tracking-widest text-[var(--healthcare-accent)] uppercase"
             >
                 {{ $formBuilderAvailable ? __('capell-theme-healthcare::generic.booking_live') : __('capell-theme-healthcare::generic.booking_static') }}
             </p>
@@ -42,7 +44,9 @@
                 {{ $formBuilderAvailable ? __('capell-theme-healthcare::generic.booking_summary_live') : __('capell-theme-healthcare::generic.booking_summary_static') }}
             </p>
             @if ($formBuilderAvailable && $formMarkup)
-                <div class="mt-5 rounded-lg bg-white p-4 text-[#14323a]">
+                <div
+                    class="mt-5 rounded-lg bg-white p-4 text-[var(--healthcare-ink)]"
+                >
                     {!! $formMarkup !!}
                 </div>
             @else
@@ -59,12 +63,12 @@
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <span
-                            class="rounded-lg bg-white px-3 py-2 text-sm font-black text-[#0f766e]"
+                            class="rounded-lg bg-white px-3 py-2 text-sm font-black text-[var(--healthcare-primary)]"
                         >
                             {{ __('capell-theme-healthcare::generic.morning_slot') }}
                         </span>
                         <span
-                            class="rounded-lg bg-[#f59e0b] px-3 py-2 text-sm font-black text-[#14323a]"
+                            class="rounded-lg bg-[var(--healthcare-accent)] px-3 py-2 text-sm font-black text-[var(--healthcare-ink)]"
                         >
                             {{ __('capell-theme-healthcare::generic.afternoon_slot') }}
                         </span>
@@ -73,14 +77,14 @@
                         @if (($primaryAction['url'] ?? null) && ($primaryAction['label'] ?? null))
                             <a
                                 href="{{ $primaryAction['url'] }}"
-                                class="rounded-lg bg-white px-4 py-3 text-center text-sm font-black text-[#0f766e]"
+                                class="rounded-lg bg-white px-4 py-3 text-center text-sm font-black text-[var(--healthcare-primary)]"
                             >
                                 {{ $primaryAction['label'] }}
                             </a>
                         @else
                             <a
                                 href="{{ $section->contactUrl ?? '/contact' }}"
-                                class="rounded-lg bg-white px-4 py-3 text-center text-sm font-black text-[#0f766e]"
+                                class="rounded-lg bg-white px-4 py-3 text-center text-sm font-black text-[var(--healthcare-primary)]"
                             >
                                 {{ __('capell-theme-healthcare::generic.booking_primary_cta') }}
                             </a>

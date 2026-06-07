@@ -16,7 +16,9 @@
             class="flex flex-col justify-between gap-5 md:flex-row md:items-end"
         >
             <div>
-                <h2 class="text-4xl font-black tracking-tight text-[#14323a]">
+                <h2
+                    class="text-4xl font-black tracking-tight text-[var(--healthcare-ink)]"
+                >
                     {{ $section->heading }}
                 </h2>
                 @if ($section->summary ?? null)
@@ -37,7 +39,7 @@
             >
                 @forelse ($services as $service)
                     <article
-                        class="{{ $usesCarousel ? 'min-w-[250px] snap-start sm:min-w-[270px] md:min-w-0' : '' }} rounded-xl border border-stone-200 bg-[#f6fbfd] p-3 transition hover:-translate-y-1 hover:border-[#0f766e] hover:shadow-lg"
+                        class="{{ $usesCarousel ? 'min-w-[250px] snap-start sm:min-w-[270px] md:min-w-0' : '' }} rounded-xl border border-stone-200 bg-[var(--healthcare-surface)] p-3 transition hover:-translate-y-1 hover:border-[var(--healthcare-primary)] hover:shadow-lg"
                     >
                         @if ($service['image'] ?? $service['imageUrl'] ?? null)
                             <img
@@ -51,11 +53,11 @@
                             />
                         @else
                             <div
-                                class="flex h-32 items-end rounded-lg border border-[#d9e8ee] bg-[#14323a] p-4 text-white"
+                                class="flex h-32 items-end rounded-lg border border-[var(--healthcare-line)] bg-[var(--healthcare-ink)] p-4 text-white"
                             >
                                 <div>
                                     <p
-                                        class="text-[0.65rem] font-black tracking-widest text-[#8de4db] uppercase"
+                                        class="text-[0.65rem] font-black tracking-widest text-[var(--healthcare-primary-bright)] uppercase"
                                     >
                                         {{ $service['icon'] ?? $service['type'] ?? __('capell-theme-healthcare::generic.service_label') }}
                                     </p>
@@ -76,7 +78,7 @@
                             </p>
                             @if ($service['price'] ?? $service['metric'] ?? null)
                                 <p
-                                    class="mt-4 text-sm font-black text-[#0f766e]"
+                                    class="mt-4 text-sm font-black text-[var(--healthcare-primary)]"
                                 >
                                     {{ $service['price'] ?? $service['metric'] }}
                                 </p>
@@ -85,12 +87,16 @@
                     </article>
                 @empty
                     <article
-                        class="rounded-xl border border-dashed border-stone-200 bg-[#f6fbfd] p-6"
+                        class="rounded-xl border border-dashed border-stone-200 bg-[var(--healthcare-surface)] p-6"
                     >
-                        <p class="text-xs font-black text-[#0f766e] uppercase">
+                        <p
+                            class="text-xs font-black text-[var(--healthcare-primary)] uppercase"
+                        >
                             {{ __('capell-theme-healthcare::generic.service_label') }}
                         </p>
-                        <h3 class="mt-3 text-lg font-black text-[#14323a]">
+                        <h3
+                            class="mt-3 text-lg font-black text-[var(--healthcare-ink)]"
+                        >
                             {{ __('capell-theme-healthcare::generic.services_ready') }}
                         </h3>
                     </article>

@@ -254,6 +254,38 @@ it('keeps healthcare typography defaults low specificity so utility colors can w
         ->not->toMatch('/(?:^|\n)\s*\.healthcare-shell\s+(?:h1|h2|h3|p)\b/');
 });
 
+it('routes healthcare section colours through theme tokens', function (): void {
+    $views = healthcareThemeTokenBladeViews(
+        __DIR__ . '/../../resources/views/sections',
+        __DIR__ . '/../../resources/views/blog',
+    );
+    $css = file_get_contents(__DIR__ . '/../../resources/css/theme-healthcare.css') ?: '';
+
+    expect($views)
+        ->toContain('var(--healthcare-ink)')
+        ->toContain('var(--healthcare-primary)')
+        ->toContain('var(--healthcare-surface)')
+        ->toContain('var(--healthcare-line)')
+        ->not->toMatch('/#[0-9a-fA-F]{3,6}/');
+
+    expect($css)
+        ->toContain('--healthcare-primary-soft')
+        ->toContain('--healthcare-primary-bright')
+        ->toContain('--healthcare-ink-strong')
+        ->toContain('--healthcare-link: var(--theme-link, #1d4ed8)')
+        ->toContain('font-weight: 780')
+        ->toContain('font-weight: 760');
+});
+
+it('keeps default healthcare token contrast at WCAG AA levels', function (): void {
+    expect(healthcareContrastRatio('#14323a', '#f6fbfd'))->toBeGreaterThanOrEqual(9.0)
+        ->and(healthcareContrastRatio('#425866', '#f6fbfd'))->toBeGreaterThanOrEqual(6.0)
+        ->and(healthcareContrastRatio('#0f766e', '#ffffff'))->toBeGreaterThanOrEqual(4.5)
+        ->and(healthcareContrastRatio('#1d4ed8', '#ffffff'))->toBeGreaterThanOrEqual(4.5)
+        ->and(healthcareContrastRatio('#f59e0b', '#14323a'))->toBeGreaterThanOrEqual(4.5)
+        ->and(healthcareContrastRatio('#ffffff', '#14323a'))->toBeGreaterThanOrEqual(9.0);
+});
+
 it('renders standard feature and content listing sections through healthcare registry fallbacks', function (): void {
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(HealthcareThemeServiceProvider::$packageName);
@@ -565,4 +597,54 @@ function healthcareThemeSection(string $key, array $viewData): ThemeSection
             return ['section' => (object) $this->viewData];
         }
     };
+}
+
+function healthcareThemeTokenBladeViews(string ...$directories): string
+{
+    $views = [];
+
+    foreach ($directories as $directory) {
+        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory));
+
+        foreach ($files as $file) {
+            if (! $file instanceof SplFileInfo || ! $file->isFile() || ! str_ends_with($file->getFilename(), '.blade.php')) {
+                continue;
+            }
+
+            $views[] = file_get_contents($file->getPathname()) ?: '';
+        }
+    }
+
+    return implode("\n", $views);
+}
+
+function healthcareContrastRatio(string $foreground, string $background): float
+{
+    $foregroundLuminance = healthcareRelativeLuminance($foreground);
+    $backgroundLuminance = healthcareRelativeLuminance($background);
+
+    $lighter = max($foregroundLuminance, $backgroundLuminance);
+    $darker = min($foregroundLuminance, $backgroundLuminance);
+
+    return ($lighter + 0.05) / ($darker + 0.05);
+}
+
+function healthcareRelativeLuminance(string $hex): float
+{
+    $hex = ltrim($hex, '#');
+
+    $channels = [
+        hexdec(substr($hex, 0, 2)) / 255,
+        hexdec(substr($hex, 2, 2)) / 255,
+        hexdec(substr($hex, 4, 2)) / 255,
+    ];
+
+    [$red, $green, $blue] = array_map(
+        static fn (float $channel): float => $channel <= 0.03928
+            ? $channel / 12.92
+            : (($channel + 0.055) / 1.055) ** 2.4,
+        $channels,
+    );
+
+    return (0.2126 * $red) + (0.7152 * $green) + (0.0722 * $blue);
 }

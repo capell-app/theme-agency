@@ -1,7 +1,7 @@
 <section class="healthcare-final-cta bg-white">
     <div class="px-6">
         <div
-            class="rounded-xl border border-[#0f766e]/15 bg-[#0f766e] p-8 text-white md:p-12"
+            class="rounded-xl border border-[var(--healthcare-primary)]/15 bg-[var(--healthcare-primary)] p-8 text-white md:p-12"
         >
             <div class="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
                 <div>
@@ -21,7 +21,7 @@
                     @foreach (($section->actions ?? []) as $action)
                         <a
                             href="{{ $action['url'] }}"
-                            class="healthcare-cta {{ ($action['style'] ?? 'primary') === 'secondary' ? 'border border-white/40 text-white' : 'bg-white text-[#0f766e]' }}"
+                            class="healthcare-cta {{ ($action['style'] ?? 'primary') === 'secondary' ? 'border border-white/40 text-white' : 'bg-white text-[var(--healthcare-primary)]' }}"
                         >
                             {{ $action['label'] }}
                         </a>

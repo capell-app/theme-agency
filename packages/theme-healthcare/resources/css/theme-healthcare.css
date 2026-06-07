@@ -1,16 +1,31 @@
 @layer components {
     .healthcare-shell {
         --healthcare-ink: var(--theme-foreground, #14323a);
-        --healthcare-muted: #5c7280;
+        --healthcare-ink-strong: color-mix(
+            in srgb,
+            var(--healthcare-ink) 86%,
+            #020617
+        );
+        --healthcare-muted: #425866;
         --healthcare-line: #d9e8ee;
         --healthcare-primary: var(--theme-primary, #0f766e);
-        --healthcare-link: #2563eb;
+        --healthcare-primary-soft: color-mix(
+            in srgb,
+            var(--healthcare-primary) 14%,
+            #ffffff
+        );
+        --healthcare-primary-bright: color-mix(
+            in srgb,
+            var(--healthcare-primary) 42%,
+            #ffffff
+        );
+        --healthcare-link: var(--theme-link, #1d4ed8);
         --healthcare-accent: var(--theme-accent, #f59e0b);
         --healthcare-surface: var(--theme-surface, #f6fbfd);
 
         background: linear-gradient(
             180deg,
-            #f6fbfd 0%,
+            var(--healthcare-surface) 0%,
             #ffffff 42%,
             var(--healthcare-surface) 100%
         );
@@ -43,16 +58,16 @@
 
     :where(.healthcare-shell h1) {
         max-width: 12ch;
-        font-size: clamp(3.25rem, 7vw, 6.75rem);
-        font-weight: 850;
-        line-height: 0.95;
+        font-size: clamp(3rem, 6vw, 5.5rem);
+        font-weight: 780;
+        line-height: 1;
     }
 
     :where(.healthcare-shell h2) {
         max-width: 15ch;
         font-size: clamp(2.25rem, 4vw, 4.25rem);
-        font-weight: 800;
-        line-height: 1;
+        font-weight: 760;
+        line-height: 1.05;
     }
 
     :where(.healthcare-shell p) {

@@ -1,11 +1,11 @@
 <nav
-    class="healthcare-navigation sticky top-0 z-20 border-b border-stone-200/80 bg-[#f6fbfd]/95 backdrop-blur"
+    class="healthcare-navigation sticky top-0 z-20 border-b border-stone-200/80 bg-[var(--healthcare-surface)]/95 backdrop-blur"
     aria-label="{{ __('capell-theme-healthcare::generic.main_navigation') }}"
 >
     <div class="flex items-center justify-between px-6 py-4">
         <a
             href="/"
-            class="text-base font-black text-[#14323a]"
+            class="text-base font-black text-[var(--healthcare-ink)]"
         >
             {{ $section->brandName }}
         </a>

@@ -14,14 +14,14 @@
 @if (in_array($section->variant ?? null, ['gallery', 'pathways', 'spotlight'], true))
     @include('capell-foundation-theme::theme.sections.content-listing', ['section' => $section])
 @else
-    <section class="healthcare-resources bg-[#f6fbfd]">
+    <section class="healthcare-resources bg-[var(--healthcare-surface)]">
         <div class="px-6">
             <div
                 class="flex flex-col justify-between gap-5 md:flex-row md:items-end"
             >
                 <div>
                     <h2
-                        class="text-4xl font-black tracking-tight text-[#14323a]"
+                        class="text-4xl font-black tracking-tight text-[var(--healthcare-ink)]"
                     >
                         {{ $section->heading }}
                     </h2>
@@ -51,7 +51,7 @@
                         @if ($blogAvailable)
                             <a
                                 href="{{ $article['url'] ?? '#' }}"
-                                class="{{ $usesCarousel ? 'min-w-[270px] snap-start sm:min-w-[300px]' : '' }} healthcare-resource-card overflow-hidden rounded-xl border border-stone-200 bg-white transition hover:-translate-y-1 hover:border-[#0f766e] hover:shadow-lg"
+                                class="{{ $usesCarousel ? 'min-w-[270px] snap-start sm:min-w-[300px]' : '' }} healthcare-resource-card overflow-hidden rounded-xl border border-stone-200 bg-white transition hover:-translate-y-1 hover:border-[var(--healthcare-primary)] hover:shadow-lg"
                             >
                                 @include('capell-theme-healthcare::sections.partials.resource-card-media', [
                                     'imageUrl' => $imageUrl,
@@ -60,7 +60,7 @@
                                 ])
                                 <span class="block p-6">
                                     <span
-                                        class="text-xs font-black tracking-widest text-[#0f766e] uppercase"
+                                        class="text-xs font-black tracking-widest text-[var(--healthcare-primary)] uppercase"
                                     >
                                         {{ $resourceType }}
                                     </span>
@@ -71,7 +71,7 @@
                                         {{ $article['summary'] ?? '' }}
                                     </span>
                                     <span
-                                        class="mt-5 inline-flex rounded-full bg-[#e0f2f1] px-3 py-1 text-xs font-black text-[#0f766e]"
+                                        class="mt-5 inline-flex rounded-full bg-[var(--healthcare-primary-soft)] px-3 py-1 text-xs font-black text-[var(--healthcare-primary)]"
                                     >
                                         {{ __('capell-theme-healthcare::generic.clinical_review') }}
                                     </span>
@@ -88,7 +88,7 @@
                                 ])
                                 <div class="p-6">
                                     <p
-                                        class="text-xs font-black tracking-widest text-[#0f766e] uppercase"
+                                        class="text-xs font-black tracking-widest text-[var(--healthcare-primary)] uppercase"
                                     >
                                         {{ __('capell-theme-healthcare::generic.resource') }}
                                     </p>
@@ -99,7 +99,7 @@
                                         {{ $article['summary'] ?? '' }}
                                     </p>
                                     <p
-                                        class="mt-5 inline-flex rounded-full bg-[#e0f2f1] px-3 py-1 text-xs font-black text-[#0f766e]"
+                                        class="mt-5 inline-flex rounded-full bg-[var(--healthcare-primary-soft)] px-3 py-1 text-xs font-black text-[var(--healthcare-primary)]"
                                     >
                                         {{ __('capell-theme-healthcare::generic.clinical_review') }}
                                     </p>

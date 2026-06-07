@@ -10,13 +10,17 @@
     />
 @else
     <div
-        class="grid aspect-[16/10] bg-[#14323a] p-4 text-white"
+        class="grid aspect-[16/10] bg-[var(--healthcare-ink)] p-4 text-white"
         aria-hidden="true"
     >
         <div class="grid h-full content-between">
             <div class="flex items-center justify-between gap-3">
-                <span class="h-3 w-20 rounded-full bg-[#0f766e]"></span>
-                <span class="h-3 w-10 rounded-full bg-[#f59e0b]"></span>
+                <span
+                    class="h-3 w-20 rounded-full bg-[var(--healthcare-primary)]"
+                ></span>
+                <span
+                    class="h-3 w-10 rounded-full bg-[var(--healthcare-accent)]"
+                ></span>
             </div>
             <div class="grid gap-2">
                 <span class="h-3 w-3/4 rounded-full bg-white/45"></span>

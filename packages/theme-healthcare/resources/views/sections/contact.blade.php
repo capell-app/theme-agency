@@ -2,10 +2,12 @@
     $locations = $section->locations ?? $section->items ?? [];
 @endphp
 
-<section class="healthcare-contact bg-[#f6fbfd]">
+<section class="healthcare-contact bg-[var(--healthcare-surface)]">
     <div class="grid min-w-0 gap-8 px-6 lg:grid-cols-[0.9fr_1.1fr]">
         <div class="min-w-0">
-            <h2 class="text-4xl font-black tracking-tight text-[#14323a]">
+            <h2
+                class="text-4xl font-black tracking-tight text-[var(--healthcare-ink)]"
+            >
                 {{ $section->heading }}
             </h2>
             @if ($section->summary ?? null)
@@ -25,10 +27,10 @@
             >
                 @forelse ($locations as $location)
                     <article
-                        class="min-w-[260px] snap-start rounded-lg border border-[#d9e8ee] bg-white p-6 sm:min-w-0"
+                        class="min-w-[260px] snap-start rounded-lg border border-[var(--healthcare-line)] bg-white p-6 sm:min-w-0"
                     >
                         <p
-                            class="text-xs font-black tracking-widest text-[#2563eb] uppercase"
+                            class="text-xs font-black tracking-widest text-[var(--healthcare-link)] uppercase"
                         >
                             {{ $location['label'] ?? __('capell-theme-healthcare::generic.location') }}
                         </p>
@@ -40,7 +42,7 @@
                         </p>
                         @if ($location['address'] ?? null)
                             <p
-                                class="mt-4 text-xs font-black text-[#14323a] uppercase"
+                                class="mt-4 text-xs font-black text-[var(--healthcare-ink)] uppercase"
                             >
                                 {{ __('capell-theme-healthcare::generic.location_address') }}
                             </p>
@@ -51,7 +53,7 @@
 
                         @if ($location['hours'] ?? $location['openingHours'] ?? null)
                             <p
-                                class="mt-4 text-xs font-black text-[#14323a] uppercase"
+                                class="mt-4 text-xs font-black text-[var(--healthcare-ink)] uppercase"
                             >
                                 {{ __('capell-theme-healthcare::generic.location_hours') }}
                             </p>
@@ -63,7 +65,7 @@
                         @if ($location['phone'] ?? null)
                             <a
                                 href="tel:{{ preg_replace('/[^0-9+]/', '', (string) $location['phone']) }}"
-                                class="mt-4 inline-flex text-sm font-black text-[#0f766e]"
+                                class="mt-4 inline-flex text-sm font-black text-[var(--healthcare-primary)]"
                             >
                                 {{ $location['phone'] }}
                             </a>
@@ -72,7 +74,7 @@
                         @if ($location['mapUrl'] ?? null)
                             <a
                                 href="{{ $location['mapUrl'] }}"
-                                class="mt-3 inline-flex text-sm font-black text-[#2563eb]"
+                                class="mt-3 inline-flex text-sm font-black text-[var(--healthcare-link)]"
                             >
                                 {{ __('capell-theme-healthcare::generic.location_map') }}
                             </a>
@@ -80,14 +82,16 @@
                     </article>
                 @empty
                     <article
-                        class="min-w-[260px] snap-start rounded-lg border border-dashed border-[#d9e8ee] bg-white p-6 sm:min-w-0"
+                        class="min-w-[260px] snap-start rounded-lg border border-dashed border-[var(--healthcare-line)] bg-white p-6 sm:min-w-0"
                     >
                         <p
-                            class="text-xs font-black tracking-widest text-[#2563eb] uppercase"
+                            class="text-xs font-black tracking-widest text-[var(--healthcare-link)] uppercase"
                         >
                             {{ __('capell-theme-healthcare::generic.location') }}
                         </p>
-                        <h3 class="mt-3 text-xl font-black text-[#14323a]">
+                        <h3
+                            class="mt-3 text-xl font-black text-[var(--healthcare-ink)]"
+                        >
                             {{ __('capell-theme-healthcare::generic.locations_ready') }}
                         </h3>
                     </article>
@@ -96,7 +100,7 @@
 
             <button
                 type="button"
-                class="theme-carousel-button carousel-prev absolute top-1/2 left-2 hidden -translate-y-1/2 rounded-full border border-[#d9e8ee] bg-white p-2 text-sm font-semibold shadow-md"
+                class="theme-carousel-button carousel-prev absolute top-1/2 left-2 hidden -translate-y-1/2 rounded-full border border-[var(--healthcare-line)] bg-white p-2 text-sm font-semibold shadow-md"
                 aria-label="{{ __('capell-theme-healthcare::generic.carousel_previous') }}"
                 data-carousel-prev
             >
@@ -104,7 +108,7 @@
             </button>
             <button
                 type="button"
-                class="theme-carousel-button carousel-next absolute top-1/2 right-2 hidden -translate-y-1/2 rounded-full border border-[#d9e8ee] bg-white p-2 text-sm font-semibold shadow-md"
+                class="theme-carousel-button carousel-next absolute top-1/2 right-2 hidden -translate-y-1/2 rounded-full border border-[var(--healthcare-line)] bg-white p-2 text-sm font-semibold shadow-md"
                 aria-label="{{ __('capell-theme-healthcare::generic.carousel_next') }}"
                 data-carousel-next
             >

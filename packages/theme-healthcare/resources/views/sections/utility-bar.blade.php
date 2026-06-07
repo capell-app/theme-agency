@@ -3,7 +3,7 @@
 @endphp
 
 <section
-    class="healthcare-utility-bar border-b border-[#d9e8ee] bg-[#14323a] px-6 py-0 text-white"
+    class="healthcare-utility-bar border-b border-[var(--healthcare-line)] bg-[var(--healthcare-ink)] px-6 py-0 text-white"
 >
     <div
         class="flex flex-col gap-3 py-3 text-sm font-semibold sm:flex-row sm:items-center sm:justify-between"
