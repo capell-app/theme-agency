@@ -61,7 +61,7 @@ Newsletter captures, confirms, segments, and syncs subscribers for Capell sites,
 
 ## Runtime Surface
 
-- Controllers: `ConfirmSubscriptionController`, `ProviderWebhookController`, `ShowPreferenceCenterController`, `UnsubscribeController`, `UpdatePreferenceCenterController`.
+- Controllers: `SubscribeController`, `ConfirmSubscriptionController`, `ProviderWebhookController`, `ShowPreferenceCenterController`, `UnsubscribeController`, `UpdatePreferenceCenterController`.
 - Routes: `packages/newsletter/routes/web.php`.
 - Jobs: `SyncSubscriberToProviderJob`.
 

@@ -5,10 +5,7 @@ declare(strict_types=1);
 use Capell\Newsletter\Actions\CreatePreferenceCenterTokenAction;
 use Capell\Newsletter\Models\Segment;
 use Capell\Newsletter\Models\Subscriber;
-use Capell\Newsletter\Tests\NewsletterTestCase;
 use Capell\Tests\Fixtures\Models\User;
-
-uses(NewsletterTestCase::class);
 
 it('keeps anonymous preference center HTML free of admin and model identifiers', function (): void {
     [$token, $segment] = newsletterPublicPreferenceCenterFixture();

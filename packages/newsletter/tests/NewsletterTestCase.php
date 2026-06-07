@@ -14,6 +14,7 @@ use Capell\Core\Models\Site;
 use Capell\Core\Models\Theme;
 use Capell\CustomerPortal\Providers\CustomerPortalServiceProvider;
 use Capell\FormBuilder\Providers\FormBuilderServiceProvider;
+use Capell\Frontend\Providers\FrontendServiceProvider;
 use Capell\Newsletter\Providers\AdminServiceProvider as NewsletterAdminServiceProvider;
 use Capell\Newsletter\Providers\NewsletterServiceProvider;
 use Capell\Tags\Providers\TagsServiceProvider;
@@ -58,6 +59,7 @@ class NewsletterTestCase extends AbstractTestCase
             AdminPanelProvider::class,
             ContactsServiceProvider::class,
             CustomerPortalServiceProvider::class,
+            FrontendServiceProvider::class,
             TagsServiceProvider::class,
             FormBuilderServiceProvider::class,
             NewsletterServiceProvider::class,
@@ -76,6 +78,7 @@ class NewsletterTestCase extends AbstractTestCase
         CapellCore::forcePackageInstalled(CapellAdminServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(ContactsServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(CustomerPortalServiceProvider::$packageName);
+        CapellCore::forcePackageInstalled(FrontendServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(TagsServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(FormBuilderServiceProvider::$packageName);
         CapellCore::forcePackageInstalled(NewsletterServiceProvider::$packageName);

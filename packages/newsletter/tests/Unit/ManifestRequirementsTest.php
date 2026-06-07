@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Capell\Newsletter\Actions\BuildNewsletterSendHandoffPayloadAction;
 use Capell\Newsletter\Actions\ResolveUtmAttributionAction;
 use Capell\Newsletter\Actions\ScheduleNewsletterSendAction;
+use Capell\Newsletter\Actions\SubscribeFromPublicRequestAction;
 use Capell\Newsletter\Actions\UpdatePreferenceCenterAction;
 use Capell\Newsletter\Filament\Resources\NewsletterSends\NewsletterSendResource;
 use Capell\Newsletter\Filament\Resources\Segments\SegmentResource;
@@ -48,6 +49,7 @@ it('declares implemented newsletter package contributions', function (): void {
         NewsletterSendResource::class,
     )
         ->and($routes['routes'])->toContain(
+            'capell-newsletter.subscribe',
             'capell-newsletter.unsubscribe',
             'capell-newsletter.unsubscribe.one-click',
             'capell-newsletter.preferences.show',
@@ -64,6 +66,7 @@ it('declares newsletter segmentation, preference center, campaign send, and attr
         ->and($manifest['actions'])->toHaveKey('buildListUnsubscribeHeaders')
         ->and($manifest['actions'])->toHaveKey('buildNewsletterSendHandoffPayload', BuildNewsletterSendHandoffPayloadAction::class)
         ->and($manifest['actions'])->toHaveKey('scheduleNewsletterSend', ScheduleNewsletterSendAction::class)
+        ->and($manifest['actions'])->toHaveKey('subscribeFromPublicRequest', SubscribeFromPublicRequestAction::class)
         ->and($manifest['actions'])->toHaveKey('resolveUtmAttribution', ResolveUtmAttributionAction::class)
         ->and($manifest['actions'])->toHaveKey('updatePreferenceCenter', UpdatePreferenceCenterAction::class)
         ->and($manifest['capabilities'])->toContain(

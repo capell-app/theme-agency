@@ -1,7 +1,18 @@
 @php
+    use Illuminate\Support\Facades\Route;
+
     $sectionHeading = $heading ?? ($section->heading ?? null);
-    $formAction = $section->formAction ?? $section->action ?? ($formAction ?? null);
-    $formMethod = strtoupper((string) ($section->formMethod ?? $method ?? 'POST'));
+    $formAction = $section->formAction ?? $section->action ?? ($formAction ?? $newsletterFormAction ?? null);
+    $formRoute = $newsletterFormRoute ?? null;
+    Route::getRoutes()->refreshNameLookups();
+    if (
+        (! is_string($formAction) || trim($formAction) === '') &&
+        is_string($formRoute) &&
+        Route::has($formRoute)
+    ) {
+        $formAction = route($formRoute);
+    }
+    $formMethod = strtoupper((string) ($section->formMethod ?? $method ?? $newsletterFormMethod ?? 'POST'));
     $formMethod = in_array($formMethod, ['GET', 'POST'], true) ? $formMethod : 'POST';
     $formAction = is_string($formAction) ? trim($formAction) : '';
 @endphp
@@ -35,6 +46,11 @@
                             {{ __('capell-theme-portfolio::generic.email_label') }}
                         </label>
                         <div class="flex min-w-[18rem] gap-2">
+                            <input
+                                type="hidden"
+                                name="source"
+                                value="theme_portfolio_newsletter"
+                            />
                             <input
                                 id="portfolio-newsletter"
                                 name="email"

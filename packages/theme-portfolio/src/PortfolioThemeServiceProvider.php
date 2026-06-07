@@ -138,7 +138,7 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
     }
 
     /**
-     * @param  array<string, array<string, bool>>  $optionalIntegrations
+     * @param  array<string, array<string, bool|string|null>>  $optionalIntegrations
      */
     private function sectionRenderer(string $sectionKey, array $optionalIntegrations): ?ViewSectionRenderer
     {
@@ -176,7 +176,7 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
     }
 
     /**
-     * @return array<string, array<string, bool>>
+     * @return array<string, array<string, bool|string|null>>
      */
     private function optionalSectionIntegrations(bool $contentSectionsAvailable, bool $mediaLibraryAvailable, bool $newsletterAvailable): array
     {
@@ -184,7 +184,11 @@ final class PortfolioThemeServiceProvider extends ServiceProvider
             'case-studies' => ['contentSectionsAvailable' => $contentSectionsAvailable],
             'work-grid' => ['mediaLibraryAvailable' => $mediaLibraryAvailable],
             'availability' => ['newsletterAvailable' => $newsletterAvailable],
-            'newsletter' => ['newsletterAvailable' => $newsletterAvailable],
+            'newsletter' => [
+                'newsletterAvailable' => $newsletterAvailable,
+                'newsletterFormRoute' => $newsletterAvailable ? 'capell-newsletter.subscribe' : null,
+                'newsletterFormMethod' => 'POST',
+            ],
         ];
     }
 }

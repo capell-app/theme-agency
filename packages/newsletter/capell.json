@@ -67,6 +67,7 @@
             "type": "route",
             "class": "Capell\\Newsletter\\Manifest\\NewsletterFrontendRoutesContribution",
             "routes": [
+                "capell-newsletter.subscribe",
                 "capell-newsletter.confirm",
                 "capell-newsletter.unsubscribe",
                 "capell-newsletter.unsubscribe.one-click",
@@ -146,6 +147,7 @@
         "resolvePreferenceCenter": "Capell\\Newsletter\\Actions\\ResolvePreferenceCenterAction",
         "resolveUtmAttribution": "Capell\\Newsletter\\Actions\\ResolveUtmAttributionAction",
         "scheduleNewsletterSend": "Capell\\Newsletter\\Actions\\ScheduleNewsletterSendAction",
+        "subscribeFromPublicRequest": "Capell\\Newsletter\\Actions\\SubscribeFromPublicRequestAction",
         "subscribeFromFormSubmission": "Capell\\Newsletter\\Actions\\SubscribeFromFormSubmissionAction",
         "syncNewsletterSubscriberContact": "Capell\\Newsletter\\Actions\\SyncNewsletterSubscriberContactAction",
         "syncSubscriberToProvider": "Capell\\Newsletter\\Actions\\SyncSubscriberToProviderAction",
