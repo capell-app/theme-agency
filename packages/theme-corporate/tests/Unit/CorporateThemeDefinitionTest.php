@@ -17,6 +17,8 @@ use Capell\Core\ThemeStudio\Data\ThemePageData;
 use Capell\Core\ThemeStudio\Theme\ThemeRegistry;
 use Capell\ThemeStudio\Corporate\CorporateThemeServiceProvider;
 use Capell\ThemeStudio\Corporate\Health\ThemeCorporateHealthCheck;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 
@@ -50,7 +52,9 @@ it('renders navigation from the corporate package views', function (): void {
 
     expect($html)
         ->toContain('Capell')
-        ->toContain('Home');
+        ->toContain('Home')
+        ->toContain('data-corporate-menu')
+        ->toContain('aria-expanded="false"');
 });
 
 it('declares renderers for every included corporate section', function (): void {
@@ -204,8 +208,28 @@ it('renders translated corporate proof aria labels with generic public selectors
         ->toContain('aria-label="Previous proof cards"')
         ->toContain('aria-label="Next proof cards"')
         ->toContain('aria-label="Close gallery"')
+        ->toContain('aria-live="polite"')
+        ->toContain('data-carousel-status')
+        ->toContain('aria-disabled="true"')
+        ->toContain('More proof cards are available.')
+        ->toContain('Proof cards are visible.')
         ->toContain('data-carousel="proof"')
-        ->not->toContain('data-carousel="corporate-proof"');
+        ->not->toContain('data-carousel="corporate-proof"')
+        ->not->toContain('‹')
+        ->not->toContain('›');
+});
+
+it('ships accessible reduced-motion corporate carousel and menu behavior', function (): void {
+    $script = file_get_contents(__DIR__ . '/../../resources/js/theme-corporate.js') ?: '';
+
+    expect($script)
+        ->toContain("querySelectorAll('[data-corporate-menu]')")
+        ->toContain("querySelectorAll('[data-carousel=\"proof\"]')")
+        ->toContain('prefers-reduced-motion: reduce')
+        ->toContain('aria-expanded')
+        ->toContain('aria-disabled')
+        ->toContain('data-carousel-status')
+        ->toContain('scrollBy');
 });
 
 it('renders content listing variant labels from translations', function (): void {
@@ -409,6 +433,79 @@ it('renders public theme markup without package identifiers', function (): void 
         ->not->toContain('signed')
         ->not->toContain('filament')
         ->not->toContain('editor');
+});
+
+it('renders the uncached corporate page inside the declared frontend budget without database queries', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(CorporateThemeServiceProvider::$packageName);
+
+    $manifest = json_decode((string) file_get_contents(__DIR__ . '/../../capell.json'), true, flags: JSON_THROW_ON_ERROR);
+    $queryCount = 0;
+
+    DB::listen(static function (QueryExecuted $query) use (&$queryCount): void {
+        $queryCount++;
+    });
+
+    $registry = new ThemeRegistry;
+    $provider = new CorporateThemeServiceProvider($this->app);
+    $provider->register();
+    $provider->boot($registry);
+
+    $queryCount = 0;
+    $startedAt = hrtime(true);
+
+    $html = $registry->renderer('corporate')->render(new ThemePageData(
+        title: 'Corporate budget render',
+        brand: new BrandProfileData,
+        sections: [
+            new HeroSectionData(
+                heading: 'Governance for growing teams',
+                summary: 'Practical strategy, compliance, and delivery support.',
+            ),
+            new FeatureSectionData(
+                heading: 'Operating model',
+                features: [
+                    ['title' => 'Risk review', 'description' => 'Structured review cadence.'],
+                    ['title' => 'Policy pack', 'description' => 'Board-ready operating documents.'],
+                ],
+            ),
+            new ProofSectionData(
+                heading: 'Evidence',
+                items: [
+                    ['metric' => '24%', 'name' => 'Faster approvals', 'summary' => 'Approval cycles shortened.'],
+                    ['metric' => '12', 'name' => 'Regional boards', 'summary' => 'Governance teams aligned.'],
+                ],
+            ),
+            new ContentListingSectionData(
+                heading: 'Briefings',
+                items: [['title' => 'Board reporting', 'summary' => 'Monthly reporting model.', 'url' => '/briefings/reporting']],
+            ),
+            new CtaSectionData(
+                heading: 'Talk to an advisor',
+                actions: [['label' => 'Book a call', 'url' => '/contact']],
+            ),
+        ],
+        navigation: new NavigationData(
+            brandName: 'Northbridge Advisory',
+            items: [['label' => 'Services', 'url' => '/services']],
+            ctaLabel: 'Contact',
+            ctaUrl: '/contact',
+        ),
+        footer: new FooterData(
+            brandName: 'Northbridge Advisory',
+            columns: [
+                ['heading' => 'Company', 'links' => [['label' => 'Contact', 'url' => '/contact']]],
+            ],
+        ),
+    ));
+
+    $elapsedMilliseconds = (hrtime(true) - $startedAt) / 1_000_000;
+
+    expect($elapsedMilliseconds)->toBeLessThanOrEqual((float) data_get($manifest, 'performance.frontendRenderBudgetMs', 20))
+        ->and($queryCount)->toBe(0)
+        ->and($html)->toContain('Governance for growing teams')
+        ->and($html)->toContain('Northbridge Advisory')
+        ->and($html)->not->toContain('capell-app/theme-corporate');
 });
 
 it('renders the corporate content listing variant matrix', function (string $variant, string $expectedMarkup): void {

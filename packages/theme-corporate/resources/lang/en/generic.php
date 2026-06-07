@@ -21,6 +21,8 @@ return [
     'gallery_open_image' => 'Open image for :item',
     'carousel_next_proof' => 'Next proof cards',
     'carousel_previous_proof' => 'Previous proof cards',
+    'carousel_scrollable' => 'More proof cards are available.',
+    'carousel_static' => 'Proof cards are visible.',
     'hero_agenda_label' => 'Agenda',
     'hero_assurance_label' => 'Assurance',
     'hero_default_eyebrow' => 'Featured',

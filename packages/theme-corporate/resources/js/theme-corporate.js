@@ -1,17 +1,50 @@
 const initializedCarousels = new WeakSet()
 
-const updateCarouselButtons = (track, previousButton, nextButton) => {
+const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+const updateCarouselButtons = (
+    track,
+    previousButton,
+    nextButton,
+    statusElement,
+) => {
     const canScroll = track.scrollWidth > track.clientWidth + 1
-
-    previousButton.classList.toggle(
-        'hidden',
-        !canScroll || track.scrollLeft <= 2,
-    )
-
-    nextButton.classList.toggle(
-        'hidden',
+    const previousDisabled = !canScroll || track.scrollLeft <= 2
+    const nextDisabled =
         !canScroll ||
-            track.scrollLeft >= track.scrollWidth - track.clientWidth - 2,
+        track.scrollLeft >= track.scrollWidth - track.clientWidth - 2
+
+    previousButton.classList.toggle('hidden', previousDisabled)
+    previousButton.setAttribute('aria-disabled', String(previousDisabled))
+
+    nextButton.classList.toggle('hidden', nextDisabled)
+    nextButton.setAttribute('aria-disabled', String(nextDisabled))
+
+    if (statusElement) {
+        statusElement.textContent = canScroll
+            ? statusElement.getAttribute('data-carousel-scrollable-label')
+            : statusElement.getAttribute('data-carousel-static-label')
+    }
+}
+
+const scrollCarousel = (track, offset) => {
+    track.scrollBy({
+        left: offset,
+        behavior: reducedMotionQuery.matches ? 'auto' : 'smooth',
+    })
+}
+
+const initializeCorporateMenu = (menu) => {
+    const summary = menu.querySelector('summary')
+
+    if (!summary) {
+        return
+    }
+
+    summary.setAttribute('aria-expanded', String(menu.open))
+
+    menu.addEventListener('toggle', () =>
+        summary.setAttribute('aria-expanded', String(menu.open)),
     )
 }
 
@@ -23,6 +56,7 @@ const initializeProofCarousel = (carousel) => {
     const track = carousel.querySelector('[data-carousel-track]')
     const previousButton = carousel.querySelector('[data-carousel-prev]')
     const nextButton = carousel.querySelector('[data-carousel-next]')
+    const statusElement = carousel.querySelector('[data-carousel-status]')
 
     if (!track || !previousButton || !nextButton) {
         return
@@ -33,24 +67,30 @@ const initializeProofCarousel = (carousel) => {
     const step = () => Math.max(280, Math.floor(track.clientWidth * 0.82))
 
     previousButton.addEventListener('click', () => {
-        track.scrollBy({ left: -step(), behavior: 'smooth' })
+        scrollCarousel(track, -step())
     })
 
     nextButton.addEventListener('click', () => {
-        track.scrollBy({ left: step(), behavior: 'smooth' })
+        scrollCarousel(track, step())
     })
 
     track.addEventListener(
         'scroll',
-        () => updateCarouselButtons(track, previousButton, nextButton),
+        () =>
+            updateCarouselButtons(
+                track,
+                previousButton,
+                nextButton,
+                statusElement,
+            ),
         { passive: true },
     )
 
     window.addEventListener('resize', () =>
-        updateCarouselButtons(track, previousButton, nextButton),
+        updateCarouselButtons(track, previousButton, nextButton, statusElement),
     )
 
-    updateCarouselButtons(track, previousButton, nextButton)
+    updateCarouselButtons(track, previousButton, nextButton, statusElement)
 }
 
 const showGalleryImage = (imageUrl) => {
@@ -84,6 +124,10 @@ const hideGalleryImage = () => {
 }
 
 const initializeCorporateTheme = () => {
+    document
+        .querySelectorAll('[data-corporate-menu]')
+        .forEach(initializeCorporateMenu)
+
     document
         .querySelectorAll('[data-carousel="proof"]')
         .forEach(initializeProofCarousel)

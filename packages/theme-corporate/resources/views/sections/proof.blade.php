@@ -27,6 +27,16 @@
                 class="theme-carousel relative"
                 data-carousel="proof"
             >
+                <p
+                    class="sr-only"
+                    aria-live="polite"
+                    data-carousel-status
+                    data-carousel-scrollable-label="{{ __('capell-theme-corporate::generic.carousel_scrollable') }}"
+                    data-carousel-static-label="{{ __('capell-theme-corporate::generic.carousel_static') }}"
+                >
+                    {{ __('capell-theme-corporate::generic.carousel_static') }}
+                </p>
+
                 <div
                     class="flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-6 pb-2 md:grid md:grid-cols-2 [&::-webkit-scrollbar]:hidden"
                     data-carousel-track
@@ -88,17 +98,25 @@
                     type="button"
                     class="theme-carousel-button carousel-prev absolute top-1/2 left-2 hidden -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-2 text-sm font-semibold text-white shadow-md"
                     aria-label="{{ __('capell-theme-corporate::generic.carousel_previous_proof') }}"
+                    aria-disabled="true"
                     data-carousel-prev
                 >
-                    ‹
+                    <span aria-hidden="true">←</span>
+                    <span class="sr-only">
+                        {{ __('capell-theme-corporate::generic.carousel_previous_proof') }}
+                    </span>
                 </button>
                 <button
                     type="button"
                     class="theme-carousel-button carousel-next absolute top-1/2 right-2 hidden -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-2 text-sm font-semibold text-white shadow-md"
                     aria-label="{{ __('capell-theme-corporate::generic.carousel_next_proof') }}"
+                    aria-disabled="true"
                     data-carousel-next
                 >
-                    ›
+                    <span aria-hidden="true">→</span>
+                    <span class="sr-only">
+                        {{ __('capell-theme-corporate::generic.carousel_next_proof') }}
+                    </span>
                 </button>
             </div>
         </div>

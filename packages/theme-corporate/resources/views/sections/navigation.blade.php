@@ -28,9 +28,13 @@
                 </a>
             @endforeach
         </div>
-        <details class="relative order-3 md:hidden">
+        <details
+            class="relative order-3 md:hidden"
+            data-corporate-menu
+        >
             <summary
                 class="cursor-pointer list-none rounded-[var(--corporate-card-radius)] border border-slate-300 px-3 py-2 text-sm font-medium text-slate-800 marker:hidden dark:border-white/15 dark:text-slate-200"
+                aria-expanded="false"
             >
                 {{ __('capell-theme-corporate::generic.menu') }}
             </summary>
