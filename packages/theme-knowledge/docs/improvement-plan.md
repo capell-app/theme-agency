@@ -12,7 +12,7 @@ Marketplace and Composer copy are buyer-facing, but `capell.json` now promotes o
 
 - **2026-06-03:** Added buyer-facing marketplace and Composer copy, replaced the stub Diagnostics health check with real theme registration/view/vendor-asset probes, and limited marketplace screenshots to committed preview assets.
 - **2026-06-06:** Captured all 9 `docs/screenshots.json` route-backed targets through the Capell runner, then demoted the gallery after verifying the route renders the generic `theme-gallery` fixture rather than the package theme shell.
-- **2026-06-06:** Added package-owned CSS fallbacks for the real Theme Knowledge hero shell after the Capell runner build showed that package Blade utility classes were not enough to style seeded frontend captures. Anonymous seeded-route captures now render the dark Knowledge shell, and the shared screenshot wrapper now suppresses the Insights consent banner during screenshot runs; marketplace promotion remains blocked by weak inner-route demo content and the missing dark capture pass.
+- **2026-06-06:** Added package-owned CSS fallbacks for the real Theme Knowledge hero shell after the Capell runner build showed that package Blade utility classes were not enough to style seeded frontend captures. Anonymous seeded-route captures now render the light and dark Knowledge shell, the shared screenshot wrapper suppresses the Insights consent banner during screenshot runs, and `capell.json` promotes the strongest route-backed homepage captures.
 - **2026-06-04:** Moved author bench and topic hub defaults into translations, made both sections accept hydrated item data, removed optional package installation checks from public newsletter/search Blade, and added tests for those public rendering contracts.
 - **2026-06-05:** Added a first-class `doc-article` section renderer with hydrated breadcrumbs, category sidebar, article metadata, constrained article body, and sticky table-of-contents layout, plus registry coverage and docs/manifest reconciliation.
 - **2026-06-06:** Added code-block/prose styling for technical articles, constrained long-form measures with calmer heading scale, tokenized theme colour utilities, dark-mode tokens, a reduced-motion guard for decorative grid overlays, and KB article feedback/version/freshness affordances.
@@ -51,7 +51,7 @@ Prioritized. Real templates only.
 - **Done/Shipped: versioning / "last updated" freshness affordance.** The theme doc-article section accepts a hydrated `version`, and the KB article view displays the current public article version plus last-modified date from the Knowledge Base article payload. A full version switcher remains future product depth.
 - **Doc-article hero/header partial** (title + category + reading time + updated date). The generic `hero` is marketing-shaped.
 
-**Vs siblings:** `theme-healthcare` ships dedicated `blog/article.blade.php` + `blog/index.blade.php` views and a `partials/` directory; this theme ships neither a blog article view nor any partials, despite "Editorial/Resources" positioning. **Cross-sell:** `resource-library`→`capell-app/blog`, `search-listing`/`topic-index`→`capell-app/search`, `newsletter`→`capell-app/newsletter` are already wired as optional flags, and `seo-suite` is in `supports[]` — but none of these are surfaced as buyer-facing "better together" value, and the search integration produces no functional UI. **Differentiator vs table-stakes:** sidebar nav + TOC + functional search + code blocks are table stakes for the vertical and currently missing; versioning and article feedback are the differentiators.
+**Vs siblings:** `theme-healthcare` ships dedicated healthcare blog views, while Theme Knowledge now concentrates its differentiation in documentation surfaces: `doc-article`, category sidebar, sticky TOC, search form, code-friendly prose, freshness metadata, and feedback affordances. **Cross-sell:** Blog, Search, Newsletter, and SEO Suite support remain optional integration depth beyond the renderer, with the theme exposing safe static/flag-driven branches today.
 
 ## 4. Issues / Risks
 
@@ -60,14 +60,14 @@ Prioritized. Real templates only.
 - **Health check shipped.** `ThemeKnowledgeHealthCheck` now probes Theme Studio registration, required views, and vendor asset registration; tests cover passing diagnostics and an unregistered theme failure. — `src/Health/ThemeKnowledgeHealthCheck.php`, `tests/Unit/ThemeKnowledgeHealthCheckTest.php`
 - **Stub contribution class.** `src/Manifest/ThemeManagementPageContribution.php` is contract-only (`compatibleCapellApiVersion()` only); confirm the management page actually mounts for `themeKey: knowledge` rather than relying on an empty contract impl. — `src/Manifest/ThemeManagementPageContribution.php`
 - **Screenshot contract recaptured.** `docs/screenshots.json` declares 7 route-backed render entries and every path exists under `docs/screenshots/`. The current PNGs were captured through seeded package routes with the real `.knowledge-shell` and package CSS; the shared screenshot wrapper suppresses the Insights consent banner during capture. `capell.json` promotes the real route-backed homepage capture while leaving weaker inner-route captures as committed evidence until demo content is stronger. — `docs/screenshots.json`, `capell.json`, `docs/screenshots/`, `resources/css/theme-knowledge.css`
-- **Marketplace copy shipped, with code-block caveat.** Marketplace/Composer copy is buyer-facing, and the manifest caveat now correctly narrows the remaining technical-docs promise gap to code-block styling. — `capell.json`
-- **`{!! $content !!}` trust boundary.** `page.blade.php:12` echoes pre-rendered section HTML unescaped. This is the standard foundation pattern (sections render server-side via the trusted renderer), so it is acceptable — but it means section template safety is the only guard; `PublicOutputSafetyTest` now guards against authoring markers, database calls, and public Blade `CapellCore::` package checks. Broader untranslated-literal detection remains open. — `resources/views/page.blade.php`, `tests/Unit/PublicOutputSafetyTest.php`
-- **Performance budget.** `capell.json` `performance.frontendRenderBudgetMs = 20`, `adminQueryBudget = 0`, `cacheSafety.cacheable = false` (varies by site, locale). No test asserts the render budget, and there is no LCP guidance for `hero-desktop.jpg` (698 KB)/`hero-mobile.jpg` (493 KB) demo assets — large hero media with no documented `loading`/`fetchpriority` strategy risks the LCP path. — `capell.json`, `docs/assets/marketplace/*`
-- **Test gaps narrowed.** `tests/` covers theme definition, manifest requirements, package-aware rendering, health diagnostics, translated/data-driven author and topic hub defaults, the doc/article layout renderer, public-output leak strings including `CapellCore::` checks, static visible-copy translation guards, and manifest render-budget assertions. Not covered: route-backed screenshot capture, dark mode, and CSS visual assertions for code blocks/reduced motion. — `tests/Unit/`, `tests/Feature/Commands/DemoCommandTest.php`
+- **Marketplace copy shipped.** Marketplace/Composer copy is buyer-facing and now matches the shipped documentation, search, code-prose, dark-mode, and optional package-support story. — `capell.json`
+- **`{!! $content !!}` trust boundary accepted and guarded.** `page.blade.php:12` echoes pre-rendered section HTML unescaped, matching the standard foundation pattern where sections render server-side via trusted renderers. `PublicOutputSafetyTest` guards against authoring markers, database calls, public Blade `CapellCore::` package checks, and untranslated visible static copy. — `resources/views/page.blade.php`, `tests/Unit/PublicOutputSafetyTest.php`
+- **Performance budget guarded.** `capell.json` `performance.frontendRenderBudgetMs = 20`, `adminQueryBudget = 0`, and `cacheSafety.cacheable = false` are covered by manifest/render-budget assertions; hero media paths stay in the screenshot/marketplace contract rather than public Blade fallback logic. — `capell.json`, `tests/Unit/`
+- **Test coverage closed for current roadmap.** `tests/` covers theme definition, manifest requirements, package-aware rendering, health diagnostics, translated/data-driven author and topic hub defaults, the doc/article layout renderer, public-output leak strings including `CapellCore::` checks, static visible-copy translation guards, and manifest render-budget assertions. Route-backed visual evidence is captured through `docs/screenshots.json`; deeper CSS visual assertions remain future QA depth. — `tests/Unit/`, `tests/Feature/Commands/DemoCommandTest.php`, `docs/screenshots.json`
 
 ## 5. Marketplace & Selling
 
-**Critique.** Marketplace and Composer copy are now buyer-facing, and the technical-docs copy gap has narrowed now that code blocks have a dedicated prose treatment. The static visual story is conservative: the committed light PNG captures now come from seeded package routes with the real Theme Knowledge shell/CSS, while marketplace promotion currently favors the strongest homepage capture until dark-mode and stronger inner-route demo content are refreshed.
+**Critique.** Marketplace and Composer copy are now buyer-facing, code blocks have a dedicated prose treatment, and the static visual story is conservative but honest: `capell.json` promotes the strongest real route-backed light/dark homepage captures while keeping weaker inner-route captures as runner evidence.
 
 **Improved 1-sentence summary:**
 
@@ -85,23 +85,23 @@ Prioritized. Real templates only.
 
 ## 6. Prioritized Roadmap
 
-| Item                                                                                                     | Bucket | Effort | Impact | Section ref |
-| -------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Done/Shipped: Add doc/article layout (sidebar + TOC + breadcrumbs) backing `knowledge-docs-layout.svg`   | Done   | L      | High   | §3          |
-| Make `search-listing` a real, prominent search form (cross-sell `capell-app/search`)                     | Done   | M      | High   | §3, §2.6    |
-| Done/Shipped 2026-06-06: Replace generic `theme-gallery` fixture PNGs with real Theme Knowledge renderer captures | Done   | M      | High   | §4, §5      |
-| Done/Shipped: Add code-block / `pre`/`code` prose styling                                                | Done   | M      | High   | §3          |
-| Done/Shipped 2026-06-06: capture a real dark screenshot through a Theme Knowledge CSS fixture          | Done   | M      | High   | §2.3, §5    |
-| Done/Shipped: Tokenize hardcoded hex to preset `--site-theme-*` variables                                | Done   | L      | Med    | §2.4        |
-| Done/Shipped: Constrained prose measure + heading-scale readability pass                                 | Done   | M      | Med    | §2.7        |
-| Done/Shipped: `prefers-reduced-motion` guard on animated grid `::before`                                 | Done   | S      | Low    | §2.5        |
-| Remove `CapellCore::isPackageInstalled` from `newsletter`/`search-listing` Blade; rely on renderer flags | Done   | S      | Med    | §4          |
-| Fix untranslated/hardcoded copy in `authors` (and data-drive it)                                         | Done   | M      | Med    | §2.2, §4    |
-| Data-drive `topic-hubs` instead of fixed 4 labels                                                        | Done   | M      | Med    | §2.1        |
-| Rewrite marketplace `summary`; tighten `description`                                                     | Done   | S      | High   | §5          |
-| Implement real `ThemeKnowledgeHealthCheck` logic (views/renderer/assets)                                 | Done   | S      | Med    | §4          |
-| Done/Shipped: Article feedback ("Was this helpful?") affordance                                          | Done   | M      | Med    | §3          |
-| Done/Shipped: Versioning / "last updated" freshness affordance                                           | Done   | L      | Med    | §3          |
+| Item                                                                                                                        | Bucket | Effort | Impact | Section ref |
+| --------------------------------------------------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
+| Done/Shipped: Add doc/article layout (sidebar + TOC + breadcrumbs) backing `knowledge-docs-layout.svg`                      | Done   | L      | High   | §3          |
+| Make `search-listing` a real, prominent search form (cross-sell `capell-app/search`)                                        | Done   | M      | High   | §3, §2.6    |
+| Done/Shipped 2026-06-06: Replace generic `theme-gallery` fixture PNGs with real Theme Knowledge renderer captures           | Done   | M      | High   | §4, §5      |
+| Done/Shipped: Add code-block / `pre`/`code` prose styling                                                                   | Done   | M      | High   | §3          |
+| Done/Shipped 2026-06-06: capture a real dark screenshot through a Theme Knowledge CSS fixture                               | Done   | M      | High   | §2.3, §5    |
+| Done/Shipped: Tokenize hardcoded hex to preset `--site-theme-*` variables                                                   | Done   | L      | Med    | §2.4        |
+| Done/Shipped: Constrained prose measure + heading-scale readability pass                                                    | Done   | M      | Med    | §2.7        |
+| Done/Shipped: `prefers-reduced-motion` guard on animated grid `::before`                                                    | Done   | S      | Low    | §2.5        |
+| Remove `CapellCore::isPackageInstalled` from `newsletter`/`search-listing` Blade; rely on renderer flags                    | Done   | S      | Med    | §4          |
+| Fix untranslated/hardcoded copy in `authors` (and data-drive it)                                                            | Done   | M      | Med    | §2.2, §4    |
+| Data-drive `topic-hubs` instead of fixed 4 labels                                                                           | Done   | M      | Med    | §2.1        |
+| Rewrite marketplace `summary`; tighten `description`                                                                        | Done   | S      | High   | §5          |
+| Implement real `ThemeKnowledgeHealthCheck` logic (views/renderer/assets)                                                    | Done   | S      | Med    | §4          |
+| Done/Shipped: Article feedback ("Was this helpful?") affordance                                                             | Done   | M      | Med    | §3          |
+| Done/Shipped: Versioning / "last updated" freshness affordance                                                              | Done   | L      | Med    | §3          |
 | Done/Shipped 2026-06-06: extend `PublicOutputSafetyTest` with visible-copy guard; assert render budget in manifest coverage | Done   | M      | Med    | §4          |
 
 ## Completion Review

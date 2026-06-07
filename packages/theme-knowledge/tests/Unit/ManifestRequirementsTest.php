@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Capell\ThemeStudio\Knowledge\KnowledgeThemeServiceProvider;
-use Illuminate\Support\Facades\File;
 
 it('declares the required first-party theme manifest boundaries', function (): void {
     $manifest = knowledgeThemeManifest();
@@ -53,7 +52,7 @@ it('uses buyer-facing marketplace copy and committed real preview assets', funct
         ]);
 
     foreach ($screenshotPaths as $screenshotPath) {
-        expect(File::exists(__DIR__ . '/../../' . $screenshotPath))->toBeTrue();
+        expect(file_exists(__DIR__ . '/../../' . $screenshotPath))->toBeTrue();
     }
 });
 
@@ -63,7 +62,7 @@ it('uses buyer-facing marketplace copy and committed real preview assets', funct
 function knowledgeThemeManifest(): array
 {
     $manifest = json_decode(
-        File::get(__DIR__ . '/../../capell.json'),
+        (string) file_get_contents(__DIR__ . '/../../capell.json'),
         associative: true,
         flags: JSON_THROW_ON_ERROR,
     );

@@ -13,9 +13,7 @@
         "bundle": "themes"
     },
     "namespace": "Capell\\ThemeStudio\\InertiaBookings",
-    "surfaces": [
-        "frontend"
-    ],
+    "surfaces": ["frontend"],
     "dependencies": {
         "requires": [
             "capell-app/core",
@@ -63,22 +61,14 @@
     },
     "settings": [],
     "permissions": [],
-    "capabilities": [
-        "theme-inertia-bookings",
-        "inertia-bookings-frontend"
-    ],
+    "capabilities": ["theme-inertia-bookings", "inertia-bookings-frontend"],
     "performance": {
         "frontendRenderBudgetMs": 20,
         "adminQueryBudget": 0,
-        "cacheTags": [
-            "theme-inertia-bookings"
-        ],
+        "cacheTags": ["theme-inertia-bookings"],
         "cacheSafety": {
             "cacheable": false,
-            "variesBy": [
-                "site",
-                "locale"
-            ],
+            "variesBy": ["site", "locale"],
             "sensitiveOutput": false,
             "invalidationSources": [],
             "queueInvalidation": true
@@ -104,26 +94,12 @@
         "description": "Theme Inertia Bookings renders Capell marketing pages through Inertia and links into the real Bookings appointment request flow with lazy slot loading.",
         "screenshots": [
             {
-                "path": "docs/screenshots/inertia-bookings-homepage.png",
-                "alt": "Theme Inertia Bookings homepage with appointment request form.",
-                "caption": "Appointment-led Capell/Inertia homepage"
-            },
-            {
-                "path": "docs/screenshots/inertia-bookings-request-flow.png",
-                "alt": "Theme Inertia Bookings public request form.",
-                "caption": "Public booking request flow"
-            },
-            {
-                "path": "docs/screenshots/inertia-bookings-services.png",
-                "alt": "Theme Inertia Bookings service sections.",
-                "caption": "Service proof and appointment CTAs"
+                "path": "docs/assets/marketplace/extension-card.svg",
+                "alt": "Theme Inertia Bookings marketplace card.",
+                "caption": "Theme Inertia Bookings extension card."
             }
         ],
-        "categories": [
-            "frontend",
-            "themes",
-            "bookings"
-        ]
+        "categories": ["frontend", "themes", "bookings"]
     },
     "themeKey": "inertia-bookings"
 }
