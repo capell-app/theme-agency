@@ -12,6 +12,7 @@ use Capell\Core\Models\Page;
 use Capell\MediaAI\Contracts\ImageDoctor;
 use Capell\MediaAI\Data\ImageDoctorRequest;
 use Capell\MediaAI\Data\ImageDoctorResult;
+use Capell\MediaAI\Jobs\RunImageDoctorJob;
 use Capell\MediaAI\Filament\MediaAIEditActionExtender;
 use Capell\MediaAI\Providers\MediaAIServiceProvider;
 use Capell\MediaAI\Support\AIOrchestratorImageDoctor;
@@ -194,8 +195,9 @@ it('returns a localized failure result from the null image doctor', function ():
         ->and($result->message)->toBe(__('capell-media-ai::media-ai.not_configured'));
 });
 
-it('passes image doctor requests to the configured ai-orchestrator implementation', function (): void {
+it('queues image doctor requests for the configured ai-orchestrator implementation', function (): void {
     app()->setLocale('cy');
+    Queue::fake();
 
     $doctor = new RecordingImageDoctor;
     app()->instance(ImageDoctor::class, $doctor);
@@ -213,12 +215,14 @@ it('passes image doctor requests to the configured ai-orchestrator implementatio
         ->assertHasNoActionErrors()
         ->assertNotified();
 
-    expect($doctor->media?->is($media))->toBeTrue()
-        ->and($doctor->request?->operation)->toBe('remove_background')
-        ->and($doctor->request?->instructions)->toBe('Remove the background and keep the subject sharp.')
-        ->and($doctor->request?->locale)->toBe('cy');
-});
+    Queue::assertPushed(RunImageDoctorJob::class, fn (RunImageDoctorJob $job): bool => $job->mediaId === $media->getKey()
+        && $job->operation === 'remove_background'
+        && $job->instructions === 'Remove the background and keep the subject sharp.'
+        && $job->locale === 'cy');
 
+    expect($doctor->media)->toBeNull()
+        ->and($doctor->request)->toBeNull();
+});
 it('runs image doctor requests through the configured ai-orchestrator capability', function (): void {
     if (! class_exists(AIOrchestratorModuleRegistry::class)) {
         test()->markTestSkipped('AI Orchestrator is not available in this checkout.');

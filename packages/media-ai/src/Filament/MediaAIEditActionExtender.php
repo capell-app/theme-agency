@@ -9,11 +9,13 @@ use Capell\Admin\Filament\Resources\Media\Pages\EditMedia;
 use Capell\Core\Models\Media;
 use Capell\MediaAI\Contracts\ImageDoctor;
 use Capell\MediaAI\Data\ImageDoctorRequest;
+use Capell\MediaAI\Jobs\RunImageDoctorJob;
 use Capell\MediaAI\Support\NullImageDoctor;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
 
 final class MediaAIEditActionExtender implements MediaEditActionExtender
@@ -44,23 +46,21 @@ final class MediaAIEditActionExtender implements MediaEditActionExtender
                 ->action(function (Media $record, array $data): void {
                     Gate::authorize('update', $record);
 
-                    $result = resolve(ImageDoctor::class)->doctor(
-                        $record,
-                        new ImageDoctorRequest(
-                            operation: (string) $data['operation'],
-                            instructions: (string) $data['instructions'],
-                            locale: app()->getLocale(),
-                        ),
+                    $user = auth()->user();
+
+                    RunImageDoctorJob::dispatch(
+                        mediaId: (int) $record->getKey(),
+                        operation: (string) $data['operation'],
+                        instructions: (string) $data['instructions'],
+                        locale: app()->getLocale(),
+                        notifiableClass: $user instanceof Model ? $user::class : null,
+                        notifiableKey: $user instanceof Model ? $user->getKey() : null,
                     );
 
-                    $notification = Notification::make()
-                        ->title($result->message ?? __('capell-media-ai::media-ai.success'));
-
-                    $result->successful
-                        ? $notification->success()
-                        : $notification->warning();
-
-                    $notification->send();
+                    Notification::make('capell_media_ai_image_doctor_queued')
+                        ->title(__('capell-media-ai::media-ai.queued'))
+                        ->success()
+                        ->send();
                 }),
         ];
     }
