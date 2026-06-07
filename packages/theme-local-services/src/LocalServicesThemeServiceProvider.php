@@ -32,7 +32,7 @@ final class LocalServicesThemeServiceProvider extends ServiceProvider
             previewImage: '/vendor/capell/themes/local-services.jpg',
             tags: ['Services', 'Local SEO', 'Lead generation'],
             bestFit: ['Service businesses', 'Local operators', 'Quote-led teams'],
-            includedSections: ['navigation', 'hero', 'features', 'services', 'service-packages', 'service-areas', 'locality-proof', 'proof', 'reviews-testimonials', 'opening-hours', 'structured-data', 'content-listing', 'quote-form', 'quote-estimator', 'case-studies', 'resources', 'contact', 'cta', 'footer'],
+            includedSections: ['navigation', 'hero', 'features', 'services', 'service-packages', 'service-areas', 'locality-proof', 'proof', 'reviews-testimonials', 'trust-badges', 'opening-hours', 'structured-data', 'content-listing', 'quote-form', 'quote-estimator', 'case-studies', 'before-after-gallery', 'resources', 'contact', 'cta', 'footer'],
             presets: [
                 new ThemePresetData(
                     key: 'local-services',

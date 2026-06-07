@@ -28,9 +28,11 @@ it('defines the Local Services theme contract', function (): void {
         ->and($definition->includedSections)->toContain('features')
         ->and($definition->includedSections)->toContain('proof')
         ->and($definition->includedSections)->toContain('reviews-testimonials')
+        ->and($definition->includedSections)->toContain('trust-badges')
         ->and($definition->includedSections)->toContain('opening-hours')
         ->and($definition->includedSections)->toContain('structured-data')
         ->and($definition->includedSections)->toContain('content-listing')
+        ->and($definition->includedSections)->toContain('before-after-gallery')
         ->and($definition->includedSections)->toContain('cta')
         ->and($definition->includedSections)->toContain('footer')
         ->and($definition->presets)->toHaveCount(1);
@@ -316,6 +318,104 @@ it('renders new premium local services layouts through the registry', function (
         ->not->toContain('capell-app/theme-local-services');
 });
 
+it('renders trust badges and before-after project evidence through the registry', function (): void {
+    CapellCore::clearPackages();
+    CapellCore::forcePackageInstalled(LocalServicesThemeServiceProvider::$packageName);
+
+    $registry = new ThemeRegistry;
+    (new LocalServicesThemeServiceProvider($this->app))->boot($registry);
+
+    $trustRenderer = $registry->sectionRenderer('local-services', 'trust-badges');
+    $galleryRenderer = $registry->sectionRenderer('local-services', 'before-after-gallery');
+
+    assert($trustRenderer instanceof SectionRenderer);
+    assert($galleryRenderer instanceof SectionRenderer);
+
+    $trustHtml = $trustRenderer->render(localServicesThemeSection('trust-badges', [
+        'heading' => 'Checked credentials',
+        'summary' => 'Proof before the quote request.',
+        'items' => [
+            [
+                'title' => 'Gas Safe registered',
+                'summary' => 'Verified engineer status for heating work.',
+                'issuer' => 'Gas Safe Register',
+                'reference' => '123456',
+                'url' => 'https://example.test/accreditations/gas-safe',
+                'imageUrl' => 'https://cdn.example.test/gas-safe.svg',
+                'imageAlt' => 'Gas Safe badge',
+            ],
+        ],
+    ]));
+
+    $emptyTrustHtml = $trustRenderer->render(localServicesThemeSection('trust-badges', [
+        'heading' => 'Empty credentials',
+        'items' => [],
+    ]));
+
+    $galleryHtml = $galleryRenderer->render(localServicesThemeSection('before-after-gallery', [
+        'heading' => 'Visible job outcomes',
+        'summary' => 'Before and after work by service route.',
+        'items' => [
+            [
+                'title' => 'Bathroom leak repair',
+                'summary' => 'Resolved damp damage and restored the finish.',
+                'service' => 'Plumbing',
+                'location' => 'Cardiff',
+                'url' => '/case-studies/bathroom-leak',
+                'beforeImage' => 'https://cdn.example.test/before.jpg',
+                'afterImage' => 'https://cdn.example.test/after.jpg',
+                'beforeAlt' => 'Damaged bathroom before repair',
+                'afterAlt' => 'Bathroom after repair',
+            ],
+        ],
+    ]));
+
+    $emptyGalleryHtml = $galleryRenderer->render(localServicesThemeSection('before-after-gallery', [
+        'heading' => 'Empty gallery',
+        'items' => [],
+    ]));
+
+    expect($trustHtml)
+        ->toContain('Checked credentials')
+        ->toContain('Proof before the quote request.')
+        ->toContain('Gas Safe registered')
+        ->toContain('Verified engineer status for heating work.')
+        ->toContain('Gas Safe Register · 123456')
+        ->toContain('href="https://example.test/accreditations/gas-safe"')
+        ->toContain('src="https://cdn.example.test/gas-safe.svg"')
+        ->toContain('alt="Gas Safe badge"')
+        ->toContain('loading="lazy"')
+        ->not->toContain('capell-app/theme-local-services')
+        ->not->toContain('Filament')
+        ->not->toContain('wire:');
+
+    expect($emptyTrustHtml)
+        ->toContain('No trust badges yet')
+        ->toContain('Add accreditations, memberships, insurance notes, or review credentials.')
+        ->not->toContain('capell-app/theme-local-services');
+
+    expect($galleryHtml)
+        ->toContain('Visible job outcomes')
+        ->toContain('Before and after work by service route.')
+        ->toContain('Bathroom leak repair')
+        ->toContain('Resolved damp damage and restored the finish.')
+        ->toContain('Plumbing · Cardiff')
+        ->toContain('href="/case-studies/bathroom-leak"')
+        ->toContain('src="https://cdn.example.test/before.jpg"')
+        ->toContain('src="https://cdn.example.test/after.jpg"')
+        ->toContain('alt="Damaged bathroom before repair"')
+        ->toContain('alt="Bathroom after repair"')
+        ->toContain('loading="lazy"')
+        ->not->toContain('capell-app/theme-local-services')
+        ->not->toContain('Filament')
+        ->not->toContain('wire:');
+
+    expect($emptyGalleryHtml)
+        ->toContain('No project gallery yet')
+        ->toContain('Add before and after project pairs to show visible job outcomes.')
+        ->not->toContain('capell-app/theme-local-services');
+});
+
 it('renders translated and data-driven service area links', function (): void {
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(LocalServicesThemeServiceProvider::$packageName);
@@ -567,6 +667,20 @@ function localServicesRenderPayload(string $sectionKey): array
         return [
             ...$payload,
             'items' => [['quote' => 'Anonymous review.', 'name' => 'Local customer']],
+        ];
+    }
+
+    if ($sectionKey === 'trust-badges') {
+        return [
+            ...$payload,
+            'items' => [['title' => 'Anonymous accreditation', 'summary' => 'Anonymous credential proof.']],
+        ];
+    }
+
+    if ($sectionKey === 'before-after-gallery') {
+        return [
+            ...$payload,
+            'items' => [['title' => 'Anonymous project', 'summary' => 'Anonymous project proof.']],
         ];
     }
 
