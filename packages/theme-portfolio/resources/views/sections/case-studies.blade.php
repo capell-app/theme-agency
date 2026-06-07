@@ -2,38 +2,6 @@
     $heading ??= $section->heading ?? null;
     $summary ??= $section->summary ?? null;
     $caseItems = $items ?? $section->items ?? [];
-
-    if ($caseItems === []) {
-        $caseItems = [
-            [
-                'title' => 'Premium portfolio redesign',
-                'summary' => 'Brand-forward campaign work rebuilt around proof, conversion, and credibility.',
-                'type' => __('capell-theme-portfolio::generic.featured_heading'),
-                'metric' => __('capell-theme-portfolio::generic.outcome_metric'),
-                'scope' => 'Strategy / UX / Visual system',
-                'role' => 'Lead studio',
-                'timeline' => '6 weeks',
-            ],
-            [
-                'title' => 'Product storytelling platform',
-                'summary' => 'Structured narratives and media-led landing paths for high-intent traffic.',
-                'type' => __('capell-theme-portfolio::generic.portfolio_copy'),
-                'metric' => '3.4x',
-                'scope' => 'Narrative / Design / Build',
-                'role' => 'Creative partner',
-                'timeline' => '8 weeks',
-            ],
-            [
-                'title' => 'Editorial design system',
-                'summary' => 'Content-first experiences built to keep visitors reading and converting.',
-                'type' => __('capell-theme-portfolio::generic.project_heading'),
-                'metric' => '120+',
-                'scope' => 'Content model / Components',
-                'role' => 'Systems lead',
-                'timeline' => '4 weeks',
-            ],
-        ];
-    }
 @endphp
 
 <section
@@ -96,7 +64,7 @@
                 class="flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto pr-4 pb-2 [&::-webkit-scrollbar]:hidden"
                 data-carousel-track
             >
-                @foreach ($caseItems as $item)
+                @forelse ($caseItems as $item)
                     <article
                         class="grid min-w-[82%] snap-start overflow-hidden border border-white/10 bg-white/[0.06] shadow-2xl shadow-black/20 md:min-w-[560px] lg:min-w-[640px] lg:grid-cols-[0.72fr_1fr]"
                     >
@@ -223,7 +191,18 @@
                             </div>
                         </div>
                     </article>
-                @endforeach
+                @empty
+                    <article
+                        class="min-w-[82%] snap-start border border-dashed border-white/20 bg-white/[0.06] p-6 md:min-w-[560px] lg:min-w-[640px]"
+                    >
+                        <h3 class="text-lg font-black text-white">
+                            {{ __('capell-theme-portfolio::generic.premium_layout_ready') }}
+                        </h3>
+                        <p class="mt-2 text-sm text-slate-300">
+                            {{ __('capell-theme-portfolio::generic.premium_layout_empty') }}
+                        </p>
+                    </article>
+                @endforelse
             </div>
 
             <div class="mt-5 flex gap-3">

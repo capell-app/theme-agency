@@ -77,6 +77,7 @@ it('keeps public Blade free of database query calls', function (): void {
         ->not->toContain('PageLoader::')
         ->not->toContain('SiteLoader::')
         ->not->toContain('NavigationLoader::')
+        ->not->toContain('CapellCore::isPackageInstalled')
         ->not->toContain('->translation')
         ->not->toContain('->assets')
         ->not->toContain('->media->')
@@ -104,4 +105,18 @@ it('keeps translated service newsletter and stat copy out of Blade literals', fu
         ->not->toContain('30+ Projects')
         ->not->toContain('12+ Industries')
         ->not->toContain('97% Retention');
+});
+
+it('ships a scoped dark theme layer without public package detection in Blade', function (): void {
+    $css = file_get_contents(__DIR__ . '/../../resources/css/theme-portfolio.css') ?: '';
+    $provider = file_get_contents(__DIR__ . '/../../src/PortfolioThemeServiceProvider.php') ?: '';
+    $blade = portfolioThemeBladeViews();
+
+    expect($provider)
+        ->toContain("key: 'portfolio-dark'")
+        ->toContain("'colorScheme' => 'dark'")
+        ->and($css)->toContain('.dark .portfolio-shell')
+        ->and($css)->toContain('--portfolio-card')
+        ->and($css)->toContain('--portfolio-border-strong')
+        ->and($blade)->not->toContain('CapellCore::isPackageInstalled');
 });

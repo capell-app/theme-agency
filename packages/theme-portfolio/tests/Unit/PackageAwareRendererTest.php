@@ -11,20 +11,20 @@ use Capell\ThemeStudio\Portfolio\PortfolioThemeServiceProvider;
 
 uses(PackagesTestCase::class);
 
-it('passes optional package availability into public section renderers', function (bool $installed, string $expected, string $missing): void {
+it('passes optional package availability into public section renderers', function (string $sectionKey, string $packageName, bool $installed, string $expected, string $missing): void {
     CapellCore::clearPackages();
     CapellCore::forcePackageInstalled(PortfolioThemeServiceProvider::$packageName);
-    CapellCore::forcePackageInstalled('capell-app/media-library', $installed);
+    CapellCore::forcePackageInstalled($packageName, $installed);
 
     $registry = new ThemeRegistry;
     (new PortfolioThemeServiceProvider($this->app))->boot($registry);
 
-    $renderer = $registry->sectionRenderer('portfolio', 'work-grid');
+    $renderer = $registry->sectionRenderer('portfolio', $sectionKey);
 
     expect($renderer)->not->toBeNull();
     assert($renderer instanceof SectionRenderer);
 
-    $html = $renderer->render(new readonly class('work-grid') implements ThemeSection
+    $html = $renderer->render(new readonly class($sectionKey) implements ThemeSection
     {
         public function __construct(private string $sectionKey) {}
 
@@ -43,12 +43,20 @@ it('passes optional package availability into public section renderers', functio
          */
         public function toViewData(): array
         {
-            return ['heading' => 'Package-aware section'];
+            return [
+                'heading' => 'Package-aware section',
+                'section' => (object) [
+                    'heading' => 'Package-aware section',
+                    'items' => [],
+                ],
+            ];
         }
     });
 
     expect($html)->toContain($expected)->not->toContain($missing);
 })->with([
-    'installed' => [true, 'Connected media library', 'Static work grid'],
-    'not installed' => [false, 'Static work grid', 'Connected media library'],
+    'media library installed' => ['work-grid', 'capell-app/media-library', true, 'Connected media library', 'Static work grid'],
+    'media library not installed' => ['work-grid', 'capell-app/media-library', false, 'Static work grid', 'Connected media library'],
+    'newsletter installed' => ['newsletter', 'capell-app/newsletter', true, 'Connected newsletter signup is available.', 'Static newsletter CTA is available.'],
+    'newsletter not installed' => ['newsletter', 'capell-app/newsletter', false, 'Static newsletter CTA is available.', 'Connected newsletter signup is available.'],
 ]);

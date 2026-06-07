@@ -1,7 +1,6 @@
 @php
-    use Capell\Core\Facades\CapellCore;
-
-    $mediaLibraryAvailable ??= CapellCore::isPackageInstalled('capell-app/media-library');
+    $mediaLibraryAvailable ??= false;
+    $projects = $section->items ?? [];
 @endphp
 
 <section
@@ -59,7 +58,7 @@
             class="mx-auto mt-2 flex max-w-5xl [scrollbar-width:none] gap-4 overflow-x-auto px-6 pr-6 pb-2 sm:grid sm:grid-cols-3 [&::-webkit-scrollbar]:hidden"
             data-carousel-track
         >
-            @foreach (($section->items ?? []) as $project)
+            @forelse ($projects as $project)
                 <article
                     class="min-w-[250px] snap-start rounded-xl border border-slate-200 bg-white p-4"
                 >
@@ -75,55 +74,18 @@
                         {{ $project['summary'] ?? $project['description'] ?? '' }}
                     </p>
                 </article>
-            @endforeach
-
-            @if (empty($section->items))
+            @empty
                 <article
-                    class="min-w-[250px] snap-start rounded-xl border border-slate-200 bg-white p-4"
+                    class="min-w-[250px] snap-start rounded-xl border border-dashed border-slate-300 bg-white p-6 sm:col-span-3"
                 >
-                    <p
-                        class="text-xs font-black tracking-widest text-slate-500 uppercase"
-                    >
-                        {{ __('capell-theme-portfolio::generic.work_grid_visual_projects_label') }}
-                    </p>
-                    <h3 class="mt-2 text-lg font-black text-[#0f172a]">
-                        {{ __('capell-theme-portfolio::generic.work_grid_landing_suite_title') }}
+                    <h3 class="text-lg font-black text-[#0f172a]">
+                        {{ __('capell-theme-portfolio::generic.premium_layout_ready') }}
                     </h3>
                     <p class="mt-2 text-sm text-slate-600">
-                        {{ __('capell-theme-portfolio::generic.work_grid_landing_suite_summary') }}
+                        {{ __('capell-theme-portfolio::generic.premium_layout_empty') }}
                     </p>
                 </article>
-                <article
-                    class="min-w-[250px] snap-start rounded-xl border border-slate-200 bg-white p-4"
-                >
-                    <p
-                        class="text-xs font-black tracking-widest text-slate-500 uppercase"
-                    >
-                        {{ __('capell-theme-portfolio::generic.work_grid_brand_systems_label') }}
-                    </p>
-                    <h3 class="mt-2 text-lg font-black text-[#0f172a]">
-                        {{ __('capell-theme-portfolio::generic.work_grid_portfolio_refresh_title') }}
-                    </h3>
-                    <p class="mt-2 text-sm text-slate-600">
-                        {{ __('capell-theme-portfolio::generic.work_grid_portfolio_refresh_summary') }}
-                    </p>
-                </article>
-                <article
-                    class="min-w-[250px] rounded-xl border border-slate-200 bg-white p-4"
-                >
-                    <p
-                        class="text-xs font-black tracking-widest text-slate-500 uppercase"
-                    >
-                        {{ __('capell-theme-portfolio::generic.work_grid_conversion_label') }}
-                    </p>
-                    <h3 class="mt-2 text-lg font-black text-[#0f172a]">
-                        {{ __('capell-theme-portfolio::generic.work_grid_case_study_platform_title') }}
-                    </h3>
-                    <p class="mt-2 text-sm text-slate-600">
-                        {{ __('capell-theme-portfolio::generic.work_grid_case_study_platform_summary') }}
-                    </p>
-                </article>
-            @endif
+            @endforelse
         </div>
 
         <button

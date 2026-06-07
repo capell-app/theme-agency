@@ -6,6 +6,13 @@
     --portfolio-primary: var(--theme-primary, #7c2d12);
     --portfolio-accent: var(--theme-accent, #f43f5e);
     --portfolio-surface: var(--theme-surface, #f8fafc);
+    --portfolio-card: #ffffff;
+    --portfolio-card-soft: #f8fafc;
+    --portfolio-border: rgb(124 45 18 / 14%);
+    --portfolio-border-strong: #cbd5e1;
+    --portfolio-deep: #070b1a;
+    --portfolio-deep-soft: #111827;
+    --portfolio-warm: #fff7ed;
 
     background:
         linear-gradient(
@@ -79,8 +86,130 @@
 }
 
 .portfolio-shell :where(article) {
-    border-color: rgb(124 45 18 / 14%);
+    border-color: var(--portfolio-border);
     box-shadow: 0 20px 58px rgb(15 23 42 / 8%);
+}
+
+.dark .portfolio-shell,
+.portfolio-shell.portfolio-shell-dark {
+    --site-theme-primary: #fb923c;
+    --site-theme-accent: #f43f5e;
+    --portfolio-ink: var(--theme-foreground, #f8fafc);
+    --portfolio-muted: #cbd5e1;
+    --portfolio-primary: var(--theme-primary, #fb923c);
+    --portfolio-accent: var(--theme-accent, #f43f5e);
+    --portfolio-surface: var(--theme-surface, #070b1a);
+    --portfolio-card: #111827;
+    --portfolio-card-soft: #1f2937;
+    --portfolio-border: rgb(255 255 255 / 14%);
+    --portfolio-border-strong: rgb(255 255 255 / 22%);
+    --portfolio-deep: #030712;
+    --portfolio-deep-soft: #0f172a;
+    --portfolio-warm: #1f2937;
+
+    background:
+        linear-gradient(180deg, #030712 0%, #070b1a 54%, #111827 100%),
+        linear-gradient(90deg, rgb(251 146 60 / 8%) 1px, transparent 1px),
+        linear-gradient(180deg, rgb(244 63 94 / 7%) 1px, transparent 1px);
+    color: var(--portfolio-ink);
+}
+
+.dark .portfolio-shell :where(h1, h2, h3),
+.portfolio-shell.portfolio-shell-dark :where(h1, h2, h3) {
+    color: var(--portfolio-ink);
+}
+
+.dark
+    .portfolio-shell
+    :where(
+        p,
+        .text-slate-500,
+        .text-slate-600,
+        .text-stone-600,
+        .text-stone-700
+    ),
+.portfolio-shell.portfolio-shell-dark
+    :where(
+        p,
+        .text-slate-500,
+        .text-slate-600,
+        .text-stone-600,
+        .text-stone-700
+    ) {
+    color: var(--portfolio-muted);
+}
+
+.dark
+    .portfolio-shell
+    :where(
+        .bg-white,
+        .bg-\[\#f8fafc\],
+        .bg-\[\#f4f6f8\],
+        .bg-\[\#eef2f7\],
+        .bg-\[\#fff7ed\]
+    ),
+.portfolio-shell.portfolio-shell-dark
+    :where(
+        .bg-white,
+        .bg-\[\#f8fafc\],
+        .bg-\[\#f4f6f8\],
+        .bg-\[\#eef2f7\],
+        .bg-\[\#fff7ed\]
+    ) {
+    background-color: var(--portfolio-card) !important;
+}
+
+.dark .portfolio-shell :where(.bg-\[\#070b1a\], .bg-\[\#0f172a\]),
+.portfolio-shell.portfolio-shell-dark
+    :where(.bg-\[\#070b1a\], .bg-\[\#0f172a\]) {
+    background-color: var(--portfolio-deep) !important;
+}
+
+.dark
+    .portfolio-shell
+    :where(
+        .border-slate-200,
+        .border-slate-300,
+        .border-\[\#cbd5e1\],
+        .border-\[\#d6dce8\],
+        .border-\[\#e2e8f0\]
+    ),
+.portfolio-shell.portfolio-shell-dark
+    :where(
+        .border-slate-200,
+        .border-slate-300,
+        .border-\[\#cbd5e1\],
+        .border-\[\#d6dce8\],
+        .border-\[\#e2e8f0\]
+    ) {
+    border-color: var(--portfolio-border-strong) !important;
+}
+
+.dark
+    .portfolio-shell
+    :where(.text-\[\#0f172a\], .text-\[\#1f3173\], .text-\[\#9a3412\]),
+.portfolio-shell.portfolio-shell-dark
+    :where(.text-\[\#0f172a\], .text-\[\#1f3173\], .text-\[\#9a3412\]) {
+    color: var(--portfolio-ink) !important;
+}
+
+.dark .portfolio-shell :where(.text-\[\#fb923c\]),
+.portfolio-shell.portfolio-shell-dark :where(.text-\[\#fb923c\]) {
+    color: var(--portfolio-primary) !important;
+}
+
+.dark .portfolio-shell :where(.bg-\[\#fb923c\]),
+.portfolio-shell.portfolio-shell-dark :where(.bg-\[\#fb923c\]) {
+    background-color: var(--portfolio-primary) !important;
+}
+
+.dark .portfolio-shell :where(.bg-\[\#1f3173\]),
+.portfolio-shell.portfolio-shell-dark :where(.bg-\[\#1f3173\]) {
+    background-color: color-mix(
+        in oklab,
+        var(--portfolio-accent) 50%,
+        var(--portfolio-deep)
+    ) !important;
 }
 
 .portfolio-shell :where(.theme-section-work-grid, .theme-section-case-studies) {

@@ -18,58 +18,29 @@
             $services = $section->items ?? [];
         @endphp
 
-        @if ($services !== [])
-            @foreach ($services as $item)
-                <article
-                    class="rounded-xl border border-slate-200 bg-white p-5"
-                >
-                    <p
-                        class="text-xs font-black tracking-[0.16em] text-[#0f172a]"
-                    >
-                        {{ $item['type'] ?? __('capell-theme-portfolio::generic.service_type_label') }}
-                    </p>
-                    <h3 class="mt-3 text-lg font-black text-[#0f172a]">
-                        {{ $item['title'] ?? '' }}
-                    </h3>
-                    <p class="mt-3 text-sm text-stone-600">
-                        {{ $item['summary'] ?? $item['description'] ?? '' }}
-                    </p>
-                </article>
-            @endforeach
-        @else
+        @forelse ($services as $item)
             <article class="rounded-xl border border-slate-200 bg-white p-5">
                 <p class="text-xs font-black tracking-[0.16em] text-[#0f172a]">
-                    {{ __('capell-theme-portfolio::generic.service_discovery_label') }}
+                    {{ $item['type'] ?? __('capell-theme-portfolio::generic.service_type_label') }}
                 </p>
                 <h3 class="mt-3 text-lg font-black text-[#0f172a]">
-                    {{ __('capell-theme-portfolio::generic.service_discovery_title') }}
+                    {{ $item['title'] ?? '' }}
                 </h3>
                 <p class="mt-3 text-sm text-stone-600">
-                    {{ __('capell-theme-portfolio::generic.service_discovery_summary') }}
+                    {{ $item['summary'] ?? $item['description'] ?? '' }}
                 </p>
             </article>
-            <article class="rounded-xl border border-slate-200 bg-white p-5">
-                <p class="text-xs font-black tracking-[0.16em] text-[#0f172a]">
-                    {{ __('capell-theme-portfolio::generic.service_design_label') }}
-                </p>
-                <h3 class="mt-3 text-lg font-black text-[#0f172a]">
-                    {{ __('capell-theme-portfolio::generic.service_design_title') }}
+        @empty
+            <article
+                class="rounded-xl border border-dashed border-slate-300 bg-white p-6 md:col-span-3"
+            >
+                <h3 class="text-lg font-black text-[#0f172a]">
+                    {{ __('capell-theme-portfolio::generic.premium_layout_ready') }}
                 </h3>
-                <p class="mt-3 text-sm text-stone-600">
-                    {{ __('capell-theme-portfolio::generic.service_design_summary') }}
+                <p class="mt-2 text-sm text-slate-600">
+                    {{ __('capell-theme-portfolio::generic.premium_layout_empty') }}
                 </p>
             </article>
-            <article class="rounded-xl border border-slate-200 bg-white p-5">
-                <p class="text-xs font-black tracking-[0.16em] text-[#0f172a]">
-                    {{ __('capell-theme-portfolio::generic.service_launch_label') }}
-                </p>
-                <h3 class="mt-3 text-lg font-black text-[#0f172a]">
-                    {{ __('capell-theme-portfolio::generic.service_launch_title') }}
-                </h3>
-                <p class="mt-3 text-sm text-stone-600">
-                    {{ __('capell-theme-portfolio::generic.service_launch_summary') }}
-                </p>
-            </article>
-        @endif
+        @endforelse
     </div>
 </section>
