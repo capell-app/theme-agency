@@ -1,7 +1,9 @@
 <section class="theme-section theme-section-featured-content">
     @isset($heading)
         <div class="mx-auto max-w-5xl px-6 py-14">
-            <h2 class="text-4xl font-black tracking-tight text-[var(--site-theme-muted)]">
+            <h2
+                class="text-4xl font-black tracking-tight text-[var(--site-theme-muted)]"
+            >
                 {{ $heading }}
             </h2>
         </div>
@@ -12,33 +14,39 @@
             <p
                 class="text-xs font-black tracking-widest text-[var(--site-theme-muted)] uppercase"
             >
-                Featured
+                {{ __('capell-theme-knowledge::generic.featured_content_first_label') }}
             </p>
-            <h3 class="mt-2 text-lg font-black">Field Notes</h3>
+            <h3 class="mt-2 text-lg font-black">
+                {{ __('capell-theme-knowledge::generic.featured_content_first_title') }}
+            </h3>
             <p class="mt-2 text-sm text-stone-600">
-                Curated thought pieces with practical execution details.
+                {{ __('capell-theme-knowledge::generic.featured_content_first_summary') }}
             </p>
         </article>
         <article class="rounded-xl border border-slate-200 bg-white p-5">
             <p
                 class="text-xs font-black tracking-widest text-[var(--site-theme-muted)] uppercase"
             >
-                Templates
+                {{ __('capell-theme-knowledge::generic.featured_content_second_label') }}
             </p>
-            <h3 class="mt-2 text-lg font-black">Design Systems</h3>
+            <h3 class="mt-2 text-lg font-black">
+                {{ __('capell-theme-knowledge::generic.featured_content_second_title') }}
+            </h3>
             <p class="mt-2 text-sm text-stone-600">
-                Download-ready snippets to speed content production.
+                {{ __('capell-theme-knowledge::generic.featured_content_second_summary') }}
             </p>
         </article>
         <article class="rounded-xl border border-slate-200 bg-white p-5">
             <p
                 class="text-xs font-black tracking-widest text-[var(--site-theme-muted)] uppercase"
             >
-                Signals
+                {{ __('capell-theme-knowledge::generic.featured_content_third_label') }}
             </p>
-            <h3 class="mt-2 text-lg font-black">Insights</h3>
+            <h3 class="mt-2 text-lg font-black">
+                {{ __('capell-theme-knowledge::generic.featured_content_third_title') }}
+            </h3>
             <p class="mt-2 text-sm text-stone-600">
-                Metrics and methods to improve conversion from insight pages.
+                {{ __('capell-theme-knowledge::generic.featured_content_third_summary') }}
             </p>
         </article>
     </div>
