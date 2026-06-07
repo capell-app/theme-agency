@@ -50,6 +50,7 @@
             "class": "Capell\\Contacts\\Manifest\\ContactsModelsContribution",
             "modelClasses": [
                 "Capell\\Contacts\\Models\\Contact",
+                "Capell\\Contacts\\Models\\ContactTag",
                 "Capell\\Contacts\\Models\\Organisation",
                 "Capell\\Contacts\\Models\\Lead",
                 "Capell\\Contacts\\Models\\ContactActivity"
@@ -66,6 +67,8 @@
         "settings": false,
         "requiredTables": [
             "contacts",
+            "contact_tag_memberships",
+            "contact_tags",
             "contact_organisations",
             "contact_organisation_memberships",
             "contact_leads",

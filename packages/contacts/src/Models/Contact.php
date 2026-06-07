@@ -172,6 +172,39 @@ class Contact extends Model
         return $this->hasMany(ContactActivity::class);
     }
 
+    /**
+     * @return BelongsToMany<ContactTag, $this>
+     */
+    public function tags(): BelongsToMany
+    {
+        $pivotTable = config('capell-contacts.tables.contact_tag_memberships');
+
+        return $this->belongsToMany(
+            ContactTag::class,
+            is_string($pivotTable) ? $pivotTable : 'contact_tag_memberships',
+            'contact_id',
+            'contact_tag_id',
+        )->withTimestamps();
+    }
+
+    /**
+     * @param  Builder<Contact>  $query
+     * @return Builder<Contact>
+     */
+    public function scopeWithTag(Builder $query, string $tag): Builder
+    {
+        $slug = ContactTag::slugFor($tag);
+
+        if ($slug === '') {
+            return $query;
+        }
+
+        return $query->whereHas(
+            'tags',
+            static fn (Builder $tagQuery): Builder => $tagQuery->where('slug', $slug),
+        );
+    }
+
     #[Override]
     protected static function booted(): void
     {
@@ -183,13 +216,6 @@ class Contact extends Model
 
         static::saved(fn (Contact $contact): null => self::flushOverviewStats($contact));
         static::deleted(fn (Contact $contact): null => self::flushOverviewStats($contact));
-    }
-
-    private static function flushOverviewStats(Contact $contact): null
-    {
-        ContactsOverviewStatsCache::flushForSite($contact->site_id);
-
-        return null;
     }
 
     /**
@@ -221,6 +247,13 @@ class Contact extends Model
             'first_seen_at' => 'immutable_datetime',
             'last_seen_at' => 'immutable_datetime',
         ];
+    }
+
+    private static function flushOverviewStats(Contact $contact): null
+    {
+        ContactsOverviewStatsCache::flushForSite($contact->site_id);
+
+        return null;
     }
 
     private static function hashIdentity(string $value): string

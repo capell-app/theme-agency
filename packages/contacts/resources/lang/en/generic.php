@@ -14,6 +14,7 @@ return [
         'phone' => 'Phone',
         'status' => 'Status',
         'summary' => 'Summary',
+        'tags' => 'Tags',
         'title' => 'Title',
         'type' => 'Type',
         'updated_at' => 'Updated at',
@@ -23,6 +24,9 @@ return [
     'actions' => [
         'privacy_anonymize' => 'Anonymize contact',
         'privacy_export' => 'Export privacy data',
+    ],
+    'filters' => [
+        'tag' => 'Tag',
     ],
     'resources' => [
         'activities' => 'Activities',

@@ -9,6 +9,7 @@ use Capell\Contacts\Actions\AnonymizeContactWithAuditAction;
 use Capell\Contacts\Actions\AuditContactPrivacyExportAction;
 use Capell\Contacts\Filament\Resources\Contacts\Pages\ListContacts;
 use Capell\Contacts\Models\Contact;
+use Capell\Contacts\Models\ContactTag;
 use Capell\Contacts\Providers\ContactsServiceProvider;
 use Capell\Core\Facades\CapellCore;
 use Filament\Actions\Action;
@@ -16,6 +17,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
@@ -39,6 +41,16 @@ final class ContactResource extends Resource
             TextColumn::make('phone')->label(__('capell-contacts::generic.fields.phone')),
             TextColumn::make('status')->label(__('capell-contacts::generic.fields.status'))->badge()->sortable(),
             TextColumn::make('last_seen_at')->label(__('capell-contacts::generic.fields.last_seen_at'))->dateTime()->sortable(),
+        ])->filters([
+            SelectFilter::make('tag')
+                ->label(__('capell-contacts::generic.filters.tag'))
+                ->options(fn (): array => ContactTag::query()
+                    ->orderBy('name')
+                    ->pluck('name', 'slug')
+                    ->all())
+                ->query(fn (Builder $query, array $data): Builder => is_string($data['value'] ?? null) && $data['value'] !== ''
+                    ? $query->withTag($data['value'])
+                    : $query),
         ])->recordActions([
             Action::make('privacy_export')
                 ->label(__('capell-contacts::generic.actions.privacy_export'))
@@ -77,7 +89,7 @@ final class ContactResource extends Resource
     #[Override]
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with('site');
+        return parent::getEloquentQuery()->with(['site', 'tags']);
     }
 
     #[Override]

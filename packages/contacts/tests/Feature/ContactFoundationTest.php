@@ -35,6 +35,7 @@ use Capell\Contacts\Enums\ContactActivityType;
 use Capell\Contacts\Enums\ContactStatus;
 use Capell\Contacts\Enums\LeadStatus;
 use Capell\Contacts\Models\Contact;
+use Capell\Contacts\Models\ContactTag;
 use Capell\Contacts\Models\Lead;
 use Capell\Contacts\Models\Organisation;
 use Capell\Contacts\Tests\ContactsTestCase;
@@ -80,6 +81,8 @@ it('loads the contacts foundation tables', function (): void {
     expect(Schema::hasTable('contacts'))->toBeTrue()
         ->and(Schema::hasTable('contact_organisations'))->toBeTrue()
         ->and(Schema::hasTable('contact_organisation_memberships'))->toBeTrue()
+        ->and(Schema::hasTable('contact_tags'))->toBeTrue()
+        ->and(Schema::hasTable('contact_tag_memberships'))->toBeTrue()
         ->and(Schema::hasTable('contact_leads'))->toBeTrue()
         ->and(Schema::hasTable('contact_activities'))->toBeTrue()
         ->and(Schema::hasColumn('contacts', 'source_key'))->toBeTrue()
@@ -163,7 +166,7 @@ it('syncs source records into contacts, tags, leads, and activities', function (
         ->and($contact->source_identifier_hash)->toBe(Contact::sourceIdentifierHash('submission-1001'))
         ->and($contact->profile)->toMatchArray([
             'form' => 'Contact',
-            'tags' => ['form lead', 'vip'],
+            'tags' => ['form-lead', 'vip'],
             'sources' => [
                 'form_builder' => [
                     'identifier' => 'submission-1001',
@@ -171,6 +174,9 @@ it('syncs source records into contacts, tags, leads, and activities', function (
                 ],
             ],
         ])
+        ->and($contact->tags()->pluck('slug')->all())->toBe(['form-lead', 'vip'])
+        ->and(ContactTag::query()->where('slug', 'form-lead')->exists())->toBeTrue()
+        ->and(Contact::query()->withTag('Form Lead')->sole()->is($contact))->toBeTrue()
         ->and($result->lead)->toBeInstanceOf(Lead::class)
         ->and($result->lead?->status)->toBe(LeadStatus::Open)
         ->and($result->lead?->context)->toMatchArray([
