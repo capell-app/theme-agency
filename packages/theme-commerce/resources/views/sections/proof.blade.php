@@ -1,9 +1,11 @@
-<section class="retail-proof border-y border-stone-200 bg-[#17211c] text-white">
+<section
+    class="retail-proof border-y border-stone-200 bg-[var(--retail-ink)] text-white"
+>
     <div class="px-6">
         <div class="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
             <div>
                 <p
-                    class="text-xs font-black tracking-[0.18em] text-[#e86f5c] uppercase"
+                    class="text-xs font-black tracking-[0.18em] text-[var(--retail-accent)] uppercase"
                 >
                     {{ __('capell-theme-commerce::generic.retail_proof_label') }}
                 </p>
@@ -22,45 +24,45 @@
             <div class="grid gap-4 sm:grid-cols-2">
                 @foreach (($section->items ?? []) as $item)
                     <article
-                        class="{{ $loop->first ? 'sm:col-span-2' : '' }} overflow-hidden rounded-2xl border border-white/10 bg-[#f8eee3] text-[#17211c] shadow-[0_18px_60px_rgba(0,0,0,0.24)]"
+                        class="{{ $loop->first ? 'sm:col-span-2' : '' }} overflow-hidden rounded-2xl border border-white/10 bg-[var(--retail-panel)] text-[var(--retail-ink)] shadow-[0_18px_60px_rgba(0,0,0,0.24)]"
                     >
                         <div
                             class="{{ $loop->first ? 'md:grid-cols-[0.72fr_1fr_0.58fr]' : 'md:grid-cols-[0.72fr_1fr]' }} grid min-h-full"
                         >
                             <div
-                                class="flex min-h-36 items-end bg-[#101a16] p-5 text-white"
+                                class="flex min-h-36 items-end bg-[var(--retail-deep)] p-5 text-white"
                             >
                                 <div class="w-full">
                                     <div
                                         class="flex items-center justify-between gap-3"
                                     >
                                         <span
-                                            class="text-xs font-black text-[#f6e6d7] uppercase"
+                                            class="text-xs font-black text-[var(--retail-warm)] uppercase"
                                         >
                                             {{ __('capell-theme-commerce::generic.proof_order_label') }}
                                         </span>
                                         <span
-                                            class="rounded-full bg-[#e86f5c] px-2 py-1 text-xs font-black text-white"
+                                            class="rounded-full bg-[var(--retail-accent)] px-2 py-1 text-xs font-black text-white"
                                         >
                                             {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}
                                         </span>
                                     </div>
                                     <div class="mt-8 grid grid-cols-3 gap-2">
                                         <span
-                                            class="h-16 rounded-md bg-[#f8eee3]/80"
+                                            class="h-16 rounded-md bg-[var(--retail-panel)]/80"
                                         ></span>
                                         <span
-                                            class="h-16 rounded-md bg-[#1f5f4a]"
+                                            class="h-16 rounded-md bg-[var(--retail-primary)]"
                                         ></span>
                                         <span
-                                            class="h-16 rounded-md bg-[#e86f5c]/80"
+                                            class="h-16 rounded-md bg-[var(--retail-accent)]/80"
                                         ></span>
                                     </div>
                                     <div
                                         class="mt-4 h-2 rounded-full bg-white/15"
                                     >
                                         <span
-                                            class="block h-2 w-3/4 rounded-full bg-[#e86f5c]"
+                                            class="block h-2 w-3/4 rounded-full bg-[var(--retail-accent)]"
                                         ></span>
                                     </div>
                                 </div>
@@ -68,12 +70,12 @@
 
                             <div class="p-6">
                                 <p
-                                    class="text-xs font-black text-[#1f5f4a] uppercase"
+                                    class="text-xs font-black text-[var(--retail-primary)] uppercase"
                                 >
                                     {{ $item['name'] ?? $item['logo'] ?? __('capell-theme-commerce::generic.merchandising_signal') }}
                                 </p>
                                 <p
-                                    class="mt-4 text-5xl leading-none font-black text-[#17211c]"
+                                    class="mt-4 text-5xl leading-none font-black text-[var(--retail-ink)]"
                                 >
                                     {{ $item['metric'] ?? $item['quote'] ?? '' }}
                                 </p>
@@ -84,7 +86,7 @@
                                 </p>
                                 @if (($item['rating'] ?? $item['stars'] ?? null) || ($item['reviewCount'] ?? $item['reviews'] ?? null))
                                     <div
-                                        class="mt-4 flex flex-wrap items-center gap-2 text-sm font-black text-[#1f5f4a]"
+                                        class="mt-4 flex flex-wrap items-center gap-2 text-sm font-black text-[var(--retail-primary)]"
                                         aria-label="{{ __('capell-theme-commerce::generic.rating_label') }}"
                                     >
                                         @if ($item['rating'] ?? $item['stars'] ?? null)
@@ -113,7 +115,7 @@
 
                             @if ($loop->first)
                                 <div
-                                    class="border-t border-[#e8ddd0] bg-white/65 p-5 md:border-t-0 md:border-l"
+                                    class="border-t border-[var(--retail-line)] bg-white/65 p-5 md:border-t-0 md:border-l"
                                 >
                                     <div class="space-y-4">
                                         <div>
@@ -124,10 +126,10 @@
                                             </p>
                                             <div class="mt-2 flex gap-2">
                                                 <span
-                                                    class="h-8 flex-1 rounded-md bg-[#17211c]"
+                                                    class="h-8 flex-1 rounded-md bg-[var(--retail-ink)]"
                                                 ></span>
                                                 <span
-                                                    class="h-8 flex-1 rounded-md bg-[#1f5f4a]"
+                                                    class="h-8 flex-1 rounded-md bg-[var(--retail-primary)]"
                                                 ></span>
                                             </div>
                                         </div>
@@ -141,16 +143,16 @@
                                                 class="mt-2 grid grid-cols-4 gap-2"
                                             >
                                                 <span
-                                                    class="h-9 rounded-md bg-[#e86f5c]"
+                                                    class="h-9 rounded-md bg-[var(--retail-accent)]"
                                                 ></span>
                                                 <span
-                                                    class="h-9 rounded-md bg-[#f6e6d7]"
+                                                    class="h-9 rounded-md bg-[var(--retail-warm)]"
                                                 ></span>
                                                 <span
-                                                    class="h-9 rounded-md bg-[#1f5f4a]"
+                                                    class="h-9 rounded-md bg-[var(--retail-primary)]"
                                                 ></span>
                                                 <span
-                                                    class="h-9 rounded-md bg-[#17211c]"
+                                                    class="h-9 rounded-md bg-[var(--retail-ink)]"
                                                 ></span>
                                             </div>
                                         </div>

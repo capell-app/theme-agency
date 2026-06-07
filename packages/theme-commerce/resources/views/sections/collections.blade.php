@@ -1,10 +1,12 @@
 @if (in_array($section->variant ?? null, ['gallery', 'pathways', 'spotlight'], true))
     @include('capell-foundation-theme::theme.sections.content-listing', ['section' => $section])
 @else
-    <section class="retail-collections bg-[#fffaf3]">
+    <section class="retail-collections bg-[var(--retail-surface)]">
         <div class="px-6">
             <div class="grid gap-4 md:grid-cols-[0.75fr_1fr] md:items-end">
-                <h2 class="text-4xl font-black tracking-tight text-[#1f2d1c]">
+                <h2
+                    class="text-4xl font-black tracking-tight text-[var(--retail-ink)]"
+                >
                     {{ $section->heading }}
                 </h2>
                 @if ($section->summary ?? null)
@@ -27,7 +29,7 @@
                     @foreach (($section->items ?? []) as $item)
                         <a
                             href="{{ $item['url'] ?? '#' }}"
-                            class="group min-w-[250px] snap-start overflow-hidden rounded-xl border border-stone-200 bg-white transition hover:-translate-y-1 hover:border-[#1f5f4a] hover:shadow-lg md:min-w-0"
+                            class="group min-w-[250px] snap-start overflow-hidden rounded-xl border border-stone-200 bg-white transition hover:-translate-y-1 hover:border-[var(--retail-primary)] hover:shadow-lg md:min-w-0"
                         >
                             @if ($item['image'] ?? $item['imageUrl'] ?? null)
                                 <img
@@ -40,14 +42,14 @@
                             <div class="p-5">
                                 @if ($item['type'] ?? null)
                                     <p
-                                        class="mb-4 text-xs font-black tracking-widest text-[#1f5f4a] uppercase"
+                                        class="mb-4 text-xs font-black tracking-widest text-[var(--retail-primary)] uppercase"
                                     >
                                         {{ $item['type'] }}
                                     </p>
                                 @endif
 
                                 <h3
-                                    class="text-xl font-black group-hover:text-[#1f5f4a]"
+                                    class="text-xl font-black group-hover:text-[var(--retail-primary)]"
                                 >
                                     {{ $item['title'] }}
                                 </h3>

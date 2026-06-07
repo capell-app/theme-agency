@@ -12,13 +12,13 @@
     ];
 @endphp
 
-<section class="retail-product-detail bg-[#fffaf3]">
+<section class="retail-product-detail bg-[var(--retail-surface)]">
     <div
         class="grid gap-8 px-6 lg:grid-cols-[minmax(0,1.08fr)_minmax(22rem,0.92fr)] lg:items-start"
     >
         <div>
             <p
-                class="text-xs font-black tracking-[0.18em] text-[#1f5f4a] uppercase"
+                class="text-xs font-black tracking-[0.18em] text-[var(--retail-primary)] uppercase"
             >
                 {{ __('capell-theme-commerce::generic.product_detail_label') }}
             </p>
@@ -41,11 +41,11 @@
                         />
                     @else
                         <div
-                            class="flex aspect-square items-end rounded-2xl bg-[#17211c] p-6 text-white"
+                            class="flex aspect-square items-end rounded-2xl bg-[var(--retail-ink)] p-6 text-white"
                         >
                             <div class="w-full">
                                 <p
-                                    class="text-xs font-black tracking-[0.18em] text-[#e86f5c] uppercase"
+                                    class="text-xs font-black tracking-[0.18em] text-[var(--retail-accent)] uppercase"
                                 >
                                     {{ __('capell-theme-commerce::generic.product_gallery_label') }}
                                 </p>
@@ -54,10 +54,10 @@
                                         class="h-16 rounded-xl bg-white/15"
                                     ></span>
                                     <span
-                                        class="h-16 rounded-xl bg-[#1f5f4a]"
+                                        class="h-16 rounded-xl bg-[var(--retail-primary)]"
                                     ></span>
                                     <span
-                                        class="h-16 rounded-xl bg-[#e86f5c]"
+                                        class="h-16 rounded-xl bg-[var(--retail-accent)]"
                                     ></span>
                                 </div>
                             </div>
@@ -90,7 +90,7 @@
                                 aria-hidden="true"
                             >
                                 <span
-                                    class="block aspect-square rounded-lg bg-[#17211c]/10"
+                                    class="block aspect-square rounded-lg bg-[var(--retail-ink)]/10"
                                 ></span>
                             </div>
                         @endforeach
@@ -101,11 +101,15 @@
 
         <div class="retail-frame bg-white p-6 shadow-sm">
             @if ($section->heading ?? null)
-                <h2 class="text-4xl font-black tracking-tight text-[#17211c]">
+                <h2
+                    class="text-4xl font-black tracking-tight text-[var(--retail-ink)]"
+                >
                     {{ $section->heading }}
                 </h2>
             @else
-                <h2 class="text-3xl font-black tracking-tight text-[#17211c]">
+                <h2
+                    class="text-3xl font-black tracking-tight text-[var(--retail-ink)]"
+                >
                     {{ __('capell-theme-commerce::generic.product_detail_empty_title') }}
                 </h2>
                 <p class="mt-3 text-sm text-stone-600">
@@ -121,7 +125,7 @@
 
             <div class="mt-6 flex flex-wrap items-end gap-3">
                 @if ($section->price ?? null)
-                    <p class="text-3xl font-black text-[#17211c]">
+                    <p class="text-3xl font-black text-[var(--retail-ink)]">
                         {{ $section->price }}
                     </p>
                 @endif
@@ -137,7 +141,7 @@
 
                 @if ($stockStatus)
                     <p
-                        class="rounded-full bg-[#1f5f4a]/10 px-3 py-1 text-xs font-black text-[#1f5f4a] uppercase"
+                        class="rounded-full bg-[var(--retail-primary)]/10 px-3 py-1 text-xs font-black text-[var(--retail-primary)] uppercase"
                     >
                         {{ $stockStatus }}
                     </p>
@@ -147,14 +151,14 @@
             @if (is_countable($variants) && count($variants) > 0)
                 <div class="mt-7">
                     <p
-                        class="text-xs font-black tracking-[0.18em] text-[#1f5f4a] uppercase"
+                        class="text-xs font-black tracking-[0.18em] text-[var(--retail-primary)] uppercase"
                     >
                         {{ __('capell-theme-commerce::generic.product_variants_label') }}
                     </p>
                     <div class="mt-3 flex flex-wrap gap-2">
                         @foreach ($variants as $variant)
                             <span
-                                class="rounded-full border border-stone-200 bg-[#fffaf3] px-4 py-2 text-sm font-bold text-[#17211c]"
+                                class="rounded-full border border-stone-200 bg-[var(--retail-surface)] px-4 py-2 text-sm font-bold text-[var(--retail-ink)]"
                             >
                                 {{ $variant['label'] ?? $variant['name'] ?? $variant }}
                             </span>
@@ -166,15 +170,15 @@
             <div class="mt-7 grid gap-3">
                 <a
                     href="{{ $ctaUrl }}"
-                    class="inline-flex justify-center rounded-full bg-[#e86f5c] px-6 py-3 text-sm font-black text-white"
+                    class="inline-flex justify-center rounded-full bg-[var(--retail-accent)] px-6 py-3 text-sm font-black text-white"
                 >
                     {{ $ctaLabel }}
                 </a>
                 <div
-                    class="rounded-xl border border-stone-200 bg-[#fffaf3] p-4"
+                    class="rounded-xl border border-stone-200 bg-[var(--retail-surface)] p-4"
                 >
                     <p
-                        class="text-xs font-black tracking-[0.18em] text-[#1f5f4a] uppercase"
+                        class="text-xs font-black tracking-[0.18em] text-[var(--retail-primary)] uppercase"
                     >
                         {{ __('capell-theme-commerce::generic.product_stock_label') }}
                     </p>
@@ -193,7 +197,7 @@
             @if (is_countable($recommendations) && count($recommendations) > 0)
                 <div class="mt-8 border-t border-stone-200 pt-6">
                     <p
-                        class="text-xs font-black tracking-[0.18em] text-[#1f5f4a] uppercase"
+                        class="text-xs font-black tracking-[0.18em] text-[var(--retail-primary)] uppercase"
                     >
                         {{ __('capell-theme-commerce::generic.product_recommendations_label') }}
                     </p>
@@ -201,13 +205,15 @@
                         @foreach (array_slice($recommendations, 0, 2) as $recommendation)
                             <a
                                 href="{{ $recommendation['url'] ?? '#' }}"
-                                class="rounded-xl border border-stone-200 bg-[#fffaf3] p-4 text-sm font-bold text-[#17211c]"
+                                class="rounded-xl border border-stone-200 bg-[var(--retail-surface)] p-4 text-sm font-bold text-[var(--retail-ink)]"
                             >
                                 <span>
                                     {{ $recommendation['title'] ?? $recommendation['label'] ?? '' }}
                                 </span>
                                 @if ($recommendation['price'] ?? null)
-                                    <span class="mt-2 block text-[#1f5f4a]">
+                                    <span
+                                        class="mt-2 block text-[var(--retail-primary)]"
+                                    >
                                         {{ $recommendation['price'] }}
                                     </span>
                                 @endif

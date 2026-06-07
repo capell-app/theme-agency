@@ -2,11 +2,11 @@
     $items = $section->items ?? $section->features ?? [];
 @endphp
 
-<section class="retail-comparison bg-[#fffaf3]">
+<section class="retail-comparison bg-[var(--retail-surface)]">
     <div class="px-6">
         <div class="mx-auto max-w-3xl text-center">
             <h2
-                class="mx-auto text-4xl font-black tracking-tight text-[#17211c]"
+                class="mx-auto text-4xl font-black tracking-tight text-[var(--retail-ink)]"
             >
                 {{ $section->heading }}
             </h2>

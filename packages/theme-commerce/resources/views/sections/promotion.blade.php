@@ -8,11 +8,11 @@
 <section class="theme-section theme-section-promotion bg-white">
     <div class="mx-auto max-w-6xl px-6 py-16">
         <div
-            class="grid gap-8 border border-[#1f5f4a]/20 bg-[#1f5f4a] p-8 text-white md:grid-cols-[0.78fr_1fr] md:items-center"
+            class="grid gap-8 border border-[var(--retail-primary)]/20 bg-[var(--retail-primary)] p-8 text-white md:grid-cols-[0.78fr_1fr] md:items-center"
         >
             <div>
                 <p
-                    class="text-xs font-black tracking-[0.16em] text-[#f6e6d7] uppercase"
+                    class="text-xs font-black tracking-[0.16em] text-[var(--retail-warm)] uppercase"
                 >
                     {{ __('capell-theme-commerce::generic.promotion_label') }}
                 </p>
@@ -26,7 +26,9 @@
                 @endif
 
                 @if ($countdown)
-                    <div class="mt-6 rounded-2xl bg-white p-4 text-[#17211c]">
+                    <div
+                        class="mt-6 rounded-2xl bg-white p-4 text-[var(--retail-ink)]"
+                    >
                         <p class="text-xs font-black text-stone-500 uppercase">
                             {{ __('capell-theme-commerce::generic.promotion_countdown_label') }}
                         </p>
@@ -34,10 +36,10 @@
                             <div class="mt-3 grid grid-cols-3 gap-2">
                                 @foreach ($countdown as $countdownItem)
                                     <div
-                                        class="rounded-xl bg-[#fffaf3] px-3 py-2"
+                                        class="rounded-xl bg-[var(--retail-surface)] px-3 py-2"
                                     >
                                         <p
-                                            class="text-lg font-black text-[#e86f5c]"
+                                            class="text-lg font-black text-[var(--retail-accent)]"
                                         >
                                             {{ $countdownItem['value'] ?? $countdownItem['count'] ?? '' }}
                                         </p>
@@ -50,7 +52,9 @@
                                 @endforeach
                             </div>
                         @else
-                            <p class="mt-2 text-lg font-black text-[#e86f5c]">
+                            <p
+                                class="mt-2 text-lg font-black text-[var(--retail-accent)]"
+                            >
                                 {{ $countdown }}
                             </p>
                         @endif
@@ -63,7 +67,9 @@
                     <article
                         class="grid gap-2 border border-white/20 bg-white/10 p-4"
                     >
-                        <p class="text-xs font-black text-[#f6e6d7] uppercase">
+                        <p
+                            class="text-xs font-black text-[var(--retail-warm)] uppercase"
+                        >
                             {{ $item['type'] ?? __('capell-theme-commerce::generic.campaign_ready') }}
                         </p>
                         <h3 class="text-lg font-black">

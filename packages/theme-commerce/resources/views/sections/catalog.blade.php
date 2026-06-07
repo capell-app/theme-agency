@@ -8,7 +8,9 @@
         class="grid min-w-0 gap-8 px-6 lg:grid-cols-[1fr_0.9fr] lg:items-center"
     >
         <div class="min-w-0">
-            <h2 class="text-4xl font-black tracking-tight text-[#17211c]">
+            <h2
+                class="text-4xl font-black tracking-tight text-[var(--retail-ink)]"
+            >
                 {{ $section->heading }}
             </h2>
             @if ($section->summary ?? null)
@@ -27,7 +29,7 @@
                 >
                     @foreach ($items as $item)
                         <span
-                            class="min-w-[220px] snap-start rounded-full border border-stone-200 bg-[#fffaf3] px-4 py-2 text-sm font-bold text-[#17211c]"
+                            class="min-w-[220px] snap-start rounded-full border border-stone-200 bg-[var(--retail-surface)] px-4 py-2 text-sm font-bold text-[var(--retail-ink)]"
                         >
                             {{ $item['title'] ?? $item['label'] ?? '' }}
                         </span>
@@ -53,10 +55,10 @@
             </div>
 
             <div
-                class="mt-8 rounded-xl border border-stone-200 bg-[#17211c] p-6 text-white"
+                class="mt-8 rounded-xl border border-stone-200 bg-[var(--retail-ink)] p-6 text-white"
             >
                 <p
-                    class="text-xs font-black tracking-[0.16em] text-[#e86f5c] uppercase"
+                    class="text-xs font-black tracking-[0.16em] text-[var(--retail-accent)] uppercase"
                 >
                     {{ $shopifyAvailable ? __('capell-theme-commerce::generic.catalog_connected') : __('capell-theme-commerce::generic.catalog_ready') }}
                 </p>
@@ -69,9 +71,9 @@
             </div>
         </div>
 
-        <div class="retail-frame bg-[#17211c] p-6 text-white">
+        <div class="retail-frame bg-[var(--retail-ink)] p-6 text-white">
             <p
-                class="text-xs font-black tracking-widest text-[#e86f5c] uppercase"
+                class="text-xs font-black tracking-widest text-[var(--retail-accent)] uppercase"
             >
                 {{ __('capell-theme-commerce::generic.catalog_highlights_label') }}
             </p>

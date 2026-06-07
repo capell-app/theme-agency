@@ -6,10 +6,13 @@
         --retail-primary: var(--theme-primary, #1f5f4a);
         --retail-accent: var(--theme-accent, #e86f5c);
         --retail-surface: var(--theme-surface, #fffaf3);
+        --retail-warm: color-mix(in srgb, var(--retail-surface) 82%, white);
+        --retail-panel: color-mix(in srgb, var(--retail-surface) 88%, white);
+        --retail-deep: color-mix(in srgb, var(--retail-ink) 88%, black);
 
         background: linear-gradient(
             180deg,
-            #fffaf3 0%,
+            var(--retail-surface) 0%,
             #ffffff 42%,
             var(--retail-surface) 100%
         );
@@ -76,7 +79,7 @@
     }
 
     .retail-skip-link {
-        background: #17211c;
+        background: var(--retail-ink);
         color: #ffffff;
         font-weight: 800;
         left: 1rem;

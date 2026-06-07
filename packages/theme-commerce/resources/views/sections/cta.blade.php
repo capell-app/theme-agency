@@ -7,7 +7,7 @@
     <div class="px-6 py-16">
         <div class="mx-auto max-w-6xl">
             <div
-                class="grid gap-6 rounded-3xl border border-[#1f5f4a]/25 bg-[#1f5f4a] p-8 text-white shadow-2xl shadow-[#1f5f4a]/20 md:p-12"
+                class="grid gap-6 rounded-3xl border border-[var(--retail-primary)]/25 bg-[var(--retail-primary)] p-8 text-white shadow-[var(--retail-primary)]/20 shadow-2xl md:p-12"
             >
                 <div class="grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
                     <div>
@@ -29,7 +29,7 @@
                                 @foreach ($metrics as $metric)
                                     <div class="rounded-xl bg-white/10 p-3">
                                         <p
-                                            class="text-2xl font-black text-[#f6e6d7]"
+                                            class="text-2xl font-black text-[var(--retail-warm)]"
                                         >
                                             {{ $metric['value'] ?? '' }}
                                         </p>
@@ -48,7 +48,7 @@
                         @foreach ($actions as $action)
                             <a
                                 href="{{ $action['url'] }}"
-                                class="retail-cta {{ ($action['style'] ?? 'primary') === 'secondary' ? 'border-white/45 bg-white/5 text-white hover:bg-white/15' : 'bg-white text-[#1f5f4a] hover:bg-stone-100' }} rounded-full border px-6 py-3 text-sm font-black transition"
+                                class="retail-cta {{ ($action['style'] ?? 'primary') === 'secondary' ? 'border-white/45 bg-white/5 text-white hover:bg-white/15' : 'bg-white text-[var(--retail-primary)] hover:bg-stone-100' }} rounded-full border px-6 py-3 text-sm font-black transition"
                             >
                                 {{ $action['label'] }}
                             </a>
@@ -57,7 +57,7 @@
                 </div>
 
                 <div
-                    class="relative mt-2 h-2 overflow-hidden rounded-full bg-[#143c2f]"
+                    class="relative mt-2 h-2 overflow-hidden rounded-full bg-[var(--retail-deep)]"
                 >
                     <div
                         class="theme-cta-progress absolute inset-y-0 left-0 hidden w-1/3 animate-pulse rounded-full bg-white/90"

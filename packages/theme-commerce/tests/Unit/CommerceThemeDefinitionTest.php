@@ -252,6 +252,28 @@ it('keeps commerce typography defaults low specificity so section color utilitie
         ->not->toMatch('/(?:^|\n)\s*\.retail-shell\s+(?:h1|h2|h3|p)\b/');
 });
 
+it('routes commerce section palette utilities through retail tokens', function (): void {
+    $viewPaths = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator(__DIR__ . '/../../resources/views', FilesystemIterator::SKIP_DOTS),
+    );
+
+    $offendingViews = [];
+
+    foreach ($viewPaths as $viewPath) {
+        if (! $viewPath instanceof SplFileInfo || $viewPath->getExtension() !== 'php') {
+            continue;
+        }
+
+        $contents = (string) file_get_contents($viewPath->getPathname());
+
+        if (preg_match('/(?:bg|text|border|shadow|hover:border|hover:text|group-hover:text)-\[#(?:[0-9a-fA-F]{3}){1,2}\]/', $contents) === 1) {
+            $offendingViews[] = $viewPath->getFilename();
+        }
+    }
+
+    expect($offendingViews)->toBe([]);
+});
+
 it('renders translated fallback and data-driven hero trust badges', function (): void {
     View::addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/views');
     resolve(Translator::class)->addNamespace('capell-theme-commerce', __DIR__ . '/../../resources/lang');

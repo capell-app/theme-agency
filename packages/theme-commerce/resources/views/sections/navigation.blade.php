@@ -1,11 +1,11 @@
 <nav
-    class="retail-navigation sticky top-0 z-20 border-b border-stone-200/80 bg-[#fffaf3]/95 backdrop-blur"
+    class="retail-navigation sticky top-0 z-20 border-b border-stone-200/80 bg-[var(--retail-surface)]/95 backdrop-blur"
     aria-label="{{ __('capell-theme-commerce::generic.main_navigation') }}"
 >
     <div class="flex items-center justify-between px-6 py-4">
         <a
             href="/"
-            class="text-base font-black text-[#17211c]"
+            class="text-base font-black text-[var(--retail-ink)]"
         >
             {{ $section->brandName }}
         </a>
@@ -36,7 +36,7 @@
             @if ($section->basketUrl ?? null)
                 <a
                     href="{{ $section->basketUrl }}"
-                    class="inline-flex items-center gap-2 rounded-full border border-stone-300 px-3 py-2 text-sm font-black text-[#17211c]"
+                    class="inline-flex items-center gap-2 rounded-full border border-stone-300 px-3 py-2 text-sm font-black text-[var(--retail-ink)]"
                     aria-label="{{ __('capell-theme-commerce::generic.basket_label') }}"
                 >
                     <span>
@@ -44,7 +44,7 @@
                     </span>
                     @if ($section->basketCount ?? null)
                         <span
-                            class="rounded-full bg-[#e86f5c] px-2 py-0.5 text-xs text-white"
+                            class="rounded-full bg-[var(--retail-accent)] px-2 py-0.5 text-xs text-white"
                         >
                             {{ $section->basketCount }}
                         </span>

@@ -10,7 +10,9 @@
             class="flex flex-col justify-between gap-5 md:flex-row md:items-end"
         >
             <div>
-                <h2 class="text-4xl font-black tracking-tight text-[#17211c]">
+                <h2
+                    class="text-4xl font-black tracking-tight text-[var(--retail-ink)]"
+                >
                     {{ $section->heading }}
                 </h2>
                 @if ($section->summary ?? null)
@@ -31,7 +33,7 @@
             >
                 @foreach ($products as $product)
                     <article
-                        class="{{ $usesCarousel ? 'min-w-[240px] snap-start sm:min-w-[260px] lg:min-w-[280px]' : '' }} group rounded-xl border border-stone-200 bg-[#fffaf3] p-3 transition hover:-translate-y-1 hover:shadow-lg"
+                        class="{{ $usesCarousel ? 'min-w-[240px] snap-start sm:min-w-[260px] lg:min-w-[280px]' : '' }} group rounded-xl border border-stone-200 bg-[var(--retail-surface)] p-3 transition hover:-translate-y-1 hover:shadow-lg"
                     >
                         @if ($product['image'] ?? $product['imageUrl'] ?? null)
                             <div class="overflow-hidden rounded-lg">
@@ -48,18 +50,18 @@
                             </div>
                         @else
                             <div
-                                class="retail-product-placeholder rounded-lg border border-[#e8ddd0] bg-[#17211c] p-4 text-white"
+                                class="retail-product-placeholder rounded-lg border border-[var(--retail-line)] bg-[var(--retail-ink)] p-4 text-white"
                             >
                                 <div
                                     class="flex items-center justify-between gap-3"
                                 >
                                     <p
-                                        class="text-xs font-black text-[#f6e6d7] uppercase"
+                                        class="text-xs font-black text-[var(--retail-warm)] uppercase"
                                     >
                                         {{ $product['icon'] ?? $product['type'] ?? __('capell-theme-commerce::generic.product_label') }}
                                     </p>
                                     <span
-                                        class="rounded-full bg-[#e86f5c] px-2 py-1 text-xs font-black text-white"
+                                        class="rounded-full bg-[var(--retail-accent)] px-2 py-1 text-xs font-black text-white"
                                     >
                                         {{ $product['price'] ?? $product['metric'] ?? __('capell-theme-commerce::generic.range_label') }}
                                     </span>
@@ -68,21 +70,23 @@
                                     class="mt-8 grid grid-cols-[1fr_0.72fr] gap-2"
                                 >
                                     <div
-                                        class="rounded-md bg-[#f8eee3] p-3 text-[#17211c]"
+                                        class="rounded-md bg-[var(--retail-panel)] p-3 text-[var(--retail-ink)]"
                                     >
                                         <p class="text-xs font-black uppercase">
                                             {{ __('capell-theme-commerce::generic.stock_label') }}
                                         </p>
                                         <span
-                                            class="mt-5 block h-2 rounded-full bg-[#1f5f4a]"
+                                            class="mt-5 block h-2 rounded-full bg-[var(--retail-primary)]"
                                         ></span>
                                     </div>
-                                    <div class="rounded-md bg-[#1f5f4a] p-3">
+                                    <div
+                                        class="rounded-md bg-[var(--retail-primary)] p-3"
+                                    >
                                         <p class="text-xs font-black uppercase">
                                             {{ __('capell-theme-commerce::generic.basket_label') }}
                                         </p>
                                         <span
-                                            class="mt-5 block h-2 rounded-full bg-[#e86f5c]"
+                                            class="mt-5 block h-2 rounded-full bg-[var(--retail-accent)]"
                                         ></span>
                                     </div>
                                 </div>
@@ -94,17 +98,17 @@
                                         class="h-8 rounded-md bg-white/15"
                                     ></span>
                                     <span
-                                        class="h-8 rounded-md bg-[#f8eee3]/70"
+                                        class="h-8 rounded-md bg-[var(--retail-panel)]/70"
                                     ></span>
                                     <span
-                                        class="h-8 rounded-md bg-[#e86f5c]/80"
+                                        class="h-8 rounded-md bg-[var(--retail-accent)]/80"
                                     ></span>
                                 </div>
                             </div>
                         @endif
                         <div class="p-2">
                             <p
-                                class="mb-2 text-xs font-black text-[#1f5f4a] uppercase"
+                                class="mb-2 text-xs font-black text-[var(--retail-primary)] uppercase"
                             >
                                 {{ __('capell-theme-commerce::generic.buying_path_label') }}
                             </p>
@@ -116,14 +120,14 @@
                             </p>
                             @if ($product['price'] ?? $product['metric'] ?? null)
                                 <p
-                                    class="mt-4 text-sm font-black text-[#1f5f4a]"
+                                    class="mt-4 text-sm font-black text-[var(--retail-primary)]"
                                 >
                                     {{ $product['price'] ?? $product['metric'] }}
                                 </p>
                             @endif
 
                             <p
-                                class="mt-4 text-xs font-black text-[#e86f5c] uppercase"
+                                class="mt-4 text-xs font-black text-[var(--retail-accent)] uppercase"
                             >
                                 {{ __('capell-theme-commerce::generic.merchandising_note_label') }}
                             </p>

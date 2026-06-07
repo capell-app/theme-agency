@@ -8,7 +8,7 @@
 
 <section class="retail-hero relative overflow-hidden">
     <div
-        class="pointer-events-none absolute inset-x-0 top-0 h-40 border-b border-stone-200 bg-[#fff3e5]"
+        class="pointer-events-none absolute inset-x-0 top-0 h-40 border-b border-stone-200 bg-[var(--retail-warm)]"
     ></div>
 
     <div
@@ -17,14 +17,14 @@
         <div>
             @if ($section->eyebrow ?? null)
                 <p
-                    class="mb-5 inline-flex rounded-full border border-[#e86f5c]/25 bg-white px-3 py-1 text-xs font-black tracking-widest text-[#1f5f4a] uppercase"
+                    class="mb-5 inline-flex rounded-full border border-[var(--retail-accent)]/25 bg-white px-3 py-1 text-xs font-black tracking-widest text-[var(--retail-primary)] uppercase"
                 >
                     {{ $section->eyebrow }}
                 </p>
             @endif
 
             <h1
-                class="max-w-2xl text-4xl font-black tracking-tight text-[#17211c] lg:text-5xl"
+                class="max-w-2xl text-4xl font-black tracking-tight text-[var(--retail-ink)] lg:text-5xl"
             >
                 {{ $section->heading }}
             </h1>
@@ -54,7 +54,7 @@
 
                     @if ($badgeLabel !== '')
                         <div
-                            class="{{ $badgeIndex === 0 ? 'bg-[#17211c] text-white' : 'border border-stone-300 bg-white text-[#17211c]' }} rounded-full px-3 py-2 text-center text-xs font-black tracking-[0.12em] uppercase"
+                            class="{{ $badgeIndex === 0 ? 'bg-[var(--retail-ink)] text-white' : 'border border-stone-300 bg-white text-[var(--retail-ink)]' }} rounded-full px-3 py-2 text-center text-xs font-black tracking-[0.12em] uppercase"
                         >
                             {{ $badgeLabel }}
                         </div>
@@ -78,17 +78,17 @@
                 />
             @else
                 <div
-                    class="aspect-[4/3] rounded-xl bg-[#17211c] p-5 text-white"
+                    class="aspect-[4/3] rounded-xl bg-[var(--retail-ink)] p-5 text-white"
                 >
                     <div
                         class="grid h-full grid-rows-[auto_1fr_auto] gap-5 rounded-lg border border-white/10 bg-white/[0.03] p-5"
                     >
                         <div class="flex items-center justify-between">
                             <span
-                                class="h-2.5 w-24 rounded-full bg-[#e86f5c]"
+                                class="h-2.5 w-24 rounded-full bg-[var(--retail-accent)]"
                             ></span>
                             <span
-                                class="h-2.5 w-14 rounded-full bg-[#1f5f4a]"
+                                class="h-2.5 w-14 rounded-full bg-[var(--retail-primary)]"
                             ></span>
                         </div>
                         <div class="grid content-end gap-3">
@@ -104,10 +104,10 @@
                         </div>
                         <div class="grid grid-cols-3 gap-3">
                             <span
-                                class="h-16 rounded-lg bg-[#e86f5c]/25"
+                                class="h-16 rounded-lg bg-[var(--retail-accent)]/25"
                             ></span>
                             <span
-                                class="h-16 rounded-lg bg-[#1f5f4a]/25"
+                                class="h-16 rounded-lg bg-[var(--retail-primary)]/25"
                             ></span>
                             <span class="h-16 rounded-lg bg-white/10"></span>
                         </div>
