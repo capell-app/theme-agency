@@ -198,6 +198,8 @@ it('returns a localized failure result from the null image doctor', function ():
 it('queues image doctor requests for the configured ai-orchestrator implementation', function (): void {
     app()->setLocale('cy');
     Queue::fake();
+    config()->set('capell-media-ai.image_doctor.budget_cents', 250);
+    config()->set('capell-media-ai.image_doctor.model', 'image-editor');
 
     $doctor = new RecordingImageDoctor;
     app()->instance(ImageDoctor::class, $doctor);
@@ -218,7 +220,9 @@ it('queues image doctor requests for the configured ai-orchestrator implementati
     Queue::assertPushed(RunImageDoctorJob::class, fn (RunImageDoctorJob $job): bool => $job->mediaId === $media->getKey()
         && $job->operation === 'remove_background'
         && $job->instructions === 'Remove the background and keep the subject sharp.'
-        && $job->locale === 'cy');
+        && $job->locale === 'cy'
+        && $job->budgetCents === 250
+        && $job->model === 'image-editor');
 
     expect($doctor->media)->toBeNull()
         ->and($doctor->request)->toBeNull();
@@ -239,6 +243,8 @@ it('runs image doctor requests through the configured ai-orchestrator capability
             operation: 'restore',
             instructions: 'Restore scratches while preserving the original crop.',
             locale: 'fr',
+            budgetCents: 300,
+            model: 'restore-model',
         ),
     );
     $lastRun = AIOrchestratorImageDoctorAction::lastRun();
@@ -255,6 +261,8 @@ it('runs image doctor requests through the configured ai-orchestrator capability
         ->and($lastRun->context['operation'])->toBe('restore')
         ->and($lastRun->context['instructions'])->toBe('Restore scratches while preserving the original crop.')
         ->and($lastRun->context['locale'])->toBe('fr')
+        ->and($lastRun->context['budget_cents'])->toBe(300)
+        ->and($lastRun->context['model'])->toBe('restore-model')
         ->and($mediaContext['id'])->toBe($media->getKey());
 });
 

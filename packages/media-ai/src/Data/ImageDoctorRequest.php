@@ -25,6 +25,8 @@ final readonly class ImageDoctorRequest
         public string $operation,
         public string $instructions,
         public ?string $locale = null,
+        public ?int $budgetCents = null,
+        public ?string $model = null,
     ) {
         if (! in_array($operation, self::OPERATIONS, true)) {
             throw new InvalidArgumentException(

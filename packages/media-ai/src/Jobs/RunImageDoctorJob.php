@@ -25,6 +25,8 @@ final class RunImageDoctorJob implements ShouldQueue
         public readonly string $operation,
         public readonly string $instructions,
         public readonly ?string $locale,
+        public readonly ?int $budgetCents,
+        public readonly ?string $model,
         public readonly ?string $notifiableClass,
         public readonly int|string|null $notifiableKey,
     ) {}
@@ -43,6 +45,8 @@ final class RunImageDoctorJob implements ShouldQueue
                 operation: $this->operation,
                 instructions: $this->instructions,
                 locale: $this->locale,
+                budgetCents: $this->budgetCents,
+                model: $this->model,
             ),
         );
 

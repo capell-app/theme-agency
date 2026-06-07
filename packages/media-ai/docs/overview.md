@@ -46,6 +46,8 @@ return [
 
 Custom providers can still bind `Capell\MediaAI\Contracts\ImageDoctor` directly. Every implementation receives the current media record and an `ImageDoctorRequest` (a validated `operation`, free-text `instructions`, and optional `locale`). It returns an `ImageDoctorResult` reporting `successful` and an optional human-readable `message`. The `message` is rendered verbatim in the editor notification, so providers must return a translated, credential-free string for the request locale.
 
+Doctor image requests are rate-limited per editor/media pair through `capell-media-ai.image_doctor.rate_limit`. Optional `budget_cents` and `model` config values are forwarded on `ImageDoctorRequest` and through the AI Orchestrator prompt/context so provider packages can enforce spend and model selection consistently.
+
 ## Boundaries
 
 - Cropping remains owned by Curator when `capell.media.backend` is `curator`.

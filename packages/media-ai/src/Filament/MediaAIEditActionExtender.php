@@ -17,6 +17,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 
 final class MediaAIEditActionExtender implements MediaEditActionExtender
 {
@@ -47,12 +48,31 @@ final class MediaAIEditActionExtender implements MediaEditActionExtender
                     Gate::authorize('update', $record);
 
                     $user = auth()->user();
+                    $rateLimitKey = $this->rateLimitKey($user instanceof Model ? $user : null, $record);
+                    $maxAttempts = $this->maxAttempts();
+
+                    if ($maxAttempts > 0 && RateLimiter::tooManyAttempts($rateLimitKey, $maxAttempts)) {
+                        Notification::make('capell_media_ai_image_doctor_rate_limited')
+                            ->title(__('capell-media-ai::media-ai.rate_limited', [
+                                'seconds' => RateLimiter::availableIn($rateLimitKey),
+                            ]))
+                            ->warning()
+                            ->send();
+
+                        return;
+                    }
+
+                    if ($maxAttempts > 0) {
+                        RateLimiter::hit($rateLimitKey, $this->decaySeconds());
+                    }
 
                     RunImageDoctorJob::dispatch(
                         mediaId: (int) $record->getKey(),
                         operation: (string) $data['operation'],
                         instructions: (string) $data['instructions'],
                         locale: app()->getLocale(),
+                        budgetCents: $this->budgetCents(),
+                        model: $this->model(),
                         notifiableClass: $user instanceof Model ? $user::class : null,
                         notifiableKey: $user instanceof Model ? $user->getKey() : null,
                     );
@@ -63,5 +83,42 @@ final class MediaAIEditActionExtender implements MediaEditActionExtender
                         ->send();
                 }),
         ];
+    }
+
+    private function rateLimitKey(?Model $user, Media $media): string
+    {
+        return sprintf(
+            'capell-media-ai:image-doctor:%s:%s',
+            $user === null ? 'guest' : $user::class . ':' . $user->getKey(),
+            $media->getKey(),
+        );
+    }
+
+    private function maxAttempts(): int
+    {
+        $maxAttempts = config('capell-media-ai.image_doctor.rate_limit.max_attempts', 10);
+
+        return is_numeric($maxAttempts) ? max(0, (int) $maxAttempts) : 10;
+    }
+
+    private function decaySeconds(): int
+    {
+        $decaySeconds = config('capell-media-ai.image_doctor.rate_limit.decay_seconds', 3600);
+
+        return is_numeric($decaySeconds) ? max(1, (int) $decaySeconds) : 3600;
+    }
+
+    private function budgetCents(): ?int
+    {
+        $budgetCents = config('capell-media-ai.image_doctor.budget_cents');
+
+        return is_numeric($budgetCents) ? max(0, (int) $budgetCents) : null;
+    }
+
+    private function model(): ?string
+    {
+        $model = config('capell-media-ai.image_doctor.model');
+
+        return is_string($model) && $model !== '' ? $model : null;
     }
 }

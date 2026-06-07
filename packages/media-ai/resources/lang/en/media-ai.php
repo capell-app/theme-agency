@@ -20,4 +20,5 @@ return [
     'provider_failed' => 'The configured image doctor could not complete the request.',
     'success' => 'Image doctor request completed.',
     'queued' => 'Image doctor request queued.',
+    'rate_limited' => 'Image doctor rate limit reached. Try again in :seconds seconds.',
 ];
