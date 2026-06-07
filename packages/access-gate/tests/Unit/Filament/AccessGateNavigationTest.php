@@ -16,8 +16,8 @@ use Capell\AccessGate\Manifest\GrantResourceContribution;
 use Capell\AccessGate\Manifest\RegistrationResourceContribution;
 use Capell\Core\Contracts\Extensions\RegistersExtensionAdminResource;
 
-it('keeps access gate contained under system navigation', function (): void {
-    $navigationGroup = (string) __('capell-admin::navigation.group_system');
+it('keeps access gate contained under workspace navigation', function (): void {
+    $navigationGroup = (string) __('capell-admin::navigation.group_workflow');
     $parentItem = (string) __('capell-access-gate::filament.navigation_group');
 
     expect(AccessAreaResource::getNavigationGroup())->toBe($navigationGroup)

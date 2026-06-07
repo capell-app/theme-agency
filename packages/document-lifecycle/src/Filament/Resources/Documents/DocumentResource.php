@@ -161,7 +161,7 @@ final class DocumentResource extends Resource
     #[Override]
     public static function getNavigationGroup(): string
     {
-        return (string) __('capell-admin::navigation.group_system');
+        return (string) __('capell-admin::navigation.group_workflow');
     }
 
     #[Override]
