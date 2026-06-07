@@ -251,6 +251,8 @@ it('runs image doctor requests through the configured ai-orchestrator capability
 
     expect($result->successful)->toBeTrue()
         ->and($result->message)->toBe('Doctor finished through AI Orchestrator')
+        ->and($result->altText)->toBe('Restored archival portrait.')
+        ->and($result->caption)->toBe('Archival portrait restored while preserving the original crop.')
         ->and($lastRun)->toBeInstanceOf(AIOrchestratorRunData::class);
     throw_unless($lastRun instanceof AIOrchestratorRunData, RuntimeException::class, 'Expected AI Orchestrator run data.');
     $mediaContext = $lastRun->context['media'] ?? null;

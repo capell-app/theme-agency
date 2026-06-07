@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Capell\MediaAI\Jobs;
 
 use Capell\Core\Models\Media;
+use Capell\MediaAI\Actions\ApplyImageDoctorMetadataAction;
 use Capell\MediaAI\Contracts\ImageDoctor;
 use Capell\MediaAI\Data\ImageDoctorRequest;
 use Filament\Notifications\Notification;
@@ -39,16 +40,19 @@ final class RunImageDoctorJob implements ShouldQueue
             return;
         }
 
-        $result = resolve(ImageDoctor::class)->doctor(
-            $media,
-            new ImageDoctorRequest(
-                operation: $this->operation,
-                instructions: $this->instructions,
-                locale: $this->locale,
-                budgetCents: $this->budgetCents,
-                model: $this->model,
-            ),
+        $request = new ImageDoctorRequest(
+            operation: $this->operation,
+            instructions: $this->instructions,
+            locale: $this->locale,
+            budgetCents: $this->budgetCents,
+            model: $this->model,
         );
+
+        $result = resolve(ImageDoctor::class)->doctor($media, $request);
+
+        if ($result->successful) {
+            ApplyImageDoctorMetadataAction::run($media, $request, $result);
+        }
 
         $notification = Notification::make('capell_media_ai_image_doctor_completed')
             ->title($result->message ?? __('capell-media-ai::media-ai.success'));

@@ -9,6 +9,8 @@ final readonly class ImageDoctorResult
     public function __construct(
         public bool $successful,
         public ?string $message = null,
+        public ?string $altText = null,
+        public ?string $caption = null,
     ) {}
 
     public static function success(?string $message = null): self

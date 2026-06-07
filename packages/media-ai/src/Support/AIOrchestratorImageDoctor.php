@@ -102,10 +102,14 @@ final class AIOrchestratorImageDoctor implements ImageDoctor
         if (is_array($result)) {
             $successful = $result['successful'] ?? $result['success'] ?? true;
             $message = $result['message'] ?? null;
+            $altText = $result['alt_text'] ?? $result['altText'] ?? null;
+            $caption = $result['caption'] ?? null;
 
             return new ImageDoctorResult(
                 successful: (bool) $successful,
                 message: is_string($message) ? $message : null,
+                altText: is_string($altText) ? $altText : null,
+                caption: is_string($caption) ? $caption : null,
             );
         }
 

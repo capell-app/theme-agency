@@ -26,7 +26,7 @@ Media AI is a premium Capell Media add-on to the free Media Library workflow. To
 4. Add short instructions.
 5. Submit the action.
 
-When the action runs, the editor sees a Filament notification carrying the `ImageDoctorResult` message — a success notification when the request succeeds, or a warning when it does not. The result object currently carries only `successful` and an optional `message`; the original media record is never mutated by this package.
+When the action runs, the editor sees a Filament notification carrying the `ImageDoctorResult` message — a success notification when the request succeeds, or a warning when it does not. The result object carries `successful`, an optional `message`, and optional generated `altText` / `caption` fields. Successful results with generated alt text or captions are written to the media record's localized translation `meta` for the request locale.
 
 ## Integration Contract
 
@@ -44,7 +44,7 @@ return [
 ];
 ```
 
-Custom providers can still bind `Capell\MediaAI\Contracts\ImageDoctor` directly. Every implementation receives the current media record and an `ImageDoctorRequest` (a validated `operation`, free-text `instructions`, and optional `locale`). It returns an `ImageDoctorResult` reporting `successful` and an optional human-readable `message`. The `message` is rendered verbatim in the editor notification, so providers must return a translated, credential-free string for the request locale.
+Custom providers can still bind `Capell\MediaAI\Contracts\ImageDoctor` directly. Every implementation receives the current media record and an `ImageDoctorRequest` (a validated `operation`, free-text `instructions`, and optional `locale`). It returns an `ImageDoctorResult` reporting `successful`, an optional human-readable `message`, and optional localized `altText` / `caption` values. The `message` is rendered verbatim in the editor notification, so providers must return a translated, credential-free string for the request locale.
 
 Doctor image requests are rate-limited per editor/media pair through `capell-media-ai.image_doctor.rate_limit`. Optional `budget_cents` and `model` config values are forwarded on `ImageDoctorRequest` and through the AI Orchestrator prompt/context so provider packages can enforce spend and model selection consistently.
 

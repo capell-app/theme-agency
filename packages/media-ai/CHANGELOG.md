@@ -13,6 +13,7 @@ All notable changes to `capell-app/media-ai` will be documented in this file.
 - Added optional `locale` context to `ImageDoctorRequest`, the Filament Doctor image action, and the AI Orchestrator adapter so provider messages can be returned translated for the active editor locale.
 - Moved Filament Doctor image provider execution into `RunImageDoctorJob`, with immediate queued feedback and completion notifications for the initiating admin.
 - Added configurable Doctor image rate limits plus budget/model hints on `ImageDoctorRequest` and AI Orchestrator context.
+- Added optional `altText` and `caption` result fields and persisted successful provider metadata to localized media translation `meta`.
 - Corrected the Boost guideline to describe the actual behaviour (fires the `ImageDoctor` contract and notifies; writes no metadata).
 
 - Prepared package metadata and documentation for ongoing Capell 4.x package work.
